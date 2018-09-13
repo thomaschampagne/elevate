@@ -3,7 +3,7 @@ import "../css/core.css";
 import { Elevate } from "./Elevate";
 import * as $ from "jquery";
 import * as fancyboxBoot from "fancybox";
-import { MessagesModel } from "./shared/models/messages.model";
+import { CoreMessages } from "./shared/models/core-messages";
 import { StartCoreDataModel } from "./shared/models/start-core-data.model";
 
 class Boot {
@@ -12,7 +12,7 @@ class Boot {
 
 		fancyboxBoot($);
 
-		addEventListener(MessagesModel.ON_START_CORE_EVENT, (event: any) => {
+		addEventListener(CoreMessages.ON_START_CORE_EVENT, (event: any) => {
 
 			const initData: StartCoreDataModel = event.detail as StartCoreDataModel;
 			const elevate = new Elevate(initData.userSettings, initData.appResources);

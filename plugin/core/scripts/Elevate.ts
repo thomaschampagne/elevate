@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "./Helper";
 import { UserSettingsModel } from "./shared/models/user-settings/user-settings.model";
-import { StorageManager } from "./StorageManager";
+import { AppStorage } from "./app-storage";
 import { CoreEnv } from "../config/core-env";
 import { AppResourcesModel } from "./models/app-resources.model";
 import { AthleteUpdateModel } from "./models/athlete-update.model";
@@ -48,6 +48,8 @@ import { ReleaseNoteModel } from "./shared/models/release-note.model";
 import { AthleteModelResolver } from "./shared/resolvers/athlete-model.resolver";
 import { DatedAthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
 import { Gender } from "../../app/src/app/shared/models/athlete/gender.enum";
+import * as Cookies from "js-cookie";
+import { AppStorageType } from "./models/storage-type.enum";
 
 export class Elevate {
 
@@ -97,10 +99,15 @@ export class Elevate {
 			}
 
 			if (this.userSettings.localStorageMustBeCleared) {
+
 				localStorage.clear();
-				Helper.setToStorage(this.extensionId, StorageManager.TYPE_SYNC, "localStorageMustBeCleared", false, (response: any) => {
-					console.log("localStorageMustBeCleared is now " + response.data.localStorageMustBeCleared);
+
+				AppStorage.getInstance().set<boolean>(AppStorageType.SYNC, "localStorageMustBeCleared", false).then(() => {
+					return AppStorage.getInstance().get<boolean>(AppStorageType.SYNC, "localStorageMustBeCleared");
+				}).then((result: boolean) => {
+					console.log("localStorageMustBeCleared is now " + result);
 				});
+
 			}
 
 			// Init "elevate bridge"
@@ -156,6 +163,10 @@ export class Elevate {
 
 		this.extensionId = this.appResources.extensionId;
 
+		if (!AppStorage.getInstance().hasExtensionId()) {
+			AppStorage.getInstance().setExtensionId(this.extensionId);
+		}
+
 		return this.initAthleteModelResolver().then(() => {
 			this.vacuumProcessor = new VacuumProcessor();
 			this.athleteId = this.vacuumProcessor.getAthleteId();
@@ -188,9 +199,9 @@ export class Elevate {
 	public createAthleteModelResolver(userSettings: UserSettingsModel): Promise<AthleteModelResolver> {
 
 		return new Promise((resolve, reject) => {
-			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, Elevate.LOCAL_DATED_ATHLETE_SETTINGS_KEY)
-				.then((result: { data: DatedAthleteSettingsModel[] }) => {
-					resolve(new AthleteModelResolver(userSettings, result.data));
+			AppStorage.getInstance().get<DatedAthleteSettingsModel[]>(AppStorageType.LOCAL, Elevate.LOCAL_DATED_ATHLETE_SETTINGS_KEY)
+				.then((result: DatedAthleteSettingsModel[]) => {
+					resolve(new AthleteModelResolver(userSettings, result));
 				}, error => reject(error));
 		});
 	}
@@ -215,7 +226,7 @@ export class Elevate {
 		}
 
 		const ribbonHtml: string = "<div id=\"pluginInstallOrUpgrade\" style=\"display: flex; justify-content: flex-start; position: fixed; z-index: 999; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white; font-size: 12px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;\">" +
-			"<div style=\"margin-right: 10px; line-height: 20px; white-space: nowrap;\"><strong>Elevate v" + this.appResources.extVersion + " updated " + ((latestRelease.isPatch) ? " (patch)" : "") + "</strong></div>" +
+			"<div style=\"margin-right: 10px; line-height: 20px; white-space: nowrap;\"><strong>Elevate updated" + ((latestRelease.isPatch) ? " (patch " + this.appResources.extVersion + ")" : " to " + this.appResources.extVersion) + "</strong></div>" +
 			"<div style=\"margin-right: 10px; line-height: 20px;\">" + latestRelease.message + "</div>" +
 			"<div style=\"margin-right: 10px; white-space: nowrap; flex: 1; display: flex; justify-content: flex-end;\">" +
 			"	<div>" +
@@ -278,14 +289,14 @@ export class Elevate {
 				on: Date.now(),
 			};
 
-			Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY, toBeStored, () => {
+			AppStorage.getInstance().set<any>(AppStorageType.LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY, toBeStored).then(() => {
 				console.log("Version has been saved to local storage");
 				callback();
 			});
 		};
 
 		// Check for previous version is installed
-		Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY, (response: any) => {
+		AppStorage.getInstance().get<any>(AppStorageType.LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY).then((response: any) => {
 
 			// Override version with fake one to simulate update
 			if (CoreEnv.simulateUpdate) {
@@ -297,7 +308,7 @@ export class Elevate {
 				};
 			}
 
-			if (!response.data || !response.data.version) {
+			if (!response || !response.version) {
 
 				// No previous version installed. It's an install of the plugin
 				console.log("No previous version found. Should be an fresh install of " + this.appResources.extVersion);
@@ -312,10 +323,10 @@ export class Elevate {
 			} else {
 
 				// A version is already installed. It's an update
-				if (response.data.version && response.data.version !== this.appResources.extVersion) {
+				if (response.version && response.version !== this.appResources.extVersion) {
 
 					// Version has changed...
-					console.log("Previous install found <" + response.data.version + "> installed on " + new Date(response.data.on));
+					console.log("Previous install found <" + response.version + "> installed on " + new Date(response.on));
 					console.log("Moving to version <" + this.appResources.extVersion + ">");
 
 					// Clear HTML5 local storage
@@ -338,7 +349,7 @@ export class Elevate {
 
 					follow("send", "event", updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
 
-					StorageManager.setCookieSeconds("elevate_athlete_update_done", false, 0); // Remove elevate_athlete_update_done cookie to trigger athlete commit earlier
+					Cookies.remove("elevate_athlete_update_done"); // Remove elevate_athlete_update_done cookie to trigger athlete commit earlier
 
 				} else {
 					console.log("No install or update detected");
@@ -875,10 +886,9 @@ export class Elevate {
 		// TODO Implement cache here: get stream from cache if exist
 		this.vacuumProcessor.getActivityStream((activityCommonStats: any, jsonResponse: any, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => {
 
-			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_SYNC, "bestSplitsConfiguration", (response: any) => {
-
-				const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.activityId, this.userSettings, jsonResponse, hasPowerMeter, response.data, (splitsConfiguration: any) => {
-					Helper.setToStorage(this.extensionId, StorageManager.TYPE_SYNC, "bestSplitsConfiguration", splitsConfiguration);
+			AppStorage.getInstance().get<any>(AppStorageType.SYNC, "bestSplitsConfiguration").then((response: any) => {
+				const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.activityId, this.userSettings, jsonResponse, hasPowerMeter, response, (splitsConfiguration: any) => {
+					AppStorage.getInstance().set<any>(AppStorageType.SYNC, "bestSplitsConfiguration", splitsConfiguration);
 				});
 
 				activityBestSplitsModifier.modify();
@@ -1047,7 +1057,7 @@ export class Elevate {
 	 */
 	public handleTrackTodayIncomingConnection(): void {
 
-		const userHasConnectSince24Hour: boolean = (StorageManager.getCookie("elevate_daily_connection_done") == "true");
+		const userHasConnectSince24Hour: boolean = (Cookies.get("elevate_daily_connection_done") === "true");
 
 		if (CoreEnv.debugMode) {
 			console.log("Cookie 'elevate_daily_connection_done' value found is: " + userHasConnectSince24Hour);
@@ -1089,7 +1099,7 @@ export class Elevate {
 			}
 
 			// Create cookie to avoid push during 1 day
-			StorageManager.setCookie("elevate_daily_connection_done", true, 1);
+			Cookies.set("elevate_daily_connection_done", "true", {expires: 1});
 
 		} else {
 			if (CoreEnv.debugMode) {
@@ -1099,18 +1109,20 @@ export class Elevate {
 	}
 
 	public handleAthleteUpdate(): void {
-		if (!StorageManager.getCookie("elevate_athlete_update_done")) {
+		if (!Cookies.get("elevate_athlete_update_done")) {
 			this.commitAthleteUpdate().then((response: any) => {
 				console.log("Updated", response);
-				StorageManager.setCookieSeconds("elevate_athlete_update_done", true, 6 * 60 * 60); // Don't update for 6 hours
+				Cookies.set("elevate_athlete_update_done", "true", {expires: (1 / 4)}); // Don't update for 6 hours
 			}, (err: any) => {
 				console.error(err);
 			});
 		}
 	}
 
-	public saveAthleteId(callback?: Function): void {
-		Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, "athleteId", this.athleteId, callback);
+	public saveAthleteId(): void {
+		AppStorage.getInstance().set<number>(AppStorageType.LOCAL, "athleteId", this.athleteId).then(() => {
+			console.debug("athlete id set to " + this.athleteId);
+		}, error => console.error(error));
 	}
 
 	public handleOnFlyActivitiesSync(): void {
@@ -1134,9 +1146,7 @@ export class Elevate {
 		setTimeout(() => {
 
 			// Allow activities sync if previous sync exists and has been done 12 hours or more ago.
-			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.lastSyncDateTime, (response: any) => {
-
-				const lastSyncDateTime: number = response.data;
+			AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronizer.lastSyncDateTime).then((lastSyncDateTime: number) => {
 
 				if (_.isNumber(lastSyncDateTime)) {
 

@@ -6,12 +6,9 @@ import { Gender } from "../../app/src/app/shared/models/athlete/gender.enum";
 import { AthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
 import { UserLactateThresholdModel } from "../../app/src/app/shared/models/athlete/athlete-settings/user-lactate-threshold.model";
 import * as _ from "lodash";
-
-
-enum BrowserStorage { // TODO Refactor use with StorageManager (duplicate code)
-	SYNC = "sync",
-	LOCAL = "local"
-}
+import { AppStorage } from "./app-storage";
+import { SyncedActivityModel } from "./shared/models/sync/synced-activity.model";
+import { AppStorageType } from "./models/storage-type.enum";
 
 class Installer {
 
@@ -31,7 +28,10 @@ class Installer {
 				this.handleUpdate().then(() => {
 
 					// Check and display sync & local storage after update
-					return Promise.all([this.get(BrowserStorage.SYNC, null), this.get(BrowserStorage.LOCAL, null)]);
+					return Promise.all([
+						AppStorage.getInstance().get(AppStorageType.SYNC),
+						AppStorage.getInstance().get(AppStorageType.LOCAL)
+					]);
 
 				}).then((result: any[]) => {
 
@@ -46,7 +46,7 @@ class Installer {
 		});
 	}
 
-	protected isPreviousVersionLowerThanOrEqualsTo(oldVersion: string, upgradingVersion: string) {
+	protected isPreviousVersionLowerThanOrEqualsTo(oldVersion: string, upgradingVersion: string): boolean {
 		return semver.gte(upgradingVersion, oldVersion);
 	}
 
@@ -77,9 +77,9 @@ class Installer {
 
 			console.log("Migrate to 5.1.1");
 
-			promise = this.remove(BrowserStorage.LOCAL, "computedActivities")
+			promise = AppStorage.getInstance().rm(AppStorageType.LOCAL, "computedActivities")
 				.then(() => {
-					return this.remove(BrowserStorage.LOCAL, "lastSyncDateTime")
+					return AppStorage.getInstance().rm(AppStorageType.LOCAL, "lastSyncDateTime")
 				}).then(() => {
 					console.log("Local History cleared");
 					return Promise.resolve();
@@ -105,9 +105,9 @@ class Installer {
 
 			console.log("Migrate to 5.11.0");
 
-			promise = this.remove(BrowserStorage.SYNC, ["enableAlphaFitnessTrend"]).then(() => {
+			promise = AppStorage.getInstance().rm(AppStorageType.SYNC, ["enableAlphaFitnessTrend"]).then(() => {
 
-				return this.get(BrowserStorage.SYNC, null);
+				return AppStorage.getInstance().get(AppStorageType.SYNC);
 
 			}).then((currentUserSavedSettings: any) => {
 
@@ -130,12 +130,12 @@ class Installer {
 						}
 
 						currentUserSavedSettings.zones.heartRate = newHeartRateZones;
-						return this.set(BrowserStorage.SYNC, null, currentUserSavedSettings).then(() => {
-							return this.remove(BrowserStorage.SYNC, ["userHrrZones"]);
+						return AppStorage.getInstance().set(AppStorageType.SYNC, null, currentUserSavedSettings).then(() => {
+							return AppStorage.getInstance().rm(AppStorageType.SYNC, ["userHrrZones"]);
 						});
 
 					} else {  // Key exists
-						return this.remove(BrowserStorage.SYNC, ["userHrrZones"]);
+						return AppStorage.getInstance().rm(AppStorageType.SYNC, ["userHrrZones"]);
 					}
 				} else {
 					return Promise.resolve();
@@ -163,19 +163,19 @@ class Installer {
 
 			console.log("Migrate to 6.1.2");
 
-			promise = this.remove(BrowserStorage.LOCAL, ["syncWithAthleteProfile"]).then(() => {
+			promise = AppStorage.getInstance().rm(AppStorageType.LOCAL, ["syncWithAthleteProfile"]).then(() => {
 
-				return this.get(BrowserStorage.LOCAL, "computedActivities").then((result: any) => {
+				return AppStorage.getInstance().get<SyncedActivityModel[]>(AppStorageType.LOCAL, "computedActivities").then((computedActivities: SyncedActivityModel[]) => {
 
-					if (result.computedActivities) {
-						return this.set(BrowserStorage.LOCAL, "syncedActivities", result.computedActivities).then(() => {
-							return this.remove(BrowserStorage.LOCAL, ["computedActivities"]);
+					if (computedActivities) {
+						return AppStorage.getInstance().set(AppStorageType.LOCAL, "syncedActivities", computedActivities).then(() => {
+							return AppStorage.getInstance().rm(AppStorageType.LOCAL, ["computedActivities"]);
 						});
 					} else {
 						return Promise.resolve();
 					}
 				}).then(() => {
-					return this.remove(BrowserStorage.SYNC, ["autoSyncMinutes"]);
+					return AppStorage.getInstance().rm(AppStorageType.SYNC, ["autoSyncMinutes"]);
 				});
 
 			});
@@ -197,7 +197,7 @@ class Installer {
 
 		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.4.0")) {
 			console.log("Migrate to 6.4.0");
-			promise = this.remove(BrowserStorage.SYNC, ["displayMotivationScore"]);
+			promise = AppStorage.getInstance().rm(AppStorageType.SYNC, ["displayMotivationScore"]);
 		} else {
 			console.log("Skip migrate to 6.4.0");
 		}
@@ -218,7 +218,7 @@ class Installer {
 
 			console.log("Migrate to 6.5.0");
 
-			promise = this.get(BrowserStorage.SYNC, null).then((userSettingsModel: any) => {
+			promise = AppStorage.getInstance().get(AppStorageType.SYNC).then((userSettingsModel: any) => {
 
 				if (userSettingsModel.userGender) {
 					const userGender = (userSettingsModel.userGender === "men") ? Gender.MEN : Gender.WOMEN;
@@ -234,17 +234,17 @@ class Installer {
 					));
 
 					// Create new athlete model structure and apply change in sync settings
-					return this.set(BrowserStorage.SYNC, "athleteModel", athleteModel);
+					return AppStorage.getInstance().set(AppStorageType.SYNC, "athleteModel", athleteModel);
 				} else {
 					return Promise.resolve();
 				}
 
 			}).then(() => {
 				// Remove deprecated old user settings
-				return this.remove(BrowserStorage.SYNC, ["userGender", "userMaxHr", "userRestHr", "userLTHR", "userFTP", "userRunningFTP", "userSwimFTP", "userWeight"]);
+				return AppStorage.getInstance().rm(AppStorageType.SYNC, ["userGender", "userMaxHr", "userRestHr", "userLTHR", "userFTP", "userRunningFTP", "userSwimFTP", "userWeight"]);
 
 			}).then(() => {
-				return this.remove(BrowserStorage.LOCAL, "profileConfigured");
+				return AppStorage.getInstance().rm(AppStorageType.LOCAL, "profileConfigured");
 			});
 
 		} else {
@@ -268,57 +268,9 @@ class Installer {
 			return this.migrate_to_6_4_0();
 		}).then(() => {
 			return this.migrate_to_6_5_0();
-		});
+		}).catch(error => console.error(error));
 
 	}
-
-	public set(storageType: string, key: string, value: any): Promise<void> { // TODO Refactor use with StorageManager (duplicate code)
-
-		return new Promise<void>((resolve: Function, reject: Function) => {
-
-			let object = {};
-			if (key) {
-				object[key] = value;
-			} else {
-				object = value
-			}
-
-			chrome.storage[storageType].set(object, () => {
-				const error = chrome.runtime.lastError;
-				if (error) {
-					reject(error.message);
-				} else {
-					resolve();
-				}
-			});
-		});
-	};
-
-	public get<T>(storageType: string, key: string): Promise<T> { // TODO Refactor use with StorageManager (duplicate code)
-		return new Promise<T>((resolve: Function, reject: Function) => {
-			chrome.storage[storageType].get(key, (result: T) => {
-				const error = chrome.runtime.lastError;
-				if (error) {
-					reject(error.message);
-				} else {
-					resolve(result);
-				}
-			});
-		});
-	};
-
-	public remove(storageType: string, key: string | string[]): Promise<void> { // TODO Refactor use with StorageManager (duplicate code)
-		return new Promise<void>((resolve: Function, reject: Function) => {
-			chrome.storage[storageType].remove(key, () => {
-				const error = chrome.runtime.lastError;
-				if (error) {
-					reject(error.message);
-				} else {
-					resolve();
-				}
-			});
-		});
-	};
 
 }
 
