@@ -1,11 +1,9 @@
-import { IStorageUsage, StorageManager } from "./StorageManager";
+import { AppStorage } from "./app-storage";
 import * as _ from "lodash";
 import { SyncResultModel } from "./shared/models/sync/sync-result.model";
-import { MessagesModel } from "./shared/models/messages.model";
+import { CoreMessages } from "./shared/models/core-messages";
 
 export class Background {
-
-	private storageManager: StorageManager = new StorageManager();
 
 	public init(): void {
 		this.listenForExternalMessages();
@@ -27,7 +25,7 @@ export class Background {
 				_.forEach(tabs, (tab: chrome.tabs.Tab) => {
 					if (!tab.url) {
 						const message = {
-							message: MessagesModel.ON_EXTERNAL_SYNC_DONE,
+							message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
 							results: syncResult
 						};
 						chrome.tabs.sendMessage(tab.id, message);
@@ -43,44 +41,47 @@ export class Background {
 
 			switch (request.method) {
 
-				case MessagesModel.ON_EXTERNAL_SYNC_DONE:
+				case CoreMessages.ON_EXTERNAL_SYNC_DONE:
 					this.forwardOnExternalSyncFinished(request.params.syncResult);
 					break;
 
-				case MessagesModel.ON_RELOAD_BROWSER_TAB:
+				case CoreMessages.ON_RELOAD_BROWSER_TAB:
 					this.reloadBrowserTab(request.params.sourceTabId);
 					break;
 
-				case MessagesModel.ON_GET_FROM_STORAGE:
-					this.storageManager.getFromStorage(request.params.storage, request.params.key, function (returnedValue: any) {
-						sendResponse({
-							data: returnedValue,
-						});
-					});
+				case AppStorage.ON_GET_MESSAGE:
+					AppStorage.getInstance().get(request.params.storage, request.params.key).then(
+						result => sendResponse({data: result}),
+						error => {
+							console.error(error);
+						}
+					);
 					break;
 
-				case MessagesModel.ON_SET_FROM_STORAGE:
-					this.storageManager.setToStorage(request.params.storage, request.params.key, request.params.value, function (returnAllData: any) {
-						sendResponse({
-							data: returnAllData,
-						});
-					});
+				case AppStorage.ON_SET_MESSAGE:
+					AppStorage.getInstance().set(request.params.storage, request.params.key, request.params.value).then(
+						() => sendResponse({message: request.params.key + " has been set to " + request.params.value}),
+						error => {
+							console.error(error);
+						}
+					);
 					break;
 
-				case MessagesModel.ON_REMOVE_FROM_STORAGE:
-					this.storageManager.removeFromStorage(request.params.storage, request.params.key, function (returnAllData: any) {
-						sendResponse({
-							data: returnAllData,
-						});
-					});
+				case AppStorage.ON_RM_MESSAGE:
+					AppStorage.getInstance().rm(request.params.storage, request.params.key).then(
+						() => sendResponse({message: request.params.key + " has been removed"}),
+						error => {
+							console.error(error);
+						}
+					);
 					break;
 
-				case MessagesModel.ON_STORAGE_USAGE:
-					this.storageManager.getStorageUsage(request.params.storage, function (response: IStorageUsage) {
-						sendResponse({
-							data: response,
+				case AppStorage.ON_USAGE_MESSAGE:
+					AppStorage.getInstance().usage(request.params.storage).then(
+						result => sendResponse({data: result}),
+						error => {
+							console.error(error);
 						});
-					});
 					break;
 
 				default:

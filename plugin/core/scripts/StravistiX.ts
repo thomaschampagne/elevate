@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "./Helper";
 import { UserSettingsModel } from "./shared/models/user-settings/user-settings.model";
-import { StorageManager } from "./StorageManager";
+import { AppStorage } from "./app-storage";
 import { CoreEnv } from "../config/core-env";
 import { AppResourcesModel } from "./models/app-resources.model";
 import { AthleteUpdateModel } from "./models/athlete-update.model";
@@ -48,6 +48,8 @@ import { ReleaseNoteModel } from "./shared/models/release-note.model";
 import { AthleteModelResolver } from "./shared/resolvers/athlete-model.resolver";
 import { DatedAthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
 import { Gender } from "../../app/src/app/shared/models/athlete/gender.enum";
+import * as Cookies from "js-cookie";
+import { AppStorageType } from "./models/storage-type.enum";
 
 export class StravistiX {
 
@@ -97,10 +99,15 @@ export class StravistiX {
 			}
 
 			if (this.userSettings.localStorageMustBeCleared) {
+
 				localStorage.clear();
-				Helper.setToStorage(this.extensionId, StorageManager.TYPE_SYNC, "localStorageMustBeCleared", false, (response: any) => {
-					console.log("localStorageMustBeCleared is now " + response.data.localStorageMustBeCleared);
+
+				AppStorage.getInstance().set<boolean>(AppStorageType.SYNC, "localStorageMustBeCleared", false).then(() => {
+					return AppStorage.getInstance().get<boolean>(AppStorageType.SYNC, "localStorageMustBeCleared");
+				}).then((result: boolean) => {
+					console.log("localStorageMustBeCleared is now " + result);
 				});
+
 			}
 
 			// Init "stravistix bridge"
@@ -156,6 +163,10 @@ export class StravistiX {
 
 		this.extensionId = this.appResources.extensionId;
 
+		if (!AppStorage.getInstance().hasExtensionId()) {
+			AppStorage.getInstance().setExtensionId(this.extensionId);
+		}
+
 		return this.initAthleteModelResolver().then(() => {
 			this.vacuumProcessor = new VacuumProcessor();
 			this.athleteId = this.vacuumProcessor.getAthleteId();
@@ -188,9 +199,9 @@ export class StravistiX {
 	public createAthleteModelResolver(userSettings: UserSettingsModel): Promise<AthleteModelResolver> {
 
 		return new Promise((resolve, reject) => {
-			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.LOCAL_DATED_ATHLETE_SETTINGS_KEY)
-				.then((result: { data: DatedAthleteSettingsModel[] }) => {
-					resolve(new AthleteModelResolver(userSettings, result.data));
+			AppStorage.getInstance().get<DatedAthleteSettingsModel[]>(AppStorageType.LOCAL, StravistiX.LOCAL_DATED_ATHLETE_SETTINGS_KEY)
+				.then((result: DatedAthleteSettingsModel[]) => {
+					resolve(new AthleteModelResolver(userSettings, result));
 				}, error => reject(error));
 		});
 	}
@@ -278,14 +289,14 @@ export class StravistiX {
 				on: Date.now(),
 			};
 
-			Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.LOCAL_VERSION_INSTALLED_KEY, toBeStored, () => {
+			AppStorage.getInstance().set<any>(AppStorageType.LOCAL, StravistiX.LOCAL_VERSION_INSTALLED_KEY, toBeStored).then(() => {
 				console.log("Version has been saved to local storage");
 				callback();
 			});
 		};
 
 		// Check for previous version is installed
-		Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, StravistiX.LOCAL_VERSION_INSTALLED_KEY, (response: any) => {
+		AppStorage.getInstance().get<any>(AppStorageType.LOCAL, StravistiX.LOCAL_VERSION_INSTALLED_KEY).then((response: any) => {
 
 			// Override version with fake one to simulate update
 			if (CoreEnv.simulateUpdate) {
@@ -297,7 +308,7 @@ export class StravistiX {
 				};
 			}
 
-			if (!response.data || !response.data.version) {
+			if (!response || !response.version) {
 
 				// No previous version installed. It's an install of the plugin
 				console.log("No previous version found. Should be an fresh install of " + this.appResources.extVersion);
@@ -312,10 +323,10 @@ export class StravistiX {
 			} else {
 
 				// A version is already installed. It's an update
-				if (response.data.version && response.data.version !== this.appResources.extVersion) {
+				if (response.version && response.version !== this.appResources.extVersion) {
 
 					// Version has changed...
-					console.log("Previous install found <" + response.data.version + "> installed on " + new Date(response.data.on));
+					console.log("Previous install found <" + response.version + "> installed on " + new Date(response.on));
 					console.log("Moving to version <" + this.appResources.extVersion + ">");
 
 					// Clear HTML5 local storage
@@ -338,7 +349,7 @@ export class StravistiX {
 
 					follow("send", "event", updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
 
-					StorageManager.setCookieSeconds("stravistix_athlete_update_done", false, 0); // Remove stravistix_athlete_update_done cookie to trigger athlete commit earlier
+					Cookies.remove("stravistix_athlete_update_done"); // Remove stravistix_athlete_update_done cookie to trigger athlete commit earlier
 
 				} else {
 					console.log("No install or update detected");
@@ -875,10 +886,9 @@ export class StravistiX {
 		// TODO Implement cache here: get stream from cache if exist
 		this.vacuumProcessor.getActivityStream((activityCommonStats: any, jsonResponse: any, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => {
 
-			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_SYNC, "bestSplitsConfiguration", (response: any) => {
-
-				const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.activityId, this.userSettings, jsonResponse, hasPowerMeter, response.data, (splitsConfiguration: any) => {
-					Helper.setToStorage(this.extensionId, StorageManager.TYPE_SYNC, "bestSplitsConfiguration", splitsConfiguration);
+			AppStorage.getInstance().get<any>(AppStorageType.SYNC, "bestSplitsConfiguration").then((response: any) => {
+				const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.activityId, this.userSettings, jsonResponse, hasPowerMeter, response, (splitsConfiguration: any) => {
+					AppStorage.getInstance().set<any>(AppStorageType.SYNC, "bestSplitsConfiguration", splitsConfiguration);
 				});
 
 				activityBestSplitsModifier.modify();
@@ -1047,7 +1057,7 @@ export class StravistiX {
 	 */
 	public handleTrackTodayIncomingConnection(): void {
 
-		const userHasConnectSince24Hour: boolean = (StorageManager.getCookie("stravistix_daily_connection_done") == "true");
+		const userHasConnectSince24Hour: boolean = (Cookies.get("stravistix_daily_connection_done") === "true");
 
 		if (CoreEnv.debugMode) {
 			console.log("Cookie 'stravistix_daily_connection_done' value found is: " + userHasConnectSince24Hour);
@@ -1089,7 +1099,7 @@ export class StravistiX {
 			}
 
 			// Create cookie to avoid push during 1 day
-			StorageManager.setCookie("stravistix_daily_connection_done", true, 1);
+			Cookies.set("stravistix_daily_connection_done", "true", {expires: 1});
 
 		} else {
 			if (CoreEnv.debugMode) {
@@ -1099,18 +1109,20 @@ export class StravistiX {
 	}
 
 	public handleAthleteUpdate(): void {
-		if (!StorageManager.getCookie("stravistix_athlete_update_done")) {
+		if (!Cookies.get("stravistix_athlete_update_done")) {
 			this.commitAthleteUpdate().then((response: any) => {
 				console.log("Updated", response);
-				StorageManager.setCookieSeconds("stravistix_athlete_update_done", true, 6 * 60 * 60); // Don't update for 6 hours
+				Cookies.set("stravistix_athlete_update_done", "true", {expires: (1 / 4)}); // Don't update for 6 hours
 			}, (err: any) => {
 				console.error(err);
 			});
 		}
 	}
 
-	public saveAthleteId(callback?: Function): void {
-		Helper.setToStorage(this.extensionId, StorageManager.TYPE_LOCAL, "athleteId", this.athleteId, callback);
+	public saveAthleteId(): void {
+		AppStorage.getInstance().set<number>(AppStorageType.LOCAL, "athleteId", this.athleteId).then(() => {
+			console.debug("athlete id set to " + this.athleteId);
+		}, error => console.error(error));
 	}
 
 	public handleOnFlyActivitiesSync(): void {
@@ -1134,9 +1146,7 @@ export class StravistiX {
 		setTimeout(() => {
 
 			// Allow activities sync if previous sync exists and has been done 12 hours or more ago.
-			Helper.getFromStorage(this.extensionId, StorageManager.TYPE_LOCAL, ActivitiesSynchronizer.lastSyncDateTime, (response: any) => {
-
-				const lastSyncDateTime: number = response.data;
+			AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronizer.lastSyncDateTime).then((lastSyncDateTime: number) => {
 
 				if (_.isNumber(lastSyncDateTime)) {
 
