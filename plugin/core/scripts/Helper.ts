@@ -1,6 +1,4 @@
-import * as Q from "q";
-import { IStorageUsage } from "./StorageManager";
-import { MessagesModel } from "./shared/models/messages.model";
+import { CoreMessages } from "./shared/models/core-messages";
 import { SpeedUnitDataModel } from "./models/activity-data/speed-unit-data.model";
 import { Constant } from "./shared/constant";
 
@@ -97,111 +95,16 @@ export class Helper {
 		return (hr - restHr) / (maxHr - restHr);
 	}
 
-	/**
-	 * Sending message to store key:value into storageType via background page
-	 */
-	public static setToStorage(extensionId: string, storageType: string, key: string, value: any, callback?: Function): Q.Promise<any> {
-
-		const deferred: Q.Deferred<any> = Q.defer();
-
-		// Sending message to background page
-		chrome.runtime.sendMessage(extensionId, {
-			method: MessagesModel.ON_SET_FROM_STORAGE,
-			params: {
-				storage: storageType,
-				key,
-				value,
-			},
-		}, (response: any) => {
-			if (callback) {
-				callback(response);
-			}
-			deferred.resolve(response);
-		});
-
-		return deferred.promise;
-	}
-
-	/**
-	 * Sending message to get key:value into storageType via background page
-	 * @param extensionId
-	 * @param storageType StorageManager.TYPE_LOCAL || StorageManager.TYPE_SYNC
-	 * @param key
-	 * @param callback
-	 * @return {Q.Promise<any>}
-	 */
-	public static getFromStorage(extensionId: string, storageType: string, key: string, callback?: Function): Q.Promise<any> {
-
-		const deferred: Q.Deferred<any> = Q.defer();
-
-		// Sending message to background page
-		chrome.runtime.sendMessage(extensionId, {
-			method: MessagesModel.ON_GET_FROM_STORAGE,
-			params: {
-				storage: storageType,
-				key,
-			},
-		}, (response: any) => {
-			if (callback) {
-				callback(response);
-			}
-			deferred.resolve(response);
-		});
-
-		return deferred.promise;
-	}
-
-	public static removeFromStorage(extensionId: string, storageType: string, key: string, callback?: Function): Q.Promise<any> {
-
-		const deferred: Q.Deferred<any> = Q.defer();
-
-		// Sending message to background page
-		chrome.runtime.sendMessage(extensionId, {
-			method: MessagesModel.ON_REMOVE_FROM_STORAGE,
-			params: {
-				storage: storageType,
-				key,
-			},
-		}, (response: any) => {
-			if (callback) {
-				callback(response);
-			}
-			deferred.resolve(response);
-		});
-
-		return deferred.promise;
-	}
-
 	public static reloadBrowserTab(extensionId: string, sourceTabId: number) {
 
 		chrome.runtime.sendMessage(extensionId, {
-			method: MessagesModel.ON_RELOAD_BROWSER_TAB,
+			method: CoreMessages.ON_RELOAD_BROWSER_TAB,
 			params: {
 				sourceTabId,
 			},
 		}, (response: any) => {
 			console.log(response);
 		});
-	}
-
-	public static getStorageUsage(extensionId: string, storageType: string, callback?: Function): Q.IPromise<IStorageUsage> {
-
-		const deferred: Q.Deferred<any> = Q.defer();
-
-		// Sending message to background page
-		chrome.runtime.sendMessage(extensionId, {
-			method: MessagesModel.ON_STORAGE_USAGE,
-			params: {
-				storage: storageType,
-			},
-		}, (response: any) => {
-			if (callback) {
-				callback(response.data);
-			}
-			deferred.resolve(response.data);
-		});
-
-		return deferred.promise;
 	}
 
 	public static formatNumber(n: any, c?: any, d?: any, t?: any): string {

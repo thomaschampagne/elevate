@@ -3,8 +3,8 @@
 	"name": "Elevate for Strava",
 	"short_name": "Elevate",
 	"description": "Enhance your Strava experience with Elevate. An opensource web plugin which analyse deeper your activities and segments efforts !",
-	"version": "6.5.1",
-	"version_name": "6.5.1 Stable",
+	"version": "6.5.2",
+	"version_name": "6.5.2 Stable",
 	"background": {
 		"scripts": [
 			"core/installer.bundle.js",

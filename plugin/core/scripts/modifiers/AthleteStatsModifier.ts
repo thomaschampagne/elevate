@@ -1,10 +1,10 @@
 import * as $ from "jquery";
 import * as _ from "lodash";
 import { Helper } from "../Helper";
-import { StorageManager } from "../StorageManager";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { Constant } from "../shared/constant";
 import { AbstractModifier } from "./AbstractModifier";
+import * as Cookies from "js-cookie";
 
 export class AthleteStatsModifier extends AbstractModifier {
 
@@ -39,24 +39,24 @@ export class AthleteStatsModifier extends AbstractModifier {
 			this.handleProgressStatsForceRefresh();
 		});
 
-		this.progressThisYear.find("#elevate_yearProgress_incVirtualRides").prop("checked", StorageManager.getCookie("elevate_yearProgress_incVirtualRides") === "true");
+		this.progressThisYear.find("#elevate_yearProgress_incVirtualRides").prop("checked", Cookies.get("elevate_yearProgress_incVirtualRides") === "true");
 		this.progressThisYear.find("#elevate_yearProgress_incVirtualRides").on("click", () => {
-			StorageManager.setCookie("elevate_yearProgress_incVirtualRides", $("#elevate_yearProgress_incVirtualRides").prop("checked"), 365);
+			Cookies.set("elevate_yearProgress_incVirtualRides", $("#elevate_yearProgress_incVirtualRides").prop("checked"), {expires: 365});
 			this.handleProgressStatsForceRefresh();
 		});
 
-		this.progressThisYear.find("#elevate_yearProgress_incCommutes").prop("checked", StorageManager.getCookie("elevate_yearProgress_incCommutes") === "true");
+		this.progressThisYear.find("#elevate_yearProgress_incCommutes").prop("checked", Cookies.get("elevate_yearProgress_incCommutes") === "true");
 		this.progressThisYear.find("#elevate_yearProgress_incCommutes").on("click", () => {
-			StorageManager.setCookie("elevate_yearProgress_incCommutes", $("#elevate_yearProgress_incCommutes").prop("checked"), 365);
+			Cookies.set("elevate_yearProgress_incCommutes", $("#elevate_yearProgress_incCommutes").prop("checked"), {expires: 365});
 			this.handleProgressStatsForceRefresh();
 		});
 	}
 
 	protected formatData(activities: any[]): any[] {
 
-		const includeVirtualRide: boolean = (StorageManager.getCookie("elevate_yearProgress_incVirtualRides") === "true");
+		const includeVirtualRide: boolean = (Cookies.get("elevate_yearProgress_incVirtualRides") === "true");
 
-		const includeCommutes: boolean = (StorageManager.getCookie("elevate_yearProgress_incCommutes") === "true");
+		const includeCommutes: boolean = (Cookies.get("elevate_yearProgress_incCommutes") === "true");
 
 		const formattedData: any[] = [];
 		let activity: any;
