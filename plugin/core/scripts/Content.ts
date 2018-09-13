@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Loader } from "../modules/Loader";
 import { AppResourcesModel } from "./models/app-resources.model";
-import { MessagesModel } from "./shared/models/messages.model";
+import { CoreMessages } from "./shared/models/core-messages";
 import { StartCoreDataModel } from "./shared/models/start-core-data.model";
 import { UserSettingsModel } from "./shared/models/user-settings/user-settings.model";
 import { userSettingsData } from "./shared/user-settings.data";
@@ -86,7 +86,7 @@ export class Content {
 
 	protected emitStartCoreEvent(startCoreData: StartCoreDataModel) {
 		const startCorePluginEvent: CustomEvent = new CustomEvent("Event");
-		startCorePluginEvent.initCustomEvent(MessagesModel.ON_START_CORE_EVENT, true, true, startCoreData);
+		startCorePluginEvent.initCustomEvent(CoreMessages.ON_START_CORE_EVENT, true, true, startCoreData);
 		dispatchEvent(startCorePluginEvent);
 	}
 }

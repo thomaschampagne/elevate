@@ -178,34 +178,26 @@ describe("ActivitiesSynchronizer", () => {
 		spyOn(activitiesSynchronizer, "saveSyncedActivitiesToLocal").and.callFake((syncedActivities: Array<SyncedActivityModel>) => {
 			const defer = Q.defer();
 			CHROME_STORAGE_STUB.syncedActivities = syncedActivities;
-			defer.resolve({
-				data: CHROME_STORAGE_STUB
-			});
+			defer.resolve();
 			return defer.promise;
 		});
 
 		spyOn(activitiesSynchronizer, "getSyncedActivitiesFromLocal").and.callFake(() => {
 			const defer = Q.defer();
-			defer.resolve({
-				data: CHROME_STORAGE_STUB.syncedActivities
-			});
+			defer.resolve(CHROME_STORAGE_STUB.syncedActivities);
 			return defer.promise;
 		});
 
 		spyOn(activitiesSynchronizer, "saveLastSyncDateToLocal").and.callFake((timestamp: number) => {
 			const defer = Q.defer();
 			CHROME_STORAGE_STUB.lastSyncDateTime = timestamp;
-			defer.resolve({
-				data: CHROME_STORAGE_STUB
-			});
+			defer.resolve();
 			return defer.promise;
 		});
 
 		spyOn(activitiesSynchronizer, "getLastSyncDateFromLocal").and.callFake(() => {
 			const defer = Q.defer();
-			defer.resolve({
-				data: (CHROME_STORAGE_STUB.lastSyncDateTime) ? CHROME_STORAGE_STUB.lastSyncDateTime : null
-			});
+			defer.resolve((CHROME_STORAGE_STUB.lastSyncDateTime) ? CHROME_STORAGE_STUB.lastSyncDateTime : null);
 			return defer.promise;
 		});
 
@@ -215,6 +207,13 @@ describe("ActivitiesSynchronizer", () => {
 			defer.resolve();
 			return defer.promise;
 		});
+
+		spyOn(activitiesSynchronizer, "getAllSavedLocal").and.callFake(() => {
+			const defer = Q.defer();
+			defer.resolve(CHROME_STORAGE_STUB);
+			return defer.promise;
+		});
+
 
 	});
 
@@ -405,11 +404,11 @@ describe("ActivitiesSynchronizer", () => {
 
 		activitiesSynchronizer.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
 			// Check no last sync date
-			expect(_.isNull(savedLastSyncDateTime.data) || _.isUndefined(savedLastSyncDateTime.data)).toBeTruthy();
+			expect(_.isNull(savedLastSyncDateTime) || _.isUndefined(savedLastSyncDateTime)).toBeTruthy();
 			return activitiesSynchronizer.getSyncedActivitiesFromLocal();
 		}).then((syncedActivitiesStored: any) => {
 			// Check no syncedActivitiesStored
-			expect(_.isNull(syncedActivitiesStored.data) || _.isUndefined(syncedActivitiesStored.data)).toBeTruthy();
+			expect(_.isNull(syncedActivitiesStored) || _.isUndefined(syncedActivitiesStored)).toBeTruthy();
 			return activitiesSynchronizer.sync(); // Start sync
 		}).then((syncResult: SyncResultModel) => {
 
@@ -438,12 +437,12 @@ describe("ActivitiesSynchronizer", () => {
 			// Check lastSyncDate & syncedAthleteProfile
 			return activitiesSynchronizer.getLastSyncDateFromLocal();
 
-		}).then((savedLastSyncDateTime: any) => {
+		}).then((savedLastSyncDateTime: number) => {
 
 			expect(CHROME_STORAGE_STUB.lastSyncDateTime).not.toBeNull();
 			expect(_.isNumber(CHROME_STORAGE_STUB.lastSyncDateTime)).toBeTruthy();
-			expect(savedLastSyncDateTime.data).not.toBeNull();
-			expect(_.isNumber(savedLastSyncDateTime.data)).toBeTruthy();
+			expect(savedLastSyncDateTime).not.toBeNull();
+			expect(_.isNumber(savedLastSyncDateTime)).toBeTruthy();
 
 			done();
 
