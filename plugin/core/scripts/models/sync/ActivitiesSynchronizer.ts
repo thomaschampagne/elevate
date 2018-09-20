@@ -156,7 +156,7 @@ export class ActivitiesSynchronizer { // TODO Rename
 			const promisesOfActivitiesStreamById: Array<Q.IPromise<StreamActivityModel>> = [];
 
 			this.getSyncedActivitiesFromLocal().then((syncedActivitiesStored: any) => {
-
+debugger;
 				// Should find added and edited activities
 				const activitiesChangesModel: ActivitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawActivities, (syncedActivitiesStored.data) ? syncedActivitiesStored.data : []);
 				this.appendGlobalActivitiesChanges(activitiesChangesModel); // Update global history
@@ -682,8 +682,7 @@ export class ActivitiesSynchronizer { // TODO Rename
 
 		// Check for lastSyncDateTime
 		this.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
-
-			const lastSyncDateTime: Date = (savedLastSyncDateTime.data && _.isNumber(savedLastSyncDateTime.data)) ? new Date(savedLastSyncDateTime.data) : null;
+			const lastSyncDateTime: Date = (savedLastSyncDateTime && (savedLastSyncDateTime.data && _.isNumber(savedLastSyncDateTime.data)) )? new Date(savedLastSyncDateTime.data) : null;
 
 			if (fastSync && fastSync === true) {
 

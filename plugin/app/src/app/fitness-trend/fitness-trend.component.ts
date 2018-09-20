@@ -223,13 +223,13 @@ export class FitnessTrendComponent implements OnInit {
 				this.lastFitnessActiveDate = (lastDayFitnessTrendModel && lastDayFitnessTrendModel.date) ? lastDayFitnessTrendModel.date : null;
 
 				// Listen for syncFinished update then reload graph if necessary.
-				this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
-					if (syncResult.activitiesChangesModel.added.length > 0
-						|| syncResult.activitiesChangesModel.edited.length > 0
-						|| syncResult.activitiesChangesModel.deleted.length > 0) {
-						this.reloadFitnessTrend();
-					}
-				});
+				//this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
+				//	if (syncResult.activitiesChangesModel.added.length > 0
+				//		|| syncResult.activitiesChangesModel.edited.length > 0
+				//		|| syncResult.activitiesChangesModel.deleted.length > 0) {
+				//		this.reloadFitnessTrend();
+				//	}
+				//});
 
 				this.showFitnessWelcomeDialog();
 			}

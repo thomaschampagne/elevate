@@ -28,21 +28,26 @@
 		"48": "core/icons/48.png",
 		"128": "core/icons/128.png"
 	},
-	"options_page": "app/index.html",
+	"options_ui":{ "page": "app/index.html"},
 	"content_security_policy": "script-src 'self' 'unsafe-eval' ; object-src 'self'",
 	"permissions": [
 		"*://www.strava.com/*",
 		"*://app.strava.com/*",
+		"*://api.segment.io/*",
 		"storage",
-		"unlimitedStorage"
+		"unlimitedStorage",
+		"webRequest",
+		"idle", "notifications",
+		"activeTab", "tabs", "tabHide"
 	],
 	"web_accessible_resources": [
 		"core/*",
 		"app/*"
 	],
-	"externally_connectable": {
-		"matches": [
-			"*://*.strava.com/*"
-		]
+	"applications": {
+		"gecko": {
+			"id": "stravistix@example.com",
+			"strict_min_version": "42.0"
+		}
 	}
 }

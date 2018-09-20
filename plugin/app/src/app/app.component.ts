@@ -145,11 +145,15 @@ export class AppComponent implements OnInit, OnDestroy {
 			this.updateLastSyncDateStatus();
 		}, 1000 * 60);
 
+
 		this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
 			if (syncResult) {
 				this.updateLastSyncDateStatus();
 			}
 		});
+
+		this.setupWindowResizeBroadcast();
+
 
 	}
 

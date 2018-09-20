@@ -101,25 +101,11 @@ export class Helper {
 	 * Sending message to store key:value into storageType via background page
 	 */
 	public static setToStorage(extensionId: string, storageType: string, key: string, value: any, callback?: Function): Q.Promise<any> {
-
-		const deferred: Q.Deferred<any> = Q.defer();
-
-		// Sending message to background page
-		chrome.runtime.sendMessage(extensionId, {
-			method: MessagesModel.ON_SET_FROM_STORAGE,
-			params: {
-				storage: storageType,
-				key,
-				value,
-			},
-		}, (response: any) => {
-			if (callback) {
-				callback(response);
-			}
-			deferred.resolve(response);
-		});
-
-		return deferred.promise;
+		return this.sendMessage(
+			extensionId,
+			{method:MessagesModel.ON_SET_FROM_STORAGE,params:{ storage: storageType, key, value }},
+			callback
+		);
 	}
 
 	/**
@@ -131,77 +117,34 @@ export class Helper {
 	 * @return {Q.Promise<any>}
 	 */
 	public static getFromStorage(extensionId: string, storageType: string, key: string, callback?: Function): Q.Promise<any> {
-
-		const deferred: Q.Deferred<any> = Q.defer();
-
-		// Sending message to background page
-		chrome.runtime.sendMessage(extensionId, {
-			method: MessagesModel.ON_GET_FROM_STORAGE,
-			params: {
-				storage: storageType,
-				key,
-			},
-		}, (response: any) => {
-			if (callback) {
-				callback(response);
-			}
-			deferred.resolve(response);
-		});
-
-		return deferred.promise;
+		return this.sendMessage(
+			extensionId,
+			{ method: MessagesModel.ON_GET_FROM_STORAGE, params: { storage: storageType,	key}},
+			callback
+		);
 	}
 
 	public static removeFromStorage(extensionId: string, storageType: string, key: string, callback?: Function): Q.Promise<any> {
-
-		const deferred: Q.Deferred<any> = Q.defer();
-
-		// Sending message to background page
-		chrome.runtime.sendMessage(extensionId, {
-			method: MessagesModel.ON_REMOVE_FROM_STORAGE,
-			params: {
-				storage: storageType,
-				key,
-			},
-		}, (response: any) => {
-			if (callback) {
-				callback(response);
-			}
-			deferred.resolve(response);
-		});
-
-		return deferred.promise;
+		return this.sendMessage(
+			extensionId,
+			{method: MessagesModel.ON_REMOVE_FROM_STORAGE, params: {storage: storageType,key}},
+			callback
+		);
 	}
 
 	public static reloadBrowserTab(extensionId: string, sourceTabId: number) {
-
-		chrome.runtime.sendMessage(extensionId, {
-			method: MessagesModel.ON_RELOAD_BROWSER_TAB,
-			params: {
-				sourceTabId,
-			},
-		}, (response: any) => {
-			console.log(response);
-		});
+		return this.sendMessage(
+			extensionId,
+			{method: MessagesModel.ON_RELOAD_BROWSER_TAB,params: {sourceTabId}}
+		);
 	}
 
 	public static getStorageUsage(extensionId: string, storageType: string, callback?: Function): Q.IPromise<IStorageUsage> {
-
-		const deferred: Q.Deferred<any> = Q.defer();
-
-		// Sending message to background page
-		chrome.runtime.sendMessage(extensionId, {
-			method: MessagesModel.ON_STORAGE_USAGE,
-			params: {
-				storage: storageType,
-			},
-		}, (response: any) => {
-			if (callback) {
-				callback(response.data);
-			}
-			deferred.resolve(response.data);
-		});
-
-		return deferred.promise;
+		return this.sendMessage(
+			extensionId,
+			{method: MessagesModel.ON_STORAGE_USAGE, params: { storage: storageType}},
+			callback
+		);
 	}
 
 	public static formatNumber(n: any, c?: any, d?: any, t?: any): string {
@@ -271,4 +214,50 @@ export class Helper {
 		return meterPerSeconds * 3.6;
 	}
 
+	public static sendMessage(extensionId: string, data: any, callback?: Function): Q.Promise<any>{
+		const deferred: Q.Deferred<any> = Q.defer();
+		// Sending message to background page
+		if(window['chrome'])
+			chrome.runtime.sendMessage(data.message,
+				(response: any) => {
+				debugger;
+				if (callback) {
+					callback(response.data);
+				}
+				deferred.resolve(response.data);
+			});
+		else {
+			//sending message to content script
+			this.sendToContentScript(
+				 data,
+				(d)=>{
+					callback&&callback(d);
+					deferred.resolve(d);
+				}
+			);
+		}
+
+		return deferred.promise;
+	}
+
+
+	public static sendToContentScript(data:any,callback?:Function){
+		function processResult(event:any){
+			if(event.data && event.data.direction === "from-content-script" &&
+				event.data.message && event.data.method === (data.method + "_RESPONSE")){
+				console.log("helper Rx",{method :event.data.method ,params:event.data.message.value});
+				window.removeEventListener(event.type, processResult);
+				callback && callback(event.data.message.value);
+			}
+			return true;
+		}
+		window.addEventListener("message", processResult );
+		console.log("helper tx",data);
+		window.postMessage(
+			{direction: "from-page-script",message: data},
+			"*"
+		);
+
+
+	}
 }

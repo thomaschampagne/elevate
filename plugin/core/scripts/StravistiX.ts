@@ -71,7 +71,6 @@ export class StravistiX {
 	public activitiesSynchronizer: ActivitiesSynchronizer;
 
 	constructor(userSettings: UserSettingsModel, appResources: AppResourcesModel) {
-
 		this.userSettings = userSettings;
 		this.appResources = appResources;
 

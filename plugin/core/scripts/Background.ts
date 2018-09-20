@@ -5,93 +5,47 @@ import { MessagesModel } from "./shared/models/messages.model";
 
 export class Background {
 
-	private storageManager: StorageManager = new StorageManager();
+	public storageManager: StorageManager = new StorageManager();
 
 	public init(): void {
 		this.listenForExternalMessages();
 	}
 
-	private reloadBrowserTab(tabId: number): void {
-		console.log("Now reloading tab id " + tabId);
-		chrome.tabs.reload(tabId);
-	}
-
-	/**
-	 * Forward syncResult to * non url tabs
-	 * @param {SyncResult} syncResult
-	 */
-	private forwardOnExternalSyncFinished(syncResult: SyncResultModel): void {
-
-		if (syncResult) {
-			chrome.tabs.query({}, (tabs: chrome.tabs.Tab[]) => {
-				_.forEach(tabs, (tab: chrome.tabs.Tab) => {
-					if (!tab.url) {
-						const message = {
-							message: MessagesModel.ON_EXTERNAL_SYNC_DONE,
-							results: syncResult
-						};
-						chrome.tabs.sendMessage(tab.id, message);
-					}
-				});
-			});
-		}
-	}
-
-	private listenForExternalMessages(): void {
-
-		chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
-
-			switch (request.method) {
-
+	public listenForExternalMessages(): void {
+		chrome.runtime.onMessage.addListener((request, sender, callback) => {
+			switch (request.message.method) {
 				case MessagesModel.ON_EXTERNAL_SYNC_DONE:
-					this.forwardOnExternalSyncFinished(request.params.syncResult);
+					//refresh graphs on data change
+					chrome.tabs.reload(request.message.params.sourceTabId);
 					break;
 
 				case MessagesModel.ON_RELOAD_BROWSER_TAB:
-					this.reloadBrowserTab(request.params.sourceTabId);
+					console.log("Now reloading tab id " + request.message.params.sourceTabId);
+					chrome.tabs.reload(request.message.params.sourceTabId);
 					break;
 
 				case MessagesModel.ON_GET_FROM_STORAGE:
-					this.storageManager.getFromStorage(request.params.storage, request.params.key, function (returnedValue: any) {
-						sendResponse({
-							data: returnedValue,
-						});
-					});
+					this.storageManager.getFromStorage(request.message.params.storage, request.message.params.key, callback);
 					break;
 
 				case MessagesModel.ON_SET_FROM_STORAGE:
-					this.storageManager.setToStorage(request.params.storage, request.params.key, request.params.value, function (returnAllData: any) {
-						sendResponse({
-							data: returnAllData,
-						});
-					});
+					this.storageManager.setToStorage(request.message.params.storage, request.message.params.key, request.message.params.value, callback);
 					break;
 
 				case MessagesModel.ON_REMOVE_FROM_STORAGE:
-					this.storageManager.removeFromStorage(request.params.storage, request.params.key, function (returnAllData: any) {
-						sendResponse({
-							data: returnAllData,
-						});
-					});
+					this.storageManager.removeFromStorage(request.message.params.storage, request.message.params.key, callback);
 					break;
 
 				case MessagesModel.ON_STORAGE_USAGE:
-					this.storageManager.getStorageUsage(request.params.storage, function (response: IStorageUsage) {
-						sendResponse({
-							data: response,
-						});
-					});
+					this.storageManager.getStorageUsage(request.message.params.storage, callback);
 					break;
 
 				default:
-					throw new Error("Not existing method");
-
+					throw new Error("Not existing method:" + JSON.stringify(request));
 			}
 			return true;
 		});
 	}
-
 }
-
 const background = new Background();
 background.init();

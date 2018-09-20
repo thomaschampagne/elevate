@@ -81,13 +81,34 @@ export class Content {
 				this.emitStartCoreEvent(startCoreData);
 			});
 		});
-
 	}
 
 	protected emitStartCoreEvent(startCoreData: StartCoreDataModel) {
 		const startCorePluginEvent: CustomEvent = new CustomEvent("Event");
-		startCorePluginEvent.initCustomEvent(MessagesModel.ON_START_CORE_EVENT, true, true, startCoreData);
+		startCorePluginEvent.initCustomEvent(MessagesModel.ON_START_CORE_EVENT, true, true, JSON.stringify(startCoreData));
 		dispatchEvent(startCorePluginEvent);
+	}
+
+	public mapEvents(){
+		let postambel = "_RESPONSE"
+			window.addEventListener("message", function(event) {
+				if(event.data && event.data.direction ===  "from-page-script" && event.data.message && !event.data.message.method.includes(postambel)){
+					console.log("content Rx",event.data);
+					chrome.runtime.sendMessage( {message:event.data.message}, function(response:any ) {
+						console.log("content Tx",event.data.message.method ,response);
+						if(chrome.runtime.lastError)
+							console.log(chrome.runtime.lastError);
+						else
+						window.postMessage({
+							direction: "from-content-script",
+							method: event.data.message.method + postambel,
+								message: {
+									value: {data:response}}
+							},
+							"*");
+					});
+				}
+			});
 	}
 }
 
@@ -146,4 +167,5 @@ export let appResources: AppResourcesModel = {
 };
 
 const content: Content = new Content(userSettingsData, appResources);
+content.mapEvents();
 content.start();
