@@ -39,14 +39,14 @@ export class MenuModifier extends AbstractModifier {
 		html += "<li style='border-top: 1px solid #DDD;'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#/donate' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.donateIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Donate</span></a></li>";
 		html += "<li style='border-top: 1px solid #DDD;'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#/releasesNotes' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.systemUpdatesIcon + "'/>&nbsp;&nbsp;&nbsp;<span><strong>" + this.appResources.extVersionName + "</strong> release notes</span></a></li>";
 
-		html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='https://chrome.google.com/webstore/detail/elevate/dhiaggccakkgdfcadnklkbljcgicpckn/reviews' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.rateIcon + "'/> <span>Rate</span></a></li>";
+		html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='https://chrome.google.com/webstore/detail/elevate-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.rateIcon + "'/> <span>Rate</span></a></li>";
 		html += "<li style='" + styleSideLeft + "' ><a  style='font-style: italic;' href='https://twitter.com/champagnethomas' style='font-style: italic;' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.twitterIcon + "'/>&nbsp;&nbsp;&nbsp;<span>What's next?</span></a></li>";
 
-		html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='https://www.strava.com/clubs/elevate' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.peopleIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Join Club</span></a></li>";
+		html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='https://www.strava.com/clubs/elevatestrava' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.peopleIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Join Club</span></a></li>";
 		html += "<li style='" + styleSideLeft + "'><a style='font-style: italic;' href='https://github.com/thomaschampagne/elevate/wiki/Frequently-Asked-Questions' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.helpIcon + "'/>&nbsp;&nbsp;&nbsp;<span> FAQ</span></a></li>";
 
 		html += "<li style='" + styleSideRight + "'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#/report' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.bugIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Report bug</span></a></li>";
-		html += "<li style='border-top: 1px solid #DDD;" + styleSideLeft + "'><a target='_blank' href='" + this.appResources.settingsLink + "#/?showSharing=true'><img style='vertical-align:middle' src='" + this.appResources.shareIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Share</span></a></li>";
+		html += "<li style='border-top: 1px solid #DDD;" + styleSideLeft + "'><a target='_blank' href='" + this.appResources.settingsLink + "#/share'><img style='vertical-align:middle' src='" + this.appResources.shareIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Share</span></a></li>";
 		html += "</ul>";
 		html += "</li>";
 

@@ -10,10 +10,10 @@ import { DomSanitizer } from "@angular/platform-browser";
 export class ShareComponent implements OnInit {
 
 	public static readonly TWEET: string = "https://twitter.com/intent/tweet?text=As%20%23strava%20user,%20you" +
-		"%20should%20try%20%23elevate%20web%20extension%20by%20%40champagnethomas." +
+		"%20should%20try%20%23elevatestrava%20web%20extension%20by%20%40champagnethomas." +
 		"%20Get%20it%20here%20%20http://thomaschampagne.github.io/elevate/.%20%23cycling%20%23running%20%23geek";
 
-	public static readonly FACEBOOK_POST: string = "https://www.facebook.com/sharer/sharer.php?u=https%3A//www.facebook.com/elevateforstrava";
+	public static readonly FACEBOOK_POST: string = "https://www.facebook.com/sharer/sharer.php?u=https%3A//www.facebook.com/elevatestrava";
 	public static readonly LANDING_PAGE_URL: string = "http://thomaschampagne.github.io/elevate/";
 
 	constructor(public iconRegistry: MatIconRegistry,
