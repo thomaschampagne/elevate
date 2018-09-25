@@ -6,10 +6,10 @@ module.exports = (env, argv) => {
 	return {
 		mode: "development",
 		entry: {
-			content: path.join(__dirname, "./scripts/Content.ts"),
-			boot: path.join(__dirname, "./scripts/Boot.ts"),
-			background: path.join(__dirname, "./scripts/Background.ts"),
-			installer: path.join(__dirname, "./scripts/Installer.ts")
+			content: path.join(__dirname, "./scripts/content.ts"),
+			boot: path.join(__dirname, "./scripts/boot.ts"),
+			background: path.join(__dirname, "./scripts/background.ts"),
+			installer: path.join(__dirname, "./scripts/installer.ts")
 		},
 		output: {
 			path: path.join(rootPath, "dist", "core"),

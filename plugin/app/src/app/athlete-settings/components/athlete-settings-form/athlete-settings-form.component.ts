@@ -3,7 +3,7 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 import { MatSnackBar } from "@angular/material";
 import { FitnessService } from "../../../fitness-trend/shared/services/fitness.service";
 import { Constant } from "../../../../../../core/scripts/shared/constant";
-import { Helper } from "../../../../../../core/scripts/Helper";
+import { Helper } from "../../../../../../core/scripts/helper";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
 import { UserSettingsModel } from "../../../../../../core/scripts/shared/models/user-settings/user-settings.model";
 import { AthleteSettingsModel } from "../../../shared/models/athlete/athlete-settings/athlete-settings.model";
