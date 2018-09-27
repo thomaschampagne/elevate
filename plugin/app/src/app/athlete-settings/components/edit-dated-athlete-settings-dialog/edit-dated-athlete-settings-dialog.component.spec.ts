@@ -10,6 +10,7 @@ import * as _ from "lodash";
 import { userSettingsData } from "../../../../../../core/scripts/shared/user-settings.data";
 import { DatedAthleteSettingsDialogData } from "./dated-athlete-settings-dialog-data.model";
 import { DatedAthleteSettingsAction } from "./dated-athlete-settings-action.enum";
+import { DatedAthleteSettingsModel } from "../../../shared/models/athlete/athlete-settings/dated-athlete-settings.model";
 
 describe("EditDatedAthleteSettingsDialogComponent", () => {
 
@@ -20,7 +21,8 @@ describe("EditDatedAthleteSettingsDialogComponent", () => {
 	beforeEach((done: Function) => {
 
 		const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
-			action: DatedAthleteSettingsAction.ACTION_ADD
+			action: DatedAthleteSettingsAction.ACTION_ADD,
+			datedAthleteSettingsModel: DatedAthleteSettingsModel.DEFAULT_MODEL
 		};
 
 		TestBed.configureTestingModule({
