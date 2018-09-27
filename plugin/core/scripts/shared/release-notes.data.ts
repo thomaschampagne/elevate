@@ -2,6 +2,20 @@ import { ReleaseNoteModel } from "./models/release-note.model";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.6.0",
+		date: "2018-09-29",
+		message: "\"Stravistix\" is now named \"Elevate\". This update brings this name change and some improvements.",
+		hotFixes: [],
+		features: [
+			"Renaming \"Stravistix\" to the new name: \"Elevate\"",
+			"Dated Athlete Settings: values from latest athletes settings are used to fill a new athlete settings form.",
+			"[Technical] Optimizing the storage allocation of user zones.",
+			"[Technical] Complete refactoring of the storage management: now a way more simple and easy to maintain."
+		],
+		isPatch: false,
+		fixes: []
+	},
+	{
 		version: "6.5.2",
 		date: "2018-09-10",
 		message: "Hotfixed the new v6.5 which introduces \"Dated Athlete Settings\". Since your physiological attributes evolve over time, this feature will provide matching athlete's attributes for a given activity date to calculate stats with actual day's attributes. Go to athlete settings to enable it.",
