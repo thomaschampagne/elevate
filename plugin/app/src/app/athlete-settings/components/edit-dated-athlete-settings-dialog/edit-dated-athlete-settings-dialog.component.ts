@@ -24,13 +24,7 @@ export class EditDatedAthleteSettingsDialogComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
-
-		if (this.data.action === DatedAthleteSettingsAction.ACTION_ADD) {
-			this.datedAthleteSettingsModel = DatedAthleteSettingsModel.asInstance(_.cloneDeep(DatedAthleteSettingsModel.DEFAULT_MODEL)); // Use default model on update
-		} else if (this.data.action === DatedAthleteSettingsAction.ACTION_EDIT) {
-			this.datedAthleteSettingsModel = DatedAthleteSettingsModel.asInstance(_.cloneDeep(this.data.datedAthleteSettingsModel));
-		}
-
+		this.datedAthleteSettingsModel = DatedAthleteSettingsModel.asInstance(_.cloneDeep(this.data.datedAthleteSettingsModel));
 	}
 
 	public onAthleteSettingsModelChanged(datedAthleteSettingsModel: DatedAthleteSettingsModel): void {
