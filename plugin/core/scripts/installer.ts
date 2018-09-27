@@ -9,6 +9,7 @@ import * as _ from "lodash";
 import { AppStorage } from "./app-storage";
 import { SyncedActivityModel } from "./shared/models/sync/synced-activity.model";
 import { AppStorageType } from "./models/storage-type.enum";
+import { UserZonesModel } from "./shared/models/user-settings/user-zones.model";
 
 class Installer {
 
@@ -252,8 +253,52 @@ class Installer {
 		}
 
 		return promise;
-
 	};
+
+	protected migrate_to_6_6_0(): Promise<void> {
+
+		let promise = Promise.resolve();
+
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.6.0")) {
+
+			console.log("Migrate to 6.6.0");
+
+			// Migrate storage of zones from ZoneModel[] to number[] => less space on storage
+			promise = AppStorage.getInstance().get(AppStorageType.SYNC).then((userSettingsModel: any) => {
+
+				const userZonesModel = userSettingsModel.zones;
+
+				let promiseMigrate;
+
+				try {
+					userZonesModel.speed = UserZonesModel.serialize(userZonesModel.speed);
+					userZonesModel.pace = UserZonesModel.serialize(userZonesModel.pace);
+					userZonesModel.gradeAdjustedPace = UserZonesModel.serialize(userZonesModel.gradeAdjustedPace);
+					userZonesModel.heartRate = UserZonesModel.serialize(userZonesModel.heartRate);
+					userZonesModel.power = UserZonesModel.serialize(userZonesModel.power);
+					userZonesModel.runningPower = UserZonesModel.serialize(userZonesModel.runningPower);
+					userZonesModel.cyclingCadence = UserZonesModel.serialize(userZonesModel.cyclingCadence);
+					userZonesModel.runningCadence = UserZonesModel.serialize(userZonesModel.runningCadence);
+					userZonesModel.grade = UserZonesModel.serialize(userZonesModel.grade);
+					userZonesModel.elevation = UserZonesModel.serialize(userZonesModel.elevation);
+					userZonesModel.ascent = UserZonesModel.serialize(userZonesModel.ascent);
+
+					promiseMigrate = AppStorage.getInstance().set(AppStorageType.SYNC, "zones", userZonesModel);
+
+				} catch (err) {
+					console.warn(err);
+					promiseMigrate = AppStorage.getInstance().set(AppStorageType.SYNC, "zones", userSettingsData.zones); // Reset to default
+				}
+
+				return promiseMigrate;
+			});
+
+		} else {
+			console.log("Skip migrate to 6.6.0");
+		}
+
+		return promise;
+	}
 
 	protected handleUpdate(): Promise<void> {
 
@@ -268,6 +313,8 @@ class Installer {
 			return this.migrate_to_6_4_0();
 		}).then(() => {
 			return this.migrate_to_6_5_0();
+		}).then(() => {
+			return this.migrate_to_6_6_0();
 		}).catch(error => console.error(error));
 
 	}

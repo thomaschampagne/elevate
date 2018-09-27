@@ -7,6 +7,7 @@ import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";
 import { ZoneChangeOrderModel } from "./zone-change-order.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 import { ZoneModel } from "../../../../../core/scripts/shared/models/zone.model";
+import { UserZonesModel } from "../../../../../core/scripts/shared/models/user-settings/user-zones.model";
 
 @Injectable()
 export class ZonesService {
@@ -17,7 +18,7 @@ export class ZonesService {
 	public currentZones: ZoneModel[];
 
 	/**
-	 * Subscription mechanism for a <ZonesComponent>.  When a whisper zone change occurs, then all zones receive
+	 * Subscription mechanism for a {ZoneComponent}.  When a whisper zone change occurs, then all zones receive
 	 * the same instruction. Instruction is targeted toward 1 zone using <IZoneChangeOrder.destinationId>.
 	 * That <ZonesComponent> has to follow change instruction
 	 * @returns {Subject<ZoneChangeWhisperModel>}
@@ -283,7 +284,7 @@ export class ZonesService {
 		return new Promise((resolve: () => void,
 							reject: (error: string) => void) => {
 
-			this.currentZones = _.clone(_.propertyOf(userSettingsData.zones)(this.zoneDefinition.value));
+			this.currentZones = UserZonesModel.deserialize(_.clone(_.propertyOf(userSettingsData.zones)(this.zoneDefinition.value)));
 
 			this.saveZones().then(() => {
 
