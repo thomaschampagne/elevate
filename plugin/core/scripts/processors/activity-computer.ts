@@ -23,6 +23,7 @@ import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete
 import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
 import { Gender } from "../../../app/src/app/shared/models/athlete/gender.enum";
 import { AthleteSettingsModel } from "../../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
+import { UserZonesModel } from "../shared/models/user-settings/user-zones.model";
 
 export class ActivityComputer {
 
@@ -65,6 +66,7 @@ export class ActivityComputer {
 		this.activityType = activityType;
 		this.isTrainer = isTrainer;
 		this.userSettings = userSettings;
+		this.userSettings.zones = UserZonesModel.asInstance(this.userSettings.zones);
 		this.athleteModel = athleteModel;
 		this.isActivityAuthor = isActivityAuthor;
 		this.hasPowerMeter = hasPowerMeter;
@@ -462,9 +464,9 @@ export class ActivityComputer {
 		let speedVarianceSum = 0;
 		let currentSpeed: number;
 
-		let speedZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.speed);
-		let paceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.pace);
-		let gradeAdjustedPaceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.gradeAdjustedPace);
+		let speedZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.get(UserZonesModel.TYPE_SPEED));
+		let paceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.get(UserZonesModel.TYPE_PACE));
+		let gradeAdjustedPaceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.get(UserZonesModel.TYPE_GRADEADJUSTEDPACE));
 
 		let movingSeconds = 0;
 		let elapsedSeconds = 0;
@@ -498,7 +500,7 @@ export class ActivityComputer {
 					genuineAvgSpeedSecondsSum += movingSeconds;
 
 					// Find speed zone id
-					const speedZoneId: number = this.getZoneId(this.userSettings.zones.speed, currentSpeed);
+					const speedZoneId: number = this.getZoneId(this.userSettings.zones.get(UserZonesModel.TYPE_SPEED), currentSpeed);
 					if (!_.isUndefined(speedZoneId) && !_.isUndefined(speedZones[speedZoneId])) {
 						speedZones[speedZoneId].s += movingSeconds;
 					}
@@ -506,7 +508,7 @@ export class ActivityComputer {
 					// Find pace zone
 					const pace: number = this.convertSpeedToPace(currentSpeed);
 
-					const paceZoneId: number = this.getZoneId(this.userSettings.zones.pace, (pace === -1) ? 0 : pace);
+					const paceZoneId: number = this.getZoneId(this.userSettings.zones.get(UserZonesModel.TYPE_PACE), (pace === -1) ? 0 : pace);
 					if (!_.isUndefined(paceZoneId) && !_.isUndefined(paceZones[paceZoneId])) {
 						paceZones[paceZoneId].s += movingSeconds;
 					}
@@ -617,9 +619,9 @@ export class ActivityComputer {
 
 		let powerZonesAlongActivityType: ZoneModel[];
 		if (this.activityType === "Ride") {
-			powerZonesAlongActivityType = this.userSettings.zones.power;
+			powerZonesAlongActivityType = this.userSettings.zones.get(UserZonesModel.TYPE_POWER);
 		} else if (this.activityType === "Run") {
-			powerZonesAlongActivityType = this.userSettings.zones.runningPower;
+			powerZonesAlongActivityType = this.userSettings.zones.get(UserZonesModel.TYPE_RUNNINGPOWER);
 		} else {
 			powerZonesAlongActivityType = null;
 		}
@@ -761,7 +763,7 @@ export class ActivityComputer {
 			return null;
 		}
 
-		this.userSettings.zones.heartRate = this.prepareZonesForDistributionComputation(this.userSettings.zones.heartRate);
+		let heartRateZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.get(UserZonesModel.TYPE_HEARTRATE));
 
 		let trainingImpulse = 0;
 		const TRIMPGenderFactor: number = (athleteModel.gender === Gender.MEN) ? 1.92 : 1.67;
@@ -797,16 +799,16 @@ export class ActivityComputer {
 				trainingImpulse += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
 
 				// Count Heart Rate Reserve distribution
-				zoneId = this.getZoneId(this.userSettings.zones.heartRate, heartRateArray[i]);
+				zoneId = this.getZoneId(heartRateZones, heartRateArray[i]);
 
 				if (!_.isUndefined(zoneId)) {
-					this.userSettings.zones.heartRate[zoneId].s += durationInSeconds;
+					heartRateZones[zoneId].s += durationInSeconds;
 				}
 			}
 		}
 
 		// Update zone distribution percentage
-		this.userSettings.zones.heartRate = this.finalizeDistributionComputationZones(this.userSettings.zones.heartRate);
+		heartRateZones = this.finalizeDistributionComputationZones(heartRateZones);
 
 		const TRIMPPerHour: number = trainingImpulse / hrrSecondsCount * 60 * 60;
 		const percentiles: number[] = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
@@ -834,7 +836,7 @@ export class ActivityComputer {
 			TRIMP: trainingImpulse,
 			TRIMPPerHour: TRIMPPerHour,
 			best20min: best20minHr,
-			heartRateZones: (this.returnZones) ? this.userSettings.zones.heartRate : null,
+			heartRateZones: (this.returnZones) ? heartRateZones : null,
 			lowerQuartileHeartRate: percentiles[0],
 			medianHeartRate: percentiles[1],
 			upperQuartileHeartRate: percentiles[2],
@@ -866,9 +868,9 @@ export class ActivityComputer {
 
 		let cadenceZoneTyped: ZoneModel[];
 		if (this.activityType === "Ride") {
-			cadenceZoneTyped = this.userSettings.zones.cyclingCadence;
+			cadenceZoneTyped = this.userSettings.zones.get(UserZonesModel.TYPE_CYCLINGCADENCE);
 		} else if (this.activityType === "Run") {
-			cadenceZoneTyped = this.userSettings.zones.runningCadence;
+			cadenceZoneTyped = this.userSettings.zones.get(UserZonesModel.TYPE_RUNNINGCADENCE);
 		} else {
 			return null;
 		}
@@ -988,7 +990,7 @@ export class ActivityComputer {
 		let gradeSum = 0,
 			gradeCount = 0;
 
-		let gradeZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.grade);
+		let gradeZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.get(UserZonesModel.TYPE_GRADE));
 		const upFlatDownInSeconds: UpFlatDownSumTotalModel = {
 			up: 0,
 			flat: 0,
@@ -1047,7 +1049,7 @@ export class ActivityComputer {
 					gradeArrayMoving.push(gradeArray[i]);
 					gradeArrayDistance.push(distance);
 
-					const gradeZoneId: number = this.getZoneId(this.userSettings.zones.grade, gradeArray[i]);
+					const gradeZoneId: number = this.getZoneId(this.userSettings.zones.get(UserZonesModel.TYPE_GRADE), gradeArray[i]);
 
 					if (!_.isUndefined(gradeZoneId) && !_.isUndefined(gradeZones[gradeZoneId])) {
 						gradeZones[gradeZoneId].s += durationInSeconds;
@@ -1184,8 +1186,8 @@ export class ActivityComputer {
 		let elevationSampleCount = 0;
 		const elevationSamples: number[] = [];
 		const elevationSamplesDistance: number[] = [];
-		let elevationZones: any = this.prepareZonesForDistributionComputation(this.userSettings.zones.elevation);
-		let ascentSpeedZones: any = this.prepareZonesForDistributionComputation(this.userSettings.zones.ascent);
+		let elevationZones: any = this.prepareZonesForDistributionComputation(this.userSettings.zones.get(UserZonesModel.TYPE_ELEVATION));
+		let ascentSpeedZones: any = this.prepareZonesForDistributionComputation(this.userSettings.zones.get(UserZonesModel.TYPE_ASCENT));
 		let durationInSeconds = 0;
 		let distance = 0;
 		let ascentDurationInSeconds = 0;
@@ -1206,7 +1208,7 @@ export class ActivityComputer {
 				elevationSamples.push(altitudeArray[i]);
 				elevationSamplesDistance.push(distance);
 
-				const elevationZoneId: number = this.getZoneId(this.userSettings.zones.elevation, altitudeArray[i]);
+				const elevationZoneId: number = this.getZoneId(this.userSettings.zones.get(UserZonesModel.TYPE_ELEVATION), altitudeArray[i]);
 
 				if (!_.isUndefined(elevationZoneId) && !_.isUndefined(elevationZones[elevationZoneId])) {
 					elevationZones[elevationZoneId].s += durationInSeconds;
@@ -1230,7 +1232,7 @@ export class ActivityComputer {
 						ascentSpeedMeterPerHourDistance.push(accumulatedDistance);
 						ascentSpeedMeterPerHourSum += ascentSpeedMeterPerHour;
 
-						const ascentSpeedZoneId: number = this.getZoneId(this.userSettings.zones.ascent, ascentSpeedMeterPerHour);
+						const ascentSpeedZoneId: number = this.getZoneId(this.userSettings.zones.get(UserZonesModel.TYPE_ASCENT), ascentSpeedMeterPerHour);
 						if (!_.isUndefined(ascentSpeedZoneId) && !_.isUndefined(ascentSpeedZones[ascentSpeedZoneId])) {
 							ascentSpeedZones[ascentSpeedZoneId].s += ascentDurationInSeconds;
 						}

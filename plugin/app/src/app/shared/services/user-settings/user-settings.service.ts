@@ -3,6 +3,7 @@ import { UserSettingsModel } from "../../../../../../core/scripts/shared/models/
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
 import { ZoneModel } from "../../../../../../core/scripts/shared/models/zone.model";
+import { UserZonesModel } from "../../../../../../core/scripts/shared/models/user-settings/user-zones.model";
 
 @Injectable()
 export class UserSettingsService {
@@ -72,9 +73,9 @@ export class UserSettingsService {
 
 			const path = "zones." + zoneDefinition.value;
 
-			this.userSettingsDao.updateNested(path, zones).then((userSettings: UserSettingsModel) => {
+			this.userSettingsDao.updateNested(path, UserZonesModel.serialize(zones)).then((userSettings: UserSettingsModel) => {
 
-				resolve(userSettings.zones[zoneDefinition.value]);
+				resolve(UserZonesModel.deserialize(userSettings.zones[zoneDefinition.value]));
 
 			}, error => {
 
