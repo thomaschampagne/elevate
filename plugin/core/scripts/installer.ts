@@ -10,6 +10,7 @@ import { AppStorage } from "./app-storage";
 import { SyncedActivityModel } from "./shared/models/sync/synced-activity.model";
 import { AppStorageType } from "./models/storage-type.enum";
 import { UserZonesModel } from "./shared/models/user-settings/user-zones.model";
+import { Constant } from "./shared/constant";
 
 class Installer {
 
@@ -54,11 +55,11 @@ class Installer {
 	protected handleInstall() {
 
 		chrome.tabs.create({
-			url: "http://thomaschampagne.github.io/elevate/", // TODO Get from config/constants
+			url: Constant.LANDING_PAGE_URL,
 		}, (tab: chrome.tabs.Tab) => {
 			console.log("First install. Display website new tab:", tab);
 			chrome.tabs.create({
-				url: chrome.extension.getURL("/app/index.html"), // TODO Get from config/constants
+				url: chrome.extension.getURL(Constant.APP_ROOT_URL),
 			}, (tab: chrome.tabs.Tab) => {
 				console.log("First install. Display settings:", tab);
 			});
