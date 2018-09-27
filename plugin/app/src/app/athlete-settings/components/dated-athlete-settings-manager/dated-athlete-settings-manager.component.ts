@@ -99,8 +99,13 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
 	public onAdd(): void {
 
+		const datedAthleteSettingsModelBase = _.first(this.datedAthleteSettingsModels);
+
+		datedAthleteSettingsModelBase.since = DatedAthleteSettingsModel.DEFAULT_SINCE;
+
 		const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
-			action: DatedAthleteSettingsAction.ACTION_ADD
+			action: DatedAthleteSettingsAction.ACTION_ADD,
+			datedAthleteSettingsModel: datedAthleteSettingsModelBase
 		};
 
 		const dialogRef = this.dialog.open(EditDatedAthleteSettingsDialogComponent, {
