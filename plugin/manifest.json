@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "Elevate for Strava",
 	"short_name": "Elevate",
-	"description": "Elevate your strava experience and goals! Elevate is a web extension which tracks your fitness and progressions over time. Analyse deeper your activities. And more...",
+	"description": "Elevate your strava experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...",
 	"version": "6.6.0",
 	"version_name": "6.6.0 Stable",
 	"background": {
