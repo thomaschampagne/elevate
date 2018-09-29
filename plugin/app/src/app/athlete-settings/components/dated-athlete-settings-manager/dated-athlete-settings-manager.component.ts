@@ -99,7 +99,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
 	public onAdd(): void {
 
-		const datedAthleteSettingsModelBase = _.first(this.datedAthleteSettingsModels);
+		const datedAthleteSettingsModelBase = _.cloneDeep(_.first(this.datedAthleteSettingsModels));
 
 		datedAthleteSettingsModelBase.since = DatedAthleteSettingsModel.DEFAULT_SINCE;
 
@@ -117,35 +117,6 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
 			if (datedAthleteSettingsModel) {
 				this.datedAthleteSettingsService.add(datedAthleteSettingsModel).then(() => {
-					this.datedAthleteSettingsModelsChange.emit();
-					this.loadData();
-				}, error => {
-					this.handleErrors(error);
-				});
-			}
-
-			afterClosedSubscription.unsubscribe();
-		});
-	}
-
-	public onReset(): void {
-
-		const data: ConfirmDialogDataModel = {
-			title: "Reset your dated athlete settings",
-			content: "Are you sure to perform this action? Current settings will be lost."
-		};
-
-		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-			minWidth: ConfirmDialogComponent.MIN_WIDTH,
-			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-			data: data
-		});
-
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
-
-			if (confirm) {
-
-				this.datedAthleteSettingsService.reset().then(() => {
 					this.datedAthleteSettingsModelsChange.emit();
 					this.loadData();
 				}, error => {
@@ -205,6 +176,35 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 				});
 
 			}
+			afterClosedSubscription.unsubscribe();
+		});
+	}
+
+	public onReset(): void {
+
+		const data: ConfirmDialogDataModel = {
+			title: "Reset your dated athlete settings",
+			content: "Are you sure to perform this action? Current settings will be lost."
+		};
+
+		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+			minWidth: ConfirmDialogComponent.MIN_WIDTH,
+			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+			data: data
+		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+
+			if (confirm) {
+
+				this.datedAthleteSettingsService.reset().then(() => {
+					this.datedAthleteSettingsModelsChange.emit();
+					this.loadData();
+				}, error => {
+					this.handleErrors(error);
+				});
+			}
+
 			afterClosedSubscription.unsubscribe();
 		});
 	}
