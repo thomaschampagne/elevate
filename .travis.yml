@@ -10,7 +10,7 @@ after_success:
   - SHA01=$(echo $TRAVIS_COMMIT | cut -c1-8)
   - for f in package/*.zip; do mv "$f" "`echo $f | sed s/.zip/.$TRAVIS_BRANCH.$SHA01.zip/`"; done
   - ARTIFACT_FILENAME=package/$(ls package | grep .zip)
-  - curl -u "$BITBUCKET_USERNAME:$BITBUCKET_PASSWORD" -X POST https://api.bitbucket.org/2.0/repositories/thomaschampagne/stravistix-ci-builds/downloads --form "files=@$ARTIFACT_FILENAME"
+  - curl -u "$BITBUCKET_USERNAME:$BITBUCKET_PASSWORD" -X POST https://api.bitbucket.org/2.0/repositories/thomaschampagne/elevate-ci-builds/downloads --form "files=@$ARTIFACT_FILENAME"
 branches:
   only:
   - master

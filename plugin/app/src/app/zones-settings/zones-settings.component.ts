@@ -23,7 +23,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 
 	public zoneDefinitions: ZoneDefinitionModel[] = ZONE_DEFINITIONS;
 	public zoneDefinitionSelected: ZoneDefinitionModel;
-	public userZones: UserZonesModel;
+	public userZonesModel: UserZonesModel;
 	public currentZones: ZoneModel[];
 	public routeParamsSubscription: Subscription;
 	public zonesUpdatesSubscription: Subscription;
@@ -42,7 +42,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 		this.userSettingsService.fetch().then((userSettingsSynced: UserSettingsModel) => {
 
 			// Load user zones data
-			this.userZones = userSettingsSynced.zones;
+			this.userZonesModel = UserZonesModel.asInstance(userSettingsSynced.zones);
 
 			// Check zoneValue provided in URL
 			this.routeParamsSubscription = this.route.params.subscribe(routeParams => {
@@ -90,7 +90,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 	private loadZonesFromDefinition(zoneDefinition: ZoneDefinitionModel) {
 
 		// Load current zone from zone definition provided
-		this.currentZones = _.propertyOf(this.userZones)(zoneDefinition.value);
+		this.currentZones = this.userZonesModel.get(zoneDefinition.value);
 
 		// Update current zones & zone definition managed by the zones service
 		this.zonesService.currentZones = this.currentZones;

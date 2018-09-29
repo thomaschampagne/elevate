@@ -7,6 +7,7 @@ import * as _ from "lodash";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
 import { ZoneModel } from "../../../../../../core/scripts/shared/models/zone.model";
 import { Gender } from "../../models/athlete/gender.enum";
+import { UserZonesModel } from "../../../../../../core/scripts/shared/models/user-settings/user-zones.model";
 
 describe("UserSettingsService", () => {
 
@@ -200,7 +201,7 @@ describe("UserSettingsService", () => {
 		};
 
 		const settings = _.cloneDeep(userSettingsData);
-		settings.zones.speed = TO_BE_SAVED_ZONES;
+		settings.zones.speed = UserZonesModel.serialize(TO_BE_SAVED_ZONES);
 
 		const updateNestedDaoSpy = spyOn(userSettingsService.userSettingsDao, "updateNested")
 			.and.returnValue(Promise.resolve(settings));

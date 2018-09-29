@@ -1,79 +1,79 @@
-.stravistiXExtendedData {
+.elevateExtendedData {
 	overflow: hidden;
 }
 
-.stravistiXExtendedData .content {
+.elevateExtendedData .content {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
-.stravistiXExtendedData table {
+.elevateExtendedData table {
 	margin: 0;
 	padding: 0;
 	border-spacing: 0px;
 }
 
-.stravistiXExtendedData td {
+.elevateExtendedData td {
 	text-align: center;
 	padding: 3px;
 }
 
-.stravistiXExtendedData div {
+.elevateExtendedData div {
 	display: inline-block;
 	vertical-align: middle;
 	padding-right: 7.5px;
 }
 
 /* Remove padding on grid for featured data */
-.stravistiXExtendedData .featuredData .grid td {
+.elevateExtendedData .featuredData .grid td {
 	padding-bottom: 0px;
 	max-width: 200px;
 	padding-right: 30px;
 }
 
-.stravistiXExtendedData .distributionGraphTitle {
+.elevateExtendedData .distributionGraphTitle {
 	display: block;
 	text-align: center;
 	font-size: 14px;
 }
 
-.stravistiXExtendedData .distributionTable {
+.elevateExtendedData .distributionTable {
 	height: 450px;
 	width: 350px;
 }
 
-.stravistiXExtendedData .distributionTable tr:hover {
+.elevateExtendedData .distributionTable tr:hover {
 	background-color: #ffff99;
 }
 
-.stravistiXExtendedData .grid {
+.elevateExtendedData .grid {
 	font-size: 22px;
 	padding-left: 10px;
 	min-width: 300px;
 }
 
-.stravistiXExtendedData .grid td {
+.elevateExtendedData .grid td {
 	text-align: left;
 	border: 0px;
 	padding-bottom: 30px;
 }
 
-.stravistiXExtendedData .gridDataContainer {
+.elevateExtendedData .gridDataContainer {
 	cursor: pointer;
 }
 
-.stravistiXExtendedData .gridUnits {
+.elevateExtendedData .gridUnits {
 	font-size: 14px;
 	text-transform: uppercase;
 }
 
-.stravistiXExtendedData .gridTitle {
+.elevateExtendedData .gridTitle {
 	font-size: 14px;
 	cursor: pointer;
 }
 
-.stravistiXExtendedData .grid td {
+.elevateExtendedData .grid td {
 	max-width: 100px;
 }
 

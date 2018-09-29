@@ -1,7 +1,7 @@
 {
-	"name": "stravistix",
-	"version": "6.5.2",
-	"description": "Wrap the needed tools required to cook the StravistiX Web Plugin",
+	"name": "elevate",
+	"version": "6.6.0",
+	"description": "Wrap the needed tools required to cook the Elevate Web Plugin",
 	"scripts": {
 		"build": "npm-run-all clean res-copy:* build-project:core build-project:app",
 		"build:prod": "npm-run-all clean res-copy:* build-project:core@prod build-project:app@prod",
@@ -38,7 +38,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/thomaschampagne/stravistix"
+		"url": "https://github.com/thomaschampagne/elevate"
 	},
 	"author": {
 		"name": "Thomas Champagne",

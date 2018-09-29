@@ -4,6 +4,7 @@ import { UserSettingsModel } from "../../../../../../core/scripts/shared/models/
 import { userSettingsData } from "../../../../../../core/scripts/shared/user-settings.data";
 import * as _ from "lodash";
 import { AthleteModel } from "../../models/athlete/athlete.model";
+import { UserZonesModel } from "../../../../../../core/scripts/shared/models/user-settings/user-zones.model";
 
 describe("UserSettingsDao", () => {
 
@@ -31,7 +32,7 @@ describe("UserSettingsDao", () => {
 		// Given
 		const sourceUserSettings = _.cloneDeep(userSettingsData);
 
-		const newSpeedZones = [{from: 666, to: 999}];
+		const newSpeedZones = UserZonesModel.serialize([{from: 666, to: 999}]);
 		const zoneSpeedPath = "zones.speed";
 
 		const expectedUpdatedSettings = _.cloneDeep(sourceUserSettings);
@@ -316,7 +317,7 @@ describe("UserSettingsDao", () => {
 	it("should update nested user setting", (done: Function) => {
 
 		// Given
-		const zones = [{from: 666, to: 999}];
+		const zones = UserZonesModel.serialize([{from: 666, to: 999}]);
 		const path = "zones.speed";
 
 		const expectedSettings = _.cloneDeep(userSettingsData);
@@ -354,7 +355,7 @@ describe("UserSettingsDao", () => {
 
 		// Given
 		const expectedErrorMessage = "Whoops! A chrome runtime error has been raised!";
-		const zones = [{from: 666, to: 999}];
+		const zones = UserZonesModel.serialize([{from: 666, to: 999}]);
 		const path = "zones.speed";
 
 		const expectedSettings = _.cloneDeep(userSettingsData);
