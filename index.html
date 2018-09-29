@@ -1,114 +1,35 @@
-<!--
-StravistiX for Strava Landing page
-Author: Thomas Champagne
-Github: https://github.com/thomaschampagne/stravistix-landingpage
- -->
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#E94E1B">
-    <meta name="description" content="Enhance your Strava experience with StravistiX chrome plugin. Analyse deeper your activities and segments efforts ;)">
-    <meta name="author" content="Thomas Champagne">
-    <meta name="keywords" content="strava, extension, plugin, chrome, cycling, running">
-    <meta property="og:site_name" content="StravistiX for Strava">
-    <meta property="og:url" content="http://thomaschampagne.github.io/stravistix/">
-    <meta property="og:image" content="http://thomaschampagne.github.io/stravistix/img/share/banner.jpg">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="StravistiX for Strava">
-    <meta property="og:description" content="Enhance your Strava experience with StravistiX chrome plugin. Analyse deeper your activities and segments efforts ;)">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="http://thomaschampagne.github.io/stravistix/">
-    <meta name="twitter:creator" content="@champagnethomas">
-    <meta name="twitter:title" content="StravistiX for Strava">
-    <meta name="twitter:description" content="Enhance your Strava experience with StravistiX chrome plugin. Analyse deeper your activities and segments efforts ;)">
-    <meta name="twitter:image" content="http://thomaschampagne.github.io/stravistix/img/share/banner.jpg">
-    <title>StravistiX for Strava</title>
-    <link rel="icon" type="image/png" href="img/favicon.png" />
-    <link rel="stylesheet" type="text/css" href="style/main.css" />
-    <script type="text/javascript" src="js/script.js"></script>
-</head>
-
-<body data-ng-app="App" data-ng-controller="BehaviourController">
-    <div id="outsideIcons" class="outsideLinks">
-        <a href="#" ng-click="goToDownloadPage()"><i class="outsideIcons fa fa-download importantIcon"></i></a>
-        <a href="#" ng-click="goToDonatePage()"><i class="outsideIcons fa fa-heart-o"></i></a>
-        <a target="_blank" href="https://twitter.com/champagnethomas"><i class="outsideIcons fa fa-petitOiseauBleu"></i></a>
-        <a target="_blank" href="https://www.facebook.com/stravistixforstrava"><i class="outsideIcons fa fa-faceDeBouc"></i></a>
-        <a target="_blank" href="https://github.com/thomaschampagne/stravistix"><i class="outsideIcons fa fa-github"></i></a>
-    </div>
-
-    <div id="fullpage">
-        <!-- Section Download -->
-        <div data-anchor="downloadPage" class="section landingBgCentering">
-            <div id="logo" class="logo">
-                <a target="_blank" href="https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn">
-                    <img src="img/logos/logo_stravistix_no_circle.svg" class="img-responsive" />
-                </a>
-            </div>
-            <div id="valueProposal" class="valueProposal">
-                <a target="_blank" href="https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn">
-                    enhance your <img class="stravaLogoDownload" src="img/logos/strava_logo.svg" /> experience !
-                </a>
-            </div>
-            <div id="downloadButton" class="downloadButton">
-                <div class="downloadBrowserProposal">
-                    Download for
-                </div>
-                <a target="_blank" href="https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn">Chrome <i class="fa fa-chrome"></i></a>
-                <a target="_blank" href="https://addons.opera.com/en/extensions/details/stravistix-for-strava/">Opera <i class="fa fa-opera"></i></a>
-            </div>
-            <div id="goToQuote" class="downArrow">
-                <a href="#" ng-click="nextSection()"><img src="img/arrows/arrow-down.svg" class="img-responsive" /></a>
-            </div>
-            <div class="ribbon"></div>
-        </div>
-        <!-- Section Preview -->
-        <div data-anchor="{{previewData.id}}" class="section" ng-repeat="previewData in previewsData">
-            <!-- Inject Angular Directive of preview  -->
-            <preview class="preview" data="previewData" index="$index" trigger-preview-sections-ready />
-        </div>
-        <div data-anchor="andMorePage" class="section">
-            <!-- Inject Angular Directive?...  -->
-            <div id="andMore" class="andMore">
-                <div><u>Also included</u></div>
-                <div>* best splits *</div>
-                <div>* years progressions *</div>
-                <div>* Weather data for cycling *</div>
-                <div>* Google Maps + street view *</div>
-                <div>* Segments GPS Virtual Partner *</div>
-                <div>* Nearby segments *</div>
-                <div><i>and more...</i></div>
-            </div>
-            <div id="goToDonate" class="downArrow">
-                <a href="#" ng-click="nextSection()"><img src="img/arrows/arrow-down.svg" class="img-responsive" /></a>
-            </div>
-        </div>
-        <div data-anchor="donatePage" class="section">
-            <!-- Inject Angular Directive of donation  -->
-            <paypal-donate></paypal-donate>
-            <div id="goToTop" class="upArrow">
-                <a href="#" ng-click="goTo('downloadPage')"><img src="img/arrows/arrow-up.svg" class="img-responsive" /></a>
-            </div>
-        </div>
-    </div>
-</body>
-<script>
-    (function(i, s, o, g, r, a, m) {
-        i['GoogleAnalyticsObject'] = r;
-        i[r] = i[r] || function() {
-            (i[r].q = i[r].q || []).push(arguments)
-        }, i[r].l = 1 * new Date();
-        a = s.createElement(o),
-            m = s.getElementsByTagName(o)[0];
-        a.async = 1;
-        a.src = g;
-        m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-    ga('create', 'UA-51167057-6', 'auto');
-    ga('send', 'pageview');
-</script>
-
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#000000">
+	<meta name="description"
+		  content="Elevate your strava experience and goals! Elevate is a web extension which tracks your fitness and progressions over time. Analyse deeper your activities. And more...">
+	<meta name="author" content="Thomas Champagne">
+	<meta name="keywords" content="strava, elevate, stravistix, extension, plugin, chrome, cycling, running">
+	<meta property="og:site_name" content="Elevate for Strava">
+	<meta property="og:url" content="http://thomaschampagne.github.io/elevate/">
+	<meta property="og:image" content="http://thomaschampagne.github.io/elevate/assets/banner.jpg">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Elevate for Strava">
+	<meta property="og:description"
+		  content="Elevate your strava experience and goals! Elevate is a web extension which tracks your fitness and progressions over time. Analyse deeper your activities. And more...">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="http://thomaschampagne.github.io/elevate/">
+	<meta name="twitter:creator" content="@champagnethomas">
+	<meta name="twitter:title" content="Elevate for Strava">
+	<meta name="twitter:description"
+		  content="Elevate your strava experience and goals! Elevate is a web extension which tracks your fitness and progressions over time. Analyse deeper your activities. And more...">
+	<meta name="twitter:image" content="http://thomaschampagne.github.io/elevate/assets/banner.jpg">
+	<title>Elevate For Strava</title>
+	<base href="/elevate/">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet">
+<link rel="stylesheet" href="styles.ff0afce074296bc2df1d.css"></head>
+<body>
+<app-root></app-root>
+<script type="text/javascript" src="runtime.06daa30a2963fa413676.js"></script><script type="text/javascript" src="polyfills.a33a8cad0f38c4811604.js"></script><script type="text/javascript" src="scripts.bbae1dca422283c588ac.js"></script><script type="text/javascript" src="main.8beeca60aa045528c3a2.js"></script></body>
 </html>
