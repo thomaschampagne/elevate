@@ -10,19 +10,6 @@ import { ActivityService } from "../../shared/services/activity/activity.service
 // TODO Give a helper guide to find dated settings (how to?)
 // TODO Show athleteModel used on strava activities
 
-/*
-TODO Fix sync error:
-d81a2915-70cf-4cb6-b97f-a54321ec62ed:1 Error: InconsistentParameters: athleteWeight required as number
-    at new n (d81a2915-70cf-4cb6-b97f-a54321ec62ed:28)
-    at Function.t.createRunningPowerEstimationStream (d81a2915-70cf-4cb6-b97f-a54321ec62ed:28)
-    at t.estimatedRunningPower (d81a2915-70cf-4cb6-b97f-a54321ec62ed:1)
-    at t.computeAnalysisData (d81a2915-70cf-4cb6-b97f-a54321ec62ed:1)
-    at t.compute (d81a2915-70cf-4cb6-b97f-a54321ec62ed:1)
-
-Also...
-TODO Handle Fitness Trend on activities without AthleteModel (e.g. Les 2 Alpes => "AlpineSki")
- */
-
 @Component({
 	selector: "app-athlete-settings",
 	templateUrl: "./athlete-settings.component.html",

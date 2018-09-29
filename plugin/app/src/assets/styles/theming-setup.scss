@@ -8,7 +8,7 @@
 @import "../../app/fitness-trend/fitness-trend.component.theme";
 @import "../../app/athlete-settings-consistency-ribbon/athlete-settings-consistency-ribbon.component.theme";
 
-@mixin stravistix-custom-theme($theme) {
+@mixin elevate-custom-theme($theme) {
 	@include native-web-elements($theme);
 	@include app-theming($theme);
 	@include athlete-settings-consistency-ribbon-theming($theme);
@@ -17,10 +17,10 @@
 
 .light {
 	@include angular-material-theme($light-theme);
-	@include stravistix-custom-theme($light-theme);
+	@include elevate-custom-theme($light-theme);
 }
 
 .dark {
 	@include angular-material-theme($dark-theme);
-	@include stravistix-custom-theme($dark-theme);
+	@include elevate-custom-theme($dark-theme);
 }

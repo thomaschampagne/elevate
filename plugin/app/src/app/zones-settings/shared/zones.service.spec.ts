@@ -9,6 +9,7 @@ import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";
 import { ZoneChangeOrderModel } from "./zone-change-order.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 import { ZoneModel } from "../../../../../core/scripts/shared/models/zone.model";
+import { UserZonesModel } from "../../../../../core/scripts/shared/models/user-settings/user-zones.model";
 
 describe("ZonesService", () => {
 
@@ -621,6 +622,8 @@ describe("ZonesService", () => {
 			}
 		);
 
+		const expectedResetZones = UserZonesModel.deserialize(userSettingsData.zones.speed);
+
 		zonesService.currentZones = FAKE_EXISTING_ZONES;
 		zonesService.zoneDefinition = SPEED_ZONE_DEFINITION_MOCKED;
 
@@ -637,9 +640,10 @@ describe("ZonesService", () => {
 			expect(saveZonesSpy).toHaveBeenCalledTimes(1);
 			expect(zonesUpdatesSpy).toHaveBeenCalledTimes(1);
 
-			expect(zonesService.currentZones.length).toEqual(userSettingsData.zones.speed.length);
+
+			expect(zonesService.currentZones.length).toEqual(expectedResetZones.length);
 			expect(zonesService.currentZones.length).not.toEqual(FAKE_EXISTING_ZONES.length);
-			expect(zonesService.currentZones).toEqual(userSettingsData.zones.speed);
+			expect(zonesService.currentZones).toEqual(expectedResetZones);
 
 			done();
 

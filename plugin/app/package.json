@@ -1,5 +1,5 @@
 {
-	"name": "stravistix-app",
+	"name": "elevate-app",
 	"license": "MIT",
 	"scripts": {
 		"ng": "ng",

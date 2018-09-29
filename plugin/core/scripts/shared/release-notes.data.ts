@@ -2,6 +2,20 @@ import { ReleaseNoteModel } from "./models/release-note.model";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.6.0",
+		date: "2018-09-29",
+		message: "\"Stravistix\" is now named \"Elevate\". This update brings this name change and some improvements.",
+		hotFixes: [],
+		features: [
+			"Renaming \"Stravistix\" to the new name: \"Elevate\"",
+			"Dated Athlete Settings: values from latest athletes settings are used to fill a new athlete settings form.",
+			"[Technical] Optimizing the storage allocation of user zones.",
+			"[Technical] Complete refactoring of the storage management: now a way more simple and easy to maintain."
+		],
+		isPatch: false,
+		fixes: []
+	},
+	{
 		version: "6.5.2",
 		date: "2018-09-10",
 		message: "Hotfixed the new v6.5 which introduces \"Dated Athlete Settings\". Since your physiological attributes evolve over time, this feature will provide matching athlete's attributes for a given activity date to calculate stats with actual day's attributes. Go to athlete settings to enable it.",
@@ -81,7 +95,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Estimated Power Stress Score: improved reliability and precision of PSS when power data is estimated (no cycling power meter). Required by the upcoming fitness trend estimation without sensors.",
 			"Activity stats panel: replaced \"75% quartile speed\" by \"Best 20min speed\"",
 			"Activity: Fixed ODO distance for bikes with unicode names on the ride page.",
-			"Synchronization: you can now trigger the fastest \"sync recent activities\" directly from the stravistix app.",
+			"Synchronization: you can now trigger the fastest \"sync recent activities\" directly from the elevate app.",
 			"Technical: Upgraded angular version from v5 to v6. Also upgraded other libs.",
 			"Other: various improvements and minors bugs fixed."
 		]
@@ -98,9 +112,9 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		],
 		isPatch: false,
 		fixes: [
-			"Optimization of the synchronisation: stravistix can now fully track your \"recent\" activities (addition, edition and deletion) when you load a strava website page. The app content will be refreshed in real time. Some users experienced some crashes and memories issues with the background sync: this should be fixed now. The auto-sync delay setting has been also removed in that optimization: goal is that user focuses less on synchronization aspects by simplifying it.",
+			"Optimization of the synchronisation: elevate can now fully track your \"recent\" activities (addition, edition and deletion) when you load a strava website page. The app content will be refreshed in real time. Some users experienced some crashes and memories issues with the background sync: this should be fixed now. The auto-sync delay setting has been also removed in that optimization: goal is that user focuses less on synchronization aspects by simplifying it.",
 			"Optimized the rendering and styling of \"extended stats panel\". Should now scale properly whatever the resolution being used.",
-			"[Technical] Big work on the switch from SystemJS to Webpack (v4) as javascript module bundler and loader. This was a required step to accelerate portability of stravistix to Firefox.",
+			"[Technical] Big work on the switch from SystemJS to Webpack (v4) as javascript module bundler and loader. This was a required step to accelerate portability of elevate to Firefox.",
 		]
 	},
 	{
@@ -269,7 +283,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		features: [
 			"Added Running stats: Stride length & total steps.",
 			"Added Cycling stats: Crank revolution distance. The distance travelled for a crank revolution.",
-			"[Beta] Added running power estimation of your running activities (comparable with cycling power in watts). /!\\ Beta feature must be enabled in stravistix settings.",
+			"[Beta] Added running power estimation of your running activities (comparable with cycling power in watts). /!\\ Beta feature must be enabled in elevate settings.",
 		],
 		isPatch: true,
 		fixes: [
@@ -287,7 +301,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		features: [
 			"Added Running stats: Stride length & total steps.",
 			"Added Cycling stats: Crank revolution distance. The distance travelled for a crank revolution.",
-			"[Beta] Added running power estimation of your running activities (comparable with cycling power in watts). /!\\ Beta feature must be enabled in stravistix settings.",
+			"[Beta] Added running power estimation of your running activities (comparable with cycling power in watts). /!\\ Beta feature must be enabled in elevate settings.",
 		],
 		isPatch: false,
 		fixes: [
@@ -336,7 +350,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		],
 		features: [
 			"Added TCX export to \"GPS Real Time Segments Efforts\" in addition to GPX format (Edge 500 users might use TCX instead of GPX). Power sensor data has been also added to exported segments efforts (both GPX/TCX). Go to an activity, choose a segment effort (from you or another athlete) and click \"Export this Segment Effort to your GPS\".",
-			"Technical: Stravistix scripts are loaded on demand with SystemJS library. Stravistix & strava.com scripts are now isolated: avoid conflicts and potentials bugs. Also migrated from \"underscore\" to a more fastest javascript library: \"lodash\".",
+			"Technical: Elevate scripts are loaded on demand with SystemJS library. Elevate & strava.com scripts are now isolated: avoid conflicts and potentials bugs. Also migrated from \"underscore\" to a more fastest javascript library: \"lodash\".",
 		],
 		isPatch: true,
 		fixes: [
@@ -351,7 +365,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		hotFixes: [],
 		features: [
 			"Added TCX export to \"GPS Real Time Segments Efforts\" in addition to GPX format (Edge 500 users might use TCX instead of GPX). Power sensor data has been also added to exported segments efforts (both GPX/TCX). Go to an activity, choose a segment effort (from you or another athlete) and click \"Export this Segment Effort to your GPS\".",
-			"Technical: Stravistix scripts are loaded on demand with SystemJS library. Stravistix & strava.com scripts are now isolated: avoid conflicts and potentials bugs. Also migrated from \"underscore\" to a more fastest javascript library: \"lodash\".",
+			"Technical: Elevate scripts are loaded on demand with SystemJS library. Elevate & strava.com scripts are now isolated: avoid conflicts and potentials bugs. Also migrated from \"underscore\" to a more fastest javascript library: \"lodash\".",
 		],
 		isPatch: false,
 		fixes: [
@@ -712,7 +726,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"BETA: Running estimated paces based on your most painful effort on a segment.",
 			"Migrate 100% of the javascript code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement."],
 		isPatch: false,
-		fixes: ["Fixed broken heat map link in StravistiX burger menu"],
+		fixes: ["Fixed broken heat map link in Elevate burger menu"],
 	}, {
 		version: "4.3.1",
 		date: "2016-10-15",
@@ -723,7 +737,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Running estimated paces based on your most painful effort on a segment.",
 			"Migrate 100% of the javascript code to <a href=\"https://www.typescriptlang.org/\" target=\"_blank\">Microsoft TypeScript</a>. An invisible enhancement for you. Futures features are now easiest to implement."],
 		isPatch: false,
-		fixes: ["Fixed broken heat map link in StravistiX burger menu"],
+		fixes: ["Fixed broken heat map link in Elevate burger menu"],
 	}, {
 		version: "4.2.3",
 		date: "2016-10-02",
@@ -876,7 +890,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Globally improved segment time comparaison for cycling activities.",
 			"Fixed segment time comparaison '-0s' when activity beats year's record on a segment",
 			"Fixed segment time comparaison '-0s' when the year record beats global previous record",
-			"Removed useless stravistix highlight feature. It's not a feature... it's not a bug... it's remove ;)",
+			"Removed useless elevate highlight feature. It's not a feature... it's not a bug... it's remove ;)",
 			"Invisible project improvements (such as gulp task runner Implementation)",
 		],
 	}, {
@@ -902,7 +916,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		version: "3.2.3",
 		date: "2016-03-26",
 		features: [
-			"Disable stravistix on new strava store",
+			"Disable elevate on new strava store",
 			"Minors improvements",
 		],
 	}, {
@@ -1111,7 +1125,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		version: "0.7.1",
 		date: "2015-05-29",
 		features: [
-			"Hotfix: Remove display stravistix chrome tab on update (http://thomaschampagne.github.io/stravistix)",
+			"Hotfix: Remove display elevate chrome tab on update (http://thomaschampagne.github.io/elevate)",
 		],
 	}, {
 		version: "0.7.0",
@@ -1151,7 +1165,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		features: [
 			"Customized zones for each Xtended data",
 			"Add TRIMP/Hour",
-			"Change extension name from StravPlus to StravistiX",
+			"Change extension name from StravPlus to Elevate",
 			"Bugs fix",
 		],
 	}, {
@@ -1289,7 +1303,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Add nearby cycling+running segments added on segment page",
 			"Add average pace in cycling activities",
 			"Add lower quartile power, median power and upper quartile power in cycling activities",
-			"Fixed: Unable to see StravistiX icon menu when highlight option is on.",
+			"Fixed: Unable to see Elevate icon menu when highlight option is on.",
 		],
 	}, {
 		version: "0.3.6",
@@ -1304,7 +1318,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		date: "2014-11-02",
 		features: [
 			"Fixed display text glitches on some pages",
-			"StravistiX menu icon orange",
+			"Elevate menu icon orange",
 			"Others minor bug fixes",
 		],
 	}, {
@@ -1315,7 +1329,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Bike activities extended data new look. Possibility to get the activity extended data panel hidden on load",
 			"Cache management of bike Odo for bike activities, force refresh possible",
 			"Fixing hide challenges and new routes which broken in new Strava.com update",
-			"New StravistiX design",
+			"New Elevate design",
 			"Bug fixes",
 		],
 	}, {
@@ -1355,7 +1369,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		date: null,
 		features: [
 			"Add Watts/KG for cycling activities",
-			"Add VeloViewer Challenges Trophy Cabinet to StravistiX menu",
+			"Add VeloViewer Challenges Trophy Cabinet to Elevate menu",
 		],
 	}, {
 		version: "0.1.9",
@@ -1380,16 +1394,16 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Hide the challenges in dashboard feed",
 			"Hide the created routes in dashboard feed",
 			"Bug fixing",
-			"Switch app name to 'StravistiX Developper Preview'",
+			"Switch app name to 'Elevate Developper Preview'",
 		],
 	}, {
 		version: "0.1.6",
 		date: null,
 		features: [
 			"Add this about page",
-			"StravistiX placed first in header",
-			"Add icons in StravistiX menu",
-			"Remove StravistiX settings page popup when extension is updated",
+			"Elevate placed first in header",
+			"Add icons in Elevate menu",
+			"Remove Elevate settings page popup when extension is updated",
 			"Bug fixing",
 		],
 	}, {
@@ -1399,7 +1413,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Segment Rank percentage now working on all leaderboards (Clubs, following, ...)",
 			"Add bike odo display or not as an option",
 			"Come back to Strava Classic color style",
-			"Add StravistiX features highlighted in bright orange as option (new miscellaneous section).",
+			"Add Elevate features highlighted in bright orange as option (new miscellaneous section).",
 		],
 	}, {
 		version: "0.1.4",
@@ -1422,10 +1436,10 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Add Default Google Map type in activity",
 			"Add links to Flyby, Veloviewer, Raceshape in activity page",
 			"Allow free accounts users to hide premium features",
-			"Add StravistiX menu",
-			"Add Settings page link to StravistiX menu",
-			"Add Global Heat Map to StravistiX menu",
-			"Add user veloviewer link to StravistiX menu",
-			"Add Kom Map link to StravistiX menu",
+			"Add Elevate menu",
+			"Add Settings page link to Elevate menu",
+			"Add Global Heat Map to Elevate menu",
+			"Add user veloviewer link to Elevate menu",
+			"Add Kom Map link to Elevate menu",
 		],
 	}];

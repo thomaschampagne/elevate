@@ -1,7 +1,7 @@
 ### Step 1: Are you in the right place?
 
-  * Your problem may have been already covered in the FAQ. Did you check https://github.com/thomaschampagne/stravistix/wiki/Frequently-Asked-Questions?
-  * Your problem or feature request may already exists in project issues section. Did you check https://github.com/thomaschampagne/stravistix/issues?
+  * Your problem may have been already covered in the FAQ. Did you check https://github.com/thomaschampagne/elevate/wiki/Frequently-Asked-Questions?
+  * Your problem or feature request may already exists in project issues section. Did you check https://github.com/thomaschampagne/elevate/issues?
 
 ### Step 2: Describe your environment
 
@@ -36,6 +36,6 @@
 
 >You can upload/attach any images to this ticket.
 
-#### Providing your stravistix synced athlete activities can be usefull to solve the problem
+#### Providing your Elevate synced athlete activities can be usefull to solve the problem
 
 > To export your activities click on "sync button" (top right and corner), then "Backup activities". You can zip the file and upload it here. 

@@ -1,22 +1,22 @@
-[![Build Status](https://travis-ci.org/thomaschampagne/stravistix.svg?branch=develop)](https://travis-ci.org/thomaschampagne/stravistix)
-[![Artifacts Dowloads](https://img.shields.io/badge/artifacts-download-00a8fb.svg)](https://bitbucket.org/thomaschampagne/stravistix-ci-builds/downloads/)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9f150ac985294364ab493682cca63f66)](https://app.codacy.com/app/th-champagne/stravistix?utm_source=github.com&utm_medium=referral&utm_content=thomaschampagne/stravistix&utm_campaign=badger)
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn) 
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/users/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn)
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews) [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating-count/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/stravistix-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews)
+[![Build Status](https://travis-ci.org/thomaschampagne/elevate.svg?branch=develop)](https://travis-ci.org/thomaschampagne/elevate)
+[![Artifacts Dowloads](https://img.shields.io/badge/artifacts-download-00a8fb.svg)](https://bitbucket.org/thomaschampagne/elevate-ci-builds/downloads/)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9f150ac985294364ab493682cca63f66)](https://app.codacy.com/app/th-champagne/elevate?utm_source=github.com&utm_medium=referral&utm_content=thomaschampagne/elevate&utm_campaign=badger)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/elevate-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn) 
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/users/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/elevate-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/elevate-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews) [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating-count/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/elevate-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews)
 
-# Install StravistiX
+# Install Elevate
 
 ## From a Chrome based browser
 
-Go to [http://thomaschampagne.github.io/stravistix/](http://thomaschampagne.github.io/stravistix/)
+Go to [http://thomaschampagne.github.io/elevate/](http://thomaschampagne.github.io/elevate/)
 
 You should be able to install it in all Chrome based browser such as Chrome, Chrome Canary, Chromium, Opera, Vivaldi, Yandex, and more ...
 
 ## From continuous integration
-Using latest **develop** branch builds: https://bitbucket.org/thomaschampagne/stravistix-ci-builds/downloads/
+Using latest **develop** branch builds: https://bitbucket.org/thomaschampagne/elevate-ci-builds/downloads/
 
-Install steps with a standalone build: https://github.com/thomaschampagne/stravistix/wiki/How-to-install-stravistix-build-archive
+Install steps with a standalone build: https://github.com/thomaschampagne/elevate/wiki/How-to-install-elevate-build-archive
 
 ## From the sources
 
@@ -83,13 +83,13 @@ That's all :)
 
 Using HTTPS
 ```bash
-git clone https://github.com/thomaschampagne/stravistix.git
+git clone https://github.com/thomaschampagne/elevate.git
 ```
 
 Or using SSH
 
 ```bash
-git clone git@github.com:thomaschampagne/stravistix.git
+git clone git@github.com:thomaschampagne/elevate.git
 ```
 
 ### Fetch NPM dependencies
@@ -98,7 +98,7 @@ The `npm` command should be installed on your system through the NodeJS installa
 
 Enter in project directory
 ```bash
-cd stravistix
+cd elevate
 ```
 
 Then install NPM dependencies with
@@ -133,7 +133,7 @@ Into your chrome based browser:
 * Open new tab and type **chrome://extensions**, then enter.
 * Tick **Developer Mode** checkbox.
 * Click **Load Unpacked Extension** button, then choose **dist/** directory (this is where you have the **manifest.json** file)
-* Make sure to disable other instances of stravistix. You can re-enable them back from same tab.
+* Make sure to disable other instances of elevate. You can re-enable them back from same tab.
 * Open strava.com
 
 ### Build plugin on files changes

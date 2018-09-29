@@ -1,6 +1,6 @@
 export class AppResourcesModel {
 	settingsLink: string;
-	logoStravistix: string;
+	logoElevate: string;
 	menuIconBlack: string;
 	menuIconOrange: string;
 	remoteViewIcon: string;
