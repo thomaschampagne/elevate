@@ -1,10 +1,10 @@
 {
 	"manifest_version": 2,
-	"name": "StravistiX for Strava",
-	"short_name": "StravistiX",
-	"description": "Enhance your Strava experience with StravistiX. An opensource web plugin which analyse deeper your activities and segments efforts !",
-	"version": "6.5.2",
-	"version_name": "6.5.2 Stable",
+	"name": "Elevate for Strava",
+	"short_name": "Elevate",
+	"description": "Elevate your strava experience and goals! Elevate is a web extension which tracks your fitness and progressions over time. Analyse deeper your activities. And more...",
+	"version": "6.6.0",
+	"version_name": "6.6.0 Stable",
 	"background": {
 		"scripts": [
 			"core/installer.bundle.js",

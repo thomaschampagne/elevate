@@ -7,7 +7,7 @@ How to install this build
 
 - Enable "Developer Mode" option.
 
-- Disable the official "StravistiX for Strava" extension (if you use it in your browser) to avoid any conflicts with the version you are installing now.
+- Disable the official "Elevate for Strava" extension (if you use it in your browser) to avoid any conflicts with the version you are installing now.
 
 - Click "Load Unpacked Extension" button, then select the folder where are extension files. And click OK .
 

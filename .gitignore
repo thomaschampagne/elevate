@@ -6,6 +6,7 @@
 dist/
 package/
 chrome-win32/
+firefox-win32/
 
 # Core karma testing
 plugin/core/**/*.js

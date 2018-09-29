@@ -1,5 +1,5 @@
 {
-	"name": "stravistix-core",
+	"name": "elevate-core",
 	"description": "Chrome Opera extension adding features for Strava website with new performances data and improved ergonomics. Made with AngularJs, UnderscoreJs and Bootstrap",
 	"keywords": [
 		"strava",
@@ -16,7 +16,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/thomaschampagne/stravistix"
+		"url": "https://github.com/thomaschampagne/elevate"
 	},
 	"main": "index.js",
 	"scripts": {
@@ -34,6 +34,7 @@
 		"file-saver": "^1.3.3",
 		"geodesy": "^1.1.1",
 		"jquery": "^3.2.1",
+		"js-cookie": "^2.2.0",
 		"lodash": "^4.17.10",
 		"q": "^1.5.0",
 		"qrcode": "^0.9.0",
@@ -49,6 +50,7 @@
 		"@types/googlemaps": "^3.30.4",
 		"@types/jasmine": "^2.8.4",
 		"@types/jquery": "^3.2.18",
+		"@types/js-cookie": "^2.2.0",
 		"@types/lodash": "^4.14.110",
 		"@types/nvd3": "^1.8.37",
 		"@types/q": "^1.0.6",
