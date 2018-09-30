@@ -5,7 +5,6 @@ import { ActivityCountByTypeModel } from "./shared/models/activity-count-by-type
 import { YearProgressModel } from "./shared/models/year-progress.model";
 import { YearProgressTypeModel } from "./shared/models/year-progress-type.model";
 import { ProgressType } from "./shared/models/progress-type.enum";
-import { ActivatedRoute } from "@angular/router";
 import { YearProgressStyleModel } from "./year-progress-graph/models/year-progress-style.model";
 import { Moment } from "moment";
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
@@ -60,8 +59,7 @@ export class YearProgressComponent implements OnInit {
 	public hasActivityModels: boolean = null; // Can be null: don't know yet true/false status on load
 	public isProgressionInitialized = false;
 
-	constructor(public route: ActivatedRoute,
-				public userSettingsService: UserSettingsService,
+	constructor(public userSettingsService: UserSettingsService,
 				public syncService: SyncService,
 				public activityService: ActivityService,
 				public yearProgressService: YearProgressService,
