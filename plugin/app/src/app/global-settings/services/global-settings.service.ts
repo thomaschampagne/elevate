@@ -228,6 +228,11 @@ export class GlobalSettingsService {
 	}, {
 		title: "Dashboard",
 		options: [{
+			key: "feedChronologicalOrder",
+			type: "checkbox",
+			title: "Organize activity feed chronologically",
+			labels: ["All"]
+		}, {
 			key: "feedHideChallenges",
 			type: "checkbox",
 			title: "Hide challenges",
@@ -265,11 +270,6 @@ export class GlobalSettingsService {
 			title: "Hide running activities under distance.",
 			labels: ["Running"],
 			min: 0,
-		}, {
-			key: "feedChronologicalOrder",
-			type: "checkbox",
-			title: "Organize activity feed chronologically",
-			labels: ["All"]
 		}],
 	}, {
 		title: "Elevate Year progression targets for " + (new Date()).getFullYear(),
