@@ -26,7 +26,7 @@ export abstract class AbstractDataView {
 	protected activityType: string;
 	protected speedUnitsData: SpeedUnitDataModel;
 
-	constructor(units?: string) {
+	protected constructor(units?: string) {
 		this.content = "";
 		this.viewTitle = "";
 		this.units = units;
