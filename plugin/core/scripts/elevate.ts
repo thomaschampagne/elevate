@@ -50,6 +50,7 @@ import { DatedAthleteSettingsModel } from "../../app/src/app/shared/models/athle
 import { Gender } from "../../app/src/app/shared/models/athlete/gender.enum";
 import * as Cookies from "js-cookie";
 import { AppStorageType } from "./models/storage-type.enum";
+import { ActivityFeedModifier } from "./modifiers/activity-feed-modifier";
 
 export class Elevate {
 
@@ -126,6 +127,7 @@ export class Elevate {
 			this.handleSegmentRankPercentage();
 			this.handleSegmentHRAP();
 			this.handleActivityStravaMapType();
+			this.handleActivityFeedModifier();
 			this.handleHideFeed();
 			this.handleDisplayFlyByFeedModifier();
 			this.handleOnFlyActivitiesSync();
@@ -597,6 +599,23 @@ export class Elevate {
 
 		const hideFeedModifier: HideFeedModifier = new HideFeedModifier(this.userSettings);
 		hideFeedModifier.modify();
+	}
+
+	public handleActivityFeedModifier(): void {
+		if (!window.location.pathname.match(/^\/dashboard/)) {
+			return;
+		}
+
+		if (!this.userSettings.feedChronologicalOrder) {
+			return;
+		}
+
+		if (CoreEnv.debugMode) {
+			console.log("Execute handleActivityFeedModifier()");
+		}
+
+		const activityFeedModifier: ActivityFeedModifier = new ActivityFeedModifier(this.userSettings);
+		activityFeedModifier.modify();
 	}
 
 	public handleDisplayFlyByFeedModifier(): void {

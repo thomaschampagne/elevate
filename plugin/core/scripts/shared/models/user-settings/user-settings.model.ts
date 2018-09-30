@@ -31,6 +31,7 @@ export class UserSettingsModel {
 	public displayAdvancedElevationData: boolean;
 	public displayBikeOdoInActivity: boolean;
 	public enableBothLegsCadence: boolean;
+	public feedChronologicalOrder: boolean;
 	public feedHideChallenges: boolean;
 	public feedHideCreatedRoutes: boolean;
 	public feedHideSuggestedAthletes: boolean;

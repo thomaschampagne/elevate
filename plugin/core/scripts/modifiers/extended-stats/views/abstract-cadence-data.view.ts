@@ -5,7 +5,7 @@ export abstract class AbstractCadenceDataView extends AbstractDataView {
 
 	protected cadenceData: CadenceDataModel;
 
-	constructor(cadenceData: CadenceDataModel, units: string) {
+	protected constructor(cadenceData: CadenceDataModel, units: string) {
 		super(units);
 		this.cadenceData = cadenceData;
 		this.mainColor = [195, 69, 185];
