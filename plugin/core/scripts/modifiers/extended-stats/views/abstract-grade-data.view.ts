@@ -6,7 +6,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
 
 	protected gradeData: GradeDataModel;
 
-	constructor(gradeData: GradeDataModel, units: string) {
+	protected constructor(gradeData: GradeDataModel, units: string) {
 		super(units);
 		this.mainColor = [3, 167, 97];
 		this.setGraphTitleFromUnits();

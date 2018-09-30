@@ -6,7 +6,7 @@ abstract class AbstractRunningDataModifier extends AbstractModifier {
 	protected intervalId: number;
 	protected dataWatch: string;
 
-	constructor(dataWatch: string) {
+	protected constructor(dataWatch: string) {
 		super();
 		this.dataWatch = dataWatch;
 	}

@@ -39,6 +39,7 @@ export const userSettingsData: UserSettingsModel = {
 	displayAdvancedElevationData: true,
 	displayBikeOdoInActivity: true,
 	enableBothLegsCadence: true,
+	feedChronologicalOrder: false,
 	feedHideChallenges: false,
 	feedHideCreatedRoutes: false,
 	feedHidePosts: false,
