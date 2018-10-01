@@ -9,7 +9,7 @@
 
 ## From a Chrome based browser
 
-Go to [http://thomaschampagne.github.io/elevate/](http://thomaschampagne.github.io/elevate/)
+Go to [https://thomaschampagne.github.io/elevate/](http://thomaschampagne.github.io/elevate/)
 
 You should be able to install it in all Chrome based browser such as Chrome, Chrome Canary, Chromium, Opera, Vivaldi, Yandex, and more ...
 
