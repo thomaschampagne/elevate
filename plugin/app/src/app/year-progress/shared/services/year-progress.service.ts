@@ -11,6 +11,8 @@ import { ProgressType } from "../models/progress-type.enum";
 import { Subject } from "rxjs";
 import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
 import { Constant } from "../../../../../../core/scripts/shared/constant";
+import { YearProgressPresetModel } from "../models/year-progress-preset.model";
+import { NotImplementedException } from "../../../shared/exceptions/not-implemented.exception";
 
 @Injectable()
 export class YearProgressService {
@@ -350,5 +352,16 @@ export class YearProgressService {
 		return moment();
 	}
 
+	public addPreset(progressType: ProgressType, activityTypes: string[], targetValue?: number): Promise<YearProgressPresetModel> {
+		throw new NotImplementedException();
+	}
+
+	public listPresets(): Promise<YearProgressPresetModel[]> {
+		throw new NotImplementedException();
+	}
+
+	public deletePreset(id: string): Promise<void> {
+		throw new NotImplementedException();
+	}
 }
 

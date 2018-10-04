@@ -11,6 +11,8 @@ import { Moment } from "moment";
 import { ProgressionAtDayModel } from "../models/progression-at-date.model";
 import { ProgressType } from "../models/progress-type.enum";
 import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
+import { YearProgressPresetModel } from "../models/year-progress-preset.model";
+import id = chrome.runtime.id;
 
 describe("YearProgressService", () => {
 
@@ -750,6 +752,98 @@ describe("YearProgressService", () => {
 			expect(result).toEqual(expected);
 			done();
 		});
+
+		describe("manage presets", () => {
+
+			it("should add a preset without target", (done: Function) => {
+
+				// Given
+				const progressType: ProgressType = ProgressType.DISTANCE;
+				const activityTypes: string[] = ["Ride", "VirtualRide"];
+
+				// When
+				const promise: Promise<YearProgressPresetModel> = yearProgressService.addPreset(progressType, activityTypes);
+
+				// Then
+				promise.then((yearProgressPresetModel: YearProgressPresetModel) => {
+
+					expect(yearProgressPresetModel).not.toBeNull();
+					done();
+
+				}, error => {
+					expect(error).toBeNull();
+					done();
+				});
+			});
+
+			it("should add a preset with target", (done: Function) => {
+
+				// Given
+				const progressType: ProgressType = ProgressType.DISTANCE;
+				const activityTypes: string[] = ["Ride", "VirtualRide"];
+				const targetValue: number = 5000;
+
+				// When
+				const promise: Promise<YearProgressPresetModel> = yearProgressService.addPreset(progressType, activityTypes, targetValue);
+
+				// Then
+				promise.then((yearProgressPresetModel: YearProgressPresetModel) => {
+
+					expect(yearProgressPresetModel).not.toBeNull();
+					done();
+
+				}, error => {
+					expect(error).toBeNull();
+					done();
+				});
+
+			});
+
+
+			it("should list presets", (done: Function) => {
+
+				// Given
+				const expected = null;
+
+				// When
+				const promise: Promise<YearProgressPresetModel[]> = yearProgressService.listPresets();
+
+				// Then
+				promise.then((list: YearProgressPresetModel[]) => {
+
+					expect(list).not.toBeNull();
+					done();
+
+				}, error => {
+					expect(error).toBeNull();
+					done();
+				});
+
+			});
+
+			it("should delete preset", (done: Function) => {
+
+				// Given
+				const id: string = null;
+
+				// When
+				const promise: Promise<void> = yearProgressService.deletePreset(id);
+
+				// Then
+				promise.then(() => {
+
+					done();
+
+				}, error => {
+					expect(error).toBeNull();
+					done();
+				});
+
+
+			});
+
+		});
+
 	});
 
 });
