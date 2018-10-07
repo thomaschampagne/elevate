@@ -4,7 +4,7 @@ import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete
 export const userSettingsData: UserSettingsModel = {
 	localStorageMustBeCleared: false,
 	systemUnit: UserSettingsModel.SYSTEM_UNIT_METRIC_KEY,
-	hasDatedAthleteSettings: false,
+	hasDatedAthleteSettings: true,
 	athleteModel: AthleteModel.DEFAULT_MODEL,
 	zones: {
 		speed: [0, 7, 9, 11, 13, 15, 18, 21, 24, 27, 30, 32, 34, 36, 38, 40, 42, 44, 47, 50, 60, 75, 100],
