@@ -7,6 +7,7 @@ import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog
 import { YearProgressOverviewDialogComponent } from "./year-progress-overview-dialog/year-progress-overview-dialog.component";
 import { YearProgressService } from "./shared/services/year-progress.service";
 import { YearProgressRoutingModule } from "./year-progress-routing.module";
+import { YearProgressDao } from "./shared/dao/year-progress.dao";
 
 @NgModule({
 	imports: [
@@ -25,7 +26,8 @@ import { YearProgressRoutingModule } from "./year-progress-routing.module";
 		YearProgressHelperDialogComponent,
 	],
 	providers: [
-		YearProgressService
+		YearProgressService,
+		YearProgressDao
 	]
 })
 export class YearProgressModule {

@@ -27,19 +27,19 @@ export class DatedAthleteSettingsDao {
 		});
 	}
 
-	public save(athletePeriodSettings: DatedAthleteSettingsModel[]): Promise<DatedAthleteSettingsModel[]> {
+	public save(datedAthleteSettingsModels: DatedAthleteSettingsModel[]): Promise<DatedAthleteSettingsModel[]> {
 
 		return new Promise<DatedAthleteSettingsModel[]>((resolve: Function, reject: Function) => {
 
-			athletePeriodSettings = _.sortBy(athletePeriodSettings, (model: DatedAthleteSettingsModel) => {
+			datedAthleteSettingsModels = _.sortBy(datedAthleteSettingsModels, (model: DatedAthleteSettingsModel) => {
 				const sortOnDate: Date = (_.isNull(model.since)) ? new Date(0) : new Date(model.since);
 				return sortOnDate.getTime() * -1;
 			});
 
-			const athletePeriodSettingsData = {};
-			athletePeriodSettingsData[DatedAthleteSettingsDao.DATED_ATHLETE_SETTINGS_KEY] = athletePeriodSettings;
+			const datedAthleteSettingsData = {};
+			datedAthleteSettingsData[DatedAthleteSettingsDao.DATED_ATHLETE_SETTINGS_KEY] = datedAthleteSettingsModels;
 
-			this.browserStorageLocal().set(athletePeriodSettingsData, () => {
+			this.browserStorageLocal().set(datedAthleteSettingsData, () => {
 				const error = this.getChromeError();
 				if (error) {
 					reject(error.message);

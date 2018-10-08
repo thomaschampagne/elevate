@@ -12,7 +12,8 @@ import { ProgressionAtDayModel } from "../models/progression-at-date.model";
 import { ProgressType } from "../models/progress-type.enum";
 import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
 import { YearProgressPresetModel } from "../models/year-progress-preset.model";
-import id = chrome.runtime.id;
+import { YearProgressModule } from "../../year-progress.module";
+import { AppError } from "../../../shared/models/app-error.model";
 
 describe("YearProgressService", () => {
 
@@ -22,7 +23,9 @@ describe("YearProgressService", () => {
 	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
-			providers: [YearProgressService]
+			imports: [
+				YearProgressModule
+			]
 		});
 
 		yearProgressService = TestBed.get(YearProgressService);
@@ -753,96 +756,147 @@ describe("YearProgressService", () => {
 			done();
 		});
 
-		describe("manage presets", () => {
+	});
 
-			it("should add a preset without target", (done: Function) => {
+	describe("manage presets", () => {
 
-				// Given
-				const progressType: ProgressType = ProgressType.DISTANCE;
-				const activityTypes: string[] = ["Ride", "VirtualRide"];
+		it("should add a preset", (done: Function) => {
 
-				// When
-				const promise: Promise<YearProgressPresetModel> = yearProgressService.addPreset(progressType, activityTypes);
+			// Given
+			const yearProgressPresetModel = new YearProgressPresetModel(ProgressType.DISTANCE, ["Ride", "VirtualRide"],
+				false, false, 5000);
 
-				// Then
-				promise.then((yearProgressPresetModel: YearProgressPresetModel) => {
+			const expected = [yearProgressPresetModel];
 
-					expect(yearProgressPresetModel).not.toBeNull();
-					done();
+			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
+				.and.returnValue(Promise.resolve(expected));
 
-				}, error => {
-					expect(error).toBeNull();
-					done();
-				});
+			const saveDaoSpy = spyOn(yearProgressService.yearProgressDao, "savePresets")
+				.and.returnValue(Promise.resolve(expected));
+
+			// When
+			const promise: Promise<YearProgressPresetModel[]> = yearProgressService.addPreset(yearProgressPresetModel);
+
+			// Then
+			promise.then((list: YearProgressPresetModel[]) => {
+
+				expect(list).not.toBeNull();
+				expect(saveDaoSpy).toHaveBeenCalledTimes(1);
+				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+				expect(list).toEqual(expected);
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				done();
 			});
+		});
 
-			it("should add a preset with target", (done: Function) => {
+		it("should list presets", (done: Function) => {
 
-				// Given
-				const progressType: ProgressType = ProgressType.DISTANCE;
-				const activityTypes: string[] = ["Ride", "VirtualRide"];
-				const targetValue: number = 5000;
+			// Given
+			const expected: YearProgressPresetModel[] = [
+				new YearProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false),
+				new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false)
+			];
 
-				// When
-				const promise: Promise<YearProgressPresetModel> = yearProgressService.addPreset(progressType, activityTypes, targetValue);
+			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
+				.and.returnValue(Promise.resolve(expected));
 
-				// Then
-				promise.then((yearProgressPresetModel: YearProgressPresetModel) => {
+			// When
+			const promise: Promise<YearProgressPresetModel[]> = yearProgressService.fetchPresets();
 
-					expect(yearProgressPresetModel).not.toBeNull();
-					done();
+			// Then
+			promise.then((list: YearProgressPresetModel[]) => {
 
-				}, error => {
-					expect(error).toBeNull();
-					done();
-				});
+				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+				expect(list).not.toBeNull();
+				expect(list).toEqual(expected);
+				done();
 
-			});
-
-
-			it("should list presets", (done: Function) => {
-
-				// Given
-				const expected = null;
-
-				// When
-				const promise: Promise<YearProgressPresetModel[]> = yearProgressService.listPresets();
-
-				// Then
-				promise.then((list: YearProgressPresetModel[]) => {
-
-					expect(list).not.toBeNull();
-					done();
-
-				}, error => {
-					expect(error).toBeNull();
-					done();
-				});
-
-			});
-
-			it("should delete preset", (done: Function) => {
-
-				// Given
-				const id: string = null;
-
-				// When
-				const promise: Promise<void> = yearProgressService.deletePreset(id);
-
-				// Then
-				promise.then(() => {
-
-					done();
-
-				}, error => {
-					expect(error).toBeNull();
-					done();
-				});
-
-
+			}, error => {
+				expect(error).toBeNull();
+				done();
 			});
 
 		});
+
+		it("should delete preset", (done: Function) => {
+
+			// Given
+			let model_0 = new YearProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false);
+			let model_1 = new YearProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000);
+			let model_2 = new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false);
+			const progressPresetModels: YearProgressPresetModel[] = [
+				model_0,
+				model_1,
+				model_2
+			];
+
+			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
+				.and.returnValue(Promise.resolve(progressPresetModels));
+
+			const saveDaoSpy = spyOn(yearProgressService.yearProgressDao, "savePresets")
+				.and.returnValue(Promise.resolve());
+
+			const index = 1;
+
+			// When
+			const promise: Promise<void> = yearProgressService.deletePreset(index);
+
+			// Then
+			promise.then(() => {
+				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+				expect(saveDaoSpy).toHaveBeenCalledWith([model_0, model_2]);
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				done();
+			});
+
+		});
+
+		it("should reject delete preset", (done: Function) => {
+
+			// Given
+			let model_0 = new YearProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false);
+			let model_1 = new YearProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000);
+			let model_2 = new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false);
+			const progressPresetModels: YearProgressPresetModel[] = [
+				model_0,
+				model_1,
+				model_2
+			];
+
+			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
+				.and.returnValue(Promise.resolve(progressPresetModels));
+
+			const saveDaoSpy = spyOn(yearProgressService.yearProgressDao, "savePresets")
+				.and.returnValue(Promise.resolve(progressPresetModels));
+
+			const index = 99; // Fake index
+
+			// When
+			const promise: Promise<void> = yearProgressService.deletePreset(index);
+
+			// Then
+			promise.then(() => {
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+
+			}, (error: AppError) => {
+
+				expect(error).not.toBeNull();
+				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+				expect(saveDaoSpy).not.toHaveBeenCalled();
+				expect(error.code).toEqual(AppError.YEAR_PROGRESS_PRESETS_DO_NOT_EXISTS);
+
+				done();
+			});
+
+		});
+
 
 	});
 
