@@ -33,7 +33,7 @@ import { AdvancedMenuComponent } from "../advanced-menu/advanced-menu.component"
 import { ExternalUpdatesService } from "./services/external-updates/external-updates.service";
 import { AthleteModelResolverService } from "./services/athlete-settings/athlete-model-resolver.service";
 import { DatedAthleteSettingsService } from "./services/dated-athlete-settings/dated-athlete-settings.service";
-import { DatedAthleteSettingsDao } from "./dao/dated-athlete-settings/dated-athlete-settings-dao.service";
+import { DatedAthleteSettingsDao } from "./dao/dated-athlete-settings/dated-athlete-settings.dao";
 
 @NgModule({
 	imports: [

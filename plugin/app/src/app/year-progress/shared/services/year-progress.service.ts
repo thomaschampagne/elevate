@@ -12,7 +12,8 @@ import { Subject } from "rxjs";
 import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
 import { Constant } from "../../../../../../core/scripts/shared/constant";
 import { YearProgressPresetModel } from "../models/year-progress-preset.model";
-import { NotImplementedException } from "../../../shared/exceptions/not-implemented.exception";
+import { YearProgressDao } from "../dao/year-progress.dao";
+import { AppError } from "../../../shared/models/app-error.model";
 
 @Injectable()
 export class YearProgressService {
@@ -24,7 +25,7 @@ export class YearProgressService {
 	public momentWatched: Moment;
 	public momentWatchedChanges: Subject<Moment>;
 
-	constructor() {
+	constructor(public yearProgressDao: YearProgressDao) {
 		// By default moment watched is today. Moment watched can be edited from external
 		this.momentWatched = this.getTodayMoment().clone().startOf("day");
 		this.momentWatchedChanges = new Subject<Moment>();
@@ -348,20 +349,44 @@ export class YearProgressService {
 		return readableTime;
 	}
 
+	/**
+	 * Fetch all preset
+	 */
+	public fetchPresets(): Promise<YearProgressPresetModel[]> {
+		return this.yearProgressDao.fetchPresets();
+	}
+
+	/**
+	 * Add preset to existing
+	 * @param yearProgressPresetModel
+	 */
+	public addPreset(yearProgressPresetModel: YearProgressPresetModel): Promise<YearProgressPresetModel[]> {
+		return this.yearProgressDao.fetchPresets().then((models: YearProgressPresetModel[]) => {
+			models.push(yearProgressPresetModel);
+			return this.yearProgressDao.savePresets(models);
+		});
+	}
+
+	/**
+	 * Remove preset at index
+	 * @param index
+	 */
+	public deletePreset(index: number): Promise<void> {
+		return this.yearProgressDao.fetchPresets().then((models: YearProgressPresetModel[]) => {
+
+			if (!models[index]) {
+				return Promise.reject(new AppError(AppError.YEAR_PROGRESS_PRESETS_DO_NOT_EXISTS, "Year progress cannot be deleted"));
+			}
+
+			models.splice(index, 1);
+			return this.yearProgressDao.savePresets(models).then(() => {
+				return Promise.resolve();
+			});
+		});
+	}
+
 	public getTodayMoment(): Moment {
 		return moment();
-	}
-
-	public addPreset(progressType: ProgressType, activityTypes: string[], targetValue?: number): Promise<YearProgressPresetModel> {
-		throw new NotImplementedException();
-	}
-
-	public listPresets(): Promise<YearProgressPresetModel[]> {
-		throw new NotImplementedException();
-	}
-
-	public deletePreset(id: string): Promise<void> {
-		throw new NotImplementedException();
 	}
 }
 
