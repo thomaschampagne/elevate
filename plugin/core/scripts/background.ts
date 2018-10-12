@@ -2,11 +2,13 @@ import { AppStorage } from "./app-storage";
 import * as _ from "lodash";
 import { SyncResultModel } from "./shared/models/sync/sync-result.model";
 import { CoreMessages } from "./shared/models/core-messages";
+import { Constant } from "./shared/constant";
 
 export class Background {
 
 	public init(): void {
 		this.listenForExternalMessages();
+		this.setBrowserActionBehaviour();
 	}
 
 	private reloadBrowserTab(tabId: number): void {
@@ -89,6 +91,14 @@ export class Background {
 
 			}
 			return true;
+		});
+	}
+
+	private setBrowserActionBehaviour(): void {
+		chrome.browserAction.onClicked.addListener(() => {
+			chrome.tabs.create({
+				url: chrome.extension.getURL(Constant.APP_ROOT_URL)
+			});
 		});
 	}
 

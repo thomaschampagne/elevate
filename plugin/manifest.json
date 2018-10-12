@@ -11,6 +11,9 @@
 			"core/background.bundle.js"
 		]
 	},
+	"browser_action": {
+		"default_title": "Open Elevate App"
+	},
 	"content_scripts": [
 		{
 			"js": [
