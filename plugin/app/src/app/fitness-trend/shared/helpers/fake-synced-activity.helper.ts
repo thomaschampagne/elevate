@@ -45,6 +45,7 @@ export class FakeSyncedActivityHelper {
 				TRIMP: avgHr * 2,
 				TRIMPPerHour: avgHr / 60,
 				best20min: avgHr * 1.5,
+				best60min: avgHr * 6,
 				activityHeartRateReserve: avgHr * 0.25,
 				activityHeartRateReserveMax: avgHr / 2,
 				averageHeartRate: avgHr,
