@@ -55,7 +55,8 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 		html += "           <span id=\"syncStepProgressText\"></span>";
 		html += "        </div>";
 		html += "        <div id=\"syncStatusError\" style=\"display: none;\">";
-		html += "           <div style=\"padding-bottom: 20px;\">Sync error occured. Maybe a network timeout error...<a href=\"#\" onclick=\"window.location.reload();\">Try to sync again</a></div>";
+		html += "           <div style=\"padding-bottom: 20px;\">Whoops sync error occurred. If problem persists try to reset your settings from " +
+			"advanced menu (Go to 'Elevate App' => 'Contextual menu in top right' => 'Advanced') or reinstall extension. <a href=\"#\" onclick=\"window.location.reload();\">Try to sync again</a></div>";
 		html += "           <div id=\"syncStatusErrorContent\" style=\"font-size: 11px;\"></div>";
 		html += "        </div>";
 		html += "       <div id=\"syncInfos\">";
@@ -159,7 +160,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 			$("#syncStatusError").show();
 
 			if (err && err.errObject) {
-				$("#syncStatusErrorContent").append("<div>ERROR on activity <" + err.activityId + ">: " + err.errObject.message + ". File: " + err.errObject.filename + ":" + err.errObject.lineno + ":" + err.errObject.colno + "</div>");
+				$("#syncStatusErrorContent").append("<div>Details:</div><div>ERROR on activity <" + err.activityId + ">: " + err.errObject.message + ". File: " + err.errObject.filename + ":" + err.errObject.lineno + ":" + err.errObject.colno + "</div>");
 			} else {
 				$("#syncStatusErrorContent").append("<div>" + JSON.stringify(err) + "</div>");
 			}
