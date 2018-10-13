@@ -205,6 +205,7 @@
 }
 
 #syncStatusError {
+	text-align: left;
 	color: #ff4f51;
 	margin: 15px
 }
