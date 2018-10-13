@@ -822,12 +822,20 @@ export class ActivityComputer {
 		const averageHeartRate: number = hrSum / hrrSecondsCount;
 		const maxHeartRate: number = _.max(heartRateArray);
 
-		let best20minHr = null;
+		let best20min = null;
 		try {
 			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(heartRateArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
-			best20minHr = splitCalculator.getBestSplit(60 * 20, true);
+			best20min = splitCalculator.getBestSplit(60 * 20, true);
 		} catch (err) {
 			console.warn("No best 20min heart rate available for this range");
+		}
+
+		let best60min = null;
+		try {
+			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(heartRateArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
+			best60min = splitCalculator.getBestSplit(60 * 60, true);
+		} catch (err) {
+			console.warn("No best 60min heart rate available for this range");
 		}
 
 		return {
@@ -835,7 +843,8 @@ export class ActivityComputer {
 			HRSSPerHour: HRSSPerHour,
 			TRIMP: trainingImpulse,
 			TRIMPPerHour: TRIMPPerHour,
-			best20min: best20minHr,
+			best20min: best20min,
+			best60min: best60min,
 			heartRateZones: (this.returnZones) ? heartRateZones : null,
 			lowerQuartileHeartRate: percentiles[0],
 			medianHeartRate: percentiles[1],
