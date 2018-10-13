@@ -67,16 +67,14 @@ export class UserZonesModel {
 		_.forEach(zones, (zone: number, index: number) => {
 
 			if (!_.isNumber(zone)) {
-				throw new Error("Cannot deserialize zones");
+				throw new Error("Cannot deserialize zones because of corrupted zones. Try to reset your settings from advanced menu (Go to 'Elevate App' => 'Contextual menu in top right' => 'Advanced')");
 			}
-
 
 			if (_.isNumber(zones[index + 1])) {
 				deserialized.push({
 					from: zone,
 					to: zones[index + 1]
 				});
-
 			}
 		});
 
