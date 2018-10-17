@@ -234,6 +234,7 @@ export class FitnessService {
 			this.generateDailyStress(fitnessTrendConfigModel, isPowerMeterEnabled, isSwimEnabled, skipActivityTypes)
 				.then((dailyActivity: DayStressModel[]) => {
 
+					let prevCtl, prevAtl, prevTsb;
 					let ctl, atl, tsb;
 
 					const fitnessTrend: DayFitnessTrendModel[] = [];
@@ -247,21 +248,29 @@ export class FitnessService {
 						if (isPreStartDay) {
 
 							if (fitnessTrendConfigModel.initializedFitnessTrendModel) {
-
 								ctl = (!_.isNull(fitnessTrendConfigModel.initializedFitnessTrendModel.ctl)) ? fitnessTrendConfigModel.initializedFitnessTrendModel.ctl : 0;
 								atl = (!_.isNull(fitnessTrendConfigModel.initializedFitnessTrendModel.atl)) ? fitnessTrendConfigModel.initializedFitnessTrendModel.atl : 0;
 								tsb = ctl - atl;
-
 							} else {
 								ctl = atl = tsb = 0;
 							}
 
-						} else {
-							ctl = ctl + (dayStress.finalStressScore - ctl) * (1 - Math.exp(-1 / 42));
-							atl = atl + (dayStress.finalStressScore - atl) * (1 - Math.exp(-1 / 7));
-							tsb = ctl - atl;
-						}
+							// Update previous values
+							prevCtl = ctl;
+							prevAtl = atl;
+							prevTsb = tsb;
 
+						} else {
+
+							ctl = prevCtl + (dayStress.finalStressScore - prevCtl) * (1 - Math.exp(-1 / 42));
+							atl = prevAtl + (dayStress.finalStressScore - prevAtl) * (1 - Math.exp(-1 / 7));
+							tsb = prevCtl - prevAtl;
+
+							// Update previous values
+							prevCtl = ctl;
+							prevAtl = atl;
+							prevTsb = tsb;
+						}
 
 						let dayFitnessTrend: DayFitnessTrendModel;
 
