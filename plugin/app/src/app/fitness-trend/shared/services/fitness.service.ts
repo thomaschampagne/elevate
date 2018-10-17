@@ -255,22 +255,16 @@ export class FitnessService {
 								ctl = atl = tsb = 0;
 							}
 
-							// Update previous values
-							prevCtl = ctl;
-							prevAtl = atl;
-							prevTsb = tsb;
-
 						} else {
-
 							ctl = prevCtl + (dayStress.finalStressScore - prevCtl) * (1 - Math.exp(-1 / 42));
 							atl = prevAtl + (dayStress.finalStressScore - prevAtl) * (1 - Math.exp(-1 / 7));
 							tsb = prevCtl - prevAtl;
-
-							// Update previous values
-							prevCtl = ctl;
-							prevAtl = atl;
-							prevTsb = tsb;
 						}
+
+						// Update previous values
+						prevCtl = ctl;
+						prevAtl = atl;
+						prevTsb = tsb;
 
 						let dayFitnessTrend: DayFitnessTrendModel;
 
