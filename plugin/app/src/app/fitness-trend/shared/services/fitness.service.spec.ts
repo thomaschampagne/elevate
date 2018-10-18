@@ -2912,7 +2912,7 @@ describe("FitnessService", () => {
 				expect(dayTrend.finalStressScore).toEqual(190);
 				expect(_.floor(dayTrend.atl, 2)).toEqual(31.11);
 				expect(_.floor(dayTrend.ctl, 2)).toEqual(9.58);
-				expect(_.floor(dayTrend.tsb, 2)).toEqual(-21.53);
+				expect(_.floor(dayTrend.tsb, 2)).toEqual(-1.48);
 
 				dayTrend = _.find(fitnessTrend, ["ids", [5]]);
 				expect(dayTrend).not.toBeNull();
@@ -2923,17 +2923,17 @@ describe("FitnessService", () => {
 				expect(dayTrend.finalStressScore).toEqual(190);
 				expect(_.floor(dayTrend.atl, 2)).toEqual(60.55);
 				expect(_.floor(dayTrend.ctl, 2)).toEqual(18.14);
-				expect(_.floor(dayTrend.tsb, 2)).toEqual(-42.42);
+				expect(_.floor(dayTrend.tsb, 2)).toEqual(-26.68);
 
 				dayTrend = _.find(fitnessTrend, ["ids", [7]]);
 				expect(_.floor(dayTrend.atl, 2)).toEqual(104.2);
 				expect(_.floor(dayTrend.ctl, 2)).toEqual(30.05);
-				expect(_.floor(dayTrend.tsb, 2)).toEqual(-74.15);
+				expect(_.floor(dayTrend.tsb, 2)).toEqual(-50.59);
 
 				dayTrend = _.find(fitnessTrend, {ids: [9, 10]});
 				expect(_.floor(dayTrend.atl, 2)).toEqual(145.81);
 				expect(_.floor(dayTrend.ctl, 2)).toEqual(45.46);
-				expect(_.floor(dayTrend.tsb, 2)).toEqual(-100.36);
+				expect(_.floor(dayTrend.tsb, 2)).toEqual(-72.46);
 
 				done();
 
@@ -2996,7 +2996,6 @@ describe("FitnessService", () => {
 				const secondDay = fitnessTrend[1];
 				expect(secondDay.ctl).toBeGreaterThan(fitnessTrendConfigModel.initializedFitnessTrendModel.ctl);
 				expect(secondDay.atl).toBeGreaterThan(fitnessTrendConfigModel.initializedFitnessTrendModel.atl);
-				expect(secondDay.tsb).toBeLessThan(fitnessTrendConfigModel.initializedFitnessTrendModel.ctl - fitnessTrendConfigModel.initializedFitnessTrendModel.atl);
 
 				done();
 
