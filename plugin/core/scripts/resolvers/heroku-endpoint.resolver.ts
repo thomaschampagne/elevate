@@ -10,7 +10,7 @@ export class HerokuEndpointResolver {
 	}
 
 	private static endPointID(serversInCluster: number, date: Date): number {
-		const worldHour = parseInt(date.toISOString().split("T")[1].split(":")[0]);
+		const worldHour = date.getUTCHours();
 		return Math.floor(worldHour / (24 / serversInCluster)) + 1;
 	}
 }
