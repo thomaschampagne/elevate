@@ -18,7 +18,8 @@ import { SyncedActivityModel } from "../../../../core/scripts/shared/models/sync
 import { YearProgressOverviewDialogComponent } from "./year-progress-overview-dialog/year-progress-overview-dialog.component";
 import { YearProgressForOverviewModel } from "./shared/models/year-progress-for-overview.model";
 import { AppError } from "../shared/models/app-error.model";
-
+import { AddYearProgressPresetsDialogComponent } from "./add-year-progress-presets-dialog/add-year-progress-presets-dialog.component";
+import { YearProgressPresetsDialogData } from "./shared/models/year-progress-presets-dialog-data";
 
 @Component({
 	selector: "app-year-progress",
@@ -211,7 +212,6 @@ export class YearProgressComponent implements OnInit {
 		localStorage.setItem(YearProgressComponent.LS_INCLUDE_INDOOR_RIDES_KEY, JSON.stringify(this.includeIndoorRide));
 	}
 
-
 	public onShowOverview(): void {
 
 		const data: YearProgressForOverviewModel = {
@@ -237,6 +237,30 @@ export class YearProgressComponent implements OnInit {
 			minWidth: YearProgressHelperDialogComponent.MIN_WIDTH,
 			maxWidth: YearProgressHelperDialogComponent.MAX_WIDTH,
 		});
+	}
+
+	public onAddTarget(): void {
+
+	}
+
+	public onSavePreset(): void {
+
+		const yearProgressPresetsDialogData: YearProgressPresetsDialogData = {
+			activityTypes: this.selectedActivityTypes,
+			yearProgressTypeModel: this.selectedProgressType,
+			includeCommuteRide: this.includeCommuteRide,
+			includeIndoorRide: this.includeIndoorRide,
+		};
+
+		this.dialog.open(AddYearProgressPresetsDialogComponent, {
+			minWidth: AddYearProgressPresetsDialogComponent.MIN_WIDTH,
+			maxWidth: AddYearProgressPresetsDialogComponent.MAX_WIDTH,
+			data: yearProgressPresetsDialogData
+		});
+	}
+
+	public onViewPresets(): void {
+
 	}
 
 	/**

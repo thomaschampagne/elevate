@@ -14,6 +14,6 @@ export class YearProgressPresetModel {
 		this.activityTypes = activityTypes;
 		this.includeCommuteRide = includeCommuteRide;
 		this.includeIndoorRide = includeIndoorRide;
-		this.targetValue = (_.isNumber(targetValue)) ? targetValue : null;
+		this.targetValue = (_.isNumber(targetValue) && targetValue > 0) ? targetValue : null;
 	}
 }

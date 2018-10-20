@@ -57,7 +57,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public initialized = false;
 
 	public static findGraphicHeight(): number {
-		return window.innerHeight * 0.675;
+		return window.innerHeight * 0.65;
 	}
 
 	public static clearSvgGraphContent(): void {
