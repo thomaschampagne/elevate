@@ -466,7 +466,7 @@ export class ActivityComputer {
 
 		let speedZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.get(UserZonesModel.TYPE_SPEED));
 		let paceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.get(UserZonesModel.TYPE_PACE));
-		let gradeAdjustedPaceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.get(UserZonesModel.TYPE_GRADEADJUSTEDPACE));
+		let gradeAdjustedPaceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.get(UserZonesModel.TYPE_GRADE_ADJUSTED_PACE));
 
 		let movingSeconds = 0;
 		let elapsedSeconds = 0;
@@ -516,9 +516,18 @@ export class ActivityComputer {
 				}
 
 				if (hasGradeAdjustedSpeed) {
-					const gradeAdjustedSpeed = gradeAdjustedSpeedArray[i] * 3.6;
-					if (gradeAdjustedSpeed > 0) {
+
+					if (gradeAdjustedSpeedArray[i] > 0) {
+
+						const gradeAdjustedSpeed = gradeAdjustedSpeedArray[i] * 3.6;
 						gradeAdjustedSpeedsNonZero.push(gradeAdjustedSpeed);
+
+						const gradeAdjustedPace = this.convertSpeedToPace(gradeAdjustedSpeed);
+
+						const gradeAdjustedPaceZoneId: number = this.getZoneId(this.userSettings.zones.get(UserZonesModel.TYPE_GRADE_ADJUSTED_PACE), (gradeAdjustedPace === -1) ? 0 : gradeAdjustedPace);
+						if (!_.isUndefined(gradeAdjustedPaceZoneId) && !_.isUndefined(gradeAdjustedPaceZones[gradeAdjustedPaceZoneId])) {
+							gradeAdjustedPaceZones[gradeAdjustedPaceZoneId].s += movingSeconds;
+						}
 					}
 				}
 			}
@@ -535,7 +544,6 @@ export class ActivityComputer {
 		const standardDeviationSpeed: number = (varianceSpeed > 0) ? Math.sqrt(varianceSpeed) : 0;
 		const percentiles: number[] = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
 
-		const genuineGradeAdjustedAvgSpeed: number = (hasGradeAdjustedSpeed) ? _.mean(gradeAdjustedSpeedsNonZero) : null;
 
 		let best20min = null;
 		try {
@@ -544,6 +552,8 @@ export class ActivityComputer {
 		} catch (err) {
 			console.warn("No best 20min speed/pace available for this range");
 		}
+
+		const genuineGradeAdjustedAvgSpeed = _.mean(gradeAdjustedSpeedsNonZero);
 
 		const speedData: SpeedDataModel = {
 			genuineAvgSpeed: genuineAvgSpeed,
@@ -559,7 +569,7 @@ export class ActivityComputer {
 			speedZones: (this.returnZones) ? speedZones : null,
 		};
 
-		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed) ? Math.floor((1 / genuineGradeAdjustedAvgSpeed) * 60 * 60) : null;
+		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed) ? Math.floor(this.convertSpeedToPace(genuineGradeAdjustedAvgSpeed)) : null;
 
 		const runningStressScore = (this.activityType === "Run" && genuineGradeAdjustedAvgPace && this.athleteModel.athleteSettings.runningFtp)
 			? ActivityComputer.computeRunningStressScore(this.activityStatsMap.movingTime, genuineGradeAdjustedAvgPace, this.athleteModel.athleteSettings.runningFtp) : null;
@@ -596,9 +606,8 @@ export class ActivityComputer {
 		if (_.isNaN(speed)) {
 			return -1;
 		}
-		return (speed === 0) ? -1 : 1 / speed * 60 * 60;
+		return (speed === 0) ? -1 : (1 / speed) * 60 * 60;
 	}
-
 
 	/**
 	 * Andrew Coggan weighted power compute method
@@ -621,7 +630,7 @@ export class ActivityComputer {
 		if (this.activityType === "Ride") {
 			powerZonesAlongActivityType = this.userSettings.zones.get(UserZonesModel.TYPE_POWER);
 		} else if (this.activityType === "Run") {
-			powerZonesAlongActivityType = this.userSettings.zones.get(UserZonesModel.TYPE_RUNNINGPOWER);
+			powerZonesAlongActivityType = this.userSettings.zones.get(UserZonesModel.TYPE_RUNNING_POWER);
 		} else {
 			powerZonesAlongActivityType = null;
 		}
@@ -763,7 +772,7 @@ export class ActivityComputer {
 			return null;
 		}
 
-		let heartRateZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.get(UserZonesModel.TYPE_HEARTRATE));
+		let heartRateZones: ZoneModel[] = this.prepareZonesForDistributionComputation(this.userSettings.zones.get(UserZonesModel.TYPE_HEART_RATE));
 
 		let trainingImpulse = 0;
 		const TRIMPGenderFactor: number = (athleteModel.gender === Gender.MEN) ? 1.92 : 1.67;
@@ -877,9 +886,9 @@ export class ActivityComputer {
 
 		let cadenceZoneTyped: ZoneModel[];
 		if (this.activityType === "Ride") {
-			cadenceZoneTyped = this.userSettings.zones.get(UserZonesModel.TYPE_CYCLINGCADENCE);
+			cadenceZoneTyped = this.userSettings.zones.get(UserZonesModel.TYPE_CYCLING_CADENCE);
 		} else if (this.activityType === "Run") {
-			cadenceZoneTyped = this.userSettings.zones.get(UserZonesModel.TYPE_RUNNINGCADENCE);
+			cadenceZoneTyped = this.userSettings.zones.get(UserZonesModel.TYPE_RUNNING_CADENCE);
 		} else {
 			return null;
 		}
