@@ -28,7 +28,8 @@ import { ManageYearProgressPresetsDialogComponent } from "./manage-year-progress
 	entryComponents: [
 		YearProgressOverviewDialogComponent,
 		YearProgressHelperDialogComponent,
-		AddYearProgressPresetsDialogComponent
+		AddYearProgressPresetsDialogComponent,
+		ManageYearProgressPresetsDialogComponent
 	],
 	providers: [
 		YearProgressService,

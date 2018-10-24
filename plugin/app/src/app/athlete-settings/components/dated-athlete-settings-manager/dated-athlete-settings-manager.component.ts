@@ -45,7 +45,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 		DatedAthleteSettingsManagerComponent.COLUMN_RUNNING_FTP,
 		DatedAthleteSettingsManagerComponent.COLUMN_SWIM_FTP,
 		DatedAthleteSettingsManagerComponent.COLUMN_ACTION_EDIT,
-		DatedAthleteSettingsManagerComponent.COLUMN_ACTION_DELETE,
+		DatedAthleteSettingsManagerComponent.COLUMN_ACTION_DELETE
 	];
 
 	public datedAthleteSettingsModels: DatedAthleteSettingsModel[];

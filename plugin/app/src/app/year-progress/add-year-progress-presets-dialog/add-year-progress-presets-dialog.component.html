@@ -23,12 +23,14 @@
 				   value="{{(yearProgressPresetModel.includeIndoorRide) ? 'Enabled' : 'Disabled'}}">
 		</mat-form-field>
 
-		<mat-form-field fxFill>
-			<input matInput placeholder="Target value (leave blank if no target)" type="number"
+		<mat-form-field fxFill *ngIf="dialogData.addWithTarget">
+			<input matInput
+				   placeholder="Target value {{(dialogData.yearProgressTypeModel.unit) ? 'in ' + dialogData.yearProgressTypeModel.unit : ''}}"
+				   type="number"
 				   [(ngModel)]="yearProgressPresetModel.targetValue"
-				   (change)="onTargetValueChanged()" min="1">
+				   (change)="onTargetValueChanged()"
+				   min="1">
 		</mat-form-field>
-
 	</div>
 </mat-dialog-content>
 <mat-dialog-actions>
