@@ -2,6 +2,26 @@ import { ReleaseNoteModel } from "./models/release-note.model";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.7.0",
+		date: "2018-10-25",
+		message: "Added chronological activity feed (activate feature from global settings). Added new data-field \"Best 60min heart rate\". This update also brings important improvements and fixes (details in release note).",
+		hotFixes: [],
+		features: [
+			"Added option to order activity feed chronologically. You can enable it from global settings with label \"Organize activity feed chronologically\".",
+			"Added new data-field in extended stats: \"Best 60min heart rate\".",
+			"Extension browser icon now start the web app.",
+			"\"Dated Athlete Settings\" are now enabled by default."
+		],
+		isPatch: false,
+		fixes: [
+			"Added the day of the week in fitness trend popup.",
+			"Fixed fitness trend \"Form\" miscalculation: \"Form\" is now based on yesterday's \"Fitness\" and \"Fatigue\" instead of current day. (See: https://help.trainingpeaks.com/hc/en-us/articles/204071764-Form-TSB)",
+			"Fixed Grade Adjusted Pace distribution graph not displayed anymore for runner in extended stats.",
+			"Fixed synchronisation stopped when following error were triggered: \"Uncaught Error: Cannot deserialize zones\".",
+			"Fixed various glitches in UI."
+		]
+	},
+	{
 		version: "6.6.0",
 		date: "2018-09-29",
 		message: "\"Stravistix\" is now named \"Elevate\". This update brings this name change and some improvements.",
