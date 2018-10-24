@@ -19,7 +19,9 @@ import { YearProgressOverviewDialogComponent } from "./year-progress-overview-di
 import { YearProgressForOverviewModel } from "./shared/models/year-progress-for-overview.model";
 import { AppError } from "../shared/models/app-error.model";
 import { AddYearProgressPresetsDialogComponent } from "./add-year-progress-presets-dialog/add-year-progress-presets-dialog.component";
-import { YearProgressPresetsDialogData } from "./shared/models/year-progress-presets-dialog-data";
+import { AddYearProgressPresetsDialogData } from "./shared/models/add-year-progress-presets-dialog-data";
+import { ManageYearProgressPresetsDialogComponent } from "./manage-year-progress-presets-dialog/manage-year-progress-presets-dialog.component";
+import { YearProgressPresetModel } from "./shared/models/year-progress-preset.model";
 
 @Component({
 	selector: "app-year-progress",
@@ -58,7 +60,8 @@ export class YearProgressComponent implements OnInit {
 	public yearProgressStyleModel: YearProgressStyleModel;
 	public momentWatched: Moment;
 	public hasActivityModels: boolean = null; // Can be null: don't know yet true/false status on load
-	public isProgressionInitialized = false;
+	public yearProgressPresetsCount: number = null;
+	public isProgressionInitialized: boolean = false;
 
 	constructor(public userSettingsService: UserSettingsService,
 				public syncService: SyncService,
@@ -84,16 +87,12 @@ export class YearProgressComponent implements OnInit {
 		}).then((results: Object[]) => {
 
 			const userSettingsModel = _.first(results) as UserSettingsModel;
-			const syncedActivityModels = _.last(results) as SyncedActivityModel[];
-			const isMetric = (userSettingsModel.systemUnit === UserSettingsModel.SYSTEM_UNIT_METRIC_KEY);
-
-			this.hasActivityModels = !_.isEmpty(syncedActivityModels);
+			this.syncedActivityModels = _.last(results) as SyncedActivityModel[];
+			this.isMetric = (userSettingsModel.systemUnit === UserSettingsModel.SYSTEM_UNIT_METRIC_KEY);
+			this.hasActivityModels = !_.isEmpty(this.syncedActivityModels);
 
 			if (this.hasActivityModels) {
-				this.setup(
-					isMetric,
-					syncedActivityModels
-				);
+				this.setup();
 			}
 
 			// Use default moment provided by service on init (should be today on first load)
@@ -113,14 +112,8 @@ export class YearProgressComponent implements OnInit {
 
 	/**
 	 *
-	 * @param {boolean} isMetric
-	 * @param {SyncedActivityModel[]} syncedActivityModels
 	 */
-	public setup(isMetric: boolean, syncedActivityModels: SyncedActivityModel[]): void {
-
-		this.isMetric = isMetric;
-
-		this.syncedActivityModels = syncedActivityModels;
+	public setup(): void {
 
 		// Keep commute rides in stats by default
 		this.includeCommuteRide = (localStorage.getItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY) !== "false");
@@ -155,6 +148,9 @@ export class YearProgressComponent implements OnInit {
 		const existingSelectedYears = this.findExistingSelectedYears();
 		this.selectedYears = (existingSelectedYears) ? existingSelectedYears : this.availableYears;
 
+		// Count presets
+		this.updateYearProgressPresetsCount();
+
 		// Compute first progression
 		this.progression();
 
@@ -163,6 +159,12 @@ export class YearProgressComponent implements OnInit {
 
 		this.isProgressionInitialized = true;
 
+	}
+
+	public updateYearProgressPresetsCount() {
+		this.yearProgressService.fetchPresets().then((models: YearProgressPresetModel[]) => {
+			this.yearProgressPresetsCount = models.length;
+		});
 	}
 
 	public progression(): void {
@@ -183,16 +185,32 @@ export class YearProgressComponent implements OnInit {
 		return _.maxBy(activitiesCountByTypeModels, "count").type;
 	}
 
+	public persistActivityTypesPreference(selectedActivityTypes: string[]) {
+		localStorage.setItem(YearProgressComponent.LS_SELECTED_ACTIVITY_TYPES_KEY, JSON.stringify(selectedActivityTypes));
+	}
+
+	public persistProgressTypePreference(type: ProgressType) {
+		localStorage.setItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY, type.toString());
+	}
+
+	public persistCommuteRidesPreference(includeCommuteRide: boolean) {
+		localStorage.setItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY, JSON.stringify(includeCommuteRide));
+	}
+
+	public persistIndoorRidesPreference(includeIndoorRide: boolean) {
+		localStorage.setItem(YearProgressComponent.LS_INCLUDE_INDOOR_RIDES_KEY, JSON.stringify(includeIndoorRide));
+	}
+
 	public onSelectedActivityTypesChange(): void {
 
 		if (this.selectedActivityTypes.length > 0) {
 			this.progression();
-			localStorage.setItem(YearProgressComponent.LS_SELECTED_ACTIVITY_TYPES_KEY, JSON.stringify(this.selectedActivityTypes));
+			this.persistActivityTypesPreference(this.selectedActivityTypes);
 		}
 	}
 
 	public onSelectedProgressTypeChange(): void {
-		localStorage.setItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY, this.selectedProgressType.type.toString());
+		this.persistProgressTypePreference(this.selectedProgressType.type);
 	}
 
 	public onSelectedYearsChange(): void {
@@ -204,12 +222,12 @@ export class YearProgressComponent implements OnInit {
 
 	public onIncludeCommuteRideToggle(): void {
 		this.progression();
-		localStorage.setItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY, JSON.stringify(this.includeCommuteRide));
+		this.persistCommuteRidesPreference(this.includeCommuteRide);
 	}
 
 	public onIncludeIndoorRideToggle(): void {
 		this.progression();
-		localStorage.setItem(YearProgressComponent.LS_INCLUDE_INDOOR_RIDES_KEY, JSON.stringify(this.includeIndoorRide));
+		this.persistIndoorRidesPreference(this.includeIndoorRide);
 	}
 
 	public onShowOverview(): void {
@@ -223,44 +241,92 @@ export class YearProgressComponent implements OnInit {
 			yearProgressStyleModel: this.yearProgressStyleModel
 		};
 
-		this.dialog.open(YearProgressOverviewDialogComponent, {
+		const dialogRef = this.dialog.open(YearProgressOverviewDialogComponent, {
 			minWidth: YearProgressOverviewDialogComponent.WIDTH,
 			maxWidth: YearProgressOverviewDialogComponent.WIDTH,
 			width: YearProgressOverviewDialogComponent.WIDTH,
 			data: data
 		});
 
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe(() => afterClosedSubscription.unsubscribe());
 	}
 
 	public onHelperClick(): void {
-		this.dialog.open(YearProgressHelperDialogComponent, {
+		const dialogRef = this.dialog.open(YearProgressHelperDialogComponent, {
 			minWidth: YearProgressHelperDialogComponent.MIN_WIDTH,
 			maxWidth: YearProgressHelperDialogComponent.MAX_WIDTH,
 		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe(() => afterClosedSubscription.unsubscribe());
 	}
 
-	public onAddTarget(): void {
+	public onSavePreset(addWithTarget: boolean): void {
 
-	}
-
-	public onSavePreset(): void {
-
-		const yearProgressPresetsDialogData: YearProgressPresetsDialogData = {
+		const addYearProgressPresetsDialogData: AddYearProgressPresetsDialogData = {
 			activityTypes: this.selectedActivityTypes,
 			yearProgressTypeModel: this.selectedProgressType,
 			includeCommuteRide: this.includeCommuteRide,
 			includeIndoorRide: this.includeIndoorRide,
+			addWithTarget: addWithTarget
 		};
 
-		this.dialog.open(AddYearProgressPresetsDialogComponent, {
+		const dialogRef = this.dialog.open(AddYearProgressPresetsDialogComponent, {
 			minWidth: AddYearProgressPresetsDialogComponent.MIN_WIDTH,
 			maxWidth: AddYearProgressPresetsDialogComponent.MAX_WIDTH,
-			data: yearProgressPresetsDialogData
+			data: addYearProgressPresetsDialogData
+		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe(() => {
+			this.updateYearProgressPresetsCount();
+			afterClosedSubscription.unsubscribe();
 		});
 	}
 
-	public onViewPresets(): void {
+	public onManagePresets(): void {
 
+		const dialogRef = this.dialog.open(ManageYearProgressPresetsDialogComponent, {
+			minWidth: ManageYearProgressPresetsDialogComponent.MIN_WIDTH,
+			maxWidth: ManageYearProgressPresetsDialogComponent.MAX_WIDTH,
+		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((yearProgressPresetModel: YearProgressPresetModel) => {
+
+			const loadPreset = (!_.isEmpty(yearProgressPresetModel));
+
+			if (loadPreset) {
+
+				const progressTypeChange = (yearProgressPresetModel.progressType !== this.selectedProgressType.type);
+				const activityTypesChange = (yearProgressPresetModel.activityTypes.join(";") !== this.selectedActivityTypes.join(";"));
+				const commuteRideChange = (yearProgressPresetModel.includeCommuteRide !== this.includeCommuteRide);
+				const indoorRideChange = (yearProgressPresetModel.includeIndoorRide !== this.includeIndoorRide);
+				console.warn("Dont forget to test a target value change (between preset loaded) here");
+
+				if (progressTypeChange) {
+					this.persistProgressTypePreference(yearProgressPresetModel.progressType);
+				}
+
+				if (activityTypesChange) {
+					this.persistActivityTypesPreference(yearProgressPresetModel.activityTypes);
+				}
+
+				if (commuteRideChange) {
+					this.persistCommuteRidesPreference(yearProgressPresetModel.includeCommuteRide);
+				}
+
+				if (indoorRideChange) {
+					this.persistIndoorRidesPreference(yearProgressPresetModel.includeIndoorRide);
+				}
+
+				if (progressTypeChange || activityTypesChange || commuteRideChange || indoorRideChange) {
+					console.log("Reload with new preset");
+					this.setup();
+				}
+			}
+
+			this.updateYearProgressPresetsCount();
+
+			afterClosedSubscription.unsubscribe();
+		});
 	}
 
 	/**

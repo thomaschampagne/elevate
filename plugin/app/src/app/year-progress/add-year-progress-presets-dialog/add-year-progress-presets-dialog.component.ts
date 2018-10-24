@@ -3,7 +3,7 @@ import { YearProgressPresetModel } from "../shared/models/year-progress-preset.m
 import { YearProgressService } from "../shared/services/year-progress.service";
 import { MAT_DIALOG_DATA } from "@angular/material";
 import { ProgressType } from "../shared/models/progress-type.enum";
-import { YearProgressPresetsDialogData } from "../shared/models/year-progress-presets-dialog-data";
+import { AddYearProgressPresetsDialogData } from "../shared/models/add-year-progress-presets-dialog-data";
 
 @Component({
 	selector: "app-add-year-progress-presets-dialog",
@@ -20,12 +20,12 @@ export class AddYearProgressPresetsDialogComponent implements OnInit {
 	public yearProgressPresetModel: YearProgressPresetModel;
 
 	constructor(public yearProgressService: YearProgressService,
-				@Inject(MAT_DIALOG_DATA) public dialogData: YearProgressPresetsDialogData) {
+				@Inject(MAT_DIALOG_DATA) public dialogData: AddYearProgressPresetsDialogData) {
 	}
 
 	public ngOnInit(): void {
 		this.yearProgressPresetModel = new YearProgressPresetModel(this.dialogData.yearProgressTypeModel.type,
-			this.dialogData.activityTypes, this.dialogData.includeCommuteRide, this.dialogData.includeCommuteRide, this.dialogData.targetValue);
+			this.dialogData.activityTypes, this.dialogData.includeCommuteRide, this.dialogData.includeIndoorRide, this.dialogData.targetValue);
 	}
 
 	public onSave(): void {

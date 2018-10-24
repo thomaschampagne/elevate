@@ -1,0 +1,75 @@
+<h2 mat-dialog-title>Your presets</h2>
+<mat-dialog-content class="mat-body-1">
+
+	<div *ngIf="(yearProgressPresetModels && yearProgressPresetModels.length === 0)">
+		No saved presets
+	</div>
+
+	<mat-table *ngIf="(yearProgressPresetModels && yearProgressPresetModels.length > 0)" #table
+			   [dataSource]="dataSource" matSort>
+		<ng-container matColumnDef="progressType">
+			<mat-header-cell *matHeaderCellDef>Progress Type</mat-header-cell>
+			<mat-cell *matCellDef="let yearProgressPresetModel">
+				{{progressTypeLabel(yearProgressPresetModel.progressType)}}
+			</mat-cell>
+		</ng-container>
+
+		<ng-container matColumnDef="activityTypes">
+			<mat-header-cell *matHeaderCellDef [ngClass]="'activityTypesColumn'">Activity Types</mat-header-cell>
+			<mat-cell *matCellDef="let yearProgressPresetModel" [ngClass]="'activityTypesColumn'">
+				{{yearProgressPresetModel.activityTypes.join(", ")}}
+			</mat-cell>
+		</ng-container>
+
+		<ng-container matColumnDef="includeCommuteRide">
+			<mat-header-cell *matHeaderCellDef>Include commute</mat-header-cell>
+			<mat-cell *matCellDef="let yearProgressPresetModel">
+				{{(yearProgressPresetModel.includeCommuteRide) ? "Yes": "No" }}
+			</mat-cell>
+		</ng-container>
+
+		<ng-container matColumnDef="includeIndoorRide">
+			<mat-header-cell *matHeaderCellDef>Include indoor</mat-header-cell>
+			<mat-cell *matCellDef="let yearProgressPresetModel">
+				{{(yearProgressPresetModel.includeIndoorRide) ? "Yes": "No" }}
+			</mat-cell>
+		</ng-container>
+
+		<ng-container matColumnDef="targetValue">
+			<mat-header-cell *matHeaderCellDef>Target Value</mat-header-cell>
+			<mat-cell *matCellDef="let yearProgressPresetModel">{{yearProgressPresetModel.targetValue}}</mat-cell>
+		</ng-container>
+
+		<ng-container matColumnDef="load">
+			<mat-header-cell *matHeaderCellDef [ngClass]="'loadColumn'"></mat-header-cell>
+			<mat-cell *matCellDef="let yearProgressPresetModel; let rowId = index" [ngClass]="'loadColumn'">
+				<button mat-icon-button (click)="onLoad(rowId)"
+						matTooltip="Load preset">
+					<mat-icon>file_upload</mat-icon>
+				</button>
+			</mat-cell>
+		</ng-container>
+
+		<ng-container matColumnDef="delete">
+			<mat-header-cell *matHeaderCellDef [ngClass]="'deleteColumn'"></mat-header-cell>
+			<mat-cell *matCellDef="let yearProgressPresetModel; let rowId = index" [ngClass]="'deleteColumn'">
+				<button mat-icon-button
+						(click)="onDelete(rowId)"
+						matTooltip="Delete preset">
+					<mat-icon>delete</mat-icon>
+				</button>
+			</mat-cell>
+		</ng-container>
+
+		<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+		<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+	</mat-table>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close color="primary">
+		Back
+	</button>
+</mat-dialog-actions>
+

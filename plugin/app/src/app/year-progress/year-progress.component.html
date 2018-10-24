@@ -72,11 +72,15 @@
 						</div>
 					</div>
 					<div fxFlex>
-						<button mat-button mat-stroked-button color="primary" (click)="onSavePreset()">
-							Add target / Save preset
+						<button mat-button mat-stroked-button color="primary" (click)="onSavePreset(true)">
+							Add target
 						</button>&nbsp;
-						<button mat-button mat-stroked-button color="primary" (click)="onViewPresets()">
-							Load / Manage presets (n)
+						<button mat-button mat-stroked-button color="primary" (click)="onSavePreset(false)">
+							Save preset
+						</button>&nbsp;
+						<button mat-button mat-stroked-button color="primary" *ngIf="(yearProgressPresetsCount > 0)"
+								(click)="onManagePresets()">
+							Your presets ({{yearProgressPresetsCount}})
 						</button>
 					</div>
 				</div>
