@@ -104,12 +104,12 @@
 
 		<div class="maths-area">
 			<katex
-				[expression]="'Fitness_{(day + 1)} = Fitness_{(day)} + (StressScore_{(day)} - Fitness_{(day)})~\\times~(1-e^{-1 / 42})'"></katex>
+				[expression]="'Fitness_{(day)} = Fitness_{(day - 1)} + (StressScore_{(day)} - Fitness_{(day - 1)})~\\times~(1-e^{-1 / 42})'"></katex>
 			<br/>
 			<katex
-				[expression]="'Fatigue_{(day + 1)} = Fatigue_{(day)} + (StressScore_{(day)} - Fatigue_{(day)})~\\times~(1-e^{-1 / 7})'"></katex>
+				[expression]="'Fatigue_{(day)} = Fatigue_{(day - 1)} + (StressScore_{(day)} - Fatigue_{(day - 1)})~\\times~(1-e^{-1 / 7})'"></katex>
 			<br/>
-			<katex [expression]="'Form_{(day + 1)} = Fitness_{(day + 1)} - Fatigue_{(day + 1)}'"></katex>
+			<katex [expression]="'Form_{(day)} = Fitness_{(day - 1)} - Fatigue_{(day - 1)}'"></katex>
 		</div>
 
 		<h2 class="mat-headline">Using training zones</h2>

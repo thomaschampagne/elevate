@@ -228,6 +228,11 @@ export class GlobalSettingsService {
 	}, {
 		title: "Dashboard",
 		options: [{
+			key: "feedChronologicalOrder",
+			type: "checkbox",
+			title: "Organize activity feed chronologically",
+			labels: ["All"]
+		}, {
 			key: "feedHideChallenges",
 			type: "checkbox",
 			title: "Hide challenges",

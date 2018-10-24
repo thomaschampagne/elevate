@@ -11,6 +11,7 @@ import { Subscription } from "rxjs";
 import { UserZonesModel } from "../../../../core/scripts/shared/models/user-settings/user-zones.model";
 import { UserSettingsModel } from "../../../../core/scripts/shared/models/user-settings/user-settings.model";
 import { ZoneModel } from "../../../../core/scripts/shared/models/zone.model";
+import { MatSnackBar } from "@angular/material";
 
 @Component({
 	selector: "app-zones-settings",
@@ -33,7 +34,8 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 	constructor(public userSettingsService: UserSettingsService,
 				public route: ActivatedRoute,
 				public router: Router,
-				public zonesService: ZonesService) {
+				public zonesService: ZonesService,
+				public snackBar: MatSnackBar) {
 	}
 
 	public ngOnInit(): void {
@@ -60,7 +62,17 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 					return;
 				}
 
-				this.loadZonesFromDefinition(zoneDefinition);
+				try {
+					this.loadZonesFromDefinition(zoneDefinition);
+				} catch (e) {
+					const snackBarRef = this.snackBar.open("Your zones are corrupted. Reset your settings from advanced menu.", "Go to advanced menu", {
+						verticalPosition: "top"
+					});
+					const subscription = snackBarRef.onAction().subscribe(() => {
+						this.router.navigate([AppRoutesModel.advancedMenu]);
+						subscription.unsubscribe();
+					});
+				}
 			});
 
 		});
@@ -85,7 +97,6 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 	 * Load current zones from a zone definition.
 	 * Also update the current zones managed by the zone service to add, remove, reset, import, export, ... zones.
 	 * @param {ZoneDefinitionModel} zoneDefinition
-	 * @param {string} overrideDefinitionTrigger
 	 */
 	private loadZonesFromDefinition(zoneDefinition: ZoneDefinitionModel) {
 

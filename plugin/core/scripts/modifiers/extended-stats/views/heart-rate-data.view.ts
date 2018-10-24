@@ -126,7 +126,7 @@ export class HeartRateDataView extends AbstractDataView {
 		this.content += this.generateSectionTitle("<img src=\"" + this.appResources.heartBeatIcon + "\" style=\"vertical-align: baseline; height:20px;\"/> HEART RATE <a target=\"_blank\" href=\"" + this.appResources.settingsLink + "#/zonesSettings/heartRate\" style=\"float: right;margin-right: 10px;\"><img src=\"" + this.appResources.cogIcon + "\" style=\"vertical-align: baseline; height:20px;\"/></a>");
 
 		// Creates a grid
-		this.makeGrid(3, 3); // (col, row)
+		this.makeGrid(3, 4); // (col, row)
 
 		this.insertDataIntoGrid();
 		this.generateCanvasForGraph();
@@ -144,19 +144,21 @@ export class HeartRateDataView extends AbstractDataView {
 	protected insertDataIntoGrid(): void {
 
 		// Insert some data inside grid
-		this.insertContentAtGridPosition(0, 0, this.printNumber(this.heartRateData.HRSS, 0), "<strong>H</strong>eart <strong>R</strong>ate <strong>S</strong>tress <strong>S</strong>core <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "", "displayAdvancedHrData");
-		this.insertContentAtGridPosition(1, 0, this.printNumber(this.heartRateData.HRSSPerHour, 1), "<strong>HRSS</strong> / Hour <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "", "displayAdvancedHrData"); // Usefull for running
+		this.insertContentAtGridPosition(0, 0, this.printNumber(this.heartRateData.HRSS, 0), "<strong>H</strong>eart <strong>R</strong>ate <strong>S</strong>tress <strong>S</strong>core", "", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(1, 0, this.printNumber(this.heartRateData.HRSSPerHour, 1), "<strong>HRSS</strong> / Hour", "", "displayAdvancedHrData"); // Usefull for running
 		this.insertContentAtGridPosition(2, 0, this.printNumber(this.heartRateData.activityHeartRateReserve, 0), "Heart Rate Reserve Avg", "%", "displayAdvancedHrData");
 
 		// Trimp
 		this.insertContentAtGridPosition(0, 1, this.printNumber(this.heartRateData.TRIMP, 0), "TRaining IMPulse", "", "displayAdvancedHrData");
 		this.insertContentAtGridPosition(1, 1, this.printNumber(this.heartRateData.TRIMPPerHour, 1), "TRaining IMPulse / Hour", "", "displayAdvancedHrData");
-		this.insertContentAtGridPosition(2, 1, this.printNumber(this.heartRateData.best20min, 0), "Best 20min Heart Rate <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "bpm", "displayAdvancedHrData");
+
+		this.insertContentAtGridPosition(0, 2, this.printNumber(this.heartRateData.best20min, 0), "Best 20min Heart Rate", "bpm", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(1, 2, this.printNumber(this.heartRateData.best60min, 0), "Best 60min Heart Rate <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "bpm", "displayAdvancedHrData");
 
 		// Quartiles
-		this.insertContentAtGridPosition(0, 2, this.heartRateData.lowerQuartileHeartRate, "25% Quartile HeartRate", "bpm", "displayAdvancedHrData");
-		this.insertContentAtGridPosition(1, 2, this.heartRateData.medianHeartRate, "50% Quartile HeartRate", "bpm", "displayAdvancedHrData");
-		this.insertContentAtGridPosition(2, 2, this.heartRateData.upperQuartileHeartRate, "75% Quartile HeartRate", "bpm", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(0, 3, this.heartRateData.lowerQuartileHeartRate, "25% Quartile HeartRate", "bpm", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(1, 3, this.heartRateData.medianHeartRate, "50% Quartile HeartRate", "bpm", "displayAdvancedHrData");
+		this.insertContentAtGridPosition(2, 3, this.heartRateData.upperQuartileHeartRate, "75% Quartile HeartRate", "bpm", "displayAdvancedHrData");
 
 	}
 

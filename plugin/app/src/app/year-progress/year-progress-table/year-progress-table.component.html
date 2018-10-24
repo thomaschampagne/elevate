@@ -4,7 +4,7 @@
 	<ng-container matColumnDef="year">
 		<mat-header-cell *matHeaderCellDef>Year</mat-header-cell>
 		<mat-cell *matCellDef="let progressionAtDay">
-			<span class="mat-title" [style.color]="progressionAtDay.color">{{progressionAtDay.year}}</span>
+			<strong [style.color]="progressionAtDay.color">{{progressionAtDay.year}}</strong>
 		</mat-cell>
 	</ng-container>
 

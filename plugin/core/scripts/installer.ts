@@ -11,6 +11,9 @@ import { SyncedActivityModel } from "./shared/models/sync/synced-activity.model"
 import { AppStorageType } from "./models/storage-type.enum";
 import { UserZonesModel } from "./shared/models/user-settings/user-zones.model";
 import { Constant } from "./shared/constant";
+import { UserSettingsModel } from "./shared/models/user-settings/user-settings.model";
+import { DatedAthleteSettingsDao } from "../../app/src/app/shared/dao/dated-athlete-settings/dated-athlete-settings-dao.service";
+import { DatedAthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
 
 class Installer {
 
@@ -81,7 +84,7 @@ class Installer {
 
 			promise = AppStorage.getInstance().rm(AppStorageType.LOCAL, "computedActivities")
 				.then(() => {
-					return AppStorage.getInstance().rm(AppStorageType.LOCAL, "lastSyncDateTime")
+					return AppStorage.getInstance().rm(AppStorageType.LOCAL, "lastSyncDateTime");
 				}).then(() => {
 					console.log("Local History cleared");
 					return Promise.resolve();
@@ -301,6 +304,50 @@ class Installer {
 		return promise;
 	}
 
+	/**
+	 * Force user using single athlete settings to use dated ones
+	 */
+	protected migrate_to_6_7_0(): Promise<void> {
+
+		let promise = Promise.resolve();
+
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.7.0")) {
+
+			console.log("Migrate to 6.7.0");
+
+			promise = AppStorage.getInstance().get<DatedAthleteSettingsModel[]>(AppStorageType.LOCAL, DatedAthleteSettingsDao.DATED_ATHLETE_SETTINGS_KEY)
+				.then((localDatedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
+
+					if (_.isEmpty(localDatedAthleteSettingsModels)) {
+
+						return AppStorage.getInstance().get(AppStorageType.SYNC).then((userSettingsModel: UserSettingsModel) => {
+
+							const athleteSettings = (userSettingsModel && userSettingsModel.athleteModel && userSettingsModel.athleteModel.athleteSettings)
+								? userSettingsModel.athleteModel.athleteSettings : AthleteSettingsModel.DEFAULT_MODEL;
+
+							const datedAthleteSettings: DatedAthleteSettingsModel[] = [
+								new DatedAthleteSettingsModel(DatedAthleteSettingsModel.DEFAULT_SINCE, athleteSettings),
+								new DatedAthleteSettingsModel(null, athleteSettings)
+							];
+
+							return AppStorage.getInstance().set(AppStorageType.LOCAL, DatedAthleteSettingsDao.DATED_ATHLETE_SETTINGS_KEY, datedAthleteSettings).then(() => {
+								return AppStorage.getInstance().set(AppStorageType.SYNC, "hasDatedAthleteSettings", true);
+							});
+
+						});
+
+					} else {
+						return Promise.resolve();
+					}
+				});
+
+		} else {
+			console.log("Skip migrate to 6.7.0");
+		}
+
+		return promise;
+	}
+
 	protected handleUpdate(): Promise<void> {
 
 		console.log("Updated from " + this.previousVersion + " to " + this.currentVersion);
@@ -316,6 +363,8 @@ class Installer {
 			return this.migrate_to_6_5_0();
 		}).then(() => {
 			return this.migrate_to_6_6_0();
+		}).then(() => {
+			return this.migrate_to_6_7_0();
 		}).catch(error => console.error(error));
 
 	}

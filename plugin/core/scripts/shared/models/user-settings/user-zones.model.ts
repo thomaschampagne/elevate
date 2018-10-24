@@ -5,12 +5,12 @@ export class UserZonesModel {
 
 	public static readonly TYPE_SPEED: string = "speed";
 	public static readonly TYPE_PACE: string = "pace";
-	public static readonly TYPE_GRADEADJUSTEDPACE: string = "gradeAdjustedPace";
-	public static readonly TYPE_HEARTRATE: string = "heartRate";
+	public static readonly TYPE_GRADE_ADJUSTED_PACE: string = "gradeAdjustedPace";
+	public static readonly TYPE_HEART_RATE: string = "heartRate";
 	public static readonly TYPE_POWER: string = "power";
-	public static readonly TYPE_RUNNINGPOWER: string = "runningPower";
-	public static readonly TYPE_CYCLINGCADENCE: string = "cyclingCadence";
-	public static readonly TYPE_RUNNINGCADENCE: string = "runningCadence";
+	public static readonly TYPE_RUNNING_POWER: string = "runningPower";
+	public static readonly TYPE_CYCLING_CADENCE: string = "cyclingCadence";
+	public static readonly TYPE_RUNNING_CADENCE: string = "runningCadence";
 	public static readonly TYPE_GRADE: string = "grade";
 	public static readonly TYPE_ELEVATION: string = "elevation";
 	public static readonly TYPE_ASCENT: string = "ascent";
@@ -67,16 +67,14 @@ export class UserZonesModel {
 		_.forEach(zones, (zone: number, index: number) => {
 
 			if (!_.isNumber(zone)) {
-				throw new Error("Cannot deserialize zones");
+				throw new Error("Cannot deserialize zones because of corrupted zones. Try to reset your settings from advanced menu (Go to 'Elevate App' => 'Contextual menu in top right' => 'Advanced')");
 			}
-
 
 			if (_.isNumber(zones[index + 1])) {
 				deserialized.push({
 					from: zone,
 					to: zones[index + 1]
 				});
-
 			}
 		});
 

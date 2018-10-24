@@ -247,21 +247,18 @@ export class FitnessService {
 						if (isPreStartDay) {
 
 							if (fitnessTrendConfigModel.initializedFitnessTrendModel) {
-
 								ctl = (!_.isNull(fitnessTrendConfigModel.initializedFitnessTrendModel.ctl)) ? fitnessTrendConfigModel.initializedFitnessTrendModel.ctl : 0;
 								atl = (!_.isNull(fitnessTrendConfigModel.initializedFitnessTrendModel.atl)) ? fitnessTrendConfigModel.initializedFitnessTrendModel.atl : 0;
 								tsb = ctl - atl;
-
 							} else {
 								ctl = atl = tsb = 0;
 							}
 
 						} else {
+							tsb = ctl - atl;
 							ctl = ctl + (dayStress.finalStressScore - ctl) * (1 - Math.exp(-1 / 42));
 							atl = atl + (dayStress.finalStressScore - atl) * (1 - Math.exp(-1 / 7));
-							tsb = ctl - atl;
 						}
-
 
 						let dayFitnessTrend: DayFitnessTrendModel;
 
