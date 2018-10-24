@@ -315,27 +315,31 @@ class Installer {
 
 			console.log("Migrate to 6.7.0");
 
-			// Migrate storage of zones from ZoneModel[] to number[] => less space on storage
-			promise = AppStorage.getInstance().get(AppStorageType.SYNC).then((userSettingsModel: UserSettingsModel) => {
+			promise = AppStorage.getInstance().get<DatedAthleteSettingsModel[]>(AppStorageType.LOCAL, DatedAthleteSettingsDao.DATED_ATHLETE_SETTINGS_KEY)
+				.then((localDatedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
 
-				if (!userSettingsModel.hasDatedAthleteSettings) {
+					if (_.isEmpty(localDatedAthleteSettingsModels)) {
 
-					const athleteSettings = (userSettingsModel && userSettingsModel.athleteModel && userSettingsModel.athleteModel.athleteSettings)
-						? userSettingsModel.athleteModel.athleteSettings : AthleteSettingsModel.DEFAULT_MODEL;
+						return AppStorage.getInstance().get(AppStorageType.SYNC).then((userSettingsModel: UserSettingsModel) => {
 
-					const datedAthleteSettings: DatedAthleteSettingsModel[] = [
-						new DatedAthleteSettingsModel(DatedAthleteSettingsModel.DEFAULT_SINCE, athleteSettings),
-						new DatedAthleteSettingsModel(null, athleteSettings)
-					];
+							const athleteSettings = (userSettingsModel && userSettingsModel.athleteModel && userSettingsModel.athleteModel.athleteSettings)
+								? userSettingsModel.athleteModel.athleteSettings : AthleteSettingsModel.DEFAULT_MODEL;
 
-					return AppStorage.getInstance().set(AppStorageType.LOCAL, DatedAthleteSettingsDao.DATED_ATHLETE_SETTINGS_KEY, datedAthleteSettings).then(() => {
-						return AppStorage.getInstance().set(AppStorageType.SYNC, "hasDatedAthleteSettings", true);
-					});
+							const datedAthleteSettings: DatedAthleteSettingsModel[] = [
+								new DatedAthleteSettingsModel(DatedAthleteSettingsModel.DEFAULT_SINCE, athleteSettings),
+								new DatedAthleteSettingsModel(null, athleteSettings)
+							];
 
-				} else {
-					return Promise.resolve();
-				}
-			});
+							return AppStorage.getInstance().set(AppStorageType.LOCAL, DatedAthleteSettingsDao.DATED_ATHLETE_SETTINGS_KEY, datedAthleteSettings).then(() => {
+								return AppStorage.getInstance().set(AppStorageType.SYNC, "hasDatedAthleteSettings", true);
+							});
+
+						});
+
+					} else {
+						return Promise.resolve();
+					}
+				});
 
 		} else {
 			console.log("Skip migrate to 6.7.0");
