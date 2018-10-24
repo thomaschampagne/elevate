@@ -3,8 +3,9 @@
 		<span *ngIf="!hasDatedAthleteSettings"><strong>Single Athlete Settings</strong> are <strong>active</strong>.
 			Enable <strong>Dated Athlete Settings</strong> for more reliable stats.</span>
 
-		<span
-			*ngIf="hasDatedAthleteSettings"><strong>Dated Athlete Settings</strong> are <strong>active</strong>.</span>
+		<span *ngIf="hasDatedAthleteSettings"><strong>Dated Athlete Settings</strong> are <strong>active</strong>.
+			You can enable <strong>Single Athlete Settings</strong> by disabling <strong>Dated Athlete Settings</strong>.
+		</span>
 	</span>
 	<span fxFlex></span>
 	<mat-slide-toggle [(ngModel)]="hasDatedAthleteSettings" (change)="onHasDatedAthleteSettingsChange()">
