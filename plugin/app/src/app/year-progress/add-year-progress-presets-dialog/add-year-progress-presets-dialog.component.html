@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Save preset</h2>
+<h2 mat-dialog-title>Create a preset with or without target</h2>
 <mat-dialog-content class="mat-body-1">
 
 	<div fxLayout="column" fxLayoutAlign="start start">
@@ -23,9 +23,9 @@
 				   value="{{(yearProgressPresetModel.includeIndoorRide) ? 'Enabled' : 'Disabled'}}">
 		</mat-form-field>
 
-		<mat-form-field fxFill *ngIf="dialogData.addWithTarget">
+		<mat-form-field fxFill>
 			<input matInput
-				   placeholder="Target value {{(dialogData.yearProgressTypeModel.unit) ? 'in ' + dialogData.yearProgressTypeModel.unit : ''}}"
+				   placeholder="Enter target value {{(dialogData.yearProgressTypeModel.unit) ? 'in ' + dialogData.yearProgressTypeModel.unit : ''}} or leave empty"
 				   type="number"
 				   [(ngModel)]="yearProgressPresetModel.targetValue"
 				   (change)="onTargetValueChanged()"
@@ -38,7 +38,7 @@
 		Cancel
 	</button>
 	<button mat-button mat-dialog-close color="primary" (click)="onSave()">
-		Save
+		<span>Create preset</span>
 	</button>
 </mat-dialog-actions>
 

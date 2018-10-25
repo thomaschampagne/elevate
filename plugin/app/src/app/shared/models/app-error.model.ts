@@ -21,6 +21,7 @@ export class AppError {
 	public static readonly DATED_ATHLETE_SETTINGS_DUPLICATES: string = "PAS_4";
 	public static readonly DATED_ATHLETE_SETTINGS_INVALID_DATE: string = "PAS_5";
 	public static readonly YEAR_PROGRESS_PRESETS_DO_NOT_EXISTS: string = "YPP_01";
+	public static readonly YEAR_PROGRESS_PRESETS_ALREADY_EXISTS: string = "YPP_02";
 
 	public code: string;
 	public message: string;
@@ -37,6 +38,7 @@ export class AppError {
 		this._codes.push(AppError.DATED_ATHLETE_SETTINGS_DUPLICATES);
 		this._codes.push(AppError.DATED_ATHLETE_SETTINGS_INVALID_DATE);
 		this._codes.push(AppError.YEAR_PROGRESS_PRESETS_DO_NOT_EXISTS);
+		this._codes.push(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS);
 	}
 
 	public checkForDuplicatesErrors(): void {

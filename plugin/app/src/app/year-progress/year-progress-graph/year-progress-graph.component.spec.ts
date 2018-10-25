@@ -51,7 +51,7 @@ describe("YearProgressGraphComponent", () => {
 		const isMetric = true;
 		const includeCommuteRide = true;
 		const includeIndoorRide = true;
-		component.yearProgressModels = yearProgressService.progression(syncedActivityModels,
+		component.yearProgressModels = yearProgressService.yearProgression(syncedActivityModels,
 			typesFilter,
 			yearsFilter,
 			isMetric,

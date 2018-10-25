@@ -4,7 +4,7 @@
 </div>
 
 
-<mat-card *ngIf="hasActivityModels === false" class="no-data">
+<mat-card *ngIf="(hasActivityModels === false)" class="no-data">
 	<mat-card-title>
 		Synchronise your activities
 	</mat-card-title>
@@ -25,7 +25,6 @@
 
 <mat-card *ngIf="hasActivityModels">
 	<mat-card-content>
-
 		<div fxLayout="row" fxLayoutAlign="start start" id="inputsSelection">
 			<div fxFlex="68" fxFlex.lt-lg="100">
 				<div fxLayout="column" fxLayoutAlign="start start">
@@ -72,15 +71,16 @@
 						</div>
 					</div>
 					<div fxFlex>
-						<button mat-button mat-stroked-button color="primary" (click)="onSavePreset(true)">
-							Add target
+						<button mat-button mat-stroked-button color="primary"
+								(click)="onCreatePreset()"
+								matTooltip="Create a preset from current selection with or without target">
+							Create preset & target
 						</button>&nbsp;
-						<button mat-button mat-stroked-button color="primary" (click)="onSavePreset(false)">
-							Save preset
-						</button>&nbsp;
-						<button mat-button mat-stroked-button color="primary" *ngIf="(yearProgressPresetsCount > 0)"
-								(click)="onManagePresets()">
-							Your presets ({{yearProgressPresetsCount}})
+						<button mat-button mat-stroked-button color="primary"
+								*ngIf="(yearProgressPresetsCount > 0)"
+								(click)="onManagePresets()"
+								matTooltip="Load a preset previously saved with or without associated target">
+							Load presets & targets ({{yearProgressPresetsCount}})
 						</button>
 					</div>
 				</div>
@@ -117,12 +117,13 @@
 			<div fxFlex="68" fxFill>
 				<mat-card-title class="mat-title">
 					Cumulative {{selectedProgressType.label}} {{(selectedProgressType.unit) ? "in " +
-					selectedProgressType.unit : ""}}
+					selectedProgressType.unit : ""}} <span *ngIf="(targetValue !== null)" class="mat-subheading-1">&nbsp;&nbsp;➔&nbsp;&nbsp;Target {{targetValue}}{{(selectedProgressType.shortUnit) ? ' ' + selectedProgressType.shortUnit : ''}}</span>
 				</mat-card-title>
 				<app-year-progress-graph
 					[selectedYears]="selectedYears"
 					[selectedProgressType]="selectedProgressType"
 					[yearProgressModels]="yearProgressModels"
+					[targetProgressionModels]="targetProgressionModels"
 					[yearProgressStyleModel]="yearProgressStyleModel">
 				</app-year-progress-graph>
 			</div>

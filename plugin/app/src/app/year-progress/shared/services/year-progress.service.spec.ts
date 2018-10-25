@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 
-import { YearProgressService } from "./year-progress.service";
+import { TargetProgressionModel, YearProgressService } from "./year-progress.service";
 import { YearProgressActivitiesFixture } from "./year-progress-activities.fixture";
 import { YearProgressModel } from "../models/year-progress.model";
 import * as _ from "lodash";
@@ -115,7 +115,7 @@ describe("YearProgressService", () => {
 			const includeIndoorRide = true;
 
 			// When
-			const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
+			const progression: YearProgressModel[] = yearProgressService.yearProgression(TEST_SYNCED_MODELS,
 				typesFilter,
 				yearsFilter,
 				isMetric,
@@ -151,7 +151,7 @@ describe("YearProgressService", () => {
 			const includeIndoorRide = true;
 
 			// When
-			const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
+			const progression: YearProgressModel[] = yearProgressService.yearProgression(TEST_SYNCED_MODELS,
 				typesFilter,
 				yearsFilter,
 				isMetric,
@@ -195,7 +195,7 @@ describe("YearProgressService", () => {
 
 
 			// When
-			const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
+			const progression: YearProgressModel[] = yearProgressService.yearProgression(TEST_SYNCED_MODELS,
 				typesFilter,
 				yearsFilter,
 				isMetric,
@@ -278,7 +278,7 @@ describe("YearProgressService", () => {
 			);
 
 			// When
-			const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
+			const progression: YearProgressModel[] = yearProgressService.yearProgression(TEST_SYNCED_MODELS,
 				typesFilter,
 				yearsFilter,
 				isMetric,
@@ -340,7 +340,7 @@ describe("YearProgressService", () => {
 			);
 
 			// When
-			const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
+			const progression: YearProgressModel[] = yearProgressService.yearProgression(TEST_SYNCED_MODELS,
 				typesFilter,
 				yearsFilter,
 				isMetric,
@@ -397,7 +397,7 @@ describe("YearProgressService", () => {
 			);
 
 			// When
-			const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
+			const progression: YearProgressModel[] = yearProgressService.yearProgression(TEST_SYNCED_MODELS,
 				typesFilter,
 				yearsFilter,
 				isMetric,
@@ -446,7 +446,7 @@ describe("YearProgressService", () => {
 			);
 
 			// When
-			const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
+			const progression: YearProgressModel[] = yearProgressService.yearProgression(TEST_SYNCED_MODELS,
 				typesFilter,
 				yearsFilter,
 				isMetric,
@@ -476,7 +476,7 @@ describe("YearProgressService", () => {
 			const includeCommuteRide = true;
 			const includeIndoorRide = true;
 
-			const progressionMethodCall = () => yearProgressService.progression(syncedActivityModels,
+			const progressionMethodCall = () => yearProgressService.yearProgression(syncedActivityModels,
 				typesFilter,
 				yearsFilter,
 				isMetric,
@@ -499,7 +499,7 @@ describe("YearProgressService", () => {
 			const isMetric = true;
 			const includeCommuteRide = true;
 			const includeIndoorRide = true;
-			const progressionMethodCall = () => yearProgressService.progression(TEST_SYNCED_MODELS,
+			const progressionMethodCall = () => yearProgressService.yearProgression(TEST_SYNCED_MODELS,
 				typesFilter,
 				yearsFilter,
 				isMetric,
@@ -521,7 +521,7 @@ describe("YearProgressService", () => {
 			const includeCommuteRide = true;
 			const includeIndoorRide = true;
 			const yearsFilter: number[] = []; // All
-			const progressionMethodCall = () => yearProgressService.progression(TEST_SYNCED_MODELS,
+			const progressionMethodCall = () => yearProgressService.yearProgression(TEST_SYNCED_MODELS,
 				typesFilter,
 				yearsFilter,
 				isMetric,
@@ -544,7 +544,7 @@ describe("YearProgressService", () => {
 			const isMetric = true;
 			const includeCommuteRide = true;
 			const includeIndoorRide = true;
-			const progression: YearProgressModel[] = yearProgressService.progression(TEST_SYNCED_MODELS,
+			const progression: YearProgressModel[] = yearProgressService.yearProgression(TEST_SYNCED_MODELS,
 				typesFilter,
 				yearsFilter,
 				isMetric,
@@ -596,6 +596,48 @@ describe("YearProgressService", () => {
 
 			done();
 
+		});
+
+	});
+
+	describe("compute target progression", () => {
+
+		it("should compute target progression on non leap year", (done: Function) => {
+
+			// Given
+			const year = 2018;
+			const targetValue = 5000;
+			const expectedTargetProgressionLength = 365;
+			const expectedStep = 13.698;
+
+			// When
+			const targetProgressionModels: TargetProgressionModel[] = yearProgressService.targetProgression(year, targetValue);
+
+			// Then
+			expect(targetProgressionModels).not.toBeNull();
+			expect(targetProgressionModels.length).toEqual(expectedTargetProgressionLength);
+			expect(_.floor(targetProgressionModels[1].value - targetProgressionModels[0].value, 3)).toEqual(expectedStep);
+
+			done();
+		});
+
+		it("should compute target progression on leap year", (done: Function) => {
+
+			// Given
+			const year = 2016;
+			const targetValue = 5000;
+			const expectedTargetProgressionLength = 366;
+			const expectedStep = 13.661;
+
+			// When
+			const targetProgressionModels: TargetProgressionModel[] = yearProgressService.targetProgression(year, targetValue);
+
+			// Then
+			expect(targetProgressionModels).not.toBeNull();
+			expect(targetProgressionModels.length).toEqual(expectedTargetProgressionLength);
+			expect(_.floor(targetProgressionModels[1].value - targetProgressionModels[0].value, 3)).toEqual(expectedStep);
+
+			done();
 		});
 
 	});
@@ -760,38 +802,6 @@ describe("YearProgressService", () => {
 
 	describe("manage presets", () => {
 
-		it("should add a preset", (done: Function) => {
-
-			// Given
-			const yearProgressPresetModel = new YearProgressPresetModel(ProgressType.DISTANCE, ["Ride", "VirtualRide"],
-				false, false, 5000);
-
-			const expected = [yearProgressPresetModel];
-
-			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
-				.and.returnValue(Promise.resolve(expected));
-
-			const saveDaoSpy = spyOn(yearProgressService.yearProgressDao, "savePresets")
-				.and.returnValue(Promise.resolve(expected));
-
-			// When
-			const promise: Promise<YearProgressPresetModel[]> = yearProgressService.addPreset(yearProgressPresetModel);
-
-			// Then
-			promise.then((list: YearProgressPresetModel[]) => {
-
-				expect(list).not.toBeNull();
-				expect(saveDaoSpy).toHaveBeenCalledTimes(1);
-				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-				expect(list).toEqual(expected);
-				done();
-
-			}, error => {
-				expect(error).toBeNull();
-				done();
-			});
-		});
-
 		it("should list presets", (done: Function) => {
 
 			// Given
@@ -816,6 +826,121 @@ describe("YearProgressService", () => {
 
 			}, error => {
 				expect(error).toBeNull();
+				done();
+			});
+
+		});
+
+		it("should add a preset", (done: Function) => {
+
+			// Given
+			const modelToBeAdded = new YearProgressPresetModel(ProgressType.DISTANCE, ["Ride", "VirtualRide"], true, true, 5000);
+
+			const progressPresetModels: YearProgressPresetModel[] = [
+				new YearProgressPresetModel(ProgressType.DISTANCE, ["Ride", "VirtualRide"], true, true),
+				new YearProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false),
+				new YearProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000),
+				new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
+			];
+
+			const expected = _.union(progressPresetModels, [modelToBeAdded]);
+
+			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
+				.and.returnValue(Promise.resolve(progressPresetModels));
+
+			const saveDaoSpy = spyOn(yearProgressService.yearProgressDao, "savePresets")
+				.and.returnValue(Promise.resolve(expected));
+
+			// When
+			const promise: Promise<YearProgressPresetModel[]> = yearProgressService.addPreset(modelToBeAdded);
+
+			// Then
+			promise.then((list: YearProgressPresetModel[]) => {
+
+				expect(list).not.toBeNull();
+				expect(saveDaoSpy).toHaveBeenCalledTimes(1);
+				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+				expect(list).toEqual(expected);
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				done();
+			});
+		});
+
+		it("should reject adding a preset already existing (with target)", (done: Function) => {
+
+			// Given
+			const modelToBeAdded = new YearProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000);
+			const progressPresetModels: YearProgressPresetModel[] = [
+				new YearProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false),
+				modelToBeAdded,
+				new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
+			];
+
+			const expectedErrorMessage = "You already saved this preset. You may load it instead.";
+
+			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
+				.and.returnValue(Promise.resolve(progressPresetModels));
+
+			const saveDaoSpy = spyOn(yearProgressService.yearProgressDao, "savePresets").and.callThrough();
+
+			// When
+			const promise: Promise<YearProgressPresetModel[]> = yearProgressService.addPreset(modelToBeAdded);
+
+			// Then
+			promise.then(() => {
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+
+			}, (error: AppError) => {
+
+				expect(error).not.toBeNull();
+				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+				expect(saveDaoSpy).not.toHaveBeenCalled();
+				expect(error.code).toEqual(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS);
+				expect(error.message).toEqual(expectedErrorMessage);
+
+				done();
+			});
+
+		});
+
+		it("should reject adding a preset already existing (without target)", (done: Function) => {
+
+			// Given
+			const modelToBeAdded = new YearProgressPresetModel(ProgressType.DISTANCE, ["Ride", "VirtualRide"], true, true);
+			const progressPresetModels: YearProgressPresetModel[] = [
+				modelToBeAdded,
+				new YearProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false),
+				new YearProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000),
+				new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
+			];
+
+			const expectedErrorMessage = "You already saved this preset. You may load it instead.";
+
+			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
+				.and.returnValue(Promise.resolve(progressPresetModels));
+
+			const saveDaoSpy = spyOn(yearProgressService.yearProgressDao, "savePresets").and.callThrough();
+
+			// When
+			const promise: Promise<YearProgressPresetModel[]> = yearProgressService.addPreset(modelToBeAdded);
+
+			// Then
+			promise.then(() => {
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+
+			}, (error: AppError) => {
+
+				expect(error).not.toBeNull();
+				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+				expect(saveDaoSpy).not.toHaveBeenCalled();
+				expect(error.code).toEqual(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS);
+				expect(error.message).toEqual(expectedErrorMessage);
+
 				done();
 			});
 

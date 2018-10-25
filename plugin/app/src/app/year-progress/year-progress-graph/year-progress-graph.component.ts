@@ -15,6 +15,7 @@ import { Subscription } from "rxjs";
 import { WindowService } from "../../shared/services/window/window.service";
 import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
 import { YearProgressService } from "../shared/services/year-progress.service";
+import { TargetProgressionModel } from "../shared/models/target-progression.model";
 
 @Component({
 	selector: "app-year-progress-graph",
@@ -23,15 +24,16 @@ import { YearProgressService } from "../shared/services/year-progress.service";
 })
 export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy {
 
+	public static readonly GRAPH_DOM_ELEMENT_ID: string = "yearProgressGraph";
+	public static readonly GRAPH_WRAPPER_DOM_ELEMENT_ID: string = "graphWrapper";
+	public static readonly GRAPH_TARGET_LINE_COLOR: string = "grey";
+
+	public readonly ProgressType = ProgressType;
+
 	constructor(public yearProgressService: YearProgressService,
 				public sideNavService: SideNavService,
 				public windowService: WindowService) {
 	}
-
-	public static readonly GRAPH_DOM_ELEMENT_ID: string = "yearProgressGraph";
-	public static readonly GRAPH_WRAPPER_DOM_ELEMENT_ID: string = "graphWrapper";
-
-	public readonly ProgressType = ProgressType;
 
 	@Input("selectedYears")
 	public selectedYears: number[];
@@ -42,18 +44,18 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	@Input("yearProgressModels")
 	public yearProgressModels: YearProgressModel[];
 
+	@Input("targetProgressionModels")
+	public targetProgressionModels: TargetProgressionModel[];
+
 	@Input("yearProgressStyleModel")
 	public yearProgressStyleModel: YearProgressStyleModel;
 
 	public viewableYearProgressDataModel: ViewableYearProgressDataModel;
 	public graphConfig: any;
 	public isMomentWatchedToday: boolean;
-
 	public sideNavChangesSubscription: Subscription;
 	public windowResizingSubscription: Subscription;
-
 	public isGraphDataReadyOnYearChange = false;
-
 	public initialized = false;
 
 	public static findGraphicHeight(): number {
@@ -109,6 +111,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 	public setupViewableGraphData(): void {
 
+		// Prepare years lines
 		const yearLines: GraphPointModel[][] = [];
 
 		_.forEach(this.yearProgressModels, (yearProgressModel: YearProgressModel) => {
@@ -157,13 +160,36 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		});
 
 		this.viewableYearProgressDataModel.setGraphicsYearLines(yearLines);
+
+		// Prepare target line
+		if (this.targetProgressionModels) {
+
+			const targetLine: GraphPointModel[] = [];
+
+			_.forEach(this.targetProgressionModels, (targetProgressionModel: TargetProgressionModel) => {
+
+				const graphPoint: Partial<GraphPointModel> = {
+					date: moment().dayOfYear(targetProgressionModel.dayOfYear).format("YYYY-MM-DD"),
+					value: targetProgressionModel.value,
+					hidden: false
+				};
+
+				targetLine.push(graphPoint as GraphPointModel);
+
+			});
+
+			this.viewableYearProgressDataModel.setGraphicsTargetLine(targetLine);
+
+		} else {
+			this.viewableYearProgressDataModel.setGraphicsTargetLine([]);
+		}
+
 	}
 
-
-	public updateGraph(): void {
+	public updateGraph(partialUpdate?: boolean): void {
 		try {
 			// Apply changes
-			this.updateViewableData();
+			this.updateViewableData(partialUpdate);
 
 			// Apply graph changes
 			this.draw();
@@ -173,16 +199,27 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		}
 	}
 
+	public updateViewableData(partialUpdate?: boolean): void {
 
-	public updateViewableData(): void {
+		this.graphConfig.markers = this.viewableYearProgressDataModel.markers;
+
+		if (partialUpdate === true) {
+			return;
+		}
 
 		this.graphConfig.data = this.viewableYearProgressDataModel.yearLines;
-		this.graphConfig.max_data_size = this.graphConfig.data.length;
 		this.graphConfig.colors = this.colorsOfSelectedYears(this.selectedYears);
 		this.graphConfig.markers = this.viewableYearProgressDataModel.markers;
 
-	}
+		// Has target progress?
+		if (this.targetProgressionModels) {
+			this.graphConfig.data.unshift(this.viewableYearProgressDataModel.targetLine); // Append first target progress
+			this.graphConfig.colors.unshift(YearProgressGraphComponent.GRAPH_TARGET_LINE_COLOR); // Append first target line color
+		}
 
+		this.graphConfig.max_data_size = this.graphConfig.data.length;
+
+	}
 
 	public draw(): void {
 		_.defer(() => {
@@ -227,7 +264,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public onGraphClick(mgEvent: MetricsGraphicsEventModel): void {
 		const momentWatched = moment(mgEvent.key || mgEvent.date);
 		this.viewableYearProgressDataModel.setMarkerMoment(momentWatched);
-		this.updateGraph();
+		this.updateGraph(true);
 		this.isMomentWatchedToday = this.isMomentToday(momentWatched);
 	}
 
@@ -254,7 +291,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public onResetMomentWatched(): void {
 		const defaultMomentWatched = this.yearProgressService.resetMomentWatched();
 		this.viewableYearProgressDataModel.setMarkerMoment(defaultMomentWatched);
-		this.updateGraph();
+		this.updateGraph(true);
 		this.isMomentWatchedToday = this.isMomentToday(defaultMomentWatched);
 	}
 

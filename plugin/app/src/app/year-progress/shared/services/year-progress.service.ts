@@ -14,6 +14,8 @@ import { Constant } from "../../../../../../core/scripts/shared/constant";
 import { YearProgressPresetModel } from "../models/year-progress-preset.model";
 import { YearProgressDao } from "../dao/year-progress.dao";
 import { AppError } from "../../../shared/models/app-error.model";
+import { YearProgressTypeModel } from "../models/year-progress-type.model";
+import { TargetProgressionModel } from "../models/target-progression.model";
 
 @Injectable()
 export class YearProgressService {
@@ -31,6 +33,15 @@ export class YearProgressService {
 		this.momentWatchedChanges = new Subject<Moment>();
 	}
 
+	public static provideProgressTypes(isMetric: boolean): YearProgressTypeModel[] {
+		return [
+			new YearProgressTypeModel(ProgressType.DISTANCE, "Distance", (isMetric) ? "kilometers" : "miles", (isMetric) ? "km" : "mi"),
+			new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h"),
+			new YearProgressTypeModel(ProgressType.ELEVATION, "Elevation", (isMetric) ? "meters" : "feet", (isMetric) ? "m" : "ft"),
+			new YearProgressTypeModel(ProgressType.COUNT, "Count")
+		];
+	}
+
 	/**
 	 *
 	 * @param {SyncedActivityModel[]} syncedActivityModels
@@ -41,8 +52,8 @@ export class YearProgressService {
 	 * @param {boolean} includeIndoorRide
 	 * @returns {YearProgressModel[]}
 	 */
-	public progression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], yearsFilter: number[],
-					   isMetric: boolean, includeCommuteRide: boolean, includeIndoorRide: boolean): YearProgressModel[] {
+	public yearProgression(syncedActivityModels: SyncedActivityModel[], typesFilter: string[], yearsFilter: number[],
+						   isMetric: boolean, includeCommuteRide: boolean, includeIndoorRide: boolean): YearProgressModel[] {
 
 		if (_.isEmpty(syncedActivityModels)) {
 			throw new Error(YearProgressService.ERROR_NO_SYNCED_ACTIVITY_MODELS);
@@ -179,6 +190,30 @@ export class YearProgressService {
 		}
 
 		return yearProgressModels;
+	}
+
+	/**
+	 *
+	 * @param year
+	 * @param targetValue
+	 */
+	public targetProgression(year: number, targetValue: number): TargetProgressionModel[] {
+
+		const targetProgressionModels: TargetProgressionModel[] = [];
+		const daysInYear = (moment().year(year).isLeapYear()) ? 366 : 365;
+		const progressStep = targetValue / daysInYear;
+
+		let targetProgression = progressStep; // Start progression
+
+		for (let day = 1; day <= daysInYear; day++) {
+			targetProgressionModels.push({
+				dayOfYear: day,
+				value: targetProgression
+			});
+			targetProgression += progressStep;
+		}
+
+		return targetProgressionModels;
 	}
 
 	/**
@@ -362,7 +397,21 @@ export class YearProgressService {
 	 */
 	public addPreset(yearProgressPresetModel: YearProgressPresetModel): Promise<YearProgressPresetModel[]> {
 		return this.yearProgressDao.fetchPresets().then((models: YearProgressPresetModel[]) => {
+
+			const existingModel = _.find(models, {
+				progressType: yearProgressPresetModel.progressType,
+				activityTypes: yearProgressPresetModel.activityTypes,
+				includeCommuteRide: yearProgressPresetModel.includeCommuteRide,
+				includeIndoorRide: yearProgressPresetModel.includeIndoorRide,
+				targetValue: yearProgressPresetModel.targetValue
+			});
+
+			if (existingModel) {
+				return Promise.reject(new AppError(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS, "You already saved this preset. You may load it instead."));
+			}
+
 			models.push(yearProgressPresetModel);
+
 			return this.yearProgressDao.savePresets(models);
 		});
 	}
