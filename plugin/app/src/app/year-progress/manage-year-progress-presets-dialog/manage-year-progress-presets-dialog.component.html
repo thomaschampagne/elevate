@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Your presets</h2>
+<h2 mat-dialog-title>Load presets and targets</h2>
 <mat-dialog-content class="mat-body-1">
 
 	<div *ngIf="(yearProgressPresetModels && yearProgressPresetModels.length === 0)">
@@ -22,14 +22,14 @@
 		</ng-container>
 
 		<ng-container matColumnDef="includeCommuteRide">
-			<mat-header-cell *matHeaderCellDef>Include commute</mat-header-cell>
+			<mat-header-cell *matHeaderCellDef>Commute</mat-header-cell>
 			<mat-cell *matCellDef="let yearProgressPresetModel">
 				{{(yearProgressPresetModel.includeCommuteRide) ? "Yes": "No" }}
 			</mat-cell>
 		</ng-container>
 
 		<ng-container matColumnDef="includeIndoorRide">
-			<mat-header-cell *matHeaderCellDef>Include indoor</mat-header-cell>
+			<mat-header-cell *matHeaderCellDef>Indoor</mat-header-cell>
 			<mat-cell *matCellDef="let yearProgressPresetModel">
 				{{(yearProgressPresetModel.includeIndoorRide) ? "Yes": "No" }}
 			</mat-cell>
@@ -37,7 +37,10 @@
 
 		<ng-container matColumnDef="targetValue">
 			<mat-header-cell *matHeaderCellDef>Target Value</mat-header-cell>
-			<mat-cell *matCellDef="let yearProgressPresetModel">{{yearProgressPresetModel.targetValue}}</mat-cell>
+			<mat-cell *matCellDef="let yearProgressPresetModel">
+				{{(yearProgressPresetModel.targetValue) ? yearProgressPresetModel.targetValue +
+				' ' + progressTypeShortUnit(yearProgressPresetModel.progressType) : '-'}}
+			</mat-cell>
 		</ng-container>
 
 		<ng-container matColumnDef="load">

@@ -1,12 +1,13 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { YearProgressService } from "../shared/services/year-progress.service";
-import { MatDialog, MatDialogRef, MatSnackBar, MatTableDataSource } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatSnackBar, MatTableDataSource } from "@angular/material";
 import { YearProgressPresetModel } from "../shared/models/year-progress-preset.model";
 import { ProgressType } from "../shared/models/progress-type.enum";
 import * as _ from "lodash";
 import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { AppError } from "../../shared/models/app-error.model";
+import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 
 @Component({
 	selector: "app-manage-year-progress-presets-dialog",
@@ -42,7 +43,8 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
 		ManageYearProgressPresetsDialogComponent.COLUMN_ACTION_DELETE
 	];
 
-	constructor(public dialogRef: MatDialogRef<ManageYearProgressPresetsDialogComponent>,
+	constructor(@Inject(MAT_DIALOG_DATA) public readonly yearProgressTypes: YearProgressTypeModel[],
+				public dialogRef: MatDialogRef<ManageYearProgressPresetsDialogComponent>,
 				public yearProgressService: YearProgressService,
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar) {
@@ -62,6 +64,11 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
 
 	public progressTypeLabel(progressType: ProgressType): string {
 		return _.startCase(ProgressType[progressType].toLowerCase());
+	}
+
+	public progressTypeShortUnit(progressType: ProgressType): string {
+		const yearProgressTypeModel = _.find(this.yearProgressTypes, {type: progressType});
+		return (yearProgressTypeModel && yearProgressTypeModel.shortUnit) ? yearProgressTypeModel.shortUnit : "";
 	}
 
 	public onLoad(rowId: number): void {
@@ -88,14 +95,15 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
 	}
 
 	private handleErrors(error: any) {
-
-		console.error(error);
-
 		if (error instanceof AppError) {
+			console.warn(error);
 			const message = (<AppError> error).message;
-			this.snackBar.open(message, "Close");
+			this.snackBar.open(message, "Close", {
+				duration: 5000
+			});
+		} else {
+			console.error(error);
 		}
-
 	}
 
 }

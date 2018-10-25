@@ -6,5 +6,4 @@ export class AddYearProgressPresetsDialogData {
 	public includeCommuteRide: boolean;
 	public includeIndoorRide: boolean;
 	public targetValue?: number;
-	public addWithTarget: boolean;
 }
