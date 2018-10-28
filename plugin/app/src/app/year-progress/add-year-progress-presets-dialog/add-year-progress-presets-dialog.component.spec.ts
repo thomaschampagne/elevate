@@ -20,8 +20,7 @@ describe("AddYearProgressPresetsDialogComponent", () => {
 			activityTypes: ["Ride", "VirtualRide"],
 			includeCommuteRide: true,
 			includeIndoorRide: true,
-			targetValue: 5000,
-			addWithTarget: true
+			targetValue: 5000
 		};
 
 		TestBed.configureTestingModule({

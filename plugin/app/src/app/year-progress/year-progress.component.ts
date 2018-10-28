@@ -24,7 +24,6 @@ import { ManageYearProgressPresetsDialogComponent } from "./manage-year-progress
 import { YearProgressPresetModel } from "./shared/models/year-progress-preset.model";
 import { TargetProgressionModel } from "./shared/models/target-progression.model";
 
-// TODO Add diff with target in table. Do specs..
 // TODO Style of target line !
 
 @Component({
