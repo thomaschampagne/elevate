@@ -26,7 +26,7 @@
 <mat-card *ngIf="hasActivityModels">
 	<mat-card-content>
 		<div fxLayout="row" fxLayoutAlign="start start" id="inputsSelection">
-			<div fxFlex="68" fxFlex.lt-lg="100">
+			<div fxFlex="60" fxFlex.lt-lg="100">
 				<div fxLayout="column" fxLayoutAlign="start start">
 					<div fxFlex fxFill>
 						<div fxLayout="row" fxLayoutAlign="start center">
@@ -114,7 +114,7 @@
 		<div fxLayout.gt-lg="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
 
 			<!--Graph -->
-			<div fxFlex="68" fxFill>
+			<div fxFlex="60" fxFill>
 				<mat-card-title class="mat-title">
 					Cumulative {{selectedProgressType.label}} {{(selectedProgressType.unit) ? "in " +
 					selectedProgressType.unit : ""}} <span *ngIf="(targetValue !== null)" class="mat-subheading-1">&nbsp;&nbsp;➔&nbsp;&nbsp;Target {{targetValue}}{{(selectedProgressType.shortUnit) ? ' ' + selectedProgressType.shortUnit : ''}}</span>
@@ -146,6 +146,7 @@
 					[selectedYears]="selectedYears"
 					[selectedProgressType]="selectedProgressType"
 					[yearProgressModels]="yearProgressModels"
+					[targetProgressionModels]="targetProgressionModels"
 					[yearProgressStyleModel]="yearProgressStyleModel">
 				</app-year-progress-table>
 			</div>

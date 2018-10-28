@@ -93,6 +93,44 @@
 		</mat-cell>
 	</ng-container>
 
+	<ng-container matColumnDef="deltaTarget">
+		<mat-header-cell *matHeaderCellDef>&Delta; With target</mat-header-cell>
+		<mat-cell *matCellDef="let progressionAtDay">
+
+			<!--Test ProgressType-->
+			<span [ngSwitch]="selectedProgressType.type"
+				  [ngClass]="progressionAtDay.deltaTarget.class"
+				  matTooltip="Compared to current target">
+
+                <!--Case when ProgressType is TIME-->
+                <span *ngSwitchCase="ProgressType.TIME">
+                    <span
+						*ngIf="((progressionAtDay.year < this.currentYear) || (progressionAtDay.year === this.currentYear && momentWatched.dayOfYear() <= todayMoment.dayOfYear()))">
+                        {{progressionAtDay.deltaTarget.signSymbol + " " + readableTimeProgress(progressionAtDay.deltaTarget.value)}}
+                    </span>
+                    <span
+						*ngIf="(progressionAtDay.year === this.currentYear && momentWatched.dayOfYear() > todayMoment.dayOfYear())">
+                        ∅
+                    </span>
+                </span>
+
+				<!--Default Case-->
+                <span *ngSwitchDefault>
+                    <span
+						*ngIf="((progressionAtDay.year < this.currentYear) || (progressionAtDay.year === this.currentYear && momentWatched.dayOfYear() <= todayMoment.dayOfYear()))">
+                        {{progressionAtDay.deltaTarget.signSymbol + " " + progressionAtDay.deltaTarget.value.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
+                    </span>
+                    <span
+						*ngIf="(progressionAtDay.year === this.currentYear && momentWatched.dayOfYear() > todayMoment.dayOfYear())">
+                        ∅
+                    </span>
+                </span>
+
+            </span>
+
+		</mat-cell>
+	</ng-container>
+
 	<!--Columns-->
 	<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
 	<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
