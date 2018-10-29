@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/thomaschampagne/elevate.svg?branch=develop)](https://travis-ci.org/thomaschampagne/elevate)
-[![Artifacts Dowloads](https://img.shields.io/badge/artifacts-download-00a8fb.svg)](https://bitbucket.org/thomaschampagne/elevate-ci-builds/downloads/)
+[![Artifacts Downloads](https://img.shields.io/badge/artifacts-download-00a8fb.svg)](https://bitbucket.org/thomaschampagne/elevate-ci-builds/downloads/)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9f150ac985294364ab493682cca63f66)](https://app.codacy.com/app/th-champagne/elevate?utm_source=github.com&utm_medium=referral&utm_content=thomaschampagne/elevate&utm_campaign=badger)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/elevate-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn) 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/users/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/elevate-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn)
@@ -20,7 +20,7 @@ Install steps with a standalone build: https://github.com/thomaschampagne/elevat
 
 ## From the sources
 
-Go to chapter [Environnement setup](#environnement-setup).
+Go to chapter [Environment setup](#environment-setup).
 
 # Development
 
@@ -65,10 +65,10 @@ _Core_ and _embedded app_ have been developed using [TypeScript](https://www.typ
 
 ### Tools
 
-* [NodeJS](https://nodejs.org/en/) as javascript runtime environnement.
+* [NodeJS](https://nodejs.org/en/) as javascript runtime environment.
 * [Npm](https://www.npmjs.com/) as package manager to fetch project dependencies
 
-## Environnement setup
+## Environment setup
 
 ### Install requirements
 
