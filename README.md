@@ -75,7 +75,7 @@ _Core_ and _embedded app_ have been developed using [TypeScript](https://www.typ
 Here's what you need to install to run the extension in a chrome based browser:
 
 - Chrome based browser (Chrome, Chromium, Chrome Canary, Opera,...), of course...
-- NodeJS [here](https://nodejs.org). Version 8+ is recommended.
+- NodeJS [here](https://nodejs.org). Version 10.x is required.
 
 That's all :)
 
