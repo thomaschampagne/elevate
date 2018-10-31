@@ -43,7 +43,7 @@ module.exports = function (config) {
 					"--headless",
 					"--disable-gpu",
 					"--disable-browser-side-navigation",
-					" --remote-debugging-port=9222" // Without a remote debugging port, Google Chrome exits immediately.
+					"--remote-debugging-port=9222" // Without a remote debugging port, Google Chrome exits immediately.
 				]
 			}
 		},

@@ -12,8 +12,8 @@ import { AppStorageType } from "./models/storage-type.enum";
 import { UserZonesModel } from "./shared/models/user-settings/user-zones.model";
 import { Constant } from "./shared/constant";
 import { UserSettingsModel } from "./shared/models/user-settings/user-settings.model";
-import { DatedAthleteSettingsDao } from "../../app/src/app/shared/dao/dated-athlete-settings/dated-athlete-settings-dao.service";
 import { DatedAthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
+import { DatedAthleteSettingsDao } from "../../app/src/app/shared/dao/dated-athlete-settings/dated-athlete-settings.dao";
 
 class Installer {
 

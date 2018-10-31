@@ -14,8 +14,16 @@ import { YearProgressActivitiesFixture } from "./shared/services/year-progress-a
 import { userSettingsData } from "../../../../core/scripts/shared/user-settings.data";
 import { SyncedActivityModel } from "../../../../core/scripts/shared/models/sync/synced-activity.model";
 import { YearProgressModule } from "./year-progress.module";
+import { YearProgressPresetModel } from "./shared/models/year-progress-preset.model";
+import { ProgressType } from "./shared/models/progress-type.enum";
 
 describe("YearProgressComponent", () => {
+
+	const yearProgressPresetModels = [
+		new YearProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false, 750),
+		new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
+		new YearProgressPresetModel(ProgressType.ELEVATION, ["Ride"], false, false, 30000),
+	];
 
 	let component: YearProgressComponent;
 	let fixture: ComponentFixture<YearProgressComponent>;
@@ -52,6 +60,7 @@ describe("YearProgressComponent", () => {
 	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(YearProgressComponent);
 		component = fixture.componentInstance;
+		spyOn(component.yearProgressService, "fetchPresets").and.returnValue(Promise.resolve(yearProgressPresetModels));
 		fixture.detectChanges();
 		done();
 	});

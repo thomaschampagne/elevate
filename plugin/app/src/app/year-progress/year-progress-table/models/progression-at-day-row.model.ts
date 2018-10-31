@@ -8,4 +8,5 @@ export class ProgressionAtDayRow {
 	public progressTypeUnit: string;
 	public deltaPreviousYear: Delta;
 	public deltaCurrentYear: Delta;
+	public deltaTarget: Delta;
 }

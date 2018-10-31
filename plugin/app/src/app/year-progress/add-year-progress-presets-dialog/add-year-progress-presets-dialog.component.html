@@ -1,0 +1,44 @@
+<h2 mat-dialog-title>Create a preset with or without target</h2>
+<mat-dialog-content class="mat-body-1">
+
+	<div fxLayout="column" fxLayoutAlign="start start">
+
+		<mat-form-field fxFill>
+			<input matInput placeholder="Progress Type" [disabled]="true"
+				   value="{{dialogData.yearProgressTypeModel.label}}">
+		</mat-form-field>
+
+		<mat-form-field fxFill>
+			<input matInput placeholder="Activity Types" [disabled]="true"
+				   value="{{yearProgressPresetModel.activityTypes.join(', ')}}">
+		</mat-form-field>
+
+		<mat-form-field fxFill>
+			<input matInput placeholder="Commute Rides" [disabled]="true"
+				   value="{{(yearProgressPresetModel.includeCommuteRide) ? 'Enabled' : 'Disabled'}}">
+		</mat-form-field>
+
+		<mat-form-field fxFill>
+			<input matInput placeholder="Indoor" [disabled]="true"
+				   value="{{(yearProgressPresetModel.includeIndoorRide) ? 'Enabled' : 'Disabled'}}">
+		</mat-form-field>
+
+		<mat-form-field fxFill>
+			<input matInput
+				   placeholder="Enter target value {{(dialogData.yearProgressTypeModel.unit) ? 'in ' + dialogData.yearProgressTypeModel.unit : ''}} or leave empty"
+				   type="number"
+				   [(ngModel)]="yearProgressPresetModel.targetValue"
+				   (change)="onTargetValueChanged()"
+				   min="1">
+		</mat-form-field>
+	</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close color="primary">
+		Cancel
+	</button>
+	<button mat-button mat-dialog-close color="primary" (click)="onSave()">
+		<span>Create preset</span>
+	</button>
+</mat-dialog-actions>
+

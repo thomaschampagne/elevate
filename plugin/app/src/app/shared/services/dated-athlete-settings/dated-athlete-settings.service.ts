@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { DatedAthleteSettingsModel } from "../../models/athlete/athlete-settings/dated-athlete-settings.model";
-import { DatedAthleteSettingsDao } from "../../dao/dated-athlete-settings/dated-athlete-settings-dao.service";
+import { DatedAthleteSettingsDao } from "../../dao/dated-athlete-settings/dated-athlete-settings.dao";
 import * as _ from "lodash";
 import { AppError } from "../../models/app-error.model";
 
