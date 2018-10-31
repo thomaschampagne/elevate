@@ -18,7 +18,13 @@ import { SyncedActivityModel } from "../../../../core/scripts/shared/models/sync
 import { YearProgressOverviewDialogComponent } from "./year-progress-overview-dialog/year-progress-overview-dialog.component";
 import { YearProgressForOverviewModel } from "./shared/models/year-progress-for-overview.model";
 import { AppError } from "../shared/models/app-error.model";
+import { AddYearProgressPresetsDialogComponent } from "./add-year-progress-presets-dialog/add-year-progress-presets-dialog.component";
+import { AddYearProgressPresetsDialogData } from "./shared/models/add-year-progress-presets-dialog-data";
+import { ManageYearProgressPresetsDialogComponent } from "./manage-year-progress-presets-dialog/manage-year-progress-presets-dialog.component";
+import { YearProgressPresetModel } from "./shared/models/year-progress-preset.model";
+import { TargetProgressionModel } from "./shared/models/target-progression.model";
 
+// TODO Style of target line !
 
 @Component({
 	selector: "app-year-progress",
@@ -42,6 +48,24 @@ export class YearProgressComponent implements OnInit {
 	public static readonly LS_SELECTED_PROGRESS_TYPE_KEY: string = "yearProgress_selectedProgressType";
 	public static readonly LS_INCLUDE_COMMUTE_RIDES_KEY: string = "yearProgress_includeCommuteRide";
 	public static readonly LS_INCLUDE_INDOOR_RIDES_KEY: string = "yearProgress_includeIndoorRide";
+	public static readonly LS_TARGET_VALUE_KEY: string = "yearProgress_targetValue";
+
+	public static findExistingSelectedYears(): number[] {
+		const existingSelectedYears = localStorage.getItem(YearProgressComponent.LS_SELECTED_YEARS_KEY);
+		if (!_.isEmpty(existingSelectedYears)) {
+			return JSON.parse(existingSelectedYears);
+		}
+		return null;
+	}
+
+	public static findExistingSelectedActivityTypes(): string[] {
+
+		const existingSelectedActivityTypes = localStorage.getItem(YearProgressComponent.LS_SELECTED_ACTIVITY_TYPES_KEY);
+		if (!_.isEmpty(existingSelectedActivityTypes)) {
+			return JSON.parse(existingSelectedActivityTypes);
+		}
+		return null;
+	}
 
 	public progressTypes: YearProgressTypeModel[];
 	public availableActivityTypes: string[] = [];
@@ -51,13 +75,16 @@ export class YearProgressComponent implements OnInit {
 	public selectedProgressType: YearProgressTypeModel;
 	public includeCommuteRide: boolean;
 	public includeIndoorRide: boolean;
+	public targetValue: number;
 	public isMetric: boolean;
 	public yearProgressModels: YearProgressModel[]; // Progress for each year
+	public targetProgressionModels: TargetProgressionModel[]; // Progress of target on current year
 	public syncedActivityModels: SyncedActivityModel[]; // Stored synced activities
 	public yearProgressStyleModel: YearProgressStyleModel;
 	public momentWatched: Moment;
 	public hasActivityModels: boolean = null; // Can be null: don't know yet true/false status on load
-	public isProgressionInitialized = false;
+	public yearProgressPresetsCount: number = null;
+	public isProgressionInitialized: boolean = false;
 
 	constructor(public userSettingsService: UserSettingsService,
 				public syncService: SyncService,
@@ -83,16 +110,12 @@ export class YearProgressComponent implements OnInit {
 		}).then((results: Object[]) => {
 
 			const userSettingsModel = _.first(results) as UserSettingsModel;
-			const syncedActivityModels = _.last(results) as SyncedActivityModel[];
-			const isMetric = (userSettingsModel.systemUnit === UserSettingsModel.SYSTEM_UNIT_METRIC_KEY);
-
-			this.hasActivityModels = !_.isEmpty(syncedActivityModels);
+			this.syncedActivityModels = _.last(results) as SyncedActivityModel[];
+			this.isMetric = (userSettingsModel.systemUnit === UserSettingsModel.SYSTEM_UNIT_METRIC_KEY);
+			this.hasActivityModels = !_.isEmpty(this.syncedActivityModels);
 
 			if (this.hasActivityModels) {
-				this.setup(
-					isMetric,
-					syncedActivityModels
-				);
+				this.setup();
 			}
 
 			// Use default moment provided by service on init (should be today on first load)
@@ -111,37 +134,26 @@ export class YearProgressComponent implements OnInit {
 	}
 
 	/**
-	 *
-	 * @param {boolean} isMetric
-	 * @param {SyncedActivityModel[]} syncedActivityModels
+	 * Setup prepare year progression and target progression along user saved preferences
 	 */
-	public setup(isMetric: boolean, syncedActivityModels: SyncedActivityModel[]): void {
-
-		this.isMetric = isMetric;
-
-		this.syncedActivityModels = syncedActivityModels;
+	public setup(): void {
 
 		// Keep commute rides in stats by default
-		this.includeCommuteRide = (localStorage.getItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY) !== "false");
+		this.includeCommuteRide = this.getCommuteRidesPref();
 
 		// Keep indoor rides in stats by default
-		this.includeIndoorRide = (localStorage.getItem(YearProgressComponent.LS_INCLUDE_INDOOR_RIDES_KEY) !== "false");
+		this.includeIndoorRide = this.getIncludeIndoorPref();
 
 		// Find all unique sport types
 		const activityCountByTypeModels = this.yearProgressService.activitiesByTypes(this.syncedActivityModels);
 		this.availableActivityTypes = _.map(activityCountByTypeModels, "type");
 
 		// Find any selected ActivityTypes existing in local storage. Else select the sport type most performed by the athlete as default
-		const existingSelectedActivityTypes: string[] = this.findExistingSelectedActivityTypes();
+		const existingSelectedActivityTypes: string[] = YearProgressComponent.findExistingSelectedActivityTypes();
 		this.selectedActivityTypes = (existingSelectedActivityTypes) ? existingSelectedActivityTypes : [this.findMostPerformedActivityType(activityCountByTypeModels)];
 
 		// Set possible progress type to see: distance, time, ...
-		this.progressTypes = [
-			new YearProgressTypeModel(ProgressType.DISTANCE, "Distance", (this.isMetric) ? "kilometers" : "miles", (this.isMetric) ? "km" : "mi"),
-			new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h"),
-			new YearProgressTypeModel(ProgressType.ELEVATION, "Elevation", (this.isMetric) ? "meters" : "feet", (this.isMetric) ? "m" : "ft"),
-			new YearProgressTypeModel(ProgressType.COUNT, "Count")
-		];
+		this.progressTypes = YearProgressService.provideProgressTypes(this.isMetric);
 
 		// Find any selected ProgressType existing in local storage. Else set distance progress type as default
 		const existingSelectedProgressType: YearProgressTypeModel = this.findExistingSelectedProgressType();
@@ -151,26 +163,51 @@ export class YearProgressComponent implements OnInit {
 		this.availableYears = this.yearProgressService.availableYears(this.syncedActivityModels);
 
 		// Seek for selected years saved by the user
-		const existingSelectedYears = this.findExistingSelectedYears();
+		const existingSelectedYears = YearProgressComponent.findExistingSelectedYears();
 		this.selectedYears = (existingSelectedYears) ? existingSelectedYears : this.availableYears;
 
-		// Compute first progression
-		this.progression();
+		// Count presets
+		this.updateYearProgressPresetsCount();
+
+		// Find target value preference
+		this.targetValue = this.getTargetValuePref();
+
+		// Compute years progression
+		this.yearProgressions();
+
+		// Compute target progression
+		this.targetProgression();
 
 		// Get color style for years
 		this.yearProgressStyleModel = this.styleFromPalette(this.yearProgressModels, YearProgressComponent.PALETTE);
 
 		this.isProgressionInitialized = true;
 
+		console.log("Setup done");
+
 	}
 
-	public progression(): void {
-		this.yearProgressModels = this.yearProgressService.progression(this.syncedActivityModels,
+	public updateYearProgressPresetsCount() {
+		this.yearProgressService.fetchPresets().then((models: YearProgressPresetModel[]) => {
+			this.yearProgressPresetsCount = models.length;
+		});
+	}
+
+	public yearProgressions(): void {
+		this.yearProgressModels = this.yearProgressService.yearProgression(this.syncedActivityModels,
 			this.selectedActivityTypes,
 			null, // All Years
 			this.isMetric,
 			this.includeCommuteRide,
 			this.includeIndoorRide);
+	}
+
+	public targetProgression(): void {
+		if (_.isNumber(this.targetValue)) {
+			this.targetProgressionModels = this.yearProgressService.targetProgression((new Date()).getFullYear(), this.targetValue);
+		} else {
+			this.targetProgressionModels = null;
+		}
 	}
 
 	/**
@@ -182,35 +219,40 @@ export class YearProgressComponent implements OnInit {
 		return _.maxBy(activitiesCountByTypeModels, "count").type;
 	}
 
-	public onSelectedActivityTypesChange(): void {
+	public onSelectedProgressTypeChange(): void {
 
-		if (this.selectedActivityTypes.length > 0) {
-			this.progression();
-			localStorage.setItem(YearProgressComponent.LS_SELECTED_ACTIVITY_TYPES_KEY, JSON.stringify(this.selectedActivityTypes));
+		this.persistProgressTypePref(this.selectedProgressType.type);
+
+		// Remove target if exists and reload
+		if (this.getTargetValuePref()) {
+			this.removeTargetValuePref();
+			this.setup();
 		}
 	}
 
-	public onSelectedProgressTypeChange(): void {
-		localStorage.setItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY, this.selectedProgressType.type.toString());
+	public onSelectedActivityTypesChange(): void {
+		if (this.selectedActivityTypes.length > 0) {
+			this.yearProgressions();
+			this.persistActivityTypesPref(this.selectedActivityTypes);
+		}
 	}
 
 	public onSelectedYearsChange(): void {
 		if (this.selectedYears.length > 0) {
-			this.progression();
+			this.yearProgressions();
 			localStorage.setItem(YearProgressComponent.LS_SELECTED_YEARS_KEY, JSON.stringify(this.selectedYears));
 		}
 	}
 
 	public onIncludeCommuteRideToggle(): void {
-		this.progression();
-		localStorage.setItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY, JSON.stringify(this.includeCommuteRide));
+		this.yearProgressions();
+		this.persistCommuteRidesPref(this.includeCommuteRide);
 	}
 
 	public onIncludeIndoorRideToggle(): void {
-		this.progression();
-		localStorage.setItem(YearProgressComponent.LS_INCLUDE_INDOOR_RIDES_KEY, JSON.stringify(this.includeIndoorRide));
+		this.yearProgressions();
+		this.persistIndoorRidesPref(this.includeIndoorRide);
 	}
-
 
 	public onShowOverview(): void {
 
@@ -223,19 +265,108 @@ export class YearProgressComponent implements OnInit {
 			yearProgressStyleModel: this.yearProgressStyleModel
 		};
 
-		this.dialog.open(YearProgressOverviewDialogComponent, {
+		const dialogRef = this.dialog.open(YearProgressOverviewDialogComponent, {
 			minWidth: YearProgressOverviewDialogComponent.WIDTH,
 			maxWidth: YearProgressOverviewDialogComponent.WIDTH,
 			width: YearProgressOverviewDialogComponent.WIDTH,
 			data: data
 		});
 
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe(() => afterClosedSubscription.unsubscribe());
 	}
 
 	public onHelperClick(): void {
-		this.dialog.open(YearProgressHelperDialogComponent, {
+		const dialogRef = this.dialog.open(YearProgressHelperDialogComponent, {
 			minWidth: YearProgressHelperDialogComponent.MIN_WIDTH,
 			maxWidth: YearProgressHelperDialogComponent.MAX_WIDTH,
+		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe(() => afterClosedSubscription.unsubscribe());
+	}
+
+	public onCreatePreset(): void {
+
+		const addYearProgressPresetsDialogData: AddYearProgressPresetsDialogData = {
+			activityTypes: this.selectedActivityTypes,
+			yearProgressTypeModel: this.selectedProgressType,
+			includeCommuteRide: this.includeCommuteRide,
+			includeIndoorRide: this.includeIndoorRide,
+			targetValue: this.targetValue
+		};
+
+		const dialogRef = this.dialog.open(AddYearProgressPresetsDialogComponent, {
+			minWidth: AddYearProgressPresetsDialogComponent.MIN_WIDTH,
+			maxWidth: AddYearProgressPresetsDialogComponent.MAX_WIDTH,
+			data: addYearProgressPresetsDialogData
+		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((savedYearProgressPresetModel: YearProgressPresetModel) => {
+
+			this.updateYearProgressPresetsCount();
+
+			if (savedYearProgressPresetModel) {
+
+				if (_.isNumber(savedYearProgressPresetModel.targetValue)) {
+					this.persistTargetValuePref(savedYearProgressPresetModel.targetValue);
+				} else {
+					this.removeTargetValuePref();
+				}
+
+				this.setup();
+			}
+
+			afterClosedSubscription.unsubscribe();
+		});
+	}
+
+	public onManagePresets(): void {
+
+		const dialogRef = this.dialog.open(ManageYearProgressPresetsDialogComponent, {
+			minWidth: ManageYearProgressPresetsDialogComponent.MIN_WIDTH,
+			maxWidth: ManageYearProgressPresetsDialogComponent.MAX_WIDTH,
+			data: this.progressTypes
+		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((yearProgressPresetModel: YearProgressPresetModel) => {
+
+			const loadPreset = (!_.isEmpty(yearProgressPresetModel));
+
+			if (loadPreset) {
+
+				const progressTypeChange = (yearProgressPresetModel.progressType !== this.selectedProgressType.type);
+				const activityTypesChange = (yearProgressPresetModel.activityTypes.join(";") !== this.selectedActivityTypes.join(";"));
+				const commuteRideChange = (yearProgressPresetModel.includeCommuteRide !== this.includeCommuteRide);
+				const indoorRideChange = (yearProgressPresetModel.includeIndoorRide !== this.includeIndoorRide);
+				const targetValueChange = (yearProgressPresetModel.targetValue !== this.targetValue);
+
+				if (progressTypeChange) {
+					this.persistProgressTypePref(yearProgressPresetModel.progressType);
+				}
+
+				if (activityTypesChange) {
+					this.persistActivityTypesPref(yearProgressPresetModel.activityTypes);
+				}
+
+				if (commuteRideChange) {
+					this.persistCommuteRidesPref(yearProgressPresetModel.includeCommuteRide);
+				}
+
+				if (indoorRideChange) {
+					this.persistIndoorRidesPref(yearProgressPresetModel.includeIndoorRide);
+				}
+
+				if (targetValueChange) {
+					this.persistTargetValuePref(yearProgressPresetModel.targetValue);
+				}
+
+				if (progressTypeChange || activityTypesChange || commuteRideChange || indoorRideChange || targetValueChange) {
+					this.setup();
+				}
+			}
+
+			this.updateYearProgressPresetsCount();
+
+			afterClosedSubscription.unsubscribe();
 		});
 	}
 
@@ -259,35 +390,6 @@ export class YearProgressComponent implements OnInit {
 		return new YearProgressStyleModel(yearsColorsMap, colors);
 	}
 
-	/**
-	 *
-	 * @returns {number[]}
-	 */
-	public findExistingSelectedYears(): number[] {
-		const existingSelectedYears = localStorage.getItem(YearProgressComponent.LS_SELECTED_YEARS_KEY);
-		if (!_.isEmpty(existingSelectedYears)) {
-			return JSON.parse(existingSelectedYears);
-		}
-		return null;
-	}
-
-	/**
-	 *
-	 * @returns {number[]}
-	 */
-	public findExistingSelectedActivityTypes(): string[] {
-
-		const existingSelectedActivityTypes = localStorage.getItem(YearProgressComponent.LS_SELECTED_ACTIVITY_TYPES_KEY);
-		if (!_.isEmpty(existingSelectedActivityTypes)) {
-			return JSON.parse(existingSelectedActivityTypes);
-		}
-		return null;
-	}
-
-	/**
-	 *
-	 * @returns {number[]}
-	 */
 	public findExistingSelectedProgressType(): YearProgressTypeModel {
 
 		const existingProgressType: ProgressType = parseInt(localStorage.getItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY)) as ProgressType;
@@ -297,6 +399,43 @@ export class YearProgressComponent implements OnInit {
 		}
 
 		return null;
+	}
+
+	public getCommuteRidesPref(): boolean {
+		return (localStorage.getItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY) !== "false");
+	}
+
+	public getIncludeIndoorPref(): boolean {
+		return (localStorage.getItem(YearProgressComponent.LS_INCLUDE_INDOOR_RIDES_KEY) !== "false");
+	}
+
+	public getTargetValuePref(): number {
+		const targetValue = parseInt(localStorage.getItem(YearProgressComponent.LS_TARGET_VALUE_KEY));
+		return (_.isNaN(targetValue)) ? null : targetValue;
+	}
+
+	public persistProgressTypePref(type: ProgressType) {
+		localStorage.setItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY, JSON.stringify(type));
+	}
+
+	public persistActivityTypesPref(selectedActivityTypes: string[]) {
+		localStorage.setItem(YearProgressComponent.LS_SELECTED_ACTIVITY_TYPES_KEY, JSON.stringify(selectedActivityTypes));
+	}
+
+	public persistCommuteRidesPref(includeCommuteRide: boolean) {
+		localStorage.setItem(YearProgressComponent.LS_INCLUDE_COMMUTE_RIDES_KEY, JSON.stringify(includeCommuteRide));
+	}
+
+	public persistIndoorRidesPref(includeIndoorRide: boolean) {
+		localStorage.setItem(YearProgressComponent.LS_INCLUDE_INDOOR_RIDES_KEY, JSON.stringify(includeIndoorRide));
+	}
+
+	public persistTargetValuePref(targetValue: number) {
+		localStorage.setItem(YearProgressComponent.LS_TARGET_VALUE_KEY, JSON.stringify(targetValue));
+	}
+
+	public removeTargetValuePref(): void {
+		localStorage.removeItem(YearProgressComponent.LS_TARGET_VALUE_KEY);
 	}
 
 }
