@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ActivityDao } from "../../dao/activity/activity.dao";
-import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 import * as _ from "lodash";
 import { AthleteModelResolverService } from "../athlete-settings/athlete-model-resolver.service";
 import { Subject } from "rxjs";

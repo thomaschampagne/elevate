@@ -1,5 +1,5 @@
-import { AthleteModel } from "../../../../app/src/app/shared/models/athlete/athlete.model";
-import { DatedAthleteSettingsModel } from "../../../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
+import { AthleteModel } from "../../app/src/app/shared/models/athlete/athlete.model";
+import { DatedAthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
 import { UserSettingsModel } from "../models/user-settings/user-settings.model";
 import * as _ from "lodash";
 

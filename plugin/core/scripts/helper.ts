@@ -1,6 +1,6 @@
-import { CoreMessages } from "./shared/models/core-messages";
+import { CoreMessages } from "../../shared/models/core-messages";
 import { SpeedUnitDataModel } from "./models/activity-data/speed-unit-data.model";
-import { Constant } from "./shared/constant";
+import { Constant } from "../../shared/constant";
 
 export class Helper {
 

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
-import { UserSettingsModel } from "../../../../../core/scripts/shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../../../shared/models/user-settings/user-settings.model";
 
 @Injectable()
 export class GlobalSettingsService {
@@ -9,7 +9,7 @@ export class GlobalSettingsService {
 	public static readonly TYPE_OPTION_LIST: string = "list";
 	public static readonly TYPE_OPTION_NUMBER: string = "number";
 
-	public sections: SectionModel[] = [{
+	public readonly sections: SectionModel[] = [{
 		title: "Units",
 		options: [{
 			key: "systemUnit",

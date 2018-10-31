@@ -7,8 +7,8 @@ import { CoreModule } from "../../core/core.module";
 import { ZoneImportExportDataModel } from "./zone-import-export-data.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 import { Mode } from "./mode.enum";
-import { userSettingsData } from "../../../../../core/scripts/shared/user-settings.data";
-import { UserZonesModel } from "../../../../../core/scripts/shared/models/user-settings/user-zones.model";
+import { userSettingsData } from "../../../../../shared/user-settings.data";
+import { UserZonesModel } from "../../../../../shared/models/user-settings/user-zones.model";
 
 describe("ZonesImportExportDialogComponent", () => {
 

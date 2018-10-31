@@ -1,10 +1,10 @@
 import { TestBed } from "@angular/core/testing";
 import { UserSettingsDao } from "./user-settings.dao";
-import { UserSettingsModel } from "../../../../../../core/scripts/shared/models/user-settings/user-settings.model";
-import { userSettingsData } from "../../../../../../core/scripts/shared/user-settings.data";
+import { UserSettingsModel } from "../../../../../../shared/models/user-settings/user-settings.model";
+import { userSettingsData } from "../../../../../../shared/user-settings.data";
 import * as _ from "lodash";
 import { AthleteModel } from "../../models/athlete/athlete.model";
-import { UserZonesModel } from "../../../../../../core/scripts/shared/models/user-settings/user-zones.model";
+import { UserZonesModel } from "../../../../../../shared/models/user-settings/user-zones.model";
 
 describe("UserSettingsDao", () => {
 

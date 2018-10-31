@@ -1,4 +1,4 @@
-import { UserSettingsModel } from "../../../scripts/shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
 import { AnalysisDataModel } from "../../../scripts/models/activity-data/analysis-data.model";
 import { ActivityStreamsModel } from "../../../scripts/models/activity-data/activity-streams.model";
 import { ActivityStatsMapModel } from "../../../scripts/models/activity-data/activity-stats-map.model";

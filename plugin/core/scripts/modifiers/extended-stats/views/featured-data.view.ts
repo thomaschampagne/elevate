@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "../../../helper";
 
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../../../shared/models/user-settings/user-settings.model";
 import { AbstractDataView } from "./abstract-data.view";
 import { AnalysisDataModel } from "../../../models/activity-data/analysis-data.model";
 import { ActivityBasicInfoModel } from "../../../models/activity-data/activity-basic-info.model";

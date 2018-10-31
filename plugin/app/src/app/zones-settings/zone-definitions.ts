@@ -1,6 +1,6 @@
 import * as moment from "moment";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
-import { Constant } from "../../../../core/scripts/shared/constant";
+import { Constant } from "../../../../shared/constant";
 
 export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
 	{

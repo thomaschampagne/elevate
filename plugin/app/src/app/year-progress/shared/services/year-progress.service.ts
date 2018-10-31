@@ -9,8 +9,8 @@ import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model
 import { ProgressionAtDayModel } from "../models/progression-at-date.model";
 import { ProgressType } from "../models/progress-type.enum";
 import { Subject } from "rxjs";
-import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
-import { Constant } from "../../../../../../core/scripts/shared/constant";
+import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
+import { Constant } from "../../../../../../shared/constant";
 import { YearProgressPresetModel } from "../models/year-progress-preset.model";
 import { YearProgressDao } from "../dao/year-progress.dao";
 import { AppError } from "../../../shared/models/app-error.model";

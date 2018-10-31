@@ -2,7 +2,7 @@ import { ActivityStreamsModel } from "../../../scripts/models/activity-data/acti
 import { AnalysisDataModel } from "../../../scripts/models/activity-data/analysis-data.model";
 import { ActivityComputer } from "../../../scripts/processors/activity-computer";
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../../scripts/shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
 import { ActivityStatsMapModel } from "../../../scripts/models/activity-data/activity-stats-map.model";
 import { AthleteModel } from "../../../../app/src/app/shared/models/athlete/athlete.model";
 import { Gender } from "../../../../app/src/app/shared/models/athlete/gender.enum";
