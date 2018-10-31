@@ -315,8 +315,8 @@ export class VacuumProcessor {
 			&& window.pageView.similarActivities().efforts.byActivityId
 		) {
 			const activity = window.pageView.similarActivities().efforts.byActivityId[window.pageView.activity().get("id")];
-			if (activity && _.isNumber(activity.get('start_date'))) {
-				return new Date(activity.get('start_date') * 1000);
+			if (activity && _.isNumber(activity.get("start_date"))) {
+				return new Date(activity.get("start_date") * 1000);
 			}
 		}
 

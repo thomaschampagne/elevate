@@ -14,10 +14,6 @@ const ComputeAnalysisWorker = require("worker-loader?inline!./workers/compute-an
 
 export class MultipleActivityProcessor {
 
-	protected appResources: AppResourcesModel;
-	protected userSettings: UserSettingsModel;
-	protected athleteModelResolver: AthleteModelResolver;
-
 	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteModelResolver) {
 		this.appResources = appResources;
 		this.userSettings = userSettings;
@@ -25,6 +21,10 @@ export class MultipleActivityProcessor {
 	}
 
 	public static outputFields: string[] = ["id", "name", "type", "display_type", "private", "bike_id", "start_time", "distance_raw", "short_unit", "moving_time_raw", "elapsed_time_raw", "trainer", "commute", "elevation_unit", "elevation_gain_raw", "calories", "hasPowerMeter"];
+
+	protected appResources: AppResourcesModel;
+	protected userSettings: UserSettingsModel;
+	protected athleteModelResolver: AthleteModelResolver;
 
 	/**
 	 * @return Activities array with computed stats
