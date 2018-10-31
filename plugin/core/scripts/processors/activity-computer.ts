@@ -13,17 +13,17 @@ import { PowerDataModel } from "../models/activity-data/power-data.model";
 import { HeartRateDataModel } from "../models/activity-data/heart-rate-data.model";
 import { CadenceDataModel } from "../models/activity-data/cadence-data.model";
 import { ElevationDataModel } from "../models/activity-data/elevation-data.model";
-import { ZoneModel } from "../shared/models/zone.model";
+import { ZoneModel } from "../../../shared/models/zone.model";
 import { UpFlatDownSumTotalModel } from "../models/activity-data/up-flat-down-sum-total.model";
 import { UpFlatDownModel } from "../models/activity-data/up-flat-down.model";
 import { UpFlatDownSumCounterModel } from "../models/activity-data/up-flat-down-sum-counter.model";
 import { AscentSpeedDataModel } from "../models/activity-data/ascent-speed-data.model";
 import { StreamVariationSplit } from "../models/stream-variation-split.model";
 import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
-import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { Gender } from "../../../app/src/app/shared/models/athlete/gender.enum";
 import { AthleteSettingsModel } from "../../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
-import { UserZonesModel } from "../shared/models/user-settings/user-zones.model";
+import { UserZonesModel } from "../../../shared/models/user-settings/user-zones.model";
 
 export class ActivityComputer {
 

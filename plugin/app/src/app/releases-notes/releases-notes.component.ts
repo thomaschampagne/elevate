@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
-import { ReleaseNoteModel } from "../../../../core/scripts/shared/models/release-note.model";
+import { ReleaseNoteModel } from "../../../../shared/models/release-note.model";
 
 @Component({
 	selector: "app-releases-notes",

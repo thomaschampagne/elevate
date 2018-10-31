@@ -1,4 +1,4 @@
-import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { AppResourcesModel } from "./app-resources.model";
 import { ActivityStatsMapModel } from "./activity-data/activity-stats-map.model";
 import { ActivityStreamsModel } from "./activity-data/activity-streams.model";

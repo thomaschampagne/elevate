@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../../../shared/models/user-settings/user-settings.model";
 import { AbstractCadenceDataView } from "./abstract-cadence-data.view";
 import { CadenceDataModel } from "../../../models/activity-data/cadence-data.model";
 

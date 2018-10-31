@@ -4,7 +4,7 @@ import { ActivityStreamsModel } from "../../scripts/models/activity-data/activit
 import { ActivityStatsMapModel } from "../../scripts/models/activity-data/activity-stats-map.model";
 import { AnalysisDataModel } from "../../scripts/models/activity-data/analysis-data.model";
 import { RunningPowerEstimator } from "../../scripts/processors/running-power-estimator";
-import { UserSettingsModel } from "../../scripts/shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { ActivityComputer } from "../../scripts/processors/activity-computer";
 import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
 import { Gender } from "../../../app/src/app/shared/models/athlete/gender.enum";

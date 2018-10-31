@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "../helper";
-import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { AbstractModifier } from "./abstract.modifier";
 
 declare let L: any; // Injected by strava.com

@@ -1,4 +1,4 @@
-import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 import * as moment from "moment";
 import * as _ from "lodash";
 import { AthleteModel } from "../../../shared/models/athlete/athlete.model";

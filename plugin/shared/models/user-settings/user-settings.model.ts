@@ -1,5 +1,5 @@
 import { UserZonesModel } from "./user-zones.model";
-import { AthleteModel } from "../../../../../app/src/app/shared/models/athlete/athlete.model";
+import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
 
 export class UserSettingsModel {
 

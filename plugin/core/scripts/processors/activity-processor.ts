@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
 import { CoreEnv } from "../../config/core-env";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
@@ -8,7 +8,7 @@ import { ActivityStatsMapModel } from "../models/activity-data/activity-stats-ma
 import { ActivityStreamsModel } from "../models/activity-data/activity-streams.model";
 import { AnalysisDataModel } from "../models/activity-data/analysis-data.model";
 import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
-import { AthleteModelResolver } from "../shared/resolvers/athlete-model.resolver";
+import { AthleteModelResolver } from "../../../shared/resolvers/athlete-model.resolver";
 import { Gender } from "../../../app/src/app/shared/models/athlete/gender.enum";
 
 const ComputeAnalysisWorker = require("worker-loader?inline!./workers/compute-analysis.worker");

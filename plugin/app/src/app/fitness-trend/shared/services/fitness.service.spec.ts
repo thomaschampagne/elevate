@@ -9,7 +9,7 @@ import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { DayStressModel } from "../models/day-stress.model";
 import { AppError } from "../../../shared/models/app-error.model";
-import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 import { FitnessTrendConfigModel } from "../models/fitness-trend-config.model";
 import { FakeSyncedActivityHelper } from "../helpers/fake-synced-activity.helper";
 import { CoreModule } from "../../../core/core.module";

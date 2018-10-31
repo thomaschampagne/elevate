@@ -1,5 +1,5 @@
 import { UpFlatDownModel } from "./up-flat-down.model";
-import { ZoneModel } from "../../shared/models/zone.model";
+import { ZoneModel } from "../../../../shared/models/zone.model";
 
 export class CadenceDataModel {
 	public cadencePercentageMoving: number;

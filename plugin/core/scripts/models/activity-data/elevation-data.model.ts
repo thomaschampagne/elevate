@@ -1,4 +1,4 @@
-import { ZoneModel } from "../../shared/models/zone.model";
+import { ZoneModel } from "../../../../shared/models/zone.model";
 import { AscentSpeedDataModel } from "./ascent-speed-data.model";
 
 export class ElevationDataModel {
