@@ -16,25 +16,33 @@ import { AppStorageType } from "../models/storage-type.enum";
 
 export class ActivitiesSynchronizer {
 
+	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteModelResolver) {
+		this.appResources = appResources;
+		this.userSettings = userSettings;
+		this.extensionId = this.appResources.extensionId;
+		this._multipleActivityProcessor = new MultipleActivityProcessor(this.appResources, this.userSettings, athleteModelResolver);
+	}
+
+	get multipleActivityProcessor(): MultipleActivityProcessor {
+		return this._multipleActivityProcessor;
+	}
+
+	get hasBeenSyncedActivities(): SyncedActivityModel[] {
+		return this._hasBeenSyncedActivities;
+	}
+
+	get activitiesChanges(): ActivitiesChangesModel {
+		return this._activitiesChanges;
+	}
+
 	public static lastSyncDateTime = "lastSyncDateTime"; // TODO Move into AppStorage as static (do that for others too)
 	public static syncedActivities = "syncedActivities"; // TODO Move into AppStorage as static (do that for others too)
-
-	public static notifyBackgroundSyncDone(extensionId: string, syncResult: SyncResultModel): void {
-		chrome.runtime.sendMessage(extensionId, {
-			method: CoreMessages.ON_EXTERNAL_SYNC_DONE,
-			params: {
-				syncResult: syncResult,
-			},
-		}, (response: any) => {
-			console.log(response);
-		});
-	}
+	public static pagesPerGroupToRead = 2; // = 40 activities with 20 activities per page.
 
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
 	protected extensionId: string;
 	protected totalRawActivityIds: number[] = [];
-	public static pagesPerGroupToRead = 2; // = 40 activities with 20 activities per page.
 	protected _hasBeenSyncedActivities: SyncedActivityModel[] = null;
 	protected _multipleActivityProcessor: MultipleActivityProcessor;
 	protected _endReached = false;
@@ -45,17 +53,15 @@ export class ActivitiesSynchronizer {
 		edited: [],
 	};
 
-	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteModelResolver) {
-		this.appResources = appResources;
-		this.userSettings = userSettings;
-		this.extensionId = this.appResources.extensionId;
-		this._multipleActivityProcessor = new MultipleActivityProcessor(this.appResources, this.userSettings, athleteModelResolver);
-	}
-
-	public appendGlobalActivitiesChanges(activitiesChangesModel: ActivitiesChangesModel): void {
-		this._activitiesChanges.added = _.union(this._activitiesChanges.added, activitiesChangesModel.added);
-		this._activitiesChanges.deleted = _.union(this._activitiesChanges.deleted, activitiesChangesModel.deleted);
-		this._activitiesChanges.edited = _.union(this._activitiesChanges.edited, activitiesChangesModel.edited);
+	public static notifyBackgroundSyncDone(extensionId: string, syncResult: SyncResultModel): void {
+		chrome.runtime.sendMessage(extensionId, {
+			method: CoreMessages.ON_EXTERNAL_SYNC_DONE,
+			params: {
+				syncResult: syncResult,
+			},
+		}, (response: any) => {
+			console.log(response);
+		});
 	}
 
 	/**
@@ -136,6 +142,12 @@ export class ActivitiesSynchronizer {
 			deleted: deleted,
 			edited: edited,
 		};
+	}
+
+	public appendGlobalActivitiesChanges(activitiesChangesModel: ActivitiesChangesModel): void {
+		this._activitiesChanges.added = _.union(this._activitiesChanges.added, activitiesChangesModel.added);
+		this._activitiesChanges.deleted = _.union(this._activitiesChanges.deleted, activitiesChangesModel.deleted);
+		this._activitiesChanges.edited = _.union(this._activitiesChanges.edited, activitiesChangesModel.edited);
 	}
 
 	/**
@@ -872,17 +884,5 @@ export class ActivitiesSynchronizer {
 
 		return deferred.promise;
 
-	}
-
-	get multipleActivityProcessor(): MultipleActivityProcessor {
-		return this._multipleActivityProcessor;
-	}
-
-	get hasBeenSyncedActivities(): SyncedActivityModel[] {
-		return this._hasBeenSyncedActivities;
-	}
-
-	get activitiesChanges(): ActivitiesChangesModel {
-		return this._activitiesChanges;
 	}
 }

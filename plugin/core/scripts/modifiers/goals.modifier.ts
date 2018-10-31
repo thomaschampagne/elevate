@@ -67,7 +67,7 @@ export class GoalsModifier extends AbstractModifier {
 				},
 			);
 		});
-	};
+	}
 
 	/**
 	 * Add a progress bar for weekly progress.

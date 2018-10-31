@@ -33,6 +33,13 @@ import { TargetProgressionModel } from "./shared/models/target-progression.model
 })
 export class YearProgressComponent implements OnInit {
 
+	constructor(public userSettingsService: UserSettingsService,
+				public syncService: SyncService,
+				public activityService: ActivityService,
+				public yearProgressService: YearProgressService,
+				public dialog: MatDialog) {
+	}
+
 	public static readonly PALETTE: string[] = [
 		"#9f8aff",
 		"#ea7015",
@@ -49,23 +56,6 @@ export class YearProgressComponent implements OnInit {
 	public static readonly LS_INCLUDE_COMMUTE_RIDES_KEY: string = "yearProgress_includeCommuteRide";
 	public static readonly LS_INCLUDE_INDOOR_RIDES_KEY: string = "yearProgress_includeIndoorRide";
 	public static readonly LS_TARGET_VALUE_KEY: string = "yearProgress_targetValue";
-
-	public static findExistingSelectedYears(): number[] {
-		const existingSelectedYears = localStorage.getItem(YearProgressComponent.LS_SELECTED_YEARS_KEY);
-		if (!_.isEmpty(existingSelectedYears)) {
-			return JSON.parse(existingSelectedYears);
-		}
-		return null;
-	}
-
-	public static findExistingSelectedActivityTypes(): string[] {
-
-		const existingSelectedActivityTypes = localStorage.getItem(YearProgressComponent.LS_SELECTED_ACTIVITY_TYPES_KEY);
-		if (!_.isEmpty(existingSelectedActivityTypes)) {
-			return JSON.parse(existingSelectedActivityTypes);
-		}
-		return null;
-	}
 
 	public progressTypes: YearProgressTypeModel[];
 	public availableActivityTypes: string[] = [];
@@ -84,13 +74,23 @@ export class YearProgressComponent implements OnInit {
 	public momentWatched: Moment;
 	public hasActivityModels: boolean = null; // Can be null: don't know yet true/false status on load
 	public yearProgressPresetsCount: number = null;
-	public isProgressionInitialized: boolean = false;
+	public isProgressionInitialized = false;
 
-	constructor(public userSettingsService: UserSettingsService,
-				public syncService: SyncService,
-				public activityService: ActivityService,
-				public yearProgressService: YearProgressService,
-				public dialog: MatDialog) {
+	public static findExistingSelectedYears(): number[] {
+		const existingSelectedYears = localStorage.getItem(YearProgressComponent.LS_SELECTED_YEARS_KEY);
+		if (!_.isEmpty(existingSelectedYears)) {
+			return JSON.parse(existingSelectedYears);
+		}
+		return null;
+	}
+
+	public static findExistingSelectedActivityTypes(): string[] {
+
+		const existingSelectedActivityTypes = localStorage.getItem(YearProgressComponent.LS_SELECTED_ACTIVITY_TYPES_KEY);
+		if (!_.isEmpty(existingSelectedActivityTypes)) {
+			return JSON.parse(existingSelectedActivityTypes);
+		}
+		return null;
 	}
 
 	public ngOnInit(): void {

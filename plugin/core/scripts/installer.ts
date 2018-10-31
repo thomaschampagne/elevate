@@ -153,7 +153,7 @@ class Installer {
 		}
 
 		return promise;
-	};
+	}
 
 	/**
 	 * Summary: Removing syncWithAthleteProfile local storage object & rename computedActivities to syncedActivities. remove autoSyncMinutes
@@ -190,7 +190,7 @@ class Installer {
 		}
 
 		return promise;
-	};
+	}
 
 	/**
 	 * Summary: Removing synced displayMotivationScore
@@ -208,7 +208,7 @@ class Installer {
 		}
 
 		return promise;
-	};
+	}
 
 	/**
 	 * Summary: Migrate old user synced athletes setting to athleteModel. Remove old user synced athletes setting.
@@ -257,7 +257,7 @@ class Installer {
 		}
 
 		return promise;
-	};
+	}
 
 	protected migrate_to_6_6_0(): Promise<void> {
 

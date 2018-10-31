@@ -950,9 +950,9 @@ describe("YearProgressService", () => {
 		it("should delete preset", (done: Function) => {
 
 			// Given
-			let model_0 = new YearProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false);
-			let model_1 = new YearProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000);
-			let model_2 = new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false);
+			const model_0 = new YearProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false);
+			const model_1 = new YearProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000);
+			const model_2 = new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false);
 			const progressPresetModels: YearProgressPresetModel[] = [
 				model_0,
 				model_1,
@@ -986,9 +986,9 @@ describe("YearProgressService", () => {
 		it("should reject delete preset", (done: Function) => {
 
 			// Given
-			let model_0 = new YearProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false);
-			let model_1 = new YearProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000);
-			let model_2 = new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false);
+			const model_0 = new YearProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false);
+			const model_1 = new YearProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000);
+			const model_2 = new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false);
 			const progressPresetModels: YearProgressPresetModel[] = [
 				model_0,
 				model_1,
