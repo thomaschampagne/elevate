@@ -1,14 +1,14 @@
 <mat-dialog-content>
 
 	<div class="actions" fxLayoutAlign="center center">
-		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_ADD)" mat-flat-button
-				color="primary" (click)="onConfirm()"> Add
+		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_ADD)" mat-stroked-button
+				color="primary" (click)="onConfirm()">Add
 		</button>
-		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_EDIT)" mat-flat-button
-				color="primary" (click)="onConfirm()">Edit
+		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_EDIT)" mat-stroked-button
+				color="primary" (click)="onConfirm()">Confirm changes
 		</button>
 		<span fxFlex="1"></span>
-		<button fxFlex="50" mat-flat-button color="primary" (click)="onCancel()">Cancel
+		<button fxFlex="50" mat-stroked-button color="primary" (click)="onCancel()">Cancel
 		</button>
 	</div>
 
@@ -33,14 +33,14 @@
 							   (athleteSettingsModelChange)="onAthleteSettingsModelChanged($event)"></app-athlete-settings-form>
 
 	<div class="actions" fxLayoutAlign="center center">
-		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_ADD)" mat-flat-button
-				color="primary" (click)="onConfirm()"> Add
+		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_ADD)" mat-stroked-button
+				color="primary" (click)="onConfirm()">Add
 		</button>
-		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_EDIT)" mat-flat-button
-				color="primary" (click)="onConfirm()">Edit
+		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_EDIT)" mat-stroked-button
+				color="primary" (click)="onConfirm()">Confirm changes
 		</button>
 		<span fxFlex="1"></span>
-		<button fxFlex="50" mat-flat-button color="primary" (click)="onCancel()">Cancel
+		<button fxFlex="50" mat-stroked-button color="primary" (click)="onCancel()">Cancel
 		</button>
 	</div>
 
