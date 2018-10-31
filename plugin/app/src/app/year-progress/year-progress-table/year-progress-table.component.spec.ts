@@ -96,8 +96,13 @@ describe("YearProgressTableComponent", () => {
 		const progressionAtDayModels: ProgressionAtDayModel[] = yearProgressService.findProgressionsAtDay(component.yearProgressModels,
 			dayMoment, component.selectedProgressType.type, component.selectedYears, component.yearProgressStyleModel.yearsColorsMap);
 
+		const targetProgressionModel = {
+			dayOfYear: dayMoment.dayOfYear(),
+			value: 1000
+		};
+
 		// When
-		const progressionRows: ProgressionAtDayRow[] = component.rows(progressionAtDayModels);
+		const progressionRows: ProgressionAtDayRow[] = component.rows(progressionAtDayModels, targetProgressionModel);
 
 		// Then
 		expect(progressionRows).not.toBeNull();
@@ -117,6 +122,10 @@ describe("YearProgressTableComponent", () => {
 		expect(progressionRow2018.deltaCurrentYear.type).toEqual(DeltaType.NAN);
 		expect(progressionRow2018.deltaCurrentYear.signSymbol).toEqual(null);
 		expect(progressionRow2018.deltaCurrentYear.class).toEqual(DeltaType.NAN.toString());
+		expect(progressionRow2018.deltaTarget.value).toEqual(1000);
+		expect(progressionRow2018.deltaTarget.type).toEqual(DeltaType.NEGATIVE);
+		expect(progressionRow2018.deltaTarget.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_NEGATIVE);
+		expect(progressionRow2018.deltaTarget.class).toEqual(DeltaType.NEGATIVE.toString());
 
 		const progressionRow2017 = progressionRows[1];
 		expect(progressionRow2017.year).toEqual(2017);
@@ -133,6 +142,10 @@ describe("YearProgressTableComponent", () => {
 		expect(progressionRow2017.deltaCurrentYear.type).toEqual(DeltaType.POSITIVE);
 		expect(progressionRow2017.deltaCurrentYear.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
 		expect(progressionRow2017.deltaCurrentYear.class).toEqual(DeltaType.POSITIVE.toString());
+		expect(progressionRow2017.deltaTarget.value).toEqual(20);
+		expect(progressionRow2017.deltaTarget.type).toEqual(DeltaType.POSITIVE);
+		expect(progressionRow2017.deltaTarget.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
+		expect(progressionRow2017.deltaTarget.class).toEqual(DeltaType.POSITIVE.toString());
 
 		const progressionRow2016 = progressionRows[2];
 		expect(progressionRow2016.year).toEqual(2016);
@@ -149,6 +162,10 @@ describe("YearProgressTableComponent", () => {
 		expect(progressionRow2016.deltaCurrentYear.type).toEqual(DeltaType.POSITIVE);
 		expect(progressionRow2016.deltaCurrentYear.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
 		expect(progressionRow2016.deltaCurrentYear.class).toEqual(DeltaType.POSITIVE.toString());
+		expect(progressionRow2016.deltaTarget.value).toEqual(30);
+		expect(progressionRow2016.deltaTarget.type).toEqual(DeltaType.POSITIVE);
+		expect(progressionRow2016.deltaTarget.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
+		expect(progressionRow2016.deltaTarget.class).toEqual(DeltaType.POSITIVE.toString());
 
 		const progressionRow2015 = progressionRows[3];
 		expect(progressionRow2015.year).toEqual(2015);
@@ -165,6 +182,10 @@ describe("YearProgressTableComponent", () => {
 		expect(progressionRow2015.deltaCurrentYear.type).toEqual(DeltaType.POSITIVE);
 		expect(progressionRow2015.deltaCurrentYear.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
 		expect(progressionRow2015.deltaCurrentYear.class).toEqual(DeltaType.POSITIVE.toString());
+		expect(progressionRow2015.deltaTarget.value).toEqual(20);
+		expect(progressionRow2015.deltaTarget.type).toEqual(DeltaType.POSITIVE);
+		expect(progressionRow2015.deltaTarget.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
+		expect(progressionRow2015.deltaTarget.class).toEqual(DeltaType.POSITIVE.toString());
 
 		done();
 	});
@@ -193,7 +214,7 @@ describe("YearProgressTableComponent", () => {
 		component.selectedProgressType = new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h");
 
 		// When
-		const progressionRows: ProgressionAtDayRow[] = component.rows([firstYear, secondYear]);
+		const progressionRows: ProgressionAtDayRow[] = component.rows([firstYear, secondYear], null);
 
 		// Then
 		expect(progressionRows).not.toBeNull();
@@ -245,7 +266,7 @@ describe("YearProgressTableComponent", () => {
 		component.selectedProgressType = new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h");
 
 		// When
-		const progressionRows: ProgressionAtDayRow[] = component.rows([firstYear, secondYear]);
+		const progressionRows: ProgressionAtDayRow[] = component.rows([firstYear, secondYear], null);
 
 		// Then
 		expect(progressionRows).not.toBeNull();
@@ -297,7 +318,7 @@ describe("YearProgressTableComponent", () => {
 		component.selectedProgressType = new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h");
 
 		// When
-		const progressionRows: ProgressionAtDayRow[] = component.rows([firstYear, secondYear]);
+		const progressionRows: ProgressionAtDayRow[] = component.rows([firstYear, secondYear], null);
 
 		// Then
 		expect(progressionRows).not.toBeNull();
@@ -349,7 +370,7 @@ describe("YearProgressTableComponent", () => {
 
 
 		// When
-		const progressionRows: ProgressionAtDayRow[] = component.rows([firstYear, secondYear]);
+		const progressionRows: ProgressionAtDayRow[] = component.rows([firstYear, secondYear], null);
 
 		// Then
 		expect(progressionRows).not.toBeNull();

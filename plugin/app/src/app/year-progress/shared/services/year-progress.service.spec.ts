@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 
-import { TargetProgressionModel, YearProgressService } from "./year-progress.service";
+import { YearProgressService } from "./year-progress.service";
 import { YearProgressActivitiesFixture } from "./year-progress-activities.fixture";
 import { YearProgressModel } from "../models/year-progress.model";
 import * as _ from "lodash";
@@ -14,6 +14,7 @@ import { SyncedActivityModel } from "../../../../../../core/scripts/shared/model
 import { YearProgressPresetModel } from "../models/year-progress-preset.model";
 import { YearProgressModule } from "../../year-progress.module";
 import { AppError } from "../../../shared/models/app-error.model";
+import { TargetProgressionModel } from "../models/target-progression.model";
 
 describe("YearProgressService", () => {
 
