@@ -26,6 +26,7 @@
 		"@angular/platform-browser": "^7.0.1",
 		"@angular/platform-browser-dynamic": "^7.0.1",
 		"@angular/router": "^7.0.1",
+		"@elevate/shared": "file:modules/shared",
 		"@iktakahiro/markdown-it-katex": "^3.0.4",
 		"core-js": "^2.5.4",
 		"d3": "^5.7.0",
