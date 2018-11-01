@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
+import { userSettingsData, UserSettingsModel } from "@elevate/shared";
 import { GlobalSettingsService } from "./services/global-settings.service";
 import * as _ from "lodash";
-import { userSettingsData } from "../../../../shared/user-settings.data";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
 import { OptionHelperDialogComponent } from "./option-helper-dialog/option-helper-dialog.component";

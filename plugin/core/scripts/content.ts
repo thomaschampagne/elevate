@@ -1,10 +1,8 @@
 import * as _ from "lodash";
 import { Loader } from "../modules/loader";
 import { AppResourcesModel } from "./models/app-resources.model";
-import { CoreMessages } from "../../shared/models/core-messages";
-import { StartCoreDataModel } from "../../shared/models/start-core-data.model";
-import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
-import { userSettingsData } from "../../shared/user-settings.data";
+import { CoreMessages, userSettingsData, UserSettingsModel } from "@elevate/shared";
+import { StartCoreDataModel } from "./models/start-core-data.model";
 
 export class Content {
 

@@ -3,8 +3,8 @@ import "../css/core.css";
 import { Elevate } from "./elevate";
 import * as $ from "jquery";
 import * as fancyboxBoot from "fancybox";
-import { CoreMessages } from "../../shared/models/core-messages";
-import { StartCoreDataModel } from "../../shared/models/start-core-data.model";
+import { CoreMessages } from "@elevate/shared";
+import { StartCoreDataModel } from "./models/start-core-data.model";
 
 class Boot {
 

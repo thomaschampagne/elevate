@@ -1,0 +1,7 @@
+{
+	"name": "@elevate/shared",
+	"version": "1.0.0",
+	"description": "Contains shared resources for both core and app",
+	"author": "Thomas Champagne"
+}
+

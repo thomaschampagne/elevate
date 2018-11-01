@@ -1,5 +1,5 @@
 import { Gender } from "./gender.enum";
-import { AthleteSettingsModel } from "./athlete-settings/athlete-settings.model";
+import { AthleteSettingsModel } from "./athlete-settings";
 
 export class AthleteModel {
 

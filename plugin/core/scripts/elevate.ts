@@ -1,6 +1,15 @@
 import * as _ from "lodash";
 import { Helper } from "./helper";
-import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
+import {
+	ActivityBasicInfoModel,
+	AthleteModelResolver,
+	DatedAthleteSettingsModel,
+	Gender,
+	ReleaseNoteModel,
+	releaseNotesData,
+	SyncResultModel,
+	UserSettingsModel
+} from "@elevate/shared";
 import { AppStorage } from "./app-storage";
 import { CoreEnv } from "../config/core-env";
 import { AppResourcesModel } from "./models/app-resources.model";
@@ -39,15 +48,8 @@ import { ISegmentInfo, SegmentProcessor } from "./processors/segment-processor";
 import { VacuumProcessor } from "./processors/vacuum-processor";
 import { ActivitiesSynchronizer } from "./processors/activities-synchronizer";
 import * as Q from "q";
-import { SyncResultModel } from "../../shared/models/sync/sync-result.model";
-import { ActivityBasicInfoModel } from "./models/activity-data/activity-basic-info.model";
 import { AthleteUpdate } from "./utils/athlete-update";
 import "./follow";
-import { releaseNotesData } from "../../shared/release-notes.data";
-import { ReleaseNoteModel } from "../../shared/models/release-note.model";
-import { AthleteModelResolver } from "../../shared/resolvers/athlete-model.resolver";
-import { DatedAthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
-import { Gender } from "../../app/src/app/shared/models/athlete/gender.enum";
 import * as Cookies from "js-cookie";
 import { AppStorageType } from "./models/storage-type.enum";
 import { ActivityFeedModifier } from "./modifiers/activity-feed-modifier";

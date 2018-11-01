@@ -15,6 +15,10 @@
 			"dom",
 			"webworker"
 		],
+		"baseUrl": "./",
+		"paths": {
+			"@elevate/shared": ["../app/modules/shared/"]
+		},
 		"skipLibCheck": true
 	}
 }

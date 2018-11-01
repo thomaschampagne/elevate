@@ -3,13 +3,11 @@ import { ZonesService } from "./zones.service";
 import * as _ from "lodash";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { ZONE_DEFINITIONS } from "../zone-definitions";
-import { userSettingsData } from "../../../../../shared/user-settings.data";
+import { userSettingsData, UserZonesModel, ZoneModel } from "@elevate/shared";
 import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
 import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";
 import { ZoneChangeOrderModel } from "./zone-change-order.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
-import { ZoneModel } from "../../../../../shared/models/zone.model";
-import { UserZonesModel } from "../../../../../shared/models/user-settings/user-zones.model";
 
 describe("ZonesService", () => {
 

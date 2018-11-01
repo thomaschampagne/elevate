@@ -1,6 +1,6 @@
 import { UpFlatDownSumTotalModel } from "./up-flat-down-sum-total.model";
 import { UpFlatDownModel } from "./up-flat-down.model";
-import { ZoneModel } from "../../../../shared/models/zone.model";
+import { ZoneModel } from "../zone.model";
 
 export class GradeDataModel {
 	public avgGrade: number;

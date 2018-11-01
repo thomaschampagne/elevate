@@ -4,8 +4,7 @@ import { SyncService } from "./sync.service";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { SyncState } from "./sync-state.enum";
 import { SyncedBackupModel } from "./synced-backup.model";
-import { DatedAthleteSettingsModel } from "../../models/athlete/athlete-settings/dated-athlete-settings.model";
-import { AthleteSettingsModel } from "../../models/athlete/athlete-settings/athlete-settings.model";
+import { AthleteSettingsModel, DatedAthleteSettingsModel } from "@elevate/shared";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 

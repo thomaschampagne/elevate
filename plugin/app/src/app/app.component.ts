@@ -20,7 +20,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/theme.enum";
 import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
-import { SyncResultModel } from "../../../shared/models/sync/sync-result.model";
+import { SyncResultModel } from "@elevate/shared";
 import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
 
 // TODO:FEAT @YearProgress Add Trimp progress EZ !!

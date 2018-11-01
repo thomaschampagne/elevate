@@ -1,7 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { DatedAthleteSettingsDao } from "./dated-athlete-settings.dao";
-import { DatedAthleteSettingsModel } from "../../models/athlete/athlete-settings/dated-athlete-settings.model";
-import { AthleteSettingsModel } from "../../models/athlete/athlete-settings/athlete-settings.model";
+import { AthleteSettingsModel, DatedAthleteSettingsModel } from "@elevate/shared";
 
 describe("DatedAthleteSettingsDao", () => {
 

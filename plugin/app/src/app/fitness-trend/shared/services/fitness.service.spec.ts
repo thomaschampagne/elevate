@@ -4,19 +4,16 @@ import { TestBed } from "@angular/core/testing";
 import { FitnessService } from "./fitness.service";
 import { ActivityService } from "../../../shared/services/activity/activity.service";
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
-import { Gender } from "../../../shared/models/athlete/gender.enum";
+import { AthleteModel, AthleteSettingsModel, Gender, SyncedActivityModel } from "@elevate/shared";
 import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { DayStressModel } from "../models/day-stress.model";
 import { AppError } from "../../../shared/models/app-error.model";
-import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
 import { FitnessTrendConfigModel } from "../models/fitness-trend-config.model";
 import { FakeSyncedActivityHelper } from "../helpers/fake-synced-activity.helper";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
 import { FitnessTrendModule } from "../../fitness-trend.module";
-import { AthleteModel } from "../../../shared/models/athlete/athlete.model";
-import { AthleteSettingsModel } from "../../../shared/models/athlete/athlete-settings/athlete-settings.model";
 
 describe("FitnessService", () => {
 

@@ -68,6 +68,7 @@ export class AppStorage {
 			}
 		});
 	}
+
 	/**
 	 *
 	 * @param storageType

@@ -1,4 +1,4 @@
-import { AthleteModel } from "../../../shared/models/athlete/athlete.model";
+import { AthleteModel } from "@elevate/shared";
 
 export class DayStressModel {
 

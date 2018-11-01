@@ -1,13 +1,9 @@
 import { TestBed } from "@angular/core/testing";
 import { UserSettingsService } from "./user-settings.service";
-import { UserSettingsModel } from "../../../../../../shared/models/user-settings/user-settings.model";
-import { userSettingsData } from "../../../../../../shared/user-settings.data";
+import { Gender, userSettingsData, UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
-import { ZoneModel } from "../../../../../../shared/models/zone.model";
-import { Gender } from "../../models/athlete/gender.enum";
-import { UserZonesModel } from "../../../../../../shared/models/user-settings/user-zones.model";
 
 describe("UserSettingsService", () => {
 

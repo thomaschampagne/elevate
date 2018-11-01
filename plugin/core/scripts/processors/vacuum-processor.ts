@@ -1,8 +1,6 @@
 import * as _ from "lodash";
 import { CoreEnv } from "../../config/core-env";
-import { ActivityStatsMapModel } from "../models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../models/activity-data/activity-streams.model";
-import { Gender } from "../../../app/src/app/shared/models/athlete/gender.enum";
+import { ActivityStatsMapModel, ActivityStreamsModel, Gender } from "@elevate/shared";
 
 export class VacuumProcessor {
 

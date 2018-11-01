@@ -1,6 +1,4 @@
-import { CoreMessages } from "../../shared/models/core-messages";
-import { SpeedUnitDataModel } from "./models/activity-data/speed-unit-data.model";
-import { Constant } from "../../shared/constant";
+import { Constant, CoreMessages, SpeedUnitDataModel } from "@elevate/shared";
 
 export class Helper {
 

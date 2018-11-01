@@ -1,6 +1,5 @@
 import * as _ from "lodash";
-import { ActivityStreamsModel } from "../models/activity-data/activity-streams.model";
-import { Constant } from "../../../shared/constant";
+import { ActivityStreamsModel, Constant } from "@elevate/shared";
 
 export interface ICourseBounds {
 	start: number;

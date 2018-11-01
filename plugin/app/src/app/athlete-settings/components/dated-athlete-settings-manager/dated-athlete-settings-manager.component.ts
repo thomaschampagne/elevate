@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { MatDialog, MatSnackBar, MatTableDataSource } from "@angular/material";
-import { DatedAthleteSettingsModel } from "../../../shared/models/athlete/athlete-settings/dated-athlete-settings.model";
+import { DatedAthleteSettingsModel } from "@elevate/shared";
 import { DatedAthleteSettingsService } from "../../../shared/services/dated-athlete-settings/dated-athlete-settings.service";
 import { EditDatedAthleteSettingsDialogComponent } from "../edit-dated-athlete-settings-dialog/edit-dated-athlete-settings-dialog.component";
 import * as _ from "lodash";

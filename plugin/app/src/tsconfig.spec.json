@@ -9,7 +9,12 @@
 			"jasmine",
 			"node",
 			"chrome"
-		]
+		],
+		"paths": {
+			"@elevate/shared": [
+				"../modules/shared/"
+			]
+		}
 	},
 	"files": [
 		"test.ts",

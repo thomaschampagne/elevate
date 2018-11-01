@@ -2,28 +2,30 @@ import * as _ from "lodash";
 import { Helper } from "../helper";
 import { RunningPowerEstimator } from "./running-power-estimator";
 import { SplitCalculator } from "./split-calculator";
-import { ActivityStatsMapModel } from "../models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../models/activity-data/activity-streams.model";
-import { AnalysisDataModel } from "../models/activity-data/analysis-data.model";
-import { MoveDataModel } from "../models/activity-data/move-data.model";
-import { SpeedDataModel } from "../models/activity-data/speed-data.model";
-import { PaceDataModel } from "../models/activity-data/pace-data.model";
-import { GradeDataModel } from "../models/activity-data/grade-data.model";
-import { PowerDataModel } from "../models/activity-data/power-data.model";
-import { HeartRateDataModel } from "../models/activity-data/heart-rate-data.model";
-import { CadenceDataModel } from "../models/activity-data/cadence-data.model";
-import { ElevationDataModel } from "../models/activity-data/elevation-data.model";
-import { ZoneModel } from "../../../shared/models/zone.model";
-import { UpFlatDownSumTotalModel } from "../models/activity-data/up-flat-down-sum-total.model";
-import { UpFlatDownModel } from "../models/activity-data/up-flat-down.model";
-import { UpFlatDownSumCounterModel } from "../models/activity-data/up-flat-down-sum-counter.model";
-import { AscentSpeedDataModel } from "../models/activity-data/ascent-speed-data.model";
+import {
+	ActivityStatsMapModel,
+	ActivityStreamsModel,
+	AnalysisDataModel,
+	AscentSpeedDataModel,
+	AthleteModel,
+	AthleteSettingsModel,
+	CadenceDataModel,
+	ElevationDataModel,
+	Gender,
+	GradeDataModel,
+	HeartRateDataModel,
+	MoveDataModel,
+	PaceDataModel,
+	PowerDataModel,
+	SpeedDataModel,
+	UpFlatDownModel,
+	UpFlatDownSumCounterModel,
+	UpFlatDownSumTotalModel,
+	UserSettingsModel,
+	UserZonesModel,
+	ZoneModel
+} from "@elevate/shared";
 import { StreamVariationSplit } from "../models/stream-variation-split.model";
-import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
-import { Gender } from "../../../app/src/app/shared/models/athlete/gender.enum";
-import { AthleteSettingsModel } from "../../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
-import { UserZonesModel } from "../../../shared/models/user-settings/user-zones.model";
 
 export class ActivityComputer {
 

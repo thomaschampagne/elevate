@@ -12,7 +12,7 @@ import { AppError } from "../shared/models/app-error.model";
 import { MatDialog, MatSnackBar } from "@angular/material";
 import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
-import { SyncResultModel } from "../../../../shared/models/sync/sync-result.model";
+import { SyncResultModel } from "@elevate/shared";
 import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.model";
 import { FitnessTrendInputsComponent } from "./fitness-trend-inputs/fitness-trend-inputs.component";
 import { FitnessTrendConfigDialogData } from "./shared/models/fitness-trend-config-dialog-data.model";
