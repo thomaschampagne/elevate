@@ -1,5 +1,5 @@
 import { UserSettingsModel } from "./models/user-settings/user-settings.model";
-import { AthleteModel } from "../app/src/app/shared/models/athlete/athlete.model";
+import { AthleteModel } from "./models/athlete/athlete.model";
 
 export const userSettingsData: UserSettingsModel = {
 	localStorageMustBeCleared: false,

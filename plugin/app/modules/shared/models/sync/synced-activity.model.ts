@@ -1,5 +1,5 @@
-import { AnalysisDataModel } from "../../../core/scripts/models/activity-data/analysis-data.model";
-import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
+import { AnalysisDataModel } from "../activity-data";
+import { AthleteModel } from "..";
 
 export class SyncedActivityModel {
 	public id: number;

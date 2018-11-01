@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "@elevate/shared";
 import { AbstractModifier } from "./abstract.modifier";
 
 export class HideFeedModifier extends AbstractModifier {

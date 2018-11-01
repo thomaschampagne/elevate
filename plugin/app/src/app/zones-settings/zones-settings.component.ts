@@ -5,12 +5,9 @@ import { ZONE_DEFINITIONS } from "./zone-definitions";
 import { ZonesService } from "./shared/zones.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AppRoutesModel } from "../shared/models/app-routes.model";
-import { userSettingsData } from "../../../../shared/user-settings.data";
+import { userSettingsData, UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
 import { Subscription } from "rxjs";
-import { UserZonesModel } from "../../../../shared/models/user-settings/user-zones.model";
-import { UserSettingsModel } from "../../../../shared/models/user-settings/user-settings.model";
-import { ZoneModel } from "../../../../shared/models/zone.model";
 import { MatSnackBar } from "@angular/material";
 
 @Component({

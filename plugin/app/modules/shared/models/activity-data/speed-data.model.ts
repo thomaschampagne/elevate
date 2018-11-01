@@ -1,4 +1,4 @@
-import { ZoneModel } from "../../../../shared/models/zone.model";
+import { ZoneModel } from "../zone.model";
 
 export class SpeedDataModel {
 	public genuineAvgSpeed: number;

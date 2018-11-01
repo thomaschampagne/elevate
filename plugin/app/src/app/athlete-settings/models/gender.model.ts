@@ -1,4 +1,4 @@
-import { Gender } from "../../shared/models/athlete/gender.enum";
+import { Gender } from "@elevate/shared";
 
 export class GenderModel {
 	public type: Gender;

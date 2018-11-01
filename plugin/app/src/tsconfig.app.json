@@ -6,7 +6,12 @@
 		"module": "es2015",
 		"types": [
 			"chrome"
-		]
+		],
+		"paths": {
+			"@elevate/shared": [
+				"../modules/shared/"
+			]
+		}
 	},
 	"exclude": [
 		"test.ts",

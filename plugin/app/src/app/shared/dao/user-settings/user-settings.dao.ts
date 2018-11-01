@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { UserSettingsModel } from "../../../../../../shared/models/user-settings/user-settings.model";
-import { userSettingsData } from "../../../../../../shared/user-settings.data";
+import { userSettingsData, UserSettingsModel } from "@elevate/shared";
 import * as _ from "lodash";
 
 @Injectable()

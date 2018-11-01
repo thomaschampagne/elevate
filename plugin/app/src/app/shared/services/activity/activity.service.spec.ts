@@ -2,15 +2,17 @@ import { TestBed } from "@angular/core/testing";
 import { ActivityService } from "./activity.service";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import * as _ from "lodash";
-import { SyncedActivityModel } from "../../../../../../shared/models/sync/synced-activity.model";
+import {
+	AthleteModel,
+	AthleteSettingsModel,
+	DatedAthleteSettingsModel,
+	Gender,
+	SyncedActivityModel,
+	userSettingsData
+} from "@elevate/shared";
 import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/fake-synced-activity.helper";
-import { AthleteModel } from "../../models/athlete/athlete.model";
-import { Gender } from "../../models/athlete/gender.enum";
-import { AthleteSettingsModel } from "../../models/athlete/athlete-settings/athlete-settings.model";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
-import { userSettingsData } from "../../../../../../shared/user-settings.data";
-import { DatedAthleteSettingsModel } from "../../models/athlete/athlete-settings/dated-athlete-settings.model";
 
 describe("ActivityService", () => {
 

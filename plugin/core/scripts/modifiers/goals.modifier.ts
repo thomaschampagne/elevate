@@ -531,7 +531,7 @@ export class GoalsModifier extends AbstractModifier {
 			formattedUnits = "";
 		}
 		return `${formattedValue}${formattedUnits}`;
-	}
+	};
 }
 
 /**

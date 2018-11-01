@@ -1,9 +1,9 @@
 export class InconsistentParametersException extends Error {
-    constructor(message?: string) {
+	constructor(message?: string) {
 		if (!message) {
 			super("InconsistentParametersException");
-        } else {
+		} else {
 			super("InconsistentParametersException: " + message);
-        }
-    }
+		}
+	}
 }

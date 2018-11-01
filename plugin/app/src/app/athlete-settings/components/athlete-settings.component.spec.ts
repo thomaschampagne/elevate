@@ -5,7 +5,7 @@ import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { AthleteSettingsModule } from "../athlete-settings.module";
 import * as _ from "lodash";
-import { userSettingsData } from "../../../../../shared/user-settings.data";
+import { userSettingsData } from "@elevate/shared";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 
 describe("AthleteSettingsComponent", () => {

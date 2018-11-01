@@ -1,18 +1,20 @@
-import { userSettingsData } from "../../shared/user-settings.data";
+import {
+	AthleteModel,
+	AthleteSettingsModel,
+	Constant,
+	DatedAthleteSettingsModel,
+	Gender,
+	SyncedActivityModel,
+	UserLactateThresholdModel,
+	userSettingsData,
+	UserSettingsModel,
+	UserZonesModel
+} from "@elevate/shared";
 import { Helper } from "./helper";
 import * as semver from "semver";
-import { AthleteModel } from "../../app/src/app/shared/models/athlete/athlete.model";
-import { Gender } from "../../app/src/app/shared/models/athlete/gender.enum";
-import { AthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
-import { UserLactateThresholdModel } from "../../app/src/app/shared/models/athlete/athlete-settings/user-lactate-threshold.model";
 import * as _ from "lodash";
 import { AppStorage } from "./app-storage";
-import { SyncedActivityModel } from "../../shared/models/sync/synced-activity.model";
 import { AppStorageType } from "./models/storage-type.enum";
-import { UserZonesModel } from "../../shared/models/user-settings/user-zones.model";
-import { Constant } from "../../shared/constant";
-import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
-import { DatedAthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
 import { DatedAthleteSettingsDao } from "../../app/src/app/shared/dao/dated-athlete-settings/dated-athlete-settings.dao";
 
 class Installer {

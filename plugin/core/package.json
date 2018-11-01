@@ -29,6 +29,7 @@
 	"license": "MIT",
 	"readme": "None",
 	"dependencies": {
+		"@elevate/shared": "file:../app/modules/shared/",
 		"chart.js": "^2.7.3",
 		"fancybox": "^3.0.1",
 		"file-saver": "^2.0.0-rc.4",

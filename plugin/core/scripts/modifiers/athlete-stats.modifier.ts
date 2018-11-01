@@ -2,7 +2,7 @@ import * as $ from "jquery";
 import * as _ from "lodash";
 import { Helper } from "../helper";
 import { AppResourcesModel } from "../models/app-resources.model";
-import { Constant } from "../../../shared/constant";
+import { Constant } from "@elevate/shared";
 import { AbstractModifier } from "./abstract.modifier";
 import * as Cookies from "js-cookie";
 

@@ -1,10 +1,9 @@
 import { TestBed } from "@angular/core/testing";
 import { DatedAthleteSettingsService } from "./dated-athlete-settings.service";
-import { DatedAthleteSettingsModel } from "../../models/athlete/athlete-settings/dated-athlete-settings.model";
+import { AthleteSettingsModel, DatedAthleteSettingsModel } from "@elevate/shared";
 import * as _ from "lodash";
 import { DatedAthleteSettingsDao } from "../../dao/dated-athlete-settings/dated-athlete-settings.dao";
 import { AppError } from "../../models/app-error.model";
-import { AthleteSettingsModel } from "../../models/athlete/athlete-settings/athlete-settings.model";
 
 describe("DatedAthleteSettingsService", () => {
 

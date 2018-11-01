@@ -3,8 +3,7 @@ import * as _ from "lodash";
 import * as $ from "jquery";
 import { CourseMaker, ExportTypes, ICourseBounds } from "../processors/course-marker";
 import { VacuumProcessor } from "../processors/vacuum-processor";
-import { ActivityStatsMapModel } from "../models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../models/activity-data/activity-streams.model";
+import { ActivityStatsMapModel, ActivityStreamsModel } from "@elevate/shared";
 import { AbstractModifier } from "./abstract.modifier";
 
 export class VirtualPartnerModifier extends AbstractModifier {

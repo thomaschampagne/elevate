@@ -1,9 +1,8 @@
 import * as _ from "lodash";
 import * as $ from "jquery";
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { Helper } from "../helper";
-import { SpeedUnitDataModel } from "../models/activity-data/speed-unit-data.model";
 import { LatLonSpherical } from "geodesy";
 import { AbstractModifier } from "./abstract.modifier";
 
