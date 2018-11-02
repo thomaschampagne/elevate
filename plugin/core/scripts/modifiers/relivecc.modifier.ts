@@ -3,7 +3,7 @@ import { AbstractModifier } from "./abstract.modifier";
 
 export class ReliveCCModifier extends AbstractModifier {
 
-	private activityId: number;
+	private readonly activityId: number;
 
 	constructor(activityId: number) {
 		super();

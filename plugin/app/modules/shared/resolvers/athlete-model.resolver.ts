@@ -81,7 +81,7 @@ export class AthleteModelResolver {
 
 		const isDateWellFormatted = (/([0-9]{4})\-([0-9]{2})\-([0-9]{2})/gm).exec(onDateString);
 		const onDate = new Date(onDateString);
-		const isValidDate = (onDate instanceof Date && !isNaN(onDate.getTime()));
+		const isValidDate = !isNaN(onDate.getTime());
 
 		if (!isDateWellFormatted || !isValidDate) {
 			throw new Error("Invalid date or not formatted as 'YYYY-MM-DD'");
