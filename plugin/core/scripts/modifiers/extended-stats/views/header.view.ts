@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
-import { ActivityBasicInfoModel } from "@elevate/shared";
+import { ActivityBasicInfoModel } from "@elevate/shared/models";
 
 export class HeaderView extends AbstractDataView {
 

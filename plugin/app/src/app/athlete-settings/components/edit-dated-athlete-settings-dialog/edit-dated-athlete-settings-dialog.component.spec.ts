@@ -7,9 +7,10 @@ import { SharedModule } from "../../../shared/shared.module";
 import { AthleteSettingsModule } from "../../athlete-settings.module";
 import { UserSettingsDao } from "../../../shared/dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
-import { DatedAthleteSettingsModel, userSettingsData } from "@elevate/shared";
 import { DatedAthleteSettingsDialogData } from "./dated-athlete-settings-dialog-data.model";
 import { DatedAthleteSettingsAction } from "./dated-athlete-settings-action.enum";
+import { DatedAthleteSettingsModel } from "@elevate/shared/models";
+import { userSettingsData } from "@elevate/shared/data";
 
 describe("EditDatedAthleteSettingsDialogComponent", () => {
 

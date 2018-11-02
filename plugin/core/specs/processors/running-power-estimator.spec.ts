@@ -8,7 +8,7 @@ import {
 	AthleteSettingsModel,
 	Gender,
 	UserSettingsModel
-} from "@elevate/shared";
+} from "@elevate/shared/models";
 import { RunningPowerEstimator } from "../../scripts/processors/running-power-estimator";
 import { ActivityComputer } from "../../scripts/processors/activity-computer";
 

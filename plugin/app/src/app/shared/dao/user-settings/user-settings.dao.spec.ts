@@ -1,6 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { UserSettingsDao } from "./user-settings.dao";
-import { AthleteModel, userSettingsData, UserSettingsModel, UserZonesModel } from "@elevate/shared";
+import { AthleteModel, UserSettingsModel, UserZonesModel } from "@elevate/shared/models";
+import { userSettingsData } from "@elevate/shared/data";
 import * as _ from "lodash";
 
 describe("UserSettingsDao", () => {

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ZoneToolBarComponent } from "./zone-tool-bar.component";
 import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
-import { userSettingsData } from "@elevate/shared";
+import { userSettingsData } from "@elevate/shared/data";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";

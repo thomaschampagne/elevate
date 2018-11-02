@@ -4,7 +4,7 @@ import { ActivityDao } from "./activity.dao";
 
 import * as _ from "lodash";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
-import { SyncedActivityModel } from "@elevate/shared";
+import { SyncedActivityModel } from "@elevate/shared/models";
 
 describe("ActivityDao", () => {
 

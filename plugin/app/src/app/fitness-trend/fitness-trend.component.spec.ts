@@ -7,7 +7,7 @@ import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fi
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
-import { userSettingsData } from "@elevate/shared";
+import { userSettingsData } from "@elevate/shared/data";
 import { FitnessTrendModule } from "./fitness-trend.module";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";

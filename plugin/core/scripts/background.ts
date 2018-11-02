@@ -1,6 +1,7 @@
 import { AppStorage } from "./app-storage";
 import * as _ from "lodash";
-import { Constant, CoreMessages, SyncResultModel } from "@elevate/shared";
+import { CoreMessages, SyncResultModel } from "@elevate/shared/models";
+import { Constant } from "@elevate/shared/constants";
 
 export class Background {
 

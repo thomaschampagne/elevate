@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { CourseMaker, ExportTypes, ICourseBounds } from "../../scripts/processors/course-marker";
-import { ActivityStreamsModel } from "@elevate/shared";
+import { ActivityStreamsModel } from "@elevate/shared/models";
 
 const activityStreamObject = require("../fixtures/activities/829770999/stream.json");
 

@@ -2,14 +2,12 @@ import * as _ from "lodash";
 import { Helper } from "./helper";
 import {
 	ActivityBasicInfoModel,
-	AthleteModelResolver,
 	DatedAthleteSettingsModel,
 	Gender,
 	ReleaseNoteModel,
-	releaseNotesData,
 	SyncResultModel,
 	UserSettingsModel
-} from "@elevate/shared";
+} from "@elevate/shared/models";
 import { AppStorage } from "./app-storage";
 import { CoreEnv } from "../config/core-env";
 import { AppResourcesModel } from "./models/app-resources.model";
@@ -53,6 +51,8 @@ import "./follow";
 import * as Cookies from "js-cookie";
 import { AppStorageType } from "./models/storage-type.enum";
 import { ActivityFeedModifier } from "./modifiers/activity-feed-modifier";
+import { AthleteModelResolver } from "@elevate/shared/resolvers";
+import { releaseNotesData } from "@elevate/shared/data";
 
 export class Elevate {
 

@@ -8,7 +8,7 @@ import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
 import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { AppError } from "../../../shared/models/app-error.model";
-import { SyncedActivityModel } from "@elevate/shared";
+import { SyncedActivityModel } from "@elevate/shared/models";
 import { FitnessTrendConfigModel } from "../models/fitness-trend-config.model";
 
 @Injectable()

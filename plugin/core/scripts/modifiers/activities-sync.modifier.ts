@@ -2,7 +2,7 @@ import { Helper } from "../helper";
 import { AppStorage } from "../app-storage";
 import { CoreEnv } from "../../config/core-env";
 import { ActivitiesSynchronizer } from "../processors/activities-synchronizer";
-import { SyncResultModel } from "@elevate/shared";
+import { SyncResultModel } from "@elevate/shared/models";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { HerokuEndpointResolver } from "../resolvers/heroku-endpoint.resolver";
 import { AbstractModifier } from "./abstract.modifier";

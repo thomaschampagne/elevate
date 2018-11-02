@@ -10,7 +10,7 @@ import { Moment } from "moment";
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { MatDialog } from "@angular/material";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
-import { SyncedActivityModel, UserSettingsModel } from "@elevate/shared";
+import { SyncedActivityModel, UserSettingsModel } from "@elevate/shared/models";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { ActivityService } from "../shared/services/activity/activity.service";

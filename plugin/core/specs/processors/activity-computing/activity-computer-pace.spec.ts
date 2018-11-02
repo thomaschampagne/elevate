@@ -6,7 +6,7 @@ import {
 	AthleteSettingsModel,
 	Gender,
 	UserSettingsModel
-} from "@elevate/shared";
+} from "@elevate/shared/models";
 import { ActivityComputer } from "../../../scripts/processors/activity-computer";
 import * as _ from "lodash";
 import { Helper } from "../../../scripts/helper";

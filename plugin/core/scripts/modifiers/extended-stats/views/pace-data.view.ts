@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
-import { PaceDataModel, ZoneModel } from "@elevate/shared";
+import { PaceDataModel, ZoneModel } from "@elevate/shared/models";
 
 export class PaceDataView extends AbstractDataView {
 

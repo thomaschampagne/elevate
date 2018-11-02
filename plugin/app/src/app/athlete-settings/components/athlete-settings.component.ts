@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { AthleteModel, AthleteSettingsModel, Gender, UserSettingsModel } from "@elevate/shared";
+import { AthleteModel, AthleteSettingsModel, Gender, UserSettingsModel } from "@elevate/shared/models";
 import { GenderModel } from "../models/gender.model";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 

@@ -8,7 +8,7 @@ import { TEST_SYNCED_ACTIVITIES } from "../../../shared-fixtures/activities-2015
 import * as moment from "moment";
 import { Moment } from "moment";
 import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
-import { userSettingsData } from "@elevate/shared";
+import { userSettingsData } from "@elevate/shared/data";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";

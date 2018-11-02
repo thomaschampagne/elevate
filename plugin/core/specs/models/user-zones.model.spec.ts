@@ -1,4 +1,4 @@
-import { UserZonesModel, ZoneModel } from "@elevate/shared";
+import { UserZonesModel, ZoneModel } from "@elevate/shared/models";
 
 describe("UserZonesModel", () => {
 

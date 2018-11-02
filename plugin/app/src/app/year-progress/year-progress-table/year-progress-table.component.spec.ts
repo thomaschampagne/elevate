@@ -12,7 +12,7 @@ import { ProgressionAtDayModel } from "../shared/models/progression-at-date.mode
 import { ProgressionAtDayRow } from "./models/progression-at-day-row.model";
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
 import { DeltaType } from "./models/delta-type.enum";
-import { SyncedActivityModel } from "@elevate/shared";
+import { SyncedActivityModel } from "@elevate/shared/models";
 import { YearProgressModule } from "../year-progress.module";
 
 describe("YearProgressTableComponent", () => {

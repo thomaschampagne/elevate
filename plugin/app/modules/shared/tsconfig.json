@@ -1,6 +1,6 @@
 {
-	"files": [
-		"index.ts"
+	"include": [
+		"**/index.ts"
 	],
 	"compileOnSave": false,
 	"compilerOptions": {

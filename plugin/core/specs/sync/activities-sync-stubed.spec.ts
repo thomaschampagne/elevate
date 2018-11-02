@@ -5,20 +5,20 @@ import { editActivityFromArray, removeActivityFromArray } from "../tools/specs-t
 import {
 	ActivitiesChangesModel,
 	AnalysisDataModel,
-	AthleteModelResolver,
 	AthleteSettingsModel,
 	DatedAthleteSettingsModel,
 	SyncedActivityModel,
 	SyncResultModel,
-	userSettingsData,
 	UserSettingsModel
-} from "@elevate/shared";
+} from "@elevate/shared/models";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { ActivitiesSynchronizer } from "../../scripts/processors/activities-synchronizer";
 import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";
 import { StreamActivityModel } from "../../scripts/models/sync/stream-activity.model";
 import { MultipleActivityProcessor } from "../../scripts/processors/multiple-activity-processor";
 import { SyncNotifyModel } from "../../scripts/models/sync/sync-notify.model";
+import { AthleteModelResolver } from "@elevate/shared/resolvers";
+import { userSettingsData } from "@elevate/shared/data";
 
 describe("ActivitiesSynchronizer", () => {
 

@@ -4,14 +4,14 @@ import {
 	ActivityStreamsModel,
 	AnalysisDataModel,
 	AthleteModel,
-	AthleteModelResolver,
 	Gender,
 	UserSettingsModel
-} from "@elevate/shared";
+} from "@elevate/shared/models";
 import { CoreEnv } from "../../config/core-env";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
 import { VacuumProcessor } from "./vacuum-processor";
+import { AthleteModelResolver } from "@elevate/shared/resolvers";
 
 const ComputeAnalysisWorker = require("worker-loader?inline!./workers/compute-analysis.worker");
 

@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { userSettingsData, UserSettingsModel } from "@elevate/shared";
+import { UserSettingsModel } from "@elevate/shared/models";
 import * as _ from "lodash";
+import { userSettingsData } from "@elevate/shared/data";
 
 @Injectable()
 export class UserSettingsDao {

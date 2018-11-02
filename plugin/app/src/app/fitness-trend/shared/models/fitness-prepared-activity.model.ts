@@ -1,4 +1,4 @@
-import { AthleteModel } from "@elevate/shared";
+import { AthleteModel } from "@elevate/shared/models";
 
 export class FitnessPreparedActivityModel {
 	public id: number;

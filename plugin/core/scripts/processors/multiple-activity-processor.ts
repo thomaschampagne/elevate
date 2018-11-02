@@ -1,10 +1,11 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import { ActivityStatsMapModel, AnalysisDataModel, AthleteModelResolver, SyncedActivityModel, UserSettingsModel } from "@elevate/shared";
+import { ActivityStatsMapModel, AnalysisDataModel, SyncedActivityModel, UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
 import { StreamActivityModel } from "../models/sync/stream-activity.model";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
+import { AthleteModelResolver } from "@elevate/shared/resolvers";
 
 const ComputeAnalysisWorker = require("worker-loader?inline!./workers/compute-analysis.worker");
 

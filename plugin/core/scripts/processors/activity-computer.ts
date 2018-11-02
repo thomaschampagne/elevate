@@ -24,7 +24,7 @@ import {
 	UserSettingsModel,
 	UserZonesModel,
 	ZoneModel
-} from "@elevate/shared";
+} from "@elevate/shared/models";
 import { StreamVariationSplit } from "../models/stream-variation-split.model";
 
 export class ActivityComputer {

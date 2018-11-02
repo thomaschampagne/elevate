@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import * as _ from "lodash";
-import { DatedAthleteSettingsModel } from "@elevate/shared";
+import { DatedAthleteSettingsModel } from "@elevate/shared/models";
 
 @Injectable()
 export class DatedAthleteSettingsDao {

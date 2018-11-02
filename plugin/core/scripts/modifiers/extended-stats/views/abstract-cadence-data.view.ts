@@ -1,5 +1,5 @@
 import { AbstractDataView } from "./abstract-data.view";
-import { CadenceDataModel } from "@elevate/shared";
+import { CadenceDataModel } from "@elevate/shared/models";
 
 export abstract class AbstractCadenceDataView extends AbstractDataView {
 

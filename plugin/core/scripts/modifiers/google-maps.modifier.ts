@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as $ from "jquery";
-import { UserSettingsModel } from "@elevate/shared";
+import { UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { AbstractModifier } from "./abstract.modifier";
 

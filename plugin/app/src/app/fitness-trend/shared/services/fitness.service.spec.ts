@@ -4,7 +4,7 @@ import { TestBed } from "@angular/core/testing";
 import { FitnessService } from "./fitness.service";
 import { ActivityService } from "../../../shared/services/activity/activity.service";
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
-import { AthleteModel, AthleteSettingsModel, Gender, SyncedActivityModel } from "@elevate/shared";
+import { AthleteModel, AthleteSettingsModel, Gender, SyncedActivityModel } from "@elevate/shared/models";
 import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { DayStressModel } from "../models/day-stress.model";

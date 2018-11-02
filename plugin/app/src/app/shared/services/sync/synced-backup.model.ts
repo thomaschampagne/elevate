@@ -1,4 +1,4 @@
-import { DatedAthleteSettingsModel, SyncedActivityModel } from "@elevate/shared";
+import { DatedAthleteSettingsModel, SyncedActivityModel } from "@elevate/shared/models";
 
 export class SyncedBackupModel {
 	public lastSyncDateTime: number;

@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
-import { AthleteModel, AthleteModelResolver, DatedAthleteSettingsModel, UserSettingsModel } from "@elevate/shared";
 import { UserSettingsService } from "../user-settings/user-settings.service";
 import { DatedAthleteSettingsService } from "../dated-athlete-settings/dated-athlete-settings.service";
 import * as _ from "lodash";
+import { AthleteModel, DatedAthleteSettingsModel, UserSettingsModel } from "@elevate/shared/models";
+import { AthleteModelResolver } from "@elevate/shared/resolvers";
 
 @Injectable()
 export class AthleteModelResolverService {

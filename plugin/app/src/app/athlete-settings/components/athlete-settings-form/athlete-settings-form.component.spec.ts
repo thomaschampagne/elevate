@@ -4,7 +4,8 @@ import * as _ from "lodash";
 import { UserSettingsDao } from "../../../shared/dao/user-settings/user-settings.dao";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
-import { AthleteSettingsModel, userSettingsData } from "@elevate/shared";
+import { AthleteSettingsModel } from "@elevate/shared/models";
+import { userSettingsData } from "@elevate/shared/data";
 import { AthleteSettingsModule } from "../../athlete-settings.module";
 
 describe("AthleteSettingsFormComponent", () => {

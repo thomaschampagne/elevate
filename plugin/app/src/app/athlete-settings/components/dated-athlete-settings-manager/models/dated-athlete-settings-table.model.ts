@@ -1,4 +1,4 @@
-import { DatedAthleteSettingsModel } from "@elevate/shared";
+import { DatedAthleteSettingsModel } from "@elevate/shared/models";
 import * as moment from "moment";
 
 export class DatedAthleteSettingsTableModel extends DatedAthleteSettingsModel {

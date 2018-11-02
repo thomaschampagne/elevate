@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
-import { CoreMessages, SyncResultModel } from "@elevate/shared";
+import { CoreMessages, SyncResultModel } from "@elevate/shared/models";
 
 @Injectable()
 export class ExternalUpdatesService {
