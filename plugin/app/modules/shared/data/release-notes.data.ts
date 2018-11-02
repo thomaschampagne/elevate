@@ -1,4 +1,4 @@
-import { ReleaseNoteModel } from "./models";
+import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{

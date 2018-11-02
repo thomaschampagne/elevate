@@ -1,4 +1,4 @@
-import { ActivityStatsMapModel, ActivityStreamsModel, AthleteModel, UserSettingsModel } from "@elevate/shared";
+import { ActivityStatsMapModel, ActivityStreamsModel, AthleteModel, UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "./app-resources.model";
 
 export class ComputeActivityThreadMessageModel {

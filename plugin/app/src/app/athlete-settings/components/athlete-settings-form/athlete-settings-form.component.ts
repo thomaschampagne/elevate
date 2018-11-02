@@ -2,9 +2,10 @@ import * as _ from "lodash";
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { MatSnackBar } from "@angular/material";
 import { FitnessService } from "../../../fitness-trend/shared/services/fitness.service";
-import { AthleteSettingsModel, Constant, UserSettingsModel } from "@elevate/shared";
+import { AthleteSettingsModel, UserSettingsModel } from "@elevate/shared/models";
 import { Helper } from "../../../../../../core/scripts/helper";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
+import { Constant } from "@elevate/shared/constants";
 
 @Component({
 	selector: "app-athlete-settings-form",

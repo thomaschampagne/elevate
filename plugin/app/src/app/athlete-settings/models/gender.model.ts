@@ -1,4 +1,4 @@
-import { Gender } from "@elevate/shared";
+import { Gender } from "@elevate/shared/models";
 
 export class GenderModel {
 	public type: Gender;

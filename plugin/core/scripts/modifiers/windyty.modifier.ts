@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as $ from "jquery";
-import { SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared";
+import { SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { Helper } from "../helper";
 import { LatLonSpherical } from "geodesy";

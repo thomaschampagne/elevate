@@ -6,11 +6,12 @@ import * as moment from "moment";
 import * as _ from "lodash";
 import { SyncState } from "./sync-state.enum";
 import { environment } from "../../../../environments/environment";
-import { Constant, DatedAthleteSettingsModel, SyncedActivityModel } from "@elevate/shared";
+import { DatedAthleteSettingsModel, SyncedActivityModel } from "@elevate/shared/models";
 import { SyncedBackupModel } from "./synced-backup.model";
 import * as semver from "semver";
 import { DatedAthleteSettingsService } from "../dated-athlete-settings/dated-athlete-settings.service";
 import { UserSettingsService } from "../user-settings/user-settings.service";
+import { Constant } from "@elevate/shared/constants";
 
 @Injectable()
 export class SyncService {

@@ -1,4 +1,4 @@
-import { DatedAthleteSettingsModel } from "@elevate/shared";
+import { DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { DatedAthleteSettingsAction } from "./dated-athlete-settings-action.enum";
 
 export class DatedAthleteSettingsDialogData {

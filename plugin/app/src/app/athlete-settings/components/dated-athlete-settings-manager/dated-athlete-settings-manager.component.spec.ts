@@ -5,7 +5,7 @@ import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
 import { AthleteSettingsModule } from "../../athlete-settings.module";
 import { DatedAthleteSettingsService } from "../../../shared/services/dated-athlete-settings/dated-athlete-settings.service";
-import { AthleteSettingsModel, DatedAthleteSettingsModel } from "@elevate/shared";
+import { AthleteSettingsModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
 
 describe("DatedAthleteSettingsManagerComponent", () => {
 	let component: DatedAthleteSettingsManagerComponent;

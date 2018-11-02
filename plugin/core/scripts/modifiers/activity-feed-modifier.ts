@@ -1,5 +1,5 @@
 import { AbstractModifier } from "./abstract.modifier";
-import { UserSettingsModel } from "@elevate/shared";
+import { UserSettingsModel } from "@elevate/shared/models";
 import * as _ from "lodash";
 
 export class ActivityFeedModifier extends AbstractModifier {

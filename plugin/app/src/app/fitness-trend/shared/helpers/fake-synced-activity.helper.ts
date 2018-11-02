@@ -1,4 +1,4 @@
-import { AthleteModel, SyncedActivityModel } from "@elevate/shared";
+import { AthleteModel, SyncedActivityModel } from "@elevate/shared/models";
 import * as moment from "moment";
 import * as _ from "lodash";
 

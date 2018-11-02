@@ -3,7 +3,7 @@ import { LinearTickOptions } from "chart.js";
 import * as _ from "lodash";
 import { Helper } from "../../../helper";
 import { AppResourcesModel } from "../../../models/app-resources.model";
-import { SpeedUnitDataModel, ZoneModel } from "@elevate/shared";
+import { SpeedUnitDataModel, ZoneModel } from "@elevate/shared/models";
 
 export abstract class AbstractDataView {
 

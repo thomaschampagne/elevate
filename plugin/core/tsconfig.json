@@ -17,7 +17,21 @@
 		],
 		"baseUrl": "./",
 		"paths": {
-			"@elevate/shared": ["../app/modules/shared/"]
+			"@elevate/shared/constants": [
+				"../app/modules/shared/constants/"
+			],
+			"@elevate/shared/data": [
+				"../app/modules/shared/data/"
+			],
+			"@elevate/shared/models": [
+				"../app/modules/shared/models/"
+			],
+			"@elevate/shared/resolvers": [
+				"../app/modules/shared/resolvers/"
+			],
+			"@elevate/shared/exceptions": [
+				"../app/modules/shared/exceptions/"
+			]
 		},
 		"skipLibCheck": true
 	}

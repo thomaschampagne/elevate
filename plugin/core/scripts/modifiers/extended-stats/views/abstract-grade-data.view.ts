@@ -1,6 +1,6 @@
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
-import { GradeDataModel } from "@elevate/shared";
+import { GradeDataModel } from "@elevate/shared/models";
 
 export abstract class AbstractGradeDataView extends AbstractDataView {
 

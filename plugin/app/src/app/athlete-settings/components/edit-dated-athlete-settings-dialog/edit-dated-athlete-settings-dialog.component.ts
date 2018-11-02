@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
-import { DatedAthleteSettingsModel } from "@elevate/shared";
+import { DatedAthleteSettingsModel } from "@elevate/shared/models";
 import * as moment from "moment";
 import { DatedAthleteSettingsDialogData } from "./dated-athlete-settings-dialog-data.model";
 import { DatedAthleteSettingsAction } from "./dated-athlete-settings-action.enum";

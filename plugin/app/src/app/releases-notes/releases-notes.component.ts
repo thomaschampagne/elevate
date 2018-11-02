@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
-import { ReleaseNoteModel } from "@elevate/shared";
+import { ReleaseNoteModel } from "@elevate/shared/models";
 
 @Component({
 	selector: "app-releases-notes",

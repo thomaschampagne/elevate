@@ -1,6 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { UserSettingsService } from "./user-settings.service";
-import { Gender, userSettingsData, UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared";
+import { Gender, UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared/models";
+import { userSettingsData } from "@elevate/shared/data";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";

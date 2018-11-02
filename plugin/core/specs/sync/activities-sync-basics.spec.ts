@@ -1,9 +1,11 @@
 import * as _ from "lodash";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/specs-tools";
-import { ActivitiesChangesModel, AthleteModelResolver, SyncedActivityModel, userSettingsData, UserSettingsModel } from "@elevate/shared";
 import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";
 import { ActivitiesSynchronizer } from "../../scripts/processors/activities-synchronizer";
+import { AthleteModelResolver } from "@elevate/shared/resolvers";
+import { ActivitiesChangesModel, SyncedActivityModel, UserSettingsModel } from "@elevate/shared/models";
+import { userSettingsData } from "@elevate/shared/data";
 
 describe("ActivitiesSynchronizer", () => {
 

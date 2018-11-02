@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { DatedAthleteSettingsModel } from "@elevate/shared";
+import { DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { DatedAthleteSettingsDao } from "../../dao/dated-athlete-settings/dated-athlete-settings.dao";
 import * as _ from "lodash";
 import { AppError } from "../../models/app-error.model";

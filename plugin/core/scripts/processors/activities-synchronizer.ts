@@ -1,13 +1,6 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import {
-	ActivitiesChangesModel,
-	AthleteModelResolver,
-	CoreMessages,
-	SyncedActivityModel,
-	SyncResultModel,
-	UserSettingsModel
-} from "@elevate/shared";
+import { ActivitiesChangesModel, CoreMessages, SyncedActivityModel, SyncResultModel, UserSettingsModel } from "@elevate/shared/models";
 import { AppStorage } from "../app-storage";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { MultipleActivityProcessor } from "./multiple-activity-processor";
@@ -15,6 +8,7 @@ import { StravaActivityModel } from "../models/sync/strava-activity.model";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { StreamActivityModel } from "../models/sync/stream-activity.model";
 import { AppStorageType } from "../models/storage-type.enum";
+import { AthleteModelResolver } from "@elevate/shared/resolvers";
 
 export class ActivitiesSynchronizer {
 

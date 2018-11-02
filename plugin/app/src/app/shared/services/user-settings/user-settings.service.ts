@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared";
+import { UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
 

@@ -3,15 +3,10 @@ import { TestBed } from "@angular/core/testing";
 import { AthleteModelResolverService } from "./athlete-model-resolver.service";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
-import {
-	AthleteModel,
-	AthleteModelResolver,
-	AthleteSettingsModel,
-	DatedAthleteSettingsModel,
-	userSettingsData,
-	UserSettingsModel
-} from "@elevate/shared";
+import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel, UserSettingsModel } from "@elevate/shared/models";
 import * as _ from "lodash";
+import { userSettingsData } from "@elevate/shared/data";
+import { AthleteModelResolver } from "@elevate/shared/resolvers";
 
 describe("AthleteModelResolverService", () => {
 

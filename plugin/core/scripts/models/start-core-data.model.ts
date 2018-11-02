@@ -1,4 +1,4 @@
-import { UserSettingsModel } from "@elevate/shared";
+import { UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "./app-resources.model";
 
 export class StartCoreDataModel {
