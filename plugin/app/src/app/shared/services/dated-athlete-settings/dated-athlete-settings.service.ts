@@ -207,7 +207,7 @@ export class DatedAthleteSettingsService {
 			if (!_.isNull(datedAthleteSettingsModel.since)) {
 				const isDateWellFormatted = (/([0-9]{4})\-([0-9]{2})\-([0-9]{2})/gm).exec(datedAthleteSettingsModel.since);
 				const onDate = new Date(datedAthleteSettingsModel.since);
-				const isValidDate = (onDate instanceof Date && !isNaN(onDate.getTime()));
+				const isValidDate = !isNaN(onDate.getTime());
 
 				if (!isDateWellFormatted || !isValidDate) {
 					promise = Promise.reject(new AppError(AppError.DATED_ATHLETE_SETTINGS_INVALID_DATE, "Dated athlete settings has invalid date."));

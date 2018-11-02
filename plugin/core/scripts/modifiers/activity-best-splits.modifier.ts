@@ -415,14 +415,14 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
 		},
 	};
 
-	private activityId: number;
+	private readonly activityId: number;
 	private userSettings: UserSettingsModel;
 	private activityJson: any;
 	private hasPowerMeter: boolean;
-	private splitsConfiguration: any;
-	private saveSplitsConfigrationMethod: Function;
+	private readonly splitsConfiguration: any;
+	private readonly saveSplitsConfigrationMethod: Function;
 	private distanceUnit: number;
-	private cacheKeyPrefix: string;
+	private readonly cacheKeyPrefix: string;
 
 	constructor(activityId: number, userSettings: UserSettingsModel, activityJson: any, hasPowerMeter: boolean, splitsConfiguration: any, saveSplitsConfigrationMethod: Function) {
 		super();
