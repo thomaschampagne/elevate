@@ -159,7 +159,7 @@ export class Elevate {
 			this.handleTrackTodayIncomingConnection();
 			this.handleAthleteUpdate();
 			this.saveAthleteId();
-			this.handleGoogleMapsComeBackModifier();
+			// this.handleGoogleMapsComeBackModifier(); //TODO: Disable Google Maps support because Gmaps Api is not free anymore. Waiting for another solution
 		});
 	}
 
