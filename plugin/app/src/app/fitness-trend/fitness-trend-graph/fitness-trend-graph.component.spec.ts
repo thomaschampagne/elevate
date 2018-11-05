@@ -19,8 +19,7 @@ import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.en
 
 describe("FitnessTrendGraphComponent", () => {
 
-	let activityDao: ActivityDao;
-	let userSettingsDao: UserSettingsDao;
+	let userSettingsDao: UserSettingsDao; // TODO Use service instead of dao
 	let activityService: ActivityService;
 	let fitnessService: FitnessService;
 	let component: FitnessTrendGraphComponent;
@@ -44,18 +43,13 @@ describe("FitnessTrendGraphComponent", () => {
 		}).compileComponents();
 
 		// Retrieve injected service
-		activityDao = TestBed.get(ActivityDao);
+		activityService = TestBed.get(ActivityDao);
 		userSettingsDao = TestBed.get(UserSettingsDao);
 		activityService = TestBed.get(ActivityService);
 		fitnessService = TestBed.get(FitnessService);
 
-		// Mocking chrome storage
-		spyOn(activityDao, "browserStorageLocal").and.returnValue({
-			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({syncedActivities: _.cloneDeep(TEST_SYNCED_ACTIVITIES)});
-			}
-		});
-
+		// Mocking
+		spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
 		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
 			get: (keys: any, callback: (item: Object) => {}) => {
 				callback(userSettingsData);

@@ -2,12 +2,11 @@ import { Helper } from "../helper";
 import { AppStorage } from "../app-storage";
 import { CoreEnv } from "../../config/core-env";
 import { ActivitiesSynchronizer } from "../processors/activities-synchronizer";
-import { SyncResultModel } from "@elevate/shared/models";
+import { AppStorageType, SyncResultModel } from "@elevate/shared/models";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { HerokuEndpointResolver } from "../resolvers/heroku-endpoint.resolver";
 import { AbstractModifier } from "./abstract.modifier";
 import * as _ from "lodash";
-import { AppStorageType } from "../models/storage-type.enum";
 import { AppStorageUsage } from "../models/app-storage-usage.model";
 
 export class ActivitiesSyncModifier extends AbstractModifier {

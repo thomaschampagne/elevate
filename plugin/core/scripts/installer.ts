@@ -1,4 +1,5 @@
 import {
+	AppStorageType,
 	AthleteModel,
 	AthleteSettingsModel,
 	DatedAthleteSettingsModel,
@@ -12,7 +13,6 @@ import { Helper } from "./helper";
 import * as semver from "semver";
 import * as _ from "lodash";
 import { AppStorage } from "./app-storage";
-import { AppStorageType } from "./models/storage-type.enum";
 import { DatedAthleteSettingsDao } from "../../app/src/app/shared/dao/dated-athlete-settings/dated-athlete-settings.dao";
 import { Constant } from "@elevate/shared/constants";
 import { userSettingsData } from "@elevate/shared/data";

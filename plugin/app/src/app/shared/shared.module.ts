@@ -11,7 +11,6 @@ import { UserSettingsService } from "./services/user-settings/user-settings.serv
 import { GlobalSettingsService } from "../global-settings/services/global-settings.service";
 import { ActivityService } from "./services/activity/activity.service";
 import { UserSettingsDao } from "./dao/user-settings/user-settings.dao";
-import { ActivityDao } from "./dao/activity/activity.dao";
 import { OptionHelperReaderService } from "../global-settings/services/option-helper-reader.service";
 import { ZonesService } from "../zones-settings/shared/zones.service";
 import { AppRoutingModule } from "./modules/app-routing.module";
@@ -34,6 +33,11 @@ import { ExternalUpdatesService } from "./services/external-updates/external-upd
 import { AthleteModelResolverService } from "./services/athlete-settings/athlete-model-resolver.service";
 import { DatedAthleteSettingsService } from "./services/dated-athlete-settings/dated-athlete-settings.service";
 import { DatedAthleteSettingsDao } from "./dao/dated-athlete-settings/dated-athlete-settings.dao";
+import { DataStore } from "./data-store/data-store";
+import { ChromeDataStore } from "./data-store/impl/chrome-data-store.service";
+import { ActivityDao } from "./dao/activity/activity.dao";
+
+const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
 
 @NgModule({
 	imports: [
@@ -77,6 +81,7 @@ import { DatedAthleteSettingsDao } from "./dao/dated-athlete-settings/dated-athl
 		ImportBackupDialogComponent
 	],
 	providers: [
+		ChromeDataStoreProvider,
 		SyncService,
 		SyncDao,
 		UserSettingsService,
