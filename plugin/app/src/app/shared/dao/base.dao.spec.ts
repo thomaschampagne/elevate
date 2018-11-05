@@ -1,10 +1,11 @@
 import { TestBed } from "@angular/core/testing";
 
-import { BaseDao } from "./base.dao";
 import { DataStore } from "../data-store/data-store";
 import { StorageLocation } from "../data-store/storage-location";
 import { Injectable } from "@angular/core";
 import { AppStorageType } from "@elevate/shared/models";
+import { MockedDataStore } from "../data-store/impl/spec/mocked-data-store.service";
+import { BaseDao } from "./base.dao";
 
 describe("BaseDao", () => {
 
@@ -13,7 +14,7 @@ describe("BaseDao", () => {
 	}
 
 	@Injectable()
-	class RealBaseDao extends BaseDao<Foo> {
+	class TestBaseDao extends BaseDao<Foo> {
 
 		public static readonly STORAGE_LOCATION: StorageLocation = {
 			key: "syncedActivities",
@@ -21,28 +22,12 @@ describe("BaseDao", () => {
 		};
 
 		public init(): void {
-			this.storageLocation = RealBaseDao.STORAGE_LOCATION;
-		}
-	}
-
-	@Injectable()
-	class MockDataStore extends DataStore {
-
-		fetch<Foo>(storageLocation: StorageLocation): Promise<Foo[]> {
-			return Promise.resolve<Foo[]>(null);
-		}
-
-		save<Foo>(storageLocation: StorageLocation, value: Foo[]): Promise<Foo[]> {
-			return Promise.resolve<Foo[]>(null);
-		}
-
-		clear<Foo>(storageLocation: StorageLocation): Promise<Foo[]> {
-			return Promise.resolve(null);
+			this.storageLocation = TestBaseDao.STORAGE_LOCATION;
 		}
 	}
 
 	let baseDao: BaseDao<Foo>;
-	let dataStore: DataStore;
+	let dataStore: DataStore<Foo>;
 
 	let checkStorageLocationSpy: jasmine.Spy;
 	let dataStoreFetchSpy: jasmine.Spy;
@@ -51,10 +36,12 @@ describe("BaseDao", () => {
 
 	beforeEach((done: Function) => {
 
+		const mockedDataStore: MockedDataStore<Foo> = new MockedDataStore();
+
 		TestBed.configureTestingModule({
 			providers: [
-				{provide: BaseDao, useClass: RealBaseDao},
-				{provide: DataStore, useClass: MockDataStore}
+				{provide: BaseDao, useClass: TestBaseDao},
+				{provide: DataStore, useValue: mockedDataStore}
 			]
 		});
 
@@ -98,7 +85,7 @@ describe("BaseDao", () => {
 			done();
 
 		}, error => {
-			expect(error).toEqual("StorageLocation not set in 'RealBaseDao'. Please override init method to assign a StorageLocation.");
+			expect(error).toEqual("StorageLocation not set in 'TestBaseDao'. Please override init method to assign a StorageLocation.");
 			expect(dataStoreFetchSpy).not.toHaveBeenCalled();
 			done();
 		});
@@ -107,7 +94,7 @@ describe("BaseDao", () => {
 	it("should fetch data", (done: Function) => {
 
 		// Given,  When
-		const promise: Promise<Foo[]> = baseDao.fetch<Foo>();
+		const promise: Promise<Foo[]> = baseDao.fetch();
 
 		// Then
 		promise.then(() => {
@@ -129,7 +116,7 @@ describe("BaseDao", () => {
 		}];
 
 		// When
-		const promise: Promise<Foo[]> = baseDao.save<Foo>(foo);
+		const promise: Promise<Foo[]> = baseDao.save(foo);
 
 		// Then
 		promise.then(() => {
@@ -146,7 +133,7 @@ describe("BaseDao", () => {
 	it("should clear data", (done: Function) => {
 
 		// Given,  When
-		const promise: Promise<Foo[]> = baseDao.clear<Foo>();
+		const promise: Promise<Foo[]> = baseDao.clear();
 
 		// Then
 		promise.then(() => {

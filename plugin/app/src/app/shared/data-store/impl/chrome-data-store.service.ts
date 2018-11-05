@@ -4,12 +4,12 @@ import { DataStore } from "../data-store";
 import { StorageLocation } from "../storage-location";
 
 @Injectable()
-export class ChromeDataStore<T> implements DataStore {
+export class ChromeDataStore<T> implements DataStore<T> {
 
 	/**
 	 * @return {Promise<T[]>}
 	 */
-	public fetch<T>(storageLocation: StorageLocation): Promise<T[]> {
+	public fetch(storageLocation: StorageLocation): Promise<T[]> {
 
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
 
@@ -30,7 +30,7 @@ export class ChromeDataStore<T> implements DataStore {
 	 * @param value
 	 * @return {Promise<T[]>}
 	 */
-	public save<T>(storageLocation: StorageLocation, value: T[]): Promise<T[]> {
+	public save(storageLocation: StorageLocation, value: T[]): Promise<T[]> {
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
 			let object = {};
 			object[storageLocation.key] = value;
@@ -39,7 +39,7 @@ export class ChromeDataStore<T> implements DataStore {
 				if (error) {
 					reject(error.message);
 				} else {
-					this.fetch<T>(storageLocation).then((response: T[]) => {
+					this.fetch(storageLocation).then((response: T[]) => {
 						resolve(response);
 					}, error => reject(error));
 				}
@@ -51,14 +51,14 @@ export class ChromeDataStore<T> implements DataStore {
 	 *
 	 * @param storageLocation
 	 */
-	public clear<T>(storageLocation: StorageLocation): Promise<T[]> {
+	public clear(storageLocation: StorageLocation): Promise<T[]> {
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
 			this.getChromeStorageArea(storageLocation).remove(storageLocation.key, () => {
 				const error = this.getLastError();
 				if (error) {
 					reject(error.message);
 				} else {
-					this.fetch<T>(storageLocation).then((response: T[]) => {
+					this.fetch(storageLocation).then((response: T[]) => {
 						if (!response) {
 							resolve(null);
 						} else {

@@ -71,7 +71,7 @@ describe("ChromeDataStore", () => {
 		browserStorageLocalSpy.and.returnValue(chromeResponseCallback<Foo>(storageLocation.key, expectedData));
 
 		// When
-		const promise: Promise<Foo[]> = chromeDataStore.fetch<Foo>(storageLocation);
+		const promise: Promise<Foo[]> = chromeDataStore.fetch(storageLocation);
 
 		// Then
 		promise.then((result: Foo[]) => {
@@ -97,7 +97,7 @@ describe("ChromeDataStore", () => {
 		browserStorageLocalSpy.and.returnValue(chromeResponseCallback<Foo>(storageLocation.key, getResponseData));
 
 		// When
-		const promise: Promise<Foo[]> = chromeDataStore.fetch<Foo>(storageLocation);
+		const promise: Promise<Foo[]> = chromeDataStore.fetch(storageLocation);
 
 		// Then
 		promise.then((result: Foo[]) => {
@@ -123,7 +123,7 @@ describe("ChromeDataStore", () => {
 		browserStorageLocalSpy.and.returnValue(chromeResponseCallback<Foo>(storageLocation.key, expectedData));
 
 		// When
-		const promise: Promise<Foo[]> = chromeDataStore.save<Foo>(storageLocation, expectedData);
+		const promise: Promise<Foo[]> = chromeDataStore.save(storageLocation, expectedData);
 
 		// Then
 		promise.then((result: Foo[]) => {
@@ -154,7 +154,7 @@ describe("ChromeDataStore", () => {
 
 
 		// When
-		const promise: Promise<Foo[]> = chromeDataStore.save<Foo>(storageLocation, saveData);
+		const promise: Promise<Foo[]> = chromeDataStore.save(storageLocation, saveData);
 
 		// Then
 		promise.then((result: Foo[]) => {
@@ -176,7 +176,7 @@ describe("ChromeDataStore", () => {
 		browserStorageLocalSpy.and.returnValue(chromeResponseCallback<Foo>(storageLocation.key, getResponseData));
 
 		// When
-		const promise: Promise<Foo[]> = chromeDataStore.clear<Foo>(storageLocation);
+		const promise: Promise<Foo[]> = chromeDataStore.clear(storageLocation);
 
 		// Then
 		promise.then((result: Foo[]) => {
@@ -202,7 +202,7 @@ describe("ChromeDataStore", () => {
 		browserStorageLocalSpy.and.returnValue(chromeResponseCallback<Foo>(storageLocation.key, getResponseData));
 
 		// When
-		const promise: Promise<Foo[]> = chromeDataStore.clear<Foo>(storageLocation);
+		const promise: Promise<Foo[]> = chromeDataStore.clear(storageLocation);
 
 		// Then
 		promise.then((result: Foo[]) => {
