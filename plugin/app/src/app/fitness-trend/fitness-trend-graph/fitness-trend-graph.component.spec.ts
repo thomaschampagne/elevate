@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FitnessTrendGraphComponent } from "./fitness-trend-graph.component";
 import { FitnessService } from "../shared/services/fitness.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
-import { ActivityDao } from "../../shared/dao/activity/activity.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../../shared-fixtures/activities-2015.fixture";
 import * as moment from "moment";
 import { Moment } from "moment";
@@ -43,7 +42,6 @@ describe("FitnessTrendGraphComponent", () => {
 		}).compileComponents();
 
 		// Retrieve injected service
-		activityService = TestBed.get(ActivityDao);
 		userSettingsDao = TestBed.get(UserSettingsDao);
 		activityService = TestBed.get(ActivityService);
 		fitnessService = TestBed.get(FitnessService);
