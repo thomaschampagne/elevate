@@ -1,38 +1,12 @@
 import { TestBed } from "@angular/core/testing";
-
 import { ActivityDao } from "./activity.dao";
-
 import * as _ from "lodash";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { DataStore } from "../../data-store/data-store";
-import { StorageLocation } from "../../data-store/storage-location";
+import { MockedDataStore } from "../../data-store/impl/spec/mocked-data-store.service";
 
 describe("ActivityDao", () => {
-
-	class MockDataStore extends DataStore {
-
-		public syncedActivities: SyncedActivityModel[];
-
-		constructor(syncedActivities: SyncedActivityModel[]) {
-			super();
-			this.syncedActivities = syncedActivities;
-		}
-
-		public fetch<SyncedActivityModel>(storageLocation: StorageLocation): Promise<SyncedActivityModel[]> {
-			return Promise.resolve(this.syncedActivities) as any;
-		}
-
-		public save<SyncedActivityModel>(storageLocation: StorageLocation, value: SyncedActivityModel[]): Promise<SyncedActivityModel[]> {
-			this.syncedActivities = value as any;
-			return this.fetch(storageLocation);
-		}
-
-		public clear<SyncedActivityModel>(storageLocation: StorageLocation): Promise<SyncedActivityModel[]> {
-			return Promise.resolve(null);
-		}
-
-	}
 
 	let activityDao: ActivityDao;
 
@@ -42,12 +16,12 @@ describe("ActivityDao", () => {
 
 		_TEST_SYNCED_ACTIVITIES_ = _.cloneDeep(TEST_SYNCED_ACTIVITIES);
 
-		const mockDataStore: MockDataStore = new MockDataStore(_TEST_SYNCED_ACTIVITIES_);
+		const mockedDataStore: MockedDataStore<SyncedActivityModel> = new MockedDataStore(_TEST_SYNCED_ACTIVITIES_);
 
 		TestBed.configureTestingModule({
 			providers: [
 				ActivityDao,
-				{provide: DataStore, useValue: mockDataStore}
+				{provide: DataStore, useValue: mockedDataStore}
 			]
 		});
 

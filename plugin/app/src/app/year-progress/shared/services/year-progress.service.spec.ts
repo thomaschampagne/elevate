@@ -15,6 +15,8 @@ import { YearProgressPresetModel } from "../models/year-progress-preset.model";
 import { YearProgressModule } from "../../year-progress.module";
 import { AppError } from "../../../shared/models/app-error.model";
 import { TargetProgressionModel } from "../models/target-progression.model";
+import { DataStore } from "../../../shared/data-store/data-store";
+import { MockedDataStore } from "../../../shared/data-store/impl/spec/mocked-data-store.service";
 
 describe("YearProgressService", () => {
 
@@ -23,9 +25,14 @@ describe("YearProgressService", () => {
 
 	beforeEach((done: Function) => {
 
+		const mockedDataStore: MockedDataStore<YearProgressPresetModel> = new MockedDataStore();
+
 		TestBed.configureTestingModule({
 			imports: [
 				YearProgressModule
+			],
+			providers: [
+				{provide: DataStore, useValue: mockedDataStore}
 			]
 		});
 
@@ -811,7 +818,7 @@ describe("YearProgressService", () => {
 				new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false)
 			];
 
-			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
+			const fetchDaoSpy = spyOn(yearProgressService.yearProgressPresetDao, "fetch")
 				.and.returnValue(Promise.resolve(expected));
 
 			// When
@@ -846,10 +853,10 @@ describe("YearProgressService", () => {
 
 			const expected = _.union(progressPresetModels, [modelToBeAdded]);
 
-			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
+			const fetchDaoSpy = spyOn(yearProgressService.yearProgressPresetDao, "fetch")
 				.and.returnValue(Promise.resolve(progressPresetModels));
 
-			const saveDaoSpy = spyOn(yearProgressService.yearProgressDao, "savePresets")
+			const saveDaoSpy = spyOn(yearProgressService.yearProgressPresetDao, "save")
 				.and.returnValue(Promise.resolve(expected));
 
 			// When
@@ -882,10 +889,10 @@ describe("YearProgressService", () => {
 
 			const expectedErrorMessage = "You already saved this preset. You may load it instead.";
 
-			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
+			const fetchDaoSpy = spyOn(yearProgressService.yearProgressPresetDao, "fetch")
 				.and.returnValue(Promise.resolve(progressPresetModels));
 
-			const saveDaoSpy = spyOn(yearProgressService.yearProgressDao, "savePresets").and.callThrough();
+			const saveDaoSpy = spyOn(yearProgressService.yearProgressPresetDao, "save").and.callThrough();
 
 			// When
 			const promise: Promise<YearProgressPresetModel[]> = yearProgressService.addPreset(modelToBeAdded);
@@ -921,10 +928,10 @@ describe("YearProgressService", () => {
 
 			const expectedErrorMessage = "You already saved this preset. You may load it instead.";
 
-			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
+			const fetchDaoSpy = spyOn(yearProgressService.yearProgressPresetDao, "fetch")
 				.and.returnValue(Promise.resolve(progressPresetModels));
 
-			const saveDaoSpy = spyOn(yearProgressService.yearProgressDao, "savePresets").and.callThrough();
+			const saveDaoSpy = spyOn(yearProgressService.yearProgressPresetDao, "save").and.callThrough();
 
 			// When
 			const promise: Promise<YearProgressPresetModel[]> = yearProgressService.addPreset(modelToBeAdded);
@@ -959,10 +966,10 @@ describe("YearProgressService", () => {
 				model_2
 			];
 
-			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
+			const fetchDaoSpy = spyOn(yearProgressService.yearProgressPresetDao, "fetch")
 				.and.returnValue(Promise.resolve(progressPresetModels));
 
-			const saveDaoSpy = spyOn(yearProgressService.yearProgressDao, "savePresets")
+			const saveDaoSpy = spyOn(yearProgressService.yearProgressPresetDao, "save")
 				.and.returnValue(Promise.resolve());
 
 			const index = 1;
@@ -995,10 +1002,10 @@ describe("YearProgressService", () => {
 				model_2
 			];
 
-			const fetchDaoSpy = spyOn(yearProgressService.yearProgressDao, "fetchPresets")
+			const fetchDaoSpy = spyOn(yearProgressService.yearProgressPresetDao, "fetch")
 				.and.returnValue(Promise.resolve(progressPresetModels));
 
-			const saveDaoSpy = spyOn(yearProgressService.yearProgressDao, "savePresets")
+			const saveDaoSpy = spyOn(yearProgressService.yearProgressPresetDao, "save")
 				.and.returnValue(Promise.resolve(progressPresetModels));
 
 			const index = 99; // Fake index

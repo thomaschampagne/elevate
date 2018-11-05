@@ -12,7 +12,7 @@ import { Subject } from "rxjs";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { Constant } from "@elevate/shared/constants";
 import { YearProgressPresetModel } from "../models/year-progress-preset.model";
-import { YearProgressDao } from "../dao/year-progress.dao";
+import { YearProgressPresetDao } from "../dao/year-progress-preset.dao";
 import { AppError } from "../../../shared/models/app-error.model";
 import { YearProgressTypeModel } from "../models/year-progress-type.model";
 import { TargetProgressionModel } from "../models/target-progression.model";
@@ -27,9 +27,8 @@ export class YearProgressService {
 	public momentWatched: Moment;
 	public momentWatchedChanges: Subject<Moment>;
 
-	constructor(public yearProgressDao: YearProgressDao) {
-		// By default moment watched is today. Moment watched can be edited from external
-		this.momentWatched = this.getTodayMoment().clone().startOf("day");
+	constructor(public yearProgressPresetDao: YearProgressPresetDao) {
+		this.momentWatched = this.getTodayMoment().clone().startOf("day"); // By default moment watched is today. Moment watched can be edited from external
 		this.momentWatchedChanges = new Subject<Moment>();
 	}
 
@@ -388,7 +387,7 @@ export class YearProgressService {
 	 * Fetch all preset
 	 */
 	public fetchPresets(): Promise<YearProgressPresetModel[]> {
-		return this.yearProgressDao.fetchPresets();
+		return this.yearProgressPresetDao.fetch();
 	}
 
 	/**
@@ -396,7 +395,7 @@ export class YearProgressService {
 	 * @param yearProgressPresetModel
 	 */
 	public addPreset(yearProgressPresetModel: YearProgressPresetModel): Promise<YearProgressPresetModel[]> {
-		return this.yearProgressDao.fetchPresets().then((models: YearProgressPresetModel[]) => {
+		return this.yearProgressPresetDao.fetch().then((models: YearProgressPresetModel[]) => {
 
 			const existingModel = _.find(models, {
 				progressType: yearProgressPresetModel.progressType,
@@ -412,7 +411,7 @@ export class YearProgressService {
 
 			models.push(yearProgressPresetModel);
 
-			return this.yearProgressDao.savePresets(models);
+			return this.yearProgressPresetDao.save(models);
 		});
 	}
 
@@ -421,14 +420,14 @@ export class YearProgressService {
 	 * @param index
 	 */
 	public deletePreset(index: number): Promise<void> {
-		return this.yearProgressDao.fetchPresets().then((models: YearProgressPresetModel[]) => {
+		return this.yearProgressPresetDao.fetch().then((models: YearProgressPresetModel[]) => {
 
 			if (!models[index]) {
 				return Promise.reject(new AppError(AppError.YEAR_PROGRESS_PRESETS_DO_NOT_EXISTS, "Year progress cannot be deleted"));
 			}
 
 			models.splice(index, 1);
-			return this.yearProgressDao.savePresets(models).then(() => {
+			return this.yearProgressPresetDao.save(models).then(() => {
 				return Promise.resolve();
 			});
 		});

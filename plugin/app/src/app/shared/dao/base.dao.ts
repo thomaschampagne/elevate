@@ -6,7 +6,7 @@ export abstract class BaseDao<T> {
 
 	public storageLocation: StorageLocation = null;
 
-	constructor(@Inject(DataStore) protected dataStore: DataStore) {
+	constructor(@Inject(DataStore) protected dataStore: DataStore<T>) {
 		this.init();
 	}
 
@@ -19,21 +19,21 @@ export abstract class BaseDao<T> {
 		return Promise.resolve();
 	}
 
-	public fetch<T>(): Promise<T[]> {
+	public fetch(): Promise<T[]> {
 		return this.checkStorageLocation().then(() => {
-			return this.dataStore.fetch<T>(this.storageLocation);
+			return this.dataStore.fetch(this.storageLocation);
 		});
 	}
 
-	public save<T>(value: T[]): Promise<T[]> {
+	public save(value: T[]): Promise<T[]> {
 		return this.checkStorageLocation().then(() => {
-			return this.dataStore.save<T>(this.storageLocation, value);
+			return this.dataStore.save(this.storageLocation, value);
 		});
 	}
 
-	public clear<T>(): Promise<T[]> {
+	public clear(): Promise<T[]> {
 		return this.checkStorageLocation().then(() => {
-			return this.dataStore.clear<T>(this.storageLocation);
+			return this.dataStore.clear(this.storageLocation);
 		});
 	}
 }

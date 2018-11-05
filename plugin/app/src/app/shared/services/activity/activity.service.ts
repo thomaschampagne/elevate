@@ -20,7 +20,7 @@ export class ActivityService {
 	 * @returns {Promise<SyncedActivityModel[]>} stored SyncedActivityModels
 	 */
 	public fetch(): Promise<SyncedActivityModel[]> {
-		return this.activityDao.fetch<SyncedActivityModel>();
+		return this.activityDao.fetch();
 	}
 
 	/**
@@ -29,7 +29,7 @@ export class ActivityService {
 	 * @returns {Promise<SyncedActivityModel[]>} saved SyncedActivityModels
 	 */
 	public save(syncedActivityModels: SyncedActivityModel[]): Promise<SyncedActivityModel[]> {
-		return this.activityDao.save<SyncedActivityModel>(syncedActivityModels);
+		return this.activityDao.save(syncedActivityModels);
 	}
 
 	/**
@@ -37,7 +37,7 @@ export class ActivityService {
 	 * @returns {Promise<SyncedActivityModel[]>} cleared SyncedActivityModels
 	 */
 	public clear(): Promise<SyncedActivityModel[]> {
-		return this.activityDao.clear<SyncedActivityModel>();
+		return this.activityDao.clear();
 	}
 
 	/**
