@@ -2,7 +2,7 @@
 
 <mat-dialog-content class="mat-body-1">
 
-	<mat-accordion>
+	<mat-accordion *ngIf="initialized">
 
 		<mat-expansion-panel [expanded]="fitnessTrendConfigDialogData.expandEstimatedStressScorePanel">
 			<mat-expansion-panel-header>
