@@ -1,4 +1,4 @@
-import { AppStorageType } from "./models/storage-type.enum";
+import { AppStorageType } from "@elevate/shared/models";
 import { AppStorageUsage } from "./models/app-storage-usage.model";
 
 export class AppStorage {

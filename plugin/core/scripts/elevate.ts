@@ -2,6 +2,7 @@ import * as _ from "lodash";
 import { Helper } from "./helper";
 import {
 	ActivityBasicInfoModel,
+	AppStorageType,
 	DatedAthleteSettingsModel,
 	Gender,
 	ReleaseNoteModel,
@@ -49,7 +50,6 @@ import * as Q from "q";
 import { AthleteUpdate } from "./utils/athlete-update";
 import "./follow";
 import * as Cookies from "js-cookie";
-import { AppStorageType } from "./models/storage-type.enum";
 import { ActivityFeedModifier } from "./modifiers/activity-feed-modifier";
 import { AthleteModelResolver } from "@elevate/shared/resolvers";
 import { releaseNotesData } from "@elevate/shared/data";
