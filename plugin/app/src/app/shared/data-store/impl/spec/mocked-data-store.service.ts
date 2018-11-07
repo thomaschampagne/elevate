@@ -1,8 +1,6 @@
 import { DataStore } from "../../data-store";
 import { StorageLocation } from "../../storage-location";
-import { Injectable } from "@angular/core";
 
-@Injectable()
 export class MockedDataStore<T> extends DataStore<T> {
 
 	protected vector: T[];
