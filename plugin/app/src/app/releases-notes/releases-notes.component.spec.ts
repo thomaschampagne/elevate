@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ReleasesNotesComponent } from "./releases-notes.component";
+import { ReleasesNotesModule } from "./releases-notes.module";
 import { CoreModule } from "../core/core.module";
 import { SharedModule } from "../shared/shared.module";
 
@@ -13,6 +14,7 @@ describe("ReleasesNotesComponent", () => {
 			imports: [
 				CoreModule,
 				SharedModule,
+				ReleasesNotesModule
 			]
 		}).compileComponents();
 
