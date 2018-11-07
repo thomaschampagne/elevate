@@ -4,8 +4,6 @@ import { AppRoutesModel } from "../models/app-routes.model";
 import { GlobalSettingsComponent } from "../../global-settings/global-settings.component";
 import { ZonesSettingsComponent } from "../../zones-settings/zones-settings.component";
 import { DonateComponent } from "../../donate/donate.component";
-import { ReleasesNotesComponent } from "../../releases-notes/releases-notes.component";
-import { ReleasesNotesResolverService } from "../../releases-notes/releases-notes-resolver.service";
 import { ShareComponent } from "../../share/share.component";
 import { ReportComponent } from "../../report/report.component";
 import { AdvancedMenuComponent } from "../../advanced-menu/advanced-menu.component";
@@ -41,10 +39,7 @@ const routes: Routes = [
 	},
 	{
 		path: AppRoutesModel.releasesNotes,
-		component: ReleasesNotesComponent,
-		resolve: {
-			releasesNotes: ReleasesNotesResolverService
-		}
+		loadChildren: "../../releases-notes/releases-notes.module#ReleasesNotesModule"
 	},
 	{
 		path: AppRoutesModel.share,
