@@ -77,7 +77,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// Then
 		expectBetween(result.powerData.avgWatts, 208, TOLERANCE);
-		expectBetween(_.floor(result.powerData.weightedPower), 258, TOLERANCE);
+		expectBetween(_.floor(result.powerData.weightedPower), 265, TOLERANCE);
 		expectBetween(_.floor(result.powerData.best20min), 380, TOLERANCE);
 
 		done();
