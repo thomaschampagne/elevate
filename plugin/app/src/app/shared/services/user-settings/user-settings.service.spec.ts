@@ -1,10 +1,12 @@
 import { TestBed } from "@angular/core/testing";
 import { UserSettingsService } from "./user-settings.service";
-import { Gender, UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared/models";
+import { Gender, SyncedActivityModel, UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { userSettingsData } from "@elevate/shared/data";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
+import { DataStore } from "../../data-store/data-store";
+import { MockedDataStore } from "../../data-store/impl/spec/mocked-data-store.service";
 
 describe("UserSettingsService", () => {
 
@@ -12,8 +14,14 @@ describe("UserSettingsService", () => {
 
 	beforeEach((done: Function) => {
 
+		const mockedDataStore: MockedDataStore<SyncedActivityModel> = new MockedDataStore();
+
 		TestBed.configureTestingModule({
-			providers: [UserSettingsService, UserSettingsDao]
+			providers: [
+				UserSettingsService,
+				UserSettingsDao,
+				{provide: DataStore, useValue: mockedDataStore}
+			]
 		});
 
 		// Retrieve injected service
@@ -52,47 +60,20 @@ describe("UserSettingsService", () => {
 
 	});
 
-	it("should get temperatureUnit key", (done: Function) => {
 
-		// Given
-		const key = "temperatureUnit";
-		const expectedSettings = userSettingsData.temperatureUnit;
-		const getDaoSpy = spyOn(userSettingsService.userSettingsDao, "get")
-			.and.returnValue(Promise.resolve(expectedSettings));
-
-		// When
-		const promiseGet: Promise<Object> = userSettingsService.get(key);
-
-		// Then
-		promiseGet.then((result: Object) => {
-
-			expect(result).not.toBeNull();
-			expect(result).toEqual(expectedSettings);
-			expect(getDaoSpy).toHaveBeenCalledTimes(1);
-			expect(getDaoSpy).toHaveBeenCalledWith(key);
-
-			done();
-
-		}, error => {
-			expect(error).toBeNull();
-			done();
-		});
-
-	});
-
-	it("should update a user setting", (done: Function) => {
+	it("should save user setting property", (done: Function) => {
 
 		// Given
 		const key = "displayAdvancedHrData";
 		const displayAdvancedHrData = false;
-		const expectedSettings = _.cloneDeep(userSettingsData);
+		const expectedSettings: UserSettingsModel = _.cloneDeep(userSettingsData);
 		expectedSettings.displayAdvancedHrData = displayAdvancedHrData;
 
-		const updateDaoSpy = spyOn(userSettingsService.userSettingsDao, "update")
+		const savePropertyDaoSpy = spyOn(userSettingsService.userSettingsDao, "saveProperty")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
-		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.update(key, displayAdvancedHrData);
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.saveProperty<boolean>(key, displayAdvancedHrData);
 
 		// Then
 		promiseUpdate.then((result: UserSettingsModel) => {
@@ -102,8 +83,8 @@ describe("UserSettingsService", () => {
 			expect(result).toEqual(expectedSettings);
 			expect(result).not.toEqual(userSettingsData);
 			expect(result.displayAdvancedHrData).not.toEqual(userSettingsData.displayAdvancedHrData);
-			expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-			expect(updateDaoSpy).toHaveBeenCalledWith(key, displayAdvancedHrData);
+			expect(savePropertyDaoSpy).toHaveBeenCalledTimes(1);
+			expect(savePropertyDaoSpy).toHaveBeenCalledWith(key, displayAdvancedHrData);
 
 			done();
 
@@ -114,30 +95,30 @@ describe("UserSettingsService", () => {
 
 	});
 
-	it("should update a user nested setting", (done: Function) => {
+	it("should save a nested user setting property", (done: Function) => {
 
 		// Given
-		const path = "athleteModel.athleteSettings.lthr.default";
+		const path: string[] = ["athleteModel", "athleteSettings", "lthr", "default"];
 		const value = 175;
-		const expectedSettings = _.cloneDeep(userSettingsData);
+		const expectedSettings: UserSettingsModel = _.cloneDeep(userSettingsData);
 		expectedSettings.athleteModel.athleteSettings.lthr.default = value;
 
-		const updateNestedDaoSpy = spyOn(userSettingsService.userSettingsDao, "updateNested")
+		const savedNestedDaoSpy = spyOn(userSettingsService.userSettingsDao, "saveProperty")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
-		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.updateNested(path, value);
+		const promiseSave: Promise<UserSettingsModel> = userSettingsService.saveProperty(path, value);
 
 		// Then
-		promiseUpdate.then((result: UserSettingsModel) => {
+		promiseSave.then((result: UserSettingsModel) => {
 
 			expect(result).not.toBeNull();
 			expect(result.athleteModel.athleteSettings.lthr.default).toEqual(value);
 			expect(result).toEqual(expectedSettings);
 			expect(result).not.toEqual(userSettingsData);
 			expect(result.athleteModel.athleteSettings.lthr.default).not.toEqual(userSettingsData.athleteModel.athleteSettings.lthr.default);
-			expect(updateNestedDaoSpy).toHaveBeenCalledTimes(1);
-			expect(updateNestedDaoSpy).toHaveBeenCalledWith(path, value);
+			expect(savedNestedDaoSpy).toHaveBeenCalledTimes(1);
+			expect(savedNestedDaoSpy).toHaveBeenCalledWith(path, value);
 
 			done();
 
@@ -154,7 +135,7 @@ describe("UserSettingsService", () => {
 		const expectedSettings = _.cloneDeep(userSettingsData);
 		expectedSettings.localStorageMustBeCleared = true;
 
-		const updateDaoSpy = spyOn(userSettingsService.userSettingsDao, "update")
+		const savePropertyDaoSpy = spyOn(userSettingsService.userSettingsDao, "saveProperty")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
@@ -162,8 +143,8 @@ describe("UserSettingsService", () => {
 
 		// Then
 		promiseClearLS.then(() => {
-			expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-			expect(updateDaoSpy).toHaveBeenCalledWith(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true);
+			expect(savePropertyDaoSpy).toHaveBeenCalledTimes(1);
+			expect(savePropertyDaoSpy).toHaveBeenCalledWith(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true);
 			done();
 
 		}, error => {
@@ -173,7 +154,7 @@ describe("UserSettingsService", () => {
 
 	});
 
-	it("should update a user zone", (done: Function) => {
+	it("should save user zone", (done: Function) => {
 
 		// Given
 		const TO_BE_SAVED_ZONES = [ // 8 zones
@@ -198,20 +179,22 @@ describe("UserSettingsService", () => {
 		};
 
 		const settings = _.cloneDeep(userSettingsData);
-		settings.zones.speed = UserZonesModel.serialize(TO_BE_SAVED_ZONES);
+		const serializedZones = UserZonesModel.serialize(TO_BE_SAVED_ZONES);
+		settings.zones.speed = serializedZones;
 
-		const updateNestedDaoSpy = spyOn(userSettingsService.userSettingsDao, "updateNested")
+		const saveNestedPropertyDaoSpy = spyOn(userSettingsService.userSettingsDao, "saveProperty")
 			.and.returnValue(Promise.resolve(settings));
 
 		// When
-		const promiseUpdateZones: Promise<ZoneModel[]> = userSettingsService.updateZones(zoneDefinition, TO_BE_SAVED_ZONES);
+		const promiseUpdateZones: Promise<ZoneModel[]> = userSettingsService.saveZones(zoneDefinition, TO_BE_SAVED_ZONES);
 
 		// Then
 		promiseUpdateZones.then((savedZones: ZoneModel[]) => {
 
 			expect(savedZones).not.toBeNull();
 			expect(savedZones).toEqual(TO_BE_SAVED_ZONES);
-			expect(updateNestedDaoSpy).toHaveBeenCalledTimes(1);
+			expect(saveNestedPropertyDaoSpy).toHaveBeenCalledTimes(1);
+			expect(saveNestedPropertyDaoSpy).toHaveBeenCalledWith(["zones", "speed"], serializedZones);
 
 			done();
 
@@ -233,7 +216,9 @@ describe("UserSettingsService", () => {
 		oldSettings.zones.power = [];
 		oldSettings.zones.cyclingCadence = [];
 
-		spyOn(userSettingsService.userSettingsDao, "reset").and.returnValue(Promise.resolve(userSettingsData));
+		const saveDaoSpy = spyOn(userSettingsService.userSettingsDao, "save")
+			.and.returnValue(Promise.resolve(userSettingsData));
+
 
 		// When
 		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.reset();
@@ -243,6 +228,9 @@ describe("UserSettingsService", () => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(userSettingsData);
+			expect(saveDaoSpy).toHaveBeenCalledTimes(1);
+			expect(saveDaoSpy).toHaveBeenCalledWith(userSettingsData);
+
 			done();
 
 		}, error => {

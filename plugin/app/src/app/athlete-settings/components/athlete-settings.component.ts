@@ -70,14 +70,14 @@ export class AthleteSettingsComponent implements OnInit {
 	 * Clear local storage for athlete settings (dated included) change
 	 */
 	public onAthleteModelChanged(): void {
-		this.userSettingsService.update(AthleteSettingsComponent.SYNCED_ATHLETE_MODEL_SETTING_KEY, this.athleteModel).then((userSettings: UserSettingsModel) => {
+		this.userSettingsService.saveProperty(AthleteSettingsComponent.SYNCED_ATHLETE_MODEL_SETTING_KEY, this.athleteModel).then((userSettings: UserSettingsModel) => {
 			console.debug("User settings updated to", userSettings);
 			this.onAthleteSettingsChanged();
 		}).catch((error) => console.error(error));
 	}
 
 	public onHasDatedAthleteSettingsChange(): void {
-		this.userSettingsService.update(AthleteSettingsComponent.SYNCED_HAS_DATED_ATHLETE_SETTINGS_KEY, this.hasDatedAthleteSettings).then((userSettings: UserSettingsModel) => {
+		this.userSettingsService.saveProperty(AthleteSettingsComponent.SYNCED_HAS_DATED_ATHLETE_SETTINGS_KEY, this.hasDatedAthleteSettings).then((userSettings: UserSettingsModel) => {
 			console.debug("User settings updated to", userSettings);
 			this.onAthleteSettingsChanged();
 		}).catch((error) => {

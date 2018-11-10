@@ -4,16 +4,16 @@ import { FitnessTrendTableComponent } from "./fitness-trend-table.component";
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
 import { userSettingsData } from "@elevate/shared/data";
-import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../../shared-fixtures/activities-2015.fixture";
 import { FitnessTrendModule } from "../fitness-trend.module";
 import * as _ from "lodash";
 import { ActivityService } from "../../shared/services/activity/activity.service";
+import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 
 describe("FitnessTrendTableComponent", () => {
 
 	let activityService: ActivityService = null;
-	let userSettingsDao: UserSettingsDao = null; // TODO Use service instead of dao
+	let userSettingsService: UserSettingsService = null;
 
 	let component: FitnessTrendTableComponent;
 	let fixture: ComponentFixture<FitnessTrendTableComponent>;
@@ -28,18 +28,11 @@ describe("FitnessTrendTableComponent", () => {
 		}).compileComponents();
 
 		activityService = TestBed.get(ActivityService);
-		userSettingsDao = TestBed.get(UserSettingsDao);
+		userSettingsService = TestBed.get(UserSettingsService);
 
 		// Mocking
 		spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
-		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
-			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(userSettingsData);
-			},
-			set: (keys: any, callback: () => {}) => {
-				callback();
-			}
-		});
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
 
 		done();
 	});
