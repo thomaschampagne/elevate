@@ -1,13 +1,10 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { ZoneComponent } from "./zone.component";
-import { MaterialModule } from "../../shared/modules/material.module";
-import { FormsModule } from "@angular/forms";
 import { ZonesService } from "../shared/zones.service";
-import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
 import { ZoneChangeWhisperModel } from "../shared/zone-change-whisper.model";
 import { ZoneChangeTypeModel } from "./zone-change-type.model";
+import { SharedModule } from "../../shared/shared.module";
+import { CoreModule } from "../../core/core.module";
 
 describe("ZoneComponent", () => {
 
@@ -20,9 +17,10 @@ describe("ZoneComponent", () => {
 	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
-			imports: [FormsModule, MaterialModule],
-			declarations: [ZoneComponent],
-			providers: [ZonesService, UserSettingsService, UserSettingsDao]
+			imports: [
+				CoreModule,
+				SharedModule
+			]
 		}).compileComponents();
 
 		zonesService = TestBed.get(ZonesService);
