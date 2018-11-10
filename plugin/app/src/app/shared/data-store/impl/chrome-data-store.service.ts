@@ -72,6 +72,7 @@ export class ChromeDataStore<T> implements DataStore<T> {
 				return Promise.reject("No root key '" + rootKey + "' found");
 			}
 
+			// Update store
 			if (isNestedPath) {
 				try {
 					dataStore = DataStore.setAtPath(dataStore, path as string[], value);

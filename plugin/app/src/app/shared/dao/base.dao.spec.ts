@@ -133,10 +133,9 @@ describe("BaseDao", () => {
 	it("should save property data", (done: Function) => {
 
 		// Given
-		mockedDataStore.setTypeObject();
-		mockedDataStore.dataStore = {
+		mockedDataStore.initWithObject({
 			bar: "john doe"
-		};
+		});
 
 		const path = "bar";
 		const newValue = "jack";
