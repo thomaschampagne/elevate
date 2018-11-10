@@ -94,8 +94,8 @@ export class ChromeDataStore<T> implements DataStore<T> {
 	 *
 	 * @param storageLocation
 	 */
-	public clear(storageLocation: StorageLocationModel): Promise<T[] | T> {
-		return new Promise<T[] | T>((resolve: Function, reject: Function) => {
+	public clear(storageLocation: StorageLocationModel): Promise<void> {
+		return new Promise<void>((resolve: Function, reject: Function) => {
 			if (storageLocation.key) {
 				this.getChromeStorageArea(storageLocation).remove(storageLocation.key, () => {
 					const error = this.getLastError();
@@ -104,7 +104,7 @@ export class ChromeDataStore<T> implements DataStore<T> {
 					} else {
 						this.fetch(storageLocation).then((response: T[] | T) => {
 							if (!response) {
-								resolve(null);
+								resolve();
 							} else {
 								reject("Unable to clear data on storage location: " + JSON.stringify(storageLocation));
 							}
@@ -117,7 +117,7 @@ export class ChromeDataStore<T> implements DataStore<T> {
 					if (error) {
 						reject(error.message);
 					} else {
-						this.fetch(storageLocation).then(response => resolve(response), error => reject(error));
+						resolve();
 					}
 				});
 			}

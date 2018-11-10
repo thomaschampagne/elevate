@@ -158,7 +158,7 @@ describe("BaseDao", () => {
 	it("should clear data", (done: Function) => {
 
 		// Given,  When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> baseDao.clear();
+		const promise: Promise<void> = baseDao.clear();
 
 		// Then
 		promise.then(() => {

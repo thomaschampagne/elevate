@@ -58,7 +58,7 @@ export abstract class BaseDao<T> {
 	/**
 	 * Clear all data
 	 */
-	public clear(): Promise<T[] | T> {
+	public clear(): Promise<void> {
 		return this.checkStorageLocation().then(() => {
 			return this.dataStore.clear(this.storageLocation);
 		});

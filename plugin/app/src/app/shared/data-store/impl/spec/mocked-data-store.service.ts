@@ -25,13 +25,13 @@ export class MockedDataStore<T> extends DataStore<T> {
 		return this.fetch(storageLocation);
 	}
 
-	public clear(storageLocation: StorageLocationModel): Promise<T[] | T> {
+	public clear(storageLocation: StorageLocationModel): Promise<void> {
 		if (this.dataStore instanceof Array) {
 			this.dataStore = [];
 		} else if (this.dataStore instanceof Object) {
 			this.dataStore = {} as T;
 		}
-		return Promise.resolve(null);
+		return Promise.resolve();
 	}
 
 	public saveProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V): Promise<T> {

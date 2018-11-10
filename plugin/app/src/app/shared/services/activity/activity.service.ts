@@ -32,12 +32,8 @@ export class ActivityService {
 		return (<Promise<SyncedActivityModel[]>> this.activityDao.save(syncedActivityModels));
 	}
 
-	/**
-	 *
-	 * @returns {Promise<SyncedActivityModel[]>} cleared SyncedActivityModels
-	 */
-	public clear(): Promise<SyncedActivityModel[]> {
-		return (<Promise<SyncedActivityModel[]>> this.activityDao.clear());
+	public clear(): Promise<void> {
+		return this.activityDao.clear();
 	}
 
 	/**
