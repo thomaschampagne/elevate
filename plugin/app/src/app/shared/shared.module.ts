@@ -15,9 +15,7 @@ import { OptionHelperReaderService } from "../global-settings/services/option-he
 import { ZonesService } from "../zones-settings/shared/zones.service";
 import { AppRoutingModule } from "./modules/app-routing.module";
 import { DonateComponent } from "../donate/donate.component";
-import { ReleasesNotesComponent } from "../releases-notes/releases-notes.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
-import { ReleasesNotesResolverService } from "../releases-notes/releases-notes-resolver.service";
 import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
 import { SyncDao } from "./dao/sync/sync.dao";
@@ -58,7 +56,6 @@ const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
 		ZonesSettingsComponent,
 		ZoneComponent,
 		DonateComponent,
-		ReleasesNotesComponent,
 		ShareComponent,
 		ReportComponent,
 		AdvancedMenuComponent,
@@ -94,7 +91,6 @@ const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
 		GlobalSettingsService,
 		OptionHelperReaderService,
 		ZonesService,
-		ReleasesNotesResolverService,
 		SideNavService,
 		WindowService,
 		ExternalUpdatesService
