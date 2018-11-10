@@ -529,8 +529,8 @@ describe("SyncService", () => {
 	it("should reject on remove activities failure (removeLastSyncDateTime not deleted)", (done: Function) => {
 
 		// Given
-		spyOn(syncService.syncDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(99));
-		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve(null));
+		spyOn(syncService.syncDao, "removeLastSyncDateTime").and.returnValue(Promise.resolve(null));
+		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.reject("Houston we have a problem"));
 
 		// When
 		const promise: Promise<void> = syncService.clearSyncedData();

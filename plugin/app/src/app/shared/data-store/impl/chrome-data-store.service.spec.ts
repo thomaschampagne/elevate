@@ -432,12 +432,11 @@ describe("ChromeDataStore", () => {
 		CHROME_STORAGE_STUB[storageLocation.key] = "FakeData";
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.clear(storageLocation);
+		const promise: Promise<void> = chromeDataStore.clear(storageLocation);
 
 		// Then
-		promise.then((result: Foo[]) => {
+		promise.then(() => {
 
-			expect(result).toBeNull();
 			expect(CHROME_STORAGE_STUB).toEqual(otherData);
 			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(2);
 			done();
@@ -456,13 +455,12 @@ describe("ChromeDataStore", () => {
 		const expectedResult = <Foo> {};
 
 		// When
-		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.clear(storageLocation);
+		const promise: Promise<void> = chromeDataStore.clear(storageLocation);
 
 		// Then
-		promise.then((result: Foo) => {
-			expect(result).toEqual(expectedResult);
+		promise.then(() => {
 			expect(CHROME_STORAGE_STUB).toEqual(expectedResult);
-			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(2);
+			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
 
 			done();
 
@@ -482,11 +480,10 @@ describe("ChromeDataStore", () => {
 		spyOn(chromeDataStore, "fetch").and.returnValue(Promise.resolve(fetchDataNotCleared));
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.clear(storageLocation);
+		const promise: Promise<void> = chromeDataStore.clear(storageLocation);
 
 		// Then
-		promise.then((result: Foo[]) => {
-			expect(result).toBeNull();
+		promise.then(() => {
 			expect(false).toBeTruthy("Whoops! I should not be here!");
 			done();
 
