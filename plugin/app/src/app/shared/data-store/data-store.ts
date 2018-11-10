@@ -41,5 +41,5 @@ export abstract class DataStore<T> {
 	 * Clear all data
 	 * @param storageLocation
 	 */
-	abstract clear(storageLocation: StorageLocationModel): Promise<T[] | T>; // TODO Try to return Promise<void> instead
+	abstract clear(storageLocation: StorageLocationModel): Promise<void>;
 }
