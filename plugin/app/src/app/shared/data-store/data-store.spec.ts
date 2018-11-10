@@ -60,7 +60,7 @@ describe("DataStore", () => {
 		};
 
 		// Then
-		expect(call).toThrow(new Error("Property at path 'dream0,dream1,fakeDream2' do not exists"));
+		expect(call).toThrow(new Error("Property at path 'dream0>dream1>fakeDream2' do not exists"));
 
 		done();
 	});

@@ -384,7 +384,7 @@ describe("ChromeDataStore", () => {
 			done();
 
 		}, error => {
-			expect(error).toEqual("Property at path 'nested,dream0,dream1,fake' do not exists");
+			expect(error).toEqual("Property at path 'nested>dream0>dream1>fake' do not exists");
 			done();
 		});
 	});
