@@ -11,7 +11,7 @@ export abstract class DataStore<T> {
 	 */
 	public static setAtPath<T, V>(object: T, path: string[], value: V): T {
 		if (!_.has(object, path)) {
-			throw new Error("Property at path '" + path + "' do not exists");
+			throw new Error("Property at path '" + path.join(">") + "' do not exists");
 		}
 		return _.set<T>(<any> object, path, value);
 	}
