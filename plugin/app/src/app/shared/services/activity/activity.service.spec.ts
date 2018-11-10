@@ -99,14 +99,11 @@ describe("ActivityService", () => {
 				.and.returnValue(Promise.resolve(null));
 
 			// When
-			const promise: Promise<SyncedActivityModel[]> = activityService.clear();
+			const promise: Promise<void> = activityService.clear();
 
 			// Then
-			promise.then((result: SyncedActivityModel[]) => {
-
-				expect(result).toBeNull();
+			promise.then(() => {
 				expect(removeDaoSpy).toHaveBeenCalledTimes(1);
-
 				done();
 
 			}, error => {

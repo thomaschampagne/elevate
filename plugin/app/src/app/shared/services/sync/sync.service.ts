@@ -167,21 +167,13 @@ export class SyncService {
 	public clearSyncedData(): Promise<void> {
 
 		return Promise.all([
-
 			this.removeLastSyncDateTime(),
 			this.activityDao.clear()
-
-		]).then((result: Object[]) => {
-
-			const lastSyncDateTime: number = result[0] as number;
-			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
-
-			if ((!_.isNull(lastSyncDateTime) && _.isNumber(lastSyncDateTime)) ||
-				!_.isEmpty(syncedActivityModels)) {
-				return Promise.reject("Athlete synced data has not been cleared totally. Some properties cannot be deleted. You may need to uninstall/install the software.");
-			}
-
+		]).then(() => {
 			return Promise.resolve();
+		}).catch(error => {
+			console.error(error);
+			return Promise.reject("Athlete synced data has not been cleared totally. Some properties cannot be deleted. You may need to uninstall/install the software.");
 		});
 	}
 
