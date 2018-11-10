@@ -387,7 +387,7 @@ export class YearProgressService {
 	 * Fetch all preset
 	 */
 	public fetchPresets(): Promise<YearProgressPresetModel[]> {
-		return this.yearProgressPresetDao.fetch();
+		return (<Promise<YearProgressPresetModel[]>> this.yearProgressPresetDao.fetch());
 	}
 
 	/**
@@ -395,7 +395,7 @@ export class YearProgressService {
 	 * @param yearProgressPresetModel
 	 */
 	public addPreset(yearProgressPresetModel: YearProgressPresetModel): Promise<YearProgressPresetModel[]> {
-		return this.yearProgressPresetDao.fetch().then((models: YearProgressPresetModel[]) => {
+		return (<Promise<YearProgressPresetModel[]>> this.yearProgressPresetDao.fetch().then((models: YearProgressPresetModel[]) => {
 
 			const existingModel = _.find(models, {
 				progressType: yearProgressPresetModel.progressType,
@@ -412,7 +412,7 @@ export class YearProgressService {
 			models.push(yearProgressPresetModel);
 
 			return this.yearProgressPresetDao.save(models);
-		});
+		}));
 	}
 
 	/**

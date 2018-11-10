@@ -62,7 +62,7 @@ export class UserZonesModel {
 
 	public static deserialize(zones: number[]): ZoneModel[] {
 
-		const deserialized: ZoneModel[] = [];
+		const zoneModels: ZoneModel[] = [];
 
 		_.forEach(zones, (zone: number, index: number) => {
 
@@ -71,14 +71,14 @@ export class UserZonesModel {
 			}
 
 			if (_.isNumber(zones[index + 1])) {
-				deserialized.push({
+				zoneModels.push({
 					from: zone,
 					to: zones[index + 1]
 				});
 			}
 		});
 
-		return deserialized;
+		return zoneModels;
 	}
 
 	constructor(public speed: number[],

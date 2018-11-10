@@ -1,7 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 
 import { DataStore } from "../data-store/data-store";
-import { StorageLocation } from "../data-store/storage-location";
+import { StorageLocationModel } from "../data-store/storage-location.model";
 import { Injectable } from "@angular/core";
 import { AppStorageType } from "@elevate/shared/models";
 import { MockedDataStore } from "../data-store/impl/spec/mocked-data-store.service";
@@ -9,17 +9,14 @@ import { BaseDao } from "./base.dao";
 
 describe("BaseDao", () => {
 
-	class Foo {
+	class Foo extends Object {
 		bar: string;
 	}
 
 	@Injectable()
 	class TestBaseDao extends BaseDao<Foo> {
 
-		public static readonly STORAGE_LOCATION: StorageLocation = {
-			key: "syncedActivities",
-			type: AppStorageType.LOCAL
-		};
+		public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel(AppStorageType.LOCAL, "foo");
 
 		public init(): void {
 			this.storageLocation = TestBaseDao.STORAGE_LOCATION;
@@ -32,11 +29,13 @@ describe("BaseDao", () => {
 	let checkStorageLocationSpy: jasmine.Spy;
 	let dataStoreFetchSpy: jasmine.Spy;
 	let dataStoreSaveSpy: jasmine.Spy;
+	let dataStoreSavePropertySpy: jasmine.Spy;
 	let dataStoreClearSpy: jasmine.Spy;
+	let mockedDataStore: MockedDataStore<Foo>;
 
 	beforeEach((done: Function) => {
 
-		const mockedDataStore: MockedDataStore<Foo> = new MockedDataStore();
+		mockedDataStore = new MockedDataStore();
 
 		TestBed.configureTestingModule({
 			providers: [
@@ -51,12 +50,13 @@ describe("BaseDao", () => {
 		checkStorageLocationSpy = spyOn(baseDao, "checkStorageLocation").and.callThrough();
 		dataStoreFetchSpy = spyOn(dataStore, "fetch").and.callThrough();
 		dataStoreSaveSpy = spyOn(dataStore, "save").and.callThrough();
+		dataStoreSavePropertySpy = spyOn(dataStore, "saveProperty").and.callThrough();
 		dataStoreClearSpy = spyOn(dataStore, "clear").and.callThrough();
 
 		done();
 	});
 
-	it("should resolve StorageLocation provided", (done: Function) => {
+	it("should resolve StorageLocationModel provided", (done: Function) => {
 
 		// Given, When
 		const promise: Promise<void> = baseDao.checkStorageLocation();
@@ -71,7 +71,7 @@ describe("BaseDao", () => {
 		});
 	});
 
-	it("should reject StorageLocation not provided", (done: Function) => {
+	it("should reject StorageLocationModel not provided", (done: Function) => {
 
 		// Given
 		baseDao.storageLocation = null; // Remove storage location
@@ -85,7 +85,7 @@ describe("BaseDao", () => {
 			done();
 
 		}, error => {
-			expect(error).toEqual("StorageLocation not set in 'TestBaseDao'. Please override init method to assign a StorageLocation.");
+			expect(error).toEqual("StorageLocationModel not set in 'TestBaseDao'. Please override init method to assign a StorageLocationModel.");
 			expect(dataStoreFetchSpy).not.toHaveBeenCalled();
 			done();
 		});
@@ -94,7 +94,7 @@ describe("BaseDao", () => {
 	it("should fetch data", (done: Function) => {
 
 		// Given,  When
-		const promise: Promise<Foo[]> = baseDao.fetch();
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> baseDao.fetch();
 
 		// Then
 		promise.then(() => {
@@ -116,7 +116,7 @@ describe("BaseDao", () => {
 		}];
 
 		// When
-		const promise: Promise<Foo[]> = baseDao.save(foo);
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> baseDao.save(foo);
 
 		// Then
 		promise.then(() => {
@@ -130,10 +130,36 @@ describe("BaseDao", () => {
 		});
 	});
 
+	it("should save property data", (done: Function) => {
+
+		// Given
+		mockedDataStore.setTypeObject();
+		mockedDataStore.dataStore = {
+			bar: "john doe"
+		};
+
+		const path = "bar";
+		const newValue = "jack";
+
+		// When
+		const promise: Promise<Foo> = baseDao.saveProperty<string>(path, newValue);
+
+		// Then
+		promise.then(() => {
+
+			expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
+			expect(dataStoreSavePropertySpy).toHaveBeenCalledTimes(1);
+			done();
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
 	it("should clear data", (done: Function) => {
 
 		// Given,  When
-		const promise: Promise<Foo[]> = baseDao.clear();
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> baseDao.clear();
 
 		// Then
 		promise.then(() => {
