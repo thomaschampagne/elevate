@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AthleteSettingsFormComponent } from "./athlete-settings-form.component";
 import * as _ from "lodash";
-import { UserSettingsDao } from "../../../shared/dao/user-settings/user-settings.dao";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
 import { AthleteSettingsModel } from "@elevate/shared/models";
 import { userSettingsData } from "@elevate/shared/data";
 import { AthleteSettingsModule } from "../../athlete-settings.module";
+import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
 
 describe("AthleteSettingsFormComponent", () => {
 
 	let component: AthleteSettingsFormComponent;
 	let fixture: ComponentFixture<AthleteSettingsFormComponent>;
-	let userSettingsDao: UserSettingsDao;
+	let userSettingsService: UserSettingsService;
 
 	beforeEach((done: Function) => {
 
@@ -24,15 +24,8 @@ describe("AthleteSettingsFormComponent", () => {
 			]
 		}).compileComponents();
 
-		userSettingsDao = TestBed.get(UserSettingsDao);
-
-		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
-			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(_.cloneDeep(userSettingsData));
-			}
-		});
-
-		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
+		userSettingsService = TestBed.get(UserSettingsService);
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
 
 		done();
 	});
