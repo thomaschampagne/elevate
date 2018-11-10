@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { GlobalSettingsComponent } from "./global-settings.component";
-import { UserSettingsDao } from "../shared/dao/user-settings/user-settings.dao";
 import { SharedModule } from "../shared/shared.module";
 import * as _ from "lodash";
 import { userSettingsData } from "@elevate/shared/data";
 import { CoreModule } from "../core/core.module";
+import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 
 describe("GlobalSettingsComponent", () => {
 
 	let component: GlobalSettingsComponent;
 	let fixture: ComponentFixture<GlobalSettingsComponent>;
-	let userSettingsDao: UserSettingsDao;
+	let userSettingsService: UserSettingsService;
 
 	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
@@ -23,15 +23,8 @@ describe("GlobalSettingsComponent", () => {
 			providers: []
 		}).compileComponents();
 
-		userSettingsDao = TestBed.get(UserSettingsDao);
-
-		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
-			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(_.cloneDeep(userSettingsData));
-			}
-		});
-
-		spyOn(userSettingsDao, "getChromeError").and.returnValue(null);
+		userSettingsService = TestBed.get(UserSettingsService);
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
 
 		done();
 	});

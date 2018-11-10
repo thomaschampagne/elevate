@@ -257,7 +257,7 @@ export class ZonesService {
 			const complianceError = this.isZonesCompliant(this.currentZones);
 
 			if (_.isNull(complianceError)) {
-				this.userSettingsService.updateZones(
+				this.userSettingsService.saveZones(
 					this.zoneDefinition,
 					this.currentZones
 				).then(() => {
