@@ -6,7 +6,6 @@ import { ActivityService } from "../../shared/services/activity/activity.service
 import { TEST_SYNCED_ACTIVITIES } from "../../../shared-fixtures/activities-2015.fixture";
 import * as moment from "moment";
 import { Moment } from "moment";
-import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
 import { userSettingsData } from "@elevate/shared/data";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
@@ -15,10 +14,11 @@ import * as _ from "lodash";
 import { PeriodModel } from "../shared/models/period.model";
 import { FitnessTrendModule } from "../fitness-trend.module";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
+import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 
 describe("FitnessTrendGraphComponent", () => {
 
-	let userSettingsDao: UserSettingsDao; // TODO Use service instead of dao
+	let userSettingsService: UserSettingsService;
 	let activityService: ActivityService;
 	let fitnessService: FitnessService;
 	let component: FitnessTrendGraphComponent;
@@ -42,20 +42,13 @@ describe("FitnessTrendGraphComponent", () => {
 		}).compileComponents();
 
 		// Retrieve injected service
-		userSettingsDao = TestBed.get(UserSettingsDao);
+		userSettingsService = TestBed.get(UserSettingsService);
 		activityService = TestBed.get(ActivityService);
 		fitnessService = TestBed.get(FitnessService);
 
 		// Mocking
 		spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
-		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
-			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(userSettingsData);
-			},
-			set: (keys: any, callback: () => {}) => {
-				callback();
-			}
-		});
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
 
 		todayMoment = moment("2015-12-01 12:00", "YYYY-MM-DD hh:mm");
 		spyOn(fitnessService, "getTodayMoment").and.returnValue(todayMoment);
