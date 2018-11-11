@@ -17,7 +17,7 @@ export class UserSettingsService {
 	}
 
 	public saveProperty<V>(path: string | string[], value: V): Promise<UserSettingsModel> {
-		return this.userSettingsDao.saveProperty<V>(path, value);
+		return this.userSettingsDao.upsertProperty<V>(path, value);
 	}
 
 	/**

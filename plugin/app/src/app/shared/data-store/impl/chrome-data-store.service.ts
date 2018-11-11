@@ -5,22 +5,28 @@ import { StorageLocationModel } from "../storage-location.model";
 import * as _ from "lodash";
 
 @Injectable()
-export class ChromeDataStore<T> implements DataStore<T> {
+export class ChromeDataStore<T> extends DataStore<T> {
 
 	/**
 	 * @return {Promise<T[] | T>}
 	 */
-	public fetch(storageLocation: StorageLocationModel): Promise<T[] | T> {
+	public fetch(storageLocation: StorageLocationModel, query: Partial<T> | string | string[], defaultStorageValue: T[] | T): Promise<T[] | T> {
+
 		return new Promise<T[] | T>((resolve: Function, reject: Function) => {
-			this.getChromeStorageArea(storageLocation).get(storageLocation.key, (result: T[] | T) => {
+
+			if (_.isEmpty(query)) {
+				query = null; // Means fetch all
+			}
+
+			this.getChromeStorageArea(storageLocation).get(query, (result: T[] | T) => {
 				const error = this.getLastError();
 				if (error) {
 					reject(error.message);
 				} else {
 					if (storageLocation.key) {
-						resolve((result[storageLocation.key]) ? result[storageLocation.key] : null);
+						resolve(result[storageLocation.key] ? result[storageLocation.key] : defaultStorageValue);
 					} else {
-						resolve((result) ? result : null);
+						resolve(!_.isEmpty(result) ? result : defaultStorageValue);
 					}
 				}
 			});
@@ -31,22 +37,27 @@ export class ChromeDataStore<T> implements DataStore<T> {
 	 *
 	 * @param storageLocation
 	 * @param value
+	 * @param defaultStorageValue
 	 * @return {Promise<T[] | T>}
 	 */
-	public save(storageLocation: StorageLocationModel, value: T[] | T): Promise<T[] | T> {
+	public save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T> {
 		return new Promise<T[] | T>((resolve: Function, reject: Function) => {
-			let object = {};
+
+			let saveQuery;
 			if (storageLocation.key) {
-				object[storageLocation.key] = value;
+				saveQuery = {};
+				saveQuery[storageLocation.key] = value;
 			} else {
-				object = (_.isObject(value)) ? value : {};
+				saveQuery = value;
 			}
-			this.getChromeStorageArea(storageLocation).set(object, () => {
+
+			this.getChromeStorageArea(storageLocation).set(saveQuery, () => {
 				const error = this.getLastError();
 				if (error) {
 					reject(error.message);
 				} else {
-					this.fetch(storageLocation).then((response: T[] | T) => {
+					const query = (storageLocation.key) ? (storageLocation.key) : null; // If no key, 'null' query will ask for all the storage
+					this.fetch(storageLocation, query, defaultStorageValue).then((response: T[] | T) => {
 						resolve(response);
 					}, error => reject(error));
 				}
@@ -59,32 +70,21 @@ export class ChromeDataStore<T> implements DataStore<T> {
 	 * @param storageLocation
 	 * @param path
 	 * @param value
+	 * @param defaultStorageValue
 	 */
-	public saveProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V): Promise<T> {
+	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
 
-		return this.fetch(storageLocation).then((dataStore: T[] | T) => {
+		const query = (storageLocation.key) ? storageLocation.key : null; // If no key, 'null' query will ask for all the storage
 
-			const isNestedPath: boolean = (path instanceof Array && path.length > 0);
-			const rootKey: string = (isNestedPath) ? path[0] : path as string;
-			const hasRootKey = (rootKey && _.has(dataStore, rootKey));
+		return this.fetch(storageLocation, query, defaultStorageValue).then((dataStore: T[] | T) => {
 
-			if (!hasRootKey) {
-				return Promise.reject("No root key '" + rootKey + "' found");
+			if (_.isArray(dataStore)) {
+				return Promise.reject("Cannot save property to a storage type 'vector'");
 			}
 
-			// Update store
-			if (isNestedPath) {
-				try {
-					dataStore = DataStore.setAtPath(dataStore, path as string[], value);
-				} catch (error) {
-					return Promise.reject(error.message);
-				}
+			dataStore = _.set(dataStore as Object, path, value) as T;
 
-			} else {
-				dataStore[rootKey] = value;
-			}
-
-			return this.save(storageLocation, dataStore).then((dataStoreSaved: T[] | T) => {
+			return this.save(storageLocation, dataStore, defaultStorageValue).then((dataStoreSaved: T[] | T) => {
 				return Promise.resolve(<T> dataStoreSaved);
 			});
 		});
@@ -99,17 +99,7 @@ export class ChromeDataStore<T> implements DataStore<T> {
 			if (storageLocation.key) {
 				this.getChromeStorageArea(storageLocation).remove(storageLocation.key, () => {
 					const error = this.getLastError();
-					if (error) {
-						reject(error.message);
-					} else {
-						this.fetch(storageLocation).then((response: T[] | T) => {
-							if (!response) {
-								resolve();
-							} else {
-								reject("Unable to clear data on storage location: " + JSON.stringify(storageLocation));
-							}
-						}, error => reject(error));
-					}
+					(error) ? reject(error.message) : resolve();
 				});
 			} else {
 				this.getChromeStorageArea(storageLocation).clear(() => {
