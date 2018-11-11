@@ -17,9 +17,14 @@ describe("BaseDao", () => {
 	class TestBaseDao extends BaseDao<Foo> {
 
 		public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel(AppStorageType.LOCAL, "foo");
+		public static readonly DEFAULT_STORAGE_VALUE: Foo[] = [];
 
-		public init(): void {
-			this.storageLocation = TestBaseDao.STORAGE_LOCATION;
+		public getStorageLocation(): StorageLocationModel {
+			return TestBaseDao.STORAGE_LOCATION;
+		}
+
+		public getDefaultStorageValue(): Foo[] | Foo {
+			return TestBaseDao.DEFAULT_STORAGE_VALUE;
 		}
 	}
 
@@ -29,7 +34,7 @@ describe("BaseDao", () => {
 	let checkStorageLocationSpy: jasmine.Spy;
 	let dataStoreFetchSpy: jasmine.Spy;
 	let dataStoreSaveSpy: jasmine.Spy;
-	let dataStoreSavePropertySpy: jasmine.Spy;
+	let dataStoreUpsertPropertySpy: jasmine.Spy;
 	let dataStoreClearSpy: jasmine.Spy;
 	let mockedDataStore: MockedDataStore<Foo>;
 
@@ -47,19 +52,27 @@ describe("BaseDao", () => {
 		baseDao = TestBed.get(BaseDao);
 		dataStore = TestBed.get(DataStore);
 
-		checkStorageLocationSpy = spyOn(baseDao, "checkStorageLocation").and.callThrough();
+		checkStorageLocationSpy = spyOn(baseDao, "checkCompliantDao").and.callThrough();
 		dataStoreFetchSpy = spyOn(dataStore, "fetch").and.callThrough();
 		dataStoreSaveSpy = spyOn(dataStore, "save").and.callThrough();
-		dataStoreSavePropertySpy = spyOn(dataStore, "saveProperty").and.callThrough();
+		dataStoreUpsertPropertySpy = spyOn(dataStore, "upsertProperty").and.callThrough();
 		dataStoreClearSpy = spyOn(dataStore, "clear").and.callThrough();
 
+		done();
+	});
+
+	it("should be initialized", (done: Function) => {
+
+		// Given & When BaseDao is instantiated, Then...
+		expect(baseDao.storageLocation).toEqual(TestBaseDao.STORAGE_LOCATION);
+		expect(baseDao.defaultStorage).toEqual(TestBaseDao.DEFAULT_STORAGE_VALUE);
 		done();
 	});
 
 	it("should resolve StorageLocationModel provided", (done: Function) => {
 
 		// Given, When
-		const promise: Promise<void> = baseDao.checkStorageLocation();
+		const promise: Promise<void> = baseDao.checkCompliantDao();
 
 		// Then
 		promise.then(() => {
@@ -77,7 +90,7 @@ describe("BaseDao", () => {
 		baseDao.storageLocation = null; // Remove storage location
 
 		// When
-		const promise: Promise<void> = baseDao.checkStorageLocation();
+		const promise: Promise<void> = baseDao.checkCompliantDao();
 
 		// Then
 		promise.then(() => {
@@ -141,13 +154,13 @@ describe("BaseDao", () => {
 		const newValue = "jack";
 
 		// When
-		const promise: Promise<Foo> = baseDao.saveProperty<string>(path, newValue);
+		const promise: Promise<Foo> = baseDao.upsertProperty<string>(path, newValue);
 
 		// Then
 		promise.then(() => {
 
 			expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
-			expect(dataStoreSavePropertySpy).toHaveBeenCalledTimes(1);
+			expect(dataStoreUpsertPropertySpy).toHaveBeenCalledTimes(1);
 			done();
 		}, error => {
 			expect(error).toBeNull();

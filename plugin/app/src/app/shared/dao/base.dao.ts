@@ -4,21 +4,27 @@ import { StorageLocationModel } from "../data-store/storage-location.model";
 
 export abstract class BaseDao<T> {
 
+	public defaultStorage: T[] | T;
+
 	public storageLocation: StorageLocationModel = null;
 
-	constructor(@Inject(DataStore) protected dataStore: DataStore<T>) {
+	constructor(@Inject(DataStore) public dataStore: DataStore<T>) {
 		this.init();
 	}
 
-	/**
-	 * Override this init method to setup StorageLocationModel for your Dao
-	 */
-	public abstract init(): void;
+	public abstract getStorageLocation(): StorageLocationModel;
+
+	public abstract getDefaultStorageValue(): T[] | T;
+
+	public init(): void {
+		this.storageLocation = this.getStorageLocation();
+		this.defaultStorage = this.getDefaultStorageValue();
+	}
 
 	/**
 	 * Check if StorageLocationModel is well set
 	 */
-	public checkStorageLocation(): Promise<void> {
+	public checkCompliantDao(): Promise<void> {
 		if (!this.storageLocation) {
 			return Promise.reject("StorageLocationModel not set in '" + this.constructor.name + "'. Please override init method to assign a StorageLocationModel.");
 		}
@@ -29,8 +35,8 @@ export abstract class BaseDao<T> {
 	 * Fetch all data
 	 */
 	public fetch(): Promise<T[] | T> {
-		return this.checkStorageLocation().then(() => {
-			return this.dataStore.fetch(this.storageLocation);
+		return this.checkCompliantDao().then(() => {
+			return this.dataStore.fetch(this.storageLocation, null, this.defaultStorage);
 		});
 	}
 
@@ -39,19 +45,19 @@ export abstract class BaseDao<T> {
 	 * @param value
 	 */
 	public save(value: T[] | T): Promise<T[] | T> {
-		return this.checkStorageLocation().then(() => {
-			return this.dataStore.save(this.storageLocation, value);
+		return this.checkCompliantDao().then(() => {
+			return this.dataStore.save(this.storageLocation, value, this.defaultStorage);
 		});
 	}
 
 	/**
-	 * Save a specific property of data handled at path (assuming path exists)
+	 * Update or insert a specific property of data handled at given path (create path if needed)
 	 * @param path key or array of keys to describe the nested path
 	 * @param value
 	 */
-	public saveProperty<V>(path: string | string[], value: V): Promise<T> {
-		return this.checkStorageLocation().then(() => {
-			return this.dataStore.saveProperty<V>(this.storageLocation, path, value);
+	public upsertProperty<V>(path: string | string[], value: V): Promise<T> {
+		return this.checkCompliantDao().then(() => {
+			return this.dataStore.upsertProperty<V>(this.storageLocation, path, value, this.defaultStorage);
 		});
 	}
 
@@ -59,7 +65,7 @@ export abstract class BaseDao<T> {
 	 * Clear all data
 	 */
 	public clear(): Promise<void> {
-		return this.checkStorageLocation().then(() => {
+		return this.checkCompliantDao().then(() => {
 			return this.dataStore.clear(this.storageLocation);
 		});
 	}

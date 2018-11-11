@@ -25,25 +25,51 @@ describe("ChromeDataStore", () => {
 	let browserStorageErrorSpy: jasmine.Spy;
 
 	let CHROME_STORAGE_STUB = {};
+	let DEFAULT_FOO: Foo;
+
 	const chromeStorageBehaviour = () => {
 		return {
-			get: (keys: any, callback: (item: Object) => {}) => {
-				if (storageLocation.key) {
+			get: (query: Object | string | string[], callback: (item: Object) => {}) => {
+				if (_.isString(query)) {
 					const response = {};
-					response[storageLocation.key] = CHROME_STORAGE_STUB[storageLocation.key];
+					if (CHROME_STORAGE_STUB[query]) {
+						response[query] = CHROME_STORAGE_STUB[query];
+					}
 					callback(response);
-				} else {
+
+				} else if (_.isArray(query) && query.length > 0) {
+
+					const response = {};
+					_.forEach(query, (key: string) => {
+						if (!_.isUndefined(CHROME_STORAGE_STUB[key])) {
+							response[key] = CHROME_STORAGE_STUB[key];
+						}
+					});
+					callback(response);
+				} else if (_.isObject(query)) {
+					const response = _.cloneDeep(query);
+					_.forEach(_.keys(response), (key: string) => {
+						if (!_.isUndefined(CHROME_STORAGE_STUB[key])) {
+							response[key] = CHROME_STORAGE_STUB[key];
+						}
+					});
+					callback(response);
+				} else if (_.isUndefined(query) || _.isNull(query)) {
 					callback(CHROME_STORAGE_STUB);
+				} else {
+					callback({});
 				}
 			},
 			set: (object: Object, callback: () => {}) => {
-				CHROME_STORAGE_STUB = object;
+				if (!_.isObject(object)) {
+					throw new Error("Must be an object");
+				}
+				_.forEach(_.keys(object), (key: string) => {
+					CHROME_STORAGE_STUB[key] = object[key];
+				});
 				callback();
 			},
 			remove: (key: string, callback: () => {}) => {
-				if (!key) {
-					throw new Error("Key cannot be empty");
-				}
 				delete CHROME_STORAGE_STUB[key];
 				callback();
 			},
@@ -72,6 +98,9 @@ describe("ChromeDataStore", () => {
 		// Mock CHROME_STORAGE_STUB
 		browserStorageLocalSpy = spyOn(chromeDataStore, "chromeLocalStorageArea").and.callFake(chromeStorageBehaviour);
 		CHROME_STORAGE_STUB = {}; // Erase storage
+		DEFAULT_FOO = {
+			bar: "I am the default one"
+		};
 
 		// Mock chrome errors. Return no errors by default
 		browserStorageErrorSpy = spyOn(chromeDataStore, "getLastError");
@@ -85,7 +114,6 @@ describe("ChromeDataStore", () => {
 		done();
 	});
 
-
 	it("should fetch data", (done: Function) => {
 
 		// Given
@@ -96,7 +124,7 @@ describe("ChromeDataStore", () => {
 		CHROME_STORAGE_STUB[storageLocation.key] = expectedData;
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.fetch(storageLocation);
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.fetch(storageLocation, null, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo[]) => {
@@ -113,19 +141,44 @@ describe("ChromeDataStore", () => {
 		});
 	});
 
-
-	it("should fetch empty data", (done: Function) => {
+	it("should fetch empty data (vector)", (done: Function) => {
 
 		// Given
 		CHROME_STORAGE_STUB = {};
+		const defaultValue = [];
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.fetch(storageLocation);
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.fetch(storageLocation, null, defaultValue);
 
 		// Then
 		promise.then((result: Foo[]) => {
 
-			expect(result).toBeNull();
+			expect(result).toEqual(defaultValue);
+			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
+	it("should fetch empty data (object))", (done: Function) => {
+
+		// Given
+		CHROME_STORAGE_STUB = {};
+		const defaultValue: Foo = {
+			bar: "john doe"
+		};
+
+		// When
+		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, null, defaultValue);
+
+		// Then
+		promise.then((result: Foo) => {
+			expect(result).not.toBeNull();
+			expect(result).toEqual(defaultValue);
 			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
 
 			done();
@@ -148,13 +201,39 @@ describe("ChromeDataStore", () => {
 		storageLocation = new StorageLocationModel(AppStorageType.LOCAL); // Override CHROME_STORAGE_STUB location with no key
 
 		// When
-		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation);
+		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, null, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedData);
+			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
+	it("should fetch default value when storage is empty (and no key provided)", (done: Function) => {
+
+		// Given
+		const defaultValue: Foo = {
+			bar: "Default Bar"
+		};
+
+		storageLocation = new StorageLocationModel(AppStorageType.LOCAL); // Override CHROME_STORAGE_STUB location with no key
+
+		// When
+		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, null, defaultValue);
+
+		// Then
+		promise.then((result: Foo) => {
+			expect(result).not.toBeNull();
+			expect(result).toEqual(defaultValue);
 			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
 
 			done();
@@ -179,7 +258,7 @@ describe("ChromeDataStore", () => {
 		};
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.save(storageLocation, toBeSaved);
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.save(storageLocation, toBeSaved, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo[]) => {
@@ -207,7 +286,7 @@ describe("ChromeDataStore", () => {
 		storageLocation = new StorageLocationModel(AppStorageType.LOCAL); // Override CHROME_STORAGE_STUB location with no key
 
 		// When
-		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.save(storageLocation, toBeSaved);
+		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.save(storageLocation, toBeSaved, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -232,11 +311,11 @@ describe("ChromeDataStore", () => {
 			bar: "john doe"
 		}];
 
-		const expectedChromeError = {message: "Error !!!"};
+		const expectedChromeError = {message: "Houston we have a problem"};
 		browserStorageErrorSpy.and.returnValue(expectedChromeError);
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.save(storageLocation, saveData);
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.save(storageLocation, saveData, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo[]) => {
@@ -266,7 +345,7 @@ describe("ChromeDataStore", () => {
 		expectedChromeStorageStubState.foo.bar = newValue;
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.saveProperty<string>(storageLocation, relativePath, newValue);
+		const promise: Promise<Foo> = chromeDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -299,7 +378,7 @@ describe("ChromeDataStore", () => {
 		expectedChromeStorageStubState.foo.bar = newValue;
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.saveProperty<boolean>(storageLocation, relativePath, newValue);
+		const promise: Promise<Foo> = chromeDataStore.upsertProperty<boolean>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -338,10 +417,11 @@ describe("ChromeDataStore", () => {
 		expectedChromeStorageStubState.foo.nested.dream0.dream1.dream2 = newValue;
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.saveProperty<string>(storageLocation, relativePath, newValue);
+		const promise: Promise<Foo> = chromeDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
+
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedChromeStorageStubState.foo);
@@ -355,9 +435,11 @@ describe("ChromeDataStore", () => {
 		});
 	});
 
-	it("should reject save nested property", (done: Function) => {
+	it("should save nested property (no key provided)", (done: Function) => {
 
 		// Given
+		storageLocation = new StorageLocationModel(AppStorageType.LOCAL); // Override CHROME_STORAGE_STUB location with no key
+
 		const currentFoo: Foo = {
 			bar: "sheldon",
 			nested: {
@@ -369,22 +451,28 @@ describe("ChromeDataStore", () => {
 			}
 		};
 
-		CHROME_STORAGE_STUB[storageLocation.key] = currentFoo;
+		CHROME_STORAGE_STUB = currentFoo;
 
-		const relativePath = ["nested", "dream0", "dream1", "fake"];
+		const relativePath = ["nested", "dream0", "dream1", "dream2"];
 		const newValue = "Bazinga!";
+		const expectedChromeStorageStubState: Foo = _.cloneDeep(CHROME_STORAGE_STUB) as Foo;
+		expectedChromeStorageStubState.nested.dream0.dream1.dream2 = newValue;
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.saveProperty<string>(storageLocation, relativePath, newValue);
+		const promise: Promise<Foo> = chromeDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
-			expect(result).toBeNull();
-			expect(false).toBeTruthy("Whoops! I should not be here!");
+
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(expectedChromeStorageStubState);
+			expect(CHROME_STORAGE_STUB).toEqual(expectedChromeStorageStubState);
+
 			done();
 
 		}, error => {
-			expect(error).toEqual("Property at path 'nested>dream0>dream1>fake' do not exists");
+			expect(error).toBeNull();
 			done();
 		});
 	});
@@ -409,7 +497,7 @@ describe("ChromeDataStore", () => {
 		const newValue = "Bazinga!";
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.saveProperty<string>(storageLocation, relativePath, newValue);
+		const promise: Promise<Foo> = chromeDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -418,7 +506,7 @@ describe("ChromeDataStore", () => {
 			done();
 
 		}, error => {
-			expect(error).toEqual("No root key 'nested' found");
+			expect(error).toEqual("Cannot save property to a storage type 'vector'");
 			done();
 		});
 
@@ -438,7 +526,7 @@ describe("ChromeDataStore", () => {
 		promise.then(() => {
 
 			expect(CHROME_STORAGE_STUB).toEqual(otherData);
-			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(2);
+			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
 			done();
 
 		}, error => {
@@ -473,11 +561,8 @@ describe("ChromeDataStore", () => {
 	it("should reject clear data", (done: Function) => {
 
 		// Given
-		const fetchDataNotCleared: Foo[] = [{
-			bar: "john doe"
-		}];
-
-		spyOn(chromeDataStore, "fetch").and.returnValue(Promise.resolve(fetchDataNotCleared));
+		const expectedChromeError = {message: "Houston we have a problem"};
+		browserStorageErrorSpy.and.returnValue(expectedChromeError);
 
 		// When
 		const promise: Promise<void> = chromeDataStore.clear(storageLocation);
@@ -488,7 +573,7 @@ describe("ChromeDataStore", () => {
 			done();
 
 		}, error => {
-			expect(error).toEqual("Unable to clear data on storage location: " + JSON.stringify(storageLocation));
+			expect(error).toEqual(expectedChromeError.message);
 			done();
 		});
 	});
