@@ -16,15 +16,6 @@ export class MockedDataStore<T> extends DataStore<T> {
 		}
 	}
 
-	public fetch(storageLocation: StorageLocationModel): Promise<T[] | T> {
-		return Promise.resolve(this.dataStore);
-	}
-
-	public save(storageLocation: StorageLocationModel, value: T[] | T): Promise<T[] | T> {
-		this.dataStore = value;
-		return this.fetch(storageLocation);
-	}
-
 	public clear(storageLocation: StorageLocationModel): Promise<void> {
 		if (this.dataStore instanceof Array) {
 			this.dataStore = [];
@@ -34,29 +25,30 @@ export class MockedDataStore<T> extends DataStore<T> {
 		return Promise.resolve();
 	}
 
-	public saveProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V): Promise<T> {
+	public fetch(storageLocation: StorageLocationModel, query: Partial<T> | string | string[], defaultStorageValue: T[] | T): Promise<T[] | T> {
+		return Promise.resolve(this.dataStore);
+	}
 
-		const isNestedPath: boolean = (path instanceof Array && path.length > 0);
-		const rootKey: string = (isNestedPath) ? path[0] : path as string;
-		const hasRootKey = (rootKey && _.has(this.dataStore, rootKey));
+	public save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T> {
+		this.dataStore = value;
+		return this.fetch(storageLocation, null, defaultStorageValue);
+	}
 
-		if (!hasRootKey) {
-			return Promise.reject("No root key '" + rootKey + "' found");
-		}
+	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
 
-		// Update store
-		if (isNestedPath) {
-			try {
-				this.dataStore = DataStore.setAtPath(this.dataStore, path as string[], value);
-			} catch (error) {
-				return Promise.reject(error.message);
+		return this.fetch(storageLocation, null, defaultStorageValue).then((dataStore: T[] | T) => {
+
+			if (_.isArray(dataStore)) {
+				return Promise.reject("Cannot save property to a storage type 'vector'");
 			}
 
-		} else {
-			this.dataStore[rootKey] = value;
-		}
+			dataStore = _.set(dataStore as Object, path, value) as T;
 
-		return Promise.resolve(<T> this.dataStore);
+			return this.save(storageLocation, dataStore, defaultStorageValue).then((dataStoreSaved: T[] | T) => {
+				return Promise.resolve(<T> dataStoreSaved);
+			});
+		});
+
 	}
 
 	public initWithVector(vector?: T[]) {
