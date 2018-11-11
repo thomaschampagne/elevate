@@ -18,24 +18,28 @@ export abstract class DataStore<T> {
 
 	/**
 	 * Fetch all data
-	 * @param storageLocation
+	 * @param storageLocation {StorageLocationModel} location
+	 * @param query Pass null to query all
+	 * @param defaultStorageValue
 	 */
-	abstract fetch(storageLocation: StorageLocationModel): Promise<T[] | T>;
+	abstract fetch(storageLocation: StorageLocationModel, query: Partial<T> | string | string[], defaultStorageValue: T[] | T): Promise<T[] | T>;
 
 	/**
 	 * Save and replace all data
 	 * @param storageLocation
 	 * @param value
+	 * @param defaultStorageValue
 	 */
-	abstract save(storageLocation: StorageLocationModel, value: T[] | T): Promise<T[] | T>;
+	abstract save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T>;
 
 	/**
-	 * Save a specific property of data handled at path (assuming path exists)
+	 * Update or insert a specific property of data handled at given path (create path if needed)
 	 * @param storageLocation
 	 * @param path
 	 * @param value
+	 * @param defaultStorageValue
 	 */
-	abstract saveProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V): Promise<T>;
+	abstract upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T>;
 
 	/**
 	 * Clear all data

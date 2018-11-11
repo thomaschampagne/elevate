@@ -8,9 +8,14 @@ import { StorageLocationModel } from "../../data-store/storage-location.model";
 export class ActivityDao extends BaseDao<SyncedActivityModel> {
 
 	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel(AppStorageType.LOCAL, "syncedActivities");
+	public static readonly DEFAULT_STORAGE_VALUE: SyncedActivityModel[] = [];
 
-	public init(): void {
-		this.storageLocation = ActivityDao.STORAGE_LOCATION;
+	public getStorageLocation(): StorageLocationModel {
+		return ActivityDao.STORAGE_LOCATION;
+	}
+
+	public getDefaultStorageValue(): SyncedActivityModel[] | SyncedActivityModel {
+		return ActivityDao.DEFAULT_STORAGE_VALUE;
 	}
 
 	/**
