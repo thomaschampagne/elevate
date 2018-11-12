@@ -38,31 +38,31 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 
 	public ngOnInit(): void {
 
-		// Load user zones config
-		this.userSettingsService.fetch().then((userSettingsSynced: UserSettingsModel) => {
+		// Check zoneValue provided in URL
+		this.routeParamsSubscription = this.route.params.subscribe(routeParams => {
 
-			// Load user zones data
-			this.userZonesModel = UserZonesModel.asInstance(userSettingsSynced.zones);
+			// Load user zones config
+			this.userSettingsService.fetch().then((userSettingsSynced: UserSettingsModel) => {
 
-			// Check zoneValue provided in URL
-			this.routeParamsSubscription = this.route.params.subscribe(routeParams => {
+				// Load user zones data
+				this.userZonesModel = UserZonesModel.asInstance(userSettingsSynced.zones);
 
 				let zoneDefinition: ZoneDefinitionModel = null;
 
 				const hasZoneValueInRoute = !_.isEmpty(routeParams.zoneValue);
 
 				if (hasZoneValueInRoute && _.has(userSettingsData.zones, routeParams.zoneValue)) {
-
 					zoneDefinition = this.getZoneDefinitionFromZoneValue(routeParams.zoneValue);
-
 				} else {
 					this.navigateToZone(ZonesSettingsComponent.DEFAULT_ZONE_VALUE);
 					return;
 				}
 
 				try {
+
 					this.loadZonesFromDefinition(zoneDefinition);
-				} catch (e) {
+
+				} catch (error) {
 					const snackBarRef = this.snackBar.open("Your zones are corrupted. Reset your settings from advanced menu.", "Go to advanced menu", {
 						verticalPosition: "top"
 					});
