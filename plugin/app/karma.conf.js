@@ -33,10 +33,10 @@ module.exports = function (config) {
 		logLevel: config.LOG_INFO,
 		autoWatch: true,
 		browsers: [
-			"Chrome"
+			"HeadlessChrome"
 		],
 		customLaunchers: {
-			ChromeHeadless: { // See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
+			HeadlessChrome: { // See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
 				base: "Chrome",
 				flags: [
 					"--no-sandbox",
