@@ -1,7 +1,6 @@
 module.exports = function (config) {
 	config.set({
 		basePath: "./",
-		browsers: ["Chrome"],
 		frameworks: ["jasmine", "promise"],
 		reporters: ["progress", "spec"],
 		plugins: [
@@ -11,8 +10,11 @@ module.exports = function (config) {
 			"karma-chrome-launcher",
 			"karma-spec-reporter"
 		],
+		browsers: [
+			"HeadlessChrome"
+		],
 		customLaunchers: {
-			ChromeHeadless: {
+			HeadlessChrome: {
 				base: "Chrome",
 				flags: [
 					"--no-sandbox",
@@ -62,6 +64,7 @@ module.exports = function (config) {
 			showSpecTiming: true,      		// print the time elapsed for each spec
 			failFast: false              	// test would finish with error when a first fail occurs.
 		},
+		autoWatch: true,
 		colors: true,
 		singleRun: false,
 		browserConsoleLogOptions: {
