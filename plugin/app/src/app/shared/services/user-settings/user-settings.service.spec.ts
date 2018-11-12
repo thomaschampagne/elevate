@@ -69,7 +69,7 @@ describe("UserSettingsService", () => {
 		const expectedSettings: UserSettingsModel = _.cloneDeep(userSettingsData);
 		expectedSettings.displayAdvancedHrData = displayAdvancedHrData;
 
-		const savePropertyDaoSpy = spyOn(userSettingsService.userSettingsDao, "saveProperty")
+		const savePropertyDaoSpy = spyOn(userSettingsService.userSettingsDao, "upsertProperty")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
@@ -103,7 +103,7 @@ describe("UserSettingsService", () => {
 		const expectedSettings: UserSettingsModel = _.cloneDeep(userSettingsData);
 		expectedSettings.athleteModel.athleteSettings.lthr.default = value;
 
-		const savedNestedDaoSpy = spyOn(userSettingsService.userSettingsDao, "saveProperty")
+		const savedNestedDaoSpy = spyOn(userSettingsService.userSettingsDao, "upsertProperty")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
@@ -135,7 +135,7 @@ describe("UserSettingsService", () => {
 		const expectedSettings = _.cloneDeep(userSettingsData);
 		expectedSettings.localStorageMustBeCleared = true;
 
-		const savePropertyDaoSpy = spyOn(userSettingsService.userSettingsDao, "saveProperty")
+		const savePropertyDaoSpy = spyOn(userSettingsService.userSettingsDao, "upsertProperty")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
@@ -182,7 +182,7 @@ describe("UserSettingsService", () => {
 		const serializedZones = UserZonesModel.serialize(TO_BE_SAVED_ZONES);
 		settings.zones.speed = serializedZones;
 
-		const saveNestedPropertyDaoSpy = spyOn(userSettingsService.userSettingsDao, "saveProperty")
+		const upsertNestedPropertyDaoSpy = spyOn(userSettingsService.userSettingsDao, "upsertProperty")
 			.and.returnValue(Promise.resolve(settings));
 
 		// When
@@ -193,8 +193,8 @@ describe("UserSettingsService", () => {
 
 			expect(savedZones).not.toBeNull();
 			expect(savedZones).toEqual(TO_BE_SAVED_ZONES);
-			expect(saveNestedPropertyDaoSpy).toHaveBeenCalledTimes(1);
-			expect(saveNestedPropertyDaoSpy).toHaveBeenCalledWith(["zones", "speed"], serializedZones);
+			expect(upsertNestedPropertyDaoSpy).toHaveBeenCalledTimes(1);
+			expect(upsertNestedPropertyDaoSpy).toHaveBeenCalledWith(["zones", "speed"], serializedZones);
 
 			done();
 
