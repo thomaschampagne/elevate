@@ -153,6 +153,7 @@ export class GlobalSettingsService {
 			title: "Revive Google Maps on activities",
 			labels: ["All"],
 			enableSubOption: ["reviveGoogleMapsLayerType"],
+			hidden: true, // Google map feature marked as hidden until it come back
 		}, {
 			key: "reviveGoogleMapsLayerType",
 			type: "list",
@@ -171,6 +172,7 @@ export class GlobalSettingsService {
 				name: "Terrain",
 			}],
 			title: "Default Google Maps layer type",
+			hidden: true, // Google map feature marked as hidden until it come back
 		}, {
 			key: "displayActivityBestSplits",
 			type: "checkbox",
