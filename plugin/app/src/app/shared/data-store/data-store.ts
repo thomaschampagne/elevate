@@ -19,8 +19,8 @@ export abstract class DataStore<T> {
 	/**
 	 * Fetch all data
 	 * @param storageLocation {StorageLocationModel} location
-	 * @param query Pass null to query all
-	 * @param defaultStorageValue
+	 * @param query pass object with keys to fetch, or array of key, or single key, or null to fetch all
+	 * @param defaultStorageValue default value returned if no data found
 	 */
 	abstract fetch(storageLocation: StorageLocationModel, query: Partial<T> | string | string[], defaultStorageValue: T[] | T): Promise<T[] | T>;
 
@@ -33,8 +33,8 @@ export abstract class DataStore<T> {
 	abstract save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T>;
 
 	/**
-	 * Update or insert a specific property of data handled at given path (create path if needed)
-	 * @param storageLocation
+	 * Update or insert a specific property at given path. Path is created if unknown.
+	 * @param storageLocation {StorageLocationModel} location
 	 * @param path
 	 * @param value
 	 * @param defaultStorageValue
