@@ -18,7 +18,7 @@ import { DonateComponent } from "../donate/donate.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
-import { SyncDao } from "./dao/sync/sync.dao";
+import { LastSyncDateTimeDao } from "./dao/sync/last-sync-date-time.dao";
 import { SyncService } from "./services/sync/sync.service";
 import { ImportBackupDialogComponent } from "./dialogs/import-backup-dialog/import-backup-dialog.component";
 import { ShareComponent } from "../share/share.component";
@@ -80,7 +80,7 @@ const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
 	providers: [
 		ChromeDataStoreProvider,
 		SyncService,
-		SyncDao,
+		LastSyncDateTimeDao,
 		UserSettingsService,
 		UserSettingsDao,
 		DatedAthleteSettingsService,

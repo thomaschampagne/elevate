@@ -104,7 +104,7 @@ describe("BaseDao", () => {
 		});
 	});
 
-	it("should fetch data", (done: Function) => {
+	it("should fetch data as vector", (done: Function) => {
 
 		// Given,  When
 		const promise: Promise<Foo[]> = <Promise<Foo[]>> baseDao.fetch();
@@ -112,6 +112,27 @@ describe("BaseDao", () => {
 		// Then
 		promise.then(() => {
 
+			expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
+			expect(dataStoreFetchSpy).toHaveBeenCalledTimes(1);
+			done();
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
+	it("should fetch data as object", (done: Function) => {
+
+		// Given
+		mockedDataStore.initWithObject({
+			bar: "john doe"
+		});
+
+		// When
+		const promise: Promise<Foo> = <Promise<Foo>> baseDao.fetch();
+
+		// Then
+		promise.then(() => {
 			expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
 			expect(dataStoreFetchSpy).toHaveBeenCalledTimes(1);
 			done();
