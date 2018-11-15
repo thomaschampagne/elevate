@@ -6,11 +6,10 @@ export class MockedDataStore<T> extends DataStore<T> {
 
 	public dataStore: T[] | T;
 
-	constructor(initObject?: T[] | T) {
+	constructor(initValue?: T[] | T) {
 		super();
-
-		if (initObject) {
-			this.dataStore = initObject;
+		if (!_.isUndefined(initValue)) {
+			this.dataStore = initValue;
 		} else {
 			this.initWithVector();
 		}
