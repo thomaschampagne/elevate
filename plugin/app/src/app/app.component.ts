@@ -23,15 +23,11 @@ import { ExternalUpdatesService } from "./shared/services/external-updates/exter
 import { SyncResultModel } from "@elevate/shared/models";
 import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
 
-// TODO:FEAT @YearProgress Add Trimp progress EZ !!
-// TODO:FEAT @YearProgress Support Progress last year in graph (https://github.com/thomaschampagne/elevate/issues/484)
-// TODO: LoggerService
-
 class MenuItemModel {
-	name: string;
-	icon: string;
-	routerLink: string;
-	routerLinkActive: boolean;
+	public name: string;
+	public icon: string;
+	public routerLink: string;
+	public routerLinkActive: boolean;
 }
 
 @Component({
