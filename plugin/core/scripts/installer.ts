@@ -317,7 +317,7 @@ class Installer {
 
 			console.log("Migrate to 6.7.0");
 
-			promise = AppStorage.getInstance().get<DatedAthleteSettingsModel[]>(AppStorageType.LOCAL, DatedAthleteSettingsDao.DATED_ATHLETE_SETTINGS_KEY)
+			promise = AppStorage.getInstance().get<DatedAthleteSettingsModel[]>(AppStorageType.LOCAL, DatedAthleteSettingsDao.STORAGE_LOCATION.key)
 				.then((localDatedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
 
 					if (_.isEmpty(localDatedAthleteSettingsModels)) {
@@ -332,7 +332,7 @@ class Installer {
 								new DatedAthleteSettingsModel(null, athleteSettings)
 							];
 
-							return AppStorage.getInstance().set(AppStorageType.LOCAL, DatedAthleteSettingsDao.DATED_ATHLETE_SETTINGS_KEY, datedAthleteSettings).then(() => {
+							return AppStorage.getInstance().set(AppStorageType.LOCAL, DatedAthleteSettingsDao.STORAGE_LOCATION.key, datedAthleteSettings).then(() => {
 								return AppStorage.getInstance().set(AppStorageType.SYNC, "hasDatedAthleteSettings", true);
 							});
 
