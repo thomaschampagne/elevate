@@ -92,7 +92,7 @@ describe("ActivityComputer", () => {
 
 		expect(result.powerData.hasPowerMeter).toEqual(false);
 		expect(result.powerData.avgWatts.toString()).toMatch(/^210.68/);
-		expect(result.powerData.weightedPower.toString()).toMatch(/^235.59/);
+		expect(result.powerData.weightedPower.toString()).toMatch(/^244.66/);
 
 		expect(result.heartRateData.TRIMP.toString()).toMatch(/^228.48086657/);
 		expect(result.heartRateData.TRIMPPerHour.toString()).toMatch(/^134.2688736/);
