@@ -395,6 +395,7 @@ export class YearProgressService {
 	 * @param yearProgressPresetModel
 	 */
 	public addPreset(yearProgressPresetModel: YearProgressPresetModel): Promise<YearProgressPresetModel[]> {
+
 		return (<Promise<YearProgressPresetModel[]>> this.yearProgressPresetDao.fetch().then((models: YearProgressPresetModel[]) => {
 
 			const existingModel = _.find(models, {

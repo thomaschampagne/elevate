@@ -21,7 +21,7 @@ export class AddYearProgressPresetsDialogComponent implements OnInit {
 	public yearProgressPresetModel: YearProgressPresetModel;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public dialogData: AddYearProgressPresetsDialogData,
-				public dialogRef: MatDialogRef<AddYearProgressPresetsDialogData>,
+				public dialogRef: MatDialogRef<AddYearProgressPresetsDialogComponent>,
 				public yearProgressService: YearProgressService,
 				public snackBar: MatSnackBar) {
 	}
