@@ -299,14 +299,14 @@ export class YearProgressComponent implements OnInit {
 			data: addYearProgressPresetsDialogData
 		});
 
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((savedYearProgressPresetModel: YearProgressPresetModel) => {
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((yearProgressPresetModel: YearProgressPresetModel) => {
 
 			this.updateYearProgressPresetsCount();
 
-			if (savedYearProgressPresetModel) {
+			if (yearProgressPresetModel) {
 
-				if (_.isNumber(savedYearProgressPresetModel.targetValue)) {
-					this.persistTargetValuePref(savedYearProgressPresetModel.targetValue);
+				if (_.isNumber(yearProgressPresetModel.targetValue)) {
+					this.persistTargetValuePref(yearProgressPresetModel.targetValue);
 				} else {
 					this.removeTargetValuePref();
 				}
