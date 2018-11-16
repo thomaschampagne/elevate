@@ -37,7 +37,7 @@ export class DatedAthleteSettingsService {
 
 		return this.validateSingle(datedAthleteSettings).then(() => {
 
-			return this.datedAthleteSettingsDao.fetch();
+			return this.fetch();
 
 		}).then((datedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
 
@@ -61,9 +61,7 @@ export class DatedAthleteSettingsService {
 				datedAthleteSettingsModels.push(defaultForeverDatedAthleteSettings);
 			}
 
-			return this.validate(datedAthleteSettingsModels).then(() => {
-				return this.datedAthleteSettingsDao.save(datedAthleteSettingsModels);
-			});
+			return this.save(datedAthleteSettingsModels);
 		});
 	}
 
@@ -74,7 +72,7 @@ export class DatedAthleteSettingsService {
 	 */
 	public save(datedAthleteSettingsModels: DatedAthleteSettingsModel[]): Promise<DatedAthleteSettingsModel[]> {
 		return this.validate(datedAthleteSettingsModels).then(() => {
-			return this.datedAthleteSettingsDao.save(datedAthleteSettingsModels);
+			return (<Promise<DatedAthleteSettingsModel[]>> this.datedAthleteSettingsDao.save(datedAthleteSettingsModels));
 		});
 	}
 
@@ -99,7 +97,7 @@ export class DatedAthleteSettingsService {
 
 		return this.validateSingle(datedAthleteSettings).then(() => {
 
-			return this.datedAthleteSettingsDao.fetch();
+			return this.fetch();
 
 		}).then((datedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
 
@@ -123,9 +121,7 @@ export class DatedAthleteSettingsService {
 			// Replace with settings given by the user
 			datedAthleteSettingsModels[indexOfSettingsToEdit] = datedAthleteSettings;
 
-			return this.validate(datedAthleteSettingsModels).then(() => {
-				return this.datedAthleteSettingsDao.save(datedAthleteSettingsModels);
-			});
+			return this.save(datedAthleteSettingsModels);
 		});
 	}
 
@@ -136,7 +132,7 @@ export class DatedAthleteSettingsService {
 	 */
 	public remove(sinceIdentifier: string): Promise<DatedAthleteSettingsModel[]> {
 
-		return this.datedAthleteSettingsDao.fetch().then((datedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
+		return this.fetch().then((datedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
 
 			if (_.isNull(sinceIdentifier)) {
 				return Promise.reject(new AppError(AppError.DATED_ATHLETE_SETTINGS_FOREVER_MUST_EXISTS,
@@ -153,9 +149,7 @@ export class DatedAthleteSettingsService {
 			// Remove dated athlete settings
 			datedAthleteSettingsModels.splice(indexOfSettingsToRemove, 1);
 
-			return this.validate(datedAthleteSettingsModels).then(() => {
-				return this.datedAthleteSettingsDao.save(datedAthleteSettingsModels);
-			});
+			return this.save(datedAthleteSettingsModels);
 		});
 	}
 
