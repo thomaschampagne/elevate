@@ -9,4 +9,5 @@ export class AppRoutesModel {
 	public static readonly share: string = "share";
 	public static readonly report: string = "report";
 	public static readonly advancedMenu: string = "advancedMenu";
+	public static readonly frequentlyAskedQuestions: string = "frequentlyAskedQuestions";
 }

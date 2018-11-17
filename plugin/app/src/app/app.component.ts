@@ -292,6 +292,10 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.router.navigate([AppRoutesModel.report]);
 	}
 
+	public onShowFaq(): void {
+		this.router.navigate([AppRoutesModel.frequentlyAskedQuestions]);
+	}
+
 	public onShowAbout(): void {
 		this.dialog.open(AboutDialogComponent, {
 			minWidth: AboutDialogComponent.MIN_WIDTH,
@@ -327,5 +331,4 @@ export class AppComponent implements OnInit, OnDestroy {
 	public ngOnDestroy(): void {
 		this.routerEventsSubscription.unsubscribe();
 	}
-
 }

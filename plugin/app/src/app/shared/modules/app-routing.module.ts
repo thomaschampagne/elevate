@@ -7,6 +7,7 @@ import { DonateComponent } from "../../donate/donate.component";
 import { ShareComponent } from "../../share/share.component";
 import { ReportComponent } from "../../report/report.component";
 import { AdvancedMenuComponent } from "../../advanced-menu/advanced-menu.component";
+import { FaqComponent } from "../../faq/faq.component";
 
 const routes: Routes = [
 	{
@@ -52,6 +53,10 @@ const routes: Routes = [
 	{
 		path: AppRoutesModel.advancedMenu,
 		component: AdvancedMenuComponent
+	},
+	{
+		path: AppRoutesModel.frequentlyAskedQuestions,
+		component: FaqComponent
 	},
 	{
 		path: "", redirectTo: AppRoutesModel.fitnessTrend, pathMatch: "full"
