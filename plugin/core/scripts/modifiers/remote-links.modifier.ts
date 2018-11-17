@@ -31,8 +31,7 @@ export class RemoteLinksModifier extends AbstractModifier {
 	public modifyActivityPage(): void {
 
 		const remoteViewActivityLinksArray: string[][] = [
-			["VeloViewer", "http://veloviewer.com/activities/", "?referrer=elevate", ""],
-			["Surface", "http://strava-tools.raceshape.com/erea/?url=", "", ""],
+			["VeloViewer", "http://veloviewer.com/activities/", "?referrer=elevate", ""]
 		];
 
 		// Activity page
