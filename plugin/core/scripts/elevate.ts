@@ -37,6 +37,7 @@ import {
 	RunningHeartRateModifier,
 	RunningTemperatureModifier,
 } from "./modifiers/running-data.modifier";
+import { RunningAnalysisGraph } from "./modifiers/running-analysis-graph.modifier";
 import { SegmentRankPercentageModifier } from "./modifiers/segment-rank-percentage.modifier";
 import { SegmentRecentEffortsHRATimeModifier } from "./modifiers/segment-recent-efforts-hratime.modifier";
 import { VirtualPartnerModifier } from "./modifiers/virtual-partner.modifier";
@@ -148,6 +149,7 @@ export class Elevate {
 			this.handleRunningHeartRate();
 			this.handleRunningCadence();
 			this.handleRunningTemperature();
+			this.handleRunningAnalysisGraph();
 
 			// All activities
 			this.handleActivityQRCodeDisplay();
@@ -1026,6 +1028,30 @@ export class Elevate {
 		const runningTemperatureModifier: RunningTemperatureModifier = new RunningTemperatureModifier();
 		runningTemperatureModifier.modify();
 	}
+
+	protected handleRunningAnalysisGraph(): void {
+
+		if (_.isUndefined(window.pageView)) {
+			return;
+		}
+
+		// Avoid bike activity
+		if (window.pageView.activity().attributes.type != "Run") {
+			return;
+		}
+
+		if (!window.location.pathname.match(/^\/activities/)) {
+			return;
+		}
+
+		if (CoreEnv.debugMode) {
+			console.log("Execute handleRunningAnalysisGraph()");
+		}
+
+		const runningAnalysisGraph: RunningAnalysisGraph = new RunningAnalysisGraph();
+		runningAnalysisGraph.modify();
+	}
+
 
 	public handleActivityQRCodeDisplay(): void {
 
