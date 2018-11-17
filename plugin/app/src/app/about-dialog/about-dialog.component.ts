@@ -1,16 +1,15 @@
 import { Component, OnInit, VERSION as angularCoreVersion } from "@angular/core";
 import { VERSION as angularMaterialVersion } from "@angular/material";
 import * as d3 from "d3";
-import { AppUsageService } from "../shared/services/app-usage/app-usage.service";
 import { AppUsageDetails } from "../shared/models/app-usage-details.model";
-import { AppUsageDao } from "../shared/dao/app-usage/app-usage.dao";
 import { HttpClient } from "@angular/common/http";
+import { DataStore } from "../shared/data-store/data-store";
+import { AppStorageType } from "@elevate/shared/models";
 
 @Component({
 	selector: "app-about-dialog",
 	templateUrl: "./about-dialog.component.html",
-	styleUrls: ["./about-dialog.component.scss"],
-	providers: [AppUsageService, AppUsageDao]
+	styleUrls: ["./about-dialog.component.scss"]
 })
 export class AboutDialogComponent implements OnInit {
 
@@ -25,13 +24,13 @@ export class AboutDialogComponent implements OnInit {
 	public appUsageDetails: AppUsageDetails;
 	public prodVersion: string;
 
-	constructor(public appUsageService: AppUsageService,
+	constructor(public dataStore: DataStore<void>,
 				public httpClient: HttpClient) {
 	}
 
 	public ngOnInit(): void {
 
-		this.appUsageService.get().then((appUsageDetails: AppUsageDetails) => {
+		this.dataStore.getAppUsageDetails(AppStorageType.LOCAL).then((appUsageDetails: AppUsageDetails) => {
 			this.appUsageDetails = appUsageDetails;
 		});
 
@@ -45,7 +44,7 @@ export class AboutDialogComponent implements OnInit {
 		});
 	}
 
-	public getAppVersion(): string {
+	public getAppVersion(): string { // TODO Avoid use chrome directly !!
 		return chrome.runtime.getManifest().version_name;
 	}
 

@@ -4,16 +4,17 @@ import { AboutDialogComponent } from "./about-dialog.component";
 import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
 import { MatDialogRef } from "@angular/material";
-import { AppUsageService } from "../shared/services/app-usage/app-usage.service";
-import { AppUsageDao } from "../shared/dao/app-usage/app-usage.dao";
-import { AppUsageDetails } from "../shared/models/app-usage-details.model";
-import { AppUsage } from "../shared/models/app-usage.model";
+import { DataStore } from "../shared/data-store/data-store";
+import { MockedDataStore } from "../shared/data-store/impl/spec/mocked-data-store.service";
 
 describe("AboutDialogComponent", () => {
 	let component: AboutDialogComponent;
 	let fixture: ComponentFixture<AboutDialogComponent>;
 
 	beforeEach((done: Function) => {
+
+		const mockedDataStore: MockedDataStore<void> = new MockedDataStore();
+
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -23,8 +24,7 @@ describe("AboutDialogComponent", () => {
 				{
 					provide: MatDialogRef, useValue: {},
 				},
-				AppUsageService,
-				AppUsageDao
+				{provide: DataStore, useValue: mockedDataStore}
 			]
 		}).compileComponents();
 		done();
@@ -37,12 +37,6 @@ describe("AboutDialogComponent", () => {
 		const version = "1.0.0";
 		spyOn(component, "getAppVersion").and.returnValue(version);
 		spyOn(component, "getProdAppVersion").and.returnValue(Promise.resolve(version));
-
-		const bytes = 1024;
-		const appUsage = new AppUsage(bytes, 4096);
-		const megaBytesInUse = bytes / (1024 * 1024);
-		const percentageUsage = 25;
-		spyOn(component.appUsageService, "get").and.returnValue(Promise.resolve(new AppUsageDetails(appUsage, megaBytesInUse, percentageUsage)));
 
 		fixture.detectChanges();
 

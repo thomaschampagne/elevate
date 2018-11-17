@@ -1,4 +1,6 @@
 import { StorageLocationModel } from "./storage-location.model";
+import { AppStorageType } from "@elevate/shared/models";
+import { AppUsageDetails } from "../models/app-usage-details.model";
 
 export abstract class DataStore<T> {
 
@@ -32,4 +34,10 @@ export abstract class DataStore<T> {
 	 * @param storageLocation
 	 */
 	abstract clear(storageLocation: StorageLocationModel): Promise<void>;
+
+	/**
+	 * Provide app usage
+	 * @param type
+	 */
+	abstract getAppUsageDetails(type: AppStorageType): Promise<AppUsageDetails>;
 }
