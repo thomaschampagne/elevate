@@ -24,7 +24,7 @@ export class OptionHelperDialogComponent implements OnInit {
 	public static readonly MIN_WIDTH: string = "40%";
 
 	public html: SafeHtml;
-	public markDownParser: MarkDownIt.MarkdownIt;
+	public markDownParser: MarkDownIt;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public dialogData: OptionHelperDataModel,
 				public domSanitizer: DomSanitizer) {
