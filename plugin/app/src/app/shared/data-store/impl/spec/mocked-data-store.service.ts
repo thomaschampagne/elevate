@@ -1,6 +1,9 @@
 import { DataStore } from "../../data-store";
 import { StorageLocationModel } from "../../storage-location.model";
 import * as _ from "lodash";
+import { AppUsage } from "../../../models/app-usage.model";
+import { AppStorageType } from "@elevate/shared/models";
+import { AppUsageDetails } from "../../../models/app-usage-details.model";
 
 export class MockedDataStore<T> extends DataStore<T> {
 
@@ -48,6 +51,17 @@ export class MockedDataStore<T> extends DataStore<T> {
 			});
 		});
 
+	}
+
+	public getAppUsageDetails(type: AppStorageType): Promise<AppUsageDetails> {
+
+		const CHROME_QUOTA_BYTES = 1024;
+		const CHROME_BYTES_IN_USE = 512;
+
+		const appUsage: AppUsage = new AppUsage(CHROME_BYTES_IN_USE, CHROME_QUOTA_BYTES);
+
+		return Promise.resolve(new AppUsageDetails(appUsage, CHROME_BYTES_IN_USE / (1024 * 1024),
+			CHROME_BYTES_IN_USE / CHROME_QUOTA_BYTES * 100));
 	}
 
 	public initWithVector(vector?: T[]) {

@@ -3,6 +3,8 @@ import { AppStorageType } from "@elevate/shared/models";
 import { DataStore } from "../data-store";
 import { StorageLocationModel } from "../storage-location.model";
 import * as _ from "lodash";
+import { AppUsage } from "../../models/app-usage.model";
+import { AppUsageDetails } from "../../models/app-usage-details.model";
 
 @Injectable()
 export class ChromeDataStore<T> extends DataStore<T> {
@@ -111,6 +113,36 @@ export class ChromeDataStore<T> extends DataStore<T> {
 					}
 				});
 			}
+		});
+	}
+
+	/**
+	 *
+	 * @param type
+	 */
+	public getAppUsageDetails(type: AppStorageType): Promise<AppUsageDetails> {
+
+		return new Promise<AppUsageDetails>((resolve) => {
+
+
+			let chromeStorageArea;
+			let quotaBytes;
+
+			if (type === AppStorageType.SYNC) {
+				chromeStorageArea = this.chromeSyncStorageArea();
+				quotaBytes = chromeStorageArea.QUOTA_BYTES;
+			} else {
+				chromeStorageArea = this.chromeLocalStorageArea();
+				quotaBytes = chromeStorageArea.QUOTA_BYTES;
+			}
+
+			chromeStorageArea.getBytesInUse((bytesInUse: number) => {
+				const appUsage = new AppUsage(bytesInUse, quotaBytes);
+				const megaBytesInUse = appUsage.bytesInUse / (1024 * 1024);
+				const percentUsage = appUsage.bytesInUse / appUsage.quotaBytes * 100;
+				const appUsageDetails: AppUsageDetails = new AppUsageDetails(appUsage, megaBytesInUse, percentUsage);
+				resolve(appUsageDetails);
+			});
 		});
 	}
 

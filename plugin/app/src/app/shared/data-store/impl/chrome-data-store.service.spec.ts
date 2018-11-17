@@ -3,6 +3,8 @@ import { ChromeDataStore } from "./chrome-data-store.service";
 import { AppStorageType } from "@elevate/shared/models";
 import { StorageLocationModel } from "../storage-location.model";
 import * as _ from "lodash";
+import { AppUsage } from "../../models/app-usage.model";
+import { AppUsageDetails } from "../../models/app-usage-details.model";
 
 describe("ChromeDataStore", () => {
 
@@ -24,6 +26,8 @@ describe("ChromeDataStore", () => {
 	let browserStorageLocalSpy: jasmine.Spy;
 	let browserStorageErrorSpy: jasmine.Spy;
 
+	const CHROME_QUOTA_BYTES = 1024;
+	const CHROME_BYTES_IN_USE = 512;
 	let CHROME_STORAGE_STUB = {};
 	let DEFAULT_FOO: Foo;
 
@@ -76,6 +80,10 @@ describe("ChromeDataStore", () => {
 			clear: (callback: () => {}) => {
 				CHROME_STORAGE_STUB = {};
 				callback();
+			},
+			QUOTA_BYTES: CHROME_QUOTA_BYTES,
+			getBytesInUse: (callback: (bytesInUse: number) => {}) => {
+				callback(CHROME_BYTES_IN_USE);
 			}
 		};
 	};
@@ -574,6 +582,31 @@ describe("ChromeDataStore", () => {
 
 		}, error => {
 			expect(error).toEqual(expectedChromeError.message);
+			done();
+		});
+	});
+
+	it("should provide AppUsageDetails", (done: Function) => {
+
+		// Given
+		const appUsage: AppUsage = new AppUsage(CHROME_BYTES_IN_USE, CHROME_QUOTA_BYTES);
+
+		const expectedAppUsageDetails: AppUsageDetails = new AppUsageDetails(appUsage,
+			CHROME_BYTES_IN_USE / (1024 * 1024),
+			CHROME_BYTES_IN_USE / CHROME_QUOTA_BYTES * 100);
+
+		// When
+		const promise: Promise<AppUsageDetails> = chromeDataStore.getAppUsageDetails(AppStorageType.LOCAL);
+
+		// Then
+		promise.then((result: AppUsageDetails) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(expectedAppUsageDetails);
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
 			done();
 		});
 	});
