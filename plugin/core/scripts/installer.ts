@@ -13,7 +13,6 @@ import { Helper } from "./helper";
 import * as semver from "semver";
 import * as _ from "lodash";
 import { AppStorage } from "./app-storage";
-import { DatedAthleteSettingsDao } from "../../app/src/app/shared/dao/dated-athlete-settings/dated-athlete-settings.dao";
 import { Constant } from "@elevate/shared/constants";
 import { userSettingsData } from "@elevate/shared/data";
 
@@ -317,7 +316,7 @@ class Installer {
 
 			console.log("Migrate to 6.7.0");
 
-			promise = AppStorage.getInstance().get<DatedAthleteSettingsModel[]>(AppStorageType.LOCAL, DatedAthleteSettingsDao.STORAGE_LOCATION.key)
+			promise = AppStorage.getInstance().get<DatedAthleteSettingsModel[]>(AppStorageType.LOCAL, "datedAthleteSettings")
 				.then((localDatedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
 
 					if (_.isEmpty(localDatedAthleteSettingsModels)) {
@@ -332,7 +331,7 @@ class Installer {
 								new DatedAthleteSettingsModel(null, athleteSettings)
 							];
 
-							return AppStorage.getInstance().set(AppStorageType.LOCAL, DatedAthleteSettingsDao.STORAGE_LOCATION.key, datedAthleteSettings).then(() => {
+							return AppStorage.getInstance().set(AppStorageType.LOCAL, "datedAthleteSettings", datedAthleteSettings).then(() => {
 								return AppStorage.getInstance().set(AppStorageType.SYNC, "hasDatedAthleteSettings", true);
 							});
 

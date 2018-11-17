@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { AppStorageType, DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { BaseDao } from "../base.dao";
 import { StorageLocationModel } from "../../data-store/storage-location.model";
+import { AppStorageType, DatedAthleteSettingsModel } from "@elevate/shared/models";
 
 @Injectable()
 export class DatedAthleteSettingsDao extends BaseDao<DatedAthleteSettingsModel> {
