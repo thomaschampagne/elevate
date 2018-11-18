@@ -112,7 +112,7 @@ export class GoalsModifier extends AbstractModifier {
 			$view, scaledGoal, actual, weekProgress);
 		this.labelProgressBar(bar, "this week");
 		$view.append(bar);
-	};
+	}
 
 	/**
 	 * Determine the current week number.
@@ -135,7 +135,7 @@ export class GoalsModifier extends AbstractModifier {
 			counter.setDate(counter.getDate() + 7);
 		}
 		return week;
-	};
+	}
 
 	/**
 	 * Determine the number of weeks in the current year.
@@ -153,7 +153,7 @@ export class GoalsModifier extends AbstractModifier {
 			counter.setDate(counter.getDate() + 7);
 		}
 		return week;
-	};
+	}
 
 	/**
 	 * Add a progress bar for monthly progress.
@@ -214,7 +214,7 @@ export class GoalsModifier extends AbstractModifier {
 			][now.getMonth()],
 		);
 		$view.append(bar);
-	};
+	}
 
 	/**
 	 * Get activities since the start of the current month.
@@ -264,7 +264,7 @@ export class GoalsModifier extends AbstractModifier {
 			};
 			request(1);
 		});
-	};
+	}
 
 	/**
 	 * Calculate the athletes actual activity.
@@ -302,7 +302,7 @@ export class GoalsModifier extends AbstractModifier {
 			}
 		}
 		return actual;
-	};
+	}
 
 	/**
 	 * Find current goal by inspecting a .js-edit element.
@@ -347,7 +347,7 @@ export class GoalsModifier extends AbstractModifier {
 			value: goalNumeric,
 			units: goalUnits,
 		};
-	};
+	}
 
 	/**
 	 * Find the firts progress bar in a .js-view element.
@@ -357,7 +357,7 @@ export class GoalsModifier extends AbstractModifier {
 			.find("[id$=\"-yearly-progress-container\"]")
 			.first()
 			;
-	};
+	}
 
 	/**
 	 * Create a new goal tracing progres bar.
@@ -424,7 +424,7 @@ export class GoalsModifier extends AbstractModifier {
 		);
 		this.updateProgressBarSVG($svg, goal, actual, progress);
 		return $container;
-	};
+	}
 
 	/**
 	 * Update the <svg> element of a progress bar.
@@ -479,7 +479,7 @@ export class GoalsModifier extends AbstractModifier {
 			.attr("x", markerX)
 			.attr("text-anchor", markerTextAnchor)
 		;
-	};
+	}
 
 	/*
      * Add a label to a progress bar.
@@ -496,7 +496,7 @@ export class GoalsModifier extends AbstractModifier {
 			.css("font-size", "0.6em")
 		;
 		$bar.find(".primary-stats").append($label);
-	};
+	}
 
 	/**
 	 * Format a goal, including units.
@@ -531,7 +531,7 @@ export class GoalsModifier extends AbstractModifier {
 			formattedUnits = "";
 		}
 		return `${formattedValue}${formattedUnits}`;
-	};
+	}
 }
 
 /**

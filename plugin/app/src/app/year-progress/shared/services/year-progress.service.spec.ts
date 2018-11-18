@@ -887,7 +887,7 @@ describe("YearProgressService", () => {
 				new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
 			];
 
-			const expectedErrorMessage = "You already saved this preset. You may load it instead.";
+			const expectedErrorMessage = "You already saved this preset.";
 
 			const fetchDaoSpy = spyOn(yearProgressService.yearProgressPresetDao, "fetch")
 				.and.returnValue(Promise.resolve(progressPresetModels));
@@ -926,7 +926,7 @@ describe("YearProgressService", () => {
 				new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
 			];
 
-			const expectedErrorMessage = "You already saved this preset. You may load it instead.";
+			const expectedErrorMessage = "You already saved this preset.";
 
 			const fetchDaoSpy = spyOn(yearProgressService.yearProgressPresetDao, "fetch")
 				.and.returnValue(Promise.resolve(progressPresetModels));

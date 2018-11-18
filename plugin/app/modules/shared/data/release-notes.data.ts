@@ -2,6 +2,25 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.8.0",
+		date: "2018-11-18",
+		message: "Added year progressions Targets & Presets. Added Analysis Graph for Running activities. And many improvements visible in release note...",
+		hotFixes: [],
+		features: [
+			"Added year progressions Targets & Presets: create presets with or without target along user defined sport types and settings.",
+			"Added Analysis Graph for Running activities."
+		],
+		isPatch: false,
+		fixes: [
+			"Improved weighted power calculation by using a new rolling window method.",
+			"Fixed bug where \"Best 20min Speed\" data-field (in extended stats) was incorrect using imperial units.",
+			"[Technical] Upgrade to angular v7, material v7 and NodeJS v10.",
+			"[Technical] Fully refactored the data access architecture to isolate persisted data from the code. Required task to save time for new features or create a standalone app (e.g. electron app).",
+			"[Technical] Refactored access to shared models between core & app.",
+			"Removed Google Maps feature: Unfortunately google maps is now too expensive to be integrated. Looking for solutions..."
+		]
+	},
+	{
 		version: "6.7.0",
 		date: "2018-10-25",
 		message: "Added chronological activity feed (activate feature from global settings). Added new data-field \"Best 60min heart rate\". This update also brings important improvements and fixes (details in release note).",

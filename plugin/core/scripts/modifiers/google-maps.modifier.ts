@@ -7,7 +7,7 @@ import * as Cookies from "js-cookie";
 
 export class GoogleMapsModifier extends AbstractModifier {
 
-	private static ENABLED: boolean = false; // Disabled at the moment (Not free any more). Both settings keys 'reviveGoogleMaps' & 'reviveGoogleMapsLayerType' are hidden in GlobalSettingsService
+	private static ENABLED = false; // Disabled at the moment (Not free any more). Both settings keys 'reviveGoogleMaps' & 'reviveGoogleMapsLayerType' are hidden in GlobalSettingsService
 
 	protected activityId: number;
 	protected appResources: AppResourcesModel;
