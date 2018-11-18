@@ -407,7 +407,7 @@ export class YearProgressService {
 			});
 
 			if (existingModel) {
-				return Promise.reject(new AppError(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS, "You already saved this preset. You may load it instead."));
+				return Promise.reject(new AppError(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS, "You already saved this preset."));
 			}
 
 			models.push(yearProgressPresetModel);
