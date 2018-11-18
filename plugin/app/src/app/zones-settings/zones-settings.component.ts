@@ -5,13 +5,11 @@ import { ZONE_DEFINITIONS } from "./zone-definitions";
 import { ZonesService } from "./shared/zones.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AppRoutesModel } from "../shared/models/app-routes.model";
-import { userSettingsData } from "../../../../core/scripts/shared/user-settings.data";
+import { UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
 import { Subscription } from "rxjs";
-import { UserZonesModel } from "../../../../core/scripts/shared/models/user-settings/user-zones.model";
-import { UserSettingsModel } from "../../../../core/scripts/shared/models/user-settings/user-settings.model";
-import { ZoneModel } from "../../../../core/scripts/shared/models/zone.model";
 import { MatSnackBar } from "@angular/material";
+import { userSettingsData } from "@elevate/shared/data";
 
 @Component({
 	selector: "app-zones-settings",
@@ -40,31 +38,31 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 
 	public ngOnInit(): void {
 
-		// Load user zones config
-		this.userSettingsService.fetch().then((userSettingsSynced: UserSettingsModel) => {
+		// Check zoneValue provided in URL
+		this.routeParamsSubscription = this.route.params.subscribe(routeParams => {
 
-			// Load user zones data
-			this.userZonesModel = UserZonesModel.asInstance(userSettingsSynced.zones);
+			// Load user zones config
+			this.userSettingsService.fetch().then((userSettingsSynced: UserSettingsModel) => {
 
-			// Check zoneValue provided in URL
-			this.routeParamsSubscription = this.route.params.subscribe(routeParams => {
+				// Load user zones data
+				this.userZonesModel = UserZonesModel.asInstance(userSettingsSynced.zones);
 
 				let zoneDefinition: ZoneDefinitionModel = null;
 
 				const hasZoneValueInRoute = !_.isEmpty(routeParams.zoneValue);
 
 				if (hasZoneValueInRoute && _.has(userSettingsData.zones, routeParams.zoneValue)) {
-
 					zoneDefinition = this.getZoneDefinitionFromZoneValue(routeParams.zoneValue);
-
 				} else {
 					this.navigateToZone(ZonesSettingsComponent.DEFAULT_ZONE_VALUE);
 					return;
 				}
 
 				try {
+
 					this.loadZonesFromDefinition(zoneDefinition);
-				} catch (e) {
+
+				} catch (error) {
 					const snackBarRef = this.snackBar.open("Your zones are corrupted. Reset your settings from advanced menu.", "Go to advanced menu", {
 						verticalPosition: "top"
 					});

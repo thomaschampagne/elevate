@@ -1,8 +1,8 @@
 import { AbstractModifier } from "./abstract.modifier";
 
 export class ActivityBikeOdoModifier extends AbstractModifier {
-	private bikeOdoArray: any;
-	private cacheKey: string;
+	private readonly bikeOdoArray: any;
+	private readonly cacheKey: string;
 
 	constructor(bikeOdoArray: any, cacheKey: string) {
 		super();

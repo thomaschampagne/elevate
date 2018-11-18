@@ -1,11 +1,8 @@
 import * as _ from "lodash";
 import { Helper } from "../../../helper";
 
-import { UserSettingsModel } from "../../../shared/models/user-settings/user-settings.model";
+import { ActivityBasicInfoModel, AnalysisDataModel, SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared/models";
 import { AbstractDataView } from "./abstract-data.view";
-import { AnalysisDataModel } from "../../../models/activity-data/analysis-data.model";
-import { ActivityBasicInfoModel } from "../../../models/activity-data/activity-basic-info.model";
-import { SpeedUnitDataModel } from "../../../models/activity-data/speed-unit-data.model";
 
 export class FeaturedDataView extends AbstractDataView {
 

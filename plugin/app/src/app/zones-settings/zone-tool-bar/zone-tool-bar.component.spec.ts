@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ZoneToolBarComponent } from "./zone-tool-bar.component";
-import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
-import { userSettingsData } from "../../../../../core/scripts/shared/user-settings.data";
+import { userSettingsData } from "@elevate/shared/data";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
+import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 
 describe("ZoneToolBarComponent", () => {
 
 	let component: ZoneToolBarComponent;
 	let fixture: ComponentFixture<ZoneToolBarComponent>;
-	let userSettingsDao: UserSettingsDao;
+	let userSettingsService: UserSettingsService;
 
 	const zoneSpeedDefinition: ZoneDefinitionModel[] = [{
 		name: "Cycling Speed",
@@ -40,14 +40,8 @@ describe("ZoneToolBarComponent", () => {
 			]
 		}).compileComponents();
 
-		userSettingsDao = TestBed.get(UserSettingsDao);
-
-		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
-			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(_.cloneDeep(userSettingsData));
-			}
-		});
-
+		userSettingsService = TestBed.get(UserSettingsService);
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
 		done();
 	});
 

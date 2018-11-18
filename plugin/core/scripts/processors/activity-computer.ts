@@ -2,28 +2,30 @@ import * as _ from "lodash";
 import { Helper } from "../helper";
 import { RunningPowerEstimator } from "./running-power-estimator";
 import { SplitCalculator } from "./split-calculator";
-import { ActivityStatsMapModel } from "../models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../models/activity-data/activity-streams.model";
-import { AnalysisDataModel } from "../models/activity-data/analysis-data.model";
-import { MoveDataModel } from "../models/activity-data/move-data.model";
-import { SpeedDataModel } from "../models/activity-data/speed-data.model";
-import { PaceDataModel } from "../models/activity-data/pace-data.model";
-import { GradeDataModel } from "../models/activity-data/grade-data.model";
-import { PowerDataModel } from "../models/activity-data/power-data.model";
-import { HeartRateDataModel } from "../models/activity-data/heart-rate-data.model";
-import { CadenceDataModel } from "../models/activity-data/cadence-data.model";
-import { ElevationDataModel } from "../models/activity-data/elevation-data.model";
-import { ZoneModel } from "../shared/models/zone.model";
-import { UpFlatDownSumTotalModel } from "../models/activity-data/up-flat-down-sum-total.model";
-import { UpFlatDownModel } from "../models/activity-data/up-flat-down.model";
-import { UpFlatDownSumCounterModel } from "../models/activity-data/up-flat-down-sum-counter.model";
-import { AscentSpeedDataModel } from "../models/activity-data/ascent-speed-data.model";
+import {
+	ActivityStatsMapModel,
+	ActivityStreamsModel,
+	AnalysisDataModel,
+	AscentSpeedDataModel,
+	AthleteModel,
+	AthleteSettingsModel,
+	CadenceDataModel,
+	ElevationDataModel,
+	Gender,
+	GradeDataModel,
+	HeartRateDataModel,
+	MoveDataModel,
+	PaceDataModel,
+	PowerDataModel,
+	SpeedDataModel,
+	UpFlatDownModel,
+	UpFlatDownSumCounterModel,
+	UpFlatDownSumTotalModel,
+	UserSettingsModel,
+	UserZonesModel,
+	ZoneModel
+} from "@elevate/shared/models";
 import { StreamVariationSplit } from "../models/stream-variation-split.model";
-import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
-import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
-import { Gender } from "../../../app/src/app/shared/models/athlete/gender.enum";
-import { AthleteSettingsModel } from "../../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
-import { UserZonesModel } from "../shared/models/user-settings/user-zones.model";
 
 export class ActivityComputer {
 
@@ -36,7 +38,7 @@ export class ActivityComputer {
 	public static readonly GRADE_PROFILE_FLAT: string = "FLAT";
 	public static readonly GRADE_PROFILE_HILLY: string = "HILLY";
 	public static readonly ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
-	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 60; // Seconds
+	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
 	public static readonly SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
 
 	protected athleteModel: AthleteModel;
@@ -645,64 +647,60 @@ export class ActivityComputer {
 		let durationInSeconds: number;
 		let totalMovingInSeconds = 0;
 
-		let timeWindowValue = 0;
-		let sumPowerTimeWindow: number[] = [];
-		const sum4thPower: number[] = [];
+		let rollingWindowSize = 0;
+		let rollingIndex = 0;
+		let sum4thPower = 0;
 
-		for (let i = 0; i < powerArray.length; i++) { // Loop on samples
+		let rollingSum = (powerArray.length > 0 ? powerArray[0] : 0);
+		let totalMovingSamples = 1;
 
-			if ((this.isTrainer || !velocityArray || _.isNumber(velocityArray[i])) && i > 0) {
+		for (let i = 1; i < powerArray.length; i++) { // Loop on samples
+			if (!(this.isTrainer || !velocityArray || _.isNumber(velocityArray[i]))) {
+				continue;
+			}
 
-				// Compute distribution for graph/table
-				durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
+			// Compute distribution for graph/table
+			durationInSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
-				// When speed data is given. then totalMovingInSeconds value increase only if athlete is moving
-				if (velocityArray) {
-					if (velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) {
-						totalMovingInSeconds += durationInSeconds;
-					}
-				} else {
-					totalMovingInSeconds += durationInSeconds;
-				}
+			rollingSum += powerArray[i];
+			rollingWindowSize += durationInSeconds;
 
-				timeWindowValue += durationInSeconds; // Add seconds to time buffer
-				sumPowerTimeWindow.push(powerArray[i]); // Add power value
+			sum4thPower += Math.pow(rollingSum / (i - rollingIndex + 1), 4);
 
-				if (timeWindowValue >= ActivityComputer.AVG_POWER_TIME_WINDOW_SIZE) {
+			// Reduce rolling window size if necessary. This is a bit
+			// complicated as we don't know a priori how many samples to
+			// remove from the beginning of the window as the delta time
+			// between samples varies.
+			while (rollingWindowSize >= ActivityComputer.AVG_POWER_TIME_WINDOW_SIZE) {
+				rollingSum -= powerArray[rollingIndex];
+				rollingWindowSize -= (timeArray[rollingIndex + 1] - timeArray[rollingIndex]);
+				rollingIndex++;
+			}
 
-					// Get average of power during these 60 seconds windows & power 4th
-					const sumPower = _.reduce(sumPowerTimeWindow, (a: number, b: number) => { // The reduce function and implementation return the sum of array
-						return (a + b);
-					}, 0) / sumPowerTimeWindow.length;
+			// When speed data is given, totalMovingInSeconds value increases only if athlete is moving
+			if (!velocityArray || (velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH)) {
+				totalMovingInSeconds += durationInSeconds;
+				totalMovingSamples++;
+			}
 
-					sum4thPower.push(Math.pow(sumPower, 4));
+			wattsSamplesOnMove.push(powerArray[i]);
+			wattsSamplesOnMoveDuration.push(durationInSeconds);
 
-					timeWindowValue = 0; // Reset time window
-					sumPowerTimeWindow = []; // Reset sum of power window
-				}
+			// average over time
+			accumulatedWattsOnMove += this.discreteValueBetween(powerArray[i], powerArray[i - 1], durationInSeconds);
+			wattSampleOnMoveCount += durationInSeconds;
 
-				wattsSamplesOnMove.push(powerArray[i]);
-				wattsSamplesOnMoveDuration.push(durationInSeconds);
+			const powerZoneId: number = this.getZoneId(powerZonesAlongActivityType, powerArray[i]);
 
-				// average over time
-				accumulatedWattsOnMove += this.discreteValueBetween(powerArray[i], powerArray[i - 1], durationInSeconds);
-				wattSampleOnMoveCount += durationInSeconds;
-
-				const powerZoneId: number = this.getZoneId(powerZonesAlongActivityType, powerArray[i]);
-
-				if (!_.isUndefined(powerZoneId) && !_.isUndefined(powerZonesAlongActivityType[powerZoneId])) {
-					powerZonesAlongActivityType[powerZoneId].s += durationInSeconds;
-				}
+			if (!_.isUndefined(powerZoneId) && !_.isUndefined(powerZonesAlongActivityType[powerZoneId])) {
+				powerZonesAlongActivityType[powerZoneId].s += durationInSeconds;
 			}
 		}
 
 		// Finalize compute of Power
 		const avgWatts: number = _.mean(powerArray);
 
-		const weightedPower = Math.sqrt(Math.sqrt(_.reduce(sum4thPower, (a: number, b: number) => { // The reduce function and implementation return the sum of array
-			return (a + b);
-		}, 0) / sum4thPower.length));
-
+		const weightedPower = Math.sqrt(Math.sqrt(sum4thPower / totalMovingSamples));
 
 		const variabilityIndex: number = weightedPower / avgWatts;
 		const intensity: number = (_.isNumber(cyclingFtp) && cyclingFtp > 0) ? (weightedPower / cyclingFtp) : null;

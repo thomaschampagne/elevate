@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { UserSettingsModel } from "../../../../core/scripts/shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "@elevate/shared/models";
+import { userSettingsData } from "@elevate/shared/data";
 import { GlobalSettingsService } from "./services/global-settings.service";
 import * as _ from "lodash";
-import { userSettingsData } from "../../../../core/scripts/shared/user-settings.data";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
 import { OptionHelperDialogComponent } from "./option-helper-dialog/option-helper-dialog.component";
@@ -115,7 +115,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 
 		if (option.type === GlobalSettingsService.TYPE_OPTION_CHECKBOX) {
 
-			this.userSettingsService.update(option.key, option.active).then(() => {
+			this.userSettingsService.saveProperty(option.key, option.active).then(() => {
 				console.log(option.key + " has been updated to ", option.active);
 			});
 
@@ -128,7 +128,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 			}
 		} else if (option.type === GlobalSettingsService.TYPE_OPTION_LIST) {
 
-			this.userSettingsService.update(option.key, option.active.key).then(() => {
+			this.userSettingsService.saveProperty(option.key, option.active.key).then(() => {
 				console.log(option.key + " has been updated to ", option.active);
 			});
 
@@ -145,7 +145,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 					this.resetOptionToDefaultValue(option);
 				}
 
-				this.userSettingsService.update(option.key, option.value).then(() => {
+				this.userSettingsService.saveProperty(option.key, option.value).then(() => {
 					console.log(option.key + " has been updated to " + option.value);
 				});
 			}

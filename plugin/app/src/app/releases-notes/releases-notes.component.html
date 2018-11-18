@@ -1,11 +1,11 @@
-<mat-toolbar color="primary">
-	<span class="mat-body-1">
-		This project is developed on free time with passion and for <strong>+20 hours of work / week</strong>.
-		<button mat-stroked-button routerLink="/donate">
-			Support the project you love 💗
+<mat-card>
+	<div fxLayout="row" fxLayoutAlign="start center">
+		This project is developed on free time with passion and for <strong>+10 hours of work / week</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<button mat-stroked-button color="primary" routerLink="/donate">
+			Support the project you love 💗 💗 💗
 		</button>
-	</span>
-</mat-toolbar>
+	</div>
+</mat-card>
 <mat-card *ngFor="let note of releasesNotes; let i = index;">
 	<mat-card-title>
 		<a target="_blank"
@@ -16,21 +16,17 @@
 		Released on {{note.date}}
 	</mat-card-subtitle>
 	<mat-card-content>
-
 		<mat-list *ngIf="(note.hotFixes && note.hotFixes.length)">
 			<h3 class="mat-subheading-2">Hot fixes</h3>
 			<mat-list-item *ngFor="let hotfix of note.hotFixes;">▹&nbsp;&nbsp;&nbsp;{{hotfix}}</mat-list-item>
 		</mat-list>
-
 		<mat-list *ngIf="(note.features && note.features.length)">
 			<h3 class="mat-subheading-2">Features</h3>
 			<mat-list-item *ngFor="let feature of note.features;">▹&nbsp;&nbsp;&nbsp;{{feature}}</mat-list-item>
 		</mat-list>
-
 		<mat-list *ngIf="(note.fixes && note.fixes.length)">
 			<h3 class="mat-subheading-2">Improvements and fixes</h3>
 			<mat-list-item *ngFor="let fix of note.fixes;">▹&nbsp;&nbsp;&nbsp;{{fix}}</mat-list-item>
 		</mat-list>
-
 	</mat-card-content>
 </mat-card>

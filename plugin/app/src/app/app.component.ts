@@ -20,19 +20,14 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/theme.enum";
 import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
-import { SyncResultModel } from "../../../core/scripts/shared/models/sync/sync-result.model";
+import { SyncResultModel } from "@elevate/shared/models";
 import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
 
-// TODO:FEAT @YearProgress Add Trimp progress EZ !!
-// TODO:FEAT @YearProgress Support Progress last year in graph (https://github.com/thomaschampagne/elevate/issues/484)
-// TODO:FEAT @YearProgress Year progress Targets line display (by KEYS = activityTypes & ProgressType)
-// TODO: LoggerService
-
 class MenuItemModel {
-	name: string;
-	icon: string;
-	routerLink: string;
-	routerLinkActive: boolean;
+	public name: string;
+	public icon: string;
+	public routerLink: string;
+	public routerLinkActive: boolean;
 }
 
 @Component({
@@ -297,6 +292,10 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.router.navigate([AppRoutesModel.report]);
 	}
 
+	public onShowFaq(): void {
+		this.router.navigate([AppRoutesModel.frequentlyAskedQuestions]);
+	}
+
 	public onShowAbout(): void {
 		this.dialog.open(AboutDialogComponent, {
 			minWidth: AboutDialogComponent.MIN_WIDTH,
@@ -332,5 +331,4 @@ export class AppComponent implements OnInit, OnDestroy {
 	public ngOnDestroy(): void {
 		this.routerEventsSubscription.unsubscribe();
 	}
-
 }

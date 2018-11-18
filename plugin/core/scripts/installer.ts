@@ -1,19 +1,20 @@
-import { userSettingsData } from "./shared/user-settings.data";
+import {
+	AppStorageType,
+	AthleteModel,
+	AthleteSettingsModel,
+	DatedAthleteSettingsModel,
+	Gender,
+	SyncedActivityModel,
+	UserLactateThresholdModel,
+	UserSettingsModel,
+	UserZonesModel
+} from "@elevate/shared/models";
 import { Helper } from "./helper";
 import * as semver from "semver";
-import { AthleteModel } from "../../app/src/app/shared/models/athlete/athlete.model";
-import { Gender } from "../../app/src/app/shared/models/athlete/gender.enum";
-import { AthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
-import { UserLactateThresholdModel } from "../../app/src/app/shared/models/athlete/athlete-settings/user-lactate-threshold.model";
 import * as _ from "lodash";
 import { AppStorage } from "./app-storage";
-import { SyncedActivityModel } from "./shared/models/sync/synced-activity.model";
-import { AppStorageType } from "./models/storage-type.enum";
-import { UserZonesModel } from "./shared/models/user-settings/user-zones.model";
-import { Constant } from "./shared/constant";
-import { UserSettingsModel } from "./shared/models/user-settings/user-settings.model";
-import { DatedAthleteSettingsDao } from "../../app/src/app/shared/dao/dated-athlete-settings/dated-athlete-settings-dao.service";
-import { DatedAthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
+import { Constant } from "@elevate/shared/constants";
+import { userSettingsData } from "@elevate/shared/data";
 
 class Installer {
 
@@ -153,7 +154,7 @@ class Installer {
 		}
 
 		return promise;
-	};
+	}
 
 	/**
 	 * Summary: Removing syncWithAthleteProfile local storage object & rename computedActivities to syncedActivities. remove autoSyncMinutes
@@ -190,7 +191,7 @@ class Installer {
 		}
 
 		return promise;
-	};
+	}
 
 	/**
 	 * Summary: Removing synced displayMotivationScore
@@ -208,7 +209,7 @@ class Installer {
 		}
 
 		return promise;
-	};
+	}
 
 	/**
 	 * Summary: Migrate old user synced athletes setting to athleteModel. Remove old user synced athletes setting.
@@ -257,7 +258,7 @@ class Installer {
 		}
 
 		return promise;
-	};
+	}
 
 	protected migrate_to_6_6_0(): Promise<void> {
 
@@ -315,7 +316,7 @@ class Installer {
 
 			console.log("Migrate to 6.7.0");
 
-			promise = AppStorage.getInstance().get<DatedAthleteSettingsModel[]>(AppStorageType.LOCAL, DatedAthleteSettingsDao.DATED_ATHLETE_SETTINGS_KEY)
+			promise = AppStorage.getInstance().get<DatedAthleteSettingsModel[]>(AppStorageType.LOCAL, "datedAthleteSettings")
 				.then((localDatedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
 
 					if (_.isEmpty(localDatedAthleteSettingsModels)) {
@@ -330,7 +331,7 @@ class Installer {
 								new DatedAthleteSettingsModel(null, athleteSettings)
 							];
 
-							return AppStorage.getInstance().set(AppStorageType.LOCAL, DatedAthleteSettingsDao.DATED_ATHLETE_SETTINGS_KEY, datedAthleteSettings).then(() => {
+							return AppStorage.getInstance().set(AppStorageType.LOCAL, "datedAthleteSettings", datedAthleteSettings).then(() => {
 								return AppStorage.getInstance().set(AppStorageType.SYNC, "hasDatedAthleteSettings", true);
 							});
 

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ActivityDao } from "../../dao/activity/activity.dao";
-import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { AthleteModelResolverService } from "../athlete-settings/athlete-model-resolver.service";
 import { Subject } from "rxjs";
@@ -20,7 +20,7 @@ export class ActivityService {
 	 * @returns {Promise<SyncedActivityModel[]>} stored SyncedActivityModels
 	 */
 	public fetch(): Promise<SyncedActivityModel[]> {
-		return this.activityDao.fetch();
+		return (<Promise<SyncedActivityModel[]>> this.activityDao.fetch());
 	}
 
 	/**
@@ -29,14 +29,10 @@ export class ActivityService {
 	 * @returns {Promise<SyncedActivityModel[]>} saved SyncedActivityModels
 	 */
 	public save(syncedActivityModels: SyncedActivityModel[]): Promise<SyncedActivityModel[]> {
-		return this.activityDao.save(syncedActivityModels);
+		return (<Promise<SyncedActivityModel[]>> this.activityDao.save(syncedActivityModels));
 	}
 
-	/**
-	 *
-	 * @returns {Promise<SyncedActivityModel[]>} cleared SyncedActivityModels
-	 */
-	public clear(): Promise<SyncedActivityModel[]> {
+	public clear(): Promise<void> {
 		return this.activityDao.clear();
 	}
 

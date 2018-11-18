@@ -33,17 +33,17 @@ module.exports = function (config) {
 		logLevel: config.LOG_INFO,
 		autoWatch: true,
 		browsers: [
-			"Chrome"
+			"HeadlessChrome"
 		],
 		customLaunchers: {
-			ChromeHeadless: { // See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
+			HeadlessChrome: { // See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
 				base: "Chrome",
 				flags: [
 					"--no-sandbox",
 					"--headless",
 					"--disable-gpu",
 					"--disable-browser-side-navigation",
-					" --remote-debugging-port=9222" // Without a remote debugging port, Google Chrome exits immediately.
+					"--remote-debugging-port=9222" // Without a remote debugging port, Google Chrome exits immediately.
 				]
 			}
 		},

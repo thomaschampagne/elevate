@@ -2,12 +2,11 @@ import { Injectable } from "@angular/core";
 import * as _ from "lodash";
 import { Subject } from "rxjs";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { userSettingsData } from "../../../../../core/scripts/shared/user-settings.data";
+import { UserZonesModel, ZoneModel } from "@elevate/shared/models";
+import { userSettingsData } from "@elevate/shared/data";
 import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";
 import { ZoneChangeOrderModel } from "./zone-change-order.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
-import { ZoneModel } from "../../../../../core/scripts/shared/models/zone.model";
-import { UserZonesModel } from "../../../../../core/scripts/shared/models/user-settings/user-zones.model";
 
 @Injectable()
 export class ZonesService {
@@ -258,7 +257,7 @@ export class ZonesService {
 			const complianceError = this.isZonesCompliant(this.currentZones);
 
 			if (_.isNull(complianceError)) {
-				this.userSettingsService.updateZones(
+				this.userSettingsService.saveZones(
 					this.zoneDefinition,
 					this.currentZones
 				).then(() => {

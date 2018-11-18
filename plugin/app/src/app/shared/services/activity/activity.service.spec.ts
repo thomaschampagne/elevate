@@ -2,15 +2,11 @@ import { TestBed } from "@angular/core/testing";
 import { ActivityService } from "./activity.service";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import * as _ from "lodash";
-import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
+import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel, Gender, SyncedActivityModel } from "@elevate/shared/models";
 import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/fake-synced-activity.helper";
-import { AthleteModel } from "../../models/athlete/athlete.model";
-import { Gender } from "../../models/athlete/gender.enum";
-import { AthleteSettingsModel } from "../../models/athlete/athlete-settings/athlete-settings.model";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
-import { userSettingsData } from "../../../../../../core/scripts/shared/user-settings.data";
-import { DatedAthleteSettingsModel } from "../../models/athlete/athlete-settings/dated-athlete-settings.model";
+import { userSettingsData } from "@elevate/shared/data";
 
 describe("ActivityService", () => {
 
@@ -103,14 +99,11 @@ describe("ActivityService", () => {
 				.and.returnValue(Promise.resolve(null));
 
 			// When
-			const promise: Promise<SyncedActivityModel[]> = activityService.clear();
+			const promise: Promise<void> = activityService.clear();
 
 			// Then
-			promise.then((result: SyncedActivityModel[]) => {
-
-				expect(result).toBeNull();
+			promise.then(() => {
 				expect(removeDaoSpy).toHaveBeenCalledTimes(1);
-
 				done();
 
 			}, error => {

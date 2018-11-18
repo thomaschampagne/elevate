@@ -1,4 +1,4 @@
-import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
+import { SyncedActivityModel } from "@elevate/shared/models";
 
 export class YearProgressActivityModel extends SyncedActivityModel {
 	public year: number;

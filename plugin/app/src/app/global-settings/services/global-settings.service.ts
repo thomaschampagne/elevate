@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
-import { UserSettingsModel } from "../../../../../core/scripts/shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "@elevate/shared/models";
 
 @Injectable()
 export class GlobalSettingsService {
@@ -9,7 +9,7 @@ export class GlobalSettingsService {
 	public static readonly TYPE_OPTION_LIST: string = "list";
 	public static readonly TYPE_OPTION_NUMBER: string = "number";
 
-	public sections: SectionModel[] = [{
+	public readonly sections: SectionModel[] = [{
 		title: "Units",
 		options: [{
 			key: "systemUnit",
@@ -153,6 +153,7 @@ export class GlobalSettingsService {
 			title: "Revive Google Maps on activities",
 			labels: ["All"],
 			enableSubOption: ["reviveGoogleMapsLayerType"],
+			hidden: true, // Google map feature marked as hidden until it come back
 		}, {
 			key: "reviveGoogleMapsLayerType",
 			type: "list",
@@ -171,6 +172,7 @@ export class GlobalSettingsService {
 				name: "Terrain",
 			}],
 			title: "Default Google Maps layer type",
+			hidden: true, // Google map feature marked as hidden until it come back
 		}, {
 			key: "displayActivityBestSplits",
 			type: "checkbox",

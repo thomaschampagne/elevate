@@ -1,6 +1,6 @@
 {
 	"name": "elevate",
-	"version": "6.7.0",
+	"version": "6.8.0",
 	"description": "Wrap the needed tools required to cook the Elevate Web Plugin",
 	"scripts": {
 		"build": "npm-run-all clean res-copy:* build-project:core build-project:app",
@@ -12,17 +12,17 @@
 		"clean": "npm-run-all clean:*",
 		"clean:dist": "node ./node_modules/del-cli/cli.js ./dist/",
 		"clean:package": "node ./node_modules/del-cli/cli.js ./package/",
-		"package": "npm-run-all clean build:prod zipRelease",
+		"package": "npm-run-all clean build:prod archive",
 		"postinstall": "cd ./plugin/core/ && npm install && cd ../app/ && npm install",
 		"res-copy:manifest": "node ./node_modules/cpy-cli/cli.js ./plugin/manifest.json ./dist/",
 		"res-copy:install-guide": "node ./node_modules/cpy-cli/cli.js ./plugin/INSTALL.txt ./dist/",
-		"test": "npm-run-all clean test:core-headless test:app-headless",
-		"test:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng test",
+		"test": "npm-run-all clean test:core test:app",
+		"test:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng test --watch=false",
 		"test:app:no-source-map": "npm run test:app -- --source-map=false",
-		"test:app-headless": "npm run test:app -- --browsers ChromeHeadless --watch false",
-		"test:core": "cd ./plugin/core && node ./node_modules/karma/bin/karma start karma.conf.js",
-		"test:core-headless": "npm run test:core -- --browsers ChromeHeadless --single-run",
-		"tslint-fix:core": "node ./plugin/core/node_modules/tslint/bin/tslint -c ./tslint.json ./plugin/core/**/*.ts --fix",
+		"test:app-ui-browser": "npm run test:app -- --browsers Chrome",
+		"test:core": "cd ./plugin/core && node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
+		"test:core-ui-browser": "npm run test:core -- --browsers Chrome",
+		"tslint-fix:core": "node ./plugin/core/node_modules/tslint/bin/tslint -c ./tslint.json ./plugin/core/**/*.ts ./plugin/shared/**/*.ts --fix",
 		"tslint-fix:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng lint app --fix",
 		"start": "npm run watch",
 		"watch": "npm run clean && npm-run-all res-copy:* && npm-run-all --print-label --parallel watch:*",
@@ -31,7 +31,7 @@
 		"wipe": "npm run clean && npm run wipe:package-locks && npm run wipe:node-modules",
 		"wipe:node-modules": "node ./node_modules/del-cli/cli.js ./node_modules/ ./plugin/core/node_modules/ ./plugin/app/node_modules/",
 		"wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json ./plugin/core/package-lock.json ./plugin/app/package-lock.json",
-		"zipRelease": "node -e \"const z = require('zip-folder'), f = require('fs'), m = require('./dist/manifest.json'), t = './package', o = t + '/v' + m.version_name.split(' ').join('_').toLowerCase() + '_' + (new Date()).toJSON().slice(0, 16).replace('T', '-').replace(':', '-') + '.zip';if (!f.existsSync(t)) f.mkdirSync(t);z('./dist', o, (e) => {let code = (e) ? 1 : 0;if (!code) console.log('Generated archive ' + o);process.exit(code);});\""
+		"archive": "node -e \"const bestzip = require('bestzip');const manifest = require('./dist/manifest.json');const fs = require('fs');const cwd = process.cwd() + '/dist/';const target = 'package/';const filename = 'v' + manifest.version_name.split(' ').join('_').toLowerCase() + '_' + (function now() {const pad = (num) => {return (num).toString().padStart(2, '0');}, d = new Date();return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + '-' + pad(d.getHours()) + '-' + pad(d.getMinutes());}()) + '.zip';const output = '../' + target + filename;if (!fs.existsSync(target)) fs.mkdirSync(target);bestzip.nodeZip({source: '*', cwd: cwd, destination: output}).then(() => {console.log('Generated archive ' + filename);process.exit(0);}).catch((err) => {console.error(err.stack);process.exit(1);});\""
 	},
 	"config": {
 		"unsafe-perm": true
@@ -55,11 +55,10 @@
 	"license": "MIT",
 	"readme": "README.md",
 	"devDependencies": {
-		"bestzip": "^1.1.6",
-		"cpy-cli": "^1.0.1",
+		"bestzip": "^2.1.2",
+		"cpy-cli": "^2.0.0",
 		"del-cli": "^1.1.0",
-		"npm-run-all": "^4.1.2",
-		"run-sequence": "^1.2.2",
-		"zip-folder": "^1.0.0"
+		"npm-run-all": "^4.1.3",
+		"run-sequence": "^2.2.1"
 	}
 }

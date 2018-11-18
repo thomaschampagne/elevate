@@ -1,13 +1,11 @@
 import * as _ from "lodash";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/specs-tools";
-import { SyncedActivityModel } from "../../scripts/shared/models/sync/synced-activity.model";
 import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";
-import { ActivitiesChangesModel } from "../../scripts/models/sync/activities-changes.model";
-import { UserSettingsModel } from "../../scripts/shared/models/user-settings/user-settings.model";
 import { ActivitiesSynchronizer } from "../../scripts/processors/activities-synchronizer";
-import { AthleteModelResolver } from "../../scripts/shared/resolvers/athlete-model.resolver";
-import { userSettingsData } from "../../scripts/shared/user-settings.data";
+import { AthleteModelResolver } from "@elevate/shared/resolvers";
+import { ActivitiesChangesModel, SyncedActivityModel, UserSettingsModel } from "@elevate/shared/models";
+import { userSettingsData } from "@elevate/shared/data";
 
 describe("ActivitiesSynchronizer", () => {
 

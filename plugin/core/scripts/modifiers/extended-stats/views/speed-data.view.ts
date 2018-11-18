@@ -1,6 +1,6 @@
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
-import { SpeedDataModel } from "../../../models/activity-data/speed-data.model";
+import { SpeedDataModel } from "@elevate/shared/models";
 import * as _ from "lodash";
 
 export class SpeedDataView extends AbstractDataView {
@@ -34,7 +34,7 @@ export class SpeedDataView extends AbstractDataView {
 	protected insertDataIntoGrid(): void {
 
 		if (_.isNumber(this.speedData.best20min) && !this.isSegmentEffortView) {
-			this.insertContentAtGridPosition(0, 0, this.printNumber(this.speedData.best20min, 1), "Best 20min Speed <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", this.speedUnitsData.speedUnitPerHour, "displayAdvancedSpeedData");
+			this.insertContentAtGridPosition(0, 0, this.printNumber((this.speedData.best20min * this.speedUnitsData.speedUnitFactor), 1), "Best 20min Speed <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", this.speedUnitsData.speedUnitPerHour, "displayAdvancedSpeedData");
 		}
 
 		// Quartiles

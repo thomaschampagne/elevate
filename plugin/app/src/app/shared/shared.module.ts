@@ -11,17 +11,14 @@ import { UserSettingsService } from "./services/user-settings/user-settings.serv
 import { GlobalSettingsService } from "../global-settings/services/global-settings.service";
 import { ActivityService } from "./services/activity/activity.service";
 import { UserSettingsDao } from "./dao/user-settings/user-settings.dao";
-import { ActivityDao } from "./dao/activity/activity.dao";
 import { OptionHelperReaderService } from "../global-settings/services/option-helper-reader.service";
 import { ZonesService } from "../zones-settings/shared/zones.service";
 import { AppRoutingModule } from "./modules/app-routing.module";
 import { DonateComponent } from "../donate/donate.component";
-import { ReleasesNotesComponent } from "../releases-notes/releases-notes.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
-import { ReleasesNotesResolverService } from "../releases-notes/releases-notes-resolver.service";
 import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
-import { SyncDao } from "./dao/sync/sync.dao";
+import { LastSyncDateTimeDao } from "./dao/sync/last-sync-date-time.dao";
 import { SyncService } from "./services/sync/sync.service";
 import { ImportBackupDialogComponent } from "./dialogs/import-backup-dialog/import-backup-dialog.component";
 import { ShareComponent } from "../share/share.component";
@@ -33,7 +30,13 @@ import { AdvancedMenuComponent } from "../advanced-menu/advanced-menu.component"
 import { ExternalUpdatesService } from "./services/external-updates/external-updates.service";
 import { AthleteModelResolverService } from "./services/athlete-settings/athlete-model-resolver.service";
 import { DatedAthleteSettingsService } from "./services/dated-athlete-settings/dated-athlete-settings.service";
-import { DatedAthleteSettingsDao } from "./dao/dated-athlete-settings/dated-athlete-settings-dao.service";
+import { DatedAthleteSettingsDao } from "./dao/dated-athlete-settings/dated-athlete-settings.dao";
+import { DataStore } from "./data-store/data-store";
+import { ChromeDataStore } from "./data-store/impl/chrome-data-store.service";
+import { ActivityDao } from "./dao/activity/activity.dao";
+import { FaqComponent } from "../faq/faq.component";
+
+const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
 
 @NgModule({
 	imports: [
@@ -54,10 +57,10 @@ import { DatedAthleteSettingsDao } from "./dao/dated-athlete-settings/dated-athl
 		ZonesSettingsComponent,
 		ZoneComponent,
 		DonateComponent,
-		ReleasesNotesComponent,
 		ShareComponent,
 		ReportComponent,
 		AdvancedMenuComponent,
+		FaqComponent,
 
 		// Dialogs
 		ZoneToolBarComponent,
@@ -77,8 +80,9 @@ import { DatedAthleteSettingsDao } from "./dao/dated-athlete-settings/dated-athl
 		ImportBackupDialogComponent
 	],
 	providers: [
+		ChromeDataStoreProvider,
 		SyncService,
-		SyncDao,
+		LastSyncDateTimeDao,
 		UserSettingsService,
 		UserSettingsDao,
 		DatedAthleteSettingsService,
@@ -89,7 +93,6 @@ import { DatedAthleteSettingsDao } from "./dao/dated-athlete-settings/dated-athl
 		GlobalSettingsService,
 		OptionHelperReaderService,
 		ZonesService,
-		ReleasesNotesResolverService,
 		SideNavService,
 		WindowService,
 		ExternalUpdatesService

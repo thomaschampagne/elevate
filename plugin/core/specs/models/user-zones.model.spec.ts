@@ -1,5 +1,4 @@
-import { ZoneModel } from "../../scripts/shared/models/zone.model";
-import { UserZonesModel } from "../../scripts/shared/models/user-settings/user-zones.model";
+import { UserZonesModel, ZoneModel } from "@elevate/shared/models";
 
 describe("UserZonesModel", () => {
 

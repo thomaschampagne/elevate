@@ -5,18 +5,18 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
 import { AthleteSettingsModule } from "../../athlete-settings.module";
-import { UserSettingsDao } from "../../../shared/dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
-import { userSettingsData } from "../../../../../../core/scripts/shared/user-settings.data";
 import { DatedAthleteSettingsDialogData } from "./dated-athlete-settings-dialog-data.model";
 import { DatedAthleteSettingsAction } from "./dated-athlete-settings-action.enum";
-import { DatedAthleteSettingsModel } from "../../../shared/models/athlete/athlete-settings/dated-athlete-settings.model";
+import { DatedAthleteSettingsModel } from "@elevate/shared/models";
+import { userSettingsData } from "@elevate/shared/data";
+import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
 
 describe("EditDatedAthleteSettingsDialogComponent", () => {
 
 	let component: EditDatedAthleteSettingsDialogComponent;
 	let fixture: ComponentFixture<EditDatedAthleteSettingsDialogComponent>;
-	let userSettingsDao: UserSettingsDao;
+	let userSettingsService: UserSettingsService;
 
 	beforeEach((done: Function) => {
 
@@ -41,13 +41,9 @@ describe("EditDatedAthleteSettingsDialogComponent", () => {
 			]
 		}).compileComponents();
 
-		userSettingsDao = TestBed.get(UserSettingsDao);
+		userSettingsService = TestBed.get(UserSettingsService);
 
-		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
-			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(_.cloneDeep(userSettingsData));
-			}
-		});
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
 
 		fixture = TestBed.createComponent(EditDatedAthleteSettingsDialogComponent);
 		component = fixture.componentInstance;

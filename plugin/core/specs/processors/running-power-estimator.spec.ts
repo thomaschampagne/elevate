@@ -1,14 +1,16 @@
 import * as _ from "lodash";
 import { Helper } from "../../scripts/helper";
-import { ActivityStreamsModel } from "../../scripts/models/activity-data/activity-streams.model";
-import { ActivityStatsMapModel } from "../../scripts/models/activity-data/activity-stats-map.model";
-import { AnalysisDataModel } from "../../scripts/models/activity-data/analysis-data.model";
+import {
+	ActivityStatsMapModel,
+	ActivityStreamsModel,
+	AnalysisDataModel,
+	AthleteModel,
+	AthleteSettingsModel,
+	Gender,
+	UserSettingsModel
+} from "@elevate/shared/models";
 import { RunningPowerEstimator } from "../../scripts/processors/running-power-estimator";
-import { UserSettingsModel } from "../../scripts/shared/models/user-settings/user-settings.model";
 import { ActivityComputer } from "../../scripts/processors/activity-computer";
-import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
-import { Gender } from "../../../app/src/app/shared/models/athlete/gender.enum";
-import { AthleteSettingsModel } from "../../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
 
 describe("RunningPowerEstimator", () => {
 

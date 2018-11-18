@@ -1,6 +1,6 @@
 import { Mode } from "./mode.enum";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
-import { ZoneModel } from "../../../../../core/scripts/shared/models/zone.model";
+import { ZoneModel } from "@elevate/shared/models";
 
 export class ZoneImportExportDataModel {
 

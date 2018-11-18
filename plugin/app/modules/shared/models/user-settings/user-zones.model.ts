@@ -1,0 +1,105 @@
+import { ZoneModel } from "../zone.model";
+import * as _ from "lodash";
+
+export class UserZonesModel {
+
+	public static readonly TYPE_SPEED: string = "speed";
+	public static readonly TYPE_PACE: string = "pace";
+	public static readonly TYPE_GRADE_ADJUSTED_PACE: string = "gradeAdjustedPace";
+	public static readonly TYPE_HEART_RATE: string = "heartRate";
+	public static readonly TYPE_POWER: string = "power";
+	public static readonly TYPE_RUNNING_POWER: string = "runningPower";
+	public static readonly TYPE_CYCLING_CADENCE: string = "cyclingCadence";
+	public static readonly TYPE_RUNNING_CADENCE: string = "runningCadence";
+	public static readonly TYPE_GRADE: string = "grade";
+	public static readonly TYPE_ELEVATION: string = "elevation";
+	public static readonly TYPE_ASCENT: string = "ascent";
+
+
+	public static asInstance(userZonesModel: UserZonesModel): UserZonesModel {
+		return new UserZonesModel(
+			userZonesModel.speed,
+			userZonesModel.pace,
+			userZonesModel.gradeAdjustedPace,
+			userZonesModel.heartRate,
+			userZonesModel.power,
+			userZonesModel.runningPower,
+			userZonesModel.cyclingCadence,
+			userZonesModel.runningCadence,
+			userZonesModel.grade,
+			userZonesModel.elevation,
+			userZonesModel.ascent,
+		);
+	}
+
+	public static serialize(zoneModels: ZoneModel[]): number[] {
+
+		const serialized: number[] = [];
+
+		_.forEach(zoneModels, (zoneModel: ZoneModel, index: number) => {
+
+			if (!zoneModel.from && !zoneModel.to) {
+				throw new Error("Cannot serialize zoneModels");
+			}
+
+			if (zoneModels[index - 1]) {
+
+				if (zoneModels[index - 1].to !== zoneModel.from) {
+					serialized.push(zoneModel.from);
+				}
+
+				serialized.push(zoneModel.to);
+
+			} else {
+				serialized.push(zoneModel.from);
+				serialized.push(zoneModel.to);
+			}
+
+		});
+
+		return serialized;
+	}
+
+	public static deserialize(zones: number[]): ZoneModel[] {
+
+		const zoneModels: ZoneModel[] = [];
+
+		_.forEach(zones, (zone: number, index: number) => {
+
+			if (!_.isNumber(zone)) {
+				throw new Error("Cannot deserialize zones because of corrupted zones. Try to reset your settings from advanced menu (Go to 'Elevate App' => 'Contextual menu in top right' => 'Advanced')");
+			}
+
+			if (_.isNumber(zones[index + 1])) {
+				zoneModels.push({
+					from: zone,
+					to: zones[index + 1]
+				});
+			}
+		});
+
+		return zoneModels;
+	}
+
+	constructor(public speed: number[],
+				public pace: number[],
+				public gradeAdjustedPace: number[],
+				public heartRate: number[],
+				public power: number[],
+				public runningPower: number[],
+				public cyclingCadence: number[],
+				public runningCadence: number[],
+				public grade: number[],
+				public elevation: number[],
+				public ascent: number[]) {
+
+	}
+
+	public get?(type: string): ZoneModel[] {
+		const zones = _.propertyOf(this)(type);
+		if (!zones) {
+			throw new Error("Cannot retrieve zones for type: " + type);
+		}
+		return UserZonesModel.deserialize(zones);
+	}
+}

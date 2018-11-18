@@ -22,6 +22,7 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
 	public ignoreBeforeMaxDate: Date = null;
 	public isEstimatedPowerStressScoreToggleEnabled: boolean;
 	public isEstimatedRunningStressScoreToggleEnabled: boolean;
+	public initialized = false;
 
 	constructor(public dialogRef: MatDialogRef<FitnessTrendConfigDialogComponent>,
 				@Inject(MAT_DIALOG_DATA) public fitnessTrendConfigDialogData: FitnessTrendConfigDialogData,
@@ -43,6 +44,10 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
 		}
 
 		this.updateEstimatedStressScoresToggles();
+
+		_.defer(() => {
+			this.initialized = true;
+		});
 	}
 
 	public updateEstimatedStressScoresToggles(): void {

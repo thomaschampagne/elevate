@@ -1,6 +1,14 @@
 import * as _ from "lodash";
 import { Helper } from "./helper";
-import { UserSettingsModel } from "./shared/models/user-settings/user-settings.model";
+import {
+	ActivityBasicInfoModel,
+	AppStorageType,
+	DatedAthleteSettingsModel,
+	Gender,
+	ReleaseNoteModel,
+	SyncResultModel,
+	UserSettingsModel
+} from "@elevate/shared/models";
 import { AppStorage } from "./app-storage";
 import { CoreEnv } from "../config/core-env";
 import { AppResourcesModel } from "./models/app-resources.model";
@@ -29,6 +37,7 @@ import {
 	RunningHeartRateModifier,
 	RunningTemperatureModifier,
 } from "./modifiers/running-data.modifier";
+import { RunningAnalysisGraph } from "./modifiers/running-analysis-graph.modifier";
 import { SegmentRankPercentageModifier } from "./modifiers/segment-rank-percentage.modifier";
 import { SegmentRecentEffortsHRATimeModifier } from "./modifiers/segment-recent-efforts-hratime.modifier";
 import { VirtualPartnerModifier } from "./modifiers/virtual-partner.modifier";
@@ -39,18 +48,12 @@ import { ISegmentInfo, SegmentProcessor } from "./processors/segment-processor";
 import { VacuumProcessor } from "./processors/vacuum-processor";
 import { ActivitiesSynchronizer } from "./processors/activities-synchronizer";
 import * as Q from "q";
-import { SyncResultModel } from "./shared/models/sync/sync-result.model";
-import { ActivityBasicInfoModel } from "./models/activity-data/activity-basic-info.model";
 import { AthleteUpdate } from "./utils/athlete-update";
 import "./follow";
-import { releaseNotesData } from "./shared/release-notes.data";
-import { ReleaseNoteModel } from "./shared/models/release-note.model";
-import { AthleteModelResolver } from "./shared/resolvers/athlete-model.resolver";
-import { DatedAthleteSettingsModel } from "../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
-import { Gender } from "../../app/src/app/shared/models/athlete/gender.enum";
 import * as Cookies from "js-cookie";
-import { AppStorageType } from "./models/storage-type.enum";
 import { ActivityFeedModifier } from "./modifiers/activity-feed-modifier";
+import { AthleteModelResolver } from "@elevate/shared/resolvers";
+import { releaseNotesData } from "@elevate/shared/data";
 
 export class Elevate {
 
@@ -146,6 +149,7 @@ export class Elevate {
 			this.handleRunningHeartRate();
 			this.handleRunningCadence();
 			this.handleRunningTemperature();
+			this.handleRunningAnalysisGraph();
 
 			// All activities
 			this.handleActivityQRCodeDisplay();
@@ -1024,6 +1028,30 @@ export class Elevate {
 		const runningTemperatureModifier: RunningTemperatureModifier = new RunningTemperatureModifier();
 		runningTemperatureModifier.modify();
 	}
+
+	protected handleRunningAnalysisGraph(): void {
+
+		if (_.isUndefined(window.pageView)) {
+			return;
+		}
+
+		// Avoid bike activity
+		if (window.pageView.activity().attributes.type != "Run") {
+			return;
+		}
+
+		if (!window.location.pathname.match(/^\/activities/)) {
+			return;
+		}
+
+		if (CoreEnv.debugMode) {
+			console.log("Execute handleRunningAnalysisGraph()");
+		}
+
+		const runningAnalysisGraph: RunningAnalysisGraph = new RunningAnalysisGraph();
+		runningAnalysisGraph.modify();
+	}
+
 
 	public handleActivityQRCodeDisplay(): void {
 

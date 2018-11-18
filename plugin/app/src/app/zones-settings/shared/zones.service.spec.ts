@@ -1,28 +1,33 @@
 import { inject, TestBed } from "@angular/core/testing";
 import { ZonesService } from "./zones.service";
 import * as _ from "lodash";
-import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { ZONE_DEFINITIONS } from "../zone-definitions";
-import { userSettingsData } from "../../../../../core/scripts/shared/user-settings.data";
-import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
+import { UserZonesModel, ZoneModel } from "@elevate/shared/models";
+import { userSettingsData } from "@elevate/shared/data";
 import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";
 import { ZoneChangeOrderModel } from "./zone-change-order.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
-import { ZoneModel } from "../../../../../core/scripts/shared/models/zone.model";
-import { UserZonesModel } from "../../../../../core/scripts/shared/models/user-settings/user-zones.model";
+import { CoreModule } from "../../core/core.module";
+import { SharedModule } from "../../shared/shared.module";
 
 describe("ZonesService", () => {
 
 	let zonesService: ZonesService;
+	let saveZonesSpy: jasmine.Spy;
 
 	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({
-			providers: [ZonesService, UserSettingsService, UserSettingsDao]
+			imports: [
+				CoreModule,
+				SharedModule
+			]
 		});
 
 		// Retrieve injected service
 		zonesService = TestBed.get(ZonesService);
+		saveZonesSpy = spyOn(zonesService.userSettingsService, "saveZones");
+		saveZonesSpy.and.returnValue(Promise.resolve());
 
 		// Set 10 fake zones
 		zonesService.currentZones = [
@@ -660,8 +665,7 @@ describe("ZonesService", () => {
 		// Given
 		const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(null);
 		const zoneModels: ZoneModel[] = [{from: 0, to: 110}, {from: 110, to: 210}];
-		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
-			.and.returnValue(Promise.resolve(zoneModels));
+		saveZonesSpy.and.returnValue(Promise.resolve(zoneModels));
 
 		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "clearLocalStorageOnNextLoad");
 
@@ -672,7 +676,7 @@ describe("ZonesService", () => {
 		promiseSave.then(() => {
 
 			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
-			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(1);
+			expect(saveZonesSpy).toHaveBeenCalledTimes(1);
 			expect(markLocalStorageClearSpy).toHaveBeenCalledTimes(1);
 
 			done();
@@ -690,8 +694,7 @@ describe("ZonesService", () => {
 		// Given
 		const fakeError = "FakeError";
 		const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(fakeError);
-		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
-			.and.returnValue(Promise.resolve(true));
+		saveZonesSpy.and.returnValue(Promise.resolve(true));
 
 		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "clearLocalStorageOnNextLoad");
 
@@ -708,7 +711,7 @@ describe("ZonesService", () => {
 
 			expect(error).toBe(fakeError);
 			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
-			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(0);
+			expect(saveZonesSpy).toHaveBeenCalledTimes(0);
 			expect(markLocalStorageClearSpy).toHaveBeenCalledTimes(0);
 
 			done();
@@ -716,13 +719,12 @@ describe("ZonesService", () => {
 
 	});
 
-	it("should not save zones on updateZones rejection", (done: Function) => {
+	it("should not save zones on saveZones rejection", (done: Function) => {
 
 		// Given
 		const fakeError = "UpdateZones Error!";
 		const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(null);
-		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
-			.and.returnValue(Promise.reject(fakeError));
+		saveZonesSpy.and.returnValue(Promise.reject(fakeError));
 
 		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "clearLocalStorageOnNextLoad");
 
@@ -740,7 +742,7 @@ describe("ZonesService", () => {
 			expect(error).not.toBeNull();
 			expect(error).toBe(fakeError);
 			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
-			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(1);
+			expect(saveZonesSpy).toHaveBeenCalledTimes(1);
 			expect(markLocalStorageClearSpy).toHaveBeenCalledTimes(0);
 
 			done();
@@ -754,8 +756,7 @@ describe("ZonesService", () => {
 		const fakeError = "clearLocalStorageOnNextLoad Error!";
 		const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(null);
 		const zoneModels: ZoneModel[] = [{from: 0, to: 110}, {from: 110, to: 210}];
-		const updateZoneSettingSpy = spyOn(zonesService.userSettingsService, "updateZones")
-			.and.returnValue(Promise.resolve(zoneModels));
+		saveZonesSpy.and.returnValue(Promise.resolve(zoneModels));
 
 		const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "clearLocalStorageOnNextLoad")
 			.and.returnValue(Promise.reject(fakeError));
@@ -774,7 +775,7 @@ describe("ZonesService", () => {
 			expect(error).not.toBeNull();
 			expect(error).toBe(fakeError);
 			expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
-			expect(updateZoneSettingSpy).toHaveBeenCalledTimes(1);
+			expect(saveZonesSpy).toHaveBeenCalledTimes(1);
 			expect(markLocalStorageClearSpy).toHaveBeenCalledTimes(1);
 
 			done();

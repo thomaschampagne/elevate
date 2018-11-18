@@ -1,53 +1,23 @@
 import { Injectable } from "@angular/core";
-import { UserSettingsModel } from "../../../../../../core/scripts/shared/models/user-settings/user-settings.model";
+import { UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
-import { ZoneModel } from "../../../../../../core/scripts/shared/models/zone.model";
-import { UserZonesModel } from "../../../../../../core/scripts/shared/models/user-settings/user-zones.model";
+import { userSettingsData } from "@elevate/shared/data";
 
 @Injectable()
 export class UserSettingsService {
 
 	public static readonly MARK_LOCAL_STORAGE_CLEAR: string = "localStorageMustBeCleared";
 
-	constructor(private _userSettingsDao: UserSettingsDao) {
+	constructor(public userSettingsDao: UserSettingsDao) {
 	}
 
-	/**
-	 *
-	 * @returns {Promise<UserSettingsModel>}
-	 */
 	public fetch(): Promise<UserSettingsModel> {
-		return this.userSettingsDao.fetch();
+		return (<Promise<UserSettingsModel>> this.userSettingsDao.fetch());
 	}
 
-	/**
-	 *
-	 * @param {string} key
-	 * @returns {Promise<Object>}
-	 */
-	public get<T>(key: string): Promise<T> {
-		return this.userSettingsDao.get<T>(key);
-	}
-
-	/**
-	 *
-	 * @param {string} key
-	 * @param value
-	 * @returns {Promise<boolean>}
-	 */
-	public update(key: string, value: any): Promise<UserSettingsModel> {
-		return this.userSettingsDao.update(key, value);
-	}
-
-	/**
-	 *
-	 * @param {string} path
-	 * @param {number} value
-	 * @returns {Promise<UserSettingsModel>}
-	 */
-	public updateNested(path: string, value: number): Promise<UserSettingsModel> {
-		return this.userSettingsDao.updateNested(path, value);
+	public saveProperty<V>(path: string | string[], value: V): Promise<UserSettingsModel> {
+		return this.userSettingsDao.upsertProperty<V>(path, value);
 	}
 
 	/**
@@ -55,7 +25,7 @@ export class UserSettingsService {
 	 * @returns {Promise<UserSettingsModel>}
 	 */
 	public clearLocalStorageOnNextLoad(): Promise<void> {
-		return this.update(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true).then(() => {
+		return this.saveProperty(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true).then(() => {
 			console.log("LocalStorage is marked to be cleared on next core load");
 			return Promise.resolve();
 		});
@@ -67,35 +37,18 @@ export class UserSettingsService {
 	 * @param {ZoneModel[]} zones
 	 * @returns {Promise<ZoneModel[]>}
 	 */
-	public updateZones(zoneDefinition: ZoneDefinitionModel, zones: ZoneModel[]): Promise<ZoneModel[]> {
-
-		return new Promise<ZoneModel[]>((resolve: Function, reject: Function) => {
-
-			const path = "zones." + zoneDefinition.value;
-
-			this.userSettingsDao.updateNested(path, UserZonesModel.serialize(zones)).then((userSettings: UserSettingsModel) => {
-
-				resolve(UserZonesModel.deserialize(userSettings.zones[zoneDefinition.value]));
-
-			}, error => {
-
-				reject(error);
-
-			});
+	public saveZones(zoneDefinition: ZoneDefinitionModel, zones: ZoneModel[]): Promise<ZoneModel[]> {
+		const path = ["zones", zoneDefinition.value];
+		return this.saveProperty<number[]>(path, UserZonesModel.serialize(zones)).then((userSettingsModel: UserSettingsModel) => {
+			return Promise.resolve(UserZonesModel.deserialize(userSettingsModel.zones[zoneDefinition.value]));
 		});
 	}
-
 
 	/**
 	 *
 	 * @returns {Promise<UserSettingsModel>}
 	 */
 	public reset(): Promise<UserSettingsModel> {
-		return this.userSettingsDao.reset();
+		return (<Promise<UserSettingsModel>> this.userSettingsDao.save(userSettingsData));
 	}
-
-	get userSettingsDao(): UserSettingsDao {
-		return this._userSettingsDao;
-	}
-
 }

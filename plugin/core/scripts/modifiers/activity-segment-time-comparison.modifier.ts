@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import $ from "../../modules/jquery.appear";
 import { Helper } from "../helper";
-import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { AbstractModifier } from "./abstract.modifier";
 

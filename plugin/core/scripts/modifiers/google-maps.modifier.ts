@@ -1,10 +1,13 @@
 import * as _ from "lodash";
 import * as $ from "jquery";
-import { UserSettingsModel } from "../shared/models/user-settings/user-settings.model";
+import { UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { AbstractModifier } from "./abstract.modifier";
+import * as Cookies from "js-cookie";
 
 export class GoogleMapsModifier extends AbstractModifier {
+
+	private static ENABLED = false; // Disabled at the moment (Not free any more). Both settings keys 'reviveGoogleMaps' & 'reviveGoogleMapsLayerType' are hidden in GlobalSettingsService
 
 	protected activityId: number;
 	protected appResources: AppResourcesModel;
@@ -27,6 +30,11 @@ export class GoogleMapsModifier extends AbstractModifier {
 			return;
 		}
 
+		if (!GoogleMapsModifier.ENABLED) {
+			this.placeNoGoogleMapsAvailableInfo();
+			return;
+		}
+
 		// Next load the Google API from external
 		this.getGoogleMapsApi();
 
@@ -40,6 +48,33 @@ export class GoogleMapsModifier extends AbstractModifier {
          self.fetchSegmentInfoAndDisplayWithGoogleMap(self.pathArray, effortIdClicked);
          });
          */
+	}
+
+	private placeNoGoogleMapsAvailableInfo() {
+
+		// Do not add Main Google Map Button if native strava map not displayed
+		if (!$("#map-canvas") || $("#map-canvas").is(":hidden") || $("#showInGoogleMap").length) {
+			return;
+		}
+
+		const dismissKey = "elevate_dismiss_no_gmaps_anymore";
+		const dismissKeyLink = dismissKey + "_link";
+
+		if (Cookies.get(dismissKey)) {
+			return;
+		}
+
+		const info = "Google Maps feature provided by 'Elevate' extension is no longer available. This service is now too expensive to be displayed at the moment.";
+		const dismiss = "dismiss this message";
+		$("#map-canvas").before("<div id='" + dismissKey + "' style='text-align: center;padding: 5px;'>" + info + " <a id='" + dismissKeyLink + "'>[" + dismiss + "]</a></div>").each(() => {
+			$("#" + dismissKeyLink).click(() => {
+				const date = new Date();
+				date.setFullYear(date.getFullYear() + 1);
+				Cookies.set(dismissKey, "true", {expires: date});
+				$("#" + dismissKey).remove();
+			});
+		});
+
 	}
 
 	protected googleMapsApiLoaded(activityId: number): boolean {

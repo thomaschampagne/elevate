@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { MatDialog, MatSnackBar, MatTableDataSource } from "@angular/material";
-import { DatedAthleteSettingsModel } from "../../../shared/models/athlete/athlete-settings/dated-athlete-settings.model";
+import { DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { DatedAthleteSettingsService } from "../../../shared/services/dated-athlete-settings/dated-athlete-settings.service";
 import { EditDatedAthleteSettingsDialogComponent } from "../edit-dated-athlete-settings-dialog/edit-dated-athlete-settings-dialog.component";
 import * as _ from "lodash";
@@ -45,7 +45,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 		DatedAthleteSettingsManagerComponent.COLUMN_RUNNING_FTP,
 		DatedAthleteSettingsManagerComponent.COLUMN_SWIM_FTP,
 		DatedAthleteSettingsManagerComponent.COLUMN_ACTION_EDIT,
-		DatedAthleteSettingsManagerComponent.COLUMN_ACTION_DELETE,
+		DatedAthleteSettingsManagerComponent.COLUMN_ACTION_DELETE
 	];
 
 	public datedAthleteSettingsModels: DatedAthleteSettingsModel[];

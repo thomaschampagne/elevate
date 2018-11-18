@@ -1,8 +1,6 @@
 import * as _ from "lodash";
 import { CoreEnv } from "../../config/core-env";
-import { ActivityStatsMapModel } from "../models/activity-data/activity-stats-map.model";
-import { ActivityStreamsModel } from "../models/activity-data/activity-streams.model";
-import { Gender } from "../../../app/src/app/shared/models/athlete/gender.enum";
+import { ActivityStatsMapModel, ActivityStreamsModel, Gender } from "@elevate/shared/models";
 
 export class VacuumProcessor {
 
@@ -315,8 +313,8 @@ export class VacuumProcessor {
 			&& window.pageView.similarActivities().efforts.byActivityId
 		) {
 			const activity = window.pageView.similarActivities().efforts.byActivityId[window.pageView.activity().get("id")];
-			if (activity && _.isNumber(activity.get('start_date'))) {
-				return new Date(activity.get('start_date') * 1000);
+			if (activity && _.isNumber(activity.get("start_date"))) {
+				return new Date(activity.get("start_date") * 1000);
 			}
 		}
 

@@ -3,16 +3,17 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FitnessTrendTableComponent } from "./fitness-trend-table.component";
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
-import { userSettingsData } from "../../../../../core/scripts/shared/user-settings.data";
-import { ActivityDao } from "../../shared/dao/activity/activity.dao";
-import { UserSettingsDao } from "../../shared/dao/user-settings/user-settings.dao";
+import { userSettingsData } from "@elevate/shared/data";
 import { TEST_SYNCED_ACTIVITIES } from "../../../shared-fixtures/activities-2015.fixture";
 import { FitnessTrendModule } from "../fitness-trend.module";
+import * as _ from "lodash";
+import { ActivityService } from "../../shared/services/activity/activity.service";
+import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 
 describe("FitnessTrendTableComponent", () => {
 
-	let activityDao: ActivityDao = null;
-	let userSettingsDao: UserSettingsDao = null;
+	let activityService: ActivityService = null;
+	let userSettingsService: UserSettingsService = null;
 
 	let component: FitnessTrendTableComponent;
 	let fixture: ComponentFixture<FitnessTrendTableComponent>;
@@ -26,24 +27,12 @@ describe("FitnessTrendTableComponent", () => {
 			],
 		}).compileComponents();
 
-		activityDao = TestBed.get(ActivityDao);
-		userSettingsDao = TestBed.get(UserSettingsDao);
+		activityService = TestBed.get(ActivityService);
+		userSettingsService = TestBed.get(UserSettingsService);
 
-		// Mocking chrome storage
-		spyOn(activityDao, "browserStorageLocal").and.returnValue({
-			get: (keys: any, callback: (item: Object) => {}) => {
-				callback({syncedActivities: TEST_SYNCED_ACTIVITIES});
-			}
-		});
-
-		spyOn(userSettingsDao, "browserStorageSync").and.returnValue({
-			get: (keys: any, callback: (item: Object) => {}) => {
-				callback(userSettingsData);
-			},
-			set: (keys: any, callback: () => {}) => {
-				callback();
-			}
-		});
+		// Mocking
+		spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
 
 		done();
 	});

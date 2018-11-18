@@ -1,17 +1,13 @@
 import * as _ from "lodash";
 import * as $ from "jquery";
 import { Helper } from "../../helper";
-import { UserSettingsModel } from "../../shared/models/user-settings/user-settings.model";
+import { ActivityBasicInfoModel, AnalysisDataModel, AthleteModel, SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AbstractDataView } from "./views/abstract-data.view";
 import { FeaturedDataView } from "./views/featured-data.view";
 import { HeaderView } from "./views/header.view";
 import { HeartRateDataView } from "./views/heart-rate-data.view";
-import { ActivityBasicInfoModel } from "../../models/activity-data/activity-basic-info.model";
-import { SpeedUnitDataModel } from "../../models/activity-data/speed-unit-data.model";
-import { AnalysisDataModel } from "../../models/activity-data/analysis-data.model";
-import { AthleteModel } from "../../../../app/src/app/shared/models/athlete/athlete.model";
 
 export abstract class AbstractExtendedDataModifier {
 

@@ -1,0 +1,15 @@
+{
+	"include": [
+		"**/index.ts"
+	],
+	"compileOnSave": false,
+	"compilerOptions": {
+		"sourceMap": true,
+		"declaration": false,
+		"target": "es5",
+		"moduleResolution": "node",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"skipLibCheck": true
+	}
+}

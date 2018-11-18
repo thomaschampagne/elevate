@@ -6,6 +6,7 @@ import { Moment } from "moment";
 export class ViewableYearProgressDataModel {
 
 	public yearLines: GraphPointModel[][] = [];
+	public targetLine: GraphPointModel[] = [];
 	public markers: MarkerModel[] = [];
 	public markerMoment: Moment;
 
@@ -18,6 +19,10 @@ export class ViewableYearProgressDataModel {
 		_.forEach(yearLines, (yearLine: GraphPointModel[]) => {
 			this.yearLines.push(MG.convert.date(yearLine, "date"));
 		});
+	}
+
+	public setGraphicsTargetLine(targetLine: GraphPointModel[]): void {
+		this.targetLine = MG.convert.date(targetLine, "date");
 	}
 
 	public setMarkerMoment(markerMoment: Moment): void {

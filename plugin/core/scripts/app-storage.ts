@@ -1,7 +1,11 @@
-import { AppStorageType } from "./models/storage-type.enum";
+import { AppStorageType } from "@elevate/shared/models";
 import { AppStorageUsage } from "./models/app-storage-usage.model";
 
 export class AppStorage {
+
+	constructor(extensionId?: string) {
+		this.extensionId = (extensionId) ? extensionId : null;
+	}
 
 	public static readonly ON_GET_MESSAGE: string = "ON_GET_MESSAGE";
 	public static readonly ON_SET_MESSAGE: string = "ON_SET_MESSAGE";
@@ -10,17 +14,13 @@ export class AppStorage {
 
 	private static instance: AppStorage = null;
 
+	private extensionId: string = null;
+
 	public static getInstance(): AppStorage {
 		if (!this.instance) {
 			this.instance = new AppStorage((chrome && chrome.runtime && chrome.runtime.id) ? chrome.runtime.id : null);
 		}
 		return this.instance;
-	}
-
-	private extensionId: string = null;
-
-	constructor(extensionId?: string) {
-		this.extensionId = (extensionId) ? extensionId : null;
 	}
 
 	public setExtensionId(extensionId: string): void {
@@ -67,7 +67,7 @@ export class AppStorage {
 				});
 			}
 		});
-	};
+	}
 
 	/**
 	 *
@@ -87,7 +87,7 @@ export class AppStorage {
 				if (key) {
 					object[key] = value;
 				} else {
-					object = value
+					object = value;
 				}
 
 				chrome.storage[storageType].set(object, () => {
@@ -106,8 +106,7 @@ export class AppStorage {
 				});
 			}
 		});
-	};
-
+	}
 
 	/**
 	 *
@@ -138,8 +137,7 @@ export class AppStorage {
 				});
 			}
 		});
-	};
-
+	}
 
 	/**
 	 *

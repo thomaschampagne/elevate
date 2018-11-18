@@ -1,7 +1,6 @@
-import { SyncedActivityModel } from "../../../../../../core/scripts/shared/models/sync/synced-activity.model";
+import { AthleteModel, SyncedActivityModel } from "@elevate/shared/models";
 import * as moment from "moment";
 import * as _ from "lodash";
-import { AthleteModel } from "../../../shared/models/athlete/athlete.model";
 
 export class FakeSyncedActivityHelper {
 

@@ -2,21 +2,23 @@ import * as _ from "lodash";
 import * as Q from "q";
 import * as $ from "jquery";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/specs-tools";
-import { UserSettingsModel } from "../../scripts/shared/models/user-settings/user-settings.model";
+import {
+	ActivitiesChangesModel,
+	AnalysisDataModel,
+	AthleteSettingsModel,
+	DatedAthleteSettingsModel,
+	SyncedActivityModel,
+	SyncResultModel,
+	UserSettingsModel
+} from "@elevate/shared/models";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { ActivitiesSynchronizer } from "../../scripts/processors/activities-synchronizer";
 import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";
 import { StreamActivityModel } from "../../scripts/models/sync/stream-activity.model";
-import { AnalysisDataModel } from "../../scripts/models/activity-data/analysis-data.model";
-import { SyncedActivityModel } from "../../scripts/shared/models/sync/synced-activity.model";
 import { MultipleActivityProcessor } from "../../scripts/processors/multiple-activity-processor";
 import { SyncNotifyModel } from "../../scripts/models/sync/sync-notify.model";
-import { SyncResultModel } from "../../scripts/shared/models/sync/sync-result.model";
-import { ActivitiesChangesModel } from "../../scripts/models/sync/activities-changes.model";
-import { AthleteModelResolver } from "../../scripts/shared/resolvers/athlete-model.resolver";
-import { userSettingsData } from "../../scripts/shared/user-settings.data";
-import { DatedAthleteSettingsModel } from "../../../app/src/app/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
-import { AthleteSettingsModel } from "../../../app/src/app/shared/models/athlete/athlete-settings/athlete-settings.model";
+import { AthleteModelResolver } from "@elevate/shared/resolvers";
+import { userSettingsData } from "@elevate/shared/data";
 
 describe("ActivitiesSynchronizer", () => {
 

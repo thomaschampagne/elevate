@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import { Helper } from "../helper";
 import { EffortInfo, LeaderBoardData } from "./activity-segment-time-comparison.modifier";
 import { AbstractModifier } from "./abstract.modifier";
-import { AthleteModel } from "../../../app/src/app/shared/models/athlete/athlete.model";
+import { AthleteModel } from "@elevate/shared/models";
 
 export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
 

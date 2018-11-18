@@ -12,5 +12,4 @@ export class ReportComponent implements OnInit {
 
 	public ngOnInit(): void {
 	}
-
 }
