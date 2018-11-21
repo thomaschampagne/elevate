@@ -2,6 +2,7 @@ import { AthleteModel } from "../models/athlete";
 import { DatedAthleteSettingsModel } from "../models/athlete/athlete-settings";
 import { UserSettingsModel } from "../models/user-settings";
 import * as _ from "lodash";
+import { userSettingsData } from "../data";
 
 /**
  * Shared by core and app to resolve AthleteModel for a given activity date
@@ -39,8 +40,9 @@ export class AthleteModelResolver {
 
 		let athleteModel: AthleteModel;
 
-		// Use gender set in synced user settings
-		const gender = this.userSettingsModel.athleteModel.gender;
+		if (!this.userSettingsModel.athleteModel) {
+			this.userSettingsModel.athleteModel = _.cloneDeep(userSettingsData.athleteModel);
+		}
 
 		const hasDatedAthleteSettings: boolean = this.userSettingsModel.hasDatedAthleteSettings;
 
@@ -50,7 +52,7 @@ export class AthleteModelResolver {
 			const datedAthleteSettingsModel: DatedAthleteSettingsModel = this.resolveDatedAthleteSettingsAtDate(onDateString);
 
 			// If datedAthleteSettingsModel found use it, instead use 'classic' AthleteSettingsModel
-			athleteModel = (datedAthleteSettingsModel) ? new AthleteModel(gender, datedAthleteSettingsModel.toAthleteSettingsModel())
+			athleteModel = (datedAthleteSettingsModel) ? new AthleteModel(this.userSettingsModel.athleteModel.gender, datedAthleteSettingsModel.toAthleteSettingsModel())
 				: new AthleteModel(this.userSettingsModel.athleteModel.gender, this.userSettingsModel.athleteModel.athleteSettings);
 
 		} else {
