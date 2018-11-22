@@ -10,6 +10,7 @@ export class AppStorage {
 	public static readonly ON_GET_MESSAGE: string = "ON_GET_MESSAGE";
 	public static readonly ON_SET_MESSAGE: string = "ON_SET_MESSAGE";
 	public static readonly ON_RM_MESSAGE: string = "ON_RM_MESSAGE";
+	public static readonly ON_CLEAR_MESSAGE: string = "ON_CLEAR_MESSAGE";
 	public static readonly ON_USAGE_MESSAGE: string = "ON_USAGE_MESSAGE";
 
 	private static instance: AppStorage = null;
@@ -133,6 +134,36 @@ export class AppStorage {
 			} else {
 
 				this.backgroundStorageQuery<T>(AppStorage.ON_RM_MESSAGE, storageType, key).then(() => {
+					resolve();
+				});
+			}
+		});
+	}
+
+	/**
+	 *
+	 * @param storageType
+	 */
+	public clear<T>(storageType: AppStorageType): Promise<void> {
+
+		this.verifyExtensionId();
+
+		return new Promise<void>((resolve: Function, reject: Function) => {
+
+			if (this.hasStorageAccess()) {
+
+				chrome.storage[storageType].clear(() => {
+					const error = chrome.runtime.lastError;
+					if (error) {
+						reject(error.message);
+					} else {
+						resolve();
+					}
+				});
+
+			} else {
+
+				this.backgroundStorageQuery<T>(AppStorage.ON_CLEAR_MESSAGE, storageType).then(() => {
 					resolve();
 				});
 			}
