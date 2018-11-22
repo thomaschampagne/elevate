@@ -7,7 +7,7 @@ import { userSettingsData } from "@elevate/shared/data";
 @Injectable()
 export class UserSettingsDao extends BaseDao<UserSettingsModel> {
 
-	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel(AppStorageType.SYNC);
+	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel(AppStorageType.SYNC, "userSettings");
 	public static readonly DEFAULT_STORAGE_VALUE: UserSettingsModel = userSettingsData;
 
 	public getStorageLocation(): StorageLocationModel {
