@@ -106,10 +106,12 @@ export class Elevate {
 
 				localStorage.clear();
 
-				AppStorage.getInstance().set<boolean>(AppStorageType.SYNC, "localStorageMustBeCleared", false).then(() => {
-					return AppStorage.getInstance().get<boolean>(AppStorageType.SYNC, "localStorageMustBeCleared");
-				}).then((result: boolean) => {
-					console.log("localStorageMustBeCleared is now " + result);
+				const updateObject = {
+					localStorageMustBeCleared: false
+				};
+
+				AppStorage.getInstance().set<Object>(AppStorageType.SYNC, "userSettings", updateObject).then(() => {
+					console.log("localStorageMustBeCleared is now");
 				});
 
 			}

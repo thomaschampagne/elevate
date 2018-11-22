@@ -2,18 +2,17 @@ import * as _ from "lodash";
 import { Loader } from "../modules/loader";
 import { AppResourcesModel } from "./models/app-resources.model";
 import { StartCoreDataModel } from "./models/start-core-data.model";
-import { CoreMessages, UserSettingsModel } from "@elevate/shared/models";
+import { AppStorageType, CoreMessages, UserSettingsModel } from "@elevate/shared/models";
 import { userSettingsData } from "@elevate/shared/data";
+import { AppStorage } from "./app-storage";
 
 export class Content {
 
 	public static loader: Loader = new Loader();
 
 	protected appResources: AppResourcesModel;
-	protected userSettings: UserSettingsModel;
 
-	constructor(userSettings: UserSettingsModel, appResources: AppResourcesModel) {
-		this.userSettings = userSettings;
+	constructor(appResources: AppResourcesModel) {
 		this.appResources = appResources;
 	}
 
@@ -54,20 +53,27 @@ export class Content {
 			return;
 		}
 
-		chrome.storage.sync.get(this.userSettings, (chromeSettings: UserSettingsModel) => {
+		AppStorage.getInstance().get<any>(AppStorageType.SYNC).then(result => {
 
-			if (_.isEmpty(chromeSettings)) { // If settings from chrome sync storage are empty
-				chromeSettings = this.userSettings;
+			let userSettingsModel: UserSettingsModel;
+
+			const hasUserSettingsKey = !_.isEmpty(result.userSettings);
+
+			if (hasUserSettingsKey) {
+				userSettingsModel = result.userSettings;
+			} else {
+				userSettingsModel = userSettingsData;
 			}
+
 			const defaultSettings = _.keys(userSettingsData);
-			const syncedSettings = _.keys(chromeSettings);
+			const syncedSettings = _.keys(userSettingsModel);
 			if (_.difference(defaultSettings, syncedSettings).length !== 0) { // If settings shape has changed
-				_.defaults(chromeSettings, userSettingsData);
+				_.defaults(userSettingsModel, userSettingsData);
 			}
 
 			const startCoreData: StartCoreDataModel = {
 				extensionId: chrome.runtime.id,
-				userSettings: chromeSettings,
+				userSettings: userSettingsModel,
 				appResources: this.appResources,
 			};
 
@@ -80,7 +86,6 @@ export class Content {
 				this.emitStartCoreEvent(startCoreData);
 			});
 		});
-
 	}
 
 	protected emitStartCoreEvent(startCoreData: StartCoreDataModel) {
@@ -144,5 +149,5 @@ export let appResources: AppResourcesModel = {
 	extensionId: chrome.runtime.id,
 };
 
-const content: Content = new Content(userSettingsData, appResources);
+const content: Content = new Content(appResources);
 content.start();
