@@ -77,6 +77,32 @@ export class AdvancedMenuComponent implements OnInit {
 		});
 	}
 
+	public onZoneSettingsReset(): void {
+
+		const data: ConfirmDialogDataModel = {
+			title: "Reset zones",
+			content: "This will reset only your zones to defaults. Are you sure to perform this action?"
+		};
+
+		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+			minWidth: ConfirmDialogComponent.MIN_WIDTH,
+			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+			data: data
+		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+			if (confirm) {
+				Promise.all([
+					this.userSettingsService.reset(),
+					this.userSettingsService.clearLocalStorageOnNextLoad()
+				]).then(() => {
+					this.snackBar.open("Zones settings have been reset", "Close");
+					afterClosedSubscription.unsubscribe();
+				});
+			}
+		});
+	}
+
 	public onUserSettingsReset(): void {
 
 		const data: ConfirmDialogDataModel = {
