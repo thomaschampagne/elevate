@@ -15,6 +15,8 @@ export class FaqComponent implements OnInit {
 	public html: SafeHtml;
 	public markDownParser: MarkDownIt;
 
+	public isFaqLoaded: boolean = null;
+
 	constructor(public httpClient: HttpClient,
 				public domSanitizer: DomSanitizer) {
 	}
@@ -22,12 +24,15 @@ export class FaqComponent implements OnInit {
 	public ngOnInit(): void {
 
 		this.markDownParser = new MarkDownIt();
+
 		this.httpClient.get(FaqComponent.FAQ_URL, {responseType: "text"}).toPromise().then((markdownData: string) => {
+
 			this.html = this.domSanitizer.bypassSecurityTrustHtml(this.markDownParser.render(markdownData));
+			this.isFaqLoaded = true;
+
 		}, err => {
 			console.error(err);
 		});
-
 	}
 
 }
