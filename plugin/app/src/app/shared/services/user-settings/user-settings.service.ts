@@ -16,6 +16,11 @@ export class UserSettingsService {
 		return (<Promise<UserSettingsModel>> this.userSettingsDao.fetch());
 	}
 
+	/**
+	 *
+	 * @param path
+	 * @param value
+	 */
 	public saveProperty<V>(path: string | string[], value: V): Promise<UserSettingsModel> {
 		return this.userSettingsDao.upsertProperty<V>(path, value);
 	}
@@ -50,5 +55,13 @@ export class UserSettingsService {
 	 */
 	public reset(): Promise<UserSettingsModel> {
 		return (<Promise<UserSettingsModel>> this.userSettingsDao.save(userSettingsData));
+	}
+
+	/**
+	 * @returns {Promise<UserSettingsModel>}
+	 */
+	public resetZones(): Promise<UserSettingsModel> {
+		const defaultZones = (<UserSettingsModel>this.userSettingsDao.getDefaultStorageValue()).zones;
+		return this.saveProperty<UserZonesModel>(["zones"], defaultZones);
 	}
 }
