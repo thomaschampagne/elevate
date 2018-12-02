@@ -55,6 +55,7 @@
 	"license": "MIT",
 	"readme": "README.md",
 	"devDependencies": {
+		"event-stream": "3.3.4",
 		"bestzip": "^2.1.2",
 		"cpy-cli": "^2.0.0",
 		"del-cli": "^1.1.0",
