@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import { ViewedDayService } from "../shared/services/viewed-day.service";
 import { Subscription } from "rxjs";
+import { FitnessTrendComponent } from "../fitness-trend.component";
 
 @Component({
 	selector: "app-fitness-trend-legend",
@@ -31,5 +32,9 @@ export class FitnessTrendLegendComponent implements OnInit, OnDestroy {
 
 	public ngOnDestroy(): void {
 		this.subscription.unsubscribe();
+	}
+
+	public onOpenActivity(id: number): void {
+		FitnessTrendComponent.openActivities([ id ]);
 	}
 }
