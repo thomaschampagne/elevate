@@ -417,7 +417,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 	}
 
 	public onGraphMouseOut(date: Date): void {
-		this.setTodayAsViewedDay();
+		//this.setTodayAsViewedDay();
 	}
 
 	public getTodayViewedDay(): DayFitnessTrendModel {
