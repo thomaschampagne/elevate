@@ -39,6 +39,10 @@ $config: mat-typography-config();
 		.name {
 			color: $accent-color;
 		}
+
+		.button {
+			cursor: pointer;
+		}
 	}
 
 	.atl-value {
