@@ -321,47 +321,167 @@ describe("AthleteModelResolverService", () => {
 		done();
 	});
 
+	it("should resolve default AthleteModel when an invalid date is given (new Date(undefined))", (done: Function) => {
+
+		// Given
+		const onDate = new Date(undefined);
+
+		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			expectedDatedAthleteSettingsModel
+		];
+
+		const expectedAthleteModel = userSettingsData.athleteModel;
+		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
+
+		// When
+		const athleteModel = athleteModelResolverService.resolve(onDate);
+
+		// Then
+		expect(athleteModel).toEqual(expectedAthleteModel);
+
+		done();
+	});
+
+	it("should resolve default AthleteModel when an invalid date is given (13 months)", (done: Function) => {
+
+		// Given
+		const onDate = "2018-13-15"; // Invalid date: 13 months
+
+		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			expectedDatedAthleteSettingsModel
+		];
+
+		const expectedAthleteModel = userSettingsData.athleteModel;
+		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
+
+		// When
+		const athleteModel = athleteModelResolverService.resolve(onDate);
+
+		// Then
+		expect(athleteModel).toEqual(expectedAthleteModel);
+
+		done();
+	});
+
+	it("should resolve default AthleteModel when an undefined date is given (undefined)", (done: Function) => {
+
+		// Given
+		const onDate = undefined;
+
+		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			expectedDatedAthleteSettingsModel
+		];
+
+		const expectedAthleteModel = userSettingsData.athleteModel;
+		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
+
+		// When
+		const athleteModel = athleteModelResolverService.resolve(onDate);
+
+		// Then
+		expect(athleteModel).toEqual(expectedAthleteModel);
+
+		done();
+	});
+
+	it("should resolve default AthleteModel when an undefined date is given (wrong pattern)", (done: Function) => {
+
+		// Given
+		const onDate = "2018-13.15"; // Wrong pattern
+
+		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			expectedDatedAthleteSettingsModel
+		];
+
+		const expectedAthleteModel = userSettingsData.athleteModel;
+		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
+
+		// When
+		const athleteModel = athleteModelResolverService.resolve(onDate);
+
+		// Then
+		expect(athleteModel).toEqual(expectedAthleteModel);
+
+		done();
+	});
+
+	it("should resolve existing default AthleteModel when a wrong date (Type Date) is given", (done: Function) => {
+
+		// Given
+		const onDate = new Date(undefined);
+
+		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			expectedDatedAthleteSettingsModel
+		];
+
+		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
+		athleteModelResolverService.athleteModelResolver.userSettingsModel.athleteModel.athleteSettings.maxHr = 666;
+		athleteModelResolverService.athleteModelResolver.userSettingsModel.athleteModel.athleteSettings.restHr = 111;
+
+		const expectedAthleteModel = _.cloneDeep(athleteModelResolverService.athleteModelResolver.userSettingsModel.athleteModel);
+
+		// When
+		const athleteModel = athleteModelResolverService.resolve(onDate);
+
+		// Then
+		expect(athleteModel).toEqual(expectedAthleteModel);
+
+		done();
+	});
+
+	it("should resolve existing default AthleteModel when a wrong date (undefined) is given", (done: Function) => {
+
+		// Given
+		const onDate = undefined;
+
+		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+			expectedDatedAthleteSettingsModel
+		];
+
+		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, datedAthleteSettingsModels);
+		athleteModelResolverService.athleteModelResolver.userSettingsModel.athleteModel.athleteSettings.maxHr = 666;
+		athleteModelResolverService.athleteModelResolver.userSettingsModel.athleteModel.athleteSettings.restHr = 111;
+
+		const expectedAthleteModel = _.cloneDeep(athleteModelResolverService.athleteModelResolver.userSettingsModel.athleteModel);
+
+		// When
+		const athleteModel = athleteModelResolverService.resolve(onDate);
+
+		// Then
+		expect(athleteModel).toEqual(expectedAthleteModel);
+
+		done();
+	});
+
 	it("should not resolve AthleteModel when athleteModelResolver not ready.", (done: Function) => {
 
 		// Given
 		const onDate = "2018-01-15";
 		const expectedError = new Error("AthleteModelResolver do not exists. Please update service at first with AthleteModelResolverService#update()");
-
-		// When
-		const call = () => {
-			athleteModelResolverService.resolve(onDate);
-		};
-
-		// Then
-		expect(call).toThrow(expectedError);
-
-		done();
-	});
-
-	it("should not resolve AthleteModel with wrong date.", (done: Function) => {
-
-		// Given
-		const onDate = "2018-13.15"; // Wrong pattern
-		const expectedError = new Error("Invalid date or not formatted as 'YYYY-MM-DD'");
-		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, []);
-
-		// When
-		const call = () => {
-			athleteModelResolverService.resolve(onDate);
-		};
-
-		// Then
-		expect(call).toThrow(expectedError);
-
-		done();
-	});
-
-	it("should not resolve AthleteModel with wrong pattern date.", (done: Function) => {
-
-		// Given
-		const onDate = "2018-13-15"; // Wrong date
-		const expectedError = new Error("Invalid date or not formatted as 'YYYY-MM-DD'");
-		athleteModelResolverService.athleteModelResolver = new AthleteModelResolver(userSettingsModel, []);
 
 		// When
 		const call = () => {
