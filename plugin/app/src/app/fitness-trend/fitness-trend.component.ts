@@ -159,6 +159,15 @@ export class FitnessTrendComponent implements OnInit {
 		}];
 	}
 
+	public static openActivity(id: number) {
+		if (_.isNumber(id)) {
+			const url = "https://www.strava.com/activities/{activityId}";
+			window.open(url.replace("{activityId}", id.toString()), "_blank");
+		} else {
+			console.warn("No activity found");
+		}
+	}
+
 	public static openActivities(ids: number[]) {
 		if (ids.length > 0) {
 			const url = "https://www.strava.com/activities/{activityId}";
