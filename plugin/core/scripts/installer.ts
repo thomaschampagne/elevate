@@ -349,6 +349,47 @@ class Installer {
 		return promise;
 	}
 
+	protected migrate_to_6_8_1(): Promise<void> {
+
+		let promise: Promise<void>;
+
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.8.1")) {
+
+			console.log("Migrate to 6.8.1");
+
+			let userSettingsModel: UserSettingsModel;
+
+			// Move all user settings content inside specific key
+			promise = AppStorage.getInstance().get(AppStorageType.SYNC).then((settings: UserSettingsModel) => {
+
+				const hasUserSettingsKey = !_.isEmpty((<any> settings).userSettings);
+
+				if (hasUserSettingsKey) {
+					return Promise.resolve();
+				} else {
+
+					userSettingsModel = settings;
+
+					delete (userSettingsModel as any).bestSplitsConfiguration; // Remove best split config from user settings
+
+					return AppStorage.getInstance().clear(AppStorageType.SYNC).then(() => {
+						return AppStorage.getInstance().set(AppStorageType.SYNC, "userSettings", userSettingsModel);
+					});
+				}
+
+			});
+
+		} else {
+
+			console.log("Skip migrate to 6.8.1");
+
+			promise = Promise.resolve();
+		}
+
+		return promise;
+	}
+
+
 	protected handleUpdate(): Promise<void> {
 
 		console.log("Updated from " + this.previousVersion + " to " + this.currentVersion);
@@ -366,6 +407,8 @@ class Installer {
 			return this.migrate_to_6_6_0();
 		}).then(() => {
 			return this.migrate_to_6_7_0();
+		}).then(() => {
+			return this.migrate_to_6_8_1();
 		}).catch(error => console.error(error));
 
 	}

@@ -1,4 +1,8 @@
-<mat-card>
+<div *ngIf="(!isFaqLoaded)">
+	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+
+<mat-card *ngIf="(isFaqLoaded === true)">
 	<mat-card-content>
 		<div [innerHtml]="html"></div>
 	</mat-card-content>

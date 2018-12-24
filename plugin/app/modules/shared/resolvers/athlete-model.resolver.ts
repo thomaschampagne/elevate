@@ -2,6 +2,7 @@ import { AthleteModel } from "../models/athlete";
 import { DatedAthleteSettingsModel } from "../models/athlete/athlete-settings";
 import { UserSettingsModel } from "../models/user-settings";
 import * as _ from "lodash";
+import { userSettingsData } from "../data";
 
 /**
  * Shared by core and app to resolve AthleteModel for a given activity date
@@ -30,27 +31,37 @@ export class AthleteModelResolver {
 		let onDateString: string;
 
 		if (onDate instanceof Date) {
-			onDateString = onDate.getFullYear() + "-" + (onDate.getMonth() + 1).toString().padStart(2, "0") + "-" + onDate.getDate().toString().padStart(2, "0");
+
+			const isValidDate = !isNaN(onDate.getTime());
+
+			if (!isValidDate) {
+				return (this.userSettingsModel.athleteModel) ? this.userSettingsModel.athleteModel : _.cloneDeep(userSettingsData.athleteModel);
+			}
+
+			onDateString = this.shortDateAsString(onDate);
+
 		} else {
+
+			if (_.isEmpty(onDate)) {
+				return (this.userSettingsModel.athleteModel) ? this.userSettingsModel.athleteModel : _.cloneDeep(userSettingsData.athleteModel);
+			}
+
 			onDateString = onDate;
 		}
 
-		this.assertCompliantDate(onDateString);
-
-		let athleteModel: AthleteModel;
-
-		// Use gender set in synced user settings
-		const gender = this.userSettingsModel.athleteModel.gender;
+		// Use default AthleteModel if current in settings doesn't exists
+		if (!this.userSettingsModel.athleteModel) {
+			this.userSettingsModel.athleteModel = _.cloneDeep(userSettingsData.athleteModel);
+		}
 
 		const hasDatedAthleteSettings: boolean = this.userSettingsModel.hasDatedAthleteSettings;
 
+		let athleteModel: AthleteModel;
 		if (hasDatedAthleteSettings) {
-
 			// Find the local AthleteModel for the given date
 			const datedAthleteSettingsModel: DatedAthleteSettingsModel = this.resolveDatedAthleteSettingsAtDate(onDateString);
-
 			// If datedAthleteSettingsModel found use it, instead use 'classic' AthleteSettingsModel
-			athleteModel = (datedAthleteSettingsModel) ? new AthleteModel(gender, datedAthleteSettingsModel.toAthleteSettingsModel())
+			athleteModel = (datedAthleteSettingsModel) ? new AthleteModel(this.userSettingsModel.athleteModel.gender, datedAthleteSettingsModel.toAthleteSettingsModel())
 				: new AthleteModel(this.userSettingsModel.athleteModel.gender, this.userSettingsModel.athleteModel.athleteSettings);
 
 		} else {
@@ -76,15 +87,8 @@ export class AthleteModelResolver {
 		return (datedAthleteSettingsModel) ? DatedAthleteSettingsModel.asInstance(datedAthleteSettingsModel) : null;
 	}
 
-
-	private assertCompliantDate(onDateString: string): void {
-
-		const isDateWellFormatted = (/([0-9]{4})\-([0-9]{2})\-([0-9]{2})/gm).exec(onDateString);
-		const onDate = new Date(onDateString);
-		const isValidDate = !isNaN(onDate.getTime());
-
-		if (!isDateWellFormatted || !isValidDate) {
-			throw new Error("Invalid date or not formatted as 'YYYY-MM-DD'");
-		}
+	public shortDateAsString(date: Date): string {
+		return date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, "0") + "-" + date.getDate().toString().padStart(2, "0");
 	}
+
 }

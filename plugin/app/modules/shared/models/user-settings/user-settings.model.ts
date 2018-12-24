@@ -48,7 +48,6 @@ export class UserSettingsModel {
 	public displayRunningPowerEstimation: boolean;
 	public reviveGoogleMapsLayerType: string;
 	public displayActivityBestSplits: boolean;
-	public bestSplitsConfiguration: any; // TODO Type this !
 	public temperatureUnit: string;
 	public showHiddenBetaFeatures: boolean;
 	public displayReliveCCLink: boolean;

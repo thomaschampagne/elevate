@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { UserSettingsService } from "./user-settings.service";
-import { Gender, SyncedActivityModel, UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared/models";
+import { UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { userSettingsData } from "@elevate/shared/data";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
@@ -14,7 +14,7 @@ describe("UserSettingsService", () => {
 
 	beforeEach((done: Function) => {
 
-		const mockedDataStore: MockedDataStore<SyncedActivityModel> = new MockedDataStore();
+		const mockedDataStore: MockedDataStore<UserSettingsModel> = new MockedDataStore(userSettingsData);
 
 		TestBed.configureTestingModule({
 			providers: [
@@ -208,14 +208,6 @@ describe("UserSettingsService", () => {
 	it("should reset user settings", (done: Function) => {
 
 		// Given
-		const oldSettings = _.cloneDeep(userSettingsData);
-		oldSettings.displayAdvancedHrData = true;
-		oldSettings.athleteModel.gender = Gender.WOMEN;
-		oldSettings.zones.speed = [];
-		oldSettings.zones.heartRate = [];
-		oldSettings.zones.power = [];
-		oldSettings.zones.cyclingCadence = [];
-
 		const saveDaoSpy = spyOn(userSettingsService.userSettingsDao, "save")
 			.and.returnValue(Promise.resolve(userSettingsData));
 
@@ -230,6 +222,31 @@ describe("UserSettingsService", () => {
 			expect(result).toEqual(userSettingsData);
 			expect(saveDaoSpy).toHaveBeenCalledTimes(1);
 			expect(saveDaoSpy).toHaveBeenCalledWith(userSettingsData);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
+	it("should reset user zones settings", (done: Function) => {
+
+		// Given
+		const upsertPropertyDao = spyOn(userSettingsService.userSettingsDao, "upsertProperty")
+			.and.returnValue(Promise.resolve(userSettingsData));
+
+
+		// When
+		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.resetZones();
+
+		// Then
+		promiseUpdate.then((result: UserSettingsModel) => {
+
+			expect(result).not.toBeNull();
+			expect(upsertPropertyDao).toHaveBeenCalledTimes(1);
+			expect(upsertPropertyDao).toHaveBeenCalledWith(["zones"], userSettingsData.zones);
 
 			done();
 

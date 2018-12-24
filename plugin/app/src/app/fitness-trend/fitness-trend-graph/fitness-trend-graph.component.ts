@@ -14,6 +14,7 @@ import { ViewableFitnessDataModel } from "./models/viewable-fitness-data.model";
 import { Subscription } from "rxjs";
 import { WindowService } from "../../shared/services/window/window.service";
 import { ViewedDayService } from "../shared/services/viewed-day.service";
+import { FitnessTrendActivitiesLinksDialogComponent } from "../fitness-trend-activities-links-dialog/fitness-trend-activities-links-dialog.component";
 
 enum FITNESS_TRENDS_KEY_CODES {
 	DOWN_ARROW = 40,
@@ -382,8 +383,22 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 	}
 
 	public onGraphClick(metricsGraphicsEvent: MetricsGraphicsEventModel): void {
+
 		const dayFitnessTrend = this.getDayFitnessTrendFromDate(metricsGraphicsEvent.key);
-		FitnessTrendComponent.openActivities(dayFitnessTrend.ids);
+
+		if (_.isEmpty(dayFitnessTrend.ids)) {
+			return;
+		}
+
+		if (dayFitnessTrend.ids.length > 1) {
+			this.dialog.open(FitnessTrendActivitiesLinksDialogComponent, {
+				minWidth: FitnessTrendActivitiesLinksDialogComponent.MIN_WIDTH,
+				maxWidth: FitnessTrendActivitiesLinksDialogComponent.MAX_WIDTH,
+				data: dayFitnessTrend
+			});
+		} else {
+			FitnessTrendComponent.openActivity(_.first(dayFitnessTrend.ids));
+		}
 	}
 
 	public onGraphMouseOver(date: Date): void {

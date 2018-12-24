@@ -8,6 +8,7 @@ import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/conf
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { AppError } from "../../shared/models/app-error.model";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
+import { YearProgressPresetsDialogResponse } from "../shared/models/year-progress-presets-dialog-response.model";
 
 @Component({
 	selector: "app-manage-year-progress-presets-dialog",
@@ -30,8 +31,8 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
 	public readonly ProgressType = ProgressType;
 
 	public yearProgressPresetModels: YearProgressPresetModel[];
-
 	public dataSource: MatTableDataSource<YearProgressPresetModel>;
+	public deletedPresets: YearProgressPresetModel[];
 
 	public readonly displayedColumns: string[] = [
 		ManageYearProgressPresetsDialogComponent.COLUMN_PROGRESS_TYPE,
@@ -52,6 +53,7 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
 
 	public ngOnInit(): void {
 		this.dataSource = new MatTableDataSource<YearProgressPresetModel>();
+		this.deletedPresets = [];
 		this.loadData();
 	}
 
@@ -72,7 +74,7 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
 	}
 
 	public onLoad(rowId: number): void {
-		this.dialogRef.close(this.yearProgressPresetModels[rowId]);
+		this.dialogRef.close(new YearProgressPresetsDialogResponse(this.deletedPresets, this.yearProgressPresetModels[rowId]));
 	}
 
 	public onDelete(rowId: number): void {
@@ -85,13 +87,20 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
 
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirmed: boolean) => {
 			if (confirmed) {
-				this.yearProgressService.deletePreset(rowId).then(() => this.loadData(),
-					error => this.handleErrors(error));
+				const deletedPresetCopy = this.yearProgressPresetModels[rowId];
+				this.yearProgressService.deletePreset(rowId).then(() => {
+					this.loadData();
+					this.deletedPresets.push(deletedPresetCopy);
+				}, error => this.handleErrors(error));
 			}
 
 			afterClosedSubscription.unsubscribe();
 		});
 
+	}
+
+	public onBackClicked(): void {
+		this.dialogRef.close(new YearProgressPresetsDialogResponse(this.deletedPresets, null));
 	}
 
 	private handleErrors(error: any) {

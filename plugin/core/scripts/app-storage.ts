@@ -1,5 +1,6 @@
 import { AppStorageType } from "@elevate/shared/models";
 import { AppStorageUsage } from "./models/app-storage-usage.model";
+import * as _ from "lodash";
 
 export class AppStorage {
 
@@ -10,6 +11,7 @@ export class AppStorage {
 	public static readonly ON_GET_MESSAGE: string = "ON_GET_MESSAGE";
 	public static readonly ON_SET_MESSAGE: string = "ON_SET_MESSAGE";
 	public static readonly ON_RM_MESSAGE: string = "ON_RM_MESSAGE";
+	public static readonly ON_CLEAR_MESSAGE: string = "ON_CLEAR_MESSAGE";
 	public static readonly ON_USAGE_MESSAGE: string = "ON_USAGE_MESSAGE";
 
 	private static instance: AppStorage = null;
@@ -111,6 +113,20 @@ export class AppStorage {
 	/**
 	 *
 	 * @param storageType
+	 * @param path
+	 * @param value
+	 */
+	public upsertProperty<T, V>(storageType: AppStorageType, path: string[], value: V): Promise<void> {
+		const key = path.shift();
+		return this.get<T>(storageType, key).then((result: T) => {
+			result = (path.length > 0) ? (_.set(result as Object, path, value) as T) : (value as any);
+			return this.set<T>(storageType, key, result);
+		});
+	}
+
+	/**
+	 *
+	 * @param storageType
 	 * @param key
 	 */
 	public rm<T>(storageType: AppStorageType, key: string | string[]): Promise<void> {
@@ -121,7 +137,7 @@ export class AppStorage {
 
 			if (this.hasStorageAccess()) {
 
-				chrome.storage[storageType].remove(<any> key, () => {
+				chrome.storage[storageType].remove(<any>key, () => {
 					const error = chrome.runtime.lastError;
 					if (error) {
 						reject(error.message);
@@ -133,6 +149,36 @@ export class AppStorage {
 			} else {
 
 				this.backgroundStorageQuery<T>(AppStorage.ON_RM_MESSAGE, storageType, key).then(() => {
+					resolve();
+				});
+			}
+		});
+	}
+
+	/**
+	 *
+	 * @param storageType
+	 */
+	public clear<T>(storageType: AppStorageType): Promise<void> {
+
+		this.verifyExtensionId();
+
+		return new Promise<void>((resolve: Function, reject: Function) => {
+
+			if (this.hasStorageAccess()) {
+
+				chrome.storage[storageType].clear(() => {
+					const error = chrome.runtime.lastError;
+					if (error) {
+						reject(error.message);
+					} else {
+						resolve();
+					}
+				});
+
+			} else {
+
+				this.backgroundStorageQuery<T>(AppStorage.ON_CLEAR_MESSAGE, storageType).then(() => {
 					resolve();
 				});
 			}

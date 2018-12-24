@@ -102,7 +102,7 @@ export class WindyTyModifier extends AbstractModifier {
 			$("[data-wheater-windyty]").click((evt: JQuery.Event) => {
 				evt.preventDefault();
 				evt.stopPropagation();
-				this.showWeather($(evt.target).attr("data-wheater-windyty"));
+				this.showWeather($((evt as any).target).attr("data-wheater-windyty"));
 			});
 
 			$("#elevate_weather_title").click((evt: JQuery.Event) => {
