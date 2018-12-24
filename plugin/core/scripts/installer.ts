@@ -349,28 +349,28 @@ class Installer {
 		return promise;
 	}
 
-	protected migrate_to_6_9_0(): Promise<void> {
+	protected migrate_to_6_8_1(): Promise<void> {
 
 		let promise: Promise<void>;
 
-		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.9.0")) {
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.8.1")) {
 
-			console.log("Migrate to 6.9.0");
+			console.log("Migrate to 6.8.1");
 
 			let userSettingsModel: UserSettingsModel;
 
-			// Migrate storage of zones from ZoneModel[] to number[] => less space on storage
+			// Move all user settings content inside specific key
 			promise = AppStorage.getInstance().get(AppStorageType.SYNC).then((settings: UserSettingsModel) => {
 
 				const hasUserSettingsKey = !_.isEmpty((<any> settings).userSettings);
 
 				if (hasUserSettingsKey) {
-
 					return Promise.resolve();
-
 				} else {
 
 					userSettingsModel = settings;
+
+					delete (userSettingsModel as any).bestSplitsConfiguration; // Remove best split config from user settings
 
 					return AppStorage.getInstance().clear(AppStorageType.SYNC).then(() => {
 						return AppStorage.getInstance().set(AppStorageType.SYNC, "userSettings", userSettingsModel);
@@ -381,7 +381,7 @@ class Installer {
 
 		} else {
 
-			console.log("Skip migrate to 6.9.0");
+			console.log("Skip migrate to 6.8.1");
 
 			promise = Promise.resolve();
 		}
@@ -408,7 +408,7 @@ class Installer {
 		}).then(() => {
 			return this.migrate_to_6_7_0();
 		}).then(() => {
-			return this.migrate_to_6_9_0();
+			return this.migrate_to_6_8_1();
 		}).catch(error => console.error(error));
 
 	}
