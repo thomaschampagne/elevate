@@ -1,5 +1,6 @@
 import { AppStorageType } from "@elevate/shared/models";
 import { AppStorageUsage } from "./models/app-storage-usage.model";
+import * as _ from "lodash";
 
 export class AppStorage {
 
@@ -112,6 +113,20 @@ export class AppStorage {
 	/**
 	 *
 	 * @param storageType
+	 * @param path
+	 * @param value
+	 */
+	public upsertProperty<T, V>(storageType: AppStorageType, path: string[], value: V): Promise<void> {
+		const key = path.shift();
+		return this.get<T>(storageType, key).then((result: T) => {
+			result = (path.length > 0) ? (_.set(result as Object, path, value) as T) : (value as any);
+			return this.set<T>(storageType, key, result);
+		});
+	}
+
+	/**
+	 *
+	 * @param storageType
 	 * @param key
 	 */
 	public rm<T>(storageType: AppStorageType, key: string | string[]): Promise<void> {
@@ -122,7 +137,7 @@ export class AppStorage {
 
 			if (this.hasStorageAccess()) {
 
-				chrome.storage[storageType].remove(<any> key, () => {
+				chrome.storage[storageType].remove(<any>key, () => {
 					const error = chrome.runtime.lastError;
 					if (error) {
 						reject(error.message);
