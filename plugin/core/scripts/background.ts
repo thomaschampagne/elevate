@@ -77,6 +77,15 @@ export class Background {
 					);
 					break;
 
+				case AppStorage.ON_CLEAR_MESSAGE:
+					AppStorage.getInstance().clear(request.params.storage).then(
+						() => sendResponse({message: request.params.storage + " has been cleared"}),
+						error => {
+							console.error(error);
+						}
+					);
+					break;
+
 				case AppStorage.ON_USAGE_MESSAGE:
 					AppStorage.getInstance().usage(request.params.storage).then(
 						result => sendResponse({data: result}),

@@ -22,6 +22,7 @@ import { AddYearProgressPresetsDialogData } from "./shared/models/add-year-progr
 import { ManageYearProgressPresetsDialogComponent } from "./manage-year-progress-presets-dialog/manage-year-progress-presets-dialog.component";
 import { YearProgressPresetModel } from "./shared/models/year-progress-preset.model";
 import { TargetProgressionModel } from "./shared/models/target-progression.model";
+import { YearProgressPresetsDialogResponse } from "./shared/models/year-progress-presets-dialog-response.model";
 
 // TODO Style of target line !
 
@@ -323,44 +324,47 @@ export class YearProgressComponent implements OnInit {
 		const dialogRef = this.dialog.open(ManageYearProgressPresetsDialogComponent, {
 			minWidth: ManageYearProgressPresetsDialogComponent.MIN_WIDTH,
 			maxWidth: ManageYearProgressPresetsDialogComponent.MAX_WIDTH,
-			data: this.progressTypes
+			data: this.progressTypes,
+			disableClose: true
 		});
 
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((yearProgressPresetModel: YearProgressPresetModel) => {
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((dialogResponse: YearProgressPresetsDialogResponse) => {
 
-			const loadPreset = (!_.isEmpty(yearProgressPresetModel));
+			let loadPresetRequired = false;
 
-			if (loadPreset) {
+			if (dialogResponse.loadPreset) {
 
-				const progressTypeChange = (yearProgressPresetModel.progressType !== this.selectedProgressType.type);
-				const activityTypesChange = (yearProgressPresetModel.activityTypes.join(";") !== this.selectedActivityTypes.join(";"));
-				const commuteRideChange = (yearProgressPresetModel.includeCommuteRide !== this.includeCommuteRide);
-				const indoorRideChange = (yearProgressPresetModel.includeIndoorRide !== this.includeIndoorRide);
-				const targetValueChange = (yearProgressPresetModel.targetValue !== this.targetValue);
+				const yearProgressPresetModel = dialogResponse.loadPreset;
+				this.persistProgressTypePref(yearProgressPresetModel.progressType);
+				this.persistActivityTypesPref(yearProgressPresetModel.activityTypes);
+				this.persistCommuteRidesPref(yearProgressPresetModel.includeCommuteRide);
+				this.persistIndoorRidesPref(yearProgressPresetModel.includeIndoorRide);
+				this.persistTargetValuePref(yearProgressPresetModel.targetValue);
+				loadPresetRequired = true;
 
-				if (progressTypeChange) {
-					this.persistProgressTypePref(yearProgressPresetModel.progressType);
-				}
+			}
 
-				if (activityTypesChange) {
-					this.persistActivityTypesPref(yearProgressPresetModel.activityTypes);
-				}
+			let hideDisplayedTargetLine = false;
 
-				if (commuteRideChange) {
-					this.persistCommuteRidesPref(yearProgressPresetModel.includeCommuteRide);
-				}
+			// Check for deleted presets to know if we have to remove the current target line display
+			if (dialogResponse.deletedPresets && dialogResponse.deletedPresets.length > 0) {
+				_.forEach(dialogResponse.deletedPresets, (deletedPreset: YearProgressPresetModel) => {
+					if ((deletedPreset.progressType === this.selectedProgressType.type)
+						&& (deletedPreset.activityTypes.join("") === this.selectedActivityTypes.join(""))
+						&& (deletedPreset.includeCommuteRide === this.includeCommuteRide)
+						&& (deletedPreset.includeIndoorRide === this.includeIndoorRide)
+						&& (deletedPreset.targetValue === this.targetValue)) {
+						hideDisplayedTargetLine = true;
+					}
+				});
+			}
 
-				if (indoorRideChange) {
-					this.persistIndoorRidesPref(yearProgressPresetModel.includeIndoorRide);
-				}
+			if (hideDisplayedTargetLine) {
+				this.removeTargetValuePref();
+			}
 
-				if (targetValueChange) {
-					this.persistTargetValuePref(yearProgressPresetModel.targetValue);
-				}
-
-				if (progressTypeChange || activityTypesChange || commuteRideChange || indoorRideChange || targetValueChange) {
-					this.setup();
-				}
+			if (loadPresetRequired || hideDisplayedTargetLine) {
+				this.setup();
 			}
 
 			this.updateYearProgressPresetsCount();
