@@ -103,17 +103,8 @@ export class Elevate {
 			}
 
 			if (this.userSettings.localStorageMustBeCleared) {
-
 				localStorage.clear();
-
-				const updateObject = {
-					localStorageMustBeCleared: false
-				};
-
-				AppStorage.getInstance().set<Object>(AppStorageType.SYNC, "userSettings", updateObject).then(() => {
-					console.log("localStorageMustBeCleared is now");
-				});
-
+				AppStorage.getInstance().upsertProperty<UserSettingsModel, boolean>(AppStorageType.SYNC, ["userSettings", "localStorageMustBeCleared"], false);
 			}
 
 			// Init "elevate bridge"
@@ -297,14 +288,14 @@ export class Elevate {
 				on: Date.now(),
 			};
 
-			AppStorage.getInstance().set<any>(AppStorageType.LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY, toBeStored).then(() => {
+			AppStorage.getInstance().set<object>(AppStorageType.LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY, toBeStored).then(() => {
 				console.log("Version has been saved to local storage");
 				callback();
 			});
 		};
 
 		// Check for previous version is installed
-		AppStorage.getInstance().get<any>(AppStorageType.LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY).then((response: any) => {
+		AppStorage.getInstance().get<object>(AppStorageType.LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY).then((response: any) => {
 
 			// Override version with fake one to simulate update
 			if (CoreEnv.simulateUpdate) {
@@ -911,9 +902,9 @@ export class Elevate {
 		// TODO Implement cache here: get stream from cache if exist
 		this.vacuumProcessor.getActivityStream((activityCommonStats: any, jsonResponse: any, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => {
 
-			AppStorage.getInstance().get<any>(AppStorageType.SYNC, "bestSplitsConfiguration").then((response: any) => {
+			AppStorage.getInstance().get(AppStorageType.SYNC, "bestSplitsConfiguration").then((response: any) => {
 				const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.activityId, this.userSettings, jsonResponse, hasPowerMeter, response, (splitsConfiguration: any) => {
-					AppStorage.getInstance().set<any>(AppStorageType.SYNC, "bestSplitsConfiguration", splitsConfiguration);
+					AppStorage.getInstance().set(AppStorageType.SYNC, "bestSplitsConfiguration", splitsConfiguration);
 				});
 
 				activityBestSplitsModifier.modify();
