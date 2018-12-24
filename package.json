@@ -1,6 +1,6 @@
 {
 	"name": "elevate",
-	"version": "6.8.0",
+	"version": "6.8.1",
 	"description": "Wrap the needed tools required to cook the Elevate Web Plugin",
 	"scripts": {
 		"build": "npm-run-all clean res-copy:* build-project:core build-project:app",
