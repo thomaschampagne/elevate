@@ -20,7 +20,7 @@ $config: mat-typography-config();
 	// Using mat-color to extract individual colors from the palette
 	$ctl-color: $accent-color;
 	$atl-color: $primary-color;
-	$tsb-color: mat-color($primary, 900);
+	$tsb-color: mat-color($primary, darker);
 
 	$caption-font-size: mat-font-size($config, caption);
 	$body-1-font-size: mat-font-size($config, body-1);
