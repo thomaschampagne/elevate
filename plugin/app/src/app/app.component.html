@@ -100,6 +100,7 @@
 				<button mat-menu-item *ngFor="let item of themeMenuItems"
 						(click)="onThemeSelect(item.name)">
 					{{item.label}}
+					<mat-icon *ngIf="item.name === this.currentTheme">check</mat-icon>
 				</button>
 
 			</mat-menu>
