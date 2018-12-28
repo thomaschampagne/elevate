@@ -5,13 +5,13 @@ import { AppModule } from "./app/app.module";
 import { environment } from "./environments/environment";
 import "hammerjs";
 
-import { ThemeVariant } from "./app/shared/theme-variant.enum";
+import { Theme } from "./app/shared/theme.class";
 
 if (environment.production) {
 	enableProdMode();
 }
 
 // Apply default theme class to body. AppComponent will also change body class along themes switches
-document.body.setAttribute("class", ThemeVariant.DEFAULT);
+document.body.setAttribute("class", Theme.getDefault());
 
 platformBrowserDynamic().bootstrapModule(AppModule).catch(err => console.log(err));

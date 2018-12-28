@@ -91,14 +91,6 @@
 				</mat-menu>
 			</ng-container>
 
-			<button mat-icon-button (click)="onThemeVariantToggle()">
-				<mat-icon *ngIf="currentThemeVariant === ThemeVariant.LIGHT"
-						  style="transform: rotate(-35deg) scaleX(-1);">
-					brightness_3 <!--Moon icon rotate by -35deg-->
-				</mat-icon>
-				<mat-icon *ngIf="currentThemeVariant === ThemeVariant.DARK">wb_sunny</mat-icon><!--Sun icon-->
-			</button>
-
 			<button mat-icon-button [matMenuTriggerFor]="themeMenu">
 				<mat-icon>palette</mat-icon>
 			</button>
