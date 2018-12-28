@@ -18,7 +18,7 @@ import { ImportBackupDialogComponent } from "./shared/dialogs/import-backup-dial
 import { SyncState } from "./shared/services/sync/sync-state.enum";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
-import { Theme } from "./shared/theme.enum";
+import { ThemeVariant } from "./shared/theme-variant.enum";
 import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
 import { SyncResultModel } from "@elevate/shared/models";
 import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
@@ -42,9 +42,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
 	public static readonly LS_USER_THEME_PREF: string = "theme";
+	public static readonly LS_USER_THEME_VARIANT_PREF: string = "themeVariant";
 
-	public Theme = Theme;
-	public currentTheme: Theme;
+	public ThemeVariant = ThemeVariant;
+	public currentTheme: string;
+	public currentThemeVariant: ThemeVariant;
 
 	public toolBarTitle: string;
 	public SyncState = SyncState;
@@ -162,32 +164,30 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public setupThemeOnLoad(): void {
 
-		let themeToBeLoaded: Theme = Theme.DEFAULT;
+		const existingSavedTheme = localStorage.getItem(AppComponent.LS_USER_THEME_PREF) as string;
+		const existingSavedThemeVariant = localStorage.getItem(AppComponent.LS_USER_THEME_VARIANT_PREF) as ThemeVariant;
 
-		const existingSavedTheme = localStorage.getItem(AppComponent.LS_USER_THEME_PREF) as Theme;
+		let themeToBeLoaded: string = existingSavedTheme ? existingSavedTheme : "default";
+		let themeVariantToBeLoaded: ThemeVariant = existingSavedThemeVariant ? existingSavedThemeVariant : ThemeVariant.DEFAULT;
 
-		if (existingSavedTheme) {
-			themeToBeLoaded = existingSavedTheme;
-		}
-
-		this.setTheme(themeToBeLoaded);
+		this.setTheme(themeToBeLoaded, themeVariantToBeLoaded);
 	}
 
-	public setTheme(theme: Theme): void {
+	public setTheme(theme: string, themeVariant: ThemeVariant): void {
+
+		// Remove previous theme and variant
+		this.overlayContainer.getContainerElement().classList.remove(this.currentTheme);
+		this.overlayContainer.getContainerElement().classList.remove(this.currentThemeVariant);
 
 		this.currentTheme = theme;
-
-		// Remove previous theme if exists
-		const previousTheme = this.overlayContainer.getContainerElement().classList[1] as Theme;
-		if (previousTheme) {
-			this.overlayContainer.getContainerElement().classList.remove(previousTheme);
-		}
+		this.currentThemeVariant = themeVariant;
 
 		// Add theme/class to overlay list
 		this.overlayContainer.getContainerElement().classList.add(this.currentTheme);
+		this.overlayContainer.getContainerElement().classList.add(this.currentThemeVariant);
 
 		// Change body theme class
-		this.renderer.setAttribute(document.body, "class", this.currentTheme);
+		this.renderer.setAttribute(document.body, "class", this.currentTheme + " " + this.currentThemeVariant);
 	}
 
 	public updateLastSyncDateStatus(): void {
@@ -274,10 +274,10 @@ export class AppComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	public onThemeToggle(): void {
-		const targetTheme = (this.currentTheme === Theme.LIGHT) ? Theme.DARK : Theme.LIGHT;
-		this.setTheme(targetTheme);
-		localStorage.setItem(AppComponent.LS_USER_THEME_PREF, targetTheme);
+	public onThemeVariantToggle(): void {
+		const targetThemeVariant = (this.currentThemeVariant === ThemeVariant.LIGHT) ? ThemeVariant.DARK : ThemeVariant.LIGHT;
+		this.setTheme(this.currentTheme, targetThemeVariant);
+		localStorage.setItem(AppComponent.LS_USER_THEME_VARIANT_PREF, targetThemeVariant);
 	}
 
 	public onShowReleaseNotes(): void {
