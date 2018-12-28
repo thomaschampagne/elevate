@@ -1,0 +1,13 @@
+.light, .default.light {
+	$light-primary: mat-palette($mat-grey, 500);
+	$light-accent: mat-palette($mat-deep-orange);
+
+	@include elevate-light-theme($light-primary, $light-accent);
+}
+
+.dark, .default.dark {
+	$dark-primary: mat-palette($mat-yellow);
+	$dark-accent: mat-palette($mat-purple, 200);
+
+	@include elevate-dark-theme($dark-primary, $dark-accent);
+}

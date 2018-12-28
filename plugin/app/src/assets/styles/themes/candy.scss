@@ -1,0 +1,13 @@
+.candy.light {
+	$light-primary: mat-palette($mat-orange, A400, A200, A700);
+	$light-accent: mat-palette($mat-purple, A400, A200, A700);
+
+	@include elevate-light-theme($light-primary, $light-accent);
+}
+
+.candy.dark {
+	$dark-primary: mat-palette($mat-pink, A200, A100, A700);
+	$dark-accent: mat-palette($mat-cyan, A200, A100, A700);
+
+	@include elevate-dark-theme($dark-primary, $dark-accent);
+}
