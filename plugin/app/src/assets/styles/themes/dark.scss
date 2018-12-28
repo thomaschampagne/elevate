@@ -1,5 +1,8 @@
 @import "~@angular/material/theming";
 
-$dark-primary: mat-palette($mat-yellow);
-$dark-accent: mat-palette($mat-purple, 200);
-$dark-theme: mat-dark-theme($dark-primary, $dark-accent);
+.dark {
+	$dark-primary: mat-palette($mat-yellow);
+	$dark-accent: mat-palette($mat-purple, 200);
+
+	@include elevate-dark-theme($dark-primary, $dark-accent);
+}
