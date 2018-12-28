@@ -99,6 +99,19 @@
 				<mat-icon *ngIf="currentThemeVariant === ThemeVariant.DARK">wb_sunny</mat-icon><!--Sun icon-->
 			</button>
 
+			<button mat-icon-button [matMenuTriggerFor]="themeMenu">
+				<mat-icon>palette</mat-icon>
+			</button>
+
+			<mat-menu #themeMenu="matMenu">
+
+				<button mat-menu-item *ngFor="let item of themeMenuItems"
+						(click)="onThemeSelect(item.name)">
+					{{item.label}}
+				</button>
+
+			</mat-menu>
+
 			<button mat-icon-button [matMenuTriggerFor]="moreMenu">
 				<mat-icon>more_vert</mat-icon>
 			</button>

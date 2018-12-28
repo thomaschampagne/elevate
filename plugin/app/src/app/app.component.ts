@@ -18,10 +18,21 @@ import { ImportBackupDialogComponent } from "./shared/dialogs/import-backup-dial
 import { SyncState } from "./shared/services/sync/sync-state.enum";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
+import { Theme } from "./shared/theme.enum";
 import { ThemeVariant } from "./shared/theme-variant.enum";
 import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
 import { SyncResultModel } from "@elevate/shared/models";
 import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
+
+class ThemeItemModel {
+	public name: string;
+	public label: string;
+
+	public constructor (name: string) {
+		this.name = name;
+		this.label = this.name.charAt(0).toUpperCase() + this.name.slice(1).toLowerCase()
+	}
+}
 
 class MenuItemModel {
 	public name: string;
@@ -44,8 +55,9 @@ export class AppComponent implements OnInit, OnDestroy {
 	public static readonly LS_USER_THEME_PREF: string = "theme";
 	public static readonly LS_USER_THEME_VARIANT_PREF: string = "themeVariant";
 
+	public Theme = Theme;
 	public ThemeVariant = ThemeVariant;
-	public currentTheme: string;
+	public currentTheme: Theme;
 	public currentThemeVariant: ThemeVariant;
 
 	public toolBarTitle: string;
@@ -57,6 +69,8 @@ export class AppComponent implements OnInit, OnDestroy {
 	@ViewChild(MatSidenav)
 	public sideNav: MatSidenav;
 	public sideNavMode: string;
+
+	public themeMenuItems: ThemeItemModel[];
 
 	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
 		{
@@ -119,6 +133,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	public ngOnInit(): void {
 
 		this.setupThemeOnLoad();
+		this.themeMenuSetup();
 
 		// Update list of sections names displayed in sidebar
 		_.forEach(this.mainMenuItems, (menuItemModel: MenuItemModel) => {
@@ -126,6 +141,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		});
 
 		this.sideNavSetup();
+		this.themeMenuSetup();
 
 		this.toolBarTitle = AppComponent.convertRouteToTitle(this.router.url);
 
@@ -162,18 +178,25 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.sideNavMode = AppComponent.DEFAULT_SIDE_NAV_MODE;
 	}
 
+	public themeMenuSetup(): void {
+
+		this.themeMenuItems =
+			Object.values(Theme)
+				.map(name => new ThemeItemModel(name));
+	}
+
 	public setupThemeOnLoad(): void {
 
-		const existingSavedTheme = localStorage.getItem(AppComponent.LS_USER_THEME_PREF) as string;
+		const existingSavedTheme = localStorage.getItem(AppComponent.LS_USER_THEME_PREF) as Theme;
 		const existingSavedThemeVariant = localStorage.getItem(AppComponent.LS_USER_THEME_VARIANT_PREF) as ThemeVariant;
 
-		let themeToBeLoaded: string = existingSavedTheme ? existingSavedTheme : "default";
+		let themeToBeLoaded: Theme = existingSavedTheme ? existingSavedTheme : Theme.DEFAULT;
 		let themeVariantToBeLoaded: ThemeVariant = existingSavedThemeVariant ? existingSavedThemeVariant : ThemeVariant.DEFAULT;
 
 		this.setTheme(themeToBeLoaded, themeVariantToBeLoaded);
 	}
 
-	public setTheme(theme: string, themeVariant: ThemeVariant): void {
+	public setTheme(theme: Theme, themeVariant: ThemeVariant): void {
 
 		// Remove previous theme and variant
 		this.overlayContainer.getContainerElement().classList.remove(this.currentTheme);
@@ -278,6 +301,11 @@ export class AppComponent implements OnInit, OnDestroy {
 		const targetThemeVariant = (this.currentThemeVariant === ThemeVariant.LIGHT) ? ThemeVariant.DARK : ThemeVariant.LIGHT;
 		this.setTheme(this.currentTheme, targetThemeVariant);
 		localStorage.setItem(AppComponent.LS_USER_THEME_VARIANT_PREF, targetThemeVariant);
+	}
+
+	public onThemeSelect(theme: Theme): void {
+		this.setTheme(theme, this.currentThemeVariant);
+		localStorage.setItem(AppComponent.LS_USER_THEME_PREF, theme);
 	}
 
 	public onShowReleaseNotes(): void {
