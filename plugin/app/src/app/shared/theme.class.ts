@@ -1,5 +1,5 @@
 export class Theme {
-	static DARK = new Theme("dark", "Elevate (Dark)");
+	static CLASSIC = new Theme("classic", "Elevate Classic");
 	static STRAVA = new Theme("strava", "Strava");
 	static BARBERSHOP = new Theme("barbershop", "Barbershop (Light)");
 	static BOUQUET = new Theme("bouquet", "Bouquet (Light)");
@@ -20,7 +20,7 @@ export class Theme {
 	}
 
 	static getDefault(): string {
-		return Theme.DARK.name;
+		return Theme.CLASSIC.name;
 	}
 
 	static getThemes(): Theme[] {
