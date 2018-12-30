@@ -2,8 +2,8 @@ export class Theme {
 	static CLASSIC = new Theme("classic", "Elevate Classic");
 	static STRAVA = new Theme("strava", "Strava");
 	static BARBERSHOP = new Theme("barbershop", "Barbershop (Light)");
-	static BOUQUET = new Theme("bouquet", "Bouquet (Light)");
 	static CANDY = new Theme("candy", "Candy");
+	static ENERGETIC = new Theme("energetic", "Energetic");
 	static ROADBLOCK = new Theme("roadblock", "Roadblock (Dark)");
 
 	// private to disallow creating other instances of this type

@@ -1,6 +1,0 @@
-.bouquet {
-	$light-primary: mat-palette($mat-orange, A400, A200, A700);
-	$light-accent: mat-palette($mat-purple, A400, A200, A700);
-
-	@include elevate-light-theme($light-primary, $light-accent);
-}
