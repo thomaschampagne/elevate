@@ -1,6 +1,6 @@
 .roadblock {
-	$dark-primary: mat-palette($mat-light-blue, A200, A100, A400);
-	$dark-accent: mat-palette($mat-red, A200, A100, A700);
+	$dark-primary: mat-palette($mat-cyan, 50, 400, A200);
+	$dark-accent: mat-palette($mat-red, 500);
 
 	@include elevate-dark-theme($dark-primary, $dark-accent);
 }
