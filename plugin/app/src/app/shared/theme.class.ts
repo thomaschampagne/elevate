@@ -3,7 +3,7 @@ export class Theme {
 	static STRAVA = new Theme("strava", "Strava");
 	static BARBERSHOP = new Theme("barbershop", "Barbershop (Light)");
 	static BOUQUET = new Theme("bouquet", "Bouquet (Light)");
-	static CANDY = new Theme("candy", "Candy (Dark)");
+	static CANDY = new Theme("candy", "Candy");
 	static ROADBLOCK = new Theme("roadblock", "Roadblock (Dark)");
 
 	// private to disallow creating other instances of this type
