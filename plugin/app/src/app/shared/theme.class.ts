@@ -1,10 +1,10 @@
 export class Theme {
 	static CLASSIC = new Theme("classic", "Elevate Classic");
 	static STRAVA = new Theme("strava", "Strava");
-	static BARBERSHOP = new Theme("barbershop", "Barbershop (Light)");
+	static BARBERSHOP = new Theme("barbershop", "Barbershop");
 	static CANDY = new Theme("candy", "Candy");
 	static ENERGETIC = new Theme("energetic", "Energetic");
-	static ROADBLOCK = new Theme("roadblock", "Roadblock (Dark)");
+	static ROADBLOCK = new Theme("roadblock", "Roadblock");
 
 	// private to disallow creating other instances of this type
 	private constructor(private _name: string, private _label: string) {
