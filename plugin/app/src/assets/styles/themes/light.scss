@@ -1,6 +1,0 @@
-.light {
-	$light-primary: mat-palette($mat-grey, 500);
-	$light-accent: mat-palette($mat-deep-orange);
-
-	@include elevate-light-theme($light-primary, $light-accent);
-}

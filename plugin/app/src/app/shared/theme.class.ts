@@ -1,6 +1,6 @@
 export class Theme {
 	static DARK = new Theme("dark", "Elevate (Dark)");
-	static LIGHT = new Theme("light", "Elevate (Light)");
+	static STRAVA = new Theme("strava", "Strava");
 	static BARBERSHOP = new Theme("barbershop", "Barbershop (Light)");
 	static BOUQUET = new Theme("bouquet", "Bouquet (Light)");
 	static CANDY = new Theme("candy", "Candy (Dark)");
