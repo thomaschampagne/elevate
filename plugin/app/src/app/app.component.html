@@ -97,10 +97,11 @@
 
 			<mat-menu #themeMenu="matMenu">
 
-				<button mat-menu-item *ngFor="let item of themeMenuItems"
-						(click)="onThemeSelect(item.name)">
-					{{item.label}}
-					<mat-icon *ngIf="item.name === this.currentTheme">check</mat-icon>
+				<button mat-menu-item
+						*ngFor="let theme of themeMenuItems"
+						(click)="onThemeSelect(theme.name)">
+					{{theme.label}}
+					<mat-icon *ngIf="theme.name === this.currentTheme">check</mat-icon>
 				</button>
 
 			</mat-menu>
