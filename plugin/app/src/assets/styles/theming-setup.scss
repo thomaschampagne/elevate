@@ -6,24 +6,24 @@
 @import "../../app/fitness-trend/fitness-trend.component.theme";
 @import "../../app/athlete-settings-consistency-ribbon/athlete-settings-consistency-ribbon.component.theme";
 
-@mixin elevate-custom-theme($theme) {
-	@include angular-material-theme($theme);
-	@include native-web-elements($theme);
-	@include app-theming($theme);
-	@include athlete-settings-consistency-ribbon-theming($theme);
-	@include fitness-trend-theming($theme);
+@mixin elevate-custom-theme($name, $theme) {
+	.#{$name} {
+		@include angular-material-theme($theme);
+		@include native-web-elements($theme);
+		@include app-theming($theme);
+		@include athlete-settings-consistency-ribbon-theming($theme);
+		@include fitness-trend-theming($theme);
+	}
 }
 
-@mixin elevate-light-theme($primary, $accent) {
+@mixin elevate-light-theme($name, $primary, $accent) {
 	$light-theme: mat-light-theme($primary, $accent);
-
-	@include elevate-custom-theme($light-theme);
+	@include elevate-custom-theme($name, $light-theme);
 }
 
-@mixin elevate-dark-theme($primary, $accent) {
+@mixin elevate-dark-theme($name, $primary, $accent) {
 	$dark-theme: mat-dark-theme($primary, $accent);
-
-	@include elevate-custom-theme($dark-theme);
+	@include elevate-custom-theme($name, $dark-theme);
 }
 
 @import "./themes/all";

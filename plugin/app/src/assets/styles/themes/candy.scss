@@ -1,6 +1,4 @@
-.candy {
-	$dark-primary: mat-palette($mat-light-blue);
-	$dark-accent: mat-palette($mat-pink);
+$dark-primary: mat-palette($mat-light-blue);
+$dark-accent: mat-palette($mat-pink);
 
-	@include elevate-light-theme($dark-primary, $dark-accent);
-}
+@include elevate-light-theme(candy, $dark-primary, $dark-accent);

@@ -1,6 +1,4 @@
-.barbershop {
-	$light-primary: mat-palette($mat-red, A400, A200, A700);
-	$light-accent: mat-palette($mat-blue, A400, A200, A700);
+$light-primary: mat-palette($mat-red, A400, A200, A700);
+$light-accent: mat-palette($mat-blue, A400, A200, A700);
 
-	@include elevate-light-theme($light-primary, $light-accent);
-}
+@include elevate-light-theme(barbershop, $light-primary, $light-accent);

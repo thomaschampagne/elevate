@@ -1,6 +1,4 @@
-.energetic {
-	$dark-primary: mat-palette($mat-pink, 100, 50, 400);
-	$dark-accent: mat-palette($mat-cyan, A200);
+$dark-primary: mat-palette($mat-pink, 100, 50, 400);
+$dark-accent: mat-palette($mat-cyan, A200);
 
-	@include elevate-dark-theme($dark-primary, $dark-accent);
-}
+@include elevate-dark-theme(energetic, $dark-primary, $dark-accent);

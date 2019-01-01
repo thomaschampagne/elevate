@@ -1,73 +1,71 @@
-.strava {
-	// generated with http://mcg.mbitson.com/#!?mcgpalette0=%23fc4c02&mcgpalette1=%2379d7bd&themename=strava
-	$md-mcgpalette0: (
-		50 : #ffeae1,
-		100 : #fec9b3,
-		200 : #fea681,
-		300 : #fd824e,
-		400 : #fc6728,
-		500 : #fc4c02,
-		600 : #fc4502,
-		700 : #fb3c01,
-		800 : #fb3301,
-		900 : #fa2401,
-		A100 : #ffffff,
-		A200 : #ffefed,
-		A400 : #ffc0ba,
-		A700 : #ffa9a1,
-		contrast: (
-			50 : #000000,
-			100 : #000000,
-			200 : #000000,
-			300 : #000000,
-			400 : #000000,
-			500 : #ffffff,
-			600 : #ffffff,
-			700 : #ffffff,
-			800 : #ffffff,
-			900 : #ffffff,
-			A100 : #000000,
-			A200 : #000000,
-			A400 : #000000,
-			A700 : #000000,
-		)
-	);
+// generated with http://mcg.mbitson.com/#!?mcgpalette0=%23fc4c02&mcgpalette1=%2379d7bd&themename=strava
+$md-mcgpalette0: (
+	50 : #ffeae1,
+	100 : #fec9b3,
+	200 : #fea681,
+	300 : #fd824e,
+	400 : #fc6728,
+	500 : #fc4c02,
+	600 : #fc4502,
+	700 : #fb3c01,
+	800 : #fb3301,
+	900 : #fa2401,
+	A100 : #ffffff,
+	A200 : #ffefed,
+	A400 : #ffc0ba,
+	A700 : #ffa9a1,
+	contrast: (
+		50 : #000000,
+		100 : #000000,
+		200 : #000000,
+		300 : #000000,
+		400 : #000000,
+		500 : #ffffff,
+		600 : #ffffff,
+		700 : #ffffff,
+		800 : #ffffff,
+		900 : #ffffff,
+		A100 : #000000,
+		A200 : #000000,
+		A400 : #000000,
+		A700 : #000000,
+	)
+);
 
-	$md-mcgpalette1: (
-		50 : #effaf7,
-		100 : #d7f3eb,
-		200 : #bcebde,
-		300 : #a1e3d1,
-		400 : #8dddc7,
-		500 : #79d7bd,
-		600 : #71d3b7,
-		700 : #66cdae,
-		800 : #5cc7a6,
-		900 : #49be98,
-		A100 : #ffffff,
-		A200 : #e4fff6,
-		A400 : #b1ffe5,
-		A700 : #97ffdd,
-		contrast: (
-			50 : #000000,
-			100 : #000000,
-			200 : #000000,
-			300 : #000000,
-			400 : #000000,
-			500 : #000000,
-			600 : #000000,
-			700 : #000000,
-			800 : #000000,
-			900 : #000000,
-			A100 : #000000,
-			A200 : #000000,
-			A400 : #000000,
-			A700 : #000000,
-		)
-	);
+$md-mcgpalette1: (
+	50 : #effaf7,
+	100 : #d7f3eb,
+	200 : #bcebde,
+	300 : #a1e3d1,
+	400 : #8dddc7,
+	500 : #79d7bd,
+	600 : #71d3b7,
+	700 : #66cdae,
+	800 : #5cc7a6,
+	900 : #49be98,
+	A100 : #ffffff,
+	A200 : #e4fff6,
+	A400 : #b1ffe5,
+	A700 : #97ffdd,
+	contrast: (
+		50 : #000000,
+		100 : #000000,
+		200 : #000000,
+		300 : #000000,
+		400 : #000000,
+		500 : #000000,
+		600 : #000000,
+		700 : #000000,
+		800 : #000000,
+		900 : #000000,
+		A100 : #000000,
+		A200 : #000000,
+		A400 : #000000,
+		A700 : #000000,
+	)
+);
 
-	$light-primary: mat-palette($md-mcgpalette0);
-	$light-accent: mat-palette($md-mcgpalette1, 800, 700, 900);
+$light-primary: mat-palette($md-mcgpalette0);
+$light-accent: mat-palette($md-mcgpalette1, 800, 700, 900);
 
-	@include elevate-light-theme($light-primary, $light-accent);
-}
+@include elevate-light-theme(strava, $light-primary, $light-accent);
