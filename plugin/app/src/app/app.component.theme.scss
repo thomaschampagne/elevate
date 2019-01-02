@@ -3,6 +3,8 @@
 @mixin app-theming($theme) {
 
 	$primary: map-get($theme, primary);
+	$accent: map-get($theme, accent);
+	$is-dark: map-get($theme, is-dark);
 
 	#logo {
 		position: absolute;
@@ -12,5 +14,13 @@
 		background-color: mat-color($primary);
 		-webkit-mask: url("assets/icons/elevate.svg") no-repeat center;
 		mask: url("assets/icons/elevate.svg") no-repeat center;
+	}
+
+	.mat-icon-button-accent {
+		.mat-icon {
+			// match the hue used by mat-slide-toggle
+			$icon-hue: if($is-dark, 200, default);
+			color: mat-color($accent, $icon-hue);
+		}
 	}
 }
