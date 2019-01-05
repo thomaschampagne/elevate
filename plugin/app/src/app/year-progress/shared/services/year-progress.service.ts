@@ -142,6 +142,8 @@ export class YearProgressService {
 			const filterQuery: Partial<YearProgressActivityModel> = {
 				year: currentDayMoment.year(),
 				dayOfYear: currentDayMoment.dayOfYear(),
+				commute: includeCommuteRide,
+				trainer: includeIndoorRide,
 			};
 
 			const activitiesFound: YearProgressActivityModel[] = _.filter(yearProgressActivityModels, filterQuery);
@@ -149,11 +151,6 @@ export class YearProgressService {
 			if (activitiesFound.length > 0) {
 
 				for (let i = 0; i < activitiesFound.length; i++) {
-
-					if ((!includeCommuteRide && activitiesFound[i].commute) || (!includeIndoorRide && activitiesFound[i].trainer)) {
-						continue;
-					}
-
 					progression.totalDistance += activitiesFound[i].distance_raw;
 					progression.totalTime += activitiesFound[i].moving_time_raw;
 					progression.totalElevation += activitiesFound[i].elevation_gain_raw;
