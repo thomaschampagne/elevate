@@ -111,6 +111,18 @@ export class DayFitnessTrendModel extends DayStressModel {
 		return this.activitiesName.join("; ");
 	}
 
+	public printActivitiesOverflowTitle(maxActivitiesShown): string {
+		if (this.activitiesName.length <= maxActivitiesShown) {
+			return null;
+		}
+
+		let overflowActivies = this.activitiesName.slice(maxActivitiesShown,this.activitiesName.length);
+		overflowActivies = _.map(overflowActivies, (obj: string, index: number) => {
+			return `[${this.types[index]}] ${obj}`;
+		});
+		return overflowActivies.join("\u000d\u000a");
+	}
+
 	public printTypes(defaultEmptyValue?: string): string {
 
 		if (this.types.length === 0) {

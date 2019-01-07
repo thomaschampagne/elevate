@@ -14,7 +14,7 @@
 						<span *ngIf="(viewedDay.activitiesName.length !== (activityIndex + 1))">;&nbsp;&nbsp;</span>
 					</span>
 				</span>
-				<span *ngIf="(viewedDay.activitiesName.length > MAX_ACTIVITIES_LEGEND_SHOWN)">+{{viewedDay.activitiesName.length - MAX_ACTIVITIES_LEGEND_SHOWN}} more</span>
+				<span *ngIf="(viewedDay.activitiesName.length > MAX_ACTIVITIES_LEGEND_SHOWN)" [title]="viewedDay.printActivitiesOverflowTitle(MAX_ACTIVITIES_LEGEND_SHOWN)">+{{viewedDay.activitiesName.length - MAX_ACTIVITIES_LEGEND_SHOWN}} more</span>
 			</span>
 
 		<span *ngSwitchCase="false">
