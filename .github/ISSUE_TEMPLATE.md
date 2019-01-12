@@ -36,6 +36,6 @@
 
 >You can upload/attach any images to this ticket.
 
-#### Providing your Elevate synced athlete activities can be usefull to solve the problem
+#### Providing your Elevate synced athlete activities can be useful to solve the problem
 
 > To export your activities click on "sync button" (top right and corner), then "Backup activities". You can zip the file and upload it here. 
