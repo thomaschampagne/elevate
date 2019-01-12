@@ -88,111 +88,11 @@ describe("YearProgressTableComponent", () => {
 		done();
 	});
 
-	it("should provide year progressions distance rows for data table display", (done: Function) => {
-
-		// Given
-		const dayMoment = moment("2018-03-01 12:00", "YYYY-MM-DD hh:mm");
-
-		const progressionAtDayModels: ProgressionAtDayModel[] = yearProgressService.findProgressionsAtDay(component.yearProgressModels,
-			dayMoment, component.selectedProgressType.type, component.selectedYears, component.yearProgressStyleModel.yearsColorsMap);
-
-		const targetProgressionModel = {
-			dayOfYear: dayMoment.dayOfYear(),
-			value: 1000
-		};
-
-		// When
-		const progressionRows: ProgressionAtDayRow[] = component.rows(progressionAtDayModels, targetProgressionModel);
-
-		// Then
-		expect(progressionRows).not.toBeNull();
-
-		const progressionRow2018 = progressionRows[0];
-		expect(progressionRow2018.year).toEqual(2018);
-		expect(progressionRow2018.color).toEqual("purple");
-		expect(progressionRow2018.deltaPreviousYear.date).toEqual("March 01, 2017");
-		expect(progressionRow2018.progressTypeLabel).toEqual("Distance");
-		expect(progressionRow2018.progressTypeUnit).toEqual("km");
-		expect(progressionRow2018.currentValue).toEqual(0);
-		expect(progressionRow2018.deltaPreviousYear.value).toEqual(1020);
-		expect(progressionRow2018.deltaPreviousYear.type).toEqual(DeltaType.NEGATIVE);
-		expect(progressionRow2018.deltaPreviousYear.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_NEGATIVE);
-		expect(progressionRow2018.deltaPreviousYear.class).toEqual(DeltaType.NEGATIVE.toString());
-		expect(progressionRow2018.deltaCurrentYear.value).toEqual(0);
-		expect(progressionRow2018.deltaCurrentYear.type).toEqual(DeltaType.NAN);
-		expect(progressionRow2018.deltaCurrentYear.signSymbol).toEqual(null);
-		expect(progressionRow2018.deltaCurrentYear.class).toEqual(DeltaType.NAN.toString());
-		expect(progressionRow2018.deltaTarget.value).toEqual(1000);
-		expect(progressionRow2018.deltaTarget.type).toEqual(DeltaType.NEGATIVE);
-		expect(progressionRow2018.deltaTarget.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_NEGATIVE);
-		expect(progressionRow2018.deltaTarget.class).toEqual(DeltaType.NEGATIVE.toString());
-
-		const progressionRow2017 = progressionRows[1];
-		expect(progressionRow2017.year).toEqual(2017);
-		expect(progressionRow2017.color).toEqual("green");
-		expect(progressionRow2017.deltaPreviousYear.date).toEqual("March 01, 2016");
-		expect(progressionRow2017.progressTypeLabel).toEqual("Distance");
-		expect(progressionRow2017.progressTypeUnit).toEqual("km");
-		expect(progressionRow2017.currentValue).toEqual(1020);
-		expect(progressionRow2017.deltaPreviousYear.value).toEqual(10);
-		expect(progressionRow2017.deltaPreviousYear.type).toEqual(DeltaType.NEGATIVE);
-		expect(progressionRow2017.deltaPreviousYear.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_NEGATIVE);
-		expect(progressionRow2017.deltaPreviousYear.class).toEqual(DeltaType.NEGATIVE.toString());
-		expect(progressionRow2017.deltaCurrentYear.value).toEqual(1020);
-		expect(progressionRow2017.deltaCurrentYear.type).toEqual(DeltaType.POSITIVE);
-		expect(progressionRow2017.deltaCurrentYear.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
-		expect(progressionRow2017.deltaCurrentYear.class).toEqual(DeltaType.POSITIVE.toString());
-		expect(progressionRow2017.deltaTarget.value).toEqual(20);
-		expect(progressionRow2017.deltaTarget.type).toEqual(DeltaType.POSITIVE);
-		expect(progressionRow2017.deltaTarget.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
-		expect(progressionRow2017.deltaTarget.class).toEqual(DeltaType.POSITIVE.toString());
-
-		const progressionRow2016 = progressionRows[2];
-		expect(progressionRow2016.year).toEqual(2016);
-		expect(progressionRow2016.color).toEqual("blue");
-		expect(progressionRow2016.deltaPreviousYear.date).toEqual("March 01, 2015");
-		expect(progressionRow2016.progressTypeLabel).toEqual("Distance");
-		expect(progressionRow2016.progressTypeUnit).toEqual("km");
-		expect(progressionRow2016.currentValue).toEqual(1030);
-		expect(progressionRow2016.deltaPreviousYear.value).toEqual(10);
-		expect(progressionRow2016.deltaPreviousYear.type).toEqual(DeltaType.POSITIVE);
-		expect(progressionRow2016.deltaPreviousYear.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
-		expect(progressionRow2016.deltaPreviousYear.class).toEqual(DeltaType.POSITIVE.toString());
-		expect(progressionRow2016.deltaCurrentYear.value).toEqual(1030);
-		expect(progressionRow2016.deltaCurrentYear.type).toEqual(DeltaType.POSITIVE);
-		expect(progressionRow2016.deltaCurrentYear.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
-		expect(progressionRow2016.deltaCurrentYear.class).toEqual(DeltaType.POSITIVE.toString());
-		expect(progressionRow2016.deltaTarget.value).toEqual(30);
-		expect(progressionRow2016.deltaTarget.type).toEqual(DeltaType.POSITIVE);
-		expect(progressionRow2016.deltaTarget.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
-		expect(progressionRow2016.deltaTarget.class).toEqual(DeltaType.POSITIVE.toString());
-
-		const progressionRow2015 = progressionRows[3];
-		expect(progressionRow2015.year).toEqual(2015);
-		expect(progressionRow2015.color).toEqual("red");
-		expect(progressionRow2015.deltaPreviousYear.date).toEqual(null);
-		expect(progressionRow2015.progressTypeLabel).toEqual("Distance");
-		expect(progressionRow2015.progressTypeUnit).toEqual("km");
-		expect(progressionRow2015.currentValue).toEqual(1020);
-		expect(progressionRow2015.deltaPreviousYear.value).toEqual(null);
-		expect(progressionRow2015.deltaPreviousYear.type).toEqual(DeltaType.NAN);
-		expect(progressionRow2015.deltaPreviousYear.signSymbol).toEqual(null);
-		expect(progressionRow2015.deltaPreviousYear.class).toEqual(DeltaType.NAN.toString());
-		expect(progressionRow2015.deltaCurrentYear.value).toEqual(1020);
-		expect(progressionRow2015.deltaCurrentYear.type).toEqual(DeltaType.POSITIVE);
-		expect(progressionRow2015.deltaCurrentYear.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
-		expect(progressionRow2015.deltaCurrentYear.class).toEqual(DeltaType.POSITIVE.toString());
-		expect(progressionRow2015.deltaTarget.value).toEqual(20);
-		expect(progressionRow2015.deltaTarget.type).toEqual(DeltaType.POSITIVE);
-		expect(progressionRow2015.deltaTarget.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
-		expect(progressionRow2015.deltaTarget.class).toEqual(DeltaType.POSITIVE.toString());
-
-		done();
-	});
-
 	it("should provide proper year progressions time rows between two years (1)", (done: Function) => {
 
 		// Given
+		const dayMoment = moment("2017-08-15 12:00", "YYYY-MM-DD hh:mm");
+
 		const hoursFirstYear = 24;
 		const firstYear: ProgressionAtDayModel = {
 			date: moment("2017-08-15 12:00", "YYYY-MM-DD hh:mm").toDate(),
@@ -211,10 +111,16 @@ describe("YearProgressTableComponent", () => {
 			color: null
 		};
 
+		const targetHours = 31;
+		const targetProgressionModel = {
+			dayOfYear: dayMoment.dayOfYear(),
+			value: targetHours
+		};
+
 		component.selectedProgressType = new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h");
 
 		// When
-		const progressionRows: ProgressionAtDayRow[] = component.rows([firstYear, secondYear], null);
+		const progressionRows: ProgressionAtDayRow[] = component.rows([firstYear, secondYear], targetProgressionModel);
 
 		// Then
 		expect(progressionRows).not.toBeNull();
@@ -229,6 +135,10 @@ describe("YearProgressTableComponent", () => {
 		expect(firstRow.deltaPreviousYear.type).toEqual(DeltaType.NEGATIVE);
 		expect(firstRow.deltaPreviousYear.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_NEGATIVE);
 		expect(firstRow.deltaPreviousYear.class).toEqual(DeltaType.NEGATIVE.toString());
+		expect(firstRow.deltaTarget.value).toEqual(Math.abs(hoursFirstYear - targetHours));
+		expect(firstRow.deltaTarget.type).toEqual(DeltaType.NEGATIVE);
+		expect(firstRow.deltaTarget.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_NEGATIVE);
+		expect(firstRow.deltaTarget.class).toEqual(DeltaType.NEGATIVE.toString());
 
 		const secondRow = progressionRows[1];
 		expect(secondRow.year).toEqual(2016);
@@ -240,6 +150,10 @@ describe("YearProgressTableComponent", () => {
 		expect(secondRow.deltaPreviousYear.type).toEqual(DeltaType.NAN);
 		expect(secondRow.deltaPreviousYear.signSymbol).toEqual(null);
 		expect(secondRow.deltaPreviousYear.class).toEqual(DeltaType.NAN.toString());
+		expect(secondRow.deltaTarget.value).toEqual(Math.abs(hoursSecondYear - targetHours));
+		expect(secondRow.deltaTarget.type).toEqual(DeltaType.POSITIVE);
+		expect(secondRow.deltaTarget.signSymbol).toEqual(YearProgressTableComponent.DELTA_SIGN_POSITIVE);
+		expect(secondRow.deltaTarget.class).toEqual(DeltaType.POSITIVE.toString());
 		done();
 	});
 
