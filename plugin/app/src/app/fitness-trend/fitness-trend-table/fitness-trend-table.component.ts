@@ -60,41 +60,41 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			header: "HRSS",
 			toolTip: "Heart Rate Stress Score",
 			type: FitnessTrendColumnType.TEXT,
-			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printHeartRateStressScore()}`
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printHeartRateStressScores("-")}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE,
 			header: "TRIMP",
 			toolTip: "Training Impulse",
 			type: FitnessTrendColumnType.TEXT,
-			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTrainingImpulseScore()}`
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTrainingImpulseScores("-")}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE,
 			header: "PSS",
 			toolTip: "Power Stress Score",
 			type: FitnessTrendColumnType.TEXT,
-			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printPowerStressScore()}`
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printPowerStressScores("-")}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE,
 			header: "RSS",
 			toolTip: "Running Stress Score",
 			type: FitnessTrendColumnType.TEXT,
-			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printRunningStressScore()}`
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printRunningStressScores("-")}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE,
 			header: "SwimSS",
 			toolTip: "Swim Stress Score",
 			type: FitnessTrendColumnType.TEXT,
-			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printSwimStressScore()}`
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printSwimStressScores("-")}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_FINAL_STRESS_SCORE,
 			header: "Final Stress",
 			type: FitnessTrendColumnType.TEXT,
-			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFinalStressScore()}`
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFinalStressScores("-")}`
 		},
 		{
 			columnDef: FitnessTrendTableComponent.COLUMN_CTL,

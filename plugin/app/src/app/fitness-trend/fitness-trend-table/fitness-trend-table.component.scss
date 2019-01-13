@@ -13,3 +13,8 @@
 .mat-column-zone {
 	flex: 0 0 8%;
 }
+
+.mat-table .mat-cell {
+	white-space: pre-line;
+	word-wrap: normal;
+}

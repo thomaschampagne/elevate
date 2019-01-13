@@ -293,6 +293,13 @@ export class FitnessService {
 							dayFitnessTrend.finalStressScore = dayStress.finalStressScore;
 						}
 
+						dayFitnessTrend.heartRateStressScores = dayStress.heartRateStressScores;
+						dayFitnessTrend.trainingImpulseScores = dayStress.trainingImpulseScores;
+						dayFitnessTrend.powerStressScores = dayStress.powerStressScores;
+						dayFitnessTrend.runningStressScores = dayStress.runningStressScores;
+						dayFitnessTrend.swimStressScores = dayStress.swimStressScores;
+						dayFitnessTrend.finalStressScores = dayStress.finalStressScores;
+
 						previousDayFitnessTrend = dayFitnessTrend;
 
 						fitnessTrend.push(dayFitnessTrend);
@@ -401,19 +408,28 @@ export class FitnessService {
 				// - PSS without Power meter
 				// - RSS
 				// - SSS
+				let activityStressScore: number = 0;
 				if (activity.powerStressScore && activity.hasPowerMeter) {
-					dayActivity.finalStressScore += activity.powerStressScore;
+					activityStressScore = activity.powerStressScore;
 				} else if (activity.heartRateStressScore) {
-					dayActivity.finalStressScore += activity.heartRateStressScore;
+					activityStressScore = activity.heartRateStressScore;
 				} else if (activity.trainingImpulseScore) {
-					dayActivity.finalStressScore += activity.trainingImpulseScore;
+					activityStressScore = activity.trainingImpulseScore;
 				} else if (activity.powerStressScore && !activity.hasPowerMeter) {
-					dayActivity.finalStressScore += activity.powerStressScore;
+					activityStressScore = activity.powerStressScore;
 				} else if (activity.runningStressScore) {
-					dayActivity.finalStressScore += activity.runningStressScore;
+					activityStressScore = activity.runningStressScore;
 				} else if (activity.swimStressScore) {
-					dayActivity.finalStressScore += activity.swimStressScore;
+					activityStressScore = activity.swimStressScore;
 				}
+				dayActivity.finalStressScore += activityStressScore;
+
+				dayActivity.finalStressScores.push(activityStressScore);
+				dayActivity.heartRateStressScores.push(activity.heartRateStressScore || 0);
+				dayActivity.trainingImpulseScores.push(activity.trainingImpulseScore || 0);
+				dayActivity.runningStressScores.push(activity.runningStressScore || 0);
+				dayActivity.powerStressScores.push(activity.powerStressScore || 0);
+				dayActivity.swimStressScores.push(activity.swimStressScore || 0);
 			});
 
 		}

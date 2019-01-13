@@ -19,6 +19,11 @@ export class DayFitnessTrendModel extends DayStressModel {
 		this.finalStressScore = dayStress.finalStressScore;
 		this.athleteModel = (dayStress.athleteModel) ? dayStress.athleteModel : null;
 
+		this.trainingImpulseScores = dayStress.trainingImpulseScores;
+		this.powerStressScores = dayStress.powerStressScores;
+		this.swimStressScores = dayStress.swimStressScores;
+		this.finalStressScores = dayStress.finalStressScores;
+
 		this.dateString = moment(this.date).format(DayFitnessTrendModel.DATE_FORMAT);
 
 		this.ctl = ctl;
@@ -104,20 +109,11 @@ export class DayFitnessTrendModel extends DayStressModel {
 	}
 
 	public printActivities(defaultEmptyValue?: string): string {
-
-		if (this.activitiesName.length === 0) {
-			return (defaultEmptyValue) ? defaultEmptyValue : "";
-		}
-		return this.activitiesName.join("; ");
+		return this.printValues(this.activitiesName, defaultEmptyValue);
 	}
 
 	public printTypes(defaultEmptyValue?: string): string {
-
-		if (this.types.length === 0) {
-			return (defaultEmptyValue) ? defaultEmptyValue : "";
-		}
-		return this.types.join("; ");
-
+		return this.printValues(this.types, defaultEmptyValue);
 	}
 
 	public printTypesCount(maxType?: number, defaultEmptyValue?: string): string {
