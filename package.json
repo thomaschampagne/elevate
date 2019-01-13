@@ -1,6 +1,6 @@
 {
 	"name": "elevate",
-	"version": "6.8.0",
+	"version": "6.8.1",
 	"description": "Wrap the needed tools required to cook the Elevate Web Plugin",
 	"scripts": {
 		"build": "npm-run-all clean res-copy:* build-project:core build-project:app",
@@ -43,13 +43,13 @@
 	"author": {
 		"name": "Thomas Champagne",
 		"email": "th.champagne@gmail.com",
-		"web": "http://thomaschampagne.github.io"
+		"web": "https://thomaschampagne.github.io"
 	},
 	"contributors": [
 		{
 			"name": "Thomas Champagne",
 			"email": "th.champagne@gmail.com",
-			"web": "http://thomaschampagne.github.io"
+			"web": "https://thomaschampagne.github.io"
 		}
 	],
 	"license": "MIT",
