@@ -56,7 +56,6 @@ export const userSettingsData: UserSettingsModel = {
 	displayRunningPowerEstimation: true,
 	reviveGoogleMapsLayerType: "terrain",
 	displayActivityBestSplits: true,
-	bestSplitsConfiguration: null,
 	temperatureUnit: "C",
 	showHiddenBetaFeatures: false,
 	displayReliveCCLink: true,

@@ -2,6 +2,23 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.8.1",
+		date: "2018-12-24",
+		message: "Patching \"Year Progressions Targets & Presets\" with improvements and bug fixes. View full release note for details.",
+		hotFixes: [],
+		features: [
+			"Fitness Trend: Added a dialog to select activity to open when user left click a day having multiple activities."
+		],
+		isPatch: true,
+		fixes: [
+			"Fixed bug where target line of a \"year progression preset\" wasn't fully deleted when the preset had deleted.",
+			"Fixed bug where the delta of current day with \"year progression target\" wasn't displayed.",
+			"Fixed a bug when no athlete settings could be found: case of activity without date (Strava Bug?!).",
+			"[Technical] Refactor and improve user settings storage management.",
+			"[Misc] Typo and syntax errors."
+		]
+	},
+	{
 		version: "6.8.0",
 		date: "2018-11-18",
 		message: "Added year progressions Targets & Presets. Added Analysis Graph for Running activities. And many improvements visible in release note...",

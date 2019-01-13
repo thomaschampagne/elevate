@@ -1,5 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import { MomentDateAdapter, MAT_MOMENT_DATE_FORMATS } from "@angular/material-moment-adapter";
 import { DatedAthleteSettingsModel } from "@elevate/shared/models";
 import * as moment from "moment";
 import { DatedAthleteSettingsDialogData } from "./dated-athlete-settings-dialog-data.model";
@@ -9,7 +11,11 @@ import * as _ from "lodash";
 @Component({
 	selector: "app-edit-dated-athlete-settings-dialog",
 	templateUrl: "./edit-dated-athlete-settings-dialog.component.html",
-	styleUrls: ["./edit-dated-athlete-settings-dialog.component.scss"]
+	styleUrls: ["./edit-dated-athlete-settings-dialog.component.scss"],
+	providers: [
+		{provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+		{provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+	]
 })
 export class EditDatedAthleteSettingsDialogComponent implements OnInit {
 
