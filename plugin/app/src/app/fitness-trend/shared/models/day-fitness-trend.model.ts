@@ -1,4 +1,5 @@
 import * as moment from "moment";
+import { AthleteModel } from "@elevate/shared/models";
 import { DayStressModel } from "./day-stress.model";
 import { TrainingZone } from "../enums/training-zone.enum";
 import * as _ from "lodash";
@@ -37,6 +38,31 @@ export class DayFitnessTrendModel extends DayStressModel {
 		this.trainingZone = this.findTrainingZone(this.tsb);
 	}
 
+	private static buildModel(date: Date, previewDay: boolean,
+				id: number, type: string, activityName: string,
+				trainingImpulseScore: number, powerStressScore: number, swimStressScore: number, finalStressScore: number,
+				athleteModel: AthleteModel,
+				ctl: number, atl: number, tsb: number,
+				prevCtl?: number, prevAtl?: number, prevTsb?: number): DayFitnessTrendModel {
+		const dayStressModel = new DayStressModel(date, previewDay);
+
+		dayStressModel.ids = [ id ];
+		dayStressModel.types = [ type ];
+		dayStressModel.activitiesName = [ activityName ];
+		dayStressModel.trainingImpulseScore = trainingImpulseScore;
+		dayStressModel.powerStressScore = powerStressScore;
+		dayStressModel.swimStressScore = swimStressScore;
+		dayStressModel.finalStressScore = finalStressScore;
+		dayStressModel.athleteModel = athleteModel;
+
+		dayStressModel.trainingImpulseScores = [ trainingImpulseScore ];
+		dayStressModel.powerStressScores = [ powerStressScore ];
+		dayStressModel.swimStressScores = [ swimStressScore ];
+		dayStressModel.finalStressScores = [ finalStressScore ];
+
+		return new DayFitnessTrendModel(dayStressModel, ctl, atl, tsb, prevCtl, prevAtl, prevTsb);
+	}
+
 	public dateString: string;
 
 	public ctl: number;
@@ -49,6 +75,23 @@ export class DayFitnessTrendModel extends DayStressModel {
 
 	public trainingZone: TrainingZone;
 	public trainingZoneAsString: string;
+
+	public splitDayIntoActivities(): DayFitnessTrendModel[] {
+		// Return an empty day as itself
+		if (!this.ids.length) {
+			return [ this ];
+		}
+
+		// Split contained activities into one, then reverse the list so the last activity of the day is first
+		return _.map(this.ids, (id: number, i: number) =>
+				DayFitnessTrendModel.buildModel(this.date, this.previewDay,
+					this.ids[i], this.types[i], this.activitiesName[i],
+					this.trainingImpulseScores[i], this.powerStressScores[i], this.swimStressScores[i], this.finalStressScores[i],
+					this.athleteModel,
+					this.ctl, this.atl, this.tsb,
+					this.prevCtl, this.prevAtl, this.prevTsb))
+			.reverse();
+	}
 
 	public printFitness(): number {
 		return _.floor(this.ctl, 1);
