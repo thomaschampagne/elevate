@@ -30,7 +30,8 @@ export class Content {
 			window.location.pathname.match(/^\/premium/) ||
 			window.location.pathname.match(/^\/gopremium/) ||
 			window.location.pathname.match(/^\/store/) ||
-			window.location.pathname.match(/^\/how-it-works/)) {
+			window.location.pathname.match(/^\/how-it-works/) ||
+			window.location.pathname.match(/^\/careers/)) {
 
 			isRunnable = false;
 		}
