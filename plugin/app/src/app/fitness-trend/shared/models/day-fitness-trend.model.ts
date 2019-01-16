@@ -14,14 +14,19 @@ export class DayFitnessTrendModel extends DayStressModel {
 		this.ids = dayStress.ids;
 		this.types = dayStress.types;
 		this.activitiesName = dayStress.activitiesName;
+
+		this.heartRateStressScore = dayStress.heartRateStressScore;
 		this.trainingImpulseScore = dayStress.trainingImpulseScore;
 		this.powerStressScore = dayStress.powerStressScore;
+		this.runningStressScore = dayStress.runningStressScore;
 		this.swimStressScore = dayStress.swimStressScore;
 		this.finalStressScore = dayStress.finalStressScore;
 		this.athleteModel = (dayStress.athleteModel) ? dayStress.athleteModel : null;
 
+		this.heartRateStressScores = dayStress.heartRateStressScores;
 		this.trainingImpulseScores = dayStress.trainingImpulseScores;
 		this.powerStressScores = dayStress.powerStressScores;
+		this.runningStressScores = dayStress.runningStressScores;
 		this.swimStressScores = dayStress.swimStressScores;
 		this.finalStressScores = dayStress.finalStressScores;
 
@@ -40,7 +45,7 @@ export class DayFitnessTrendModel extends DayStressModel {
 
 	private static buildModel(date: Date, previewDay: boolean,
 				id: number, type: string, activityName: string,
-				trainingImpulseScore: number, powerStressScore: number, swimStressScore: number, finalStressScore: number,
+				trainingImpulseScore: number, heartRateStressScore: number, runningStressScore: number, powerStressScore: number, swimStressScore: number, finalStressScore: number,
 				athleteModel: AthleteModel,
 				ctl: number, atl: number, tsb: number,
 				prevCtl?: number, prevAtl?: number, prevTsb?: number): DayFitnessTrendModel {
@@ -49,14 +54,19 @@ export class DayFitnessTrendModel extends DayStressModel {
 		dayStressModel.ids = [ id ];
 		dayStressModel.types = [ type ];
 		dayStressModel.activitiesName = [ activityName ];
+
+		dayStressModel.heartRateStressScore = heartRateStressScore;
 		dayStressModel.trainingImpulseScore = trainingImpulseScore;
 		dayStressModel.powerStressScore = powerStressScore;
+		dayStressModel.runningStressScore = runningStressScore;
 		dayStressModel.swimStressScore = swimStressScore;
 		dayStressModel.finalStressScore = finalStressScore;
 		dayStressModel.athleteModel = athleteModel;
 
+		dayStressModel.heartRateStressScores = [ heartRateStressScore ];
 		dayStressModel.trainingImpulseScores = [ trainingImpulseScore ];
 		dayStressModel.powerStressScores = [ powerStressScore ];
+		dayStressModel.runningStressScores = [ runningStressScore ];
 		dayStressModel.swimStressScores = [ swimStressScore ];
 		dayStressModel.finalStressScores = [ finalStressScore ];
 
@@ -86,7 +96,7 @@ export class DayFitnessTrendModel extends DayStressModel {
 		return _.map(this.ids, (id: number, i: number) =>
 				DayFitnessTrendModel.buildModel(this.date, this.previewDay,
 					this.ids[i], this.types[i], this.activitiesName[i],
-					this.trainingImpulseScores[i], this.powerStressScores[i], this.swimStressScores[i], this.finalStressScores[i],
+					this.trainingImpulseScores[i], this.heartRateStressScores[i], this.runningStressScores[i], this.powerStressScores[i], this.swimStressScores[i], this.finalStressScores[i],
 					this.athleteModel,
 					this.ctl, this.atl, this.tsb,
 					this.prevCtl, this.prevAtl, this.prevTsb))
