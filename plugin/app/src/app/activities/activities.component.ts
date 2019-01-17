@@ -15,11 +15,11 @@ import { NotImplementedException } from "@elevate/shared/exceptions";
 })
 export class ActivitiesComponent implements OnInit {
 
-	// TODO Save rows count per page
 	// TODO Handle show athlete settings
 	// TODO Spreadsheet export.
 
 	public static readonly LS_SELECTED_COLUMNS: string = "activitiesTable_selectedColumns";
+	public static readonly LS_PAGE_SIZE_PREFERENCE: string = "activitiesTable_pageSize";
 
 	public readonly ColumnType = ActivityColumns.ColumnType;
 
@@ -91,6 +91,12 @@ export class ActivitiesComponent implements OnInit {
 
 		this.dataSource = new MatTableDataSource<SyncedActivityModel>();
 		this.dataSource.paginator = this.matPaginator;
+
+		const pageSizePreference = parseInt(localStorage.getItem(ActivitiesComponent.LS_PAGE_SIZE_PREFERENCE));
+		if (!_.isNaN(pageSizePreference)) {
+			this.dataSource.paginator.pageSize = pageSizePreference;
+		}
+
 		this.dataSource.sort = this.matSort;
 
 		this.dataSource.sortingDataAccessor = (activity: SyncedActivityModel, sortHeaderId: string) => {
@@ -188,5 +194,9 @@ export class ActivitiesComponent implements OnInit {
 		this.selectedColumns = [ActivityColumns.Definition.ALL[0], ActivityColumns.Definition.ALL[1]];
 		this.filterDisplayedColumns();
 		localStorage.removeItem(ActivitiesComponent.LS_SELECTED_COLUMNS);
+	}
+
+	public onPageSizeChanged(): void {
+		localStorage.setItem(ActivitiesComponent.LS_PAGE_SIZE_PREFERENCE, this.dataSource.paginator.pageSize.toString());
 	}
 }
