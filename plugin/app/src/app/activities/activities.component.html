@@ -75,7 +75,8 @@
 	</div>
 	<mat-paginator #paginator
 				   [pageSize]="10"
-				   [pageSizeOptions]="[5, 10, 15, 25, 50, 100]">
+				   [pageSizeOptions]="[5, 10, 15, 25, 50, 100]"
+				   (page)="onPageSizeChanged()">
 	</mat-paginator>
 </mat-card>
 
