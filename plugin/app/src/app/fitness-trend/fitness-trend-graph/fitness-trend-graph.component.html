@@ -24,9 +24,7 @@
 	<div fxFlex="94">
 
 		<div #fitnessTrendGraph id="fitnessTrendGraph" class="viewed-day-tooltip"
-			 [ngClass]='{"active-viewed-day": viewedDay?.hasActivities()}'
-			 (window:focus)="setTodayAsViewedDay()"
-			 (document:mousemove)="onTooltipMouseMove($event)">
+			 [ngClass]='{"active-viewed-day": viewedDay?.hasActivities()}'>
 
 			<!--Tooltip shown on mouse move over graph-->
 			<div #viewedDayTooltip>
