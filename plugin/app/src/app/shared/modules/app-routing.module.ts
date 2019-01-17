@@ -8,8 +8,13 @@ import { ShareComponent } from "../../share/share.component";
 import { ReportComponent } from "../../report/report.component";
 import { AdvancedMenuComponent } from "../../advanced-menu/advanced-menu.component";
 import { FaqComponent } from "../../faq/faq.component";
+import { ActivitiesComponent } from "../../activities/activities.component";
 
 const routes: Routes = [
+	{
+		path: AppRoutesModel.activities,
+		component: ActivitiesComponent
+	},
 	{
 		path: AppRoutesModel.fitnessTrend,
 		loadChildren: "../../fitness-trend/fitness-trend.module#FitnessTrendModule"
@@ -59,7 +64,7 @@ const routes: Routes = [
 		component: FaqComponent
 	},
 	{
-		path: "", redirectTo: AppRoutesModel.fitnessTrend, pathMatch: "full"
+		path: "", redirectTo: AppRoutesModel.activities, pathMatch: "full"
 	},
 ];
 
