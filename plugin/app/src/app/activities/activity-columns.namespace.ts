@@ -122,6 +122,17 @@ export namespace ActivityColumns {
 	}
 
 	/**
+	 * Link based column
+	 */
+	export class AthleteSettingsColumn<T> extends TextColumn<T> {
+		public type: ColumnType = ColumnType.ATHLETE_SETTINGS;
+
+		constructor(category: string) {
+			super(category, "athleteSettings", null, "Athlete Settings", "Display athlete settings which have been used to compute stats that day");
+		}
+	}
+
+	/**
 	 * Number based column
 	 */
 	export class NumberColumn<T> extends Column<T> {
@@ -158,8 +169,8 @@ export namespace ActivityColumns {
 		public static readonly HEART_RATE: string = "Heart rate";
 		public static readonly CADENCE: string = "Cadence";
 		public static readonly POWER: string = "Power";
+		public static readonly OTHERS: string = "Others";
 		// public static readonly STRESS_SCORES: string = "Stress Scores";
-		// public static readonly OTHERS: string = "Others";
 
 		public label: string;
 		public columns: Column<SyncedActivityModel>[];
@@ -367,7 +378,6 @@ export namespace ActivityColumns {
 			/**
 			 * Pace
 			 */
-
 			new NumberColumn(Category.PACE, "extendedStats.paceData.genuineGradeAdjustedAvgPace", Definition.LONG_DISTANCE_SYSTEM_UNITS, "Grade Adj. Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)).setDescription("Grade Adjusted Pace"),
 			new NumberColumn(Category.PACE, "extendedStats.paceData.best20min", Definition.LONG_DISTANCE_SYSTEM_UNITS, "Best 20min Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
 			new NumberColumn(Category.PACE, "extendedStats.paceData.lowerQuartilePace", Definition.LONG_DISTANCE_SYSTEM_UNITS, "25% Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
@@ -438,6 +448,11 @@ export namespace ActivityColumns {
 			new NumberColumn(Category.ELEVATION, "extendedStats.elevationData.medianElevation", Definition.ELEVATION_SYSTEM_UNITS, "50% Elevation", Print.number, 0, 1, Constant.METER_TO_FEET_FACTOR, "Median Elevation"),
 			new NumberColumn(Category.ELEVATION, "extendedStats.elevationData.upperQuartileElevation", Definition.ELEVATION_SYSTEM_UNITS, "75% Elevation", Print.number, 0, 1, Constant.METER_TO_FEET_FACTOR, "Upper Quartile Elevation"),
 
+
+			/**
+			 * Others
+			 */
+			new AthleteSettingsColumn(Category.OTHERS)
 		];
 	}
 }
