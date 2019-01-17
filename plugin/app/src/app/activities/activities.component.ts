@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
-import { MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
+import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
 import { SyncedActivityModel, SyncResultModel, UserSettingsModel } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { ActivityColumns } from "./activity-columns.namespace";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { NotImplementedException } from "@elevate/shared/exceptions";
+import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
+import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 
 @Component({
 	selector: "app-activities",
@@ -15,11 +16,58 @@ import { NotImplementedException } from "@elevate/shared/exceptions";
 })
 export class ActivitiesComponent implements OnInit {
 
-	// TODO Handle show athlete settings
 	// TODO Spreadsheet export.
 
 	public static readonly LS_SELECTED_COLUMNS: string = "activitiesTable_selectedColumns";
 	public static readonly LS_PAGE_SIZE_PREFERENCE: string = "activitiesTable_pageSize";
+
+	public static printAthleteSettings(activity: SyncedActivityModel): string {
+
+		if (!activity.athleteModel) {
+			return null;
+		}
+
+		let inlineSettings = "";
+
+		if (activity.extendedStats.heartRateData && (_.isNumber(activity.extendedStats.heartRateData.HRSS)
+			|| _.isNumber(activity.extendedStats.heartRateData.TRIMP))) {
+
+			inlineSettings += "MaxHr " + activity.athleteModel.athleteSettings.maxHr + "bpm. ";
+			inlineSettings += "RestHr " + activity.athleteModel.athleteSettings.restHr + "bpm. ";
+
+			if (activity.athleteModel.athleteSettings.lthr.default
+				|| activity.athleteModel.athleteSettings.lthr.cycling
+				|| activity.athleteModel.athleteSettings.lthr.running) {
+
+				let lthrStr = "Lthr ";
+
+				lthrStr += (activity.athleteModel.athleteSettings.lthr.default) ? "D:" + activity.athleteModel.athleteSettings.lthr.default + "bpm, " : "";
+				lthrStr += (activity.athleteModel.athleteSettings.lthr.cycling) ? "C:" + activity.athleteModel.athleteSettings.lthr.cycling + "bpm, " : "";
+				lthrStr += (activity.athleteModel.athleteSettings.lthr.running) ? "R:" + activity.athleteModel.athleteSettings.lthr.running + "bpm, " : "";
+				lthrStr = lthrStr.slice(0, -2);
+
+				inlineSettings += lthrStr + ". ";
+			}
+
+		}
+
+		if (activity.extendedStats.powerData && (_.isNumber(activity.extendedStats.powerData.powerStressScore) && activity.athleteModel.athleteSettings.cyclingFtp)) {
+			inlineSettings += "Cycling Ftp " + activity.athleteModel.athleteSettings.cyclingFtp + "w. ";
+		}
+
+		if (activity.extendedStats.paceData && (_.isNumber(activity.extendedStats.paceData.runningStressScore) && activity.athleteModel.athleteSettings.runningFtp)) {
+			inlineSettings += "Run Ftp " + activity.athleteModel.athleteSettings.runningFtp + "s/km. ";
+		}
+
+		if (activity.type === "Swim" && activity.athleteModel.athleteSettings.swimFtp) {
+			inlineSettings += "Swim Ftp " + activity.athleteModel.athleteSettings.swimFtp + "m/min. ";
+		}
+
+		inlineSettings += "Weight " + activity.athleteModel.athleteSettings.weight + "kg.";
+
+		return inlineSettings;
+
+	}
 
 	public readonly ColumnType = ActivityColumns.ColumnType;
 
@@ -41,7 +89,8 @@ export class ActivitiesComponent implements OnInit {
 	constructor(public activityService: ActivityService,
 				public userSettingsService: UserSettingsService,
 				public externalUpdatesService: ExternalUpdatesService,
-				public snackBar: MatSnackBar) {
+				public snackBar: MatSnackBar,
+				public dialog: MatDialog) {
 		this.initialized = false;
 	}
 
@@ -122,14 +171,13 @@ export class ActivitiesComponent implements OnInit {
 			this.dataSource.data = _.sortBy(syncedActivityModels, (dayFitnessTrendModel: SyncedActivityModel) => {
 				return dayFitnessTrendModel.id * -1;
 			});
-
-			this.initialized = true;
-
 		}).catch(error => {
-			this.initialized = true;
 			const message = error.toString() + ". Press (F12) to see a more detailed error message in browser console.";
 			this.snackBar.open(message, "Close");
 			console.error(message);
+
+		}).finally(() => {
+			this.initialized = true;
 		});
 	}
 
@@ -181,8 +229,12 @@ export class ActivitiesComponent implements OnInit {
 		this.dataSource.filter = filterValue;
 	}
 
-	public onViewAthleteSettings(): void {
-		throw new NotImplementedException();
+	public onViewAthleteSettings(activity: SyncedActivityModel): void {
+		this.dialog.open(GotItDialogComponent, {
+			minWidth: GotItDialogComponent.MIN_WIDTH,
+			maxWidth: GotItDialogComponent.MAX_WIDTH,
+			data: new GotItDialogDataModel("Calculated with athlete settings", ActivitiesComponent.printAthleteSettings(activity))
+		});
 	}
 
 	public tickAll(): void {
@@ -191,12 +243,12 @@ export class ActivitiesComponent implements OnInit {
 	}
 
 	public unTickAll(): void {
-		this.selectedColumns = [ActivityColumns.Definition.ALL[0], ActivityColumns.Definition.ALL[1]];
-		this.filterDisplayedColumns();
-		localStorage.removeItem(ActivitiesComponent.LS_SELECTED_COLUMNS);
+		this.selectedColumns = [ActivityColumns.Definition.ALL[0], ActivityColumns.Definition.ALL[1]]; // TODO Use find where instead
+		this.onSelectedColumns();
 	}
 
 	public onPageSizeChanged(): void {
 		localStorage.setItem(ActivitiesComponent.LS_PAGE_SIZE_PREFERENCE, this.dataSource.paginator.pageSize.toString());
 	}
+
 }
