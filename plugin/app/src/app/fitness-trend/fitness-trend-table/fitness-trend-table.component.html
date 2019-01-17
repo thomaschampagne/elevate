@@ -5,15 +5,15 @@
 			</span>
 		<input fxFill matInput [(ngModel)]="searchText" (keyup)="applyFilter($event.target.value)"
 			   placeholder="Filter by type or activities name">
-		<button mat-button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
+		<button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
 				(click)="searchText=''; applyFilter(searchText);">
 			<mat-icon>close</mat-icon>
 		</button>
 	</mat-form-field>
 </div>
-<mat-table #table [dataSource]="dataSource" matSort>
-	<ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
-		<mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="{{column.toolTip}}">
+<mat-table [dataSource]="dataSource" matSort>
+	<ng-container *ngFor="let column of columns" [matColumnDef]="column.id">
+		<mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="{{column.description}}">
 			{{column.header}}
 		</mat-header-cell>
 		<mat-cell *matCellDef="let dayFitnessTrend">
