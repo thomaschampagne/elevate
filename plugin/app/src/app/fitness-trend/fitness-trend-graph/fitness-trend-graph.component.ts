@@ -406,6 +406,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 		this.viewedDayService.onChange(this.viewedDay);
 	}
 
+	@HostListener("document:mousemove", ["$event"])
 	public onTooltipMouseMove(mouseEvent: MouseEvent): void {
 
 		let mouseDistanceX = 50; // Default value in px. Can be changed below if tooltip goes out of the graph
@@ -445,6 +446,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 		});
 	}
 
+	@HostListener("window:focus")
 	public setTodayAsViewedDay(): void {
 		this.viewedDay = this.getTodayViewedDay();
 		this.viewedDayService.onChange(this.viewedDay);
