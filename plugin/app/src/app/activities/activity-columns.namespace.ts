@@ -47,7 +47,7 @@ export namespace ActivityColumns {
 		public category: string;
 		public description: string;
 
-		public width: string = "120px"; // Default column width
+		public width: string = "115px"; // Default column width
 		public sticky: boolean = false; // Column is not stick by default
 
 		public abstract type: ColumnType;
@@ -352,8 +352,8 @@ export namespace ActivityColumns {
 			/**
 			 * Common
 			 */
-			new TextColumn(Category.COMMON, "start_time", Print.startDate, "Date").setSticky().setWidth("150px"),
-			new ActivityLinkColumn(Category.COMMON, "name").setSticky().setWidth("230px"),
+			new TextColumn(Category.COMMON, "start_time", Print.startDate, "Date").setWidth("150px"),
+			new ActivityLinkColumn(Category.COMMON, "name").setWidth("230px"),
 			new TextColumn(Category.COMMON, "type"),
 			new TextColumn(Category.COMMON, "moving_time_raw", Print.movingTime, "Moving Time"),
 			new NumberColumn(Category.COMMON, "distance_raw", Definition.LONG_DISTANCE_SYSTEM_UNITS, "Distance", Print.number, 0, 0.001, Constant.KM_TO_MILE_FACTOR),
