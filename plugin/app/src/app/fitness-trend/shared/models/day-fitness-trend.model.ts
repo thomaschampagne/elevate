@@ -13,8 +13,10 @@ export class DayFitnessTrendModel extends DayStressModel {
 		this.ids = dayStress.ids;
 		this.types = dayStress.types;
 		this.activitiesName = dayStress.activitiesName;
+		this.heartRateStressScore = dayStress.heartRateStressScore;
 		this.trainingImpulseScore = dayStress.trainingImpulseScore;
 		this.powerStressScore = dayStress.powerStressScore;
+		this.runningStressScore = dayStress.runningStressScore;
 		this.swimStressScore = dayStress.swimStressScore;
 		this.finalStressScore = dayStress.finalStressScore;
 		this.athleteModel = (dayStress.athleteModel) ? dayStress.athleteModel : null;
