@@ -49,7 +49,9 @@
 								 matTooltip="{{column.description}}">
 					{{column.header}}
 				</mat-header-cell>
-				<mat-cell *matCellDef="let activity" [fxFlex]="column.width">
+				<mat-cell *matCellDef="let activity" [fxFlex]="column.width"
+						  matTooltip="[{{activity.start_time | date}}] {{activity.name | shorten: 42: '...'}}"
+						  matTooltipPosition="left">
 					<ng-container *ngIf="column.type === ColumnType.TEXT">
 						{{column.print(activity, column.id)}}
 					</ng-container>

@@ -243,7 +243,11 @@ export class ActivitiesComponent implements OnInit {
 	}
 
 	public unTickAll(): void {
-		this.selectedColumns = [ActivityColumns.Definition.ALL[0], ActivityColumns.Definition.ALL[1]]; // TODO Use find where instead
+		this.selectedColumns = [
+			_.find(ActivityColumns.Definition.ALL, {id: "start_time"}),
+			_.find(ActivityColumns.Definition.ALL, {id: "name"}),
+		];
+
 		this.onSelectedColumns();
 	}
 
