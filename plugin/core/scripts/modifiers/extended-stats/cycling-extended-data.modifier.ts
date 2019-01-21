@@ -119,7 +119,9 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
 			} else {
 				powerStressScore = "-";
-				labelPSS = "<i>Configure FTP in athlete settings</br>to get \"" + labelPSS + "\"</i>";
+				const message = (this.userSettings.hasDatedAthleteSettings) ? "<i>No cycling FTP found in athlete </br>settings for this activity date</i>"
+					: "<i>Please configure cycling FTP</br>in athlete settings </br>to see \"Power Stress Score\"</i>";
+				labelPSS = message;
 			}
 
 			this.insertContentAtGridPosition(1, 6, powerStressScore, labelPSS, "", null);
