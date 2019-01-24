@@ -22,9 +22,8 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		super.insertContentSummaryGridContent();
 
 		// Speed and pace
-		let relevantSpeed = "-";
 		if (this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData) {
-
+			let relevantSpeed = "-";
 			let title;
 			let units;
 			if (this.analysisData.speedData.best20min) {
@@ -63,9 +62,8 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		}
 		this.insertContentAtGridPosition(1, 4, cadenceTimeMoving, "Pedaling Time", (cadencePercentageMoving !== "-") ? " <span class=\"summarySubGridTitle\">(" + cadencePercentageMoving + "% of activity)</span>" : "", "displayCadenceData");
 
-		let weightedPower = "-";
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
-			weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
+			let weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
 			let labelWeightedPower = "Weighted Avg Power";
 			if (!this.analysisData.powerData.hasPowerMeter) {
 				weightedPower = "<span style='font-size: 14px;'>~</span>" + weightedPower;
@@ -74,9 +72,8 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 			this.insertContentAtGridPosition(0, 5, weightedPower, labelWeightedPower, " w <span class=\"summarySubGridTitle\" style=\"font-size: 11px;\">(Dr. A. Coggan formula)</span>", "displayAdvancedPowerData");
 		}
 
-		let avgWattsPerKg = "-";
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
-			avgWattsPerKg = this.analysisData.powerData.avgWattsPerKg.toFixed(2);
+			let avgWattsPerKg = this.analysisData.powerData.avgWattsPerKg.toFixed(2);
 			let labelWKg = "Watts Per Kilograms";
 			if (!this.analysisData.powerData.hasPowerMeter) {
 				avgWattsPerKg = "<span style='font-size: 14px;'>~</span>" + avgWattsPerKg;
@@ -105,23 +102,20 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 			this.insertContentAtGridPosition(0, 6, best20min, label, best20minUnits, "displayAdvancedPowerData");
 		}
 
-		let powerStressScore = "-";
+
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData && this.isAuthorOfViewedActivity) {
 
+			let powerStressScore = "-";
 			let labelPSS = "Power Stress Score";
+
 			if (this.analysisData.powerData.powerStressScore) {
 				powerStressScore = this.analysisData.powerData.powerStressScore.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.powerData.powerStressScorePerHour.toFixed(1) + " / hour)</span>";
-				labelPSS = "Power Stress Score";
-
 				if (!this.analysisData.powerData.hasPowerMeter) {
 					labelPSS = "Est. " + labelPSS;
 				}
 
 			} else {
-				powerStressScore = "-";
-				const message = (this.userSettings.hasDatedAthleteSettings) ? "<i>No cycling FTP found in athlete </br>settings for this activity date</i>"
-					: "<i>Please configure cycling FTP</br>in athlete settings </br>to see \"Power Stress Score\"</i>";
-				labelPSS = message;
+				labelPSS = "<i>Configure FTP in athlete settings</br>to get \"" + labelPSS + "\"</i>";
 			}
 
 			this.insertContentAtGridPosition(1, 6, powerStressScore, labelPSS, "", null);

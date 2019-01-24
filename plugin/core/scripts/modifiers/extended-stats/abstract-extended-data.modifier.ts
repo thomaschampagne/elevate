@@ -43,6 +43,9 @@ export abstract class AbstractExtendedDataModifier {
 		this.isAuthorOfViewedActivity = isAuthorOfViewedActivity;
 		this.speedUnitsData = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
 		this.type = type;
+	}
+
+	public apply(): void {
 
 		if (_.isNull(this.type)) {
 			console.error("ExtendedDataModifier must be set");

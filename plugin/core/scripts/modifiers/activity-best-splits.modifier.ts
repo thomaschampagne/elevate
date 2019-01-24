@@ -172,8 +172,7 @@ function BestSplitWorker() {
 
 		public compute(split: any, activityJson: any, options: any): any {
 
-			let max: number,
-				distance: number,
+			let distance: number,
 				hr: number,
 				avgCadence: number,
 				avgPower: number,
@@ -451,7 +450,6 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
 		// http://phrogz.net/js/framerate-independent-low-pass-filter.html
 		// value += (currentValue - value) / (smoothing / timeSinceLastSample);
 		// it is adapted for stability - if (smoothing / timeSinceLastSample) is less then 1, set it to 1 -> no smoothing for that sample
-		let max: number;
 		if (data && distance) {
 			let smooth_factor = 0;
 			const result: number[] = [];
@@ -807,7 +805,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
 			}
 			const splitType = parseInt($("#best-split-new-unit").val().toString());
 
-			const splitAlreadyExist = _.find(splitsArray, <any> {
+			const splitAlreadyExist = _.find(splitsArray, <any>{
 				length: splitLength,
 				unit: splitType,
 			});
