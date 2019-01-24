@@ -698,6 +698,8 @@ export class Elevate {
             break;*/
 		}
 
+		extendedDataModifier.apply();
+
 		// Send opened activity type to ga for stats
 		const updatedToEvent: any = {
 			categorie: "Analyse",
@@ -734,11 +736,9 @@ export class Elevate {
 
 		let view: any = Strava.Labs.Activities.SegmentLeaderboardView; // Strava.Labs.Activities.SegmentEffortDetailView
 
-		if (activityType === ("Run" || "Hike" || "Walk")) {
+		if (activityType === ("Ride" || "Run" || "Hike" || "Walk")) {
 			view = Strava.Labs.Activities.SegmentEffortDetailView;
-		}
-
-		if (!view) {
+		} else {
 			return;
 		}
 
@@ -783,6 +783,9 @@ export class Elevate {
 				default:
 					break;
 			}
+
+			extendedDataModifier.apply();
+
 			return r;
 		};
 

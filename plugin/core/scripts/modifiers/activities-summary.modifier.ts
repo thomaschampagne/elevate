@@ -64,8 +64,6 @@ export class ActivitiesSummaryModifier extends AbstractModifier {
 
 			if ($activityUrl.attr("href") !== null) {
 
-				const href: string = $activityUrl.attr("href");
-
 				if ($activityUrl.attr("href")) {
 
 					const activityId: number = parseInt(_.last($activityUrl.attr("href").split("/")));

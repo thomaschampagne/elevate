@@ -123,9 +123,7 @@ export class WindyTyModifier extends AbstractModifier {
 
 	protected showWeather(type: string): void {
 
-		const date: Date = new Date(window.pageView.activity().get("startDateLocal") * 1000);
 		const defaultZoomLevel = 11;
-		const windyTyHour: number = Math.round(date.getUTCHours() / 6) * 6;
 
 		const windUnitConfig: string = "metricWind=" + ((this.speedUnitData.units === "km") ? "km/h" : "mph");
 		const temperatureUnitConfig: string = "metricTemp=" + this.userSettings.temperatureUnit;
