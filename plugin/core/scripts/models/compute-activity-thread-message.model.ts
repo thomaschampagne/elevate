@@ -14,4 +14,6 @@ export class ComputeActivityThreadMessageModel {
 	activityStream: ActivityStreamsModel;
 	bounds: number[];
 	returnZones: boolean;
+    elapsed_time: number;
+    average_speed: number;
 }

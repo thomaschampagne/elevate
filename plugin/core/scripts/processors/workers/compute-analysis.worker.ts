@@ -16,7 +16,9 @@ onmessage = (mainThreadEvent: MessageEvent) => {
 		threadMessage.activityStatsMap,
 		threadMessage.activityStream,
 		threadMessage.bounds,
-		threadMessage.returnZones);
+        threadMessage.returnZones,
+        threadMessage.elapsed_time,
+        threadMessage.average_speed);
 	const result: AnalysisDataModel = analysisComputer.compute();
 
 	postMessage(result);
