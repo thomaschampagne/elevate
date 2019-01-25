@@ -144,7 +144,9 @@ export class MultipleActivityProcessor {
 			activityStatsMap: activityStatsMap,
 			activityStream: activityWithStream.stream,
 			bounds: null,
-			returnZones: false
+            returnZones: false,
+            elapsed_time: activityWithStream.elapsed_time_raw,
+            average_speed: activityWithStream.distance_raw / activityWithStream.elapsed_time_raw
 		};
 
 		computeAnalysisThread.postMessage(threadMessage);
