@@ -527,9 +527,9 @@ export class ActivityComputer {
 	 */
 	protected moveData(velocityArray: number[], timeArray: number[], gradeAdjustedSpeedArray?: number[]): MoveDataModel {
 
-    if (_.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
-        return null;
-    }
+        if (_.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
+            return null;
+        }
 
 		let genuineAvgSpeedSum = 0,
 			genuineAvgSpeedSecondsSum = 0;
