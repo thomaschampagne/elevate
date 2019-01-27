@@ -90,16 +90,17 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
 		if (this.userSettings.displayAdvancedSpeedData && this.isAuthorOfViewedActivity && this.supportsGap) {
 
-			let runningStressScore;
-
+			let runningStressScore = "-";
+			let labelRSS = "Running Stress Score";
 			if (this.analysisData.paceData
 				&& this.analysisData.paceData.runningStressScore) {
 				runningStressScore = this.analysisData.paceData.runningStressScore.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.paceData.runningStressScorePerHour.toFixed(1) + " / hour)</span>";
 			} else {
-				runningStressScore = "<span class=\"summarySubGridTitle\"><i>Configure Running FTP in athlete settings</i></span>";
+				labelRSS = "<span style='cursor: not-allowed'>" + ((this.userSettings.hasDatedAthleteSettings) ? "<i>No running FTP found in athlete </br>settings for this activity date</i>"
+					: "<i>Please configure running FTP</br>in athlete settings </br>to see \"Running Stress Score\"</i>") + "</span>";
 			}
 
-			this.insertContentAtGridPosition(0, 5, runningStressScore, "Running Stress Score", "", "displayAdvancedSpeedData");
+			this.insertContentAtGridPosition(0, 5, runningStressScore, labelRSS, "", null);
 		}
 	}
 
