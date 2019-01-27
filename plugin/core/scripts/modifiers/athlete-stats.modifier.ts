@@ -13,10 +13,7 @@ export class AthleteStatsModifier extends AbstractModifier {
 	}
 
 	public modify(): void {
-		const stravaProgress = $("#progress-goals");
-		stravaProgress.before("<div class='section'><h3 style='font-weight: 400;'>Elevate Year progressions are now only available from " +
-			"the <a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Elevate App</a> itself.</h3></div>").each(() => {
-
-		});
+		$("#progress-goals").before("<div class='section'><h3 style='font-weight: 400;'>Elevate Year progressions are now only available from " +
+			"the <a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Elevate App</a> itself.</h3></div>");
 	}
 }
