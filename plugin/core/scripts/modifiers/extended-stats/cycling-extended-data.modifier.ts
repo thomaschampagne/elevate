@@ -113,8 +113,8 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 				}
 
 			} else {
-				labelPSS = (this.userSettings.hasDatedAthleteSettings) ? "<i style='cursor: not-allowed'>No cycling FTP found in athlete </br>settings for this activity date</i>"
-					: "<i>Please configure cycling FTP</br>in athlete settings </br>to see \"Power Stress Score\"</i>";
+				labelPSS = "<span style='cursor: not-allowed'>" + ((this.userSettings.hasDatedAthleteSettings) ? "<i>No cycling FTP found in athlete </br>settings for this activity date</i>"
+					: "<i>Please configure cycling FTP</br>in athlete settings </br>to see \"Power Stress Score\"</i>") + "</span>";
 			}
 
 			this.insertContentAtGridPosition(1, 6, powerStressScore, labelPSS, "", null);
