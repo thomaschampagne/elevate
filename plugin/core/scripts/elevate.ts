@@ -369,10 +369,7 @@ export class Elevate {
 			console.log("Execute handleAthletesStats()");
 		}
 
-		const athleteStatsModifier: AthleteStatsModifier = new AthleteStatsModifier(this.appResources, {
-			Run: this.userSettings.targetsYearRun,
-			Ride: this.userSettings.targetsYearRide,
-		});
+		const athleteStatsModifier: AthleteStatsModifier = new AthleteStatsModifier(this.appResources);
 		athleteStatsModifier.modify();
 	}
 
