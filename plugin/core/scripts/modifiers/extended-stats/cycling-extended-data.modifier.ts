@@ -22,12 +22,11 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		super.insertContentSummaryGridContent();
 
 		// Speed and pace
+		let relevantSpeed = "-";
+		let title = "Best 20min Speed";
+		let units = "";
 		if (this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData) {
-			let relevantSpeed = "-";
-			let title;
-			let units;
 			if (this.analysisData.speedData.best20min) {
-				title = "Best 20min Speed";
 				relevantSpeed = (this.analysisData.speedData.best20min * this.speedUnitsData.speedUnitFactor).toFixed(1);
 				units = this.speedUnitsData.speedUnitPerHour;
 			} else {
@@ -35,8 +34,8 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 				title = "75% Quartile Speed";
 				units = this.speedUnitsData.speedUnitPerHour + " <span class=\"summarySubGridTitle\">(&sigma; :" + (this.analysisData.speedData.standardDeviationSpeed * this.speedUnitsData.speedUnitFactor).toFixed(1) + " )</span>";
 			}
-			this.insertContentAtGridPosition(1, 0, relevantSpeed, title, units, "displayAdvancedSpeedData");
 		}
+		this.insertContentAtGridPosition(1, 0, relevantSpeed, title, units, "displayAdvancedSpeedData");
 
 		// ...
 		let climbSpeed = "-";
@@ -107,7 +106,6 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
 			let powerStressScore = "-";
 			let labelPSS = "Power Stress Score";
-
 			if (this.analysisData.powerData.powerStressScore) {
 				powerStressScore = this.analysisData.powerData.powerStressScore.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.powerData.powerStressScorePerHour.toFixed(1) + " / hour)</span>";
 				if (!this.analysisData.powerData.hasPowerMeter) {
@@ -115,7 +113,8 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 				}
 
 			} else {
-				labelPSS = "<i>Configure FTP in athlete settings</br>to get \"" + labelPSS + "\"</i>";
+				labelPSS = (this.userSettings.hasDatedAthleteSettings) ? "<i style='cursor: not-allowed'>No cycling FTP found in athlete </br>settings for this activity date</i>"
+					: "<i>Please configure cycling FTP</br>in athlete settings </br>to see \"Power Stress Score\"</i>";
 			}
 
 			this.insertContentAtGridPosition(1, 6, powerStressScore, labelPSS, "", null);

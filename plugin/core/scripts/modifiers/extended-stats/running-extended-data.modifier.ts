@@ -22,10 +22,13 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 		super.insertContentSummaryGridContent();
 
 		// Speed and pace
+		let q3Move = "-";
+		let units = "";
 		if (this.analysisData.paceData && this.userSettings.displayAdvancedSpeedData) {
-			const q3Move = Helper.secondsToHHMMSS(this.analysisData.paceData.upperQuartilePace / this.speedUnitsData.speedUnitFactor, true);
-			this.insertContentAtGridPosition(1, 0, q3Move, "75% Quartile Pace", "/" + this.speedUnitsData.units, "displayAdvancedSpeedData");
+			q3Move = Helper.secondsToHHMMSS(this.analysisData.paceData.upperQuartilePace / this.speedUnitsData.speedUnitFactor, true);
+			units = "/" + this.speedUnitsData.units;
 		}
+		this.insertContentAtGridPosition(1, 0, q3Move, "75% Quartile Pace", units, "displayAdvancedSpeedData");
 
 		// Avg climb pace
 		let climbPaceDisplayed = "-";
