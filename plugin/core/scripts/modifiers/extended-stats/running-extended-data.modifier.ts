@@ -90,7 +90,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
 		if (this.userSettings.displayAdvancedSpeedData && this.isAuthorOfViewedActivity && this.supportsGap) {
 
-			let runningStressScore = "-";
+			let runningStressScore;
 
 			if (this.analysisData.paceData
 				&& this.analysisData.paceData.runningStressScore) {
