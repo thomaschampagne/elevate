@@ -109,7 +109,7 @@ export class HeartRateDataView extends AbstractDataView {
 			return parseFloat(value);
 		}));
 
-		const hr: string[] = tooltip.title[0].split(" ")[1].replace("%", "").split("-");
+		const hr: string[] = tooltip.title[0].split(" ")[1].replace(/%/g, "").split("-");
 
 		tooltip.body[0].lines[0] = Math.round(Helper.heartRateReserveFromHeartrate(parseInt(hr[0]),
 			HeartRateDataView.instance.athleteModel.athleteSettings.maxHr, HeartRateDataView.instance.athleteModel.athleteSettings.restHr) * 100) +

@@ -23,10 +23,12 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
 		// Speed and pace
 		let q3Move = "-";
+		let units = "";
 		if (this.analysisData.paceData && this.userSettings.displayAdvancedSpeedData) {
 			q3Move = Helper.secondsToHHMMSS(this.analysisData.paceData.upperQuartilePace / this.speedUnitsData.speedUnitFactor, true);
-			this.insertContentAtGridPosition(1, 0, q3Move, "75% Quartile Pace", "/" + this.speedUnitsData.units, "displayAdvancedSpeedData");
+			units = "/" + this.speedUnitsData.units;
 		}
+		this.insertContentAtGridPosition(1, 0, q3Move, "75% Quartile Pace", units, "displayAdvancedSpeedData");
 
 		// Avg climb pace
 		let climbPaceDisplayed = "-";
@@ -74,20 +76,22 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 			this.insertContentAtGridPosition(0, 4, averageWatts, averageWattsTitle, "w", userSettingKey);
 		}
 
-		let weightedPower = "-";
+
 		if (this.userSettings.displayAdvancedPowerData) {
 
 			if (this.analysisData.powerData
 				&& this.analysisData.powerData.weightedPower
 				&& this.analysisData.powerData.hasPowerMeter
 			) {
-				weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
+				const weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
 				this.insertContentAtGridPosition(1, 4, weightedPower, "Weighted Power", "w", "displayAdvancedPowerData");
 			}
 		}
 
-		let runningStressScore = "-";
 		if (this.userSettings.displayAdvancedSpeedData && this.isAuthorOfViewedActivity && this.supportsGap) {
+
+			let runningStressScore = "-";
+
 			if (this.analysisData.paceData
 				&& this.analysisData.paceData.runningStressScore) {
 				runningStressScore = this.analysisData.paceData.runningStressScore.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.paceData.runningStressScorePerHour.toFixed(1) + " / hour)</span>";

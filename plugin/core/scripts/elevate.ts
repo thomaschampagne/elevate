@@ -698,6 +698,8 @@ export class Elevate {
             break;*/
 		}
 
+		extendedDataModifier.apply();
+
 		// Send opened activity type to ga for stats
 		const updatedToEvent: any = {
 			categorie: "Analyse",
@@ -732,60 +734,64 @@ export class Elevate {
 		const activityProcessor = new ActivityProcessor(this.vacuumProcessor, this.athleteModelResolver, this.appResources, this.userSettings,
 			this.activityId, activityType, activityStartDate, isTrainer, supportsGap, this.isActivityAuthor);
 
-		let view: any = Strava.Labs.Activities.SegmentLeaderboardView; // Strava.Labs.Activities.SegmentEffortDetailView
+		let view: any;
 
-		if (activityType === ("Run" || "Hike" || "Walk")) {
+		if (_.indexOf(["Run", "Hike", "Walk"], activityType) !== -1) {
 			view = Strava.Labs.Activities.SegmentEffortDetailView;
+		} else {
+			view = Strava.Labs.Activities.SegmentLeaderboardView;
 		}
 
-		if (!view) {
-			return;
-		}
+		if (view) {
 
-		const functionRender: any = view.prototype.render;
+			const functionRender: any = view.prototype.render;
 
-		const that: Elevate = this;
+			const that: Elevate = this;
 
-		view.prototype.render = function () { // No arrow function here with! If yes loosing arguments
+			view.prototype.render = function () { // No arrow function here with! If yes loosing arguments
 
-			const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
+				const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-			const basicInfo: ActivityBasicInfoModel = {
-				activityName: that.vacuumProcessor.getActivityName(),
-				activityTime: that.vacuumProcessor.getActivityTime(),
+				const basicInfo: ActivityBasicInfoModel = {
+					activityName: that.vacuumProcessor.getActivityName(),
+					activityTime: that.vacuumProcessor.getActivityTime(),
+				};
+
+				let extendedDataModifier: AbstractExtendedDataModifier;
+
+				switch (activityType) {
+					case "Ride":
+						extendedDataModifier = new CyclingExtendedDataModifier(
+							activityProcessor,
+							that.activityId,
+							supportsGap,
+							that.appResources,
+							that.userSettings,
+							that.isActivityAuthor,
+							basicInfo,
+							AbstractExtendedDataModifier.TYPE_SEGMENT);
+						break;
+					case "Run":
+						extendedDataModifier = new RunningExtendedDataModifier(
+							activityProcessor,
+							that.activityId,
+							supportsGap,
+							that.appResources,
+							that.userSettings,
+							that.isActivityAuthor,
+							basicInfo,
+							AbstractExtendedDataModifier.TYPE_SEGMENT);
+						break;
+					default:
+						break;
+				}
+
+				extendedDataModifier.apply();
+
+				return r;
 			};
 
-			let extendedDataModifier: AbstractExtendedDataModifier;
-
-			switch (activityType) {
-				case "Ride":
-					extendedDataModifier = new CyclingExtendedDataModifier(
-						activityProcessor,
-						that.activityId,
-						supportsGap,
-						that.appResources,
-						that.userSettings,
-						that.isActivityAuthor,
-						basicInfo,
-						AbstractExtendedDataModifier.TYPE_SEGMENT);
-					break;
-				case "Run":
-					extendedDataModifier = new RunningExtendedDataModifier(
-						activityProcessor,
-						that.activityId,
-						supportsGap,
-						that.appResources,
-						that.userSettings,
-						that.isActivityAuthor,
-						basicInfo,
-						AbstractExtendedDataModifier.TYPE_SEGMENT);
-					break;
-				default:
-					break;
-			}
-			return r;
-		};
-
+		}
 	}
 
 	public handleNearbySegments(): void {
