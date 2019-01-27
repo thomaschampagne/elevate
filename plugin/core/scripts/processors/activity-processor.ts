@@ -30,7 +30,7 @@ export class ActivityProcessor {
 	protected activityId: number;
 	protected activityType: string;
 	protected activityStartDate: Date;
-	protected hasSupportsGap: boolean;
+	protected supportsGap: boolean;
 	protected isTrainer: boolean;
 	protected isActivityAuthor: boolean;
 	protected computeAnalysisThread: Worker;
@@ -44,7 +44,7 @@ export class ActivityProcessor {
 				activityType: string,
 				activityStartDate: Date,
 				isTrainer: boolean,
-				hasSupportsGap: boolean,
+				supportsGap: boolean,
 				isActivityAuthor: boolean) {
 
 		this.vacuumProcessor = vacuumProcessor;
@@ -55,7 +55,7 @@ export class ActivityProcessor {
 		this.activityType = activityType;
 		this.activityStartDate = activityStartDate;
 		this.isTrainer = isTrainer;
-		this.hasSupportsGap = hasSupportsGap;
+		this.supportsGap = supportsGap;
 		this.zones = this.userSettings.zones;
 		this.isActivityAuthor = isActivityAuthor;
 	}
@@ -135,7 +135,7 @@ export class ActivityProcessor {
 		// He will compute them in the background
 		const threadMessage: ComputeActivityThreadMessageModel = {
 			activityType: this.activityType,
-			supportsGap: this.hasSupportsGap,
+			supportsGap: this.supportsGap,
 			isTrainer: this.isTrainer,
 			appResources: this.appResources,
 			userSettings: this.userSettings,

@@ -634,7 +634,7 @@ export class Elevate {
 		}
 
 		const activityType: string = window.pageView.activity().get("type");
-		const supportsGap: boolean = window.pageView.activity().get("hasSupportsGap");
+		const supportsGap: boolean = window.pageView.activity().get("supportsGap");
 		const isTrainer: boolean = window.pageView.activity().get("trainer");
 
 		// Skip manual activities
@@ -686,7 +686,7 @@ export class Elevate {
                 this.activityProcessor,
                 this.activityId,
                 activityType,
-                hasSupportsGap,
+                supportsGap,
                 this.appResources,
                 this.userSettingsData,
                 this.isActivityAuthor,
@@ -719,7 +719,7 @@ export class Elevate {
 		}
 
 		const activityType: string = window.pageView.activity().get("type");
-		const supportsGap: boolean = window.pageView.activity().get("hasSupportsGap");
+		const supportsGap: boolean = window.pageView.activity().get("supportsGap");
 		const isTrainer: boolean = window.pageView.activity().get("trainer");
 
 		// Skip manual activities
