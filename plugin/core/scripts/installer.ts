@@ -362,7 +362,7 @@ class Installer {
 			// Move all user settings content inside specific key
 			promise = AppStorage.getInstance().get(AppStorageType.SYNC).then((settings: UserSettingsModel) => {
 
-				const hasUserSettingsKey = !_.isEmpty((<any> settings).userSettings);
+				const hasUserSettingsKey = !_.isEmpty((<any>settings).userSettings);
 
 				if (hasUserSettingsKey) {
 					return Promise.resolve();
@@ -389,6 +389,40 @@ class Installer {
 		return promise;
 	}
 
+	protected migrate_to_6_8_2(): Promise<void> {
+
+		let promise: Promise<void>;
+
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.8.2")) {
+
+			console.log("Migrate to 6.8.2");
+
+			let userSettingsModel: UserSettingsModel;
+
+			// Move all user settings content inside specific key
+			promise = AppStorage.getInstance().get(AppStorageType.SYNC, "userSettings").then((settings: UserSettingsModel) => {
+
+				const hasOldYearProgressTargets = _.isNumber((<any>settings).targetsYearRide) || _.isNumber((<any>settings).targetsYearRun);
+
+				if (hasOldYearProgressTargets) {
+					userSettingsModel = settings;
+					delete (userSettingsModel as any).targetsYearRide;
+					delete (userSettingsModel as any).targetsYearRun;
+					return AppStorage.getInstance().set(AppStorageType.SYNC, "userSettings", userSettingsModel);
+				} else {
+					return Promise.resolve();
+				}
+			});
+
+		} else {
+
+			console.log("Skip migrate to 6.8.2");
+
+			promise = Promise.resolve();
+		}
+
+		return promise;
+	}
 
 	protected handleUpdate(): Promise<void> {
 
@@ -409,6 +443,8 @@ class Installer {
 			return this.migrate_to_6_7_0();
 		}).then(() => {
 			return this.migrate_to_6_8_1();
+		}).then(() => {
+			return this.migrate_to_6_8_2();
 		}).catch(error => console.error(error));
 
 	}
