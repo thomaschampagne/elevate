@@ -11,8 +11,6 @@ export class UserSettingsModel {
 	public hasDatedAthleteSettings: boolean;
 	public athleteModel: AthleteModel;
 	public zones: UserZonesModel;
-	public targetsYearRide: number;
-	public targetsYearRun: number;
 	public remoteLinks: boolean;
 	public defaultLeaderBoardFilter: string;
 	public activateRunningGradeAdjustedPace: boolean;
