@@ -397,22 +397,21 @@ class Installer {
 
 			console.log("Migrate to 6.8.2");
 
+			let userSettingsModel: UserSettingsModel;
+
 			// Move all user settings content inside specific key
-			promise = AppStorage.getInstance().get(AppStorageType.SYNC).then((settings: UserSettingsModel) => {
+			promise = AppStorage.getInstance().get(AppStorageType.SYNC, "userSettings").then((settings: UserSettingsModel) => {
 
 				const hasOldYearProgressTargets = _.isNumber((<any>settings).targetsYearRide) || _.isNumber((<any>settings).targetsYearRun);
 
 				if (hasOldYearProgressTargets) {
-
-					delete (settings as any).targetsYearRide;
-					delete (settings as any).targetsYearRun;
-
-					return AppStorage.getInstance().set(AppStorageType.SYNC, "userSettings", settings);
-
+					userSettingsModel = settings;
+					delete (userSettingsModel as any).targetsYearRide;
+					delete (userSettingsModel as any).targetsYearRun;
+					return AppStorage.getInstance().set(AppStorageType.SYNC, "userSettings", userSettingsModel);
 				} else {
 					return Promise.resolve();
 				}
-
 			});
 
 		} else {
