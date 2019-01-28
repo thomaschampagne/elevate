@@ -35,8 +35,8 @@ describe("ActivityComputer Paces", () => {
 	const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../../fixtures/user-settings/2470979.json")); // Thomas C user settings
 	const statsMap: ActivityStatsMapModel = _.cloneDeep(require("../../fixtures/activities/887284960/statsMap.json"));
 	const athleteModel = new AthleteModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
-    const elapsed_time = null;
-    const average_speed = null;
+	const elapsedTime = null;
+	const averageSpeed = null;
 
 	const PACE_SECONDS_TOLERANCE = 10;
 
@@ -47,7 +47,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsedTime, averageSpeed);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -65,7 +65,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsedTime, averageSpeed);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -83,7 +83,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsedTime, averageSpeed);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -101,7 +101,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsedTime, averageSpeed);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -119,7 +119,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsedTime, averageSpeed);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -137,7 +137,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsedTime, averageSpeed);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -155,7 +155,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsedTime, averageSpeed);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -173,7 +173,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsedTime, averageSpeed);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -191,7 +191,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsedTime, averageSpeed);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -209,7 +209,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsedTime, averageSpeed);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -227,7 +227,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsedTime, averageSpeed);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then

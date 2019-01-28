@@ -145,9 +145,9 @@ export class ActivityProcessor {
 			activityStatsMap: activityStatsMap,
 			activityStream: activityStream,
 			bounds: bounds,
-            returnZones: true,
-            elapsed_time: null,
-            average_speed: null
+			returnZones: true,
+			elapsedTime: null,
+			averageSpeed: null
 		};
 
 		this.computeAnalysisThread.postMessage(threadMessage);
