@@ -2,18 +2,18 @@ import { ActivityStatsMapModel, ActivityStreamsModel, AthleteModel, UserSettings
 import { AppResourcesModel } from "./app-resources.model";
 
 export class ComputeActivityThreadMessageModel {
-	activityType: string;
-	supportsGap: boolean;
-	isTrainer: boolean;
-	appResources: AppResourcesModel;
-	userSettings: UserSettingsModel;
-	isActivityAuthor: boolean;
-	athleteModel: AthleteModel;
-	hasPowerMeter: boolean;
-	activityStatsMap: ActivityStatsMapModel;
-	activityStream: ActivityStreamsModel;
-	bounds: number[];
-	returnZones: boolean;
-    elapsed_time: number;
-    average_speed: number;
+	public activityType: string;
+	public supportsGap: boolean;
+	public isTrainer: boolean;
+	public appResources: AppResourcesModel;
+	public userSettings: UserSettingsModel;
+	public isActivityAuthor: boolean;
+	public athleteModel: AthleteModel;
+	public hasPowerMeter: boolean;
+	public elapsedTime: number;
+	public averageSpeed: number;
+	public activityStatsMap: ActivityStatsMapModel;
+	public activityStream: ActivityStreamsModel;
+	public bounds: number[];
+	public returnZones: boolean;
 }
