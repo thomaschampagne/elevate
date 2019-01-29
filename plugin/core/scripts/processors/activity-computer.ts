@@ -80,8 +80,8 @@ export class ActivityComputer {
 		this.activityStream = activityStream;
 		this.bounds = bounds;
 		this.returnZones = returnZones;
-		this.elapsedTime = elapsedTime;
-		this.averageSpeed = averageSpeed;
+		this.elapsedTime = (elapsedTime) ? elapsedTime : null;
+		this.averageSpeed = (averageSpeed) ? averageSpeed : null;
 	}
 
 	public static streamVariationsSplits(trackedStream: number[], timeScale: number[], distanceScale: number[]): StreamVariationSplit[] {
@@ -470,35 +470,33 @@ export class ActivityComputer {
 			return null;
 		}
 
-		const genuineAvgSpeed: number = averageSpeed * 3.6;
-
 		const speedData: SpeedDataModel = {
-			genuineAvgSpeed: genuineAvgSpeed,
-			totalAvgSpeed: genuineAvgSpeed,
-			best20min: (elapsedTime >= 1200) ? genuineAvgSpeed : null,
-			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
-			lowerQuartileSpeed: genuineAvgSpeed,
-			medianSpeed: genuineAvgSpeed,
-			upperQuartileSpeed: genuineAvgSpeed,
+			genuineAvgSpeed: averageSpeed,
+			totalAvgSpeed: averageSpeed,
+			best20min: null,
+			avgPace: (1 / averageSpeed) * 60 * 60, // send in seconds
+			lowerQuartileSpeed: null,
+			medianSpeed: null,
+			upperQuartileSpeed: null,
 			varianceSpeed: 0,
-			genuineGradeAdjustedAvgSpeed: genuineAvgSpeed,
+			genuineGradeAdjustedAvgSpeed: averageSpeed,
 			standardDeviationSpeed: 0,
 			speedZones: null
 		};
 
-		const genuineAvgPace = Math.floor(this.convertSpeedToPace(genuineAvgSpeed));
+		const averagePace = this.convertSpeedToPace(averageSpeed);
 
-		const runningStressScore = (this.activityType === "Run" && genuineAvgPace && this.athleteModel.athleteSettings.runningFtp)
-			? ActivityComputer.computeRunningStressScore(elapsedTime, genuineAvgPace, this.athleteModel.athleteSettings.runningFtp) : null;
+		const runningStressScore = (this.activityType === "Run" && averagePace && this.athleteModel.athleteSettings.runningFtp)
+			? ActivityComputer.computeRunningStressScore(elapsedTime, averagePace, this.athleteModel.athleteSettings.runningFtp) : null;
 
 		const paceData: PaceDataModel = {
-			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
-			best20min: (elapsedTime >= 1200) ? Math.floor((1 / genuineAvgSpeed) * 60 * 60) : null,
-			lowerQuartilePace: genuineAvgPace,
-			medianPace: genuineAvgPace,
-			upperQuartilePace: genuineAvgPace,
+			avgPace: averagePace, // send in seconds
+			best20min: null,
+			lowerQuartilePace: null,
+			medianPace: null,
+			upperQuartilePace: null,
 			variancePace: 0,
-			genuineGradeAdjustedAvgPace: genuineAvgPace,
+			genuineGradeAdjustedAvgPace: averagePace,
 			paceZones: null,
 			gradeAdjustedPaceZones: null,
 			runningStressScore: runningStressScore,
@@ -658,14 +656,12 @@ export class ActivityComputer {
 			runningStressScorePerHour: (runningStressScore) ? runningStressScore / genuineAvgSpeedSecondsSum * 60 * 60 : null
 		};
 
-		const moveData: MoveDataModel = {
+		return {
 			movingTime: genuineAvgSpeedSecondsSum,
 			elapsedTime: elapsedSeconds,
 			speed: speedData,
 			pace: paceData,
 		};
-
-		return moveData;
 	}
 
 	/**
