@@ -146,7 +146,7 @@ export class MultipleActivityProcessor {
 			bounds: null,
 			returnZones: false,
 			elapsedTime: activityWithStream.elapsed_time_raw,
-			averageSpeed: activityWithStream.distance_raw / activityWithStream.elapsed_time_raw
+			averageSpeed: ((activityWithStream.distance_raw / activityWithStream.elapsed_time_raw) * 3.6)
 		};
 
 		computeAnalysisThread.postMessage(threadMessage);
