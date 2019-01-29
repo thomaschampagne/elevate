@@ -43,7 +43,6 @@ describe("Helper", () => {
 		expect(Helper.convertSpeedToPace(20)).toEqual(180);
 		expect(Helper.convertSpeedToPace(10)).toEqual(360);
 		expect(Helper.convertSpeedToPace(5)).toEqual(720);
-		expect(Helper.convertSpeedToPace("asdf")).toEqual(-1);
 		expect(Helper.convertSpeedToPace(0)).toEqual(-1);
 		done();
 	});
