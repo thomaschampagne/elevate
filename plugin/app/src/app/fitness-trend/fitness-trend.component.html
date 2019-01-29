@@ -128,8 +128,7 @@
 <mat-card *ngIf="(areSyncedActivitiesCompliant === true)">
 	<mat-card-content>
 		<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
-			<app-fitness-trend-inputs #fitnessTrendInputs
-									  fxFlex="35" fxFill fxLayout="column" fxLayoutAlign="start start"
+			<app-fitness-trend-inputs fxFlex="45" fxFill fxLayout="column" fxLayoutAlign="start start"
 									  [dateMin]="dateMin"
 									  [dateMax]="dateMax"
 									  [lastPeriods]="lastPeriods"
@@ -146,10 +145,12 @@
 									  (trainingZonesToggleChange)="onTrainingZonesToggleChange($event)"
 									  (powerMeterToggleChange)="onPowerMeterToggleChange($event)"
 									  (swimToggleChange)="onSwimToggleChange($event)"
-									  (eBikeRidesToggleChange)="onEBikeRidesToggleChange($event)">
+									  (eBikeRidesToggleChange)="onEBikeRidesToggleChange($event)"
+									  (estimatedPowerStressScoreToggleChange)="onEstimatedPowerStressScoreToggleChange($event)"
+									  (estimatedRunningStressScoreToggleChange)="onEstimatedRunningStressScoreChange($event)">
 			</app-fitness-trend-inputs>
 
-			<app-fitness-trend-legend fxFlex="65" fxFill fxLayout="row" fxLayoutAlign="end end" class="mat-subheading-2"
+			<app-fitness-trend-legend fxFlex="55" fxFill fxLayout="row" fxLayoutAlign="end end" class="mat-subheading-2"
 									  [isTrainingZonesEnabled]="isTrainingZonesEnabled"></app-fitness-trend-legend>
 
 		</div>
@@ -160,35 +161,6 @@
 								 [periodViewed]="periodViewed"
 								 [isTrainingZonesEnabled]="isTrainingZonesEnabled">
 		</app-fitness-trend-graph>
-
-		<div class="estimatedStressScoresNotes" (click)="onOpenFitnessTrendConfig(true)">
-			<span
-				*ngIf="isEstimatedPowerStressScoreEnabled"
-				matTooltip="Power Stress Score Estimation is currently enabled. You can disable it from feature config (click that text or on above cog icon to open it).">
-				Power Stress Scores Estimation is <span class="estimationEnabled">ON</span>&nbsp;<mat-icon
-				[inline]="true">info</mat-icon>
-			</span>
-			<span
-				*ngIf="!isEstimatedPowerStressScoreEnabled"
-				matTooltip="Power Stress Score Estimation is currently disabled. You can enable it from feature config (click that text or on above cog icon to open it).
-				Note: A Cycling Functional Threshold Power (FTP) is required in athlete settings. The Power Meter
-				data toggle (thunderbolt icon) must be switched ON. And the Heart Rate Stress Score calculation mode must be set to HRSS.">
-				Power Stress Scores Estimation is <span class="estimationDisabled">OFF</span>&nbsp;<mat-icon
-				[inline]="true">info</mat-icon>
-			</span>
-			&nbsp;&nbsp;&nbsp;&nbsp;
-			<span *ngIf="isEstimatedRunningStressScoreEnabled"
-				  matTooltip="Running Stress Score Estimation is currently enabled. You can disable it from feature config (click that text or on above cog icon to open it).">
-				Running Stress Score Estimation is <span class="estimationEnabled">ON</span>&nbsp;<mat-icon
-				[inline]="true">info</mat-icon>
-			</span>
-			<span *ngIf="!isEstimatedRunningStressScoreEnabled"
-				  matTooltip="Running Stress Score Estimation is currently disabled. You can enable it from feature config (click that text or on above cog icon to open it).
-					Note: A Running Functional Threshold Pace is required in athlete settings. And the Heart Rate Stress Score calculation mode must be set to HRSS.">
-				Running Stress Score Estimation is <span class="estimationDisabled">OFF</span>&nbsp;<mat-icon
-				[inline]="true">info</mat-icon>
-			</span>
-		</div>
 
 	</mat-card-content>
 </mat-card>
