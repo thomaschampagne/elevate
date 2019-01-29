@@ -178,7 +178,7 @@ export class Helper {
 	 * @param speed in kph
 	 * @return pace in seconds/km, if NaN/Infinite then return -1
 	 */
-	protected convertSpeedToPace(speed: number): number {
+	public static convertSpeedToPace(speed: number): number {
 		if (_.isNaN(speed)) {
 			return -1;
 		}
