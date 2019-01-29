@@ -34,9 +34,17 @@ describe("Helper", () => {
 		done();
 	});
 
-	it("should convert meters per seconds tp KPH", (done: Function) => {
+	it("should convert meters per seconds to KPH", (done: Function) => {
 		expect(Helper.convertMetersPerSecondsToKph(10)).toEqual(36);
 		done();
 	});
 
+	it("should convert speed to pace", (done: Function) => {
+		expect(Helper.convertSpeedToPace(20)).toEqual(180);
+		expect(Helper.convertSpeedToPace(10)).toEqual(360);
+		expect(Helper.convertSpeedToPace(5)).toEqual(720);
+		expect(Helper.convertSpeedToPace("asdf")).toEqual(-1);
+		expect(Helper.convertSpeedToPace(0)).toEqual(-1);
+		done();
+	});
 });
