@@ -179,9 +179,9 @@ export class Helper {
 	 * @return pace in seconds/km, if NaN/Infinite then return -1
 	 */
 	public static convertSpeedToPace(speed: number): number {
-		if (_.isNaN(speed)) {
+		if (!_.isFinite(speed) || speed <= 0) {
 			return -1;
 		}
-		return (speed === 0) ? -1 : 1 / speed * 60 * 60;
+		return (1 / speed * 60 * 60);
 	}
 }

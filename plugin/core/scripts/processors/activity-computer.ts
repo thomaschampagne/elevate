@@ -561,7 +561,7 @@ export class ActivityComputer {
 			genuineAvgSpeed: genuineAvgSpeed,
 			totalAvgSpeed: genuineAvgSpeed * this.moveRatio(genuineAvgSpeedSecondsSum, elapsedSeconds),
 			best20min: best20min,
-			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
+			avgPace: Math.floor(Helper.convertSpeedToPace(genuineAvgSpeed)), // send in seconds
 			lowerQuartileSpeed: percentiles[0],
 			medianSpeed: percentiles[1],
 			upperQuartileSpeed: percentiles[2],
@@ -577,8 +577,8 @@ export class ActivityComputer {
 			? ActivityComputer.computeRunningStressScore(this.activityStatsMap.movingTime, genuineGradeAdjustedAvgPace, this.athleteModel.athleteSettings.runningFtp) : null;
 
 		const paceData: PaceDataModel = {
-			avgPace: Math.floor((1 / genuineAvgSpeed) * 60 * 60), // send in seconds
-			best20min: (best20min) ? Math.floor((1 / best20min) * 60 * 60) : null,
+			avgPace: Math.floor(Helper.convertSpeedToPace(genuineAvgSpeed)), // send in seconds
+			best20min: (best20min) ? Math.floor(Helper.convertSpeedToPace(best20min)) : null,
 			lowerQuartilePace: Helper.convertSpeedToPace(percentiles[0]),
 			medianPace: Helper.convertSpeedToPace(percentiles[1]),
 			upperQuartilePace: Helper.convertSpeedToPace(percentiles[2]),
@@ -590,14 +590,12 @@ export class ActivityComputer {
 			runningStressScorePerHour: (runningStressScore) ? runningStressScore / genuineAvgSpeedSecondsSum * 60 * 60 : null
 		};
 
-		const moveData: MoveDataModel = {
+		return {
 			movingTime: genuineAvgSpeedSecondsSum,
 			elapsedTime: elapsedSeconds,
 			speed: speedData,
 			pace: paceData,
 		};
-
-		return moveData;
 	}
 
 	/**
@@ -1282,8 +1280,8 @@ export class ActivityComputer {
 		};
 
 		if (skipAscentSpeedCompute) {
-			elevationData = <ElevationDataModel> _.omit(elevationData, "ascentSpeedZones");
-			elevationData = <ElevationDataModel> _.omit(elevationData, "ascentSpeed");
+			elevationData = <ElevationDataModel>_.omit(elevationData, "ascentSpeedZones");
+			elevationData = <ElevationDataModel>_.omit(elevationData, "ascentSpeed");
 		}
 
 		return elevationData;
