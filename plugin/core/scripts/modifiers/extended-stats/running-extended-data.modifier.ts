@@ -35,7 +35,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 
 			// Convert speed to pace
-			const avgClimbPace: number = this.convertSpeedToPace(this.analysisData.gradeData.upFlatDownMoveData.up);
+			const avgClimbPace: number = Helper.convertSpeedToPace(this.analysisData.gradeData.upFlatDownMoveData.up);
 
 			if (avgClimbPace !== -1) {
 				// let seconds: number = parseInt((avgClimbPace / speedUnitFactor).toFixed(0));
