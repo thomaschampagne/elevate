@@ -203,7 +203,7 @@ export class ActivityComputer {
 
 	public compute(): AnalysisDataModel {
 
-		if (!_.isNull(this.activityStream)) {
+		if (!_.isEmpty(this.activityStream)) {
 
 			// Append altitude_smooth to fetched strava activity stream before compute analysis data
 			this.activityStream.altitude_smooth = this.smoothAltitudeStream(this.activityStream, this.activityStatsMap);
@@ -211,7 +211,6 @@ export class ActivityComputer {
 			// Slices array stream if activity bounds are given.
 			// It's mainly used for segment effort extended stats
 			this.sliceStreamFromBounds(this.activityStream, this.bounds);
-
 		}
 
 		return this.computeAnalysisData(this.athleteModel, this.hasPowerMeter, this.activityStatsMap, this.activityStream);
@@ -282,12 +281,13 @@ export class ActivityComputer {
 								  activityStream: ActivityStreamsModel): AnalysisDataModel {
 
 		// Include speed and pace
-		if (activityStream && activityStream.velocity_smooth) {
+		const hasActivityStream = !_.isEmpty(activityStream);
+		if (hasActivityStream && activityStream.velocity_smooth) {
 			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_adjusted_speed);
-		} else if (this.activityType === "Run") {
+		} else if (!hasActivityStream && this.activityType === "Run") { // Allow to estimate running move data if no stream available (goal is to get RSS computation for manual activities)
 			this.movementData = this.moveDataEstimate(this.elapsedTime, this.averageSpeed);
 		} else {
-			this.movementData = null;
+			return null;
 		}
 
 		// Q1 Speed
@@ -314,14 +314,10 @@ export class ActivityComputer {
 		if (this.activityType === "Run"
 			&& !this.hasPowerMeter
 			&& this.isActivityAuthor) {
-
 			powerData = this.estimatedRunningPower(activityStream, athleteModel.athleteSettings.weight, hasPowerMeter, athleteModel.athleteSettings.cyclingFtp);
-
 		} else {
-
-			powerData = this.powerData(athleteModel.athleteSettings.weight, hasPowerMeter, athleteModel.athleteSettings.cyclingFtp, activityStream.watts, activityStream.velocity_smooth,
-				activityStream.time);
-
+			powerData = this.powerData(athleteModel.athleteSettings.weight, hasPowerMeter, athleteModel.athleteSettings.cyclingFtp,
+				activityStream.watts, activityStream.velocity_smooth, activityStream.time);
 		}
 
 		// TRaining IMPulse
