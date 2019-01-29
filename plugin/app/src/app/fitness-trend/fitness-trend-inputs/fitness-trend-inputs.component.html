@@ -50,7 +50,8 @@
 
 	<span fxFlex="3"></span>
 
-	<button mat-icon-button color="primary" (click)="onShowInfo()">
+	<button mat-icon-button color="primary" (click)="onShowInfo()"
+			matTooltip="Fitness Trend User Guide">
 		<mat-icon>help_outline</mat-icon>
 	</button>
 
@@ -63,7 +64,7 @@
 					  (change)="onTrainingZonesToggle()"
 					  matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
 					  'Training Zones are disabled when heart rate stress calculation method is set to TRIMP (Training Impulse). Because TRIMP scores are not optimized to be use with Training Zones. You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. The feature helper explains why... (click <?> icon to open it). You can switch to HRSS method in feature settings (click <cog> icon).' :
-					  'Display Training Zones on graph'}}">
+					  'Enable training zones'}}">
 		<mat-icon>power_input</mat-icon>
 	</mat-slide-toggle>
 
@@ -71,8 +72,8 @@
 					  [disabled]="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
 					  (change)="onPowerMeterToggle()"
 					  matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
-					  'Cycling Power Stress Scores (PSS) are not used in fitness trend calculation when heart rate stress calculation method is set to TRIMP (Training Impulse). Because TRIMP scores compared to PSS scores is not fully reliable. You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. The feature helper explains why... (click <?> icon to open it). You can switch to HRSS method in feature settings (click <cog> icon).' :
-					  'Use cycling power data when available'}}">
+					  'Use of cycling power data is disabled when heart rate stress calculation method is set to TRIMP (Training Impulse). Indeed TRIMP scores aren\'t comparable with PSS (Power Stress Score). You should switch to the HRSS (Heart Rate Stress Score) method instead (click on <cog> icon to switch to HRSS method).' :
+					  'Enable use of cycling power data if available on your rides. When enabled, the fitness trend will use & display rides\' PSS (Power Stress Scores). These scores are calculated from activities\' power data. Note that PSS can be calculated only if you properly set your cycling FTP in single or dated athlete settings.'}}">
 		<mat-icon>flash_on</mat-icon>
 	</mat-slide-toggle>
 
@@ -81,14 +82,36 @@
 					  (change)="onSwimToggle()"
 					  matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
 					  'Swimming Stress Scores (SSS) are not used in fitness trend calculation when heart rate stress calculation method is set to TRIMP (Training Impulse). Because TRIMP scores compared to SSS scores is not fully reliable. You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. The feature helper explains why... (click <?> icon to open it). You can switch to HRSS method in feature settings (click <cog> icon).' :
-					  'Enable Swimming Stress Score based on your Swim FTP only (no heart rate sensor required)'}}">
+					  'Enable SSS (Swimming Stress Score) on swimming activities. Note that SSS can be calculated only if you properly set your swim FTP in single or dated athlete settings'}}">
 		<mat-icon>pool</mat-icon>
 	</mat-slide-toggle>
 
 	<mat-slide-toggle [(ngModel)]="isEBikeRidesEnabled"
 					  (change)="onEBikeRidesEnabledToggle()"
-					  matTooltip="Includes electrical assisted efforts in your fitness trend when checked">
+					  matTooltip="Include electrical assisted rides">
 		<mat-icon>battery_charging_full</mat-icon>
+	</mat-slide-toggle>
+
+	<mat-slide-toggle
+		[(ngModel)]="isEstimatedPowerStressScoreEnabled"
+		(change)="onEstimatedPowerStressScoreToggle()"
+		[disabled]="!isPowerMeterEnabled || fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP"
+		matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+					  'Use of estimated cycling power data is disabled when heart rate stress calculation method is set to TRIMP (Training Impulse). Indeed TRIMP scores aren\'t comparable with estimated PSS (Power Stress Score). You should switch to the HRSS (Heart Rate Stress Score) method instead (click on <cog> icon to switch to HRSS method).' :
+					  'Enable use of estimated cycling power data if available on your rides. When enabled, the fitness trend will use & display rides\' estimated PSS (Power Stress Scores). These scores are calculated from activities\' estimated power data. Note that PSS can be calculated only if you properly set your cycling FTP in single or dated athlete settings and your weight is set in your strava.com profile (required to allow strava to estimate the power data on next rides).'}}">
+		<mat-icon [inline]="true">graphic_eq</mat-icon>
+		<mat-icon [inline]="true">flash_on</mat-icon>
+	</mat-slide-toggle>
+
+	<mat-slide-toggle
+		[(ngModel)]="isEstimatedRunningStressScoreEnabled"
+		(change)="onEstimatedRunningStressScoreToggle()"
+		[disabled]="fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP"
+		matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+					  'Use of estimated RSS (Running Stress Score) is disabled when heart rate stress calculation method is set to TRIMP (Training Impulse). Indeed TRIMP scores aren\'t comparable with estimated RSS. You should switch to the HRSS (Heart Rate Stress Score) method instead (click on <cog> icon to switch to HRSS method).' :
+					  'Enable estimated RSS (Running Stress Score). When enabled, the fitness trend will use & display runs\' estimated RSS. These scores are calculated from activities\' pace & time data. Note that RSS can be calculated only if you properly set your running FTP in single or dated athlete settings.'}}">
+		<mat-icon [inline]="true">graphic_eq</mat-icon>
+		<mat-icon [inline]="true">directions_run</mat-icon>
 	</mat-slide-toggle>
 
 </div>

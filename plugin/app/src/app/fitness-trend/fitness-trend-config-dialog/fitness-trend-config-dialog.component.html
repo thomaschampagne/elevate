@@ -7,7 +7,7 @@
 		<mat-expansion-panel [expanded]="fitnessTrendConfigDialogData.expandEstimatedStressScorePanel">
 			<mat-expansion-panel-header>
 				<mat-panel-title>
-					Estimate Running/Cycling Stress Scores
+					Estimated stress scores
 				</mat-panel-title>
 				<mat-panel-description>
 					Case where you don't own (or forgot) Heart Rate Monitor or Cycling Power Meter
@@ -19,7 +19,7 @@
 					<mat-slide-toggle
 						[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedPowerStressScore"
 						[disabled]="!isEstimatedPowerStressScoreToggleEnabled">
-						Enable Cycling Power Stress Score (PSS) Estimation.
+						Enable cycling estimated PSS (Power Stress Scores) when estimated power data is available
 					</mat-slide-toggle>
 
 					<div class="hint" *ngIf="!isEstimatedPowerStressScoreToggleEnabled">
@@ -60,7 +60,7 @@
 					<mat-slide-toggle
 						[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedRunningStressScore"
 						[disabled]="!isEstimatedRunningStressScoreToggleEnabled">
-						Enable Running Stress Score (RSS) Estimation.
+						Enable running estimated RSS (Running Stress Score)
 					</mat-slide-toggle>
 
 					<div class="hint" *ngIf="!isEstimatedRunningStressScoreToggleEnabled">
