@@ -254,15 +254,4 @@ export abstract class AbstractDataView {
 			console.error("Grid is not initialized");
 		}
 	}
-
-	/**
-	 * @param speed in kph
-	 * @return pace in seconds/km, if NaN/Infinite then return -1
-	 */
-	protected convertSpeedToPace(speed: number): number {
-		if (_.isNaN(speed)) {
-			return -1;
-		}
-		return (speed === 0) ? -1 : 1 / speed * 60 * 60;
-	}
 }
