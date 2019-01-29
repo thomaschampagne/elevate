@@ -466,11 +466,13 @@ export class ActivityComputer {
 			return null;
 		}
 
+		const averagePace = Helper.convertSpeedToPace(averageSpeed);
+
 		const speedData: SpeedDataModel = {
 			genuineAvgSpeed: averageSpeed,
 			totalAvgSpeed: averageSpeed,
 			best20min: null,
-			avgPace: (1 / averageSpeed) * 60 * 60, // send in seconds
+			avgPace: averagePace, // send in seconds
 			lowerQuartileSpeed: null,
 			medianSpeed: null,
 			upperQuartileSpeed: null,
@@ -479,8 +481,6 @@ export class ActivityComputer {
 			standardDeviationSpeed: 0,
 			speedZones: null
 		};
-
-		const averagePace = Helper.convertSpeedToPace(averageSpeed);
 
 		const runningStressScore = (this.activityType === "Run" && averagePace && this.athleteModel.athleteSettings.runningFtp)
 			? ActivityComputer.computeRunningStressScore(elapsedTime, averagePace, this.athleteModel.athleteSettings.runningFtp) : null;
