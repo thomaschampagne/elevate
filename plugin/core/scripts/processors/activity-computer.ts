@@ -520,6 +520,13 @@ export class ActivityComputer {
 			return null;
 		}
 
+		// No grade adjusted speed if treadmill indoor run
+		if (this.isTrainer
+			&& this.activityType === "Run"
+			&& _.mean(gradeAdjustedSpeedArray) === 0) {
+			gradeAdjustedSpeedArray = velocityArray;
+		}
+
 		let genuineAvgSpeedSum = 0,
 			genuineAvgSpeedSecondsSum = 0;
 		const speedsNonZero: number[] = [];
