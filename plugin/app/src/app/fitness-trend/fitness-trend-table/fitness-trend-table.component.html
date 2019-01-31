@@ -28,7 +28,7 @@
 			</ng-container>
 			<ng-container *ngIf="column.type === FitnessTrendColumnType.STRAVA_LINK">
 				<button *ngIf="dayFitnessTrend.ids.length" mat-icon-button color="primary"
-						(click)="onOpenActivities(dayFitnessTrend.ids)">
+						(click)="onLinkClicked(dayFitnessTrend)">
 					<mat-icon>link</mat-icon>
 				</button>
 			</ng-container>
