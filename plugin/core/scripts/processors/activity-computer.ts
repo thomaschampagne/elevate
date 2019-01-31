@@ -710,8 +710,12 @@ export class ActivityComputer {
 		let rollingSum = (powerArray.length > 0 ? powerArray[0] : 0);
 		let totalMovingSamples = 1;
 
+		const hasNoSpeedStream = _.isEmpty(velocityArray);
+
 		for (let i = 1; i < powerArray.length; i++) { // Loop on samples
-			if (!(this.isTrainer || !velocityArray || _.isNumber(velocityArray[i]))) {
+
+			const isReadyForPowerStats = (this.isTrainer || hasNoSpeedStream || _.isNumber(velocityArray[i]));
+			if (!isReadyForPowerStats) {
 				continue;
 			}
 
@@ -734,7 +738,7 @@ export class ActivityComputer {
 			}
 
 			// When speed data is given, totalMovingInSeconds value increases only if athlete is moving
-			if (!velocityArray || (velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH)) {
+			if (hasNoSpeedStream || (velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) || this.isTrainer) {
 				totalMovingInSeconds += durationInSeconds;
 				totalMovingSamples++;
 			}
@@ -792,7 +796,7 @@ export class ActivityComputer {
 		}
 
 		const powerStressScore = ActivityComputer.computePowerStressScore(totalMovingInSeconds, weightedPower, cyclingFtp);
-		const powerStressScorePerHour: number = (powerStressScore) ? powerStressScore / totalMovingInSeconds * 60 * 60 : null;
+		const powerStressScorePerHour: number = powerStressScore / totalMovingInSeconds * 60 * 60;
 
 		const powerData: PowerDataModel = {
 			hasPowerMeter: hasPowerMeter,
