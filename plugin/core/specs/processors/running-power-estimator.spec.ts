@@ -22,14 +22,15 @@ describe("RunningPowerEstimator", () => {
 		const weightKg = 54.32; // Kg
 		const meters = 6.9 * 1000; // 6.9 km
 		const totalSeconds = Helper.HHMMSStoSeconds("00:39:48");
-
 		const elevationGain = 25;
-		const _expectedAvgPower = 151;
+		const expectedAvgPower = 151;
+
+		// When
 		const power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
 
 		// Then
-		expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
-		expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
+		expect(power).toBeGreaterThanOrEqual(expectedAvgPower - WATTS_TOLERANCE);
+		expect(power).toBeLessThanOrEqual(expectedAvgPower + WATTS_TOLERANCE);
 	});
 
 	it("estimateRunningPower should provide a consistency average power compared to " +
@@ -39,18 +40,15 @@ describe("RunningPowerEstimator", () => {
 		const meters = 12.8 * 1000;
 		const totalSeconds = Helper.HHMMSStoSeconds("01:02:25");
 		const elevationGain = 0;
-
-
-		const _expectedAvgPower = 287;
+		const expectedAvgPower = 287;
 
 		// When
 		const power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
-		// Then
-		expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
-		expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
-	});
 
-	// When
+		// Then
+		expect(power).toBeGreaterThanOrEqual(expectedAvgPower - WATTS_TOLERANCE);
+		expect(power).toBeLessThanOrEqual(expectedAvgPower + WATTS_TOLERANCE);
+	});
 
 	it("estimateRunningPower should provide a consistency average power compared to " +
 		"real running power meter (based on https://www.strava.com/activities/878683797)", () => {
@@ -59,32 +57,32 @@ describe("RunningPowerEstimator", () => {
 		const meters = 15.7 * 1000;
 		const totalSeconds = Helper.HHMMSStoSeconds("01:14:52");
 		const elevationGain = 148;
-
-		const _expectedAvgPower = 296;
+		const expectedAvgPower = 296;
 
 		// When
 		const power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
+
 		// Then
-		expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
-		expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
+		expect(power).toBeGreaterThanOrEqual(expectedAvgPower - WATTS_TOLERANCE);
+		expect(power).toBeLessThanOrEqual(expectedAvgPower + WATTS_TOLERANCE);
 	});
 
 	it("estimateRunningPower should provide a consistency average power compared to " +
 		"real running power meter (based on https://www.strava.com/activities/849522984)", () => {
+
 		// Given
 		const weightKg = 68.94; // Kg
 		const meters = 5.3 * 1000;
 		const totalSeconds = Helper.HHMMSStoSeconds("00:30:22");
 		const elevationGain = 64;
-
-
-		const _expectedAvgPower = 214;
+		const expectedAvgPower = 214;
 
 		// When
 		const power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
+
 		// Then
-		expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
-		expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
+		expect(power).toBeGreaterThanOrEqual(expectedAvgPower - WATTS_TOLERANCE);
+		expect(power).toBeLessThanOrEqual(expectedAvgPower + WATTS_TOLERANCE);
 	});
 
 	it("estimateRunningPower should provide a consistency average power compared to " +
@@ -95,13 +93,13 @@ describe("RunningPowerEstimator", () => {
 		const totalSeconds = Helper.HHMMSStoSeconds("00:44:23");
 		const elevationGain = 56;
 
-		const _expectedAvgPower = 215;
+		const expectedAvgPower = 215;
 
 		// When
 		const power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
 		// Then
-		expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
-		expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
+		expect(power).toBeGreaterThanOrEqual(expectedAvgPower - WATTS_TOLERANCE);
+		expect(power).toBeLessThanOrEqual(expectedAvgPower + WATTS_TOLERANCE);
 	});
 
 	it("estimateRunningPower should provide a consistency average power compared to " +
@@ -112,13 +110,29 @@ describe("RunningPowerEstimator", () => {
 		const totalSeconds = Helper.HHMMSStoSeconds("00:41:14");
 		const elevationGain = 32;
 
-		const _expectedAvgPower = 285;
+		const expectedAvgPower = 285;
 
 		// When
 		const power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
 		// Then
-		expect(power).toBeGreaterThanOrEqual(_expectedAvgPower - WATTS_TOLERANCE);
-		expect(power).toBeLessThanOrEqual(_expectedAvgPower + WATTS_TOLERANCE);
+		expect(power).toBeGreaterThanOrEqual(expectedAvgPower - WATTS_TOLERANCE);
+		expect(power).toBeLessThanOrEqual(expectedAvgPower + WATTS_TOLERANCE);
+	});
+
+	it("estimateRunningPower should provide return zero power when totalSeconds = 0", () => {
+
+		// Given
+		const weightKg = 54.32; // Kg
+		const meters = 6.9 * 1000; // 6.9 km
+		const totalSeconds = 0;
+		const elevationGain = 25;
+		const expectedAvgPower = 0;
+
+		// When
+		const power = RunningPowerEstimator.estimateRunningPower(weightKg, meters, totalSeconds, elevationGain);
+
+		// Then
+		expect(power).toEqual(expectedAvgPower);
 	});
 
 
