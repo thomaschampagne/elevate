@@ -50,9 +50,12 @@ export class RunningPowerEstimator {
 	 */
 	public static estimateRunningPower(weightKg: number, meters: number, seconds: number, elevationGain: number): number {
 
+		if (!_.isNumber(seconds) || seconds <= 0) {
+			return 0;
+		}
+
 		const runningEcoVolumeO2PerKm = 210; // Units: (ml/kg/km)
 		const cyclingEcoWattsPerVolumeO2 = 75; // Units: W/L // ??
-
 		const minutes = seconds / 60;
 		const km = meters / 1000;
 		const minPerKmPace = minutes / km; // Units: min/km
