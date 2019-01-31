@@ -12,6 +12,7 @@ import { Parser as Json2CsvParser } from "json2csv";
 import { saveAs } from "file-saver";
 import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
+import { FitnessTrendActivitiesLinksDialogComponent } from "../fitness-trend-activities-links-dialog/fitness-trend-activities-links-dialog.component";
 
 @Component({
 	selector: "app-fitness-trend-table",
@@ -267,6 +268,7 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 		fitnessTrendModels = _.sortBy(fitnessTrendModels, (dayFitnessTrendModel: DayFitnessTrendModel) => {
 			return dayFitnessTrendModel.timestamp * -1;
 		});
+
 		return fitnessTrendModels;
 	}
 
@@ -312,8 +314,18 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 		return exportedFitnessTrend;
 	}
 
-	public onOpenActivities(ids: number[]): void {
-		FitnessTrendComponent.openActivities(ids);
+	public onLinkClicked(dayFitnessTrend: DayFitnessTrendModel): void {
+
+		if (dayFitnessTrend.ids.length > 1) {
+			this.dialog.open(FitnessTrendActivitiesLinksDialogComponent, {
+				minWidth: FitnessTrendActivitiesLinksDialogComponent.MIN_WIDTH,
+				maxWidth: FitnessTrendActivitiesLinksDialogComponent.MAX_WIDTH,
+				data: dayFitnessTrend
+			});
+		} else {
+			FitnessTrendComponent.openActivity(_.first(dayFitnessTrend.ids));
+		}
+
 	}
 
 	public onViewAthleteSettings(dayFitnessTrendModel: DayFitnessTrendModel): void {
