@@ -31,7 +31,7 @@ export class RunningPowerEstimator {
 			if (i > 0) {
 				const time = timeArray[i] - timeArray[i - 1];
 				const distanceAdjusted = distanceArray[i] - distanceArray[i - 1];
-				const elevationGain = altitudeArray[i] - altitudeArray[i - 1];
+				const elevationGain = (altitudeArray) ? altitudeArray[i] - altitudeArray[i - 1] : 0;
 				power = this.estimateRunningPower(athleteWeight, distanceAdjusted, time, elevationGain);
 			}
 			powerStream.push(power);
