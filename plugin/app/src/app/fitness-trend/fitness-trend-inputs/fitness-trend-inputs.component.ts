@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
 import { LastPeriodModel } from "../shared/models/last-period.model";
 import { PeriodModel } from "../shared/models/period.model";
 import { MatDialog } from "@angular/material";
@@ -11,7 +11,7 @@ import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.m
 	templateUrl: "./fitness-trend-inputs.component.html",
 	styleUrls: ["./fitness-trend-inputs.component.scss"]
 })
-export class FitnessTrendInputsComponent implements OnInit {
+export class FitnessTrendInputsComponent implements OnInit, OnChanges {
 
 	public readonly HeartRateImpulseMode = HeartRateImpulseMode;
 
@@ -66,10 +66,40 @@ export class FitnessTrendInputsComponent implements OnInit {
 	@Output("eBikeRidesToggleChange")
 	public eBikeRidesToggleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+	@Output("estimatedPowerStressScoreToggleChange")
+	public estimatedPowerStressScoreToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+	@Output("estimatedRunningStressScoreToggleChange")
+	public estimatedRunningStressScoreToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+	public isEstimatedPowerStressScoreEnabled: boolean;
+
+	public isEstimatedRunningStressScoreEnabled: boolean;
+
 	constructor(public dialog: MatDialog) {
 	}
 
 	public ngOnInit(): void {
+		this.loadEstimatedPowerStressScore();
+		this.loadEstimatedRunningStressScore();
+	}
+
+	public ngOnChanges(changes: SimpleChanges): void {
+		if (changes.fitnessTrendConfigModel && !changes.fitnessTrendConfigModel.isFirstChange()) {
+			this.loadEstimatedPowerStressScore();
+			this.loadEstimatedRunningStressScore();
+		}
+	}
+
+	public loadEstimatedPowerStressScore(): void {
+		this.isEstimatedPowerStressScoreEnabled = this.isPowerMeterEnabled
+			&& this.fitnessTrendConfigModel.allowEstimatedPowerStressScore
+			&& this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
+	}
+
+	public loadEstimatedRunningStressScore(): void {
+		this.isEstimatedRunningStressScoreEnabled = this.fitnessTrendConfigModel.allowEstimatedRunningStressScore
+			&& this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
 	}
 
 	public onLastPeriodSelected(): void {
@@ -86,6 +116,7 @@ export class FitnessTrendInputsComponent implements OnInit {
 	}
 
 	public onPowerMeterToggle(): void {
+		this.loadEstimatedPowerStressScore();
 		this.powerMeterToggleChange.emit(this.isPowerMeterEnabled);
 	}
 
@@ -95,6 +126,14 @@ export class FitnessTrendInputsComponent implements OnInit {
 
 	public onEBikeRidesEnabledToggle(): void {
 		this.eBikeRidesToggleChange.emit(this.isEBikeRidesEnabled);
+	}
+
+	public onEstimatedPowerStressScoreToggle(): void {
+		this.estimatedPowerStressScoreToggle.emit(this.isEstimatedPowerStressScoreEnabled);
+	}
+
+	public onEstimatedRunningStressScoreToggle(): void {
+		this.estimatedRunningStressScoreToggle.emit(this.isEstimatedRunningStressScoreEnabled);
 	}
 
 	public onConfigClicked(): void {

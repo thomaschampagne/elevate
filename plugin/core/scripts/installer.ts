@@ -389,13 +389,13 @@ class Installer {
 		return promise;
 	}
 
-	protected migrate_to_6_8_2(): Promise<void> {
+	protected migrate_to_6_9_0(): Promise<void> {
 
 		let promise: Promise<void>;
 
-		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.8.2")) {
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.9.0")) {
 
-			console.log("Migrate to 6.8.2");
+			console.log("Migrate to 6.9.0");
 
 			let userSettingsModel: UserSettingsModel;
 
@@ -416,7 +416,7 @@ class Installer {
 
 		} else {
 
-			console.log("Skip migrate to 6.8.2");
+			console.log("Skip migrate to 6.9.0");
 
 			promise = Promise.resolve();
 		}
@@ -444,7 +444,7 @@ class Installer {
 		}).then(() => {
 			return this.migrate_to_6_8_1();
 		}).then(() => {
-			return this.migrate_to_6_8_2();
+			return this.migrate_to_6_9_0();
 		}).catch(error => console.error(error));
 
 	}
