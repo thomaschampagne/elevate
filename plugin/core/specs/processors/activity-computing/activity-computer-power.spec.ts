@@ -32,10 +32,9 @@ describe("ActivityComputer Cycling Power", () => {
 	const athleteModel = new AthleteModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
 	const statsMap: ActivityStatsMapModel = {
 		movingTime: -1,
-		elevation: -1
+		elevation: -1,
+		distance: -1
 	};
-    const elapsed_time = null;
-    const average_speed = null;
 
 	let TOLERANCE;
 
@@ -54,7 +53,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -74,7 +73,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -98,7 +97,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -118,7 +117,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -138,7 +137,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -160,7 +159,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -180,7 +179,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -201,7 +200,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones, elapsed_time, average_speed);
+			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then

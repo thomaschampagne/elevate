@@ -137,13 +137,13 @@ export class VacuumProcessor {
 		// Create activityData Map
 		const movingTime = window.pageView.activity().get("moving_time");
 		const elevGain = window.pageView.activity().get("elev_gain");
+		const distance = window.pageView.activity().get("distance");
 
-		const activityCommonStats: ActivityStatsMapModel = {
+		return {
 			movingTime: (movingTime) ? movingTime : null,
 			elevation: (elevGain) ? elevGain : null,
+			distance: (distance) ? distance : null
 		};
-
-		return activityCommonStats;
 	}
 
 	/**

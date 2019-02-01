@@ -14,6 +14,4 @@ export class ComputeActivityThreadMessageModel {
 	public activityStream: ActivityStreamsModel;
 	public bounds: number[];
 	public returnZones: boolean;
-	public elapsedTime?: number;
-	public averageSpeed?: number;
 }
