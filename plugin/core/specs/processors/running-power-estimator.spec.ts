@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "../../scripts/helper";
 import {
-	ActivityStatsMapModel,
+	ActivitySourceDataModel,
 	ActivityStreamsModel,
 	AnalysisDataModel,
 	AthleteModel,
@@ -256,7 +256,7 @@ describe("RunningPowerEstimator", () => {
 		const returnZones = true;
 		const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../fixtures/user-settings/2470979.json")); // Thomas C user settings
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/887284960/stream.json"));
-		const statsMap: ActivityStatsMapModel = {
+		const activitySourceData: ActivitySourceDataModel = {
 			movingTime: -1,
 			elevation: -1,
 			distance: -1
@@ -265,7 +265,7 @@ describe("RunningPowerEstimator", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, statsMap, stream, bounds, returnZones);
+			isActivityAuthor, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 
 		const result: AnalysisDataModel = activityComputer.compute();
 

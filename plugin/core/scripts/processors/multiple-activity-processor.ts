@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import { ActivityStatsMapModel, AnalysisDataModel, SyncedActivityModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivitySourceDataModel, AnalysisDataModel, SyncedActivityModel, UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
 import { StreamActivityModel } from "../models/sync/stream-activity.model";
@@ -112,7 +112,7 @@ export class MultipleActivityProcessor {
 		return deferred.promise;
 	}
 
-	protected createActivityStatMap(activityWithStream: StreamActivityModel): ActivityStatsMapModel {
+	protected provideActivitySourceData(activityWithStream: StreamActivityModel): ActivitySourceDataModel {
 
 		return {
 			elevation: parseInt(activityWithStream.elevation_gain),
@@ -129,7 +129,7 @@ export class MultipleActivityProcessor {
 		const computeAnalysisThread: Worker = new ComputeAnalysisWorker();
 
 		// Create activity stats map from given activity
-		const activityStatsMap: ActivityStatsMapModel = this.createActivityStatMap(activityWithStream);
+		const activitySourceData: ActivitySourceDataModel = this.provideActivitySourceData(activityWithStream);
 
 		const threadMessage: ComputeActivityThreadMessageModel = {
 			activityType: activityWithStream.type,
@@ -140,7 +140,7 @@ export class MultipleActivityProcessor {
 			isActivityAuthor: true, // While syncing and processing activities, elevate user is always author of the activity
 			athleteModel: activityWithStream.athleteModel,
 			hasPowerMeter: activityWithStream.hasPowerMeter,
-			activityStatsMap: activityStatsMap,
+			activitySourceData: activitySourceData,
 			activityStream: activityWithStream.stream,
 			bounds: null,
 			returnZones: false
