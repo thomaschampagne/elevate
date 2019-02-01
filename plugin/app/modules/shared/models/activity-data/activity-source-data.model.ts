@@ -1,4 +1,4 @@
-export class ActivityStatsMapModel { // TODO Rename model ActivityInfos
+export class ActivitySourceDataModel {
 	public movingTime: number;
 	public elevation: number;
 	public distance: number;

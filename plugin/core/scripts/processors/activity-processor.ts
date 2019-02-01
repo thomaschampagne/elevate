@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import {
-	ActivityStatsMapModel,
+	ActivitySourceDataModel,
 	ActivityStreamsModel,
 	AnalysisDataModel,
 	AthleteModel,
@@ -84,7 +84,7 @@ export class ActivityProcessor {
 		}
 
 		// Else no cache... then call VacuumProcessor for getting data, compute them and cache them
-		this.vacuumProcessor.getActivityStream((activityStatsMap: ActivityStatsMapModel, activityStream: ActivityStreamsModel, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => { // Get stream on page
+		this.vacuumProcessor.getActivityStream((activitySourceData: ActivitySourceDataModel, activityStream: ActivityStreamsModel, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => { // Get stream on page
 
 			const onDate = (this.activityStartDate) ? this.activityStartDate : new Date();
 			const athleteModel: AthleteModel = this.athleteModelResolver.resolve(onDate);
@@ -98,7 +98,7 @@ export class ActivityProcessor {
 			console.log("Compute with AthleteModel", JSON.stringify(athleteModel));
 
 			// Compute data in a background thread to avoid UI locking
-			this.computeAnalysisThroughDedicatedThread(hasPowerMeter, athleteModel, activityStatsMap, activityStream, bounds, (resultFromThread: AnalysisDataModel) => {
+			this.computeAnalysisThroughDedicatedThread(hasPowerMeter, athleteModel, activitySourceData, activityStream, bounds, (resultFromThread: AnalysisDataModel) => {
 
 				callback(athleteModel, resultFromThread);
 
@@ -125,7 +125,7 @@ export class ActivityProcessor {
 	}
 
 	private computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteModel: AthleteModel,
-												  activityStatsMap: ActivityStatsMapModel, activityStream: ActivityStreamsModel,
+												  activitySourceData: ActivitySourceDataModel, activityStream: ActivityStreamsModel,
 												  bounds: number[], callback: (analysisData: AnalysisDataModel) => void): void {
 
 		// Lets create that worker/thread!
@@ -142,7 +142,7 @@ export class ActivityProcessor {
 			isActivityAuthor: this.isActivityAuthor,
 			athleteModel: athleteModel,
 			hasPowerMeter: hasPowerMeter,
-			activityStatsMap: activityStatsMap,
+			activitySourceData: activitySourceData,
 			activityStream: activityStream,
 			bounds: bounds,
 			returnZones: true
