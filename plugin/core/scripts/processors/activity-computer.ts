@@ -455,7 +455,7 @@ export class ActivityComputer {
 	 */
 	protected moveDataEstimate(movingTime: number, distance: number): MoveDataModel {
 
-		if (!_.isNumber(movingTime) || movingTime === 0 || !_.isNumber(distance) || distance > 0) {
+		if (!_.isNumber(movingTime) || movingTime === 0 || !_.isNumber(distance) || distance === 0) {
 			return null;
 		}
 
