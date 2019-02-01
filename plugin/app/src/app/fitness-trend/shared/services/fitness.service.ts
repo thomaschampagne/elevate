@@ -83,7 +83,7 @@ export class FitnessService {
 						&& (activity.extendedStats.powerData.hasPowerMeter || fitnessTrendConfigModel.allowEstimatedPowerStressScore)
 						&& _.isNumber(activity.extendedStats.powerData.powerStressScore);
 
-					const hasRunningData: boolean = activity.type === "Run"
+					const hasRunningData: boolean = (activity.type === "Run" || activity.type === "VirtualRun")
 						&& fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP
 						&& _.isNumber(activity.athleteModel.athleteSettings.runningFtp)
 						&& activity.extendedStats
