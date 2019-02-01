@@ -60,7 +60,7 @@ describe("ActivityComputer", () => {
 
 		const isActivityAuthor = true;
 		const activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, athleteModel,
-			isActivityAuthor, powerMeter, statsMap, stream, null, true, null, null);
+			isActivityAuthor, powerMeter, statsMap, stream, null, true);
 
 		const result: AnalysisDataModel = activityComputer.compute();
 

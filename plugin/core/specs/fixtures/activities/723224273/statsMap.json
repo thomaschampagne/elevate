@@ -4,5 +4,6 @@
 	"avgPower": 211,
 	"averageSpeed": 33.1,
 	"averageHeartRate": 164,
-	"maxHeartRate": 190
+	"maxHeartRate": 190,
+	"movingTime:": 6128
 }

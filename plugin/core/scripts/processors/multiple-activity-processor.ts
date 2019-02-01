@@ -114,12 +114,11 @@ export class MultipleActivityProcessor {
 
 	protected createActivityStatMap(activityWithStream: StreamActivityModel): ActivityStatsMapModel {
 
-		const statsMap: ActivityStatsMapModel = {
+		return {
 			elevation: parseInt(activityWithStream.elevation_gain),
 			movingTime: activityWithStream.moving_time_raw,
+			distance: activityWithStream.distance_raw
 		};
-
-		return statsMap;
 	}
 
 	protected computeActivity(activityWithStream: StreamActivityModel): Q.IPromise<AnalysisDataModel> {
@@ -144,9 +143,7 @@ export class MultipleActivityProcessor {
 			activityStatsMap: activityStatsMap,
 			activityStream: activityWithStream.stream,
 			bounds: null,
-			returnZones: false,
-			elapsedTime: activityWithStream.elapsed_time_raw,
-			averageSpeed: ((activityWithStream.distance_raw / activityWithStream.elapsed_time_raw) * 3.6)
+			returnZones: false
 		};
 
 		computeAnalysisThread.postMessage(threadMessage);

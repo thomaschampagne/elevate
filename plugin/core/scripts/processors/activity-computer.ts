@@ -52,8 +52,6 @@ export class ActivityComputer {
 	protected activityStream: ActivityStreamsModel;
 	protected bounds: number[];
 	protected returnZones: boolean;
-	protected elapsedTime: number; // TODO Put in stat map?
-	protected averageSpeed: number; // TODO Put in stat map?
 
 	constructor(activityType: string,
 				isTrainer: boolean,
@@ -64,9 +62,7 @@ export class ActivityComputer {
 				activityStatsMap: ActivityStatsMapModel,
 				activityStream: ActivityStreamsModel,
 				bounds: number[],
-				returnZones: boolean,
-				elapsedTime: number,
-				averageSpeed: number) {
+				returnZones: boolean) {
 
 		// Store activityType, isTrainer, input activity params and userSettingsData
 		this.activityType = activityType;
@@ -80,8 +76,6 @@ export class ActivityComputer {
 		this.activityStream = activityStream;
 		this.bounds = bounds;
 		this.returnZones = returnZones;
-		this.elapsedTime = (elapsedTime) ? elapsedTime : null;
-		this.averageSpeed = (averageSpeed) ? averageSpeed : null;
 	}
 
 	public static streamVariationsSplits(trackedStream: number[], timeScale: number[], distanceScale: number[]): StreamVariationSplit[] {
@@ -286,7 +280,7 @@ export class ActivityComputer {
 		if (hasActivityStream && activityStream.velocity_smooth) {
 			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_adjusted_speed);
 		} else if (!hasActivityStream && this.activityType === "Run") { // Allow to estimate running move data if no stream available (goal is to get RSS computation for manual activities)
-			this.movementData = this.moveDataEstimate(this.elapsedTime, this.averageSpeed); // TODO Try to pass "this.elapsedTime, this.averageSpeed" as param, No members! + Unit testing computeAnalysisData!
+			this.movementData = this.moveDataEstimate(this.activityStatsMap.movingTime, this.activityStatsMap.distance);
 		} else {
 			return null;
 		}
@@ -347,7 +341,7 @@ export class ActivityComputer {
 		const elevationData: ElevationDataModel = this.elevationData(activityStream);
 
 		// Return an array with all that shit...
-		const analysisData: AnalysisDataModel = {
+		return {
 			moveRatio: moveRatio,
 			speedData: speedData,
 			paceData: paceData,
@@ -357,8 +351,6 @@ export class ActivityComputer {
 			gradeData: gradeData,
 			elevationData: elevationData
 		};
-
-		return analysisData;
 	}
 
 	protected estimatedRunningPower(activityStream: ActivityStreamsModel, athleteWeight: number, hasPowerMeter: boolean, userFTP: number) {
@@ -457,16 +449,17 @@ export class ActivityComputer {
 
 	/**
 	 *
-	 * @param {number} elapsedTime
-	 * @param {number} averageSpeed
+	 * @param {number} movingTime
+	 * @param {number} distance
 	 * @returns {MoveDataModel}
 	 */
-	protected moveDataEstimate(elapsedTime: number, averageSpeed: number): MoveDataModel {
+	protected moveDataEstimate(movingTime: number, distance: number): MoveDataModel {
 
-		if (!_.isNumber(elapsedTime) || elapsedTime === 0 || !_.isNumber(averageSpeed)) {
+		if (!_.isNumber(movingTime) || movingTime === 0 || !_.isNumber(distance) || distance > 0) {
 			return null;
 		}
 
+		const averageSpeed = distance / movingTime * 3.6;
 		const averagePace = Helper.convertSpeedToPace(averageSpeed);
 
 		const speedData: SpeedDataModel = {
@@ -484,7 +477,7 @@ export class ActivityComputer {
 		};
 
 		const runningStressScore = (this.activityType === "Run" && averagePace && this.athleteModel.athleteSettings.runningFtp)
-			? ActivityComputer.computeRunningStressScore(elapsedTime, averagePace, this.athleteModel.athleteSettings.runningFtp) : null;
+			? ActivityComputer.computeRunningStressScore(movingTime, averagePace, this.athleteModel.athleteSettings.runningFtp) : null;
 
 		const paceData: PaceDataModel = {
 			avgPace: averagePace, // send in seconds
@@ -497,12 +490,12 @@ export class ActivityComputer {
 			paceZones: null,
 			gradeAdjustedPaceZones: null,
 			runningStressScore: runningStressScore,
-			runningStressScorePerHour: (runningStressScore) ? runningStressScore / elapsedTime * 60 * 60 : null
+			runningStressScorePerHour: (runningStressScore) ? runningStressScore / movingTime * 60 * 60 : null
 		};
 
 		return {
-			movingTime: elapsedTime,
-			elapsedTime: elapsedTime,
+			movingTime: movingTime,
+			elapsedTime: movingTime,
 			speed: speedData,
 			pace: paceData,
 		};
