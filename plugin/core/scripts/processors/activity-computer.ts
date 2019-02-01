@@ -52,8 +52,8 @@ export class ActivityComputer {
 	protected activityStream: ActivityStreamsModel;
 	protected bounds: number[];
 	protected returnZones: boolean;
-	protected elapsedTime: number;
-	protected averageSpeed: number;
+	protected elapsedTime: number; // TODO Put in stat map?
+	protected averageSpeed: number; // TODO Put in stat map?
 
 	constructor(activityType: string,
 				isTrainer: boolean,
@@ -203,7 +203,9 @@ export class ActivityComputer {
 
 	public compute(): AnalysisDataModel {
 
-		if (!_.isEmpty(this.activityStream)) {
+		const hasActivityStream = !_.isEmpty(this.activityStream);
+
+		if (hasActivityStream) {
 
 			// Append altitude_smooth to fetched strava activity stream before compute analysis data
 			this.activityStream.altitude_smooth = this.smoothAltitudeStream(this.activityStream, this.activityStatsMap);
@@ -214,7 +216,6 @@ export class ActivityComputer {
 		}
 
 		return this.computeAnalysisData(this.athleteModel, this.hasPowerMeter, this.activityStatsMap, this.activityStream);
-
 	}
 
 	protected sliceStreamFromBounds(activityStream: ActivityStreamsModel, bounds: number[]): void {
@@ -285,7 +286,7 @@ export class ActivityComputer {
 		if (hasActivityStream && activityStream.velocity_smooth) {
 			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_adjusted_speed);
 		} else if (!hasActivityStream && this.activityType === "Run") { // Allow to estimate running move data if no stream available (goal is to get RSS computation for manual activities)
-			this.movementData = this.moveDataEstimate(this.elapsedTime, this.averageSpeed);
+			this.movementData = this.moveDataEstimate(this.elapsedTime, this.averageSpeed); // TODO Try to pass "this.elapsedTime, this.averageSpeed" as param, No members! + Unit testing computeAnalysisData!
 		} else {
 			return null;
 		}
@@ -640,7 +641,7 @@ export class ActivityComputer {
 			speedZones: (this.returnZones) ? speedZones : null,
 		};
 
-		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed) ? Math.floor(Helper.convertSpeedToPace(genuineGradeAdjustedAvgSpeed)) : null;
+		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed && genuineGradeAdjustedAvgSpeed > 0) ? Math.floor(Helper.convertSpeedToPace(genuineGradeAdjustedAvgSpeed)) : null;
 
 		const runningStressScore = (this.activityType === "Run" && genuineGradeAdjustedAvgPace && this.athleteModel.athleteSettings.runningFtp)
 			? ActivityComputer.computeRunningStressScore(this.activityStatsMap.movingTime, genuineGradeAdjustedAvgPace, this.athleteModel.athleteSettings.runningFtp) : null;
