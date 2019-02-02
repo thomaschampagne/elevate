@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { CoreEnv } from "../../config/core-env";
-import { ActivityStatsMapModel, ActivityStreamsModel, Gender } from "@elevate/shared/models";
+import { ActivitySourceDataModel, ActivityStreamsModel, Gender } from "@elevate/shared/models";
 
 export class VacuumProcessor {
 
@@ -132,24 +132,24 @@ export class VacuumProcessor {
 	/**
 	 * @returns Common activity stats given by Strava throught right panel
 	 */
-	protected getActivityStatsMap(): ActivityStatsMapModel {
+	protected getActivityStatsMap(): ActivitySourceDataModel {
 
 		// Create activityData Map
 		const movingTime = window.pageView.activity().get("moving_time");
 		const elevGain = window.pageView.activity().get("elev_gain");
+		const distance = window.pageView.activity().get("distance");
 
-		const activityCommonStats: ActivityStatsMapModel = {
+		return {
 			movingTime: (movingTime) ? movingTime : null,
 			elevation: (elevGain) ? elevGain : null,
+			distance: (distance) ? distance : null
 		};
-
-		return activityCommonStats;
 	}
 
 	/**
 	 * @returns activity stream in callback
 	 */
-	public getActivityStream(callback: (activityCommonStats: ActivityStatsMapModel, activityStream: ActivityStreamsModel, // TODO Improve with Promise of Structure
+	public getActivityStream(callback: (activityCommonStats: ActivitySourceDataModel, activityStream: ActivityStreamsModel, // TODO Improve with Promise of Structure
 										athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => void): void {
 
 		let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + this.getActivityId());
