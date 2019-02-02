@@ -2,6 +2,35 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.9.0",
+		date: "2019-02-02",
+		message: "Added support of manual & virtual running activities into Fitness Trend (⚠️ Please read the release notes to enable it). This update also pushes many fixes and improvements.",
+		hotFixes: [],
+		features: [
+			"Added support of manual running activities into Fitness Trend. ⚠️ You will need to \"Clear & Re-sync your activities\" & enable Running Stress Score estimation to see the changes.",
+			"Added support of virtual running activities into Fitness Trend. ⚠️ You will need to \"Clear & Re-sync your activities\" & enable Running Stress Score estimation to see the changes.",
+			"Added support of estimated running power calculation even if altitude data isn't provided (assuming it's a flat run).",
+			"Added a dialog to select activity to open into Fitness Trend table in case of multiple activities.",
+			"Added a warning when a detected indoor cycling activity isn't flagged as \"Indoor Cycling\" on a strava activity page.",
+			"Moved \"Estimated Cycling Power Data\" and \"Estimated Running Stress Score\" toggles along side others into Fitness Trend. Estimated fitness trend feature is more understandable.",
+		],
+		isPatch: false,
+		fixes: [
+			"Fixed case when PSS (Power Stress Score) wasn't calculated on trainer rides with an average speed equals to zero.",
+			"Fixed case when treadmill indoor activities could provide insane RSS (Running Stress Score).",
+			"Fixed a visual glitch that could appear on Zwift activities pages.",
+			"Fixed a case where \"Dated Athlete Settings\" effective dates could change without explanation.",
+			"Fixed strava careers page visual glitch created by the extension.",
+			"Fixed some typo errors.",
+			"Improved Fitness Trend legend update when browser tab is getting the focus.",
+			"[Technical] Fixed year progressions units tests error raised during change to 2019.",
+			"[Technical] Refactoring and improvement around speed/pace conversion through the app.",
+			"[Technical] Switched to LGTM.com for code quality analysis",
+			"[Technical] Fixed LGTM issues. Project quality is ranked to A+ (the best one).",
+			"[Technical] Upgraded Angular & others npm libraries."
+		]
+	},
+	{
 		version: "6.8.1",
 		date: "2018-12-24",
 		message: "Patching \"Year Progressions Targets & Presets\" with improvements and bug fixes. View full release note for details.",
