@@ -171,7 +171,7 @@ export class Elevate {
 			this.athleteId = this.vacuumProcessor.getAthleteId();
 			this.athleteName = this.vacuumProcessor.getAthleteName();
 			this.activityAthleteId = this.vacuumProcessor.getActivityAthleteId();
-			this.isActivityAuthor = (this.activityAthleteId === this.athleteId);
+			this.isActivityAuthor = (this.activityAthleteId === this.athleteId || CoreEnv.forceIsActivityAuthor);
 			this.isPremium = this.vacuumProcessor.getPremiumStatus();
 			this.isPro = this.vacuumProcessor.getProStatus();
 			this.activityId = this.vacuumProcessor.getActivityId();
