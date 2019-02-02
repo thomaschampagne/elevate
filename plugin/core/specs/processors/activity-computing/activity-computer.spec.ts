@@ -1,5 +1,5 @@
 import {
-	ActivityStatsMapModel,
+	ActivitySourceDataModel,
 	ActivityStreamsModel,
 	AnalysisDataModel,
 	AthleteModel,
@@ -53,14 +53,14 @@ describe("ActivityComputer", () => {
 
 		const userSettingsMock: UserSettingsModel = require("../../fixtures/user-settings/2470979.json");
 		const stream: ActivityStreamsModel = require("../../fixtures/activities/723224273/stream.json");
-		const statsMap: ActivityStatsMapModel = require("../../fixtures/activities/723224273/statsMap.json");
+		const activitySourceData: ActivitySourceDataModel = require("../../fixtures/activities/723224273/activitySourceData.json");
 		const athleteModel = new AthleteModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
 
 		stream.watts = stream.watts_calc; // because powerMeter is false
 
 		const isActivityAuthor = true;
 		const activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, athleteModel,
-			isActivityAuthor, powerMeter, statsMap, stream, null, true);
+			isActivityAuthor, powerMeter, activitySourceData, stream, null, true);
 
 		const result: AnalysisDataModel = activityComputer.compute();
 

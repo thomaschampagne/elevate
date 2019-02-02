@@ -13,12 +13,11 @@ onmessage = (mainThreadEvent: MessageEvent) => {
 		threadMessage.athleteModel,
 		threadMessage.isActivityAuthor,
 		threadMessage.hasPowerMeter,
-		threadMessage.activityStatsMap,
+		threadMessage.activitySourceData,
 		threadMessage.activityStream,
 		threadMessage.bounds,
 		threadMessage.returnZones);
+
 	const result: AnalysisDataModel = analysisComputer.compute();
-
 	postMessage(result);
-
 };
