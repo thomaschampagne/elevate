@@ -3,7 +3,7 @@ import { Helper } from "../helper";
 import { RunningPowerEstimator } from "./running-power-estimator";
 import { SplitCalculator } from "./split-calculator";
 import {
-	ActivityStatsMapModel,
+	ActivitySourceDataModel,
 	ActivityStreamsModel,
 	AnalysisDataModel,
 	AscentSpeedDataModel,
@@ -48,7 +48,7 @@ export class ActivityComputer {
 	protected movementData: MoveDataModel;
 	protected isActivityAuthor: boolean;
 	protected hasPowerMeter: boolean;
-	protected activityStatsMap: ActivityStatsMapModel;
+	protected activitySourceData: ActivitySourceDataModel;
 	protected activityStream: ActivityStreamsModel;
 	protected bounds: number[];
 	protected returnZones: boolean;
@@ -59,7 +59,7 @@ export class ActivityComputer {
 				athleteModel: AthleteModel,
 				isActivityAuthor: boolean,
 				hasPowerMeter: boolean,
-				activityStatsMap: ActivityStatsMapModel,
+				activitySourceData: ActivitySourceDataModel,
 				activityStream: ActivityStreamsModel,
 				bounds: number[],
 				returnZones: boolean) {
@@ -72,7 +72,7 @@ export class ActivityComputer {
 		this.athleteModel = athleteModel;
 		this.isActivityAuthor = isActivityAuthor;
 		this.hasPowerMeter = hasPowerMeter;
-		this.activityStatsMap = activityStatsMap;
+		this.activitySourceData = activitySourceData;
 		this.activityStream = activityStream;
 		this.bounds = bounds;
 		this.returnZones = returnZones;
@@ -197,18 +197,19 @@ export class ActivityComputer {
 
 	public compute(): AnalysisDataModel {
 
-		if (!this.activityStream) {
-			return null;
+		const hasActivityStream = !_.isEmpty(this.activityStream);
+
+		if (hasActivityStream) {
+
+			// Append altitude_smooth to fetched strava activity stream before compute analysis data
+			this.activityStream.altitude_smooth = this.smoothAltitudeStream(this.activityStream, this.activitySourceData);
+
+			// Slices array stream if activity bounds are given.
+			// It's mainly used for segment effort extended stats
+			this.sliceStreamFromBounds(this.activityStream, this.bounds);
 		}
 
-		// Append altitude_smooth to fetched strava activity stream before compute analysis data
-		this.activityStream.altitude_smooth = this.smoothAltitudeStream(this.activityStream, this.activityStatsMap);
-
-		// Slices array stream if activity bounds are given.
-		// It's mainly used for segment effort extended stats
-		this.sliceStreamFromBounds(this.activityStream, this.bounds);
-
-		return this.computeAnalysisData(this.athleteModel, this.hasPowerMeter, this.activityStatsMap, this.activityStream);
+		return this.computeAnalysisData(this.athleteModel, this.hasPowerMeter, this.activitySourceData, this.activityStream);
 	}
 
 	protected sliceStreamFromBounds(activityStream: ActivityStreamsModel, bounds: number[]): void {
@@ -266,19 +267,22 @@ export class ActivityComputer {
 		}
 	}
 
-	protected smoothAltitudeStream(activityStream: ActivityStreamsModel, activityStatsMap: ActivityStatsMapModel): any {
-		return this.smoothAltitude(activityStream, activityStatsMap.elevation);
+	protected smoothAltitudeStream(activityStream: ActivityStreamsModel, activitySourceData: ActivitySourceDataModel): any {
+		return this.smoothAltitude(activityStream, activitySourceData.elevation);
 	}
 
 
-	protected computeAnalysisData(athleteModel: AthleteModel, hasPowerMeter: boolean, activityStatsMap: ActivityStatsMapModel,
+	protected computeAnalysisData(athleteModel: AthleteModel, hasPowerMeter: boolean, activitySourceData: ActivitySourceDataModel,
 								  activityStream: ActivityStreamsModel): AnalysisDataModel {
 
 		// Include speed and pace
-		this.movementData = null;
-
-		if (activityStream.velocity_smooth) {
+		const hasActivityStream = !_.isEmpty(activityStream);
+		if (hasActivityStream && activityStream.velocity_smooth) {
 			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_adjusted_speed);
+		} else if (!hasActivityStream && this.activityType === "Run") { // Allow to estimate running move data if no stream available (goal is to get RSS computation for manual activities)
+			this.movementData = this.moveDataEstimate(this.activitySourceData.movingTime, this.activitySourceData.distance);
+		} else {
+			return null;
 		}
 
 		// Q1 Speed
@@ -305,14 +309,10 @@ export class ActivityComputer {
 		if (this.activityType === "Run"
 			&& !this.hasPowerMeter
 			&& this.isActivityAuthor) {
-
 			powerData = this.estimatedRunningPower(activityStream, athleteModel.athleteSettings.weight, hasPowerMeter, athleteModel.athleteSettings.cyclingFtp);
-
 		} else {
-
-			powerData = this.powerData(athleteModel.athleteSettings.weight, hasPowerMeter, athleteModel.athleteSettings.cyclingFtp, activityStream.watts, activityStream.velocity_smooth,
-				activityStream.time);
-
+			powerData = this.powerData(athleteModel.athleteSettings.weight, hasPowerMeter, athleteModel.athleteSettings.cyclingFtp,
+				activityStream.watts, activityStream.velocity_smooth, activityStream.time);
 		}
 
 		// TRaining IMPulse
@@ -321,16 +321,16 @@ export class ActivityComputer {
 		// Q1 HR
 		// Median HR
 		// Q3 HR
-		const heartRateData: HeartRateDataModel = this.heartRateData(athleteModel, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth);
+		const heartRateData: HeartRateDataModel = (!_.isEmpty(activityStream)) ? this.heartRateData(athleteModel, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth) : null;
 
 		// Avg grade
 		// Q1/Q2/Q3 grade
-		const gradeData: GradeDataModel = this.gradeData(activityStream.grade_smooth, activityStream.velocity_smooth, activityStream.time, activityStream.distance, activityStream.cadence);
+		const gradeData: GradeDataModel = (!_.isEmpty(activityStream)) ? this.gradeData(activityStream.grade_smooth, activityStream.velocity_smooth, activityStream.time, activityStream.distance, activityStream.cadence) : null;
 
 		// Cadence percentage
 		// Time Cadence
 		// Crank revolution
-		const cadenceData: CadenceDataModel = this.cadenceData(activityStream.cadence, activityStream.velocity_smooth, activityStream.distance, activityStream.time);
+		const cadenceData: CadenceDataModel = (!_.isEmpty(activityStream)) ? this.cadenceData(activityStream.cadence, activityStream.velocity_smooth, activityStream.distance, activityStream.time) : null;
 		// ... if exists cadenceData then append cadence pace (climbing, flat & downhill) if she has been previously provided by "gradeData"
 		if (cadenceData && gradeData && gradeData.upFlatDownCadencePaceData) {
 			cadenceData.upFlatDownCadencePaceData = gradeData.upFlatDownCadencePaceData;
@@ -341,7 +341,7 @@ export class ActivityComputer {
 		const elevationData: ElevationDataModel = this.elevationData(activityStream);
 
 		// Return an array with all that shit...
-		const analysisData: AnalysisDataModel = {
+		return {
 			moveRatio: moveRatio,
 			speedData: speedData,
 			paceData: paceData,
@@ -351,11 +351,13 @@ export class ActivityComputer {
 			gradeData: gradeData,
 			elevationData: elevationData
 		};
-
-		return analysisData;
 	}
 
 	protected estimatedRunningPower(activityStream: ActivityStreamsModel, athleteWeight: number, hasPowerMeter: boolean, userFTP: number) {
+
+		if (_.isEmpty(activityStream)) {
+			return null;
+		}
 
 		try {
 			console.log("Trying to estimate wattage of this run...");
@@ -447,6 +449,60 @@ export class ActivityComputer {
 
 	/**
 	 *
+	 * @param {number} movingTime
+	 * @param {number} distance
+	 * @returns {MoveDataModel}
+	 */
+	protected moveDataEstimate(movingTime: number, distance: number): MoveDataModel {
+
+		if (!_.isNumber(movingTime) || movingTime === 0 || !_.isNumber(distance) || distance === 0) {
+			return null;
+		}
+
+		const averageSpeed = distance / movingTime * 3.6;
+		const averagePace = Helper.convertSpeedToPace(averageSpeed);
+
+		const speedData: SpeedDataModel = {
+			genuineAvgSpeed: averageSpeed,
+			totalAvgSpeed: averageSpeed,
+			best20min: null,
+			avgPace: averagePace, // send in seconds
+			lowerQuartileSpeed: null,
+			medianSpeed: null,
+			upperQuartileSpeed: null,
+			varianceSpeed: 0,
+			genuineGradeAdjustedAvgSpeed: averageSpeed,
+			standardDeviationSpeed: 0,
+			speedZones: null
+		};
+
+		const runningStressScore = (this.activityType === "Run" && averagePace && this.athleteModel.athleteSettings.runningFtp)
+			? ActivityComputer.computeRunningStressScore(movingTime, averagePace, this.athleteModel.athleteSettings.runningFtp) : null;
+
+		const paceData: PaceDataModel = {
+			avgPace: averagePace, // send in seconds
+			best20min: null,
+			lowerQuartilePace: null,
+			medianPace: null,
+			upperQuartilePace: null,
+			variancePace: 0,
+			genuineGradeAdjustedAvgPace: averagePace,
+			paceZones: null,
+			gradeAdjustedPaceZones: null,
+			runningStressScore: runningStressScore,
+			runningStressScorePerHour: (runningStressScore) ? runningStressScore / movingTime * 60 * 60 : null
+		};
+
+		return {
+			movingTime: movingTime,
+			elapsedTime: movingTime,
+			speed: speedData,
+			pace: paceData,
+		};
+	}
+
+	/**
+	 *
 	 * @param {number[]} velocityArray
 	 * @param {number[]} timeArray
 	 * @param {number[]} gradeAdjustedSpeedArray
@@ -456,6 +512,13 @@ export class ActivityComputer {
 
 		if (_.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
 			return null;
+		}
+
+		// No grade adjusted speed if treadmill indoor run
+		if (this.isTrainer
+			&& this.activityType === "Run"
+			&& _.mean(gradeAdjustedSpeedArray) === 0) {
+			gradeAdjustedSpeedArray = velocityArray;
 		}
 
 		let genuineAvgSpeedSum = 0,
@@ -571,10 +634,10 @@ export class ActivityComputer {
 			speedZones: (this.returnZones) ? speedZones : null,
 		};
 
-		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed) ? Math.floor(Helper.convertSpeedToPace(genuineGradeAdjustedAvgSpeed)) : null;
+		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed && genuineGradeAdjustedAvgSpeed > 0) ? Math.floor(Helper.convertSpeedToPace(genuineGradeAdjustedAvgSpeed)) : null;
 
 		const runningStressScore = ((this.activityType === "Run" || this.activityType === "VirtualRun") && genuineGradeAdjustedAvgPace && this.athleteModel.athleteSettings.runningFtp)
-			? ActivityComputer.computeRunningStressScore(this.activityStatsMap.movingTime, genuineGradeAdjustedAvgPace, this.athleteModel.athleteSettings.runningFtp) : null;
+			? ActivityComputer.computeRunningStressScore(this.activitySourceData.movingTime, genuineGradeAdjustedAvgPace, this.athleteModel.athleteSettings.runningFtp) : null;
 
 		const paceData: PaceDataModel = {
 			avgPace: Math.floor(Helper.convertSpeedToPace(genuineAvgSpeed)), // send in seconds
@@ -1168,6 +1231,10 @@ export class ActivityComputer {
 	}
 
 	protected elevationData(activityStream: ActivityStreamsModel): ElevationDataModel {
+
+		if (_.isEmpty(activityStream)) {
+			return null;
+		}
 
 		const distanceArray: any = activityStream.distance;
 		const timeArray: any = activityStream.time;

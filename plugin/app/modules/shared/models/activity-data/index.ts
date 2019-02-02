@@ -1,5 +1,5 @@
 export * from "./activity-basic-info.model";
-export * from "./activity-stats-map.model";
+export * from "./activity-source-data.model";
 export * from "./activity-streams.model";
 export * from "./analysis-data.model";
 export * from "./ascent-speed-data.model";
