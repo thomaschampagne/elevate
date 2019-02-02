@@ -1,17 +1,17 @@
-import { ActivityStatsMapModel, ActivityStreamsModel, AthleteModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivitySourceDataModel, ActivityStreamsModel, AthleteModel, UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "./app-resources.model";
 
 export class ComputeActivityThreadMessageModel {
-	activityType: string;
-	supportsGap: boolean;
-	isTrainer: boolean;
-	appResources: AppResourcesModel;
-	userSettings: UserSettingsModel;
-	isActivityAuthor: boolean;
-	athleteModel: AthleteModel;
-	hasPowerMeter: boolean;
-	activityStatsMap: ActivityStatsMapModel;
-	activityStream: ActivityStreamsModel;
-	bounds: number[];
-	returnZones: boolean;
+	public activityType: string;
+	public supportsGap: boolean; // TODO Should be moved in ActivitySourceDataModel
+	public isTrainer: boolean; // TODO Should be moved in ActivitySourceDataModel
+	public appResources: AppResourcesModel;
+	public userSettings: UserSettingsModel;
+	public isActivityAuthor: boolean;
+	public athleteModel: AthleteModel;
+	public hasPowerMeter: boolean; // TODO Should be moved in ActivitySourceDataModel
+	public activitySourceData: ActivitySourceDataModel;
+	public activityStream: ActivityStreamsModel;
+	public bounds: number[];
+	public returnZones: boolean;
 }
