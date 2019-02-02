@@ -231,10 +231,10 @@ describe("FitnessService", () => {
 			fitnessTrendConfigModel.allowEstimatedPowerStressScore = true;
 			fitnessTrendConfigModel.allowEstimatedRunningStressScore = true;
 			const skipActivityTypes = null;
-			const expectedFitnessPreparedActivitiesLength = 8;
+			const expectedFitnessPreparedActivitiesLength = 9;
 			const expectedTrimpScoredActivitiesLength = 3;
 			const expectedPowerScoredActivitiesLength = 3;
-			const expectedRunningScoredActivitiesLength = 4;
+			const expectedRunningScoredActivitiesLength = 5;
 			const expectedSwimScoredActivitiesLength = 1;
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
@@ -313,6 +313,16 @@ describe("FitnessService", () => {
 				null,
 				null,
 				false));
+
+			syncedActivityModels.push(FakeSyncedActivityHelper.create(9,
+				_ATHLETE_MODEL_,
+				"No sensor VirtualRun 1", // RSS Scored
+				"VirtualRun",
+				"2018-02-10",
+				null,
+				null,
+				false,
+				300));
 
 			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
