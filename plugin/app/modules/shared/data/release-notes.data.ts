@@ -21,6 +21,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Fixed a visual glitch that could appear on Zwift activities pages.",
 			"Fixed a case where \"Dated Athlete Settings\" effective dates could change without explanation.",
 			"Fixed strava careers page visual glitch created by the extension.",
+			"Fixed hide \"Suggested Friends\" not working anymore.",
 			"Fixed some typo errors.",
 			"Improved Fitness Trend legend update when browser tab is getting the focus.",
 			"[Technical] Fixed year progressions units tests error raised during change to 2019.",
