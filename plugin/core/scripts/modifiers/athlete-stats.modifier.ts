@@ -13,7 +13,7 @@ export class AthleteStatsModifier extends AbstractModifier {
 	}
 
 	public modify(): void {
-		$("#progress-goals").before("<div class='section'><h3 style='font-weight: 400;'>Elevate Year progressions are now only available from " +
+		$("#progress-goals").before("<div class='section'><h3 style='font-weight: 400;'>⚠ Elevate <a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Year Progressions</a> feature which was displayed here before is now only available from " +
 			"the <a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Elevate App</a> itself.</h3></div>");
 	}
 }
