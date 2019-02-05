@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import * as $ from "jquery";
 import { Helper } from "../../helper";
-import { ActivityBasicInfoModel, AnalysisDataModel, AthleteModel, SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, AnalysisDataModel, AthleteModel, SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AbstractDataView } from "./views/abstract-data.view";
@@ -21,8 +21,8 @@ export abstract class AbstractExtendedDataModifier {
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
 	protected athleteModel: AthleteModel;
-	protected basicInfo: ActivityBasicInfoModel;
-	protected isAuthorOfViewedActivity: boolean;
+	protected activityInfo: ActivityInfoModel;
+	protected isOwner: boolean;
 	protected speedUnitsData: SpeedUnitDataModel;
 	protected type: number;
 	protected analysisData: AnalysisDataModel;
@@ -32,15 +32,15 @@ export abstract class AbstractExtendedDataModifier {
 	protected dataViews: AbstractDataView[] = [];
 
 	protected constructor(activityProcessor: ActivityProcessor, activityId: number, supportsGap: boolean, appResources: AppResourcesModel,
-						  userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfo: any, type: number) {
+						  userSettings: UserSettingsModel, isOwner: boolean, activityInfo: ActivityInfoModel, type: number) {
 
 		this.activityProcessor = activityProcessor;
 		this.activityId = activityId;
 		this.supportsGap = supportsGap;
 		this.appResources = appResources;
 		this.userSettings = userSettings;
-		this.basicInfo = basicInfo;
-		this.isAuthorOfViewedActivity = isAuthorOfViewedActivity;
+		this.activityInfo = activityInfo;
+		this.isOwner = isOwner;
 		this.speedUnitsData = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
 		this.type = type;
 	}
@@ -73,7 +73,7 @@ export abstract class AbstractExtendedDataModifier {
 				} else if (this.type === AbstractExtendedDataModifier.TYPE_SEGMENT) {
 					// Place button for segment
 					this.placeExtendedStatsButtonSegment(() => {
-						// Extended Button for segment has been placed...
+						console.debug("Extended Button for segment has been placed...");
 					});
 				}
 			},
@@ -203,7 +203,7 @@ export abstract class AbstractExtendedDataModifier {
 				}
 
 				// Update basic Infos
-				this.basicInfo.segmentEffort = {
+				this.activityInfo.segmentEffort = {
 					name: segmentInfosResponse.display_name,
 					elapsedTimeSec: segmentInfosResponse.elapsed_time_raw,
 				};
@@ -304,10 +304,10 @@ export abstract class AbstractExtendedDataModifier {
 		// Clean Data View Before
 		this.cleanDataViews();
 
-		const headerView: HeaderView = new HeaderView(this.basicInfo);
+		const headerView: HeaderView = new HeaderView(this.activityInfo);
 		headerView.setAppResources(this.appResources);
 		headerView.setAppResources(this.appResources);
-		headerView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+		headerView.setIsAuthorOfViewedActivity(this.isOwner);
 		headerView.setActivityType(this.activityType);
 		headerView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 		this.dataViews.push(headerView);
@@ -315,9 +315,9 @@ export abstract class AbstractExtendedDataModifier {
 		// By default we have... If data exist of course...
 		// Featured view
 		if (this.analysisData) {
-			const featuredDataView: FeaturedDataView = new FeaturedDataView(this.analysisData, this.userSettings, this.basicInfo);
+			const featuredDataView: FeaturedDataView = new FeaturedDataView(this.analysisData, this.userSettings, this.activityInfo);
 			featuredDataView.setAppResources(this.appResources);
-			featuredDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+			featuredDataView.setIsAuthorOfViewedActivity(this.isOwner);
 			featuredDataView.setActivityType(this.activityType);
 			featuredDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(featuredDataView);
@@ -327,7 +327,7 @@ export abstract class AbstractExtendedDataModifier {
 		if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
 			const heartRateDataView: HeartRateDataView = new HeartRateDataView(this.analysisData.heartRateData, "hrr", this.athleteModel);
 			heartRateDataView.setAppResources(this.appResources);
-			heartRateDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+			heartRateDataView.setIsAuthorOfViewedActivity(this.isOwner);
 			heartRateDataView.setActivityType(this.activityType);
 			heartRateDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(heartRateDataView);

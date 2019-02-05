@@ -1,5 +1,5 @@
 import { Helper } from "../../helper";
-import { UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AbstractExtendedDataModifier } from "./abstract-extended-data.modifier";
@@ -14,8 +14,8 @@ import * as _ from "lodash";
 export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
 	constructor(activityProcessor: ActivityProcessor, activityId: number, supportsGap: boolean, appResources: AppResourcesModel,
-				userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfos: any, type: number) {
-		super(activityProcessor, activityId, supportsGap, appResources, userSettings, isAuthorOfViewedActivity, basicInfos, type);
+				userSettings: UserSettingsModel, isOwner: boolean, activityInfo: ActivityInfoModel, type: number) {
+		super(activityProcessor, activityId, supportsGap, appResources, userSettings, isOwner, activityInfo, type);
 	}
 
 	protected insertContentSummaryGridContent(): void {
@@ -102,7 +102,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		}
 
 
-		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData && this.isAuthorOfViewedActivity) {
+		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData && this.isOwner) {
 
 			let powerStressScore = "-";
 			let labelPSS = "Power Stress Score";
@@ -158,7 +158,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
 			const speedDataView: SpeedDataView = new SpeedDataView(this.analysisData.speedData, units);
 			speedDataView.setAppResources(this.appResources);
-			speedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+			speedDataView.setIsAuthorOfViewedActivity(this.isOwner);
 			speedDataView.setActivityType(this.activityType);
 			speedDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(speedDataView);
@@ -167,7 +167,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
 			const powerDataView: CyclingPowerDataView = new CyclingPowerDataView(this.analysisData.powerData, "w");
 			powerDataView.setAppResources(this.appResources);
-			powerDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+			powerDataView.setIsAuthorOfViewedActivity(this.isOwner);
 			powerDataView.setActivityType(this.activityType);
 			powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(powerDataView);
@@ -176,7 +176,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {
 			const cyclingCadenceDataView: CyclingCadenceDataView = new CyclingCadenceDataView(this.analysisData.cadenceData, "rpm");
 			cyclingCadenceDataView.setAppResources(this.appResources);
-			cyclingCadenceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+			cyclingCadenceDataView.setIsAuthorOfViewedActivity(this.isOwner);
 			cyclingCadenceDataView.setActivityType(this.activityType);
 			cyclingCadenceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(cyclingCadenceDataView);
@@ -185,7 +185,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 			const cyclingGradeDataView: CyclingGradeDataView = new CyclingGradeDataView(this.analysisData.gradeData, "%");
 			cyclingGradeDataView.setAppResources(this.appResources);
-			cyclingGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+			cyclingGradeDataView.setIsAuthorOfViewedActivity(this.isOwner);
 			cyclingGradeDataView.setActivityType(this.activityType);
 			cyclingGradeDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(cyclingGradeDataView);
@@ -194,7 +194,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.elevationData && this.userSettings.displayAdvancedElevationData) {
 			const elevationDataView: ElevationDataView = new ElevationDataView(this.analysisData.elevationData, "m");
 			elevationDataView.setAppResources(this.appResources);
-			elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+			elevationDataView.setIsAuthorOfViewedActivity(this.isOwner);
 			elevationDataView.setActivityType(this.activityType);
 			elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(elevationDataView);
@@ -202,7 +202,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 			if (this.analysisData.elevationData.ascentSpeed && this.analysisData.elevationData.ascentSpeedZones) {
 				const ascentSpeedDataView: AscentSpeedDataView = new AscentSpeedDataView(this.analysisData.elevationData, "Vm/h");
 				ascentSpeedDataView.setAppResources(this.appResources);
-				ascentSpeedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+				ascentSpeedDataView.setIsAuthorOfViewedActivity(this.isOwner);
 				ascentSpeedDataView.setActivityType(this.activityType);
 				this.dataViews.push(ascentSpeedDataView);
 			}

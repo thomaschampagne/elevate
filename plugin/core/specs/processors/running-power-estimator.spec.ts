@@ -140,7 +140,7 @@ describe("RunningPowerEstimator", () => {
 		"power stats estimations near real running power meter  (based on https://www.strava.com/activities/874762067)", () => {
 
 		// Given
-		const _expectedPower = 151; // Real Running Average Power = 151 W (From power meter)
+		const expectedPower = 151; // Real Running Average Power = 151 W (From power meter)
 		const athleteWeight = 54.32;
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/874762067/stream.json")); // Mikala run sample 1/2 NCNR Run Club
 
@@ -151,8 +151,8 @@ describe("RunningPowerEstimator", () => {
 
 		// Then
 		expect(estimatedAvgPower).not.toBeNull();
-		expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - WATTS_TOLERANCE));
-		expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + WATTS_TOLERANCE));
+		expect(estimatedAvgPower).toBeGreaterThanOrEqual((expectedPower - WATTS_TOLERANCE));
+		expect(estimatedAvgPower).toBeLessThanOrEqual((expectedPower + WATTS_TOLERANCE));
 
 	});
 
@@ -160,7 +160,7 @@ describe("RunningPowerEstimator", () => {
 		"power stats estimations near real running power meter  (based on https://www.strava.com/activities/852961332)", () => {
 
 		// Given
-		const _expectedPower = 287;
+		const expectedPower = 287;
 		const athleteWeight = 79.4;
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/852961332/stream.json")); // Stryd 3/6 lap test .... brrr
 
@@ -172,8 +172,8 @@ describe("RunningPowerEstimator", () => {
 
 		// Then
 		expect(estimatedAvgPower).not.toBeNull();
-		expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - WATTS_TOLERANCE));
-		expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + WATTS_TOLERANCE));
+		expect(estimatedAvgPower).toBeGreaterThanOrEqual((expectedPower - WATTS_TOLERANCE));
+		expect(estimatedAvgPower).toBeLessThanOrEqual((expectedPower + WATTS_TOLERANCE));
 	});
 
 	it("createRunningPowerEstimationStream should provide " +
@@ -181,7 +181,7 @@ describe("RunningPowerEstimator", () => {
 		"based on https://www.strava.com/activities/878683797", () => {
 
 		// Given
-		const _expectedPower = 296;
+		const expectedPower = 296;
 		const athleteWeight = 79.4;
 
 		// Two shooting ranges and a road dedicated to the inventor of Velcro
@@ -195,8 +195,8 @@ describe("RunningPowerEstimator", () => {
 
 		// Then
 		expect(estimatedAvgPower).not.toBeNull();
-		expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - WATTS_TOLERANCE));
-		expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + WATTS_TOLERANCE));
+		expect(estimatedAvgPower).toBeGreaterThanOrEqual((expectedPower - WATTS_TOLERANCE));
+		expect(estimatedAvgPower).toBeLessThanOrEqual((expectedPower + WATTS_TOLERANCE));
 	});
 
 	it("createRunningPowerEstimationStream should provide " +
@@ -204,7 +204,7 @@ describe("RunningPowerEstimator", () => {
 		"based on https://www.strava.com/activities/833008371", () => {
 
 		// Given
-		const _expectedPower = 310;
+		const expectedPower = 310;
 		const athleteWeight = 79.4;
 
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/833008371/stream.json")); // Morning Run
@@ -217,15 +217,15 @@ describe("RunningPowerEstimator", () => {
 
 		// Then
 		expect(estimatedAvgPower).not.toBeNull();
-		expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - WATTS_TOLERANCE));
-		expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + WATTS_TOLERANCE));
+		expect(estimatedAvgPower).toBeGreaterThanOrEqual((expectedPower - WATTS_TOLERANCE));
+		expect(estimatedAvgPower).toBeLessThanOrEqual((expectedPower + WATTS_TOLERANCE));
 	});
 
 	// Running estimation test
 	it("should compute correctly '1/2 NCNR Run Club' @ https://www.strava.com/activities/874762067", (done: Function) => {
 
 		// Given
-		const _expectedPower = 151;
+		const expectedPower = 151;
 		const athleteWeight = 54.32;
 
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/874762067/stream.json"));
@@ -238,8 +238,8 @@ describe("RunningPowerEstimator", () => {
 
 		// Then
 		expect(estimatedAvgPower).not.toBeNull();
-		expect(estimatedAvgPower).toBeGreaterThanOrEqual((_expectedPower - WATTS_TOLERANCE));
-		expect(estimatedAvgPower).toBeLessThanOrEqual((_expectedPower + WATTS_TOLERANCE));
+		expect(estimatedAvgPower).toBeGreaterThanOrEqual((expectedPower - WATTS_TOLERANCE));
+		expect(estimatedAvgPower).toBeLessThanOrEqual((expectedPower + WATTS_TOLERANCE));
 		done();
 	});
 
@@ -250,7 +250,7 @@ describe("RunningPowerEstimator", () => {
 		// Given
 		const activityType = "Run";
 		const isTrainer = false;
-		const isActivityAuthor = true;
+		const isOwner = true;
 		const hasPowerMeter = false;
 		const bounds: number[] = null;
 		const returnZones = true;
@@ -265,7 +265,7 @@ describe("RunningPowerEstimator", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
+			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 
 		const result: AnalysisDataModel = activityComputer.compute();
 
