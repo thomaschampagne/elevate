@@ -42,7 +42,7 @@ export class HideFeedModifier extends AbstractModifier {
 
 			// If hide suggested athletes
 			if (this.userSettings.feedHideSuggestedAthletes) {
-				$("#suggested-follow-module").remove(); // Will work as long as id remains "suggested-follow-module"
+				$("#suggested-follows").remove(); // Will work as long as id remains "suggested-follows"
 			}
 
 			if (this.userSettings.feedHideVirtualRides || this.userSettings.feedHideRideActivitiesUnderDistance > 0 || this.userSettings.feedHideRunActivitiesUnderDistance > 0) {
@@ -54,11 +54,8 @@ export class HideFeedModifier extends AbstractModifier {
 
 					const activityType: string = $(element)
 						.find("div.entry-icon.media-left").find(".app-icon").attr("class")
-						.replace("app-icon", "")
-						.replace("icon-dark", "")
-						.replace("icon-lg", "")
-						.replace(/\s+/g, "")
-						.replace("icon-", "");
+						// extract the activityType from the first class with icon-<activityType>, ignoring icon-lg and icon-dark
+						.replace(/^.*icon-(?!lg|dark)([^ ]+).*$/, "$1");
 
 					const distanceElement = _.filter($(element).find("ul.list-stats").find("[class=unit]"), (item) => {
 						return ($(item).html().trim() == "km" || $(item).html().trim() == "mi");

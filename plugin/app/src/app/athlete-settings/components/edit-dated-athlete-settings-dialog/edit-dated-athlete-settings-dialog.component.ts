@@ -15,6 +15,8 @@ export class EditDatedAthleteSettingsDialogComponent implements OnInit {
 
 	public static readonly WIDTH: string = "60%";
 
+	public sinceDate: Date;
+
 	public datedAthleteSettingsModel: DatedAthleteSettingsModel;
 
 	public DatedAthleteSettingsAction = DatedAthleteSettingsAction;
@@ -25,6 +27,7 @@ export class EditDatedAthleteSettingsDialogComponent implements OnInit {
 
 	public ngOnInit(): void {
 		this.datedAthleteSettingsModel = DatedAthleteSettingsModel.asInstance(_.cloneDeep(this.data.datedAthleteSettingsModel));
+		this.sinceDate = moment(this.datedAthleteSettingsModel.since).toDate();
 	}
 
 	public onAthleteSettingsModelChanged(datedAthleteSettingsModel: DatedAthleteSettingsModel): void {
@@ -32,7 +35,7 @@ export class EditDatedAthleteSettingsDialogComponent implements OnInit {
 	}
 
 	public onDateChange(): void {
-		this.datedAthleteSettingsModel.since = moment(this.datedAthleteSettingsModel.since).format(DatedAthleteSettingsModel.SINCE_DATE_FORMAT);
+		this.datedAthleteSettingsModel.since = moment(this.sinceDate).format(DatedAthleteSettingsModel.SINCE_DATE_FORMAT);
 	}
 
 	public onConfirm(): void {

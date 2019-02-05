@@ -16,7 +16,8 @@ export class SegmentRankPercentageModifier extends AbstractModifier {
 		const standing: JQuery = $(".leaders").find("table").find(".standing");
 
 		// Clean
-		const ranking: string[] = standing.children().last().text().trim().replace("\n", "").replace(/ /g, "").split("/");
+		const ranking: string[] = standing.children().last().text().trim()
+			.replace(/\\n/g, "").replace(/ /g, "").split("/");
 
 		let percentage: string;
 
@@ -26,7 +27,7 @@ export class SegmentRankPercentageModifier extends AbstractModifier {
 			percentage = (parseInt(ranking[0]) / parseInt(ranking[1]) * 100).toFixed(2) + "%";
 		}
 		// Rewrite percentage after ranking
-		standing.after("<td class=\"percentageRanking\"><h3>Rank %</h3><strong>" + percentage + "</strong></td>");
+		standing.after("<td class=\"percentageRanking standing text-nowrap\"><h5 class=\"topless text-uppercase\">Rank</h5><strong>" + percentage + "</strong></td>");
 
 		if ($(".percentageRanking").length) {
 			clearInterval(this.intervalId);

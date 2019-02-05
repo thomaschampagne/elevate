@@ -18,8 +18,7 @@ describe("FitnessTrendConfigDialogComponent", () => {
 		fitnessTrendConfigDialogData = {
 			fitnessTrendConfigModel: FitnessTrendComponent.DEFAULT_CONFIG,
 			lastFitnessActiveDate: new Date(),
-			isPowerMeterEnabled: true,
-			expandEstimatedStressScorePanel: false
+			isPowerMeterEnabled: true
 		};
 
 		TestBed.configureTestingModule({

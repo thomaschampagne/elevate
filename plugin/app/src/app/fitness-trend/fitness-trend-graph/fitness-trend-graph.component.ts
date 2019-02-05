@@ -16,19 +16,19 @@ import { WindowService } from "../../shared/services/window/window.service";
 import { ViewedDayService } from "../shared/services/viewed-day.service";
 import { FitnessTrendActivitiesLinksDialogComponent } from "../fitness-trend-activities-links-dialog/fitness-trend-activities-links-dialog.component";
 
-enum FITNESS_TRENDS_KEY_CODES {
-	DOWN_ARROW = 40,
-	RIGHT_ARROW = 39,
-	UP_ARROW = 38,
-	LEFT_ARROW = 37
-}
-
 @Component({
 	selector: "app-fitness-trend-graph",
 	templateUrl: "./fitness-trend-graph.component.html",
 	styleUrls: ["./fitness-trend-graph.component.scss"]
 })
 export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy {
+
+	private static readonly KEY_CODES = {
+		DOWN_ARROW: "ArrowDown",
+		RIGHT_ARROW: "ArrowRight",
+		UP_ARROW: "ArrowUp",
+		LEFT_ARROW: "ArrowLeft"
+	};
 
 	public static readonly SLIDE_PERIOD_VIEWED_DAYS: number = 14; // Days
 	public static readonly ZOOM_PERIOD_VIEWED_DAYS: number = 14; // Days
@@ -406,6 +406,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 		this.viewedDayService.onChange(this.viewedDay);
 	}
 
+	@HostListener("document:mousemove", ["$event"])
 	public onTooltipMouseMove(mouseEvent: MouseEvent): void {
 
 		let mouseDistanceX = 50; // Default value in px. Can be changed below if tooltip goes out of the graph
@@ -445,6 +446,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 		});
 	}
 
+	@HostListener("window:focus")
 	public setTodayAsViewedDay(): void {
 		this.viewedDay = this.getTodayViewedDay();
 		this.viewedDayService.onChange(this.viewedDay);
@@ -463,20 +465,20 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 	@HostListener("window:keydown", ["$event"])
 	public onKeyDown(event: KeyboardEvent): void {
 
-		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.RIGHT_ARROW) {
+		if (event.code === FitnessTrendGraphComponent.KEY_CODES.RIGHT_ARROW) {
 			this.onPeriodViewedForward();
 		}
 
-		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.LEFT_ARROW) {
+		if (event.code === FitnessTrendGraphComponent.KEY_CODES.LEFT_ARROW) {
 			this.onPeriodViewedBackward();
 		}
 
-		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.UP_ARROW) {
+		if (event.code === FitnessTrendGraphComponent.KEY_CODES.UP_ARROW) {
 			this.onPeriodViewedZoomIn();
 			event.preventDefault();
 		}
 
-		if (event.keyCode === FITNESS_TRENDS_KEY_CODES.DOWN_ARROW) {
+		if (event.code === FitnessTrendGraphComponent.KEY_CODES.DOWN_ARROW) {
 			this.onPeriodViewedZoomOut();
 			event.preventDefault();
 		}

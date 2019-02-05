@@ -1,3 +1,4 @@
+import * as _ from "lodash";
 import { CoreMessages, SpeedUnitDataModel } from "@elevate/shared/models";
 import { Constant } from "@elevate/shared/constants";
 
@@ -173,4 +174,14 @@ export class Helper {
 		return meterPerSeconds * 3.6;
 	}
 
+	/**
+	 * @param speed in kph
+	 * @return pace in seconds/km, if NaN/Infinite then return -1
+	 */
+	public static convertSpeedToPace(speed: number): number {
+		if (!_.isFinite(speed) || speed <= 0) {
+			return -1;
+		}
+		return (1 / speed * 60 * 60);
+	}
 }
