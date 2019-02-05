@@ -510,7 +510,7 @@ export class ActivityComputer {
 	 */
 	protected moveData(velocityArray: number[], timeArray: number[], gradeAdjustedSpeedArray?: number[]): MoveDataModel {
 
-		if (_.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
+		if (_.isEmpty(velocityArray) || _.isEmpty(timeArray) || _.mean(velocityArray) === 0) {
 			return null;
 		}
 
@@ -674,7 +674,7 @@ export class ActivityComputer {
 	protected powerData(athleteWeight: number, hasPowerMeter: boolean, cyclingFtp: number, powerArray: number[],
 						velocityArray: number[], timeArray: number[], isEstimatedRunningPower?: boolean): PowerDataModel {
 
-		if (_.isEmpty(powerArray) || _.isEmpty(timeArray)) {
+		if (_.isEmpty(powerArray) || _.isEmpty(timeArray) || _.mean(powerArray) === 0) {
 			return null;
 		}
 
@@ -820,7 +820,7 @@ export class ActivityComputer {
 	protected heartRateData(athleteModel: AthleteModel, heartRateArray: number[], timeArray: number[],
 							velocityArray: number[]): HeartRateDataModel {
 
-		if (_.isEmpty(heartRateArray) || _.isEmpty(timeArray)) {
+		if (_.isEmpty(heartRateArray) || _.isEmpty(timeArray) || _.mean(heartRateArray) === 0) {
 			return null;
 		}
 
@@ -920,7 +920,7 @@ export class ActivityComputer {
 	protected cadenceData(cadenceArray: number[], velocityArray: number[], distanceArray: number[],
 						  timeArray: number[]): CadenceDataModel {
 
-		if (_.isEmpty(cadenceArray) || _.isEmpty(timeArray)) {
+		if (_.isEmpty(cadenceArray) || _.isEmpty(timeArray) || _.mean(cadenceArray) === 0) {
 			return null;
 		}
 
@@ -1049,7 +1049,7 @@ export class ActivityComputer {
 
 	protected gradeData(gradeArray: number[], velocityArray: number[], timeArray: number[], distanceArray: number[], cadenceArray: number[]): GradeDataModel {
 
-		if (_.isEmpty(gradeArray) || _.isEmpty(velocityArray) || _.isEmpty(timeArray)) {
+		if (_.isEmpty(gradeArray) || _.isEmpty(velocityArray) || _.isEmpty(timeArray) || _.mean(velocityArray) === 0) {
 			return null;
 		}
 
@@ -1241,7 +1241,7 @@ export class ActivityComputer {
 		const velocityArray: any = activityStream.velocity_smooth;
 		const altitudeArray: any = activityStream.altitude_smooth;
 
-		if (_.isEmpty(distanceArray) || _.isEmpty(timeArray) || _.isEmpty(velocityArray) || _.isEmpty(altitudeArray)) {
+		if (_.isEmpty(distanceArray) || _.isEmpty(timeArray) || _.isEmpty(velocityArray) || _.isEmpty(altitudeArray) || _.mean(distanceArray) === 0 || _.mean(velocityArray) === 0) {
 			return null;
 		}
 

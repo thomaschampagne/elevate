@@ -13,9 +13,8 @@ import * as _ from "lodash";
 
 export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
-	constructor(activityProcessor: ActivityProcessor, activityId: number, supportsGap: boolean, appResources: AppResourcesModel,
-				userSettings: UserSettingsModel, isOwner: boolean, activityInfo: ActivityInfoModel, type: number) {
-		super(activityProcessor, activityId, supportsGap, appResources, userSettings, isOwner, activityInfo, type);
+	constructor(activityProcessor: ActivityProcessor, activityInfo: ActivityInfoModel, appResources: AppResourcesModel, userSettings: UserSettingsModel, type: number) {
+		super(activityProcessor, activityInfo, appResources, userSettings, type);
 	}
 
 	protected insertContentSummaryGridContent(): void {
@@ -27,12 +26,12 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		let units = "";
 		if (this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData) {
 			if (this.analysisData.speedData.best20min) {
-				relevantSpeed = (this.analysisData.speedData.best20min * this.speedUnitsData.speedUnitFactor).toFixed(1);
+				relevantSpeed = this.printNumber((this.analysisData.speedData.best20min * this.speedUnitsData.speedUnitFactor), 1);
 				units = this.speedUnitsData.speedUnitPerHour;
 			} else {
-				relevantSpeed = (this.analysisData.speedData.upperQuartileSpeed * this.speedUnitsData.speedUnitFactor).toFixed(1);
+				relevantSpeed = this.printNumber((this.analysisData.speedData.upperQuartileSpeed * this.speedUnitsData.speedUnitFactor), 1);
 				title = "75% Quartile Speed";
-				units = this.speedUnitsData.speedUnitPerHour + " <span class=\"summarySubGridTitle\">(&sigma; :" + (this.analysisData.speedData.standardDeviationSpeed * this.speedUnitsData.speedUnitFactor).toFixed(1) + " )</span>";
+				units = this.speedUnitsData.speedUnitPerHour + " <span class=\"summarySubGridTitle\">(&sigma; :" + this.printNumber((this.analysisData.speedData.standardDeviationSpeed * this.speedUnitsData.speedUnitFactor), 1) + " )</span>";
 			}
 		}
 		this.insertContentAtGridPosition(1, 0, relevantSpeed, title, units, "displayAdvancedSpeedData");
@@ -40,7 +39,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		// ...
 		let climbSpeed = "-";
 		if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
-			climbSpeed = (this.analysisData.gradeData.upFlatDownMoveData.up * this.speedUnitsData.speedUnitFactor).toFixed(1);
+			climbSpeed = this.printNumber((this.analysisData.gradeData.upFlatDownMoveData.up * this.speedUnitsData.speedUnitFactor), 1);
 		}
 		this.insertContentAtGridPosition(1, 3, climbSpeed, "Avg climbing speed", this.speedUnitsData.speedUnitPerHour, "displayAdvancedGradeData");
 
@@ -57,12 +56,12 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		let cadencePercentageMoving = "-";
 		if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {
 			cadenceTimeMoving = Helper.secondsToHHMMSS(this.analysisData.cadenceData.cadenceTimeMoving);
-			cadencePercentageMoving = this.analysisData.cadenceData.cadencePercentageMoving.toFixed(0);
+			cadencePercentageMoving = this.printNumber(this.analysisData.cadenceData.cadencePercentageMoving);
 		}
 		this.insertContentAtGridPosition(1, 4, cadenceTimeMoving, "Pedaling Time", (cadencePercentageMoving !== "-") ? " <span class=\"summarySubGridTitle\">(" + cadencePercentageMoving + "% of activity)</span>" : "", "displayCadenceData");
 
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
-			let weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
+			let weightedPower = this.printNumber(this.analysisData.powerData.weightedPower);
 			let labelWeightedPower = "Weighted Avg Power";
 			if (!this.analysisData.powerData.hasPowerMeter) {
 				weightedPower = "<span style='font-size: 14px;'>~</span>" + weightedPower;
@@ -72,7 +71,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		}
 
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
-			let avgWattsPerKg = this.analysisData.powerData.avgWattsPerKg.toFixed(2);
+			let avgWattsPerKg = this.printNumber(this.analysisData.powerData.avgWattsPerKg, 2);
 			let labelWKg = "Watts Per Kilograms";
 			if (!this.analysisData.powerData.hasPowerMeter) {
 				avgWattsPerKg = "<span style='font-size: 14px;'>~</span>" + avgWattsPerKg;
@@ -89,7 +88,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
 			if (_.isNumber(this.analysisData.powerData.best20min)) {
 
-				best20min = this.analysisData.powerData.best20min.toFixed(0);
+				best20min = this.printNumber(this.analysisData.powerData.best20min);
 				best20minUnits = "w";
 
 				if (!this.analysisData.powerData.hasPowerMeter) {
@@ -101,7 +100,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 			this.insertContentAtGridPosition(0, 6, best20min, label, best20minUnits, "displayAdvancedPowerData");
 		}
 
-		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData && this.isOwner) {
+		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData && this.activityInfo.isOwner) {
 
 			let powerStressScore = "-";
 			let labelPSS = "Power Stress Score";
@@ -110,7 +109,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 				powerStressScore = "";
 				labelPSS = "This activity seems to have been performed indoor.<br/> Make sure to flag it as \"Indoor Cycling\" otherwise<br/> Power Stress Score will not be calculated.";
 			} else if (_.isNumber(this.analysisData.powerData.powerStressScore)) {
-				powerStressScore = this.analysisData.powerData.powerStressScore.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.powerData.powerStressScorePerHour.toFixed(1) + " / hour)</span>";
+				powerStressScore = this.printNumber(this.analysisData.powerData.powerStressScore) + " <span class=\"summarySubGridTitle\">(" + this.printNumber(this.analysisData.powerData.powerStressScorePerHour, 1) + " / hour)</span>";
 				if (!this.analysisData.powerData.hasPowerMeter) {
 					labelPSS = "Est. " + labelPSS;
 				}
@@ -157,7 +156,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
 			const speedDataView: SpeedDataView = new SpeedDataView(this.analysisData.speedData, units);
 			speedDataView.setAppResources(this.appResources);
-			speedDataView.setIsAuthorOfViewedActivity(this.isOwner);
+			speedDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			speedDataView.setActivityType(this.activityType);
 			speedDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(speedDataView);
@@ -166,7 +165,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
 			const powerDataView: CyclingPowerDataView = new CyclingPowerDataView(this.analysisData.powerData, "w");
 			powerDataView.setAppResources(this.appResources);
-			powerDataView.setIsAuthorOfViewedActivity(this.isOwner);
+			powerDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			powerDataView.setActivityType(this.activityType);
 			powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(powerDataView);
@@ -175,7 +174,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {
 			const cyclingCadenceDataView: CyclingCadenceDataView = new CyclingCadenceDataView(this.analysisData.cadenceData, "rpm");
 			cyclingCadenceDataView.setAppResources(this.appResources);
-			cyclingCadenceDataView.setIsAuthorOfViewedActivity(this.isOwner);
+			cyclingCadenceDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			cyclingCadenceDataView.setActivityType(this.activityType);
 			cyclingCadenceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(cyclingCadenceDataView);
@@ -184,7 +183,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 			const cyclingGradeDataView: CyclingGradeDataView = new CyclingGradeDataView(this.analysisData.gradeData, "%");
 			cyclingGradeDataView.setAppResources(this.appResources);
-			cyclingGradeDataView.setIsAuthorOfViewedActivity(this.isOwner);
+			cyclingGradeDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			cyclingGradeDataView.setActivityType(this.activityType);
 			cyclingGradeDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(cyclingGradeDataView);
@@ -193,7 +192,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.elevationData && this.userSettings.displayAdvancedElevationData) {
 			const elevationDataView: ElevationDataView = new ElevationDataView(this.analysisData.elevationData, "m");
 			elevationDataView.setAppResources(this.appResources);
-			elevationDataView.setIsAuthorOfViewedActivity(this.isOwner);
+			elevationDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			elevationDataView.setActivityType(this.activityType);
 			elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(elevationDataView);
@@ -201,7 +200,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 			if (this.analysisData.elevationData.ascentSpeed && this.analysisData.elevationData.ascentSpeedZones) {
 				const ascentSpeedDataView: AscentSpeedDataView = new AscentSpeedDataView(this.analysisData.elevationData, "Vm/h");
 				ascentSpeedDataView.setAppResources(this.appResources);
-				ascentSpeedDataView.setIsAuthorOfViewedActivity(this.isOwner);
+				ascentSpeedDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 				ascentSpeedDataView.setActivityType(this.activityType);
 				this.dataViews.push(ascentSpeedDataView);
 			}

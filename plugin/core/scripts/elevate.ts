@@ -171,7 +171,7 @@ export class Elevate {
 			this.athleteId = this.vacuumProcessor.getAthleteId();
 			this.athleteName = this.vacuumProcessor.getAthleteName();
 			this.activityAthleteId = this.vacuumProcessor.getActivityAthleteId();
-			this.isOwner = (this.activityAthleteId === this.athleteId || CoreEnv.forceIsActivityAuthor);
+			this.isOwner = (this.activityAthleteId === this.athleteId || CoreEnv.forceIsActivityOwner);
 			this.isPremium = this.vacuumProcessor.getPremiumStatus();
 			this.isPro = this.vacuumProcessor.getProStatus();
 			this.activityId = this.vacuumProcessor.getActivityId();
@@ -660,23 +660,17 @@ export class Elevate {
 			case "Ride":
 				extendedDataModifier = new CyclingExtendedDataModifier(
 					activityProcessor,
-					this.activityId,
-					activityInfo.supportsGap,
+					activityInfo,
 					this.appResources,
 					this.userSettings,
-					this.isOwner,
-					activityInfo,
 					AbstractExtendedDataModifier.TYPE_ACTIVITY);
 				break;
 			case "Run":
 				extendedDataModifier = new RunningExtendedDataModifier(
 					activityProcessor,
-					this.activityId,
-					activityInfo.supportsGap,
+					activityInfo,
 					this.appResources,
 					this.userSettings,
-					this.isOwner,
-					activityInfo,
 					AbstractExtendedDataModifier.TYPE_ACTIVITY);
 				break;
 			/*default:
@@ -757,23 +751,17 @@ export class Elevate {
 					case "Ride":
 						extendedDataModifier = new CyclingExtendedDataModifier(
 							activityProcessor,
-							that.activityId,
-							activityInfo.supportsGap,
+							activityInfo,
 							that.appResources,
 							that.userSettings,
-							that.isOwner,
-							activityInfo,
 							AbstractExtendedDataModifier.TYPE_SEGMENT);
 						break;
 					case "Run":
 						extendedDataModifier = new RunningExtendedDataModifier(
 							activityProcessor,
-							that.activityId,
-							activityInfo.supportsGap,
+							activityInfo,
 							that.appResources,
 							that.userSettings,
-							that.isOwner,
-							activityInfo,
 							AbstractExtendedDataModifier.TYPE_SEGMENT);
 						break;
 					default:

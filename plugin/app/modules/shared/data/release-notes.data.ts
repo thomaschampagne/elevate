@@ -27,8 +27,8 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Removed legacy \"Year Progressions\" feature which was displayed in Strava \"My Profile\" before. You must use the \"Year Progressions\" inside Elevate App itself from now.",
 			"[Technical] Fixed year progressions units tests error raised during change to 2019.",
 			"[Technical] Refactoring and improvements around speed/pace conversion through the app.",
-			"[Technical] Switched to LGTM.com for code quality analysis",
-			"[Technical] Fixed LGTM issues. Project quality is ranked to A+ (the best one).",
+			"[Technical] Refactoring and improvements in activity computing and stats display.",
+			"[Technical] Switched to LGTM.com for code quality analysis: project quality is ranked to A+ (the best one).",
 			"[Technical] Upgraded Angular & others npm libraries."
 		]
 	},
