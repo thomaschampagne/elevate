@@ -101,16 +101,15 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 			this.insertContentAtGridPosition(0, 6, best20min, label, best20minUnits, "displayAdvancedPowerData");
 		}
 
-
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData && this.isOwner) {
 
 			let powerStressScore = "-";
 			let labelPSS = "Power Stress Score";
 
-			if (!this.analysisData.moveRatio && !this.analysisData.powerData.powerStressScore) {
+			if (!this.analysisData.moveRatio && !this.activityInfo.isTrainer) {
 				powerStressScore = "";
 				labelPSS = "This activity seems to have been performed indoor.<br/> Make sure to flag it as \"Indoor Cycling\" otherwise<br/> Power Stress Score will not be calculated.";
-			} else if (this.analysisData.powerData.powerStressScore) {
+			} else if (_.isNumber(this.analysisData.powerData.powerStressScore)) {
 				powerStressScore = this.analysisData.powerData.powerStressScore.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.powerData.powerStressScorePerHour.toFixed(1) + " / hour)</span>";
 				if (!this.analysisData.powerData.hasPowerMeter) {
 					labelPSS = "Est. " + labelPSS;
