@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "./helper";
 import {
-	ActivityBasicInfoModel,
+	ActivityInfoModel,
 	AppStorageType,
 	DatedAthleteSettingsModel,
 	Gender,
@@ -69,7 +69,7 @@ export class Elevate {
 	public activityId: number;
 	public athleteId: number;
 	public athleteModelResolver: AthleteModelResolver;
-	public isActivityAuthor: boolean;
+	public isOwner: boolean;
 	public extensionId: string;
 	public appResources: AppResourcesModel;
 	public userSettings: UserSettingsModel;
@@ -171,7 +171,7 @@ export class Elevate {
 			this.athleteId = this.vacuumProcessor.getAthleteId();
 			this.athleteName = this.vacuumProcessor.getAthleteName();
 			this.activityAthleteId = this.vacuumProcessor.getActivityAthleteId();
-			this.isActivityAuthor = (this.activityAthleteId === this.athleteId || CoreEnv.forceIsActivityAuthor);
+			this.isOwner = (this.activityAthleteId === this.athleteId || CoreEnv.forceIsActivityOwner);
 			this.isPremium = this.vacuumProcessor.getPremiumStatus();
 			this.isPro = this.vacuumProcessor.getProStatus();
 			this.activityId = this.vacuumProcessor.getActivityId();
@@ -633,52 +633,44 @@ export class Elevate {
 			return;
 		}
 
-		const activityType: string = window.pageView.activity().get("type");
-		const supportsGap: boolean = window.pageView.activity().get("supportsGap");
-		const isTrainer: boolean = window.pageView.activity().get("trainer");
+		const activityInfo: ActivityInfoModel = {
+			id: this.activityId,
+			type: window.pageView.activity().get("type"),
+			name: this.vacuumProcessor.getActivityName(),
+			startTime: this.vacuumProcessor.getActivityStartDate(),
+			supportsGap: window.pageView.activity().get("supportsGap"),
+			isTrainer: window.pageView.activity().get("trainer"),
+			isOwner: this.isOwner
+		};
 
 		// Skip manual activities
-		if (activityType === "Manual") {
+		if (activityInfo.type === "Manual") {
 			return;
 		}
 
-		const activityStartDate = this.vacuumProcessor.getActivityStartDate();
-
-		const activityProcessor = new ActivityProcessor(this.vacuumProcessor, this.athleteModelResolver, this.appResources, this.userSettings,
-			this.activityId, activityType, activityStartDate, isTrainer, supportsGap, this.isActivityAuthor);
+		const activityProcessor = new ActivityProcessor(this.vacuumProcessor, this.athleteModelResolver, this.appResources, this.userSettings, activityInfo);
 
 		if (CoreEnv.debugMode) {
 			console.log("Execute handleExtendedData_()");
 		}
 
-		const basicInfo: ActivityBasicInfoModel = {
-			activityName: this.vacuumProcessor.getActivityName(),
-			activityTime: this.vacuumProcessor.getActivityTime(),
-		};
-
 		let extendedDataModifier: AbstractExtendedDataModifier;
 
-		switch (activityType) {
+		switch (activityInfo.type) {
 			case "Ride":
 				extendedDataModifier = new CyclingExtendedDataModifier(
 					activityProcessor,
-					this.activityId,
-					supportsGap,
+					activityInfo,
 					this.appResources,
 					this.userSettings,
-					this.isActivityAuthor,
-					basicInfo,
 					AbstractExtendedDataModifier.TYPE_ACTIVITY);
 				break;
 			case "Run":
 				extendedDataModifier = new RunningExtendedDataModifier(
 					activityProcessor,
-					this.activityId,
-					supportsGap,
+					activityInfo,
 					this.appResources,
 					this.userSettings,
-					this.isActivityAuthor,
-					basicInfo,
 					AbstractExtendedDataModifier.TYPE_ACTIVITY);
 				break;
 			/*default:
@@ -689,8 +681,8 @@ export class Elevate {
                 supportsGap,
                 this.appResources,
                 this.userSettingsData,
-                this.isActivityAuthor,
-                basicInfo,
+                this.isOwner,
+                activityInfo,
                 AbstractExtendedDataModifier.TYPE_ACTIVITY);
             break;*/
 		}
@@ -701,7 +693,7 @@ export class Elevate {
 		const updatedToEvent: any = {
 			categorie: "Analyse",
 			action: "openedActivityType",
-			name: activityType,
+			name: activityInfo.type,
 		};
 
 		follow("send", "event", updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
@@ -718,22 +710,26 @@ export class Elevate {
 			return;
 		}
 
-		const activityType: string = window.pageView.activity().get("type");
-		const supportsGap: boolean = window.pageView.activity().get("supportsGap");
-		const isTrainer: boolean = window.pageView.activity().get("trainer");
+		const activityInfo: ActivityInfoModel = {
+			id: this.activityId,
+			type: window.pageView.activity().get("type"),
+			name: this.vacuumProcessor.getActivityName(),
+			startTime: this.vacuumProcessor.getActivityStartDate(),
+			supportsGap: window.pageView.activity().get("supportsGap"),
+			isTrainer: window.pageView.activity().get("trainer"),
+			isOwner: this.isOwner
+		};
 
 		// Skip manual activities
-		if (activityType === "Manual") {
+		if (activityInfo.type === "Manual") {
 			return;
 		}
 
-		const activityStartDate = this.vacuumProcessor.getActivityStartDate();
-		const activityProcessor = new ActivityProcessor(this.vacuumProcessor, this.athleteModelResolver, this.appResources, this.userSettings,
-			this.activityId, activityType, activityStartDate, isTrainer, supportsGap, this.isActivityAuthor);
+		const activityProcessor = new ActivityProcessor(this.vacuumProcessor, this.athleteModelResolver, this.appResources, this.userSettings, activityInfo);
 
 		let view: any;
 
-		if (_.indexOf(["Run", "Hike", "Walk"], activityType) !== -1) {
+		if (_.indexOf(["Run", "Hike", "Walk"], activityInfo.type) !== -1) {
 			view = Strava.Labs.Activities.SegmentEffortDetailView;
 		} else {
 			view = Strava.Labs.Activities.SegmentLeaderboardView;
@@ -749,34 +745,23 @@ export class Elevate {
 
 				const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-				const basicInfo: ActivityBasicInfoModel = {
-					activityName: that.vacuumProcessor.getActivityName(),
-					activityTime: that.vacuumProcessor.getActivityTime(),
-				};
-
 				let extendedDataModifier: AbstractExtendedDataModifier;
 
-				switch (activityType) {
+				switch (activityInfo.type) {
 					case "Ride":
 						extendedDataModifier = new CyclingExtendedDataModifier(
 							activityProcessor,
-							that.activityId,
-							supportsGap,
+							activityInfo,
 							that.appResources,
 							that.userSettings,
-							that.isActivityAuthor,
-							basicInfo,
 							AbstractExtendedDataModifier.TYPE_SEGMENT);
 						break;
 					case "Run":
 						extendedDataModifier = new RunningExtendedDataModifier(
 							activityProcessor,
-							that.activityId,
-							supportsGap,
+							activityInfo,
 							that.appResources,
 							that.userSettings,
-							that.isActivityAuthor,
-							basicInfo,
 							AbstractExtendedDataModifier.TYPE_SEGMENT);
 						break;
 					default:

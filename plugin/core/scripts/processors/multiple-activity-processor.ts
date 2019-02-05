@@ -137,7 +137,7 @@ export class MultipleActivityProcessor {
 			isTrainer: activityWithStream.trainer,
 			appResources: this.appResources,
 			userSettings: this.userSettings,
-			isActivityAuthor: true, // While syncing and processing activities, elevate user is always author of the activity
+			isOwner: true, // While syncing and processing activities, elevate user is always author of the activity
 			athleteModel: activityWithStream.athleteModel,
 			hasPowerMeter: activityWithStream.hasPowerMeter,
 			activitySourceData: activitySourceData,

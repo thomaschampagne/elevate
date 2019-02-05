@@ -25,7 +25,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 	const activityType = "Ride";
 	const isTrainer = false;
-	const isActivityAuthor = true;
+	const isOwner = true;
 	const bounds: number[] = null;
 	const returnZones = false;
 	const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../../fixtures/user-settings/2470979.json")); // Thomas C user settings
@@ -53,7 +53,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
+			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -73,7 +73,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
+			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -97,7 +97,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
+			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -117,7 +117,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
+			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -137,7 +137,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
+			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -159,7 +159,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
+			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -179,7 +179,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
+			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -200,7 +200,7 @@ describe("ActivityComputer Cycling Power", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
-			isActivityAuthor, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
+			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
