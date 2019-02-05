@@ -11,7 +11,7 @@ onmessage = (mainThreadEvent: MessageEvent) => {
 		threadMessage.isTrainer,
 		threadMessage.userSettings,
 		threadMessage.athleteModel,
-		threadMessage.isActivityAuthor,
+		threadMessage.isOwner,
 		threadMessage.hasPowerMeter,
 		threadMessage.activitySourceData,
 		threadMessage.activityStream,

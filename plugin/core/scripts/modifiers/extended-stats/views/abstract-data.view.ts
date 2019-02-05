@@ -20,7 +20,7 @@ export abstract class AbstractDataView {
 	protected mainColor: number[];
 	protected table: JQuery;
 	protected appResources: AppResourcesModel;
-	protected isAuthorOfViewedActivity: boolean;
+	protected isOwner: boolean;
 	protected isSegmentEffortView: boolean;
 	protected activityType: string;
 	protected speedUnitsData: SpeedUnitDataModel;
@@ -42,8 +42,8 @@ export abstract class AbstractDataView {
 		return this.content;
 	}
 
-	public printNumber(value: number, decimals: number): string {
-		return (_.isNumber(value)) ? value.toFixed(decimals) : "-";
+	public printNumber(value: number, decimals?: number): string {
+		return (_.isNumber(value) && !_.isNaN(value) && _.isFinite(value)) ? value.toFixed((decimals) ? decimals : 0) : "-";
 	}
 
 	public setIsSegmentEffortView(bool: boolean): void {
@@ -51,7 +51,7 @@ export abstract class AbstractDataView {
 	}
 
 	public setIsAuthorOfViewedActivity(bool: boolean): void {
-		this.isAuthorOfViewedActivity = bool;
+		this.isOwner = bool;
 	}
 
 	public setGraphTitleFromUnits(): void {

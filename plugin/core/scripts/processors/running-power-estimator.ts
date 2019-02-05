@@ -50,7 +50,7 @@ export class RunningPowerEstimator {
 	 */
 	public static estimateRunningPower(weightKg: number, meters: number, seconds: number, elevationGain: number): number {
 
-		if (!_.isNumber(seconds) || seconds <= 0) {
+		if (!_.isNumber(seconds) || seconds === 0) {
 			return 0;
 		}
 

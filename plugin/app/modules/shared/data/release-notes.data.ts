@@ -3,7 +3,7 @@ import { ReleaseNoteModel } from "../models";
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
 		version: "6.9.0",
-		date: "2019-02-02",
+		date: "2019-02-05",
 		message: "Added support of manual & virtual running activities into Fitness Trend (⚠️ Please read the release notes to enable it). This update also pushes many fixes and improvements.",
 		hotFixes: [],
 		features: [
@@ -24,10 +24,11 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Fixed hide \"Suggested Friends\" not working anymore.",
 			"Fixed some typo errors.",
 			"Improved Fitness Trend legend update when browser tab is getting the focus.",
+			"Removed legacy \"Year Progressions\" feature which was displayed in Strava \"My Profile\" before. You must use the \"Year Progressions\" inside Elevate App itself from now.",
 			"[Technical] Fixed year progressions units tests error raised during change to 2019.",
-			"[Technical] Refactoring and improvement around speed/pace conversion through the app.",
-			"[Technical] Switched to LGTM.com for code quality analysis",
-			"[Technical] Fixed LGTM issues. Project quality is ranked to A+ (the best one).",
+			"[Technical] Refactoring and improvements around speed/pace conversion through the app.",
+			"[Technical] Refactoring and improvements in activity computing and stats display.",
+			"[Technical] Switched to LGTM.com for code quality analysis: project quality is ranked to A+ (the best one).",
 			"[Technical] Upgraded Angular & others npm libraries."
 		]
 	},

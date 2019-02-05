@@ -1,24 +1,24 @@
 import * as _ from "lodash";
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
-import { ActivityBasicInfoModel } from "@elevate/shared/models";
+import { ActivityInfoModel } from "@elevate/shared/models";
 
 export class HeaderView extends AbstractDataView {
 
-	protected basicInfo: ActivityBasicInfoModel;
+	protected activityInfo: ActivityInfoModel;
 
-	constructor(basicInfo: any) {
+	constructor(activityInfo: ActivityInfoModel) {
 		super(null);
-		this.basicInfo = basicInfo;
+		this.activityInfo = activityInfo;
 	}
 
 	public render(): void {
 
 		let detail: string;
-		if (this.isSegmentEffortView && !_.isEmpty(this.basicInfo.segmentEffort)) { // Segment effort only
-			detail = "SEGMENT EFFORT on <i>&lt;" + this.basicInfo.segmentEffort.name + "&gt;</i> // TIME " + Helper.secondsToHHMMSS(this.basicInfo.segmentEffort.elapsedTimeSec);
+		if (this.isSegmentEffortView && !_.isEmpty(this.activityInfo.segmentEffort)) { // Segment effort only
+			detail = "SEGMENT EFFORT on <i>&lt;" + this.activityInfo.segmentEffort.name + "&gt;</i> // TIME " + Helper.secondsToHHMMSS(this.activityInfo.segmentEffort.elapsedTimeSec);
 		} else { // Complete activity
-			detail = "ACTIVITY <i>&lt;" + this.basicInfo.activityName + "&gt;</i>";
+			detail = "ACTIVITY <i>&lt;" + this.activityInfo.name + "&gt;</i>";
 		}
 
 		this.content += "<div style='width:100%; margin-left: 10px; margin-top: 10px; margin-bottom: 5px;font-size: 14px;'>";
