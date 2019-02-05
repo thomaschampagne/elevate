@@ -20,7 +20,7 @@ export abstract class AbstractDataView {
 	protected mainColor: number[];
 	protected table: JQuery;
 	protected appResources: AppResourcesModel;
-	protected isAuthorOfViewedActivity: boolean;
+	protected isOwner: boolean;
 	protected isSegmentEffortView: boolean;
 	protected activityType: string;
 	protected speedUnitsData: SpeedUnitDataModel;
@@ -51,7 +51,7 @@ export abstract class AbstractDataView {
 	}
 
 	public setIsAuthorOfViewedActivity(bool: boolean): void {
-		this.isAuthorOfViewedActivity = bool;
+		this.isOwner = bool;
 	}
 
 	public setGraphTitleFromUnits(): void {

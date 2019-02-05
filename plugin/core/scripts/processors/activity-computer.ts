@@ -46,7 +46,7 @@ export class ActivityComputer {
 	protected isTrainer: boolean;
 	protected userSettings: UserSettingsModel;
 	protected movementData: MoveDataModel;
-	protected isActivityAuthor: boolean;
+	protected isOwner: boolean;
 	protected hasPowerMeter: boolean;
 	protected activitySourceData: ActivitySourceDataModel;
 	protected activityStream: ActivityStreamsModel;
@@ -57,7 +57,7 @@ export class ActivityComputer {
 				isTrainer: boolean,
 				userSettings: UserSettingsModel,
 				athleteModel: AthleteModel,
-				isActivityAuthor: boolean,
+				isOwner: boolean,
 				hasPowerMeter: boolean,
 				activitySourceData: ActivitySourceDataModel,
 				activityStream: ActivityStreamsModel,
@@ -70,7 +70,7 @@ export class ActivityComputer {
 		this.userSettings = userSettings;
 		this.userSettings.zones = UserZonesModel.asInstance(this.userSettings.zones);
 		this.athleteModel = athleteModel;
-		this.isActivityAuthor = isActivityAuthor;
+		this.isOwner = isOwner;
 		this.hasPowerMeter = hasPowerMeter;
 		this.activitySourceData = activitySourceData;
 		this.activityStream = activityStream;
@@ -308,7 +308,7 @@ export class ActivityComputer {
 		// If Running activity with no power data, then try to estimate it for the author of activity...
 		if (this.activityType === "Run"
 			&& !this.hasPowerMeter
-			&& this.isActivityAuthor) {
+			&& this.isOwner) {
 			powerData = this.estimatedRunningPower(activityStream, athleteModel.athleteSettings.weight, hasPowerMeter, athleteModel.athleteSettings.cyclingFtp);
 		} else {
 			powerData = this.powerData(athleteModel.athleteSettings.weight, hasPowerMeter, athleteModel.athleteSettings.cyclingFtp,

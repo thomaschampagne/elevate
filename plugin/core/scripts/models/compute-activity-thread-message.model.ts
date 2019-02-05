@@ -3,13 +3,13 @@ import { AppResourcesModel } from "./app-resources.model";
 
 export class ComputeActivityThreadMessageModel {
 	public activityType: string;
-	public supportsGap: boolean; // TODO Should be moved in ActivitySourceDataModel
-	public isTrainer: boolean; // TODO Should be moved in ActivitySourceDataModel
+	public supportsGap: boolean; // TODO Should be moved in ActivitySourceDataModel?!
+	public isTrainer: boolean; // TODO Should be moved in ActivitySourceDataModel?!
 	public appResources: AppResourcesModel;
 	public userSettings: UserSettingsModel;
-	public isActivityAuthor: boolean;
+	public isOwner: boolean; // TODO Should be moved in ActivitySourceDataModel?!
 	public athleteModel: AthleteModel;
-	public hasPowerMeter: boolean; // TODO Should be moved in ActivitySourceDataModel
+	public hasPowerMeter: boolean; // TODO Should be moved in ActivitySourceDataModel?!
 	public activitySourceData: ActivitySourceDataModel;
 	public activityStream: ActivityStreamsModel;
 	public bounds: number[];

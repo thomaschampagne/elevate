@@ -58,9 +58,9 @@ describe("ActivityComputer", () => {
 
 		stream.watts = stream.watts_calc; // because powerMeter is false
 
-		const isActivityAuthor = true;
+		const isOwner = true;
 		const activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, athleteModel,
-			isActivityAuthor, powerMeter, activitySourceData, stream, null, true);
+			isOwner, powerMeter, activitySourceData, stream, null, true);
 
 		const result: AnalysisDataModel = activityComputer.compute();
 

@@ -331,12 +331,6 @@ export class VacuumProcessor {
 		return null;
 	}
 
-
-	public getActivityTime(): string {
-		const activityTime: string = $(".activity-summary-container").find("time").text().trim();
-		return (activityTime) ? activityTime : null;
-	}
-
 	public getActivityName(): string {
 		const activityName: string = $(".activity-summary-container").find(".marginless.activity-name").text().trim();
 		return (activityName) ? activityName : null;
