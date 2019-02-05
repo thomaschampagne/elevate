@@ -42,8 +42,8 @@ export abstract class AbstractDataView {
 		return this.content;
 	}
 
-	public printNumber(value: number, decimals: number): string {
-		return (_.isNumber(value)) ? value.toFixed(decimals) : "-";
+	public printNumber(value: number, decimals?: number): string {
+		return (_.isNumber(value) && !_.isNaN(value) && _.isFinite(value)) ? value.toFixed((decimals) ? decimals : 0) : "-";
 	}
 
 	public setIsSegmentEffortView(bool: boolean): void {

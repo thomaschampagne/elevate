@@ -13,9 +13,9 @@ import * as $ from "jquery";
 
 export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
-	constructor(activityProcessor: ActivityProcessor, activityId: number, supportsGap: boolean, appResources: AppResourcesModel,
-				userSettings: UserSettingsModel, isOwner: boolean, activityInfo: ActivityInfoModel, type: number) {
-		super(activityProcessor, activityId, supportsGap, appResources, userSettings, isOwner, activityInfo, type);
+	constructor(activityProcessor: ActivityProcessor, activityInfo: ActivityInfoModel, appResources: AppResourcesModel,
+				userSettings: UserSettingsModel, type: number) {
+		super(activityProcessor, activityInfo, appResources, userSettings, type);
 	}
 
 	protected insertContentSummaryGridContent(): void {
@@ -39,8 +39,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 			const avgClimbPace: number = Helper.convertSpeedToPace(this.analysisData.gradeData.upFlatDownMoveData.up);
 
 			if (avgClimbPace !== -1) {
-				// let seconds: number = parseInt((avgClimbPace / speedUnitFactor).toFixed(0));
-				const seconds: number = avgClimbPace / this.speedUnitsData.speedUnitFactor; // / speedUnitFactor).toFixed(0));
+				const seconds: number = avgClimbPace / this.speedUnitsData.speedUnitFactor;
 				if (seconds) {
 					climbPaceDisplayed = Helper.secondsToHHMMSS(seconds, true);
 				}
@@ -60,7 +59,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 				if (this.analysisData.powerData.hasPowerMeter) {
 
 					// Real running power data
-					averageWatts = this.analysisData.powerData.avgWatts.toFixed(0);
+					averageWatts = this.printNumber(this.analysisData.powerData.avgWatts);
 					userSettingKey = "displayAdvancedPowerData";
 
 				} else {
@@ -69,7 +68,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 					if (this.userSettings.displayRunningPowerEstimation) {
 						averageWattsTitle = "Estimated " + averageWattsTitle;
 						userSettingKey = "displayRunningPowerEstimation";
-						averageWatts = "<span style='font-size: 14px;'>~</span>" + this.analysisData.powerData.avgWatts.toFixed(0);
+						averageWatts = "<span style='font-size: 14px;'>~</span>" + this.printNumber(this.analysisData.powerData.avgWatts);
 					}
 				}
 			}
@@ -84,18 +83,18 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 				&& this.analysisData.powerData.weightedPower
 				&& this.analysisData.powerData.hasPowerMeter
 			) {
-				const weightedPower = this.analysisData.powerData.weightedPower.toFixed(0);
+				const weightedPower = this.printNumber(this.analysisData.powerData.weightedPower);
 				this.insertContentAtGridPosition(1, 4, weightedPower, "Weighted Power", "w", "displayAdvancedPowerData");
 			}
 		}
 
-		if (this.userSettings.displayAdvancedSpeedData && this.isOwner && this.supportsGap) {
+		if (this.userSettings.displayAdvancedSpeedData && this.activityInfo.isOwner && this.activityInfo.supportsGap) {
 
 			let runningStressScore = "-";
 			let labelRSS = "Running Stress Score";
 			if (this.analysisData.paceData
 				&& this.analysisData.paceData.runningStressScore) {
-				runningStressScore = this.analysisData.paceData.runningStressScore.toFixed(0) + " <span class=\"summarySubGridTitle\">(" + this.analysisData.paceData.runningStressScorePerHour.toFixed(1) + " / hour)</span>";
+				runningStressScore = this.printNumber(this.analysisData.paceData.runningStressScore) + " <span class=\"summarySubGridTitle\">(" + this.printNumber(this.analysisData.paceData.runningStressScorePerHour, 1) + " / hour)</span>";
 			} else {
 				labelRSS = "<span style='cursor: not-allowed'>" + ((this.userSettings.hasDatedAthleteSettings) ? "<i>No running FTP found in athlete </br>settings for this activity date</i>"
 					: "<i>Please configure running FTP</br>in athlete settings </br>to see \"Running Stress Score\"</i>") + "</span>";
@@ -138,9 +137,9 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 			const units: string = (measurementPreference == "meters") ? "/km" : "/mi";
 
 			const paceDataView: PaceDataView = new PaceDataView(this.analysisData.paceData, units);
-			paceDataView.setSupportsGap(this.supportsGap);
+			paceDataView.setSupportsGap(this.activityInfo.supportsGap);
 			paceDataView.setAppResources(this.appResources);
-			paceDataView.setIsAuthorOfViewedActivity(this.isOwner);
+			paceDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			paceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(paceDataView);
 		}
@@ -153,7 +152,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
 			const gradeAdjustedPaceDataView: GradeAdjustedPaceDataView = new GradeAdjustedPaceDataView(this.analysisData.paceData, units);
 			gradeAdjustedPaceDataView.setAppResources(this.appResources);
-			gradeAdjustedPaceDataView.setIsAuthorOfViewedActivity(this.isOwner);
+			gradeAdjustedPaceDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			gradeAdjustedPaceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(gradeAdjustedPaceDataView);
 		}
@@ -168,7 +167,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
 				const powerDataView: RunningPowerDataView = new RunningPowerDataView(this.analysisData.powerData, "w");
 				powerDataView.setAppResources(this.appResources);
-				powerDataView.setIsAuthorOfViewedActivity(this.isOwner);
+				powerDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 				powerDataView.setActivityType(this.activityType);
 				powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 				this.dataViews.push(powerDataView);
@@ -178,7 +177,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {
 			const runningCadenceDataView: RunningCadenceDataView = new RunningCadenceDataView(this.analysisData.cadenceData, "spm", this.userSettings);
 			runningCadenceDataView.setAppResources(this.appResources);
-			runningCadenceDataView.setIsAuthorOfViewedActivity(this.isOwner);
+			runningCadenceDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			runningCadenceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(runningCadenceDataView);
 		}
@@ -186,7 +185,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 			const runningGradeDataView: RunningGradeDataView = new RunningGradeDataView(this.analysisData.gradeData, "%");
 			runningGradeDataView.setAppResources(this.appResources);
-			runningGradeDataView.setIsAuthorOfViewedActivity(this.isOwner);
+			runningGradeDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			runningGradeDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(runningGradeDataView);
 		}
@@ -194,7 +193,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.elevationData && this.userSettings.displayAdvancedElevationData) {
 			const elevationDataView: ElevationDataView = new ElevationDataView(this.analysisData.elevationData, "m");
 			elevationDataView.setAppResources(this.appResources);
-			elevationDataView.setIsAuthorOfViewedActivity(this.isOwner);
+			elevationDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(elevationDataView);
 		}
