@@ -20,7 +20,6 @@ export class NearbySegmentsModifier extends AbstractModifier {
 		html += "<button class='btn btn-default dropdown-toggle'><img style='vertical-align:middle' src='" + this.appResources.trackChangesIcon + "'/> <span>Nearby Segments</span> <span class='app-icon-wrapper '><span class='app-icon icon-strong-caret-down icon-dark icon-xs'></span></span></button>";
 		html += "<ul class='dropdown-menu' style='max-height: 800px;'>";
 
-		let segment: ISegmentInfo;
 		let segmentName: string;
 		let segmentIconType: string;
 

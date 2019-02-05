@@ -1,6 +1,6 @@
+import { MediaObserver } from "@angular/flex-layout";
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
-import { ObservableMedia } from "@angular/flex-layout";
 
 @Injectable()
 export class WindowService {
@@ -9,7 +9,7 @@ export class WindowService {
 
 	public resizing: Subject<void>;
 
-	constructor(public media: ObservableMedia) {
+	constructor(public media: MediaObserver) {
 		this.resizing = new Subject<void>();
 	}
 
