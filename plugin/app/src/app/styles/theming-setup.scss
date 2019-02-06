@@ -3,10 +3,10 @@
 @import "./themes/dark";
 
 // Import Mixins
-@import "./native-elements.theme";
-@import "../../app/app.component.theme";
-@import "../../app/fitness-trend/fitness-trend.component.theme";
-@import "../../app/athlete-settings-consistency-ribbon/athlete-settings-consistency-ribbon.component.theme";
+@import "native-elements.theme";
+@import "../app.component.theme";
+@import "../fitness-trend/fitness-trend.component.theme";
+@import "../athlete-settings-consistency-ribbon/athlete-settings-consistency-ribbon.component.theme";
 
 @mixin elevate-custom-theme($theme) {
 	@include native-web-elements($theme);
