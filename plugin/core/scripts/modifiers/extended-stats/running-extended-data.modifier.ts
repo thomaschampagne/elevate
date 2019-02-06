@@ -10,6 +10,7 @@ import { RunningGradeDataView } from "./views/running-grade-data.view";
 import { RunningPowerDataView } from "./views/running-power-data.view";
 import { GradeAdjustedPaceDataView } from "./views/grade-adjusted-pace-data.view";
 import * as $ from "jquery";
+import * as _ from "lodash";
 
 export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
@@ -95,9 +96,12 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 			if (this.analysisData.paceData
 				&& this.analysisData.paceData.runningStressScore) {
 				runningStressScore = this.printNumber(this.analysisData.paceData.runningStressScore) + " <span class=\"summarySubGridTitle\">(" + this.printNumber(this.analysisData.paceData.runningStressScorePerHour, 1) + " / hour)</span>";
-			} else {
-				labelRSS = "<span style='cursor: not-allowed'>" + ((this.userSettings.hasDatedAthleteSettings) ? "<i>No running FTP found in athlete </br>settings for this activity date</i>"
+			} else if (this.analysisData.paceData
+				&& !_.isNumber(this.athleteModel.athleteSettings.runningFtp)) {
+				labelRSS = "<span style='cursor: not-allowed'>" + ((this.userSettings.hasDatedAthleteSettings) ? "<i>No running FTP in dated athlete </br>settings for this activity date</i>"
 					: "<i>Please configure running FTP</br>in athlete settings </br>to see \"Running Stress Score\"</i>") + "</span>";
+			} else {
+				labelRSS = "Unable to display </br>\"Running Stress Score\"";
 			}
 
 			this.insertContentAtGridPosition(0, 5, runningStressScore, labelRSS, "", null);
