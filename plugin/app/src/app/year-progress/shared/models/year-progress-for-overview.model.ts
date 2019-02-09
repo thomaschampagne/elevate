@@ -8,6 +8,6 @@ export class YearProgressForOverviewModel {
 	public selectedYears: number[];
 	public selectedActivityTypes: string[];
 	public yearProgressStyleModel: YearProgressStyleModel;
-	public yearProgressModels: YearProgressModel[]; // Progress for each year
+	public yearProgressions: YearProgressModel[]; // Progress for each year
 	public progressTypes: YearProgressTypeModel[];
 }

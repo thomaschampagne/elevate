@@ -26,7 +26,7 @@ describe("YearProgressOverviewDialogComponent", () => {
 		selectedYears: [2017, 2016],
 		selectedActivityTypes: ["Ride", "Run"],
 		yearProgressStyleModel: new YearProgressStyleModel(yearsColorsMap, colors),
-		yearProgressModels: [],
+		yearProgressions: [],
 		progressTypes: []
 	};
 

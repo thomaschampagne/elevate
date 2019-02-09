@@ -3,16 +3,16 @@ import { YearProgressModel } from "../shared/models/year-progress.model";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import * as moment from "moment";
 import { Moment } from "moment";
-import { ProgressionAtDayModel } from "../shared/models/progression-at-date.model";
+import { ProgressAtDayModel } from "../shared/models/progress-at-date.model";
 import { YearProgressService } from "../shared/services/year-progress.service";
-import { ProgressType } from "../shared/models/progress-type.enum";
+import { ProgressType } from "../shared/enums/progress-type.enum";
 import * as _ from "lodash";
 import { ProgressionAtDayRow } from "./models/progression-at-day-row.model";
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
 import { DeltaType } from "./models/delta-type.enum";
 import { MatTableDataSource } from "@angular/material";
 import { Delta } from "./models/delta.model";
-import { TargetProgressionModel } from "../shared/models/target-progression.model";
+import { TargetProgressModel } from "../shared/models/target-progress.model";
 
 @Component({
 	selector: "app-year-progress-table",
@@ -45,7 +45,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 	public todayMoment: Moment;
 	public momentWatched: Moment;
 	public currentYear: number;
-	public currentYearProgressionAtDayModel: ProgressionAtDayModel;
+	public currentYearProgressAtDayModel: ProgressAtDayModel;
 	public dataSource: MatTableDataSource<ProgressionAtDayRow>;
 	public initialized = false;
 
@@ -58,11 +58,11 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 	@Input("selectedProgressType")
 	public selectedProgressType: YearProgressTypeModel;
 
-	@Input("yearProgressModels")
-	public yearProgressModels: YearProgressModel[];
+	@Input("yearProgressions")
+	public yearProgressions: YearProgressModel[];
 
-	@Input("targetProgressionModels")
-	public targetProgressionModels: TargetProgressionModel[];
+	@Input("targetProgressModels")
+	public targetProgressModels: TargetProgressModel[];
 
 	@Input("yearProgressStyleModel")
 	public yearProgressStyleModel: YearProgressStyleModel;
@@ -105,7 +105,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 
 	public ngOnChanges(changes: SimpleChanges): void {
 
-		if (this.targetProgressionModels) { // Has target given?
+		if (this.targetProgressModels) { // Has target given?
 
 			// Add delta target column if not in current columns
 			const hasDeltaTargetColumn = _.indexOf(this.displayedColumns, YearProgressTableComponent.COLUMN_DELTA_CURRENT_TARGET) !== -1;
@@ -130,7 +130,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 	public updateData(): void {
 
 		// Find progressions for moment watched on current year
-		this.currentYearProgressionAtDayModel = _.first(this.yearProgressService.findProgressionsAtDay(this.yearProgressModels,
+		this.currentYearProgressAtDayModel = _.first(this.yearProgressService.findProgressionsAtDay(this.yearProgressions,
 			this.momentWatched,
 			this.selectedProgressType.type,
 			[this.currentYear],
@@ -138,7 +138,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 
 
 		// Find progressions for moment watched on selected years
-		const progressionAtDayModels: ProgressionAtDayModel[] = this.yearProgressService.findProgressionsAtDay(this.yearProgressModels,
+		const progressAtDayModels: ProgressAtDayModel[] = this.yearProgressService.findProgressionsAtDay(this.yearProgressions,
 			this.momentWatched,
 			this.selectedProgressType.type,
 			this.selectedYears,
@@ -146,32 +146,32 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 
 		// If target progression given, seek for target model of watched day.
 		// It includes the value that athlete should reach at that day to respect target
-		const targetProgressionModel = (this.targetProgressionModels) ? _.find(this.targetProgressionModels, {
+		const targetProgressModel = (this.targetProgressModels) ? _.find(this.targetProgressModels, {
 			dayOfYear: this.momentWatched.dayOfYear()
 		}) : null;
 
 		this.dataSource = new MatTableDataSource<ProgressionAtDayRow>(); // Force table to refresh with new instantiation.
-		this.dataSource.data = this.rows(progressionAtDayModels, targetProgressionModel);
+		this.dataSource.data = this.rows(progressAtDayModels, targetProgressModel);
 	}
 
-	public rows(progressionAtDayModels: ProgressionAtDayModel[], targetProgressionModel: TargetProgressionModel): ProgressionAtDayRow[] {
+	public rows(progressAtDayModels: ProgressAtDayModel[], targetProgressModel: TargetProgressModel): ProgressionAtDayRow[] {
 
 		const progressionAtDayRows: ProgressionAtDayRow[] = [];
 
-		_.forEach(progressionAtDayModels, (progressionAtDayModel: ProgressionAtDayModel, index: number) => {
+		_.forEach(progressAtDayModels, (progressAtDayModel: ProgressAtDayModel, index: number) => {
 
 			// Calculate values and deltas
-			const previousYearProgressAtDay: ProgressionAtDayModel = progressionAtDayModels[index + 1];
-			const deltaPreviousYear: Delta = this.getDeltaValueBetween(progressionAtDayModel, previousYearProgressAtDay);
-			const deltaCurrentYear: Delta = this.getDeltaValueBetween(progressionAtDayModel, this.currentYearProgressionAtDayModel);
-			const deltaTarget: Delta = (targetProgressionModel) ? this.getDeltaFromTarget(progressionAtDayModel, targetProgressionModel) : null;
+			const previousYearProgressAtDay: ProgressAtDayModel = progressAtDayModels[index + 1];
+			const deltaPreviousYear: Delta = this.getDeltaValueBetween(progressAtDayModel, previousYearProgressAtDay);
+			const deltaCurrentYear: Delta = this.getDeltaValueBetween(progressAtDayModel, this.currentYearProgressAtDayModel);
+			const deltaTarget: Delta = (targetProgressModel) ? this.getDeltaFromTarget(progressAtDayModel, targetProgressModel) : null;
 
 			const progressionAtDayRow: ProgressionAtDayRow = {
-				year: progressionAtDayModel.year,
-				color: progressionAtDayModel.color,
+				year: progressAtDayModel.year,
+				color: progressAtDayModel.color,
 				progressTypeLabel: this.selectedProgressType.label,
 				progressTypeUnit: (this.selectedProgressType.shortUnit) ? this.selectedProgressType.shortUnit : "",
-				currentValue: progressionAtDayModel.value,
+				currentValue: progressAtDayModel.value,
 				deltaPreviousYear: deltaPreviousYear,
 				deltaCurrentYear: deltaCurrentYear,
 				deltaTarget: deltaTarget
@@ -184,9 +184,9 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 		return progressionAtDayRows;
 	}
 
-	public getDeltaFromTarget(progressionAtDayModel: ProgressionAtDayModel, targetProgressionModel: TargetProgressionModel): Delta {
+	public getDeltaFromTarget(progressAtDayModel: ProgressAtDayModel, targetProgressModel: TargetProgressModel): Delta {
 
-		const deltaValue: number = (_.isNumber(targetProgressionModel.value)) ? Math.floor(progressionAtDayModel.value - targetProgressionModel.value) : null;
+		const deltaValue: number = (_.isNumber(targetProgressModel.value)) ? Math.floor(progressAtDayModel.value - targetProgressModel.value) : null;
 
 		let deltaType: DeltaType;
 		let deltaSignSymbol: string;
@@ -206,19 +206,19 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 
 		return {
 			type: deltaType,
-			date: (progressionAtDayModel) ? moment(progressionAtDayModel.date).format("MMMM DD, YYYY") : null,
+			date: (progressAtDayModel) ? moment(progressAtDayModel.date).format("MMMM DD, YYYY") : null,
 			value: (!_.isNull(deltaValue)) ? Math.abs(deltaValue) : null,
 			signSymbol: deltaSignSymbol,
-			class: (progressionAtDayModel.year === this.currentYear && this.momentWatched.dayOfYear() > this.todayMoment.dayOfYear()) ? DeltaType.NAN : deltaType.toString()
+			class: (progressAtDayModel.year === this.currentYear && this.momentWatched.dayOfYear() > this.todayMoment.dayOfYear()) ? DeltaType.NAN : deltaType.toString()
 		};
 
 	}
 
-	public getDeltaValueBetween(progressionAtDayModel_A: ProgressionAtDayModel, progressionAtDayModel_B: ProgressionAtDayModel): Delta {
+	public getDeltaValueBetween(progressAtDayModel_A: ProgressAtDayModel, progressAtDayModel_B: ProgressAtDayModel): Delta {
 
-		const isSameYearComparison = (progressionAtDayModel_A && progressionAtDayModel_B && progressionAtDayModel_A.year === progressionAtDayModel_B.year);
-		const B_value: number = (progressionAtDayModel_B && _.isNumber(progressionAtDayModel_B.value)) ? progressionAtDayModel_B.value : null;
-		const deltaValue: number = (_.isNumber(B_value)) ? (progressionAtDayModel_A.value - B_value) : null;
+		const isSameYearComparison = (progressAtDayModel_A && progressAtDayModel_B && progressAtDayModel_A.year === progressAtDayModel_B.year);
+		const B_value: number = (progressAtDayModel_B && _.isNumber(progressAtDayModel_B.value)) ? progressAtDayModel_B.value : null;
+		const deltaValue: number = (_.isNumber(B_value)) ? (progressAtDayModel_A.value - B_value) : null;
 
 		// Sign of delta
 		let deltaType: DeltaType;
@@ -239,7 +239,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 
 		return {
 			type: deltaType,
-			date: (progressionAtDayModel_B) ? moment(progressionAtDayModel_B.date).format("MMMM DD, YYYY") : null,
+			date: (progressAtDayModel_B) ? moment(progressAtDayModel_B.date).format("MMMM DD, YYYY") : null,
 			value: (!_.isNull(deltaValue)) ? Math.abs(deltaValue) : null,
 			signSymbol: deltaSignSymbol,
 			class: deltaType.toString(),
