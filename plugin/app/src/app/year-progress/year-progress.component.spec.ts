@@ -15,7 +15,7 @@ import { SyncedActivityModel } from "@elevate/shared/models";
 import { userSettingsData } from "@elevate/shared/data";
 import { YearProgressModule } from "./year-progress.module";
 import { YearProgressPresetModel } from "./shared/models/year-progress-preset.model";
-import { ProgressType } from "./shared/models/progress-type.enum";
+import { ProgressType } from "./shared/enums/progress-type.enum";
 
 describe("YearProgressComponent", () => {
 
@@ -100,7 +100,7 @@ describe("YearProgressComponent", () => {
 		const colorPalette: string [] = ["red", "blue", "green", "purple", "orange"];
 		const expectedGlobalColors: string [] = ["red", "blue", "green", "purple", "orange", "red", "blue"];
 
-		const yearProgressModels: YearProgressModel[] = [
+		const yearProgressions: YearProgressModel[] = [
 			new YearProgressModel(2011, []),
 			new YearProgressModel(2012, []),
 			new YearProgressModel(2013, []),
@@ -111,7 +111,7 @@ describe("YearProgressComponent", () => {
 		];
 
 		// When
-		const style: YearProgressStyleModel = component.styleFromPalette(yearProgressModels, colorPalette);
+		const style: YearProgressStyleModel = component.styleFromPalette(yearProgressions, colorPalette);
 
 		// Then
 		expect(style.colors).toEqual(expectedGlobalColors);

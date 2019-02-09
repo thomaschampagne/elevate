@@ -1,0 +1,4 @@
+export enum ProgressMode {
+	STANDARD_CUMULATIVE,
+	ROLLING_CUMULATIVE
+}

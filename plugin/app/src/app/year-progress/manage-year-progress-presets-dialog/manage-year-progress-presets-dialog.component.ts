@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { YearProgressService } from "../shared/services/year-progress.service";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatSnackBar, MatTableDataSource } from "@angular/material";
 import { YearProgressPresetModel } from "../shared/models/year-progress-preset.model";
-import { ProgressType } from "../shared/models/progress-type.enum";
+import { ProgressType } from "../shared/enums/progress-type.enum";
 import * as _ from "lodash";
 import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";

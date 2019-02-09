@@ -5,7 +5,7 @@ import { YearProgressModule } from "../year-progress.module";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { AddYearProgressPresetsDialogData } from "../shared/models/add-year-progress-presets-dialog-data";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
-import { ProgressType } from "../shared/models/progress-type.enum";
+import { ProgressType } from "../shared/enums/progress-type.enum";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 

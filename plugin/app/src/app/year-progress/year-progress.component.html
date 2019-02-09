@@ -30,7 +30,17 @@
 				<div fxLayout="column" fxLayoutAlign="start start">
 					<div fxFlex fxFill>
 						<div fxLayout="row" fxLayoutAlign="start center">
-							<mat-form-field fxFlex="150px">
+							<!--							<mat-form-field fxFlex="125px">
+                                                            <mat-select placeholder="Progress Mode (TODO)"
+                                                                        (selectionChange)="onSelectedProgressTypeChange()"
+                                                                        [(ngModel)]="selectedProgressType">
+                                                                <mat-option *ngFor="let progressType of progressTypes" [value]="progressType">
+                                                                    {{progressType.label}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                        <span fxFlex="1"></span>-->
+							<mat-form-field fxFlex="125px">
 								<mat-select placeholder="Progress Type"
 											(selectionChange)="onSelectedProgressTypeChange()"
 											[(ngModel)]="selectedProgressType">
@@ -122,8 +132,8 @@
 				<app-year-progress-graph
 					[selectedYears]="selectedYears"
 					[selectedProgressType]="selectedProgressType"
-					[yearProgressModels]="yearProgressModels"
-					[targetProgressionModels]="targetProgressionModels"
+					[yearProgressions]="yearProgressions"
+					[targetProgressModels]="targetProgressModels"
 					[yearProgressStyleModel]="yearProgressStyleModel">
 				</app-year-progress-graph>
 			</div>
@@ -145,8 +155,8 @@
 				<app-year-progress-table
 					[selectedYears]="selectedYears"
 					[selectedProgressType]="selectedProgressType"
-					[yearProgressModels]="yearProgressModels"
-					[targetProgressionModels]="targetProgressionModels"
+					[yearProgressions]="yearProgressions"
+					[targetProgressModels]="targetProgressModels"
 					[yearProgressStyleModel]="yearProgressStyleModel">
 				</app-year-progress-table>
 			</div>

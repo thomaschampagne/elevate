@@ -5,17 +5,17 @@ import * as moment from "moment";
 import { Moment } from "moment";
 import * as _ from "lodash";
 import { YearProgressModel } from "../shared/models/year-progress.model";
-import { ProgressionModel } from "../shared/models/progression.model";
+import { ProgressModel } from "../shared/models/progress.model";
 import * as d3 from "d3";
 import { MetricsGraphicsEventModel } from "../../shared/models/graphs/metrics-graphics-event.model";
-import { ProgressType } from "../shared/models/progress-type.enum";
+import { ProgressType } from "../shared/enums/progress-type.enum";
 import { GraphPointModel } from "../../shared/models/graphs/graph-point.model";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import { Subscription } from "rxjs";
 import { WindowService } from "../../shared/services/window/window.service";
 import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
 import { YearProgressService } from "../shared/services/year-progress.service";
-import { TargetProgressionModel } from "../shared/models/target-progression.model";
+import { TargetProgressModel } from "../shared/models/target-progress.model";
 
 @Component({
 	selector: "app-year-progress-graph",
@@ -41,11 +41,11 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	@Input("selectedProgressType")
 	public selectedProgressType: YearProgressTypeModel;
 
-	@Input("yearProgressModels")
-	public yearProgressModels: YearProgressModel[];
+	@Input("yearProgressions")
+	public yearProgressions: YearProgressModel[];
 
-	@Input("targetProgressionModels")
-	public targetProgressionModels: TargetProgressionModel[];
+	@Input("targetProgressModels")
+	public targetProgressModels: TargetProgressModel[];
 
 	@Input("yearProgressStyleModel")
 	public yearProgressStyleModel: YearProgressStyleModel;
@@ -114,7 +114,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		// Prepare years lines
 		const yearLines: GraphPointModel[][] = [];
 
-		_.forEach(this.yearProgressModels, (yearProgressModel: YearProgressModel) => {
+		_.forEach(this.yearProgressions, (yearProgressModel: YearProgressModel) => {
 
 			const isYearSelected = (_.indexOf(this.selectedYears, yearProgressModel.year) !== -1);
 
@@ -122,28 +122,28 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 				const yearLine: GraphPointModel[] = [];
 
-				_.forEach(yearProgressModel.progressions, (progressionModel: ProgressionModel) => {
+				_.forEach(yearProgressModel.progressions, (progressModel: ProgressModel) => {
 
 					const graphPoint: Partial<GraphPointModel> = {
-						date: moment().dayOfYear(progressionModel.dayOfYear).format("YYYY-MM-DD"),
-						hidden: progressionModel.isFuture
+						date: moment().dayOfYear(progressModel.dayOfYear).format("YYYY-MM-DD"),
+						hidden: progressModel.isFuture
 					};
 
 					switch (this.selectedProgressType.type) {
 						case ProgressType.DISTANCE:
-							graphPoint.value = progressionModel.totalDistance;
+							graphPoint.value = progressModel.distance;
 							break;
 
 						case ProgressType.TIME:
-							graphPoint.value = progressionModel.totalTime;
+							graphPoint.value = progressModel.time;
 							break;
 
 						case ProgressType.ELEVATION:
-							graphPoint.value = progressionModel.totalElevation; // meters
+							graphPoint.value = progressModel.elevation; // meters
 							break;
 
 						case ProgressType.COUNT:
-							graphPoint.value = progressionModel.count;
+							graphPoint.value = progressModel.count;
 							break;
 
 						default:
@@ -162,15 +162,15 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		this.viewableYearProgressDataModel.setGraphicsYearLines(yearLines);
 
 		// Prepare target line
-		if (this.targetProgressionModels) {
+		if (this.targetProgressModels) {
 
 			const targetLine: GraphPointModel[] = [];
 
-			_.forEach(this.targetProgressionModels, (targetProgressionModel: TargetProgressionModel) => {
+			_.forEach(this.targetProgressModels, (targetProgressModel: TargetProgressModel) => {
 
 				const graphPoint: Partial<GraphPointModel> = {
-					date: moment().dayOfYear(targetProgressionModel.dayOfYear).format("YYYY-MM-DD"),
-					value: targetProgressionModel.value,
+					date: moment().dayOfYear(targetProgressModel.dayOfYear).format("YYYY-MM-DD"),
+					value: targetProgressModel.value,
 					hidden: false
 				};
 
@@ -212,7 +212,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		this.graphConfig.markers = this.viewableYearProgressDataModel.markers;
 
 		// Has target progress?
-		if (this.targetProgressionModels) {
+		if (this.targetProgressModels) {
 			this.graphConfig.data.unshift(this.viewableYearProgressDataModel.targetLine); // Append first target progress
 			this.graphConfig.colors.unshift(YearProgressGraphComponent.GRAPH_TARGET_LINE_COLOR); // Append first target line color
 		}

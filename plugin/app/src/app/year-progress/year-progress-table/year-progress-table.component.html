@@ -99,7 +99,7 @@
 		<mat-cell *matCellDef="let progressionAtDay">
 
 			<!--Test ProgressType-->
-			<span *ngIf="targetProgressionModels"
+			<span *ngIf="targetProgressModels"
 				  [ngSwitch]="selectedProgressType.type"
 				  [ngClass]="progressionAtDay.deltaTarget.class"
 				  matTooltip="Compared to current target">

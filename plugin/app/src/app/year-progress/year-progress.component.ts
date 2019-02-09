@@ -4,7 +4,7 @@ import { YearProgressService } from "./shared/services/year-progress.service";
 import { ActivityCountByTypeModel } from "./shared/models/activity-count-by-type.model";
 import { YearProgressModel } from "./shared/models/year-progress.model";
 import { YearProgressTypeModel } from "./shared/models/year-progress-type.model";
-import { ProgressType } from "./shared/models/progress-type.enum";
+import { ProgressType } from "./shared/enums/progress-type.enum";
 import { YearProgressStyleModel } from "./year-progress-graph/models/year-progress-style.model";
 import { Moment } from "moment";
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
@@ -21,10 +21,19 @@ import { AddYearProgressPresetsDialogComponent } from "./add-year-progress-prese
 import { AddYearProgressPresetsDialogData } from "./shared/models/add-year-progress-presets-dialog-data";
 import { ManageYearProgressPresetsDialogComponent } from "./manage-year-progress-presets-dialog/manage-year-progress-presets-dialog.component";
 import { YearProgressPresetModel } from "./shared/models/year-progress-preset.model";
-import { TargetProgressionModel } from "./shared/models/target-progression.model";
+import { TargetProgressModel } from "./shared/models/target-progress.model";
 import { YearProgressPresetsDialogResponse } from "./shared/models/year-progress-presets-dialog-response.model";
+import { StandardProgressConfigModel } from "./shared/models/standard-progress-config.model";
 
+/* Legacy tasks */
 // TODO Style of target line !
+// TODO Refresh on external update event!
+
+/* Rolling Streak Mode Tasks */
+
+// TODO Provide 2 modes : "Standard Cumulative Mode" & "Rolling Cumulative Mode"
+// TODO (Rolling Cumulative Mode) Rolling value in days >= 1. (days, months, years) and a number
+// TODO (Rolling Cumulative Mode) User input => Select (days, months, years) + Number input for Rolling length
 
 @Component({
 	selector: "app-year-progress",
@@ -67,8 +76,8 @@ export class YearProgressComponent implements OnInit {
 	public includeIndoorRide: boolean;
 	public targetValue: number;
 	public isMetric: boolean;
-	public yearProgressModels: YearProgressModel[]; // Progress for each year
-	public targetProgressionModels: TargetProgressionModel[]; // Progress of target on current year
+	public yearProgressions: YearProgressModel[]; // Progress for each year
+	public targetProgressModels: TargetProgressModel[]; // Progress of target on current year
 	public syncedActivityModels: SyncedActivityModel[]; // Stored synced activities
 	public yearProgressStyleModel: YearProgressStyleModel;
 	public momentWatched: Moment;
@@ -173,13 +182,13 @@ export class YearProgressComponent implements OnInit {
 		this.targetValue = this.getTargetValuePref();
 
 		// Compute years progression
-		this.yearProgressions();
+		this.computeYearProgressions();
 
 		// Compute target progression
 		this.targetProgression();
 
 		// Get color style for years
-		this.yearProgressStyleModel = this.styleFromPalette(this.yearProgressModels, YearProgressComponent.PALETTE);
+		this.yearProgressStyleModel = this.styleFromPalette(this.yearProgressions, YearProgressComponent.PALETTE);
 
 		this.isProgressionInitialized = true;
 
@@ -193,20 +202,23 @@ export class YearProgressComponent implements OnInit {
 		});
 	}
 
-	public yearProgressions(): void {
-		this.yearProgressModels = this.yearProgressService.yearProgression(this.syncedActivityModels,
-			this.selectedActivityTypes,
-			null, // All Years
-			this.isMetric,
-			this.includeCommuteRide,
-			this.includeIndoorRide);
+	public computeYearProgressions(): void {
+
+		const progressConfig = new StandardProgressConfigModel(this.selectedActivityTypes, [], this.isMetric,
+			this.includeCommuteRide, this.includeIndoorRide);
+
+		// const progressConfig = new RollingProgressConfigModel(this.selectedActivityTypes, [], this.isMetric,
+		// 	this.includeCommuteRide, this.includeIndoorRide, 30);
+
+		this.yearProgressions = this.yearProgressService.progressions(progressConfig, this.syncedActivityModels);
+
 	}
 
 	public targetProgression(): void {
 		if (_.isNumber(this.targetValue)) {
-			this.targetProgressionModels = this.yearProgressService.targetProgression((new Date()).getFullYear(), this.targetValue);
+			this.targetProgressModels = this.yearProgressService.targetProgression((new Date()).getFullYear(), this.targetValue);
 		} else {
-			this.targetProgressionModels = null;
+			this.targetProgressModels = null;
 		}
 	}
 
@@ -232,25 +244,25 @@ export class YearProgressComponent implements OnInit {
 
 	public onSelectedActivityTypesChange(): void {
 		if (this.selectedActivityTypes.length > 0) {
-			this.yearProgressions();
+			this.computeYearProgressions();
 			this.persistActivityTypesPref(this.selectedActivityTypes);
 		}
 	}
 
 	public onSelectedYearsChange(): void {
 		if (this.selectedYears.length > 0) {
-			this.yearProgressions();
+			this.computeYearProgressions();
 			localStorage.setItem(YearProgressComponent.LS_SELECTED_YEARS_KEY, JSON.stringify(this.selectedYears));
 		}
 	}
 
 	public onIncludeCommuteRideToggle(): void {
-		this.yearProgressions();
+		this.computeYearProgressions();
 		this.persistCommuteRidesPref(this.includeCommuteRide);
 	}
 
 	public onIncludeIndoorRideToggle(): void {
-		this.yearProgressions();
+		this.computeYearProgressions();
 		this.persistIndoorRidesPref(this.includeIndoorRide);
 	}
 
@@ -261,7 +273,7 @@ export class YearProgressComponent implements OnInit {
 			selectedYears: this.selectedYears,
 			selectedActivityTypes: this.selectedActivityTypes,
 			progressTypes: this.progressTypes,
-			yearProgressModels: this.yearProgressModels,
+			yearProgressions: this.yearProgressions,
 			yearProgressStyleModel: this.yearProgressStyleModel
 		};
 
@@ -375,16 +387,16 @@ export class YearProgressComponent implements OnInit {
 
 	/**
 	 *
-	 * @param {YearProgressModel[]} yearProgressModels
+	 * @param {YearProgressModel[]} yearProgressions
 	 * @param {string[]} colorPalette
 	 * @returns {YearProgressStyleModel}
 	 */
-	public styleFromPalette(yearProgressModels: YearProgressModel[], colorPalette: string[]): YearProgressStyleModel {
+	public styleFromPalette(yearProgressions: YearProgressModel[], colorPalette: string[]): YearProgressStyleModel {
 
 		const yearsColorsMap = new Map<number, string>();
 		const colors: string[] = [];
 
-		_.forEach(yearProgressModels, (yearProgressModel: YearProgressModel, index) => {
+		_.forEach(yearProgressions, (yearProgressModel: YearProgressModel, index) => {
 			const color = colorPalette[index % colorPalette.length];
 			yearsColorsMap.set(yearProgressModel.year, color);
 			colors.push(color);

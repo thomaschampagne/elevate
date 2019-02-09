@@ -8,7 +8,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import { YearProgressService } from "../shared/services/year-progress.service";
 import { YearProgressPresetModel } from "../shared/models/year-progress-preset.model";
-import { ProgressType } from "../shared/models/progress-type.enum";
+import { ProgressType } from "../shared/enums/progress-type.enum";
 
 describe("ManageYearProgressPresetsDialogComponent", () => {
 
