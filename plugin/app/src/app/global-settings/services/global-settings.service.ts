@@ -274,21 +274,6 @@ export class GlobalSettingsService {
 			min: 0,
 		}],
 	}, {
-		title: "Elevate Year progression targets for " + (new Date()).getFullYear(),
-		options: [{
-			key: "targetsYearRide",
-			type: "number",
-			title: "Cycling distance target for " + (new Date()).getFullYear(),
-			labels: ["Cycling"],
-			min: 0,
-		}, {
-			key: "targetsYearRun",
-			type: "number",
-			title: "Running distance target for " + (new Date()).getFullYear(),
-			labels: ["Running"],
-			min: 0,
-		}],
-	}, {
 		title: "Hidden/Beta features",
 		options: [{
 			key: "showHiddenBetaFeatures",
