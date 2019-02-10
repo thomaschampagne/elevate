@@ -248,7 +248,7 @@ export class Elevate {
 			$("#pluginInstallOrUpgrade").hide();
 			$("#pluginInstallOrUpgrade").slideDown(450);
 
-			let counter = 25000;
+			let counter = 30000;
 			const refresh = 1000;
 			$("#pluginInstallOrUpgrade_counter").html((("0" + (counter / 1000)).slice(-2)));
 			const counterInterval = setInterval(() => {
