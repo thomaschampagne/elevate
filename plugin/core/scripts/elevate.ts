@@ -20,7 +20,6 @@ import { ActivitySegmentTimeComparisonModifier } from "./modifiers/activity-segm
 import { ActivityStravaMapTypeModifier } from "./modifiers/activity-strava-map-type.modifier";
 import { AthleteStatsModifier } from "./modifiers/athlete-stats.modifier";
 import { DefaultLeaderBoardFilterModifier } from "./modifiers/default-leader-board-filter.modifier";
-import { DisplayFlyByFeedModifier } from "./modifiers/display-flyby-feed.modifier";
 import { AbstractExtendedDataModifier } from "./modifiers/extended-stats/abstract-extended-data.modifier";
 import { CyclingExtendedDataModifier } from "./modifiers/extended-stats/cycling-extended-data.modifier";
 import { RunningExtendedDataModifier } from "./modifiers/extended-stats/running-extended-data.modifier";
@@ -50,7 +49,7 @@ import * as Q from "q";
 import { AthleteUpdate } from "./utils/athlete-update";
 import "./follow";
 import * as Cookies from "js-cookie";
-import { ActivityFeedModifier } from "./modifiers/activity-feed-modifier";
+import { ActivitiesChronologicalFeedModifier } from "./modifiers/activities-chronological-feed-modifier";
 import { AthleteModelResolver } from "@elevate/shared/resolvers";
 import { releaseNotesData } from "@elevate/shared/data";
 
@@ -110,51 +109,45 @@ export class Elevate {
 			// Init "elevate bridge"
 			window.__elevate_bridge__ = {}; // TODO Find another solution
 
-			if (CoreEnv.debugMode) {
-				console.log("Handling " + window.location.pathname);
-			}
-
 			// Common
 			this.handleMenu();
-			// this.handleRemoteLinks();
+			this.handleRemoteLinks();
 			this.handleWindyTyModifier();
 			this.handleReliveCCModifier();
-			// this.handleDefaultLeaderboardFilter();
-			// this.handleSegmentRankPercentage();
-			// this.handleSegmentHRAP();
-			// this.handleActivityStravaMapType();
-			// this.handleActivityFeedModifier();
-			// this.handleHideFeed();
-			// this.handleDisplayFlyByFeedModifier();
-			// this.handleOnFlyActivitiesSync();
+			this.handleDefaultLeaderboardFilter();
+			this.handleSegmentRankPercentage();
+			this.handleSegmentHRAP();
+			this.handleActivityStravaMapType();
+			this.handleActivitiesChronologicalFeedModifier();
+			this.handleHideFeed();
+			this.handleOnFlyActivitiesSync();
 			this.handleActivitiesSyncFromOutside();
-			//
-			// // Bike
+
+			// Bike
 			this.handleExtendedActivityData();
 			this.handleExtendedSegmentEffortData();
-			// this.handleNearbySegments();
-			// this.handleActivityBikeOdo();
-			// this.handleActivitySegmentTimeComparison();
+			this.handleNearbySegments();
+			this.handleActivityBikeOdo();
+			this.handleActivitySegmentTimeComparison();
 			this.handleActivityBestSplits();
-			//
-			// // Run
-			// this.handleRunningGradeAdjustedPace();
-			// this.handleRunningHeartRate();
-			// this.handleRunningCadence();
-			// this.handleRunningTemperature();
-			// this.handleRunningAnalysisGraph();
-			//
-			// // All activities
-			// this.handleActivityQRCodeDisplay();
-			// this.handleVirtualPartner();
-			// this.handleAthletesStats();
-			// this.handleActivitiesSummary();
-			//
-			// // Must be done at the end
-			// this.handleTrackTodayIncomingConnection();
-			// this.handleAthleteUpdate();
-			// this.saveAthleteId();
-			// this.handleGoogleMapsComeBackModifier();
+
+			// Run
+			this.handleRunningGradeAdjustedPace();
+			this.handleRunningHeartRate();
+			this.handleRunningCadence();
+			this.handleRunningTemperature();
+			this.handleRunningAnalysisGraph();
+
+			// All activities
+			this.handleActivityQRCodeDisplay();
+			this.handleVirtualPartner();
+			this.handleAthletesStats();
+
+			// Must be done at the end
+			this.handleTrackTodayIncomingConnection();
+			this.handleAthleteUpdate();
+			this.saveAthleteId();
+			this.handleGoogleMapsComeBackModifier();
 		});
 	}
 
@@ -371,28 +364,8 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleAthletesStats()");
-		}
-
 		const athleteStatsModifier: AthleteStatsModifier = new AthleteStatsModifier(this.appResources);
 		athleteStatsModifier.modify();
-	}
-
-	public handleActivitiesSummary(): void {
-
-		/* DISABLE WEEKLY TOTALS ACTIVITY SUMMARY. Coming soon inside dashboard.
-
-         // If we are not on the athletes page then return...
-         if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId + "$", "g"))) {
-         return;
-         }
-
-         if (env.debugMode) console.log("Execute handleActivitiesSummary()");
-
-         let activitiesSummaryModifier: ActivitiesSummaryModifier = new ActivitiesSummaryModifier();
-         activitiesSummaryModifier.modify();
-         */
 	}
 
 	public handlePreviewRibbon(): void {
@@ -402,10 +375,6 @@ export class Elevate {
 	}
 
 	public handleMenu(): void {
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleMenu()");
-		}
 
 		const menuModifier: MenuModifier = new MenuModifier(this.athleteId, this.appResources);
 		menuModifier.modify();
@@ -420,10 +389,6 @@ export class Elevate {
 		// If we are not on a segment or activity page then return...
 		if (!this.pageMatches.segment && !this.pageMatches.activity) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleRemoteLinks()");
 		}
 
 		const remoteLinksModifier: RemoteLinksModifier = new RemoteLinksModifier(this.appResources, (this.activityAthleteId === this.athleteId), this.activityId);
@@ -453,10 +418,6 @@ export class Elevate {
 		// If home trainer skip (it will use gps data to locate weather data)
 		if (window.pageView.activity().get("trainer")) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleWindyTyModifier()");
 		}
 
 		const windyTyModifier: WindyTyModifier = new WindyTyModifier(this.activityId, this.appResources, this.userSettings);
@@ -490,10 +451,6 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleReliveCCModifier()");
-		}
-
 		const reliveCCModifier: ReliveCCModifier = new ReliveCCModifier(this.activityId);
 		reliveCCModifier.modify();
 	}
@@ -512,10 +469,6 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleDefaultLeaderboardFilter()");
-		}
-
 		const defaultLeaderBoardFilterModifier: DefaultLeaderBoardFilterModifier = new DefaultLeaderBoardFilterModifier(this.userSettings.defaultLeaderBoardFilter);
 		defaultLeaderBoardFilterModifier.modify();
 	}
@@ -527,12 +480,8 @@ export class Elevate {
 		}
 
 		// If we are not on a segment page then return...
-		if (!window.location.pathname.match(/^\/segments\/(\d+)$/)) {
+		if (!this.pageMatches.segment) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleSegmentRankPercentage()");
 		}
 
 		const segmentRankPercentage: SegmentRankPercentageModifier = new SegmentRankPercentageModifier();
@@ -546,12 +495,8 @@ export class Elevate {
 		}
 
 		// If we are not on a segment page then return...
-		if (!window.location.pathname.match(/^\/segments\/(\d+)$/)) {
+		if (!this.pageMatches.segment) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleSegmentHRAP_()");
 		}
 
 		const athleteModel = this.athleteModelResolver.getCurrent(); // TODO Could be improved by using AthleteModel at each dates
@@ -570,10 +515,6 @@ export class Elevate {
 		// Test where are on an activity...
 		if (!this.pageMatches.activity) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleActivityStravaMapType()");
 		}
 
 		const activityStravaMapTypeModifier: ActivityStravaMapTypeModifier = new ActivityStravaMapTypeModifier(this.userSettings.activityStravaMapType);
@@ -597,15 +538,11 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleHideFeed()");
-		}
-
 		const hideFeedModifier: HideFeedModifier = new HideFeedModifier(this.userSettings);
 		hideFeedModifier.modify();
 	}
 
-	public handleActivityFeedModifier(): void {
+	public handleActivitiesChronologicalFeedModifier(): void {
 		if (!this.pageMatches.dashboard) {
 			return;
 		}
@@ -614,27 +551,8 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleActivityFeedModifier()");
-		}
-
-		const activityFeedModifier: ActivityFeedModifier = new ActivityFeedModifier(this.userSettings);
+		const activityFeedModifier: ActivitiesChronologicalFeedModifier = new ActivitiesChronologicalFeedModifier(this.userSettings);
 		activityFeedModifier.modify();
-	}
-
-	public handleDisplayFlyByFeedModifier(): void {
-
-		// Test if where are on dashboard page
-		if (!this.pageMatches.dashboard) {
-			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleDisplayFlyByFeedModifier()");
-		}
-
-		const displayFlyByFeedModifier: DisplayFlyByFeedModifier = new DisplayFlyByFeedModifier();
-		displayFlyByFeedModifier.modify();
 	}
 
 	public handleExtendedActivityData(): void {
@@ -659,10 +577,6 @@ export class Elevate {
 		}
 
 		const activityProcessor = new ActivityProcessor(this.vacuumProcessor, this.athleteModelResolver, this.appResources, this.userSettings, activityInfo);
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleExtendedData_()");
-		}
 
 		let extendedDataModifier: AbstractExtendedDataModifier;
 
@@ -798,19 +712,11 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleNearbySegments()");
-		}
-
 		// Getting segment id
 		const segmentId: number = parseInt(segmentData[1]);
 
 		const segmentProcessor: SegmentProcessor = new SegmentProcessor(this.vacuumProcessor, segmentId);
 		segmentProcessor.getNearbySegmentsAround((jsonSegments: ISegmentInfo[]) => {
-
-			if (CoreEnv.debugMode) {
-				console.log(jsonSegments);
-			}
 
 			const nearbySegmentsModifier: NearbySegmentsModifier = new NearbySegmentsModifier(jsonSegments, this.appResources);
 			nearbySegmentsModifier.modify();
@@ -838,10 +744,6 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleActivityBikeOdo()");
-		}
-
 		const bikeOdoProcessor: BikeOdoProcessor = new BikeOdoProcessor(this.vacuumProcessor, this.activityAthleteId);
 		bikeOdoProcessor.getBikeOdoOfAthlete((bikeOdoArray: string[]) => {
 			const activityBikeOdoModifier: ActivityBikeOdoModifier = new ActivityBikeOdoModifier(bikeOdoArray, bikeOdoProcessor.getCacheKey());
@@ -861,14 +763,9 @@ export class Elevate {
 		}
 
 		const activityType: string = window.pageView.activity().get("type");
+
 		// PR only for my own activities
-		const isMyOwn: boolean = (this.athleteId == this.activityAthleteId);
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleActivitySegmentTimeComparison()");
-		}
-
-		const activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings, this.appResources, activityType, isMyOwn);
+		const activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings, this.appResources, activityType, this.isOwner);
 		activitySegmentTimeComparisonModifier.modify();
 
 	}
@@ -892,10 +789,6 @@ export class Elevate {
 		const activityType: string = window.pageView.activity().attributes.type;
 		if (activityType != "Ride") {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleActivityBestSplits()");
 		}
 
 		const activityInfo: ActivityInfoModel = {
@@ -935,10 +828,6 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleRunningGradeAdjustedPace()");
-		}
-
 		const runningGradeAdjustedPace: RunningGradeAdjustedPaceModifier = new RunningGradeAdjustedPaceModifier();
 		runningGradeAdjustedPace.modify();
 	}
@@ -960,10 +849,6 @@ export class Elevate {
 
 		if (!this.pageMatches.activity) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleRunningHeartRate()");
 		}
 
 		const runningHeartRateModifier: RunningHeartRateModifier = new RunningHeartRateModifier();
@@ -989,10 +874,6 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleRunningCadence()");
-		}
-
 		const runningCadenceModifier: RunningCadenceModifier = new RunningCadenceModifier();
 		runningCadenceModifier.modify();
 	}
@@ -1016,10 +897,6 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleRunningHeartRate()");
-		}
-
 		const runningTemperatureModifier: RunningTemperatureModifier = new RunningTemperatureModifier();
 		runningTemperatureModifier.modify();
 	}
@@ -1037,10 +914,6 @@ export class Elevate {
 
 		if (!this.pageMatches.activity) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleRunningAnalysisGraph()");
 		}
 
 		const runningAnalysisGraph: RunningAnalysisGraph = new RunningAnalysisGraph();
@@ -1101,14 +974,7 @@ export class Elevate {
 
 		const userHasConnectSince24Hour: boolean = (Cookies.get("elevate_daily_connection_done") === "true");
 
-		if (CoreEnv.debugMode) {
-			console.log("Cookie 'elevate_daily_connection_done' value found is: " + userHasConnectSince24Hour);
-		}
-
 		if (_.isNull(this.athleteId)) {
-			if (CoreEnv.debugMode) {
-				console.log("athleteId is empty value: " + this.athleteId);
-			}
 			return;
 		}
 
@@ -1132,10 +998,6 @@ export class Elevate {
 			// Push IncomingConnection
 			const eventName: string = accountName + " #" + this.athleteId + " v" + this.appResources.extVersion;
 
-			if (CoreEnv.debugMode) {
-				console.log("Cookie 'elevate_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
-			}
-
 			if (!CoreEnv.debugMode) {
 				follow("send", "event", "DailyConnection", eventAction, eventName);
 			}
@@ -1144,9 +1006,6 @@ export class Elevate {
 			Cookies.set("elevate_daily_connection_done", "true", {expires: 1});
 
 		} else {
-			if (CoreEnv.debugMode) {
-				console.log("Cookie 'elevate_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
-			}
 		}
 	}
 
@@ -1171,16 +1030,12 @@ export class Elevate {
 
 		// Skipping on fly sync because a dedicated sync has been asked by user
 		if (window.location.search.match("elevateSync")) {
+			console.log("Sync Popup. Skip handleOnFlyActivitiesSync()");
 			return;
 		}
 
 		if (window.location.pathname.match("login") || window.location.pathname.match("upload")) {
 			console.log("Login or upload page. Skip handleOnFlyActivitiesSync()");
-			return;
-		}
-
-		if (window.location.search.match("elevateSync")) {
-			console.log("Sync Popup. Skip handleOnFlyActivitiesSync()");
 			return;
 		}
 

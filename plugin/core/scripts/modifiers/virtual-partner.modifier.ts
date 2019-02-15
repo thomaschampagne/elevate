@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import * as $ from "jquery";
 import { CourseMaker, ExportTypes, ICourseBounds } from "../processors/course-marker";
 import { VacuumProcessor } from "../processors/vacuum-processor";
-import { ActivitySourceDataModel, ActivityStreamsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, ActivitySourceDataModel, ActivityStreamsModel } from "@elevate/shared/models";
 import { AbstractModifier } from "./abstract.modifier";
 
 export class VirtualPartnerModifier extends AbstractModifier {
@@ -115,7 +115,11 @@ export class VirtualPartnerModifier extends AbstractModifier {
 
 		this.getSegmentInfos(effortId, (segmentData: any) => {
 
-			this.vacuumProcessor.getActivityStream(null, (activitySourceData: ActivitySourceDataModel, activityStream: ActivityStreamsModel) => { // Get stream on page
+			const activityInfo: ActivityInfoModel = <ActivityInfoModel>{
+				id: this.activityId
+			};
+
+			this.vacuumProcessor.getActivityStream(activityInfo, (activitySourceData: ActivitySourceDataModel, activityStream: ActivityStreamsModel) => { // Get stream on page
 				if (_.isEmpty(activityStream.latlng)) {
 					alert("No GPS Data found");
 					return;
