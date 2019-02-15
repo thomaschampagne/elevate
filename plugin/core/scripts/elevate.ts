@@ -1039,7 +1039,7 @@ export class Elevate {
 			return;
 		}
 
-		const waitBeforeFastSyncSeconds = 2;
+		const waitBeforeFastSyncSeconds = 3;
 		setTimeout(() => {
 
 			// Allow activities sync if previous sync exists and has been done 12 hours or more ago.

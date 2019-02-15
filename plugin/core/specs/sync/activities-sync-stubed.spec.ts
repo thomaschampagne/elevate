@@ -144,7 +144,7 @@ describe("ActivitiesSynchronizer", () => {
 			defer.resolve(data);
 			return defer.promise;
 		});
-		spyOn(activitiesSynchronizer, "getSleepTimeBetweenStreamsCalls").and.returnValue(10); // Sleep 10 ms in test
+		spyOn(activitiesSynchronizer, "getSleepTime").and.returnValue(10); // Sleep 10 ms in test
 
 		/**
 		 * Stub MultipleActivityProcessor:compute. Create fake analysis results
