@@ -1,7 +1,7 @@
 import { Helper } from "../helper";
 import { AppStorage } from "../app-storage";
 import { CoreEnv } from "../../config/core-env";
-import { ActivitiesSynchronizer } from "../processors/activities-synchronizer";
+import { ActivitiesSynchronize } from "../processors/activities-synchronize";
 import { AppStorageType, SyncResultModel } from "@elevate/shared/models";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { HerokuEndpointResolver } from "../resolvers/heroku-endpoint.resolver";
@@ -11,7 +11,7 @@ import { AppStorageUsage } from "../models/app-storage-usage.model";
 
 export class ActivitiesSyncModifier extends AbstractModifier {
 
-	protected activitiesSynchronizer: ActivitiesSynchronizer;
+	protected activitiesSynchronize: ActivitiesSynchronize;
 	protected extensionId: string;
 	protected sourceTabId: number;
 	protected forceSync: boolean;
@@ -19,9 +19,9 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 
 	public closeWindowIntervalId = -1;
 
-	constructor(extensionId: string, activitiesSynchronizer: ActivitiesSynchronizer, fastSync: boolean, forceSync: boolean, sourceTabId?: number) {
+	constructor(extensionId: string, activitiesSynchronize: ActivitiesSynchronize, fastSync: boolean, forceSync: boolean, sourceTabId?: number) {
 		super();
-		this.activitiesSynchronizer = activitiesSynchronizer;
+		this.activitiesSynchronize = activitiesSynchronize;
 		this.extensionId = extensionId;
 		this.sourceTabId = sourceTabId;
 		this.forceSync = forceSync;
@@ -75,7 +75,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 
 			if (this.forceSync) {
 				// Clear previous synced cache and start a new sync
-				this.activitiesSynchronizer.clearSyncCache().then(() => {
+				this.activitiesSynchronize.clearSyncCache().then(() => {
 					this.sync();
 				});
 			} else {
@@ -99,7 +99,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 
 		// Start sync..
 		const syncStart = performance.now();
-		this.activitiesSynchronizer.sync(this.fastSync).then((syncResult: SyncResultModel) => {
+		this.activitiesSynchronize.sync(this.fastSync).then((syncResult: SyncResultModel) => {
 
 			console.log("Sync finished", syncResult);
 
@@ -108,7 +108,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 			$("#totalProgressText").html("100%");
 
 			if (this.fastSync) {
-				ActivitiesSynchronizer.notifyBackgroundSyncDone.call(this, this.extensionId, syncResult);
+				ActivitiesSynchronize.notifyBackgroundSyncDone.call(this, this.extensionId, syncResult);
 				setTimeout(() => {
 					window.close();
 				}, 200);

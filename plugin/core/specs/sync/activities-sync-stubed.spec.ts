@@ -12,7 +12,7 @@ import {
 	UserSettingsModel
 } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
-import { ActivitiesSynchronizer } from "../../scripts/processors/activities-synchronizer";
+import { ActivitiesSynchronize } from "../../scripts/processors/activities-synchronize";
 import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";
 import { StreamActivityModel } from "../../scripts/models/sync/stream-activity.model";
 import { MultipleActivityProcessor } from "../../scripts/processors/multiple-activity-processor";
@@ -20,12 +20,12 @@ import { SyncNotifyModel } from "../../scripts/models/sync/sync-notify.model";
 import { AthleteModelResolver } from "@elevate/shared/resolvers";
 import { userSettingsData } from "@elevate/shared/data";
 
-describe("ActivitiesSynchronizer", () => {
+describe("ActivitiesSynchronize", () => {
 
 	let athleteModelResolver: AthleteModelResolver;
 	let userSettingsMock: UserSettingsModel;
 	let appResourcesMock: AppResourcesModel;
-	let activitiesSynchronizer: ActivitiesSynchronizer;
+	let activitiesSynchronize: ActivitiesSynchronize;
 	let rawPagesOfActivities: Array<{ models: Array<StravaActivityModel>, total: number }>;
 	let CHROME_STORAGE_STUB: { // Fake stubed storage to simulate chrome local storage
 		syncedActivities?: SyncedActivityModel[],
@@ -106,12 +106,12 @@ describe("ActivitiesSynchronizer", () => {
 		];
 		athleteModelResolver = new AthleteModelResolver(userSettingsMock, datedAthleteSettingsModels);
 
-		activitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock, athleteModelResolver);
+		activitiesSynchronize = new ActivitiesSynchronize(appResourcesMock, userSettingsMock, athleteModelResolver);
 
 		/**
 		 * Stubing http calls to strava training pages
 		 */
-		spyOn(activitiesSynchronizer, "httpPageGet").and.callFake((perPage: number, page: number) => {
+		spyOn(activitiesSynchronize, "httpPageGet").and.callFake((perPage: number, page: number) => {
 			const defer = $.Deferred();
 			const rawPagesOfActivity = rawPagesOfActivities[page - 1];
 			if (rawPagesOfActivity) {
@@ -133,7 +133,7 @@ describe("ActivitiesSynchronizer", () => {
 		const stream: any = _.cloneDeep(require("../fixtures/activities/723224273/stream.json"));
 		stream.watts = stream.watts_calc; // because powerMeter is false
 
-		spyOn(activitiesSynchronizer, "fetchStreamByActivityId").and.callFake((activityId: number) => {
+		spyOn(activitiesSynchronize, "fetchStreamByActivityId").and.callFake((activityId: number) => {
 			const defer = Q.defer();
 			const data: any = {};
 			_.forEach(_.keys(stream), (key: string) => {
@@ -144,14 +144,14 @@ describe("ActivitiesSynchronizer", () => {
 			defer.resolve(data);
 			return defer.promise;
 		});
-		spyOn(activitiesSynchronizer, "getSleepTime").and.returnValue(10); // Sleep 10 ms in test
+		spyOn(activitiesSynchronize, "getSleepTime").and.returnValue(10); // Sleep 10 ms in test
 
 		/**
 		 * Stub MultipleActivityProcessor:compute. Create fake analysis results
 		 */
-		spyOn(activitiesSynchronizer.multipleActivityProcessor, "compute").and.callFake((activitiesWithStream: Array<StreamActivityModel>) => {
+		spyOn(activitiesSynchronize.multipleActivityProcessor, "compute").and.callFake((activitiesWithStream: Array<StreamActivityModel>) => {
 			const defer = Q.defer();
-			console.log("Spy activitiesSynchronizer.multipleActivityProcessor:compute called");
+			console.log("Spy activitiesSynchronize.multipleActivityProcessor:compute called");
 			const activitiesComputed: Array<SyncedActivityModel> = [];
 			const fakeAnalysisData: AnalysisDataModel = {
 				moveRatio: null,
@@ -180,40 +180,40 @@ describe("ActivitiesSynchronizer", () => {
 		 * - getLastSyncDateFromLocal
 		 * - clearSyncCache
 		 */
-		spyOn(activitiesSynchronizer, "saveSyncedActivitiesToLocal").and.callFake((syncedActivities: Array<SyncedActivityModel>) => {
+		spyOn(activitiesSynchronize, "saveSyncedActivitiesToLocal").and.callFake((syncedActivities: Array<SyncedActivityModel>) => {
 			const defer = Q.defer();
 			CHROME_STORAGE_STUB.syncedActivities = syncedActivities;
 			defer.resolve();
 			return defer.promise;
 		});
 
-		spyOn(activitiesSynchronizer, "getSyncedActivitiesFromLocal").and.callFake(() => {
+		spyOn(activitiesSynchronize, "getSyncedActivitiesFromLocal").and.callFake(() => {
 			const defer = Q.defer();
 			defer.resolve(CHROME_STORAGE_STUB.syncedActivities);
 			return defer.promise;
 		});
 
-		spyOn(activitiesSynchronizer, "saveLastSyncDateToLocal").and.callFake((timestamp: number) => {
+		spyOn(activitiesSynchronize, "saveLastSyncDateToLocal").and.callFake((timestamp: number) => {
 			const defer = Q.defer();
 			CHROME_STORAGE_STUB.lastSyncDateTime = timestamp;
 			defer.resolve();
 			return defer.promise;
 		});
 
-		spyOn(activitiesSynchronizer, "getLastSyncDateFromLocal").and.callFake(() => {
+		spyOn(activitiesSynchronize, "getLastSyncDateFromLocal").and.callFake(() => {
 			const defer = Q.defer();
 			defer.resolve((CHROME_STORAGE_STUB.lastSyncDateTime) ? CHROME_STORAGE_STUB.lastSyncDateTime : null);
 			return defer.promise;
 		});
 
-		spyOn(activitiesSynchronizer, "clearSyncCache").and.callFake(() => {
+		spyOn(activitiesSynchronize, "clearSyncCache").and.callFake(() => {
 			const defer = Q.defer();
 			CHROME_STORAGE_STUB = {}; // Remove all
 			defer.resolve();
 			return defer.promise;
 		});
 
-		spyOn(activitiesSynchronizer, "getAllSavedLocal").and.callFake(() => {
+		spyOn(activitiesSynchronize, "getAllSavedLocal").and.callFake(() => {
 			const defer = Q.defer();
 			defer.resolve(CHROME_STORAGE_STUB);
 			return defer.promise;
@@ -222,14 +222,14 @@ describe("ActivitiesSynchronizer", () => {
 
 	});
 
-	it("should ensure ActivitiesSynchronizer:getFirstPageRemoteActivities()", (done: Function) => {
+	it("should ensure ActivitiesSynchronize:getFirstPageRemoteActivities()", (done: Function) => {
 
 		// Given
 		const expectedCount = 140;
 		const expectedFirstPageModelCount = 20;
 
 		// When
-		const remoteActivitiesCount = activitiesSynchronizer.getFirstPageRemoteActivities();
+		const remoteActivitiesCount = activitiesSynchronize.getFirstPageRemoteActivities();
 
 		// Then
 		remoteActivitiesCount.then((result: { activitiesCountAllPages: number, firstPageModels: StravaActivityModel[] }) => {
@@ -245,12 +245,12 @@ describe("ActivitiesSynchronizer", () => {
 		});
 	});
 
-	it("should ensure ActivitiesSynchronizer:fetchRawActivitiesRecursive()", (done: Function) => {
+	it("should ensure ActivitiesSynchronize:fetchRawActivitiesRecursive()", (done: Function) => {
 
 		// Give NO last sync date or page + page to read.
-		activitiesSynchronizer.fetchRawActivitiesRecursive(null).then((rawStravaActivities: Array<StravaActivityModel>) => {
+		activitiesSynchronize.fetchRawActivitiesRecursive(null).then((rawStravaActivities: Array<StravaActivityModel>) => {
 
-			expect(activitiesSynchronizer.httpPageGet).toHaveBeenCalled(); // Ensure spy call
+			expect(activitiesSynchronize.httpPageGet).toHaveBeenCalled(); // Ensure spy call
 
 			expect(rawStravaActivities).not.toBeNull();
 			expect(rawStravaActivities.length).toEqual(20 * 7); // 140 > 7 pages
@@ -271,20 +271,20 @@ describe("ActivitiesSynchronizer", () => {
 
 			const fakeRide: StravaActivityModel = _.find(rawStravaActivities, {id: 9999999999}); // Find in page 1
 			expect(fakeRide).toBeUndefined();
-			return activitiesSynchronizer.fetchRawActivitiesRecursive(null, 1, 3);
+			return activitiesSynchronize.fetchRawActivitiesRecursive(null, 1, 3);
 
 		}).then((rawStravaActivities: Array<StravaActivityModel>) => {
-			// expect(activitiesSynchronizer.endReached).toBeFalsy();
+			// expect(activitiesSynchronize.endReached).toBeFalsy();
 			expect(rawStravaActivities.length).toEqual(20 * 3);
-			return activitiesSynchronizer.fetchRawActivitiesRecursive(null, 6, 3); // Can only read page 6 + 7
+			return activitiesSynchronize.fetchRawActivitiesRecursive(null, 6, 3); // Can only read page 6 + 7
 
 		}).then((rawStravaActivities: Array<StravaActivityModel>) => {
-			// expect(activitiesSynchronizer.endReached).toBeTruthy();
+			// expect(activitiesSynchronize.endReached).toBeTruthy();
 			expect(rawStravaActivities.length).toEqual(40); // Page 6 + 7
-			return activitiesSynchronizer.fetchRawActivitiesRecursive(null, 6, 1);
+			return activitiesSynchronize.fetchRawActivitiesRecursive(null, 6, 1);
 
 		}).then((rawStravaActivities: Array<StravaActivityModel>) => {
-			// expect(activitiesSynchronizer.endReached).toBeFalsy();
+			// expect(activitiesSynchronize.endReached).toBeFalsy();
 			expect(rawStravaActivities.length).toEqual(20);
 			done();
 
@@ -296,12 +296,12 @@ describe("ActivitiesSynchronizer", () => {
 		});
 	});
 
-	it("should ensure ActivitiesSynchronizer:fetchWithStream()", (done: Function) => {
+	it("should ensure ActivitiesSynchronize:fetchWithStream()", (done: Function) => {
 
 		// let fromPage = 1, pagesToRead = 3; // read 1 => 3
-		activitiesSynchronizer.fetchWithStream(null, null, null).then((activitiesWithStream: Array<StreamActivityModel>) => {
+		activitiesSynchronize.fetchWithStream(null, null, null).then((activitiesWithStream: Array<StreamActivityModel>) => {
 
-			expect(activitiesSynchronizer.fetchStreamByActivityId).toHaveBeenCalled(); // Ensure spy call
+			expect(activitiesSynchronize.fetchStreamByActivityId).toHaveBeenCalled(); // Ensure spy call
 
 			expect(activitiesWithStream).not.toBeNull();
 			expect(activitiesWithStream.length).toEqual(140);
@@ -316,11 +316,11 @@ describe("ActivitiesSynchronizer", () => {
 			expect(fakeRide).toBeUndefined();
 
 			// Now fetch in pages 4 to 6
-			return activitiesSynchronizer.fetchWithStream(null, 4, 3);
+			return activitiesSynchronize.fetchWithStream(null, 4, 3);
 
 		}).then((activitiesWithStream: Array<StreamActivityModel>) => {
 
-			// Testing activitiesSynchronizer.fetchWithStream(null, 4, 3); => pages 4 to 6
+			// Testing activitiesSynchronize.fetchWithStream(null, 4, 3); => pages 4 to 6
 			expect(activitiesWithStream).not.toBeNull();
 			expect(activitiesWithStream.length).toEqual(60);
 			const jeannieRide: StreamActivityModel = _.find(activitiesWithStream, {id: 718908064}); // Find from page 1, "Pédalage avec Madame Jeannie Longo"
@@ -337,12 +337,12 @@ describe("ActivitiesSynchronizer", () => {
 
 	});
 
-	it("should ensure ActivitiesSynchronizer:fetchAndComputeGroupOfPages()", (done: Function) => {
+	it("should ensure ActivitiesSynchronize:fetchAndComputeGroupOfPages()", (done: Function) => {
 
 		// Getting all pages (7)
-		activitiesSynchronizer.fetchAndComputeGroupOfPages(null, null, null).then((activitiesComputed: Array<SyncedActivityModel>) => {
+		activitiesSynchronize.fetchAndComputeGroupOfPages(null, null, null).then((activitiesComputed: Array<SyncedActivityModel>) => {
 
-			expect(activitiesSynchronizer.multipleActivityProcessor.compute).toHaveBeenCalled(); // Ensure spy call
+			expect(activitiesSynchronize.multipleActivityProcessor.compute).toHaveBeenCalled(); // Ensure spy call
 			expect(activitiesComputed).not.toBeNull();
 			expect(activitiesComputed.length).toEqual(140);
 
@@ -351,7 +351,7 @@ describe("ActivitiesSynchronizer", () => {
 			expect(_.first(activitiesComputed).extendedStats.speedData).toBeNull();
 
 			// Now fetch in pages 7 to 10 (only 7 exists...)
-			return activitiesSynchronizer.fetchAndComputeGroupOfPages(null, 7, 3);
+			return activitiesSynchronize.fetchAndComputeGroupOfPages(null, 7, 3);
 
 		}).then((activitiesComputed: Array<SyncedActivityModel>) => {
 
@@ -371,17 +371,17 @@ describe("ActivitiesSynchronizer", () => {
 		});
 	});
 
-	it("should ensure ActivitiesSynchronizer:computeActivitiesByGroupsOfPages() all pages", (done: Function) => {
+	it("should ensure ActivitiesSynchronize:computeActivitiesByGroupsOfPages() all pages", (done: Function) => {
 
-		expect(activitiesSynchronizer).not.toBeNull();
-		expect(activitiesSynchronizer).not.toBeUndefined();
-		expect(activitiesSynchronizer.computeActivitiesByGroupsOfPages).not.toBeUndefined();
+		expect(activitiesSynchronize).not.toBeNull();
+		expect(activitiesSynchronize).not.toBeUndefined();
+		expect(activitiesSynchronize.computeActivitiesByGroupsOfPages).not.toBeUndefined();
 
 		// Getting all pages here:
-		activitiesSynchronizer.computeActivitiesByGroupsOfPages(null).then((mergedSyncedActivities: Array<SyncedActivityModel>) => {
+		activitiesSynchronize.computeActivitiesByGroupsOfPages(null).then((mergedSyncedActivities: Array<SyncedActivityModel>) => {
 
-			expect(activitiesSynchronizer.getSyncedActivitiesFromLocal).toHaveBeenCalled(); // Ensure spy call
-			expect(activitiesSynchronizer.saveSyncedActivitiesToLocal).toHaveBeenCalled(); // Ensure spy call
+			expect(activitiesSynchronize.getSyncedActivitiesFromLocal).toHaveBeenCalled(); // Ensure spy call
+			expect(activitiesSynchronize.saveSyncedActivitiesToLocal).toHaveBeenCalled(); // Ensure spy call
 
 			expect(mergedSyncedActivities).not.toBeNull();
 			expect(mergedSyncedActivities.length).toEqual(140);
@@ -397,7 +397,7 @@ describe("ActivitiesSynchronizer", () => {
 			const fakeRide: SyncedActivityModel = _.find(mergedSyncedActivities, {id: 9999999999}); // Find fake
 			expect(fakeRide).toBeUndefined();
 
-			expect(activitiesSynchronizer.hasBeenSyncedActivities).not.toBeNull(); // Keep tracking of merged activities instance
+			expect(activitiesSynchronize.hasBeenSyncedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
 			done();
 		});
@@ -405,23 +405,23 @@ describe("ActivitiesSynchronizer", () => {
 
 	it("should sync() when no existing stored synced activities", (done: Function) => {
 
-		expect(activitiesSynchronizer.hasBeenSyncedActivities).toBeNull(); // No mergedSyncedActivities at the moment
+		expect(activitiesSynchronize.hasBeenSyncedActivities).toBeNull(); // No mergedSyncedActivities at the moment
 
-		activitiesSynchronizer.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
+		activitiesSynchronize.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
 			// Check no last sync date
 			expect(_.isNull(savedLastSyncDateTime) || _.isUndefined(savedLastSyncDateTime)).toBeTruthy();
-			return activitiesSynchronizer.getSyncedActivitiesFromLocal();
+			return activitiesSynchronize.getSyncedActivitiesFromLocal();
 		}).then((syncedActivitiesStored: any) => {
 			// Check no syncedActivitiesStored
 			expect(_.isNull(syncedActivitiesStored) || _.isUndefined(syncedActivitiesStored)).toBeTruthy();
-			return activitiesSynchronizer.sync(); // Start sync
+			return activitiesSynchronize.sync(); // Start sync
 		}).then((syncResult: SyncResultModel) => {
 
 			// Sync finished
-			expect(activitiesSynchronizer.getSyncedActivitiesFromLocal).toHaveBeenCalled(); // Ensure spy call
-			expect(activitiesSynchronizer.saveSyncedActivitiesToLocal).toHaveBeenCalled(); // Ensure spy call
-			expect(activitiesSynchronizer.getLastSyncDateFromLocal).toHaveBeenCalledTimes(2); // Ensure spy call
-			expect(activitiesSynchronizer.saveLastSyncDateToLocal).toHaveBeenCalledTimes(1); // Ensure spy call
+			expect(activitiesSynchronize.getSyncedActivitiesFromLocal).toHaveBeenCalled(); // Ensure spy call
+			expect(activitiesSynchronize.saveSyncedActivitiesToLocal).toHaveBeenCalled(); // Ensure spy call
+			expect(activitiesSynchronize.getLastSyncDateFromLocal).toHaveBeenCalledTimes(2); // Ensure spy call
+			expect(activitiesSynchronize.saveLastSyncDateToLocal).toHaveBeenCalledTimes(1); // Ensure spy call
 
 			expect(syncResult.syncedActivities).not.toBeNull();
 			expect(syncResult.syncedActivities.length).toEqual(140);
@@ -437,10 +437,10 @@ describe("ActivitiesSynchronizer", () => {
 			const fakeRide: SyncedActivityModel = _.find(syncResult.syncedActivities, {id: 9999999999}); // Find fake
 			expect(fakeRide).toBeUndefined();
 
-			expect(activitiesSynchronizer.hasBeenSyncedActivities).not.toBeNull(); // Keep tracking of merged activities instance
+			expect(activitiesSynchronize.hasBeenSyncedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
 			// Check lastSyncDate & syncedAthleteProfile
-			return activitiesSynchronizer.getLastSyncDateFromLocal();
+			return activitiesSynchronize.getLastSyncDateFromLocal();
 
 		}).then((savedLastSyncDateTime: number) => {
 
@@ -468,7 +468,7 @@ describe("ActivitiesSynchronizer", () => {
 		// Get a full sync, with nothing stored...
 		// On sync done simulate 2 new added activities on strava.com
 		// Re-sync and test...
-		activitiesSynchronizer.sync().then((syncResult: SyncResultModel) => {
+		activitiesSynchronize.sync().then((syncResult: SyncResultModel) => {
 
 			// Sync is done...
 			expect(CHROME_STORAGE_STUB.syncedActivities).not.toBeNull();
@@ -490,10 +490,10 @@ describe("ActivitiesSynchronizer", () => {
 			expect(_.find(CHROME_STORAGE_STUB.syncedActivities, <any> {id: 644365059})).toBeUndefined();
 			expect(_.find(CHROME_STORAGE_STUB.syncedActivities, <any> {id: 371317512})).toBeUndefined();
 
-			expect(activitiesSynchronizer.hasBeenSyncedActivities).not.toBeNull(); // Keep tracking of merged activities instance
+			expect(activitiesSynchronize.hasBeenSyncedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
 			// Ready for a new sync
-			return activitiesSynchronizer.sync();
+			return activitiesSynchronize.sync();
 
 		}).then((syncResult: SyncResultModel) => {
 
@@ -519,7 +519,7 @@ describe("ActivitiesSynchronizer", () => {
 		// Get a full sync, with nothing stored...
 		// On sync done simulate 1 new added 2 weeks ago
 		// Re-sync and test...
-		activitiesSynchronizer.sync().then((syncResult: SyncResultModel) => {
+		activitiesSynchronize.sync().then((syncResult: SyncResultModel) => {
 
 			// Sync is done...
 			expect(CHROME_STORAGE_STUB.syncedActivities).not.toBeNull();
@@ -538,10 +538,10 @@ describe("ActivitiesSynchronizer", () => {
 			expect(CHROME_STORAGE_STUB.syncedActivities.length).toEqual(syncResult.syncedActivities.length - 1);
 			expect(_.find(CHROME_STORAGE_STUB.syncedActivities, <any> {id: 657225503})).toBeUndefined();
 
-			expect(activitiesSynchronizer.hasBeenSyncedActivities).not.toBeNull(); // Keep tracking of merged activities instance
+			expect(activitiesSynchronize.hasBeenSyncedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
 			// Ready for a new sync
-			return activitiesSynchronizer.sync();
+			return activitiesSynchronize.sync();
 
 		}).then((syncResult: SyncResultModel) => {
 
@@ -562,7 +562,7 @@ describe("ActivitiesSynchronizer", () => {
 			expect(_.find(CHROME_STORAGE_STUB.syncedActivities, <any> {id: 367463594})).toBeUndefined();
 
 			// Ready for a new sync
-			return activitiesSynchronizer.sync();
+			return activitiesSynchronize.sync();
 
 		}).then((syncResult: SyncResultModel) => {
 
@@ -589,7 +589,7 @@ describe("ActivitiesSynchronizer", () => {
 		// Get a full sync, with nothing stored...
 		// On sync done simulate ...
 		// Re-sync and test...
-		activitiesSynchronizer.sync().then((syncResult: SyncResultModel) => {
+		activitiesSynchronize.sync().then((syncResult: SyncResultModel) => {
 
 			// Sync is done...
 			expect(CHROME_STORAGE_STUB.syncedActivities).not.toBeNull();
@@ -604,7 +604,7 @@ describe("ActivitiesSynchronizer", () => {
 			expect(editStravaActivity(427606185, rawPagesOfActivities[5], "First Zwift", "VirtualRide")).toBeTruthy(); // Page 6, "1st zwift ride"
 
 			// Ready for a new sync
-			return activitiesSynchronizer.sync();
+			return activitiesSynchronize.sync();
 
 		}).then((syncResult: SyncResultModel) => {
 
@@ -656,7 +656,7 @@ describe("ActivitiesSynchronizer", () => {
 		// Get a full sync, with nothing stored...
 		// On sync done simulate ...
 		// Re-sync and test...
-		activitiesSynchronizer.sync().then((syncResult: SyncResultModel) => {
+		activitiesSynchronize.sync().then((syncResult: SyncResultModel) => {
 
 			// Sync is done...
 			expect(CHROME_STORAGE_STUB.syncedActivities).not.toBeNull();
@@ -675,7 +675,7 @@ describe("ActivitiesSynchronizer", () => {
 			expect(_.find(rawPagesOfActivities[5].models, {id: 424565561})).toBeDefined(); // Should still exists
 
 			// Ready for a new sync
-			return activitiesSynchronizer.sync();
+			return activitiesSynchronize.sync();
 
 		}).then((syncResult: SyncResultModel) => {
 
@@ -714,7 +714,7 @@ describe("ActivitiesSynchronizer", () => {
 		// Get a full sync, with nothing stored...
 		// On sync done simulate ...
 		// Re-sync and test...
-		activitiesSynchronizer.sync().then((syncResult: SyncResultModel) => {
+		activitiesSynchronize.sync().then((syncResult: SyncResultModel) => {
 
 			// Sync is done...
 			expect(CHROME_STORAGE_STUB.syncedActivities).not.toBeNull();
@@ -768,7 +768,7 @@ describe("ActivitiesSynchronizer", () => {
 			expect(_.find(rawPagesOfActivities[5].models, {id: 424565561})).toBeDefined(); // Should still exists "Chartreuse Rousse et Herbe fluo !!"
 
 			// Ready for a new sync
-			return activitiesSynchronizer.sync();
+			return activitiesSynchronize.sync();
 
 		}).then((syncResult: SyncResultModel) => {
 
@@ -816,7 +816,7 @@ describe("ActivitiesSynchronizer", () => {
 	it("should ensure hasRemoteFirstPageActivitiesMismatch() reject when no local activities", (done: Function) => {
 
 		// Given, When
-		const hasMissMatchPromise = activitiesSynchronizer.hasRemoteFirstPageActivitiesMismatch();
+		const hasMissMatchPromise = activitiesSynchronize.hasRemoteFirstPageActivitiesMismatch();
 
 		// Then
 		hasMissMatchPromise.then(() => {
@@ -832,7 +832,7 @@ describe("ActivitiesSynchronizer", () => {
 
 		// Given
 		const newStravaActivityId = 799672885;
-		const promiseLocalSyncedActivity = activitiesSynchronizer.sync().then((syncResult: SyncResultModel) => {
+		const promiseLocalSyncedActivity = activitiesSynchronize.sync().then((syncResult: SyncResultModel) => {
 			addStravaActivity(newStravaActivityId); // New strava activity "Running back... Hard"
 			return Q.resolve();
 		});
@@ -840,7 +840,7 @@ describe("ActivitiesSynchronizer", () => {
 		// When
 		promiseLocalSyncedActivity.then(() => {
 
-			const hasMissMatchPromise = activitiesSynchronizer.hasRemoteFirstPageActivitiesMismatch();
+			const hasMissMatchPromise = activitiesSynchronize.hasRemoteFirstPageActivitiesMismatch();
 			hasMissMatchPromise.then((result: { hasMisMatch: boolean, activitiesChangesModel: ActivitiesChangesModel }) => {
 				expect(result.hasMisMatch).toBeTruthy();
 				expect(result.activitiesChangesModel.added.length).toEqual(1);
@@ -856,11 +856,11 @@ describe("ActivitiesSynchronizer", () => {
 	it("should ensure hasRemoteFirstPageActivitiesMismatch() detect no remote added activity", (done: Function) => {
 
 		// Given
-		const promiseSynced = activitiesSynchronizer.sync();
+		const promiseSynced = activitiesSynchronize.sync();
 
 		// When
 		const hasMissMatchPromise = promiseSynced.then(() => {
-			return activitiesSynchronizer.hasRemoteFirstPageActivitiesMismatch();
+			return activitiesSynchronize.hasRemoteFirstPageActivitiesMismatch();
 		});
 
 		// Then
@@ -880,7 +880,7 @@ describe("ActivitiesSynchronizer", () => {
 		const newName = "NewName";
 		const newType = "NewType";
 
-		const promiseLocalSyncedActivity = activitiesSynchronizer.sync().then(() => {
+		const promiseLocalSyncedActivity = activitiesSynchronize.sync().then(() => {
 			editStravaActivity(editedActivityId, rawPagesOfActivities[0], newName, newType);
 			return Q.resolve();
 		});
@@ -888,7 +888,7 @@ describe("ActivitiesSynchronizer", () => {
 		// When
 		promiseLocalSyncedActivity.then(() => {
 
-			const hasMissMatchPromise = activitiesSynchronizer.hasRemoteFirstPageActivitiesMismatch();
+			const hasMissMatchPromise = activitiesSynchronize.hasRemoteFirstPageActivitiesMismatch();
 			hasMissMatchPromise.then((result: { hasMisMatch: boolean, activitiesChangesModel: ActivitiesChangesModel }) => {
 				expect(result.hasMisMatch).toBeTruthy();
 				expect(result.activitiesChangesModel.added.length).toEqual(0);
@@ -905,7 +905,7 @@ describe("ActivitiesSynchronizer", () => {
 		// Given
 		const deletedActivityId = 727632286; // Lunch ride
 
-		const promiseLocalSyncedActivity = activitiesSynchronizer.sync().then(() => {
+		const promiseLocalSyncedActivity = activitiesSynchronize.sync().then(() => {
 			removeStravaActivity(deletedActivityId, rawPagesOfActivities[0]);
 			return Q.resolve();
 		});
@@ -913,7 +913,7 @@ describe("ActivitiesSynchronizer", () => {
 		// When
 		promiseLocalSyncedActivity.then(() => {
 
-			const hasMissMatchPromise = activitiesSynchronizer.hasRemoteFirstPageActivitiesMismatch();
+			const hasMissMatchPromise = activitiesSynchronize.hasRemoteFirstPageActivitiesMismatch();
 			hasMissMatchPromise.then((result: { hasMisMatch: boolean, activitiesChangesModel: ActivitiesChangesModel }) => {
 				expect(result.hasMisMatch).toBeTruthy();
 				expect(result.activitiesChangesModel.added.length).toEqual(0);
@@ -933,7 +933,7 @@ describe("ActivitiesSynchronizer", () => {
 		const addedActivityId = 723224273; // Bon rythme ! 33 KPH !!
 		const deletedActivityId = 707356065; // Je suis un gros lent !
 
-		const promiseLocalSyncedActivity = activitiesSynchronizer.sync().then(() => {
+		const promiseLocalSyncedActivity = activitiesSynchronize.sync().then(() => {
 			editStravaActivity(editedActivityId, rawPagesOfActivities[0], "Fake", "Fake");
 			editStravaActivity(editedActivityId2, rawPagesOfActivities[0], "Fake", "Fake");
 			addStravaActivity(addedActivityId);
@@ -944,7 +944,7 @@ describe("ActivitiesSynchronizer", () => {
 		// When
 		promiseLocalSyncedActivity.then(() => {
 
-			const hasMissMatchPromise = activitiesSynchronizer.hasRemoteFirstPageActivitiesMismatch();
+			const hasMissMatchPromise = activitiesSynchronize.hasRemoteFirstPageActivitiesMismatch();
 			hasMissMatchPromise.then((result: { hasMisMatch: boolean, activitiesChangesModel: ActivitiesChangesModel }) => {
 				expect(result.hasMisMatch).toBeTruthy();
 				expect(result.activitiesChangesModel.added.length).toEqual(1);
@@ -963,7 +963,7 @@ describe("ActivitiesSynchronizer", () => {
 		const editedActivityId2 = 722210052; // Fort saint eynard
 		const addedActivityId = 723224273; // Bon rythme ! 33 KPH !!
 
-		const promiseLocalSyncedActivity = activitiesSynchronizer.sync().then(() => {
+		const promiseLocalSyncedActivity = activitiesSynchronize.sync().then(() => {
 			editStravaActivity(editedActivityId, rawPagesOfActivities[0], "Fake", "Fake");
 			editStravaActivity(editedActivityId2, rawPagesOfActivities[0], "Fake", "Fake");
 			addStravaActivity(addedActivityId);
@@ -973,7 +973,7 @@ describe("ActivitiesSynchronizer", () => {
 		// When
 		promiseLocalSyncedActivity.then(() => {
 
-			const hasMissMatchPromise = activitiesSynchronizer.hasRemoteFirstPageActivitiesMismatch();
+			const hasMissMatchPromise = activitiesSynchronize.hasRemoteFirstPageActivitiesMismatch();
 			hasMissMatchPromise.then((result: { hasMisMatch: boolean, activitiesChangesModel: ActivitiesChangesModel }) => {
 				expect(result.hasMisMatch).toBeTruthy();
 				expect(result.activitiesChangesModel.added.length).toEqual(1);
@@ -992,14 +992,14 @@ describe("ActivitiesSynchronizer", () => {
 		const addedStravaActivityId = 727632286; // Lunch ride
 		const expectedName = "Lunch Ride";
 		const expectedType = "Ride";
-		const promiseLocalSyncedActivity = activitiesSynchronizer.sync().then(() => {
+		const promiseLocalSyncedActivity = activitiesSynchronize.sync().then(() => {
 			addStravaActivity(addedStravaActivityId);
 			return Q.resolve();
 		});
 
 		// When
 		const promiseFastSync = promiseLocalSyncedActivity.then(() => {
-			return activitiesSynchronizer.sync(enableFastSync);
+			return activitiesSynchronize.sync(enableFastSync);
 		});
 
 		// Then
@@ -1022,14 +1022,14 @@ describe("ActivitiesSynchronizer", () => {
 		const editedActivityId = 727632286; // Lunch ride
 		const newName = "NewName";
 		const newType = "NewType";
-		const promiseLocalSyncedActivity = activitiesSynchronizer.sync().then(() => {
+		const promiseLocalSyncedActivity = activitiesSynchronize.sync().then(() => {
 			editStravaActivity(editedActivityId, rawPagesOfActivities[0], newName, newType);
 			return Q.resolve();
 		});
 
 		// When
 		const promiseFastSync = promiseLocalSyncedActivity.then(() => {
-			return activitiesSynchronizer.sync(enableFastSync);
+			return activitiesSynchronize.sync(enableFastSync);
 		});
 
 		// Then
@@ -1053,14 +1053,14 @@ describe("ActivitiesSynchronizer", () => {
 		// Given
 		const enableFastSync = true;
 		const deletedActivityId = 727632286; // Lunch ride
-		const promiseLocalSyncedActivity = activitiesSynchronizer.sync().then(() => {
+		const promiseLocalSyncedActivity = activitiesSynchronize.sync().then(() => {
 			removeStravaActivity(deletedActivityId, rawPagesOfActivities[0]);
 			return Q.resolve();
 		});
 
 		// When
 		const promiseFastSync = promiseLocalSyncedActivity.then(() => {
-			return activitiesSynchronizer.sync(enableFastSync);
+			return activitiesSynchronize.sync(enableFastSync);
 		});
 
 		// Then
@@ -1096,7 +1096,7 @@ describe("ActivitiesSynchronizer", () => {
 
 		const deletedActivityId = 707356065; // Je suis un gros lent !
 
-		const promiseLocalSyncedActivity = activitiesSynchronizer.sync().then(() => {
+		const promiseLocalSyncedActivity = activitiesSynchronize.sync().then(() => {
 			editStravaActivity(editedActivityId, rawPagesOfActivities[0], newName, newType);
 			editStravaActivity(editedActivityId2, rawPagesOfActivities[0], newName2, newType2);
 			addStravaActivity(addedActivityId);
@@ -1106,7 +1106,7 @@ describe("ActivitiesSynchronizer", () => {
 
 		// When
 		const promiseFastSync = promiseLocalSyncedActivity.then(() => {
-			return activitiesSynchronizer.sync(enableFastSync);
+			return activitiesSynchronize.sync(enableFastSync);
 		});
 
 		// Then
@@ -1141,13 +1141,13 @@ describe("ActivitiesSynchronizer", () => {
 
 		// Given
 		const enableFastSync = true;
-		const promiseLocalSyncedActivity = activitiesSynchronizer.sync().then(() => {
+		const promiseLocalSyncedActivity = activitiesSynchronize.sync().then(() => {
 			return Q.resolve();
 		});
 
 		// When
 		const promiseFastSync = promiseLocalSyncedActivity.then(() => {
-			return activitiesSynchronizer.sync(enableFastSync);
+			return activitiesSynchronize.sync(enableFastSync);
 		});
 
 		// Then
@@ -1168,7 +1168,7 @@ describe("ActivitiesSynchronizer", () => {
 	});
 
 	afterEach(() => {
-		activitiesSynchronizer = null;
+		activitiesSynchronize = null;
 	});
 
 });

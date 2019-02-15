@@ -16,7 +16,7 @@ import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { StreamActivityModel } from "../models/sync/stream-activity.model";
 import { AthleteModelResolver } from "@elevate/shared/resolvers";
 
-export class ActivitiesSynchronizer {
+export class ActivitiesSynchronize {
 
 	public static readonly SLEEP_TIME: number = 1500;
 
@@ -185,7 +185,7 @@ export class ActivitiesSynchronizer {
 
 			this.getSyncedActivitiesFromLocal().then((syncedActivitiesStored: any) => {
 
-				const activitiesChangesModel: ActivitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawActivities, (syncedActivitiesStored) ? syncedActivitiesStored : []);
+				const activitiesChangesModel: ActivitiesChangesModel = ActivitiesSynchronize.findAddedAndEditedActivities(rawActivities, (syncedActivitiesStored) ? syncedActivitiesStored : []);
 				this.appendGlobalActivitiesChanges(activitiesChangesModel); // Update global history
 
 				// For each activity, fetch his stream and compute extended stats
@@ -213,7 +213,7 @@ export class ActivitiesSynchronizer {
 
 						promisesOfActivitiesStreamById.push(streamPromise);
 
-						return ActivitiesSynchronizer.sleep(sleepTime).then(() => {
+						return ActivitiesSynchronize.sleep(sleepTime).then(() => {
 							return Q.resolve(activityId);
 						});
 
@@ -342,14 +342,14 @@ export class ActivitiesSynchronizer {
 
 		}).then((remoteFirstPage: { activitiesCountAllPages: number, firstPageModels: StravaActivityModel[] }) => {
 
-			const activitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(remoteFirstPage.firstPageModels,
+			const activitiesChangesModel = ActivitiesSynchronize.findAddedAndEditedActivities(remoteFirstPage.firstPageModels,
 				localSyncedActivityModels);
 
 			const remoteFirstPageIds: number[] = _.map(remoteFirstPage.firstPageModels, (stravaActivityModel: StravaActivityModel) => {
 				return stravaActivityModel.id;
 			});
 
-			activitiesChangesModel.deleted = ActivitiesSynchronizer.findDeletedActivities(remoteFirstPageIds,
+			activitiesChangesModel.deleted = ActivitiesSynchronize.findDeletedActivities(remoteFirstPageIds,
 				_.slice(localSyncedActivityModels, -1 * (remoteFirstPageIds.length - activitiesChangesModel.added.length))).deleted;
 
 			const hasAddedOrEditedActivitiesMisMatch = (activitiesChangesModel.added.length > 0
@@ -445,7 +445,7 @@ export class ActivitiesSynchronizer {
 		}, (data: any, textStatus: string, errorThrown: any) => {
 			// error
 			const err: any = {
-				method: "ActivitiesSynchronizer.fetchRawActivitiesRecursive",
+				method: "ActivitiesSynchronize.fetchRawActivitiesRecursive",
 				page,
 				data,
 				textStatus,
@@ -484,7 +484,7 @@ export class ActivitiesSynchronizer {
 		}, (data: any, textStatus: any, errorThrown: any) => {
 			// Error
 			deferred.reject({
-				method: "ActivitiesSynchronizer.fetchStreamByActivityId",
+				method: "ActivitiesSynchronize.fetchStreamByActivityId",
 				activityId,
 				data,
 				textStatus,
@@ -503,9 +503,9 @@ export class ActivitiesSynchronizer {
 
 		console.log("clearSyncCache requested");
 
-		return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronizer.syncedActivities).then(() => {
+		return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronize.syncedActivities).then(() => {
 			console.log("syncedActivities removed from local storage");
-			return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronizer.lastSyncDateTime);
+			return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronize.lastSyncDateTime);
 		}).then(() => {
 			console.log("lastSyncDateTime removed from local storage");
 		});
@@ -585,7 +585,7 @@ export class ActivitiesSynchronizer {
 		}
 
 		if (!pagesPerGroupToRead) {
-			pagesPerGroupToRead = ActivitiesSynchronizer.pagesPerGroupToRead;
+			pagesPerGroupToRead = ActivitiesSynchronize.pagesPerGroupToRead;
 		}
 
 		if (!deferred) {
@@ -783,7 +783,7 @@ export class ActivitiesSynchronizer {
 					activitiesChangesModel = this._activitiesChanges;
 
 					// Check for  deletions, check for added and edited has been done in "fetchWithStream" for each group of pages
-					activitiesChangesModel.deleted = ActivitiesSynchronizer.findDeletedActivities(this.totalRawActivityIds, syncedActivitiesStored).deleted;
+					activitiesChangesModel.deleted = ActivitiesSynchronize.findDeletedActivities(this.totalRawActivityIds, syncedActivitiesStored).deleted;
 
 					const hasEditedChanges = activitiesChangesModel.edited.length > 0;
 					const hasDeletedChanges = activitiesChangesModel.deleted.length > 0;
@@ -889,7 +889,7 @@ export class ActivitiesSynchronizer {
 	}
 
 	public getSleepTime(): number {
-		return ActivitiesSynchronizer.SLEEP_TIME;
+		return ActivitiesSynchronize.SLEEP_TIME;
 	}
 
 	public getAllSavedLocal(): Q.IPromise<any> {
@@ -897,12 +897,12 @@ export class ActivitiesSynchronizer {
 	}
 
 	public saveLastSyncDateToLocal(timestamp: number) {
-		return AppStorage.getInstance().set<number>(AppStorageType.LOCAL, ActivitiesSynchronizer.lastSyncDateTime, timestamp);
+		return AppStorage.getInstance().set<number>(AppStorageType.LOCAL, ActivitiesSynchronize.lastSyncDateTime, timestamp);
 	}
 
 	public getLastSyncDateFromLocal() {
 		const deferred = Q.defer<number>();
-		AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronizer.lastSyncDateTime).then((result: number) => {
+		AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronize.lastSyncDateTime).then((result: number) => {
 			deferred.resolve(result);
 		}, error => deferred.reject(error));
 
@@ -910,12 +910,12 @@ export class ActivitiesSynchronizer {
 	}
 
 	public saveSyncedActivitiesToLocal(syncedActivities: SyncedActivityModel[]) {
-		return AppStorage.getInstance().set<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronizer.syncedActivities, syncedActivities);
+		return AppStorage.getInstance().set<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronize.syncedActivities, syncedActivities);
 	}
 
 	public getSyncedActivitiesFromLocal(): Q.Promise<SyncedActivityModel[]> {
 		const deferred = Q.defer<SyncedActivityModel[]>();
-		AppStorage.getInstance().get<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronizer.syncedActivities).then((result: SyncedActivityModel[]) => {
+		AppStorage.getInstance().get<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronize.syncedActivities).then((result: SyncedActivityModel[]) => {
 			deferred.resolve(result);
 		}, error => deferred.reject(error));
 

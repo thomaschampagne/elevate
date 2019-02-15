@@ -44,7 +44,7 @@ import { ActivityProcessor } from "./processors/activity-processor";
 import { BikeOdoProcessor } from "./processors/bike-odo-processor";
 import { ISegmentInfo, SegmentProcessor } from "./processors/segment-processor";
 import { VacuumProcessor } from "./processors/vacuum-processor";
-import { ActivitiesSynchronizer } from "./processors/activities-synchronizer";
+import { ActivitiesSynchronize } from "./processors/activities-synchronize";
 import * as Q from "q";
 import { AthleteUpdate } from "./utils/athlete-update";
 import "./follow";
@@ -72,7 +72,7 @@ export class Elevate {
 	public appResources: AppResourcesModel;
 	public userSettings: UserSettingsModel;
 	public vacuumProcessor: VacuumProcessor;
-	public activitiesSynchronizer: ActivitiesSynchronizer;
+	public activitiesSynchronize: ActivitiesSynchronize;
 	public pageMatches: { activity: boolean, dashboard: boolean, segment: boolean };
 
 	constructor(userSettings: UserSettingsModel, appResources: AppResourcesModel) {
@@ -168,7 +168,7 @@ export class Elevate {
 			this.isPremium = this.vacuumProcessor.getPremiumStatus();
 			this.isPro = this.vacuumProcessor.getProStatus();
 			this.activityId = this.vacuumProcessor.getActivityId();
-			this.activitiesSynchronizer = new ActivitiesSynchronizer(this.appResources, this.userSettings, this.athleteModelResolver);
+			this.activitiesSynchronize = new ActivitiesSynchronize(this.appResources, this.userSettings, this.athleteModelResolver);
 
 			this.pageMatches = {
 				activity: (window.location.pathname.match(/^\/activities/) !== null),
@@ -1043,7 +1043,7 @@ export class Elevate {
 		setTimeout(() => {
 
 			// Allow activities sync if previous sync exists and has been done 12 hours or more ago.
-			AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronizer.lastSyncDateTime).then((lastSyncDateTime: number) => {
+			AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronize.lastSyncDateTime).then((lastSyncDateTime: number) => {
 
 				if (_.isNumber(lastSyncDateTime)) {
 
@@ -1051,11 +1051,11 @@ export class Elevate {
 
 					// At first perform a fast sync to get the "just uploaded ride/run" ready
 					const fastSync = true;
-					const fastSyncPromise: Q.Promise<SyncResultModel> = this.activitiesSynchronizer.sync(fastSync);
+					const fastSyncPromise: Q.Promise<SyncResultModel> = this.activitiesSynchronize.sync(fastSync);
 					fastSyncPromise.then((syncResult: SyncResultModel) => {
 
 						console.log("Fast sync finished", syncResult);
-						ActivitiesSynchronizer.notifyBackgroundSyncDone.call(this, this.extensionId, syncResult); // Notify background page that sync is finished
+						ActivitiesSynchronize.notifyBackgroundSyncDone.call(this, this.extensionId, syncResult); // Notify background page that sync is finished
 
 					}).catch((err: any) => {
 						console.warn(err);
@@ -1087,7 +1087,7 @@ export class Elevate {
 		const fastSync = (urlParams.fastSync === "true" && !forceSync);
 		const sourceTabId = (urlParams.sourceTabId) ? parseInt(urlParams.sourceTabId) : -1;
 
-		const activitiesSyncModifier: ActivitiesSyncModifier = new ActivitiesSyncModifier(this.extensionId, this.activitiesSynchronizer, fastSync, forceSync, sourceTabId);
+		const activitiesSyncModifier: ActivitiesSyncModifier = new ActivitiesSyncModifier(this.extensionId, this.activitiesSynchronize, fastSync, forceSync, sourceTabId);
 		activitiesSyncModifier.modify();
 	}
 
