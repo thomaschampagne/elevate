@@ -74,6 +74,7 @@ export class Elevate {
 	public userSettings: UserSettingsModel;
 	public vacuumProcessor: VacuumProcessor;
 	public activitiesSynchronizer: ActivitiesSynchronizer;
+	public pageMatches: { activity: boolean, dashboard: boolean, segment: boolean };
 
 	constructor(userSettings: UserSettingsModel, appResources: AppResourcesModel) {
 
@@ -117,7 +118,7 @@ export class Elevate {
 			this.handleMenu();
 			// this.handleRemoteLinks();
 			this.handleWindyTyModifier();
-			// this.handleReliveCCModifier();
+			this.handleReliveCCModifier();
 			// this.handleDefaultLeaderboardFilter();
 			// this.handleSegmentRankPercentage();
 			// this.handleSegmentHRAP();
@@ -175,6 +176,12 @@ export class Elevate {
 			this.isPro = this.vacuumProcessor.getProStatus();
 			this.activityId = this.vacuumProcessor.getActivityId();
 			this.activitiesSynchronizer = new ActivitiesSynchronizer(this.appResources, this.userSettings, this.athleteModelResolver);
+
+			this.pageMatches = {
+				activity: (window.location.pathname.match(/^\/activities/) !== null),
+				dashboard: (window.location.pathname.match(/^\/dashboard/) !== null),
+				segment: (window.location.pathname.match(/^\/segments\/(\d+)$/) !== null)
+			};
 
 			return Promise.resolve();
 
@@ -271,7 +278,7 @@ export class Elevate {
 
 	public handlePluginInstallOrUpgrade(): void {
 
-		if (!window.location.pathname.match(/^\/dashboard/)) {
+		if (!this.pageMatches.dashboard) {
 			return;
 		}
 
@@ -411,7 +418,7 @@ export class Elevate {
 		}
 
 		// If we are not on a segment or activity page then return...
-		if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.segment && !this.pageMatches.activity) {
 			return;
 		}
 
@@ -430,7 +437,7 @@ export class Elevate {
 		}
 
 		// If we are not on a segment or activity page then return...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -463,7 +470,7 @@ export class Elevate {
 		}
 
 		// If we are not on a segment or activity page then return...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -494,7 +501,7 @@ export class Elevate {
 	public handleDefaultLeaderboardFilter(): void {
 
 		// If we are not on a segment or activity page then return...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -561,7 +568,7 @@ export class Elevate {
 	public handleActivityStravaMapType(): void {
 
 		// Test where are on an activity...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -576,7 +583,7 @@ export class Elevate {
 	public handleHideFeed(): void {
 
 		// Test if where are on dashboard page
-		if (!window.location.pathname.match(/^\/dashboard/)) {
+		if (!this.pageMatches.dashboard) {
 			return;
 		}
 
@@ -599,7 +606,7 @@ export class Elevate {
 	}
 
 	public handleActivityFeedModifier(): void {
-		if (!window.location.pathname.match(/^\/dashboard/)) {
+		if (!this.pageMatches.dashboard) {
 			return;
 		}
 
@@ -618,7 +625,7 @@ export class Elevate {
 	public handleDisplayFlyByFeedModifier(): void {
 
 		// Test if where are on dashboard page
-		if (!window.location.pathname.match(/^\/dashboard/)) {
+		if (!this.pageMatches.dashboard) {
 			return;
 		}
 
@@ -818,7 +825,7 @@ export class Elevate {
 		}
 
 		// Test where are on an activity...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -845,7 +852,7 @@ export class Elevate {
 	public handleActivitySegmentTimeComparison(): void {
 
 		// Test where are on an activity page... (note this includes activities/XXX/segments)
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -873,7 +880,7 @@ export class Elevate {
 		}
 
 		// Test where are on an activity...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -924,7 +931,7 @@ export class Elevate {
 			return;
 		}
 
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -951,7 +958,7 @@ export class Elevate {
 			return;
 		}
 
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -978,7 +985,7 @@ export class Elevate {
 			return;
 		}
 
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -1005,7 +1012,7 @@ export class Elevate {
 			return;
 		}
 
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -1028,7 +1035,7 @@ export class Elevate {
 			return;
 		}
 
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -1044,7 +1051,7 @@ export class Elevate {
 	public handleActivityQRCodeDisplay(): void {
 
 		// Test where are on an activity...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -1060,7 +1067,7 @@ export class Elevate {
 	public handleVirtualPartner(): void {
 
 		// Test where are on an activity...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -1079,7 +1086,7 @@ export class Elevate {
 		}
 
 		// Test where are on an activity...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
