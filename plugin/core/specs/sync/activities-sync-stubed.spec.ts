@@ -80,6 +80,8 @@ describe("ActivitiesSynchronizer", () => {
 
 	beforeEach(() => {
 
+		jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
+
 		CHROME_STORAGE_STUB = {}; // Reset storage
 
 		userSettingsMock = _.cloneDeep(userSettingsData);
@@ -142,6 +144,7 @@ describe("ActivitiesSynchronizer", () => {
 			defer.resolve(data);
 			return defer.promise;
 		});
+		spyOn(activitiesSynchronizer, "getSleepTimeBetweenStreamsCalls").and.returnValue(10); // Sleep 10 ms in test
 
 		/**
 		 * Stub MultipleActivityProcessor:compute. Create fake analysis results

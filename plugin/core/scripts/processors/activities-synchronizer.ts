@@ -18,6 +18,10 @@ import { AthleteModelResolver } from "@elevate/shared/resolvers";
 
 export class ActivitiesSynchronizer {
 
+	// public static readonly STREAMS_CALLS_PER_MINUTE: number = 10;
+	// public static readonly SLEEP_TIME_BETWEEN_STREAMS_CALLS: number = 60 / ActivitiesSynchronizer.STREAMS_CALLS_PER_MINUTE * 1000;
+	public static readonly SLEEP_TIME_BETWEEN_STREAMS_CALLS: number = 5000;
+
 	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteModelResolver) {
 		this.appResources = appResources;
 		this.userSettings = userSettings;
@@ -157,17 +161,26 @@ export class ActivitiesSynchronizer {
 	 */
 	public fetchWithStream(lastSyncDateTime: Date, fromPage: number, pagesToRead: number): Q.Promise<StreamActivityModel[]> {
 
+		const sleep = (ms: number) => {
+			return new Promise(resolve => {
+				setTimeout(() => {
+					resolve();
+				}, ms);
+			});
+		};
+
 		const deferred = Q.defer<StreamActivityModel[]>();
 
 		// Start fetching missing activities
 		this.fetchRawActivitiesRecursive(lastSyncDateTime, fromPage, pagesToRead).then((rawActivities: StravaActivityModel[]) => {
+
 
 			// Success
 			console.log("Activities fetched in group " + this.printGroupLimits(fromPage, pagesToRead) + ": " + rawActivities.length);
 
 			let fetchedActivitiesStreamCount = 0;
 			let fetchedActivitiesProgress = 0;
-			const promisesOfActivitiesStreamById: Array<Q.IPromise<StreamActivityModel>> = [];
+			const promisesOfActivitiesStreamById: Array<Q.Promise<StreamActivityModel>> = [];
 
 			this.getSyncedActivitiesFromLocal().then((syncedActivitiesStored: any) => {
 
@@ -175,81 +188,97 @@ export class ActivitiesSynchronizer {
 				this.appendGlobalActivitiesChanges(activitiesChangesModel); // Update global history
 
 				// For each activity, fetch his stream and compute extended stats
-				_.forEach(activitiesChangesModel.added, (activityId: number) => {
-					// Getting promise of stream for each activity...
-					promisesOfActivitiesStreamById.push(this.fetchStreamByActivityId(activityId));
-				});
+				const timeBetweenStreamsCalls = this.getSleepTimeBetweenStreamsCalls();
+				const fetchStreamSequence = activitiesChangesModel.added.reduce((prev: Promise<number>, activityId: number, index: number) => {
+
+					return prev.then(() => {
+
+						// Call stream and track promise
+						const streamPromise = this.fetchStreamByActivityId(activityId).then((streamActivityModel: StreamActivityModel) => {
+
+							// Track and notify progress...
+							fetchedActivitiesStreamCount++;
+							fetchedActivitiesProgress = fetchedActivitiesStreamCount / activitiesChangesModel.added.length * 100;
+							const notify: SyncNotifyModel = {
+								step: "fetchedStreamsPercentage",
+								progress: fetchedActivitiesProgress,
+								activityId: activityId,
+							};
+
+							deferred.notify(notify);
+
+							return Q.resolve(streamActivityModel);
+						});
+
+						promisesOfActivitiesStreamById.push(streamPromise);
+
+						return sleep(timeBetweenStreamsCalls).then(() => {
+							return Q.resolve(activityId);
+						});
+
+					});
+
+				}, Promise.resolve(null));
+
 
 				// Track all parsed activities from strava: used for deletions detect at the end..
 				_.forEach(rawActivities, (rawActivity: StravaActivityModel) => {
 					this.totalRawActivityIds.push(rawActivity.id);
 				});
 
-				Q.allSettled(promisesOfActivitiesStreamById).then((streamResults: any) => {
+				fetchStreamSequence.then(() => {
 
-					console.log("Stream length: " + streamResults.length + ", raw activities length: " + rawActivities.length + ")");
+					Q.allSettled(promisesOfActivitiesStreamById).then((streamResults: any) => {
 
-					const activitiesWithStream: StreamActivityModel[] = [];
+						console.log("Stream length: " + streamResults.length + ", raw activities length: " + rawActivities.length + ")");
 
-					_.forEach(streamResults, (data: Q.PromiseState<any>) => {
+						const activitiesWithStream: StreamActivityModel[] = [];
 
-						if (data.state === "rejected") {
+						_.forEach(streamResults, (data: Q.PromiseState<any>) => {
 
-							// No stream found for this activity
-							console.warn("Stream not found for activity <" + data.reason.activityId + ">", data);
+							if (data.state === "rejected") {
 
-							// Add to activities list without even if no stream...
-							const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {id: <number>data.reason.activityId});
-							const activityWithStream: StreamActivityModel = newlyDetectedActivity as StreamActivityModel;
-							activityWithStream.hasPowerMeter = null;
-							activityWithStream.stream = null;
-							activitiesWithStream.push(activityWithStream);
+								// No stream found for this activity
+								console.warn("Stream not found for activity <" + data.reason.activityId + ">", data);
 
-						} else if (data.state === "fulfilled") {
+								// Add to activities list without even if no stream...
+								const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {id: <number>data.reason.activityId});
+								const activityWithStream: StreamActivityModel = newlyDetectedActivity as StreamActivityModel;
+								activityWithStream.hasPowerMeter = null;
+								activityWithStream.stream = null;
+								activitiesWithStream.push(activityWithStream);
 
-							// Find raw activities of fetched stream and push
-							const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {id: <number>data.value.activityId});
+							} else if (data.state === "fulfilled") {
 
-							let hasPowerMeter = true;
-							if (_.isEmpty(data.value.watts)) {
-								data.value.watts = data.value.watts_calc;
-								hasPowerMeter = false;
+								// Find raw activities of fetched stream and push
+								const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {id: <number>data.value.activityId});
+
+								let hasPowerMeter = true;
+								if (_.isEmpty(data.value.watts)) {
+									data.value.watts = data.value.watts_calc;
+									hasPowerMeter = false;
+								}
+
+								const activityWithStream: StreamActivityModel = newlyDetectedActivity as StreamActivityModel;
+								activityWithStream.hasPowerMeter = hasPowerMeter;
+								activityWithStream.stream = data.value;
+
+								activitiesWithStream.push(activityWithStream);
 							}
+						});
 
-							const activityWithStream: StreamActivityModel = newlyDetectedActivity as StreamActivityModel;
-							activityWithStream.hasPowerMeter = hasPowerMeter;
-							activityWithStream.stream = data.value;
+						// Finishing... force progress @ 100% because 'rejected' promises don't call progress callback
+						const notify: SyncNotifyModel = {
+							step: "fetchedStreamsPercentage",
+							progress: 100,
+						};
+						deferred.notify(notify);
+						deferred.resolve(activitiesWithStream);
 
-							activitiesWithStream.push(activityWithStream);
-						}
+					}, (err: any) => {
+						// error, we don't enter here with allSettled...
+
 					});
-
-					// Finishing... force progress @ 100% because 'rejected' promises don't call progress callback
-					const notify: SyncNotifyModel = {
-						step: "fetchedStreamsPercentage",
-						progress: 100,
-					};
-					deferred.notify(notify);
-					deferred.resolve(activitiesWithStream);
-
-				}, (err: any) => {
-					// error, we don't enter here with allSettled...
-
-				}, (notification: any) => {
-
-					// Progress...
-					fetchedActivitiesProgress = fetchedActivitiesStreamCount / activitiesChangesModel.added.length * 100;
-
-					const notify: SyncNotifyModel = {
-						step: "fetchedStreamsPercentage",
-						progress: fetchedActivitiesProgress,
-						index: notification.index,
-						activityId: notification.value,
-					};
-
-					deferred.notify(notify);
-
-					fetchedActivitiesStreamCount++;
 				});
 
 			});
@@ -430,14 +459,15 @@ export class ActivitiesSynchronizer {
 		return deferred.promise;
 	}
 
+
 	/**
 	 * Fetch the stream of an activity
 	 * @param activityId
 	 * @return {Q.Promise<T>}
 	 */
-	public fetchStreamByActivityId(activityId: number): Q.IPromise<any> {
+	public fetchStreamByActivityId(activityId: number): Q.Promise<StreamActivityModel> {
 
-		const deferred = Q.defer();
+		const deferred = Q.defer<StreamActivityModel>();
 
 		const activityStreamUrl: string = "/activities/" + activityId + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng&stream_types[]=grade_adjusted_speed";
 
@@ -855,6 +885,10 @@ export class ActivitiesSynchronizer {
 		};
 		this._endReached = false;
 		this.totalRawActivityIds = [];
+	}
+
+	public getSleepTimeBetweenStreamsCalls(): number {
+		return ActivitiesSynchronizer.SLEEP_TIME_BETWEEN_STREAMS_CALLS;
 	}
 
 	public getAllSavedLocal(): Q.IPromise<any> {
