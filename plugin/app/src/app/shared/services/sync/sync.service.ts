@@ -18,7 +18,7 @@ export class SyncService {
 
 	public static readonly SYNC_URL_BASE: string = "https://www.strava.com/dashboard";
 	public static readonly SYNC_WINDOW_WIDTH: number = 700;
-	public static readonly SYNC_WINDOW_HEIGHT: number = 675;
+	public static readonly SYNC_WINDOW_HEIGHT: number = 700;
 
 	constructor(public lastSyncDateTimeDao: LastSyncDateTimeDao,
 				public activityDao: ActivityDao,

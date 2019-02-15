@@ -18,9 +18,7 @@ import { AthleteModelResolver } from "@elevate/shared/resolvers";
 
 export class ActivitiesSynchronizer {
 
-	// public static readonly STREAMS_CALLS_PER_MINUTE: number = 10;
-	// public static readonly SLEEP_TIME_BETWEEN_STREAMS_CALLS: number = 60 / ActivitiesSynchronizer.STREAMS_CALLS_PER_MINUTE * 1000;
-	public static readonly SLEEP_TIME_BETWEEN_STREAMS_CALLS: number = 5000;
+	public static readonly SLEEP_TIME: number = 1500;
 
 	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteModelResolver) {
 		this.appResources = appResources;
@@ -123,6 +121,18 @@ export class ActivitiesSynchronizer {
 	}
 
 	/**
+	 *
+	 * @param ms
+	 */
+	public static sleep(ms: number): Promise<void> {
+		return new Promise(resolve => {
+			setTimeout(() => {
+				resolve();
+			}, ms);
+		});
+	};
+
+	/**
 	 * Provides:
 	 * - activity IDs to delete in the local activities (removed from strava.com)
 	 * @param rawActivityIds
@@ -161,19 +171,10 @@ export class ActivitiesSynchronizer {
 	 */
 	public fetchWithStream(lastSyncDateTime: Date, fromPage: number, pagesToRead: number): Q.Promise<StreamActivityModel[]> {
 
-		const sleep = (ms: number) => {
-			return new Promise(resolve => {
-				setTimeout(() => {
-					resolve();
-				}, ms);
-			});
-		};
-
 		const deferred = Q.defer<StreamActivityModel[]>();
 
 		// Start fetching missing activities
 		this.fetchRawActivitiesRecursive(lastSyncDateTime, fromPage, pagesToRead).then((rawActivities: StravaActivityModel[]) => {
-
 
 			// Success
 			console.log("Activities fetched in group " + this.printGroupLimits(fromPage, pagesToRead) + ": " + rawActivities.length);
@@ -188,8 +189,8 @@ export class ActivitiesSynchronizer {
 				this.appendGlobalActivitiesChanges(activitiesChangesModel); // Update global history
 
 				// For each activity, fetch his stream and compute extended stats
-				const timeBetweenStreamsCalls = this.getSleepTimeBetweenStreamsCalls();
-				const fetchStreamSequence = activitiesChangesModel.added.reduce((prev: Promise<number>, activityId: number, index: number) => {
+				const sleepTime = this.getSleepTime();
+				const fetchStreamSequence = activitiesChangesModel.added.reduce((prev: Promise<number>, activityId: number) => {
 
 					return prev.then(() => {
 
@@ -212,7 +213,7 @@ export class ActivitiesSynchronizer {
 
 						promisesOfActivitiesStreamById.push(streamPromise);
 
-						return sleep(timeBetweenStreamsCalls).then(() => {
+						return ActivitiesSynchronizer.sleep(sleepTime).then(() => {
 							return Q.resolve(activityId);
 						});
 
@@ -887,8 +888,8 @@ export class ActivitiesSynchronizer {
 		this.totalRawActivityIds = [];
 	}
 
-	public getSleepTimeBetweenStreamsCalls(): number {
-		return ActivitiesSynchronizer.SLEEP_TIME_BETWEEN_STREAMS_CALLS;
+	public getSleepTime(): number {
+		return ActivitiesSynchronizer.SLEEP_TIME;
 	}
 
 	public getAllSavedLocal(): Q.IPromise<any> {
