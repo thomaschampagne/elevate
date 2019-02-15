@@ -116,7 +116,7 @@ export class Elevate {
 			// Common
 			this.handleMenu();
 			// this.handleRemoteLinks();
-			// this.handleWindyTyModifier();
+			this.handleWindyTyModifier();
 			// this.handleReliveCCModifier();
 			// this.handleDefaultLeaderboardFilter();
 			// this.handleSegmentRankPercentage();
@@ -406,12 +406,12 @@ export class Elevate {
 
 	public handleRemoteLinks(): void {
 
-		// If we are not on a segment or activity page then return...
-		if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
+		if (!this.userSettings.remoteLinks) {
 			return;
 		}
 
-		if (!this.userSettings.remoteLinks) {
+		// If we are not on a segment or activity page then return...
+		if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
 			return;
 		}
 
@@ -424,6 +424,10 @@ export class Elevate {
 	}
 
 	public handleWindyTyModifier(): void {
+
+		if (!this.userSettings.displayWindyOverlay) {
+			return;
+		}
 
 		// If we are not on a segment or activity page then return...
 		if (!window.location.pathname.match(/^\/activities/)) {
