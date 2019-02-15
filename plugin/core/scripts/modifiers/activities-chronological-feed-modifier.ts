@@ -2,7 +2,7 @@ import { AbstractModifier } from "./abstract.modifier";
 import { UserSettingsModel } from "@elevate/shared/models";
 import * as _ from "lodash";
 
-export class ActivityFeedModifier extends AbstractModifier {
+export class ActivitiesChronologicalFeedModifier extends AbstractModifier {
 
 	private static readonly DEBOUNCE_ORDER_FEED_ITEMS_TIME: number = 1000;
 
@@ -17,7 +17,7 @@ export class ActivityFeedModifier extends AbstractModifier {
 
 		if (this.userSettings.feedChronologicalOrder) {
 
-			const debounceOrderFeedItems = _.debounce(this.orderFeedItems, ActivityFeedModifier.DEBOUNCE_ORDER_FEED_ITEMS_TIME);
+			const debounceOrderFeedItems = _.debounce(this.orderFeedItems, ActivitiesChronologicalFeedModifier.DEBOUNCE_ORDER_FEED_ITEMS_TIME);
 
 			window.addEventListener("scroll", (e: UIEvent) => {
 				debounceOrderFeedItems();
