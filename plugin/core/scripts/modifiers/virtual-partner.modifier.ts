@@ -115,7 +115,7 @@ export class VirtualPartnerModifier extends AbstractModifier {
 
 		this.getSegmentInfos(effortId, (segmentData: any) => {
 
-			this.vacuumProcessor.getActivityStream((activitySourceData: ActivitySourceDataModel, activityStream: ActivityStreamsModel) => { // Get stream on page
+			this.vacuumProcessor.getActivityStream(null, (activitySourceData: ActivitySourceDataModel, activityStream: ActivityStreamsModel) => { // Get stream on page
 				if (_.isEmpty(activityStream.latlng)) {
 					alert("No GPS Data found");
 					return;
