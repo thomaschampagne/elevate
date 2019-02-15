@@ -116,45 +116,45 @@ export class Elevate {
 
 			// Common
 			this.handleMenu();
-			this.handleRemoteLinks();
-			this.handleWindyTyModifier();
-			this.handleReliveCCModifier();
-			this.handleDefaultLeaderboardFilter();
-			this.handleSegmentRankPercentage();
-			this.handleSegmentHRAP();
-			this.handleActivityStravaMapType();
-			this.handleActivityFeedModifier();
-			this.handleHideFeed();
-			this.handleDisplayFlyByFeedModifier();
-			this.handleOnFlyActivitiesSync();
+			// this.handleRemoteLinks();
+			// this.handleWindyTyModifier();
+			// this.handleReliveCCModifier();
+			// this.handleDefaultLeaderboardFilter();
+			// this.handleSegmentRankPercentage();
+			// this.handleSegmentHRAP();
+			// this.handleActivityStravaMapType();
+			// this.handleActivityFeedModifier();
+			// this.handleHideFeed();
+			// this.handleDisplayFlyByFeedModifier();
+			// this.handleOnFlyActivitiesSync();
 			this.handleActivitiesSyncFromOutside();
-
-			// Bike
+			//
+			// // Bike
 			this.handleExtendedActivityData();
 			this.handleExtendedSegmentEffortData();
-			this.handleNearbySegments();
-			this.handleActivityBikeOdo();
-			this.handleActivitySegmentTimeComparison();
-			this.handleActivityBestSplits();
-
-			// Run
-			this.handleRunningGradeAdjustedPace();
-			this.handleRunningHeartRate();
-			this.handleRunningCadence();
-			this.handleRunningTemperature();
-			this.handleRunningAnalysisGraph();
-
-			// All activities
-			this.handleActivityQRCodeDisplay();
-			this.handleVirtualPartner();
-			this.handleAthletesStats();
-			this.handleActivitiesSummary();
-
-			// Must be done at the end
-			this.handleTrackTodayIncomingConnection();
-			this.handleAthleteUpdate();
-			this.saveAthleteId();
-			this.handleGoogleMapsComeBackModifier();
+			// this.handleNearbySegments();
+			// this.handleActivityBikeOdo();
+			// this.handleActivitySegmentTimeComparison();
+			// this.handleActivityBestSplits();
+			//
+			// // Run
+			// this.handleRunningGradeAdjustedPace();
+			// this.handleRunningHeartRate();
+			// this.handleRunningCadence();
+			// this.handleRunningTemperature();
+			// this.handleRunningAnalysisGraph();
+			//
+			// // All activities
+			// this.handleActivityQRCodeDisplay();
+			// this.handleVirtualPartner();
+			// this.handleAthletesStats();
+			// this.handleActivitiesSummary();
+			//
+			// // Must be done at the end
+			// this.handleTrackTodayIncomingConnection();
+			// this.handleAthleteUpdate();
+			// this.saveAthleteId();
+			// this.handleGoogleMapsComeBackModifier();
 		});
 	}
 
@@ -879,7 +879,8 @@ export class Elevate {
 		}
 
 		// Only cycling is supported
-		if (window.pageView.activity().attributes.type != "Ride") {
+		const activityType: string = window.pageView.activity().attributes.type;
+		if (activityType != "Ride") {
 			return;
 		}
 
@@ -888,7 +889,7 @@ export class Elevate {
 		}
 
 		// TODO Implement cache here: get stream from cache if exist
-		this.vacuumProcessor.getActivityStream((activityCommonStats: any, jsonResponse: any, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => {
+		this.vacuumProcessor.getActivityStream(null, (activityCommonStats: any, jsonResponse: any, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => {
 
 			AppStorage.getInstance().get(AppStorageType.SYNC, "bestSplitsConfiguration").then((response: any) => {
 				const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.activityId, this.userSettings, jsonResponse, hasPowerMeter, response, (splitsConfiguration: any) => {
