@@ -152,11 +152,12 @@ export class VacuumProcessor {
 	public getActivityStream(activityInfo: ActivityInfoModel, callback: (activityCommonStats: ActivitySourceDataModel, activityStream: ActivityStreamsModel, // TODO Improve with Promise of Structure
 																		 athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => void): void {
 
-		let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + this.getActivityId());
+		let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + activityInfo.id);
 
 		if (cache) {
 			cache = JSON.parse(cache);
 			callback(cache.activityCommonStats, cache.stream, cache.athleteWeight, cache.athleteGender, cache.hasPowerMeter);
+			console.log("Using stream cache for activity '" + activityInfo.name + "' (id:" + activityInfo.id + ")");
 			return;
 		}
 

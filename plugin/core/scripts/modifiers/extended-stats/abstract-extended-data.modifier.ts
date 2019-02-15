@@ -169,7 +169,7 @@ export abstract class AbstractExtendedDataModifier {
 
 		let htmlButton = "<section style=\"text-align: center;\">";
 		htmlButton += "<a class=\"button btn-block btn-primary\" id=\"extendedStatsButton\" href=\"#\">";
-		htmlButton += "Display Elevate extended stats";
+		htmlButton += "Display elevate extended stats";
 		htmlButton += "</a>";
 		htmlButton += "</section>";
 

@@ -4,7 +4,6 @@ import {
 	ActivityInfoModel,
 	AppStorageType,
 	DatedAthleteSettingsModel,
-	Gender,
 	ReleaseNoteModel,
 	SyncResultModel,
 	UserSettingsModel
@@ -135,7 +134,7 @@ export class Elevate {
 			// this.handleNearbySegments();
 			// this.handleActivityBikeOdo();
 			// this.handleActivitySegmentTimeComparison();
-			// this.handleActivityBestSplits();
+			this.handleActivityBestSplits();
 			//
 			// // Run
 			// this.handleRunningGradeAdjustedPace();
@@ -888,18 +887,21 @@ export class Elevate {
 			console.log("Execute handleActivityBestSplits()");
 		}
 
-		// TODO Implement cache here: get stream from cache if exist
-		this.vacuumProcessor.getActivityStream(null, (activityCommonStats: any, jsonResponse: any, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => {
+		const activityInfo: ActivityInfoModel = {
+			id: this.activityId,
+			type: window.pageView.activity().get("type"),
+			name: this.vacuumProcessor.getActivityName(),
+			startTime: this.vacuumProcessor.getActivityStartDate(),
+			supportsGap: window.pageView.activity().get("supportsGap"),
+			isTrainer: window.pageView.activity().get("trainer"),
+			isOwner: this.isOwner
+		};
 
-			AppStorage.getInstance().get(AppStorageType.SYNC, "bestSplitsConfiguration").then((response: any) => {
-				const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.activityId, this.userSettings, jsonResponse, hasPowerMeter, response, (splitsConfiguration: any) => {
-					AppStorage.getInstance().set(AppStorageType.SYNC, "bestSplitsConfiguration", splitsConfiguration);
-				});
-
-				activityBestSplitsModifier.modify();
-
+		AppStorage.getInstance().get(AppStorageType.LOCAL, "bestSplitsConfiguration").then((response: any) => {
+			const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.vacuumProcessor, activityInfo, this.userSettings, response, (splitsConfiguration: any) => {
+				AppStorage.getInstance().set(AppStorageType.LOCAL, "bestSplitsConfiguration", splitsConfiguration);
 			});
-
+			activityBestSplitsModifier.modify();
 		});
 	}
 
