@@ -18,7 +18,7 @@ import { AthleteModelResolver } from "@elevate/shared/resolvers";
 
 export class ActivitiesSynchronize {
 
-	public static readonly SLEEP_TIME: number = 1500;
+	public static readonly SLEEP_TIME: number = 2000;
 
 	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteModelResolver) {
 		this.appResources = appResources;

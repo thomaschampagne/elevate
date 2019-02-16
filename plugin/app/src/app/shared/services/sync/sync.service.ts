@@ -32,7 +32,7 @@ export class SyncService {
 	 * @returns {Promise<number>}
 	 */
 	public getLastSyncDateTime(): Promise<number> {
-		return (<Promise<number>> this.lastSyncDateTimeDao.fetch());
+		return (<Promise<number>>this.lastSyncDateTimeDao.fetch());
 	}
 
 	/**
@@ -41,7 +41,7 @@ export class SyncService {
 	 * @returns {Promise<number>}
 	 */
 	public saveLastSyncTime(value: number): Promise<number> {
-		return (<Promise<number>> this.lastSyncDateTimeDao.save(value));
+		return (<Promise<number>>this.lastSyncDateTimeDao.save(value));
 	}
 
 	/**
@@ -116,6 +116,10 @@ export class SyncService {
 	public export(): Promise<{ filename: string, size: number }> {
 
 		return this.prepareForExport().then((backupModel: SyncedBackupModel) => {
+
+			// // TODO compress/uncompressed later:
+			// const blob = new Blob([Utils.gzipToBin<SyncedBackupModel>(backupModel)], {type: "application/gzip"});
+			// const filename = moment().format("Y.M.D-H.mm") + "_v" + backupModel.pluginVersion + ".history.gzip";
 
 			const blob = new Blob([JSON.stringify(backupModel)], {type: "application/json; charset=utf-8"});
 			const filename = moment().format("Y.M.D-H.mm") + "_v" + backupModel.pluginVersion + ".history.json";
