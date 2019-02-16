@@ -1,11 +1,11 @@
 import * as _ from "lodash";
 import { CoreEnv } from "../../config/core-env";
 import { ActivityInfoModel, ActivitySourceDataModel, ActivityStreamsModel, Gender } from "@elevate/shared/models";
-import { Gzip } from "../utils/gzip";
 import { BikeGearModel } from "../models/gear/bike-gear.model";
 import { GearType } from "../models/gear/gear-type.enum";
 import { ShoesGearModel } from "../models/gear/shoes-gear.model";
 import { GearModel } from "../models/gear/gear.model";
+import { Gzip } from "../utils/gzip";
 
 export class VacuumProcessor {
 
