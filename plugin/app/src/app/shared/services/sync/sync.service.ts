@@ -260,3 +260,4 @@ export class SyncService {
 		saveAs(blob, filename);
 	}
 }
+

@@ -2,6 +2,10 @@ import * as _ from "lodash";
 import { CoreEnv } from "../../config/core-env";
 import { ActivityInfoModel, ActivitySourceDataModel, ActivityStreamsModel, Gender } from "@elevate/shared/models";
 import { Gzip } from "../utils/gzip";
+import { BikeGearModel } from "../models/gear/bike-gear.model";
+import { GearType } from "../models/gear/gear-type.enum";
+import { ShoesGearModel } from "../models/gear/shoes-gear.model";
+import { GearModel } from "../models/gear/gear.model";
 
 export class VacuumProcessor {
 
@@ -372,36 +376,43 @@ export class VacuumProcessor {
 	/**
 	 * @returns Array of bikes/odo
 	 */
-	public getBikeOdoOfAthlete(athleteId: number, callback: (bikeOdoArray: any) => void): void {
+	public getAthleteGear<T extends GearModel>(athleteId: number, type: GearType): Promise<T[]> {
 
-		if (_.isUndefined(window.pageView)) {
-			callback(null);
-			return;
+		let gearType;
+
+		if (type === GearType.BIKE) {
+			gearType = "bikes";
+		} else if (type === GearType.SHOES) {
+			gearType = "shoes";
+		} else {
+			throw new Error("Unsupported gear type");
 		}
 
-		if (window.pageView.activity().attributes.type != "Ride") {
-			callback(null);
-			return;
-		}
+		const url: string = "/athletes/" + athleteId + "/gear/" + gearType;
 
-		const url: string = location.protocol + "//www.strava.com/athletes/" + athleteId;
+		return new Promise((resolve, reject) => {
+			$.ajax({
+				url,
+				dataType: "json",
+			}).done((results: any[], textStatus: string, jqXHR: JQuery.jqXHR) => {
 
-		$.ajax({
-			url,
-			dataType: "json",
-		}).always((data: any) => {
+				if (textStatus !== "success") {
+					reject(jqXHR);
+				} else {
+					const gears: GearModel[] = [];
+					_.forEach(results, (result: any) => {
+						if (type === GearType.BIKE) {
+							gears.push(new BikeGearModel(result.id, ((result.total_distance) ? parseInt(result.total_distance.replace(",", "")) : 0), result.active,
+								result.default, result.description, result.display_name));
+						} else if (type === GearType.SHOES) {
+							gears.push(new ShoesGearModel(result.id, ((result.total_distance) ? parseInt(result.total_distance.replace(",", "")) : 0), result.active,
+								result.default, result.description, result.display_name, result.brand_name, result.model_name, result.name, result.notification_distance));
+						}
 
-			const bikeOdoArray: any = {};
-
-			_.forEach($(data.responseText).find("div.gear>table>tbody>tr"), (element: Element) => {
-
-				const bikeName: string = $(element).find("td").first().text().trim();
-				const bikeOdo: string = $(element).find("td").last().text().trim();
-
-				bikeOdoArray[btoa(window.unescape(encodeURIComponent(bikeName)))] = bikeOdo;
+					});
+					resolve(gears as T[]);
+				}
 			});
-
-			callback(bikeOdoArray);
 		});
 	}
 

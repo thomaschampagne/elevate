@@ -41,7 +41,6 @@ import { SegmentRecentEffortsHRATimeModifier } from "./modifiers/segment-recent-
 import { VirtualPartnerModifier } from "./modifiers/virtual-partner.modifier";
 import { WindyTyModifier } from "./modifiers/windyty.modifier";
 import { ActivityProcessor } from "./processors/activity-processor";
-import { BikeOdoProcessor } from "./processors/bike-odo-processor";
 import { ISegmentInfo, SegmentProcessor } from "./processors/segment-processor";
 import { VacuumProcessor } from "./processors/vacuum-processor";
 import { ActivitiesSynchronize } from "./processors/activities-synchronize";
@@ -744,11 +743,8 @@ export class Elevate {
 			return;
 		}
 
-		const bikeOdoProcessor: BikeOdoProcessor = new BikeOdoProcessor(this.vacuumProcessor, this.activityAthleteId);
-		bikeOdoProcessor.getBikeOdoOfAthlete((bikeOdoArray: string[]) => {
-			const activityBikeOdoModifier: ActivityBikeOdoModifier = new ActivityBikeOdoModifier(bikeOdoArray, bikeOdoProcessor.getCacheKey());
-			activityBikeOdoModifier.modify();
-		});
+		const activityBikeOdoModifier: ActivityBikeOdoModifier = new ActivityBikeOdoModifier(this.vacuumProcessor, this.athleteId);
+		activityBikeOdoModifier.modify();
 	}
 
 	public handleActivitySegmentTimeComparison(): void {
