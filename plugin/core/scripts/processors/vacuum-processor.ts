@@ -1,4 +1,5 @@
 import * as _ from "lodash";
+import * as jcb64 from "jcb64";
 import { CoreEnv } from "../../config/core-env";
 import { ActivityInfoModel, ActivitySourceDataModel, ActivityStreamsModel, Gender } from "@elevate/shared/models";
 
@@ -162,7 +163,7 @@ export class VacuumProcessor {
 			let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + activityInfo.id);
 
 			if (cache) {
-				cache = JSON.parse(cache);
+				cache = JSON.parse(jcb64.unpack(cache));
 				callback(cache.activityCommonStats, cache.stream, cache.athleteWeight, cache.athleteGender, cache.hasPowerMeter);
 				console.log("Using stream cache for activity '" + activityInfo.name + "' (id:" + activityInfo.id + ")");
 				return;
@@ -276,12 +277,13 @@ export class VacuumProcessor {
 
 			// Save result to cache
 			try {
-				localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), JSON.stringify({
+				const cache = JSON.stringify({
 					activityCommonStats: this.getActivityStatsMap(),
 					stream: activityStream,
 					athleteWeight: this.getAthleteWeight(),
 					hasPowerMeter,
-				}));
+				});
+				localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), jcb64.pack(cache));
 			} catch (err) {
 				console.warn(err);
 				localStorage.clear();
