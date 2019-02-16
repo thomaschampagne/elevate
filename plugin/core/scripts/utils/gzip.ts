@@ -1,4 +1,4 @@
-import * as pako from "pako";
+import { gzip, inflate } from "pako";
 
 export class Gzip {
 
@@ -8,7 +8,7 @@ export class Gzip {
 	 * @return base64 string
 	 */
 	public static toBase64<T>(object: T): string {
-		return btoa(pako.gzip(JSON.stringify(object), {to: "string"}));
+		return btoa(gzip(JSON.stringify(object), {to: "string"}));
 	}
 
 	/**
@@ -17,7 +17,7 @@ export class Gzip {
 	 * @return object of type {T}
 	 */
 	public static fromBase64<T>(base64: string): T {
-		return JSON.parse(pako.inflate(atob(base64), {to: "string"}));
+		return JSON.parse(inflate(atob(base64), {to: "string"}));
 	}
 
 	/**
@@ -26,7 +26,7 @@ export class Gzip {
 	 * @return Uint8Array bin
 	 */
 	public static toBin<T>(object: T): Uint8Array {
-		return pako.gzip(JSON.stringify(object));
+		return gzip(JSON.stringify(object));
 	}
 
 	/**
@@ -34,7 +34,8 @@ export class Gzip {
 	 * @param binary
 	 * @return object of type {T}
 	 */
-	public static fromBin<T>(binary: Uint8Array): T {
-		return JSON.parse(pako.inflate(binary));
+	public static fromBin<T>(binary: Uint8Array): Uint8Array {
+		// return inflate(binary);
+		return null; // TODO !!
 	}
 }
