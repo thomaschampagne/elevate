@@ -888,7 +888,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
 					}
 					workerPromises[split.id] = $.Deferred();
 					worker.postMessage({
-						result: localStorage.getItem(this.cacheKeyPrefix + split.id),
+						result: null,
 						split,
 						activity,
 						options: {
@@ -945,16 +945,6 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
 						speedLabel = this.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? "mph" : "km/h";
 
 					computeSplit(split, this.activityStreams).done((value: any) => {
-
-						// Set or update split result in cache
-						if (!localStorage.getItem(this.cacheKeyPrefix + split.id)) {
-							try {
-								localStorage.setItem(this.cacheKeyPrefix + split.id, JSON.stringify(value));
-							} catch (err) {
-								console.warn(err);
-								localStorage.clear();
-							}
-						}
 
 						setValue(splitId + "-time", value.time, (value: any) => {
 							return Helper.secondsToHHMMSS(value, true);
