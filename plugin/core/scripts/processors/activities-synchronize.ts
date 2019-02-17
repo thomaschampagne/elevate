@@ -18,8 +18,6 @@ import { AthleteModelResolver } from "@elevate/shared/resolvers";
 
 export class ActivitiesSynchronize {
 
-	public static readonly SLEEP_TIME: number = 2000;
-
 	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteModelResolver) {
 		this.appResources = appResources;
 		this.userSettings = userSettings;
@@ -39,9 +37,11 @@ export class ActivitiesSynchronize {
 		return this._activitiesChanges;
 	}
 
-	public static lastSyncDateTime = "lastSyncDateTime"; // TODO Move into AppStorage as static (do that for others too)
-	public static syncedActivities = "syncedActivities"; // TODO Move into AppStorage as static (do that for others too)
-	public static pagesPerGroupToRead = 2; // = 40 activities with 20 activities per page.
+	public static readonly LAST_SYNC_DATE_TIME_KEY = "lastSyncDateTime"; // TODO Move into AppStorage as static (do that for others too)
+	public static readonly SYNCED_ACTIVITIES_KEY = "syncedActivities"; // TODO Move into AppStorage as static (do that for others too)
+	public static readonly PAGES_PER_GROUP = 1; // = 20 activities with 20 activities per page.
+	public static readonly ACTIVITIES_PER_PAGE = 20; // 20 usually
+	public static readonly SLEEP_TIME = 1750;
 
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
@@ -195,7 +195,7 @@ export class ActivitiesSynchronize {
 					return prev.then(() => {
 
 						// Call stream and track promise
-						const streamPromise = this.fetchStreamByActivityId(activityId).then((streamActivityModel: StreamActivityModel) => {
+						return this.fetchStreamByActivityId(activityId).then((streamActivityModel: StreamActivityModel) => {
 
 							// Track and notify progress...
 							fetchedActivitiesStreamCount++;
@@ -208,13 +208,12 @@ export class ActivitiesSynchronize {
 
 							deferred.notify(notify);
 
-							return Q.resolve(streamActivityModel);
-						});
+							promisesOfActivitiesStreamById.push(Q.resolve(streamActivityModel));
 
-						promisesOfActivitiesStreamById.push(streamPromise);
+							return ActivitiesSynchronize.sleep(sleepTime).then(() => {
+								return Q.resolve(activityId);
+							});
 
-						return ActivitiesSynchronize.sleep(sleepTime).then(() => {
-							return Q.resolve(activityId);
 						});
 
 					});
@@ -278,10 +277,11 @@ export class ActivitiesSynchronize {
 
 					}, (err: any) => {
 						// error, we don't enter here with allSettled...
-
 					});
-				});
 
+				}, error => {
+					deferred.reject(error);
+				});
 			});
 
 		}, (err: any) => {
@@ -400,7 +400,8 @@ export class ActivitiesSynchronize {
 			activitiesList = [];
 		}
 
-		const perPage = 20;
+		const perPage = ActivitiesSynchronize.ACTIVITIES_PER_PAGE;
+
 		const promiseActivitiesRequest: JQueryXHR = this.httpPageGet(perPage, page);
 
 		const notify: SyncNotifyModel = {
@@ -471,25 +472,29 @@ export class ActivitiesSynchronize {
 		const deferred = Q.defer<StreamActivityModel>();
 
 		const activityStreamUrl: string = "/activities/" + activityId + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng&stream_types[]=grade_adjusted_speed";
+		const promiseActivityStream = $.ajax(activityStreamUrl);
 
-		const promiseActivityStream: JQueryXHR = $.ajax(activityStreamUrl);
-
-		promiseActivityStream.then((data: any, textStatus: any, jqXHR: JQueryXHR) => {
+		promiseActivityStream.then((data: any, textStatus: string, jqXHR: JQueryXHR) => {
 
 			// success
 			deferred.notify(activityId);
 			data.activityId = activityId; // Append activityId resolved data
 			deferred.resolve(data);
 
-		}, (data: any, textStatus: any, errorThrown: any) => {
-			// Error
-			deferred.reject({
-				method: "ActivitiesSynchronize.fetchStreamByActivityId",
-				activityId,
-				data,
-				textStatus,
-				errorThrown,
-			});
+		}, (jqXHR: JQueryXHR) => {
+
+			const streamNotFound = jqXHR.status === 404;
+
+			if (streamNotFound) {
+				deferred.resolve({activityId: activityId} as any);
+			} else {
+				deferred.reject({
+					streamFailure: true,
+					activityId: activityId,
+					statusCode: jqXHR.status,
+					statusText: jqXHR.statusText
+				});
+			}
 
 		});
 
@@ -503,9 +508,9 @@ export class ActivitiesSynchronize {
 
 		console.log("clearSyncCache requested");
 
-		return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronize.syncedActivities).then(() => {
+		return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronize.SYNCED_ACTIVITIES_KEY).then(() => {
 			console.log("syncedActivities removed from local storage");
-			return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronize.lastSyncDateTime);
+			return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY);
 		}).then(() => {
 			console.log("lastSyncDateTime removed from local storage");
 		});
@@ -585,7 +590,7 @@ export class ActivitiesSynchronize {
 		}
 
 		if (!pagesPerGroupToRead) {
-			pagesPerGroupToRead = ActivitiesSynchronize.pagesPerGroupToRead;
+			pagesPerGroupToRead = ActivitiesSynchronize.PAGES_PER_GROUP;
 		}
 
 		if (!deferred) {
@@ -640,7 +645,6 @@ export class ActivitiesSynchronize {
 
 						// Current group have been saved with previously stored activities...
 						// console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' saved to extension local storage, total count: ' + pagesGroupSaved.data.syncedActivities.length + ' data: ', pagesGroupSaved);
-
 						const notify: SyncNotifyModel = {
 							step: "savedSyncedActivities",
 							progress: 100,
@@ -897,12 +901,12 @@ export class ActivitiesSynchronize {
 	}
 
 	public saveLastSyncDateToLocal(timestamp: number) {
-		return AppStorage.getInstance().set<number>(AppStorageType.LOCAL, ActivitiesSynchronize.lastSyncDateTime, timestamp);
+		return AppStorage.getInstance().set<number>(AppStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY, timestamp);
 	}
 
 	public getLastSyncDateFromLocal() {
 		const deferred = Q.defer<number>();
-		AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronize.lastSyncDateTime).then((result: number) => {
+		AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY).then((result: number) => {
 			deferred.resolve(result);
 		}, error => deferred.reject(error));
 
@@ -910,12 +914,12 @@ export class ActivitiesSynchronize {
 	}
 
 	public saveSyncedActivitiesToLocal(syncedActivities: SyncedActivityModel[]) {
-		return AppStorage.getInstance().set<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronize.syncedActivities, syncedActivities);
+		return AppStorage.getInstance().set<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronize.SYNCED_ACTIVITIES_KEY, syncedActivities);
 	}
 
 	public getSyncedActivitiesFromLocal(): Q.Promise<SyncedActivityModel[]> {
 		const deferred = Q.defer<SyncedActivityModel[]>();
-		AppStorage.getInstance().get<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronize.syncedActivities).then((result: SyncedActivityModel[]) => {
+		AppStorage.getInstance().get<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronize.SYNCED_ACTIVITIES_KEY).then((result: SyncedActivityModel[]) => {
 			deferred.resolve(result);
 		}, error => deferred.reject(error));
 
