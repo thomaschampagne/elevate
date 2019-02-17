@@ -1039,7 +1039,7 @@ export class Elevate {
 		setTimeout(() => {
 
 			// Allow activities sync if previous sync exists and has been done 12 hours or more ago.
-			AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronize.lastSyncDateTime).then((lastSyncDateTime: number) => {
+			AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY).then((lastSyncDateTime: number) => {
 
 				if (_.isNumber(lastSyncDateTime)) {
 

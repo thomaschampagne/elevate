@@ -17,8 +17,8 @@ import { Constant } from "@elevate/shared/constants";
 export class SyncService {
 
 	public static readonly SYNC_URL_BASE: string = "https://www.strava.com/dashboard";
-	public static readonly SYNC_WINDOW_WIDTH: number = 700;
-	public static readonly SYNC_WINDOW_HEIGHT: number = 700;
+	public static readonly SYNC_WINDOW_WIDTH: number = 690;
+	public static readonly SYNC_WINDOW_HEIGHT: number = 720;
 
 	constructor(public lastSyncDateTimeDao: LastSyncDateTimeDao,
 				public activityDao: ActivityDao,
