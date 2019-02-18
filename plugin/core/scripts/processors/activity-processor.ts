@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import {
 	ActivityInfoModel,
 	ActivitySourceDataModel,
@@ -8,7 +7,6 @@ import {
 	Gender,
 	UserSettingsModel
 } from "@elevate/shared/models";
-import { CoreEnv } from "../../config/core-env";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
 import { VacuumProcessor } from "./vacuum-processor";
@@ -46,68 +44,35 @@ export class ActivityProcessor {
 		this.zones = this.userSettings.zones;
 	}
 
-	public getAnalysisData(activityId: number, bounds: number[], callback: (athleteModel: AthleteModel, analysisData: AnalysisDataModel) => void): void {
+	public getAnalysisData(activityInfo: ActivityInfoModel, bounds: number[], callback: (athleteModel: AthleteModel, analysisData: AnalysisDataModel) => void): void {
 
 		if (!this.activityInfo.type) {
 			console.error("No activity type set for ActivityProcessor");
 		}
 
-		// We are not using cache when bounds are given
-		let useCache = true;
-		if (!_.isEmpty(bounds)) {
-			useCache = false;
-		}
+		setTimeout(() => {
 
-		if (useCache) {
-			// Find in cache first is data exist
-			const cacheResult: IAnalysisDataCache = JSON.parse(localStorage.getItem(ActivityProcessor.cachePrefix + activityId)) as IAnalysisDataCache;
+			// Call VacuumProcessor for getting data, compute them and cache them
+			this.vacuumProcessor.getActivityStream(this.activityInfo, (activitySourceData: ActivitySourceDataModel, activityStream: ActivityStreamsModel, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => { // Get stream on page
 
-			if (!_.isNull(cacheResult) && CoreEnv.useActivityStreamCache) {
-				console.log("Using existing activity cache mode");
-				callback(cacheResult.athleteModel, cacheResult.analysisDataModel);
-				return;
-			}
-		}
+				const onDate = (this.activityInfo.startTime) ? this.activityInfo.startTime : new Date();
+				const athleteModel: AthleteModel = this.athleteModelResolver.resolve(onDate);
 
-		// Else no cache... then call VacuumProcessor for getting data, compute them and cache them
-		this.vacuumProcessor.getActivityStream((activitySourceData: ActivitySourceDataModel, activityStream: ActivityStreamsModel, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => { // Get stream on page
-
-			const onDate = (this.activityInfo.startTime) ? this.activityInfo.startTime : new Date();
-			const athleteModel: AthleteModel = this.athleteModelResolver.resolve(onDate);
-
-			// Use as many properties of the author if user 'isOwner'
-			if (!this.activityInfo.isOwner) {
-				athleteModel.athleteSettings.weight = athleteWeight;
-				athleteModel.gender = athleteGender;
-			}
-
-			console.log("Compute with AthleteModel", JSON.stringify(athleteModel));
-
-			// Compute data in a background thread to avoid UI locking
-			this.computeAnalysisThroughDedicatedThread(hasPowerMeter, athleteModel, activitySourceData, activityStream, bounds, (resultFromThread: AnalysisDataModel) => {
-
-				callback(athleteModel, resultFromThread);
-
-				// Cache the result from thread to localStorage
-				if (useCache) {
-					console.log("Creating activity cache");
-					try {
-
-						const analysisDataCache: IAnalysisDataCache = {
-							analysisDataModel: resultFromThread,
-							athleteModel: athleteModel
-						};
-
-						localStorage.setItem(ActivityProcessor.cachePrefix + activityId, JSON.stringify(analysisDataCache)); // Cache the result to local storage
-					} catch (err) {
-						console.warn(err);
-						localStorage.clear();
-					}
+				// Use as many properties of the author if user 'isOwner'
+				if (!this.activityInfo.isOwner) {
+					athleteModel.athleteSettings.weight = athleteWeight;
+					athleteModel.gender = athleteGender;
 				}
 
-			});
+				console.log("Compute with AthleteModel", JSON.stringify(athleteModel));
 
+				// Compute data in a background thread to avoid UI locking
+				this.computeAnalysisThroughDedicatedThread(hasPowerMeter, athleteModel, activitySourceData, activityStream, bounds, (resultFromThread: AnalysisDataModel) => {
+					callback(athleteModel, resultFromThread);
+				});
+			});
 		});
+
 	}
 
 	private computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteModel: AthleteModel,

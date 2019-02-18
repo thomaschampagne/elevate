@@ -15,7 +15,7 @@ export class HideFeedModifier extends AbstractModifier {
 		this.userSettings = userSettings;
 	}
 
-	public modify(): void {
+	public modify(): void { // TODO Improve using code of RunningGradeAdjustedPaceModifier & ActivitiesChronologicalFeedModifier
 
 		const timeout = 250;
 

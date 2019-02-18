@@ -35,7 +35,7 @@ module.exports = function (config) {
 		webpack: {
 			mode: "development",
 			resolve: {
-				extensions: [".ts"]
+				extensions: [".ts", ".js"]
 			},
 			module: {
 				rules: [

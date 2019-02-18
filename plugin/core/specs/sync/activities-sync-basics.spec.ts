@@ -2,12 +2,12 @@ import * as _ from "lodash";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/specs-tools";
 import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";
-import { ActivitiesSynchronizer } from "../../scripts/processors/activities-synchronizer";
+import { ActivitiesSynchronize } from "../../scripts/processors/activities-synchronize";
 import { AthleteModelResolver } from "@elevate/shared/resolvers";
 import { ActivitiesChangesModel, SyncedActivityModel, UserSettingsModel } from "@elevate/shared/models";
 import { userSettingsData } from "@elevate/shared/data";
 
-describe("ActivitiesSynchronizer", () => {
+describe("ActivitiesSynchronize", () => {
 
 	let userSettingsMock: UserSettingsModel;
 	let athleteModelResolver: AthleteModelResolver;
@@ -63,7 +63,7 @@ describe("ActivitiesSynchronizer", () => {
 		rawPageOfActivities = editActivityFromArray(708752345, rawPageOfActivities, "MTB @ Bastille", "Ride"); // Edit Run "Bastille"
 
 		// Now find+test changes
-		const changes: ActivitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawPageOfActivities, syncedActivities);
+		const changes: ActivitiesChangesModel = ActivitiesSynchronize.findAddedAndEditedActivities(rawPageOfActivities, syncedActivities);
 
 		expect(changes).not.toBeNull();
 		expect(changes.deleted).toEqual([]);
@@ -85,7 +85,7 @@ describe("ActivitiesSynchronizer", () => {
 		expect(findWhere.type).toEqual("Ride");
 		expect(findWhere.display_type).toEqual("Ride");
 
-		expect(ActivitiesSynchronizer.findAddedAndEditedActivities(null, null)).not.toBeNull();
+		expect(ActivitiesSynchronize.findAddedAndEditedActivities(null, null)).not.toBeNull();
 
 		done();
 
@@ -94,33 +94,33 @@ describe("ActivitiesSynchronizer", () => {
 	it("should append activities of pages where activities added, modified and deleted ", (done: Function) => {
 
 		const appResourcesMock: AppResourcesModel = _.cloneDeep(require("../fixtures/app-resources/app-resources.json"));
-		const activitiesSynchronizer: ActivitiesSynchronizer = new ActivitiesSynchronizer(appResourcesMock, userSettingsMock, athleteModelResolver);
+		const activitiesSynchronize: ActivitiesSynchronize = new ActivitiesSynchronize(appResourcesMock, userSettingsMock, athleteModelResolver);
 
 		// Append
-		activitiesSynchronizer.appendGlobalActivitiesChanges({
+		activitiesSynchronize.appendGlobalActivitiesChanges({
 			added: [1, 2],
 			deleted: [],
 			edited: []
 		});
 
-		expect(activitiesSynchronizer.activitiesChanges).not.toBeNull();
-		expect(activitiesSynchronizer.activitiesChanges.added).toEqual([1, 2]);
-		expect(activitiesSynchronizer.activitiesChanges.deleted.length).toEqual(0);
-		expect(activitiesSynchronizer.activitiesChanges.edited.length).toEqual(0);
+		expect(activitiesSynchronize.activitiesChanges).not.toBeNull();
+		expect(activitiesSynchronize.activitiesChanges.added).toEqual([1, 2]);
+		expect(activitiesSynchronize.activitiesChanges.deleted.length).toEqual(0);
+		expect(activitiesSynchronize.activitiesChanges.edited.length).toEqual(0);
 
 		// Append
-		activitiesSynchronizer.appendGlobalActivitiesChanges({
+		activitiesSynchronize.appendGlobalActivitiesChanges({
 			added: [4, 5],
 			deleted: [],
 			edited: [{id: 6, name: "rideName", type: "Ride", display_type: "Ride"}]
 		});
-		expect(activitiesSynchronizer.activitiesChanges).not.toBeNull();
-		expect(activitiesSynchronizer.activitiesChanges.added.length).toEqual(4);
-		expect(activitiesSynchronizer.activitiesChanges.deleted.length).toEqual(0);
-		expect(activitiesSynchronizer.activitiesChanges.edited.length).toEqual(1);
+		expect(activitiesSynchronize.activitiesChanges).not.toBeNull();
+		expect(activitiesSynchronize.activitiesChanges.added.length).toEqual(4);
+		expect(activitiesSynchronize.activitiesChanges.deleted.length).toEqual(0);
+		expect(activitiesSynchronize.activitiesChanges.edited.length).toEqual(1);
 
 		// Append
-		activitiesSynchronizer.appendGlobalActivitiesChanges({
+		activitiesSynchronize.appendGlobalActivitiesChanges({
 			added: [5, 10, 11],
 			deleted: [15, 16],
 			edited: [{id: 6, name: "rideName", type: "Ride", display_type: "Ride"}, {
@@ -130,10 +130,10 @@ describe("ActivitiesSynchronizer", () => {
 				display_type: "Run"
 			}]
 		});
-		expect(activitiesSynchronizer.activitiesChanges).not.toBeNull();
-		expect(activitiesSynchronizer.activitiesChanges.added.length).toEqual(6); // id:5 already added
-		expect(activitiesSynchronizer.activitiesChanges.deleted.length).toEqual(2);
-		expect(activitiesSynchronizer.activitiesChanges.edited.length).toEqual(3);
+		expect(activitiesSynchronize.activitiesChanges).not.toBeNull();
+		expect(activitiesSynchronize.activitiesChanges.added.length).toEqual(6); // id:5 already added
+		expect(activitiesSynchronize.activitiesChanges.deleted.length).toEqual(2);
+		expect(activitiesSynchronize.activitiesChanges.edited.length).toEqual(3);
 
 		done();
 	});
