@@ -192,6 +192,16 @@
 	text-align: left;
 }
 
+#syncStatusError {
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-bottom: 5%;
+	text-align: left;
+	background: gold;
+	padding: 14px;
+	font-size: 14px;
+}
+
 #syncContainer progress {
 	height: 7px;
 }
@@ -202,12 +212,6 @@
 	padding-bottom: 2%;
 	text-align: left;
 	width: 100%;
-}
-
-#syncStatusError {
-	text-align: left;
-	color: #ff4f51;
-	margin: 15px
 }
 
 progress {

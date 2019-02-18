@@ -1,10 +1,15 @@
 import * as _ from "lodash";
 import { CoreEnv } from "../../config/core-env";
-import { ActivitySourceDataModel, ActivityStreamsModel, Gender } from "@elevate/shared/models";
+import { ActivityInfoModel, ActivitySourceDataModel, ActivityStreamsModel, Gender } from "@elevate/shared/models";
+import { BikeGearModel } from "../models/gear/bike-gear.model";
+import { GearType } from "../models/gear/gear-type.enum";
+import { ShoesGearModel } from "../models/gear/shoes-gear.model";
+import { GearModel } from "../models/gear/gear.model";
+import { Gzip } from "../utils/gzip";
 
 export class VacuumProcessor {
 
-	public static cachePrefix = "elevate_activityStream_";
+	public static cachePrefix = "elevate_stream_";
 
 	/**
 	 *  Get the strava athlete id connected
@@ -149,42 +154,150 @@ export class VacuumProcessor {
 	/**
 	 * @returns activity stream in callback
 	 */
-	public getActivityStream(callback: (activityCommonStats: ActivitySourceDataModel, activityStream: ActivityStreamsModel, // TODO Improve with Promise of Structure
-										athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => void): void {
+	/**
+	 *
+	 * @param activityInfo
+	 * @param callback
+	 */
+	public getActivityStream(activityInfo: ActivityInfoModel, callback: (activityCommonStats: ActivitySourceDataModel, activityStream: ActivityStreamsModel, // TODO Improve with Promise of Structure
+																		 athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => void): void {
 
-		let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + this.getActivityId());
+		if (_.isNumber(activityInfo.id)) {
 
-		if (cache) {
-			cache = JSON.parse(cache);
-			callback(cache.activityCommonStats, cache.stream, cache.athleteWeight, cache.athleteGender, cache.hasPowerMeter);
-			return;
+			let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + activityInfo.id);
+
+			if (cache) {
+				cache = Gzip.fromBase64(cache);
+				callback(cache.activityCommonStats, cache.stream, cache.athleteWeight, cache.athleteGender, cache.hasPowerMeter);
+				console.log("Using stream cache for activity '" + activityInfo.name + "' (id:" + activityInfo.id + ")");
+				return;
+			}
 		}
 
-		const url: string = "/activities/" + this.getActivityId() + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng&stream_types[]=grade_adjusted_speed";
+		let hasPowerMeter = true;
 
-		$.ajax(url).done((activityStream: ActivityStreamsModel) => {
+		let activityStream: ActivityStreamsModel;
 
-			let hasPowerMeter = true;
+		const hasLocalStreamData = window.pageView
+			&& window.pageView.streamsRequest
+			&& window.pageView.streamsRequest.streams
+			&& window.pageView.streamsRequest.streams.streamData
+			&& window.pageView.streamsRequest.streams.streamData.data;
+
+		const localStreamData: ActivityStreamsModel = (hasLocalStreamData) ? window.pageView.streamsRequest.streams.streamData.data : {};
+
+		let streamUrl: string = "/activities/" + this.getActivityId() + "/streams?";
+		let missingStream = false;
+
+		if (_.isEmpty(localStreamData.time)) {
+			streamUrl += "stream_types[]=time&";
+			missingStream = true;
+		}
+
+		if (_.isEmpty(localStreamData.distance)) {
+			streamUrl += "stream_types[]=distance&";
+			missingStream = true;
+		}
+
+		if (_.isEmpty(localStreamData.velocity_smooth)) {
+			streamUrl += "stream_types[]=velocity_smooth&";
+			missingStream = true;
+		}
+
+		if (_.isEmpty(localStreamData.altitude)) {
+			streamUrl += "stream_types[]=altitude&";
+			missingStream = true;
+		}
+
+		if (_.isEmpty(localStreamData.cadence)) {
+			streamUrl += "stream_types[]=cadence&";
+			missingStream = true;
+		}
+
+		if (_.isEmpty(localStreamData.heartrate)) {
+			streamUrl += "stream_types[]=heartrate&";
+			missingStream = true;
+		}
+
+		if (_.isEmpty(localStreamData.watts)) {
+
+			streamUrl += "stream_types[]=watts&";
+			missingStream = true;
+
+			if (_.isEmpty(localStreamData.watts_calc)) {
+				streamUrl += "stream_types[]=watts_calc&";
+				missingStream = true;
+			}
+		}
+
+		if (_.isEmpty(localStreamData.latlng) && activityInfo && !activityInfo.isTrainer) {
+			streamUrl += "stream_types[]=latlng&";
+			missingStream = true;
+		}
+
+		if (_.isEmpty(localStreamData.grade_smooth)) {
+			streamUrl += "stream_types[]=grade_smooth&";
+			missingStream = true;
+		}
+
+		if (_.isEmpty(localStreamData.grade_adjusted_speed) && activityInfo && (activityInfo.type === "Run" || activityInfo.type === "VirtualRun")) {
+			streamUrl += "stream_types[]=grade_adjusted_speed&";
+			missingStream = true;
+		}
+
+		let activityStreamPromise: Promise<ActivityStreamsModel>;
+
+		if (missingStream) {
+			activityStreamPromise = new Promise(resolve => {
+				$.ajax(streamUrl).done((activityStream: ActivityStreamsModel) => {
+					resolve(activityStream);
+				});
+			});
+
+		} else {
+			activityStreamPromise = Promise.resolve(localStreamData);
+		}
+
+		// We have a complete stream for all sensors
+		activityStreamPromise.then((completeStream: ActivityStreamsModel) => {
+
+			activityStream = new ActivityStreamsModel(
+				(localStreamData.time) ? localStreamData.time : completeStream.time,
+				(localStreamData.distance) ? localStreamData.distance : completeStream.distance,
+				(localStreamData.velocity_smooth) ? localStreamData.velocity_smooth : completeStream.velocity_smooth,
+				(localStreamData.altitude) ? localStreamData.altitude : completeStream.altitude,
+				(localStreamData.cadence) ? localStreamData.cadence : completeStream.cadence,
+				(localStreamData.heartrate) ? localStreamData.heartrate : completeStream.heartrate,
+				(localStreamData.watts) ? localStreamData.watts : completeStream.watts,
+				(localStreamData.watts_calc) ? localStreamData.watts_calc : completeStream.watts_calc,
+				(localStreamData.latlng) ? localStreamData.latlng : completeStream.latlng,
+				(localStreamData.grade_smooth) ? localStreamData.grade_smooth : completeStream.grade_smooth,
+				(localStreamData.grade_adjusted_speed) ? localStreamData.grade_adjusted_speed : completeStream.grade_adjusted_speed);
 
 			if (_.isEmpty(activityStream.watts)) {
 				activityStream.watts = activityStream.watts_calc;
 				hasPowerMeter = false;
 			}
 
+			// Save result to cache
 			try {
-				// Save result to cache
-				localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), JSON.stringify({
+				const cache = {
 					activityCommonStats: this.getActivityStatsMap(),
 					stream: activityStream,
 					athleteWeight: this.getAthleteWeight(),
 					hasPowerMeter,
-				}));
+				};
+
+				localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), Gzip.toBase64(cache));
 			} catch (err) {
 				console.warn(err);
 				localStorage.clear();
 			}
 
 			callback(this.getActivityStatsMap(), activityStream, this.getAthleteWeight(), this.getActivityAthleteGender(), hasPowerMeter);
+		}, error => {
+			console.error(error);
+			callback(this.getActivityStatsMap(), new ActivityStreamsModel(), this.getAthleteWeight(), this.getActivityAthleteGender(), hasPowerMeter);
 		});
 	}
 
@@ -263,36 +376,43 @@ export class VacuumProcessor {
 	/**
 	 * @returns Array of bikes/odo
 	 */
-	public getBikeOdoOfAthlete(athleteId: number, callback: (bikeOdoArray: any) => void): void {
+	public getAthleteGear<T extends GearModel>(athleteId: number, type: GearType): Promise<T[]> {
 
-		if (_.isUndefined(window.pageView)) {
-			callback(null);
-			return;
+		let gearType;
+
+		if (type === GearType.BIKE) {
+			gearType = "bikes";
+		} else if (type === GearType.SHOES) {
+			gearType = "shoes";
+		} else {
+			throw new Error("Unsupported gear type");
 		}
 
-		if (window.pageView.activity().attributes.type != "Ride") {
-			callback(null);
-			return;
-		}
+		const url: string = "/athletes/" + athleteId + "/gear/" + gearType;
 
-		const url: string = location.protocol + "//www.strava.com/athletes/" + athleteId;
+		return new Promise((resolve, reject) => {
+			$.ajax({
+				url,
+				dataType: "json",
+			}).done((results: any[], textStatus: string, jqXHR: JQuery.jqXHR) => {
 
-		$.ajax({
-			url,
-			dataType: "json",
-		}).always((data: any) => {
+				if (textStatus !== "success") {
+					reject(jqXHR);
+				} else {
+					const gears: GearModel[] = [];
+					_.forEach(results, (result: any) => {
+						if (type === GearType.BIKE) {
+							gears.push(new BikeGearModel(result.id, ((result.total_distance) ? parseInt(result.total_distance.replace(",", "")) : 0), result.active,
+								result.default, result.description, result.display_name));
+						} else if (type === GearType.SHOES) {
+							gears.push(new ShoesGearModel(result.id, ((result.total_distance) ? parseInt(result.total_distance.replace(",", "")) : 0), result.active,
+								result.default, result.description, result.display_name, result.brand_name, result.model_name, result.name, result.notification_distance));
+						}
 
-			const bikeOdoArray: any = {};
-
-			_.forEach($(data.responseText).find("div.gear>table>tbody>tr"), (element: Element) => {
-
-				const bikeName: string = $(element).find("td").first().text().trim();
-				const bikeOdo: string = $(element).find("td").last().text().trim();
-
-				bikeOdoArray[btoa(window.unescape(encodeURIComponent(bikeName)))] = bikeOdo;
+					});
+					resolve(gears as T[]);
+				}
 			});
-
-			callback(bikeOdoArray);
 		});
 	}
 
