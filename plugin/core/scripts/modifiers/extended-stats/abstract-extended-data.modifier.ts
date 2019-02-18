@@ -45,7 +45,20 @@ export abstract class AbstractExtendedDataModifier {
 			console.error("ExtendedDataModifier must be set");
 		}
 
-		// Getting data to display at least summary panel. Cache will be normally used next if user click 'Show extended stats' in ACTIVITY mode
+		// Only display the extended stat button now. Sub panel is now displayed
+		if (this.type === AbstractExtendedDataModifier.TYPE_ACTIVITY) {
+			// Add Show extended statistics to page
+			this.placeExtendedStatsButton(() => {
+				console.debug("Extended Button for segment has been placed...");
+			});
+		} else if (this.type === AbstractExtendedDataModifier.TYPE_SEGMENT) {
+			// Place button for segment
+			this.placeExtendedStatsButtonSegment(() => {
+				console.debug("Extended Button for segment has been placed...");
+			});
+		}
+
+		/*// Getting data to display at least summary panel. Cache will be normally used next if user click 'Show extended stats' in ACTIVITY mode
 		this.activityProcessor.getAnalysisData(
 			this.activityInfo.id,
 			null, // No bounds given, full activity requested
@@ -71,7 +84,7 @@ export abstract class AbstractExtendedDataModifier {
 					});
 				}
 			},
-		);
+		);*/
 	}
 
 	protected placeSummaryPanel(panelAdded: () => void): void {
@@ -156,7 +169,7 @@ export abstract class AbstractExtendedDataModifier {
 
 		let htmlButton = "<section style=\"text-align: center;\">";
 		htmlButton += "<a class=\"button btn-block btn-primary\" id=\"extendedStatsButton\" href=\"#\">";
-		htmlButton += "Show extended statistics";
+		htmlButton += "Display elevate extended stats";
 		htmlButton += "</a>";
 		htmlButton += "</section>";
 
@@ -165,7 +178,7 @@ export abstract class AbstractExtendedDataModifier {
 			$("#extendedStatsButton").click(() => {
 
 				this.activityProcessor.getAnalysisData(
-					this.activityInfo.id,
+					this.activityInfo,
 					null, // No bounds given, full activity requested
 					(athleteModel: AthleteModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
 
@@ -203,7 +216,7 @@ export abstract class AbstractExtendedDataModifier {
 				};
 
 				this.activityProcessor.getAnalysisData(
-					this.activityInfo.id,
+					this.activityInfo,
 					[segmentInfosResponse.start_index, segmentInfosResponse.end_index], // Bounds given, full activity requested
 					(athleteModel: AthleteModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
 
