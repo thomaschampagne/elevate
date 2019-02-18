@@ -204,6 +204,11 @@ export class GlobalSettingsService {
 			type: "checkbox",
 			title: "Relive your rides/runs with relive.cc",
 			labels: ["Cycling", "Running"],
+		}, {
+			key: "displayWindyOverlay",
+			type: "checkbox",
+			title: "Display Wind, Temp, Clouds & Humidity overlay of your cycling activity",
+			labels: ["Cycling"],
 		}],
 	}, {
 		title: "Segments viewing options",
