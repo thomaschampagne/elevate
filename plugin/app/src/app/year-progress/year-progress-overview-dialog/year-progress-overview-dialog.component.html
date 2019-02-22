@@ -1,10 +1,15 @@
 <h2 mat-dialog-title>Progressions overview on {{data.momentWatched.format("MMMM Do")}}</h2>
-<h4 class="mat-body-1">Activity types: <i>{{data.selectedActivityTypes.join(", ")}}</i></h4>
+<div class="info mat-body-1">Progress Mode:
+	<i *ngIf="data.progressConfig.mode === ProgressMode.YEAR_TO_DATE">Year to date</i>
+	<i *ngIf="data.progressConfig.mode === ProgressMode.ROLLING">Rolling on {{data.progressConfig.rollingDays}} days</i>
+</div>
+<div class="info mat-body-1">Activity types: <i>{{data.selectedActivityTypes.join(", ")}}</i></div>
 <mat-dialog-content class="mat-body-1">
 	<div fxLayout="row" fxLayoutAlign="space-between center">
 		<ng-container *ngFor="let progressType of data.progressTypes; let index = index;">
 			<div fxFlex>
-				<app-year-progress-table [hideYearsColumn]="(index !== 0)"
+				<app-year-progress-table [progressConfig]="data.progressConfig"
+										 [hideYearsColumn]="(index !== 0)"
 										 [selectedYears]="data.selectedYears"
 										 [selectedProgressType]="progressType"
 										 [yearProgressions]="data.yearProgressions"

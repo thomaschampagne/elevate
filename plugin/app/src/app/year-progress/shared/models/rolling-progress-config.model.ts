@@ -1,15 +1,27 @@
 import { ProgressMode } from "../enums/progress-mode.enum";
-import { StandardProgressConfigModel } from "./standard-progress-config.model";
+import { YearToDateProgressConfigModel } from "./year-to-date-progress-config.model";
+import { ProgressConfig } from "../interfaces/progress-config";
 
-export class RollingProgressConfigModel extends StandardProgressConfigModel {
+export class RollingProgressConfigModel extends YearToDateProgressConfigModel {
 
-	public readonly mode = ProgressMode.ROLLING_CUMULATIVE; // Overrides mode
+	public static instanceFrom(progressConfig: ProgressConfig): RollingProgressConfigModel {
+
+		if (progressConfig.mode !== ProgressMode.ROLLING) {
+			throw new Error("progressConfig.mode !== ProgressMode.ROLLING");
+		}
+
+		return new RollingProgressConfigModel(progressConfig.activityTypes, progressConfig.years, progressConfig.isMetric,
+			progressConfig.includeCommuteRide, progressConfig.includeIndoorRide, (<RollingProgressConfigModel>progressConfig).rollingDays);
+	}
+
+	public readonly mode = ProgressMode.ROLLING; // Overrides mode
 
 	public readonly rollingDays: number;
 
-	constructor(typesFilter: string[], yearsFilter: number[], isMetric: boolean, includeCommuteRide: boolean,
+	constructor(typesFilter: string[], years: number[], isMetric: boolean, includeCommuteRide: boolean,
 				includeIndoorRide: boolean, rollingDays: number) {
-		super(typesFilter, yearsFilter, isMetric, includeCommuteRide, includeIndoorRide);
+		super(typesFilter, isMetric, includeCommuteRide, includeIndoorRide);
 		this.rollingDays = rollingDays;
+		this.years = years;
 	}
 }

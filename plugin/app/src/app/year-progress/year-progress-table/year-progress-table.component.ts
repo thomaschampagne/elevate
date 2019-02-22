@@ -13,6 +13,8 @@ import { DeltaType } from "./models/delta-type.enum";
 import { MatTableDataSource } from "@angular/material";
 import { Delta } from "./models/delta.model";
 import { TargetProgressModel } from "../shared/models/target-progress.model";
+import { ProgressConfig } from "../shared/interfaces/progress-config";
+import { ProgressMode } from "../shared/enums/progress-mode.enum";
 
 @Component({
 	selector: "app-year-progress-table",
@@ -41,6 +43,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 
 	public readonly ProgressType = ProgressType;
 	public readonly DeltaType = DeltaType;
+	public readonly ProgressMode = ProgressMode;
 
 	public todayMoment: Moment;
 	public momentWatched: Moment;
@@ -48,6 +51,9 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 	public currentYearProgressAtDayModel: ProgressAtDayModel;
 	public dataSource: MatTableDataSource<ProgressionAtDayRow>;
 	public initialized = false;
+
+	@Input("progressConfig")
+	public progressConfig: ProgressConfig;
 
 	@Input("hideYearsColumn")
 	public hideYearsColumn: boolean;

@@ -14,15 +14,15 @@ import { YearProgressActivitiesFixture } from "./shared/services/year-progress-a
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { userSettingsData } from "@elevate/shared/data";
 import { YearProgressModule } from "./year-progress.module";
-import { YearProgressPresetModel } from "./shared/models/year-progress-preset.model";
+import { YearToDateProgressPresetModel } from "./shared/models/year-to-date-progress-preset.model";
 import { ProgressType } from "./shared/enums/progress-type.enum";
 
 describe("YearProgressComponent", () => {
 
 	const yearProgressPresetModels = [
-		new YearProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false, 750),
-		new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
-		new YearProgressPresetModel(ProgressType.ELEVATION, ["Ride"], false, false, 30000),
+		new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false, 750),
+		new YearToDateProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
+		new YearToDateProgressPresetModel(ProgressType.ELEVATION, ["Ride"], false, false, 30000),
 	];
 
 	let component: YearProgressComponent;
@@ -87,7 +87,7 @@ describe("YearProgressComponent", () => {
 		];
 
 		// When
-		const mostPerformedType = component.findMostPerformedActivityType(activitiesCountByTypeModels);
+		const mostPerformedType = YearProgressComponent.findMostPerformedActivityType(activitiesCountByTypeModels);
 
 		// Then
 		expect(mostPerformedType).toEqual(expected);

@@ -8,6 +8,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { YearProgressForOverviewModel } from "../shared/models/year-progress-for-overview.model";
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
 import * as moment from "moment";
+import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-progress-config.model";
 
 describe("YearProgressOverviewDialogComponent", () => {
 
@@ -22,6 +23,7 @@ describe("YearProgressOverviewDialogComponent", () => {
 	const colors: string [] = ["red", "blue", "green", "purple"];
 
 	const yearProgressForOverviewModel: YearProgressForOverviewModel = {
+		progressConfig: new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true, true),
 		momentWatched: moment(),
 		selectedYears: [2017, 2016],
 		selectedActivityTypes: ["Ride", "Run"],

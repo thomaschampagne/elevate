@@ -1,4 +1,4 @@
 export enum ProgressMode {
-	STANDARD_CUMULATIVE,
-	ROLLING_CUMULATIVE
+	YEAR_TO_DATE,
+	ROLLING
 }
