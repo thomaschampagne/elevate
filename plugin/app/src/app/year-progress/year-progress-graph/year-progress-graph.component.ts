@@ -11,11 +11,11 @@ import { MetricsGraphicsEventModel } from "../../shared/models/graphs/metrics-gr
 import { ProgressType } from "../shared/enums/progress-type.enum";
 import { GraphPointModel } from "../../shared/models/graphs/graph-point.model";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
-import { Subscription } from "rxjs";
-import { WindowService } from "../../shared/services/window/window.service";
-import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
 import { YearProgressService } from "../shared/services/year-progress.service";
 import { TargetProgressModel } from "../shared/models/target-progress.model";
+import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
+import { WindowService } from "../../shared/services/window/window.service";
+import { Subscription } from "rxjs";
 
 @Component({
 	selector: "app-year-progress-graph",
@@ -34,6 +34,9 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 				public sideNavService: SideNavService,
 				public windowService: WindowService) {
 	}
+
+	@Input("isGraphExpanded")
+	public isGraphExpanded: boolean;
 
 	@Input("selectedYears")
 	public selectedYears: number[];
@@ -57,10 +60,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public windowResizingSubscription: Subscription;
 	public isGraphDataReadyOnYearChange = false;
 	public initialized = false;
-
-	public static findGraphicHeight(): number {
-		return window.innerHeight * 0.65;
-	}
 
 	public static clearSvgGraphContent(): void {
 		const svgElement = document.getElementById(YearProgressGraphComponent.GRAPH_DOM_ELEMENT_ID).children[0];
@@ -102,6 +101,10 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		if (changes.selectedYears) {
 			YearProgressGraphComponent.clearSvgGraphContent();
 			this.isGraphDataReadyOnYearChange = false;
+		}
+
+		if (changes.isGraphExpanded) {
+			this.onComponentSizeChanged();
 		}
 
 		// Always re-draw svg content
@@ -326,7 +329,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 			animate_on_load: false,
 			transition_on_update: false,
 			aggregate_rollover: true,
-			interpolate: d3.curveLinear,
+			interpolate: d3.curveNatural,
 			missing_is_hidden: true,
 			missing_is_hidden_accessor: "hidden",
 			xax_count: 12,
@@ -355,9 +358,16 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		this.applyGraphHeight();
 	}
 
+	/**
+	 * @return year progress graph height. Height is lower if graph is expanded
+	 */
+	public findGraphicHeight(): number {
+		return window.innerHeight * 0.65 * ((this.isGraphExpanded) ? 0.80 : 1);
+	}
+
 	public applyGraphHeight(): void {
-		const height: number = YearProgressGraphComponent.findGraphicHeight();
-		this.graphConfig.height = height;
+		const height: number = this.findGraphicHeight();
+		this.graphConfig.height = this.findGraphicHeight();
 		document.getElementById(YearProgressGraphComponent.GRAPH_WRAPPER_DOM_ELEMENT_ID).style.height = height + "px";
 	}
 

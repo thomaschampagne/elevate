@@ -11,7 +11,7 @@ import { YearProgressTypeModel } from "../shared/models/year-progress-type.model
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { YearProgressModule } from "../year-progress.module";
-import { StandardProgressConfigModel } from "../shared/models/standard-progress-config.model";
+import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-progress-config.model";
 
 describe("YearProgressGraphComponent", () => {
 
@@ -47,7 +47,7 @@ describe("YearProgressGraphComponent", () => {
 		yearProgressService.momentWatched = moment();
 
 		// Inject fake progression
-		const progressConfig = new StandardProgressConfigModel(["Ride", "VirtualRide", "Run"], [], true, true, true);
+		const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true, true);
 
 		component.yearProgressions = yearProgressService.progressions(progressConfig, syncedActivityModels);
 

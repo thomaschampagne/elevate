@@ -1,11 +1,11 @@
-import { YearProgressPresetModel } from "./year-progress-preset.model";
+import { YearToDateProgressPresetModel } from "./year-to-date-progress-preset.model";
 
 export class YearProgressPresetsDialogResponse {
 
-	public deletedPresets: YearProgressPresetModel[];
-	public loadPreset: YearProgressPresetModel;
+	public deletedPresets: YearToDateProgressPresetModel[];
+	public loadPreset: YearToDateProgressPresetModel;
 
-	constructor(deletedPresets: YearProgressPresetModel[], loadPreset: YearProgressPresetModel) {
+	constructor(deletedPresets: YearToDateProgressPresetModel[], loadPreset: YearToDateProgressPresetModel) {
 		this.deletedPresets = deletedPresets;
 		this.loadPreset = loadPreset;
 	}

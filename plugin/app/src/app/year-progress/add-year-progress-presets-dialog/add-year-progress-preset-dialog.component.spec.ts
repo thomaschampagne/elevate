@@ -1,27 +1,26 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AddYearProgressPresetsDialogComponent } from "./add-year-progress-presets-dialog.component";
+import { AddYearProgressPresetDialogComponent } from "./add-year-progress-preset-dialog.component";
 import { YearProgressModule } from "../year-progress.module";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
-import { AddYearProgressPresetsDialogData } from "../shared/models/add-year-progress-presets-dialog-data";
+import { AddYearToDateProgressPresetDialogData } from "../shared/models/add-year-to-date-progress-preset-dialog-data";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import { ProgressType } from "../shared/enums/progress-type.enum";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 
-describe("AddYearProgressPresetsDialogComponent", () => {
-	let component: AddYearProgressPresetsDialogComponent;
-	let fixture: ComponentFixture<AddYearProgressPresetsDialogComponent>;
+describe("AddYearProgressPresetDialogComponent", () => {
+	let component: AddYearProgressPresetDialogComponent;
+	let fixture: ComponentFixture<AddYearProgressPresetDialogComponent>;
 
 	beforeEach((done: Function) => {
 
-		const addYearProgressPresetsDialogData: AddYearProgressPresetsDialogData = {
-			yearProgressTypeModel: new YearProgressTypeModel(ProgressType.DISTANCE, "Distance"),
-			activityTypes: ["Ride", "VirtualRide"],
-			includeCommuteRide: true,
-			includeIndoorRide: true,
-			targetValue: 5000
-		};
+		const addYearProgressPresetsDialogData: AddYearToDateProgressPresetDialogData =
+			new AddYearToDateProgressPresetDialogData(new YearProgressTypeModel(ProgressType.DISTANCE, "Distance"),
+				["Ride", "VirtualRide"],
+				true,
+				true,
+				5000);
 
 		TestBed.configureTestingModule({
 			imports: [
@@ -43,7 +42,7 @@ describe("AddYearProgressPresetsDialogComponent", () => {
 	});
 
 	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(AddYearProgressPresetsDialogComponent);
+		fixture = TestBed.createComponent(AddYearProgressPresetDialogComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 		done();

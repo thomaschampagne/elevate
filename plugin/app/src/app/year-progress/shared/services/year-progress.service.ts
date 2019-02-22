@@ -11,15 +11,16 @@ import { ProgressType } from "../enums/progress-type.enum";
 import { Subject } from "rxjs";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { Constant } from "@elevate/shared/constants";
-import { YearProgressPresetModel } from "../models/year-progress-preset.model";
+import { YearToDateProgressPresetModel } from "../models/year-to-date-progress-preset.model";
 import { YearProgressPresetDao } from "../dao/year-progress-preset.dao";
 import { AppError } from "../../../shared/models/app-error.model";
 import { YearProgressTypeModel } from "../models/year-progress-type.model";
 import { TargetProgressModel } from "../models/target-progress.model";
 import { ProgressMode } from "../enums/progress-mode.enum";
-import { ProgressConfigModel } from "../interfaces/progress-config.model";
-import { StandardProgressConfigModel } from "../models/standard-progress-config.model";
+import { ProgressConfig } from "../interfaces/progress-config";
+import { YearToDateProgressConfigModel } from "../models/year-to-date-progress-config.model";
 import { RollingProgressConfigModel } from "../models/rolling-progress-config.model";
+import { RollingProgressPresetModel } from "../models/rolling-progress-preset.model";
 
 @Injectable()
 export class YearProgressService {
@@ -50,18 +51,18 @@ export class YearProgressService {
 	 * @param config
 	 * @param syncedActivityModels
 	 */
-	public progressions(config: ProgressConfigModel, syncedActivityModels: SyncedActivityModel[]): YearProgressModel[] {
+	public progressions(config: ProgressConfig, syncedActivityModels: SyncedActivityModel[]): YearProgressModel[] {
 
 		if (_.isEmpty(syncedActivityModels)) {
 			throw new Error(YearProgressService.ERROR_NO_SYNCED_ACTIVITY_MODELS);
 		}
 
-		if (_.isEmpty(config.typesFilter)) {
+		if (_.isEmpty(config.activityTypes)) {
 			throw new Error(YearProgressService.ERROR_NO_TYPES_FILTER);
 		}
 
 
-		let yearProgressActivities = this.filterSyncedActivityModelAlongTypes(syncedActivityModels, config.typesFilter);
+		let yearProgressActivities = this.filterSyncedActivityModelAlongTypes(syncedActivityModels, config.activityTypes);
 
 		if (_.isEmpty(yearProgressActivities)) {
 			throw new Error(YearProgressService.ERROR_NO_YEAR_PROGRESS_MODELS);
@@ -77,9 +78,9 @@ export class YearProgressService {
 		const fromMoment: Moment = moment(_.first(syncedActivityModels).start_time).startOf("year"); // 1st january of first year
 		const toMoment: Moment = this.getTodayMoment().clone().endOf("year").endOf("day");
 
-		return (config.mode === ProgressMode.STANDARD_CUMULATIVE)
-			? this.computeStandardProgressions(config as StandardProgressConfigModel, fromMoment, toMoment, todayMoment, yearProgressActivities)
-			: this.computeRollingProgressions(config as RollingProgressConfigModel, fromMoment, toMoment, todayMoment, yearProgressActivities);
+		return (config.mode === ProgressMode.YEAR_TO_DATE)
+			? this.computeYearToDateSumProgressions(config as YearToDateProgressConfigModel, fromMoment, toMoment, todayMoment, yearProgressActivities)
+			: this.computeRollingSumProgressions(config as RollingProgressConfigModel, fromMoment, toMoment, todayMoment, yearProgressActivities);
 	}
 
 	/**
@@ -90,14 +91,14 @@ export class YearProgressService {
 	 * @param todayMoment
 	 * @param yearProgressActivities
 	 */
-	public computeStandardProgressions(config: StandardProgressConfigModel,
-									   fromMoment: Moment,
-									   toMoment: Moment,
-									   todayMoment,
-									   yearProgressActivities): YearProgressModel[] {
+	public computeYearToDateSumProgressions(config: YearToDateProgressConfigModel,
+											fromMoment: Moment,
+											toMoment: Moment,
+											todayMoment,
+											yearProgressActivities): YearProgressModel[] {
 
 		const yearProgressions: YearProgressModel[] = [];
-		const hasYearFilter = !_.isEmpty(config.yearsFilter);
+		const hasYearFilter = !_.isEmpty(config.years);
 		let lastProgress: ProgressModel = null;
 
 		// From 'fromMoment' to 'todayMoment' loop on days...
@@ -110,7 +111,7 @@ export class YearProgressService {
 			let progress: ProgressModel = null;
 
 			if (hasYearFilter) {
-				const currentYearNotSelected = (_.indexOf(config.yearsFilter, currentYear) === -1);
+				const currentYearNotSelected = (_.indexOf(config.years, currentYear) === -1);
 				if (currentYearNotSelected) { // Does exists current year in filter from the user?
 					currentDayMoment.add(1, "years");
 					continue;
@@ -197,11 +198,11 @@ export class YearProgressService {
 	 * @param todayMoment
 	 * @param yearProgressActivities
 	 */
-	public computeRollingProgressions(config: RollingProgressConfigModel,
-									  fromMoment: Moment,
-									  toMoment: Moment,
-									  todayMoment,
-									  yearProgressActivities): YearProgressModel[] {
+	public computeRollingSumProgressions(config: RollingProgressConfigModel,
+										 fromMoment: Moment,
+										 toMoment: Moment,
+										 todayMoment,
+										 yearProgressActivities): YearProgressModel[] {
 
 		const yearProgressions: YearProgressModel[] = [];
 
@@ -218,7 +219,7 @@ export class YearProgressService {
 			count: []
 		};
 
-		const maxYearToCompute: number = (!_.isEmpty(config.yearsFilter)) ? _.max(config.yearsFilter) : null;
+		const maxYearToCompute: number = (!_.isEmpty(config.years)) ? _.max(config.years) : null;
 
 		while (currentDayMoment.isSameOrBefore(toMoment)) {
 
@@ -268,7 +269,7 @@ export class YearProgressService {
 			rollingBuffers.elevation.push(onDayTotals.elevation);
 			rollingBuffers.count.push(onDayTotals.count);
 
-			const rollingCumulative = {
+			const rollingSum = {
 				distance: (_.sum(rollingBuffers.distance) - ((isRollingBufferSizeReached) ? rollingBuffers.distance.shift() : 0)),
 				time: (_.sum(rollingBuffers.time) - (((isRollingBufferSizeReached) ? rollingBuffers.time.shift() : 0))),
 				elevation: (_.sum(rollingBuffers.elevation) - ((isRollingBufferSizeReached) ? rollingBuffers.elevation.shift() : 0)),
@@ -278,10 +279,10 @@ export class YearProgressService {
 			const progression: ProgressModel = new ProgressModel(
 				currentDayMoment.year(),
 				currentDayMoment.dayOfYear(),
-				rollingCumulative.distance,
-				rollingCumulative.time,
-				rollingCumulative.elevation,
-				rollingCumulative.count
+				rollingSum.distance,
+				rollingSum.time,
+				rollingSum.elevation,
+				rollingSum.count
 			);
 
 			// Create new year progress if current year do not exists
@@ -339,7 +340,7 @@ export class YearProgressService {
 	 * @param year
 	 * @param targetValue
 	 */
-	public targetProgression(year: number, targetValue: number): TargetProgressModel[] {
+	public yearToDateTargetProgression(year: number, targetValue: number): TargetProgressModel[] {
 
 		const targetProgressModels: TargetProgressModel[] = [];
 		const daysInYear = (moment().year(year).isLeapYear()) ? 366 : 365;
@@ -355,6 +356,25 @@ export class YearProgressService {
 			targetProgress += progressStep;
 		}
 
+		return targetProgressModels;
+	}
+
+	/**
+	 *
+	 * @param year
+	 * @param targetValue
+	 */
+	public rollingTargetProgression(year: number, targetValue: number): TargetProgressModel[] {
+
+		const targetProgressModels: TargetProgressModel[] = [];
+		const daysInYear = (moment().year(year).isLeapYear()) ? 366 : 365;
+
+		for (let day = 1; day <= daysInYear; day++) {
+			targetProgressModels.push({
+				dayOfYear: day,
+				value: targetValue
+			});
+		}
 		return targetProgressModels;
 	}
 
@@ -529,31 +549,40 @@ export class YearProgressService {
 	/**
 	 * Fetch all preset
 	 */
-	public fetchPresets(): Promise<YearProgressPresetModel[]> {
-		return (<Promise<YearProgressPresetModel[]>>this.yearProgressPresetDao.fetch());
+	public fetchPresets(): Promise<YearToDateProgressPresetModel[]> {
+		return (<Promise<YearToDateProgressPresetModel[]>>this.yearProgressPresetDao.fetch());
 	}
 
 	/**
 	 * Add preset to existing
-	 * @param yearProgressPresetModel
+	 * @param presetModel
 	 */
-	public addPreset(yearProgressPresetModel: YearProgressPresetModel): Promise<YearProgressPresetModel[]> {
+	public addPreset(presetModel: YearToDateProgressPresetModel): Promise<YearToDateProgressPresetModel[]> {
 
-		return (<Promise<YearProgressPresetModel[]>>this.yearProgressPresetDao.fetch().then((models: YearProgressPresetModel[]) => {
+		return (<Promise<YearToDateProgressPresetModel[]>>this.yearProgressPresetDao.fetch().then((models: YearToDateProgressPresetModel[]) => {
 
-			const existingModel = _.find(models, {
-				progressType: yearProgressPresetModel.progressType,
-				activityTypes: yearProgressPresetModel.activityTypes,
-				includeCommuteRide: yearProgressPresetModel.includeCommuteRide,
-				includeIndoorRide: yearProgressPresetModel.includeIndoorRide,
-				targetValue: yearProgressPresetModel.targetValue
-			});
+			const query = {
+				mode: presetModel.mode,
+				progressType: presetModel.progressType,
+				activityTypes: presetModel.activityTypes,
+				includeCommuteRide: presetModel.includeCommuteRide,
+				includeIndoorRide: presetModel.includeIndoorRide,
+				targetValue: presetModel.targetValue
+			};
+
+			if (presetModel.mode === ProgressMode.ROLLING) {
+				const rollingPresetModel = (presetModel as RollingProgressPresetModel);
+				query["rollingPeriod"] = rollingPresetModel.rollingPeriod;
+				query["periodMultiplier"] = rollingPresetModel.periodMultiplier;
+			}
+
+			const existingModel = _.find(models, query);
 
 			if (existingModel) {
 				return Promise.reject(new AppError(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS, "You already saved this preset."));
 			}
 
-			models.push(yearProgressPresetModel);
+			models.push(presetModel);
 
 			return this.yearProgressPresetDao.save(models);
 		}));
@@ -564,7 +593,7 @@ export class YearProgressService {
 	 * @param index
 	 */
 	public deletePreset(index: number): Promise<void> {
-		return this.yearProgressPresetDao.fetch().then((models: YearProgressPresetModel[]) => {
+		return this.yearProgressPresetDao.fetch().then((models: YearToDateProgressPresetModel[]) => {
 
 			if (!models[index]) {
 				return Promise.reject(new AppError(AppError.YEAR_PROGRESS_PRESETS_DO_NOT_EXISTS, "Year progress cannot be deleted"));
