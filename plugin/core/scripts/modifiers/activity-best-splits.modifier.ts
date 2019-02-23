@@ -1,7 +1,8 @@
 import * as _ from "lodash";
 import { Helper } from "../helper";
-import { UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, ActivitySourceDataModel, ActivityStreamsModel, Gender, UserSettingsModel } from "@elevate/shared/models";
 import { AbstractModifier } from "./abstract.modifier";
+import { VacuumProcessor } from "../processors/vacuum-processor";
 
 declare let L: any; // Injected by strava.com
 
@@ -231,8 +232,8 @@ function BestSplitWorker() {
 						values.avgPower.timeOrDistance = timeOrDistance;
 					}
 
-					const elevationGain: number = this.totalGainOfValues(begin, end, activityJson.filteredAltitude) * ratio;
-					const elevationDrop: number = this.totalDropOfValues(begin, end, activityJson.filteredAltitude) * ratio;
+					const elevationGain: number = this.totalGainOfValues(begin, end, activityJson.altitude) * ratio;
+					const elevationDrop: number = this.totalDropOfValues(begin, end, activityJson.altitude) * ratio;
 					if (elevationGain > values.elevationGain.value) {
 						values.elevationGain.value = elevationGain;
 						values.elevationGain.begin = begin;
@@ -414,26 +415,25 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
 		},
 	};
 
-	private readonly activityId: number;
+	private activityStreams: ActivityStreamsModel;
+	private vacuumProcessor: VacuumProcessor;
+	private activityInfo: ActivityInfoModel;
 	private userSettings: UserSettingsModel;
-	private activityJson: any;
-	private hasPowerMeter: boolean;
 	private readonly splitsConfiguration: any;
-	private readonly saveSplitsConfigrationMethod: Function;
+	private readonly saveSplitsConfigurationMethod: Function;
 	private distanceUnit: number;
 	private readonly cacheKeyPrefix: string;
 
-	constructor(activityId: number, userSettings: UserSettingsModel, activityJson: any, hasPowerMeter: boolean, splitsConfiguration: any, saveSplitsConfigrationMethod: Function) {
+	constructor(vacuumProcessor: VacuumProcessor, activityInfo: ActivityInfoModel, userSettings: UserSettingsModel, splitsConfiguration: any, saveSplitsConfigrationMethod: Function) {
 		super();
-		this.activityId = activityId;
+		this.vacuumProcessor = vacuumProcessor;
+		this.activityInfo = activityInfo;
 		this.userSettings = userSettings;
-		this.activityJson = activityJson;
-		this.hasPowerMeter = hasPowerMeter;
 		this.splitsConfiguration = splitsConfiguration;
-		this.saveSplitsConfigrationMethod = saveSplitsConfigrationMethod || function () {
+		this.saveSplitsConfigurationMethod = saveSplitsConfigrationMethod || function () {
 		};
 		this.distanceUnit = ActivityBestSplitsModifier.Units.Kilometers;
-		this.cacheKeyPrefix = "elevate_bestsplit_" + this.activityId + "_";
+		this.cacheKeyPrefix = "elevate_split_" + this.activityInfo.id + "_";
 	}
 
 	protected filterData(data: number[], distance: number[], smoothing: number): number[] {
@@ -525,9 +525,6 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
 			selectedSplitId: string,
 			measurementPreference = window.currentAthlete ? window.currentAthlete.get("measurement_preference") : "meters";
 
-		this.activityJson.filteredAltitude = this.filterData(this.activityJson.altitude, this.activityJson.distance, 22); // fixed smoothing 200 way way too high!
-
-		this.distanceUnit = (measurementPreference == "meters") ? ActivityBestSplitsModifier.Units.Kilometers : ActivityBestSplitsModifier.Units.Miles;
 
 		segments.find("h3.segments-header")
 			.html("Segment efforts")
@@ -569,457 +566,459 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
 		}
 
 		$(".bestsplits-header-title").click(() => {
-			$(".bestsplits-header-title")
-				.addClass("btn-primary")
-				.css("color", "#FC4C02")
-				.css("background", "white");
 
-			$(".segments-header-title")
-				.css("font-weight", "normal")
-				.css("text-decoration", "none")
-				.css("color", "black")
-				.removeClass("btn-primary");
+			this.vacuumProcessor.getActivityStream(this.activityInfo, (activitySourceData: ActivitySourceDataModel, activityStream: ActivityStreamsModel, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => { // Get stream on page
 
-			$("#segment-filter").hide();
+				this.activityStreams = activityStream;
+				this.activityStreams.altitude = this.filterData(this.activityStreams.altitude, this.activityStreams.distance, 22); // fixed smoothing 200 way way too high!
+				this.distanceUnit = (measurementPreference == "meters") ? ActivityBestSplitsModifier.Units.Kilometers : ActivityBestSplitsModifier.Units.Miles;
 
-			segments.find("table.segments").hide();
-			segments.find("div.show-hide-segments").hide();
-			segments.find("div.hidden-segments-container").hide();
-			bestSplitsSection.show();
-		});
-
-		const removeSplitSelection = () => {
-			if (map && splitPolyLine) {
-				map.removeLayer(splitPolyLine);
-				splitPolyLine = null;
-			}
-			if (splitAltitude) {
-				splitAltitude.attr("style", "fill: " + splitColor + "; opacity: 0");
-			}
-			$("[data-activity-points].selected").removeClass("selected").css({
-				"background-color": "",
-				"color": "black",
-			});
-			selectedSplitId = undefined;
-		};
-
-		$(".segments-header-title").click(() => {
-			$(".segments-header-title")
-				.css("color", "#FC4C02")
-				.addClass("btn-primary");
-
-			$(".bestsplits-header-title")
-				.css("font-weight", "normal")
-				.css("text-decoration", "none")
-				.css("color", "black")
-				.removeClass("btn-primary");
-
-			$("#segment-filter").show();
-
-			bestSplitsSection.hide();
-			segments.find("table.segments").show();
-			segments.find("div.show-hide-segments").show();
-			if ($("#show-hidden-efforts").hasClass("hidden")) {
-				segments.find("div.hidden-segments-container").show();
-			}
-			removeSplitSelection();
-		});
-
-		$(document).on("click", "[data-activity-points]", {}, (eventObject: any) => {
-
-			if (map) {
-
-				$("[data-activity-points].selected").removeClass("selected").css({
-					"background-color": "",
-					"color": "black",
-				});
-
-				$(eventObject.currentTarget).addClass("selected").css({
-					"background-color": splitColor,
-					"color": "white",
-				});
-
-				if (splitPolyLine) {
-					map.removeLayer(splitPolyLine);
-					splitPolyLine = null;
-				}
-
-				const range: string[] = $(eventObject.currentTarget).attr("data-activity-points").split("-"),
-					start = parseInt(range[0]),
-					stop = parseInt(range[1]);
-
-				splitPolyLine = L.polyline([], {
-					color: splitColor,
-				});
-
-				for (let i: number = start; i <= stop; i++) {
-					splitPolyLine.addLatLng(L.latLng(this.activityJson.latlng[i][0], this.activityJson.latlng[i][1]));
-				}
-
-				splitPolyLine.addTo(map);
-
-				const chartRect: JQuery = $("#grid rect:not([data-split])");
-				if (chartRect.length === 0) {
-					return;
-				}
-				const width: number = parseInt(chartRect.attr("width")),
-					height: number = parseInt(chartRect.attr("height"));
-				const xScale = d3.scale.linear().domain([0, this.activityJson.distance[this.activityJson.distance.length - 1]]).range([0, width]);
-				if (!splitAltitude) {
-					splitAltitude = d3.select("#grid").insert("rect", "rect").attr("y", "0").attr("style", "fill: " + splitColor + "; opacity: 0").attr("data-split", "true");
-				}
-
-				splitAltitude.attr("x", xScale(this.activityJson.distance[start]));
-				splitAltitude.attr("height", height);
-				splitAltitude.attr("width", xScale(this.activityJson.distance[stop] - this.activityJson.distance[start]));
-				splitAltitude.attr("style", "fill: " + splitColor + "; opacity: 0.3");
-
-				selectedSplitId = $(eventObject.currentTarget).data("split-id");
-			}
-		});
-
-		const splitsTable: JQuery = $("<table class='dense marginless best-splits' style='text-align: center'>" +
-			"<thead>" +
-			"<tr>" +
-			"<th style='text-align: center; vertical-align: top;'>Split</th>" +
-			"<th style='text-align: center; vertical-align: top;'>Time Distance</th>" +
-			"<th style='text-align: center; vertical-align: top;'>Avg Speed</th>" +
-			"<th style='text-align: center; vertical-align: top;'>Avg HR</th>" +
-			"<th style='text-align: center; vertical-align: top;'>Drop HR</th>" +
-			"<th style='text-align: center; vertical-align: top;'>Rise HR</th>" +
-			"<th style='text-align: center; vertical-align: top;'>Avg Power</th>" +
-			"<th style='text-align: center; vertical-align: top;'>Avg Cadence</th>" +
-			"<th style='text-align: center; vertical-align: top;'>Elevation gain</th>" +
-			"<th style='text-align: center; vertical-align: top;'>Elevation drop</th>" +
-			"<th style='text-align: center; vertical-align: top;'></th>" +
-			"</tr>" +
-			"</thead>" +
-			"<tfoot>" +
-			"<tr>" +
-			"<td colspan='11'>Length:&nbsp;" +
-			"<input type='number' min='1' max='9999' value='5' id='best-split-new-length' style='width: 100px' />&nbsp;" +
-			"Type:&nbsp;<select id='best-split-new-unit'>" +
-			"<option selected value='" + ActivityBestSplitsModifier.Units.Minutes + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Minutes) + "</option>" +
-			"<option value='" + ActivityBestSplitsModifier.Units.Seconds + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Seconds) + "</option>" +
-			"<option value='" + ActivityBestSplitsModifier.Units.Kilometers + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Kilometers) + "</option>" +
-			"<option value='" + ActivityBestSplitsModifier.Units.Miles + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Miles) + "</option>" +
-			"</select>&nbsp;" +
-			"<a class='button' id='best-split-new-add'>Add new split</a>" +
-			"</td>" +
-			"</tr>" +
-			"<tr>" +
-			"<td colspan='11' style='text-align: center'><em>Data accuracy depends on GPS logging interval used to record this activity. Move cursor over values to see exact distance/time at which the value was computed. Click on any value to see the split on map and altitude chart.</em></th>" +
-			"</tr>" +
-			"</tfoot>" +
-			"<tbody class='splits-list'>" +
-			"</tbody>" +
-			"</table>");
-
-		bestSplitsSection.append(splitsTable);
-		const splitsTableBody: JQuery = splitsTable.find("tbody");
-
-		let splitsArray: any[] = [{
-			length: 1,
-			unit: ActivityBestSplitsModifier.Units.Kilometers,
-			id: Helper.guid(),
-		}, {
-			length: 10,
-			unit: ActivityBestSplitsModifier.Units.Kilometers,
-			id: Helper.guid(),
-		}, {
-			length: 30,
-			unit: ActivityBestSplitsModifier.Units.Kilometers,
-			id: Helper.guid(),
-		}, {
-			length: 50,
-			unit: ActivityBestSplitsModifier.Units.Kilometers,
-			id: Helper.guid(),
-		}, {
-			length: 1,
-			unit: ActivityBestSplitsModifier.Units.Minutes,
-			id: Helper.guid(),
-		}, {
-			length: 10,
-			unit: ActivityBestSplitsModifier.Units.Minutes,
-			id: Helper.guid(),
-		}, {
-			length: 20,
-			unit: ActivityBestSplitsModifier.Units.Minutes,
-			id: Helper.guid(),
-		}, {
-			length: 60,
-			unit: ActivityBestSplitsModifier.Units.Minutes,
-			id: Helper.guid(),
-		}];
-
-		if (this.splitsConfiguration) {
-			splitsArray = this.splitsConfiguration.splits || splitsArray;
-		}
-		splitsArray.sort((left, right) => {
-			if (left.unit === right.unit) {
-				return left.length - right.length;
-			} else {
-				return left.unit - right.unit;
-			}
-		});
-
-		const activityDistanceInMeters: number = this.activityJson.distance[this.activityJson.distance.length - 1],
-			activityDurationInSeconds: number = this.activityJson.time[this.activityJson.time.length - 1];
-
-		splitsArray.forEach((split: any) => {
-			this.addSplitToTable(split, splitsTableBody, activityDistanceInMeters, activityDurationInSeconds);
-		});
-
-		const saveSplitsConfiguration = (splitsArray: any[]) => {
-			this.saveSplitsConfigrationMethod({
-				splits: splitsArray,
-			});
-		};
-
-		$(document).on("click", ".best-split-remove", (event: any) => {
-
-			event.preventDefault();
-
-			const splitId: string = $(event.currentTarget).data("split-id");
-			if (splitId === selectedSplitId) {
-				removeSplitSelection();
-			}
-
-			splitsTableBody.find("#split-" + splitId).fadeOut(() => {
-				$(event.currentTarget).remove();
-			});
-
-			splitsArray = splitsArray.filter((split: any) => {
-				return split.id != splitId;
-			});
-
-			saveSplitsConfiguration(splitsArray);
-		});
-
-		$("#best-split-new-add").click((e: JQuery.Event) => {
-			e.preventDefault();
-			const splitLength = parseInt($("#best-split-new-length").val().toString());
-			if (splitLength < 1) {
-				$("#best-split-new-length").focus();
-				return;
-			}
-			const splitType = parseInt($("#best-split-new-unit").val().toString());
-
-			const splitAlreadyExist = _.find(splitsArray, <any>{
-				length: splitLength,
-				unit: splitType,
-			});
-
-			if (splitAlreadyExist) {
-				alert("This split already exist.");
-				return;
-			}
-
-			switch (splitType) {
-
-				case ActivityBestSplitsModifier.Units.Minutes:
-					if ((splitLength * 60) > activityDurationInSeconds) {
-						$.fancybox({
-							autoScale: true,
-							transitionIn: "fade",
-							transitionOut: "fade",
-							type: "iframe",
-							content: "<div>The length of the split cannot be longer than the activity time.</div>",
-							afterClose: () => {
-								$("#best-split-new-length").focus();
-							},
-						});
-						return;
+				const removeSplitSelection = () => {
+					if (map && splitPolyLine) {
+						map.removeLayer(splitPolyLine);
+						splitPolyLine = null;
 					}
-					break;
-
-				case ActivityBestSplitsModifier.Units.Seconds:
-					if (splitLength > activityDurationInSeconds) {
-						$.fancybox({
-							autoScale: true,
-							transitionIn: "fade",
-							transitionOut: "fade",
-							type: "iframe",
-							content: "<div>The length of the split cannot be longer than the activity time.</div>",
-							afterClose: () => {
-								$("#best-split-new-length").focus();
-							},
-						});
-						return;
+					if (splitAltitude) {
+						splitAltitude.attr("style", "fill: " + splitColor + "; opacity: 0");
 					}
-					break;
-
-				case ActivityBestSplitsModifier.Units.Kilometers:
-				case ActivityBestSplitsModifier.Units.Miles:
-					const valueToCheck = splitLength * (splitType === ActivityBestSplitsModifier.Units.Miles ? ActivityBestSplitsModifier.Units.MilesToMetersFactor : ActivityBestSplitsModifier.Units.KilometersToMetersFactor);
-					if (valueToCheck > activityDistanceInMeters) {
-						$.fancybox({
-							autoScale: true,
-							transitionIn: "fade",
-							transitionOut: "fade",
-							type: "iframe",
-							content: "<div>The length of the split cannot be longer than the activity distance.</div>",
-							afterClose: () => {
-								$("#best-split-new-length").focus();
-							},
-						});
-						return;
-					}
-					break;
-
-				default:
-					$("#best-split-new-unit").focus();
-					return;
-			}
-
-			const newSplit = {
-				id: Helper.guid(),
-				unit: splitType,
-				length: splitLength,
-			};
-			splitsArray.push(newSplit);
-			saveSplitsConfiguration(splitsArray);
-			this.addSplitToTable(newSplit, splitsTableBody, activityDistanceInMeters, activityDurationInSeconds);
-			processSplit(newSplit);
-		});
-
-		let worker: Worker,
-			workerPromises: Array<JQueryDeferred<any>> = [];
-		const computeSplit = (split: any, activity: any) => {
-			// TODO Implement cache for best split here. Avoid computation of split each time to load the page faster
-			if (!worker) {
-				const blobURL = URL.createObjectURL(new Blob(["(",
-					BestSplitWorker.toString(),
-					")()",
-				], {
-					type: "application/javascript",
-				}));
-				worker = new Worker(blobURL);
-				worker.onmessage = (message: MessageEvent) => {
-					workerPromises[message.data.split.id].resolve(message.data.result);
-					delete workerPromises[message.data.split.id];
+					$("[data-activity-points].selected").removeClass("selected").css({
+						"background-color": "",
+						"color": "black",
+					});
+					selectedSplitId = undefined;
 				};
-				URL.revokeObjectURL(blobURL);
-			}
-			workerPromises[split.id] = $.Deferred();
-			worker.postMessage({
-				result: localStorage.getItem(this.cacheKeyPrefix + split.id),
-				split,
-				activity,
-				options: {
-					distanceUnit: this.distanceUnit,
-					Minutes: ActivityBestSplitsModifier.Units.Minutes,
-					Seconds: ActivityBestSplitsModifier.Units.Seconds,
-					Kilometers: ActivityBestSplitsModifier.Units.Kilometers,
-					Miles: ActivityBestSplitsModifier.Units.Miles,
-					MetersTo0001hMileFactor: ActivityBestSplitsModifier.Units.MetersTo0001hMileFactor,
-					KilometersToMilesFactor: ActivityBestSplitsModifier.Units.KilometersToMilesFactor,
-					MilesToMetersFactor: ActivityBestSplitsModifier.Units.MilesToMetersFactor,
-					KilometersToMetersFactor: ActivityBestSplitsModifier.Units.KilometersToMetersFactor,
-				},
-			});
-			return workerPromises[split.id].promise();
-		};
 
-		const processSplit = (split: any) => {
-			const splitId = "#split-" + split.id,
-				splitRow = splitsTableBody.find(splitId),
-				setValue = (elementId: string, value: any, formatFunction: Function, defValue: string, tooltipFormatFunction: Function) => {
-					const element = $(elementId);
-					element.html("");
-					if (value.samples) {
-						const text = formatFunction ? formatFunction(value.value) : value.value;
-						element.text(text);
-						element.attr("data-activity-points", value.begin + "-" + value.end);
-						element.data("split-id", split.id);
-						element.css({
-							cursor: "pointer",
+				$(".segments-header-title").click(() => {
+					$(".segments-header-title")
+						.css("color", "#FC4C02")
+						.addClass("btn-primary");
+
+					$(".bestsplits-header-title")
+						.css("font-weight", "normal")
+						.css("text-decoration", "none")
+						.css("color", "black")
+						.removeClass("btn-primary");
+
+					$("#segment-filter").show();
+
+					bestSplitsSection.hide();
+					segments.find("table.segments").show();
+					segments.find("div.show-hide-segments").show();
+					if ($("#show-hidden-efforts").hasClass("hidden")) {
+						segments.find("div.hidden-segments-container").show();
+					}
+					removeSplitSelection();
+				});
+
+				$(document).on("click", "[data-activity-points]", {}, (eventObject: any) => {
+
+					if (map) {
+
+						$("[data-activity-points].selected").removeClass("selected").css({
+							"background-color": "",
+							"color": "black",
 						});
-						if (value.timeOrDistance && tooltipFormatFunction) {
-							element.attr("title", tooltipFormatFunction(value));
+
+						$(eventObject.currentTarget).addClass("selected").css({
+							"background-color": splitColor,
+							"color": "white",
+						});
+
+						if (splitPolyLine) {
+							map.removeLayer(splitPolyLine);
+							splitPolyLine = null;
 						}
+
+						const range: string[] = $(eventObject.currentTarget).attr("data-activity-points").split("-"),
+							start = parseInt(range[0]),
+							stop = parseInt(range[1]);
+
+						splitPolyLine = L.polyline([], {
+							color: splitColor,
+						});
+
+						for (let i: number = start; i <= stop; i++) {
+							splitPolyLine.addLatLng(L.latLng(this.activityStreams.latlng[i][0], this.activityStreams.latlng[i][1]));
+						}
+
+						splitPolyLine.addTo(map);
+
+						const chartRect: JQuery = $("#grid rect:not([data-split])");
+						if (chartRect.length === 0) {
+							return;
+						}
+						const width: number = parseInt(chartRect.attr("width")),
+							height: number = parseInt(chartRect.attr("height"));
+						const xScale = d3.scale.linear().domain([0, this.activityStreams.distance[this.activityStreams.distance.length - 1]]).range([0, width]);
+						if (!splitAltitude) {
+							splitAltitude = d3.select("#grid").insert("rect", "rect").attr("y", "0").attr("style", "fill: " + splitColor + "; opacity: 0").attr("data-split", "true");
+						}
+
+						splitAltitude.attr("x", xScale(this.activityStreams.distance[start]));
+						splitAltitude.attr("height", height);
+						splitAltitude.attr("width", xScale(this.activityStreams.distance[stop] - this.activityStreams.distance[start]));
+						splitAltitude.attr("style", "fill: " + splitColor + "; opacity: 0.3");
+
+						selectedSplitId = $(eventObject.currentTarget).data("split-id");
+					}
+				});
+
+				const splitsTable: JQuery = $("<table class='dense marginless best-splits' style='text-align: center'>" +
+					"<thead>" +
+					"<tr>" +
+					"<th style='text-align: center; vertical-align: top;'>Split</th>" +
+					"<th style='text-align: center; vertical-align: top;'>Time Distance</th>" +
+					"<th style='text-align: center; vertical-align: top;'>Avg Speed</th>" +
+					"<th style='text-align: center; vertical-align: top;'>Avg HR</th>" +
+					"<th style='text-align: center; vertical-align: top;'>Drop HR</th>" +
+					"<th style='text-align: center; vertical-align: top;'>Rise HR</th>" +
+					"<th style='text-align: center; vertical-align: top;'>Avg Power</th>" +
+					"<th style='text-align: center; vertical-align: top;'>Avg Cadence</th>" +
+					"<th style='text-align: center; vertical-align: top;'>Elevation gain</th>" +
+					"<th style='text-align: center; vertical-align: top;'>Elevation drop</th>" +
+					"<th style='text-align: center; vertical-align: top;'></th>" +
+					"</tr>" +
+					"</thead>" +
+					"<tfoot>" +
+					"<tr>" +
+					"<td colspan='11'>Length:&nbsp;" +
+					"<input type='number' min='1' max='9999' value='5' id='best-split-new-length' style='width: 100px' />&nbsp;" +
+					"Type:&nbsp;<select id='best-split-new-unit'>" +
+					"<option selected value='" + ActivityBestSplitsModifier.Units.Minutes + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Minutes) + "</option>" +
+					"<option value='" + ActivityBestSplitsModifier.Units.Seconds + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Seconds) + "</option>" +
+					"<option value='" + ActivityBestSplitsModifier.Units.Kilometers + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Kilometers) + "</option>" +
+					"<option value='" + ActivityBestSplitsModifier.Units.Miles + "'>" + ActivityBestSplitsModifier.Units.getLabel(ActivityBestSplitsModifier.Units.Miles) + "</option>" +
+					"</select>&nbsp;" +
+					"<a class='button' id='best-split-new-add'>Add new split</a>" +
+					"</td>" +
+					"</tr>" +
+					"<tr>" +
+					"<td colspan='11' style='text-align: center'><em>Data accuracy depends on GPS logging interval used to record this activity. Move cursor over values to see exact distance/time at which the value was computed. Click on any value to see the split on map and altitude chart.</em></th>" +
+					"</tr>" +
+					"</tfoot>" +
+					"<tbody class='splits-list'>" +
+					"</tbody>" +
+					"</table>");
+
+				bestSplitsSection.append(splitsTable);
+				const splitsTableBody: JQuery = splitsTable.find("tbody");
+
+				let splitsArray: any[] = [{
+					length: 1,
+					unit: ActivityBestSplitsModifier.Units.Kilometers,
+					id: Helper.guid(),
+				}, {
+					length: 10,
+					unit: ActivityBestSplitsModifier.Units.Kilometers,
+					id: Helper.guid(),
+				}, {
+					length: 30,
+					unit: ActivityBestSplitsModifier.Units.Kilometers,
+					id: Helper.guid(),
+				}, {
+					length: 50,
+					unit: ActivityBestSplitsModifier.Units.Kilometers,
+					id: Helper.guid(),
+				}, {
+					length: 1,
+					unit: ActivityBestSplitsModifier.Units.Minutes,
+					id: Helper.guid(),
+				}, {
+					length: 10,
+					unit: ActivityBestSplitsModifier.Units.Minutes,
+					id: Helper.guid(),
+				}, {
+					length: 20,
+					unit: ActivityBestSplitsModifier.Units.Minutes,
+					id: Helper.guid(),
+				}, {
+					length: 60,
+					unit: ActivityBestSplitsModifier.Units.Minutes,
+					id: Helper.guid(),
+				}];
+
+				if (this.splitsConfiguration) {
+					splitsArray = this.splitsConfiguration.splits || splitsArray;
+				}
+				splitsArray.sort((left, right) => {
+					if (left.unit === right.unit) {
+						return left.length - right.length;
 					} else {
-						if (defValue) {
-							element.text(defValue);
-						}
+						return left.unit - right.unit;
 					}
+				});
+
+				const activityDistanceInMeters: number = this.activityStreams.distance[this.activityStreams.distance.length - 1],
+					activityDurationInSeconds: number = this.activityStreams.time[this.activityStreams.time.length - 1];
+
+				splitsArray.forEach((split: any) => {
+					this.addSplitToTable(split, splitsTableBody, activityDistanceInMeters, activityDurationInSeconds);
+				});
+
+				const saveSplitsConfiguration = (splitsArray: any[]) => {
+					this.saveSplitsConfigurationMethod({
+						splits: splitsArray,
+					});
 				};
-			splitRow.find("td.value").append("<span class='ajax-loading-image'></span>");
 
-			const formatDistance = (value: any) => {
-					return Helper.formatNumber(value.timeOrDistance / 1000) + ActivityBestSplitsModifier.Units.getLabel(this.distanceUnit);
-				},
-				formatTime = (value: any) => {
-					return Helper.secondsToHHMMSS(value.timeOrDistance, true);
-				},
-				formatTooltip = split.unit === ActivityBestSplitsModifier.Units.Minutes ? formatTime : formatDistance,
-				formatTooltipDropRise = (value: any) => {
-					const arrow = value.value.beginValue > value.value.endValue ? "\u2198" : "\u2197";
-					return Helper.formatNumber(value.value.beginValue, 0) + arrow + Helper.formatNumber(value.value.endValue, 0) + " " + formatTooltip(value);
-				},
-				speedLabel = this.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? "mph" : "km/h";
+				$(document).on("click", ".best-split-remove", (event: any) => {
 
-			computeSplit(split, this.activityJson).done((value: any) => {
+					event.preventDefault();
 
-				// Set or update split result in cache
-				if (!localStorage.getItem(this.cacheKeyPrefix + split.id)) {
-					try {
-						localStorage.setItem(this.cacheKeyPrefix + split.id, JSON.stringify(value));
-					} catch (err) {
-						console.warn(err);
-						localStorage.clear();
+					const splitId: string = $(event.currentTarget).data("split-id");
+					if (splitId === selectedSplitId) {
+						removeSplitSelection();
 					}
-				}
 
-				setValue(splitId + "-time", value.time, (value: any) => {
-					return Helper.secondsToHHMMSS(value, true);
-				}, "", formatDistance);
-				setValue(splitId + "-distance", value.distance, (value: any) => {
-					return Helper.formatNumber(value / 1000) + ActivityBestSplitsModifier.Units.getLabel(this.distanceUnit);
-				}, "", formatTime);
-				setValue(splitId + "-avg-speed", value.avgSpeed, (value: any) => {
-					return Helper.formatNumber(value) + speedLabel;
-				}, "n/a", formatTooltip);
-				setValue(splitId + "-avg-hr", value.avgHr, (value: any) => {
-					return Helper.formatNumber(value, 0) + "bpm";
-				}, "n/a", formatTooltip);
-				setValue(splitId + "-drop-hr", value.dropHr, (value: any) => {
-					return "-" + Helper.formatNumber(value.value, 0) + "bpm";
-				}, "n/a", formatTooltipDropRise);
-				setValue(splitId + "-rise-hr", value.riseHr, (value: any) => {
-					return "+" + Helper.formatNumber(value.value, 0) + "bpm";
-				}, "n/a", formatTooltipDropRise);
-				setValue(splitId + "-avg-power", value.avgPower, (value: any) => {
-					return Helper.formatNumber(value, 0) + "W";
-				}, "n/a", formatTooltip);
-				setValue(splitId + "-elevation-gain", value.elevationGain, (value: any) => {
-					return Helper.formatNumber(value, 0) + "m";
-				}, "n/a", formatTooltip);
-				setValue(splitId + "-elevation-drop", value.elevationDrop, (value: any) => {
-					return Helper.formatNumber(value, 0) + "m";
-				}, "n/a", formatTooltip);
-				setValue(splitId + "-avg-cadence", value.avgCadence, (value: any) => {
-					return Helper.formatNumber(value, 0);
-				}, "n/a", formatTooltip);
-				splitRow.find("td.value span.ajax-loading-image").remove();
+					splitsTableBody.find("#split-" + splitId).fadeOut(() => {
+						$(event.currentTarget).remove();
+					});
+
+					splitsArray = splitsArray.filter((split: any) => {
+						return split.id != splitId;
+					});
+
+					saveSplitsConfiguration(splitsArray);
+				});
+
+				$("#best-split-new-add").click((e: JQuery.Event) => {
+					e.preventDefault();
+					const splitLength = parseInt($("#best-split-new-length").val().toString());
+					if (splitLength < 1) {
+						$("#best-split-new-length").focus();
+						return;
+					}
+					const splitType = parseInt($("#best-split-new-unit").val().toString());
+
+					const splitAlreadyExist = _.find(splitsArray, <any>{
+						length: splitLength,
+						unit: splitType,
+					});
+
+					if (splitAlreadyExist) {
+						alert("This split already exist.");
+						return;
+					}
+
+					switch (splitType) {
+
+						case ActivityBestSplitsModifier.Units.Minutes:
+							if ((splitLength * 60) > activityDurationInSeconds) {
+								$.fancybox({
+									autoScale: true,
+									transitionIn: "fade",
+									transitionOut: "fade",
+									type: "iframe",
+									content: "<div>The length of the split cannot be longer than the activity time.</div>",
+									afterClose: () => {
+										$("#best-split-new-length").focus();
+									},
+								});
+								return;
+							}
+							break;
+
+						case ActivityBestSplitsModifier.Units.Seconds:
+							if (splitLength > activityDurationInSeconds) {
+								$.fancybox({
+									autoScale: true,
+									transitionIn: "fade",
+									transitionOut: "fade",
+									type: "iframe",
+									content: "<div>The length of the split cannot be longer than the activity time.</div>",
+									afterClose: () => {
+										$("#best-split-new-length").focus();
+									},
+								});
+								return;
+							}
+							break;
+
+						case ActivityBestSplitsModifier.Units.Kilometers:
+						case ActivityBestSplitsModifier.Units.Miles:
+							const valueToCheck = splitLength * (splitType === ActivityBestSplitsModifier.Units.Miles ? ActivityBestSplitsModifier.Units.MilesToMetersFactor : ActivityBestSplitsModifier.Units.KilometersToMetersFactor);
+							if (valueToCheck > activityDistanceInMeters) {
+								$.fancybox({
+									autoScale: true,
+									transitionIn: "fade",
+									transitionOut: "fade",
+									type: "iframe",
+									content: "<div>The length of the split cannot be longer than the activity distance.</div>",
+									afterClose: () => {
+										$("#best-split-new-length").focus();
+									},
+								});
+								return;
+							}
+							break;
+
+						default:
+							$("#best-split-new-unit").focus();
+							return;
+					}
+
+					const newSplit = {
+						id: Helper.guid(),
+						unit: splitType,
+						length: splitLength,
+					};
+					splitsArray.push(newSplit);
+					saveSplitsConfiguration(splitsArray);
+					this.addSplitToTable(newSplit, splitsTableBody, activityDistanceInMeters, activityDurationInSeconds);
+					processSplit(newSplit);
+				});
+
+				let worker: Worker,
+					workerPromises: Array<JQueryDeferred<any>> = [];
+				const computeSplit = (split: any, activity: any) => {
+					// TODO Implement cache for best split here. Avoid computation of split each time to load the page faster
+					if (!worker) {
+						const blobURL = URL.createObjectURL(new Blob(["(",
+							BestSplitWorker.toString(),
+							")()",
+						], {
+							type: "application/javascript",
+						}));
+						worker = new Worker(blobURL);
+						worker.onmessage = (message: MessageEvent) => {
+							workerPromises[message.data.split.id].resolve(message.data.result);
+							delete workerPromises[message.data.split.id];
+						};
+						URL.revokeObjectURL(blobURL);
+					}
+					workerPromises[split.id] = $.Deferred();
+					worker.postMessage({
+						result: null,
+						split,
+						activity,
+						options: {
+							distanceUnit: this.distanceUnit,
+							Minutes: ActivityBestSplitsModifier.Units.Minutes,
+							Seconds: ActivityBestSplitsModifier.Units.Seconds,
+							Kilometers: ActivityBestSplitsModifier.Units.Kilometers,
+							Miles: ActivityBestSplitsModifier.Units.Miles,
+							MetersTo0001hMileFactor: ActivityBestSplitsModifier.Units.MetersTo0001hMileFactor,
+							KilometersToMilesFactor: ActivityBestSplitsModifier.Units.KilometersToMilesFactor,
+							MilesToMetersFactor: ActivityBestSplitsModifier.Units.MilesToMetersFactor,
+							KilometersToMetersFactor: ActivityBestSplitsModifier.Units.KilometersToMetersFactor,
+						},
+					});
+					return workerPromises[split.id].promise();
+				};
+
+				const processSplit = (split: any) => {
+					const splitId = "#split-" + split.id,
+						splitRow = splitsTableBody.find(splitId),
+						setValue = (elementId: string, value: any, formatFunction: Function, defValue: string, tooltipFormatFunction: Function) => {
+							const element = $(elementId);
+							element.html("");
+							if (value.samples) {
+								const text = formatFunction ? formatFunction(value.value) : value.value;
+								element.text(text);
+								element.attr("data-activity-points", value.begin + "-" + value.end);
+								element.data("split-id", split.id);
+								element.css({
+									cursor: "pointer",
+								});
+								if (value.timeOrDistance && tooltipFormatFunction) {
+									element.attr("title", tooltipFormatFunction(value));
+								}
+							} else {
+								if (defValue) {
+									element.text(defValue);
+								}
+							}
+						};
+					splitRow.find("td.value").append("<span class='ajax-loading-image'></span>");
+
+					const formatDistance = (value: any) => {
+							return Helper.formatNumber(value.timeOrDistance / 1000) + ActivityBestSplitsModifier.Units.getLabel(this.distanceUnit);
+						},
+						formatTime = (value: any) => {
+							return Helper.secondsToHHMMSS(value.timeOrDistance, true);
+						},
+						formatTooltip = split.unit === ActivityBestSplitsModifier.Units.Minutes ? formatTime : formatDistance,
+						formatTooltipDropRise = (value: any) => {
+							const arrow = value.value.beginValue > value.value.endValue ? "\u2198" : "\u2197";
+							return Helper.formatNumber(value.value.beginValue, 0) + arrow + Helper.formatNumber(value.value.endValue, 0) + " " + formatTooltip(value);
+						},
+						speedLabel = this.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? "mph" : "km/h";
+
+					computeSplit(split, this.activityStreams).done((value: any) => {
+
+						setValue(splitId + "-time", value.time, (value: any) => {
+							return Helper.secondsToHHMMSS(value, true);
+						}, "", formatDistance);
+						setValue(splitId + "-distance", value.distance, (value: any) => {
+							return Helper.formatNumber(value / 1000) + ActivityBestSplitsModifier.Units.getLabel(this.distanceUnit);
+						}, "", formatTime);
+						setValue(splitId + "-avg-speed", value.avgSpeed, (value: any) => {
+							return Helper.formatNumber(value) + speedLabel;
+						}, "n/a", formatTooltip);
+						setValue(splitId + "-avg-hr", value.avgHr, (value: any) => {
+							return Helper.formatNumber(value, 0) + "bpm";
+						}, "n/a", formatTooltip);
+						setValue(splitId + "-drop-hr", value.dropHr, (value: any) => {
+							return "-" + Helper.formatNumber(value.value, 0) + "bpm";
+						}, "n/a", formatTooltipDropRise);
+						setValue(splitId + "-rise-hr", value.riseHr, (value: any) => {
+							return "+" + Helper.formatNumber(value.value, 0) + "bpm";
+						}, "n/a", formatTooltipDropRise);
+						setValue(splitId + "-avg-power", value.avgPower, (value: any) => {
+							return Helper.formatNumber(value, 0) + "W";
+						}, "n/a", formatTooltip);
+						setValue(splitId + "-elevation-gain", value.elevationGain, (value: any) => {
+							return Helper.formatNumber(value, 0) + "m";
+						}, "n/a", formatTooltip);
+						setValue(splitId + "-elevation-drop", value.elevationDrop, (value: any) => {
+							return Helper.formatNumber(value, 0) + "m";
+						}, "n/a", formatTooltip);
+						setValue(splitId + "-avg-cadence", value.avgCadence, (value: any) => {
+							return Helper.formatNumber(value, 0);
+						}, "n/a", formatTooltip);
+						splitRow.find("td.value span.ajax-loading-image").remove();
+					});
+				};
+
+				splitsArray.forEach((split: any) => {
+					processSplit(split);
+				});
+
+				// when a user clicks 'Analysis' #segments element is removed so we have to wait for it and re-run the modify function
+				const waitForSegmentsSectionRemoved = () => {
+					if ($("#segments.best-splits-processed").length !== 0) {
+						setTimeout(() => {
+							waitForSegmentsSectionRemoved();
+						}, 1000);
+						return;
+					}
+					this.modify();
+				};
+				waitForSegmentsSectionRemoved();
+
+				$(".bestsplits-header-title")
+					.addClass("btn-primary")
+					.css("color", "#FC4C02")
+					.css("background", "white");
+
+				$(".segments-header-title")
+					.css("font-weight", "normal")
+					.css("text-decoration", "none")
+					.css("color", "black")
+					.removeClass("btn-primary");
+
+				$("#segment-filter").hide();
+
+				segments.find("table.segments").hide();
+				segments.find("div.show-hide-segments").hide();
+				segments.find("div.hidden-segments-container").hide();
+				bestSplitsSection.show();
+
 			});
-		};
 
-		splitsArray.forEach((split: any) => {
-			processSplit(split);
 		});
 
-		// when a user clicks 'Analysis' #segments element is removed so we have to wait for it and re-run the modify function
-		const waitForSegmentsSectionRemoved = () => {
-			if ($("#segments.best-splits-processed").length !== 0) {
-				setTimeout(() => {
-					waitForSegmentsSectionRemoved();
-				}, 1000);
-				return;
-			}
-			this.modify();
-		};
-		waitForSegmentsSectionRemoved();
+
 	}
 
 }
