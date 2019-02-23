@@ -2,9 +2,39 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.9.2",
+		date: "2019-02-18",
+		message: "🔥 Hotfix 🔥 After days & nights of work, all the broken features are now mostly fixed: Elevate now manages the new technical restrictions introduced by Strava on their servers. V6.9.x Reminder: Support of Manual & Virtual running in Fitness Trend. Details in release note.",
+		hotFixes: [
+			"Fixed the \"flat\" Fitness Trend bug with activities syncing optimization. Sync now manages the new technical restrictions introduced by Strava on their servers. It may take few hours to see bug fixed.. Some of you may redo a \"clear and re-sync\". Unfortunately syncs will be now slower on unsynced activities.",
+			"Fixed missing \"Elevate Extended Stats\" & \"Graph Analysis\" on activities pages. Extension now performs optimized network calls to Strava servers to fetch the sensors data. This data is required to compute extended stats on activities, segments, best splits, and also to export GPS files from virtual partners. It may take few hours to see bug fixed. Note: The extended stats summary panel on Strava activities has been temporally removed to increase the optimization.",
+			"Optimized storage of Strava activities cache (sensors data). Size is now reduced by -80% using gzip compression :). Cache is used to avoid networks calls to Strava servers.",
+			"Added an option in settings to Weather display on cycling activities (option is disabled by default). Avoid networks call for users not using this feature.",
+			"Rework and optimization of gear bike odo fetch & display on cycling activities."
+		],
+		features: [
+			"Check the 6.9.0 release note for features related to v6.9.x",
+		],
+		isPatch: true,
+		fixes: []
+	},
+	{
+		version: "6.9.1",
+		date: "2019-02-11",
+		message: "👨‍⚕️💉 Patch: After some users requests, the old year progressions had to be revived temporally. V6.9 Reminder: Support of Manual & Virtual running in Fitness Trend (⚠️ Read release notes to enable it).",
+		hotFixes: [],
+		features: [
+			"Check the 6.9.0 release note for features related to v6.9.x",
+		],
+		isPatch: true,
+		fixes: [
+			"Revived old year progressions in 'Strava My Profile' after some users requests. Note that old year progressions will be disabled once 'Distance last 30d & year' have been migrated to the new  year progressions in Elevate App itself.",
+		]
+	},
+	{
 		version: "6.9.0",
-		date: "2019-02-05",
-		message: "Added support of manual & virtual running activities into Fitness Trend (⚠️ Please read the release notes to enable it). This update also pushes many fixes and improvements.",
+		date: "2019-02-06",
+		message: "Support of Manual & Virtual running in Fitness Trend (⚠️ Read release notes to enable it).",
 		hotFixes: [],
 		features: [
 			"Added support of manual running activities into Fitness Trend. ⚠️ You will need to \"Clear & Re-sync your activities\" & enable Running Stress Score estimation to see the changes.",
@@ -14,8 +44,9 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Added a warning when a detected indoor cycling activity isn't flagged as \"Indoor Cycling\" on a strava activity page.",
 			"Moved \"Estimated Cycling Power Data\" and \"Estimated Running Stress Score\" toggles along side others into Fitness Trend. Estimated fitness trend feature is more understandable.",
 		],
-		isPatch: false,
+		isPatch: true,
 		fixes: [
+			"Revived old year progressions in 'Strava My Profile' after some users requests. Note that old year progressions will be disabled once 'Distance last 30d & year' have been migrated to the new  year progressions in Elevate App itself.",
 			"Fixed case when PSS (Power Stress Score) wasn't calculated on trainer rides with an average speed equals to zero.",
 			"Fixed case when treadmill indoor activities could provide insane RSS (Running Stress Score).",
 			"Fixed a visual glitch that could appear on Zwift activities pages.",

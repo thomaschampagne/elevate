@@ -57,4 +57,5 @@ export const userSettingsData: UserSettingsModel = {
 	temperatureUnit: "C",
 	showHiddenBetaFeatures: false,
 	displayReliveCCLink: true,
+	displayWindyOverlay: false
 };
