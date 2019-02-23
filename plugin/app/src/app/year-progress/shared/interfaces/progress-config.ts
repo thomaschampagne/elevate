@@ -1,7 +1,7 @@
 import { ProgressMode } from "../enums/progress-mode.enum";
 
 export interface ProgressConfig {
-	readonly mode: ProgressMode
+	readonly mode: ProgressMode;
 	activityTypes: string[];
 	isMetric: boolean;
 	includeCommuteRide: boolean;

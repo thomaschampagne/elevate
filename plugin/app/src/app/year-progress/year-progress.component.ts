@@ -48,6 +48,31 @@ import { RollingProgressPresetModel } from "./shared/models/rolling-progress-pre
 })
 export class YearProgressComponent implements OnInit {
 
+	constructor(public userSettingsService: UserSettingsService,
+				public syncService: SyncService,
+				public activityService: ActivityService,
+				public yearProgressService: YearProgressService,
+				public dialog: MatDialog,
+				public mediaObserver: MediaObserver) {
+
+		this.availableYears = [];
+		this.availableActivityTypes = [];
+		this.hasActivityModels = null; // Can be null: don't know yet true/false status on loadRollingSumPreferences
+		this.yearProgressPresetsCount = null;
+		this.isProgressionInitialized = false;
+		this.rollingPeriods = YearProgressComponent.ROLLING_PERIODS;
+		this.progressModes = [
+			{
+				value: ProgressMode.YEAR_TO_DATE,
+				label: "Year to date"
+			},
+			{
+				value: ProgressMode.ROLLING,
+				label: "Rolling"
+			}
+		];
+	}
+
 	public static readonly PALETTE: string[] = [
 		"#9f8aff",
 		"#ea7015",
@@ -68,24 +93,6 @@ export class YearProgressComponent implements OnInit {
 	public static readonly LS_SELECTED_ROLLING_PERIOD_MULTIPLIER_KEY: string = "yearProgress_periodRollingMultiplier";
 	public static readonly LS_TARGET_VALUE_KEY: string = "yearProgress_targetValue";
 	public static readonly LS_EXPANDED_GRAPH_KEY: string = "yearProgress_expandedGraph";
-
-	/**
-	 *
-	 * @param {ActivityCountByTypeModel[]} activitiesCountByTypeModels
-	 * @returns {string}
-	 */
-	public static findMostPerformedActivityType(activitiesCountByTypeModels: ActivityCountByTypeModel[]): string {
-		return _.maxBy(activitiesCountByTypeModels, "count").type;
-	}
-
-	/**
-	 * Retrieve rolling days length from  rolling period and multiplier
-	 * @param rollingPeriod
-	 * @param periodMultiplier
-	 */
-	public static findRollingDays(rollingPeriod: string, periodMultiplier: number): number {
-		return moment.duration(periodMultiplier, <moment.DurationInputArg2>rollingPeriod.toLowerCase()).asDays();
-	}
 
 	public readonly debouncedPeriodMultiplierChange = _.debounce(this.applyPeriodMultiplierChange, 1000 /*ms*/);
 	public readonly ProgressMode = ProgressMode;
@@ -190,29 +197,22 @@ export class YearProgressComponent implements OnInit {
 	public isProgressionInitialized;
 	public isGraphExpanded: boolean;
 
-	constructor(public userSettingsService: UserSettingsService,
-				public syncService: SyncService,
-				public activityService: ActivityService,
-				public yearProgressService: YearProgressService,
-				public dialog: MatDialog,
-				public mediaObserver: MediaObserver) {
+	/**
+	 *
+	 * @param {ActivityCountByTypeModel[]} activitiesCountByTypeModels
+	 * @returns {string}
+	 */
+	public static findMostPerformedActivityType(activitiesCountByTypeModels: ActivityCountByTypeModel[]): string {
+		return _.maxBy(activitiesCountByTypeModels, "count").type;
+	}
 
-		this.availableYears = [];
-		this.availableActivityTypes = [];
-		this.hasActivityModels = null; // Can be null: don't know yet true/false status on loadRollingSumPreferences
-		this.yearProgressPresetsCount = null;
-		this.isProgressionInitialized = false;
-		this.rollingPeriods = YearProgressComponent.ROLLING_PERIODS;
-		this.progressModes = [
-			{
-				value: ProgressMode.YEAR_TO_DATE,
-				label: "Year to date"
-			},
-			{
-				value: ProgressMode.ROLLING,
-				label: "Rolling"
-			}
-		];
+	/**
+	 * Retrieve rolling days length from  rolling period and multiplier
+	 * @param rollingPeriod
+	 * @param periodMultiplier
+	 */
+	public static findRollingDays(rollingPeriod: string, periodMultiplier: number): number {
+		return moment.duration(periodMultiplier, <moment.DurationInputArg2>rollingPeriod.toLowerCase()).asDays();
 	}
 
 	public ngOnInit(): void {
