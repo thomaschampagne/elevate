@@ -73,7 +73,6 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 	@Input("yearProgressStyleModel")
 	public yearProgressStyleModel: YearProgressStyleModel;
 
-
 	constructor(public yearProgressService: YearProgressService) {
 	}
 
@@ -141,7 +140,6 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 			this.selectedProgressType.type,
 			[this.currentYear],
 			this.yearProgressStyleModel.yearsColorsMap));
-
 
 		// Find progressions for moment watched on selected years
 		const progressAtDayModels: ProgressAtDayModel[] = this.yearProgressService.findProgressionsAtDay(this.yearProgressions,

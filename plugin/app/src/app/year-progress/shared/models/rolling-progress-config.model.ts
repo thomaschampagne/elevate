@@ -10,7 +10,7 @@ export class RollingProgressConfigModel extends YearToDateProgressConfigModel {
 			throw new Error("progressConfig.mode !== ProgressMode.ROLLING");
 		}
 
-		return new RollingProgressConfigModel(progressConfig.activityTypes, progressConfig.years, progressConfig.isMetric,
+		return new RollingProgressConfigModel(progressConfig.activityTypes, progressConfig.isMetric,
 			progressConfig.includeCommuteRide, progressConfig.includeIndoorRide, (<RollingProgressConfigModel>progressConfig).rollingDays);
 	}
 
@@ -18,10 +18,9 @@ export class RollingProgressConfigModel extends YearToDateProgressConfigModel {
 
 	public readonly rollingDays: number;
 
-	constructor(typesFilter: string[], years: number[], isMetric: boolean, includeCommuteRide: boolean,
+	constructor(typesFilter: string[], isMetric: boolean, includeCommuteRide: boolean,
 				includeIndoorRide: boolean, rollingDays: number) {
 		super(typesFilter, isMetric, includeCommuteRide, includeIndoorRide);
 		this.rollingDays = rollingDays;
-		this.years = years;
 	}
 }

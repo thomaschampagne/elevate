@@ -8,7 +8,6 @@ export class YearProgressForOverviewModel {
 	public progressConfig: ProgressConfig;
 	public momentWatched: Moment;
 	public selectedYears: number[];
-	public selectedActivityTypes: string[];
 	public yearProgressStyleModel: YearProgressStyleModel;
 	public yearProgressions: YearProgressModel[]; // Progress for each year
 	public progressTypes: YearProgressTypeModel[];

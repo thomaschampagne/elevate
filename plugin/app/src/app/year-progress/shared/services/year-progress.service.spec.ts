@@ -18,9 +18,9 @@ import { TargetProgressModel } from "../models/target-progress.model";
 import { DataStore } from "../../../shared/data-store/data-store";
 import { MockedDataStore } from "../../../shared/data-store/impl/spec/mocked-data-store.service";
 import { ProgressMode } from "../enums/progress-mode.enum";
-import { YearToDateProgressConfigModel } from "../models/year-to-date-progress-config.model";
 import { RollingProgressConfigModel } from "../models/rolling-progress-config.model";
 import { RollingProgressPresetModel } from "../models/rolling-progress-preset.model";
+import { YearToDateProgressConfigModel } from "../models/year-to-date-progress-config.model";
 import Spy = jasmine.Spy;
 
 describe("YearProgressService", () => {
@@ -396,44 +396,6 @@ describe("YearProgressService", () => {
 
 		});
 
-		it("should compute progression with only provided years", (done: Function) => {
-
-			// Given
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, false, false);
-			progressConfig.years = [2015, 2017];
-
-			const expectedLastDay2015 = new ProgressModel(2015,
-				365,
-				5110,
-				657000 / 3600, // = Hours
-				69350,
-				219
-			);
-
-			const expectedLastDay2017 = new ProgressModel(2017,
-				365,
-				2130,
-				275400 / 3600, // = Hours
-				28950,
-				92
-			);
-
-			// When
-			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, TEST_SYNCED_MODELS);
-
-			// Then
-			expect(yearProgressions).not.toBeNull();
-
-			const lastDay2015 = _.last(yearProgressions[0].progressions);
-			expect(lastDay2015).toEqual(expectedLastDay2015);
-
-			const lastDay2017 = _.last(yearProgressions[1].progressions);
-			expect(lastDay2017).toEqual(expectedLastDay2017);
-
-			done();
-
-		});
-
 		it("should not compute progression with empty activities", (done: Function) => {
 
 			// Given
@@ -562,7 +524,7 @@ describe("YearProgressService", () => {
 			const expectedYear = 2019;
 			const expectedDaysInYear = 365;
 			const rollingDays = moment.duration(1, "week").asDays();
-			const progressConfig = new RollingProgressConfigModel(["Ride"], [], true, true, true, rollingDays);
+			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, true, rollingDays);
 
 			const todayTime = "2019-02-15 20:00";
 			getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
@@ -632,7 +594,7 @@ describe("YearProgressService", () => {
 			const expectedYearsLength = 2;
 			const expectedDaysInYear = 365;
 			const rollingDays = moment.duration(1, "week").asDays();
-			const progressConfig = new RollingProgressConfigModel(["Ride"], [], true, true, true, rollingDays);
+			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, true, rollingDays);
 
 			const todayTime = "2019-02-15 20:00";
 			getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
@@ -733,7 +695,7 @@ describe("YearProgressService", () => {
 			const expectedYear = 2019;
 			const expectedDaysInYear = 365;
 			const rollingDays = moment.duration(1, "week").asDays();
-			const progressConfig = new RollingProgressConfigModel(["Ride"], [], true, true, true, rollingDays);
+			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, true, rollingDays);
 
 			const todayTime = "2019-02-15 20:00";
 			getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
@@ -850,41 +812,6 @@ describe("YearProgressService", () => {
 
 			done();
 
-		});
-
-		it("should calculate 1 week rolling progression (with years filters)", (done: Function) => {
-
-			// Given
-			const rollingDays = moment.duration(1, "week").asDays();
-			const yearsFilter = [2014, 2016, 2017];
-			const expectedComputedYears = [2013, 2014, 2015, 2016, 2017]; // 2013 to 2017 needs to be calculated since 2017 can depends from 2013...
-			const expectedNotComputedYears = [2018, 2019]; // 2018 & 2019 don't need to be computed since max year in filter is 2017
-			const expectedYearsLength = expectedComputedYears.length;
-			const progressConfig = new RollingProgressConfigModel(["Ride"], yearsFilter, true, true, true, rollingDays);
-
-			const todayTime = "2018-02-15 20:00";
-			getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
-
-			/* History definition: generating year progressions from 2013-01-01 => 2019-12-31 */
-			syncedActivityModels.push(createActivity("2013-03-01", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-15", "Ride", 10000, 3600, 100));
-
-			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, syncedActivityModels as SyncedActivityModel[]);
-
-			// Then
-			expect(yearProgressions).not.toBeNull();
-			expect(yearProgressions).not.toBeNull();
-			expect(yearProgressions.length).toEqual(expectedYearsLength);
-
-			_.forEach(expectedComputedYears, year => {
-				expect(_.find(yearProgressions, {year: year})).toBeDefined();
-			});
-
-			_.forEach(expectedNotComputedYears, year => {
-				expect(_.find(yearProgressions, {year: year})).toBeUndefined();
-			});
-
-			done();
 		});
 
 	});

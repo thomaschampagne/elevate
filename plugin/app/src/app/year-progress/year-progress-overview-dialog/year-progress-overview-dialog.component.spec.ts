@@ -23,10 +23,9 @@ describe("YearProgressOverviewDialogComponent", () => {
 	const colors: string [] = ["red", "blue", "green", "purple"];
 
 	const yearProgressForOverviewModel: YearProgressForOverviewModel = {
-		progressConfig: new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true, true),
+		progressConfig: new YearToDateProgressConfigModel(["Ride", "Run"], true, true, true),
 		momentWatched: moment(),
 		selectedYears: [2017, 2016],
-		selectedActivityTypes: ["Ride", "Run"],
 		yearProgressStyleModel: new YearProgressStyleModel(yearsColorsMap, colors),
 		yearProgressions: [],
 		progressTypes: []

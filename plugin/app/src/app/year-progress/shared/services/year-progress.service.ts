@@ -61,7 +61,6 @@ export class YearProgressService {
 			throw new Error(YearProgressService.ERROR_NO_TYPES_FILTER);
 		}
 
-
 		let yearProgressActivities = this.filterSyncedActivityModelAlongTypes(syncedActivityModels, config.activityTypes);
 
 		if (_.isEmpty(yearProgressActivities)) {
@@ -98,7 +97,6 @@ export class YearProgressService {
 											yearProgressActivities): YearProgressModel[] {
 
 		const yearProgressions: YearProgressModel[] = [];
-		const hasYearFilter = !_.isEmpty(config.years);
 		let lastProgress: ProgressModel = null;
 
 		// From 'fromMoment' to 'todayMoment' loop on days...
@@ -109,14 +107,6 @@ export class YearProgressService {
 
 			const currentYear = currentDayMoment.year();
 			let progress: ProgressModel = null;
-
-			if (hasYearFilter) {
-				const currentYearNotSelected = (_.indexOf(config.years, currentYear) === -1);
-				if (currentYearNotSelected) { // Does exists current year in filter from the user?
-					currentDayMoment.add(1, "years");
-					continue;
-				}
-			}
 
 			// Create new year progress if current year do not exists
 			const isNewYearProgress = (!_.find(yearProgressions, {year: currentYear}));
@@ -219,8 +209,6 @@ export class YearProgressService {
 			count: []
 		};
 
-		const maxYearToCompute: number = (!_.isEmpty(config.years)) ? _.max(config.years) : null;
-
 		while (currentDayMoment.isSameOrBefore(toMoment)) {
 
 			// Increase buffer size until rolling days length is reached
@@ -229,11 +217,6 @@ export class YearProgressService {
 			}
 
 			const currentYear = currentDayMoment.year();
-
-			if (maxYearToCompute && currentYear > maxYearToCompute) {
-				currentDayMoment.add(1, "years");
-				continue;
-			}
 
 			const activitiesFound: YearProgressActivityModel[] = _.filter<YearProgressActivityModel>(yearProgressActivities, {
 				year: currentDayMoment.year(),
