@@ -4,11 +4,10 @@ import { ProgressConfig } from "../interfaces/progress-config";
 export class YearToDateProgressConfigModel implements ProgressConfig {
 
 	public readonly mode: ProgressMode = ProgressMode.YEAR_TO_DATE;
-	public readonly activityTypes: string[];
-	public readonly isMetric: boolean;
-	public readonly includeCommuteRide: boolean;
-	public readonly includeIndoorRide: boolean;
-	public years: number[] = [];
+	public activityTypes: string[];
+	public isMetric: boolean;
+	public includeCommuteRide: boolean;
+	public includeIndoorRide: boolean;
 
 	public static instanceFrom(progressConfig: ProgressConfig): YearToDateProgressConfigModel {
 
@@ -25,6 +24,5 @@ export class YearToDateProgressConfigModel implements ProgressConfig {
 		this.isMetric = isMetric;
 		this.includeCommuteRide = includeCommuteRide;
 		this.includeIndoorRide = includeIndoorRide;
-		this.years = [];
 	}
 }

@@ -52,10 +52,10 @@ export class YearProgressComponent implements OnInit {
 		"#9f8aff",
 		"#ea7015",
 		"#00b423",
-		"#005aff",
+		"#006dff",
 		"#e1ab19",
 		"#ee135e",
-		"#00e8dd"
+		"#00ffe2"
 	];
 
 	public static readonly ROLLING_PERIODS: string[] = ["Days", "Weeks", "Months", "Years"];
@@ -358,8 +358,15 @@ export class YearProgressComponent implements OnInit {
 			: RollingProgressConfigModel.instanceFrom(this.progressConfig);
 
 		if (this.progressConfig.mode === ProgressMode.YEAR_TO_DATE) {
-			this.computeYearProgressions();
+
+			if (this.progressStorage.targetValue.get()) {
+				this.progressStorage.targetValue.rm();
+			}
+
 			this.progressStorage.config.set(this.progressConfig);
+
+			this.setup(this.progressConfig.isMetric);
+
 		} else {
 
 			// Load rolling period and multiplier from 'local stored' preferences if mode is set to rolling
@@ -376,20 +383,23 @@ export class YearProgressComponent implements OnInit {
 		const rollingDays = YearProgressComponent.findRollingDays(this.selectedRollingPeriod, this.periodMultiplier);
 
 		// Update progress config
-		this.progressConfig = new RollingProgressConfigModel(this.progressConfig.activityTypes, this.progressConfig.years, this.progressConfig.isMetric,
+		this.progressConfig = new RollingProgressConfigModel(this.progressConfig.activityTypes, this.progressConfig.isMetric,
 			this.progressConfig.includeCommuteRide, this.progressConfig.includeIndoorRide, rollingDays);
 
-		// Re-compute
-		this.computeYearProgressions();
+		if (this.progressStorage.targetValue.get()) {
+			this.progressStorage.targetValue.rm();
+		}
 
 		// Save config to local storage
 		this.progressStorage.config.set(this.progressConfig);
 
+		// Re-compute
+		this.setup(this.progressConfig.isMetric);
 	}
 
 	public onRollingPeriodChanged(): void {
-		this.onRollingDaysChanged();
 		this.progressStorage.rollingPeriod.set(this.selectedRollingPeriod);
+		this.onRollingDaysChanged();
 	}
 
 	public onPeriodMultiplierChanged(): void {
@@ -398,8 +408,8 @@ export class YearProgressComponent implements OnInit {
 
 	public applyPeriodMultiplierChange(): void {
 		if (this.periodMultiplier >= 1 && this.periodMultiplier <= 999) {
-			this.onRollingDaysChanged();
 			this.progressStorage.periodMultiplier.set(this.periodMultiplier);
+			this.onRollingDaysChanged();
 		} else {
 			const existingPeriodMultiplier = this.progressStorage.periodMultiplier.get();
 			this.periodMultiplier = (existingPeriodMultiplier > 1) ? existingPeriodMultiplier : YearProgressComponent.DEFAULT_ROLLING_MULTIPLIER;
@@ -447,7 +457,6 @@ export class YearProgressComponent implements OnInit {
 			progressConfig: this.progressConfig,
 			momentWatched: this.momentWatched,
 			selectedYears: this.selectedYears,
-			selectedActivityTypes: this.progressConfig.activityTypes,
 			progressTypes: this.progressTypes,
 			yearProgressions: this.yearProgressions,
 			yearProgressStyleModel: this.yearProgressStyleModel
@@ -548,7 +557,7 @@ export class YearProgressComponent implements OnInit {
 
 					const presetToLoad = dialogResponse.loadPreset as RollingProgressPresetModel;
 					const rollingDays = YearProgressComponent.findRollingDays(presetToLoad.rollingPeriod, presetToLoad.periodMultiplier);
-					this.progressConfig = new RollingProgressConfigModel(presetToLoad.activityTypes, [], this.progressConfig.isMetric,
+					this.progressConfig = new RollingProgressConfigModel(presetToLoad.activityTypes, this.progressConfig.isMetric,
 						presetToLoad.includeCommuteRide, presetToLoad.includeIndoorRide, rollingDays);
 
 					this.progressStorage.rollingPeriod.set(presetToLoad.rollingPeriod);
