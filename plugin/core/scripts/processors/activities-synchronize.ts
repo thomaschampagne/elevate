@@ -16,7 +16,7 @@ import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { StreamActivityModel } from "../models/sync/stream-activity.model";
 import { AthleteModelResolver } from "@elevate/shared/resolvers";
 
-export class ActivitiesSynchronizer {
+export class ActivitiesSynchronize {
 
 	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteModelResolver) {
 		this.appResources = appResources;
@@ -37,9 +37,11 @@ export class ActivitiesSynchronizer {
 		return this._activitiesChanges;
 	}
 
-	public static lastSyncDateTime = "lastSyncDateTime"; // TODO Move into AppStorage as static (do that for others too)
-	public static syncedActivities = "syncedActivities"; // TODO Move into AppStorage as static (do that for others too)
-	public static pagesPerGroupToRead = 2; // = 40 activities with 20 activities per page.
+	public static readonly LAST_SYNC_DATE_TIME_KEY = "lastSyncDateTime"; // TODO Move into AppStorage as static (do that for others too)
+	public static readonly SYNCED_ACTIVITIES_KEY = "syncedActivities"; // TODO Move into AppStorage as static (do that for others too)
+	public static readonly PAGES_PER_GROUP = 1; // = 20 activities with 20 activities per page.
+	public static readonly ACTIVITIES_PER_PAGE = 20; // 20 usually
+	public static readonly SLEEP_TIME = 1750;
 
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
@@ -119,6 +121,18 @@ export class ActivitiesSynchronizer {
 	}
 
 	/**
+	 *
+	 * @param ms
+	 */
+	public static sleep(ms: number): Promise<void> {
+		return new Promise(resolve => {
+			setTimeout(() => {
+				resolve();
+			}, ms);
+		});
+	};
+
+	/**
 	 * Provides:
 	 * - activity IDs to delete in the local activities (removed from strava.com)
 	 * @param rawActivityIds
@@ -167,91 +181,107 @@ export class ActivitiesSynchronizer {
 
 			let fetchedActivitiesStreamCount = 0;
 			let fetchedActivitiesProgress = 0;
-			const promisesOfActivitiesStreamById: Array<Q.IPromise<StreamActivityModel>> = [];
+			const promisesOfActivitiesStreamById: Array<Q.Promise<StreamActivityModel>> = [];
 
 			this.getSyncedActivitiesFromLocal().then((syncedActivitiesStored: any) => {
 
-				const activitiesChangesModel: ActivitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(rawActivities, (syncedActivitiesStored) ? syncedActivitiesStored : []);
+				const activitiesChangesModel: ActivitiesChangesModel = ActivitiesSynchronize.findAddedAndEditedActivities(rawActivities, (syncedActivitiesStored) ? syncedActivitiesStored : []);
 				this.appendGlobalActivitiesChanges(activitiesChangesModel); // Update global history
 
 				// For each activity, fetch his stream and compute extended stats
-				_.forEach(activitiesChangesModel.added, (activityId: number) => {
-					// Getting promise of stream for each activity...
-					promisesOfActivitiesStreamById.push(this.fetchStreamByActivityId(activityId));
-				});
+				const sleepTime = this.getSleepTime();
+				const fetchStreamSequence = activitiesChangesModel.added.reduce((prev: Promise<number>, activityId: number) => {
+
+					return prev.then(() => {
+
+						// Call stream and track promise
+						return this.fetchStreamByActivityId(activityId).then((streamActivityModel: StreamActivityModel) => {
+
+							// Track and notify progress...
+							fetchedActivitiesStreamCount++;
+							fetchedActivitiesProgress = fetchedActivitiesStreamCount / activitiesChangesModel.added.length * 100;
+							const notify: SyncNotifyModel = {
+								step: "fetchedStreamsPercentage",
+								progress: fetchedActivitiesProgress,
+								activityId: activityId,
+							};
+
+							deferred.notify(notify);
+
+							promisesOfActivitiesStreamById.push(Q.resolve(streamActivityModel));
+
+							return ActivitiesSynchronize.sleep(sleepTime).then(() => {
+								return Q.resolve(activityId);
+							});
+
+						});
+
+					});
+
+				}, Promise.resolve(null));
+
 
 				// Track all parsed activities from strava: used for deletions detect at the end..
 				_.forEach(rawActivities, (rawActivity: StravaActivityModel) => {
 					this.totalRawActivityIds.push(rawActivity.id);
 				});
 
-				Q.allSettled(promisesOfActivitiesStreamById).then((streamResults: any) => {
+				fetchStreamSequence.then(() => {
 
-					console.log("Stream length: " + streamResults.length + ", raw activities length: " + rawActivities.length + ")");
+					Q.allSettled(promisesOfActivitiesStreamById).then((streamResults: any) => {
 
-					const activitiesWithStream: StreamActivityModel[] = [];
+						console.log("Stream length: " + streamResults.length + ", raw activities length: " + rawActivities.length + ")");
 
-					_.forEach(streamResults, (data: Q.PromiseState<any>) => {
+						const activitiesWithStream: StreamActivityModel[] = [];
 
-						if (data.state === "rejected") {
+						_.forEach(streamResults, (data: Q.PromiseState<any>) => {
 
-							// No stream found for this activity
-							console.warn("Stream not found for activity <" + data.reason.activityId + ">", data);
+							if (data.state === "rejected") {
 
-							// Add to activities list without even if no stream...
-							const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {id: <number> data.reason.activityId});
-							const activityWithStream: StreamActivityModel = newlyDetectedActivity as StreamActivityModel;
-							activityWithStream.hasPowerMeter = null;
-							activityWithStream.stream = null;
-							activitiesWithStream.push(activityWithStream);
+								// No stream found for this activity
+								console.warn("Stream not found for activity <" + data.reason.activityId + ">", data);
 
-						} else if (data.state === "fulfilled") {
+								// Add to activities list without even if no stream...
+								const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {id: <number>data.reason.activityId});
+								const activityWithStream: StreamActivityModel = newlyDetectedActivity as StreamActivityModel;
+								activityWithStream.hasPowerMeter = null;
+								activityWithStream.stream = null;
+								activitiesWithStream.push(activityWithStream);
 
-							// Find raw activities of fetched stream and push
-							const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {id: <number> data.value.activityId});
+							} else if (data.state === "fulfilled") {
 
-							let hasPowerMeter = true;
-							if (_.isEmpty(data.value.watts)) {
-								data.value.watts = data.value.watts_calc;
-								hasPowerMeter = false;
+								// Find raw activities of fetched stream and push
+								const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {id: <number>data.value.activityId});
+
+								let hasPowerMeter = true;
+								if (_.isEmpty(data.value.watts)) {
+									data.value.watts = data.value.watts_calc;
+									hasPowerMeter = false;
+								}
+
+								const activityWithStream: StreamActivityModel = newlyDetectedActivity as StreamActivityModel;
+								activityWithStream.hasPowerMeter = hasPowerMeter;
+								activityWithStream.stream = data.value;
+
+								activitiesWithStream.push(activityWithStream);
 							}
+						});
 
-							const activityWithStream: StreamActivityModel = newlyDetectedActivity as StreamActivityModel;
-							activityWithStream.hasPowerMeter = hasPowerMeter;
-							activityWithStream.stream = data.value;
+						// Finishing... force progress @ 100% because 'rejected' promises don't call progress callback
+						const notify: SyncNotifyModel = {
+							step: "fetchedStreamsPercentage",
+							progress: 100,
+						};
+						deferred.notify(notify);
+						deferred.resolve(activitiesWithStream);
 
-							activitiesWithStream.push(activityWithStream);
-						}
+					}, (err: any) => {
+						// error, we don't enter here with allSettled...
 					});
 
-					// Finishing... force progress @ 100% because 'rejected' promises don't call progress callback
-					const notify: SyncNotifyModel = {
-						step: "fetchedStreamsPercentage",
-						progress: 100,
-					};
-					deferred.notify(notify);
-					deferred.resolve(activitiesWithStream);
-
-				}, (err: any) => {
-					// error, we don't enter here with allSettled...
-
-				}, (notification: any) => {
-
-					// Progress...
-					fetchedActivitiesProgress = fetchedActivitiesStreamCount / activitiesChangesModel.added.length * 100;
-
-					const notify: SyncNotifyModel = {
-						step: "fetchedStreamsPercentage",
-						progress: fetchedActivitiesProgress,
-						index: notification.index,
-						activityId: notification.value,
-					};
-
-					deferred.notify(notify);
-
-					fetchedActivitiesStreamCount++;
+				}, error => {
+					deferred.reject(error);
 				});
-
 			});
 
 		}, (err: any) => {
@@ -312,14 +342,14 @@ export class ActivitiesSynchronizer {
 
 		}).then((remoteFirstPage: { activitiesCountAllPages: number, firstPageModels: StravaActivityModel[] }) => {
 
-			const activitiesChangesModel = ActivitiesSynchronizer.findAddedAndEditedActivities(remoteFirstPage.firstPageModels,
+			const activitiesChangesModel = ActivitiesSynchronize.findAddedAndEditedActivities(remoteFirstPage.firstPageModels,
 				localSyncedActivityModels);
 
 			const remoteFirstPageIds: number[] = _.map(remoteFirstPage.firstPageModels, (stravaActivityModel: StravaActivityModel) => {
 				return stravaActivityModel.id;
 			});
 
-			activitiesChangesModel.deleted = ActivitiesSynchronizer.findDeletedActivities(remoteFirstPageIds,
+			activitiesChangesModel.deleted = ActivitiesSynchronize.findDeletedActivities(remoteFirstPageIds,
 				_.slice(localSyncedActivityModels, -1 * (remoteFirstPageIds.length - activitiesChangesModel.added.length))).deleted;
 
 			const hasAddedOrEditedActivitiesMisMatch = (activitiesChangesModel.added.length > 0
@@ -370,7 +400,8 @@ export class ActivitiesSynchronizer {
 			activitiesList = [];
 		}
 
-		const perPage = 20;
+		const perPage = ActivitiesSynchronize.ACTIVITIES_PER_PAGE;
+
 		const promiseActivitiesRequest: JQueryXHR = this.httpPageGet(perPage, page);
 
 		const notify: SyncNotifyModel = {
@@ -415,7 +446,7 @@ export class ActivitiesSynchronizer {
 		}, (data: any, textStatus: string, errorThrown: any) => {
 			// error
 			const err: any = {
-				method: "ActivitiesSynchronizer.fetchRawActivitiesRecursive",
+				method: "ActivitiesSynchronize.fetchRawActivitiesRecursive",
 				page,
 				data,
 				textStatus,
@@ -430,35 +461,40 @@ export class ActivitiesSynchronizer {
 		return deferred.promise;
 	}
 
+
 	/**
 	 * Fetch the stream of an activity
 	 * @param activityId
 	 * @return {Q.Promise<T>}
 	 */
-	public fetchStreamByActivityId(activityId: number): Q.IPromise<any> {
+	public fetchStreamByActivityId(activityId: number): Q.Promise<StreamActivityModel> {
 
-		const deferred = Q.defer();
+		const deferred = Q.defer<StreamActivityModel>();
 
 		const activityStreamUrl: string = "/activities/" + activityId + "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng&stream_types[]=grade_adjusted_speed";
+		const promiseActivityStream = $.ajax(activityStreamUrl);
 
-		const promiseActivityStream: JQueryXHR = $.ajax(activityStreamUrl);
-
-		promiseActivityStream.then((data: any, textStatus: any, jqXHR: JQueryXHR) => {
+		promiseActivityStream.then((data: any, textStatus: string, jqXHR: JQueryXHR) => {
 
 			// success
 			deferred.notify(activityId);
 			data.activityId = activityId; // Append activityId resolved data
 			deferred.resolve(data);
 
-		}, (data: any, textStatus: any, errorThrown: any) => {
-			// Error
-			deferred.reject({
-				method: "ActivitiesSynchronizer.fetchStreamByActivityId",
-				activityId,
-				data,
-				textStatus,
-				errorThrown,
-			});
+		}, (jqXHR: JQueryXHR) => {
+
+			const streamNotFound = jqXHR.status === 404;
+
+			if (streamNotFound) {
+				deferred.resolve({activityId: activityId} as any);
+			} else {
+				deferred.reject({
+					streamFailure: true,
+					activityId: activityId,
+					statusCode: jqXHR.status,
+					statusText: jqXHR.statusText
+				});
+			}
 
 		});
 
@@ -472,9 +508,9 @@ export class ActivitiesSynchronizer {
 
 		console.log("clearSyncCache requested");
 
-		return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronizer.syncedActivities).then(() => {
+		return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronize.SYNCED_ACTIVITIES_KEY).then(() => {
 			console.log("syncedActivities removed from local storage");
-			return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronizer.lastSyncDateTime);
+			return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY);
 		}).then(() => {
 			console.log("lastSyncDateTime removed from local storage");
 		});
@@ -554,7 +590,7 @@ export class ActivitiesSynchronizer {
 		}
 
 		if (!pagesPerGroupToRead) {
-			pagesPerGroupToRead = ActivitiesSynchronizer.pagesPerGroupToRead;
+			pagesPerGroupToRead = ActivitiesSynchronize.PAGES_PER_GROUP;
 		}
 
 		if (!deferred) {
@@ -609,7 +645,6 @@ export class ActivitiesSynchronizer {
 
 						// Current group have been saved with previously stored activities...
 						// console.log('Group ' + this.printGroupLimits(fromPage, pagesPerGroupToRead) + ' saved to extension local storage, total count: ' + pagesGroupSaved.data.syncedActivities.length + ' data: ', pagesGroupSaved);
-
 						const notify: SyncNotifyModel = {
 							step: "savedSyncedActivities",
 							progress: 100,
@@ -752,7 +787,7 @@ export class ActivitiesSynchronizer {
 					activitiesChangesModel = this._activitiesChanges;
 
 					// Check for  deletions, check for added and edited has been done in "fetchWithStream" for each group of pages
-					activitiesChangesModel.deleted = ActivitiesSynchronizer.findDeletedActivities(this.totalRawActivityIds, syncedActivitiesStored).deleted;
+					activitiesChangesModel.deleted = ActivitiesSynchronize.findDeletedActivities(this.totalRawActivityIds, syncedActivitiesStored).deleted;
 
 					const hasEditedChanges = activitiesChangesModel.edited.length > 0;
 					const hasDeletedChanges = activitiesChangesModel.deleted.length > 0;
@@ -857,17 +892,21 @@ export class ActivitiesSynchronizer {
 		this.totalRawActivityIds = [];
 	}
 
+	public getSleepTime(): number {
+		return ActivitiesSynchronize.SLEEP_TIME;
+	}
+
 	public getAllSavedLocal(): Q.IPromise<any> {
 		return AppStorage.getInstance().get<any>(AppStorageType.LOCAL);
 	}
 
 	public saveLastSyncDateToLocal(timestamp: number) {
-		return AppStorage.getInstance().set<number>(AppStorageType.LOCAL, ActivitiesSynchronizer.lastSyncDateTime, timestamp);
+		return AppStorage.getInstance().set<number>(AppStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY, timestamp);
 	}
 
 	public getLastSyncDateFromLocal() {
 		const deferred = Q.defer<number>();
-		AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronizer.lastSyncDateTime).then((result: number) => {
+		AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY).then((result: number) => {
 			deferred.resolve(result);
 		}, error => deferred.reject(error));
 
@@ -875,12 +914,12 @@ export class ActivitiesSynchronizer {
 	}
 
 	public saveSyncedActivitiesToLocal(syncedActivities: SyncedActivityModel[]) {
-		return AppStorage.getInstance().set<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronizer.syncedActivities, syncedActivities);
+		return AppStorage.getInstance().set<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronize.SYNCED_ACTIVITIES_KEY, syncedActivities);
 	}
 
 	public getSyncedActivitiesFromLocal(): Q.Promise<SyncedActivityModel[]> {
 		const deferred = Q.defer<SyncedActivityModel[]>();
-		AppStorage.getInstance().get<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronizer.syncedActivities).then((result: SyncedActivityModel[]) => {
+		AppStorage.getInstance().get<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronize.SYNCED_ACTIVITIES_KEY).then((result: SyncedActivityModel[]) => {
 			deferred.resolve(result);
 		}, error => deferred.reject(error));
 

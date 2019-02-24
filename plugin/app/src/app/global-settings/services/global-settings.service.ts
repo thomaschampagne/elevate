@@ -204,6 +204,11 @@ export class GlobalSettingsService {
 			type: "checkbox",
 			title: "Relive your rides/runs with relive.cc",
 			labels: ["Cycling", "Running"],
+		}, {
+			key: "displayWindyOverlay",
+			type: "checkbox",
+			title: "Display Wind, Temp, Clouds & Humidity overlay of your cycling activity",
+			labels: ["Cycling"],
 		}],
 	}, {
 		title: "Segments viewing options",
@@ -270,21 +275,6 @@ export class GlobalSettingsService {
 			key: "feedHideRunActivitiesUnderDistance",
 			type: "number",
 			title: "Hide running activities under distance.",
-			labels: ["Running"],
-			min: 0,
-		}],
-	}, {
-		title: "Elevate Year progression targets for " + (new Date()).getFullYear(),
-		options: [{
-			key: "targetsYearRide",
-			type: "number",
-			title: "Cycling distance target for " + (new Date()).getFullYear(),
-			labels: ["Cycling"],
-			min: 0,
-		}, {
-			key: "targetsYearRun",
-			type: "number",
-			title: "Running distance target for " + (new Date()).getFullYear(),
 			labels: ["Running"],
 			min: 0,
 		}],

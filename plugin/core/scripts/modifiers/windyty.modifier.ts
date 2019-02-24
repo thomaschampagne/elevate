@@ -41,41 +41,38 @@ export class WindyTyModifier extends AbstractModifier {
 
 	protected getActivityBaryCenter(callback: (latLon: LatLonSpherical) => void): void {
 
-		const url: string = "/activities/" + this.activityId + "/streams?stream_types[]=latlng";
 
-		$.ajax({
-			url,
-			dataType: "json",
-		}).done((jsonResponse) => {
+		const hasLatLngStreamData = window.pageView
+			&& window.pageView.streamsRequest
+			&& window.pageView.streamsRequest.streams
+			&& window.pageView.streamsRequest.streams.streamData
+			&& window.pageView.streamsRequest.streams.streamData.data
+			&& window.pageView.streamsRequest.streams.streamData.data.latlng;
 
-			if (_.isEmpty(jsonResponse.latlng)) {
-				callback(null);
-				return;
-			}
+		if (!hasLatLngStreamData) {
+			callback(null);
+			return;
+		}
 
-			// Store first, middle and last position from latlng. These 3 position will help to findout barycenter position of th activity
-			const firstMiddleLastPosition: number[] = [];
-			firstMiddleLastPosition.push(jsonResponse.latlng[0]);
-			firstMiddleLastPosition.push(jsonResponse.latlng[Math.round((jsonResponse.latlng.length - 1) / 2)]);
-			firstMiddleLastPosition.push(jsonResponse.latlng[jsonResponse.latlng.length - 1]);
+		const latLng: number[][] = window.pageView.streamsRequest.streams.streamData.data.latlng;
 
-			const startPoint: number[] = jsonResponse.latlng[0];
-			const midPoint: number[] = jsonResponse.latlng[Math.round((jsonResponse.latlng.length - 1) / 2)];
-			const endPoint: number[] = jsonResponse.latlng[jsonResponse.latlng.length - 1];
+		// Store first, middle and last position from latLng. These 3 position will help to findout barycenter position of th activity
+		const startPoint: number[] = latLng[0];
+		const midPoint: number[] = latLng[Math.round((latLng.length - 1) / 2)];
+		const endPoint: number[] = latLng[latLng.length - 1];
 
-			const baryCenterPoint: number[] = [];
+		const baryCenterPoint: number[] = [];
 
-			// Add start + end vector
-			baryCenterPoint[0] = (startPoint[0] + endPoint[0]) / 2;
-			baryCenterPoint[1] = (startPoint[1] + endPoint[1]) / 2;
+		// Add start + end vector
+		baryCenterPoint[0] = (startPoint[0] + endPoint[0]) / 2;
+		baryCenterPoint[1] = (startPoint[1] + endPoint[1]) / 2;
 
-			// Add middPoint
-			baryCenterPoint[0] = (baryCenterPoint[0] + midPoint[0]) / 2;
-			baryCenterPoint[1] = (baryCenterPoint[1] + midPoint[1]) / 2;
+		// Add middPoint
+		baryCenterPoint[0] = (baryCenterPoint[0] + midPoint[0]) / 2;
+		baryCenterPoint[1] = (baryCenterPoint[1] + midPoint[1]) / 2;
 
-			callback(new LatLonSpherical(baryCenterPoint[0], baryCenterPoint[1]));
+		callback(new LatLonSpherical(baryCenterPoint[0], baryCenterPoint[1]));
 
-		});
 	}
 
 	protected modifyPage(): void {
@@ -123,9 +120,7 @@ export class WindyTyModifier extends AbstractModifier {
 
 	protected showWeather(type: string): void {
 
-		const date: Date = new Date(window.pageView.activity().get("startDateLocal") * 1000);
 		const defaultZoomLevel = 11;
-		const windyTyHour: number = Math.round(date.getUTCHours() / 6) * 6;
 
 		const windUnitConfig: string = "metricWind=" + ((this.speedUnitData.units === "km") ? "km/h" : "mph");
 		const temperatureUnitConfig: string = "metricTemp=" + this.userSettings.temperatureUnit;

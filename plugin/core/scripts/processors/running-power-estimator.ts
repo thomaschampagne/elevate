@@ -31,7 +31,7 @@ export class RunningPowerEstimator {
 			if (i > 0) {
 				const time = timeArray[i] - timeArray[i - 1];
 				const distanceAdjusted = distanceArray[i] - distanceArray[i - 1];
-				const elevationGain = altitudeArray[i] - altitudeArray[i - 1];
+				const elevationGain = (altitudeArray) ? altitudeArray[i] - altitudeArray[i - 1] : 0;
 				power = this.estimateRunningPower(athleteWeight, distanceAdjusted, time, elevationGain);
 			}
 			powerStream.push(power);
@@ -50,9 +50,12 @@ export class RunningPowerEstimator {
 	 */
 	public static estimateRunningPower(weightKg: number, meters: number, seconds: number, elevationGain: number): number {
 
+		if (!_.isNumber(seconds) || seconds === 0) {
+			return 0;
+		}
+
 		const runningEcoVolumeO2PerKm = 210; // Units: (ml/kg/km)
 		const cyclingEcoWattsPerVolumeO2 = 75; // Units: W/L // ??
-
 		const minutes = seconds / 60;
 		const km = meters / 1000;
 		const minPerKmPace = minutes / km; // Units: min/km

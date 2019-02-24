@@ -65,8 +65,6 @@ export class FitnessTrendComponent implements OnInit {
 	public isPowerMeterEnabled: boolean;
 	public isSwimEnabled: boolean;
 	public isEBikeRidesEnabled: boolean;
-	public isEstimatedPowerStressScoreEnabled: boolean;
-	public isEstimatedRunningStressScoreEnabled: boolean;
 	public skipActivityTypes: string[] = [];
 	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
 	public areSyncedActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
@@ -206,9 +204,6 @@ export class FitnessTrendComponent implements OnInit {
 			// Change toggle state along HRSS/TRIMP heart rate mode
 			this.updateTogglesStatesAlongHrMode();
 
-			// Change estimated stress score status along (R)FTP, power meter and HRSS/TRIMP heart rate mode
-			this.updateEstimatedStressScoresNotes();
-
 			// Check for activity types to skip (e.g. EBikeRide)
 			this.isEBikeRidesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY));
 			this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
@@ -288,8 +283,6 @@ export class FitnessTrendComponent implements OnInit {
 
 		this.isPowerMeterEnabled = enabled;
 		this.reloadFitnessTrend();
-
-		_.defer(() => this.updateEstimatedStressScoresNotes());
 	}
 
 	public onSwimToggleChange(enabled: boolean): void {
@@ -317,13 +310,26 @@ export class FitnessTrendComponent implements OnInit {
 		this.reloadFitnessTrend();
 	}
 
-	public onOpenFitnessTrendConfig(expandEstimatedStressScorePanel?: boolean): void {
+	public onEstimatedPowerStressScoreToggleChange(enabled: boolean): void {
+		if (this.fitnessTrendConfigModel.allowEstimatedPowerStressScore !== enabled) {
+			this.fitnessTrendConfigModel.allowEstimatedPowerStressScore = enabled;
+			this.saveConfigAndReloadFitnessTrend();
+		}
+	}
+
+	public onEstimatedRunningStressScoreChange(enabled: boolean): void {
+		if (this.fitnessTrendConfigModel.allowEstimatedRunningStressScore !== enabled) {
+			this.fitnessTrendConfigModel.allowEstimatedRunningStressScore = enabled;
+			this.saveConfigAndReloadFitnessTrend();
+		}
+	}
+
+	public onOpenFitnessTrendConfig(): void {
 
 		const fitnessTrendConfigDialogData: FitnessTrendConfigDialogData = {
 			fitnessTrendConfigModel: _.cloneDeep(this.fitnessTrendConfigModel),
 			lastFitnessActiveDate: this.lastFitnessActiveDate,
-			isPowerMeterEnabled: this.isPowerMeterEnabled,
-			expandEstimatedStressScorePanel: _.isBoolean(expandEstimatedStressScorePanel) ? expandEstimatedStressScorePanel : false
+			isPowerMeterEnabled: this.isPowerMeterEnabled
 		};
 
 		const dialogRef = this.dialog.open(FitnessTrendConfigDialogComponent, {
@@ -348,10 +354,7 @@ export class FitnessTrendComponent implements OnInit {
 
 			if (hasConfigChanged) {
 				this.fitnessTrendConfigModel = fitnessTrendConfigModel;
-				localStorage.setItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY, JSON.stringify(this.fitnessTrendConfigModel)); // Save config local
-				this.initialize().then(() => {
-					console.debug("FitnessTrend component re-initialized");
-				});
+				this.saveConfigAndReloadFitnessTrend();
 			}
 		});
 	}
@@ -370,17 +373,6 @@ export class FitnessTrendComponent implements OnInit {
 			this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY));
 			this.isSwimEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY));
 		}
-	}
-
-	public updateEstimatedStressScoresNotes(): void {
-
-		this.isEstimatedPowerStressScoreEnabled = this.isPowerMeterEnabled
-			&& this.fitnessTrendConfigModel.allowEstimatedPowerStressScore
-			&& this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
-
-		this.isEstimatedRunningStressScoreEnabled = this.fitnessTrendConfigModel.allowEstimatedRunningStressScore
-			&& this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
-
 	}
 
 	public reloadFitnessTrend(): void {
@@ -427,6 +419,14 @@ export class FitnessTrendComponent implements OnInit {
 				maxWidth: FitnessTrendWelcomeDialogComponent.MAX_WIDTH,
 			}), 1000);
 		}
+	}
+
+	/**
+	 * Save current fitness config and reload fitness trend
+	 */
+	public saveConfigAndReloadFitnessTrend(): void {
+		localStorage.setItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY, JSON.stringify(this.fitnessTrendConfigModel)); // Save config local
+		this.reloadFitnessTrend();
 	}
 }
 

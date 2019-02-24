@@ -1,7 +1,7 @@
 import { Helper } from "../helper";
 import { AppStorage } from "../app-storage";
 import { CoreEnv } from "../../config/core-env";
-import { ActivitiesSynchronizer } from "../processors/activities-synchronizer";
+import { ActivitiesSynchronize } from "../processors/activities-synchronize";
 import { AppStorageType, SyncResultModel } from "@elevate/shared/models";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { HerokuEndpointResolver } from "../resolvers/heroku-endpoint.resolver";
@@ -11,7 +11,7 @@ import { AppStorageUsage } from "../models/app-storage-usage.model";
 
 export class ActivitiesSyncModifier extends AbstractModifier {
 
-	protected activitiesSynchronizer: ActivitiesSynchronizer;
+	protected activitiesSynchronize: ActivitiesSynchronize;
 	protected extensionId: string;
 	protected sourceTabId: number;
 	protected forceSync: boolean;
@@ -19,9 +19,9 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 
 	public closeWindowIntervalId = -1;
 
-	constructor(extensionId: string, activitiesSynchronizer: ActivitiesSynchronizer, fastSync: boolean, forceSync: boolean, sourceTabId?: number) {
+	constructor(extensionId: string, activitiesSynchronize: ActivitiesSynchronize, fastSync: boolean, forceSync: boolean, sourceTabId?: number) {
 		super();
-		this.activitiesSynchronizer = activitiesSynchronizer;
+		this.activitiesSynchronize = activitiesSynchronize;
 		this.extensionId = extensionId;
 		this.sourceTabId = sourceTabId;
 		this.forceSync = forceSync;
@@ -37,11 +37,13 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 		html += "<div>";
 		html += "    <div id=\"syncContainer\">";
 		html += "       <div id=\"syncMessage\">";
-		html += "           <span style=\"font-size: 28px;\">Syncing activities to browser.</span><br/><br/>It can take several minutes on your first synchronisation. " +
-			"Keep that in background... Synced activities are locally saved in the storage allocated by the extension." +
+		html += "           <span style=\"font-size: 28px;\">Syncing activities to extension storage.</span> <br/><br/>" +
+			"The <strong>first</strong> sync is long due to technical purpose: <strong>~6 minutes / 100 activities</strong>. <strong>Upcoming syncs are short and silent.</strong> " +
+			"Keep this window in background, it will close itself when synchronization is done.<br/><br/>" +
+			"Synced activities are locally saved in the storage allocated by the extension." +
 			"<br/><br/>On a daily use, your recent activities will be automatically pushed to the Elevate app when strava website is loaded." +
 			"<br/><br/>In specific cases like \"old\" activities added, edited or deleted from strava, you have to launch synchronization by yourself.<br/><br/>" +
-			"<i>Note: closing this window will stop the synchronization. Window will close itself when synchronization is done.</i>";
+			"<i>Note: closing this window will stop the synchronization.</i>";
 		html += "       </div>";
 		html += "       <div class=\"progressBarGroup\">";
 		html += "           <div id=\"totalProgress\">Global synchronisation progress</div>";
@@ -54,9 +56,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 		html += "           <span id=\"syncStepProgressText\"></span>";
 		html += "        </div>";
 		html += "        <div id=\"syncStatusError\" style=\"display: none;\">";
-		html += "           <div style=\"padding-bottom: 20px;\">Whoops sync error occurred. If problem persists try to reset your settings from " +
-			"advanced menu (Go to 'Elevate App' => 'Contextual menu in top right' => 'Advanced') or reinstall extension. <a href=\"#\" onclick=\"window.location.reload();\">Try to sync again</a></div>";
-		html += "           <div id=\"syncStatusErrorContent\" style=\"font-size: 11px;\"></div>";
+		html += "           <strong>Synchronization stopped. Don't worry.</strong><br/>The sync had to pause due to Strava servers errors or potential overload. To avoid this, please relaunch sync in few hours. It will resume where it stopped. Already synced activities will not be calculated.";
 		html += "        </div>";
 		html += "       <div id=\"syncInfos\">";
 		html += "           <div style=\"padding-bottom: 10px;\" id=\"totalActivities\"></div>";
@@ -73,7 +73,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 
 			if (this.forceSync) {
 				// Clear previous synced cache and start a new sync
-				this.activitiesSynchronizer.clearSyncCache().then(() => {
+				this.activitiesSynchronize.clearSyncCache().then(() => {
 					this.sync();
 				});
 			} else {
@@ -96,7 +96,8 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 	protected sync(): void {
 
 		// Start sync..
-		this.activitiesSynchronizer.sync(this.fastSync).then((syncResult: SyncResultModel) => {
+		const syncStart = performance.now();
+		this.activitiesSynchronize.sync(this.fastSync).then((syncResult: SyncResultModel) => {
 
 			console.log("Sync finished", syncResult);
 
@@ -105,7 +106,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 			$("#totalProgressText").html("100%");
 
 			if (this.fastSync) {
-				ActivitiesSynchronizer.notifyBackgroundSyncDone.call(this, this.extensionId, syncResult);
+				ActivitiesSynchronize.notifyBackgroundSyncDone.call(this, this.extensionId, syncResult);
 				setTimeout(() => {
 					window.close();
 				}, 200);
@@ -123,8 +124,8 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 
 				let timer: number = 5 * 1000; // 5s for debug...
 				this.closeWindowIntervalId = window.setInterval(() => {
-					$("#autoClose").html("<div style=\"background: #fff969; padding: 5px;\"><span>Sync done. Added: " + syncResult.activitiesChangesModel.added.length + ", Edited:" + syncResult.activitiesChangesModel.edited.length + ", Deleted:" + syncResult.activitiesChangesModel.deleted.length +
-						". Closing in " + (timer / 1000) + "s</span> <a href=\"#\" onclick=\"javascript:window.__elevate_bridge__.activitiesSyncModifierInstance.cancelAutoClose()\">Cancel auto close<a></div>");
+					$("#autoClose").html("<div style=\"background: #fff969; padding: 5px;\"><span>Sync done. Added: " + syncResult.activitiesChangesModel.added.length + ", Edited: " + syncResult.activitiesChangesModel.edited.length + ", Deleted: " + syncResult.activitiesChangesModel.deleted.length +
+						". Closing in " + (timer / 1000) + "s</span> <a href=\"#\" onclick=\"window.__elevate_bridge__.activitiesSyncModifierInstance.cancelAutoClose()\">Cancel auto close<a></div>");
 					if (timer <= 0) {
 						window.close();
 					}
@@ -132,13 +133,13 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 				});
 			}
 
-		}, (err: any) => {
+		}, (error: any) => {
 
-			console.error("Sync error", err);
+			console.error("Sync error", error);
 
 			const errorUpdate: any = {
 				stravaId: (window.currentAthlete && window.currentAthlete.get("id") ? window.currentAthlete.get("id") : null),
-				error: {path: window.location.href, date: new Date(), content: err},
+				error: {path: window.location.href, date: new Date(), content: error},
 			};
 
 			const endPoint = HerokuEndpointResolver.resolve(CoreEnv.endPoint) + "/api/errorReport";
@@ -156,12 +157,10 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 				},
 			});
 
-			$("#syncStatusError").show();
-
-			if (err && err.errObject) {
-				$("#syncStatusErrorContent").append("<div>Details:</div><div>ERROR on activity <" + err.activityId + ">: " + err.errObject.message + ". File: " + err.errObject.filename + ":" + err.errObject.lineno + ":" + err.errObject.colno + "</div>");
-			} else {
-				$("#syncStatusErrorContent").append("<div>" + JSON.stringify(err) + "</div>");
+			if (error) { // Too many request :/
+				$("#syncStatusError").show();
+				$(".progressBarGroup").hide();
+				console.error(error);
 			}
 
 		}, (progress: SyncNotifyModel) => {
@@ -190,6 +189,8 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 					break;
 				case "updatingLastSyncDateTime":
 					stepMessage = "Updating your last synchronization date... And you're done.";
+					const totalSec = (performance.now() - syncStart) / 1000;
+					console.log("Sync time: " + Helper.secondsToHHMMSS(totalSec) + " (" + Math.round(totalSec) + "s)");
 					break;
 			}
 
