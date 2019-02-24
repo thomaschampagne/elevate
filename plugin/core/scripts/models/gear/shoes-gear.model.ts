@@ -3,8 +3,9 @@ import { GearType } from "./gear-type.enum";
 
 export class ShoesGearModel extends GearModel {
 
-	constructor(id: number, total_distance: number, isActive: boolean, isDefault: boolean, description: string, display_name: string, brand_name: string, model_name: string, name: string, notification_distance: number) {
-		super(id, total_distance, isActive, isDefault, description, display_name);
+	constructor(id: number, total_distance: number, isActive: boolean, isDefault: boolean, description: string, display_name: string,
+				brand_name: string, model_name: string, name: string, notification_distance: number, units: string) {
+		super(id, total_distance, isActive, isDefault, description, display_name, units);
 		this.brand_name = brand_name;
 		this.model_name = model_name;
 		this.name = name;
