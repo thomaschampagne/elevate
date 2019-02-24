@@ -1,44 +1,37 @@
 import { AbstractModifier } from "./abstract.modifier";
+import * as _ from "lodash";
+import { GearType } from "../models/gear/gear-type.enum";
+import { BikeGearModel } from "../models/gear/bike-gear.model";
+import { VacuumProcessor } from "../processors/vacuum-processor";
 
 export class ActivityBikeOdoModifier extends AbstractModifier {
-	private readonly bikeOdoArray: any;
-	private readonly cacheKey: string;
 
-	constructor(bikeOdoArray: any, cacheKey: string) {
+	public vacuumProcessor: VacuumProcessor;
+	public athleteId: number;
+
+	constructor(vacuumProcessor: VacuumProcessor, athleteId: number) {
 		super();
-		this.bikeOdoArray = bikeOdoArray;
-		this.cacheKey = cacheKey;
+		this.vacuumProcessor = vacuumProcessor;
+		this.athleteId = athleteId;
 	}
 
 	public modify(): void {
 
 		// Get bike name on Activity Page
-		const bikeDisplayedOnActivityPage: string = $(".gear-name").text().trim();
+		const activityBike: string = $(".gear-name").text().trim();
 
 		// Get odo from map
-		let activityBikeOdo = "No bike declared";
-		try {
-			activityBikeOdo = this.bikeOdoArray[btoa(window.unescape(encodeURIComponent(bikeDisplayedOnActivityPage)))] || activityBikeOdo;
-		} catch (err) {
-			console.warn("Unable to find bike odo for this Activity");
-		}
+		this.vacuumProcessor.getAthleteGear(this.athleteId, GearType.BIKE).then((bikes: BikeGearModel[]) => {
 
-		const newBikeDisplayHTML: string = bikeDisplayedOnActivityPage + "<strong> / " + activityBikeOdo + "</strong>";
+			const bikeFound = _.find(bikes, {display_name: activityBike});
+			if (bikeFound) {
+				$(".gear-name").html(activityBike + "<strong> / Odo: " + bikeFound.total_distance + " " + bikeFound.units + "</strong>");
+			}
 
-		const forceRefreshActionHTML = "<a href=\"#\" style=\"cursor: pointer;\" title=\"Force odo refresh for this athlete's bike. Usually it refresh every 2 hours...\" id=\"bikeOdoForceRefresh\">Force refresh odo</a>";
-
-		// Edit Activity Page
-		$(".gear-name").html(newBikeDisplayHTML + "<br />" + forceRefreshActionHTML).each(() => {
-
-			$("#bikeOdoForceRefresh").on("click", () => {
-				this.handleUserBikeOdoForceRefresh();
-			});
-
+		}, err => {
+			console.error(err);
 		});
+
 	}
 
-	protected handleUserBikeOdoForceRefresh(): void {
-		localStorage.removeItem(this.cacheKey);
-		window.location.reload();
-	}
 }

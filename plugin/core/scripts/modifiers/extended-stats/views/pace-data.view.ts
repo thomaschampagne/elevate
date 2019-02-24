@@ -43,7 +43,7 @@ export class PaceDataView extends AbstractDataView {
 			}
 		}
 
-		if (this.isAuthorOfViewedActivity && this.supportsGap && _.isNumber(this.paceData.runningStressScore)) {
+		if (this.isOwner && this.supportsGap && _.isNumber(this.paceData.runningStressScore)) {
 			this.insertContentAtGridPosition(1, 0, this.printNumber(this.paceData.runningStressScore, 0), "<strong>R</strong>unning <strong>S</strong>tress <strong>S</strong>core <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "", "displayAdvancedSpeedData");
 			this.insertContentAtGridPosition(2, 0, this.printNumber(this.paceData.runningStressScorePerHour, 1), "RSS / Hour <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>", "", "displayAdvancedSpeedData");
 		}

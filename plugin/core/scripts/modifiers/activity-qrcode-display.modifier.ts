@@ -16,14 +16,16 @@ export class ActivityQRCodeDisplayModifier extends AbstractModifier {
 
 	public modify(): void {
 
-		const html: string = "<a href=\"javascript:;\" id=\"activityFlashCodebutton\" class=\"button\" title=\"Flash code for your mobile app\"><img src=\"" + this.appResources.qrCodeIcon + "\"/></a>";
+		const html: string = "<a href='javascript:;' id='activityFlashCodeButton' class='button' title='Flash code for your mobile app'><img src='" + this.appResources.qrCodeIcon + "'/></a>";
+
+		$("header>h2").width("65%");
 
 		$(".collapse.button").first().before(html).each(() => {
 
 			// Once dom inserted
-			$("#activityFlashCodebutton").click(() => {
+			$("#activityFlashCodeButton").click(() => {
 
-				$.fancybox("<div align=\"center\"><h2>#elevate Activity Flash code</h2><h3>Scan from your smartphone.</h3><p><canvas style=\"padding: 0px 60px 0px 60px;\" id=\"qrcode\"></canvas></p><h3>Save by right click on image then \"Save image as...\"</h3></div>");
+				$.fancybox("<div align='center'><h2>#elevate Activity Flash code</h2><h3>Scan from your smart phone.</h3><p><canvas style='padding: 0px 60px 0px 60px;' id='qrcode'></canvas></p><h3>Save by right click on image then \"Save image as...\"</h3></div>");
 
 				QRCode.toCanvas(document.getElementById("qrcode"),
 					"http://app.strava.com/activities/" + this.activityId, (error) => {
@@ -32,9 +34,7 @@ export class ActivityQRCodeDisplayModifier extends AbstractModifier {
 						}
 						console.log("QRCode created");
 					});
-
 			});
-
 		});
 	}
 }

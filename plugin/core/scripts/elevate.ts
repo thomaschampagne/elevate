@@ -1,10 +1,9 @@
 import * as _ from "lodash";
 import { Helper } from "./helper";
 import {
-	ActivityBasicInfoModel,
+	ActivityInfoModel,
 	AppStorageType,
 	DatedAthleteSettingsModel,
-	Gender,
 	ReleaseNoteModel,
 	SyncResultModel,
 	UserSettingsModel
@@ -21,7 +20,6 @@ import { ActivitySegmentTimeComparisonModifier } from "./modifiers/activity-segm
 import { ActivityStravaMapTypeModifier } from "./modifiers/activity-strava-map-type.modifier";
 import { AthleteStatsModifier } from "./modifiers/athlete-stats.modifier";
 import { DefaultLeaderBoardFilterModifier } from "./modifiers/default-leader-board-filter.modifier";
-import { DisplayFlyByFeedModifier } from "./modifiers/display-flyby-feed.modifier";
 import { AbstractExtendedDataModifier } from "./modifiers/extended-stats/abstract-extended-data.modifier";
 import { CyclingExtendedDataModifier } from "./modifiers/extended-stats/cycling-extended-data.modifier";
 import { RunningExtendedDataModifier } from "./modifiers/extended-stats/running-extended-data.modifier";
@@ -43,15 +41,14 @@ import { SegmentRecentEffortsHRATimeModifier } from "./modifiers/segment-recent-
 import { VirtualPartnerModifier } from "./modifiers/virtual-partner.modifier";
 import { WindyTyModifier } from "./modifiers/windyty.modifier";
 import { ActivityProcessor } from "./processors/activity-processor";
-import { BikeOdoProcessor } from "./processors/bike-odo-processor";
 import { ISegmentInfo, SegmentProcessor } from "./processors/segment-processor";
 import { VacuumProcessor } from "./processors/vacuum-processor";
-import { ActivitiesSynchronizer } from "./processors/activities-synchronizer";
+import { ActivitiesSynchronize } from "./processors/activities-synchronize";
 import * as Q from "q";
 import { AthleteUpdate } from "./utils/athlete-update";
 import "./follow";
 import * as Cookies from "js-cookie";
-import { ActivityFeedModifier } from "./modifiers/activity-feed-modifier";
+import { ActivitiesChronologicalFeedModifier } from "./modifiers/activities-chronological-feed-modifier";
 import { AthleteModelResolver } from "@elevate/shared/resolvers";
 import { releaseNotesData } from "@elevate/shared/data";
 
@@ -69,12 +66,13 @@ export class Elevate {
 	public activityId: number;
 	public athleteId: number;
 	public athleteModelResolver: AthleteModelResolver;
-	public isActivityAuthor: boolean;
+	public isOwner: boolean;
 	public extensionId: string;
 	public appResources: AppResourcesModel;
 	public userSettings: UserSettingsModel;
 	public vacuumProcessor: VacuumProcessor;
-	public activitiesSynchronizer: ActivitiesSynchronizer;
+	public activitiesSynchronize: ActivitiesSynchronize;
+	public pageMatches: { activity: boolean, dashboard: boolean, segment: boolean };
 
 	constructor(userSettings: UserSettingsModel, appResources: AppResourcesModel) {
 
@@ -110,10 +108,6 @@ export class Elevate {
 			// Init "elevate bridge"
 			window.__elevate_bridge__ = {}; // TODO Find another solution
 
-			if (CoreEnv.debugMode) {
-				console.log("Handling " + window.location.pathname);
-			}
-
 			// Common
 			this.handleMenu();
 			this.handleRemoteLinks();
@@ -123,9 +117,8 @@ export class Elevate {
 			this.handleSegmentRankPercentage();
 			this.handleSegmentHRAP();
 			this.handleActivityStravaMapType();
-			this.handleActivityFeedModifier();
+			this.handleActivitiesChronologicalFeedModifier();
 			this.handleHideFeed();
-			this.handleDisplayFlyByFeedModifier();
 			this.handleOnFlyActivitiesSync();
 			this.handleActivitiesSyncFromOutside();
 
@@ -148,7 +141,6 @@ export class Elevate {
 			this.handleActivityQRCodeDisplay();
 			this.handleVirtualPartner();
 			this.handleAthletesStats();
-			this.handleActivitiesSummary();
 
 			// Must be done at the end
 			this.handleTrackTodayIncomingConnection();
@@ -171,11 +163,17 @@ export class Elevate {
 			this.athleteId = this.vacuumProcessor.getAthleteId();
 			this.athleteName = this.vacuumProcessor.getAthleteName();
 			this.activityAthleteId = this.vacuumProcessor.getActivityAthleteId();
-			this.isActivityAuthor = (this.activityAthleteId === this.athleteId);
+			this.isOwner = (this.activityAthleteId === this.athleteId || CoreEnv.forceIsActivityOwner);
 			this.isPremium = this.vacuumProcessor.getPremiumStatus();
 			this.isPro = this.vacuumProcessor.getProStatus();
 			this.activityId = this.vacuumProcessor.getActivityId();
-			this.activitiesSynchronizer = new ActivitiesSynchronizer(this.appResources, this.userSettings, this.athleteModelResolver);
+			this.activitiesSynchronize = new ActivitiesSynchronize(this.appResources, this.userSettings, this.athleteModelResolver);
+
+			this.pageMatches = {
+				activity: (window.location.pathname.match(/^\/activities/) !== null),
+				dashboard: (window.location.pathname.match(/^\/dashboard/) !== null),
+				segment: (window.location.pathname.match(/^\/segments\/(\d+)$/) !== null)
+			};
 
 			return Promise.resolve();
 
@@ -248,7 +246,7 @@ export class Elevate {
 			$("#pluginInstallOrUpgrade").hide();
 			$("#pluginInstallOrUpgrade").slideDown(450);
 
-			let counter = 25000;
+			let counter = 30000;
 			const refresh = 1000;
 			$("#pluginInstallOrUpgrade_counter").html((("0" + (counter / 1000)).slice(-2)));
 			const counterInterval = setInterval(() => {
@@ -272,7 +270,7 @@ export class Elevate {
 
 	public handlePluginInstallOrUpgrade(): void {
 
-		if (!window.location.pathname.match(/^\/dashboard/)) {
+		if (!this.pageMatches.dashboard) {
 			return;
 		}
 
@@ -365,31 +363,8 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleAthletesStats()");
-		}
-
-		const athleteStatsModifier: AthleteStatsModifier = new AthleteStatsModifier(this.appResources, {
-			Run: this.userSettings.targetsYearRun,
-			Ride: this.userSettings.targetsYearRide,
-		});
+		const athleteStatsModifier: AthleteStatsModifier = new AthleteStatsModifier(this.appResources);
 		athleteStatsModifier.modify();
-	}
-
-	public handleActivitiesSummary(): void {
-
-		/* DISABLE WEEKLY TOTALS ACTIVITY SUMMARY. Coming soon inside dashboard.
-
-         // If we are not on the athletes page then return...
-         if (!window.location.pathname.match(new RegExp("/athletes/" + this.athleteId + "$", "g"))) {
-         return;
-         }
-
-         if (env.debugMode) console.log("Execute handleActivitiesSummary()");
-
-         let activitiesSummaryModifier: ActivitiesSummaryModifier = new ActivitiesSummaryModifier();
-         activitiesSummaryModifier.modify();
-         */
 	}
 
 	public handlePreviewRibbon(): void {
@@ -400,27 +375,19 @@ export class Elevate {
 
 	public handleMenu(): void {
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleMenu()");
-		}
-
 		const menuModifier: MenuModifier = new MenuModifier(this.athleteId, this.appResources);
 		menuModifier.modify();
 	}
 
 	public handleRemoteLinks(): void {
 
-		// If we are not on a segment or activity page then return...
-		if (!window.location.pathname.match(/^\/segments\/(\d+)$/) && !window.location.pathname.match(/^\/activities/)) {
-			return;
-		}
-
 		if (!this.userSettings.remoteLinks) {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleRemoteLinks()");
+		// If we are not on a segment or activity page then return...
+		if (!this.pageMatches.segment && !this.pageMatches.activity) {
+			return;
 		}
 
 		const remoteLinksModifier: RemoteLinksModifier = new RemoteLinksModifier(this.appResources, (this.activityAthleteId === this.athleteId), this.activityId);
@@ -429,8 +396,12 @@ export class Elevate {
 
 	public handleWindyTyModifier(): void {
 
+		if (!this.userSettings.displayWindyOverlay) {
+			return;
+		}
+
 		// If we are not on a segment or activity page then return...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -448,10 +419,6 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleWindyTyModifier()");
-		}
-
 		const windyTyModifier: WindyTyModifier = new WindyTyModifier(this.activityId, this.appResources, this.userSettings);
 		windyTyModifier.modify();
 	}
@@ -463,7 +430,7 @@ export class Elevate {
 		}
 
 		// If we are not on a segment or activity page then return...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -483,10 +450,6 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleReliveCCModifier()");
-		}
-
 		const reliveCCModifier: ReliveCCModifier = new ReliveCCModifier(this.activityId);
 		reliveCCModifier.modify();
 	}
@@ -494,7 +457,7 @@ export class Elevate {
 	public handleDefaultLeaderboardFilter(): void {
 
 		// If we are not on a segment or activity page then return...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -503,10 +466,6 @@ export class Elevate {
 
 		if (!view) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleDefaultLeaderboardFilter()");
 		}
 
 		const defaultLeaderBoardFilterModifier: DefaultLeaderBoardFilterModifier = new DefaultLeaderBoardFilterModifier(this.userSettings.defaultLeaderBoardFilter);
@@ -520,12 +479,8 @@ export class Elevate {
 		}
 
 		// If we are not on a segment page then return...
-		if (!window.location.pathname.match(/^\/segments\/(\d+)$/)) {
+		if (!this.pageMatches.segment) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleSegmentRankPercentage()");
 		}
 
 		const segmentRankPercentage: SegmentRankPercentageModifier = new SegmentRankPercentageModifier();
@@ -539,12 +494,8 @@ export class Elevate {
 		}
 
 		// If we are not on a segment page then return...
-		if (!window.location.pathname.match(/^\/segments\/(\d+)$/)) {
+		if (!this.pageMatches.segment) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleSegmentHRAP_()");
 		}
 
 		const athleteModel = this.athleteModelResolver.getCurrent(); // TODO Could be improved by using AthleteModel at each dates
@@ -561,12 +512,8 @@ export class Elevate {
 	public handleActivityStravaMapType(): void {
 
 		// Test where are on an activity...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleActivityStravaMapType()");
 		}
 
 		const activityStravaMapTypeModifier: ActivityStravaMapTypeModifier = new ActivityStravaMapTypeModifier(this.userSettings.activityStravaMapType);
@@ -576,7 +523,7 @@ export class Elevate {
 	public handleHideFeed(): void {
 
 		// Test if where are on dashboard page
-		if (!window.location.pathname.match(/^\/dashboard/)) {
+		if (!this.pageMatches.dashboard) {
 			return;
 		}
 
@@ -590,16 +537,12 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleHideFeed()");
-		}
-
 		const hideFeedModifier: HideFeedModifier = new HideFeedModifier(this.userSettings);
 		hideFeedModifier.modify();
 	}
 
-	public handleActivityFeedModifier(): void {
-		if (!window.location.pathname.match(/^\/dashboard/)) {
+	public handleActivitiesChronologicalFeedModifier(): void {
+		if (!this.pageMatches.dashboard) {
 			return;
 		}
 
@@ -607,27 +550,8 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleActivityFeedModifier()");
-		}
-
-		const activityFeedModifier: ActivityFeedModifier = new ActivityFeedModifier(this.userSettings);
+		const activityFeedModifier: ActivitiesChronologicalFeedModifier = new ActivitiesChronologicalFeedModifier(this.userSettings);
 		activityFeedModifier.modify();
-	}
-
-	public handleDisplayFlyByFeedModifier(): void {
-
-		// Test if where are on dashboard page
-		if (!window.location.pathname.match(/^\/dashboard/)) {
-			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleDisplayFlyByFeedModifier()");
-		}
-
-		const displayFlyByFeedModifier: DisplayFlyByFeedModifier = new DisplayFlyByFeedModifier();
-		displayFlyByFeedModifier.modify();
 	}
 
 	public handleExtendedActivityData(): void {
@@ -636,73 +560,59 @@ export class Elevate {
 			return;
 		}
 
-		const activityType: string = window.pageView.activity().get("type");
-		const supportsGap: boolean = window.pageView.activity().get("hasSupportsGap");
-		const isTrainer: boolean = window.pageView.activity().get("trainer");
+		const activityInfo: ActivityInfoModel = {
+			id: this.activityId,
+			type: window.pageView.activity().get("type"),
+			name: this.vacuumProcessor.getActivityName(),
+			startTime: this.vacuumProcessor.getActivityStartDate(),
+			supportsGap: window.pageView.activity().get("supportsGap"),
+			isTrainer: window.pageView.activity().get("trainer"),
+			isOwner: this.isOwner
+		};
 
 		// Skip manual activities
-		if (activityType === "Manual") {
+		if (activityInfo.type === "Manual") {
 			return;
 		}
 
-		const activityStartDate = this.vacuumProcessor.getActivityStartDate();
-
-		const activityProcessor = new ActivityProcessor(this.vacuumProcessor, this.athleteModelResolver, this.appResources, this.userSettings,
-			this.activityId, activityType, activityStartDate, isTrainer, supportsGap, this.isActivityAuthor);
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleExtendedData_()");
-		}
-
-		const basicInfo: ActivityBasicInfoModel = {
-			activityName: this.vacuumProcessor.getActivityName(),
-			activityTime: this.vacuumProcessor.getActivityTime(),
-		};
+		const activityProcessor = new ActivityProcessor(this.vacuumProcessor, this.athleteModelResolver, this.appResources, this.userSettings, activityInfo);
 
 		let extendedDataModifier: AbstractExtendedDataModifier;
 
-		switch (activityType) {
+		switch (activityInfo.type) {
 			case "Ride":
 				extendedDataModifier = new CyclingExtendedDataModifier(
 					activityProcessor,
-					this.activityId,
-					supportsGap,
+					activityInfo,
 					this.appResources,
 					this.userSettings,
-					this.isActivityAuthor,
-					basicInfo,
 					AbstractExtendedDataModifier.TYPE_ACTIVITY);
+				extendedDataModifier.apply();
 				break;
 			case "Run":
 				extendedDataModifier = new RunningExtendedDataModifier(
 					activityProcessor,
-					this.activityId,
-					supportsGap,
+					activityInfo,
 					this.appResources,
 					this.userSettings,
-					this.isActivityAuthor,
-					basicInfo,
 					AbstractExtendedDataModifier.TYPE_ACTIVITY);
+				extendedDataModifier.apply();
 				break;
-			/*default:
-            extendedDataModifier = new GenericExtendedDataModifier(
-                this.activityProcessor,
-                this.activityId,
-                activityType,
-                hasSupportsGap,
-                this.appResources,
-                this.userSettingsData,
-                this.isActivityAuthor,
-                basicInfo,
-                AbstractExtendedDataModifier.TYPE_ACTIVITY);
-            break;*/
+			default:
+				/*			extendedDataModifier = new GenericExtendedDataModifier(
+								activityProcessor,
+								activityInfo,
+								this.appResources,
+								this.userSettings,
+								AbstractExtendedDataModifier.TYPE_ACTIVITY);*/
+				break;
 		}
 
 		// Send opened activity type to ga for stats
 		const updatedToEvent: any = {
 			categorie: "Analyse",
 			action: "openedActivityType",
-			name: activityType,
+			name: activityInfo.type,
 		};
 
 		follow("send", "event", updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
@@ -719,73 +629,71 @@ export class Elevate {
 			return;
 		}
 
-		const activityType: string = window.pageView.activity().get("type");
-		const supportsGap: boolean = window.pageView.activity().get("hasSupportsGap");
-		const isTrainer: boolean = window.pageView.activity().get("trainer");
-
-		// Skip manual activities
-		if (activityType === "Manual") {
-			return;
-		}
-
-		const activityStartDate = this.vacuumProcessor.getActivityStartDate();
-		const activityProcessor = new ActivityProcessor(this.vacuumProcessor, this.athleteModelResolver, this.appResources, this.userSettings,
-			this.activityId, activityType, activityStartDate, isTrainer, supportsGap, this.isActivityAuthor);
-
-		let view: any = Strava.Labs.Activities.SegmentLeaderboardView; // Strava.Labs.Activities.SegmentEffortDetailView
-
-		if (activityType === ("Run" || "Hike" || "Walk")) {
-			view = Strava.Labs.Activities.SegmentEffortDetailView;
-		}
-
-		if (!view) {
-			return;
-		}
-
-		const functionRender: any = view.prototype.render;
-
-		const that: Elevate = this;
-
-		view.prototype.render = function () { // No arrow function here with! If yes loosing arguments
-
-			const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
-
-			const basicInfo: ActivityBasicInfoModel = {
-				activityName: that.vacuumProcessor.getActivityName(),
-				activityTime: that.vacuumProcessor.getActivityTime(),
-			};
-
-			let extendedDataModifier: AbstractExtendedDataModifier;
-
-			switch (activityType) {
-				case "Ride":
-					extendedDataModifier = new CyclingExtendedDataModifier(
-						activityProcessor,
-						that.activityId,
-						supportsGap,
-						that.appResources,
-						that.userSettings,
-						that.isActivityAuthor,
-						basicInfo,
-						AbstractExtendedDataModifier.TYPE_SEGMENT);
-					break;
-				case "Run":
-					extendedDataModifier = new RunningExtendedDataModifier(
-						activityProcessor,
-						that.activityId,
-						supportsGap,
-						that.appResources,
-						that.userSettings,
-						that.isActivityAuthor,
-						basicInfo,
-						AbstractExtendedDataModifier.TYPE_SEGMENT);
-					break;
-				default:
-					break;
-			}
-			return r;
+		const activityInfo: ActivityInfoModel = {
+			id: this.activityId,
+			type: window.pageView.activity().get("type"),
+			name: this.vacuumProcessor.getActivityName(),
+			startTime: this.vacuumProcessor.getActivityStartDate(),
+			supportsGap: window.pageView.activity().get("supportsGap"),
+			isTrainer: window.pageView.activity().get("trainer"),
+			isOwner: this.isOwner
 		};
 
+		// Skip manual activities
+		if (activityInfo.type === "Manual") {
+			return;
+		}
+
+		const activityProcessor = new ActivityProcessor(this.vacuumProcessor, this.athleteModelResolver, this.appResources, this.userSettings, activityInfo);
+
+		let view: any;
+
+		if (_.indexOf(["Run", "Hike", "Walk"], activityInfo.type) !== -1) {
+			view = Strava.Labs.Activities.SegmentEffortDetailView;
+		} else {
+			view = Strava.Labs.Activities.SegmentLeaderboardView;
+		}
+
+		if (view) {
+
+			const functionRender: any = view.prototype.render;
+
+			const that: Elevate = this;
+
+			view.prototype.render = function () { // No arrow function here with! If yes loosing arguments
+
+				const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
+
+				let extendedDataModifier: AbstractExtendedDataModifier;
+
+				switch (activityInfo.type) {
+					case "Ride":
+						extendedDataModifier = new CyclingExtendedDataModifier(
+							activityProcessor,
+							activityInfo,
+							that.appResources,
+							that.userSettings,
+							AbstractExtendedDataModifier.TYPE_SEGMENT);
+						extendedDataModifier.apply();
+						break;
+					case "Run":
+						extendedDataModifier = new RunningExtendedDataModifier(
+							activityProcessor,
+							activityInfo,
+							that.appResources,
+							that.userSettings,
+							AbstractExtendedDataModifier.TYPE_SEGMENT);
+						extendedDataModifier.apply();
+						break;
+					default:
+						break;
+				}
+
+
+				return r;
+			};
+
+		}
 	}
 
 	public handleNearbySegments(): void {
@@ -800,19 +708,11 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleNearbySegments()");
-		}
-
 		// Getting segment id
 		const segmentId: number = parseInt(segmentData[1]);
 
 		const segmentProcessor: SegmentProcessor = new SegmentProcessor(this.vacuumProcessor, segmentId);
 		segmentProcessor.getNearbySegmentsAround((jsonSegments: ISegmentInfo[]) => {
-
-			if (CoreEnv.debugMode) {
-				console.log(jsonSegments);
-			}
 
 			const nearbySegmentsModifier: NearbySegmentsModifier = new NearbySegmentsModifier(jsonSegments, this.appResources);
 			nearbySegmentsModifier.modify();
@@ -827,7 +727,7 @@ export class Elevate {
 		}
 
 		// Test where are on an activity...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -840,21 +740,14 @@ export class Elevate {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleActivityBikeOdo()");
-		}
-
-		const bikeOdoProcessor: BikeOdoProcessor = new BikeOdoProcessor(this.vacuumProcessor, this.activityAthleteId);
-		bikeOdoProcessor.getBikeOdoOfAthlete((bikeOdoArray: string[]) => {
-			const activityBikeOdoModifier: ActivityBikeOdoModifier = new ActivityBikeOdoModifier(bikeOdoArray, bikeOdoProcessor.getCacheKey());
-			activityBikeOdoModifier.modify();
-		});
+		const activityBikeOdoModifier: ActivityBikeOdoModifier = new ActivityBikeOdoModifier(this.vacuumProcessor, this.athleteId);
+		activityBikeOdoModifier.modify();
 	}
 
 	public handleActivitySegmentTimeComparison(): void {
 
 		// Test where are on an activity page... (note this includes activities/XXX/segments)
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -863,14 +756,9 @@ export class Elevate {
 		}
 
 		const activityType: string = window.pageView.activity().get("type");
+
 		// PR only for my own activities
-		const isMyOwn: boolean = (this.athleteId == this.activityAthleteId);
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleActivitySegmentTimeComparison()");
-		}
-
-		const activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings, this.appResources, activityType, isMyOwn);
+		const activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings, this.appResources, activityType, this.isOwner);
 		activitySegmentTimeComparisonModifier.modify();
 
 	}
@@ -882,7 +770,7 @@ export class Elevate {
 		}
 
 		// Test where are on an activity...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -891,26 +779,26 @@ export class Elevate {
 		}
 
 		// Only cycling is supported
-		if (window.pageView.activity().attributes.type != "Ride") {
+		const activityType: string = window.pageView.activity().attributes.type;
+		if (activityType != "Ride") {
 			return;
 		}
 
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleActivityBestSplits()");
-		}
+		const activityInfo: ActivityInfoModel = {
+			id: this.activityId,
+			type: window.pageView.activity().get("type"),
+			name: this.vacuumProcessor.getActivityName(),
+			startTime: this.vacuumProcessor.getActivityStartDate(),
+			supportsGap: window.pageView.activity().get("supportsGap"),
+			isTrainer: window.pageView.activity().get("trainer"),
+			isOwner: this.isOwner
+		};
 
-		// TODO Implement cache here: get stream from cache if exist
-		this.vacuumProcessor.getActivityStream((activityCommonStats: any, jsonResponse: any, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => {
-
-			AppStorage.getInstance().get(AppStorageType.SYNC, "bestSplitsConfiguration").then((response: any) => {
-				const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.activityId, this.userSettings, jsonResponse, hasPowerMeter, response, (splitsConfiguration: any) => {
-					AppStorage.getInstance().set(AppStorageType.SYNC, "bestSplitsConfiguration", splitsConfiguration);
-				});
-
-				activityBestSplitsModifier.modify();
-
+		AppStorage.getInstance().get(AppStorageType.LOCAL, "bestSplitsConfiguration").then((response: any) => {
+			const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.vacuumProcessor, activityInfo, this.userSettings, response, (splitsConfiguration: any) => {
+				AppStorage.getInstance().set(AppStorageType.LOCAL, "bestSplitsConfiguration", splitsConfiguration);
 			});
-
+			activityBestSplitsModifier.modify();
 		});
 	}
 
@@ -929,12 +817,8 @@ export class Elevate {
 			return;
 		}
 
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleRunningGradeAdjustedPace()");
 		}
 
 		const runningGradeAdjustedPace: RunningGradeAdjustedPaceModifier = new RunningGradeAdjustedPaceModifier();
@@ -956,12 +840,8 @@ export class Elevate {
 			return;
 		}
 
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleRunningHeartRate()");
 		}
 
 		const runningHeartRateModifier: RunningHeartRateModifier = new RunningHeartRateModifier();
@@ -983,12 +863,8 @@ export class Elevate {
 			return;
 		}
 
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleRunningCadence()");
 		}
 
 		const runningCadenceModifier: RunningCadenceModifier = new RunningCadenceModifier();
@@ -1010,12 +886,8 @@ export class Elevate {
 			return;
 		}
 
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleRunningHeartRate()");
 		}
 
 		const runningTemperatureModifier: RunningTemperatureModifier = new RunningTemperatureModifier();
@@ -1033,12 +905,8 @@ export class Elevate {
 			return;
 		}
 
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
-		}
-
-		if (CoreEnv.debugMode) {
-			console.log("Execute handleRunningAnalysisGraph()");
 		}
 
 		const runningAnalysisGraph: RunningAnalysisGraph = new RunningAnalysisGraph();
@@ -1049,7 +917,7 @@ export class Elevate {
 	public handleActivityQRCodeDisplay(): void {
 
 		// Test where are on an activity...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -1065,7 +933,7 @@ export class Elevate {
 	public handleVirtualPartner(): void {
 
 		// Test where are on an activity...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -1084,7 +952,7 @@ export class Elevate {
 		}
 
 		// Test where are on an activity...
-		if (!window.location.pathname.match(/^\/activities/)) {
+		if (!this.pageMatches.activity) {
 			return;
 		}
 
@@ -1099,14 +967,7 @@ export class Elevate {
 
 		const userHasConnectSince24Hour: boolean = (Cookies.get("elevate_daily_connection_done") === "true");
 
-		if (CoreEnv.debugMode) {
-			console.log("Cookie 'elevate_daily_connection_done' value found is: " + userHasConnectSince24Hour);
-		}
-
 		if (_.isNull(this.athleteId)) {
-			if (CoreEnv.debugMode) {
-				console.log("athleteId is empty value: " + this.athleteId);
-			}
 			return;
 		}
 
@@ -1130,10 +991,6 @@ export class Elevate {
 			// Push IncomingConnection
 			const eventName: string = accountName + " #" + this.athleteId + " v" + this.appResources.extVersion;
 
-			if (CoreEnv.debugMode) {
-				console.log("Cookie 'elevate_daily_connection_done' not found, send track <IncomingConnection> / <" + accountType + "> / <" + eventName + ">");
-			}
-
 			if (!CoreEnv.debugMode) {
 				follow("send", "event", "DailyConnection", eventAction, eventName);
 			}
@@ -1142,9 +999,6 @@ export class Elevate {
 			Cookies.set("elevate_daily_connection_done", "true", {expires: 1});
 
 		} else {
-			if (CoreEnv.debugMode) {
-				console.log("Cookie 'elevate_daily_connection_done' exist, DO NOT TRACK IncomingConnection");
-			}
 		}
 	}
 
@@ -1169,6 +1023,7 @@ export class Elevate {
 
 		// Skipping on fly sync because a dedicated sync has been asked by user
 		if (window.location.search.match("elevateSync")) {
+			console.log("Sync Popup. Skip handleOnFlyActivitiesSync()");
 			return;
 		}
 
@@ -1177,16 +1032,11 @@ export class Elevate {
 			return;
 		}
 
-		if (window.location.search.match("elevateSync")) {
-			console.log("Sync Popup. Skip handleOnFlyActivitiesSync()");
-			return;
-		}
-
-		const waitBeforeFastSyncSeconds = 2;
+		const waitBeforeFastSyncSeconds = 3;
 		setTimeout(() => {
 
 			// Allow activities sync if previous sync exists and has been done 12 hours or more ago.
-			AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronizer.lastSyncDateTime).then((lastSyncDateTime: number) => {
+			AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY).then((lastSyncDateTime: number) => {
 
 				if (_.isNumber(lastSyncDateTime)) {
 
@@ -1194,11 +1044,11 @@ export class Elevate {
 
 					// At first perform a fast sync to get the "just uploaded ride/run" ready
 					const fastSync = true;
-					const fastSyncPromise: Q.Promise<SyncResultModel> = this.activitiesSynchronizer.sync(fastSync);
+					const fastSyncPromise: Q.Promise<SyncResultModel> = this.activitiesSynchronize.sync(fastSync);
 					fastSyncPromise.then((syncResult: SyncResultModel) => {
 
 						console.log("Fast sync finished", syncResult);
-						ActivitiesSynchronizer.notifyBackgroundSyncDone.call(this, this.extensionId, syncResult); // Notify background page that sync is finished
+						ActivitiesSynchronize.notifyBackgroundSyncDone.call(this, this.extensionId, syncResult); // Notify background page that sync is finished
 
 					}).catch((err: any) => {
 						console.warn(err);
@@ -1230,7 +1080,7 @@ export class Elevate {
 		const fastSync = (urlParams.fastSync === "true" && !forceSync);
 		const sourceTabId = (urlParams.sourceTabId) ? parseInt(urlParams.sourceTabId) : -1;
 
-		const activitiesSyncModifier: ActivitiesSyncModifier = new ActivitiesSyncModifier(this.extensionId, this.activitiesSynchronizer, fastSync, forceSync, sourceTabId);
+		const activitiesSyncModifier: ActivitiesSyncModifier = new ActivitiesSyncModifier(this.extensionId, this.activitiesSynchronize, fastSync, forceSync, sourceTabId);
 		activitiesSyncModifier.modify();
 	}
 

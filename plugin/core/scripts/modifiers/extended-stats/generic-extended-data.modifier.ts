@@ -7,13 +7,13 @@ import { PaceDataView } from "./views/pace-data.view";
 import { RunningCadenceDataView } from "./views/running-cadence.data.view";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AppResourcesModel } from "../../models/app-resources.model";
-import { UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, UserSettingsModel } from "@elevate/shared/models";
 
 export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 
 	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, supportsGap: boolean,
-				appResources: AppResourcesModel, userSettings: UserSettingsModel, isAuthorOfViewedActivity: boolean, basicInfo: any, type: number) {
-		super(activityProcessor, activityId, supportsGap, appResources, userSettings, isAuthorOfViewedActivity, basicInfo, type);
+				appResources: AppResourcesModel, userSettings: UserSettingsModel, isOwner: boolean, activityInfo: ActivityInfoModel, type: number) {
+		super(activityProcessor, activityInfo, appResources, userSettings, type);
 	}
 
 	protected placeSummaryPanel(panelAdded: () => void): void {
@@ -30,7 +30,7 @@ export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 			const units: string = (measurementPreference == "meters") ? "kph" : "mph";
 			const speedDataView: SpeedDataView = new SpeedDataView(this.analysisData.speedData, units);
 			speedDataView.setAppResources(this.appResources);
-			speedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+			speedDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			speedDataView.setActivityType(this.activityType);
 			speedDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(speedDataView);
@@ -43,7 +43,7 @@ export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 
 			const paceDataView: PaceDataView = new PaceDataView(this.analysisData.paceData, units);
 			paceDataView.setAppResources(this.appResources);
-			paceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+			paceDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			paceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(paceDataView);
 		}
@@ -51,7 +51,7 @@ export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {
 			const runningCadenceDataView: RunningCadenceDataView = new RunningCadenceDataView(this.analysisData.cadenceData, "spm", this.userSettings);
 			runningCadenceDataView.setAppResources(this.appResources);
-			runningCadenceDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+			runningCadenceDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			runningCadenceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(runningCadenceDataView);
 		}
@@ -59,7 +59,7 @@ export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 			const cyclingGradeDataView: CyclingGradeDataView = new CyclingGradeDataView(this.analysisData.gradeData, "%");
 			cyclingGradeDataView.setAppResources(this.appResources);
-			cyclingGradeDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+			cyclingGradeDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			cyclingGradeDataView.setActivityType(this.activityType);
 			cyclingGradeDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(cyclingGradeDataView);
@@ -68,7 +68,7 @@ export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.elevationData && this.userSettings.displayAdvancedElevationData) {
 			const elevationDataView: ElevationDataView = new ElevationDataView(this.analysisData.elevationData, "m");
 			elevationDataView.setAppResources(this.appResources);
-			elevationDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+			elevationDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			elevationDataView.setActivityType(this.activityType);
 			elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(elevationDataView);
@@ -76,7 +76,7 @@ export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 			if (this.analysisData.elevationData.ascentSpeed && this.analysisData.elevationData.ascentSpeedZones) {
 				const ascentSpeedDataView: AscentSpeedDataView = new AscentSpeedDataView(this.analysisData.elevationData, "Vm/h");
 				ascentSpeedDataView.setAppResources(this.appResources);
-				ascentSpeedDataView.setIsAuthorOfViewedActivity(this.isAuthorOfViewedActivity);
+				ascentSpeedDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 				ascentSpeedDataView.setActivityType(this.activityType);
 				this.dataViews.push(ascentSpeedDataView);
 			}

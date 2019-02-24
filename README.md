@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/thomaschampagne/elevate.svg?branch=develop)](https://travis-ci.org/thomaschampagne/elevate)
 [![Artifacts Downloads](https://img.shields.io/badge/artifacts-download-00a8fb.svg)](https://thomaschampagne.github.io/elevate/#/builds)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9f150ac985294364ab493682cca63f66)](https://app.codacy.com/app/th-champagne/elevate?utm_source=github.com&utm_medium=referral&utm_content=thomaschampagne/elevate&utm_campaign=badger)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/thomaschampagne/elevate.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/thomaschampagne/elevate/context:javascript)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/thomaschampagne/elevate.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/thomaschampagne/elevate/alerts/)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/elevate-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn) 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/users/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/elevate-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/elevate-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews) [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating-count/dhiaggccakkgdfcadnklkbljcgicpckn.svg)](https://chrome.google.com/webstore/detail/elevate-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn/reviews)

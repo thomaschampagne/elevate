@@ -12,7 +12,7 @@ export class DatedAthleteSettingsTableModel extends DatedAthleteSettingsModel {
 			datedAthleteSettingsModel
 		);
 
-		this.sinceAsDate = (this.since) ? moment(this.since).toDate() : null;
+		this.sinceAsDate = (this.since) ? new Date(this.since) : null;
 		this.untilAsDate = (previousDatedAthleteSettingsModel && previousDatedAthleteSettingsModel.since) ?
 			moment(previousDatedAthleteSettingsModel.since, DatedAthleteSettingsModel.SINCE_DATE_FORMAT).subtract(1, "days").toDate() : null;
 	}

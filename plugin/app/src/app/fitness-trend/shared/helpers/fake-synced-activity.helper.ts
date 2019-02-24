@@ -88,8 +88,8 @@ export class FakeSyncedActivityHelper {
 				genuineGradeAdjustedAvgPace: avgPace,
 				paceZones: null,
 				gradeAdjustedPaceZones: null,
-				runningStressScore: (type === "Run") ? avgPace : null,
-				runningStressScorePerHour: (type === "Run") ? avgPace : null,
+				runningStressScore: (type === "Run" || type === "VirtualRun") ? avgPace : null,
+				runningStressScorePerHour: (type === "Run" || type === "VirtualRun") ? avgPace : null,
 			};
 		}
 		return fakeActivity;

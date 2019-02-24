@@ -1,28 +1,28 @@
 import * as _ from "lodash";
 import { Helper } from "../../../helper";
 
-import { ActivityBasicInfoModel, AnalysisDataModel, SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, AnalysisDataModel, SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared/models";
 import { AbstractDataView } from "./abstract-data.view";
 
 export class FeaturedDataView extends AbstractDataView {
 
 	protected analysisData: AnalysisDataModel;
-	protected basicInfo: ActivityBasicInfoModel;
+	protected activityInfo: ActivityInfoModel;
 	protected userSettings: UserSettingsModel;
 
-	constructor(analysisData: AnalysisDataModel, userSettings: UserSettingsModel, basicInfo: any) {
+	constructor(analysisData: AnalysisDataModel, userSettings: UserSettingsModel, activityInfo: ActivityInfoModel) {
 
 		super(null);
 		this.hasGraph = false;
 		this.analysisData = analysisData;
 		this.userSettings = userSettings;
-		this.basicInfo = basicInfo;
+		this.activityInfo = activityInfo;
 
 		if (!this.analysisData || !this.userSettings) {
 			console.error("analysisData and userSettingsData are required");
 		}
 
-		if (this.isSegmentEffortView && !_.isEmpty(this.basicInfo.segmentEffort)) {
+		if (this.isSegmentEffortView && !_.isEmpty(this.activityInfo.segmentEffort)) {
 			this.mainColor = [252, 76, 2];
 		}
 	}
@@ -48,7 +48,7 @@ export class FeaturedDataView extends AbstractDataView {
 
 		const speedUnitsData: SpeedUnitDataModel = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
 
-		if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio && _.isEmpty(this.basicInfo.segmentEffort)) {
+		if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio && _.isEmpty(this.activityInfo.segmentEffort)) {
 			this.insertContentAtGridPosition(0, 0, this.printNumber(this.analysisData.moveRatio, 2), "Move Ratio", "", "displayActivityRatio"); // Move ratio
 		}
 

@@ -15,7 +15,7 @@ export class HideFeedModifier extends AbstractModifier {
 		this.userSettings = userSettings;
 	}
 
-	public modify(): void {
+	public modify(): void { // TODO Improve using code of RunningGradeAdjustedPaceModifier & ActivitiesChronologicalFeedModifier
 
 		const timeout = 250;
 
@@ -42,7 +42,7 @@ export class HideFeedModifier extends AbstractModifier {
 
 			// If hide suggested athletes
 			if (this.userSettings.feedHideSuggestedAthletes) {
-				$("#suggested-follow-module").remove(); // Will work as long as id remains "suggested-follow-module"
+				$("#suggested-follows").remove(); // Will work as long as id remains "suggested-follows"
 			}
 
 			if (this.userSettings.feedHideVirtualRides || this.userSettings.feedHideRideActivitiesUnderDistance > 0 || this.userSettings.feedHideRunActivitiesUnderDistance > 0) {
