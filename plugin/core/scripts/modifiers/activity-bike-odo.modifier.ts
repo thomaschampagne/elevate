@@ -25,7 +25,7 @@ export class ActivityBikeOdoModifier extends AbstractModifier {
 
 			const bikeFound = _.find(bikes, {display_name: activityBike});
 			if (bikeFound) {
-				$(".gear-name").html(activityBike + "<strong> / Odo: " + bikeFound.total_distance + "</strong>");
+				$(".gear-name").html(activityBike + "<strong> / Odo: " + bikeFound.total_distance + " " + bikeFound.units + "</strong>");
 			}
 
 		}, err => {

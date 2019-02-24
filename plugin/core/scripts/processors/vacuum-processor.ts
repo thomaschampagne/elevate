@@ -6,6 +6,7 @@ import { GearType } from "../models/gear/gear-type.enum";
 import { ShoesGearModel } from "../models/gear/shoes-gear.model";
 import { GearModel } from "../models/gear/gear.model";
 import { Gzip } from "../utils/gzip";
+import { Helper } from "../helper";
 
 export class VacuumProcessor {
 
@@ -378,6 +379,10 @@ export class VacuumProcessor {
 	 */
 	public getAthleteGear<T extends GearModel>(athleteId: number, type: GearType): Promise<T[]> {
 
+		const parseOdo = (odo: string) => {
+			return (parseInt(odo.replace(".", "").replace(",", "")) / 10);
+		};
+
 		let gearType;
 
 		if (type === GearType.BIKE) {
@@ -389,6 +394,8 @@ export class VacuumProcessor {
 		}
 
 		const url: string = "/athletes/" + athleteId + "/gear/" + gearType;
+
+		const unitData = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
 
 		return new Promise((resolve, reject) => {
 			$.ajax({
@@ -402,11 +409,11 @@ export class VacuumProcessor {
 					const gears: GearModel[] = [];
 					_.forEach(results, (result: any) => {
 						if (type === GearType.BIKE) {
-							gears.push(new BikeGearModel(result.id, ((result.total_distance) ? parseInt(result.total_distance.replace(",", "")) : 0), result.active,
-								result.default, result.description, result.display_name));
+							gears.push(new BikeGearModel(result.id, ((result.total_distance) ? parseOdo(result.total_distance) : 0), result.active,
+								result.default, result.description, result.display_name, unitData.units));
 						} else if (type === GearType.SHOES) {
-							gears.push(new ShoesGearModel(result.id, ((result.total_distance) ? parseInt(result.total_distance.replace(",", "")) : 0), result.active,
-								result.default, result.description, result.display_name, result.brand_name, result.model_name, result.name, result.notification_distance));
+							gears.push(new ShoesGearModel(result.id, ((result.total_distance) ? parseOdo(result.total_distance) : 0), result.active,
+								result.default, result.description, result.display_name, result.brand_name, result.model_name, result.name, result.notification_distance, unitData.units));
 						}
 
 					});
