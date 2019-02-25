@@ -38,7 +38,6 @@ import { RollingProgressPresetModel } from "./shared/models/rolling-progress-pre
 // TODO Refresh on external update event!
 
 /* Rolling mode Mode Tasks */
-// TODO Migrate any saved presets (6.9.0) to new format.
 // TODO Fully remove legacy code and warning.
 
 @Component({
