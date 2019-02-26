@@ -3,11 +3,10 @@ import { YearToDateProgressPresetModel } from "../shared/models/year-to-date-pro
 import { YearProgressService } from "../shared/services/year-progress.service";
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
 import { ProgressType } from "../shared/enums/progress-type.enum";
-import { AddYearToDateProgressPresetDialogData } from "../shared/models/add-year-to-date-progress-preset-dialog-data";
 import { AppError } from "../../shared/models/app-error.model";
 import { ProgressMode } from "../shared/enums/progress-mode.enum";
-import { AddRollingProgressPresetDialogData } from "../shared/models/add-rolling-progress-preset-dialog-data";
 import { RollingProgressPresetModel } from "../shared/models/rolling-progress-preset.model";
+import { AddRollingProgressPresetDialogData } from "../shared/models/add-rolling-progress-preset-dialog-data";
 
 @Component({
 	selector: "app-add-year-progress-presets-dialog",
@@ -24,7 +23,7 @@ export class AddYearProgressPresetDialogComponent implements OnInit {
 
 	public progressPresetModel: YearToDateProgressPresetModel;
 
-	constructor(@Inject(MAT_DIALOG_DATA) public dialogData: AddYearToDateProgressPresetDialogData,
+	constructor(@Inject(MAT_DIALOG_DATA) public dialogData: any /*AddYearToDateProgressPresetDialogData | AddRollingProgressPresetDialogData*/,
 				public dialogRef: MatDialogRef<AddYearProgressPresetDialogComponent>,
 				public yearProgressService: YearProgressService,
 				public snackBar: MatSnackBar) {
@@ -35,7 +34,11 @@ export class AddYearProgressPresetDialogComponent implements OnInit {
 			this.progressPresetModel = new YearToDateProgressPresetModel(this.dialogData.yearProgressTypeModel.type, this.dialogData.activityTypes,
 				this.dialogData.includeCommuteRide, this.dialogData.includeIndoorRide, this.dialogData.targetValue);
 		} else {
-			const rollingPresetDialogData = this.dialogData as AddRollingProgressPresetDialogData;
+
+			const rollingPresetDialogData = new AddRollingProgressPresetDialogData(this.dialogData.yearProgressTypeModel, this.dialogData.activityTypes,
+				this.dialogData.includeCommuteRide, this.dialogData.includeIndoorRide, this.dialogData.targetValue,
+				(<AddRollingProgressPresetDialogData>this.dialogData).rollingPeriod, (<AddRollingProgressPresetDialogData>this.dialogData).periodMultiplier);
+
 			this.progressPresetModel = new RollingProgressPresetModel(rollingPresetDialogData.yearProgressTypeModel.type, rollingPresetDialogData.activityTypes,
 				rollingPresetDialogData.includeCommuteRide, rollingPresetDialogData.includeIndoorRide, rollingPresetDialogData.targetValue, rollingPresetDialogData.rollingPeriod, rollingPresetDialogData.periodMultiplier);
 		}
