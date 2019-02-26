@@ -171,9 +171,12 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
 						return;
 					}
 
-					if (this.displaySegmentTimeComparisonPosition) {
-						const percentRank: number = parseInt(segmentEffortInfo.overall_rank) / parseInt(segmentEffortInfo.overall_count);
-						positionCell.html("<div title=\"Your position\" style=\"text-align: center; font-size:11px; padding: 1px 1px; background-color: #565656; color:" + this.getColorForPercentage(percentRank) + "\">" + segmentEffortInfo.overall_rank + "&nbsp;/&nbsp;" + segmentEffortInfo.overall_count + "<br/>" + (percentRank * 100).toFixed(1) + "%</div>");
+					if (this.displaySegmentTimeComparisonPosition && segmentEffortInfo.overall_rank) {
+						const overallRank = ((segmentEffortInfo.overall_rank) ? parseInt(segmentEffortInfo.overall_rank) : 0);
+						const percentRank: number = overallRank / parseInt(segmentEffortInfo.overall_count);
+						positionCell.html("<div title=\"Your position\" style=\"text-align: center; font-size:11px; padding: 1px 1px; background-color: #565656; color:" + this.getColorForPercentage(percentRank) + "\">" + overallRank + "&nbsp;/&nbsp;" + segmentEffortInfo.overall_count + "<br/>" + (percentRank * 100).toFixed(1) + "%</div>");
+					} else {
+						positionCell.html("n/a");
 					}
 
 					const komSeconds: string = Helper.HHMMSStoSeconds((this.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")).toString(),
