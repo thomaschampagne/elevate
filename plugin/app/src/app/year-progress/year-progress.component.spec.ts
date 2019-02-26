@@ -16,9 +16,11 @@ import { userSettingsData } from "@elevate/shared/data";
 import { YearProgressModule } from "./year-progress.module";
 import { YearToDateProgressPresetModel } from "./shared/models/year-to-date-progress-preset.model";
 import { ProgressType } from "./shared/enums/progress-type.enum";
+import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
 
 describe("YearProgressComponent", () => {
 
+	const pluginId = "c061d18abea0";
 	const yearProgressPresetModels = [
 		new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false, 750),
 		new YearToDateProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
@@ -34,6 +36,13 @@ describe("YearProgressComponent", () => {
 	let TEST_SYNCED_ACTIVITIES: SyncedActivityModel[];
 
 	beforeEach((done: Function) => {
+
+		spyOn(ExternalUpdatesService, "getBrowserExternalMessages").and.returnValue({
+			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
+			}
+		});
+
+		spyOn(ExternalUpdatesService, "getBrowserPluginId").and.returnValue(pluginId);
 
 		TestBed.configureTestingModule({
 			imports: [
