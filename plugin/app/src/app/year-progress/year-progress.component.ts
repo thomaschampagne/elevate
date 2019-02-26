@@ -11,7 +11,7 @@ import { YearProgressStyleModel } from "./year-progress-graph/models/year-progre
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { MatDialog } from "@angular/material";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
-import { SyncedActivityModel, UserSettingsModel } from "@elevate/shared/models";
+import { SyncedActivityModel, SyncResultModel, UserSettingsModel } from "@elevate/shared/models";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { ActivityService } from "../shared/services/activity/activity.service";
@@ -32,10 +32,10 @@ import { MediaObserver } from "@angular/flex-layout";
 import { AddYearToDateProgressPresetDialogData } from "./shared/models/add-year-to-date-progress-preset-dialog-data";
 import { AddRollingProgressPresetDialogData } from "./shared/models/add-rolling-progress-preset-dialog-data";
 import { RollingProgressPresetModel } from "./shared/models/rolling-progress-preset.model";
+import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
 
 /* Legacy tasks */
 // TODO Style of target line !
-// TODO Refresh on external update event!
 
 /* Rolling mode Mode Tasks */
 // TODO Fully remove legacy code and warning.
@@ -51,6 +51,7 @@ export class YearProgressComponent implements OnInit {
 				public syncService: SyncService,
 				public activityService: ActivityService,
 				public yearProgressService: YearProgressService,
+				public externalUpdatesService: ExternalUpdatesService,
 				public dialog: MatDialog,
 				public mediaObserver: MediaObserver) {
 
@@ -216,6 +217,22 @@ export class YearProgressComponent implements OnInit {
 
 	public ngOnInit(): void {
 
+		this.initialize();
+
+		// Listen for syncFinished update then reload year progressions if necessary.
+		this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
+			if (syncResult.activitiesChangesModel.added.length > 0
+				|| syncResult.activitiesChangesModel.edited.length > 0
+				|| syncResult.activitiesChangesModel.deleted.length > 0) {
+
+				this.initialize();
+			}
+		});
+
+	}
+
+	public initialize(): void {
+
 		this.syncService.getSyncState().then((syncState: SyncState) => {
 
 			if (syncState !== SyncState.SYNCED) {
@@ -246,12 +263,11 @@ export class YearProgressComponent implements OnInit {
 				this.momentWatched = momentWatched;
 			});
 
-
 		}, (appError: AppError) => {
 			console.error(appError.toString());
 		});
-
 	}
+
 
 	/**
 	 * Setup prepare year progression and target progression along user saved preferences
