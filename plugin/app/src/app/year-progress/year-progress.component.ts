@@ -433,11 +433,30 @@ export class YearProgressComponent implements OnInit {
 		}
 	}
 
+	public onTickAllActivityTypes(): void {
+		this.progressConfig.activityTypes = this.availableActivityTypes;
+		this.onSelectedActivityTypesChanged();
+	}
+
+	public onUnTickAllActivityTypes(): void {
+		this.progressConfig.activityTypes = [_.first(this.availableActivityTypes)];
+		this.onSelectedActivityTypesChanged();
+	}
+
 	public onSelectedYearsChanged(): void {
 		if (this.selectedYears.length > 0) {
-			this.computeYearProgressions();
 			this.progressStorage.selectedYears.set(this.selectedYears);
 		}
+	}
+
+	public onTickAllYears(): void {
+		this.selectedYears = this.availableYears;
+		this.onSelectedYearsChanged();
+	}
+
+	public onUnTickAllYears(): void {
+		this.selectedYears = [moment().year()];
+		this.onSelectedYearsChanged();
 	}
 
 	public onIncludeCommuteRideToggle(): void {

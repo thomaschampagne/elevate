@@ -58,7 +58,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public isMomentWatchedToday: boolean;
 	public sideNavChangesSubscription: Subscription;
 	public windowResizingSubscription: Subscription;
-	public isGraphDataReadyOnYearChange = false;
 	public initialized = false;
 
 	public static clearSvgGraphContent(): void {
@@ -100,7 +99,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 		// Clear svg content if year selection changed
 		if (changes.selectedYears) {
 			YearProgressGraphComponent.clearSvgGraphContent();
-			this.isGraphDataReadyOnYearChange = false;
 		}
 
 		if (changes.isGraphExpanded) {
@@ -227,7 +225,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public draw(): void {
 		_.defer(() => {
 			MG.data_graphic(this.graphConfig);
-			this.isGraphDataReadyOnYearChange = true;
 		});
 	}
 
