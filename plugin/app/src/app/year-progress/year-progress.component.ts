@@ -33,12 +33,11 @@ import { AddYearToDateProgressPresetDialogData } from "./shared/models/add-year-
 import { AddRollingProgressPresetDialogData } from "./shared/models/add-rolling-progress-preset-dialog-data";
 import { RollingProgressPresetModel } from "./shared/models/rolling-progress-preset.model";
 import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
+import { YearProgressWelcomeDialogComponent } from "./year-progress-welcome-dialog/year-progress-welcome-dialog.component";
 
 /* Legacy tasks */
-// TODO Style of target line !
-
-/* Rolling mode Mode Tasks */
-// TODO Fully remove legacy code and warning.
+// TODO Style of target line!
+// TODO Remove message old feature (code and warning).
 
 @Component({
 	selector: "app-year-progress",
@@ -262,6 +261,8 @@ export class YearProgressComponent implements OnInit {
 			this.yearProgressService.momentWatchedChanges.subscribe((momentWatched: Moment) => {
 				this.momentWatched = momentWatched;
 			});
+
+			this.showYearProgressWelcomeDialog();
 
 		}, (appError: AppError) => {
 			console.error(appError.toString());
@@ -680,4 +681,17 @@ export class YearProgressComponent implements OnInit {
 
 		return null;
 	}
+
+	public showYearProgressWelcomeDialog(): void {
+
+		const show: boolean = _.isEmpty(localStorage.getItem(YearProgressWelcomeDialogComponent.LS_HIDE_YEAR_PROGRESS_WELCOME_DIALOG));
+
+		if (show) {
+			_.delay(() => this.dialog.open(YearProgressWelcomeDialogComponent, {
+				minWidth: YearProgressWelcomeDialogComponent.MIN_WIDTH,
+				maxWidth: YearProgressWelcomeDialogComponent.MAX_WIDTH,
+			}), 1000);
+		}
+	}
+
 }
