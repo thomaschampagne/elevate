@@ -13,7 +13,9 @@ export class AthleteStatsModifier extends AbstractModifier {
 	}
 
 	public modify(): void {
-		$("#progress-goals").before("<div class='section'><h3 style='font-weight: 400;'>⚠ Elevate <a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Year Progressions</a> feature which was displayed here before is now only available from " +
-			"the <a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Elevate App</a> itself.</h3></div>");
+		$("#progress-goals").before("<div class='section'><h3 style='font-weight: 400;'>⚠ Elevate " +
+			"<a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Rolling & year to date progressions</a> features are now fully migrated with a better implementation and customisation in" +
+			" the <a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Elevate App</a> itself.<br/><br/>⚠ To access to the <strong>'distance last 30d & year'</strong> features in the new year progression, then inside, switch to the mode 'Rolling'" +
+			", set period to 'days' and multiplier to '30'. <a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Access to the new year progressions</a>.</h3></div>");
 	}
 }
