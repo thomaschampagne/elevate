@@ -29,8 +29,8 @@
 				<div fxLayout="column" fxLayoutAlign="start start">
 					<div fxFlex fxFill>
 						<div fxLayout="row" fxLayoutAlign="start center">
-							<mat-form-field [fxFlex]="(progressConfig.mode === ProgressMode.ROLLING) ? '80px' : '95px'">
-								<mat-select placeholder="Progress Mode"
+							<mat-form-field [fxFlex]="(progressConfig.mode === ProgressMode.ROLLING) ? '70px' : '95px'">
+								<mat-select placeholder="Mode"
 											(selectionChange)="onProgressModeChanged()"
 											[(ngModel)]="progressConfig.mode">
 									<mat-option *ngFor="let progressMode of progressModes" [value]="progressMode.value">
@@ -40,8 +40,8 @@
 							</mat-form-field>
 							<span fxFlex="0.5"></span>
 							<ng-container *ngIf="progressConfig.mode === ProgressMode.ROLLING">
-								<mat-form-field fxFlex="80px">
-									<mat-select placeholder="Rolling Period"
+								<mat-form-field fxFlex="75px">
+									<mat-select placeholder="Period"
 												value="Months"
 												(selectionChange)="onRollingPeriodChanged()"
 												[(ngModel)]="selectedRollingPeriod">
@@ -52,7 +52,7 @@
 									</mat-select>
 								</mat-form-field>
 								<span fxFlex="0.5"></span>
-								<mat-form-field fxFlex="60px">
+								<mat-form-field fxFlex="50px">
 									<input
 										placeholder="Multiplier"
 										matInput
@@ -66,7 +66,7 @@
 								</mat-form-field>
 								<span fxFlex="0.5"></span>
 							</ng-container>
-							<mat-form-field fxFlex="85px">
+							<mat-form-field fxFlex="80px">
 								<mat-select placeholder="Progress Type"
 											(selectionChange)="onSelectedProgressTypeChanged()"
 											[(ngModel)]="selectedProgressType">
@@ -87,6 +87,15 @@
 										{{type}}
 									</mat-option>
 								</mat-select>
+								<button mat-button matSuffix mat-icon-button matTooltip="Tick all activity types"
+										(click)="$event.stopPropagation(); onTickAllActivityTypes()">
+									<mat-icon>done_all</mat-icon>
+								</button>
+								<button mat-button matSuffix mat-icon-button
+										matTooltip="Untick all activity types (most performed excluded)"
+										(click)="$event.stopPropagation(); onUnTickAllActivityTypes()">
+									<mat-icon>clear</mat-icon>
+								</button>
 							</mat-form-field>
 							<span fxFlex="0.5"></span>
 							<mat-slide-toggle
@@ -137,6 +146,15 @@
 								{{year}}
 							</mat-option>
 						</mat-select>
+						<button mat-button matSuffix mat-icon-button matTooltip="Tick all years"
+								(click)="$event.stopPropagation(); onTickAllYears()">
+							<mat-icon>done_all</mat-icon>
+						</button>
+						<button mat-button matSuffix mat-icon-button
+								matTooltip="Untick all years (current year excluded)"
+								(click)="$event.stopPropagation(); onUnTickAllYears()">
+							<mat-icon>clear</mat-icon>
+						</button>
 					</mat-form-field>
 					<span fxFlex="2"></span>
 					<button fxFlexAlign="center" mat-icon-button color="primary" (click)="onHelperClick()">
