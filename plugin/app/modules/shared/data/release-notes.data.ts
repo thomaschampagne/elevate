@@ -14,6 +14,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Fixed broken cycling odo in strava activities for users having \"imperial\" system unit preference.",
 			"Fixed virtual partner export crash on activities which are not \"Ride\" or \"Run\".",
 			"Fixed a user interface glitch on segment time comparison (private activities).",
+			"[Technical] Upgraded Angular & others npm libraries."
 		]
 	},
 	{
