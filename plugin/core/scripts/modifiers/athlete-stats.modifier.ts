@@ -1,6 +1,8 @@
 import { AbstractModifier } from "./abstract.modifier";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ISegmentInfo } from "../processors/segment-processor";
+import * as Cookies from "js-cookie";
+import * as $ from "jquery";
 
 export class AthleteStatsModifier extends AbstractModifier {
 
@@ -13,9 +15,25 @@ export class AthleteStatsModifier extends AbstractModifier {
 	}
 
 	public modify(): void {
-		$("#progress-goals").before("<div class='section'><h3 style='font-weight: 400;'>⚠ Elevate " +
-			"<a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Rolling & year to date progressions</a> features are now fully migrated with a better implementation and customisation in" +
-			" the <a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Elevate App</a> itself.<br/><br/>⚠ To access to the <strong>'distance last 30d & year'</strong> features in the new year progression, then inside, switch to the mode 'Rolling'" +
-			", set period to 'days' and multiplier to '30'. <a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Access to the new year progressions</a>.</h3></div>");
+
+		const dismissKey = "elevate_dismiss_moved_year_progress";
+		const dismissKeyLink = dismissKey + "_link";
+
+		if (Cookies.get(dismissKey)) {
+			return;
+		}
+
+		$("#progress-goals").before("<div id=\"" + dismissKey + "\">⚠ Elevate " +
+			"<a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Rolling & year to date progressions</a> features are now fully migrated to" +
+			" the <a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>Elevate App</a> with a better implementation and customisation. To access the old \"Distance last 30d & Distance last year\" " +
+			"features in the <a onclick='window.open(\"" + this.appResources.settingsLink + "#/yearProgressions\", \"_blank\");'>new year progressions</a>, just set the progress mode to \"Rolling\"" +
+			", and set the rolling period of your choice.<a id=\"" + dismissKeyLink + "\">[dismiss]</a></div>").each(() => {
+			$("#" + dismissKeyLink).click(() => {
+				const date = new Date();
+				date.setFullYear(date.getFullYear() + 1);
+				Cookies.set(dismissKey, "true", {expires: date});
+				$("#" + dismissKey).remove();
+			});
+		});
 	}
 }
