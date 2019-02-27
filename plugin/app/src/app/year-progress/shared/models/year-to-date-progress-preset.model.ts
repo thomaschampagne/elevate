@@ -1,8 +1,10 @@
-import { ProgressType } from "./progress-type.enum";
 import * as _ from "lodash";
+import { ProgressType } from "../enums/progress-type.enum";
+import { ProgressMode } from "../enums/progress-mode.enum";
 
-export class YearProgressPresetModel {
+export class YearToDateProgressPresetModel {
 
+	public readonly mode: ProgressMode = ProgressMode.YEAR_TO_DATE;
 	public progressType: ProgressType;
 	public activityTypes: string[];
 	public includeCommuteRide: boolean;

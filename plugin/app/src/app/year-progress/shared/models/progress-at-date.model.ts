@@ -1,6 +1,6 @@
-import { ProgressType } from "./progress-type.enum";
+import { ProgressType } from "../enums/progress-type.enum";
 
-export class ProgressionAtDayModel {
+export class ProgressAtDayModel {
 
 	public date: Date;
 	public year: number;

@@ -1,0 +1,61 @@
+<h2 mat-dialog-title>Create a preset with or without target</h2>
+<mat-dialog-content class="mat-body-1">
+
+	<div fxLayout="column" fxLayoutAlign="start start">
+
+		<mat-form-field fxFill>
+			<input matInput placeholder="Progress Mode" [disabled]="true"
+				   value="{{(this.dialogData.mode === ProgressMode.ROLLING) ? 'Rolling' : 'Year to date'}}">
+		</mat-form-field>
+
+		<ng-container *ngIf="this.dialogData.mode === ProgressMode.ROLLING">
+			<mat-form-field fxFill>
+				<input matInput placeholder="Rolling Period" [disabled]="true"
+					   value="{{dialogData.rollingPeriod}}">
+			</mat-form-field>
+
+			<mat-form-field fxFill>
+				<input matInput placeholder="Period Multiplier" [disabled]="true"
+					   value="{{dialogData.periodMultiplier}}">
+			</mat-form-field>
+		</ng-container>
+
+		<mat-form-field fxFill>
+			<input matInput placeholder="Progress Type" [disabled]="true"
+				   value="{{dialogData.yearProgressTypeModel.label}}">
+		</mat-form-field>
+
+		<mat-form-field fxFill>
+			<input matInput placeholder="Activity Types" [disabled]="true"
+				   value="{{progressPresetModel.activityTypes.join(', ')}}">
+		</mat-form-field>
+
+		<mat-form-field fxFill>
+			<input matInput placeholder="Commute Rides" [disabled]="true"
+				   value="{{(progressPresetModel.includeCommuteRide) ? 'Enabled' : 'Disabled'}}">
+		</mat-form-field>
+
+		<mat-form-field fxFill>
+			<input matInput placeholder="Indoor" [disabled]="true"
+				   value="{{(progressPresetModel.includeIndoorRide) ? 'Enabled' : 'Disabled'}}">
+		</mat-form-field>
+
+		<mat-form-field fxFill>
+			<input matInput
+				   [placeholder]="(this.dialogData.mode === ProgressMode.YEAR_TO_DATE) ? 'Enter target value to reach by the end of the year ' + ((dialogData.yearProgressTypeModel.unit) ? 'in ' + dialogData.yearProgressTypeModel.unit : '') + 'or leave empty' :
+				   'Enter the target value to be maintained on ' + (((dialogData.periodMultiplier === 1) ? 'last rolling ' + dialogData.rollingPeriod.toLocaleLowerCase().slice(0, -1) : (dialogData.periodMultiplier + ' last rolling ' + dialogData.rollingPeriod.toLocaleLowerCase()))) + ((dialogData.yearProgressTypeModel.unit) ? ' in ' + dialogData.yearProgressTypeModel.unit : '') + ' or leave empty'"
+				   type="number"
+				   [(ngModel)]="progressPresetModel.targetValue"
+				   (change)="onTargetValueChanged()"
+				   min="1">
+		</mat-form-field>
+	</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+	<button mat-button mat-dialog-close color="primary">
+		Cancel
+	</button>
+	<button mat-button color="primary" (click)="onSave()">
+		<span>Create preset</span>
+	</button>
+</mat-dialog-actions>

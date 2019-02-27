@@ -8,8 +8,9 @@ import { YearProgressOverviewDialogComponent } from "./year-progress-overview-di
 import { YearProgressService } from "./shared/services/year-progress.service";
 import { YearProgressRoutingModule } from "./year-progress-routing.module";
 import { YearProgressPresetDao } from "./shared/dao/year-progress-preset.dao";
-import { AddYearProgressPresetsDialogComponent } from "./add-year-progress-presets-dialog/add-year-progress-presets-dialog.component";
+import { AddYearProgressPresetDialogComponent } from "./add-year-progress-presets-dialog/add-year-progress-preset-dialog.component";
 import { ManageYearProgressPresetsDialogComponent } from "./manage-year-progress-presets-dialog/manage-year-progress-presets-dialog.component";
+import { YearProgressWelcomeDialogComponent } from "./year-progress-welcome-dialog/year-progress-welcome-dialog.component";
 
 @NgModule({
 	imports: [
@@ -22,14 +23,16 @@ import { ManageYearProgressPresetsDialogComponent } from "./manage-year-progress
 		YearProgressTableComponent,
 		YearProgressOverviewDialogComponent,
 		YearProgressHelperDialogComponent,
-		AddYearProgressPresetsDialogComponent,
-		ManageYearProgressPresetsDialogComponent
+		AddYearProgressPresetDialogComponent,
+		ManageYearProgressPresetsDialogComponent,
+		YearProgressWelcomeDialogComponent
 	],
 	entryComponents: [
 		YearProgressOverviewDialogComponent,
 		YearProgressHelperDialogComponent,
-		AddYearProgressPresetsDialogComponent,
-		ManageYearProgressPresetsDialogComponent
+		AddYearProgressPresetDialogComponent,
+		ManageYearProgressPresetsDialogComponent,
+		YearProgressWelcomeDialogComponent
 	],
 	providers: [
 		YearProgressService,
