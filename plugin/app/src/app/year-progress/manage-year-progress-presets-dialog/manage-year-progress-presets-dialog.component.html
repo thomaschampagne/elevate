@@ -7,8 +7,35 @@
 
 	<mat-table *ngIf="(yearProgressPresetModels && yearProgressPresetModels.length > 0)" #table
 			   [dataSource]="dataSource" matSort>
+
+		<ng-container matColumnDef="progressMode">
+			<mat-header-cell *matHeaderCellDef [ngClass]="'progressMode'">Progress Mode</mat-header-cell>
+			<mat-cell *matCellDef="let yearProgressPresetModel">
+				<span *ngIf="yearProgressPresetModel.mode === ProgressMode.YEAR_TO_DATE">Year to date</span>
+				<span *ngIf="yearProgressPresetModel.mode === ProgressMode.ROLLING">Rolling</span>
+			</mat-cell>
+		</ng-container>
+
+		<ng-container matColumnDef="rollingPeriod">
+			<mat-header-cell *matHeaderCellDef>Rolling Period</mat-header-cell>
+			<mat-cell *matCellDef="let yearProgressPresetModel">
+				<span *ngIf="yearProgressPresetModel.mode === ProgressMode.YEAR_TO_DATE">n/a</span>
+				<span
+					*ngIf="yearProgressPresetModel.mode === ProgressMode.ROLLING">{{yearProgressPresetModel.rollingPeriod}}</span>
+			</mat-cell>
+		</ng-container>
+
+		<ng-container matColumnDef="periodMultiplier">
+			<mat-header-cell *matHeaderCellDef>Period Multiplier</mat-header-cell>
+			<mat-cell *matCellDef="let yearProgressPresetModel">
+				<span *ngIf="yearProgressPresetModel.mode === ProgressMode.YEAR_TO_DATE">n/a</span>
+				<span
+					*ngIf="yearProgressPresetModel.mode === ProgressMode.ROLLING">{{yearProgressPresetModel.periodMultiplier}}</span>
+			</mat-cell>
+		</ng-container>
+
 		<ng-container matColumnDef="progressType">
-			<mat-header-cell *matHeaderCellDef>Progress Type</mat-header-cell>
+			<mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
 			<mat-cell *matCellDef="let yearProgressPresetModel">
 				{{progressTypeLabel(yearProgressPresetModel.progressType)}}
 			</mat-cell>

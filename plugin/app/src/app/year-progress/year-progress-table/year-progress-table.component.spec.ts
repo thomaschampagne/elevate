@@ -5,18 +5,20 @@ import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
 import { YearProgressService } from "../shared/services/year-progress.service";
 import * as moment from "moment";
-import { ProgressType } from "../shared/models/progress-type.enum";
+import { ProgressType } from "../shared/enums/progress-type.enum";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import { YearProgressActivitiesFixture } from "../shared/services/year-progress-activities.fixture";
-import { ProgressionAtDayModel } from "../shared/models/progression-at-date.model";
+import { ProgressAtDayModel } from "../shared/models/progress-at-date.model";
 import { ProgressionAtDayRow } from "./models/progression-at-day-row.model";
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
 import { DeltaType } from "./models/delta-type.enum";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { YearProgressModule } from "../year-progress.module";
+import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-progress-config.model";
 
 describe("YearProgressTableComponent", () => {
 
+	const isMetric = true;
 	let component: YearProgressTableComponent;
 	let fixture: ComponentFixture<YearProgressTableComponent>;
 	let yearProgressService: YearProgressService;
@@ -46,19 +48,12 @@ describe("YearProgressTableComponent", () => {
 
 		component.currentYear = 2018;
 		component.momentWatched = moment().year(component.currentYear);
+		component.progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
 
 		// Inject fake progression
-		const typesFilter: string[] = ["Ride", "VirtualRide", "Run"];
-		const yearsFilter: number[] = []; // All
-		const isMetric = true;
-		const includeCommuteRide = true;
-		const includeIndoorRide = true;
-		component.yearProgressModels = yearProgressService.yearProgression(syncedActivityModels,
-			typesFilter,
-			yearsFilter,
-			isMetric,
-			includeCommuteRide,
-			includeIndoorRide);
+		const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
+
+		component.yearProgressions = yearProgressService.progressions(progressConfig, isMetric, syncedActivityModels);
 
 		// Inject selected years (here all from syncedActivityModels)
 		component.selectedYears = yearProgressService.availableYears(syncedActivityModels);
@@ -94,7 +89,7 @@ describe("YearProgressTableComponent", () => {
 		const dayMoment = moment("2017-08-15 12:00", "YYYY-MM-DD hh:mm");
 
 		const hoursFirstYear = 24;
-		const firstYear: ProgressionAtDayModel = {
+		const firstYear: ProgressAtDayModel = {
 			date: moment("2017-08-15 12:00", "YYYY-MM-DD hh:mm").toDate(),
 			year: 2017,
 			progressType: ProgressType.TIME,
@@ -103,7 +98,7 @@ describe("YearProgressTableComponent", () => {
 		};
 
 		const hoursSecondYear = 36;
-		const secondYear: ProgressionAtDayModel = {
+		const secondYear: ProgressAtDayModel = {
 			date: moment("2016-08-15 12:00", "YYYY-MM-DD hh:mm").toDate(),
 			year: 2016,
 			progressType: ProgressType.TIME,
@@ -112,7 +107,7 @@ describe("YearProgressTableComponent", () => {
 		};
 
 		const targetHours = 31;
-		const targetProgressionModel = {
+		const targetProgressModel = {
 			dayOfYear: dayMoment.dayOfYear(),
 			value: targetHours
 		};
@@ -120,7 +115,7 @@ describe("YearProgressTableComponent", () => {
 		component.selectedProgressType = new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h");
 
 		// When
-		const progressionRows: ProgressionAtDayRow[] = component.rows([firstYear, secondYear], targetProgressionModel);
+		const progressionRows: ProgressionAtDayRow[] = component.rows([firstYear, secondYear], targetProgressModel);
 
 		// Then
 		expect(progressionRows).not.toBeNull();
@@ -160,7 +155,7 @@ describe("YearProgressTableComponent", () => {
 	it("should provide proper year progressions time rows when no delta between two years (2)", (done: Function) => {
 		// Given
 		const hoursFirstYear = 24;
-		const firstYear: ProgressionAtDayModel = {
+		const firstYear: ProgressAtDayModel = {
 			date: moment("2017-08-15 12:00", "YYYY-MM-DD hh:mm").toDate(),
 			year: 2017,
 			progressType: ProgressType.TIME,
@@ -169,7 +164,7 @@ describe("YearProgressTableComponent", () => {
 		};
 
 		const hoursSecondYear = 24;
-		const secondYear: ProgressionAtDayModel = {
+		const secondYear: ProgressAtDayModel = {
 			date: moment("2016-08-15 12:00", "YYYY-MM-DD hh:mm").toDate(),
 			year: 2016,
 			progressType: ProgressType.TIME,
@@ -212,7 +207,7 @@ describe("YearProgressTableComponent", () => {
 	it("should provide proper year progressions time rows when no delta between two years (3)", (done: Function) => {
 		// Given
 		const hoursFirstYear = 24;
-		const firstYear: ProgressionAtDayModel = {
+		const firstYear: ProgressAtDayModel = {
 			date: moment("2017-08-15 12:00", "YYYY-MM-DD hh:mm").toDate(),
 			year: 2017,
 			progressType: ProgressType.TIME,
@@ -221,7 +216,7 @@ describe("YearProgressTableComponent", () => {
 		};
 
 		const hoursSecondYear = 0;
-		const secondYear: ProgressionAtDayModel = {
+		const secondYear: ProgressAtDayModel = {
 			date: moment("2016-08-15 12:00", "YYYY-MM-DD hh:mm").toDate(),
 			year: 2016,
 			progressType: ProgressType.TIME,
@@ -264,7 +259,7 @@ describe("YearProgressTableComponent", () => {
 	it("should provide proper year progressions elevation rows when no delta between two years", (done: Function) => {
 
 		// Given
-		const firstYear: ProgressionAtDayModel = {
+		const firstYear: ProgressAtDayModel = {
 			date: moment("2017-08-15 12:00", "YYYY-MM-DD hh:mm").toDate(),
 			year: 2017,
 			progressType: ProgressType.ELEVATION,
@@ -272,7 +267,7 @@ describe("YearProgressTableComponent", () => {
 			color: null
 		};
 
-		const secondYear: ProgressionAtDayModel = {
+		const secondYear: ProgressAtDayModel = {
 			date: moment("2016-08-15 12:00", "YYYY-MM-DD hh:mm").toDate(),
 			year: 2016,
 			progressType: ProgressType.ELEVATION,
