@@ -8,6 +8,8 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		hotFixes: [],
 		features: [
 			"Added \"Rolling Progression\" mode in year progressions: analyze your training volume variations and intensity over a \"customise-able fixed rolling time window\".",
+			"Added ability to expand/shrink the \"rolling \"or \"year to date\" progression graph.",
+			"Added in year progressions: \"tick/untick all\" buttons for activity types and years selection."
 		],
 		isPatch: false,
 		fixes: [
