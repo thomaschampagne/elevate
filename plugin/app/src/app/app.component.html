@@ -35,8 +35,8 @@
 
 			<span class="toolbar-spacer"></span>
 
-			<ng-container *ngIf="syncState">
-				<button mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
+			<ng-container>
+				<button mat-button color="primary" [matMenuTriggerFor]="syncMenu">
 					<mat-icon *ngIf="(syncState === SyncState.NOT_SYNCED)">
 						sync_disabled
 					</mat-icon>
@@ -67,7 +67,8 @@
 							(click)="onSync(false, syncState === SyncState.NOT_SYNCED)">
 						<mat-icon>sync</mat-icon>
 						<span *ngIf="(syncState === SyncState.NOT_SYNCED)">Sync</span>
-						<span *ngIf="(syncState !== SyncState.NOT_SYNCED)">Sync all activities</span>
+						<span *ngIf="(syncState === SyncState.SYNCED)">Sync all activities</span>
+						<span *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">Continue sync</span>
 					</button>
 					<button mat-menu-item (click)="onSync(false, true)"
 							*ngIf="(syncState !== SyncState.NOT_SYNCED)">
