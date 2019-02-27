@@ -49,9 +49,10 @@ export class YearProgressService {
 	/**
 	 *
 	 * @param config
+	 * @param isMetric
 	 * @param syncedActivityModels
 	 */
-	public progressions(config: ProgressConfig, syncedActivityModels: SyncedActivityModel[]): YearProgressModel[] {
+	public progressions(config: ProgressConfig, isMetric: boolean, syncedActivityModels: SyncedActivityModel[]): YearProgressModel[] {
 
 		if (_.isEmpty(syncedActivityModels)) {
 			throw new Error(YearProgressService.ERROR_NO_SYNCED_ACTIVITY_MODELS);
@@ -78,19 +79,21 @@ export class YearProgressService {
 		const toMoment: Moment = this.getTodayMoment().clone().endOf("year").endOf("day");
 
 		return (config.mode === ProgressMode.YEAR_TO_DATE)
-			? this.computeYearToDateSumProgressions(config as YearToDateProgressConfigModel, fromMoment, toMoment, todayMoment, yearProgressActivities)
-			: this.computeRollingSumProgressions(config as RollingProgressConfigModel, fromMoment, toMoment, todayMoment, yearProgressActivities);
+			? this.computeYearToDateSumProgressions(config as YearToDateProgressConfigModel, isMetric, fromMoment, toMoment, todayMoment, yearProgressActivities)
+			: this.computeRollingSumProgressions(config as RollingProgressConfigModel, isMetric, fromMoment, toMoment, todayMoment, yearProgressActivities);
 	}
 
 	/**
 	 *
 	 * @param config
+	 * @param isMetric
 	 * @param fromMoment
 	 * @param toMoment
 	 * @param todayMoment
 	 * @param yearProgressActivities
 	 */
 	public computeYearToDateSumProgressions(config: YearToDateProgressConfigModel,
+											isMetric: boolean,
 											fromMoment: Moment,
 											toMoment: Moment,
 											todayMoment,
@@ -173,7 +176,7 @@ export class YearProgressService {
 			progress.isFuture = (!currentDayMoment.isSameOrBefore(todayMoment));
 
 			// Prepare along metric/imperial & push
-			currentYearProgress.progressions.push(this.prepareAlongSystemUnits(progress, config.isMetric));
+			currentYearProgress.progressions.push(this.prepareAlongSystemUnits(progress, isMetric));
 			currentDayMoment.add(1, "days"); // Add a day until todayMoment
 		}
 
@@ -183,12 +186,14 @@ export class YearProgressService {
 	/**
 	 *
 	 * @param config
+	 * @param isMetric
 	 * @param fromMoment
 	 * @param toMoment
 	 * @param todayMoment
 	 * @param yearProgressActivities
 	 */
 	public computeRollingSumProgressions(config: RollingProgressConfigModel,
+										 isMetric: boolean,
 										 fromMoment: Moment,
 										 toMoment: Moment,
 										 todayMoment,
@@ -283,7 +288,7 @@ export class YearProgressService {
 			progression.isFuture = (!currentDayMoment.isSameOrBefore(todayMoment));
 
 			// Prepare along metric/imperial & push
-			currentYearProgress.progressions.push(this.prepareAlongSystemUnits(progression, config.isMetric));
+			currentYearProgress.progressions.push(this.prepareAlongSystemUnits(progression, isMetric));
 			currentDayMoment.add(1, "days"); // Add a day until todayMoment
 		}
 
