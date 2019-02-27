@@ -15,6 +15,7 @@ import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-pro
 
 describe("YearProgressGraphComponent", () => {
 
+	const isMetric = true;
 	let component: YearProgressGraphComponent;
 	let fixture: ComponentFixture<YearProgressGraphComponent>;
 	let yearProgressService: YearProgressService;
@@ -47,9 +48,9 @@ describe("YearProgressGraphComponent", () => {
 		yearProgressService.momentWatched = moment();
 
 		// Inject fake progression
-		const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true, true);
+		const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
 
-		component.yearProgressions = yearProgressService.progressions(progressConfig, syncedActivityModels);
+		component.yearProgressions = yearProgressService.progressions(progressConfig, isMetric, syncedActivityModels);
 
 		// Inject selected years (here all from syncedActivityModels)
 		component.selectedYears = yearProgressService.availableYears(syncedActivityModels);
