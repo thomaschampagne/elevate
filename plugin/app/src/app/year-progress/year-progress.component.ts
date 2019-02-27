@@ -175,6 +175,7 @@ export class YearProgressComponent implements OnInit {
 		}
 	};
 
+	public isMetric: boolean;
 	public progressModes: { value: ProgressMode, label: string }[];
 	public rollingPeriods: string[];
 	public selectedRollingPeriod: string;
@@ -251,7 +252,8 @@ export class YearProgressComponent implements OnInit {
 
 			if (this.hasActivityModels) {
 				const userSettingsModel = _.first(results) as UserSettingsModel;
-				this.setup((userSettingsModel.systemUnit === UserSettingsModel.SYSTEM_UNIT_METRIC_KEY));
+				this.isMetric = (userSettingsModel.systemUnit === UserSettingsModel.SYSTEM_UNIT_METRIC_KEY);
+				this.setup();
 			}
 
 			// Use default moment provided by service on init (should be today on first loadRollingSumPreferences)
@@ -273,7 +275,7 @@ export class YearProgressComponent implements OnInit {
 	/**
 	 * Setup prepare year progression and target progression along user saved preferences
 	 */
-	public setup(isMetric: boolean): void {
+	public setup(): void {
 
 		// Find all unique sport types
 		const activityCountByTypeModels = this.yearProgressService.activitiesByTypes(this.syncedActivityModels);
@@ -286,7 +288,6 @@ export class YearProgressComponent implements OnInit {
 		if (!this.progressConfig) {
 			this.progressConfig = new YearToDateProgressConfigModel(
 				[YearProgressComponent.findMostPerformedActivityType(activityCountByTypeModels)], // Select the sport type most performed by the athlete as default
-				isMetric,
 				true,
 				true
 			);
@@ -298,7 +299,7 @@ export class YearProgressComponent implements OnInit {
 		}
 
 		// Set possible progress type to see: distance, time, ...
-		this.progressTypes = YearProgressService.provideProgressTypes(this.progressConfig.isMetric);
+		this.progressTypes = YearProgressService.provideProgressTypes(this.isMetric);
 
 		// Find any selected ProgressType existing in local storage. Else set distance progress type as default
 		const existingSelectedProgressType: YearProgressTypeModel = this.findExistingSelectedProgressType();
@@ -352,7 +353,7 @@ export class YearProgressComponent implements OnInit {
 	}
 
 	public computeYearProgressions(): void {
-		this.yearProgressions = this.yearProgressService.progressions(this.progressConfig, this.syncedActivityModels);
+		this.yearProgressions = this.yearProgressService.progressions(this.progressConfig, this.isMetric, this.syncedActivityModels);
 	}
 
 	public targetProgression(): void {
@@ -381,7 +382,7 @@ export class YearProgressComponent implements OnInit {
 
 			this.progressStorage.config.set(this.progressConfig);
 
-			this.setup(this.progressConfig.isMetric);
+			this.setup();
 
 		} else {
 
@@ -399,8 +400,8 @@ export class YearProgressComponent implements OnInit {
 		const rollingDays = YearProgressComponent.findRollingDays(this.selectedRollingPeriod, this.periodMultiplier);
 
 		// Update progress config
-		this.progressConfig = new RollingProgressConfigModel(this.progressConfig.activityTypes, this.progressConfig.isMetric,
-			this.progressConfig.includeCommuteRide, this.progressConfig.includeIndoorRide, rollingDays);
+		this.progressConfig = new RollingProgressConfigModel(this.progressConfig.activityTypes, this.progressConfig.includeCommuteRide,
+			this.progressConfig.includeIndoorRide, rollingDays);
 
 		if (this.progressStorage.targetValue.get()) {
 			this.progressStorage.targetValue.rm();
@@ -410,7 +411,7 @@ export class YearProgressComponent implements OnInit {
 		this.progressStorage.config.set(this.progressConfig);
 
 		// Re-compute
-		this.setup(this.progressConfig.isMetric);
+		this.setup();
 	}
 
 	public onRollingPeriodChanged(): void {
@@ -439,7 +440,7 @@ export class YearProgressComponent implements OnInit {
 		// Remove target if exists and reload
 		if (this.progressStorage.targetValue.get()) {
 			this.progressStorage.targetValue.rm();
-			this.setup(this.progressConfig.isMetric);
+			this.setup();
 		}
 	}
 
@@ -558,7 +559,7 @@ export class YearProgressComponent implements OnInit {
 					this.progressStorage.targetValue.rm();
 				}
 
-				this.setup(this.progressConfig.isMetric);
+				this.setup();
 			}
 
 			afterClosedSubscription.unsubscribe();
@@ -582,7 +583,7 @@ export class YearProgressComponent implements OnInit {
 
 				if (dialogResponse.loadPreset.mode === ProgressMode.YEAR_TO_DATE) {
 
-					this.progressConfig = new YearToDateProgressConfigModel(dialogResponse.loadPreset.activityTypes, this.progressConfig.isMetric,
+					this.progressConfig = new YearToDateProgressConfigModel(dialogResponse.loadPreset.activityTypes,
 						dialogResponse.loadPreset.includeCommuteRide, dialogResponse.loadPreset.includeIndoorRide);
 
 					this.progressStorage.rollingPeriod.rm();
@@ -592,8 +593,8 @@ export class YearProgressComponent implements OnInit {
 
 					const presetToLoad = dialogResponse.loadPreset as RollingProgressPresetModel;
 					const rollingDays = YearProgressComponent.findRollingDays(presetToLoad.rollingPeriod, presetToLoad.periodMultiplier);
-					this.progressConfig = new RollingProgressConfigModel(presetToLoad.activityTypes, this.progressConfig.isMetric,
-						presetToLoad.includeCommuteRide, presetToLoad.includeIndoorRide, rollingDays);
+					this.progressConfig = new RollingProgressConfigModel(presetToLoad.activityTypes, presetToLoad.includeCommuteRide,
+						presetToLoad.includeIndoorRide, rollingDays);
 
 					this.progressStorage.rollingPeriod.set(presetToLoad.rollingPeriod);
 					this.progressStorage.periodMultiplier.set(presetToLoad.periodMultiplier);
@@ -642,7 +643,7 @@ export class YearProgressComponent implements OnInit {
 			}
 
 			if (loadPresetRequired || hideDisplayedTargetLine) {
-				this.setup(this.progressConfig.isMetric);
+				this.setup();
 			}
 
 			this.updateYearProgressPresetsCount();

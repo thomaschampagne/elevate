@@ -18,6 +18,7 @@ import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-pro
 
 describe("YearProgressTableComponent", () => {
 
+	const isMetric = true;
 	let component: YearProgressTableComponent;
 	let fixture: ComponentFixture<YearProgressTableComponent>;
 	let yearProgressService: YearProgressService;
@@ -47,20 +48,20 @@ describe("YearProgressTableComponent", () => {
 
 		component.currentYear = 2018;
 		component.momentWatched = moment().year(component.currentYear);
-		component.progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true, true);
+		component.progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
 
 		// Inject fake progression
-		const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true, true);
+		const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
 
-		component.yearProgressions = yearProgressService.progressions(progressConfig, syncedActivityModels);
+		component.yearProgressions = yearProgressService.progressions(progressConfig, isMetric, syncedActivityModels);
 
 		// Inject selected years (here all from syncedActivityModels)
 		component.selectedYears = yearProgressService.availableYears(syncedActivityModels);
 
 		// Inject progress type
 		component.selectedProgressType = new YearProgressTypeModel(ProgressType.DISTANCE, "Distance",
-			(progressConfig.isMetric) ? "kilometers" : "miles",
-			(progressConfig.isMetric) ? "km" : "mi");
+			(isMetric) ? "kilometers" : "miles",
+			(isMetric) ? "km" : "mi");
 
 		// Inject style
 		const colors: string [] = ["red", "blue", "green", "purple"];
