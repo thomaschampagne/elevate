@@ -1,14 +1,15 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { YearProgressService } from "../shared/services/year-progress.service";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatSnackBar, MatTableDataSource } from "@angular/material";
-import { YearProgressPresetModel } from "../shared/models/year-progress-preset.model";
-import { ProgressType } from "../shared/models/progress-type.enum";
+import { YearToDateProgressPresetModel } from "../shared/models/year-to-date-progress-preset.model";
+import { ProgressType } from "../shared/enums/progress-type.enum";
 import * as _ from "lodash";
 import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { AppError } from "../../shared/models/app-error.model";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import { YearProgressPresetsDialogResponse } from "../shared/models/year-progress-presets-dialog-response.model";
+import { ProgressMode } from "../shared/enums/progress-mode.enum";
 
 @Component({
 	selector: "app-manage-year-progress-presets-dialog",
@@ -17,9 +18,12 @@ import { YearProgressPresetsDialogResponse } from "../shared/models/year-progres
 })
 export class ManageYearProgressPresetsDialogComponent implements OnInit {
 
-	public static readonly MAX_WIDTH: string = "90%";
-	public static readonly MIN_WIDTH: string = "60%";
+	public static readonly MAX_WIDTH: string = "100%";
+	public static readonly MIN_WIDTH: string = "80%";
 
+	public static readonly COLUMN_PROGRESS_MODE: string = "progressMode";
+	public static readonly COLUMN_PROGRESS_ROLLING_PERIOD: string = "rollingPeriod";
+	public static readonly COLUMN_PROGRESS_PERIOD_MULTIPLIER: string = "periodMultiplier";
 	public static readonly COLUMN_PROGRESS_TYPE: string = "progressType";
 	public static readonly COLUMN_ACTIVITY_TYPES: string = "activityTypes";
 	public static readonly COLUMN_INCLUDE_COMMUTE_RIDE: string = "includeCommuteRide";
@@ -29,12 +33,16 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
 	public static readonly COLUMN_ACTION_DELETE: string = "delete";
 
 	public readonly ProgressType = ProgressType;
+	public readonly ProgressMode = ProgressMode;
 
-	public yearProgressPresetModels: YearProgressPresetModel[];
-	public dataSource: MatTableDataSource<YearProgressPresetModel>;
-	public deletedPresets: YearProgressPresetModel[];
+	public yearProgressPresetModels: YearToDateProgressPresetModel[];
+	public dataSource: MatTableDataSource<YearToDateProgressPresetModel>;
+	public deletedPresets: YearToDateProgressPresetModel[];
 
 	public readonly displayedColumns: string[] = [
+		ManageYearProgressPresetsDialogComponent.COLUMN_PROGRESS_MODE,
+		ManageYearProgressPresetsDialogComponent.COLUMN_PROGRESS_ROLLING_PERIOD,
+		ManageYearProgressPresetsDialogComponent.COLUMN_PROGRESS_PERIOD_MULTIPLIER,
 		ManageYearProgressPresetsDialogComponent.COLUMN_PROGRESS_TYPE,
 		ManageYearProgressPresetsDialogComponent.COLUMN_ACTIVITY_TYPES,
 		ManageYearProgressPresetsDialogComponent.COLUMN_INCLUDE_COMMUTE_RIDE,
@@ -52,13 +60,13 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
-		this.dataSource = new MatTableDataSource<YearProgressPresetModel>();
+		this.dataSource = new MatTableDataSource<YearToDateProgressPresetModel>();
 		this.deletedPresets = [];
 		this.loadData();
 	}
 
 	private loadData(): void {
-		this.yearProgressService.fetchPresets().then((models: YearProgressPresetModel[]) => {
+		this.yearProgressService.fetchPresets().then((models: YearToDateProgressPresetModel[]) => {
 			this.yearProgressPresetModels = models;
 			this.dataSource.data = this.yearProgressPresetModels;
 		});

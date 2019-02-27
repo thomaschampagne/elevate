@@ -1,4 +1,4 @@
-import { ProgressType } from "./progress-type.enum";
+import { ProgressType } from "../enums/progress-type.enum";
 
 export class YearProgressTypeModel {
 

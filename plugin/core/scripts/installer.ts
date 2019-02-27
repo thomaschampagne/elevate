@@ -15,6 +15,8 @@ import * as _ from "lodash";
 import { AppStorage } from "./app-storage";
 import { Constant } from "@elevate/shared/constants";
 import { userSettingsData } from "@elevate/shared/data";
+import { YearToDateProgressPresetModel } from "../../app/src/app/year-progress/shared/models/year-to-date-progress-preset.model";
+import { ProgressMode } from "../../app/src/app/year-progress/shared/enums/progress-mode.enum";
 
 class Installer {
 
@@ -424,6 +426,45 @@ class Installer {
 		return promise;
 	}
 
+	protected migrate_to_6_10_0(): Promise<void> {
+
+		let promise: Promise<void>;
+
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.10.0")) {
+
+			console.log("Migrate to 6.10.0");
+
+			// Move all user settings content inside specific key
+			promise = AppStorage.getInstance().get(AppStorageType.LOCAL, "yearProgressPresets").then((oldPresetModels: YearToDateProgressPresetModel[]) => {
+
+				const migratedPresets: YearToDateProgressPresetModel[] = [];
+
+				let hasUpgradedPresets = false;
+				_.forEach(oldPresetModels, (presetModel: any /*YearToDateProgressPresetModel*/) => {
+					if (_.isUndefined(presetModel.mode)) {
+						presetModel.mode = ProgressMode.YEAR_TO_DATE;
+						hasUpgradedPresets = true;
+					}
+					migratedPresets.push(presetModel);
+				});
+
+				if (hasUpgradedPresets) {
+					return AppStorage.getInstance().set(AppStorageType.LOCAL, "yearProgressPresets", migratedPresets);
+				} else {
+					return Promise.resolve();
+				}
+			});
+
+		} else {
+
+			console.log("Skip migrate to 6.10.0");
+
+			promise = Promise.resolve();
+		}
+
+		return promise;
+	}
+
 	protected handleUpdate(): Promise<void> {
 
 		console.log("Updated from " + this.previousVersion + " to " + this.currentVersion);
@@ -445,6 +486,8 @@ class Installer {
 			return this.migrate_to_6_8_1();
 		}).then(() => {
 			return this.migrate_to_6_9_0();
+		}).then(() => {
+			return this.migrate_to_6_10_0();
 		}).catch(error => console.error(error));
 
 	}

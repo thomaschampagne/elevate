@@ -236,6 +236,8 @@ export class FitnessTrendComponent implements OnInit {
 				});
 
 				this.showFitnessWelcomeDialog();
+
+				return Promise.resolve();
 			}
 
 		}, (appError: AppError) => {
