@@ -2,6 +2,24 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.10.0",
+		date: "2019-02-27",
+		message: "NEW!! Analyze your training volume variations and intensity with the new \"Rolling\" mode available in \"Year progressions\". Improvements & fixes have been also pushed.",
+		hotFixes: [],
+		features: [
+			"Added \"Rolling Progression\" mode in year progressions: analyze your training volume variations and intensity over a \"customise-able fixed rolling time window\".",
+			"Added ability to expand/shrink the \"rolling \"or \"year to date\" progression graph.",
+			"Added in year progressions: \"tick/untick all\" buttons for activity types and years selection."
+		],
+		isPatch: false,
+		fixes: [
+			"Fixed broken cycling odo in strava activities for users having \"imperial\" system unit preference.",
+			"Fixed virtual partner export crash on activities which are not \"Ride\" or \"Run\".",
+			"Fixed a user interface glitch on segment time comparison (private activities).",
+			"[Technical] Upgraded Angular & others npm libraries."
+		]
+	},
+	{
 		version: "6.9.2",
 		date: "2019-02-18",
 		message: "🔥 Hotfix 🔥 After days & nights of work, all the broken features are now mostly fixed: Elevate now manages the new technical restrictions introduced by Strava on their servers. V6.9.x Reminder: Support of Manual & Virtual running in Fitness Trend. Details in release note.",
@@ -44,7 +62,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Added a warning when a detected indoor cycling activity isn't flagged as \"Indoor Cycling\" on a strava activity page.",
 			"Moved \"Estimated Cycling Power Data\" and \"Estimated Running Stress Score\" toggles along side others into Fitness Trend. Estimated fitness trend feature is more understandable.",
 		],
-		isPatch: true,
+		isPatch: false,
 		fixes: [
 			"Revived old year progressions in 'Strava My Profile' after some users requests. Note that old year progressions will be disabled once 'Distance last 30d & year' have been migrated to the new  year progressions in Elevate App itself.",
 			"Fixed case when PSS (Power Stress Score) wasn't calculated on trainer rides with an average speed equals to zero.",

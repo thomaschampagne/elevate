@@ -14,15 +14,17 @@ import { YearProgressActivitiesFixture } from "./shared/services/year-progress-a
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { userSettingsData } from "@elevate/shared/data";
 import { YearProgressModule } from "./year-progress.module";
-import { YearProgressPresetModel } from "./shared/models/year-progress-preset.model";
-import { ProgressType } from "./shared/models/progress-type.enum";
+import { YearToDateProgressPresetModel } from "./shared/models/year-to-date-progress-preset.model";
+import { ProgressType } from "./shared/enums/progress-type.enum";
+import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
 
 describe("YearProgressComponent", () => {
 
+	const pluginId = "c061d18abea0";
 	const yearProgressPresetModels = [
-		new YearProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false, 750),
-		new YearProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
-		new YearProgressPresetModel(ProgressType.ELEVATION, ["Ride"], false, false, 30000),
+		new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false, 750),
+		new YearToDateProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
+		new YearToDateProgressPresetModel(ProgressType.ELEVATION, ["Ride"], false, false, 30000),
 	];
 
 	let component: YearProgressComponent;
@@ -34,6 +36,13 @@ describe("YearProgressComponent", () => {
 	let TEST_SYNCED_ACTIVITIES: SyncedActivityModel[];
 
 	beforeEach((done: Function) => {
+
+		spyOn(ExternalUpdatesService, "getBrowserExternalMessages").and.returnValue({
+			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
+			}
+		});
+
+		spyOn(ExternalUpdatesService, "getBrowserPluginId").and.returnValue(pluginId);
 
 		TestBed.configureTestingModule({
 			imports: [
@@ -87,7 +96,7 @@ describe("YearProgressComponent", () => {
 		];
 
 		// When
-		const mostPerformedType = component.findMostPerformedActivityType(activitiesCountByTypeModels);
+		const mostPerformedType = YearProgressComponent.findMostPerformedActivityType(activitiesCountByTypeModels);
 
 		// Then
 		expect(mostPerformedType).toEqual(expected);
@@ -100,7 +109,7 @@ describe("YearProgressComponent", () => {
 		const colorPalette: string [] = ["red", "blue", "green", "purple", "orange"];
 		const expectedGlobalColors: string [] = ["red", "blue", "green", "purple", "orange", "red", "blue"];
 
-		const yearProgressModels: YearProgressModel[] = [
+		const yearProgressions: YearProgressModel[] = [
 			new YearProgressModel(2011, []),
 			new YearProgressModel(2012, []),
 			new YearProgressModel(2013, []),
@@ -111,7 +120,7 @@ describe("YearProgressComponent", () => {
 		];
 
 		// When
-		const style: YearProgressStyleModel = component.styleFromPalette(yearProgressModels, colorPalette);
+		const style: YearProgressStyleModel = component.styleFromPalette(yearProgressions, colorPalette);
 
 		// Then
 		expect(style.colors).toEqual(expectedGlobalColors);

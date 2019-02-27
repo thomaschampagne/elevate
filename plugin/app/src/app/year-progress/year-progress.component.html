@@ -3,7 +3,6 @@
 	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>
 
-
 <mat-card *ngIf="(hasActivityModels === false)" class="no-data">
 	<mat-card-title>
 		Synchronise your activities
@@ -30,40 +29,86 @@
 				<div fxLayout="column" fxLayoutAlign="start start">
 					<div fxFlex fxFill>
 						<div fxLayout="row" fxLayoutAlign="start center">
-							<mat-form-field fxFlex="150px">
+							<mat-form-field [fxFlex]="(progressConfig.mode === ProgressMode.ROLLING) ? '70px' : '95px'">
+								<mat-select placeholder="Mode"
+											(selectionChange)="onProgressModeChanged()"
+											[(ngModel)]="progressConfig.mode">
+									<mat-option *ngFor="let progressMode of progressModes" [value]="progressMode.value">
+										{{progressMode.label}}
+									</mat-option>
+								</mat-select>
+							</mat-form-field>
+							<span fxFlex="0.5"></span>
+							<ng-container *ngIf="progressConfig.mode === ProgressMode.ROLLING">
+								<mat-form-field fxFlex="75px">
+									<mat-select placeholder="Period"
+												value="Months"
+												(selectionChange)="onRollingPeriodChanged()"
+												[(ngModel)]="selectedRollingPeriod">
+										<mat-option *ngFor="let rollingPeriod of rollingPeriods"
+													[value]="rollingPeriod">
+											{{rollingPeriod}}
+										</mat-option>
+									</mat-select>
+								</mat-form-field>
+								<span fxFlex="0.5"></span>
+								<mat-form-field fxFlex="50px">
+									<input
+										placeholder="Multiplier"
+										matInput
+										min="1"
+										max="999"
+										minlength="1"
+										maxlength="3"
+										[(ngModel)]="periodMultiplier"
+										(change)="onPeriodMultiplierChanged()"
+										type="number"/>
+								</mat-form-field>
+								<span fxFlex="0.5"></span>
+							</ng-container>
+							<mat-form-field fxFlex="80px">
 								<mat-select placeholder="Progress Type"
-											(selectionChange)="onSelectedProgressTypeChange()"
+											(selectionChange)="onSelectedProgressTypeChanged()"
 											[(ngModel)]="selectedProgressType">
 									<mat-option *ngFor="let progressType of progressTypes" [value]="progressType">
 										{{progressType.label}}
 									</mat-option>
 								</mat-select>
 							</mat-form-field>
-							<span fxFlex="1"></span>
+							<span fxFlex="0.5"></span>
 							<mat-form-field fxFlex>
 								<mat-select placeholder="Activity Types"
-											(selectionChange)="onSelectedActivityTypesChange()"
-											[(ngModel)]="selectedActivityTypes"
+											(selectionChange)="onSelectedActivityTypesChanged()"
+											[(ngModel)]="progressConfig.activityTypes"
 											multiple>
 									<mat-option *ngFor="let type of availableActivityTypes"
 												[value]="type"
-												[disabled]="(selectedActivityTypes.length === 1 && type === selectedActivityTypes[0])">
+												[disabled]="(progressConfig.activityTypes.length === 1 && type === progressConfig.activityTypes[0])">
 										{{type}}
 									</mat-option>
 								</mat-select>
+								<button mat-button matSuffix mat-icon-button matTooltip="Tick all activity types"
+										(click)="$event.stopPropagation(); onTickAllActivityTypes()">
+									<mat-icon>done_all</mat-icon>
+								</button>
+								<button mat-button matSuffix mat-icon-button
+										matTooltip="Untick all activity types (most performed excluded)"
+										(click)="$event.stopPropagation(); onUnTickAllActivityTypes()">
+									<mat-icon>clear</mat-icon>
+								</button>
 							</mat-form-field>
-							<span fxFlex="1"></span>
+							<span fxFlex="0.5"></span>
 							<mat-slide-toggle
 								fxFlexAlign="center"
-								[(ngModel)]="includeCommuteRide"
+								[(ngModel)]="this.progressConfig.includeCommuteRide"
 								(change)="onIncludeCommuteRideToggle()"
 								matTooltip="Include commute activities in your progression.">
 								<mat-icon>work</mat-icon>
 							</mat-slide-toggle>
-							<span fxFlex="1"></span>
+							<span fxFlex="0.5"></span>
 							<mat-slide-toggle
 								fxFlexAlign="center"
-								[(ngModel)]="includeIndoorRide"
+								[(ngModel)]="this.progressConfig.includeIndoorRide"
 								(change)="onIncludeIndoorRideToggle()"
 								matTooltip="Include indoor activities in your progression.">
 								<mat-icon>home</mat-icon>
@@ -93,7 +138,7 @@
 					<mat-form-field fxFlex>
 						<mat-select placeholder="Years"
 									[(ngModel)]="selectedYears"
-									(selectionChange)="onSelectedYearsChange()"
+									(selectionChange)="onSelectedYearsChanged()"
 									multiple>
 							<mat-option *ngFor="let year of availableYears"
 										[value]="year"
@@ -101,6 +146,15 @@
 								{{year}}
 							</mat-option>
 						</mat-select>
+						<button mat-button matSuffix mat-icon-button matTooltip="Tick all years"
+								(click)="$event.stopPropagation(); onTickAllYears()">
+							<mat-icon>done_all</mat-icon>
+						</button>
+						<button mat-button matSuffix mat-icon-button
+								matTooltip="Untick all years (current year excluded)"
+								(click)="$event.stopPropagation(); onUnTickAllYears()">
+							<mat-icon>clear</mat-icon>
+						</button>
 					</mat-form-field>
 					<span fxFlex="2"></span>
 					<button fxFlexAlign="center" mat-icon-button color="primary" (click)="onHelperClick()">
@@ -111,31 +165,60 @@
 		</div>
 
 		<!--Graph Card + Table Card -->
-		<div fxLayout.gt-lg="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
+		<div [fxLayout]="(isGraphExpanded || mediaObserver.isActive('lt-lg')) ? 'column' : 'row'"
+			 fxLayoutAlign="start start">
 
 			<!--Graph -->
-			<div fxFlex="60" fxFill>
-				<mat-card-title class="mat-title">
-					Cumulative {{selectedProgressType.label}} {{(selectedProgressType.unit) ? "in " +
-					selectedProgressType.unit : ""}} <span *ngIf="(targetValue !== null)" class="mat-subheading-1">&nbsp;&nbsp;➔&nbsp;&nbsp;Target {{targetValue}}{{(selectedProgressType.shortUnit) ? ' ' + selectedProgressType.shortUnit : ''}}</span>
+			<div [fxFlex]="(isGraphExpanded) ? 100 : 60" fxFill>
+				<mat-card-title>
+					<div fxLayout="row" fxLayoutAlign="space-between start" class="mat-subheading-2">
+						<div>
+							<span *ngIf="progressConfig.mode === ProgressMode.YEAR_TO_DATE">
+							Total <strong>{{selectedProgressType.label.toLocaleLowerCase()}}</strong> since January 1st
+							</span>
+							<span *ngIf="progressConfig.mode === ProgressMode.ROLLING">
+							Total <strong>{{selectedProgressType.label.toLocaleLowerCase()}}</strong> maintained on <strong>{{(periodMultiplier === 1) ? "last rolling " + selectedRollingPeriod.toLocaleLowerCase().slice(0, -1) : (periodMultiplier + " last rolling " + selectedRollingPeriod.toLocaleLowerCase())}}</strong>
+							</span>
+							<span>{{(selectedProgressType.unit) ? " in " + selectedProgressType.unit : ""}}</span>
+							<span *ngIf="(targetValue !== null)"
+								  class="mat-body-1">&nbsp;➔&nbsp;Target {{targetValue}}{{(selectedProgressType.shortUnit) ? ' ' + selectedProgressType.shortUnit : ''}}</span>
+						</div>
+						<button fxHide.lt-lg class="expanded-button" mat-icon-button (click)="onExpandGraphClicked()">
+							<mat-icon *ngIf="!isGraphExpanded" color="primary" matTooltip="Expand graph">
+								fullscreen
+							</mat-icon>
+							<mat-icon *ngIf="isGraphExpanded" color="primary" matTooltip="Shrink graph">
+								fullscreen_exit
+							</mat-icon>
+						</button>
+					</div>
 				</mat-card-title>
-				<app-year-progress-graph
-					[selectedYears]="selectedYears"
-					[selectedProgressType]="selectedProgressType"
-					[yearProgressModels]="yearProgressModels"
-					[targetProgressionModels]="targetProgressionModels"
-					[yearProgressStyleModel]="yearProgressStyleModel">
+				<app-year-progress-graph [isGraphExpanded]="isGraphExpanded"
+										 [selectedYears]="selectedYears"
+										 [selectedProgressType]="selectedProgressType"
+										 [yearProgressions]="yearProgressions"
+										 [targetProgressModels]="targetProgressModels"
+										 [yearProgressStyleModel]="yearProgressStyleModel">
 				</app-year-progress-graph>
 			</div>
 
-			<span fxFlex="1" fxHide.lt-lg></span>
+			<span fxFlex="1" [fxHide]="isGraphExpanded"></span>
 
 			<!-- Table/Legend -->
 			<div fxFlex fxFill>
-				<mat-card-title class="mat-title">
-					<div fxLayout="row" fxLayoutAlign="space-between start">
+				<mat-card-title>
+					<div fxLayout="row" fxLayoutAlign="space-between start" class="mat-subheading-2">
 						<span fxFlex="100">
-							{{momentWatched.format("MMMM Do")}}
+							<span *ngIf="progressConfig.mode === ProgressMode.ROLLING">
+								{{momentWatched.clone().subtract(progressConfig.rollingDays, "days").format("MMMM Do")}}
+								<mat-icon inline="true" [style.vertical-align]="'middle'">arrow_forward</mat-icon>
+								{{momentWatched.format("MMMM Do")}}
+							</span>
+							<span *ngIf="progressConfig.mode === ProgressMode.YEAR_TO_DATE">
+								January 1st
+								<mat-icon inline="true" [style.vertical-align]="'middle'">arrow_forward</mat-icon>
+								{{momentWatched.format("MMMM Do")}}
+							</span>
 						</span>
 						<span fxFlex>
 							<button mat-stroked-button color="primary" (click)="onShowOverview()">Overview</button>
@@ -143,10 +226,11 @@
 					</div>
 				</mat-card-title>
 				<app-year-progress-table
+					[progressConfig]="progressConfig"
 					[selectedYears]="selectedYears"
 					[selectedProgressType]="selectedProgressType"
-					[yearProgressModels]="yearProgressModels"
-					[targetProgressionModels]="targetProgressionModels"
+					[yearProgressions]="yearProgressions"
+					[targetProgressModels]="targetProgressModels"
 					[yearProgressStyleModel]="yearProgressStyleModel">
 				</app-year-progress-table>
 			</div>
