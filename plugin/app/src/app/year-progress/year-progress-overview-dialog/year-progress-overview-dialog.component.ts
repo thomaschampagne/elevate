@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material";
 import { YearProgressForOverviewModel } from "../shared/models/year-progress-for-overview.model";
+import { ProgressMode } from "../shared/enums/progress-mode.enum";
 
 @Component({
 	selector: "app-year-progress-overview-dialog",
@@ -10,6 +11,8 @@ import { YearProgressForOverviewModel } from "../shared/models/year-progress-for
 export class YearProgressOverviewDialogComponent implements OnInit {
 
 	public static readonly WIDTH: string = "95%";
+
+	public readonly ProgressMode = ProgressMode;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public data: YearProgressForOverviewModel) {
 	}

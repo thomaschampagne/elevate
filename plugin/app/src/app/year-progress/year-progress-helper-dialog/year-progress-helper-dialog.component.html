@@ -1,11 +1,55 @@
 <mat-dialog-content class="mat-body-1">
 	<div>
-		<h3 class="mat-title">What is the purpose of this feature?</h3>
-		This feature allows you to evaluate a progress of your choice (distance, time, ...) from the beginning of a year
-		to a specific day of that year. And compare it to previous years. Let's take an example: Today is
-		{{todayMoment.format("MMM Do")}}. So the feature will reply to the following question:<br/><br/>
-		<i>"What I've accomplished by {{todayMoment.format("MMM Do")}} of this year compared to previous years to the
-			same date?"</i>
+		<h3 class="mat-title">Year to date progression mode</h3>The year to date progression mode evaluates the total<i>"distance"</i>,
+		<i>"time"</i>, <i>"elevation"</i> OR <i>"activity count"</i> from the beginning of a year to a specific day of
+		the year. And compare it to previous years. Let's take an example: Today is {{todayMoment.format("MMMM Do")}}.
+		So the feature will reply to the following question: <i>"What I've accomplished
+		by {{todayMoment.format("MMMM Do")}} of this year compared to previous years to the same date?"</i>
+	</div>
+
+	<div>
+		<h3 class="mat-title">Rolling progression mode</h3>
+		"Rolling progression" helps you to analyze your training volume variations and intensity over a <i>"customise-able
+		fixed rolling time window"</i> which slides every day. This is the total <i>"distance"</i>, <i>"time"</i>, <i>"elevation"</i>OR<i>"activity
+		count"</i> you were able to maintain during this window. And this day after day. In long endurance sports,
+		volume and intensity are the keys for success. Leaving apart intensity which can be obtained with Stress Scores
+		(HRSS, PSS, ...), the rolling progression provides the simplest part of the equation which is hard to get right:
+		<strong>the volume</strong>. By combining this with the "rolling progression targets", you will be able to track
+		and ensure a defined training volume pace overtime (use presets feature to define targets).<br/><br/>If you
+		still have some difficulties to understand "rolling progression", here's a use case. We assume that:
+		<ul>
+			<li>You're a cyclist who rides
+				<katex [expression]="'20km/day'"></katex>
+			</li>
+			<li>Th rolling time window is set to <strong>30 days</strong></li>
+			<li>And today is <strong>{{todayMoment.format("MMMM Do")}}</strong></li>
+		</ul>
+		Then, as of <strong>{{todayMoment.format("MMMM Do")}}</strong>, you have ridden
+		<katex [expression]="'600km~(=20km~\\times~30d)'"></katex>
+		between <strong>{{todayMoment.clone().subtract(30, "days").format("MMMM Do")}}</strong>and
+		<strong>{{todayMoment.format("MMMM Do")}}</strong> (today). So, on today, the rolling progression on last 30
+		days is
+		<katex [expression]="'600km'"></katex>
+		. Easy!<br/><br/>If in the next <strong>10 days</strong> you decide to ride
+		<katex [expression]="'40km/day'"></katex>
+		instead of
+		<katex [expression]="'20km/day'"></katex>
+		, then on <strong>{{todayMoment.clone().add(10, "days").format("MMMM Do")}}</strong> (10 days later), the
+		rolling progression on last 30 days will be
+		<katex [expression]="'800~km~(=40km~\\times~10d~+~20km~\\times~20d)'"></katex>
+		<br/><br/>If unfortunately you get injured
+		on<strong>{{todayMoment.clone().add(11, "days").format("MMMM Do")}}</strong>and you are not able to ride from
+		this date. Then:<br/><br/>- On <strong>{{todayMoment.clone().add(11, "days").format("MMMM Do")}}</strong>,
+		rolling last 30d progression will be &nbsp;&nbsp;➔&nbsp;&nbsp;<katex
+		[expression]="'780~km~(=0km~\\times~1d~+~40km~\\times~10d~+~20km~\\times~19d)'"></katex>
+		<br/>- On <strong>{{todayMoment.clone().add(12, "days").format("MMMM Do")}}</strong>, rolling last 30d
+		progression will be &nbsp;&nbsp;➔&nbsp;&nbsp;<katex
+		[expression]="'760~km~(=0km~\\times~2d~+~40km~\\times~10d~+~20km~\\times~18d)'"></katex>
+		<br/>- On <strong>{{todayMoment.clone().add(13, "days").format("MMMM Do")}}</strong>, rolling last 30d
+		progression will be &nbsp;&nbsp;➔&nbsp;&nbsp;<katex
+		[expression]="'740~km~(=0km~\\times~3d~+~40km~\\times~10d~+~20km~\\times~17d)'"></katex>
+		<br/>...<br/>- On <strong>{{todayMoment.clone().add(40, "days").format("MMMM Do")}}</strong>, rolling last 30d
+		progression will be &nbsp;&nbsp;➔&nbsp;&nbsp;<katex [expression]="'0~km~(=0km~\\times~30d)'"></katex>
 	</div>
 
 	<div>
