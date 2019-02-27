@@ -56,7 +56,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 		html += "           <span id=\"syncStepProgressText\"></span>";
 		html += "        </div>";
 		html += "        <div id=\"syncStatusError\" style=\"display: none;\">";
-		html += "           <strong>Synchronization stopped. Don't worry.</strong><br/>The sync had to pause due to Strava servers errors or potential overload. To avoid this, please relaunch sync in few hours. It will resume where it stopped. Already synced activities will not be calculated.";
+		html += "           <span style='color: crimson; font-weight: 600;'>Please continue your synchronization in 4~5 hours: you have reached the quota of activities which can be synced at the moment. Of course already synced activities will not be re-synced on next sync.<br/><br/> This limit is intended to avoid Strava servers errors or potential overload.</span>";
 		html += "        </div>";
 		html += "       <div id=\"syncInfos\">";
 		html += "           <div style=\"padding-bottom: 10px;\" id=\"totalActivities\"></div>";

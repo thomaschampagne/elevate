@@ -587,6 +587,7 @@ export class Elevate {
 					this.appResources,
 					this.userSettings,
 					AbstractExtendedDataModifier.TYPE_ACTIVITY);
+				extendedDataModifier.apply();
 				break;
 			case "Run":
 				extendedDataModifier = new RunningExtendedDataModifier(
@@ -595,22 +596,17 @@ export class Elevate {
 					this.appResources,
 					this.userSettings,
 					AbstractExtendedDataModifier.TYPE_ACTIVITY);
+				extendedDataModifier.apply();
 				break;
-			/*default:
-            extendedDataModifier = new GenericExtendedDataModifier(
-                this.activityProcessor,
-                this.activityId,
-                activityType,
-                supportsGap,
-                this.appResources,
-                this.userSettingsData,
-                this.isOwner,
-                activityInfo,
-                AbstractExtendedDataModifier.TYPE_ACTIVITY);
-            break;*/
+			default:
+				/*			extendedDataModifier = new GenericExtendedDataModifier(
+								activityProcessor,
+								activityInfo,
+								this.appResources,
+								this.userSettings,
+								AbstractExtendedDataModifier.TYPE_ACTIVITY);*/
+				break;
 		}
-
-		extendedDataModifier.apply();
 
 		// Send opened activity type to ga for stats
 		const updatedToEvent: any = {
@@ -678,6 +674,7 @@ export class Elevate {
 							that.appResources,
 							that.userSettings,
 							AbstractExtendedDataModifier.TYPE_SEGMENT);
+						extendedDataModifier.apply();
 						break;
 					case "Run":
 						extendedDataModifier = new RunningExtendedDataModifier(
@@ -686,12 +683,12 @@ export class Elevate {
 							that.appResources,
 							that.userSettings,
 							AbstractExtendedDataModifier.TYPE_SEGMENT);
+						extendedDataModifier.apply();
 						break;
 					default:
 						break;
 				}
 
-				extendedDataModifier.apply();
 
 				return r;
 			};
