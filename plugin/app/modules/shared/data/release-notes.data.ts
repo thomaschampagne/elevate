@@ -2,8 +2,8 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
-		version: "6.10.0",
-		date: "2019-02-27",
+		version: "6.10.1",
+		date: "2019-02-28",
 		message: "NEW!! Analyze your training volume variations and intensity with the new \"Rolling\" mode available in \"Year progressions\". Improvements & fixes have been also pushed.",
 		hotFixes: [],
 		features: [
@@ -16,6 +16,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 			"Fixed broken cycling odo in strava activities for users having \"imperial\" system unit preference.",
 			"Fixed virtual partner export crash on activities which are not \"Ride\" or \"Run\".",
 			"Fixed a user interface glitch on segment time comparison (private activities).",
+			"Fixed system unit switch not handled in new year progressions",
 			"[Technical] Upgraded Angular & others npm libraries."
 		]
 	},

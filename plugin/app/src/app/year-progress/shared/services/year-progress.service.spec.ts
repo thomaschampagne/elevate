@@ -33,6 +33,8 @@ describe("YearProgressService", () => {
 		return date + "T11:00:00+0000";
 	};
 
+	const isMetric = true;
+
 	let service: YearProgressService;
 	let TEST_SYNCED_MODELS: SyncedActivityModel[];
 	let getTodayMomentSpy: Spy;
@@ -132,10 +134,10 @@ describe("YearProgressService", () => {
 			// Given
 			const expectedLength = 4;
 
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true, true);
+			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
 
 			// When
-			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, TEST_SYNCED_MODELS);
+			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 
 			// Then
 			expect(yearProgressions).not.toBeNull();
@@ -160,10 +162,10 @@ describe("YearProgressService", () => {
 		it("should compute progression by tagging future days of current year", (done: Function) => {
 
 			// Given
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true, true);
+			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
 
 			// When
-			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, TEST_SYNCED_MODELS);
+			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 
 			// Then
 			const yearProgressModel_2018 = yearProgressions[3];
@@ -182,7 +184,7 @@ describe("YearProgressService", () => {
 
 			// Given
 			const expectedLength = 4;
-			const progressConfig = new YearToDateProgressConfigModel(["Walk"], true, true, true);
+			const progressConfig = new YearToDateProgressConfigModel(["Walk"], true, true);
 
 			const fakeWalkActivity = new SyncedActivityModel();
 			fakeWalkActivity.id = 99;
@@ -198,7 +200,7 @@ describe("YearProgressService", () => {
 			TEST_SYNCED_MODELS.push(fakeWalkActivity);
 
 			// When
-			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, TEST_SYNCED_MODELS);
+			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 
 			// Then
 			expect(yearProgressions).not.toBeNull();
@@ -226,7 +228,7 @@ describe("YearProgressService", () => {
 		it("should compute progression with proper totals metrics", (done: Function) => {
 
 			// Given
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true, true);
+			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
 
 			const expectedFirstDay2015 = new ProgressModel(2015,
 				1,
@@ -277,7 +279,7 @@ describe("YearProgressService", () => {
 			);
 
 			// When
-			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, TEST_SYNCED_MODELS);
+			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 
 			// Then
 			expect(yearProgressions).not.toBeNull();
@@ -304,7 +306,7 @@ describe("YearProgressService", () => {
 		it("should compute progression without commute rides and with proper totals metrics", (done: Function) => {
 
 			// Given
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, false, true);
+			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], false, true);
 
 			const expectedLastDay2015 = new ProgressModel(2015,
 				365,
@@ -330,7 +332,7 @@ describe("YearProgressService", () => {
 			);
 
 			// When
-			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, TEST_SYNCED_MODELS);
+			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 
 			// Then
 			expect(yearProgressions).not.toBeNull();
@@ -351,7 +353,8 @@ describe("YearProgressService", () => {
 		it("should compute progression with imperial system unit", (done: Function) => {
 
 			// Given
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], false, true, true);
+			const isMetric = false;
+			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
 
 			const expectedLastDay2015 = new ProgressModel(2015,
 				365,
@@ -378,7 +381,7 @@ describe("YearProgressService", () => {
 			);
 
 			// When
-			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, TEST_SYNCED_MODELS);
+			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 
 			// Then
 			expect(yearProgressions).not.toBeNull();
@@ -401,9 +404,9 @@ describe("YearProgressService", () => {
 			// Given
 			const syncedActivityModels = [];
 
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true, true);
+			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
 
-			const progressionMethodCall = () => service.progressions(progressConfig, syncedActivityModels);
+			const progressionMethodCall = () => service.progressions(progressConfig, isMetric, syncedActivityModels);
 
 
 			// When, Then
@@ -416,9 +419,9 @@ describe("YearProgressService", () => {
 		it("should not compute progression with empty types filters", (done: Function) => {
 
 			// Given
-			const progressConfig = new YearToDateProgressConfigModel([], true, true, true);
+			const progressConfig = new YearToDateProgressConfigModel([], true, true);
 
-			const progressionMethodCall = () => service.progressions(progressConfig, TEST_SYNCED_MODELS);
+			const progressionMethodCall = () => service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 
 			// When, Then
 			expect(progressionMethodCall).toThrowError(YearProgressService.ERROR_NO_TYPES_FILTER);
@@ -430,9 +433,9 @@ describe("YearProgressService", () => {
 		it("should not compute progression with not existing type", (done: Function) => {
 
 			// Given
-			const progressConfig = new YearToDateProgressConfigModel(["FakeType"], true, true, true);
+			const progressConfig = new YearToDateProgressConfigModel(["FakeType"], true, true);
 
-			const progressionMethodCall = () => service.progressions(progressConfig, TEST_SYNCED_MODELS);
+			const progressionMethodCall = () => service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 
 			// When, Then
 			expect(progressionMethodCall).toThrowError(YearProgressService.ERROR_NO_YEAR_PROGRESS_MODELS);
@@ -445,9 +448,9 @@ describe("YearProgressService", () => {
 
 			// Given
 			const expectedLength = 4;
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true, true);
+			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
 
-			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, TEST_SYNCED_MODELS);
+			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 
 			const selectedYears: number[] = [2018, 2017, 2016, 2015];
 
@@ -524,7 +527,7 @@ describe("YearProgressService", () => {
 			const expectedYear = 2019;
 			const expectedDaysInYear = 365;
 			const rollingDays = moment.duration(1, "week").asDays();
-			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, true, rollingDays);
+			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, rollingDays);
 
 			const todayTime = "2019-02-15 20:00";
 			getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
@@ -548,7 +551,7 @@ describe("YearProgressService", () => {
 			/* (Rest) 2019-02-16 */
 			/* ... */
 
-			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, syncedActivityModels as SyncedActivityModel[]);
+			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, syncedActivityModels as SyncedActivityModel[]);
 
 			// Then
 			/* Common checks */
@@ -594,7 +597,7 @@ describe("YearProgressService", () => {
 			const expectedYearsLength = 2;
 			const expectedDaysInYear = 365;
 			const rollingDays = moment.duration(1, "week").asDays();
-			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, true, rollingDays);
+			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, rollingDays);
 
 			const todayTime = "2019-02-15 20:00";
 			getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
@@ -628,7 +631,7 @@ describe("YearProgressService", () => {
 			/* (Rest) 2019-01-16 */
 			/* ... */
 
-			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, syncedActivityModels as SyncedActivityModel[]);
+			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, syncedActivityModels as SyncedActivityModel[]);
 
 			// Then
 			/* Common checks */
@@ -695,7 +698,7 @@ describe("YearProgressService", () => {
 			const expectedYear = 2019;
 			const expectedDaysInYear = 365;
 			const rollingDays = moment.duration(1, "week").asDays();
-			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, true, rollingDays);
+			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, rollingDays);
 
 			const todayTime = "2019-02-15 20:00";
 			getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
@@ -720,7 +723,7 @@ describe("YearProgressService", () => {
 			/* (Rest) 2019-02-16 */
 			/* ... */
 
-			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, syncedActivityModels as SyncedActivityModel[]);
+			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, syncedActivityModels as SyncedActivityModel[]);
 
 			// Then
 			/* Common checks */
