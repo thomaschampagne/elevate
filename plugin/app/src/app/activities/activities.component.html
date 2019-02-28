@@ -17,7 +17,7 @@
 		</mat-form-field>
 	</div>
 	<mat-form-field fxFill>
-		<mat-select placeholder="Displayed columns"
+		<mat-select placeholder="Columns displayed selection"
 					[(ngModel)]="selectedColumns"
 					(selectionChange)="onSelectedColumns()"
 					multiple>
@@ -41,6 +41,11 @@
 				(click)="unTickAll(); $event.stopPropagation();">
 			<mat-icon>clear</mat-icon>
 		</button>
+		<button matSuffix mat-icon-button
+				matTooltip="Reset to default"
+				(click)="reset(); $event.stopPropagation();">
+			<mat-icon>settings_backup_restore</mat-icon>
+		</button>
 	</mat-form-field>
 	<div class="table-container">
 		<table mat-table [dataSource]="dataSource" matSort>
@@ -52,6 +57,9 @@
 				<mat-cell *matCellDef="let activity" [fxFlex]="column.width"
 						  matTooltip="[{{activity.start_time | date}}] {{activity.name | shorten: 42: '...'}}"
 						  matTooltipPosition="left">
+					<ng-container *ngIf="column.type === ColumnType.DATE">
+						{{column.print(activity, column.id)}}
+					</ng-container>
 					<ng-container *ngIf="column.type === ColumnType.TEXT">
 						{{column.print(activity, column.id)}}
 					</ng-container>
@@ -80,5 +88,6 @@
 				   [pageSizeOptions]="[5, 10, 15, 25, 50, 100]"
 				   (page)="onPageSizeChanged()">
 	</mat-paginator>
+	<button mat-stroked-button color="primary" (click)="onSpreadSheetExport()">Export to spreadsheet</button>
 </mat-card>
 

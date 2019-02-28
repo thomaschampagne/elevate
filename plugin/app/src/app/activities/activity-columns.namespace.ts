@@ -5,10 +5,10 @@ import { Constant } from "@elevate/shared/constants";
 
 export namespace ActivityColumns {
 
-	interface SpecificUnits {
+	export interface SpecificUnits {
 	}
 
-	class SystemUnits implements SpecificUnits {
+	export class SystemUnits implements SpecificUnits {
 
 		public metric: string;
 		public imperial: string;
@@ -19,7 +19,7 @@ export namespace ActivityColumns {
 		}
 	}
 
-	class CadenceUnits implements SpecificUnits {
+	export class CadenceUnits implements SpecificUnits {
 
 		public cycling: string;
 		public running: string;
@@ -31,6 +31,7 @@ export namespace ActivityColumns {
 	}
 
 	export enum ColumnType {
+		DATE,
 		TEXT,
 		NUMBER,
 		ATHLETE_SETTINGS,
@@ -49,6 +50,7 @@ export namespace ActivityColumns {
 
 		public width: string = "115px"; // Default column width
 		public sticky: boolean = false; // Column is not stick by default
+		public isDefault: boolean = false; // Column is not default
 
 		public abstract type: ColumnType;
 		public abstract print: (...args: any[]) => string;
@@ -80,18 +82,24 @@ export namespace ActivityColumns {
 
 		/**
 		 *
+		 * @param width in px
+		 */
+		public setWidth(width: string): Column<T> {
+			this.width = width;
+			return this;
+		}
+
+		/**
+		 *
 		 */
 		public setSticky(): Column<T> {
 			this.sticky = true;
 			return this;
 		}
 
-		/**
-		 *
-		 * @param width in px
-		 */
-		public setWidth(width: string): Column<T> {
-			this.width = width;
+
+		public setDefault(value: boolean): Column<T> {
+			this.isDefault = value;
 			return this;
 		}
 	}
@@ -109,6 +117,19 @@ export namespace ActivityColumns {
 			this.print = (print) ? print : Print.field;
 		}
 	}
+
+	/**
+	 * Date based column
+	 */
+	export class DateColumn<T> extends TextColumn<T> {
+
+		public type: ColumnType = ColumnType.DATE;
+
+		constructor(category: string, id: string, header?: string, description?: string) {
+			super(category, id, Print.startDate, header, description);
+		}
+	}
+
 
 	/**
 	 * Link based column
@@ -240,7 +261,7 @@ export namespace ActivityColumns {
 				units = isImperial ? units.imperial : units.metric;
 			}
 
-			return (_.isNumber(value) && !_.isNaN(value)) ? (moment().startOf("day").seconds(value).format("mm:ss") + " /" + units) : Print.NO_DATA;
+			return (_.isNumber(value) && !_.isNaN(value)) ? (moment().startOf("day").seconds(value).format("mm:ss") + (units ? " " + units : "")) : Print.NO_DATA;
 		}
 
 		/**
@@ -342,6 +363,7 @@ export namespace ActivityColumns {
 	export class Definition {
 
 		public static readonly LONG_DISTANCE_SYSTEM_UNITS: SystemUnits = new SystemUnits("km", "mi");
+		public static readonly LONG_PACE_SYSTEM_UNITS: SystemUnits = new SystemUnits("/km", "/mi");
 		public static readonly SHORT_DISTANCE_SYSTEM_UNITS: SystemUnits = new SystemUnits("m", "ft");
 		public static readonly ELEVATION_SYSTEM_UNITS: SystemUnits = new SystemUnits("m", "ft");
 		public static readonly SPEED_SYSTEM_UNITS: SystemUnits = new SystemUnits("kph", "mph");
@@ -352,22 +374,22 @@ export namespace ActivityColumns {
 			/**
 			 * Common
 			 */
-			new TextColumn(Category.COMMON, "start_time", Print.startDate, "Date").setWidth("150px"),
-			new ActivityLinkColumn(Category.COMMON, "name").setWidth("230px"),
-			new TextColumn(Category.COMMON, "type"),
-			new TextColumn(Category.COMMON, "moving_time_raw", Print.movingTime, "Moving Time"),
-			new NumberColumn(Category.COMMON, "distance_raw", Definition.LONG_DISTANCE_SYSTEM_UNITS, "Distance", Print.number, 0, 0.001, Constant.KM_TO_MILE_FACTOR),
-			new NumberColumn(Category.COMMON, "elevation_gain_raw", Definition.ELEVATION_SYSTEM_UNITS, "Elevation Gain", Print.number, 0, 1, Constant.METER_TO_FEET_FACTOR),
-			new NumberColumn(Category.COMMON, "extendedStats.speedData.genuineAvgSpeed", Definition.SPEED_SYSTEM_UNITS, "Avg Moving Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
-			new NumberColumn(Category.COMMON, "extendedStats.paceData.avgPace", Definition.LONG_DISTANCE_SYSTEM_UNITS, "Avg Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
+			new DateColumn(Category.COMMON, "start_time", "Date").setWidth("150px").setDefault(true),
+			new ActivityLinkColumn(Category.COMMON, "name").setWidth("230px").setDefault(true),
+			new TextColumn(Category.COMMON, "type").setDefault(true),
+			new TextColumn(Category.COMMON, "moving_time_raw", Print.movingTime, "Moving Time").setDefault(true),
+			new NumberColumn(Category.COMMON, "distance_raw", Definition.LONG_DISTANCE_SYSTEM_UNITS, "Distance", Print.number, 0, 0.001, Constant.KM_TO_MILE_FACTOR).setDefault(true),
+			new NumberColumn(Category.COMMON, "elevation_gain_raw", Definition.ELEVATION_SYSTEM_UNITS, "Elevation Gain", Print.number, 0, 1, Constant.METER_TO_FEET_FACTOR).setDefault(true),
+			new NumberColumn(Category.COMMON, "extendedStats.speedData.genuineAvgSpeed", Definition.SPEED_SYSTEM_UNITS, "Avg Moving Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR).setDefault(true),
+			new NumberColumn(Category.COMMON, "extendedStats.paceData.avgPace", Definition.LONG_PACE_SYSTEM_UNITS, "Avg Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)).setDefault(true),
 			new NumberColumn(Category.COMMON, "extendedStats.moveRatio", null, "Move Ratio", Print.number, 2),
 
 			/**
 			 * Speed
 			 */
 			new NumberColumn(Category.SPEED, "extendedStats.speedData.totalAvgSpeed", Definition.SPEED_SYSTEM_UNITS, "Avg Total Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
-			new NumberColumn(Category.SPEED, "extendedStats.speedData.best20min", Definition.SPEED_SYSTEM_UNITS, "Best 20min Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
-			// new NumberColumn(Category.SPEED, "extendedStats.speedData.avgPace", Definition.SPEED_SYSTEM_UNITS, "", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
+			new NumberColumn(Category.SPEED, "extendedStats.speedData.best20min", Definition.SPEED_SYSTEM_UNITS, "Best 20min Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR).setDefault(true),
+			// new NumberColumn(Category.SPEED, "extendedStats.speedData.avgPace", Definition.LONG_PACE_SYSTEM_UNITS, "", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
 			new NumberColumn(Category.SPEED, "extendedStats.speedData.lowerQuartileSpeed", Definition.SPEED_SYSTEM_UNITS, "25% Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
 			new NumberColumn(Category.SPEED, "extendedStats.speedData.medianSpeed", Definition.SPEED_SYSTEM_UNITS, "50% Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
 			new NumberColumn(Category.SPEED, "extendedStats.speedData.upperQuartileSpeed", Definition.SPEED_SYSTEM_UNITS, "75% Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
@@ -378,26 +400,26 @@ export namespace ActivityColumns {
 			/**
 			 * Pace
 			 */
-			new NumberColumn(Category.PACE, "extendedStats.paceData.genuineGradeAdjustedAvgPace", Definition.LONG_DISTANCE_SYSTEM_UNITS, "Grade Adj. Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)).setDescription("Grade Adjusted Pace"),
-			new NumberColumn(Category.PACE, "extendedStats.paceData.best20min", Definition.LONG_DISTANCE_SYSTEM_UNITS, "Best 20min Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
-			new NumberColumn(Category.PACE, "extendedStats.paceData.lowerQuartilePace", Definition.LONG_DISTANCE_SYSTEM_UNITS, "25% Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
-			new NumberColumn(Category.PACE, "extendedStats.paceData.medianPace", Definition.LONG_DISTANCE_SYSTEM_UNITS, "50% Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
-			new NumberColumn(Category.PACE, "extendedStats.paceData.upperQuartilePace", Definition.LONG_DISTANCE_SYSTEM_UNITS, "75% Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
-			new NumberColumn(Category.PACE, "extendedStats.paceData.runningStressScore").setHeader("Running Stress Score"),
-			new NumberColumn(Category.PACE, "extendedStats.paceData.runningStressScorePerHour").setHeader("Running Stress Score / h"),
+			new NumberColumn(Category.PACE, "extendedStats.paceData.genuineGradeAdjustedAvgPace", Definition.LONG_PACE_SYSTEM_UNITS, "Grade Adj. Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)).setDescription("Grade Adjusted Pace"),
+			new NumberColumn(Category.PACE, "extendedStats.paceData.best20min", Definition.LONG_PACE_SYSTEM_UNITS, "Best 20min Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)).setDefault(true),
+			new NumberColumn(Category.PACE, "extendedStats.paceData.lowerQuartilePace", Definition.LONG_PACE_SYSTEM_UNITS, "25% Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
+			new NumberColumn(Category.PACE, "extendedStats.paceData.medianPace", Definition.LONG_PACE_SYSTEM_UNITS, "50% Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
+			new NumberColumn(Category.PACE, "extendedStats.paceData.upperQuartilePace", Definition.LONG_PACE_SYSTEM_UNITS, "75% Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
+			new NumberColumn(Category.PACE, "extendedStats.paceData.runningStressScore").setHeader("Running Stress Score").setDefault(true),
+			new NumberColumn(Category.PACE, "extendedStats.paceData.runningStressScorePerHour").setHeader("Running Stress Score / h").setDefault(true),
 
 			/**
 			 * Heart rate
 			 */
-			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.averageHeartRate", "bpm", "Avg HR"),
+			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.averageHeartRate", "bpm", "Avg HR").setDefault(true),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.maxHeartRate", "bpm", "Max HR"),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.activityHeartRateReserve", "bpm", "Avg HRR").setDescription("Average Heart Rate Reserve"),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.activityHeartRateReserveMax", "bpm", "Max HRR").setDescription("Max Heart Rate Reserve"),
-			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.HRSS").setDescription("Heart Rate Stress Score"),
-			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.HRSSPerHour").setHeader("HRSS / h").setDescription("Heart Rate Stress Score / Hour"),
+			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.HRSS").setDescription("Heart Rate Stress Score").setDefault(true),
+			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.HRSSPerHour").setHeader("HRSS / h").setDescription("Heart Rate Stress Score / Hour").setDefault(true),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.TRIMP").setDescription("Training Impulse Score"),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.TRIMPPerHour").setHeader("TRIMP / h").setDescription("Training Impulse Score / Hour"),
-			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.best20min", "bpm", "Best 20min HR"),
+			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.best20min", "bpm", "Best 20min HR").setDefault(true),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.best60min", "bpm", "Best 60min HR"),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.lowerQuartileHeartRate", "bpm", "25% HR").setDescription("Lower Quartile Bpm"),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.medianHeartRate", "bpm", "50% HR").setDescription("Median Bpm"),
@@ -407,7 +429,7 @@ export namespace ActivityColumns {
 			 */
 			new NumberColumn(Category.CADENCE, "extendedStats.cadenceData.cadencePercentageMoving", "%", "Cadence % Moving").setDescription("Cadence percentage while moving"),
 			new NumberColumn(Category.CADENCE, "extendedStats.cadenceData.cadenceTimeMoving", null, "Cadence Time Moving", Print.time).setDescription("Cadence Time while moving"),
-			new NumberColumn(Category.CADENCE, "extendedStats.cadenceData.averageCadenceMoving", Definition.CADENCE_UNITS, "Cadence Avg Moving").setDescription("Cadence Average while moving"),
+			new NumberColumn(Category.CADENCE, "extendedStats.cadenceData.averageCadenceMoving", Definition.CADENCE_UNITS, "Cadence Avg Moving").setDescription("Cadence Average while moving").setDefault(true),
 			new NumberColumn(Category.CADENCE, "extendedStats.cadenceData.standardDeviationCadence", Definition.CADENCE_UNITS, "σ Cadence").setDescription("Standard Deviation σ"),
 			new NumberColumn(Category.CADENCE, "extendedStats.cadenceData.totalOccurrences").setHeader("Cadence Count").setDescription("Total Crank Revolutions for cycling and Steps for running"),
 			new NumberColumn(Category.CADENCE, "extendedStats.cadenceData.lowerQuartileCadence", Definition.CADENCE_UNITS, "25% Cadence"),
@@ -425,16 +447,16 @@ export namespace ActivityColumns {
 			 * Power
 			 */
 			new TextColumn(Category.POWER, "extendedStats.powerData.hasPowerMeter", Print.boolean, "Power Meter"),
-			new NumberColumn(Category.POWER, "extendedStats.powerData.avgWatts", "w", "Avg Watts"),
-			new NumberColumn(Category.POWER, "extendedStats.powerData.avgWattsPerKg", "w", "Avg Watts / Kg", Print.number, 2),
+			new NumberColumn(Category.POWER, "extendedStats.powerData.avgWatts", "w", "Avg Watts").setDefault(true),
+			new NumberColumn(Category.POWER, "extendedStats.powerData.avgWattsPerKg", "w/kg", "Avg Watts / Kilograms", Print.number, 2).setDefault(true),
 			new NumberColumn(Category.POWER, "extendedStats.powerData.weightedPower", "w", "Weighted Power"),
-			new NumberColumn(Category.POWER, "extendedStats.powerData.weightedWattsPerKg", "w", "Weighted Power / Kg", Print.number, 2),
-			new NumberColumn(Category.POWER, "extendedStats.powerData.best20min", "w", "Best 20min Power"),
+			new NumberColumn(Category.POWER, "extendedStats.powerData.weightedWattsPerKg", "w/kg", "Weighted Power / Kilograms", Print.number, 2),
+			new NumberColumn(Category.POWER, "extendedStats.powerData.best20min", "w", "Best 20min Power").setDefault(true),
 			// new NumberColumn(Category.POWER, "extendedStats.powerData.bestEightyPercent", "w", "bestEightyPercent"),
 			new NumberColumn(Category.POWER, "extendedStats.powerData.variabilityIndex", null, "Variability Index", Print.number, 2),
 			// new NumberColumn(Category.POWER, "extendedStats.powerData.punchFactor", "w", "punchFactor"),
-			new NumberColumn(Category.POWER, "extendedStats.powerData.powerStressScore", null, "Power Stress Score"),
-			new NumberColumn(Category.POWER, "extendedStats.powerData.powerStressScorePerHour", null, "Power Stress Score / h"),
+			new NumberColumn(Category.POWER, "extendedStats.powerData.powerStressScore", null, "Power Stress Score").setDefault(true),
+			new NumberColumn(Category.POWER, "extendedStats.powerData.powerStressScorePerHour", null, "Power Stress Score / h").setDefault(true),
 			new NumberColumn(Category.POWER, "extendedStats.powerData.lowerQuartileWatts", "w", "25% Watts").setDescription("Lower Quartile Watts"),
 			new NumberColumn(Category.POWER, "extendedStats.powerData.medianWatts", "w", "50% Watts").setDescription("Median Watts"),
 			new NumberColumn(Category.POWER, "extendedStats.powerData.upperQuartileWatts", "w", "75% Watts").setDescription("Upper Quartile Watts"),
@@ -452,7 +474,7 @@ export namespace ActivityColumns {
 			/**
 			 * Others
 			 */
-			new AthleteSettingsColumn(Category.OTHERS)
+			new AthleteSettingsColumn(Category.OTHERS).setDefault(true)
 		];
 	}
 }

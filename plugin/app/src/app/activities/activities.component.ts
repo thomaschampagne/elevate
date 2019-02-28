@@ -8,6 +8,9 @@ import { ActivityColumns } from "./activity-columns.namespace";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
+import { Parser as Json2CsvParser } from "json2csv";
+import * as moment from "moment";
+import NumberColumn = ActivityColumns.NumberColumn;
 
 @Component({
 	selector: "app-activities",
@@ -16,12 +19,10 @@ import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dia
 })
 export class ActivitiesComponent implements OnInit {
 
-	// TODO Spreadsheet export.
-
 	public static readonly LS_SELECTED_COLUMNS: string = "activitiesTable_selectedColumns";
 	public static readonly LS_PAGE_SIZE_PREFERENCE: string = "activitiesTable_pageSize";
 
-	public static printAthleteSettings(activity: SyncedActivityModel): string {
+	public static printAthleteSettings(activity: SyncedActivityModel, isImperial: boolean): string {
 
 		if (!activity.athleteModel) {
 			return null;
@@ -29,7 +30,7 @@ export class ActivitiesComponent implements OnInit {
 
 		let inlineSettings = "";
 
-		if (activity.extendedStats.heartRateData && (_.isNumber(activity.extendedStats.heartRateData.HRSS)
+		if (activity.extendedStats && activity.extendedStats.heartRateData && (_.isNumber(activity.extendedStats.heartRateData.HRSS)
 			|| _.isNumber(activity.extendedStats.heartRateData.TRIMP))) {
 
 			inlineSettings += "MaxHr " + activity.athleteModel.athleteSettings.maxHr + "bpm. ";
@@ -51,12 +52,12 @@ export class ActivitiesComponent implements OnInit {
 
 		}
 
-		if (activity.extendedStats.powerData && (_.isNumber(activity.extendedStats.powerData.powerStressScore) && activity.athleteModel.athleteSettings.cyclingFtp)) {
+		if (activity.extendedStats && activity.extendedStats.powerData && (_.isNumber(activity.extendedStats.powerData.powerStressScore) && activity.athleteModel.athleteSettings.cyclingFtp)) {
 			inlineSettings += "Cycling Ftp " + activity.athleteModel.athleteSettings.cyclingFtp + "w. ";
 		}
 
-		if (activity.extendedStats.paceData && (_.isNumber(activity.extendedStats.paceData.runningStressScore) && activity.athleteModel.athleteSettings.runningFtp)) {
-			inlineSettings += "Run Ftp " + activity.athleteModel.athleteSettings.runningFtp + "s/km. ";
+		if (activity.extendedStats && activity.extendedStats.paceData && (_.isNumber(activity.extendedStats.paceData.runningStressScore) && activity.athleteModel.athleteSettings.runningFtp)) {
+			inlineSettings += "Run Ftp " + activity.athleteModel.athleteSettings.runningFtp + "s/" + ((isImperial) ? "mi" : "km") + ".";
 		}
 
 		if (activity.type === "Swim" && activity.athleteModel.athleteSettings.swimFtp) {
@@ -126,7 +127,8 @@ export class ActivitiesComponent implements OnInit {
 	public columnsSetup(): void {
 
 		const existingSelectedColumns = this.getSelectedColumns();
-		this.selectedColumns = (existingSelectedColumns) ? existingSelectedColumns : _.clone(ActivityColumns.Definition.ALL);
+
+		this.selectedColumns = (existingSelectedColumns) ? existingSelectedColumns : this.getDefaultsColumns();
 
 		// Filter column along selection
 		this.filterDisplayedColumns();
@@ -209,6 +211,12 @@ export class ActivitiesComponent implements OnInit {
 		return selectedColumns;
 	}
 
+	public getDefaultsColumns(): ActivityColumns.Column<SyncedActivityModel>[] {
+		return _.filter(ActivityColumns.Definition.ALL, (column: ActivityColumns.Column<SyncedActivityModel>) => {
+			return column.isDefault;
+		});
+	}
+
 	public saveSelectedColumns(): void {
 		const columnsToBeSaved: string[] = _.map(this.selectedColumns, (column: ActivityColumns.Column<SyncedActivityModel>) => {
 			return column.id;
@@ -233,12 +241,17 @@ export class ActivitiesComponent implements OnInit {
 		this.dialog.open(GotItDialogComponent, {
 			minWidth: GotItDialogComponent.MIN_WIDTH,
 			maxWidth: GotItDialogComponent.MAX_WIDTH,
-			data: new GotItDialogDataModel("Calculated with athlete settings", ActivitiesComponent.printAthleteSettings(activity))
+			data: new GotItDialogDataModel("Calculated with athlete settings", ActivitiesComponent.printAthleteSettings(activity, this.isImperial))
 		});
 	}
 
 	public tickAll(): void {
 		this.selectedColumns = _.clone(ActivityColumns.Definition.ALL);
+		this.onSelectedColumns();
+	}
+
+	public reset(): void {
+		this.selectedColumns = this.getDefaultsColumns();
 		this.onSelectedColumns();
 	}
 
@@ -253,6 +266,90 @@ export class ActivitiesComponent implements OnInit {
 
 	public onPageSizeChanged(): void {
 		localStorage.setItem(ActivitiesComponent.LS_PAGE_SIZE_PREFERENCE, this.dataSource.paginator.pageSize.toString());
+	}
+
+	public onSpreadSheetExport(): void {
+
+		try {
+
+			const fields = _.map(this.selectedColumns, (column: ActivityColumns.Column<SyncedActivityModel>) => {
+
+				let columnLabel = column.header;
+
+				if (ActivityColumns.ColumnType.NUMBER) {
+
+					const numberColumn = (column as NumberColumn<SyncedActivityModel>);
+
+					if (numberColumn.units) {
+
+						let unitsColumn = numberColumn.units;
+
+						if (unitsColumn instanceof ActivityColumns.SystemUnits) {
+							unitsColumn = this.isImperial ? unitsColumn.imperial : unitsColumn.metric;
+						}
+
+						if (unitsColumn instanceof ActivityColumns.CadenceUnits) {
+							unitsColumn = unitsColumn.cycling + " or " + unitsColumn.running;
+						}
+
+						columnLabel += (unitsColumn) ? " (" + unitsColumn + ")" : "";
+					}
+
+				}
+
+				return {
+					label: columnLabel,
+					default: "",
+					value: (activity: SyncedActivityModel) => {
+
+						let cellValue;
+
+						switch (column.type) {
+
+							case ActivityColumns.ColumnType.DATE:
+								cellValue = moment(activity.start_time).format();
+								break;
+
+							case ActivityColumns.ColumnType.TEXT:
+								cellValue = column.print(activity, column.id);
+								break;
+
+							case ActivityColumns.ColumnType.STRAVA_ACTIVITY_LINK:
+								cellValue = column.print(activity, column.id);
+								break;
+
+							case ActivityColumns.ColumnType.NUMBER:
+								const numberColumn = (column as NumberColumn<SyncedActivityModel>);
+								cellValue = numberColumn.print(activity, null, numberColumn.precision, numberColumn.factor,
+									this.isImperial, numberColumn.imperialFactor, numberColumn.id);
+								break;
+
+							case ActivityColumns.ColumnType.ATHLETE_SETTINGS:
+								cellValue = ActivitiesComponent.printAthleteSettings(activity, this.isImperial);
+								break;
+
+							default:
+								cellValue = "";
+								break;
+						}
+
+						return cellValue;
+
+					}
+				};
+
+			});
+
+			const parser = new Json2CsvParser({fields: fields});
+			const csvData = parser.parse(this.dataSource.data);
+			const blob = new Blob([csvData], {type: "application/csv; charset=utf-8"});
+			const filename = "elevate_activities_export." + moment().format("Y.M.D-H.mm.ss") + ".csv";
+			saveAs(blob, filename);
+
+		} catch (err) {
+			console.error(err);
+		}
+
 	}
 
 }
