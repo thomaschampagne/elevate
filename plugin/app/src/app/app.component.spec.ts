@@ -49,7 +49,7 @@ describe("AppComponent", () => {
 
 	it("should have main menu items", (done: Function) => {
 		const app = fixture.debugElement.componentInstance;
-		expect(app.mainMenuItems.length).toEqual(5);
+		expect(app.mainMenuItems.length).toEqual(6);
 		done();
 	});
 

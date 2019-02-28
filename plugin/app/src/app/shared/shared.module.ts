@@ -35,6 +35,7 @@ import { DataStore } from "./data-store/data-store";
 import { ChromeDataStore } from "./data-store/impl/chrome-data-store.service";
 import { ActivityDao } from "./dao/activity/activity.dao";
 import { FaqComponent } from "../faq/faq.component";
+import { ActivitiesComponent } from "../activities/activities.component";
 
 const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
 
@@ -53,6 +54,7 @@ const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
 	],
 	declarations: [
 		// Components
+		ActivitiesComponent,
 		GlobalSettingsComponent,
 		ZonesSettingsComponent,
 		ZoneComponent,

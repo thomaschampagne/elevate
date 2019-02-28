@@ -18,7 +18,7 @@ import { ImportBackupDialogComponent } from "./shared/dialogs/import-backup-dial
 import { SyncState } from "./shared/services/sync/sync-state.enum";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
-import { Theme } from "./shared/theme.enum";
+import { Theme } from "./shared/enums/theme.enum";
 import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
 import { SyncResultModel } from "@elevate/shared/models";
 import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
@@ -58,6 +58,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
 		{
+			icon: "view_list",
+			routerLink: AppRoutesModel.activities,
+			routerLinkActive: true
+		}, {
 			icon: "timeline",
 			routerLink: AppRoutesModel.fitnessTrend,
 			routerLinkActive: true
