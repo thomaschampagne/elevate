@@ -33,16 +33,19 @@
 		</mat-select>
 		<button matSuffix mat-icon-button
 				matTooltip="Tick all"
+				color="primary"
 				(click)="tickAll(); $event.stopPropagation();">
 			<mat-icon>done_all</mat-icon>
 		</button>
 		<button matSuffix mat-icon-button
 				matTooltip="Untick all"
+				color="primary"
 				(click)="unTickAll(); $event.stopPropagation();">
 			<mat-icon>clear</mat-icon>
 		</button>
 		<button matSuffix mat-icon-button
 				matTooltip="Reset to default"
+				color="primary"
 				(click)="reset(); $event.stopPropagation();">
 			<mat-icon>settings_backup_restore</mat-icon>
 		</button>
