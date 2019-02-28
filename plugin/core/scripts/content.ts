@@ -126,6 +126,7 @@ export let appResources: AppResourcesModel = {
 	systemUpdatesIcon: chrome.extension.getURL("/core/icons/ic_system_update_24px.svg"),
 	fitnessCenterIcon: chrome.extension.getURL("/core/icons/ic_fitness_center_black_24px.svg"),
 	timelineIcon: chrome.extension.getURL("/core/icons/ic_timeline_black_24px.svg"),
+	viewListIcon: chrome.extension.getURL("/core/icons/baseline-view_list-24px.svg"),
 	dateRange: chrome.extension.getURL("/core/icons/ic_date_range_black_24px.svg"),
 	athleteIcon: chrome.extension.getURL("/core/icons/ic_accessibility_black_24px.svg"),
 	donateIcon: chrome.extension.getURL("/core/icons/ic_attach_money_24px.svg"),

@@ -28,6 +28,7 @@ export class AppResourcesModel {
 	public systemUpdatesIcon: string;
 	public fitnessCenterIcon: string;
 	public timelineIcon: string;
+	public viewListIcon: string;
 	public dateRange: string;
 	public athleteIcon: string;
 	public donateIcon: string;

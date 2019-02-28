@@ -1,0 +1,96 @@
+<!--Loading-->
+<div *ngIf="!initialized">
+	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+<mat-card>
+	<div fxLayout="row" fxLayoutAlign="center center" class="mat-subheading-2">
+		<mat-form-field fxFlex="50">
+			<span matPrefix>
+				<mat-icon>search</mat-icon><span>&nbsp;&nbsp;&nbsp;</span>
+			</span>
+			<input fxFill matInput [(ngModel)]="searchText" (keyup)="applyFilter($event.target.value)"
+				   placeholder="Filter by type or activities name">
+			<button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
+					(click)="searchText=''; applyFilter(searchText);">
+				<mat-icon>close</mat-icon>
+			</button>
+		</mat-form-field>
+	</div>
+	<mat-form-field fxFill>
+		<mat-select placeholder="Columns displayed selection"
+					[(ngModel)]="selectedColumns"
+					(selectionChange)="onSelectedColumns()"
+					multiple>
+			<mat-optgroup *ngFor="let columnCategory of columnsCategories;"
+						  [label]="columnCategory.label">
+				<mat-option *ngFor="let column of columnCategory.columns"
+							[disabled]="(selectedColumns.length === 1 && column.id === selectedColumns[0].id)"
+							[value]="column"
+							[matTooltip]="(column.description ? column.description : '')">
+					{{column.header}}
+				</mat-option>
+			</mat-optgroup>
+		</mat-select>
+		<button matSuffix mat-icon-button
+				matTooltip="Tick all"
+				color="primary"
+				(click)="tickAll(); $event.stopPropagation();">
+			<mat-icon>done_all</mat-icon>
+		</button>
+		<button matSuffix mat-icon-button
+				matTooltip="Untick all"
+				color="primary"
+				(click)="unTickAll(); $event.stopPropagation();">
+			<mat-icon>clear</mat-icon>
+		</button>
+		<button matSuffix mat-icon-button
+				matTooltip="Reset to default"
+				color="primary"
+				(click)="reset(); $event.stopPropagation();">
+			<mat-icon>settings_backup_restore</mat-icon>
+		</button>
+	</mat-form-field>
+	<div class="table-container">
+		<table mat-table [dataSource]="dataSource" matSort>
+			<ng-container *ngFor="let column of columns" [matColumnDef]="column.id" [sticky]="column.sticky">
+				<mat-header-cell *matHeaderCellDef mat-sort-header [fxFlex]="column.width"
+								 matTooltip="{{column.description}}">
+					{{column.header}}
+				</mat-header-cell>
+				<mat-cell *matCellDef="let activity" [fxFlex]="column.width"
+						  matTooltip="[{{activity.start_time | date}}] {{activity.name | shorten: 42: '...'}}"
+						  matTooltipPosition="left">
+					<ng-container *ngIf="column.type === ColumnType.DATE">
+						{{column.print(activity, column.id)}}
+					</ng-container>
+					<ng-container *ngIf="column.type === ColumnType.TEXT">
+						{{column.print(activity, column.id)}}
+					</ng-container>
+					<ng-container *ngIf="column.type === ColumnType.STRAVA_ACTIVITY_LINK">
+						<a href="https://www.strava.com/activities/{{activity.id}}"
+						   target="_blank">{{column.print(activity, column.id)}}</a>
+					</ng-container>
+					<ng-container *ngIf="column.type === ColumnType.NUMBER">
+						{{column.print(activity, column.units, column.precision, column.factor, isImperial, column.imperialFactor, column.id)}}
+					</ng-container>
+					<ng-container *ngIf="column.type === ColumnType.ATHLETE_SETTINGS">
+						<button *ngIf="activity.id" mat-icon-button color="primary"
+								(click)="onViewAthleteSettings(activity)">
+							<mat-icon>accessibility</mat-icon>
+						</button>
+					</ng-container>
+				</mat-cell>
+			</ng-container>
+
+			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+		</table>
+	</div>
+	<mat-paginator #paginator
+				   [pageSize]="10"
+				   [pageSizeOptions]="[5, 10, 15, 25, 50, 100]"
+				   (page)="onPageSizeChanged()">
+	</mat-paginator>
+	<button mat-stroked-button color="primary" (click)="onSpreadSheetExport()">Export to spreadsheet</button>
+</mat-card>
+
