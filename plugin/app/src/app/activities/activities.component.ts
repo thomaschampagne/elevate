@@ -19,8 +19,33 @@ import NumberColumn = ActivityColumns.NumberColumn;
 })
 export class ActivitiesComponent implements OnInit {
 
+	constructor(public activityService: ActivityService,
+				public userSettingsService: UserSettingsService,
+				public appEventsService: AppEventsService,
+				public snackBar: MatSnackBar,
+				public dialog: MatDialog) {
+		this.initialized = false;
+	}
+
 	public static readonly LS_SELECTED_COLUMNS: string = "activitiesTable_selectedColumns";
 	public static readonly LS_PAGE_SIZE_PREFERENCE: string = "activitiesTable_pageSize";
+
+	public readonly ColumnType = ActivityColumns.ColumnType;
+
+	@ViewChild(MatPaginator)
+	public matPaginator: MatPaginator;
+
+	@ViewChild(MatSort)
+	public matSort: MatSort;
+
+	public dataSource: MatTableDataSource<SyncedActivityModel>;
+	public columns: ActivityColumns.Column<SyncedActivityModel>[];
+	public selectedColumns: ActivityColumns.Column<SyncedActivityModel>[];
+	public columnsCategories: ActivityColumns.Category[];
+	public displayedColumns: string[];
+	public isImperial: boolean;
+	public initialized: boolean;
+	public searchText: string;
 
 	public static printAthleteSettings(activity: SyncedActivityModel, isImperial: boolean): string {
 
@@ -68,31 +93,6 @@ export class ActivitiesComponent implements OnInit {
 
 		return inlineSettings;
 
-	}
-
-	public readonly ColumnType = ActivityColumns.ColumnType;
-
-	@ViewChild(MatPaginator)
-	public matPaginator: MatPaginator;
-
-	@ViewChild(MatSort)
-	public matSort: MatSort;
-
-	public dataSource: MatTableDataSource<SyncedActivityModel>;
-	public columns: ActivityColumns.Column<SyncedActivityModel>[];
-	public selectedColumns: ActivityColumns.Column<SyncedActivityModel>[];
-	public columnsCategories: ActivityColumns.Category[];
-	public displayedColumns: string[];
-	public isImperial: boolean;
-	public initialized: boolean;
-	public searchText: string;
-
-	constructor(public activityService: ActivityService,
-				public userSettingsService: UserSettingsService,
-				public appEventsService: AppEventsService,
-				public snackBar: MatSnackBar,
-				public dialog: MatDialog) {
-		this.initialized = false;
 	}
 
 	public ngOnInit(): void {
