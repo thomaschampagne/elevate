@@ -1,5 +1,47 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
+const defaultBrowserKarmaConfig = {
+	browsers: [
+		"HeadlessChrome"
+	],
+	customLaunchers: {
+		HeadlessChrome: {
+			base: "Chrome",
+			flags: [
+				"--no-sandbox",
+				// See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
+				"--headless",
+				"--disable-gpu",
+				// Without a remote debugging port, Google Chrome exits immediately.
+				" --remote-debugging-port=9222"
+			]
+		}
+	}
+};
+
+const provideBrowsersKarmaConfig = () => {
+
+	const fs = require("fs");
+	const customBrowsersKarmaConfigPath = __dirname + "/../../browsers.karma.conf.js";
+
+	let browsersKarmaConfig = null;
+	if (fs.existsSync(customBrowsersKarmaConfigPath)) {
+		browsersKarmaConfig = require(customBrowsersKarmaConfigPath);
+		if (!browsersKarmaConfig.browsers || !browsersKarmaConfig.customLaunchers) {
+			browsersKarmaConfig = null;
+		}
+	}
+
+	if (browsersKarmaConfig) {
+		console.log("Using CUSTOM browser config");
+	} else {
+		console.log("Using DEFAULT browser config");
+		browsersKarmaConfig = defaultBrowserKarmaConfig;
+	}
+	return browsersKarmaConfig;
+};
+
+const browsersKarmaConfig = provideBrowsersKarmaConfig();
 
 module.exports = function (config) {
 	config.set({
@@ -32,21 +74,8 @@ module.exports = function (config) {
 		colors: true,
 		logLevel: config.LOG_INFO,
 		autoWatch: true,
-		browsers: [
-			"HeadlessChrome"
-		],
-		customLaunchers: {
-			HeadlessChrome: { // See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
-				base: "Chrome",
-				flags: [
-					"--no-sandbox",
-					"--headless",
-					"--disable-gpu",
-					"--disable-browser-side-navigation",
-					"--remote-debugging-port=9222" // Without a remote debugging port, Google Chrome exits immediately.
-				]
-			}
-		},
+		browsers: browsersKarmaConfig.browsers,
+		customLaunchers: browsersKarmaConfig.customLaunchers,
 		specReporter: {
 			maxLogLines: 5,             	// limit number of lines logged per test
 			suppressErrorSummary: false, 	// do not print error summary
