@@ -48,9 +48,9 @@ export namespace ActivityColumns {
 		public category: string;
 		public description: string;
 
-		public width: string = "115px"; // Default column width
-		public sticky: boolean = false; // Column is not stick by default
-		public isDefault: boolean = false; // Column is not default
+		public width = "115px"; // Default column width
+		public sticky = false; // Column is not stick by default
+		public isDefault = false; // Column is not default
 
 		public abstract type: ColumnType;
 		public abstract print: (...args: any[]) => string;

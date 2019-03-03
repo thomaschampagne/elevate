@@ -130,7 +130,7 @@ export class ActivitiesSynchronize {
 				resolve();
 			}, ms);
 		});
-	};
+	}
 
 	/**
 	 * Provides:
