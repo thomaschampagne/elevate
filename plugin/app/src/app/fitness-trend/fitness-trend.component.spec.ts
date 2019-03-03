@@ -8,7 +8,7 @@ import { SyncService } from "../shared/services/sync/sync.service";
 import { userSettingsData } from "@elevate/shared/data";
 import { FitnessTrendModule } from "./fitness-trend.module";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
-import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
+import { ChromeEventsService } from "../shared/services/external-updates/impl/chrome-events.service";
 import * as _ from "lodash";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
@@ -24,12 +24,12 @@ describe("FitnessTrendComponent", () => {
 
 	beforeEach((done: Function) => {
 
-		spyOn(ExternalUpdatesService, "getBrowserExternalMessages").and.returnValue({
+		spyOn(ChromeEventsService, "getBrowserExternalMessages").and.returnValue({
 			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
 			}
 		});
 
-		spyOn(ExternalUpdatesService, "getBrowserPluginId").and.returnValue(pluginId);
+		spyOn(ChromeEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
 		TestBed.configureTestingModule({
 			imports: [

@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivityService } from "../shared/services/activity/activity.service";
-import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
 import { SyncedActivityModel, SyncResultModel, UserSettingsModel } from "@elevate/shared/models";
 import * as _ from "lodash";
@@ -10,6 +9,7 @@ import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dia
 import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 import { Parser as Json2CsvParser } from "json2csv";
 import * as moment from "moment";
+import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import NumberColumn = ActivityColumns.NumberColumn;
 
 @Component({
@@ -89,7 +89,7 @@ export class ActivitiesComponent implements OnInit {
 
 	constructor(public activityService: ActivityService,
 				public userSettingsService: UserSettingsService,
-				public externalUpdatesService: ExternalUpdatesService,
+				public appEventsService: AppEventsService,
 				public snackBar: MatSnackBar,
 				public dialog: MatDialog) {
 		this.initialized = false;
@@ -114,7 +114,7 @@ export class ActivitiesComponent implements OnInit {
 		});
 
 		// Listen for syncFinished update then table if necessary.
-		this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
+		this.appEventsService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
 			if (syncResult.activitiesChangesModel.added.length > 0
 				|| syncResult.activitiesChangesModel.edited.length > 0
 				|| syncResult.activitiesChangesModel.deleted.length > 0) {

@@ -1,17 +1,20 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
-import { CoreMessages, SyncResultModel } from "@elevate/shared/models";
+import { CoreMessages, SyncResultModel } from "../../../../../../modules/shared/models";
+import { AppEventsService } from "../app-events-service";
 
 @Injectable()
-export class ExternalUpdatesService {
+export class ChromeEventsService extends AppEventsService {
 
 	constructor() {
 
-		this.pluginId = ExternalUpdatesService.getBrowserPluginId();
+		super();
+
+		this.pluginId = ChromeEventsService.getBrowserPluginId();
 
 		// Listen for external messages
-		ExternalUpdatesService.getBrowserExternalMessages().addListener((request: any, sender: chrome.runtime.MessageSender) => {
-			this.onExternalRequestReceived(request, sender.id);
+		ChromeEventsService.getBrowserExternalMessages().addListener((request: any, sender: chrome.runtime.MessageSender) => {
+			this.onBrowserRequestReceived(request, sender.id);
 		});
 
 		this.onSyncDone = new Subject<SyncResultModel>();
@@ -28,7 +31,7 @@ export class ExternalUpdatesService {
 		return chrome.runtime.id;
 	}
 
-	public onExternalRequestReceived(request: { message: string, results: any }, senderId: any): void {
+	public onBrowserRequestReceived(request: { message: string, results: any }, senderId: any): void {
 
 		if (senderId !== this.pluginId) {
 			return;

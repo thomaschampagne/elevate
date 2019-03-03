@@ -11,12 +11,12 @@ import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enu
 import { AppError } from "../shared/models/app-error.model";
 import { MatDialog, MatSnackBar } from "@angular/material";
 import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
-import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
 import { SyncResultModel } from "@elevate/shared/models";
 import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.model";
 import { FitnessTrendInputsComponent } from "./fitness-trend-inputs/fitness-trend-inputs.component";
 import { FitnessTrendConfigDialogData } from "./shared/models/fitness-trend-config-dialog-data.model";
 import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog/fitness-trend-config-dialog.component";
+import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 
 @Component({
 	selector: "app-fitness-trend",
@@ -27,7 +27,7 @@ export class FitnessTrendComponent implements OnInit {
 
 	constructor(public syncService: SyncService,
 				public fitnessService: FitnessService,
-				public externalUpdatesService: ExternalUpdatesService,
+				public appEventsService: AppEventsService,
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar) {
 	}
@@ -227,7 +227,7 @@ export class FitnessTrendComponent implements OnInit {
 				this.lastFitnessActiveDate = (lastDayFitnessTrendModel && lastDayFitnessTrendModel.date) ? lastDayFitnessTrendModel.date : null;
 
 				// Listen for syncFinished update then reload graph if necessary.
-				this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
+				this.appEventsService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
 					if (syncResult.activitiesChangesModel.added.length > 0
 						|| syncResult.activitiesChangesModel.edited.length > 0
 						|| syncResult.activitiesChangesModel.deleted.length > 0) {

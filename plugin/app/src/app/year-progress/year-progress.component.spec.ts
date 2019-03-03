@@ -16,7 +16,7 @@ import { userSettingsData } from "@elevate/shared/data";
 import { YearProgressModule } from "./year-progress.module";
 import { YearToDateProgressPresetModel } from "./shared/models/year-to-date-progress-preset.model";
 import { ProgressType } from "./shared/enums/progress-type.enum";
-import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
+import { ChromeEventsService } from "../shared/services/external-updates/impl/chrome-events.service";
 
 describe("YearProgressComponent", () => {
 
@@ -37,12 +37,12 @@ describe("YearProgressComponent", () => {
 
 	beforeEach((done: Function) => {
 
-		spyOn(ExternalUpdatesService, "getBrowserExternalMessages").and.returnValue({
+		spyOn(ChromeEventsService, "getBrowserExternalMessages").and.returnValue({
 			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
 			}
 		});
 
-		spyOn(ExternalUpdatesService, "getBrowserPluginId").and.returnValue(pluginId);
+		spyOn(ChromeEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
 		TestBed.configureTestingModule({
 			imports: [
