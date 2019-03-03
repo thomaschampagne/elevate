@@ -1,3 +1,48 @@
+// Karma configuration file, see link for more information
+// https://karma-runner.github.io/1.0/config/configuration-file.html
+const defaultBrowserKarmaConfig = {
+	browsers: [
+		"HeadlessChrome"
+	],
+	customLaunchers: {
+		HeadlessChrome: {
+			base: "Chrome",
+			flags: [
+				"--no-sandbox",
+				// See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
+				"--headless",
+				"--disable-gpu",
+				// Without a remote debugging port, Google Chrome exits immediately.
+				" --remote-debugging-port=9222"
+			]
+		}
+	}
+};
+
+const provideBrowsersKarmaConfig = () => {
+
+	const fs = require("fs");
+	const customBrowsersKarmaConfigPath = __dirname + "/../../browsers.karma.conf.js";
+
+	let browsersKarmaConfig = null;
+	if (fs.existsSync(customBrowsersKarmaConfigPath)) {
+		browsersKarmaConfig = require(customBrowsersKarmaConfigPath);
+		if (!browsersKarmaConfig.browsers || !browsersKarmaConfig.customLaunchers) {
+			browsersKarmaConfig = null;
+		}
+	}
+
+	if (browsersKarmaConfig) {
+		console.log("Using CUSTOM browser config");
+	} else {
+		console.log("Using DEFAULT browser config");
+		browsersKarmaConfig = defaultBrowserKarmaConfig;
+	}
+	return browsersKarmaConfig;
+};
+
+const browsersKarmaConfig = provideBrowsersKarmaConfig();
+
 module.exports = function (config) {
 	config.set({
 		basePath: "./",
@@ -10,22 +55,8 @@ module.exports = function (config) {
 			"karma-chrome-launcher",
 			"karma-spec-reporter"
 		],
-		browsers: [
-			"HeadlessChrome"
-		],
-		customLaunchers: {
-			HeadlessChrome: {
-				base: "Chrome",
-				flags: [
-					"--no-sandbox",
-					// See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
-					"--headless",
-					"--disable-gpu",
-					// Without a remote debugging port, Google Chrome exits immediately.
-					" --remote-debugging-port=9222"
-				]
-			}
-		},
+		browsers: browsersKarmaConfig.browsers,
+		customLaunchers: browsersKarmaConfig.customLaunchers,
 		files: [
 			"specs/**/*.spec.ts"
 		],
