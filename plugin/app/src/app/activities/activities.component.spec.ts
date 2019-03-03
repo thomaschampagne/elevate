@@ -9,7 +9,7 @@ import * as _ from "lodash";
 import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fixture";
 import { userSettingsData } from "@elevate/shared/data";
 import { SyncService } from "../shared/services/sync/sync.service";
-import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
+import { ChromeEventsService } from "../shared/services/external-updates/impl/chrome-events.service";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 
 describe("ActivitiesComponent", () => {
@@ -30,12 +30,12 @@ describe("ActivitiesComponent", () => {
 			]
 		}).compileComponents();
 
-		spyOn(ExternalUpdatesService, "getBrowserExternalMessages").and.returnValue({
+		spyOn(ChromeEventsService, "getBrowserExternalMessages").and.returnValue({
 			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
 			}
 		});
 
-		spyOn(ExternalUpdatesService, "getBrowserPluginId").and.returnValue(pluginId);
+		spyOn(ChromeEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
 		activityService = TestBed.get(ActivityService);
 		userSettingsService = TestBed.get(UserSettingsService);

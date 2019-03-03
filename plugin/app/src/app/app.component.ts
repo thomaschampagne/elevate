@@ -19,9 +19,9 @@ import { SyncState } from "./shared/services/sync/sync-state.enum";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/enums/theme.enum";
-import { ExternalUpdatesService } from "./shared/services/external-updates/external-updates.service";
 import { SyncResultModel } from "@elevate/shared/models";
 import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
+import { AppEventsService } from "./shared/services/external-updates/app-events-service";
 
 class MenuItemModel {
 	public name: string;
@@ -112,7 +112,7 @@ export class AppComponent implements OnInit, OnDestroy {
 				public renderer: Renderer2,
 				public iconRegistry: MatIconRegistry,
 				public sanitizer: DomSanitizer,
-				public externalUpdatesService: ExternalUpdatesService) {
+				public appEventsService: AppEventsService) {
 
 		this.registerCustomIcons();
 
@@ -133,7 +133,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
 			if (routerEvent instanceof NavigationEnd) {
-				const route: string = (<NavigationEnd> routerEvent).urlAfterRedirects;
+				const route: string = (<NavigationEnd>routerEvent).urlAfterRedirects;
 				this.toolBarTitle = AppComponent.convertRouteToTitle(route);
 			}
 		});
@@ -144,7 +144,7 @@ export class AppComponent implements OnInit, OnDestroy {
 			this.updateLastSyncDateStatus();
 		}, 1000 * 60);
 
-		this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
+		this.appEventsService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
 			if (syncResult) {
 				this.updateLastSyncDateStatus();
 			}
