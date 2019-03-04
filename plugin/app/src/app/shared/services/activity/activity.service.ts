@@ -4,6 +4,7 @@ import { SyncedActivityModel } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { AthleteModelResolverService } from "../athlete-settings/athlete-model-resolver.service";
 import { Subject } from "rxjs";
+import { LoggerService } from "../logging/logger.service";
 
 @Injectable()
 export class ActivityService {
@@ -11,7 +12,8 @@ export class ActivityService {
 	public athleteSettingsConsistency: Subject<boolean>;
 
 	constructor(public activityDao: ActivityDao,
-				public athleteModelResolverService: AthleteModelResolverService) {
+				public athleteModelResolverService: AthleteModelResolverService,
+				public logger: LoggerService) {
 		this.athleteSettingsConsistency = new Subject<boolean>();
 	}
 
@@ -71,10 +73,10 @@ export class ActivityService {
 	 */
 	public verifyConsistencyWithAthleteSettings(): void {
 
-		console.debug("checking athlete settings consistency");
+		this.logger.debug("checking athlete settings consistency");
 		this.isAthleteSettingsConsistent().then(isConsistent => {
 			this.athleteSettingsConsistency.next(isConsistent);
-			console.debug("Athlete settings consistent: " + isConsistent);
+			this.logger.debug("Athlete settings consistent: " + isConsistent);
 		}, error => this.athleteSettingsConsistency.error(error));
 
 	}

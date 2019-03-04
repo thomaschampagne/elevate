@@ -13,6 +13,7 @@ import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-
 import { FitnessTrendColumnModel } from "./fitness-trend-column.model";
 import { FitnessTrendColumnType } from "./fitness-trend-column.enum";
 import { FitnessTrendActivitiesLinksDialogComponent } from "../fitness-trend-activities-links-dialog/fitness-trend-activities-links-dialog.component";
+import { LoggerService } from "../../shared/services/logging/logger.service";
 
 @Component({
 	selector: "app-fitness-trend-table",
@@ -162,7 +163,8 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	@ViewChild(MatSort)
 	public matSort: MatSort;
 
-	constructor(public dialog: MatDialog) {
+	constructor(public dialog: MatDialog,
+				public logger: LoggerService) {
 	}
 
 	public ngOnInit(): void {
@@ -346,7 +348,7 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			const filename = "fitness_trend_export." + moment().format("Y.M.D-H.mm.ss") + ".csv";
 			saveAs(blob, filename);
 		} catch (err) {
-			console.error(err);
+			this.logger.error(err);
 		}
 
 	}

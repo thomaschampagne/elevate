@@ -16,6 +16,7 @@ import { TargetProgressModel } from "../shared/models/target-progress.model";
 import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
 import { WindowService } from "../../shared/services/window/window.service";
 import { Subscription } from "rxjs";
+import { LoggerService } from "../../shared/services/logging/logger.service";
 
 @Component({
 	selector: "app-year-progress-graph",
@@ -32,7 +33,8 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 	constructor(public yearProgressService: YearProgressService,
 				public sideNavService: SideNavService,
-				public windowService: WindowService) {
+				public windowService: WindowService,
+				public logger: LoggerService) {
 	}
 
 	@Input("isGraphExpanded")
@@ -196,7 +198,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 			this.draw();
 
 		} catch (error) {
-			console.warn(error);
+			this.logger.warn(error);
 		}
 	}
 
