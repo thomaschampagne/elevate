@@ -2,11 +2,10 @@ import { TestBed } from "@angular/core/testing";
 import { UserSettingsService } from "./user-settings.service";
 import { UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { userSettingsData } from "@elevate/shared/data";
-import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import * as _ from "lodash";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
-import { DataStore } from "../../data-store/data-store";
-import { MockedDataStore } from "../../data-store/impl/spec/mocked-data-store.service";
+import { SharedModule } from "../../shared.module";
+import { CoreModule } from "../../../core/core.module";
 
 describe("UserSettingsService", () => {
 
@@ -14,13 +13,10 @@ describe("UserSettingsService", () => {
 
 	beforeEach((done: Function) => {
 
-		const mockedDataStore: MockedDataStore<UserSettingsModel> = new MockedDataStore(userSettingsData);
-
 		TestBed.configureTestingModule({
-			providers: [
-				UserSettingsService,
-				UserSettingsDao,
-				{provide: DataStore, useValue: mockedDataStore}
+			imports: [
+				CoreModule,
+				SharedModule
 			]
 		});
 

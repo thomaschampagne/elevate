@@ -44,7 +44,6 @@ const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
 const AppEventsServiceProvider = {provide: AppEventsService, useClass: ChromeEventsService};
 const LoggerServiceProvider = {provide: LoggerService, useClass: ConsoleLoggerService};
 
-
 @NgModule({
 	imports: [
 		CoreModule,
