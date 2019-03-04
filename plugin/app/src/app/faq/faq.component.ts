@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import * as MarkDownIt from "markdown-it";
+import { LoggerService } from "../shared/services/logging/logger.service";
 
 @Component({
 	selector: "app-faq",
@@ -18,7 +19,8 @@ export class FaqComponent implements OnInit {
 	public isFaqLoaded: boolean = null;
 
 	constructor(public httpClient: HttpClient,
-				public domSanitizer: DomSanitizer) {
+				public domSanitizer: DomSanitizer,
+				public logger: LoggerService) {
 	}
 
 	public ngOnInit(): void {
@@ -31,7 +33,7 @@ export class FaqComponent implements OnInit {
 			this.isFaqLoaded = true;
 
 		}, err => {
-			console.error(err);
+			this.logger.error(err);
 		});
 	}
 

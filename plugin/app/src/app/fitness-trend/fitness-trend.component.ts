@@ -17,6 +17,7 @@ import { FitnessTrendInputsComponent } from "./fitness-trend-inputs/fitness-tren
 import { FitnessTrendConfigDialogData } from "./shared/models/fitness-trend-config-dialog-data.model";
 import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog/fitness-trend-config-dialog.component";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
+import { LoggerService } from "../shared/services/logging/logger.service";
 
 @Component({
 	selector: "app-fitness-trend",
@@ -29,7 +30,8 @@ export class FitnessTrendComponent implements OnInit {
 				public fitnessService: FitnessService,
 				public appEventsService: AppEventsService,
 				public dialog: MatDialog,
-				public snackBar: MatSnackBar) {
+				public snackBar: MatSnackBar,
+				public logger: LoggerService) {
 	}
 
 	public static readonly DEFAULT_CONFIG: FitnessTrendConfigModel = {
@@ -162,7 +164,7 @@ export class FitnessTrendComponent implements OnInit {
 			const url = "https://www.strava.com/activities/{activityId}";
 			window.open(url.replace("{activityId}", id.toString()), "_blank");
 		} else {
-			console.warn("No activity found");
+			throw new Error("No activity found");
 		}
 	}
 
@@ -173,13 +175,13 @@ export class FitnessTrendComponent implements OnInit {
 				window.open(url.replace("{activityId}", id.toString()), "_blank");
 			});
 		} else {
-			console.warn("No activities found");
+			throw new Error("No activities found");
 		}
 	}
 
 	public ngOnInit(): void {
 		this.initialize().then(() => {
-			console.debug("FitnessTrend component initialized");
+			this.logger.debug("FitnessTrend component initialized");
 		});
 	}
 
@@ -251,7 +253,7 @@ export class FitnessTrendComponent implements OnInit {
 			} else {
 				const message = appError.toString() + ". Press (F12) to see a more detailed error message in browser console.";
 				this.snackBar.open(message, "Close");
-				console.error(message);
+				this.logger.error(message);
 			}
 
 		});
@@ -385,7 +387,7 @@ export class FitnessTrendComponent implements OnInit {
 			this.fitnessTrend = fitnessTrend;
 			this.updateDateRangeAndPeriods();
 
-		}, (appError: AppError) => console.error(appError.toString()));
+		}, (appError: AppError) => this.logger.error(appError.toString()));
 	}
 
 	public updateSkipActivityTypes(isEBikeRidesEnabled: boolean): void {

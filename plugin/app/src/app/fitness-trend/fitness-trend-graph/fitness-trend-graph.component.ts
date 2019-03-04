@@ -15,6 +15,7 @@ import { Subscription } from "rxjs";
 import { WindowService } from "../../shared/services/window/window.service";
 import { ViewedDayService } from "../shared/services/viewed-day.service";
 import { FitnessTrendActivitiesLinksDialogComponent } from "../fitness-trend-activities-links-dialog/fitness-trend-activities-links-dialog.component";
+import { LoggerService } from "../../shared/services/logging/logger.service";
 
 @Component({
 	selector: "app-fitness-trend-graph",
@@ -80,7 +81,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 	constructor(public sideNavService: SideNavService,
 				public windowService: WindowService,
 				public viewedDayService: ViewedDayService,
-				public dialog: MatDialog) {
+				public dialog: MatDialog,
+				public logger: LoggerService) {
 	}
 
 	public ngOnInit(): void {
@@ -219,7 +221,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 			this.draw();
 
 		} catch (error) {
-			console.warn(error);
+			this.logger.warn(error);
 		}
 
 	}
@@ -228,7 +230,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 		_.defer(() => {
 			MG.data_graphic(this.graphConfig);
-			console.log("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
+			this.logger.info("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
 		});
 	}
 

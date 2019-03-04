@@ -12,6 +12,7 @@ import * as semver from "semver";
 import { DatedAthleteSettingsService } from "../dated-athlete-settings/dated-athlete-settings.service";
 import { UserSettingsService } from "../user-settings/user-settings.service";
 import { Constant } from "@elevate/shared/constants";
+import { LoggerService } from "../logging/logger.service";
 
 @Injectable()
 export class SyncService {
@@ -23,7 +24,8 @@ export class SyncService {
 	constructor(public lastSyncDateTimeDao: LastSyncDateTimeDao,
 				public activityDao: ActivityDao,
 				public datedAthleteSettingsService: DatedAthleteSettingsService,
-				public userSettingsService: UserSettingsService) {
+				public userSettingsService: UserSettingsService,
+				public logger: LoggerService) {
 
 	}
 
@@ -176,7 +178,7 @@ export class SyncService {
 		]).then(() => {
 			return Promise.resolve();
 		}).catch(error => {
-			console.error(error);
+			this.logger.error(error);
 			return Promise.reject("Athlete synced data has not been cleared totally. Some properties cannot be deleted. You may need to uninstall/install the software.");
 		});
 	}

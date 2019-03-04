@@ -10,6 +10,7 @@ import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dia
 import { Parser as Json2CsvParser } from "json2csv";
 import * as moment from "moment";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
+import { LoggerService } from "../shared/services/logging/logger.service";
 import NumberColumn = ActivityColumns.NumberColumn;
 
 @Component({
@@ -23,7 +24,8 @@ export class ActivitiesComponent implements OnInit {
 				public userSettingsService: UserSettingsService,
 				public appEventsService: AppEventsService,
 				public snackBar: MatSnackBar,
-				public dialog: MatDialog) {
+				public dialog: MatDialog,
+				public logger: LoggerService) {
 		this.initialized = false;
 	}
 
@@ -160,7 +162,7 @@ export class ActivitiesComponent implements OnInit {
 				return (valueAtPath) ? valueAtPath : 0;
 
 			} else {
-				console.warn("Column path missing", JSON.stringify(column));
+				this.logger.warn("Column path missing", JSON.stringify(column));
 				return 0;
 			}
 		};
@@ -176,7 +178,7 @@ export class ActivitiesComponent implements OnInit {
 		}).catch(error => {
 			const message = error.toString() + ". Press (F12) to see a more detailed error message in browser console.";
 			this.snackBar.open(message, "Close");
-			console.error(message);
+			this.logger.error(message);
 
 		}).finally(() => {
 			this.initialized = true;
@@ -347,7 +349,7 @@ export class ActivitiesComponent implements OnInit {
 			saveAs(blob, filename);
 
 		} catch (err) {
-			console.error(err);
+			this.logger.error(err);
 		}
 
 	}
