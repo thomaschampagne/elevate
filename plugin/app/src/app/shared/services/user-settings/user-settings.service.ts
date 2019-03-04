@@ -3,13 +3,15 @@ import { UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared/mo
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
 import { userSettingsData } from "@elevate/shared/data";
+import { LoggerService } from "../logging/logger.service";
 
 @Injectable()
 export class UserSettingsService {
 
 	public static readonly MARK_LOCAL_STORAGE_CLEAR: string = "localStorageMustBeCleared";
 
-	constructor(public userSettingsDao: UserSettingsDao) {
+	constructor(public userSettingsDao: UserSettingsDao,
+				public logger: LoggerService) {
 	}
 
 	public fetch(): Promise<UserSettingsModel> {
@@ -31,7 +33,7 @@ export class UserSettingsService {
 	 */
 	public clearLocalStorageOnNextLoad(): Promise<void> {
 		return this.saveProperty(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true).then(() => {
-			console.log("LocalStorage is marked to be cleared on next core load");
+			this.logger.info("LocalStorage is marked to be cleared on next core load");
 			return Promise.resolve();
 		});
 	}
