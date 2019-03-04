@@ -37,9 +37,13 @@ import { ActivityDao } from "./dao/activity/activity.dao";
 import { FaqComponent } from "../faq/faq.component";
 import { ActivitiesComponent } from "../activities/activities.component";
 import { AppEventsService } from "./services/external-updates/app-events-service";
+import { ConsoleLoggerService } from "./services/logging/console-logger.service";
+import { LoggerService } from "./services/logging/logger.service";
 
 const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
 const AppEventsServiceProvider = {provide: AppEventsService, useClass: ChromeEventsService};
+const LoggerServiceProvider = {provide: LoggerService, useClass: ConsoleLoggerService};
+
 
 @NgModule({
 	imports: [
@@ -99,7 +103,8 @@ const AppEventsServiceProvider = {provide: AppEventsService, useClass: ChromeEve
 		ZonesService,
 		SideNavService,
 		WindowService,
-		AppEventsServiceProvider
+		AppEventsServiceProvider,
+		LoggerServiceProvider
 	]
 })
 export class SharedModule {

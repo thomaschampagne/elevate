@@ -8,6 +8,7 @@ import { ZoneChangeTypeModel } from "./zone-change-type.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 import { Subscription } from "rxjs";
 import { ZoneModel } from "@elevate/shared/models";
+import { LoggerService } from "../../shared/services/logging/logger.service";
 
 @Component({
 	selector: "app-zone",
@@ -51,7 +52,8 @@ export class ZoneComponent implements OnInit, OnDestroy {
 	public stepUpdatesSubscription: Subscription;
 
 	constructor(public zonesService: ZonesService,
-				public snackBar: MatSnackBar) {
+				public snackBar: MatSnackBar,
+				public logger: LoggerService) {
 	}
 
 	public ngOnInit(): void {
@@ -66,11 +68,11 @@ export class ZoneComponent implements OnInit, OnDestroy {
 
 		}, error => {
 
-			console.error(error);
+			this.logger.error(error);
 
 		}, () => {
 
-			console.log("InstructionListener complete");
+			this.logger.info("InstructionListener complete");
 
 		});
 

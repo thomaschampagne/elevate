@@ -10,6 +10,7 @@ import { DatedAthleteSettingsDialogData } from "../edit-dated-athlete-settings-d
 import { ConfirmDialogComponent } from "../../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { ConfirmDialogDataModel } from "../../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { AppError } from "../../../shared/models/app-error.model";
+import { LoggerService } from "../../../shared/services/logging/logger.service";
 
 @Component({
 	selector: "app-dated-athlete-settings-manager",
@@ -57,7 +58,8 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
 	constructor(public datedAthleteSettingsService: DatedAthleteSettingsService,
 				public dialog: MatDialog,
-				public snackBar: MatSnackBar) {
+				public snackBar: MatSnackBar,
+				public logger: LoggerService) {
 	}
 
 	public ngOnInit(): void {
@@ -211,7 +213,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
 	private handleErrors(error: any) {
 
-		console.error(error);
+		this.logger.error(error);
 
 		if (error instanceof AppError) {
 			const message = (<AppError> error).message;

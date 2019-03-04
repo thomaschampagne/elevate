@@ -34,6 +34,7 @@ import { AddRollingProgressPresetDialogData } from "./shared/models/add-rolling-
 import { RollingProgressPresetModel } from "./shared/models/rolling-progress-preset.model";
 import { YearProgressWelcomeDialogComponent } from "./year-progress-welcome-dialog/year-progress-welcome-dialog.component";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
+import { LoggerService } from "../shared/services/logging/logger.service";
 
 /* Legacy tasks */
 // TODO Style of target line!
@@ -52,7 +53,8 @@ export class YearProgressComponent implements OnInit {
 				public yearProgressService: YearProgressService,
 				public appEventsService: AppEventsService,
 				public dialog: MatDialog,
-				public mediaObserver: MediaObserver) {
+				public mediaObserver: MediaObserver,
+				public logger: LoggerService) {
 
 		this.availableYears = [];
 		this.availableActivityTypes = [];
@@ -267,7 +269,7 @@ export class YearProgressComponent implements OnInit {
 			this.showYearProgressWelcomeDialog();
 
 		}, (appError: AppError) => {
-			console.error(appError.toString());
+			this.logger.error(appError.toString());
 		});
 	}
 
@@ -332,7 +334,7 @@ export class YearProgressComponent implements OnInit {
 
 		this.isProgressionInitialized = true;
 
-		console.log("Setup done");
+		this.logger.info("Setup done");
 
 	}
 
