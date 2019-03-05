@@ -15,6 +15,20 @@ export class MenuModifier extends AbstractModifier {
 		this.appResources = appResources;
 	}
 
+	public heatmapClick(): void {
+		if (window.navigator.geolocation) {
+			window.navigator.geolocation.getCurrentPosition(
+				(position: Position) => {
+					window.open("http://labs.strava.com/heatmap/#12/" + position.coords.longitude + "/" + position.coords.latitude + "/gray/both", "_blank");
+				},
+				(error: PositionError) => {
+					console.error(error);
+					alert("Some Elevate functions will not work without your location position. Please make sure you have allowed location tracking on this site. Click on the location icon placed on the right inside the chrome web address bar => Clear tracking setting => Refresh page > Allow tracking.");
+				},
+			);
+		}
+	}
+
 	public modify(): void {
 
 		// Add kom-map to global navigation
@@ -36,7 +50,7 @@ export class MenuModifier extends AbstractModifier {
 		html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/globalSettings'><img style='vertical-align:middle' src='" + this.appResources.settingsIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Global Settings</span></a></li>";
 		html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/athleteSettings'><img style='vertical-align:middle' src='" + this.appResources.athleteIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Athlete Settings</span></a></li>";
 		// html += "<li><a href='http://labs.strava.com/achievement-map/' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.komMapIcon + "'/> <span>KOM/CR Map</span></a></li>";
-		html += "<li ><a href='#' class='sx_menu_heatmap'><img style='vertical-align:middle' src='" + this.appResources.heatmapIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Global Heatmap</span></a></li>";
+		html += "<li ><a href='#' class='sx_menu_heatmap' id=\"heatmapGloablButton\"><img style='vertical-align:middle' src='" + this.appResources.heatmapIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Global Heatmap</span></a></li>";
 		html += "<li style='border-top: 1px solid #DDD;'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#/donate' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.donateIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Donate</span></a></li>";
 		html += "<li style='border-top: 1px solid #DDD;'><a style='font-style: italic;' href='" + this.appResources.settingsLink + "#/releasesNotes' target='_blank'><img style='vertical-align:middle' src='" + this.appResources.systemUpdatesIcon + "'/>&nbsp;&nbsp;&nbsp;<span><strong>" + this.appResources.extVersionName + "</strong> release notes</span></a></li>";
 
@@ -50,21 +64,10 @@ export class MenuModifier extends AbstractModifier {
 		html += "<li style='border-top: 1px solid #DDD;" + styleSideLeft + "'><a target='_blank' href='" + this.appResources.settingsLink + "#/share'><img style='vertical-align:middle' src='" + this.appResources.shareIcon + "'/>&nbsp;&nbsp;&nbsp;<span>Share</span></a></li>";
 		html += "</ul>";
 		html += "</li>";
-
-		if (window.navigator.geolocation) {
-			window.navigator.geolocation.getCurrentPosition(
-				(position: Position) => {
-					$(".sx_menu_heatmap").attr("href", "http://labs.strava.com/heatmap/#12/" + position.coords.longitude + "/" + position.coords.latitude + "/gray/both");
-					$(".sx_menu_heatmap").attr("target", "_blank");
-				},
-				(error: PositionError) => {
-					console.error(error);
-					$(".sx_menu_heatmap").attr("href", "#");
-					$(".sx_menu_heatmap").attr("target", "_self");
-					$(".sx_menu_heatmap").attr("onclick", "alert(\"Some Elevate functions will not work without your location position. Please make sure you have allowed location tracking on this site. Click on the location icon placed on the right inside the chrome web address bar => Clear tracking setting => Refresh page > Allow tracking.\")");
-				},
-			);
-		}
 		globalNav.children().first().before(html);
+
+		$("#heatmapGloablButton").click(() => {
+			this.heatmapClick();
+		});
 	}
 }
