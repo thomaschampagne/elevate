@@ -6,7 +6,7 @@
 import { LoggerService } from "../app/shared/services/logging/logger.service";
 
 export const environment = {
-	desktop: false,
+	desktop: true,
 	production: false,
 	logLevel: LoggerService.LEVEL_DEBUG,
 	skipRestoreSyncedBackupCheck: false

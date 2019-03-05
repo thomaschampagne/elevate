@@ -27,29 +27,25 @@ import { CoreModule } from "../core/core.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
 import { AdvancedMenuComponent } from "../advanced-menu/advanced-menu.component";
-import { ChromeEventsService } from "./services/external-updates/impl/chrome-events.service";
 import { AthleteModelResolverService } from "./services/athlete-settings/athlete-model-resolver.service";
 import { DatedAthleteSettingsService } from "./services/dated-athlete-settings/dated-athlete-settings.service";
 import { DatedAthleteSettingsDao } from "./dao/dated-athlete-settings/dated-athlete-settings.dao";
-import { DataStore } from "./data-store/data-store";
-import { ChromeDataStore } from "./data-store/impl/chrome-data-store.service";
 import { ActivityDao } from "./dao/activity/activity.dao";
 import { FaqComponent } from "../faq/faq.component";
 import { ActivitiesComponent } from "../activities/activities.component";
-import { AppEventsService } from "./services/external-updates/app-events-service";
-import { ConsoleLoggerService } from "./services/logging/console-logger.service";
 import { LoggerService } from "./services/logging/logger.service";
-
-const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
-const AppEventsServiceProvider = {provide: AppEventsService, useClass: ChromeEventsService};
-const LoggerServiceProvider = {provide: LoggerService, useClass: ConsoleLoggerService};
+import { ConsoleLoggerService } from "./services/logging/console-logger.service";
+import { environment } from "../../environments/environment";
+import { DesktopModule } from "./modules/desktop.module";
+import { ChromeModule } from "./modules/chrome.module";
 
 @NgModule({
 	imports: [
 		CoreModule,
 		BrowserModule,
 		BrowserAnimationsModule,
-		AppRoutingModule
+		AppRoutingModule,
+		(environment.desktop) ? DesktopModule : ChromeModule
 	],
 	exports: [
 		CoreModule,
@@ -87,7 +83,6 @@ const LoggerServiceProvider = {provide: LoggerService, useClass: ConsoleLoggerSe
 		ImportBackupDialogComponent
 	],
 	providers: [
-		ChromeDataStoreProvider,
 		SyncService,
 		LastSyncDateTimeDao,
 		UserSettingsService,
@@ -102,8 +97,7 @@ const LoggerServiceProvider = {provide: LoggerService, useClass: ConsoleLoggerSe
 		ZonesService,
 		SideNavService,
 		WindowService,
-		AppEventsServiceProvider,
-		LoggerServiceProvider
+		{provide: LoggerService, useClass: ConsoleLoggerService}
 	]
 })
 export class SharedModule {

@@ -3,12 +3,19 @@
 	"version": "6.10.1",
 	"description": "Wrap the needed tools required to cook the Elevate Web Plugin",
 	"scripts": {
-		"build": "npm-run-all clean res-copy:* build-project:core build-project:app",
-		"build:prod": "npm-run-all clean res-copy:* build-project:core@prod build-project:app@prod",
-		"build-project:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build",
-		"build-project:app@prod": "npm run build-project:app -- --prod",
-		"build-project:core": "cd ./plugin/core && node ./node_modules/webpack/bin/webpack.js --config ./core.webpack.config.js",
-		"build-project:core@prod": "npm run build-project:core -- --mode production",
+		"build": "npm-run-all clean res-copy:* build:core build:app",
+		"build:prod": "npm-run-all clean res-copy:* build:core@prod build:app@prod",
+		"build:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build",
+		"build:app@prod": "npm run build:app -- --prod",
+		"build:core": "cd ./plugin/core && node ./node_modules/webpack/bin/webpack.js --config ./core.webpack.config.js",
+		"build:core@prod": "npm run build:core -- --mode production",
+		"--------START-DESKTOP-WIP----------": "----------------------------",
+		"build:desktop:boot": "node ./node_modules/typescript/lib/tsc.js -p desktop/tsconfig.desktop.json",
+		"build:desktop": "npm run clean && npm run build:app -- --base-href --configuration=desktop",
+		"build:desktop@prod": "npm run clean && npm run build:app -- --base-href --configuration=desktop:prod",
+		"start:desktop": "npm run build:desktop:boot && run-electron ./dist/desktop.run.js",
+		"electron:build:win32": "npm run build:desktop:boot && electron-builder build --windows",
+		"----------END-DESKTOP-WIP----------": "----------------------------",
 		"clean": "npm-run-all clean:*",
 		"clean:dist": "node ./node_modules/del-cli/cli.js ./dist/",
 		"clean:package": "node ./node_modules/del-cli/cli.js ./package/",
@@ -26,8 +33,8 @@
 		"tslint-fix:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng lint app --fix",
 		"start": "npm run watch",
 		"watch": "npm run clean && npm-run-all res-copy:* && npm-run-all --print-label --parallel watch:*",
-		"watch:app": "npm run build-project:app -- --watch",
-		"watch:core": "npm run build-project:core -- --watch",
+		"watch:app": "npm run build:app -- --watch",
+		"watch:core": "npm run build:core -- --watch",
 		"wipe": "npm run clean && npm run wipe:package-locks && npm run wipe:node-modules",
 		"wipe:node-modules": "node ./node_modules/del-cli/cli.js ./node_modules/ ./plugin/core/node_modules/ ./plugin/app/node_modules/",
 		"wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json ./plugin/core/package-lock.json ./plugin/app/package-lock.json",
@@ -58,7 +65,38 @@
 		"bestzip": "^2.1.2",
 		"cpy-cli": "^2.0.0",
 		"del-cli": "^1.1.0",
+		"electron": "^4.0.6",
+		"electron-builder": "^20.38.5",
 		"npm-run-all": "^4.1.5",
-		"run-sequence": "^2.2.1"
+		"run-electron": "^0.1.0",
+		"run-sequence": "^2.2.1",
+		"typescript": "^3.3.0"
+	},
+	"main": "./dist/boot.js",
+	"build": {
+		"appId": "com.thomaschampagne.elevate",
+		"productName": "elevate-desktop-app",
+		"directories": {
+			"output": "package/"
+		},
+		"files": [
+			"!**/*",
+			"dist/**/*.*"
+		],
+		"win": {
+			"target": [
+				"zip"
+			]
+		},
+		"mac": {
+			"target": [
+				"dmg"
+			]
+		},
+		"linux": {
+			"target": [
+				"AppImage"
+			]
+		}
 	}
 }
