@@ -340,7 +340,7 @@ export class ActivityComputer {
 		// Q1/Q2/Q3 elevation
 		const elevationData: ElevationDataModel = this.elevationData(activityStream);
 
-		const runningPerformanceIndex : number = (!_.isEmpty(activityStream)) ? this.runningPerformanceIndex(athleteModel, this.activitySourceData, elevationData, heartRateData) : null;
+		const runningPerformanceIndex : number = (!_.isEmpty(activityStream) && !_.isNull(heartRateData)) ? this.runningPerformanceIndex(athleteModel, this.activitySourceData, elevationData, heartRateData) : null;
 
 
 		// Return an array with all that shit...
