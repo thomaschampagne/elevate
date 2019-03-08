@@ -399,7 +399,6 @@ export class ActivityComputer {
 		const averageHeartRate: number = heartRateData.averageHeartRate;
 		const userMaxHr: number = athleteModel.athleteSettings.maxHr;
 		const runIntensity: number = Math.round((averageHeartRate/userMaxHr*1.45-0.3)*100)/100; // calculate the run intesity; this is rounded to 2 decimal poitns
-		console.log(runIntensity);
 		const gradeAdjustedDistance = activitySourceData.distance + (elevationData.accumulatedElevationAscent * 6) - (elevationData.accumulatedElevationDescent * 4);
 		const distanceRate: number = (213.9 / (activitySourceData.movingTime/60) * ((gradeAdjustedDistance/1000)**1.06) ) + 3.5;
 		return distanceRate/runIntensity;
