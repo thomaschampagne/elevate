@@ -92,6 +92,11 @@ export class GlobalSettingsService {
 			type: "checkbox",
 			title: "Enable bike odo display",
 			labels: ["Cycling"],
+		},{
+			key: "displayRunningPerformanceIndex",
+			type: "checkbox",
+			title: "Display running performance index",
+			labels: ["Running"],
 		}, {
 			key: "activateRunningGradeAdjustedPace",
 			type: "checkbox",

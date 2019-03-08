@@ -15,4 +15,5 @@ export class AnalysisDataModel {
 	public cadenceData: CadenceDataModel;
 	public gradeData: GradeDataModel;
 	public elevationData: ElevationDataModel;
+        public runningPerformanceIndex: number;
 }
