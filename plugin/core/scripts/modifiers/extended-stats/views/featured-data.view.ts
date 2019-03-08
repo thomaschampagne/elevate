@@ -36,7 +36,7 @@ export class FeaturedDataView extends AbstractDataView {
 			this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 
 			// Add a title
-			this.makeGrid(7, 1); // (col, row)
+			this.makeGrid(8, 1); // (col, row)
 
 			this.insertDataIntoGrid();
 
@@ -61,6 +61,10 @@ export class FeaturedDataView extends AbstractDataView {
 			this.insertContentAtGridPosition(3, 0, this.printNumber(this.analysisData.heartRateData.HRSSPerHour, 1), "HRSS / Hour", "", "displayAdvancedHrData");
 		}
 
+		if (this.analysisData.heartRateData && this.userSettings.displayRunningPerformanceIndex) {
+			this.insertContentAtGridPosition(4, 0, this.printNumber(this.analysisData.runningPerformanceIndex, 1), "Run Index", "", "displayRunningPerformanceIndex");
+		}
+
 		if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
 
 			if (_.isNumber(this.analysisData.powerData.best20min) && !this.isSegmentEffortView) {
@@ -68,7 +72,7 @@ export class FeaturedDataView extends AbstractDataView {
 				if (!this.analysisData.powerData.hasPowerMeter) {
 					label = "Estimated " + label;
 				}
-				this.insertContentAtGridPosition(4, 0, this.printNumber(this.analysisData.powerData.best20min, 0), label, "w", "displayAdvancedPowerData"); // Avg watt /kg
+				this.insertContentAtGridPosition(5, 0, this.printNumber(this.analysisData.powerData.best20min, 0), label, "w", "displayAdvancedPowerData"); // Avg watt /kg
 			}
 
 			if (_.isNumber(this.analysisData.powerData.weightedWattsPerKg)) {
@@ -76,12 +80,12 @@ export class FeaturedDataView extends AbstractDataView {
 				if (!this.analysisData.powerData.hasPowerMeter) {
 					label = "Estimated " + label;
 				}
-				this.insertContentAtGridPosition(5, 0, this.printNumber(this.analysisData.powerData.weightedWattsPerKg, 2), label, "w/kg", "displayAdvancedPowerData"); // Avg watt /kg
+				this.insertContentAtGridPosition(6, 0, this.printNumber(this.analysisData.powerData.weightedWattsPerKg, 2), label, "w/kg", "displayAdvancedPowerData"); // Avg watt /kg
 			}
 		}
 
 		if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
-			this.insertContentAtGridPosition(6, 0, this.analysisData.gradeData.gradeProfile, "Grade Profile", "", "displayAdvancedGradeData");
+			this.insertContentAtGridPosition(7, 0, this.analysisData.gradeData.gradeProfile, "Grade Profile", "", "displayAdvancedGradeData");
 		}
 
 		// Remove empty case in grid. This avoid unwanted padding on feature view rendering
