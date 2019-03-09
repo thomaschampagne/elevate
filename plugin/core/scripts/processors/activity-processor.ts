@@ -3,35 +3,30 @@ import {
 	ActivitySourceDataModel,
 	ActivityStreamsModel,
 	AnalysisDataModel,
-	AthleteModel,
+	AthleteSnapshotModel,
 	Gender,
 	UserSettingsModel
 } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
 import { VacuumProcessor } from "./vacuum-processor";
-import { AthleteModelResolver } from "@elevate/shared/resolvers";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 
 const ComputeAnalysisWorker = require("worker-loader?inline!./workers/compute-analysis.worker");
-
-interface IAnalysisDataCache {
-	athleteModel: AthleteModel;
-	analysisDataModel: AnalysisDataModel;
-}
 
 export class ActivityProcessor {
 
 	public static cachePrefix = "elevate_activity_";
 	protected appResources: AppResourcesModel;
 	protected vacuumProcessor: VacuumProcessor;
-	protected athleteModelResolver: AthleteModelResolver;
+	protected athleteModelResolver: AthleteSnapshotResolver;
 	protected zones: any;
 	protected activityInfo: ActivityInfoModel;
 	protected computeAnalysisThread: Worker;
 	protected userSettings: UserSettingsModel;
 
 	constructor(vacuumProcessor: VacuumProcessor,
-				athleteModelResolver: AthleteModelResolver,
+				athleteModelResolver: AthleteSnapshotResolver,
 				appResources: AppResourcesModel,
 				userSettings: UserSettingsModel,
 				activityInfo: ActivityInfoModel) {
@@ -44,7 +39,7 @@ export class ActivityProcessor {
 		this.zones = this.userSettings.zones;
 	}
 
-	public getAnalysisData(activityInfo: ActivityInfoModel, bounds: number[], callback: (athleteModel: AthleteModel, analysisData: AnalysisDataModel) => void): void {
+	public getAnalysisData(activityInfo: ActivityInfoModel, bounds: number[], callback: (athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel) => void): void {
 
 		if (!this.activityInfo.type) {
 			console.error("No activity type set for ActivityProcessor");
@@ -56,26 +51,26 @@ export class ActivityProcessor {
 			this.vacuumProcessor.getActivityStream(this.activityInfo, (activitySourceData: ActivitySourceDataModel, activityStream: ActivityStreamsModel, athleteWeight: number, athleteGender: Gender, hasPowerMeter: boolean) => { // Get stream on page
 
 				const onDate = (this.activityInfo.startTime) ? this.activityInfo.startTime : new Date();
-				const athleteModel: AthleteModel = this.athleteModelResolver.resolve(onDate);
+				const athleteSnapshot: AthleteSnapshotModel = this.athleteModelResolver.resolve(onDate);
 
 				// Use as many properties of the author if user 'isOwner'
 				if (!this.activityInfo.isOwner) {
-					athleteModel.athleteSettings.weight = athleteWeight;
-					athleteModel.gender = athleteGender;
+					athleteSnapshot.athleteSettings.weight = athleteWeight;
+					athleteSnapshot.gender = athleteGender;
 				}
 
-				console.log("Compute with AthleteModel", JSON.stringify(athleteModel));
+				console.log("Compute with AthleteSnapshotModel", JSON.stringify(athleteSnapshot));
 
 				// Compute data in a background thread to avoid UI locking
-				this.computeAnalysisThroughDedicatedThread(hasPowerMeter, athleteModel, activitySourceData, activityStream, bounds, (resultFromThread: AnalysisDataModel) => {
-					callback(athleteModel, resultFromThread);
+				this.computeAnalysisThroughDedicatedThread(hasPowerMeter, athleteSnapshot, activitySourceData, activityStream, bounds, (resultFromThread: AnalysisDataModel) => {
+					callback(athleteSnapshot, resultFromThread);
 				});
 			});
 		});
 
 	}
 
-	private computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteModel: AthleteModel,
+	private computeAnalysisThroughDedicatedThread(hasPowerMeter: boolean, athleteSnapshot: AthleteSnapshotModel,
 												  activitySourceData: ActivitySourceDataModel, activityStream: ActivityStreamsModel,
 												  bounds: number[], callback: (analysisData: AnalysisDataModel) => void): void {
 
@@ -91,7 +86,7 @@ export class ActivityProcessor {
 			appResources: this.appResources,
 			userSettings: this.userSettings,
 			isOwner: this.activityInfo.isOwner,
-			athleteModel: athleteModel,
+			athleteSnapshot: athleteSnapshot,
 			hasPowerMeter: hasPowerMeter,
 			activitySourceData: activitySourceData,
 			activityStream: activityStream,

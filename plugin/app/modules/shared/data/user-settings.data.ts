@@ -1,11 +1,8 @@
 import { UserSettingsModel } from "../models/user-settings";
-import { AthleteModel } from "../models/athlete";
 
 export const userSettingsData: UserSettingsModel = {
 	localStorageMustBeCleared: false,
 	systemUnit: UserSettingsModel.SYSTEM_UNIT_METRIC_KEY,
-	hasDatedAthleteSettings: true,
-	athleteModel: AthleteModel.DEFAULT_MODEL,
 	zones: {
 		speed: [0, 7, 9, 11, 13, 15, 18, 21, 24, 27, 30, 32, 34, 36, 38, 40, 42, 44, 47, 50, 60, 75, 100],
 		pace: [60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 540, 570, 720, 900],
