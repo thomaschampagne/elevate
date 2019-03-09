@@ -2,20 +2,20 @@ import * as _ from "lodash";
 import { Helper } from "../helper";
 import { EffortInfo, LeaderBoardData } from "./activity-segment-time-comparison.modifier";
 import { AbstractModifier } from "./abstract.modifier";
-import { AthleteModel } from "@elevate/shared/models";
+import { AthleteSnapshotModel } from "@elevate/shared/models";
 
 export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
 
 	protected displayRecentEffortsHRAdjustedPacePower: boolean;
-	protected athleteModel: AthleteModel;
+	protected athleteSnapshot: AthleteSnapshotModel;
 	protected athleteId: number;
 	protected segmentId: number;
 	protected hraTimeLoop: number;
 
-	constructor(displayRecentEffortsHRAdjustedPacePower: boolean, athleteModel: AthleteModel, athleteId: number, segmentId: number) {
+	constructor(displayRecentEffortsHRAdjustedPacePower: boolean, athleteSnapshot: AthleteSnapshotModel, athleteId: number, segmentId: number) {
 		super();
 		this.displayRecentEffortsHRAdjustedPacePower = displayRecentEffortsHRAdjustedPacePower;
-		this.athleteModel = athleteModel;
+		this.athleteSnapshot = athleteSnapshot;
 		this.athleteId = athleteId;
 		this.segmentId = segmentId;
 	}
@@ -139,7 +139,7 @@ export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
 					maxHR = Helper.safeMax(maxHR, r.avg_heart_rate);
 				});
 
-				const restHR = this.athleteModel.athleteSettings.restHr;
+				const restHR = this.athleteSnapshot.athleteSettings.restHr;
 				const targetHR = maxHR;
 
 				class HRValueComputed {

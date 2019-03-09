@@ -1,12 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { AthleteModel, AthleteSettingsModel, Gender, UserSettingsModel } from "@elevate/shared/models";
+import { AthleteModel, Gender } from "@elevate/shared/models";
 import { GenderModel } from "../models/gender.model";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { LoggerService } from "../../shared/services/logging/logger.service";
+import { AthleteService } from "../../shared/services/athlete/athlete.service";
 
 // TODO Give a helper guide to find dated settings (how to?)
-// TODO Show athleteModel used on strava activities
+// TODO Show athleteSnapshot used on strava activities
 
 @Component({
 	selector: "app-athlete-settings",
@@ -15,8 +16,7 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 })
 export class AthleteSettingsComponent implements OnInit {
 
-	public static readonly SYNCED_ATHLETE_MODEL_SETTING_KEY = "athleteModel";
-	public static readonly SYNCED_HAS_DATED_ATHLETE_SETTINGS_KEY = "hasDatedAthleteSettings";
+	public static readonly SYNCED_ATHLETE_MODEL_SETTING_GENDER_KEY = "gender";
 
 	public readonly GENDER_LIST: GenderModel[] = [{
 		type: Gender.MEN,
@@ -28,17 +28,15 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public athleteModel: AthleteModel;
 
-	public hasDatedAthleteSettings: boolean;
-
 	constructor(public userSettingsService: UserSettingsService,
+				public athleteService: AthleteService,
 				public activityService: ActivityService,
 				public logger: LoggerService) {
 	}
 
 	public ngOnInit(): void {
-		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
-			this.hasDatedAthleteSettings = userSettings.hasDatedAthleteSettings;
-			this.athleteModel = userSettings.athleteModel;
+		this.athleteService.fetch().then((athleteModel: AthleteModel) => {
+			this.athleteModel = athleteModel;
 		});
 	}
 
@@ -51,13 +49,9 @@ export class AthleteSettingsComponent implements OnInit {
 		this.activityService.verifyConsistencyWithAthleteSettings();
 	}
 
-	public onAthleteSettingsModelChanged(athleteSettingsModel: AthleteSettingsModel): void {
-		this.athleteModel.athleteSettings = athleteSettingsModel;
-		this.onAthleteModelChanged();
-	}
-
 	public onGenderChanged(): void {
-		this.onAthleteModelChanged();
+		this.athleteService.saveProperty(AthleteSettingsComponent.SYNCED_ATHLETE_MODEL_SETTING_GENDER_KEY, this.athleteModel.gender)
+			.then(() => this.onAthleteSettingsChanged());
 	}
 
 	public onDatedAthleteSettingsModelsChanged(): void {
@@ -66,24 +60,5 @@ export class AthleteSettingsComponent implements OnInit {
 
 	public clearLocalStorageOnNextLoad(): void {
 		this.userSettingsService.clearLocalStorageOnNextLoad().catch((error) => this.logger.error(error));
-	}
-
-	/**
-	 * Clear local storage for athlete settings (dated included) change
-	 */
-	public onAthleteModelChanged(): void {
-		this.userSettingsService.saveProperty(AthleteSettingsComponent.SYNCED_ATHLETE_MODEL_SETTING_KEY, this.athleteModel).then((userSettings: UserSettingsModel) => {
-			this.logger.debug("User settings updated to", userSettings);
-			this.onAthleteSettingsChanged();
-		}).catch((error) => this.logger.error(error));
-	}
-
-	public onHasDatedAthleteSettingsChange(): void {
-		this.userSettingsService.saveProperty(AthleteSettingsComponent.SYNCED_HAS_DATED_ATHLETE_SETTINGS_KEY, this.hasDatedAthleteSettings).then((userSettings: UserSettingsModel) => {
-			this.logger.debug("User settings updated to", userSettings);
-			this.onAthleteSettingsChanged();
-		}).catch((error) => {
-			this.logger.error(error);
-		});
 	}
 }

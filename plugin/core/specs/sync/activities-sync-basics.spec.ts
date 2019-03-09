@@ -3,18 +3,18 @@ import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/specs-tools";
 import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";
 import { ActivitiesSynchronize } from "../../scripts/processors/activities-synchronize";
-import { AthleteModelResolver } from "@elevate/shared/resolvers";
-import { ActivitiesChangesModel, SyncedActivityModel, UserSettingsModel } from "@elevate/shared/models";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
+import { ActivitiesChangesModel, AthleteModel, SyncedActivityModel, UserSettingsModel } from "@elevate/shared/models";
 import { userSettingsData } from "@elevate/shared/data";
 
 describe("ActivitiesSynchronize", () => {
 
 	let userSettingsMock: UserSettingsModel;
-	let athleteModelResolver: AthleteModelResolver;
+	let athleteModelResolver: AthleteSnapshotResolver;
 
 	beforeEach((done: Function) => {
 		userSettingsMock = _.cloneDeep(userSettingsData);
-		athleteModelResolver = new AthleteModelResolver(userSettingsMock, []);
+		athleteModelResolver = new AthleteSnapshotResolver(AthleteModel.DEFAULT_MODEL);
 		done();
 	});
 

@@ -97,9 +97,8 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 				&& this.analysisData.paceData.runningStressScore) {
 				runningStressScore = this.printNumber(this.analysisData.paceData.runningStressScore) + " <span class=\"summarySubGridTitle\">(" + this.printNumber(this.analysisData.paceData.runningStressScorePerHour, 1) + " / hour)</span>";
 			} else if (this.analysisData.paceData
-				&& !_.isNumber(this.athleteModel.athleteSettings.runningFtp)) {
-				labelRSS = "<span style='cursor: not-allowed'>" + ((this.userSettings.hasDatedAthleteSettings) ? "<i>No running FTP in dated athlete </br>settings for this activity date</i>"
-					: "<i>Please configure running FTP</br>in athlete settings </br>to see \"Running Stress Score\"</i>") + "</span>";
+				&& !_.isNumber(this.athleteSnapshot.athleteSettings.runningFtp)) {
+				labelRSS = "<span style='cursor: not-allowed'><i>No running FTP in dated athlete </br>settings for this activity date</i></span>";
 			} else {
 				labelRSS = "Unable to display </br>\"Running Stress Score\"";
 			}

@@ -7,12 +7,15 @@ import { AthleteSettingsModule } from "../athlete-settings.module";
 import * as _ from "lodash";
 import { userSettingsData } from "@elevate/shared/data";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
+import { AthleteService } from "../../shared/services/athlete/athlete.service";
+import { AthleteModel } from "@elevate/shared/models";
 
 describe("AthleteSettingsComponent", () => {
 
 	let component: AthleteSettingsComponent;
 	let fixture: ComponentFixture<AthleteSettingsComponent>;
 	let userSettingsService: UserSettingsService;
+	let athleteService: AthleteService;
 
 	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
@@ -24,8 +27,10 @@ describe("AthleteSettingsComponent", () => {
 		}).compileComponents();
 
 		userSettingsService = TestBed.get(UserSettingsService);
+		athleteService = TestBed.get(AthleteService);
 
 		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
+		spyOn(athleteService, "fetch").and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
 		done();
 	});
 

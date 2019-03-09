@@ -214,7 +214,7 @@ class Installer {
 	}
 
 	/**
-	 * Summary: Migrate old user synced athletes setting to athleteModel. Remove old user synced athletes setting.
+	 * Summary: Migrate old user synced athletes setting to athleteSnapshot. Remove old user synced athletes setting.
 	 * Create datedAthleteSettings into local storage
 	 * @returns {Promise<void>}
 	 */
@@ -231,7 +231,7 @@ class Installer {
 				if (userSettingsModel.userGender) {
 					const userGender = (userSettingsModel.userGender === "men") ? Gender.MEN : Gender.WOMEN;
 
-					const athleteModel = new AthleteModel(userGender, new AthleteSettingsModel(
+					const athleteModel = new AthleteModel(userGender, <any>new AthleteSettingsModel(
 						(_.isNumber(userSettingsModel.userMaxHr)) ? userSettingsModel.userMaxHr : null,
 						(_.isNumber(userSettingsModel.userRestHr)) ? userSettingsModel.userRestHr : null,
 						(!_.isEmpty(userSettingsModel.userLTHR)) ? userSettingsModel.userLTHR : UserLactateThresholdModel.DEFAULT_MODEL,
@@ -323,7 +323,7 @@ class Installer {
 
 					if (_.isEmpty(localDatedAthleteSettingsModels)) {
 
-						return AppStorage.getInstance().get(AppStorageType.SYNC).then((userSettingsModel: UserSettingsModel) => {
+						return AppStorage.getInstance().get(AppStorageType.SYNC).then((userSettingsModel: any) => {
 
 							const athleteSettings = (userSettingsModel && userSettingsModel.athleteModel && userSettingsModel.athleteModel.athleteSettings)
 								? userSettingsModel.athleteModel.athleteSettings : AthleteSettingsModel.DEFAULT_MODEL;
@@ -465,6 +465,109 @@ class Installer {
 		return promise;
 	}
 
+	protected migrate_to_6_11_0(): Promise<void> {
+
+		let promise: Promise<void>;
+
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.11.0")) {
+
+			console.log("Migrate to 6.11.0");
+
+			const alreadyMigratedMessage = "Abort 6.11.0 migration. Already migrated";
+
+			// Move all user settings from sync to local
+			promise = Promise.all([
+				AppStorage.getInstance().get(AppStorageType.SYNC, "userSettings"),
+				AppStorage.getInstance().get(AppStorageType.LOCAL)
+
+			]).then(result => {
+
+				if (!result[0]) {
+					throw Error(alreadyMigratedMessage);
+				}
+
+				const userSettingsModel: UserSettingsModel = <UserSettingsModel>result[0];
+				const localBrowserStorage: any = <any>result[1] || <any>{};
+
+				localBrowserStorage["userSettings"] = userSettingsModel;
+
+				return AppStorage.getInstance().set(AppStorageType.LOCAL, null, localBrowserStorage); // Update local storage
+
+			}).then(() => {
+				return AppStorage.getInstance().rm(AppStorageType.SYNC, "userSettings"); // Remove userSettings from sync
+			}).then(() => {
+
+				return Promise.all([
+					AppStorage.getInstance().get(AppStorageType.LOCAL, "userSettings"), // Get userSettings from local now
+					AppStorage.getInstance().get(AppStorageType.LOCAL, "datedAthleteSettings")
+				]);
+
+			}).then(result => {
+
+				const userSettingsModel: UserSettingsModel = <UserSettingsModel>result[0];
+				const datedAthleteSettings: DatedAthleteSettingsModel[] = <DatedAthleteSettingsModel[]>result[1];
+
+				// Create new athlete storage local
+				const athleteModel: AthleteModel = (<any>userSettingsModel).athleteModel;
+				const isSingleAthleteSettingsMode = (<any>userSettingsModel).hasDatedAthleteSettings === false;
+
+				if (isSingleAthleteSettingsMode) {
+
+					const athleteSettings: AthleteSettingsModel = (athleteModel && (<any>athleteModel).athleteSettings) ? (<any>athleteModel).athleteSettings : AthleteSettingsModel.DEFAULT_MODEL;
+
+					athleteModel.datedAthleteSettings = [
+						new DatedAthleteSettingsModel(DatedAthleteSettingsModel.DEFAULT_SINCE, athleteSettings),
+						new DatedAthleteSettingsModel(null, athleteSettings)
+					];
+
+				} else if (athleteModel) {
+					athleteModel.datedAthleteSettings = datedAthleteSettings;
+				}
+
+				// Remove deprecated keys
+				delete (<any>athleteModel).athleteSettings;
+				delete (<any>userSettingsModel).athleteModel;
+				delete (<any>userSettingsModel).hasDatedAthleteSettings;
+
+				return Promise.all([
+					AppStorage.getInstance().set(AppStorageType.LOCAL, "userSettings", userSettingsModel), // Update user settings
+					AppStorage.getInstance().set(AppStorageType.LOCAL, "athlete", athleteModel), // Save new athlete key on local storage
+					AppStorage.getInstance().rm(AppStorageType.LOCAL, "datedAthleteSettings"), // datedAthleteSettings are now stored in athlete storage
+				]);
+
+			}).then(() => {
+				return AppStorage.getInstance().get(AppStorageType.LOCAL, "syncedActivities");
+			}).then((syncedActivities: SyncedActivityModel[]) => {
+
+				// Rename athleteModel to athleteSnapshot for each activity
+				_.forEach(syncedActivities, (activity: SyncedActivityModel) => {
+					activity.athleteSnapshot = (<any>activity).athleteModel;
+					delete (<any>activity).athleteModel;
+				});
+
+				return AppStorage.getInstance().set(AppStorageType.LOCAL, "syncedActivities", syncedActivities);
+			}).catch(error => {
+
+				if (error.message === alreadyMigratedMessage) {
+					console.log(alreadyMigratedMessage);
+				} else {
+					console.error(error);
+				}
+
+				promise = Promise.resolve();
+
+			});
+
+		} else {
+
+			console.log("Skip migrate to 6.11.0");
+
+			promise = Promise.resolve();
+		}
+
+		return promise;
+	}
+
 	protected handleUpdate(): Promise<void> {
 
 		console.log("Updated from " + this.previousVersion + " to " + this.currentVersion);
@@ -488,6 +591,8 @@ class Installer {
 			return this.migrate_to_6_9_0();
 		}).then(() => {
 			return this.migrate_to_6_10_0();
+		}).then(() => {
+			return this.migrate_to_6_11_0();
 		}).catch(error => console.error(error));
 
 	}
