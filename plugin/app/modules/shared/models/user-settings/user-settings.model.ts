@@ -1,5 +1,4 @@
 import { UserZonesModel } from "./user-zones.model";
-import { AthleteModel } from "../athlete";
 
 export class UserSettingsModel {
 
@@ -8,8 +7,6 @@ export class UserSettingsModel {
 
 	public localStorageMustBeCleared: boolean;
 	public systemUnit: string;
-	public hasDatedAthleteSettings: boolean;
-	public athleteModel: AthleteModel;
 	public zones: UserZonesModel;
 	public remoteLinks: boolean;
 	public defaultLeaderBoardFilter: string;

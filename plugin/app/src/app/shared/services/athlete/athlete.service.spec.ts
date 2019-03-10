@@ -1,15 +1,16 @@
 import { TestBed } from "@angular/core/testing";
-import { DatedAthleteSettingsService } from "./dated-athlete-settings.service";
-import { AthleteSettingsModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
+import { AthleteService } from "./athlete.service";
+import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel, Gender } from "@elevate/shared/models";
 import * as _ from "lodash";
-import { DatedAthleteSettingsDao } from "../../dao/dated-athlete-settings/dated-athlete-settings.dao";
+import { AthleteDao } from "../../dao/athlete/athlete-dao.service";
 import { AppError } from "../../models/app-error.model";
 import { MockedDataStore } from "../../data-store/impl/spec/mocked-data-store.service";
 import { DataStore } from "../../data-store/data-store";
 
-describe("DatedAthleteSettingsService", () => {
+describe("AthleteService", () => {
 
-	let service: DatedAthleteSettingsService = null;
+	let service: AthleteService = null;
+	let defaultAthleteModel: AthleteModel = null;
 
 	let since;
 	let until;
@@ -20,7 +21,7 @@ describe("DatedAthleteSettingsService", () => {
 	let runningFTP;
 	let swimFTP;
 	let weight;
-	let mockedDataStore: MockedDataStore<DatedAthleteSettingsModel>;
+	let mockedDataStore: MockedDataStore<AthleteModel>;
 
 	beforeEach((done: Function) => {
 
@@ -28,14 +29,16 @@ describe("DatedAthleteSettingsService", () => {
 
 		TestBed.configureTestingModule({
 			providers: [
-				DatedAthleteSettingsService,
-				DatedAthleteSettingsDao,
+				AthleteService,
+				AthleteDao,
 				{provide: DataStore, useValue: mockedDataStore}
 			]
 		});
 
 		// Retrieve injected service
-		service = TestBed.get(DatedAthleteSettingsService);
+		service = TestBed.get(AthleteService);
+
+		defaultAthleteModel = new AthleteModel(Gender.MEN, null);
 
 		since = new Date();
 		until = new Date();
@@ -60,34 +63,33 @@ describe("DatedAthleteSettingsService", () => {
 
 	describe("should fetch", () => {
 
-		it("should fetch and sort descending existing 'dated athlete settings'", (done: Function) => {
+		it("should fetch and sort descending existing 'dated athlete settings' from athlete model", (done: Function) => {
 
 			// Given
 			const expectedApsModel_03 = new DatedAthleteSettingsModel("2018-06-01", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75));
 			const expectedApsModel_02 = new DatedAthleteSettingsModel("2018-02-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76));
 			const expectedApsModel_01 = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
-			const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
+			defaultAthleteModel.datedAthleteSettings = [
 				expectedApsModel_03,
 				expectedApsModel_01, // Introduce not sorted period between 01/02
 				expectedApsModel_02, // Introduce not sorted period between 01/02
 			];
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
-
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.fetch();
+			const promise: Promise<AthleteModel> = service.fetch();
 
 			// Then
-			promise.then((result: DatedAthleteSettingsModel[]) => {
+			promise.then((athleteModel: AthleteModel) => {
 
-				expect(result).not.toBeNull();
+				expect(athleteModel).not.toBeNull();
 				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
 
-				expect(result[0]).toEqual(expectedApsModel_03);
-				expect(result[1]).toEqual(expectedApsModel_02);
-				expect(result[2]).toEqual(expectedApsModel_01);
+				expect(athleteModel.datedAthleteSettings[0]).toEqual(expectedApsModel_03);
+				expect(athleteModel.datedAthleteSettings[1]).toEqual(expectedApsModel_02);
+				expect(athleteModel.datedAthleteSettings[2]).toEqual(expectedApsModel_01);
 
 				done();
 
@@ -103,19 +105,20 @@ describe("DatedAthleteSettingsService", () => {
 			// Given
 			const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [];
 
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
+			defaultAthleteModel.datedAthleteSettings = existingPeriodAthleteSettings;
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.fetch();
+			const promise: Promise<AthleteModel> = service.fetch();
 
 			// Then
-			promise.then((result: DatedAthleteSettingsModel[]) => {
+			promise.then((athleteModel: AthleteModel) => {
 
-				expect(result).not.toBeNull();
+				expect(athleteModel).not.toBeNull();
 				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-				expect(result).toEqual(existingPeriodAthleteSettings);
+				expect(athleteModel.datedAthleteSettings).toEqual(existingPeriodAthleteSettings);
 				done();
 
 			}, error => {
@@ -130,14 +133,14 @@ describe("DatedAthleteSettingsService", () => {
 
 			// Given
 			const errorMessage = "Houston we have a problem";
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.returnValue(Promise.reject(errorMessage));
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.returnValue(Promise.reject(errorMessage));
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.fetch();
+			const promise: Promise<AthleteModel> = service.fetch();
 
 			// Then
-			promise.then((result: DatedAthleteSettingsModel[]) => {
-				expect(result).toBeNull();
+			promise.then((athleteModel: AthleteModel) => {
+				expect(athleteModel).toBeNull();
 				expect(false).toBeTruthy("Whoops! I should not be here!");
 				done();
 
@@ -166,29 +169,31 @@ describe("DatedAthleteSettingsService", () => {
 				new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
+			defaultAthleteModel.datedAthleteSettings = existingPeriodAthleteSettings;
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
 			const athletePeriodSettingsToAdd = new DatedAthleteSettingsModel("2018-06-03", new AthleteSettingsModel(maxHr,
 				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight));
 
-			const expectedPeriodAthleteSettings = _.flatten([athletePeriodSettingsToAdd, existingPeriodAthleteSettings]);
+			const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
+			expectedAthleteModel.datedAthleteSettings = _.flatten([athletePeriodSettingsToAdd, existingPeriodAthleteSettings]);
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 			const validateSpy = spyOn(service, "validate").and.callThrough();
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save").and.callThrough();
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.add(athletePeriodSettingsToAdd);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.addSettings(athletePeriodSettingsToAdd);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
 
 				expect(result).not.toBeNull();
-				expect(result).toEqual(expectedPeriodAthleteSettings);
+				expect(result).toEqual(expectedAthleteModel.datedAthleteSettings);
 				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
 				expect(validateSpy).toHaveBeenCalledTimes(1);
 				expect(saveDaoSpy).toHaveBeenCalledTimes(1);
-				expect(saveDaoSpy).toHaveBeenCalledWith(expectedPeriodAthleteSettings);
+				expect(saveDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 
 				done();
 
@@ -208,29 +213,31 @@ describe("DatedAthleteSettingsService", () => {
 				new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
 			];
 
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
+			defaultAthleteModel.datedAthleteSettings = existingPeriodAthleteSettings;
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
 			const athletePeriodSettingsToAdd = new DatedAthleteSettingsModel("2018-06-03", new AthleteSettingsModel(maxHr,
 				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight));
 
-			const expectedPeriodAthleteSettings = _.flatten([athletePeriodSettingsToAdd, existingPeriodAthleteSettings]);
+			const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
+			expectedAthleteModel.datedAthleteSettings = _.flatten([athletePeriodSettingsToAdd, existingPeriodAthleteSettings]);
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 			const validateSpy = spyOn(service, "validate").and.callThrough();
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save").and.callThrough();
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.add(athletePeriodSettingsToAdd);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.addSettings(athletePeriodSettingsToAdd);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
 
 				expect(result).not.toBeNull();
-				expect(result).toEqual(expectedPeriodAthleteSettings);
+				expect(result).toEqual(expectedAthleteModel.datedAthleteSettings);
 				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
 				expect(validateSpy).toHaveBeenCalledTimes(1);
 				expect(saveDaoSpy).toHaveBeenCalledTimes(1);
-				expect(saveDaoSpy).toHaveBeenCalledWith(expectedPeriodAthleteSettings);
+				expect(saveDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 
 				done();
 
@@ -247,7 +254,8 @@ describe("DatedAthleteSettingsService", () => {
 			// Given
 			const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [];
 
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
+			defaultAthleteModel.datedAthleteSettings = existingPeriodAthleteSettings;
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
 			const athletePeriodSettingsToAdd = new DatedAthleteSettingsModel("2018-06-03", new AthleteSettingsModel(maxHr,
 				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight));
@@ -258,12 +266,15 @@ describe("DatedAthleteSettingsService", () => {
 			foreverDatedSettings.since = null;
 			expectedPeriodAthleteSettings.push(foreverDatedSettings);
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
+			expectedAthleteModel.datedAthleteSettings = expectedPeriodAthleteSettings;
+
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 			const validateSpy = spyOn(service, "validate").and.callThrough();
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save").and.callThrough();
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.add(athletePeriodSettingsToAdd);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.addSettings(athletePeriodSettingsToAdd);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
@@ -273,7 +284,7 @@ describe("DatedAthleteSettingsService", () => {
 				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
 				expect(validateSpy).toHaveBeenCalledTimes(1);
 				expect(saveDaoSpy).toHaveBeenCalledTimes(1);
-				expect(saveDaoSpy).toHaveBeenCalledWith(expectedPeriodAthleteSettings);
+				expect(saveDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 
 				done();
 
@@ -289,24 +300,24 @@ describe("DatedAthleteSettingsService", () => {
 
 			// Given
 			const addAtDate = "2018-04-15";
-			const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
+			defaultAthleteModel.datedAthleteSettings = [
 				new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
 				new DatedAthleteSettingsModel(addAtDate, new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
 				new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 				new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
 			const athletePeriodSettingsToAdd = new DatedAthleteSettingsModel(addAtDate, new AthleteSettingsModel(maxHr,
 				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight));
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 			const validateSpy = spyOn(service, "validate").and.callThrough();
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save").and.callThrough();
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.add(athletePeriodSettingsToAdd);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.addSettings(athletePeriodSettingsToAdd);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
@@ -331,25 +342,24 @@ describe("DatedAthleteSettingsService", () => {
 		it("should reject add of invalid dated athlete settings date", (done: Function) => {
 
 			// Given
-			const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
+			defaultAthleteModel.datedAthleteSettings = [
 				new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
 				new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
 				new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 				new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
-
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
 			const invalidDate = "2018-99-99";
 			const athletePeriodSettingsToAdd = new DatedAthleteSettingsModel(invalidDate, new AthleteSettingsModel(maxHr,
 				restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight));
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 			const validateSpy = spyOn(service, "validate").and.callThrough();
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save").and.callThrough();
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.add(athletePeriodSettingsToAdd);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.addSettings(athletePeriodSettingsToAdd);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
@@ -375,7 +385,7 @@ describe("DatedAthleteSettingsService", () => {
 
 	describe("should save", () => {
 
-		it("should save several dated athlete settings", (done: Function) => {
+		it("should save several dated athlete settings of AthleteModel", (done: Function) => {
 
 			// Given
 			const expectedPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
@@ -387,18 +397,23 @@ describe("DatedAthleteSettingsService", () => {
 
 			const validateSpy = spyOn(service, "validate").and.returnValue(Promise.resolve());
 
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save")
-				.and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
+			const athleteModelToSave = _.cloneDeep(defaultAthleteModel);
+			athleteModelToSave.datedAthleteSettings = expectedPeriodAthleteSettings;
+
+			const expectedAthleteModel = _.cloneDeep(athleteModelToSave);
+
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save")
+				.and.returnValue(Promise.resolve(athleteModelToSave));
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.save(expectedPeriodAthleteSettings);
+			const promise: Promise<AthleteModel> = service.save(athleteModelToSave);
 
 			// Then
-			promise.then((result: DatedAthleteSettingsModel[]) => {
+			promise.then((athleteModel: AthleteModel) => {
 
-				expect(result).not.toBeNull();
+				expect(athleteModel).not.toBeNull();
 				expect(validateSpy).toHaveBeenCalledTimes(1);
-				expect(saveDaoSpy).toHaveBeenCalledWith(expectedPeriodAthleteSettings);
+				expect(saveDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 				expect(saveDaoSpy).toHaveBeenCalledTimes(1);
 
 				done();
@@ -416,31 +431,30 @@ describe("DatedAthleteSettingsService", () => {
 
 	describe("should reset", () => {
 
-		it("should reset dated athlete settings", (done: Function) => {
+		it("should reset dated athlete settings of AthleteModel", (done: Function) => {
 
 			// Given
-			const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
+			defaultAthleteModel.datedAthleteSettings = [
 				new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
 				new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
 				new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 				new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
-
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save").and.callThrough();
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save").and.callThrough();
 			const validateSpy = spyOn(service, "validate").and.callThrough();
-			const addDaoSpy = spyOn(service, "add").and.callThrough();
+			const addDaoSpy = spyOn(service, "addSettings").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.reset();
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.resetSettings();
 
 			// Then
-			promise.then((result: DatedAthleteSettingsModel[]) => {
+			promise.then((datedAthleteSettings: DatedAthleteSettingsModel[]) => {
 
-				expect(result).not.toBeNull();
-				expect(result.length).toEqual(2);
-				expect(_.first(result)).toEqual(DatedAthleteSettingsModel.DEFAULT_MODEL);
+				expect(datedAthleteSettings).not.toBeNull();
+				expect(datedAthleteSettings.length).toEqual(2);
+				expect(_.first(datedAthleteSettings)).toEqual(DatedAthleteSettingsModel.DEFAULT_MODEL);
 				expect(validateSpy).toHaveBeenCalledTimes(1);
 				expect(addDaoSpy).toHaveBeenCalledTimes(1);
 				expect(saveDaoSpy).toHaveBeenCalledTimes(2);
@@ -469,25 +483,27 @@ describe("DatedAthleteSettingsService", () => {
 			const datedAthleteSettingsModel_03 = new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 			const datedAthleteSettingsModel_04 = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 
-			const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
+			defaultAthleteModel.datedAthleteSettings = [
 				datedAthleteSettingsModel_01,
 				datedAthleteSettingsModel_02,
 				datedAthleteSettingsModel_03,
 				datedAthleteSettingsModel_04
 			];
-
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
 			const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(editAtDate, new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99));
 			const expectedEditedPeriodAthleteSettings = [datedAthleteSettingsModel_01, expectedEditedDatedAthleteSettings,
 				datedAthleteSettingsModel_03, datedAthleteSettingsModel_04];
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
+			expectedAthleteModel.datedAthleteSettings = expectedEditedPeriodAthleteSettings;
+
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 			const validateSpy = spyOn(service, "validate").and.callThrough();
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save").and.callThrough();
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.edit(editAtDate, expectedEditedDatedAthleteSettings);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.editSettings(editAtDate, expectedEditedDatedAthleteSettings);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
@@ -497,7 +513,7 @@ describe("DatedAthleteSettingsService", () => {
 				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
 				expect(validateSpy).toHaveBeenCalledTimes(1);
 				expect(saveDaoSpy).toHaveBeenCalledTimes(1);
-				expect(saveDaoSpy).toHaveBeenCalledWith(expectedEditedPeriodAthleteSettings);
+				expect(saveDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 
 				done();
 
@@ -517,14 +533,13 @@ describe("DatedAthleteSettingsService", () => {
 			const datedAthleteSettingsModel_03 = new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 			const datedAthleteSettingsModel_04 = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 
-			const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
+			defaultAthleteModel.datedAthleteSettings = [
 				datedAthleteSettingsModel_01,
 				datedAthleteSettingsModel_02,
 				datedAthleteSettingsModel_03,
 				datedAthleteSettingsModel_04
 			];
-
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
 			const expectedNewDate = "2018-03-01";
 			const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(expectedNewDate, new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99));
@@ -532,12 +547,15 @@ describe("DatedAthleteSettingsService", () => {
 			const expectedEditedPeriodAthleteSettings = [datedAthleteSettingsModel_01, expectedEditedDatedAthleteSettings,
 				datedAthleteSettingsModel_03, datedAthleteSettingsModel_04];
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
+			expectedAthleteModel.datedAthleteSettings = expectedEditedPeriodAthleteSettings;
+
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 			const validateSpy = spyOn(service, "validate").and.callThrough();
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save").and.callThrough();
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.edit(editAtDate, expectedEditedDatedAthleteSettings);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.editSettings(editAtDate, expectedEditedDatedAthleteSettings);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
@@ -547,7 +565,7 @@ describe("DatedAthleteSettingsService", () => {
 				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
 				expect(validateSpy).toHaveBeenCalledTimes(1);
 				expect(saveDaoSpy).toHaveBeenCalledTimes(1);
-				expect(saveDaoSpy).toHaveBeenCalledWith(expectedEditedPeriodAthleteSettings);
+				expect(saveDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 
 				done();
 
@@ -564,21 +582,23 @@ describe("DatedAthleteSettingsService", () => {
 			const editAtDate = null;
 			const foreverDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 
-			const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
+			defaultAthleteModel.datedAthleteSettings = [
 				foreverDatedAthleteSettingsModel
 			];
-
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
 			const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(editAtDate, new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99));
 			const expectedEditedPeriodAthleteSettings = [expectedEditedDatedAthleteSettings];
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
+			expectedAthleteModel.datedAthleteSettings = expectedEditedPeriodAthleteSettings;
+
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 			const validateSpy = spyOn(service, "validate").and.callThrough();
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save").and.callThrough();
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.edit(editAtDate, expectedEditedDatedAthleteSettings);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.editSettings(editAtDate, expectedEditedDatedAthleteSettings);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
@@ -588,7 +608,7 @@ describe("DatedAthleteSettingsService", () => {
 				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
 				expect(validateSpy).toHaveBeenCalledTimes(1);
 				expect(saveDaoSpy).toHaveBeenCalledTimes(1);
-				expect(saveDaoSpy).toHaveBeenCalledWith(expectedEditedPeriodAthleteSettings);
+				expect(saveDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 
 				done();
 
@@ -609,24 +629,23 @@ describe("DatedAthleteSettingsService", () => {
 			const datedAthleteSettingsModel_03 = new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 			const datedAthleteSettingsModel_04 = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 
-			const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
+			defaultAthleteModel.datedAthleteSettings = [
 				datedAthleteSettingsModel_01,
 				datedAthleteSettingsModel_02,
 				datedAthleteSettingsModel_03,
 				datedAthleteSettingsModel_04
 			];
-
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
 			const expectedNewDate = "2018-03-01";
 			const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(expectedNewDate, new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99));
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 			const validateSpy = spyOn(service, "validate").and.callThrough();
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save").and.callThrough();
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.edit(fakeEditAtDate, expectedEditedDatedAthleteSettings);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.editSettings(fakeEditAtDate, expectedEditedDatedAthleteSettings);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
@@ -657,23 +676,22 @@ describe("DatedAthleteSettingsService", () => {
 			const datedAthleteSettingsModel_03 = new DatedAthleteSettingsModel(existingDatedSettingsDate, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 			const datedAthleteSettingsModel_04 = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 
-			const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
+			defaultAthleteModel.datedAthleteSettings = [
 				datedAthleteSettingsModel_01,
 				datedAthleteSettingsModel_02,
 				datedAthleteSettingsModel_03,
 				datedAthleteSettingsModel_04
 			];
-
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
 			const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(existingDatedSettingsDate, new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99));
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 			const validateSpy = spyOn(service, "validate").and.callThrough();
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save").and.callThrough();
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.edit(editAtDate, expectedEditedDatedAthleteSettings);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.editSettings(editAtDate, expectedEditedDatedAthleteSettings);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
@@ -704,23 +722,22 @@ describe("DatedAthleteSettingsService", () => {
 			const datedAthleteSettingsModel_03 = new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 			const datedAthleteSettingsModel_04 = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78));
 
-			const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
+			defaultAthleteModel.datedAthleteSettings = [
 				datedAthleteSettingsModel_01,
 				datedAthleteSettingsModel_02,
 				datedAthleteSettingsModel_03,
 				datedAthleteSettingsModel_04
 			];
-
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
 			const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(invalidDate, new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99));
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 			const validateSpy = spyOn(service, "validate").and.callThrough();
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save").and.callThrough();
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.edit(invalidDate, expectedEditedDatedAthleteSettings);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.editSettings(invalidDate, expectedEditedDatedAthleteSettings);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
@@ -757,17 +774,21 @@ describe("DatedAthleteSettingsService", () => {
 				new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
 			];
 
-			mockedDataStore.initWithVector(existingPeriodAthleteSettings);
+			defaultAthleteModel.datedAthleteSettings = existingPeriodAthleteSettings;
+			mockedDataStore.initWithObject(defaultAthleteModel);
 
 			const expectedPeriodAthleteSettings = _.cloneDeep(existingPeriodAthleteSettings);
 			expectedPeriodAthleteSettings.splice(removeDatedAthleteSettingsIndex, 1);
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch").and.callThrough();
+			const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
+			expectedAthleteModel.datedAthleteSettings = expectedPeriodAthleteSettings;
+
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch").and.callThrough();
 			const validateSpy = spyOn(service, "validate").and.callThrough();
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save").and.callThrough();
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save").and.callThrough();
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.remove(removeSinceIdentifier);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.removeSettings(removeSinceIdentifier);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
@@ -776,7 +797,7 @@ describe("DatedAthleteSettingsService", () => {
 				expect(result).toEqual(expectedPeriodAthleteSettings);
 				expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
 				expect(validateSpy).toHaveBeenCalledTimes(1);
-				expect(saveDaoSpy).toHaveBeenCalledWith(expectedPeriodAthleteSettings);
+				expect(saveDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 				expect(saveDaoSpy).toHaveBeenCalledTimes(1);
 
 				done();
@@ -800,16 +821,16 @@ describe("DatedAthleteSettingsService", () => {
 
 			const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch")
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch")
 				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
 
 			const validateSpy = spyOn(service, "validate").and.callThrough();
 
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save")
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save")
 				.and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.remove(removeSinceIdentifier);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.removeSettings(removeSinceIdentifier);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
@@ -840,16 +861,16 @@ describe("DatedAthleteSettingsService", () => {
 
 			const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch")
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch")
 				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
 
 			const validateSpy = spyOn(service, "validate").and.callThrough();
 
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save")
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save")
 				.and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.remove(removeSinceIdentifier);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.removeSettings(removeSinceIdentifier);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {
@@ -883,16 +904,14 @@ describe("DatedAthleteSettingsService", () => {
 
 			const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
 
-			const fetchDaoSpy = spyOn(service.datedAthleteSettingsDao, "fetch")
+			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch")
 				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
 
-			const validateSpy = spyOn(service, "validate").and.callThrough();
-
-			const saveDaoSpy = spyOn(service.datedAthleteSettingsDao, "save")
+			const saveDaoSpy = spyOn(service.athleteModelDao, "save")
 				.and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
 
 			// When
-			const promise: Promise<DatedAthleteSettingsModel[]> = service.remove(removeSinceIdentifier);
+			const promise: Promise<DatedAthleteSettingsModel[]> = service.removeSettings(removeSinceIdentifier);
 
 			// Then
 			promise.then((result: DatedAthleteSettingsModel[]) => {

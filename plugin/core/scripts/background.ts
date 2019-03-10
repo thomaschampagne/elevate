@@ -1,4 +1,4 @@
-import { AppStorage } from "./app-storage";
+import { BrowserStorage } from "./browser-storage";
 import * as _ from "lodash";
 import { CoreMessages, SyncResultModel } from "@elevate/shared/models";
 import { Constant } from "@elevate/shared/constants";
@@ -50,8 +50,8 @@ export class Background {
 					this.reloadBrowserTab(request.params.sourceTabId);
 					break;
 
-				case AppStorage.ON_GET_MESSAGE:
-					AppStorage.getInstance().get(request.params.storage, request.params.key).then(
+				case BrowserStorage.ON_GET_MESSAGE:
+					BrowserStorage.getInstance().get(request.params.storage, request.params.key).then(
 						result => sendResponse({data: result}),
 						error => {
 							console.error(error);
@@ -59,8 +59,8 @@ export class Background {
 					);
 					break;
 
-				case AppStorage.ON_SET_MESSAGE:
-					AppStorage.getInstance().set(request.params.storage, request.params.key, request.params.value).then(
+				case BrowserStorage.ON_SET_MESSAGE:
+					BrowserStorage.getInstance().set(request.params.storage, request.params.key, request.params.value).then(
 						() => sendResponse({message: request.params.key + " has been set to " + request.params.value}),
 						error => {
 							console.error(error);
@@ -68,8 +68,8 @@ export class Background {
 					);
 					break;
 
-				case AppStorage.ON_RM_MESSAGE:
-					AppStorage.getInstance().rm(request.params.storage, request.params.key).then(
+				case BrowserStorage.ON_RM_MESSAGE:
+					BrowserStorage.getInstance().rm(request.params.storage, request.params.key).then(
 						() => sendResponse({message: request.params.key + " has been removed"}),
 						error => {
 							console.error(error);
@@ -77,8 +77,8 @@ export class Background {
 					);
 					break;
 
-				case AppStorage.ON_CLEAR_MESSAGE:
-					AppStorage.getInstance().clear(request.params.storage).then(
+				case BrowserStorage.ON_CLEAR_MESSAGE:
+					BrowserStorage.getInstance().clear(request.params.storage).then(
 						() => sendResponse({message: request.params.storage + " has been cleared"}),
 						error => {
 							console.error(error);
@@ -86,8 +86,8 @@ export class Background {
 					);
 					break;
 
-				case AppStorage.ON_USAGE_MESSAGE:
-					AppStorage.getInstance().usage(request.params.storage).then(
+				case BrowserStorage.ON_USAGE_MESSAGE:
+					BrowserStorage.getInstance().usage(request.params.storage).then(
 						result => sendResponse({data: result}),
 						error => {
 							console.error(error);

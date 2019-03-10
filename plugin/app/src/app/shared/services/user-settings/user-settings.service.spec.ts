@@ -91,39 +91,6 @@ describe("UserSettingsService", () => {
 
 	});
 
-	it("should save a nested user setting property", (done: Function) => {
-
-		// Given
-		const path: string[] = ["athleteModel", "athleteSettings", "lthr", "default"];
-		const value = 175;
-		const expectedSettings: UserSettingsModel = _.cloneDeep(userSettingsData);
-		expectedSettings.athleteModel.athleteSettings.lthr.default = value;
-
-		const savedNestedDaoSpy = spyOn(userSettingsService.userSettingsDao, "upsertProperty")
-			.and.returnValue(Promise.resolve(expectedSettings));
-
-		// When
-		const promiseSave: Promise<UserSettingsModel> = userSettingsService.saveProperty(path, value);
-
-		// Then
-		promiseSave.then((result: UserSettingsModel) => {
-
-			expect(result).not.toBeNull();
-			expect(result.athleteModel.athleteSettings.lthr.default).toEqual(value);
-			expect(result).toEqual(expectedSettings);
-			expect(result).not.toEqual(userSettingsData);
-			expect(result.athleteModel.athleteSettings.lthr.default).not.toEqual(userSettingsData.athleteModel.athleteSettings.lthr.default);
-			expect(savedNestedDaoSpy).toHaveBeenCalledTimes(1);
-			expect(savedNestedDaoSpy).toHaveBeenCalledWith(path, value);
-
-			done();
-
-		}, error => {
-			expect(error).toBeNull();
-			done();
-		});
-
-	});
 
 	it("should mark local storage to be clear", (done: Function) => {
 

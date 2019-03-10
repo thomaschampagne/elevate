@@ -1,19 +1,3 @@
-<mat-toolbar>
-	<span class="mat-body-1">
-		<span *ngIf="!hasDatedAthleteSettings"><strong>Single Athlete Settings</strong> are <strong>active</strong>.
-			Enable <strong>Dated Athlete Settings</strong> for more reliable stats.</span>
-
-		<span *ngIf="hasDatedAthleteSettings"><strong>Dated Athlete Settings</strong> are <strong>active</strong>.
-			You can enable <strong>Single Athlete Settings</strong> by disabling <strong>Dated Athlete Settings</strong>.
-		</span>
-	</span>
-	<span fxFlex></span>
-	<mat-slide-toggle [(ngModel)]="hasDatedAthleteSettings" (change)="onHasDatedAthleteSettingsChange()"
-					  class="mat-body-1">
-		Dated Athlete Settings
-	</mat-slide-toggle>
-</mat-toolbar>
-
 <!--Gender-->
 <mat-card class="gender-card" *ngIf="(athleteModel && athleteModel.gender)">
 	<mat-card-title>
@@ -35,11 +19,6 @@
 	</mat-card-content>
 </mat-card>
 
-<!--Single athlete settings form when athlete hasn't DatedAthleteSettings ON-->
-<app-athlete-settings-form *ngIf="(hasDatedAthleteSettings !== true && athleteModel && athleteModel.athleteSettings)"
-						   [athleteSettingsModel]="athleteModel.athleteSettings"
-						   (athleteSettingsModelChange)="onAthleteSettingsModelChanged($event)"></app-athlete-settings-form>
-
 <!--Dated Athlete Settings manager component-->
-<app-dated-athlete-settings-manager *ngIf="(hasDatedAthleteSettings === true)"
-									(datedAthleteSettingsModelsChange)="onDatedAthleteSettingsModelsChanged()"></app-dated-athlete-settings-manager>
+<app-dated-athlete-settings-manager
+	(datedAthleteSettingsModelsChange)="onDatedAthleteSettingsModelsChanged()"></app-dated-athlete-settings-manager>

@@ -4,7 +4,7 @@ import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { MatDialog, MatSnackBar } from "@angular/material";
 import { SyncService } from "../shared/services/sync/sync.service";
-import { DatedAthleteSettingsService } from "../shared/services/dated-athlete-settings/dated-athlete-settings.service";
+import { AthleteService } from "../shared/services/athlete/athlete.service";
 
 @Component({
 	selector: "app-advanced-menu",
@@ -14,7 +14,7 @@ import { DatedAthleteSettingsService } from "../shared/services/dated-athlete-se
 export class AdvancedMenuComponent implements OnInit {
 
 	constructor(public userSettingsService: UserSettingsService,
-				public datedAthleteSettingsService: DatedAthleteSettingsService,
+				public athleteService: AthleteService,
 				public syncService: SyncService,
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar) {
@@ -107,7 +107,7 @@ export class AdvancedMenuComponent implements OnInit {
 
 		const data: ConfirmDialogDataModel = {
 			title: "Reset settings",
-			content: "This will reset your settings to defaults including: single or dated athlete settings, zones settings and global settings. Are you sure to perform this action?"
+			content: "This will reset your settings to defaults including: dated athlete settings, zones settings and global settings. Are you sure to perform this action?"
 		};
 
 		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -120,7 +120,7 @@ export class AdvancedMenuComponent implements OnInit {
 			if (confirm) {
 				Promise.all([
 					this.userSettingsService.reset(),
-					this.datedAthleteSettingsService.reset(),
+					this.athleteService.resetSettings(),
 					this.userSettingsService.clearLocalStorageOnNextLoad()
 				]).then(() => {
 					this.snackBar.open("Settings have been reset", "Close");
