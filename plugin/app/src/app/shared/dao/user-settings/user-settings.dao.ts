@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AppStorageType, UserSettingsModel } from "@elevate/shared/models";
+import { UserSettingsModel } from "@elevate/shared/models";
 import { BaseDao } from "../base.dao";
 import { StorageLocationModel } from "../../data-store/storage-location.model";
 import { userSettingsData } from "@elevate/shared/data";
@@ -7,7 +7,7 @@ import { userSettingsData } from "@elevate/shared/data";
 @Injectable()
 export class UserSettingsDao extends BaseDao<UserSettingsModel> {
 
-	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel(AppStorageType.LOCAL, "userSettings");
+	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("userSettings");
 	public static readonly DEFAULT_STORAGE_VALUE: UserSettingsModel = userSettingsData;
 
 	public getStorageLocation(): StorageLocationModel {

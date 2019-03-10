@@ -2,9 +2,10 @@ import * as _ from "lodash";
 import { Loader } from "../modules/loader";
 import { AppResourcesModel } from "./models/app-resources.model";
 import { StartCoreDataModel } from "./models/start-core-data.model";
-import { AppStorageType, CoreMessages, UserSettingsModel } from "@elevate/shared/models";
+import { CoreMessages, UserSettingsModel } from "@elevate/shared/models";
 import { userSettingsData } from "@elevate/shared/data";
-import { AppStorage } from "./app-storage";
+import { BrowserStorage } from "./browser-storage";
+import { BrowserStorageType } from "./models/browser-storage-type.enum";
 
 export class Content {
 
@@ -54,7 +55,7 @@ export class Content {
 			return;
 		}
 
-		AppStorage.getInstance().get<any>(AppStorageType.LOCAL).then(result => {
+		BrowserStorage.getInstance().get<any>(BrowserStorageType.LOCAL).then(result => {
 
 			let userSettingsModel: UserSettingsModel;
 

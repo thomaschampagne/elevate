@@ -1,14 +1,7 @@
 import * as _ from "lodash";
 import { Helper } from "./helper";
-import {
-	ActivityInfoModel,
-	AppStorageType,
-	AthleteModel,
-	ReleaseNoteModel,
-	SyncResultModel,
-	UserSettingsModel
-} from "@elevate/shared/models";
-import { AppStorage } from "./app-storage";
+import { ActivityInfoModel, AthleteModel, ReleaseNoteModel, SyncResultModel, UserSettingsModel } from "@elevate/shared/models";
+import { BrowserStorage } from "./browser-storage";
 import { CoreEnv } from "../config/core-env";
 import { AppResourcesModel } from "./models/app-resources.model";
 import { AthleteUpdateModel } from "./models/athlete-update.model";
@@ -51,6 +44,7 @@ import * as Cookies from "js-cookie";
 import { ActivitiesChronologicalFeedModifier } from "./modifiers/activities-chronological-feed-modifier";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { releaseNotesData } from "@elevate/shared/data";
+import { BrowserStorageType } from "./models/browser-storage-type.enum";
 
 export class Elevate {
 
@@ -102,7 +96,7 @@ export class Elevate {
 
 			if (this.userSettings.localStorageMustBeCleared) {
 				localStorage.clear();
-				AppStorage.getInstance().upsertProperty<UserSettingsModel, boolean>(AppStorageType.LOCAL, ["userSettings", "localStorageMustBeCleared"], false);
+				BrowserStorage.getInstance().upsertProperty<UserSettingsModel, boolean>(BrowserStorageType.LOCAL, ["userSettings", "localStorageMustBeCleared"], false);
 			}
 
 			// Init "elevate bridge"
@@ -154,8 +148,8 @@ export class Elevate {
 
 		this.extensionId = this.appResources.extensionId;
 
-		if (!AppStorage.getInstance().hasExtensionId()) {
-			AppStorage.getInstance().setExtensionId(this.extensionId);
+		if (!BrowserStorage.getInstance().hasExtensionId()) {
+			BrowserStorage.getInstance().setExtensionId(this.extensionId);
 		}
 
 		return this.initAthleteModelResolver().then(() => {
@@ -196,7 +190,7 @@ export class Elevate {
 	public createAthleteModelResolver(): Promise<AthleteSnapshotResolver> {
 
 		return new Promise((resolve, reject) => {
-			AppStorage.getInstance().get<AthleteModel>(AppStorageType.LOCAL, Elevate.LOCAL_ATHLETE_KEY)
+			BrowserStorage.getInstance().get<AthleteModel>(BrowserStorageType.LOCAL, Elevate.LOCAL_ATHLETE_KEY)
 				.then((athleteModel: AthleteModel) => {
 					resolve(new AthleteSnapshotResolver(athleteModel));
 				}, error => reject(error));
@@ -286,14 +280,14 @@ export class Elevate {
 				on: Date.now(),
 			};
 
-			AppStorage.getInstance().set<object>(AppStorageType.LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY, toBeStored).then(() => {
+			BrowserStorage.getInstance().set<object>(BrowserStorageType.LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY, toBeStored).then(() => {
 				console.log("Version has been saved to local storage");
 				callback();
 			});
 		};
 
 		// Check for previous version is installed
-		AppStorage.getInstance().get<object>(AppStorageType.LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY).then((response: any) => {
+		BrowserStorage.getInstance().get<object>(BrowserStorageType.LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY).then((response: any) => {
 
 			// Override version with fake one to simulate update
 			if (CoreEnv.simulateUpdate) {
@@ -794,9 +788,9 @@ export class Elevate {
 			isOwner: this.isOwner
 		};
 
-		AppStorage.getInstance().get(AppStorageType.LOCAL, "bestSplitsConfiguration").then((response: any) => {
+		BrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "bestSplitsConfiguration").then((response: any) => {
 			const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.vacuumProcessor, activityInfo, this.userSettings, response, (splitsConfiguration: any) => {
-				AppStorage.getInstance().set(AppStorageType.LOCAL, "bestSplitsConfiguration", splitsConfiguration);
+				BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "bestSplitsConfiguration", splitsConfiguration);
 			});
 			activityBestSplitsModifier.modify();
 		});
@@ -1014,7 +1008,7 @@ export class Elevate {
 	}
 
 	public saveAthleteId(): void {
-		AppStorage.getInstance().set<number>(AppStorageType.LOCAL, "athleteId", this.athleteId).then(() => {
+		BrowserStorage.getInstance().set<number>(BrowserStorageType.LOCAL, "athleteId", this.athleteId).then(() => {
 			console.debug("athlete id set to " + this.athleteId);
 		}, error => console.error(error));
 	}
@@ -1036,7 +1030,7 @@ export class Elevate {
 		setTimeout(() => {
 
 			// Allow activities sync if previous sync exists and has been done 12 hours or more ago.
-			AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY).then((lastSyncDateTime: number) => {
+			BrowserStorage.getInstance().get<number>(BrowserStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY).then((lastSyncDateTime: number) => {
 
 				if (_.isNumber(lastSyncDateTime)) {
 
