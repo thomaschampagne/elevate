@@ -1,5 +1,5 @@
 import { AnalysisDataModel } from "../activity-data";
-import { AthleteModel } from "..";
+import { AthleteSnapshotModel } from "../athlete";
 
 export class SyncedActivityModel {
 	public id: number;
@@ -20,5 +20,5 @@ export class SyncedActivityModel {
 	public elevation_gain_raw: number;
 	public calories: number;
 	public extendedStats: AnalysisDataModel;
-	public athleteModel: AthleteModel;
+	public athleteSnapshot: AthleteSnapshotModel;
 }

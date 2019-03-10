@@ -3,7 +3,6 @@ import { TestBed } from "@angular/core/testing";
 import { DataStore } from "../data-store/data-store";
 import { StorageLocationModel } from "../data-store/storage-location.model";
 import { Injectable } from "@angular/core";
-import { AppStorageType } from "@elevate/shared/models";
 import { MockedDataStore } from "../data-store/impl/spec/mocked-data-store.service";
 import { BaseDao } from "./base.dao";
 
@@ -16,7 +15,7 @@ describe("BaseDao", () => {
 	@Injectable()
 	class TestBaseDao extends BaseDao<Foo> {
 
-		public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel(AppStorageType.LOCAL, "foo");
+		public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("foo");
 		public static readonly DEFAULT_STORAGE_VALUE: Foo[] = [];
 
 		public getStorageLocation(): StorageLocationModel {
@@ -107,7 +106,7 @@ describe("BaseDao", () => {
 	it("should fetch data as vector", (done: Function) => {
 
 		// Given,  When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> baseDao.fetch();
+		const promise: Promise<Foo[]> = <Promise<Foo[]>>baseDao.fetch();
 
 		// Then
 		promise.then(() => {
@@ -129,7 +128,7 @@ describe("BaseDao", () => {
 		});
 
 		// When
-		const promise: Promise<Foo> = <Promise<Foo>> baseDao.fetch();
+		const promise: Promise<Foo> = <Promise<Foo>>baseDao.fetch();
 
 		// Then
 		promise.then(() => {
@@ -150,7 +149,7 @@ describe("BaseDao", () => {
 		}];
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> baseDao.save(foo);
+		const promise: Promise<Foo[]> = <Promise<Foo[]>>baseDao.save(foo);
 
 		// Then
 		promise.then(() => {

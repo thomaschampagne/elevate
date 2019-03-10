@@ -19,7 +19,7 @@ export class DayFitnessTrendModel extends DayStressModel {
 		this.runningStressScore = dayStress.runningStressScore;
 		this.swimStressScore = dayStress.swimStressScore;
 		this.finalStressScore = dayStress.finalStressScore;
-		this.athleteModel = (dayStress.athleteModel) ? dayStress.athleteModel : null;
+		this.athleteSnapshot = (dayStress.athleteSnapshot) ? dayStress.athleteSnapshot : null;
 
 		this.dateString = moment(this.date).format(DayFitnessTrendModel.DATE_FORMAT);
 
@@ -180,7 +180,7 @@ export class DayFitnessTrendModel extends DayStressModel {
 
 	public printAthleteSettings(): string {
 
-		if (!this.athleteModel) {
+		if (!this.athleteSnapshot) {
 			return null;
 		}
 
@@ -188,18 +188,18 @@ export class DayFitnessTrendModel extends DayStressModel {
 
 		if (_.isNumber(this.heartRateStressScore) || _.isNumber(this.trainingImpulseScore)) {
 
-			inlineSettings += "MaxHr " + this.athleteModel.athleteSettings.maxHr + "bpm. ";
-			inlineSettings += "RestHr " + this.athleteModel.athleteSettings.restHr + "bpm. ";
+			inlineSettings += "MaxHr " + this.athleteSnapshot.athleteSettings.maxHr + "bpm. ";
+			inlineSettings += "RestHr " + this.athleteSnapshot.athleteSettings.restHr + "bpm. ";
 
-			if (this.athleteModel.athleteSettings.lthr.default
-				|| this.athleteModel.athleteSettings.lthr.cycling
-				|| this.athleteModel.athleteSettings.lthr.running) {
+			if (this.athleteSnapshot.athleteSettings.lthr.default
+				|| this.athleteSnapshot.athleteSettings.lthr.cycling
+				|| this.athleteSnapshot.athleteSettings.lthr.running) {
 
 				let lthrStr = "Lthr ";
 
-				lthrStr += (this.athleteModel.athleteSettings.lthr.default) ? "D:" + this.athleteModel.athleteSettings.lthr.default + "bpm, " : "";
-				lthrStr += (this.athleteModel.athleteSettings.lthr.cycling) ? "C:" + this.athleteModel.athleteSettings.lthr.cycling + "bpm, " : "";
-				lthrStr += (this.athleteModel.athleteSettings.lthr.running) ? "R:" + this.athleteModel.athleteSettings.lthr.running + "bpm, " : "";
+				lthrStr += (this.athleteSnapshot.athleteSettings.lthr.default) ? "D:" + this.athleteSnapshot.athleteSettings.lthr.default + "bpm, " : "";
+				lthrStr += (this.athleteSnapshot.athleteSettings.lthr.cycling) ? "C:" + this.athleteSnapshot.athleteSettings.lthr.cycling + "bpm, " : "";
+				lthrStr += (this.athleteSnapshot.athleteSettings.lthr.running) ? "R:" + this.athleteSnapshot.athleteSettings.lthr.running + "bpm, " : "";
 				lthrStr = lthrStr.slice(0, -2);
 
 				inlineSettings += lthrStr + ". ";
@@ -207,19 +207,19 @@ export class DayFitnessTrendModel extends DayStressModel {
 
 		}
 
-		if (_.isNumber(this.powerStressScore) && this.athleteModel.athleteSettings.cyclingFtp) {
-			inlineSettings += "Cycling Ftp " + this.athleteModel.athleteSettings.cyclingFtp + "w. ";
+		if (_.isNumber(this.powerStressScore) && this.athleteSnapshot.athleteSettings.cyclingFtp) {
+			inlineSettings += "Cycling Ftp " + this.athleteSnapshot.athleteSettings.cyclingFtp + "w. ";
 		}
 
-		if (_.isNumber(this.runningStressScore) && this.athleteModel.athleteSettings.runningFtp) {
-			inlineSettings += "Run Ftp " + this.athleteModel.athleteSettings.runningFtp + "s/km. ";
+		if (_.isNumber(this.runningStressScore) && this.athleteSnapshot.athleteSettings.runningFtp) {
+			inlineSettings += "Run Ftp " + this.athleteSnapshot.athleteSettings.runningFtp + "s/km. ";
 		}
 
-		if (_.isNumber(this.swimStressScore) && this.athleteModel.athleteSettings.swimFtp) {
-			inlineSettings += "Swim Ftp " + this.athleteModel.athleteSettings.swimFtp + "m/min. ";
+		if (_.isNumber(this.swimStressScore) && this.athleteSnapshot.athleteSettings.swimFtp) {
+			inlineSettings += "Swim Ftp " + this.athleteSnapshot.athleteSettings.swimFtp + "m/min. ";
 		}
 
-		inlineSettings += "Weight " + this.athleteModel.athleteSettings.weight + "kg.";
+		inlineSettings += "Weight " + this.athleteSnapshot.athleteSettings.weight + "kg.";
 
 		return inlineSettings;
 

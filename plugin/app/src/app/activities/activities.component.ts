@@ -51,7 +51,7 @@ export class ActivitiesComponent implements OnInit {
 
 	public static printAthleteSettings(activity: SyncedActivityModel, isImperial: boolean): string {
 
-		if (!activity.athleteModel) {
+		if (!activity.athleteSnapshot) {
 			return null;
 		}
 
@@ -60,18 +60,18 @@ export class ActivitiesComponent implements OnInit {
 		if (activity.extendedStats && activity.extendedStats.heartRateData && (_.isNumber(activity.extendedStats.heartRateData.HRSS)
 			|| _.isNumber(activity.extendedStats.heartRateData.TRIMP))) {
 
-			inlineSettings += "MaxHr " + activity.athleteModel.athleteSettings.maxHr + "bpm. ";
-			inlineSettings += "RestHr " + activity.athleteModel.athleteSettings.restHr + "bpm. ";
+			inlineSettings += "MaxHr " + activity.athleteSnapshot.athleteSettings.maxHr + "bpm. ";
+			inlineSettings += "RestHr " + activity.athleteSnapshot.athleteSettings.restHr + "bpm. ";
 
-			if (activity.athleteModel.athleteSettings.lthr.default
-				|| activity.athleteModel.athleteSettings.lthr.cycling
-				|| activity.athleteModel.athleteSettings.lthr.running) {
+			if (activity.athleteSnapshot.athleteSettings.lthr.default
+				|| activity.athleteSnapshot.athleteSettings.lthr.cycling
+				|| activity.athleteSnapshot.athleteSettings.lthr.running) {
 
 				let lthrStr = "Lthr ";
 
-				lthrStr += (activity.athleteModel.athleteSettings.lthr.default) ? "D:" + activity.athleteModel.athleteSettings.lthr.default + "bpm, " : "";
-				lthrStr += (activity.athleteModel.athleteSettings.lthr.cycling) ? "C:" + activity.athleteModel.athleteSettings.lthr.cycling + "bpm, " : "";
-				lthrStr += (activity.athleteModel.athleteSettings.lthr.running) ? "R:" + activity.athleteModel.athleteSettings.lthr.running + "bpm, " : "";
+				lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.default) ? "D:" + activity.athleteSnapshot.athleteSettings.lthr.default + "bpm, " : "";
+				lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.cycling) ? "C:" + activity.athleteSnapshot.athleteSettings.lthr.cycling + "bpm, " : "";
+				lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.running) ? "R:" + activity.athleteSnapshot.athleteSettings.lthr.running + "bpm, " : "";
 				lthrStr = lthrStr.slice(0, -2);
 
 				inlineSettings += lthrStr + ". ";
@@ -79,19 +79,19 @@ export class ActivitiesComponent implements OnInit {
 
 		}
 
-		if (activity.extendedStats && activity.extendedStats.powerData && (_.isNumber(activity.extendedStats.powerData.powerStressScore) && activity.athleteModel.athleteSettings.cyclingFtp)) {
-			inlineSettings += "Cycling Ftp " + activity.athleteModel.athleteSettings.cyclingFtp + "w. ";
+		if (activity.extendedStats && activity.extendedStats.powerData && (_.isNumber(activity.extendedStats.powerData.powerStressScore) && activity.athleteSnapshot.athleteSettings.cyclingFtp)) {
+			inlineSettings += "Cycling Ftp " + activity.athleteSnapshot.athleteSettings.cyclingFtp + "w. ";
 		}
 
-		if (activity.extendedStats && activity.extendedStats.paceData && (_.isNumber(activity.extendedStats.paceData.runningStressScore) && activity.athleteModel.athleteSettings.runningFtp)) {
-			inlineSettings += "Run Ftp " + activity.athleteModel.athleteSettings.runningFtp + "s/" + ((isImperial) ? "mi" : "km") + ".";
+		if (activity.extendedStats && activity.extendedStats.paceData && (_.isNumber(activity.extendedStats.paceData.runningStressScore) && activity.athleteSnapshot.athleteSettings.runningFtp)) {
+			inlineSettings += "Run Ftp " + activity.athleteSnapshot.athleteSettings.runningFtp + "s/" + ((isImperial) ? "mi" : "km") + ".";
 		}
 
-		if (activity.type === "Swim" && activity.athleteModel.athleteSettings.swimFtp) {
-			inlineSettings += "Swim Ftp " + activity.athleteModel.athleteSettings.swimFtp + "m/min. ";
+		if (activity.type === "Swim" && activity.athleteSnapshot.athleteSettings.swimFtp) {
+			inlineSettings += "Swim Ftp " + activity.athleteSnapshot.athleteSettings.swimFtp + "m/min. ";
 		}
 
-		inlineSettings += "Weight " + activity.athleteModel.athleteSettings.weight + "kg.";
+		inlineSettings += "Weight " + activity.athleteSnapshot.athleteSettings.weight + "kg.";
 
 		return inlineSettings;
 
