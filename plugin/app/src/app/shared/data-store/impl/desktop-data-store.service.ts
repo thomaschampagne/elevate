@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { StorageLocationModel } from "../storage-location.model";
-import { AppStorageType } from "@elevate/shared/models";
 import { DataStore } from "../data-store";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
 
@@ -14,7 +13,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 		return Promise.resolve(defaultStorageValue);
 	}
 
-	getAppUsageDetails(type: AppStorageType): Promise<AppUsageDetails> {
+	getAppUsageDetails(): Promise<AppUsageDetails> {
 		return undefined;
 	}
 
