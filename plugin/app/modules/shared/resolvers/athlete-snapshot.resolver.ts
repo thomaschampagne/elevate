@@ -9,7 +9,7 @@ export class AthleteSnapshotResolver {
 
 	constructor(athleteModel: AthleteModel) {
 
-		this.athleteModel = athleteModel;
+		this.athleteModel = (athleteModel) ? athleteModel : AthleteModel.DEFAULT_MODEL;
 
 		this.athleteModel.datedAthleteSettings = _.sortBy(this.athleteModel.datedAthleteSettings, (model: DatedAthleteSettingsModel) => {
 			const sortOnDate: Date = (_.isNull(model.since)) ? new Date(0) : new Date(model.since);

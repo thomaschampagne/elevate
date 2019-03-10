@@ -24,7 +24,7 @@ describe("AthleteSnapshotResolverService", () => {
 
 		athleteSnapshotResolverService = TestBed.get(AthleteSnapshotResolverService);
 
-		defaultAthleteModel = AthleteModel.DEFAULT_MODEL;
+		defaultAthleteModel = _.cloneDeep(AthleteModel.DEFAULT_MODEL);
 
 		done();
 	});
@@ -487,6 +487,33 @@ describe("AthleteSnapshotResolverService", () => {
 		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
 		done();
+	});
+
+	it("should resolve AthleteSnapshotModel when no AthleteModel exists (in storage)", (done: Function) => {
+
+		// Given
+		const onDate = "2018-05-10";
+		const expectedAthleteModel = AthleteModel.DEFAULT_MODEL;
+		const expectedAthleteSettings = AthleteSettingsModel.DEFAULT_MODEL;
+
+		spyOn(athleteSnapshotResolverService.athleteService, "fetch").and.returnValue(Promise.resolve(null));
+
+		athleteSnapshotResolverService.update().then(() => {
+
+			// When
+			const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+
+			// Then
+			expect(athleteSnapshot.gender).toEqual(expectedAthleteModel.gender);
+			expect(athleteSnapshot.athleteSettings).toEqual(expectedAthleteSettings);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
 	});
 
 	it("should not resolve AthleteModel when athleteSnapshotResolver not ready.", (done: Function) => {
