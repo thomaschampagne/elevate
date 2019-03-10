@@ -5,13 +5,13 @@ import { AppResourcesModel } from "../models/app-resources.model";
 import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
 import { StreamActivityModel } from "../models/sync/stream-activity.model";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
-import { AthleteModelResolver } from "@elevate/shared/resolvers";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 
 const ComputeAnalysisWorker = require("worker-loader?inline!./workers/compute-analysis.worker");
 
 export class MultipleActivityProcessor {
 
-	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteModelResolver) {
+	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteSnapshotResolver) {
 		this.appResources = appResources;
 		this.userSettings = userSettings;
 		this.athleteModelResolver = athleteModelResolver;
@@ -21,7 +21,7 @@ export class MultipleActivityProcessor {
 
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
-	protected athleteModelResolver: AthleteModelResolver;
+	protected athleteModelResolver: AthleteSnapshotResolver;
 
 	/**
 	 * @return Activities array with computed stats
@@ -39,7 +39,7 @@ export class MultipleActivityProcessor {
 			return promise.then(() => {
 
 				// Find athlete model to compute with activity
-				activityWithStream.athleteModel = this.athleteModelResolver.resolve(new Date(activityWithStream.start_time));
+				activityWithStream.athleteSnapshot = this.athleteModelResolver.resolve(new Date(activityWithStream.start_time));
 
 				return this.computeActivity(activityWithStream).then((activityComputed: AnalysisDataModel) => {
 
@@ -78,7 +78,7 @@ export class MultipleActivityProcessor {
 
 					const activityComputed: SyncedActivityModel = _.pick(activitiesWithStream[index], MultipleActivityProcessor.outputFields) as SyncedActivityModel;
 					activityComputed.extendedStats = computedResult;
-					activityComputed.athleteModel = activitiesWithStream[index].athleteModel;
+					activityComputed.athleteSnapshot = activitiesWithStream[index].athleteSnapshot;
 					activitiesComputed.push(activityComputed);
 
 				});
@@ -138,7 +138,7 @@ export class MultipleActivityProcessor {
 			appResources: this.appResources,
 			userSettings: this.userSettings,
 			isOwner: true, // While syncing and processing activities, elevate user is always author of the activity
-			athleteModel: activityWithStream.athleteModel,
+			athleteSnapshot: activityWithStream.athleteSnapshot,
 			hasPowerMeter: activityWithStream.hasPowerMeter,
 			activitySourceData: activitySourceData,
 			activityStream: activityWithStream.stream,

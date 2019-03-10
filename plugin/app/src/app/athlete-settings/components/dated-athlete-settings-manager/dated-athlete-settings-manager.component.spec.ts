@@ -4,8 +4,8 @@ import { DatedAthleteSettingsManagerComponent } from "./dated-athlete-settings-m
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
 import { AthleteSettingsModule } from "../../athlete-settings.module";
-import { DatedAthleteSettingsService } from "../../../shared/services/dated-athlete-settings/dated-athlete-settings.service";
-import { AthleteSettingsModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
+import { AthleteService } from "../../../shared/services/athlete/athlete.service";
+import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel, Gender } from "@elevate/shared/models";
 
 describe("DatedAthleteSettingsManagerComponent", () => {
 	let component: DatedAthleteSettingsManagerComponent;
@@ -20,7 +20,7 @@ describe("DatedAthleteSettingsManagerComponent", () => {
 			]
 		}).compileComponents();
 
-		const datedAthleteSettingsService = TestBed.get(DatedAthleteSettingsService);
+		const athleteService = TestBed.get(AthleteService);
 
 		const datedAthleteSettings: DatedAthleteSettingsModel[] = [
 			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, null, 190, null, null, 75)),
@@ -29,7 +29,9 @@ describe("DatedAthleteSettingsManagerComponent", () => {
 			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78))
 		];
 
-		spyOn(datedAthleteSettingsService, "fetch").and.returnValue(Promise.resolve(datedAthleteSettings));
+		const athleteModel = new AthleteModel(Gender.MEN, datedAthleteSettings);
+
+		spyOn(athleteService, "fetch").and.returnValue(Promise.resolve(athleteModel));
 
 		done();
 	});

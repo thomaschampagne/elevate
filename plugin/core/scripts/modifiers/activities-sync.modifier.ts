@@ -1,13 +1,14 @@
 import { Helper } from "../helper";
-import { AppStorage } from "../app-storage";
+import { BrowserStorage } from "../browser-storage";
 import { CoreEnv } from "../../config/core-env";
 import { ActivitiesSynchronize } from "../processors/activities-synchronize";
-import { AppStorageType, SyncResultModel } from "@elevate/shared/models";
+import { SyncResultModel } from "@elevate/shared/models";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { HerokuEndpointResolver } from "../resolvers/heroku-endpoint.resolver";
 import { AbstractModifier } from "./abstract.modifier";
 import * as _ from "lodash";
 import { AppStorageUsage } from "../models/app-storage-usage.model";
+import { BrowserStorageType } from "../models/browser-storage-type.enum";
 
 export class ActivitiesSyncModifier extends AbstractModifier {
 
@@ -83,7 +84,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 	}
 
 	protected updateStorageUsage() {
-		AppStorage.getInstance().usage(AppStorageType.LOCAL).then((storageUsage: AppStorageUsage) => {
+		BrowserStorage.getInstance().usage(BrowserStorageType.LOCAL).then((storageUsage: AppStorageUsage) => {
 			$("#storageUsage").html("Extension local storage occupation: <strong>" + (storageUsage.bytesInUse / (1024 * 1024)).toFixed(1) + "MB</strong>");
 		});
 	}

@@ -4,8 +4,8 @@ import {
 	ActivitySourceDataModel,
 	ActivityStreamsModel,
 	AnalysisDataModel,
-	AthleteModel,
 	AthleteSettingsModel,
+	AthleteSnapshotModel,
 	Gender,
 	UserSettingsModel
 } from "@elevate/shared/models";
@@ -261,10 +261,11 @@ describe("RunningPowerEstimator", () => {
 			elevation: -1,
 			distance: -1
 		};
-		const athleteModel = new AthleteModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
+		const athleteSnapshot = new AthleteSnapshotModel(Gender.MEN, new AthleteSettingsModel(200, 45,
+			null, 240, null, null, 71.9));
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
 			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 
 		const result: AnalysisDataModel = activityComputer.compute();

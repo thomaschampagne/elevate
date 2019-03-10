@@ -61,7 +61,7 @@ export class FitnessService {
 						return;
 					}
 
-					if (!activity.athleteModel) {
+					if (!activity.athleteSnapshot) {
 						reject(new AppError(AppError.FT_NO_ACTIVITY_ATHLETE_MODEL,
 							"Some of your synced activities are missing athlete settings. To fix that check " +
 							"your athlete settings and \"clear and re-sync your activities\""));
@@ -77,7 +77,7 @@ export class FitnessService {
 					const hasPowerData: boolean = (activity.type === "Ride" || activity.type === "VirtualRide" || activity.type === "EBikeRide")
 						&& powerMeterEnable
 						&& fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP
-						&& _.isNumber(activity.athleteModel.athleteSettings.cyclingFtp)
+						&& _.isNumber(activity.athleteSnapshot.athleteSettings.cyclingFtp)
 						&& activity.extendedStats
 						&& activity.extendedStats.powerData
 						&& (activity.extendedStats.powerData.hasPowerMeter || fitnessTrendConfigModel.allowEstimatedPowerStressScore)
@@ -85,15 +85,15 @@ export class FitnessService {
 
 					const hasRunningData: boolean = (activity.type === "Run" || activity.type === "VirtualRun")
 						&& fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP
-						&& _.isNumber(activity.athleteModel.athleteSettings.runningFtp)
+						&& _.isNumber(activity.athleteSnapshot.athleteSettings.runningFtp)
 						&& activity.extendedStats
 						&& activity.extendedStats.paceData
 						&& _.isNumber(activity.extendedStats.paceData.runningStressScore)
 						&& fitnessTrendConfigModel.allowEstimatedRunningStressScore;
 
 					const hasSwimmingData: boolean = (swimEnable
-						&& _.isNumber(activity.athleteModel.athleteSettings.swimFtp)
-						&& activity.athleteModel.athleteSettings.swimFtp > 0
+						&& _.isNumber(activity.athleteSnapshot.athleteSettings.swimFtp)
+						&& activity.athleteSnapshot.athleteSettings.swimFtp > 0
 						&& activity.type === "Swim"
 						&& fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP
 						&& _.isNumber(activity.distance_raw) && _.isNumber(activity.moving_time_raw)
@@ -110,7 +110,7 @@ export class FitnessService {
 						type: activity.type,
 						hasPowerMeter: (activity.extendedStats && activity.extendedStats.powerData && activity.extendedStats.powerData.hasPowerMeter),
 						name: activity.name,
-						athleteModel: activity.athleteModel
+						athleteSnapshot: activity.athleteSnapshot
 					};
 
 					if (hasHeartRateData) {
@@ -134,7 +134,7 @@ export class FitnessService {
 						fitnessReadyActivity.swimStressScore = this.computeSwimStressScore(activity.distance_raw,
 							activity.moving_time_raw,
 							activity.elapsed_time_raw,
-							activity.athleteModel.athleteSettings.swimFtp);
+							activity.athleteSnapshot.athleteSettings.swimFtp);
 					}
 
 					fitnessPreparedActivities.push(fitnessReadyActivity);
@@ -346,7 +346,7 @@ export class FitnessService {
 				dayActivity.ids.push(activity.id);
 				dayActivity.activitiesName.push(activity.name);
 				dayActivity.types.push(activity.type);
-				dayActivity.athleteModel = activity.athleteModel;
+				dayActivity.athleteSnapshot = activity.athleteSnapshot;
 
 				const hasPowerStressScore = _.isNumber(activity.powerStressScore);
 				const hasHeartRateStressScore = _.isNumber(activity.heartRateStressScore);
