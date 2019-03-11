@@ -4,9 +4,10 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 import { LoggerService } from "../app/shared/services/logging/logger.service";
+import { EnvType } from "../app/shared/enums/env-type";
 
 export const environment = {
-	desktop: true,
+	type: EnvType.DESKTOP,
 	production: false,
 	logLevel: LoggerService.LEVEL_DEBUG,
 	skipRestoreSyncedBackupCheck: false

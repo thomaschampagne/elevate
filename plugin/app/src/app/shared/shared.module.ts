@@ -38,6 +38,7 @@ import { ConsoleLoggerService } from "./services/logging/console-logger.service"
 import { environment } from "../../environments/environment";
 import { DesktopModule } from "./modules/desktop.module";
 import { ChromeModule } from "./modules/chrome.module";
+import { EnvType } from "./enums/env-type";
 
 @NgModule({
 	imports: [
@@ -45,7 +46,7 @@ import { ChromeModule } from "./modules/chrome.module";
 		BrowserModule,
 		BrowserAnimationsModule,
 		AppRoutingModule,
-		(environment.desktop) ? DesktopModule : ChromeModule
+		(environment.type === EnvType.DESKTOP) ? DesktopModule : ChromeModule
 	],
 	exports: [
 		CoreModule,
