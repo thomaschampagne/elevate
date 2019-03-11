@@ -54,7 +54,7 @@ export class Content {
 			return;
 		}
 
-		AppStorage.getInstance().get<any>(AppStorageType.SYNC).then(result => {
+		AppStorage.getInstance().get<any>(AppStorageType.LOCAL).then(result => {
 
 			let userSettingsModel: UserSettingsModel;
 

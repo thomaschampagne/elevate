@@ -1,4 +1,4 @@
-import { ActivitySourceDataModel, ActivityStreamsModel, AthleteModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivitySourceDataModel, ActivityStreamsModel, AthleteSnapshotModel, UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "./app-resources.model";
 
 export class ComputeActivityThreadMessageModel {
@@ -8,7 +8,7 @@ export class ComputeActivityThreadMessageModel {
 	public appResources: AppResourcesModel;
 	public userSettings: UserSettingsModel;
 	public isOwner: boolean; // TODO Should be moved in ActivitySourceDataModel?!
-	public athleteModel: AthleteModel;
+	public athleteSnapshot: AthleteSnapshotModel;
 	public hasPowerMeter: boolean; // TODO Should be moved in ActivitySourceDataModel?!
 	public activitySourceData: ActivitySourceDataModel;
 	public activityStream: ActivityStreamsModel;

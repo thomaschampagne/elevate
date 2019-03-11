@@ -27,9 +27,9 @@ import { CoreModule } from "../core/core.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
 import { AdvancedMenuComponent } from "../advanced-menu/advanced-menu.component";
-import { AthleteModelResolverService } from "./services/athlete-settings/athlete-model-resolver.service";
-import { DatedAthleteSettingsService } from "./services/dated-athlete-settings/dated-athlete-settings.service";
-import { DatedAthleteSettingsDao } from "./dao/dated-athlete-settings/dated-athlete-settings.dao";
+import { AthleteSnapshotResolverService } from "./services/athlete-snapshot-resolver/athlete-snapshot-resolver.service";
+import { AthleteService } from "./services/athlete/athlete.service";
+import { AthleteDao } from "./dao/athlete/athlete-dao.service";
 import { ActivityDao } from "./dao/activity/activity.dao";
 import { FaqComponent } from "../faq/faq.component";
 import { ActivitiesComponent } from "../activities/activities.component";
@@ -87,9 +87,9 @@ import { ChromeModule } from "./modules/chrome.module";
 		LastSyncDateTimeDao,
 		UserSettingsService,
 		UserSettingsDao,
-		DatedAthleteSettingsService,
-		DatedAthleteSettingsDao,
-		AthleteModelResolverService,
+		AthleteService,
+		AthleteDao,
+		AthleteSnapshotResolverService,
 		ActivityService,
 		ActivityDao,
 		GlobalSettingsService,

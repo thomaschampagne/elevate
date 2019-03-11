@@ -3,7 +3,7 @@ import { Helper } from "./helper";
 import {
 	ActivityInfoModel,
 	AppStorageType,
-	DatedAthleteSettingsModel,
+	AthleteModel,
 	ReleaseNoteModel,
 	SyncResultModel,
 	UserSettingsModel
@@ -49,7 +49,7 @@ import { AthleteUpdate } from "./utils/athlete-update";
 import "./follow";
 import * as Cookies from "js-cookie";
 import { ActivitiesChronologicalFeedModifier } from "./modifiers/activities-chronological-feed-modifier";
-import { AthleteModelResolver } from "@elevate/shared/resolvers";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { releaseNotesData } from "@elevate/shared/data";
 
 export class Elevate {
@@ -57,7 +57,7 @@ export class Elevate {
 	public static instance: Elevate = null;
 
 	public static LOCAL_VERSION_INSTALLED_KEY = "versionInstalled";
-	public static LOCAL_DATED_ATHLETE_SETTINGS_KEY = "datedAthleteSettings";
+	public static LOCAL_ATHLETE_KEY = "athlete";
 
 	public isPro: boolean;
 	public isPremium: boolean;
@@ -65,7 +65,7 @@ export class Elevate {
 	public activityAthleteId: number;
 	public activityId: number;
 	public athleteId: number;
-	public athleteModelResolver: AthleteModelResolver;
+	public athleteModelResolver: AthleteSnapshotResolver;
 	public isOwner: boolean;
 	public extensionId: string;
 	public appResources: AppResourcesModel;
@@ -102,7 +102,7 @@ export class Elevate {
 
 			if (this.userSettings.localStorageMustBeCleared) {
 				localStorage.clear();
-				AppStorage.getInstance().upsertProperty<UserSettingsModel, boolean>(AppStorageType.SYNC, ["userSettings", "localStorageMustBeCleared"], false);
+				AppStorage.getInstance().upsertProperty<UserSettingsModel, boolean>(AppStorageType.LOCAL, ["userSettings", "localStorageMustBeCleared"], false);
 			}
 
 			// Init "elevate bridge"
@@ -186,19 +186,19 @@ export class Elevate {
 		if (this.athleteModelResolver) {
 			return Promise.resolve();
 		} else {
-			return this.createAthleteModelResolver(this.userSettings).then(athleteModelResolver => {
+			return this.createAthleteModelResolver().then(athleteModelResolver => {
 				this.athleteModelResolver = athleteModelResolver;
 				return Promise.resolve();
 			});
 		}
 	}
 
-	public createAthleteModelResolver(userSettings: UserSettingsModel): Promise<AthleteModelResolver> {
+	public createAthleteModelResolver(): Promise<AthleteSnapshotResolver> {
 
 		return new Promise((resolve, reject) => {
-			AppStorage.getInstance().get<DatedAthleteSettingsModel[]>(AppStorageType.LOCAL, Elevate.LOCAL_DATED_ATHLETE_SETTINGS_KEY)
-				.then((result: DatedAthleteSettingsModel[]) => {
-					resolve(new AthleteModelResolver(userSettings, result));
+			AppStorage.getInstance().get<AthleteModel>(AppStorageType.LOCAL, Elevate.LOCAL_ATHLETE_KEY)
+				.then((athleteModel: AthleteModel) => {
+					resolve(new AthleteSnapshotResolver(athleteModel));
 				}, error => reject(error));
 		});
 	}
@@ -498,11 +498,11 @@ export class Elevate {
 			return;
 		}
 
-		const athleteModel = this.athleteModelResolver.getCurrent(); // TODO Could be improved by using AthleteModel at each dates
+		const athleteSnapshot = this.athleteModelResolver.getCurrent(); // TODO Could be improved by using AthleteModel at each dates
 
 		const segmentId: number = parseInt(/^\/segments\/(\d+)$/.exec(window.location.pathname)[1]);
 		const segmentHRATime: SegmentRecentEffortsHRATimeModifier = new SegmentRecentEffortsHRATimeModifier(this.userSettings.displayRecentEffortsHRAdjustedPacePower,
-			athleteModel,
+			athleteSnapshot,
 			this.athleteId,
 			segmentId);
 		segmentHRATime.modify();

@@ -4,14 +4,16 @@ import { SyncService } from "./sync.service";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { SyncState } from "./sync-state.enum";
 import { SyncedBackupModel } from "./synced-backup.model";
-import { AthleteSettingsModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
+import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
+import * as _ from "lodash";
 
 describe("SyncService", () => {
 
 	const tabId = 101;
 	const installedVersion = "2.0.0";
+	let athleteModel: AthleteModel;
 	let syncService: SyncService;
 	let lastSyncDateTimeDao: LastSyncDateTimeDao;
 
@@ -23,6 +25,8 @@ describe("SyncService", () => {
 				SharedModule,
 			]
 		});
+
+		athleteModel = _.cloneDeep(AthleteModel.DEFAULT_MODEL);
 
 		syncService = TestBed.get(SyncService);
 		lastSyncDateTimeDao = TestBed.get(LastSyncDateTimeDao);
@@ -128,9 +132,11 @@ describe("SyncService", () => {
 			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
 		];
 
+		athleteModel.datedAthleteSettings = expectedPeriodAthleteSettings;
+
 		spyOn(syncService.lastSyncDateTimeDao, "fetch").and.returnValue(lastSyncDateTime);
 		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
-		spyOn(syncService.datedAthleteSettingsService, "fetch").and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
+		spyOn(syncService.athleteService, "fetch").and.returnValue(Promise.resolve(athleteModel));
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.prepareForExport();
@@ -142,7 +148,7 @@ describe("SyncService", () => {
 			expect(syncedBackupModel.pluginVersion).toEqual(installedVersion);
 			expect(syncedBackupModel.lastSyncDateTime).toEqual(lastSyncDateTime);
 			expect(syncedBackupModel.syncedActivities).toEqual(TEST_SYNCED_ACTIVITIES);
-			expect(syncedBackupModel.datedAthleteSettings).toEqual(expectedPeriodAthleteSettings);
+			expect(syncedBackupModel.athleteModel).toEqual(athleteModel);
 			done();
 
 		}, error => {
@@ -158,7 +164,7 @@ describe("SyncService", () => {
 
 		spyOn(syncService.lastSyncDateTimeDao, "fetch").and.returnValue(lastSyncDateTime);
 		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
-		spyOn(syncService.datedAthleteSettingsService, "fetch").and.returnValue(Promise.resolve([]));
+		spyOn(syncService.athleteService, "fetch").and.returnValue(Promise.resolve([]));
 
 		const prepareForExportSpy = spyOn(syncService, "prepareForExport").and.callThrough();
 		const saveAsSpy = spyOn(syncService, "saveAs").and.stub();
@@ -185,7 +191,7 @@ describe("SyncService", () => {
 		// Given
 		spyOn(syncService.lastSyncDateTimeDao, "fetch").and.returnValue(null);
 		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
-		spyOn(syncService.datedAthleteSettingsService, "fetch").and.returnValue(Promise.resolve([]));
+		spyOn(syncService.athleteService, "fetch").and.returnValue(Promise.resolve([]));
 
 
 		const prepareForExportSpy = spyOn(syncService, "prepareForExport").and.callThrough();
@@ -222,18 +228,21 @@ describe("SyncService", () => {
 			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
 		];
 
+		athleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+
 		spyOn(syncService, "getCompatibleBackupVersionThreshold").and.returnValue(compatibleBackupVersionThreshold);
+
 
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
-			datedAthleteSettings: datedAthleteSettingsModels,
+			athleteModel: athleteModel,
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: importedBackupVersion
 		};
 
 		spyOn(syncService.lastSyncDateTimeDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
 		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
-		spyOn(syncService.datedAthleteSettingsService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.datedAthleteSettings));
+		spyOn(syncService.athleteService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.athleteModel));
 
 		spyOn(syncService.lastSyncDateTimeDao, "clear").and.returnValue(Promise.resolve());
 		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve());
@@ -254,7 +263,7 @@ describe("SyncService", () => {
 			expect(syncedBackupModel.pluginVersion).toEqual(importedSyncedBackupModel.pluginVersion);
 			expect(syncedBackupModel.lastSyncDateTime).toEqual(importedSyncedBackupModel.lastSyncDateTime);
 			expect(syncedBackupModel.syncedActivities).toEqual(importedSyncedBackupModel.syncedActivities);
-			expect(syncedBackupModel.datedAthleteSettings).toEqual(importedSyncedBackupModel.datedAthleteSettings);
+			expect(syncedBackupModel.athleteModel).toEqual(importedSyncedBackupModel.athleteModel);
 			done();
 
 		}, error => {
@@ -264,7 +273,7 @@ describe("SyncService", () => {
 
 	});
 
-	it("should import athlete activities with a 1.5.1 backup and 1.2.3 compatible backup version threshold (datedAthleteSettings empty)", (done: Function) => {
+	it("should import athlete activities with a 1.5.1 backup and 1.2.3 compatible backup version threshold (athleteModel empty)", (done: Function) => {
 
 		// Given
 		const lastSyncDateTime = 99;
@@ -272,9 +281,11 @@ describe("SyncService", () => {
 		const compatibleBackupVersionThreshold = "1.2.3";
 		spyOn(syncService, "getCompatibleBackupVersionThreshold").and.returnValue(compatibleBackupVersionThreshold);
 
+		athleteModel = null;
+
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
-			datedAthleteSettings: [],
+			athleteModel: athleteModel,
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: importedBackupVersion
 		};
@@ -286,9 +297,9 @@ describe("SyncService", () => {
 		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve());
 
 		const spyClearSyncedData = spyOn(syncService, "clearSyncedData").and.callThrough();
-		const spyResetDatedAthleteSettings = spyOn(syncService.datedAthleteSettingsService, "reset").and.stub();
-		const spySaveDatedAthleteSettings = spyOn(syncService.datedAthleteSettingsService, "save")
-			.and.returnValue(Promise.resolve(importedSyncedBackupModel.datedAthleteSettings));
+		const spyResetDatedAthleteSettings = spyOn(syncService.athleteService, "resetSettings").and.stub();
+		const spySaveDatedAthleteSettings = spyOn(syncService.athleteService, "save")
+			.and.returnValue(Promise.resolve(importedSyncedBackupModel.athleteModel));
 
 		const spyClearLocalStorage = spyOn(syncService.userSettingsService, "clearLocalStorageOnNextLoad").and.returnValue(Promise.resolve());
 
@@ -324,9 +335,11 @@ describe("SyncService", () => {
 		spyOn(syncService, "getCompatibleBackupVersionThreshold").and.returnValue(compatibleBackupVersionThreshold);
 		const expectedErrorMessage = "Imported backup version " + importedBackupVersion + " is not compatible with current installed version " + installedVersion + ".";
 
+		athleteModel.datedAthleteSettings = [];
+
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
-			datedAthleteSettings: [],
+			athleteModel: athleteModel,
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: importedBackupVersion
 		};
@@ -356,9 +369,11 @@ describe("SyncService", () => {
 		const lastSyncDateTime = 99;
 		const expectedErrorMessage = "Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.";
 
+		athleteModel.datedAthleteSettings = [];
+
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
-			datedAthleteSettings: [],
+			athleteModel: athleteModel,
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: null
 		};
@@ -417,9 +432,11 @@ describe("SyncService", () => {
 		const importedBackupVersion = "1.0.0";
 		const expectedErrorMessage = "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.";
 
+		athleteModel.datedAthleteSettings = [];
+
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: null,
-			datedAthleteSettings: [],
+			athleteModel: athleteModel,
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: importedBackupVersion
 		};
@@ -479,9 +496,11 @@ describe("SyncService", () => {
 		const importedBackupVersion = "1.0.0";
 		const expectedErrorMessage = "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.";
 
+		athleteModel.datedAthleteSettings = [];
+
 		const importedSyncedBackupModel: SyncedBackupModel = {
 			syncedActivities: [],
-			datedAthleteSettings: [],
+			athleteModel: athleteModel,
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: importedBackupVersion
 		};

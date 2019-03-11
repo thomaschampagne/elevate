@@ -1,20 +1,20 @@
 import * as _ from "lodash";
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
-import { AthleteModel, HeartRateDataModel } from "@elevate/shared/models";
+import { AthleteSnapshotModel, HeartRateDataModel } from "@elevate/shared/models";
 
 export class HeartRateDataView extends AbstractDataView {
 
 	public static instance: HeartRateDataView = null;
 
 	protected heartRateData: HeartRateDataModel;
-	protected athleteModel: AthleteModel;
+	protected athleteSnapshot: AthleteSnapshotModel;
 
-	constructor(heartRateData: HeartRateDataModel, units: string, athleteModel: AthleteModel) {
+	constructor(heartRateData: HeartRateDataModel, units: string, athleteSnapshot: AthleteSnapshotModel) {
 		super(units);
 		this.mainColor = [228, 76, 92];
 		this.heartRateData = heartRateData;
-		this.athleteModel = athleteModel;
+		this.athleteSnapshot = athleteSnapshot;
 		this.setGraphTitleFromUnits();
 		this.setupDistributionGraph();
 		this.setupDistributionTable();
@@ -44,10 +44,10 @@ export class HeartRateDataView extends AbstractDataView {
 		for (const zone in this.heartRateData.heartRateZones) {
 
 			let fromHRR = Helper.heartRateReserveFromHeartrate(this.heartRateData.heartRateZones[zone].from,
-				this.athleteModel.athleteSettings.maxHr, this.athleteModel.athleteSettings.restHr) * 100;
+				this.athleteSnapshot.athleteSettings.maxHr, this.athleteSnapshot.athleteSettings.restHr) * 100;
 			fromHRR = Math.round(fromHRR);
 			let toHRR = Helper.heartRateReserveFromHeartrate(this.heartRateData.heartRateZones[zone].to,
-				this.athleteModel.athleteSettings.maxHr, this.athleteModel.athleteSettings.restHr) * 100;
+				this.athleteSnapshot.athleteSettings.maxHr, this.athleteSnapshot.athleteSettings.restHr) * 100;
 			toHRR = Math.round(toHRR);
 
 			htmlTable += "<tr>"; // Zone
@@ -112,10 +112,10 @@ export class HeartRateDataView extends AbstractDataView {
 		const hr: string[] = tooltip.title[0].split(" ")[1].replace(/%/g, "").split("-");
 
 		tooltip.body[0].lines[0] = Math.round(Helper.heartRateReserveFromHeartrate(parseInt(hr[0]),
-			HeartRateDataView.instance.athleteModel.athleteSettings.maxHr, HeartRateDataView.instance.athleteModel.athleteSettings.restHr) * 100) +
+			HeartRateDataView.instance.athleteSnapshot.athleteSettings.maxHr, HeartRateDataView.instance.athleteSnapshot.athleteSettings.restHr) * 100) +
 			" - " + Math.round(Helper.heartRateReserveFromHeartrate(parseInt(hr[1]),
-				HeartRateDataView.instance.athleteModel.athleteSettings.maxHr,
-				HeartRateDataView.instance.athleteModel.athleteSettings.restHr) * 100) +
+				HeartRateDataView.instance.athleteSnapshot.athleteSettings.maxHr,
+				HeartRateDataView.instance.athleteSnapshot.athleteSettings.restHr) * 100) +
 			" %HRR during " + Helper.secondsToHHMMSS(timeInMinutes * 60);
 	}
 

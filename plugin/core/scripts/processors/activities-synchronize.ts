@@ -14,11 +14,11 @@ import { MultipleActivityProcessor } from "./multiple-activity-processor";
 import { StravaActivityModel } from "../models/sync/strava-activity.model";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { StreamActivityModel } from "../models/sync/stream-activity.model";
-import { AthleteModelResolver } from "@elevate/shared/resolvers";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 
 export class ActivitiesSynchronize {
 
-	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteModelResolver) {
+	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteSnapshotResolver) {
 		this.appResources = appResources;
 		this.userSettings = userSettings;
 		this.extensionId = this.appResources.extensionId;
