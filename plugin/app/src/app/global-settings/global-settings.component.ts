@@ -51,7 +51,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 
 	public ngOnInit(): void {
 
-		this.sections = this.globalSettingsService.sections;
+		this.sections = this.globalSettingsService.getSectionsByEnvTarget(environment.target);
 
 		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
 			this.renderOptionsForEachSection(userSettings);
@@ -75,9 +75,9 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 
 	/**
 	 *
-	 * @param {UserSettingsModel} userSettingsSynced
+	 * @param {UserSettingsModel} userSettings
 	 */
-	public renderOptionsForEachSection(userSettingsSynced: UserSettingsModel): void {
+	public renderOptionsForEachSection(userSettings: UserSettingsModel): void {
 
 		_.forEach(this.sections, (section: SectionModel) => {
 
@@ -85,23 +85,23 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 
 				if (option.type === GlobalSettingsService.TYPE_OPTION_CHECKBOX) {
 
-					option.active = _.propertyOf(userSettingsSynced)(option.key);
+					option.active = _.propertyOf(userSettings)(option.key);
 
 					if (option.enableSubOption) {
 						_.forEach(option.enableSubOption, (subKey: string) => {
-							this.displaySubOption(subKey, _.propertyOf(userSettingsSynced)(option.key));
+							this.displaySubOption(subKey, _.propertyOf(userSettings)(option.key));
 						});
 					}
 
 				} else if (option.type === GlobalSettingsService.TYPE_OPTION_LIST) {
 
 					option.active = _.find(option.list, {
-						key: _.propertyOf(userSettingsSynced)(option.key),
+						key: _.propertyOf(userSettings)(option.key),
 					});
 
 				} else if (option.type === GlobalSettingsService.TYPE_OPTION_NUMBER) {
 
-					option.value = _.propertyOf(userSettingsSynced)(option.key);
+					option.value = _.propertyOf(userSettings)(option.key);
 
 				} else {
 					this.logger.error("Option type not supported");
