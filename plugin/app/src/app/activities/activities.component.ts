@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
-import { SyncedActivityModel, SyncResultModel, UserSettingsModel } from "@elevate/shared/models";
+import { SyncedActivityModel, SyncResultModel, UserSettings } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { ActivityColumns } from "./activity-columns.namespace";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
@@ -12,6 +12,7 @@ import * as moment from "moment";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import NumberColumn = ActivityColumns.NumberColumn;
+import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Component({
 	selector: "app-activities",
@@ -101,7 +102,7 @@ export class ActivitiesComponent implements OnInit {
 
 		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
 
-			this.isImperial = (userSettings.systemUnit === UserSettingsModel.SYSTEM_UNIT_IMPERIAL_KEY);
+			this.isImperial = (userSettings.systemUnit === UserSettings.SYSTEM_UNIT_IMPERIAL_KEY);
 
 		}).then(() => {
 

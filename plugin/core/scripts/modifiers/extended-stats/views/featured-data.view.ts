@@ -1,16 +1,17 @@
 import * as _ from "lodash";
 import { Helper } from "../../../helper";
 
-import { ActivityInfoModel, AnalysisDataModel, SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, AnalysisDataModel, SpeedUnitDataModel, UserSettings } from "@elevate/shared/models";
 import { AbstractDataView } from "./abstract-data.view";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class FeaturedDataView extends AbstractDataView {
 
 	protected analysisData: AnalysisDataModel;
 	protected activityInfo: ActivityInfoModel;
-	protected userSettings: UserSettingsModel;
+	protected userSettings: ExtensionUserSettingsModel;
 
-	constructor(analysisData: AnalysisDataModel, userSettings: UserSettingsModel, activityInfo: ActivityInfoModel) {
+	constructor(analysisData: AnalysisDataModel, userSettings: ExtensionUserSettingsModel, activityInfo: ActivityInfoModel) {
 
 		super(null);
 		this.hasGraph = false;

@@ -21,11 +21,12 @@ import {
 	UpFlatDownModel,
 	UpFlatDownSumCounterModel,
 	UpFlatDownSumTotalModel,
-	UserSettingsModel,
+	UserSettings,
 	UserZonesModel,
 	ZoneModel
 } from "@elevate/shared/models";
 import { StreamVariationSplit } from "../models/stream-variation-split.model";
+import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export class ActivityComputer {
 

@@ -1,13 +1,14 @@
 import * as _ from "lodash";
 import * as $ from "jquery";
 import { Helper } from "../../helper";
-import { ActivityInfoModel, AnalysisDataModel, AthleteSnapshotModel, SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, AnalysisDataModel, AthleteSnapshotModel, SpeedUnitDataModel, UserSettings } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AbstractDataView } from "./views/abstract-data.view";
 import { FeaturedDataView } from "./views/featured-data.view";
 import { HeaderView } from "./views/header.view";
 import { HeartRateDataView } from "./views/heart-rate-data.view";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export abstract class AbstractExtendedDataModifier {
 
@@ -17,7 +18,7 @@ export abstract class AbstractExtendedDataModifier {
 	protected activityProcessor: ActivityProcessor;
 	protected activityType: string;
 	protected appResources: AppResourcesModel;
-	protected userSettings: UserSettingsModel;
+	protected userSettings: ExtensionUserSettingsModel;
 	protected athleteSnapshot: AthleteSnapshotModel;
 	protected activityInfo: ActivityInfoModel;
 	protected speedUnitsData: SpeedUnitDataModel;
@@ -29,7 +30,7 @@ export abstract class AbstractExtendedDataModifier {
 	protected dataViews: AbstractDataView[] = [];
 
 	protected constructor(activityProcessor: ActivityProcessor, activityInfo: ActivityInfoModel, appResources: AppResourcesModel,
-						  userSettings: UserSettingsModel, type: number) {
+						  userSettings: ExtensionUserSettingsModel, type: number) {
 
 		this.activityProcessor = activityProcessor;
 		this.appResources = appResources;

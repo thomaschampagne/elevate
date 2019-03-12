@@ -1,5 +1,5 @@
 import { Helper } from "../../helper";
-import { ActivityInfoModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, UserSettings } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AbstractExtendedDataModifier } from "./abstract-extended-data.modifier";
@@ -10,10 +10,11 @@ import { CyclingPowerDataView } from "./views/cycling-power-data.view";
 import { ElevationDataView } from "./views/elevation-data.view";
 import { SpeedDataView } from "./views/speed-data.view";
 import * as _ from "lodash";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
-	constructor(activityProcessor: ActivityProcessor, activityInfo: ActivityInfoModel, appResources: AppResourcesModel, userSettings: UserSettingsModel, type: number) {
+	constructor(activityProcessor: ActivityProcessor, activityInfo: ActivityInfoModel, appResources: AppResourcesModel, userSettings: ExtensionUserSettingsModel, type: number) {
 		super(activityProcessor, activityInfo, appResources, userSettings, type);
 	}
 

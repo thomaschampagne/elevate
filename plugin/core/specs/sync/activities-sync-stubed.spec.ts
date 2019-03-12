@@ -8,7 +8,7 @@ import {
 	AthleteModel,
 	SyncedActivityModel,
 	SyncResultModel,
-	UserSettingsModel
+	UserSettings,
 } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { ActivitiesSynchronize } from "../../scripts/processors/activities-synchronize";
@@ -17,12 +17,12 @@ import { StreamActivityModel } from "../../scripts/models/sync/stream-activity.m
 import { MultipleActivityProcessor } from "../../scripts/processors/multiple-activity-processor";
 import { SyncNotifyModel } from "../../scripts/models/sync/sync-notify.model";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
-import { userSettingsData } from "@elevate/shared/data";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 describe("ActivitiesSynchronize", () => {
 
 	let athleteModelResolver: AthleteSnapshotResolver;
-	let userSettingsMock: UserSettingsModel;
+	let userSettingsMock: ExtensionUserSettingsModel;
 	let appResourcesMock: AppResourcesModel;
 	let activitiesSynchronize: ActivitiesSynchronize;
 	let rawPagesOfActivities: Array<{ models: Array<StravaActivityModel>, total: number }>;
@@ -83,7 +83,7 @@ describe("ActivitiesSynchronize", () => {
 
 		CHROME_STORAGE_STUB = {}; // Reset storage
 
-		userSettingsMock = _.cloneDeep(userSettingsData);
+		userSettingsMock = _.cloneDeep(ExtensionUserSettingsModel.DEFAULT_MODEL);
 		appResourcesMock = _.cloneDeep(require("../fixtures/app-resources/app-resources.json"));
 
 		// We have 7 pages

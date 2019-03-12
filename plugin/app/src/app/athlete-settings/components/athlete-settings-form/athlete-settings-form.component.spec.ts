@@ -3,10 +3,10 @@ import { AthleteSettingsFormComponent } from "./athlete-settings-form.component"
 import * as _ from "lodash";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
-import { AthleteSettingsModel } from "@elevate/shared/models";
-import { userSettingsData } from "@elevate/shared/data";
+import { AthleteSettingsModel, UserSettings } from "@elevate/shared/models";
 import { AthleteSettingsModule } from "../../athlete-settings.module";
 import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("AthleteSettingsFormComponent", () => {
 
@@ -25,7 +25,7 @@ describe("AthleteSettingsFormComponent", () => {
 		}).compileComponents();
 
 		userSettingsService = TestBed.get(UserSettingsService);
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
 		done();
 	});

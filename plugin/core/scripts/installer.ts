@@ -5,7 +5,7 @@ import {
 	Gender,
 	SyncedActivityModel,
 	UserLactateThresholdModel,
-	UserSettingsModel,
+	UserSettings,
 	UserZonesModel
 } from "@elevate/shared/models";
 import { Helper } from "./helper";
@@ -13,10 +13,10 @@ import * as semver from "semver";
 import * as _ from "lodash";
 import { BrowserStorage } from "./browser-storage";
 import { Constant } from "@elevate/shared/constants";
-import { userSettingsData } from "@elevate/shared/data";
 import { YearToDateProgressPresetModel } from "../../app/src/app/year-progress/shared/models/year-to-date-progress-preset.model";
 import { ProgressMode } from "../../app/src/app/year-progress/shared/enums/progress-mode.enum";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 class Installer {
 
@@ -294,7 +294,7 @@ class Installer {
 
 				} catch (err) {
 					console.warn(err);
-					promiseMigrate = BrowserStorage.getInstance().set(BrowserStorageType.SYNC, "zones", userSettingsData.zones); // Reset to default
+					promiseMigrate = BrowserStorage.getInstance().set(BrowserStorageType.SYNC, "zones", ExtensionUserSettingsModel.DEFAULT_MODEL.zones); // Reset to default
 				}
 
 				return promiseMigrate;
@@ -359,10 +359,10 @@ class Installer {
 
 			console.log("Migrate to 6.8.1");
 
-			let userSettingsModel: UserSettingsModel;
+			let userSettingsModel: ExtensionUserSettingsModel;
 
 			// Move all user settings content inside specific key
-			promise = BrowserStorage.getInstance().get(BrowserStorageType.SYNC).then((settings: UserSettingsModel) => {
+			promise = BrowserStorage.getInstance().get(BrowserStorageType.SYNC).then((settings: ExtensionUserSettingsModel) => {
 
 				const hasUserSettingsKey = !_.isEmpty((<any>settings).userSettings);
 
@@ -399,10 +399,10 @@ class Installer {
 
 			console.log("Migrate to 6.9.0");
 
-			let userSettingsModel: UserSettingsModel;
+			let userSettingsModel: ExtensionUserSettingsModel;
 
 			// Move all user settings content inside specific key
-			promise = BrowserStorage.getInstance().get(BrowserStorageType.SYNC, "userSettings").then((settings: UserSettingsModel) => {
+			promise = BrowserStorage.getInstance().get(BrowserStorageType.SYNC, "userSettings").then((settings: ExtensionUserSettingsModel) => {
 
 				const hasOldYearProgressTargets = _.isNumber((<any>settings).targetsYearRide) || _.isNumber((<any>settings).targetsYearRun);
 
@@ -486,7 +486,7 @@ class Installer {
 					throw Error(alreadyMigratedMessage);
 				}
 
-				const userSettingsModel: UserSettingsModel = <UserSettingsModel>result[0];
+				const userSettingsModel: ExtensionUserSettingsModel = <ExtensionUserSettingsModel>result[0];
 				const localBrowserStorage: any = <any>result[1] || <any>{};
 
 				localBrowserStorage["userSettings"] = userSettingsModel;
@@ -504,7 +504,7 @@ class Installer {
 
 			}).then(result => {
 
-				const userSettingsModel: UserSettingsModel = <UserSettingsModel>result[0];
+				const userSettingsModel: ExtensionUserSettingsModel = <ExtensionUserSettingsModel>result[0];
 				const datedAthleteSettings: DatedAthleteSettingsModel[] = <DatedAthleteSettingsModel[]>result[1];
 
 				// Create new athlete storage local
@@ -571,7 +571,6 @@ class Installer {
 	protected handleUpdate(): Promise<void> {
 
 		console.log("Updated from " + this.previousVersion + " to " + this.currentVersion);
-		console.debug("UserSettings on update", userSettingsData);
 
 		return this.migrate_to_5_1_1().then(() => {
 			return this.migrate_to_5_11_0();

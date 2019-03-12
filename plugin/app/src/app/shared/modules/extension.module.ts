@@ -13,5 +13,5 @@ import { ChromeVersionsProvider } from "../services/versions/impl/chrome-version
 		{provide: VERSIONS_PROVIDER, useClass: ChromeVersionsProvider}
 	]
 })
-export class ChromeModule {
+export class ExtensionModule {
 }

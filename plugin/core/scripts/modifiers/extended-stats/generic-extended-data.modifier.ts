@@ -7,12 +7,13 @@ import { PaceDataView } from "./views/pace-data.view";
 import { RunningCadenceDataView } from "./views/running-cadence.data.view";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AppResourcesModel } from "../../models/app-resources.model";
-import { ActivityInfoModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, UserSettings } from "@elevate/shared/models";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 
 	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, supportsGap: boolean,
-				appResources: AppResourcesModel, userSettings: UserSettingsModel, isOwner: boolean, activityInfo: ActivityInfoModel, type: number) {
+				appResources: AppResourcesModel, userSettings: ExtensionUserSettingsModel, isOwner: boolean, activityInfo: ActivityInfoModel, type: number) {
 		super(activityProcessor, activityInfo, appResources, userSettings, type);
 	}
 

@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import { ActivitiesChangesModel, CoreMessages, SyncedActivityModel, SyncResultModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivitiesChangesModel, CoreMessages, SyncedActivityModel, SyncResultModel, UserSettings } from "@elevate/shared/models";
 import { BrowserStorage } from "../browser-storage";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { MultipleActivityProcessor } from "./multiple-activity-processor";
@@ -9,10 +9,11 @@ import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { StreamActivityModel } from "../models/sync/stream-activity.model";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { BrowserStorageType } from "../models/browser-storage-type.enum";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class ActivitiesSynchronize {
 
-	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteSnapshotResolver) {
+	constructor(appResources: AppResourcesModel, userSettings: ExtensionUserSettingsModel, athleteModelResolver: AthleteSnapshotResolver) {
 		this.appResources = appResources;
 		this.userSettings = userSettings;
 		this.extensionId = this.appResources.extensionId;
@@ -38,7 +39,7 @@ export class ActivitiesSynchronize {
 	public static readonly SLEEP_TIME = 1750;
 
 	protected appResources: AppResourcesModel;
-	protected userSettings: UserSettingsModel;
+	protected userSettings: ExtensionUserSettingsModel;
 	protected extensionId: string;
 	protected totalRawActivityIds: number[] = [];
 	protected _hasBeenSyncedActivities: SyncedActivityModel[] = null;

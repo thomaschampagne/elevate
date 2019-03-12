@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
-import { UserSettingsModel } from "@elevate/shared/models";
+import { EnvTarget } from "../../shared/enums/env-target";
+import { UserSettings } from "@elevate/shared/models";
 
 @Injectable()
 export class GlobalSettingsService {
@@ -16,10 +17,10 @@ export class GlobalSettingsService {
 			type: "list",
 			labels: ["All"],
 			list: [{
-				key: UserSettingsModel.SYSTEM_UNIT_METRIC_KEY,
+				key: UserSettings.SYSTEM_UNIT_METRIC_KEY,
 				name: "Metric",
 			}, {
-				key: UserSettingsModel.SYSTEM_UNIT_IMPERIAL_KEY,
+				key: UserSettings.SYSTEM_UNIT_IMPERIAL_KEY,
 				name: "Imperial",
 			}],
 			title: "App system units",
@@ -38,6 +39,7 @@ export class GlobalSettingsService {
 		}],
 	}, {
 		title: "Activities Extended Statistics",
+		envTarget: EnvTarget.EXTENSION,
 		options: [{
 			key: "displayActivityRatio",
 			type: "checkbox",
@@ -82,6 +84,7 @@ export class GlobalSettingsService {
 		}],
 	}, {
 		title: "Activity viewing options",
+		envTarget: EnvTarget.EXTENSION,
 		options: [{
 			key: "enableBothLegsCadence",
 			type: "checkbox",
@@ -212,6 +215,7 @@ export class GlobalSettingsService {
 		}],
 	}, {
 		title: "Segments viewing options",
+		envTarget: EnvTarget.EXTENSION,
 		options: [{
 			key: "displaySegmentRankPercentage",
 			type: "checkbox",
@@ -226,6 +230,7 @@ export class GlobalSettingsService {
 
 	}, {
 		title: "Activities and Segments viewing options",
+		envTarget: EnvTarget.EXTENSION,
 		options: [{
 			key: "remoteLinks",
 			type: "checkbox",
@@ -234,6 +239,7 @@ export class GlobalSettingsService {
 		}],
 	}, {
 		title: "Dashboard",
+		envTarget: EnvTarget.EXTENSION,
 		options: [{
 			key: "feedChronologicalOrder",
 			type: "checkbox",
@@ -280,6 +286,7 @@ export class GlobalSettingsService {
 		}],
 	}, {
 		title: "Hidden/Beta features",
+		envTarget: EnvTarget.EXTENSION,
 		options: [{
 			key: "showHiddenBetaFeatures",
 			type: "checkbox",

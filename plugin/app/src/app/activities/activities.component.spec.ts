@@ -7,10 +7,11 @@ import { ActivityService } from "../shared/services/activity/activity.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import * as _ from "lodash";
 import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fixture";
-import { userSettingsData } from "@elevate/shared/data";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { ChromeEventsService } from "../shared/services/external-updates/impl/chrome-events.service";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
+import { UserSettings } from "@elevate/shared/models";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ActivitiesComponent", () => {
 
@@ -43,7 +44,7 @@ describe("ActivitiesComponent", () => {
 
 		// Mocking
 		spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
 		spyOn(syncService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
 		spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));

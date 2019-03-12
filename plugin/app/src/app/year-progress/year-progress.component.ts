@@ -11,7 +11,7 @@ import { YearProgressStyleModel } from "./year-progress-graph/models/year-progre
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { MatDialog } from "@angular/material";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
-import { SyncedActivityModel, SyncResultModel, UserSettingsModel } from "@elevate/shared/models";
+import { SyncedActivityModel, SyncResultModel, UserSettings } from "@elevate/shared/models";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { ActivityService } from "../shared/services/activity/activity.service";
@@ -35,6 +35,7 @@ import { RollingProgressPresetModel } from "./shared/models/rolling-progress-pre
 import { YearProgressWelcomeDialogComponent } from "./year-progress-welcome-dialog/year-progress-welcome-dialog.component";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { LoggerService } from "../shared/services/logging/logger.service";
+import UserSettingsModel = UserSettings.UserSettingsModel;
 
 /* Legacy tasks */
 // TODO Style of target line!
@@ -254,7 +255,7 @@ export class YearProgressComponent implements OnInit {
 
 			if (this.hasActivityModels) {
 				const userSettingsModel = _.first(results) as UserSettingsModel;
-				this.isMetric = (userSettingsModel.systemUnit === UserSettingsModel.SYSTEM_UNIT_METRIC_KEY);
+				this.isMetric = (userSettingsModel.systemUnit === UserSettings.SYSTEM_UNIT_METRIC_KEY);
 				this.setup();
 			}
 

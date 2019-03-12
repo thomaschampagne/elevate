@@ -6,6 +6,8 @@ import { CoreModule } from "../core/core.module";
 import { MatDialogRef } from "@angular/material";
 import { DataStore } from "../shared/data-store/data-store";
 import { MockedDataStore } from "../shared/data-store/impl/spec/mocked-data-store.service";
+import { VERSIONS_PROVIDER } from "../shared/services/versions/versions-provider.interface";
+import { MockedVersionsProvider } from "../shared/services/versions/impl/spec/mocked-versions-provider";
 
 describe("AboutDialogComponent", () => {
 	let component: AboutDialogComponent;
@@ -14,6 +16,7 @@ describe("AboutDialogComponent", () => {
 	beforeEach((done: Function) => {
 
 		const mockedDataStore: MockedDataStore<void> = new MockedDataStore();
+		const mockedVersionsProvider: MockedVersionsProvider = new MockedVersionsProvider();
 
 		TestBed.configureTestingModule({
 			imports: [
@@ -24,7 +27,8 @@ describe("AboutDialogComponent", () => {
 				{
 					provide: MatDialogRef, useValue: {},
 				},
-				{provide: DataStore, useValue: mockedDataStore}
+				{provide: DataStore, useValue: mockedDataStore},
+				{provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider}
 			]
 		}).compileComponents();
 		done();
@@ -33,13 +37,7 @@ describe("AboutDialogComponent", () => {
 	beforeEach((done: Function) => {
 		fixture = TestBed.createComponent(AboutDialogComponent);
 		component = fixture.componentInstance;
-
-		const version = "1.0.0";
-		spyOn(component, "getAppVersion").and.returnValue(version);
-		spyOn(component, "getProdAppVersion").and.returnValue(Promise.resolve(version));
-
 		fixture.detectChanges();
-
 		done();
 	});
 

@@ -1,8 +1,8 @@
 import { LoggerService } from "../app/shared/services/logging/logger.service";
-import { EnvType } from "../app/shared/enums/env-type";
+import { EnvTarget } from "../app/shared/enums/env-target";
 
 export const environment = {
-	type: EnvType.EXTENSION,
+	target: EnvTarget.EXTENSION,
 	production: true,
 	logLevel: LoggerService.LEVEL_DEBUG,
 	skipRestoreSyncedBackupCheck: false

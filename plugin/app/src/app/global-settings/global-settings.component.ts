@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { UserSettingsModel } from "@elevate/shared/models";
-import { userSettingsData } from "@elevate/shared/data";
 import { GlobalSettingsService } from "./services/global-settings.service";
 import * as _ from "lodash";
 import { MatDialog } from "@angular/material";
@@ -14,6 +12,9 @@ import { OptionModel } from "./models/option.model";
 import { OptionHelperDataModel } from "./option-helper-dialog/option-helper-data.model";
 import { Subscription } from "rxjs";
 import { LoggerService } from "../shared/services/logging/logger.service";
+import { environment } from "../../environments/environment";
+import { UserSettings } from "@elevate/shared/models";
+import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Component({
 	selector: "app-global-settings",
@@ -52,8 +53,8 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 
 		this.sections = this.globalSettingsService.sections;
 
-		this.userSettingsService.fetch().then((userSettingsSynced: UserSettingsModel) => {
-			this.renderOptionsForEachSection(userSettingsSynced);
+		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
+			this.renderOptionsForEachSection(userSettings);
 		});
 
 		// Watch query params to filter options from URL
@@ -161,7 +162,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 	 * @param {OptionModel} option
 	 */
 	public resetOptionToDefaultValue(option: OptionModel): void {
-		const resetValue = _.propertyOf(userSettingsData)(option.key);
+		const resetValue = _.propertyOf(UserSettings.getDefaultsByEnvTarget(environment.target))(option.key);
 		this.logger.info(option.key + " value not compliant, Reset to  " + resetValue);
 		option.value = resetValue;
 	}

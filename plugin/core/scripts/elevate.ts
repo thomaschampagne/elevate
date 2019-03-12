@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "./helper";
-import { ActivityInfoModel, AthleteModel, ReleaseNoteModel, SyncResultModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, AthleteModel, ReleaseNoteModel, SyncResultModel, UserSettings } from "@elevate/shared/models";
 import { BrowserStorage } from "./browser-storage";
 import { CoreEnv } from "../config/core-env";
 import { AppResourcesModel } from "./models/app-resources.model";
@@ -45,6 +45,7 @@ import { ActivitiesChronologicalFeedModifier } from "./modifiers/activities-chro
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { releaseNotesData } from "@elevate/shared/data";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class Elevate {
 
@@ -63,12 +64,12 @@ export class Elevate {
 	public isOwner: boolean;
 	public extensionId: string;
 	public appResources: AppResourcesModel;
-	public userSettings: UserSettingsModel;
+	public userSettings: ExtensionUserSettingsModel;
 	public vacuumProcessor: VacuumProcessor;
 	public activitiesSynchronize: ActivitiesSynchronize;
 	public pageMatches: { activity: boolean, dashboard: boolean, segment: boolean };
 
-	constructor(userSettings: UserSettingsModel, appResources: AppResourcesModel) {
+	constructor(userSettings: ExtensionUserSettingsModel, appResources: AppResourcesModel) {
 
 		this.userSettings = userSettings;
 		this.appResources = appResources;
@@ -96,7 +97,7 @@ export class Elevate {
 
 			if (this.userSettings.localStorageMustBeCleared) {
 				localStorage.clear();
-				BrowserStorage.getInstance().upsertProperty<UserSettingsModel, boolean>(BrowserStorageType.LOCAL, ["userSettings", "localStorageMustBeCleared"], false);
+				BrowserStorage.getInstance().upsertProperty<ExtensionUserSettingsModel, boolean>(BrowserStorageType.LOCAL, ["userSettings", "localStorageMustBeCleared"], false);
 			}
 
 			// Init "elevate bridge"

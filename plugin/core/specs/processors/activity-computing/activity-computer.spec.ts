@@ -5,10 +5,11 @@ import {
 	AthleteSettingsModel,
 	AthleteSnapshotModel,
 	Gender,
-	UserSettingsModel
+	UserSettings,
 } from "@elevate/shared/models";
 import { ActivityComputer } from "../../../scripts/processors/activity-computer";
 import { StreamVariationSplit } from "../../../scripts/models/stream-variation-split.model";
+import UserSettingsModel = UserSettings.UserSettingsModel;
 
 describe("ActivityComputer", () => {
 

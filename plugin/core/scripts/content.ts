@@ -2,10 +2,10 @@ import * as _ from "lodash";
 import { Loader } from "../modules/loader";
 import { AppResourcesModel } from "./models/app-resources.model";
 import { StartCoreDataModel } from "./models/start-core-data.model";
-import { CoreMessages, UserSettingsModel } from "@elevate/shared/models";
-import { userSettingsData } from "@elevate/shared/data";
+import { CoreMessages, UserSettings } from "@elevate/shared/models";
 import { BrowserStorage } from "./browser-storage";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class Content {
 
@@ -57,20 +57,22 @@ export class Content {
 
 		BrowserStorage.getInstance().get<any>(BrowserStorageType.LOCAL).then(result => {
 
-			let userSettingsModel: UserSettingsModel;
+			let userSettingsModel: ExtensionUserSettingsModel;
 
 			const hasUserSettingsKey = !_.isEmpty(result.userSettings);
+
+			const defaultUserSettingsData = ExtensionUserSettingsModel.DEFAULT_MODEL;
 
 			if (hasUserSettingsKey) {
 				userSettingsModel = result.userSettings;
 			} else {
-				userSettingsModel = userSettingsData;
+				userSettingsModel = defaultUserSettingsData;
 			}
 
-			const defaultSettings = _.keys(userSettingsData);
+			const defaultSettings = _.keys(defaultUserSettingsData);
 			const syncedSettings = _.keys(userSettingsModel);
 			if (_.difference(defaultSettings, syncedSettings).length !== 0) { // If settings shape has changed
-				_.defaults(userSettingsModel, userSettingsData);
+				_.defaults(userSettingsModel, defaultUserSettingsData);
 			}
 
 			const startCoreData: StartCoreDataModel = {

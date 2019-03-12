@@ -5,10 +5,10 @@ import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { AthleteSettingsModule } from "../athlete-settings.module";
 import * as _ from "lodash";
-import { userSettingsData } from "@elevate/shared/data";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { AthleteService } from "../../shared/services/athlete/athlete.service";
-import { AthleteModel } from "@elevate/shared/models";
+import { AthleteModel, UserSettings } from "@elevate/shared/models";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("AthleteSettingsComponent", () => {
 
@@ -29,7 +29,7 @@ describe("AthleteSettingsComponent", () => {
 		userSettingsService = TestBed.get(UserSettingsService);
 		athleteService = TestBed.get(AthleteService);
 
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 		spyOn(athleteService, "fetch").and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
 		done();
 	});

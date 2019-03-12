@@ -3,8 +3,9 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ZonesSettingsComponent } from "./zones-settings.component";
 import { CoreModule } from "../core/core.module";
 import { SharedModule } from "../shared/shared.module";
-import { userSettingsData } from "@elevate/shared/data";
 import * as _ from "lodash";
+import { UserSettings } from "@elevate/shared/models";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZonesSettingsComponent", () => {
 
@@ -26,7 +27,7 @@ describe("ZonesSettingsComponent", () => {
 		fixture = TestBed.createComponent(ZonesSettingsComponent);
 		component = fixture.componentInstance;
 
-		spyOn(component.userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
+		spyOn(component.userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
 		fixture.detectChanges();
 		done();

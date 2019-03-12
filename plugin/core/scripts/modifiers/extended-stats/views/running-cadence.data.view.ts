@@ -1,12 +1,13 @@
 import * as _ from "lodash";
-import { CadenceDataModel, UserSettingsModel } from "@elevate/shared/models";
+import { CadenceDataModel, UserSettings } from "@elevate/shared/models";
 import { AbstractCadenceDataView } from "./abstract-cadence-data.view";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class RunningCadenceDataView extends AbstractCadenceDataView {
 
-	protected userSettings: UserSettingsModel;
+	protected userSettings: ExtensionUserSettingsModel;
 
-	constructor(cadenceData: CadenceDataModel, units: string, userSettings: UserSettingsModel) {
+	constructor(cadenceData: CadenceDataModel, units: string, userSettings: ExtensionUserSettingsModel) {
 
 		if (userSettings.enableBothLegsCadence) {
 

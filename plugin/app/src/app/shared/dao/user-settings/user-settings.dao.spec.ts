@@ -1,8 +1,9 @@
 import { TestBed } from "@angular/core/testing";
 import { UserSettingsDao } from "./user-settings.dao";
-import { UserSettingsModel } from "@elevate/shared/models";
 import { DataStore } from "../../data-store/data-store";
 import { MockedDataStore } from "../../data-store/impl/spec/mocked-data-store.service";
+import { UserSettings } from "@elevate/shared/models";
+import UserSettingsModel = UserSettings.UserSettingsModel;
 
 describe("UserSettingsDao", () => {
 

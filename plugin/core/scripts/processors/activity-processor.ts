@@ -5,12 +5,13 @@ import {
 	AnalysisDataModel,
 	AthleteSnapshotModel,
 	Gender,
-	UserSettingsModel
+	UserSettings
 } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
 import { VacuumProcessor } from "./vacuum-processor";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 const ComputeAnalysisWorker = require("worker-loader?inline!./workers/compute-analysis.worker");
 
@@ -23,12 +24,12 @@ export class ActivityProcessor {
 	protected zones: any;
 	protected activityInfo: ActivityInfoModel;
 	protected computeAnalysisThread: Worker;
-	protected userSettings: UserSettingsModel;
+	protected userSettings: ExtensionUserSettingsModel;
 
 	constructor(vacuumProcessor: VacuumProcessor,
 				athleteModelResolver: AthleteSnapshotResolver,
 				appResources: AppResourcesModel,
-				userSettings: UserSettingsModel,
+				userSettings: ExtensionUserSettingsModel,
 				activityInfo: ActivityInfoModel) {
 
 		this.vacuumProcessor = vacuumProcessor;

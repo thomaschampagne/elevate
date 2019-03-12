@@ -8,9 +8,9 @@ import { AthleteSettingsModule } from "../../athlete-settings.module";
 import * as _ from "lodash";
 import { DatedAthleteSettingsDialogData } from "./dated-athlete-settings-dialog-data.model";
 import { DatedAthleteSettingsAction } from "./dated-athlete-settings-action.enum";
-import { DatedAthleteSettingsModel } from "@elevate/shared/models";
-import { userSettingsData } from "@elevate/shared/data";
+import { DatedAthleteSettingsModel, UserSettings } from "@elevate/shared/models";
 import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("EditDatedAthleteSettingsDialogComponent", () => {
 
@@ -43,7 +43,7 @@ describe("EditDatedAthleteSettingsDialogComponent", () => {
 
 		userSettingsService = TestBed.get(UserSettingsService);
 
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
 		fixture = TestBed.createComponent(EditDatedAthleteSettingsDialogComponent);
 		component = fixture.componentInstance;

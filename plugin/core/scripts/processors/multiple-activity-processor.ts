@@ -1,17 +1,18 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import { ActivitySourceDataModel, AnalysisDataModel, SyncedActivityModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivitySourceDataModel, AnalysisDataModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
 import { StreamActivityModel } from "../models/sync/stream-activity.model";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 const ComputeAnalysisWorker = require("worker-loader?inline!./workers/compute-analysis.worker");
 
 export class MultipleActivityProcessor {
 
-	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteSnapshotResolver) {
+	constructor(appResources: AppResourcesModel, userSettings: ExtensionUserSettingsModel, athleteModelResolver: AthleteSnapshotResolver) {
 		this.appResources = appResources;
 		this.userSettings = userSettings;
 		this.athleteModelResolver = athleteModelResolver;
@@ -20,7 +21,7 @@ export class MultipleActivityProcessor {
 	public static outputFields: string[] = ["id", "name", "type", "display_type", "private", "bike_id", "start_time", "distance_raw", "short_unit", "moving_time_raw", "elapsed_time_raw", "trainer", "commute", "elevation_unit", "elevation_gain_raw", "calories", "hasPowerMeter"];
 
 	protected appResources: AppResourcesModel;
-	protected userSettings: UserSettingsModel;
+	protected userSettings: ExtensionUserSettingsModel;
 	protected athleteModelResolver: AthleteSnapshotResolver;
 
 	/**

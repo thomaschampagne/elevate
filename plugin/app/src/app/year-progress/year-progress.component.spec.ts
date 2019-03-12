@@ -11,12 +11,12 @@ import { SyncService } from "../shared/services/sync/sync.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { YearProgressActivitiesFixture } from "./shared/services/year-progress-activities.fixture";
-import { SyncedActivityModel } from "@elevate/shared/models";
-import { userSettingsData } from "@elevate/shared/data";
+import { SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { YearProgressModule } from "./year-progress.module";
 import { YearToDateProgressPresetModel } from "./shared/models/year-to-date-progress-preset.model";
 import { ProgressType } from "./shared/enums/progress-type.enum";
 import { ChromeEventsService } from "../shared/services/external-updates/impl/chrome-events.service";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("YearProgressComponent", () => {
 
@@ -60,7 +60,7 @@ describe("YearProgressComponent", () => {
 
 		spyOn(syncService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
 		spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(userSettingsData));
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(DesktopUserSettingsModel.DEFAULT_MODEL));
 		spyOn(activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
 		done();

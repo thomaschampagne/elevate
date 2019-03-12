@@ -3,7 +3,6 @@ import * as _ from "lodash";
 import { Subject } from "rxjs";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { UserZonesModel, ZoneModel } from "@elevate/shared/models";
-import { userSettingsData } from "@elevate/shared/data";
 import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";
 import { ZoneChangeOrderModel } from "./zone-change-order.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
@@ -283,7 +282,7 @@ export class ZonesService {
 		return new Promise((resolve: () => void,
 							reject: (error: string) => void) => {
 
-			this.currentZones = UserZonesModel.deserialize(_.clone(_.propertyOf(userSettingsData.zones)(this.zoneDefinition.value)));
+			this.currentZones = UserZonesModel.deserialize(_.clone(_.propertyOf(UserZonesModel.DEFAULT_MODEL)(this.zoneDefinition.value)));
 
 			this.saveZones().then(() => {
 

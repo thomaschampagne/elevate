@@ -7,10 +7,11 @@ import {
 	AthleteSettingsModel,
 	AthleteSnapshotModel,
 	Gender,
-	UserSettingsModel
+	UserSettings
 } from "@elevate/shared/models";
 import { RunningPowerEstimator } from "../../scripts/processors/running-power-estimator";
 import { ActivityComputer } from "../../scripts/processors/activity-computer";
+import UserSettingsModel = UserSettings.UserSettingsModel;
 
 describe("RunningPowerEstimator", () => {
 

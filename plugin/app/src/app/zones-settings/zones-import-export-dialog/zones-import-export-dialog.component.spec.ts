@@ -7,8 +7,8 @@ import { CoreModule } from "../../core/core.module";
 import { ZoneImportExportDataModel } from "./zone-import-export-data.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 import { Mode } from "./mode.enum";
-import { UserZonesModel } from "@elevate/shared/models";
-import { userSettingsData } from "@elevate/shared/data";
+import { UserSettings, UserZonesModel } from "@elevate/shared/models";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZonesImportExportDialogComponent", () => {
 
@@ -29,7 +29,7 @@ describe("ZonesImportExportDialogComponent", () => {
 	beforeEach((done: Function) => {
 
 		zoneImportExportDataModel_As_Export = new ZoneImportExportDataModel(zoneSpeedDefinition,
-			UserZonesModel.deserialize(userSettingsData.zones.speed), Mode.EXPORT);
+			UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed), Mode.EXPORT);
 
 		TestBed.configureTestingModule({
 			imports: [
@@ -67,7 +67,7 @@ describe("ZonesImportExportDialogComponent", () => {
 		// Given
 		const fixture = TestBed.createComponent(ZonesImportExportDialogComponent);
 		const compiled = fixture.debugElement.nativeElement;
-		const expected = JSON.stringify(UserZonesModel.deserialize(userSettingsData.zones.speed));
+		const expected = JSON.stringify(UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed));
 
 		// When
 		fixture.detectChanges();

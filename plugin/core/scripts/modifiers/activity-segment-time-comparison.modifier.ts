@@ -1,9 +1,10 @@
 import * as _ from "lodash";
 import $ from "../../modules/jquery.appear";
 import { Helper } from "../helper";
-import { UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { AbstractModifier } from "./abstract.modifier";
+import { UserSettings } from "@elevate/shared/models";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export interface EffortInfo {
 	// values obtained from the HTTP request
@@ -47,7 +48,7 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
 	protected deltaPRLabel: string;
 	protected deltaKomLabel: string;
 
-	constructor(userSettings: UserSettingsModel, appResources: AppResourcesModel, activityType: string, isMyOwn: boolean) {
+	constructor(userSettings: ExtensionUserSettingsModel, appResources: AppResourcesModel, activityType: string, isMyOwn: boolean) {
 		super();
 		this.showDifferenceToKOM = userSettings.displaySegmentTimeComparisonToKOM;
 		this.showDifferenceToPR = isMyOwn && userSettings.displaySegmentTimeComparisonToPR;

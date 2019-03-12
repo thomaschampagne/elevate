@@ -1,8 +1,9 @@
-import { UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "./app-resources.model";
+import { UserSettings } from "@elevate/shared/models";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class StartCoreDataModel {
 	extensionId: string;
-	userSettings: UserSettingsModel;
+	userSettings: ExtensionUserSettingsModel;
 	appResources: AppResourcesModel;
 }

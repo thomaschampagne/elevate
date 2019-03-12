@@ -3,9 +3,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { GlobalSettingsComponent } from "./global-settings.component";
 import { SharedModule } from "../shared/shared.module";
 import * as _ from "lodash";
-import { userSettingsData } from "@elevate/shared/data";
 import { CoreModule } from "../core/core.module";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
+import { UserSettings } from "@elevate/shared/models";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("GlobalSettingsComponent", () => {
 
@@ -24,7 +25,7 @@ describe("GlobalSettingsComponent", () => {
 		}).compileComponents();
 
 		userSettingsService = TestBed.get(UserSettingsService);
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
 		done();
 	});

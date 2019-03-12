@@ -5,10 +5,11 @@ import {
 	AthleteSettingsModel,
 	AthleteSnapshotModel,
 	Gender,
-	UserSettingsModel
+	UserSettings,
 } from "@elevate/shared/models";
 import { ActivityComputer } from "../../../scripts/processors/activity-computer";
 import * as _ from "lodash";
+import UserSettingsModel = UserSettings.UserSettingsModel;
 
 const expectBetween = (expectValue: number, toEqual: number, tolerance: number) => {
 

@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
-import { UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared/models";
+import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
-import { userSettingsData } from "@elevate/shared/data";
 import { LoggerService } from "../logging/logger.service";
+import { environment } from "../../../../environments/environment";
+import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Injectable()
 export class UserSettingsService {
@@ -15,7 +16,7 @@ export class UserSettingsService {
 	}
 
 	public fetch(): Promise<UserSettingsModel> {
-		return (<Promise<UserSettingsModel>> this.userSettingsDao.fetch());
+		return (<Promise<UserSettingsModel>>this.userSettingsDao.fetch());
 	}
 
 	/**
@@ -56,7 +57,7 @@ export class UserSettingsService {
 	 * @returns {Promise<UserSettingsModel>}
 	 */
 	public reset(): Promise<UserSettingsModel> {
-		return (<Promise<UserSettingsModel>> this.userSettingsDao.save(userSettingsData));
+		return (<Promise<UserSettingsModel>>this.userSettingsDao.save(UserSettings.getDefaultsByEnvTarget(environment.target)));
 	}
 
 	/**

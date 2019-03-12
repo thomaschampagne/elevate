@@ -1,6 +1,7 @@
 import * as _ from "lodash";
-import { UserSettingsModel } from "@elevate/shared/models";
 import { AbstractModifier } from "./abstract.modifier";
+import { UserSettings } from "@elevate/shared/models";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class HideFeedModifier extends AbstractModifier {
 
@@ -8,9 +9,9 @@ export class HideFeedModifier extends AbstractModifier {
 	private static RIDE = "ride";
 	private static RUN = "run";
 
-	protected userSettings: UserSettingsModel;
+	protected userSettings: ExtensionUserSettingsModel;
 
-	constructor(userSettings: UserSettingsModel) {
+	constructor(userSettings: ExtensionUserSettingsModel) {
 		super();
 		this.userSettings = userSettings;
 	}

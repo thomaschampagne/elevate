@@ -1,11 +1,14 @@
 import { TestBed } from "@angular/core/testing";
 import { UserSettingsService } from "./user-settings.service";
-import { UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared/models";
-import { userSettingsData } from "@elevate/shared/data";
+import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
 import { SharedModule } from "../../shared.module";
 import { CoreModule } from "../../../core/core.module";
+import { EnvTarget } from "../../enums/env-target";
+import UserSettingsModel = UserSettings.UserSettingsModel;
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("UserSettingsService", () => {
 
@@ -33,7 +36,7 @@ describe("UserSettingsService", () => {
 	it("should fetch user settings", (done: Function) => {
 
 		// Given
-		const expectedSettings = _.cloneDeep(userSettingsData);
+		const expectedSettings = _.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL);
 		const fetchDaoSpy = spyOn(userSettingsService.userSettingsDao, "fetch")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
@@ -62,25 +65,26 @@ describe("UserSettingsService", () => {
 		// Given
 		const key = "displayAdvancedHrData";
 		const displayAdvancedHrData = false;
-		const expectedSettings: UserSettingsModel = _.cloneDeep(userSettingsData);
+		const userSettingsData = <ExtensionUserSettingsModel>UserSettings.getDefaultsByEnvTarget(EnvTarget.EXTENSION);
+		const expectedSettings: ExtensionUserSettingsModel = _.cloneDeep(userSettingsData);
 		expectedSettings.displayAdvancedHrData = displayAdvancedHrData;
 
-		const savePropertyDaoSpy = spyOn(userSettingsService.userSettingsDao, "upsertProperty")
+		const upsertPropertyDaoSpy = spyOn(userSettingsService.userSettingsDao, "upsertProperty")
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
-		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.saveProperty<boolean>(key, displayAdvancedHrData);
+		const promiseUpdate: Promise<ExtensionUserSettingsModel> = <Promise<ExtensionUserSettingsModel>>userSettingsService.saveProperty<boolean>(key, displayAdvancedHrData);
 
 		// Then
-		promiseUpdate.then((result: UserSettingsModel) => {
+		promiseUpdate.then((result: ExtensionUserSettingsModel) => {
 
 			expect(result).not.toBeNull();
 			expect(result.displayAdvancedHrData).toEqual(displayAdvancedHrData);
 			expect(result).toEqual(expectedSettings);
 			expect(result).not.toEqual(userSettingsData);
 			expect(result.displayAdvancedHrData).not.toEqual(userSettingsData.displayAdvancedHrData);
-			expect(savePropertyDaoSpy).toHaveBeenCalledTimes(1);
-			expect(savePropertyDaoSpy).toHaveBeenCalledWith(key, displayAdvancedHrData);
+			expect(upsertPropertyDaoSpy).toHaveBeenCalledTimes(1);
+			expect(upsertPropertyDaoSpy).toHaveBeenCalledWith(key, displayAdvancedHrData);
 
 			done();
 
@@ -95,7 +99,7 @@ describe("UserSettingsService", () => {
 	it("should mark local storage to be clear", (done: Function) => {
 
 		// Given
-		const expectedSettings = _.cloneDeep(userSettingsData);
+		const expectedSettings = _.cloneDeep(ExtensionUserSettingsModel.DEFAULT_MODEL);
 		expectedSettings.localStorageMustBeCleared = true;
 
 		const savePropertyDaoSpy = spyOn(userSettingsService.userSettingsDao, "upsertProperty")
@@ -141,7 +145,7 @@ describe("UserSettingsService", () => {
 			customDisplay: null
 		};
 
-		const settings = _.cloneDeep(userSettingsData);
+		const settings = _.cloneDeep(UserSettings.getDefaultsByEnvTarget(EnvTarget.DESKTOP));
 		const serializedZones = UserZonesModel.serialize(TO_BE_SAVED_ZONES);
 		settings.zones.speed = serializedZones;
 
@@ -171,9 +175,9 @@ describe("UserSettingsService", () => {
 	it("should reset user settings", (done: Function) => {
 
 		// Given
+		const expectedUserSettings = UserSettings.getDefaultsByEnvTarget(EnvTarget.DESKTOP);
 		const saveDaoSpy = spyOn(userSettingsService.userSettingsDao, "save")
-			.and.returnValue(Promise.resolve(userSettingsData));
-
+			.and.returnValue(Promise.resolve(expectedUserSettings));
 
 		// When
 		const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.reset();
@@ -182,9 +186,9 @@ describe("UserSettingsService", () => {
 		promiseUpdate.then((result: UserSettingsModel) => {
 
 			expect(result).not.toBeNull();
-			expect(result).toEqual(userSettingsData);
+			expect(result).toEqual(expectedUserSettings);
 			expect(saveDaoSpy).toHaveBeenCalledTimes(1);
-			expect(saveDaoSpy).toHaveBeenCalledWith(userSettingsData);
+			expect(saveDaoSpy).toHaveBeenCalledWith(expectedUserSettings);
 
 			done();
 
@@ -197,8 +201,9 @@ describe("UserSettingsService", () => {
 	it("should reset user zones settings", (done: Function) => {
 
 		// Given
+		const expectedUserSettings = UserSettings.getDefaultsByEnvTarget(EnvTarget.DESKTOP);
 		const upsertPropertyDao = spyOn(userSettingsService.userSettingsDao, "upsertProperty")
-			.and.returnValue(Promise.resolve(userSettingsData));
+			.and.returnValue(Promise.resolve(expectedUserSettings));
 
 
 		// When
@@ -209,7 +214,7 @@ describe("UserSettingsService", () => {
 
 			expect(result).not.toBeNull();
 			expect(upsertPropertyDao).toHaveBeenCalledTimes(1);
-			expect(upsertPropertyDao).toHaveBeenCalledWith(["zones"], userSettingsData.zones);
+			expect(upsertPropertyDao).toHaveBeenCalledWith(["zones"], expectedUserSettings.zones);
 
 			done();
 

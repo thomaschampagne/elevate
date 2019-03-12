@@ -1,8 +1,9 @@
 import * as _ from "lodash";
 import { Helper } from "../helper";
-import { ActivityInfoModel, ActivitySourceDataModel, ActivityStreamsModel, Gender, UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, ActivitySourceDataModel, ActivityStreamsModel, Gender, UserSettings } from "@elevate/shared/models";
 import { AbstractModifier } from "./abstract.modifier";
 import { VacuumProcessor } from "../processors/vacuum-processor";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 declare let L: any; // Injected by strava.com
 
@@ -418,13 +419,13 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
 	private activityStreams: ActivityStreamsModel;
 	private vacuumProcessor: VacuumProcessor;
 	private activityInfo: ActivityInfoModel;
-	private userSettings: UserSettingsModel;
+	private userSettings: ExtensionUserSettingsModel;
 	private readonly splitsConfiguration: any;
 	private readonly saveSplitsConfigurationMethod: Function;
 	private distanceUnit: number;
 	private readonly cacheKeyPrefix: string;
 
-	constructor(vacuumProcessor: VacuumProcessor, activityInfo: ActivityInfoModel, userSettings: UserSettingsModel, splitsConfiguration: any, saveSplitsConfigrationMethod: Function) {
+	constructor(vacuumProcessor: VacuumProcessor, activityInfo: ActivityInfoModel, userSettings: ExtensionUserSettingsModel, splitsConfiguration: any, saveSplitsConfigrationMethod: Function) {
 		super();
 		this.vacuumProcessor = vacuumProcessor;
 		this.activityInfo = activityInfo;

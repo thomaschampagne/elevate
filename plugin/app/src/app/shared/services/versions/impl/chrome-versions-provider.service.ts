@@ -11,7 +11,6 @@ export class ChromeVersionsProvider implements VersionsProvider {
 	}
 
 	public getInstalledAppVersion(): Promise<string> {
-		debugger;
 		return Promise.resolve(chrome.runtime.getManifest().version);
 	}
 

@@ -1,9 +1,10 @@
 import * as _ from "lodash";
 import * as $ from "jquery";
-import { UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { AbstractModifier } from "./abstract.modifier";
 import * as Cookies from "js-cookie";
+import { UserSettings } from "@elevate/shared/models";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class GoogleMapsModifier extends AbstractModifier {
 
@@ -11,11 +12,11 @@ export class GoogleMapsModifier extends AbstractModifier {
 
 	protected activityId: number;
 	protected appResources: AppResourcesModel;
-	protected userSettings: UserSettingsModel;
+	protected userSettings: ExtensionUserSettingsModel;
 	protected pathArray: number[][];
 	protected map: google.maps.Map;
 
-	constructor(activityId: number, appResources: AppResourcesModel, userSettings: UserSettingsModel) {
+	constructor(activityId: number, appResources: AppResourcesModel, userSettings: ExtensionUserSettingsModel) {
 		super();
 		this.activityId = activityId;
 		this.appResources = appResources;

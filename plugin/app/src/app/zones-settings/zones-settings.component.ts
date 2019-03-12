@@ -5,11 +5,11 @@ import { ZONE_DEFINITIONS } from "./zone-definitions";
 import { ZonesService } from "./shared/zones.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AppRoutesModel } from "../shared/models/app-routes.model";
-import { UserSettingsModel, UserZonesModel, ZoneModel } from "@elevate/shared/models";
+import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
 import { Subscription } from "rxjs";
 import { MatSnackBar } from "@angular/material";
-import { userSettingsData } from "@elevate/shared/data";
+import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Component({
 	selector: "app-zones-settings",
@@ -42,16 +42,16 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 		this.routeParamsSubscription = this.route.params.subscribe(routeParams => {
 
 			// Load user zones config
-			this.userSettingsService.fetch().then((userSettingsSynced: UserSettingsModel) => {
+			this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
 
 				// Load user zones data
-				this.userZonesModel = UserZonesModel.asInstance(userSettingsSynced.zones);
+				this.userZonesModel = UserZonesModel.asInstance(userSettings.zones);
 
 				let zoneDefinition: ZoneDefinitionModel = null;
 
 				const hasZoneValueInRoute = !_.isEmpty(routeParams.zoneValue);
 
-				if (hasZoneValueInRoute && _.has(userSettingsData.zones, routeParams.zoneValue)) {
+				if (hasZoneValueInRoute && _.has(UserZonesModel.DEFAULT_MODEL, routeParams.zoneValue)) {
 					zoneDefinition = this.getZoneDefinitionFromZoneValue(routeParams.zoneValue);
 				} else {
 					this.navigateToZone(ZonesSettingsComponent.DEFAULT_ZONE_VALUE);

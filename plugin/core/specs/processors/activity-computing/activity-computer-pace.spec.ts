@@ -5,11 +5,12 @@ import {
 	AthleteSettingsModel,
 	AthleteSnapshotModel,
 	Gender,
-	UserSettingsModel
+	UserSettings,
 } from "@elevate/shared/models";
 import { ActivityComputer } from "../../../scripts/processors/activity-computer";
 import * as _ from "lodash";
 import { Helper } from "../../../scripts/helper";
+import UserSettingsModel = UserSettings.UserSettingsModel;
 
 const expectPace = (expectPaceString: string, toEqualPaceString: string, secondsTolerance: number) => {
 

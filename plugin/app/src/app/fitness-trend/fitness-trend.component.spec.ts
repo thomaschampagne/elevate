@@ -5,7 +5,6 @@ import { CoreModule } from "../core/core.module";
 import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fixture";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { SyncService } from "../shared/services/sync/sync.service";
-import { userSettingsData } from "@elevate/shared/data";
 import { FitnessTrendModule } from "./fitness-trend.module";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
 import * as _ from "lodash";
@@ -14,7 +13,8 @@ import { UserSettingsService } from "../shared/services/user-settings/user-setti
 import { Injectable } from "@angular/core";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { Subject } from "rxjs";
-import { SyncResultModel } from "@elevate/shared/models";
+import { SyncResultModel, UserSettings } from "@elevate/shared/models";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("FitnessTrendComponent", () => {
 
@@ -55,7 +55,7 @@ describe("FitnessTrendComponent", () => {
 
 		// Mocking
 		spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(userSettingsData)));
+		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
 		spyOn(syncService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
 		spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));

@@ -2,13 +2,13 @@ import { inject, TestBed } from "@angular/core/testing";
 import { ZonesService } from "./zones.service";
 import * as _ from "lodash";
 import { ZONE_DEFINITIONS } from "../zone-definitions";
-import { UserZonesModel, ZoneModel } from "@elevate/shared/models";
-import { userSettingsData } from "@elevate/shared/data";
+import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";
 import { ZoneChangeOrderModel } from "./zone-change-order.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZonesService", () => {
 
@@ -627,7 +627,7 @@ describe("ZonesService", () => {
 			}
 		);
 
-		const expectedResetZones = UserZonesModel.deserialize(userSettingsData.zones.speed);
+		const expectedResetZones = UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed);
 
 		zonesService.currentZones = FAKE_EXISTING_ZONES;
 		zonesService.zoneDefinition = SPEED_ZONE_DEFINITION_MOCKED;
@@ -803,7 +803,7 @@ describe("ZonesService", () => {
 
 		// Given
 		const jsonInput = "[{\"from\":120,\"to\":140},{\"from\":140,\"to\":150},{\"from\":150,\"to\":160}]";
-		const zonesToImport: ZoneModel[] = <ZoneModel[]> JSON.parse(jsonInput);
+		const zonesToImport: ZoneModel[] = <ZoneModel[]>JSON.parse(jsonInput);
 
 		const saveZonesSpy = spyOn(zonesService, "saveZones").and.returnValue(Promise.resolve(true));
 		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");

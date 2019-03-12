@@ -1,5 +1,5 @@
 import { Helper } from "../../helper";
-import { ActivityInfoModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, UserSettings } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AbstractExtendedDataModifier } from "./abstract-extended-data.modifier";
@@ -11,11 +11,12 @@ import { RunningPowerDataView } from "./views/running-power-data.view";
 import { GradeAdjustedPaceDataView } from "./views/grade-adjusted-pace-data.view";
 import * as $ from "jquery";
 import * as _ from "lodash";
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
 	constructor(activityProcessor: ActivityProcessor, activityInfo: ActivityInfoModel, appResources: AppResourcesModel,
-				userSettings: UserSettingsModel, type: number) {
+				userSettings: ExtensionUserSettingsModel, type: number) {
 		super(activityProcessor, activityInfo, appResources, userSettings, type);
 	}
 
