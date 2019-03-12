@@ -10,7 +10,7 @@ describe("ChromeEventsService", () => {
 	beforeEach((done: Function) => {
 
 		spyOn(ChromeEventsService, "getBrowserExternalMessages").and.returnValue({
-			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
+			addListener: () => {
 			}
 		});
 

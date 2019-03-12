@@ -14,7 +14,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 	}
 
 	getAppUsageDetails(): Promise<AppUsageDetails> {
-		return undefined;
+		return Promise.resolve(null);
 	}
 
 	save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T> {

@@ -8,34 +8,43 @@ import { SyncService } from "../shared/services/sync/sync.service";
 import { userSettingsData } from "@elevate/shared/data";
 import { FitnessTrendModule } from "./fitness-trend.module";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
-import { ChromeEventsService } from "../shared/services/external-updates/impl/chrome-events.service";
 import * as _ from "lodash";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
+import { Injectable } from "@angular/core";
+import { AppEventsService } from "../shared/services/external-updates/app-events-service";
+import { Subject } from "rxjs";
+import { SyncResultModel } from "@elevate/shared/models";
 
 describe("FitnessTrendComponent", () => {
 
-	const pluginId = "c061d18abea0";
 	let activityService: ActivityService;
 	let userSettingsService: UserSettingsService;
 	let syncService: SyncService;
 	let component: FitnessTrendComponent;
 	let fixture: ComponentFixture<FitnessTrendComponent>;
 
+	@Injectable()
+	class MockEventsService extends AppEventsService {
+		public onSyncDone: Subject<SyncResultModel>;
+
+		constructor() {
+			super();
+			this.onSyncDone = new Subject<SyncResultModel>();
+		}
+	}
+
+
 	beforeEach((done: Function) => {
-
-		spyOn(ChromeEventsService, "getBrowserExternalMessages").and.returnValue({
-			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
-			}
-		});
-
-		spyOn(ChromeEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
 				SharedModule,
 				FitnessTrendModule
+			],
+			providers: [
+				{provide: AppEventsService, useClass: MockEventsService},
 			]
 		}).compileComponents();
 

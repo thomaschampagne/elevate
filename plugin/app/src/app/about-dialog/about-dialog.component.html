@@ -25,7 +25,7 @@
 
 	<div class="versions">
 		<div>
-			Plugin version: {{appVersion}}
+			Plugin version: {{installedVersion}}
 		</div>
 		<div>
 			Angular Core version: {{angularCoreVersion}}
@@ -39,9 +39,9 @@
 	</div>
 	<mat-divider></mat-divider>
 	<div>
-		<span *ngIf="this.prodVersion === this.appVersion">You are running the latest version</span>
-		<span *ngIf="this.prodVersion !== this.appVersion">You are not running the latest version.
-			Latest version is {{this.prodVersion}}. Rebooting your browser may trigger the update process.</span>
+		<span *ngIf="remoteVersion === installedVersion">You are running the latest version</span>
+		<span *ngIf="remoteVersion !== installedVersion">You are not running the latest version.
+			Latest version is {{remoteVersion}}. Rebooting your browser may trigger the update process.</span>
 	</div>
 </mat-dialog-content>
 <mat-dialog-actions>

@@ -1,9 +1,10 @@
-import { Component, OnInit, VERSION as angularCoreVersion } from "@angular/core";
+import { Component, Inject, OnInit, VERSION as angularCoreVersion } from "@angular/core";
 import { VERSION as angularMaterialVersion } from "@angular/material";
 import * as d3 from "d3";
 import { AppUsageDetails } from "../shared/models/app-usage-details.model";
-import { HttpClient } from "@angular/common/http";
 import { DataStore } from "../shared/data-store/data-store";
+import { VERSIONS_PROVIDER, VersionsProvider } from "../shared/services/versions/versions-provider.interface";
+
 
 @Component({
 	selector: "app-about-dialog",
@@ -14,17 +15,16 @@ export class AboutDialogComponent implements OnInit {
 
 	public static readonly MAX_WIDTH: string = "40%";
 	public static readonly MIN_WIDTH: string = "40%";
-	public static readonly MANIFEST_PRODUCTION: string = "https://raw.githubusercontent.com/thomaschampagne/elevate/master/plugin/manifest.json";
 
 	public angularCoreVersion: string;
 	public angularMaterialVersion: string;
 	public d3Version: string;
-	public appVersion: string;
+	public installedVersion: string;
 	public appUsageDetails: AppUsageDetails;
-	public prodVersion: string;
+	public remoteVersion: string;
 
 	constructor(public dataStore: DataStore<void>,
-				public httpClient: HttpClient) {
+				@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider) {
 	}
 
 	public ngOnInit(): void {
@@ -33,25 +33,17 @@ export class AboutDialogComponent implements OnInit {
 			this.appUsageDetails = appUsageDetails;
 		});
 
-		this.appVersion = this.getAppVersion();
+		this.versionsProvider.getInstalledAppVersion().then(version => {
+			this.installedVersion = version;
+		});
+
+		this.versionsProvider.getCurrentRemoteAppVersion().then(version => {
+			this.remoteVersion = version;
+		});
+
 		this.angularCoreVersion = angularCoreVersion.full;
 		this.angularMaterialVersion = angularMaterialVersion.full;
 		this.d3Version = d3.version;
 
-		this.getProdAppVersion().then((version: string) => {
-			this.prodVersion = version;
-		});
-	}
-
-	public getAppVersion(): string { // TODO Avoid use chrome directly !!
-		return chrome.runtime.getManifest().version_name;
-	}
-
-	public getProdAppVersion(): Promise<string> {
-		return this.httpClient.get<any>(AboutDialogComponent.MANIFEST_PRODUCTION).toPromise().then((response: any) => {
-			return Promise.resolve(response.version_name);
-		}, err => {
-			return Promise.reject(err);
-		});
 	}
 }

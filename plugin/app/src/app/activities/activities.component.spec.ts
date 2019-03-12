@@ -31,7 +31,7 @@ describe("ActivitiesComponent", () => {
 		}).compileComponents();
 
 		spyOn(ChromeEventsService, "getBrowserExternalMessages").and.returnValue({
-			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
+			addListener: () => {
 			}
 		});
 
