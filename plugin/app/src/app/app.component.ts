@@ -22,6 +22,8 @@ import { Theme } from "./shared/enums/theme.enum";
 import { SyncResultModel } from "@elevate/shared/models";
 import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
 import { AppEventsService } from "./shared/services/external-updates/app-events-service";
+import { EnvTarget } from "./shared/enums/env-target";
+import { environment } from "../environments/environment";
 
 class MenuItemModel {
 	public name: string;
@@ -43,6 +45,9 @@ export class AppComponent implements OnInit, OnDestroy {
 	public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
 	public static readonly LS_USER_THEME_PREF: string = "theme";
 
+	public envTarget: EnvTarget = environment.target;
+
+	public EnvTarget = EnvTarget;
 	public Theme = Theme;
 	public currentTheme: Theme;
 
