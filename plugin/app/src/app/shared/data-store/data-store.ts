@@ -9,6 +9,7 @@ export abstract class DataStore<T> {
 	 * @param query pass object with keys to fetch, or array of key, or single key, or null to fetch all
 	 * @param defaultStorageValue default value returned if no data found
 	 */
+	// TODO Rename fetchAll
 	abstract fetch(storageLocation: StorageLocationModel, query: Partial<T> | string | string[], defaultStorageValue: T[] | T): Promise<T[] | T>;
 
 	/**
@@ -17,6 +18,7 @@ export abstract class DataStore<T> {
 	 * @param value
 	 * @param defaultStorageValue
 	 */
+	// TODO Rename saveAll
 	abstract save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T>;
 
 	/**
@@ -38,4 +40,6 @@ export abstract class DataStore<T> {
 	 * Provide app usage
 	 */
 	abstract getAppUsageDetails(): Promise<AppUsageDetails>;
+
+	// TODO Add count()
 }
