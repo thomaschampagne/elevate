@@ -463,6 +463,52 @@ describe("DesktopDataStore", () => {
 
 		});
 
+		it("should save settings when FakeSettings object is missing", (done: Function) => {
+
+			// Given
+			const newSettings = <FakeSettings>{
+				setting_a: 0,
+				setting_b: 0,
+				setting_c: 0
+			};
+
+			const defaultSettings = <FakeSettings>{
+				setting_a: 1,
+				setting_b: 2,
+				setting_c: 3
+			};
+
+			const promiseMissingCollection = desktopDataStore.getCollection(fakeSettingsStorageLocation.key).destroy().then(() => {
+				desktopDataStore.elevateCollectionsMap.delete(fakeSettingsStorageLocation.key);
+				return Promise.resolve();
+			});
+
+			// When
+			const promise: Promise<FakeSettings> = promiseMissingCollection.then(() => {
+				getCollectionSpy.calls.reset();
+				return <Promise<FakeSettings>>desktopDataStore.save(fakeSettingsStorageLocation, newSettings, defaultSettings);
+			});
+
+			// Then
+			promise.then((settings: FakeSettings) => {
+
+				expect(settings).toEqual(settings);
+				expect(settings._id).toEqual(fakeSettingsStorageLocation.key);
+				expect(settings.setting_a).toEqual(newSettings.setting_a);
+				expect(settings.setting_b).toEqual(newSettings.setting_b);
+				expect(settings.setting_c).toEqual(newSettings.setting_c);
+				expect(getCollectionSpy).toHaveBeenCalledTimes(2);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
 		it("should upsert property of a FakeSettings object", (done: Function) => {
 
 			// Given

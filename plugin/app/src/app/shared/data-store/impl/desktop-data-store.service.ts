@@ -5,6 +5,7 @@ import { AppUsageDetails } from "../../models/app-usage-details.model";
 import PouchDB from "pouchdb-browser";
 import * as _ from "lodash";
 import { LoggerService } from "../../services/logging/logger.service";
+import { NotImplementedException } from "@elevate/shared/exceptions";
 
 @Injectable()
 export class DesktopDataStore<T> extends DataStore<T> {
@@ -68,7 +69,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 	// TODO
 	public getAppUsageDetails(): Promise<AppUsageDetails> {
-		return Promise.resolve(null);
+		throw new NotImplementedException();
 	}
 
 	public save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T> {
@@ -79,15 +80,21 @@ export class DesktopDataStore<T> extends DataStore<T> {
 			include_docs: true
 		}).then(results => {
 
-			const isObjectMode = results.total_rows === 1 && results.rows[0].id === storageLocation.key;
+			const hasExistingObject = (results.total_rows === 1 && results.rows[0].id === storageLocation.key);
+			const isNewValueObject = _.isObject(value) && !_.isArray(value);
+			const isObjectMode = isNewValueObject || hasExistingObject;
 
 			let savePromise;
 
 			if (isObjectMode) {
+
 				const newDocValue = <T>value;
 
-				// Update new doc with revision of object to be updated
-				newDocValue[DesktopDataStore.POUCH_DB_REV_FIELD] = results.rows[0].doc._rev;
+				if (hasExistingObject) { // Update new doc with revision of object to be updated if object exists in collection
+					newDocValue[DesktopDataStore.POUCH_DB_REV_FIELD] = results.rows[0].doc._rev;
+				} else { // Create new one with _id
+					newDocValue[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key;
+				}
 				savePromise = collection.put(newDocValue);
 
 			} else {

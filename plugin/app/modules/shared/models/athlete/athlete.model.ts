@@ -4,7 +4,14 @@ import { AbstractAthleteModel } from "./abstract-athlete.model";
 
 export class AthleteModel extends AbstractAthleteModel {
 
-	public static readonly DEFAULT_MODEL: AthleteModel = new AthleteModel(Gender.MEN, [DatedAthleteSettingsModel.DEFAULT_MODEL]);
+	public static readonly DEFAULT_MODEL: AthleteModel = new AthleteModel(Gender.MEN, AthleteModel.getDefaultDatedAthleteSettings());
+
+	public static getDefaultDatedAthleteSettings(): DatedAthleteSettingsModel[] {
+		const foreverSettings = Object.assign({}, DatedAthleteSettingsModel.DEFAULT_MODEL);
+		foreverSettings.since = null;
+		return [DatedAthleteSettingsModel.DEFAULT_MODEL, foreverSettings];
+	}
+
 	public gender: Gender;
 	public datedAthleteSettings: DatedAthleteSettingsModel[];
 
