@@ -10,7 +10,7 @@ import Spy = jasmine.Spy;
 
 describe("DesktopDataStore", () => {
 
-	describe("Handle collection", () => {
+	describe("Handle collection storage", () => {
 
 		class FakePerson extends Object {
 			_id: string;
@@ -295,7 +295,7 @@ describe("DesktopDataStore", () => {
 
 	});
 
-	describe("Handle object", () => {
+	describe("Handle object storage", () => {
 
 		class FakeSettings extends Object {
 			_id: string;
@@ -574,6 +574,209 @@ describe("DesktopDataStore", () => {
 				});
 			});
 		});
+	});
+
+	describe("Handle value storage", () => {
+
+		let desktopDataStore: DesktopDataStore<any>;
+		let getCollectionSpy: Spy;
+
+		const fakeDateTimeStorageLocation = new StorageLocationModel("dateTime");
+
+		const fakeDateTime = {
+			_id: "dateTime",
+			$value: 99999999999
+		};
+
+		beforeEach((done: Function) => {
+
+			TestBed.configureTestingModule({
+				providers: [
+					DesktopDataStore,
+					{provide: LoggerService, useClass: ConsoleLoggerService}
+				]
+			});
+
+			desktopDataStore = TestBed.get(DesktopDataStore);
+
+			getCollectionSpy = spyOn(desktopDataStore, "getCollection").and.callThrough();
+
+			const pouchSettingsDB: PouchDB.Database<any> = <PouchDB.Database<any>>desktopDataStore.getCollection(fakeDateTimeStorageLocation.key);
+			pouchSettingsDB.allDocs().then(results => {
+
+				expect(results.total_rows).toEqual(0);
+				return pouchSettingsDB.bulkDocs([fakeDateTime]);
+
+			}).then(result => {
+				expect(result.length).toEqual(1);
+				expect(desktopDataStore.elevateCollectionsMap.size).toEqual(1);
+				getCollectionSpy.calls.reset();
+				done();
+
+			}).catch(error => {
+				console.error(error);
+				throw error;
+			});
+
+		});
+
+		afterEach((done: Function) => {
+
+			// Cleaning collection
+			desktopDataStore.getCollection(fakeDateTimeStorageLocation.key).destroy().then(() => {
+				desktopDataStore.elevateCollectionsMap.delete(fakeDateTimeStorageLocation.key);
+				done();
+			}).catch(error => {
+				console.error(error);
+				throw error;
+			});
+
+		});
+
+		it("should fetch a fakeDateTime value", (done: Function) => {
+
+			// Given
+			const expectedFakeDateTime = _.cloneDeep(fakeDateTime);
+
+			// When
+			const promise: Promise<number> = <Promise<number>>desktopDataStore.fetch(fakeDateTimeStorageLocation, null, null);
+
+			// Then
+			promise.then((fakeDateTime: number) => {
+
+				expect(fakeDateTime).toEqual(expectedFakeDateTime[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD]);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
+		it("should fetch a default storage value when fakeDateTime value is missing", (done: Function) => {
+
+			// Given
+			const defaultStorageValue = null;
+			const promiseMissingCollection = desktopDataStore.getCollection(fakeDateTimeStorageLocation.key).destroy().then(() => {
+				desktopDataStore.elevateCollectionsMap.delete(fakeDateTimeStorageLocation.key);
+				getCollectionSpy.calls.reset();
+				return Promise.resolve();
+			});
+
+			// When
+			const promise: Promise<number> = promiseMissingCollection.then(() => {
+				return <Promise<number>>desktopDataStore.fetch(fakeDateTimeStorageLocation, null, defaultStorageValue);
+			});
+
+			// Then
+			promise.then((fakeDateTime: number) => {
+
+				expect(fakeDateTime).toEqual(defaultStorageValue);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
+		it("should save and replace a fakeDateTime value", (done: Function) => {
+
+			// Given
+			const newValue = 666;
+
+			// When
+			const promise: Promise<number> = <Promise<number>>desktopDataStore.save(fakeDateTimeStorageLocation, newValue, null);
+
+			// Then
+			promise.then((fakeDateTime: number) => {
+
+				expect(fakeDateTime).toEqual(newValue);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
+		it("should save a dateTime when fakeDateTime is missing", (done: Function) => {
+
+			// Given
+			const newValue = 555;
+			const promiseMissingCollection = desktopDataStore.getCollection(fakeDateTimeStorageLocation.key).destroy().then(() => {
+				desktopDataStore.elevateCollectionsMap.delete(fakeDateTimeStorageLocation.key);
+				getCollectionSpy.calls.reset();
+				return Promise.resolve();
+			});
+
+			// When
+			const promise: Promise<number> = promiseMissingCollection.then(() => {
+				return <Promise<number>>desktopDataStore.save(fakeDateTimeStorageLocation, newValue, null);
+			});
+
+			// Then
+			promise.then((fakeDateTime: number) => {
+
+				expect(fakeDateTime).toEqual(newValue);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
+		it("should reject upsert of a fakeDateTime value", (done: Function) => {
+
+			// Given
+			const newValue = 444;
+			const updatePath = ["none"];
+
+			// When
+			const promise = desktopDataStore.upsertProperty(fakeDateTimeStorageLocation, updatePath, newValue, null);
+
+			// Then
+			promise.then(() => {
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+
+			}, error => {
+				expect(error).not.toBeNull();
+				expect(error).toEqual("Cannot save property of a value");
+				done();
+			});
+
+		});
+
+		it("should clear fakeDateTime value", (done: Function) => {
+
+			// When
+			const promise: Promise<void> = desktopDataStore.clear(fakeDateTimeStorageLocation);
+
+			// Then
+			promise.then(() => {
+
+				desktopDataStore.elevateCollectionsMap.get(fakeDateTimeStorageLocation.key).allDocs().then(result => {
+					expect(result.total_rows).toEqual(0);
+					done();
+				});
+			});
+		});
+
+
 	});
 
 });

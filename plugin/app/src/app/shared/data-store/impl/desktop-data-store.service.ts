@@ -11,6 +11,7 @@ import { NotImplementedException } from "@elevate/shared/exceptions";
 export class DesktopDataStore<T> extends DataStore<T> {
 
 	public static readonly POUCH_DB_ID_FIELD: string = "_id";
+	public static readonly POUCH_DB_SINGLE_VALUE_FIELD: string = "$value";
 	public static readonly POUCH_DB_DELETED_FIELD: string = "_deleted";
 	public static readonly POUCH_DB_REV_FIELD: string = "_rev";
 
@@ -62,7 +63,22 @@ export class DesktopDataStore<T> extends DataStore<T> {
 			});
 
 			// If only 1 result and identifier match with storage key, then result as "object", else "array"
-			return <Promise<T[] | T>>((docs.length === 1 && docs[0][DesktopDataStore.POUCH_DB_ID_FIELD] === storageLocation.key) ? Promise.resolve(docs[0]) : Promise.resolve(docs));
+			const isArrayMode = _.isArray(docs);
+			const isObjectMode = (docs.length === 1 && docs[0][DesktopDataStore.POUCH_DB_ID_FIELD] === storageLocation.key);
+			const isValueMode = isObjectMode && _.has(docs[0], DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD);
+
+			let promise;
+			if (isValueMode) {
+				promise = Promise.resolve(docs[0][DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD]);
+			} else if (isObjectMode) {
+				promise = Promise.resolve(docs[0]);
+			} else if (isArrayMode) {
+				promise = Promise.resolve(docs);
+			} else {
+				promise = Promise.reject("Unknown desktop data store type");
+			}
+
+			return <Promise<T[] | T>>promise;
 		});
 
 	}
@@ -83,10 +99,23 @@ export class DesktopDataStore<T> extends DataStore<T> {
 			const hasExistingObject = (results.total_rows === 1 && results.rows[0].id === storageLocation.key);
 			const isNewValueObject = _.isObject(value) && !_.isArray(value);
 			const isObjectMode = isNewValueObject || hasExistingObject;
+			const isValueMode = !_.isObject(value) || (hasExistingObject && _.has(results.rows[0].doc, DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD));
 
 			let savePromise;
 
-			if (isObjectMode) {
+			if (isValueMode) {
+
+				const newDocValue = {};
+				newDocValue[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key;
+				newDocValue[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD] = value;
+
+				if (hasExistingObject) { // Update new doc with revision of object to be updated if object exists in collection
+					newDocValue[DesktopDataStore.POUCH_DB_REV_FIELD] = results.rows[0].doc._rev;
+				}
+
+				savePromise = collection.put(<T>newDocValue);
+
+			} else if (isObjectMode) {
 
 				const newDocValue = <T>value;
 
@@ -142,6 +171,10 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 			if (_.isArray(doc)) {
 				return Promise.reject("Cannot save property to a collection");
+			}
+
+			if (!_.isObject(doc)) {
+				return Promise.reject("Cannot save property of a value");
 			}
 
 			doc = _.set(doc as Object, path, value) as T; // Update property of doc
