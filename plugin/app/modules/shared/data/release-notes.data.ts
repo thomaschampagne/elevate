@@ -2,6 +2,21 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.10.2",
+		date: "2019-03-17",
+		message: "👨‍⚕️💉 Fixed some syncing errors + Year progressions not displayed in some cases + Restored activity summary stats panel. <u>V6.10 Reminder</u>: Analyze your training volume variations and intensity with the new \"Rolling\" mode available in \"Year progressions\".",
+		hotFixes: [
+			"Fixed syncing errors cases when the synchronisation could stop unexpectedly (independent from quota reached warning).",
+			"Fixed year progressions not displayed in some cases.",
+			"Restored the activity summary stats panel in running & cycling strava activities."
+		],
+		features: [
+			"Check the 6.10.1 release note for features related to v6.10.x"
+		],
+		isPatch: true,
+		fixes: []
+	},
+	{
 		version: "6.10.1",
 		date: "2019-02-28",
 		message: "NEW!! Analyze your training volume variations and intensity with the new \"Rolling\" mode available in \"Year progressions\". Improvements & fixes have been also pushed.",
