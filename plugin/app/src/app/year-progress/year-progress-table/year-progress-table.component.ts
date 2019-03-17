@@ -46,7 +46,6 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 	public readonly ProgressMode = ProgressMode;
 
 	public todayMoment: Moment;
-	public momentWatched: Moment;
 	public currentYear: number;
 	public currentYearProgressAtDayModel: ProgressAtDayModel;
 	public dataSource: MatTableDataSource<ProgressionAtDayRow>;
@@ -60,6 +59,9 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 
 	@Input("selectedYears")
 	public selectedYears: number[];
+
+	@Input("momentWatched")
+	public momentWatched: Moment;
 
 	@Input("selectedProgressType")
 	public selectedProgressType: YearProgressTypeModel;
@@ -82,19 +84,11 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 
 		this.currentYear = this.todayMoment.year();
 
-		// Use default moment provided by service on init (should be today on first load)
-		this.momentWatched = this.yearProgressService.momentWatched;
-
 		if (this.hideYearsColumn) {
 			this.displayedColumns = _.remove(this.displayedColumns, (column: string) => {
 				return (column !== YearProgressTableComponent.COLUMN_YEAR);
 			});
 		}
-
-		// Fist data update
-		this.updateData();
-
-		this.initialized = true;
 
 		// When user mouse moves on graph, listen for moment watched and update table rows
 		this.yearProgressService.momentWatchedChanges.subscribe((momentWatched: Moment) => {
@@ -106,9 +100,18 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 			this.momentWatched = momentWatched;
 			this.updateData();
 		});
+
+		// Fist data update
+		this.updateData();
+
+		this.initialized = true;
 	}
 
 	public ngOnChanges(changes: SimpleChanges): void {
+
+		if (!this.initialized) {
+			return;
+		}
 
 		if (this.targetProgressModels) { // Has target given?
 
@@ -123,10 +126,6 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 			this.displayedColumns = _.remove(this.displayedColumns, (column: string) => {
 				return (column !== YearProgressTableComponent.COLUMN_DELTA_CURRENT_TARGET);
 			});
-		}
-
-		if (!this.initialized) {
-			return;
 		}
 
 		this.updateData();

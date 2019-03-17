@@ -458,6 +458,10 @@ export class YearProgressService {
 				year: selectedYear
 			});
 
+			if (!yearProgressModel) { // Continue if we don't have year progressions for current selectedYear
+				return;
+			}
+
 			const progressModel: ProgressModel = _.find(yearProgressModel.progressions, {
 				dayOfYear: dayMomentAtYear.dayOfYear()
 			});
