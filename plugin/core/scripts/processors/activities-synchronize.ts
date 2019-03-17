@@ -477,17 +477,17 @@ export class ActivitiesSynchronize {
 
 		}, (jqXHR: JQueryXHR) => {
 
-			const streamNotFound = jqXHR.status === 404;
+			const shouldStopSync = jqXHR.status === 429;
 
-			if (streamNotFound) {
-				deferred.resolve({activityId: activityId} as any);
-			} else {
+			if (shouldStopSync) {
 				deferred.reject({
 					streamFailure: true,
 					activityId: activityId,
 					statusCode: jqXHR.status,
 					statusText: jqXHR.statusText
 				});
+			} else {
+				deferred.resolve({activityId: activityId} as any);
 			}
 
 		});
