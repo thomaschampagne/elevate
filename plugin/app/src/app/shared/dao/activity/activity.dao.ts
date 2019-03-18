@@ -3,11 +3,12 @@ import * as _ from "lodash";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { BaseDao } from "../base.dao";
 import { StorageLocationModel } from "../../data-store/storage-location.model";
+import { StorageType } from "../../data-store/storage-type.enum";
 
 @Injectable()
 export class ActivityDao extends BaseDao<SyncedActivityModel> {
 
-	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("syncedActivities");
+	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("syncedActivities", StorageType.LIST);
 	public static readonly DEFAULT_STORAGE_VALUE: SyncedActivityModel[] = [];
 
 	public getStorageLocation(): StorageLocationModel {

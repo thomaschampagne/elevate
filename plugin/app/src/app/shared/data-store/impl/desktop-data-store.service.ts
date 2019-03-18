@@ -3,84 +3,107 @@ import { StorageLocationModel } from "../storage-location.model";
 import { DataStore } from "../data-store";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
 import PouchDB from "pouchdb-browser";
-import * as _ from "lodash";
+import PouchDBFind from "pouchdb-find";
 import { LoggerService } from "../../services/logging/logger.service";
 import { NotImplementedException } from "@elevate/shared/exceptions";
+import * as _ from "lodash";
+import { StorageType } from "../storage-type.enum";
 
 @Injectable()
 export class DesktopDataStore<T> extends DataStore<T> {
 
+	public static readonly POUCH_DB_NAME: string = "elevate";
+
 	public static readonly POUCH_DB_ID_FIELD: string = "_id";
+	public static readonly POUCH_DB_ID_LIST_SEPARATOR: string = ":";
 	public static readonly POUCH_DB_SINGLE_VALUE_FIELD: string = "$value";
 	public static readonly POUCH_DB_DELETED_FIELD: string = "_deleted";
 	public static readonly POUCH_DB_REV_FIELD: string = "_rev";
 
-	public elevateCollectionsMap: Map<string, PouchDB.Database<T[] | T>>;
+	public database: PouchDB.Database<T[] | T>;
 
 	constructor(public logger: LoggerService) {
 		super();
-		this.elevateCollectionsMap = new Map<string, PouchDB.Database<T[] | T>>();
+		this.setup();
 	}
 
-	public getCollection(name: string): PouchDB.Database<T[] | T> {
-		if (!this.elevateCollectionsMap.has(name)) {
-			this.elevateCollectionsMap.set(name, new PouchDB(name, {auto_compaction: true}));
-		}
-		return this.elevateCollectionsMap.get(name);
+	public setup(): void {
+		PouchDB.plugin(PouchDBFind); // Register find plugin
+		this.database = new PouchDB(DesktopDataStore.POUCH_DB_NAME, {auto_compaction: true});
+
 	}
 
 	public clear(storageLocation: StorageLocationModel): Promise<void> {
 
-		const collection = this.getCollection(storageLocation.key);
+		return this.database.find({
+			selector: {
+				_id: DesktopDataStore.getDbIdSelectorByStorageLocation(storageLocation)
+			},
+			fields: [DesktopDataStore.POUCH_DB_ID_FIELD, DesktopDataStore.POUCH_DB_REV_FIELD]
+		}).then(result => {
 
-		return collection.destroy().then(() => {
+			let promise = Promise.resolve(null);
 
-			this.elevateCollectionsMap.delete(storageLocation.key);
+			if (result.docs.length > 0) {
 
-			this.getCollection(storageLocation.key); // Force collection to be recreated again
+				if (storageLocation.storageType === StorageType.LIST) {
 
+					result.docs = result.docs.map(doc => {
+						doc[DesktopDataStore.POUCH_DB_DELETED_FIELD] = true;
+						return doc;
+					});
+
+					promise = this.database.bulkDocs(result.docs);
+
+				} else if (storageLocation.storageType === StorageType.OBJECT || storageLocation.storageType === StorageType.SINGLE_VALUE) {
+
+					promise = this.database.remove(result.docs[0][DesktopDataStore.POUCH_DB_ID_FIELD], result.docs[0][DesktopDataStore.POUCH_DB_REV_FIELD]);
+
+				} else {
+					throw new Error("Unknown StorageType");
+				}
+			}
+
+			return promise;
+
+		}).then(() => {
 			return Promise.resolve();
+		});
+	}
+
+	public static getDbIdSelectorByStorageLocation(storageLocation: StorageLocationModel): PouchDB.Find.ConditionOperators {
+		const selector = (storageLocation.storageType === StorageType.LIST) ?
+			{$regex: "^" + storageLocation.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR + ".*"} : {$eq: storageLocation.key};
+		selector["$gte"] = null; // Solves "no matching index found, create an index to optimize query time"
+		return selector;
+	}
+
+	public getDocsById(storageLocation: StorageLocationModel): Promise<PouchDB.Find.FindResponse<T[] | T>> {
+		return this.database.find({
+			selector: {
+				_id: DesktopDataStore.getDbIdSelectorByStorageLocation(storageLocation)
+			}
 		});
 	}
 
 	public fetch(storageLocation: StorageLocationModel, query: Partial<T> | string | string[], defaultStorageValue: T[] | T): Promise<T[] | T> {
 
-		return this.getCollection(storageLocation.key).allDocs({
-			include_docs: true
-		}).then(results => {
+		return this.getDocsById(storageLocation).then(result => {
 
-			if (results.total_rows === 0) {
+			let response: T[] | T;
 
-				if (defaultStorageValue) {
-					defaultStorageValue[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key;
-				}
-
-				return Promise.resolve(defaultStorageValue);
-			}
-
-			const docs = results.rows.map(result => {
-				return <T>result.doc;
-			});
-
-			// If only 1 result and identifier match with storage key, then result as "object", else "array"
-			const isArrayMode = _.isArray(docs);
-			const isObjectMode = (docs.length === 1 && docs[0][DesktopDataStore.POUCH_DB_ID_FIELD] === storageLocation.key);
-			const isValueMode = isObjectMode && _.has(docs[0], DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD);
-
-			let promise;
-			if (isValueMode) {
-				promise = Promise.resolve(docs[0][DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD]);
-			} else if (isObjectMode) {
-				promise = Promise.resolve(docs[0]);
-			} else if (isArrayMode) {
-				promise = Promise.resolve(docs);
+			if (storageLocation.storageType === StorageType.LIST) {
+				response = <T[] | T> result.docs;
+			} else if (storageLocation.storageType === StorageType.OBJECT) {
+				response = (result.docs[0]) ? result.docs[0] : defaultStorageValue;
+			} else if (storageLocation.storageType === StorageType.SINGLE_VALUE) {
+				response = (result.docs[0]) ? result.docs[0][DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD] : defaultStorageValue;
 			} else {
-				promise = Promise.reject("Unknown desktop data store type");
+				throw new Error("Unknown StorageType");
 			}
 
-			return <Promise<T[] | T>>promise;
+			return Promise.resolve(response);
 		});
-
 	}
 
 	// TODO
@@ -90,79 +113,87 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 	public save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T> {
 
-		const collection = this.getCollection(storageLocation.key);
+		let savePromise: Promise<T[] | T>;
 
-		return collection.allDocs({
-			include_docs: true
-		}).then(results => {
+		if (storageLocation.storageType === StorageType.LIST || storageLocation.storageType === StorageType.OBJECT) {
 
-			const hasExistingObject = (results.total_rows === 1 && results.rows[0].id === storageLocation.key);
-			const isNewValueObject = _.isObject(value) && !_.isArray(value);
-			const isObjectMode = isNewValueObject || hasExistingObject;
-			const isValueMode = !_.isObject(value) || (hasExistingObject && _.has(results.rows[0].doc, DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD));
+			savePromise = this.fetch(storageLocation, null, defaultStorageValue).then(result => {
 
-			let savePromise;
+				let promise;
 
-			if (isValueMode) {
+				// let savePromise
+				if (storageLocation.storageType === StorageType.LIST) {
 
-				const newDocValue = {};
-				newDocValue[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key;
-				newDocValue[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD] = value;
+					const newDocsValue = <T[]> value;
 
-				if (hasExistingObject) { // Update new doc with revision of object to be updated if object exists in collection
-					newDocValue[DesktopDataStore.POUCH_DB_REV_FIELD] = results.rows[0].doc._rev;
-				}
+					// Find existing docs in db
+					const existingDocs = <T[]> result;
 
-				savePromise = collection.put(<T>newDocValue);
+					// Find docs to be removed
+					const removeDocs = _.differenceBy(existingDocs, newDocsValue, DesktopDataStore.POUCH_DB_ID_FIELD).map(doc => {
+						doc[DesktopDataStore.POUCH_DB_DELETED_FIELD] = true;
+						return doc;
+					});
 
-			} else if (isObjectMode) {
+					// Find docs to be updated with new value
+					const updateDocs = _.intersectionBy(existingDocs, newDocsValue, DesktopDataStore.POUCH_DB_ID_FIELD);
 
-				const newDocValue = <T>value;
+					// Prepare "put" docs: if a new doc already exists, then apply his revision field to update in pouch db
+					const putDocs = newDocsValue.map(newDoc => {
+						const existingDoc = _.find(updateDocs, {_id: newDoc[DesktopDataStore.POUCH_DB_ID_FIELD]});
+						if (existingDoc) {
+							newDoc[DesktopDataStore.POUCH_DB_REV_FIELD] = existingDoc[DesktopDataStore.POUCH_DB_REV_FIELD];
+						}
+						return newDoc;
+					});
 
-				if (hasExistingObject) { // Update new doc with revision of object to be updated if object exists in collection
-					newDocValue[DesktopDataStore.POUCH_DB_REV_FIELD] = results.rows[0].doc._rev;
-				} else { // Create new one with _id
-					newDocValue[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key;
-				}
-				savePromise = collection.put(newDocValue);
+					// Now apply all changes to collection
+					const docsChanges = _.union(removeDocs, putDocs);
+					promise = this.database.bulkDocs(docsChanges);
 
-			} else {
+				} else if (storageLocation.storageType === StorageType.OBJECT) {
 
-				const newDocsValue = <T[]>value;
+					value[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key;
 
-				// Find existing docs in db
-				const existingDocs = results.rows.map(result => {
-					return <T>result.doc;
-				});
-
-				// Find docs to be removed
-				const removeDocs = _.differenceBy(existingDocs, newDocsValue, DesktopDataStore.POUCH_DB_ID_FIELD).map(doc => {
-					doc[DesktopDataStore.POUCH_DB_DELETED_FIELD] = true;
-					return doc;
-				});
-
-				// Find docs to be updated with new value
-				const updateDocs = _.intersectionBy(existingDocs, newDocsValue, DesktopDataStore.POUCH_DB_ID_FIELD);
-
-				// Prepare "put" docs: if a new doc already exists, then apply his revision field to update in pouch db
-				const putDocs = newDocsValue.map(newDoc => {
-					const existingDoc = _.find(updateDocs, {_id: newDoc[DesktopDataStore.POUCH_DB_ID_FIELD]});
-					if (existingDoc) {
-						newDoc[DesktopDataStore.POUCH_DB_REV_FIELD] = existingDoc[DesktopDataStore.POUCH_DB_REV_FIELD];
+					if (result[DesktopDataStore.POUCH_DB_REV_FIELD]) {
+						value[DesktopDataStore.POUCH_DB_REV_FIELD] = result[DesktopDataStore.POUCH_DB_REV_FIELD];
 					}
-					return newDoc;
+
+					promise = this.database.put(value);
+				}
+
+				return promise.then(() => {
+					return this.fetch(storageLocation, null, defaultStorageValue);
 				});
 
-				// Now apply all changes to collection
-				const docsChanges = _.union(removeDocs, putDocs);
-				savePromise = collection.bulkDocs(docsChanges);
-			}
-
-			return savePromise.then(() => {
-				return this.fetch(storageLocation, null, defaultStorageValue);
 			});
 
-		});
+		} else if (storageLocation.storageType === StorageType.SINGLE_VALUE) {
+
+			savePromise = this.getDocsById(storageLocation).then(result => {
+
+				let newDoc;
+				if (result.docs[0]) {
+					newDoc = result.docs[0];
+					newDoc[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD] = value;
+				} else {
+					newDoc = {};
+					newDoc[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key;
+					newDoc[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD] = value;
+				}
+
+				return this.database.put(newDoc).then(() => {
+					return this.fetch(storageLocation, null, defaultStorageValue);
+				});
+
+			});
+
+
+		} else {
+			throw new Error("Unknown StorageType");
+		}
+
+		return savePromise;
 	}
 
 	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
@@ -178,11 +209,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 			}
 
 			doc = _.set(doc as Object, path, value) as T; // Update property of doc
-
-			return this.getCollection(storageLocation.key).put(doc).then(() => {
-				return <Promise<T>>this.fetch(storageLocation, null, defaultStorageValue);
-			});
+			return <Promise<T>> this.save(storageLocation, doc, defaultStorageValue);
 		});
 	}
-
 }

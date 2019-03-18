@@ -2,11 +2,12 @@ import { Injectable } from "@angular/core";
 import { BaseDao } from "../base.dao";
 import { StorageLocationModel } from "../../data-store/storage-location.model";
 import { AthleteModel } from "@elevate/shared/models";
+import { StorageType } from "../../data-store/storage-type.enum";
 
 @Injectable()
 export class AthleteDao extends BaseDao<AthleteModel> {
 
-	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("athlete");
+	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("athlete", StorageType.OBJECT);
 	public static readonly DEFAULT_STORAGE_VALUE: AthleteModel = AthleteModel.DEFAULT_MODEL;
 
 	public getDefaultStorageValue(): AthleteModel {

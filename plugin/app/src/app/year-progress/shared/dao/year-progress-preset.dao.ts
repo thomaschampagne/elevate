@@ -2,11 +2,12 @@ import { Injectable } from "@angular/core";
 import { YearToDateProgressPresetModel } from "../models/year-to-date-progress-preset.model";
 import { BaseDao } from "../../../shared/dao/base.dao";
 import { StorageLocationModel } from "../../../shared/data-store/storage-location.model";
+import { StorageType } from "../../../shared/data-store/storage-type.enum";
 
 @Injectable()
 export class YearProgressPresetDao extends BaseDao<YearToDateProgressPresetModel> {
 
-	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("yearProgressPresets");
+	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("yearProgressPresets", StorageType.LIST);
 	public static readonly DEFAULT_STORAGE_VALUE: YearToDateProgressPresetModel[] = [];
 
 	public getStorageLocation(): StorageLocationModel {

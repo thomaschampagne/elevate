@@ -3,102 +3,145 @@ import { TestBed } from "@angular/core/testing";
 import { DesktopDataStore } from "./desktop-data-store.service";
 import { StorageLocationModel } from "../storage-location.model";
 import * as _ from "lodash";
-import PouchDB from "pouchdb-browser";
 import { LoggerService } from "../../services/logging/logger.service";
 import { ConsoleLoggerService } from "../../services/logging/console-logger.service";
-import Spy = jasmine.Spy;
+import { StorageType } from "../storage-type.enum";
 
 describe("DesktopDataStore", () => {
 
-	describe("Handle collection storage", () => {
+	class FakeDoc {
+		_id: string;
+		$doctype: string;
 
-		class FakePerson extends Object {
-			_id: string;
-			name: string;
-			age: number;
+		constructor(id: string) {
+			this._id = id;
+			this.$doctype = id;
 		}
+	}
 
-		let desktopDataStore: DesktopDataStore<FakePerson>;
+	class FakeSettings {
 
-		let getCollectionSpy: Spy;
+		maxHr: number;
+		restHr: number;
+		weight: number;
 
-		const fakePersonsStorageLocation = new StorageLocationModel("fakePersons");
+		constructor(maxHr: number, restHr: number, weight: number) {
+			this.maxHr = maxHr;
+			this.restHr = restHr;
+			this.weight = weight;
+		}
+	}
 
-		const fakePersons: FakePerson[] = [{
-			_id: "001",
-			name: "Jean Kevin",
-			age: 12
-		}, {
-			_id: "002",
-			name: "Colette Sterolle",
-			age: 54
-		}];
+	class FakeAthlete extends FakeDoc {
 
-		beforeEach((done: Function) => {
+		name: string;
+		age: number;
+		fakeSettings: FakeSettings[];
 
-			TestBed.configureTestingModule({
-				providers: [
-					DesktopDataStore,
-					{provide: LoggerService, useClass: ConsoleLoggerService}
-				]
-			});
+		constructor(name: string, age: number, fakeSettings: FakeSettings[]) {
+			super("fakeAthlete");
+			this.name = name;
+			this.age = age;
+			this.fakeSettings = fakeSettings;
+		}
+	}
 
-			desktopDataStore = TestBed.get(DesktopDataStore);
-			getCollectionSpy = spyOn(desktopDataStore, "getCollection").and.callThrough();
+	class FakeDateTime extends FakeDoc {
 
-			const pouchPersonDB: PouchDB.Database<FakePerson> = <PouchDB.Database<FakePerson>>desktopDataStore.getCollection(fakePersonsStorageLocation.key);
-			pouchPersonDB.allDocs().then(results => {
+		$value: any;
 
-				expect(results.total_rows).toEqual(0);
-				return pouchPersonDB.bulkDocs(fakePersons);
+		constructor($value: any) {
+			super("fakeDateTime");
+			this.$value = $value;
+		}
+	}
 
-			}).then(result => {
-				expect(result.length).toEqual(fakePersons.length);
-				expect(desktopDataStore.elevateCollectionsMap.size).toEqual(1);
-				getCollectionSpy.calls.reset();
-				done();
+	class FakeActivity extends FakeDoc {
 
-			}).catch(error => {
-				console.error(error);
-				throw error;
-			});
+		name: string;
+		type: string;
+
+		constructor(activityId: string, name: string, type: string) {
+			super("fakeSyncedActivity:" + activityId);
+			this.$doctype = "fakeSyncedActivity"; // Override to ensure doctype
+			this.name = name;
+			this.type = type;
+		}
+	}
+
+	let desktopDataStore: DesktopDataStore<any[] | any>;
+
+	const FAKE_DOCUMENTS: FakeDoc[] = [
+		new FakeAthlete("Thomas", 31, [new FakeSettings(189, 60, 75),
+			new FakeSettings(195, 50, 72)]),
+
+		new FakeDateTime(new Date().getTime()),
+
+		new FakeActivity("00001", "Hard climb", "Ride"),
+		new FakeActivity("00002", "Recover session", "Ride"),
+		new FakeActivity("00003", "Running day!", "Run"),
+	];
+
+	const FAKE_ATHLETE_STORAGE_LOCATION = new StorageLocationModel("fakeAthlete", StorageType.OBJECT);
+	const FAKE_ACTIVITIES_STORAGE_LOCATION = new StorageLocationModel("fakeSyncedActivity", StorageType.LIST);
+	const FAKE_DATE_TIME_STORAGE_LOCATION = new StorageLocationModel("fakeDateTime", StorageType.SINGLE_VALUE);
+
+	beforeEach((done: Function) => {
+
+		TestBed.configureTestingModule({
+			providers: [
+				DesktopDataStore,
+				{provide: LoggerService, useClass: ConsoleLoggerService}
+			]
 		});
 
-		afterEach((done: Function) => {
+		desktopDataStore = TestBed.get(DesktopDataStore);
 
-			// Cleaning collection
-			desktopDataStore.getCollection(fakePersonsStorageLocation.key).destroy().then(() => {
-				desktopDataStore.elevateCollectionsMap.delete(fakePersonsStorageLocation.key);
-				done();
-			}).catch(error => {
-				console.error(error);
-				throw error;
-			});
+		const fakeDocs = _.cloneDeep(FAKE_DOCUMENTS);
+
+		desktopDataStore.database.allDocs().then(results => {
+			expect(results.total_rows).toEqual(0);
+			return desktopDataStore.database.bulkDocs(fakeDocs);
+
+		}).then(results => {
+			expect(results.length).toEqual(fakeDocs.length);
+			done();
+
+		}).catch(error => {
+			console.error(error);
+			throw error;
 		});
+	});
 
-		it("should fetch a FakePersons collection", (done: Function) => {
+	afterEach((done: Function) => {
+
+		// Cleaning database
+		desktopDataStore.database.destroy().then(() => {
+			done();
+		}).catch(error => {
+			console.error(error);
+			throw error;
+		});
+	});
+
+	describe("Handle object", () => {
+
+		it("should fetch a FakeAthlete object", (done: Function) => {
 
 			// Given
-			const expectedPerson = _.find(fakePersons, p => {
-				return p._id === "001";
-			});
+			const expectedFakeAthlete: FakeAthlete = <FakeAthlete> _.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"});
 
 			// When
-			const promise: Promise<FakePerson[]> = <Promise<FakePerson[]>>desktopDataStore.fetch(fakePersonsStorageLocation, null, []);
+			const promise: Promise<FakeAthlete> = <Promise<FakeAthlete>> desktopDataStore.fetch(FAKE_ATHLETE_STORAGE_LOCATION, null, null);
 
 			// Then
-			promise.then((results: FakePerson[]) => {
+			promise.then((fakeAthlete: FakeAthlete) => {
 
-				const fetchedPerson = _.find(results, p => {
-					return p._id === "001";
-				});
-
-				expect(fetchedPerson._id).toEqual(expectedPerson._id);
-				expect(fetchedPerson.name).toEqual(expectedPerson.name);
-				expect(fetchedPerson.age).toEqual(expectedPerson.age);
-
-				expect(results.length).toEqual(fakePersons.length);
-				expect(getCollectionSpy).toHaveBeenCalledTimes(1);
+				expect(fakeAthlete._id).toEqual(expectedFakeAthlete._id);
+				expect(fakeAthlete.name).toEqual(expectedFakeAthlete.name);
+				expect(fakeAthlete.age).toEqual(expectedFakeAthlete.age);
+				expect(fakeAthlete.fakeSettings.length).toEqual(expectedFakeAthlete.fakeSettings.length);
+				expect(fakeAthlete.$doctype).toEqual(expectedFakeAthlete.$doctype);
 
 				done();
 
@@ -109,26 +152,223 @@ describe("DesktopDataStore", () => {
 			});
 		});
 
-		it("should fetch default storage value when FakePersons collection is missing", (done: Function) => {
+		it("should fetch default storage value when FakeAthlete object is missing in database", (done: Function) => {
+
+			// Given
+			const defaultFakeAthlete: FakeAthlete = new FakeAthlete("Your Name", 30, []);
+
+			const promiseMissing = desktopDataStore.database.get(FAKE_ATHLETE_STORAGE_LOCATION.key).then(fakeAthlete => {
+				return desktopDataStore.database.remove(fakeAthlete);
+			});
+
+			// When
+			const promise: Promise<FakeAthlete> = <Promise<FakeAthlete>> promiseMissing.then(() => {
+				return desktopDataStore.fetch(FAKE_ATHLETE_STORAGE_LOCATION, null, defaultFakeAthlete);
+			});
+
+			// Then
+			promise.then((fakeAthlete: FakeAthlete) => {
+
+				expect(fakeAthlete._id).toEqual(defaultFakeAthlete._id);
+				expect(fakeAthlete.name).toEqual(defaultFakeAthlete.name);
+				expect(fakeAthlete.age).toEqual(defaultFakeAthlete.age);
+				expect(fakeAthlete.fakeSettings.length).toEqual(defaultFakeAthlete.fakeSettings.length);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+		});
+
+		it("should save and replace a FakeAthlete object", (done: Function) => {
+
+			// Given
+			const newFakeAthlete: FakeAthlete = <FakeAthlete> _.cloneDeep(_.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"}));
+			newFakeAthlete.age = 99;
+			newFakeAthlete.name = "Fake name";
+			newFakeAthlete.fakeSettings = [new FakeSettings(99, 99, 99)];
+
+			// When
+			const promise: Promise<FakeAthlete> = <Promise<FakeAthlete>> desktopDataStore.save(FAKE_ATHLETE_STORAGE_LOCATION, newFakeAthlete, null);
+
+			// Then
+			promise.then((savedFakeAthlete: FakeAthlete) => {
+
+				expect(savedFakeAthlete._id).toEqual(newFakeAthlete._id);
+				expect(savedFakeAthlete.name).toEqual(newFakeAthlete.name);
+				expect(savedFakeAthlete.age).toEqual(newFakeAthlete.age);
+				expect(savedFakeAthlete.fakeSettings.length).toEqual(newFakeAthlete.fakeSettings.length);
+				expect(savedFakeAthlete.$doctype).toEqual(newFakeAthlete.$doctype);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
+		it("should save a FakeAthlete when object is missing in database", (done: Function) => {
+
+			// Given
+			const defaultFakeAthlete: FakeAthlete = new FakeAthlete("Your Name", 30, []);
+			const newFakeAthlete: FakeAthlete = <FakeAthlete> _.cloneDeep(_.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"}));
+			newFakeAthlete.age = 99;
+			newFakeAthlete.name = "Fake name";
+			newFakeAthlete.fakeSettings = [new FakeSettings(99, 99, 99)];
+
+			const promiseMissing = desktopDataStore.database.get(FAKE_ATHLETE_STORAGE_LOCATION.key).then(fakeAthlete => {
+				return desktopDataStore.database.remove(fakeAthlete);
+			});
+
+			// When
+			const promise: Promise<FakeAthlete> = promiseMissing.then(() => {
+				return <Promise<FakeAthlete>> desktopDataStore.save(FAKE_ATHLETE_STORAGE_LOCATION, newFakeAthlete, defaultFakeAthlete);
+			});
+
+			// Then
+			promise.then((savedFakeAthlete: FakeAthlete) => {
+
+				expect(savedFakeAthlete._id).toEqual(newFakeAthlete._id);
+				expect(savedFakeAthlete.name).toEqual(newFakeAthlete.name);
+				expect(savedFakeAthlete.age).toEqual(newFakeAthlete.age);
+				expect(savedFakeAthlete.fakeSettings.length).toEqual(newFakeAthlete.fakeSettings.length);
+				expect(savedFakeAthlete.$doctype).toEqual(newFakeAthlete.$doctype);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
+		it("should upsert property of a FakeAthlete object", (done: Function) => {
+
+			// Given
+			const newValue: number = 666;
+			const updatePath = ["fakeSettings", "1", "weight"]; // eq "fakeSettings[1].weight"
+
+			const expectedFakeAthlete: FakeAthlete = <FakeAthlete> _.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"});
+			expectedFakeAthlete.fakeSettings[1].weight = newValue;
+
+			// When
+			const promise: Promise<FakeAthlete> = <Promise<FakeAthlete>> desktopDataStore.upsertProperty(FAKE_ATHLETE_STORAGE_LOCATION, updatePath, newValue, null);
+
+			// Then
+			promise.then((savedFakeAthlete: FakeAthlete) => {
+
+				expect(savedFakeAthlete._id).toEqual(expectedFakeAthlete._id);
+				expect(savedFakeAthlete.name).toEqual(expectedFakeAthlete.name);
+				expect(savedFakeAthlete.age).toEqual(expectedFakeAthlete.age);
+				expect(savedFakeAthlete.fakeSettings.length).toEqual(expectedFakeAthlete.fakeSettings.length);
+				expect(savedFakeAthlete.fakeSettings[1].weight).toEqual(expectedFakeAthlete.fakeSettings[1].weight);
+				expect(savedFakeAthlete.$doctype).toEqual(expectedFakeAthlete.$doctype);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
+		it("should clear FakeAthlete object", (done: Function) => {
+
+			// When
+			const promise: Promise<void> = desktopDataStore.clear(FAKE_ATHLETE_STORAGE_LOCATION);
+
+			// Then
+			promise.then(() => {
+
+				desktopDataStore.database.find({
+					selector: {
+						_id: {$eq: FAKE_ATHLETE_STORAGE_LOCATION.key}
+					}
+				}).then(results => {
+					expect(results.docs.length).toEqual(0);
+					done();
+				});
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+		});
+
+	});
+
+	describe("Handle collection", () => {
+
+		it("should fetch a FakeActivity collection", (done: Function) => {
+
+			// Given
+			const expectedDocType = "fakeSyncedActivity";
+			const expectedFakeActivities: FakeActivity[] = <FakeActivity[]> _.filter(FAKE_DOCUMENTS, (doc: FakeDoc) => {
+				return doc._id.match("fakeSyncedActivity:") !== null;
+			});
+
+			// When
+			const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>> desktopDataStore.fetch(FAKE_ACTIVITIES_STORAGE_LOCATION, null, null);
+
+			// Then
+			promise.then((fakeActivities: FakeActivity[]) => {
+
+				expect(fakeActivities.length).toEqual(3);
+				expect(fakeActivities[0]._id).toEqual(expectedFakeActivities[0]._id);
+				expect(fakeActivities[0].name).toEqual(expectedFakeActivities[0].name);
+				expect(fakeActivities[0].type).toEqual(expectedFakeActivities[0].type);
+				expect(fakeActivities[0].$doctype).toEqual(expectedDocType);
+
+				expect(fakeActivities[1]._id).toEqual(expectedFakeActivities[1]._id);
+				expect(fakeActivities[1].name).toEqual(expectedFakeActivities[1].name);
+				expect(fakeActivities[1].type).toEqual(expectedFakeActivities[1].type);
+				expect(fakeActivities[1].$doctype).toEqual(expectedDocType);
+
+				expect(fakeActivities[2]._id).toEqual(expectedFakeActivities[2]._id);
+				expect(fakeActivities[2].name).toEqual(expectedFakeActivities[2].name);
+				expect(fakeActivities[2].type).toEqual(expectedFakeActivities[2].type);
+				expect(fakeActivities[2].$doctype).toEqual(expectedDocType);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+		});
+
+		it("should fetch default storage value when FakeActivity collection is missing in database", (done: Function) => {
 
 			// Given
 			const defaultStorageValue = [];
-			const promiseMissingCollection = desktopDataStore.getCollection(fakePersonsStorageLocation.key).destroy().then(() => {
-				desktopDataStore.elevateCollectionsMap.delete(fakePersonsStorageLocation.key);
-				getCollectionSpy.calls.reset();
+			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
+				const fakeAthlete = _.cloneDeep(_.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"}));
+				desktopDataStore.setup();
+				desktopDataStore.database.put(fakeAthlete);
 				return Promise.resolve();
 			});
 
 			// When
-			const promise: Promise<FakePerson[]> = promiseMissingCollection.then(() => {
-				return <Promise<FakePerson[]>>desktopDataStore.fetch(fakePersonsStorageLocation, null, defaultStorageValue);
+			const promise: Promise<FakeActivity[]> = promiseMissingCollection.then(() => {
+				return <Promise<FakeActivity[]>> desktopDataStore.fetch(FAKE_ACTIVITIES_STORAGE_LOCATION, null, defaultStorageValue);
 			});
 
 			// Then
-			promise.then((results: FakePerson[]) => {
+			promise.then((fakeActivities: FakeActivity[]) => {
 
-				expect(results).toEqual(defaultStorageValue);
-				expect(getCollectionSpy).toHaveBeenCalledTimes(1);
+				expect(fakeActivities).toEqual(defaultStorageValue);
 
 				done();
 
@@ -137,133 +377,71 @@ describe("DesktopDataStore", () => {
 				expect(false).toBeTruthy("Whoops! I should not be here!");
 				done();
 			});
-
 		});
 
-		it("should save and replace an existing FakePersons collection", (done: Function) => {
+		it("should save and replace an existing FakeActivity collection", (done: Function) => {
 
 			// Given
 			const expectedLength = 3;
-			const newFakePersons: FakePerson[] = [{
-				_id: "003",
-				name: "Robert Binouse",
-				age: 55
-			}, {
-				_id: "004",
-				name: "Marta Tinette",
-				age: 62
-			}, {
-				_id: "005",
-				name: "Jack Adi",
-				age: 37
-			}];
+			const newFakeActivities: FakeActivity[] = [
+				new FakeActivity("00003", "Running day! (rename)", "Run"),
+				new FakeActivity("00004", "Recovery spins", "Ride"),
+				new FakeActivity("00005", "Marathon", "Run"),
+			];
 
-			const expectedPerson = _.find(newFakePersons, p => {
-				return p._id === "004";
+			const expectedExistRenamedActivity = _.find(newFakeActivities, activity => {
+				return activity._id === "fakeSyncedActivity:00003";
+			});
+
+			const expectedExistActivity = _.find(newFakeActivities, activity => {
+				return activity._id === "fakeSyncedActivity:00004";
 			});
 
 			// When
-			const promise: Promise<FakePerson[]> = <Promise<FakePerson[]>>desktopDataStore.save(fakePersonsStorageLocation, newFakePersons, []);
+			const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>> desktopDataStore.save(FAKE_ACTIVITIES_STORAGE_LOCATION, newFakeActivities, []);
 
 			// Then
-			promise.then((results: FakePerson[]) => {
+			promise.then((results: FakeActivity[]) => {
 
 				expect(results).not.toBeNull();
 
 				// Test new person added
-				const fetchedNewPerson: FakePerson = <FakePerson>_.find(results, {_id: "004"});
-				expect(fetchedNewPerson._id).toEqual(expectedPerson._id);
-				expect(fetchedNewPerson.name).toEqual(expectedPerson.name);
-				expect(fetchedNewPerson.age).toEqual(expectedPerson.age);
+				const fakeActivity: FakeActivity = _.find(results, {_id: "fakeSyncedActivity:00004"});
+				expect(fakeActivity._id).toEqual(expectedExistActivity._id);
+				expect(fakeActivity.name).toEqual(expectedExistActivity.name);
+				expect(fakeActivity.type).toEqual(expectedExistActivity.type);
+				expect(fakeActivity.$doctype).toEqual(expectedExistActivity.$doctype);
+
+				const fakeRenamedActivity: FakeActivity = _.find(results, {_id: "fakeSyncedActivity:00003"});
+				expect(fakeRenamedActivity._id).toEqual(expectedExistRenamedActivity._id);
+				expect(fakeRenamedActivity.name).toEqual(expectedExistRenamedActivity.name);
+				expect(fakeRenamedActivity.type).toEqual(expectedExistRenamedActivity.type);
+				expect(fakeRenamedActivity.$doctype).toEqual(expectedExistRenamedActivity.$doctype);
 
 				// Test person removed
-				const unknownPerson = <FakePerson>_.find(results, {_id: "001"});
-				expect(unknownPerson).toBeUndefined();
+				const unknownActivity = _.find(results, {_id: "fakeSyncedActivity:00001"});
+				expect(unknownActivity).toBeUndefined();
 
 				expect(results.length).toEqual(expectedLength);
-				expect(getCollectionSpy).toHaveBeenCalledTimes(2);
 
 				done();
 
 			}, error => {
+				console.log(error);
 				expect(error).toBeNull();
 				expect(false).toBeTruthy("Whoops! I should not be here!");
 				done();
 			});
 		});
 
-		it("should save and replace an existing FakePersons collection (including updates of some rows)", (done: Function) => {
+		it("should reject upsert of a FakeActivity collection", (done: Function) => {
 
 			// Given
-			const expectedLength = 4;
-			const updatedFakePerson = _.cloneDeep(<FakePerson>_.find(fakePersons, {_id: "002"}));
-			updatedFakePerson.age = 99;
-
-			const newFakePersons: FakePerson[] = [
-				updatedFakePerson, {
-					_id: "003",
-					name: "Robert Binouse",
-					age: 55
-				}, {
-					_id: "004",
-					name: "Marta Tinette",
-					age: 62
-				}, {
-					_id: "005",
-					name: "Jack Adi",
-					age: 37
-				}];
-
-			const expectedPerson = _.find(newFakePersons, p => {
-				return p._id === "004";
-			});
-
-
-			// When
-			const promise: Promise<FakePerson[]> = <Promise<FakePerson[]>>desktopDataStore.save(fakePersonsStorageLocation, newFakePersons, []);
-
-			// Then
-			promise.then((results: FakePerson[]) => {
-
-				expect(results).not.toBeNull();
-
-				// Test new person added
-				const fetchedNewPerson: FakePerson = <FakePerson>_.find(results, {_id: "004"});
-				expect(fetchedNewPerson._id).toEqual(expectedPerson._id);
-				expect(fetchedNewPerson.name).toEqual(expectedPerson.name);
-				expect(fetchedNewPerson.age).toEqual(expectedPerson.age);
-
-				// Test update of person
-				const fetchedUpdatedPerson = <FakePerson>_.find(results, {_id: "002"});
-				expect(fetchedUpdatedPerson._id).toEqual(updatedFakePerson._id);
-				expect(fetchedUpdatedPerson.name).toEqual(updatedFakePerson.name);
-				expect(fetchedUpdatedPerson.age).toEqual(updatedFakePerson.age);
-
-				// Test person removed
-				const unknownPerson = <FakePerson>_.find(results, {_id: "001"});
-				expect(unknownPerson).toBeUndefined();
-
-				expect(results.length).toEqual(expectedLength);
-				expect(getCollectionSpy).toHaveBeenCalledTimes(2);
-
-				done();
-
-			}, error => {
-				expect(error).toBeNull();
-				expect(false).toBeTruthy("Whoops! I should not be here!");
-				done();
-			});
-
-		});
-
-		it("should reject upsert of a FakePersons collection", (done: Function) => {
-
-			// Given
-			const newValue = _.cloneDeep(<FakePerson>_.find(fakePersons, {_id: "002"}));
+			const newValue = "foo";
 			const updatePath = ["none"];
 
 			// When
-			const promise = desktopDataStore.upsertProperty(fakePersonsStorageLocation, updatePath, newValue, []);
+			const promise = desktopDataStore.upsertProperty(FAKE_ACTIVITIES_STORAGE_LOCATION, updatePath, newValue, []);
 
 			// Then
 			promise.then(() => {
@@ -275,183 +453,22 @@ describe("DesktopDataStore", () => {
 				expect(error).toEqual("Cannot save property to a collection");
 				done();
 			});
-
 		});
 
-		it("should clear FakePersons collection", (done: Function) => {
+		it("should clear FakeActivity collection", (done: Function) => {
 
 			// When
-			const promise: Promise<void> = desktopDataStore.clear(fakePersonsStorageLocation);
+			const promise: Promise<void> = desktopDataStore.clear(FAKE_ACTIVITIES_STORAGE_LOCATION);
 
 			// Then
 			promise.then(() => {
 
-				desktopDataStore.elevateCollectionsMap.get(fakePersonsStorageLocation.key).allDocs().then(result => {
-					expect(result.total_rows).toEqual(0);
-					done();
-				});
-			});
-		});
-
-	});
-
-	describe("Handle object storage", () => {
-
-		class FakeSettings extends Object {
-			_id: string;
-			setting_a: number;
-			setting_b: number;
-			setting_c: number;
-			sub_settings?: SubSettings;
-		}
-
-		class SubSettings {
-			sub_setting_a: number;
-			sub_setting_b: number;
-			sub_setting_c: number;
-		}
-
-		let desktopDataStore: DesktopDataStore<FakeSettings>;
-		let getCollectionSpy: Spy;
-
-		const fakeSettingsStorageLocation = new StorageLocationModel("fakeSettings");
-
-		const fakeSettings: FakeSettings = {
-			_id: "fakeSettings",
-			setting_a: 11,
-			setting_b: 99,
-			setting_c: 32
-		};
-
-		beforeEach((done: Function) => {
-
-			TestBed.configureTestingModule({
-				providers: [
-					DesktopDataStore,
-					{provide: LoggerService, useClass: ConsoleLoggerService}
-				]
-			});
-
-			desktopDataStore = TestBed.get(DesktopDataStore);
-
-			getCollectionSpy = spyOn(desktopDataStore, "getCollection").and.callThrough();
-
-			const pouchSettingsDB: PouchDB.Database<FakeSettings> = <PouchDB.Database<FakeSettings>>desktopDataStore.getCollection(fakeSettingsStorageLocation.key);
-			pouchSettingsDB.allDocs().then(results => {
-
-				expect(results.total_rows).toEqual(0);
-				return pouchSettingsDB.bulkDocs([fakeSettings]);
-
-			}).then(result => {
-				expect(result.length).toEqual(1);
-				expect(desktopDataStore.elevateCollectionsMap.size).toEqual(1);
-				getCollectionSpy.calls.reset();
-				done();
-
-			}).catch(error => {
-				console.error(error);
-				throw error;
-			});
-
-		});
-
-		afterEach((done: Function) => {
-
-			// Cleaning collection
-			desktopDataStore.getCollection(fakeSettingsStorageLocation.key).destroy().then(() => {
-				desktopDataStore.elevateCollectionsMap.delete(fakeSettingsStorageLocation.key);
-				done();
-			}).catch(error => {
-				console.error(error);
-				throw error;
-			});
-
-		});
-
-		it("should fetch a FakeSettings object", (done: Function) => {
-
-			// Given
-			const expectedSettings = _.cloneDeep(fakeSettings);
-
-			// When
-			const promise: Promise<FakeSettings> = <Promise<FakeSettings>>desktopDataStore.fetch(fakeSettingsStorageLocation, null, []);
-
-			// Then
-			promise.then((fakeSettings: FakeSettings) => {
-
-				expect(fakeSettings._id).toEqual(expectedSettings._id);
-				expect(fakeSettings.setting_a).toEqual(expectedSettings.setting_a);
-				expect(fakeSettings.setting_b).toEqual(expectedSettings.setting_b);
-				expect(fakeSettings.setting_c).toEqual(expectedSettings.setting_c);
-
-				done();
-
-			}, error => {
-				expect(error).toBeNull();
-				expect(false).toBeTruthy("Whoops! I should not be here!");
-				done();
-			});
-
-		});
-
-		it("should fetch default storage value when FakeSettings object is missing", (done: Function) => {
-
-			// Given
-			const defaultStorageValue = <FakeSettings>{
-				// _id: "fakeSettings", // Missing _id for the purpose of the test.
-				setting_a: 0,
-				setting_b: 0,
-				setting_c: 0
-			};
-			const promiseMissingCollection = desktopDataStore.getCollection(fakeSettingsStorageLocation.key).destroy().then(() => {
-				desktopDataStore.elevateCollectionsMap.delete(fakeSettingsStorageLocation.key);
-				getCollectionSpy.calls.reset();
-				return Promise.resolve();
-			});
-
-			// When
-			const promise: Promise<FakeSettings> = promiseMissingCollection.then(() => {
-				return <Promise<FakeSettings>>desktopDataStore.fetch(fakeSettingsStorageLocation, null, defaultStorageValue);
-			});
-
-			// Then
-			promise.then((settings: FakeSettings) => {
-
-				expect(settings).toEqual(defaultStorageValue);
-				expect(settings._id).toEqual(fakeSettingsStorageLocation.key);
-				expect(getCollectionSpy).toHaveBeenCalledTimes(1);
-
-				done();
-
-			}, error => {
-				expect(error).toBeNull();
-				expect(false).toBeTruthy("Whoops! I should not be here!");
-				done();
-			});
-
-		});
-
-		it("should save and replace a FakeSettings object", (done: Function) => {
-
-			// Given
-			const newSettings = _.cloneDeep(fakeSettings);
-			newSettings.setting_a = 111;
-			newSettings.setting_b = 222;
-			newSettings.setting_c = 333;
-
-			// When
-			const promise: Promise<FakeSettings> = <Promise<FakeSettings>>desktopDataStore.save(fakeSettingsStorageLocation, newSettings, fakeSettings);
-
-			// Then
-			promise.then((fakeSettings: FakeSettings) => {
-
-				expect(fakeSettings._id).toEqual(fakeSettingsStorageLocation.key);
-				expect(fakeSettings.setting_a).toEqual(newSettings.setting_a);
-				expect(fakeSettings.setting_b).toEqual(newSettings.setting_b);
-				expect(fakeSettings.setting_c).toEqual(newSettings.setting_c);
-
-				desktopDataStore.elevateCollectionsMap.get(fakeSettingsStorageLocation.key).allDocs().then(result => {
-					expect(result.total_rows).toEqual(1);
+				desktopDataStore.database.find({
+					selector: {
+						_id: {$regex: "^" + FAKE_ACTIVITIES_STORAGE_LOCATION.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR + ".*"}
+					}
+				}).then(results => {
+					expect(results.docs.length).toEqual(0);
 					done();
 				});
 
@@ -459,192 +476,24 @@ describe("DesktopDataStore", () => {
 				expect(error).toBeNull();
 				expect(false).toBeTruthy("Whoops! I should not be here!");
 				done();
-			});
-
-		});
-
-		it("should save settings when FakeSettings object is missing", (done: Function) => {
-
-			// Given
-			const newSettings = <FakeSettings>{
-				setting_a: 0,
-				setting_b: 0,
-				setting_c: 0
-			};
-
-			const defaultSettings = <FakeSettings>{
-				setting_a: 1,
-				setting_b: 2,
-				setting_c: 3
-			};
-
-			const promiseMissingCollection = desktopDataStore.getCollection(fakeSettingsStorageLocation.key).destroy().then(() => {
-				desktopDataStore.elevateCollectionsMap.delete(fakeSettingsStorageLocation.key);
-				return Promise.resolve();
-			});
-
-			// When
-			const promise: Promise<FakeSettings> = promiseMissingCollection.then(() => {
-				getCollectionSpy.calls.reset();
-				return <Promise<FakeSettings>>desktopDataStore.save(fakeSettingsStorageLocation, newSettings, defaultSettings);
-			});
-
-			// Then
-			promise.then((settings: FakeSettings) => {
-
-				expect(settings).toEqual(settings);
-				expect(settings._id).toEqual(fakeSettingsStorageLocation.key);
-				expect(settings.setting_a).toEqual(newSettings.setting_a);
-				expect(settings.setting_b).toEqual(newSettings.setting_b);
-				expect(settings.setting_c).toEqual(newSettings.setting_c);
-				expect(getCollectionSpy).toHaveBeenCalledTimes(2);
-
-				done();
-
-			}, error => {
-				expect(error).toBeNull();
-				expect(false).toBeTruthy("Whoops! I should not be here!");
-				done();
-			});
-
-		});
-
-		it("should upsert property of a FakeSettings object", (done: Function) => {
-
-			// Given
-			const settings = _.cloneDeep(fakeSettings);
-			settings.sub_settings = {
-				sub_setting_a: -1,
-				sub_setting_b: -2,
-				sub_setting_c: -3,
-			};
-
-			const promiseSettingsReady = desktopDataStore.getCollection(fakeSettingsStorageLocation.key).destroy().then(() => {
-				desktopDataStore.elevateCollectionsMap.delete(fakeSettingsStorageLocation.key);
-				getCollectionSpy.calls.reset();
-				return desktopDataStore.getCollection(fakeSettingsStorageLocation.key).put(settings);
-			});
-
-			const newValue: number = 666;
-			const updatePath = ["sub_settings", "sub_setting_b"];
-
-			const expectedSaveSettings = _.cloneDeep(settings);
-			expectedSaveSettings.sub_settings.sub_setting_b = newValue;
-
-			// When
-			const promise: Promise<FakeSettings> = promiseSettingsReady.then(() => {
-				return <Promise<FakeSettings>>desktopDataStore.upsertProperty(fakeSettingsStorageLocation, updatePath, newValue, fakeSettings);
-			});
-
-			// Then
-			promise.then((fakeSettings: FakeSettings) => {
-
-				expect(fakeSettings._id).toEqual(fakeSettingsStorageLocation.key);
-				expect(fakeSettings.setting_a).toEqual(expectedSaveSettings.setting_a);
-				expect(fakeSettings.setting_b).toEqual(expectedSaveSettings.setting_b);
-				expect(fakeSettings.setting_c).toEqual(expectedSaveSettings.setting_c);
-				expect(fakeSettings.sub_settings.sub_setting_a).toEqual(expectedSaveSettings.sub_settings.sub_setting_a);
-				expect(fakeSettings.sub_settings.sub_setting_b).toEqual(expectedSaveSettings.sub_settings.sub_setting_b);
-				expect(fakeSettings.sub_settings.sub_setting_c).toEqual(expectedSaveSettings.sub_settings.sub_setting_c);
-
-				desktopDataStore.elevateCollectionsMap.get(fakeSettingsStorageLocation.key).allDocs().then(result => {
-					expect(result.total_rows).toEqual(1);
-					done();
-				});
-
-			}, error => {
-				expect(error).toBeNull();
-				expect(false).toBeTruthy("Whoops! I should not be here!");
-				done();
-			});
-
-		});
-
-		it("should clear FakeSettings object", (done: Function) => {
-
-			// When
-			const promise: Promise<void> = desktopDataStore.clear(fakeSettingsStorageLocation);
-
-			// Then
-			promise.then(() => {
-
-				desktopDataStore.elevateCollectionsMap.get(fakeSettingsStorageLocation.key).allDocs().then(result => {
-					expect(result.total_rows).toEqual(0);
-					done();
-				});
 			});
 		});
 	});
 
-	describe("Handle value storage", () => {
+	describe("Handle single value", () => {
 
-		let desktopDataStore: DesktopDataStore<any>;
-		let getCollectionSpy: Spy;
-
-		const fakeDateTimeStorageLocation = new StorageLocationModel("dateTime");
-
-		const fakeDateTime = {
-			_id: "dateTime",
-			$value: 99999999999
-		};
-
-		beforeEach((done: Function) => {
-
-			TestBed.configureTestingModule({
-				providers: [
-					DesktopDataStore,
-					{provide: LoggerService, useClass: ConsoleLoggerService}
-				]
-			});
-
-			desktopDataStore = TestBed.get(DesktopDataStore);
-
-			getCollectionSpy = spyOn(desktopDataStore, "getCollection").and.callThrough();
-
-			const pouchSettingsDB: PouchDB.Database<any> = <PouchDB.Database<any>>desktopDataStore.getCollection(fakeDateTimeStorageLocation.key);
-			pouchSettingsDB.allDocs().then(results => {
-
-				expect(results.total_rows).toEqual(0);
-				return pouchSettingsDB.bulkDocs([fakeDateTime]);
-
-			}).then(result => {
-				expect(result.length).toEqual(1);
-				expect(desktopDataStore.elevateCollectionsMap.size).toEqual(1);
-				getCollectionSpy.calls.reset();
-				done();
-
-			}).catch(error => {
-				console.error(error);
-				throw error;
-			});
-
-		});
-
-		afterEach((done: Function) => {
-
-			// Cleaning collection
-			desktopDataStore.getCollection(fakeDateTimeStorageLocation.key).destroy().then(() => {
-				desktopDataStore.elevateCollectionsMap.delete(fakeDateTimeStorageLocation.key);
-				done();
-			}).catch(error => {
-				console.error(error);
-				throw error;
-			});
-
-		});
-
-		it("should fetch a fakeDateTime value", (done: Function) => {
+		it("should fetch a FakeDateTime as single value", (done: Function) => {
 
 			// Given
-			const expectedFakeDateTime = _.cloneDeep(fakeDateTime);
+			const expectedFakeDateTime = (<FakeDateTime> _.find(FAKE_DOCUMENTS, {_id: "fakeDateTime"})).$value;
 
 			// When
-			const promise: Promise<number> = <Promise<number>>desktopDataStore.fetch(fakeDateTimeStorageLocation, null, null);
+			const promise: Promise<number> = desktopDataStore.fetch(FAKE_DATE_TIME_STORAGE_LOCATION, null, null);
 
 			// Then
 			promise.then((fakeDateTime: number) => {
 
-				expect(fakeDateTime).toEqual(expectedFakeDateTime[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD]);
+				expect(fakeDateTime).toEqual(expectedFakeDateTime);
 
 				done();
 
@@ -656,28 +505,26 @@ describe("DesktopDataStore", () => {
 
 		});
 
-		it("should fetch a default storage value when fakeDateTime value is missing", (done: Function) => {
+		it("should fetch default storage value when FakeDateTime is missing in database", (done: Function) => {
 
 			// Given
 			const defaultStorageValue = null;
-			const promiseMissingCollection = desktopDataStore.getCollection(fakeDateTimeStorageLocation.key).destroy().then(() => {
-				desktopDataStore.elevateCollectionsMap.delete(fakeDateTimeStorageLocation.key);
-				getCollectionSpy.calls.reset();
+			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
+				const fakeAthlete = _.cloneDeep(_.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"}));
+				desktopDataStore.setup();
+				desktopDataStore.database.put(fakeAthlete);
 				return Promise.resolve();
 			});
 
 			// When
 			const promise: Promise<number> = promiseMissingCollection.then(() => {
-				return <Promise<number>>desktopDataStore.fetch(fakeDateTimeStorageLocation, null, defaultStorageValue);
+				return desktopDataStore.fetch(FAKE_DATE_TIME_STORAGE_LOCATION, null, defaultStorageValue);
 			});
 
 			// Then
 			promise.then((fakeDateTime: number) => {
-
 				expect(fakeDateTime).toEqual(defaultStorageValue);
-
 				done();
-
 			}, error => {
 				expect(error).toBeNull();
 				expect(false).toBeTruthy("Whoops! I should not be here!");
@@ -686,18 +533,18 @@ describe("DesktopDataStore", () => {
 
 		});
 
-		it("should save and replace a fakeDateTime value", (done: Function) => {
+		it("should save and replace a FakeDateTime single value", (done: Function) => {
 
 			// Given
-			const newValue = 666;
+			const newDateTime = _.random(10000);
 
 			// When
-			const promise: Promise<number> = <Promise<number>>desktopDataStore.save(fakeDateTimeStorageLocation, newValue, null);
+			const promise: Promise<number> = <Promise<number>> desktopDataStore.save(FAKE_DATE_TIME_STORAGE_LOCATION, newDateTime, null);
 
 			// Then
 			promise.then((fakeDateTime: number) => {
 
-				expect(fakeDateTime).toEqual(newValue);
+				expect(fakeDateTime).toEqual(newDateTime);
 
 				done();
 
@@ -709,28 +556,27 @@ describe("DesktopDataStore", () => {
 
 		});
 
-		it("should save a dateTime when fakeDateTime is missing", (done: Function) => {
+		it("should save a FakeDateTime when FakeDateTime is missing in database", (done: Function) => {
 
 			// Given
-			const newValue = 555;
-			const promiseMissingCollection = desktopDataStore.getCollection(fakeDateTimeStorageLocation.key).destroy().then(() => {
-				desktopDataStore.elevateCollectionsMap.delete(fakeDateTimeStorageLocation.key);
-				getCollectionSpy.calls.reset();
+			const newDateTime = _.random(10000);
+
+			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
+				const fakeAthlete = _.cloneDeep(_.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"}));
+				desktopDataStore.setup();
+				desktopDataStore.database.put(fakeAthlete);
 				return Promise.resolve();
 			});
 
 			// When
 			const promise: Promise<number> = promiseMissingCollection.then(() => {
-				return <Promise<number>>desktopDataStore.save(fakeDateTimeStorageLocation, newValue, null);
+				return <Promise<number>> desktopDataStore.save(FAKE_DATE_TIME_STORAGE_LOCATION, newDateTime, null);
 			});
 
 			// Then
 			promise.then((fakeDateTime: number) => {
-
-				expect(fakeDateTime).toEqual(newValue);
-
+				expect(fakeDateTime).toEqual(newDateTime);
 				done();
-
 			}, error => {
 				expect(error).toBeNull();
 				expect(false).toBeTruthy("Whoops! I should not be here!");
@@ -739,14 +585,14 @@ describe("DesktopDataStore", () => {
 
 		});
 
-		it("should reject upsert of a fakeDateTime value", (done: Function) => {
+		it("should reject upsert of a FakeDateTime value", (done: Function) => {
 
 			// Given
 			const newValue = 444;
 			const updatePath = ["none"];
 
 			// When
-			const promise = desktopDataStore.upsertProperty(fakeDateTimeStorageLocation, updatePath, newValue, null);
+			const promise = desktopDataStore.upsertProperty(FAKE_DATE_TIME_STORAGE_LOCATION, updatePath, newValue, null);
 
 			// Then
 			promise.then(() => {
@@ -761,23 +607,30 @@ describe("DesktopDataStore", () => {
 
 		});
 
-		it("should clear fakeDateTime value", (done: Function) => {
+		it("should clear FakeDateTime value", (done: Function) => {
 
 			// When
-			const promise: Promise<void> = desktopDataStore.clear(fakeDateTimeStorageLocation);
+			const promise: Promise<void> = desktopDataStore.clear(FAKE_DATE_TIME_STORAGE_LOCATION);
 
 			// Then
 			promise.then(() => {
 
-				desktopDataStore.elevateCollectionsMap.get(fakeDateTimeStorageLocation.key).allDocs().then(result => {
-					expect(result.total_rows).toEqual(0);
+				desktopDataStore.database.find({
+					selector: {
+						_id: {$eq: FAKE_DATE_TIME_STORAGE_LOCATION.key}
+					}
+				}).then(results => {
+					expect(results.docs.length).toEqual(0);
 					done();
 				});
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
 			});
 		});
-
 
 	});
 
 });
-

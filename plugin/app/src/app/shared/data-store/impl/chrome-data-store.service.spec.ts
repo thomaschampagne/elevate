@@ -90,7 +90,8 @@ describe("ChromeDataStore", () => {
 	beforeEach((done: Function) => {
 
 		storageLocation = {
-			key: "foo"
+			key: "foo",
+			storageType: null
 		};
 
 		TestBed.configureTestingModule({
