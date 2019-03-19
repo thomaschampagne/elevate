@@ -46,7 +46,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 			if (result.docs.length > 0) {
 
-				if (storageLocation.storageType === StorageType.LIST) {
+				if (storageLocation.storageType === StorageType.COLLECTION) {
 
 					result.docs = result.docs.map(doc => {
 						doc[DesktopDataStore.POUCH_DB_DELETED_FIELD] = true;
@@ -72,7 +72,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 	}
 
 	public static getDbIdSelectorByStorageLocation(storageLocation: StorageLocationModel): PouchDB.Find.ConditionOperators {
-		const selector = (storageLocation.storageType === StorageType.LIST) ?
+		const selector = (storageLocation.storageType === StorageType.COLLECTION) ?
 			{$regex: "^" + storageLocation.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR + ".*"} : {$eq: storageLocation.key};
 		selector["$gte"] = null; // Solves "no matching index found, create an index to optimize query time"
 		return selector;
@@ -92,7 +92,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 			let response: T[] | T;
 
-			if (storageLocation.storageType === StorageType.LIST) {
+			if (storageLocation.storageType === StorageType.COLLECTION) {
 				response = <T[] | T> result.docs;
 			} else if (storageLocation.storageType === StorageType.OBJECT) {
 				response = (result.docs[0]) ? result.docs[0] : defaultStorageValue;
@@ -115,14 +115,14 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 		let savePromise: Promise<T[] | T>;
 
-		if (storageLocation.storageType === StorageType.LIST || storageLocation.storageType === StorageType.OBJECT) {
+		if (storageLocation.storageType === StorageType.COLLECTION || storageLocation.storageType === StorageType.OBJECT) {
 
 			savePromise = this.fetch(storageLocation, null, defaultStorageValue).then(result => {
 
 				let promise;
 
 				// let savePromise
-				if (storageLocation.storageType === StorageType.LIST) {
+				if (storageLocation.storageType === StorageType.COLLECTION) {
 
 					const newDocsValue = <T[]> value;
 
@@ -143,6 +143,9 @@ export class DesktopDataStore<T> extends DataStore<T> {
 						const existingDoc = _.find(updateDocs, {_id: newDoc[DesktopDataStore.POUCH_DB_ID_FIELD]});
 						if (existingDoc) {
 							newDoc[DesktopDataStore.POUCH_DB_REV_FIELD] = existingDoc[DesktopDataStore.POUCH_DB_REV_FIELD];
+						} else {
+							const collectionDocId = storageLocation.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR + _.get(newDoc, storageLocation.collectionFieldId);
+							newDoc[DesktopDataStore.POUCH_DB_ID_FIELD] = collectionDocId;
 						}
 						return newDoc;
 					});

@@ -8,7 +8,8 @@ import { StorageType } from "../../data-store/storage-type.enum";
 @Injectable()
 export class ActivityDao extends BaseDao<SyncedActivityModel> {
 
-	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("syncedActivities", StorageType.LIST);
+	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("syncedActivities", StorageType.COLLECTION,
+		SyncedActivityModel.ID_FIELD);
 	public static readonly DEFAULT_STORAGE_VALUE: SyncedActivityModel[] = [];
 
 	public getStorageLocation(): StorageLocationModel {

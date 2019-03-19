@@ -10,8 +10,8 @@ import { StorageType } from "../storage-type.enum";
 describe("DesktopDataStore", () => {
 
 	class FakeDoc {
-		_id: string;
-		$doctype: string;
+		_id?: string;
+		$doctype?: string;
 
 		constructor(id: string) {
 			this._id = id;
@@ -58,12 +58,14 @@ describe("DesktopDataStore", () => {
 
 	class FakeActivity extends FakeDoc {
 
+		activityId: string;
 		name: string;
 		type: string;
 
 		constructor(activityId: string, name: string, type: string) {
 			super("fakeSyncedActivity:" + activityId);
 			this.$doctype = "fakeSyncedActivity"; // Override to ensure doctype
+			this.activityId = activityId;
 			this.name = name;
 			this.type = type;
 		}
@@ -71,7 +73,7 @@ describe("DesktopDataStore", () => {
 
 	let desktopDataStore: DesktopDataStore<any[] | any>;
 
-	const FAKE_DOCUMENTS: FakeDoc[] = [
+	const FAKE_EXISTING_DOCUMENTS: FakeDoc[] = [
 		new FakeAthlete("Thomas", 31, [new FakeSettings(189, 60, 75),
 			new FakeSettings(195, 50, 72)]),
 
@@ -83,7 +85,7 @@ describe("DesktopDataStore", () => {
 	];
 
 	const FAKE_ATHLETE_STORAGE_LOCATION = new StorageLocationModel("fakeAthlete", StorageType.OBJECT);
-	const FAKE_ACTIVITIES_STORAGE_LOCATION = new StorageLocationModel("fakeSyncedActivity", StorageType.LIST);
+	const FAKE_ACTIVITIES_STORAGE_LOCATION = new StorageLocationModel("fakeSyncedActivity", StorageType.COLLECTION, "activityId");
 	const FAKE_DATE_TIME_STORAGE_LOCATION = new StorageLocationModel("fakeDateTime", StorageType.SINGLE_VALUE);
 
 	beforeEach((done: Function) => {
@@ -97,7 +99,7 @@ describe("DesktopDataStore", () => {
 
 		desktopDataStore = TestBed.get(DesktopDataStore);
 
-		const fakeDocs = _.cloneDeep(FAKE_DOCUMENTS);
+		const fakeDocs = _.cloneDeep(FAKE_EXISTING_DOCUMENTS);
 
 		desktopDataStore.database.allDocs().then(results => {
 			expect(results.total_rows).toEqual(0);
@@ -129,7 +131,7 @@ describe("DesktopDataStore", () => {
 		it("should fetch a FakeAthlete object", (done: Function) => {
 
 			// Given
-			const expectedFakeAthlete: FakeAthlete = <FakeAthlete> _.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"});
+			const expectedFakeAthlete: FakeAthlete = <FakeAthlete> _.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"});
 
 			// When
 			const promise: Promise<FakeAthlete> = <Promise<FakeAthlete>> desktopDataStore.fetch(FAKE_ATHLETE_STORAGE_LOCATION, null, null);
@@ -186,7 +188,7 @@ describe("DesktopDataStore", () => {
 		it("should save and replace a FakeAthlete object", (done: Function) => {
 
 			// Given
-			const newFakeAthlete: FakeAthlete = <FakeAthlete> _.cloneDeep(_.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"}));
+			const newFakeAthlete: FakeAthlete = <FakeAthlete> _.cloneDeep(_.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"}));
 			newFakeAthlete.age = 99;
 			newFakeAthlete.name = "Fake name";
 			newFakeAthlete.fakeSettings = [new FakeSettings(99, 99, 99)];
@@ -217,7 +219,7 @@ describe("DesktopDataStore", () => {
 
 			// Given
 			const defaultFakeAthlete: FakeAthlete = new FakeAthlete("Your Name", 30, []);
-			const newFakeAthlete: FakeAthlete = <FakeAthlete> _.cloneDeep(_.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"}));
+			const newFakeAthlete: FakeAthlete = <FakeAthlete> _.cloneDeep(_.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"}));
 			newFakeAthlete.age = 99;
 			newFakeAthlete.name = "Fake name";
 			newFakeAthlete.fakeSettings = [new FakeSettings(99, 99, 99)];
@@ -256,7 +258,7 @@ describe("DesktopDataStore", () => {
 			const newValue: number = 666;
 			const updatePath = ["fakeSettings", "1", "weight"]; // eq "fakeSettings[1].weight"
 
-			const expectedFakeAthlete: FakeAthlete = <FakeAthlete> _.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"});
+			const expectedFakeAthlete: FakeAthlete = <FakeAthlete> _.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"});
 			expectedFakeAthlete.fakeSettings[1].weight = newValue;
 
 			// When
@@ -314,7 +316,7 @@ describe("DesktopDataStore", () => {
 
 			// Given
 			const expectedDocType = "fakeSyncedActivity";
-			const expectedFakeActivities: FakeActivity[] = <FakeActivity[]> _.filter(FAKE_DOCUMENTS, (doc: FakeDoc) => {
+			const expectedFakeActivities: FakeActivity[] = <FakeActivity[]> _.filter(FAKE_EXISTING_DOCUMENTS, (doc: FakeDoc) => {
 				return doc._id.match("fakeSyncedActivity:") !== null;
 			});
 
@@ -354,7 +356,7 @@ describe("DesktopDataStore", () => {
 			// Given
 			const defaultStorageValue = [];
 			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
-				const fakeAthlete = _.cloneDeep(_.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"}));
+				const fakeAthlete = _.cloneDeep(_.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"}));
 				desktopDataStore.setup();
 				desktopDataStore.database.put(fakeAthlete);
 				return Promise.resolve();
@@ -384,18 +386,23 @@ describe("DesktopDataStore", () => {
 			// Given
 			const expectedLength = 3;
 			const newFakeActivities: FakeActivity[] = [
-				new FakeActivity("00003", "Running day! (rename)", "Run"),
-				new FakeActivity("00004", "Recovery spins", "Ride"),
-				new FakeActivity("00005", "Marathon", "Run"),
+				{activityId: "00003", name: "Running day! (rename)", type: "Run"},
+				{activityId: "00004", name: "Recovery spins", type: "Ride"},
+				{activityId: "00005", name: "Marathon", type: "Run"}
 			];
 
-			const expectedExistRenamedActivity = _.find(newFakeActivities, activity => {
-				return activity._id === "fakeSyncedActivity:00003";
+			const expectedExistRenamedActivity = <FakeActivity> _.find(newFakeActivities, activity => {
+				return activity.activityId === "00003";
 			});
+			expectedExistRenamedActivity._id = "fakeSyncedActivity:00003";
+			expectedExistRenamedActivity.$doctype = "fakeSyncedActivity";
 
-			const expectedExistActivity = _.find(newFakeActivities, activity => {
-				return activity._id === "fakeSyncedActivity:00004";
+			const expectedExistActivity = <FakeActivity> _.find(newFakeActivities, activity => {
+				return activity.activityId === "00004";
 			});
+			expectedExistActivity._id = "fakeSyncedActivity:00004";
+			expectedExistActivity.$doctype = "fakeSyncedActivity";
+
 
 			// When
 			const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>> desktopDataStore.save(FAKE_ACTIVITIES_STORAGE_LOCATION, newFakeActivities, []);
@@ -485,7 +492,7 @@ describe("DesktopDataStore", () => {
 		it("should fetch a FakeDateTime as single value", (done: Function) => {
 
 			// Given
-			const expectedFakeDateTime = (<FakeDateTime> _.find(FAKE_DOCUMENTS, {_id: "fakeDateTime"})).$value;
+			const expectedFakeDateTime = (<FakeDateTime> _.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeDateTime"})).$value;
 
 			// When
 			const promise: Promise<number> = desktopDataStore.fetch(FAKE_DATE_TIME_STORAGE_LOCATION, null, null);
@@ -510,7 +517,7 @@ describe("DesktopDataStore", () => {
 			// Given
 			const defaultStorageValue = null;
 			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
-				const fakeAthlete = _.cloneDeep(_.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"}));
+				const fakeAthlete = _.cloneDeep(_.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"}));
 				desktopDataStore.setup();
 				desktopDataStore.database.put(fakeAthlete);
 				return Promise.resolve();
@@ -562,7 +569,7 @@ describe("DesktopDataStore", () => {
 			const newDateTime = _.random(10000);
 
 			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
-				const fakeAthlete = _.cloneDeep(_.find(FAKE_DOCUMENTS, {_id: "fakeAthlete"}));
+				const fakeAthlete = _.cloneDeep(_.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"}));
 				desktopDataStore.setup();
 				desktopDataStore.database.put(fakeAthlete);
 				return Promise.resolve();

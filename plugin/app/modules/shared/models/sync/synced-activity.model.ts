@@ -2,6 +2,7 @@ import { AnalysisDataModel } from "../activity-data";
 import { AthleteSnapshotModel } from "../athlete";
 
 export class SyncedActivityModel {
+	public static readonly ID_FIELD: string = "id";
 	public id: number;
 	public name: string;
 	public type: string;

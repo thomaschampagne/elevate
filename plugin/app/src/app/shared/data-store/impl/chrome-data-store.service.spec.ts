@@ -91,7 +91,8 @@ describe("ChromeDataStore", () => {
 
 		storageLocation = {
 			key: "foo",
-			storageType: null
+			storageType: null,
+			collectionFieldId: null
 		};
 
 		TestBed.configureTestingModule({
