@@ -21,6 +21,7 @@ import { ProgressMode } from "../enums/progress-mode.enum";
 import { RollingProgressConfigModel } from "../models/rolling-progress-config.model";
 import { RollingProgressPresetModel } from "../models/rolling-progress-preset.model";
 import { YearToDateProgressConfigModel } from "../models/year-to-date-progress-config.model";
+import { Tools } from "@elevate/shared/tools";
 import Spy = jasmine.Spy;
 
 describe("YearProgressService", () => {
@@ -1292,10 +1293,10 @@ describe("YearProgressService", () => {
 			const saveDaoSpy = spyOn(service.yearProgressPresetDao, "save")
 				.and.returnValue(Promise.resolve());
 
-			const index = 1;
+			const deleteId = model_1.id;
 
 			// When
-			const promise: Promise<void> = service.deletePreset(index);
+			const promise: Promise<void> = service.deletePreset(deleteId);
 
 			// Then
 			promise.then(() => {
@@ -1328,10 +1329,10 @@ describe("YearProgressService", () => {
 			const saveDaoSpy = spyOn(service.yearProgressPresetDao, "save")
 				.and.returnValue(Promise.resolve(progressPresetModels));
 
-			const index = 99; // Fake index
+			const fakeId = Tools.genId(); // Fake index
 
 			// When
-			const promise: Promise<void> = service.deletePreset(index);
+			const promise: Promise<void> = service.deletePreset(fakeId);
 
 			// Then
 			promise.then(() => {

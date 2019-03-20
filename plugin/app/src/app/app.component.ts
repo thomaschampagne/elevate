@@ -216,7 +216,37 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	public onSync(fastSync: boolean, forceSync: boolean): void {
-		this.syncService.sync(fastSync, forceSync);
+
+		if (this.syncState === SyncState.NOT_SYNCED) {
+
+			const data: ConfirmDialogDataModel = {
+				title: "⚠️ First synchronisation",
+				content: "Your first synchronisation can take a long time and can be done in several times if you have more than 400 activities. Make sure you properly setup your " +
+					"athlete settings before (Cycling FTP, Running FTP, Swim FTP, Heart rate, ...) or may have missing results in Elevate features. This is to avoid a redo of the first synchronisation.",
+				confirmText: "Start sync",
+				cancelText: "Check my athlete settings"
+			};
+
+			const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+				minWidth: ConfirmDialogComponent.MIN_WIDTH,
+				maxWidth: "50%",
+				data: data
+			});
+
+			const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+
+				if (confirm) {
+					this.syncService.sync(fastSync, forceSync);
+				} else {
+					this.router.navigate([AppRoutesModel.athleteSettings]);
+				}
+				afterClosedSubscription.unsubscribe();
+			});
+
+		} else {
+			this.syncService.sync(fastSync, forceSync);
+		}
+
 	}
 
 	public onClearSyncedData(): void {

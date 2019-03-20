@@ -175,7 +175,7 @@ describe("UserSettingsService", () => {
 	it("should reset user settings", (done: Function) => {
 
 		// Given
-		const expectedUserSettings = UserSettings.getDefaultsByEnvTarget(EnvTarget.DESKTOP);
+		const expectedUserSettings = UserSettings.getDefaultsByEnvTarget(EnvTarget.EXTENSION);
 		const saveDaoSpy = spyOn(userSettingsService.userSettingsDao, "save")
 			.and.returnValue(Promise.resolve(expectedUserSettings));
 
