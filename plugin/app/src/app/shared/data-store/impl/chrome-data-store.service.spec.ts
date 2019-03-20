@@ -132,7 +132,7 @@ describe("ChromeDataStore", () => {
 		CHROME_STORAGE_STUB[storageLocation.key] = expectedData;
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.fetch(storageLocation, null, DEFAULT_FOO);
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.fetch(storageLocation, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo[]) => {
@@ -156,7 +156,7 @@ describe("ChromeDataStore", () => {
 		const defaultValue = [];
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.fetch(storageLocation, null, defaultValue);
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.fetch(storageLocation, defaultValue);
 
 		// Then
 		promise.then((result: Foo[]) => {
@@ -181,7 +181,7 @@ describe("ChromeDataStore", () => {
 		};
 
 		// When
-		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, null, defaultValue);
+		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, defaultValue);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -209,7 +209,7 @@ describe("ChromeDataStore", () => {
 		storageLocation = new StorageLocationModel(); // Override CHROME_STORAGE_STUB location with no key
 
 		// When
-		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, null, DEFAULT_FOO);
+		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -236,7 +236,7 @@ describe("ChromeDataStore", () => {
 		storageLocation = new StorageLocationModel(); // Override CHROME_STORAGE_STUB location with no key
 
 		// When
-		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, null, defaultValue);
+		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, defaultValue);
 
 		// Then
 		promise.then((result: Foo) => {

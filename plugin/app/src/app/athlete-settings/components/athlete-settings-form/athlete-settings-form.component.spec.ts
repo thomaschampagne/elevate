@@ -34,7 +34,7 @@ describe("AthleteSettingsFormComponent", () => {
 
 		fixture = TestBed.createComponent(AthleteSettingsFormComponent);
 		component = fixture.componentInstance;
-		component.athleteSettingsModel = AthleteSettingsModel.DEFAULT_MODEL;
+		component.athleteSettingsModel = _.cloneDeep(AthleteSettingsModel.DEFAULT_MODEL);
 		fixture.detectChanges();
 
 		done();

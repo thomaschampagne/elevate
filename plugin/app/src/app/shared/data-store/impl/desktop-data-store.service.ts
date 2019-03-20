@@ -86,7 +86,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 		});
 	}
 
-	public fetch(storageLocation: StorageLocationModel, query: Partial<T> | string | string[], defaultStorageValue: T[] | T): Promise<T[] | T> {
+	public fetch(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T): Promise<T[] | T> {
 
 		return this.getDocsById(storageLocation).then(result => {
 
@@ -117,7 +117,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 		if (storageLocation.storageType === StorageType.COLLECTION || storageLocation.storageType === StorageType.OBJECT) {
 
-			savePromise = this.fetch(storageLocation, null, defaultStorageValue).then(result => {
+			savePromise = this.fetch(storageLocation, defaultStorageValue).then(result => {
 
 				let promise;
 
@@ -166,7 +166,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 				}
 
 				return promise.then(() => {
-					return this.fetch(storageLocation, null, defaultStorageValue);
+					return this.fetch(storageLocation, defaultStorageValue);
 				});
 
 			});
@@ -186,7 +186,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 				}
 
 				return this.database.put(newDoc).then(() => {
-					return this.fetch(storageLocation, null, defaultStorageValue);
+					return this.fetch(storageLocation, defaultStorageValue);
 				});
 
 			});
@@ -201,7 +201,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
 
-		return this.fetch(storageLocation, null, defaultStorageValue).then((doc: T) => {
+		return this.fetch(storageLocation, defaultStorageValue).then((doc: T) => {
 
 			if (_.isArray(doc)) {
 				return Promise.reject("Cannot save property to a collection");

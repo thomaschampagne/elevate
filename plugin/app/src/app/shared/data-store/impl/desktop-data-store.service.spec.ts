@@ -134,7 +134,7 @@ describe("DesktopDataStore", () => {
 			const expectedFakeAthlete: FakeAthlete = <FakeAthlete> _.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"});
 
 			// When
-			const promise: Promise<FakeAthlete> = <Promise<FakeAthlete>> desktopDataStore.fetch(FAKE_ATHLETE_STORAGE_LOCATION, null, null);
+			const promise: Promise<FakeAthlete> = <Promise<FakeAthlete>> desktopDataStore.fetch(FAKE_ATHLETE_STORAGE_LOCATION, null);
 
 			// Then
 			promise.then((fakeAthlete: FakeAthlete) => {
@@ -165,7 +165,7 @@ describe("DesktopDataStore", () => {
 
 			// When
 			const promise: Promise<FakeAthlete> = <Promise<FakeAthlete>> promiseMissing.then(() => {
-				return desktopDataStore.fetch(FAKE_ATHLETE_STORAGE_LOCATION, null, defaultFakeAthlete);
+				return desktopDataStore.fetch(FAKE_ATHLETE_STORAGE_LOCATION, defaultFakeAthlete);
 			});
 
 			// Then
@@ -321,7 +321,7 @@ describe("DesktopDataStore", () => {
 			});
 
 			// When
-			const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>> desktopDataStore.fetch(FAKE_ACTIVITIES_STORAGE_LOCATION, null, null);
+			const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>> desktopDataStore.fetch(FAKE_ACTIVITIES_STORAGE_LOCATION, null);
 
 			// Then
 			promise.then((fakeActivities: FakeActivity[]) => {
@@ -364,7 +364,7 @@ describe("DesktopDataStore", () => {
 
 			// When
 			const promise: Promise<FakeActivity[]> = promiseMissingCollection.then(() => {
-				return <Promise<FakeActivity[]>> desktopDataStore.fetch(FAKE_ACTIVITIES_STORAGE_LOCATION, null, defaultStorageValue);
+				return <Promise<FakeActivity[]>> desktopDataStore.fetch(FAKE_ACTIVITIES_STORAGE_LOCATION, defaultStorageValue);
 			});
 
 			// Then
@@ -495,7 +495,7 @@ describe("DesktopDataStore", () => {
 			const expectedFakeDateTime = (<FakeDateTime> _.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeDateTime"})).$value;
 
 			// When
-			const promise: Promise<number> = desktopDataStore.fetch(FAKE_DATE_TIME_STORAGE_LOCATION, null, null);
+			const promise: Promise<number> = desktopDataStore.fetch(FAKE_DATE_TIME_STORAGE_LOCATION, null);
 
 			// Then
 			promise.then((fakeDateTime: number) => {
@@ -525,7 +525,7 @@ describe("DesktopDataStore", () => {
 
 			// When
 			const promise: Promise<number> = promiseMissingCollection.then(() => {
-				return desktopDataStore.fetch(FAKE_DATE_TIME_STORAGE_LOCATION, null, defaultStorageValue);
+				return desktopDataStore.fetch(FAKE_DATE_TIME_STORAGE_LOCATION, defaultStorageValue);
 			});
 
 			// Then

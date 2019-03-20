@@ -26,18 +26,18 @@ export class MockedDataStore<T> extends DataStore<T> {
 		return Promise.resolve();
 	}
 
-	public fetch(storageLocation: StorageLocationModel, query: Partial<T> | string | string[], defaultStorageValue: T[] | T): Promise<T[] | T> {
+	public fetch(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T): Promise<T[] | T> {
 		return Promise.resolve(this.dataStore);
 	}
 
 	public save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T> {
 		this.dataStore = value;
-		return this.fetch(storageLocation, null, defaultStorageValue);
+		return this.fetch(storageLocation, defaultStorageValue);
 	}
 
 	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
 
-		return this.fetch(storageLocation, null, defaultStorageValue).then((dataStore: T[] | T) => {
+		return this.fetch(storageLocation, defaultStorageValue).then((dataStore: T[] | T) => {
 
 			if (_.isArray(dataStore)) {
 				return Promise.reject("Cannot save property to a storage type 'vector'");

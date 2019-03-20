@@ -36,7 +36,7 @@ export abstract class BaseDao<T> {
 	 */
 	public fetch(): Promise<T[] | T> {
 		return this.checkCompliantDao().then(() => {
-			return this.dataStore.fetch(this.storageLocation, null, this.defaultStorage);
+			return this.dataStore.fetch(this.storageLocation, this.defaultStorage);
 		});
 	}
 

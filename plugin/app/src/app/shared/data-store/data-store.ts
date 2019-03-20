@@ -6,11 +6,10 @@ export abstract class DataStore<T> {
 	/**
 	 * Fetch all data
 	 * @param storageLocation {StorageLocationModel} location
-	 * @param query pass object with keys to fetch, or array of key, or single key, or null to fetch all
 	 * @param defaultStorageValue default value returned if no data found
 	 */
 	// TODO Rename fetchAll
-	abstract fetch(storageLocation: StorageLocationModel, query: Partial<T> | string | string[], defaultStorageValue: T[] | T): Promise<T[] | T>;
+	abstract fetch(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T): Promise<T[] | T>;
 
 	/**
 	 * Save and replace all data

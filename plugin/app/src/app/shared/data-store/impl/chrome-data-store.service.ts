@@ -11,15 +11,13 @@ export class ChromeDataStore<T> extends DataStore<T> {
 	/**
 	 * @return {Promise<T[] | T>}
 	 */
-	public fetch(storageLocation: StorageLocationModel, query: Partial<T> | string | string[], defaultStorageValue: T[] | T): Promise<T[] | T> {
+	public fetch(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T): Promise<T[] | T> {
 
 		return new Promise<T[] | T>((resolve: Function, reject: Function) => {
 
-			if (_.isEmpty(query)) {
-				query = null; // Means fetch all
-			}
+			const fetchKeys = (storageLocation.key) ? storageLocation.key : null; // If no key, 'null' fetchKeys will ask for all the storage
 
-			this.chromeLocalStorageArea().get(query, (result: T[] | T) => {
+			this.chromeLocalStorageArea().get(fetchKeys, (result: T[] | T) => {
 				const error = this.getLastError();
 				if (error) {
 					reject(error.message);
@@ -57,8 +55,7 @@ export class ChromeDataStore<T> extends DataStore<T> {
 				if (error) {
 					reject(error.message);
 				} else {
-					const query = (storageLocation.key) ? (storageLocation.key) : null; // If no key, 'null' query will ask for all the storage
-					this.fetch(storageLocation, query, defaultStorageValue).then((response: T[] | T) => {
+					this.fetch(storageLocation, defaultStorageValue).then((response: T[] | T) => {
 						resolve(response);
 					}, error => reject(error));
 				}
@@ -75,9 +72,8 @@ export class ChromeDataStore<T> extends DataStore<T> {
 	 */
 	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
 
-		const query = (storageLocation.key) ? storageLocation.key : null; // If no key, 'null' query will ask for all the storage
 
-		return this.fetch(storageLocation, query, defaultStorageValue).then((dataStore: T[] | T) => {
+		return this.fetch(storageLocation, defaultStorageValue).then((dataStore: T[] | T) => {
 
 			if (_.isArray(dataStore)) {
 				return Promise.reject("Cannot save property to a storage type 'vector'");
@@ -86,7 +82,7 @@ export class ChromeDataStore<T> extends DataStore<T> {
 			dataStore = _.set(dataStore as Object, path, value) as T;
 
 			return this.save(storageLocation, dataStore, defaultStorageValue).then((dataStoreSaved: T[] | T) => {
-				return Promise.resolve(<T>dataStoreSaved);
+				return Promise.resolve(<T> dataStoreSaved);
 			});
 		});
 	}
@@ -122,8 +118,6 @@ export class ChromeDataStore<T> extends DataStore<T> {
 	public getAppUsageDetails(): Promise<AppUsageDetails> {
 
 		return new Promise<AppUsageDetails>((resolve) => {
-
-
 			const localStorageArea = this.chromeLocalStorageArea();
 			localStorageArea.getBytesInUse((bytesInUse: number) => {
 				const appUsage = new AppUsage(bytesInUse, localStorageArea.QUOTA_BYTES);
@@ -142,15 +136,6 @@ export class ChromeDataStore<T> extends DataStore<T> {
 	public chromeLocalStorageArea(): chrome.storage.LocalStorageArea {
 		return chrome.storage.local;
 	}
-
-	/**
-	 *
-	 * @returns {chrome.storage.SyncStorageArea}
-	 */
-	public chromeSyncStorageArea(): chrome.storage.SyncStorageArea {
-		return chrome.storage.sync;
-	}
-
 
 	public getLastError(): chrome.runtime.LastError {
 		return chrome.runtime.lastError;
