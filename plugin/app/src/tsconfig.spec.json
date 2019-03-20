@@ -25,6 +25,9 @@
 			],
 			"@elevate/shared/exceptions": [
 				"../modules/shared/exceptions/"
+			],
+			"@elevate/shared/tools": [
+				"../modules/shared/tools/"
 			]
 		}
 	},

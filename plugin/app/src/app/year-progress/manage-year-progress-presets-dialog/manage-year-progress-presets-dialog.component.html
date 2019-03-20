@@ -5,8 +5,8 @@
 		No saved presets
 	</div>
 
-	<mat-table *ngIf="(yearProgressPresetModels && yearProgressPresetModels.length > 0)" #table
-			   [dataSource]="dataSource" matSort>
+	<mat-table matSort *ngIf="(yearProgressPresetModels && yearProgressPresetModels.length > 0)"
+			   [dataSource]="dataSource">
 
 		<ng-container matColumnDef="progressMode">
 			<mat-header-cell *matHeaderCellDef [ngClass]="'progressMode'">Progress Mode</mat-header-cell>
@@ -51,14 +51,14 @@
 		<ng-container matColumnDef="includeCommuteRide">
 			<mat-header-cell *matHeaderCellDef>Commute</mat-header-cell>
 			<mat-cell *matCellDef="let yearProgressPresetModel">
-				{{(yearProgressPresetModel.includeCommuteRide) ? "Yes": "No" }}
+				{{(yearProgressPresetModel.includeCommuteRide) ? "Yes" : "No" }}
 			</mat-cell>
 		</ng-container>
 
 		<ng-container matColumnDef="includeIndoorRide">
 			<mat-header-cell *matHeaderCellDef>Indoor</mat-header-cell>
 			<mat-cell *matCellDef="let yearProgressPresetModel">
-				{{(yearProgressPresetModel.includeIndoorRide) ? "Yes": "No" }}
+				{{(yearProgressPresetModel.includeIndoorRide) ? "Yes" : "No" }}
 			</mat-cell>
 		</ng-container>
 
@@ -72,8 +72,8 @@
 
 		<ng-container matColumnDef="load">
 			<mat-header-cell *matHeaderCellDef [ngClass]="'loadColumn'"></mat-header-cell>
-			<mat-cell *matCellDef="let yearProgressPresetModel; let rowId = index" [ngClass]="'loadColumn'">
-				<button mat-icon-button (click)="onLoad(rowId)"
+			<mat-cell *matCellDef="let yearProgressPresetModel;" [ngClass]="'loadColumn'">
+				<button mat-icon-button (click)="onLoad(yearProgressPresetModel.id)"
 						matTooltip="Load preset">
 					<mat-icon>file_upload</mat-icon>
 				</button>
@@ -82,9 +82,9 @@
 
 		<ng-container matColumnDef="delete">
 			<mat-header-cell *matHeaderCellDef [ngClass]="'deleteColumn'"></mat-header-cell>
-			<mat-cell *matCellDef="let yearProgressPresetModel; let rowId = index" [ngClass]="'deleteColumn'">
+			<mat-cell *matCellDef="let yearProgressPresetModel;" [ngClass]="'deleteColumn'">
 				<button mat-icon-button
-						(click)="onDelete(rowId)"
+						(click)="onDelete(yearProgressPresetModel.id)"
 						matTooltip="Delete preset">
 					<mat-icon>delete</mat-icon>
 				</button>

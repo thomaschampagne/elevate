@@ -17,6 +17,7 @@ import { userSettingsData } from "@elevate/shared/data";
 import { YearToDateProgressPresetModel } from "../../app/src/app/year-progress/shared/models/year-to-date-progress-preset.model";
 import { ProgressMode } from "../../app/src/app/year-progress/shared/enums/progress-mode.enum";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
+import { Tools } from "@elevate/shared/tools";
 
 class Installer {
 
@@ -231,7 +232,7 @@ class Installer {
 				if (userSettingsModel.userGender) {
 					const userGender = (userSettingsModel.userGender === "men") ? Gender.MEN : Gender.WOMEN;
 
-					const athleteModel = new AthleteModel(userGender, <any>new AthleteSettingsModel(
+					const athleteModel = new AthleteModel(userGender, <any> new AthleteSettingsModel(
 						(_.isNumber(userSettingsModel.userMaxHr)) ? userSettingsModel.userMaxHr : null,
 						(_.isNumber(userSettingsModel.userRestHr)) ? userSettingsModel.userRestHr : null,
 						(!_.isEmpty(userSettingsModel.userLTHR)) ? userSettingsModel.userLTHR : UserLactateThresholdModel.DEFAULT_MODEL,
@@ -364,7 +365,7 @@ class Installer {
 			// Move all user settings content inside specific key
 			promise = BrowserStorage.getInstance().get(BrowserStorageType.SYNC).then((settings: UserSettingsModel) => {
 
-				const hasUserSettingsKey = !_.isEmpty((<any>settings).userSettings);
+				const hasUserSettingsKey = !_.isEmpty((<any> settings).userSettings);
 
 				if (hasUserSettingsKey) {
 					return Promise.resolve();
@@ -404,7 +405,7 @@ class Installer {
 			// Move all user settings content inside specific key
 			promise = BrowserStorage.getInstance().get(BrowserStorageType.SYNC, "userSettings").then((settings: UserSettingsModel) => {
 
-				const hasOldYearProgressTargets = _.isNumber((<any>settings).targetsYearRide) || _.isNumber((<any>settings).targetsYearRun);
+				const hasOldYearProgressTargets = _.isNumber((<any> settings).targetsYearRide) || _.isNumber((<any> settings).targetsYearRun);
 
 				if (hasOldYearProgressTargets) {
 					userSettingsModel = settings;
@@ -467,7 +468,7 @@ class Installer {
 
 	protected migrate_to_6_11_0(): Promise<void> {
 
-		let promise: Promise<void>;
+		let promise: Promise<void> = Promise.resolve();
 
 		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.11.0")) {
 
@@ -486,8 +487,8 @@ class Installer {
 					throw Error(alreadyMigratedMessage);
 				}
 
-				const userSettingsModel: UserSettingsModel = <UserSettingsModel>result[0];
-				const localBrowserStorage: any = <any>result[1] || <any>{};
+				const userSettingsModel: UserSettingsModel = <UserSettingsModel> result[0];
+				const localBrowserStorage: any = <any> result[1] || <any> {};
 
 				localBrowserStorage["userSettings"] = userSettingsModel;
 
@@ -504,16 +505,16 @@ class Installer {
 
 			}).then(result => {
 
-				const userSettingsModel: UserSettingsModel = <UserSettingsModel>result[0];
-				const datedAthleteSettings: DatedAthleteSettingsModel[] = <DatedAthleteSettingsModel[]>result[1];
+				const userSettingsModel: UserSettingsModel = <UserSettingsModel> result[0];
+				const datedAthleteSettings: DatedAthleteSettingsModel[] = <DatedAthleteSettingsModel[]> result[1];
 
 				// Create new athlete storage local
-				const athleteModel: AthleteModel = (<any>userSettingsModel).athleteModel;
-				const isSingleAthleteSettingsMode = (<any>userSettingsModel).hasDatedAthleteSettings === false;
+				const athleteModel: AthleteModel = (<any> userSettingsModel).athleteModel;
+				const isSingleAthleteSettingsMode = (<any> userSettingsModel).hasDatedAthleteSettings === false;
 
 				if (isSingleAthleteSettingsMode) {
 
-					const athleteSettings: AthleteSettingsModel = (athleteModel && (<any>athleteModel).athleteSettings) ? (<any>athleteModel).athleteSettings : AthleteSettingsModel.DEFAULT_MODEL;
+					const athleteSettings: AthleteSettingsModel = (athleteModel && (<any> athleteModel).athleteSettings) ? (<any> athleteModel).athleteSettings : AthleteSettingsModel.DEFAULT_MODEL;
 
 					athleteModel.datedAthleteSettings = [
 						new DatedAthleteSettingsModel(DatedAthleteSettingsModel.DEFAULT_SINCE, athleteSettings),
@@ -525,9 +526,9 @@ class Installer {
 				}
 
 				// Remove deprecated keys
-				delete (<any>athleteModel).athleteSettings;
-				delete (<any>userSettingsModel).athleteModel;
-				delete (<any>userSettingsModel).hasDatedAthleteSettings;
+				delete (<any> athleteModel).athleteSettings;
+				delete (<any> userSettingsModel).athleteModel;
+				delete (<any> userSettingsModel).hasDatedAthleteSettings;
 
 				return Promise.all([
 					BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "userSettings", userSettingsModel), // Update user settings
@@ -541,8 +542,8 @@ class Installer {
 
 				// Rename athleteModel to athleteSnapshot for each activity
 				_.forEach(syncedActivities, (activity: SyncedActivityModel) => {
-					activity.athleteSnapshot = (<any>activity).athleteModel;
-					delete (<any>activity).athleteModel;
+					activity.athleteSnapshot = (<any> activity).athleteModel;
+					delete (<any> activity).athleteModel;
 				});
 
 				return BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "syncedActivities", syncedActivities);
@@ -554,18 +555,30 @@ class Installer {
 					console.error(error);
 				}
 
-				promise = Promise.resolve();
+				return Promise.resolve();
+
+			}).then(() => {
+
+				// Add ids to yearProgressPresets
+				return BrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "yearProgressPresets").then((yearProgressPresets: object[]) => {
+
+					yearProgressPresets = _.map(yearProgressPresets, preset /* :YearToDateProgressPresetModel */ => {
+						preset["id"] = Tools.genId();
+						return preset;
+					});
+
+					return BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "yearProgressPresets", yearProgressPresets);
+
+				});
 
 			});
 
 		} else {
-
 			console.log("Skip migrate to 6.11.0");
-
-			promise = Promise.resolve();
 		}
 
 		return promise;
+
 	}
 
 	protected handleUpdate(): Promise<void> {
