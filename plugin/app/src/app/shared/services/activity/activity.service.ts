@@ -22,15 +22,9 @@ export class ActivityService {
 	 * @returns {Promise<SyncedActivityModel[]>} stored SyncedActivityModels
 	 */
 	public fetch(): Promise<SyncedActivityModel[]> {
-
-		const findRequest = {
-			selector: {
-				start_time: {$gte: null}
-			},
-			sort: ["start_time"]
-		};
-
-		return (<Promise<SyncedActivityModel[]>> this.activityDao.fetch(findRequest));
+		return (<Promise<SyncedActivityModel[]>> this.activityDao.fetch()).then(activities => {
+			return Promise.resolve(_.sortBy(activities, "start_time"));
+		});
 	}
 
 	/**
@@ -39,7 +33,7 @@ export class ActivityService {
 	 * @returns {Promise<SyncedActivityModel[]>} saved SyncedActivityModels
 	 */
 	public save(syncedActivityModels: SyncedActivityModel[]): Promise<SyncedActivityModel[]> {
-		return (<Promise<SyncedActivityModel[]>>this.activityDao.save(syncedActivityModels));
+		return (<Promise<SyncedActivityModel[]>> this.activityDao.save(syncedActivityModels));
 	}
 
 	public clear(): Promise<void> {

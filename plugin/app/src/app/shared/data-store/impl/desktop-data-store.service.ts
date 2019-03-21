@@ -4,6 +4,7 @@ import { DataStore } from "../data-store";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
 import PouchDB from "pouchdb-browser";
 import PouchDBFind from "pouchdb-find";
+import PouchDBDebug from "pouchdb-debug";
 import { LoggerService } from "../../services/logging/logger.service";
 import { NotImplementedException } from "@elevate/shared/exceptions";
 import * as _ from "lodash";
@@ -14,6 +15,7 @@ import FindRequest = PouchDB.Find.FindRequest;
 export class DesktopDataStore<T> extends DataStore<T> {
 
 	public static readonly POUCH_DB_NAME: string = "elevate";
+	public static readonly POUCH_DB_DEBUG: string = null; // values: "*", "pouchdb:find", "pouchdb:http" ...
 
 	public static readonly POUCH_DB_ID_FIELD: string = "_id";
 	public static readonly POUCH_DB_ID_LIST_SEPARATOR: string = ":";
@@ -32,6 +34,10 @@ export class DesktopDataStore<T> extends DataStore<T> {
 		PouchDB.plugin(PouchDBFind); // Register find plugin
 		this.database = new PouchDB(DesktopDataStore.POUCH_DB_NAME, {auto_compaction: true});
 
+		if (DesktopDataStore.POUCH_DB_DEBUG) {
+			PouchDB.plugin(PouchDBDebug); // Register debug plugin
+			PouchDB.debug.enable(DesktopDataStore.POUCH_DB_DEBUG);
+		}
 	}
 
 	public clear(storageLocation: StorageLocationModel): Promise<void> {
@@ -91,16 +97,17 @@ export class DesktopDataStore<T> extends DataStore<T> {
 			findRequest = _.set(findRequest, ["selector", DesktopDataStore.POUCH_DB_ID_FIELD], DesktopDataStore.getDbIdSelectorByStorageLocation(storageLocation));
 		}
 
-		// Create indexes along FindRequest selector fields
-		const indexesToCreate = _.without(_.keys(findRequest.selector), DesktopDataStore.POUCH_DB_ID_FIELD);
+		return this.database.find(findRequest);
+	}
+
+	public createIndexes(indexes: string[]): Promise<PouchDB.Find.CreateIndexResponse<T[] | T>> {
+
+		const indexesToCreate = _.without(indexes, DesktopDataStore.POUCH_DB_ID_FIELD);
 		return this.database.createIndex({
 			index: {
 				fields: indexesToCreate
 			}
-		}).then(() => {
-			return this.database.find(findRequest);
 		});
-
 	}
 
 	public fetch(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T, findRequest?: FindRequest<T[] | T>): Promise<T[] | T> {

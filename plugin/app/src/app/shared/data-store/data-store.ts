@@ -10,7 +10,7 @@ export abstract class DataStore<T> {
 	 * @param defaultStorageValue default value returned if no data found
 	 * @param findRequest
 	 */
-	// TODO Rename fetchAll
+	// TODO Rename "fetchAll" or "getAll"
 	abstract fetch(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T, findRequest?: FindRequest<T[] | T>): Promise<T[] | T>;
 
 	/**
@@ -19,8 +19,31 @@ export abstract class DataStore<T> {
 	 * @param value
 	 * @param defaultStorageValue
 	 */
-	// TODO Rename saveAll
+	// TODO Rename "saveAll" or "eraseWith" or "replaceAll"
 	abstract save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T>;
+
+	/**
+	 *
+	 * @param storageLocation
+	 * @param value
+	 */
+	// TODO abstract put(storageLocation: StorageLocationModel, value: T): Promise<T[] | T>;
+
+	/**
+	 *
+	 * @param storageLocation
+	 * @param value
+	 */
+	// TODO abstract getById(storageLocation: StorageLocationModel, id: string): Promise<T>;
+
+	/**
+	 *
+	 * @param storageLocation
+	 * @param defaultStorageValue
+	 * TODO Only for collections
+	 */
+
+	// TODO abstract count(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T): number;
 
 	/**
 	 * Update or insert a specific property at given path. Path is created if unknown.
@@ -41,6 +64,4 @@ export abstract class DataStore<T> {
 	 * Provide app usage
 	 */
 	abstract getAppUsageDetails(): Promise<AppUsageDetails>;
-
-	// TODO Add count()
 }

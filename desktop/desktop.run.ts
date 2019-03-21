@@ -5,8 +5,8 @@ import * as url from "url";
 
 class DesktopRun {
 
-	private static readonly WINDOW_WIDTH: number = 1024;
-	private static readonly WINDOW_HEIGHT: number = 950;
+	private static readonly WINDOW_WIDTH: number = 1600;
+	private static readonly WINDOW_HEIGHT: number = 1024;
 
 	private readonly app: Electron.App;
 	private readonly isPackaged: boolean;
@@ -25,12 +25,13 @@ class DesktopRun {
 		const winHeight = DesktopRun.WINDOW_HEIGHT;
 
 		this.appWindow = new BrowserWindow({
-			x: (size.width / 2) - (winWidth / 2),
-			y: (size.height / 2) - (winHeight / 2),
-			width: (this.isPackaged) ? winWidth : winWidth * 1.5,
+			width: winWidth,
 			height: winHeight,
+			center: true,
 			frame: true
 		});
+
+		this.appWindow.maximize();
 
 		this.appWindow.loadURL(
 			url.format({
@@ -61,6 +62,11 @@ class DesktopRun {
 		globalShortcut.register("CommandOrControl+R", () => {
 			console.log("CommandOrControl+R is pressed, reload app");
 			this.appWindow.reload();
+		});
+
+		globalShortcut.register("CommandOrControl+F12", () => {
+			console.log("CommandOrControl+F12 is pressed, toggle dev tools");
+			this.appWindow.webContents.toggleDevTools();
 		});
 
 	}
