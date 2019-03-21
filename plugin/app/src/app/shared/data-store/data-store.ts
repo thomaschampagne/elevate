@@ -1,5 +1,6 @@
 import { StorageLocationModel } from "./storage-location.model";
 import { AppUsageDetails } from "../models/app-usage-details.model";
+import FindRequest = PouchDB.Find.FindRequest;
 
 export abstract class DataStore<T> {
 
@@ -7,9 +8,10 @@ export abstract class DataStore<T> {
 	 * Fetch all data
 	 * @param storageLocation {StorageLocationModel} location
 	 * @param defaultStorageValue default value returned if no data found
+	 * @param findRequest
 	 */
 	// TODO Rename fetchAll
-	abstract fetch(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T): Promise<T[] | T>;
+	abstract fetch(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T, findRequest?: FindRequest<T[] | T>): Promise<T[] | T>;
 
 	/**
 	 * Save and replace all data

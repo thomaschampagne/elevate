@@ -22,7 +22,15 @@ export class ActivityService {
 	 * @returns {Promise<SyncedActivityModel[]>} stored SyncedActivityModels
 	 */
 	public fetch(): Promise<SyncedActivityModel[]> {
-		return (<Promise<SyncedActivityModel[]>>this.activityDao.fetch());
+
+		const findRequest = {
+			selector: {
+				start_time: {$gte: null}
+			},
+			sort: ["start_time"]
+		};
+
+		return (<Promise<SyncedActivityModel[]>> this.activityDao.fetch(findRequest));
 	}
 
 	/**

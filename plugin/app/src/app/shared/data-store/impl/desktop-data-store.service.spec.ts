@@ -79,9 +79,9 @@ describe("DesktopDataStore", () => {
 
 		new FakeDateTime(new Date().getTime()),
 
-		new FakeActivity("00001", "Hard climb", "Ride"),
+		new FakeActivity("00001", "Zwift climb", "Ride"),
 		new FakeActivity("00002", "Recover session", "Ride"),
-		new FakeActivity("00003", "Running day!", "Run"),
+		new FakeActivity("00003", "Easy running day!", "Run"),
 	];
 
 	const FAKE_ATHLETE_STORAGE_LOCATION = new StorageLocationModel("fakeAthlete", StorageType.OBJECT);
@@ -341,6 +341,40 @@ describe("DesktopDataStore", () => {
 				expect(fakeActivities[2].name).toEqual(expectedFakeActivities[2].name);
 				expect(fakeActivities[2].type).toEqual(expectedFakeActivities[2].type);
 				expect(fakeActivities[2].$doctype).toEqual(expectedDocType);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+		});
+
+		it("should fetch and sort a FakeActivity collection", (done: Function) => {
+
+			// Given
+			const expectedFakeActivities: FakeActivity[] = <FakeActivity[]> _.filter(FAKE_EXISTING_DOCUMENTS, (doc: FakeDoc) => {
+				return doc._id.match("fakeSyncedActivity:") !== null;
+			});
+
+			const findRequest = {
+				selector: {
+					name: {$gte: null}
+				},
+				sort: ["name"]
+			};
+
+			// When
+			const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>> desktopDataStore.fetch(FAKE_ACTIVITIES_STORAGE_LOCATION, null, findRequest);
+
+			// Then
+			promise.then((fakeActivities: FakeActivity[]) => {
+
+				expect(fakeActivities.length).toEqual(3);
+				expect(fakeActivities[0].name).toEqual(expectedFakeActivities[2].name);
+				expect(fakeActivities[1].name).toEqual(expectedFakeActivities[1].name);
+				expect(fakeActivities[2].name).toEqual(expectedFakeActivities[0].name);
 
 				done();
 

@@ -8,6 +8,7 @@ import { LoggerService } from "../../services/logging/logger.service";
 import { NotImplementedException } from "@elevate/shared/exceptions";
 import * as _ from "lodash";
 import { StorageType } from "../storage-type.enum";
+import FindRequest = PouchDB.Find.FindRequest;
 
 @Injectable()
 export class DesktopDataStore<T> extends DataStore<T> {
@@ -78,17 +79,33 @@ export class DesktopDataStore<T> extends DataStore<T> {
 		return selector;
 	}
 
-	public getDocsById(storageLocation: StorageLocationModel): Promise<PouchDB.Find.FindResponse<T[] | T>> {
-		return this.database.find({
-			selector: {
-				_id: DesktopDataStore.getDbIdSelectorByStorageLocation(storageLocation)
+	public findDocs(storageLocation: StorageLocationModel, findRequest?: FindRequest<T[] | T>): Promise<PouchDB.Find.FindResponse<T[] | T>> {
+
+		if (!findRequest) {
+			findRequest = {
+				selector: {
+					_id: DesktopDataStore.getDbIdSelectorByStorageLocation(storageLocation)
+				}
+			};
+		} else {
+			findRequest = _.set(findRequest, ["selector", DesktopDataStore.POUCH_DB_ID_FIELD], DesktopDataStore.getDbIdSelectorByStorageLocation(storageLocation));
+		}
+
+		// Create indexes along FindRequest selector fields
+		const indexesToCreate = _.without(_.keys(findRequest.selector), DesktopDataStore.POUCH_DB_ID_FIELD);
+		return this.database.createIndex({
+			index: {
+				fields: indexesToCreate
 			}
+		}).then(() => {
+			return this.database.find(findRequest);
 		});
+
 	}
 
-	public fetch(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T): Promise<T[] | T> {
+	public fetch(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T, findRequest?: FindRequest<T[] | T>): Promise<T[] | T> {
 
-		return this.getDocsById(storageLocation).then(result => {
+		return this.findDocs(storageLocation, findRequest).then(result => {
 
 			let response: T[] | T;
 
@@ -173,7 +190,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 		} else if (storageLocation.storageType === StorageType.SINGLE_VALUE) {
 
-			savePromise = this.getDocsById(storageLocation).then(result => {
+			savePromise = this.findDocs(storageLocation).then(result => {
 
 				let newDoc;
 				if (result.docs[0]) {

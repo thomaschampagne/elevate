@@ -1,6 +1,7 @@
 import { Inject } from "@angular/core";
 import { DataStore } from "../data-store/data-store";
 import { StorageLocationModel } from "../data-store/storage-location.model";
+import FindRequest = PouchDB.Find.FindRequest;
 
 export abstract class BaseDao<T> {
 
@@ -34,9 +35,9 @@ export abstract class BaseDao<T> {
 	/**
 	 * Fetch all data
 	 */
-	public fetch(): Promise<T[] | T> {
+	public fetch(findRequest?: FindRequest<T[] | T>): Promise<T[] | T> {
 		return this.checkCompliantDao().then(() => {
-			return this.dataStore.fetch(this.storageLocation, this.defaultStorage);
+			return this.dataStore.fetch(this.storageLocation, this.defaultStorage, findRequest);
 		});
 	}
 
