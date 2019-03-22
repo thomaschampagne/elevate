@@ -340,7 +340,7 @@ export class ActivityComputer {
 		// Q1/Q2/Q3 elevation
 		const elevationData: ElevationDataModel = this.elevationData(activityStream);
 
-		const runningPerformanceIndex : number = (!_.isEmpty(activityStream) && !_.isNull(heartRateData)) ? this.runningPerformanceIndex(athleteModel, this.activitySourceData, elevationData, heartRateData) : null;
+		const runningPerformanceIndex : number = (!_.isEmpty(activityStream) && !_.isNull(heartRateData)) ? this.runningPerformanceIndex(athleteSnapshot, this.activitySourceData, elevationData, heartRateData) : null;
 
 
 		// Return an array with all that shit...
@@ -395,9 +395,9 @@ export class ActivityComputer {
 	}
 
 
-	protected runningPerformanceIndex(athleteModel: AthleteModel, activitySourceData: ActivitySourceDataModel, elevationData: ElevationDataModel, heartRateData: HeartRateDataModel) : number {
+	protected runningPerformanceIndex(athleteSnapshot: AthleteSnapshotModel, activitySourceData: ActivitySourceDataModel, elevationData: ElevationDataModel, heartRateData: HeartRateDataModel) : number {
 		const averageHeartRate: number = heartRateData.averageHeartRate;
-		const userMaxHr: number = athleteModel.athleteSettings.maxHr;
+		const userMaxHr: number = athleteSnapshot.athleteSettings.maxHr;
 		const runIntensity: number = Math.round((averageHeartRate/userMaxHr*1.45-0.3)*100)/100; // calculate the run intesity; this is rounded to 2 decimal poitns
 		const gradeAdjustedDistance = activitySourceData.distance + (elevationData.accumulatedElevationAscent * 6) - (elevationData.accumulatedElevationDescent * 4);
 		const distanceRate: number = (213.9 / (activitySourceData.movingTime/60) * ((gradeAdjustedDistance/1000)**1.06) ) + 3.5;
