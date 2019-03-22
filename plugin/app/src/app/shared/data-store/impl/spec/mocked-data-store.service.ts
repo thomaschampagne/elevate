@@ -2,7 +2,6 @@ import { DataStore } from "../../data-store";
 import { StorageLocationModel } from "../../storage-location.model";
 import * as _ from "lodash";
 import { AppUsage } from "../../../models/app-usage.model";
-import { AppStorageType } from "@elevate/shared/models";
 import { AppUsageDetails } from "../../../models/app-usage-details.model";
 
 export class MockedDataStore<T> extends DataStore<T> {
@@ -53,7 +52,7 @@ export class MockedDataStore<T> extends DataStore<T> {
 
 	}
 
-	public getAppUsageDetails(type: AppStorageType): Promise<AppUsageDetails> {
+	public getAppUsageDetails(): Promise<AppUsageDetails> {
 
 		const CHROME_QUOTA_BYTES = 1024;
 		const CHROME_BYTES_IN_USE = 512;

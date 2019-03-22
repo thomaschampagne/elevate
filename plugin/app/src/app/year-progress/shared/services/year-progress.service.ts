@@ -458,6 +458,10 @@ export class YearProgressService {
 				year: selectedYear
 			});
 
+			if (!yearProgressModel) { // Continue if we don't have year progressions for current selectedYear
+				return;
+			}
+
 			const progressModel: ProgressModel = _.find(yearProgressModel.progressions, {
 				dayOfYear: dayMomentAtYear.dayOfYear()
 			});
@@ -538,7 +542,7 @@ export class YearProgressService {
 	 * Fetch all preset
 	 */
 	public fetchPresets(): Promise<YearToDateProgressPresetModel[]> {
-		return (<Promise<YearToDateProgressPresetModel[]>>this.yearProgressPresetDao.fetch());
+		return (<Promise<YearToDateProgressPresetModel[]>> this.yearProgressPresetDao.fetch());
 	}
 
 	/**
@@ -547,7 +551,7 @@ export class YearProgressService {
 	 */
 	public addPreset(presetModel: YearToDateProgressPresetModel): Promise<YearToDateProgressPresetModel[]> {
 
-		return (<Promise<YearToDateProgressPresetModel[]>>this.yearProgressPresetDao.fetch().then((models: YearToDateProgressPresetModel[]) => {
+		return (<Promise<YearToDateProgressPresetModel[]>> this.yearProgressPresetDao.fetch().then((models: YearToDateProgressPresetModel[]) => {
 
 			const query = {
 				mode: presetModel.mode,
@@ -578,16 +582,19 @@ export class YearProgressService {
 
 	/**
 	 * Remove preset at index
-	 * @param index
+	 * @param id
 	 */
-	public deletePreset(index: number): Promise<void> {
+	public deletePreset(id: string): Promise<void> {
 		return this.yearProgressPresetDao.fetch().then((models: YearToDateProgressPresetModel[]) => {
 
-			if (!models[index]) {
+			const presetIndex = _.findIndex(models, {id: id});
+
+			if (presetIndex === -1) {
 				return Promise.reject(new AppError(AppError.YEAR_PROGRESS_PRESETS_DO_NOT_EXISTS, "Year progress cannot be deleted"));
 			}
 
-			models.splice(index, 1);
+			models.splice(presetIndex, 1);
+
 			return this.yearProgressPresetDao.save(models).then(() => {
 				return Promise.resolve();
 			});

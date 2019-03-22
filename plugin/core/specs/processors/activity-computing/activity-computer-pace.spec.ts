@@ -2,8 +2,8 @@ import {
 	ActivitySourceDataModel,
 	ActivityStreamsModel,
 	AnalysisDataModel,
-	AthleteModel,
 	AthleteSettingsModel,
+	AthleteSnapshotModel,
 	Gender,
 	UserSettingsModel
 } from "@elevate/shared/models";
@@ -33,7 +33,7 @@ describe("ActivityComputer Paces", () => {
 	const bounds: number[] = null;
 	const returnZones = false;
 	const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../../fixtures/user-settings/2470979.json")); // Thomas C user settings
-	const athleteModel = new AthleteModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
+	const athleteSnapshot = new AthleteSnapshotModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
 	const activitySourceData: ActivitySourceDataModel = {
 		movingTime: -1,
 		elevation: -1,
@@ -48,7 +48,7 @@ describe("ActivityComputer Paces", () => {
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/887284960/stream.json"));
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
 			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -66,7 +66,7 @@ describe("ActivityComputer Paces", () => {
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/878683797/stream.json"));
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
 			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -84,7 +84,7 @@ describe("ActivityComputer Paces", () => {
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/849522984/stream.json"));
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
 			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -102,7 +102,7 @@ describe("ActivityComputer Paces", () => {
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/708752345/stream.json"));
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
 			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -120,7 +120,7 @@ describe("ActivityComputer Paces", () => {
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1550722452/stream.json"));
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
 			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -138,7 +138,7 @@ describe("ActivityComputer Paces", () => {
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/350379527/stream.json"));
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
 			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -156,7 +156,7 @@ describe("ActivityComputer Paces", () => {
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1551720271/stream.json"));
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
 			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -174,7 +174,7 @@ describe("ActivityComputer Paces", () => {
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1553538436/stream.json"));
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
 			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -192,7 +192,7 @@ describe("ActivityComputer Paces", () => {
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1553976435/stream.json"));
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
 			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -210,7 +210,7 @@ describe("ActivityComputer Paces", () => {
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1553069082/stream.json"));
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
 			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 
@@ -228,7 +228,7 @@ describe("ActivityComputer Paces", () => {
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1654295114/stream.json"));
 
 		// When
-		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteModel,
+		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
 			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
 		const result: AnalysisDataModel = activityComputer.compute();
 

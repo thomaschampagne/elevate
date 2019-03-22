@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
 import * as _ from "lodash";
-import { AppStorageType, SyncedActivityModel } from "@elevate/shared/models";
+import { SyncedActivityModel } from "@elevate/shared/models";
 import { BaseDao } from "../base.dao";
 import { StorageLocationModel } from "../../data-store/storage-location.model";
 
 @Injectable()
 export class ActivityDao extends BaseDao<SyncedActivityModel> {
 
-	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel(AppStorageType.LOCAL, "syncedActivities");
+	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("syncedActivities");
 	public static readonly DEFAULT_STORAGE_VALUE: SyncedActivityModel[] = [];
 
 	public getStorageLocation(): StorageLocationModel {

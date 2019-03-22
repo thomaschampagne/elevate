@@ -4,7 +4,7 @@ import { TestBed } from "@angular/core/testing";
 import { FitnessService } from "./fitness.service";
 import { ActivityService } from "../../../shared/services/activity/activity.service";
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
-import { AthleteModel, AthleteSettingsModel, Gender, SyncedActivityModel } from "@elevate/shared/models";
+import { AthleteSettingsModel, AthleteSnapshotModel, Gender, SyncedActivityModel } from "@elevate/shared/models";
 import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { DayStressModel } from "../models/day-stress.model";
@@ -20,7 +20,7 @@ describe("FitnessService", () => {
 	const todayDate = "2015-12-01 12:00";
 	const momentDatePattern = "YYYY-MM-DD hh:mm";
 
-	let _ATHLETE_MODEL_: AthleteModel;
+	let _ATHLETE_MODEL_SNAPSHOT_: AthleteSnapshotModel;
 	let fitnessTrendConfigModel: FitnessTrendConfigModel;
 	let powerMeterEnable;
 	let swimEnable;
@@ -41,7 +41,7 @@ describe("FitnessService", () => {
 		});
 
 		// Define default athlete model
-		_ATHLETE_MODEL_ = new AthleteModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
+		_ATHLETE_MODEL_SNAPSHOT_ = new AthleteSnapshotModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
 			default: 163,
 			cycling: null,
 			running: null
@@ -95,7 +95,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRide 01",
 				"Ride",
 				"2018-01-01",
@@ -104,7 +104,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRide 02",
 				"Ride",
 				"2018-01-15",
@@ -113,7 +113,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRide 03",
 				"Ride",
 				"2018-01-30",
@@ -167,7 +167,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperPoweredRide 01",
 				"Ride",
 				"2018-01-01",
@@ -176,7 +176,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperPoweredRide 02",
 				"Ride",
 				"2018-01-15",
@@ -185,7 +185,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperPoweredRide 03",
 				"Ride",
 				"2018-01-30",
@@ -239,7 +239,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-01",
@@ -248,7 +248,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Ride", // HR Scored + Est PSS Scored
 				"Ride",
 				"2018-01-15",
@@ -257,7 +257,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -266,7 +266,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-02",
@@ -276,7 +276,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-03",
@@ -286,7 +286,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -296,7 +296,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -306,7 +306,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(8,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -315,7 +315,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(9,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor VirtualRun 1", // RSS Scored
 				"VirtualRun",
 				"2018-02-10",
@@ -372,7 +372,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-01",
@@ -381,7 +381,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Ride", // HR Scored
 				"Ride",
 				"2018-01-15",
@@ -390,7 +390,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -399,7 +399,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run", // HR Scored
 				"Run",
 				"2018-02-02",
@@ -409,7 +409,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run", // HR Scored
 				"Run",
 				"2018-02-03",
@@ -419,7 +419,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -429,7 +429,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -439,7 +439,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(8,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -496,7 +496,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-01",
@@ -505,7 +505,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Ride", // HR Scored
 				"Ride",
 				"2018-01-15",
@@ -514,7 +514,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -523,7 +523,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-02",
@@ -533,7 +533,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-03",
@@ -543,7 +543,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -553,7 +553,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -563,7 +563,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(8,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -620,7 +620,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-01",
@@ -629,7 +629,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Ride", // HR Scored
 				"Ride",
 				"2018-01-15",
@@ -638,7 +638,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -647,7 +647,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-02",
@@ -657,7 +657,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-03",
@@ -667,7 +667,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -677,7 +677,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -687,7 +687,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(8,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -745,7 +745,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-01",
@@ -754,7 +754,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Ride", // HR Scored + Est PSS Scored
 				"Ride",
 				"2018-01-15",
@@ -763,7 +763,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -772,7 +772,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-02",
@@ -782,7 +782,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-03",
@@ -792,7 +792,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -802,7 +802,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -812,7 +812,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(8,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -871,7 +871,7 @@ describe("FitnessService", () => {
 			const syncedActivityModels: SyncedActivityModel[] = [];
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -880,7 +880,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -890,7 +890,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -900,7 +900,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(8,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -951,7 +951,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperPoweredRide 01",
 				"Ride",
 				"2018-01-01",
@@ -960,7 +960,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperPoweredRide 02",
 				"Ride",
 				"2018-01-15",
@@ -969,7 +969,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperPoweredRide 03",
 				"Ride",
 				"2018-01-30",
@@ -1006,7 +1006,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRide 01",
 				"Ride",
 				"2018-01-01",
@@ -1015,7 +1015,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRide 02",
 				"Ride",
 				"2018-01-15",
@@ -1024,7 +1024,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRide 03",
 				"Ride",
 				"2018-01-30",
@@ -1064,7 +1064,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-01",
@@ -1073,7 +1073,7 @@ describe("FitnessService", () => {
 				, true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -1082,7 +1082,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1092,7 +1092,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1102,7 +1102,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -1142,7 +1142,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-01",
@@ -1151,7 +1151,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -1160,7 +1160,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1170,7 +1170,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1180,7 +1180,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -1189,7 +1189,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Ride", // Trimp Scored
 				"Ride",
 				"2018-02-11",
@@ -1258,7 +1258,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-01",
@@ -1267,7 +1267,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Ride", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -1276,7 +1276,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1286,7 +1286,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run 2", // RSS Scored
 				"Run",
 				"2018-02-08",
@@ -1296,7 +1296,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -1305,7 +1305,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Ride", // Trimp Scored
 				"Ride",
 				"2018-02-11",
@@ -1369,11 +1369,11 @@ describe("FitnessService", () => {
 			const expectedPowerScoredActivitiesLength = 0;
 			const expectedSwimScoredActivitiesLength = 0;
 
-			_ATHLETE_MODEL_.athleteSettings.cyclingFtp = null;
+			_ATHLETE_MODEL_SNAPSHOT_.athleteSettings.cyclingFtp = null;
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperPoweredRide 01",
 				"Ride",
 				"2018-01-01",
@@ -1382,7 +1382,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperPoweredRide 02",
 				"Ride",
 				"2018-01-15",
@@ -1391,7 +1391,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperPoweredRide 03",
 				"Ride",
 				"2018-01-30",
@@ -1445,21 +1445,21 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 
-			// Add activity: SuperPoweredRide not having cyclingFtp on his athleteModel
+			// Add activity: SuperPoweredRide not having cyclingFtp on his athleteSnapshot
 			const syncedActivityModel_1 = FakeSyncedActivityHelper.create(1,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"SuperPoweredRide 01",
 				"Ride",
 				"2018-01-01",
 				null,
 				250,
 				true);
-			syncedActivityModel_1.athleteModel.athleteSettings.cyclingFtp = null;
+			syncedActivityModel_1.athleteSnapshot.athleteSettings.cyclingFtp = null;
 			syncedActivityModels.push(syncedActivityModel_1);
 
 			// Add activity
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"SuperPoweredRide 02",
 				"Ride",
 				"2018-01-15",
@@ -1469,7 +1469,7 @@ describe("FitnessService", () => {
 
 			// Add activity
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"SuperPoweredRide 03",
 				"Ride",
 				"2018-01-30",
@@ -1479,7 +1479,7 @@ describe("FitnessService", () => {
 
 			// Add activity
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"Swimming 01", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -1487,21 +1487,21 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			// Add activity: Swimming 02 not having swimFtp on his athleteModel
+			// Add activity: Swimming 02 not having swimFtp on his athleteSnapshot
 			const syncedActivityModel_5 = FakeSyncedActivityHelper.create(5,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"Swimming 02", // SSS Scored
 				"Swim",
 				"2018-02-10",
 				null,
 				null,
 				false);
-			syncedActivityModel_5.athleteModel.athleteSettings.swimFtp = null;
+			syncedActivityModel_5.athleteSnapshot.athleteSettings.swimFtp = null;
 			syncedActivityModels.push(syncedActivityModel_5);
 
 			// Add activity:
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"SuperHeartRateRun 01", // HRSS Scored
 				"Run",
 				"2018-02-11",
@@ -1511,7 +1511,7 @@ describe("FitnessService", () => {
 
 			// Add activity (w/ Est Stress Score):
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"No sensor Run 1", // Est RSS scored
 				"Run",
 				"2018-02-16",
@@ -1520,9 +1520,9 @@ describe("FitnessService", () => {
 				false,
 				300)); // => RSS: 100 (priority)
 
-			// Add activity (w/ Est Stress Score): No sensor Run 2 not having runningFtp on his athleteModel
+			// Add activity (w/ Est Stress Score): No sensor Run 2 not having runningFtp on his athleteSnapshot
 			const syncedActivityModel_8 = FakeSyncedActivityHelper.create(8,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"No sensor Run 2", // Est RSS scored
 				"Run",
 				"2018-02-17",
@@ -1530,12 +1530,12 @@ describe("FitnessService", () => {
 				null,
 				false,
 				300); // => RSS: 100 (priority)
-			syncedActivityModel_8.athleteModel.athleteSettings.runningFtp = null;
+			syncedActivityModel_8.athleteSnapshot.athleteSettings.runningFtp = null;
 			syncedActivityModels.push(syncedActivityModel_8);
 
 			// Add activity (w/ Est Stress Score)
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(9,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"SuperPoweredRide Est 01", // Est PSS scored
 				"Ride",
 				"2018-03-01",
@@ -1543,16 +1543,16 @@ describe("FitnessService", () => {
 				250,
 				false));
 
-			// Add activity (w/ Est Stress Score): SuperPoweredRide Est 02 not having runningFtp on his athleteModel
+			// Add activity (w/ Est Stress Score): SuperPoweredRide Est 02 not having runningFtp on his athleteSnapshot
 			const syncedActivityModel_10 = FakeSyncedActivityHelper.create(10,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"SuperPoweredRide Est 02", // Est PSS scored
 				"Ride",
 				"2018-03-01",
 				null,
 				250,
 				false);
-			syncedActivityModel_10.athleteModel.athleteSettings.cyclingFtp = null;
+			syncedActivityModel_10.athleteSnapshot.athleteSettings.cyclingFtp = null;
 			syncedActivityModels.push(syncedActivityModel_10);
 
 			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
@@ -1603,21 +1603,21 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 
-			// Add activity: SuperPoweredRide not having cyclingFtp on his athleteModel
+			// Add activity: SuperPoweredRide not having cyclingFtp on his athleteSnapshot
 			const syncedActivityModel_1 = FakeSyncedActivityHelper.create(1,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"SuperPoweredRide 01",
 				"Ride",
 				"2018-01-01",
 				null,
 				250,
 				true);
-			syncedActivityModel_1.athleteModel.athleteSettings.cyclingFtp = null;
+			syncedActivityModel_1.athleteSnapshot.athleteSettings.cyclingFtp = null;
 			syncedActivityModels.push(syncedActivityModel_1);
 
 			// Add activity
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"SuperPoweredRide 02",
 				"Ride",
 				"2018-01-15",
@@ -1627,7 +1627,7 @@ describe("FitnessService", () => {
 
 			// Add activity
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"SuperPoweredRide 03",
 				"Ride",
 				"2018-01-30",
@@ -1637,7 +1637,7 @@ describe("FitnessService", () => {
 
 			// Add activity
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"Swimming 01", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -1645,21 +1645,21 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			// Add activity: Swimming 02 not having swimFtp on his athleteModel
+			// Add activity: Swimming 02 not having swimFtp on his athleteSnapshot
 			const syncedActivityModel_5 = FakeSyncedActivityHelper.create(5,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"Swimming 02", // SSS Scored
 				"Swim",
 				"2018-02-10",
 				null,
 				null,
 				false);
-			syncedActivityModel_5.athleteModel.athleteSettings.swimFtp = null;
+			syncedActivityModel_5.athleteSnapshot.athleteSettings.swimFtp = null;
 			syncedActivityModels.push(syncedActivityModel_5);
 
 			// Add activity:
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"SuperHeartRateRun 01", // HRSS Scored
 				"Run",
 				"2018-02-11",
@@ -1669,7 +1669,7 @@ describe("FitnessService", () => {
 
 			// Add activity (w/ Est Stress Score):
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"No sensor Run 1", // Est RSS scored
 				"Run",
 				"2018-02-16",
@@ -1678,9 +1678,9 @@ describe("FitnessService", () => {
 				false,
 				300)); // => RSS: 100 (priority)
 
-			// Add activity (w/ Est Stress Score): No sensor Run 2 not having runningFtp on his athleteModel
+			// Add activity (w/ Est Stress Score): No sensor Run 2 not having runningFtp on his athleteSnapshot
 			const syncedActivityModel_8 = FakeSyncedActivityHelper.create(8,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"No sensor Run 2", // Est RSS scored
 				"Run",
 				"2018-02-17",
@@ -1688,12 +1688,12 @@ describe("FitnessService", () => {
 				null,
 				false,
 				300); // => RSS: 100 (priority)
-			syncedActivityModel_8.athleteModel.athleteSettings.runningFtp = null;
+			syncedActivityModel_8.athleteSnapshot.athleteSettings.runningFtp = null;
 			syncedActivityModels.push(syncedActivityModel_8);
 
 			// Add activity (w/ Est Stress Score)
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(9,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"SuperPoweredRide Est 01",
 				"Ride",
 				"2018-03-01",
@@ -1701,16 +1701,16 @@ describe("FitnessService", () => {
 				250,
 				false));
 
-			// Add activity (w/ Est Stress Score): SuperPoweredRide Est 02 not having runningFtp on his athleteModel
+			// Add activity (w/ Est Stress Score): SuperPoweredRide Est 02 not having runningFtp on his athleteSnapshot
 			const syncedActivityModel_10 = FakeSyncedActivityHelper.create(10,
-				_.cloneDeep(_ATHLETE_MODEL_),
+				_.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
 				"SuperPoweredRide Est 02",
 				"Ride",
 				"2018-03-01",
 				null,
 				250,
 				false);
-			syncedActivityModel_10.athleteModel.athleteSettings.cyclingFtp = null;
+			syncedActivityModel_10.athleteSnapshot.athleteSettings.cyclingFtp = null;
 			syncedActivityModels.push(syncedActivityModel_10);
 
 			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
@@ -1763,7 +1763,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(151,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRide 01",
 				"Ride",
 				"2018-01-01",
@@ -1772,7 +1772,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(235,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Super E-Bike Ride",
 				"EBikeRide",
 				"2018-01-15",
@@ -1781,7 +1781,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(666,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRide 02",
 				"Ride",
 				"2018-01-30",
@@ -1790,7 +1790,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(999,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRun 01",
 				"Run",
 				"2018-01-30",
@@ -1844,7 +1844,7 @@ describe("FitnessService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(151,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRide 01",
 				"Ride",
 				"2018-01-01",
@@ -1853,7 +1853,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(235,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Super E-Bike Ride",
 				"EBikeRide",
 				"2018-01-15",
@@ -1862,7 +1862,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(666,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRide 02",
 				"Ride",
 				"2018-01-30",
@@ -1871,7 +1871,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(999,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRun 01",
 				"Run",
 				"2018-01-30",
@@ -1923,7 +1923,7 @@ describe("FitnessService", () => {
 			const expectedFitnessPreparedActivitiesLength = 4;
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 01",
 				"Ride",
 				"2018-01-01",
@@ -1932,7 +1932,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 02",
 				"Ride",
 				"2018-01-15",
@@ -1941,7 +1941,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 03",
 				"Ride",
 				"2018-01-16",
@@ -1950,7 +1950,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 04",
 				"Ride",
 				"2018-01-17",
@@ -1959,7 +1959,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 05",
 				"Ride",
 				"2018-01-18",
@@ -1968,7 +1968,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Run 01",
 				"Run",
 				"2018-01-19",
@@ -2011,7 +2011,7 @@ describe("FitnessService", () => {
 			const expectedFitnessPreparedActivitiesLength = 3;
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 01",
 				"Ride",
 				"2018-01-01",
@@ -2020,7 +2020,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 02 #MTBDH",
 				"Ride",
 				"2018-01-15",
@@ -2029,7 +2029,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 03 #MTBDH",
 				"Ride",
 				"2018-01-16",
@@ -2038,7 +2038,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 04",
 				"Ride",
 				"2018-01-17",
@@ -2047,7 +2047,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 05 @skipMe",
 				"Ride",
 				"2018-01-18",
@@ -2056,7 +2056,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Run 01",
 				"Run",
 				"2018-01-19",
@@ -2111,7 +2111,7 @@ describe("FitnessService", () => {
 			const expectedFitnessPreparedActivitiesLength = 2;
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 01",
 				"Ride",
 				"2018-01-01",
@@ -2120,7 +2120,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 02 #MTBDH",
 				"Ride",
 				"2018-01-15",
@@ -2129,7 +2129,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 03 #MTBDH",
 				"Ride",
 				"2018-01-16",
@@ -2138,7 +2138,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 04",
 				"Ride",
 				"2018-01-17",
@@ -2147,7 +2147,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 05 @skipMe",
 				"Ride",
 				"2018-01-18",
@@ -2156,7 +2156,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Run 01",
 				"Run",
 				"2018-01-19",
@@ -2232,7 +2232,7 @@ describe("FitnessService", () => {
 			const syncedActivityModels: SyncedActivityModel[] = [];
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 01",
 				"Ride",
 				"2018-01-01",
@@ -2241,14 +2241,14 @@ describe("FitnessService", () => {
 				false));
 
 			const activityModel = FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 02",
 				"Ride",
 				"2018-01-15",
 				150,
 				null,
 				false);
-			activityModel.athleteModel = undefined;
+			activityModel.athleteSnapshot = undefined;
 			syncedActivityModels.push(activityModel);
 
 			spyOn(activityService.activityDao, "fetch")
@@ -2278,7 +2278,7 @@ describe("FitnessService", () => {
 			fitnessTrendConfigModel.ignoreActivityNamePatterns = ["Ride"];
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 01",
 				"Ride",
 				"2018-01-01",
@@ -2287,7 +2287,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 02 #MTBDH",
 				"Ride",
 				"2018-01-15",
@@ -2296,7 +2296,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 03 #MTBDH",
 				"Ride",
 				"2018-01-16",
@@ -2305,7 +2305,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Ride 04",
 				"Ride",
 				"2018-01-17",
@@ -2353,7 +2353,7 @@ describe("FitnessService", () => {
 			const syncedActivityModels: SyncedActivityModel[] = [];
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(0,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride + HR", // PSS Scored + HRSS Scored
 				"Ride",
 				"2018-01-01",
@@ -2362,7 +2362,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-02",
@@ -2371,7 +2371,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Ride", // HR Scored
 				"Ride",
 				"2018-01-15",
@@ -2380,7 +2380,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Ride 2", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -2389,7 +2389,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-02",
@@ -2399,7 +2399,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run 2",  // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-03",
@@ -2409,7 +2409,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run", // Est RSS scored
 				"Run",
 				"2018-02-07",
@@ -2419,7 +2419,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run 2", // Est RSS scored
 				"Run",
 				"2018-02-08",
@@ -2429,7 +2429,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(8,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -2439,7 +2439,7 @@ describe("FitnessService", () => {
 
 			// ... Grouped activities 2018-02-12; Final SS => 380
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(9,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run 3", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-12",
@@ -2449,7 +2449,7 @@ describe("FitnessService", () => {
 				300)); // => RSS: 100
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(10,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR + Est power Ride", // HR + PSS Scored (estimated)
 				"Ride",
 				"2018-02-12",
@@ -2459,7 +2459,7 @@ describe("FitnessService", () => {
 
 			// ... Grouped activities 2018-02-13; Final SS => 372
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(11,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run 4", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-13",
@@ -2469,7 +2469,7 @@ describe("FitnessService", () => {
 				300));  // => RSS: 100
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(12,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run 3", // Est RSS scored
 				"Run",
 				"2018-02-13",
@@ -2480,7 +2480,7 @@ describe("FitnessService", () => {
 
 			// ... Grouped activities 2018-02-14;
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(13,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-02-14",
@@ -2489,7 +2489,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(14,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR + Est power Ride", // HR + PSS Scored (estimated)
 				"Ride",
 				"2018-02-14",
@@ -2498,7 +2498,7 @@ describe("FitnessService", () => {
 				false)); // => Est PSS: 150
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(15,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run 4", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-14",
@@ -2508,7 +2508,7 @@ describe("FitnessService", () => {
 				300));  // => RSS: 300
 
 			const swimActivity = FakeSyncedActivityHelper.create(16,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-14",
@@ -2644,7 +2644,7 @@ describe("FitnessService", () => {
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			getTodayMomentSpy.and.returnValue(moment("2018-02-15 12:00", momentDatePattern));
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRide 01",
 				"Ride",
 				"2018-01-01",
@@ -2653,7 +2653,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRide 02",
 				"Ride",
 				"2018-01-15",
@@ -2662,7 +2662,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"SuperHeartRateRide 03",
 				"Ride",
 				"2018-01-30",
@@ -2726,7 +2726,7 @@ describe("FitnessService", () => {
 			const expectedRunName = "HR Run 2";
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(0,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride + HR", // PSS Scored + HRSS Scored
 				"Ride",
 				"2018-01-01",
@@ -2735,7 +2735,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-01-02",
@@ -2744,7 +2744,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Ride", // HR Scored
 				"Ride",
 				"2018-01-15",
@@ -2753,7 +2753,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Ride 2", // PSS Scored (estimated)
 				"Ride",
 				"2018-01-30",
@@ -2762,7 +2762,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(4,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-02",
@@ -2772,7 +2772,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(5,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run 2",  // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-03",
@@ -2782,7 +2782,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run", // Est RSS scored
 				"Run",
 				"2018-02-07",
@@ -2792,7 +2792,7 @@ describe("FitnessService", () => {
 				300));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(7,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run 2", // Est RSS scored
 				"Run",
 				"2018-02-08",
@@ -2802,7 +2802,7 @@ describe("FitnessService", () => {
 				300));
 
 			const swimActivity_1 = FakeSyncedActivityHelper.create(8,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-09",
@@ -2814,7 +2814,7 @@ describe("FitnessService", () => {
 
 			// ... Grouped activities 2018-02-12; Final SS => 380
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(9,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run 3", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-12",
@@ -2824,7 +2824,7 @@ describe("FitnessService", () => {
 				300)); // => RSS: 100
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(10,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR + Est power Ride", // HR + PSS Scored (estimated)
 				"Ride",
 				"2018-02-12",
@@ -2834,7 +2834,7 @@ describe("FitnessService", () => {
 
 			// ... Grouped activities 2018-02-13; Final SS => 372
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(11,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run 4", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-13",
@@ -2844,7 +2844,7 @@ describe("FitnessService", () => {
 				300));  // => RSS: 100
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(12,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"No sensor Run 3", // Est RSS scored
 				"Run",
 				"2018-02-13",
@@ -2855,7 +2855,7 @@ describe("FitnessService", () => {
 
 			// ... Grouped activities 2018-02-14;
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(13,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Power Ride", // PSS Scored
 				"Ride",
 				"2018-02-14",
@@ -2864,7 +2864,7 @@ describe("FitnessService", () => {
 				true));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(14,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR + Est power Ride", // HR + PSS Scored (estimated)
 				"Ride",
 				"2018-02-14",
@@ -2873,7 +2873,7 @@ describe("FitnessService", () => {
 				false)); // => Est PSS: 150
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(15,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"HR Run 4", // HR Scored + Est RSS scored
 				"Run",
 				"2018-02-14",
@@ -2883,7 +2883,7 @@ describe("FitnessService", () => {
 				300));  // => RSS: 300
 
 			const swimActivity_2 = FakeSyncedActivityHelper.create(16,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Swimming", // SSS Scored
 				"Swim",
 				"2018-02-14",
@@ -2959,7 +2959,7 @@ describe("FitnessService", () => {
 
 			// Add some fakes EBikeRides
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Super Bike Ride 01",
 				"Ride",
 				"2015-11-15",
@@ -2968,7 +2968,7 @@ describe("FitnessService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				_ATHLETE_MODEL_,
+				_ATHLETE_MODEL_SNAPSHOT_,
 				"Super Bike Ride 02",
 				"Ride",
 				"2015-11-20",

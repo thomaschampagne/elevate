@@ -1,40 +1,31 @@
 import { Gender } from "./gender.enum";
-import { AthleteSettingsModel } from "./athlete-settings";
+import { AthleteSettingsModel, DatedAthleteSettingsModel } from "./athlete-settings";
+import { AbstractAthleteModel } from "./abstract-athlete.model";
 
-export class AthleteModel {
+export class AthleteModel extends AbstractAthleteModel {
 
-	public static readonly DEFAULT_MODEL: AthleteModel = new AthleteModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
-
+	public static readonly DEFAULT_MODEL: AthleteModel = new AthleteModel(Gender.MEN, [DatedAthleteSettingsModel.DEFAULT_MODEL]);
 	public gender: Gender;
-	public athleteSettings: AthleteSettingsModel;
+	public datedAthleteSettings: DatedAthleteSettingsModel[];
+
 
 	/**
 	 *
 	 * @param {Gender} gender
-	 * @param {AthleteSettingsModel} athleteSettings
+	 * @param {AthleteSettingsModel} datedAthleteSettings
 	 */
-	constructor(gender: Gender, athleteSettings: AthleteSettingsModel) {
+	constructor(gender: Gender, datedAthleteSettings: DatedAthleteSettingsModel[]) {
+		super();
 		this.gender = gender;
-		this.athleteSettings = athleteSettings;
+		this.datedAthleteSettings = (!datedAthleteSettings || datedAthleteSettings.length === 0)
+			? [DatedAthleteSettingsModel.DEFAULT_MODEL] : datedAthleteSettings;
 	}
 
 	/**
 	 *
-	 * @param otherAthleteModel {AthleteModel}
 	 */
-	public equals(otherAthleteModel: AthleteModel): boolean {
-
-		const isSame = otherAthleteModel && (this.athleteSettings.maxHr !== otherAthleteModel.athleteSettings.maxHr
-			|| this.athleteSettings.restHr !== otherAthleteModel.athleteSettings.restHr
-			|| this.athleteSettings.cyclingFtp !== otherAthleteModel.athleteSettings.cyclingFtp
-			|| this.athleteSettings.runningFtp !== otherAthleteModel.athleteSettings.runningFtp
-			|| this.athleteSettings.lthr.default !== otherAthleteModel.athleteSettings.lthr.default
-			|| this.athleteSettings.lthr.cycling !== otherAthleteModel.athleteSettings.lthr.cycling
-			|| this.athleteSettings.lthr.running !== otherAthleteModel.athleteSettings.lthr.running
-			|| this.athleteSettings.weight !== otherAthleteModel.athleteSettings.weight
-			|| this.athleteSettings.swimFtp !== otherAthleteModel.athleteSettings.swimFtp
-			|| this.gender !== otherAthleteModel.gender
-		);
-		return !isSame;
+	public getCurrentSettings(): AthleteSettingsModel {
+		const lastDatedAthleteSettingsModel = this.datedAthleteSettings[this.datedAthleteSettings.length - 1];
+		return (lastDatedAthleteSettingsModel) ? lastDatedAthleteSettingsModel.toAthleteSettingsModel() : null;
 	}
 }

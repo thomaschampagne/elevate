@@ -2,11 +2,17 @@ import { TestBed } from "@angular/core/testing";
 import { ActivityService } from "./activity.service";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import * as _ from "lodash";
-import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel, Gender, SyncedActivityModel } from "@elevate/shared/models";
+import {
+	AthleteModel,
+	AthleteSettingsModel,
+	AthleteSnapshotModel,
+	DatedAthleteSettingsModel,
+	Gender,
+	SyncedActivityModel
+} from "@elevate/shared/models";
 import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/fake-synced-activity.helper";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
-import { userSettingsData } from "@elevate/shared/data";
 
 describe("ActivityService", () => {
 
@@ -158,18 +164,20 @@ describe("ActivityService", () => {
 
 	describe("Activity compliance with athlete settings", () => {
 
-		it("should resolve activities compliant with athlete settings hasDatedAthleteSettings=false", (done: Function) => {
+		it("should resolve activities compliant with athlete settings", (done: Function) => {
 
 			// Given
-			const athleteModel = new AthleteModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
+			const athleteSnapshot = new AthleteSnapshotModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
 				default: 163,
 				cycling: null,
 				running: null
 			}, 150, 300, 31, 70));
 
+			const athleteModel = new AthleteModel(Gender.MEN, [new DatedAthleteSettingsModel(null, athleteSnapshot.athleteSettings)]);
+
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				athleteModel,
+				athleteSnapshot,
 				"SuperHeartRateRide 01",
 				"Ride",
 				"2018-01-01",
@@ -178,7 +186,7 @@ describe("ActivityService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				athleteModel,
+				athleteSnapshot,
 				"SuperHeartRateRide 02",
 				"Ride",
 				"2018-01-15",
@@ -187,7 +195,7 @@ describe("ActivityService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				athleteModel,
+				athleteSnapshot,
 				"SuperHeartRateRide 03",
 				"Ride",
 				"2018-01-30",
@@ -198,13 +206,8 @@ describe("ActivityService", () => {
 			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
-			const userSettingsModel = _.cloneDeep(userSettingsData);
-			userSettingsModel.hasDatedAthleteSettings = false;
-			userSettingsModel.athleteModel = _.cloneDeep(athleteModel);
-			spyOn(activityService.athleteModelResolverService.userSettingsService, "fetch")
-				.and.returnValue(Promise.resolve(userSettingsModel));
-			spyOn(activityService.athleteModelResolverService.datedAthleteSettingsService, "fetch")
-				.and.returnValue(Promise.resolve([]));
+			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
+				.and.returnValue(Promise.resolve(athleteModel));
 
 			// When
 			const promise = activityService.isAthleteSettingsConsistent();
@@ -227,25 +230,27 @@ describe("ActivityService", () => {
 		it("should resolve activities compliant with athlete settings hasDatedAthleteSettings=true", (done: Function) => {
 
 			// Given
-			const athleteModel01 = new AthleteModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
+			const athleteSnapshot01 = new AthleteSnapshotModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
 				default: 163,
 				cycling: null,
 				running: null
 			}, 150, 300, 31, 70));
 
-			const athleteModel02 = _.cloneDeep(athleteModel01);
-			athleteModel02.athleteSettings.maxHr = 211;
-			athleteModel02.athleteSettings.restHr = 66;
-			athleteModel02.athleteSettings.cyclingFtp = 250;
+			const athleteSnapshot02 = _.cloneDeep(athleteSnapshot01);
+			athleteSnapshot02.athleteSettings.maxHr = 211;
+			athleteSnapshot02.athleteSettings.restHr = 66;
+			athleteSnapshot02.athleteSettings.cyclingFtp = 250;
 
 			const datedAthleteSettingsModels = [
-				new DatedAthleteSettingsModel("2018-01-14", athleteModel02.athleteSettings),
-				new DatedAthleteSettingsModel(null, athleteModel01.athleteSettings),
+				new DatedAthleteSettingsModel("2018-01-14", athleteSnapshot02.athleteSettings),
+				new DatedAthleteSettingsModel(null, athleteSnapshot01.athleteSettings),
 			];
+
+			const athleteModel = new AthleteModel(Gender.MEN, datedAthleteSettingsModels);
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				athleteModel01,
+				athleteSnapshot01,
 				"SuperHeartRateRide 01",
 				"Ride",
 				"2018-01-01",
@@ -254,7 +259,7 @@ describe("ActivityService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				athleteModel02,
+				athleteSnapshot02,
 				"SuperHeartRateRide 02",
 				"Ride",
 				"2018-01-15",
@@ -263,7 +268,7 @@ describe("ActivityService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				athleteModel02,
+				athleteSnapshot02,
 				"SuperHeartRateRide 03",
 				"Ride",
 				"2018-01-30",
@@ -274,13 +279,8 @@ describe("ActivityService", () => {
 			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
-			const userSettingsModel = _.cloneDeep(userSettingsData);
-			userSettingsModel.hasDatedAthleteSettings = true;
-			userSettingsModel.athleteModel = _.cloneDeep(athleteModel01);
-			spyOn(activityService.athleteModelResolverService.userSettingsService, "fetch")
-				.and.returnValue(Promise.resolve(userSettingsModel));
-			spyOn(activityService.athleteModelResolverService.datedAthleteSettingsService, "fetch")
-				.and.returnValue(Promise.resolve(datedAthleteSettingsModels));
+			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
+				.and.returnValue(Promise.resolve(athleteModel));
 
 			// When
 			const promise = activityService.isAthleteSettingsConsistent();
@@ -303,7 +303,7 @@ describe("ActivityService", () => {
 		it("should resolve non consistent activities ids which are not compliant athlete settings hasDatedAthleteSettings=true", (done: Function) => {
 
 			// Given
-			const athleteModel01 = new AthleteModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
+			const athleteModel01 = new AthleteSnapshotModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
 				default: 163,
 				cycling: null,
 				running: null
@@ -318,6 +318,8 @@ describe("ActivityService", () => {
 				new DatedAthleteSettingsModel("2018-01-15", athleteModel02.athleteSettings),
 				new DatedAthleteSettingsModel(null, athleteModel01.athleteSettings),
 			];
+
+			const athleteModel = new AthleteModel(Gender.MEN, datedAthleteSettingsModels);
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
@@ -350,13 +352,8 @@ describe("ActivityService", () => {
 			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
-			const userSettingsModel = _.cloneDeep(userSettingsData);
-			userSettingsModel.hasDatedAthleteSettings = true;
-			userSettingsModel.athleteModel = _.cloneDeep(athleteModel01);
-			spyOn(activityService.athleteModelResolverService.userSettingsService, "fetch")
-				.and.returnValue(Promise.resolve(userSettingsModel));
-			spyOn(activityService.athleteModelResolverService.datedAthleteSettingsService, "fetch")
-				.and.returnValue(Promise.resolve(datedAthleteSettingsModels));
+			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
+				.and.returnValue(Promise.resolve(athleteModel));
 
 			// When
 			const promise = activityService.nonConsistentActivitiesWithAthleteSettings();
@@ -383,7 +380,7 @@ describe("ActivityService", () => {
 		it("should resolve activities NOT compliant with athlete settings", (done: Function) => {
 
 			// Given
-			const athleteModel = new AthleteModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
+			const athleteSnapshot = new AthleteSnapshotModel(Gender.MEN, new AthleteSettingsModel(190, 60, {
 				default: 163,
 				cycling: null,
 				running: null
@@ -391,7 +388,7 @@ describe("ActivityService", () => {
 
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
-				athleteModel,
+				athleteSnapshot,
 				"SuperHeartRateRide 01",
 				"Ride",
 				"2018-01-01",
@@ -399,10 +396,10 @@ describe("ActivityService", () => {
 				null,
 				false));
 
-			const variousAthleteModel = _.cloneDeep(athleteModel);
-			variousAthleteModel.athleteSettings.maxHr = 666; // Introducing a little settings change
+			const variousAthleteSnapshotModel = _.cloneDeep(athleteSnapshot);
+			variousAthleteSnapshotModel.athleteSettings.maxHr = 666; // Introducing a little settings change
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
-				variousAthleteModel,
+				variousAthleteSnapshotModel,
 				"SuperHeartRateRide 02",
 				"Ride",
 				"2018-01-15",
@@ -411,7 +408,7 @@ describe("ActivityService", () => {
 				false));
 
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
-				athleteModel,
+				athleteSnapshot,
 				"SuperHeartRateRide 03",
 				"Ride",
 				"2018-01-30",
@@ -422,12 +419,7 @@ describe("ActivityService", () => {
 			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
-			const userSettingsModel = _.cloneDeep(userSettingsData);
-			userSettingsModel.hasDatedAthleteSettings = false;
-			userSettingsModel.athleteModel = _.cloneDeep(athleteModel);
-			spyOn(activityService.athleteModelResolverService.userSettingsService, "fetch")
-				.and.returnValue(Promise.resolve(userSettingsModel));
-			spyOn(activityService.athleteModelResolverService.datedAthleteSettingsService, "fetch")
+			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
 				.and.returnValue(Promise.resolve([]));
 
 			// When

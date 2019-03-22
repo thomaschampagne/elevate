@@ -1,4 +1,4 @@
-export enum AppStorageType {
+export enum BrowserStorageType {
 	SYNC = "sync",
 	LOCAL = "local"
 }

@@ -1,24 +1,18 @@
 import * as _ from "lodash";
 import * as Q from "q";
-import {
-	ActivitiesChangesModel,
-	AppStorageType,
-	CoreMessages,
-	SyncedActivityModel,
-	SyncResultModel,
-	UserSettingsModel
-} from "@elevate/shared/models";
-import { AppStorage } from "../app-storage";
+import { ActivitiesChangesModel, CoreMessages, SyncedActivityModel, SyncResultModel, UserSettingsModel } from "@elevate/shared/models";
+import { BrowserStorage } from "../browser-storage";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { MultipleActivityProcessor } from "./multiple-activity-processor";
 import { StravaActivityModel } from "../models/sync/strava-activity.model";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { StreamActivityModel } from "../models/sync/stream-activity.model";
-import { AthleteModelResolver } from "@elevate/shared/resolvers";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
+import { BrowserStorageType } from "../models/browser-storage-type.enum";
 
 export class ActivitiesSynchronize {
 
-	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteModelResolver) {
+	constructor(appResources: AppResourcesModel, userSettings: UserSettingsModel, athleteModelResolver: AthleteSnapshotResolver) {
 		this.appResources = appResources;
 		this.userSettings = userSettings;
 		this.extensionId = this.appResources.extensionId;
@@ -37,8 +31,8 @@ export class ActivitiesSynchronize {
 		return this._activitiesChanges;
 	}
 
-	public static readonly LAST_SYNC_DATE_TIME_KEY = "lastSyncDateTime"; // TODO Move into AppStorage as static (do that for others too)
-	public static readonly SYNCED_ACTIVITIES_KEY = "syncedActivities"; // TODO Move into AppStorage as static (do that for others too)
+	public static readonly LAST_SYNC_DATE_TIME_KEY = "lastSyncDateTime"; // TODO Move into BrowserStorage as static (do that for others too)
+	public static readonly SYNCED_ACTIVITIES_KEY = "syncedActivities"; // TODO Move into BrowserStorage as static (do that for others too)
 	public static readonly PAGES_PER_GROUP = 1; // = 20 activities with 20 activities per page.
 	public static readonly ACTIVITIES_PER_PAGE = 20; // 20 usually
 	public static readonly SLEEP_TIME = 1750;
@@ -483,17 +477,17 @@ export class ActivitiesSynchronize {
 
 		}, (jqXHR: JQueryXHR) => {
 
-			const streamNotFound = jqXHR.status === 404;
+			const shouldStopSync = jqXHR.status === 429;
 
-			if (streamNotFound) {
-				deferred.resolve({activityId: activityId} as any);
-			} else {
+			if (shouldStopSync) {
 				deferred.reject({
 					streamFailure: true,
 					activityId: activityId,
 					statusCode: jqXHR.status,
 					statusText: jqXHR.statusText
 				});
+			} else {
+				deferred.resolve({activityId: activityId} as any);
 			}
 
 		});
@@ -508,9 +502,9 @@ export class ActivitiesSynchronize {
 
 		console.log("clearSyncCache requested");
 
-		return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronize.SYNCED_ACTIVITIES_KEY).then(() => {
+		return BrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, ActivitiesSynchronize.SYNCED_ACTIVITIES_KEY).then(() => {
 			console.log("syncedActivities removed from local storage");
-			return AppStorage.getInstance().rm(AppStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY);
+			return BrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY);
 		}).then(() => {
 			console.log("lastSyncDateTime removed from local storage");
 		});
@@ -897,16 +891,16 @@ export class ActivitiesSynchronize {
 	}
 
 	public getAllSavedLocal(): Q.IPromise<any> {
-		return AppStorage.getInstance().get<any>(AppStorageType.LOCAL);
+		return BrowserStorage.getInstance().get<any>(BrowserStorageType.LOCAL);
 	}
 
 	public saveLastSyncDateToLocal(timestamp: number) {
-		return AppStorage.getInstance().set<number>(AppStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY, timestamp);
+		return BrowserStorage.getInstance().set<number>(BrowserStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY, timestamp);
 	}
 
 	public getLastSyncDateFromLocal() {
 		const deferred = Q.defer<number>();
-		AppStorage.getInstance().get<number>(AppStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY).then((result: number) => {
+		BrowserStorage.getInstance().get<number>(BrowserStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY).then((result: number) => {
 			deferred.resolve(result);
 		}, error => deferred.reject(error));
 
@@ -914,12 +908,12 @@ export class ActivitiesSynchronize {
 	}
 
 	public saveSyncedActivitiesToLocal(syncedActivities: SyncedActivityModel[]) {
-		return AppStorage.getInstance().set<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronize.SYNCED_ACTIVITIES_KEY, syncedActivities);
+		return BrowserStorage.getInstance().set<SyncedActivityModel[]>(BrowserStorageType.LOCAL, ActivitiesSynchronize.SYNCED_ACTIVITIES_KEY, syncedActivities);
 	}
 
 	public getSyncedActivitiesFromLocal(): Q.Promise<SyncedActivityModel[]> {
 		const deferred = Q.defer<SyncedActivityModel[]>();
-		AppStorage.getInstance().get<SyncedActivityModel[]>(AppStorageType.LOCAL, ActivitiesSynchronize.SYNCED_ACTIVITIES_KEY).then((result: SyncedActivityModel[]) => {
+		BrowserStorage.getInstance().get<SyncedActivityModel[]>(BrowserStorageType.LOCAL, ActivitiesSynchronize.SYNCED_ACTIVITIES_KEY).then((result: SyncedActivityModel[]) => {
 			deferred.resolve(result);
 		}, error => deferred.reject(error));
 
