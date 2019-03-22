@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import * as $ from "jquery";
 import { Helper } from "../../helper";
-import { ActivityInfoModel, AnalysisDataModel, AthleteModel, SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, AnalysisDataModel, AthleteSnapshotModel, SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AbstractDataView } from "./views/abstract-data.view";
@@ -18,7 +18,7 @@ export abstract class AbstractExtendedDataModifier {
 	protected activityType: string;
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
-	protected athleteModel: AthleteModel;
+	protected athleteSnapshot: AthleteSnapshotModel;
 	protected activityInfo: ActivityInfoModel;
 	protected speedUnitsData: SpeedUnitDataModel;
 	protected type: number;
@@ -45,46 +45,29 @@ export abstract class AbstractExtendedDataModifier {
 			console.error("ExtendedDataModifier must be set");
 		}
 
-		// Only display the extended stat button now. Sub panel is now displayed
-		if (this.type === AbstractExtendedDataModifier.TYPE_ACTIVITY) {
-			// Add Show extended statistics to page
-			this.placeExtendedStatsButton(() => {
-				console.debug("Extended Button for segment has been placed...");
-			});
-		} else if (this.type === AbstractExtendedDataModifier.TYPE_SEGMENT) {
-			// Place button for segment
-			this.placeExtendedStatsButtonSegment(() => {
-				console.debug("Extended Button for segment has been placed...");
-			});
-		}
+		// Getting data to display at least summary panel. Cache will be normally used next if user click 'Show extended stats' in ACTIVITY mode
+		this.getFullAnalysisData().then((result: { athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel }) => {
 
-		/*// Getting data to display at least summary panel. Cache will be normally used next if user click 'Show extended stats' in ACTIVITY mode
-		this.activityProcessor.getAnalysisData(
-			this.activityInfo.id,
-			null, // No bounds given, full activity requested
-			(athleteModel: AthleteModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
+			this.athleteSnapshot = result.athleteSnapshot;
+			this.analysisData = result.analysisData;
 
-				this.athleteModel = athleteModel;
-				this.analysisData = analysisData;
+			if (this.type === AbstractExtendedDataModifier.TYPE_ACTIVITY) {
 
-				if (this.type === AbstractExtendedDataModifier.TYPE_ACTIVITY) {
-
-					this.placeSummaryPanel(() => { // Summary panel has been placed...
-
-						// Add Show extended statistics to page
-						this.placeExtendedStatsButton(() => {
-							// Extended Button has been placed...
-						});
-					});
-
-				} else if (this.type === AbstractExtendedDataModifier.TYPE_SEGMENT) {
-					// Place button for segment
-					this.placeExtendedStatsButtonSegment(() => {
+				this.placeSummaryPanel(() => { // Summary panel has been placed...
+					// Add Show extended statistics to page
+					this.placeExtendedStatsButton(() => {
+						// Extended Button has been placed...
 						console.debug("Extended Button for segment has been placed...");
 					});
-				}
-			},
-		);*/
+				});
+
+			} else if (this.type === AbstractExtendedDataModifier.TYPE_SEGMENT) {
+				// Place button for segment
+				this.placeExtendedStatsButtonSegment(() => {
+					console.debug("Extended Button for segment has been placed...");
+				});
+			}
+		});
 	}
 
 	protected placeSummaryPanel(panelAdded: () => void): void {
@@ -177,24 +160,30 @@ export abstract class AbstractExtendedDataModifier {
 
 			$("#extendedStatsButton").click(() => {
 
-				this.activityProcessor.getAnalysisData(
-					this.activityInfo,
-					null, // No bounds given, full activity requested
-					(athleteModel: AthleteModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
+				this.getFullAnalysisData().then((result: { athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel }) => {
 
-						if (!this.athleteModel) {
-							this.athleteModel = athleteModel;
-						}
+					if (!this.athleteSnapshot) {
+						this.athleteSnapshot = result.athleteSnapshot;
+					}
 
-						this.analysisData = analysisData;
-						this.renderViews();
-						this.showResultsAndRefreshGraphs();
-					},
-				);
+					this.analysisData = result.analysisData;
+					this.renderViews();
+					this.showResultsAndRefreshGraphs();
+
+				});
 			});
 			if (buttonAdded) {
 				buttonAdded();
 			}
+		});
+	}
+
+	protected getFullAnalysisData(): Promise<{ athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel }> {
+
+		return new Promise<{ athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel }>(resolve => {
+			this.activityProcessor.getAnalysisData(this.activityInfo, null, (athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
+				resolve({athleteSnapshot: athleteSnapshot, analysisData: analysisData});
+			});
 		});
 	}
 
@@ -205,7 +194,7 @@ export abstract class AbstractExtendedDataModifier {
 			this.getSegmentInfos((segmentInfosResponse: any) => {
 
 				// Call Activity Processor with bounds
-				if (!segmentInfosResponse.start_index && segmentInfosResponse.end_index) {
+				if (!_.isNumber(segmentInfosResponse.start_index) || !_.isNumber(segmentInfosResponse.end_index)) {
 					return;
 				}
 
@@ -218,10 +207,10 @@ export abstract class AbstractExtendedDataModifier {
 				this.activityProcessor.getAnalysisData(
 					this.activityInfo,
 					[segmentInfosResponse.start_index, segmentInfosResponse.end_index], // Bounds given, full activity requested
-					(athleteModel: AthleteModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
+					(athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
 
-						if (!this.athleteModel) {
-							this.athleteModel = athleteModel;
+						if (!this.athleteSnapshot) {
+							this.athleteSnapshot = athleteSnapshot;
 						}
 
 						this.analysisData = analysisData;
@@ -332,7 +321,7 @@ export abstract class AbstractExtendedDataModifier {
 
 		// Heart view
 		if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
-			const heartRateDataView: HeartRateDataView = new HeartRateDataView(this.analysisData.heartRateData, "hrr", this.athleteModel);
+			const heartRateDataView: HeartRateDataView = new HeartRateDataView(this.analysisData.heartRateData, "hrr", this.athleteSnapshot);
 			heartRateDataView.setAppResources(this.appResources);
 			heartRateDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			heartRateDataView.setActivityType(this.activityType);

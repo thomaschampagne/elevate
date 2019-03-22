@@ -4,7 +4,6 @@ import * as d3 from "d3";
 import { AppUsageDetails } from "../shared/models/app-usage-details.model";
 import { HttpClient } from "@angular/common/http";
 import { DataStore } from "../shared/data-store/data-store";
-import { AppStorageType } from "@elevate/shared/models";
 
 @Component({
 	selector: "app-about-dialog",
@@ -30,7 +29,7 @@ export class AboutDialogComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this.dataStore.getAppUsageDetails(AppStorageType.LOCAL).then((appUsageDetails: AppUsageDetails) => {
+		this.dataStore.getAppUsageDetails().then((appUsageDetails: AppUsageDetails) => {
 			this.appUsageDetails = appUsageDetails;
 		});
 

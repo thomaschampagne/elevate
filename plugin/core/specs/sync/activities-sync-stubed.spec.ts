@@ -5,8 +5,7 @@ import { editActivityFromArray, removeActivityFromArray } from "../tools/specs-t
 import {
 	ActivitiesChangesModel,
 	AnalysisDataModel,
-	AthleteSettingsModel,
-	DatedAthleteSettingsModel,
+	AthleteModel,
 	SyncedActivityModel,
 	SyncResultModel,
 	UserSettingsModel
@@ -17,12 +16,12 @@ import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.m
 import { StreamActivityModel } from "../../scripts/models/sync/stream-activity.model";
 import { MultipleActivityProcessor } from "../../scripts/processors/multiple-activity-processor";
 import { SyncNotifyModel } from "../../scripts/models/sync/sync-notify.model";
-import { AthleteModelResolver } from "@elevate/shared/resolvers";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { userSettingsData } from "@elevate/shared/data";
 
 describe("ActivitiesSynchronize", () => {
 
-	let athleteModelResolver: AthleteModelResolver;
+	let athleteModelResolver: AthleteSnapshotResolver;
 	let userSettingsMock: UserSettingsModel;
 	let appResourcesMock: AppResourcesModel;
 	let activitiesSynchronize: ActivitiesSynchronize;
@@ -99,12 +98,7 @@ describe("ActivitiesSynchronize", () => {
 		];
 
 		// Setup athlete models resolution
-		userSettingsMock.hasDatedAthleteSettings = true;
-
-		const datedAthleteSettingsModels = [
-			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, 325, 32, 78))
-		];
-		athleteModelResolver = new AthleteModelResolver(userSettingsMock, datedAthleteSettingsModels);
+		athleteModelResolver = new AthleteSnapshotResolver(AthleteModel.DEFAULT_MODEL);
 
 		activitiesSynchronize = new ActivitiesSynchronize(appResourcesMock, userSettingsMock, athleteModelResolver);
 

@@ -1,11 +1,11 @@
-import { AthleteModel, SyncedActivityModel } from "@elevate/shared/models";
+import { AthleteSnapshotModel, SyncedActivityModel } from "@elevate/shared/models";
 import * as moment from "moment";
 import * as _ from "lodash";
 
 export class FakeSyncedActivityHelper {
 
 	public static create(id: number,
-						 athleteModel: AthleteModel,
+						 athleteSnapshot: AthleteSnapshotModel,
 						 name: string,
 						 type: string,
 						 dateStr: string,
@@ -16,7 +16,7 @@ export class FakeSyncedActivityHelper {
 
 		const fakeActivity = new SyncedActivityModel();
 		fakeActivity.id = id;
-		fakeActivity.athleteModel = athleteModel;
+		fakeActivity.athleteSnapshot = athleteSnapshot;
 		fakeActivity.name = name;
 		fakeActivity.type = type;
 		fakeActivity.display_type = type;

@@ -1,1 +1,1 @@
-export * from "./athlete-model.resolver";
+export * from "./athlete-snapshot.resolver";
