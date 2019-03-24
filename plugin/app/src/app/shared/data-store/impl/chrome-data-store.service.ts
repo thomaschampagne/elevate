@@ -15,9 +15,9 @@ export class ChromeDataStore<T> extends DataStore<T> {
 
 		return new Promise<T[] | T>((resolve: Function, reject: Function) => {
 
-			const fetchKeys = (storageLocation.key) ? storageLocation.key : null; // If no key, 'null' fetchKeys will ask for all the storage
+			const fetchKey = (storageLocation.key) ? storageLocation.key : null; // If no key, 'null' fetchKey will ask for all the storage
 
-			this.chromeLocalStorageArea().get(fetchKeys, (result: T[] | T) => {
+			this.chromeLocalStorageArea().get(fetchKey, (result: T[] | T) => {
 				const error = this.getLastError();
 				if (error) {
 					reject(error.message);
@@ -49,7 +49,7 @@ export class ChromeDataStore<T> extends DataStore<T> {
 			} else {
 				saveQuery = value;
 			}
-
+			//
 			this.chromeLocalStorageArea().set(saveQuery, () => {
 				const error = this.getLastError();
 				if (error) {
@@ -62,6 +62,29 @@ export class ChromeDataStore<T> extends DataStore<T> {
 			});
 		});
 	}
+
+	public getById(storageLocation: StorageLocationModel, id: string): Promise<T> {
+
+		return this.fetch(storageLocation, null).then((dataStore: T[] | T) => {
+
+			let result: T = null;
+
+			if (_.isArray(dataStore)) {
+				const predicate = {};
+				predicate[storageLocation.collectionFieldId] = id;
+				result = <T> _.find(dataStore, predicate);
+			} else {
+				result = dataStore;
+			}
+
+			return <Promise<T>> Promise.resolve((result) ? result : null);
+		});
+	}
+
+	public put(storageLocation: StorageLocationModel, value: T): Promise<T> {
+		return undefined;
+	}
+
 
 	/**
 	 *

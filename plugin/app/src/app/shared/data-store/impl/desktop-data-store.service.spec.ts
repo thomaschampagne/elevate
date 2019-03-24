@@ -6,6 +6,7 @@ import * as _ from "lodash";
 import { LoggerService } from "../../services/logging/logger.service";
 import { ConsoleLoggerService } from "../../services/logging/console-logger.service";
 import { StorageType } from "../storage-type.enum";
+import Spy = jasmine.Spy;
 
 describe("DesktopDataStore", () => {
 
@@ -185,6 +186,34 @@ describe("DesktopDataStore", () => {
 			});
 		});
 
+		it("should get by id a FakeAthlete object", (done: Function) => {
+
+			// Given
+			const id = "fakeAthlete";
+			const expectedFakeAthlete: FakeAthlete = <FakeAthlete> _.find(FAKE_EXISTING_DOCUMENTS, {_id: id});
+
+			// When
+			const promise: Promise<FakeAthlete> = <Promise<FakeAthlete>> desktopDataStore.getById(FAKE_ATHLETE_STORAGE_LOCATION, id);
+
+			// Then
+			promise.then((fakeAthlete: FakeAthlete) => {
+
+				expect(fakeAthlete._id).toEqual(expectedFakeAthlete._id);
+				expect(fakeAthlete.name).toEqual(expectedFakeAthlete.name);
+				expect(fakeAthlete.age).toEqual(expectedFakeAthlete.age);
+				expect(fakeAthlete.fakeSettings.length).toEqual(expectedFakeAthlete.fakeSettings.length);
+				expect(fakeAthlete.$doctype).toEqual(expectedFakeAthlete.$doctype);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+		});
+
+
 		it("should save and replace a FakeAthlete object", (done: Function) => {
 
 			// Given
@@ -218,11 +247,18 @@ describe("DesktopDataStore", () => {
 		it("should save a FakeAthlete when object is missing in database", (done: Function) => {
 
 			// Given
-			const defaultFakeAthlete: FakeAthlete = new FakeAthlete("Your Name", 30, []);
-			const newFakeAthlete: FakeAthlete = <FakeAthlete> _.cloneDeep(_.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"}));
-			newFakeAthlete.age = 99;
-			newFakeAthlete.name = "Fake name";
-			newFakeAthlete.fakeSettings = [new FakeSettings(99, 99, 99)];
+			const expectedDocType = "fakeAthlete";
+			const defaultFakeAthlete: FakeAthlete = {
+				name: "Your Name",
+				age: 30,
+				fakeSettings: [new FakeSettings(11, 11, 11)]
+			};
+
+			const newFakeAthlete: FakeAthlete = {
+				name: "Fake name",
+				age: 99,
+				fakeSettings: [new FakeSettings(99, 99, 99)]
+			};
 
 			const promiseMissing = desktopDataStore.database.get(FAKE_ATHLETE_STORAGE_LOCATION.key).then(fakeAthlete => {
 				return desktopDataStore.database.remove(fakeAthlete);
@@ -240,7 +276,7 @@ describe("DesktopDataStore", () => {
 				expect(savedFakeAthlete.name).toEqual(newFakeAthlete.name);
 				expect(savedFakeAthlete.age).toEqual(newFakeAthlete.age);
 				expect(savedFakeAthlete.fakeSettings.length).toEqual(newFakeAthlete.fakeSettings.length);
-				expect(savedFakeAthlete.$doctype).toEqual(newFakeAthlete.$doctype);
+				expect(savedFakeAthlete.$doctype).toEqual(expectedDocType);
 
 				done();
 
@@ -250,6 +286,75 @@ describe("DesktopDataStore", () => {
 				done();
 			});
 
+		});
+
+		it("should put (create) a FakeAthlete as object", (done: Function) => {
+
+			// Given
+			const expectedDocId = "fakeAthlete";
+			const docType = "fakeAthlete";
+			const newFakeAthlete: FakeAthlete = {name: "Jean kevin", age: 30, fakeSettings: []};
+
+			const promiseMissing = desktopDataStore.database.get(FAKE_ATHLETE_STORAGE_LOCATION.key).then(fakeAthlete => {
+				return desktopDataStore.database.remove(fakeAthlete);
+			});
+
+			// When
+			const promise: Promise<FakeAthlete> = promiseMissing.then(() => {
+				return <Promise<FakeAthlete>> desktopDataStore.put(FAKE_ATHLETE_STORAGE_LOCATION, newFakeAthlete);
+			});
+
+			// Then
+			promise.then((fakeAthlete: FakeAthlete) => {
+
+				expect(fakeAthlete._id).toEqual(expectedDocId);
+				expect(fakeAthlete.name).toEqual(newFakeAthlete.name);
+				expect(fakeAthlete.age).toEqual(newFakeAthlete.age);
+				expect(fakeAthlete.fakeSettings).toEqual(newFakeAthlete.fakeSettings);
+				expect(fakeAthlete.$doctype).toEqual(docType);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+		});
+
+		it("should put (update) a FakeAthlete as object", (done: Function) => {
+
+			// Given
+			const docId = "fakeAthlete";
+			const docType = "fakeAthlete";
+			const updatedFakeAthlete: FakeAthlete = {_id: docId, name: "Jean kevin", age: 30, fakeSettings: [], $doctype: docType};
+
+			const promiseSetRevision = desktopDataStore.database.get(docId).then(doc => {
+				updatedFakeAthlete[DesktopDataStore.POUCH_DB_REV_FIELD] = doc._rev;
+				return Promise.resolve();
+			});
+
+			// When
+			const promise: Promise<FakeAthlete> = promiseSetRevision.then(() => {
+				return desktopDataStore.put(FAKE_ACTIVITIES_STORAGE_LOCATION, updatedFakeAthlete);
+			});
+
+			// Then
+			promise.then((fakeAthlete: FakeAthlete) => {
+
+				expect(fakeAthlete._id).toEqual(docId);
+				expect(fakeAthlete.name).toEqual(updatedFakeAthlete.name);
+				expect(fakeAthlete.age).toEqual(updatedFakeAthlete.age);
+				expect(fakeAthlete.fakeSettings).toEqual(updatedFakeAthlete.fakeSettings);
+				expect(fakeAthlete.$doctype).toEqual(docType);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
 		});
 
 		it("should upsert property of a FakeAthlete object", (done: Function) => {
@@ -351,40 +456,6 @@ describe("DesktopDataStore", () => {
 			});
 		});
 
-		it("should fetch and sort a FakeActivity collection", (done: Function) => {
-
-			// Given
-			const expectedFakeActivities: FakeActivity[] = <FakeActivity[]> _.filter(FAKE_EXISTING_DOCUMENTS, (doc: FakeDoc) => {
-				return doc._id.match("fakeSyncedActivity:") !== null;
-			});
-
-			const findRequest = {
-				selector: {
-					name: {$gte: null}
-				},
-				sort: ["name"]
-			};
-
-			// When
-			const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>> desktopDataStore.fetch(FAKE_ACTIVITIES_STORAGE_LOCATION, null, findRequest);
-
-			// Then
-			promise.then((fakeActivities: FakeActivity[]) => {
-
-				expect(fakeActivities.length).toEqual(3);
-				expect(fakeActivities[0].name).toEqual(expectedFakeActivities[2].name);
-				expect(fakeActivities[1].name).toEqual(expectedFakeActivities[1].name);
-				expect(fakeActivities[2].name).toEqual(expectedFakeActivities[0].name);
-
-				done();
-
-			}, error => {
-				expect(error).toBeNull();
-				expect(false).toBeTruthy("Whoops! I should not be here!");
-				done();
-			});
-		});
-
 		it("should fetch default storage value when FakeActivity collection is missing in database", (done: Function) => {
 
 			// Given
@@ -392,8 +463,9 @@ describe("DesktopDataStore", () => {
 			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
 				const fakeAthlete = _.cloneDeep(_.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"}));
 				desktopDataStore.setup();
-				desktopDataStore.database.put(fakeAthlete);
-				return Promise.resolve();
+				desktopDataStore.database.put(fakeAthlete).then(() => {
+					return Promise.resolve();
+				});
 			});
 
 			// When
@@ -415,6 +487,107 @@ describe("DesktopDataStore", () => {
 			});
 		});
 
+		it("should get by id a FakeActivity into a collection", (done: Function) => {
+
+			// Given
+			const id = "fakeSyncedActivity:00002";
+			const expectedDocType = "fakeSyncedActivity";
+			const expectedFakeActivity: FakeActivity = <FakeActivity> _.find(FAKE_EXISTING_DOCUMENTS, {_id: id});
+
+			// When
+			const promise: Promise<FakeActivity> = desktopDataStore.getById(FAKE_ACTIVITIES_STORAGE_LOCATION, id);
+
+			// Then
+			promise.then((fakeActivity: FakeActivity) => {
+
+				expect(fakeActivity._id).toEqual(expectedFakeActivity._id);
+				expect(fakeActivity.name).toEqual(expectedFakeActivity.name);
+				expect(fakeActivity.type).toEqual(expectedFakeActivity.type);
+				expect(fakeActivity.$doctype).toEqual(expectedDocType);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+		});
+
+		it("should put (create) a FakeActivity into collection", (done: Function) => {
+
+			// Given
+			const expectedDocType = "fakeSyncedActivity";
+			const id = "00009";
+			const expectedDocId = "fakeSyncedActivity:" + id;
+			const newFakeActivity: FakeActivity = {activityId: id, name: "New activity !", type: "Ride"};
+
+			// When
+			const promise: Promise<FakeActivity> = desktopDataStore.put(FAKE_ACTIVITIES_STORAGE_LOCATION, newFakeActivity);
+
+			// Then
+			promise.then((fakeActivity: FakeActivity) => {
+
+				expect(fakeActivity._id).toEqual(expectedDocId);
+				expect(fakeActivity.name).toEqual(newFakeActivity.name);
+				expect(fakeActivity.activityId).toEqual(newFakeActivity.activityId);
+				expect(fakeActivity.type).toEqual(newFakeActivity.type);
+				expect(fakeActivity.$doctype).toEqual(expectedDocType);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+		});
+
+		it("should put (update) a FakeActivity into collection", (done: Function) => {
+
+			// Given
+			const docType = "fakeSyncedActivity";
+			const id = "00001";
+			const docId = "fakeSyncedActivity:" + id;
+			const updatedFakeActivity: FakeActivity = {
+				_id: docId,
+				activityId: id,
+				name: "Updated activity !",
+				type: "Run",
+				$doctype: docType
+			};
+
+			const putSpy = spyOn(desktopDataStore.database, "put").and.callThrough();
+
+			const promiseSetRevision = desktopDataStore.database.get(docId).then(doc => {
+				updatedFakeActivity[DesktopDataStore.POUCH_DB_REV_FIELD] = doc._rev;
+				return Promise.resolve();
+			});
+
+			// When
+			const promise: Promise<FakeActivity> = promiseSetRevision.then(() => {
+				return desktopDataStore.put(FAKE_ACTIVITIES_STORAGE_LOCATION, updatedFakeActivity);
+			});
+
+			// Then
+			promise.then((fakeActivity: FakeActivity) => {
+
+				expect(fakeActivity._id).toEqual(docId);
+				expect(fakeActivity.name).toEqual(updatedFakeActivity.name);
+				expect(fakeActivity.activityId).toEqual(updatedFakeActivity.activityId);
+				expect(fakeActivity.type).toEqual(updatedFakeActivity.type);
+				expect(fakeActivity.$doctype).toEqual(docType);
+				expect(putSpy).toHaveBeenCalledWith(updatedFakeActivity);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+		});
+
 		it("should save and replace an existing FakeActivity collection", (done: Function) => {
 
 			// Given
@@ -425,17 +598,23 @@ describe("DesktopDataStore", () => {
 				{activityId: "00005", name: "Marathon", type: "Run"}
 			];
 
-			const expectedExistRenamedActivity = <FakeActivity> _.find(newFakeActivities, activity => {
+			const expectedExistRenamedActivity = <FakeActivity> _.find(_.cloneDeep(newFakeActivities), activity => {
 				return activity.activityId === "00003";
 			});
 			expectedExistRenamedActivity._id = "fakeSyncedActivity:00003";
 			expectedExistRenamedActivity.$doctype = "fakeSyncedActivity";
 
-			const expectedExistActivity = <FakeActivity> _.find(newFakeActivities, activity => {
+			const expectedExistActivity = <FakeActivity> _.find(_.cloneDeep(newFakeActivities), activity => {
 				return activity.activityId === "00004";
 			});
 			expectedExistActivity._id = "fakeSyncedActivity:00004";
 			expectedExistActivity.$doctype = "fakeSyncedActivity";
+
+			const expectedExistActivity2 = <FakeActivity> _.find(_.cloneDeep(newFakeActivities), activity => {
+				return activity.activityId === "00005";
+			});
+			expectedExistActivity2._id = "fakeSyncedActivity:00005";
+			expectedExistActivity2.$doctype = "fakeSyncedActivity";
 
 
 			// When
@@ -447,11 +626,11 @@ describe("DesktopDataStore", () => {
 				expect(results).not.toBeNull();
 
 				// Test new person added
-				const fakeActivity: FakeActivity = _.find(results, {_id: "fakeSyncedActivity:00004"});
-				expect(fakeActivity._id).toEqual(expectedExistActivity._id);
-				expect(fakeActivity.name).toEqual(expectedExistActivity.name);
-				expect(fakeActivity.type).toEqual(expectedExistActivity.type);
-				expect(fakeActivity.$doctype).toEqual(expectedExistActivity.$doctype);
+				const addedFakeActivity_1: FakeActivity = _.find(results, {_id: "fakeSyncedActivity:00004"});
+				expect(addedFakeActivity_1._id).toEqual(expectedExistActivity._id);
+				expect(addedFakeActivity_1.name).toEqual(expectedExistActivity.name);
+				expect(addedFakeActivity_1.type).toEqual(expectedExistActivity.type);
+				expect(addedFakeActivity_1.$doctype).toEqual(expectedExistActivity.$doctype);
 
 				const fakeRenamedActivity: FakeActivity = _.find(results, {_id: "fakeSyncedActivity:00003"});
 				expect(fakeRenamedActivity._id).toEqual(expectedExistRenamedActivity._id);
@@ -462,6 +641,12 @@ describe("DesktopDataStore", () => {
 				// Test person removed
 				const unknownActivity = _.find(results, {_id: "fakeSyncedActivity:00001"});
 				expect(unknownActivity).toBeUndefined();
+
+				const addedFakeActivity_2: FakeActivity = _.find(results, {_id: "fakeSyncedActivity:00005"});
+				expect(addedFakeActivity_2._id).toEqual(expectedExistActivity2._id);
+				expect(addedFakeActivity_2.name).toEqual(expectedExistActivity2.name);
+				expect(addedFakeActivity_2.type).toEqual(expectedExistActivity2.type);
+				expect(addedFakeActivity_2.$doctype).toEqual(expectedExistActivity2.$doctype);
 
 				expect(results.length).toEqual(expectedLength);
 
@@ -553,8 +738,9 @@ describe("DesktopDataStore", () => {
 			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
 				const fakeAthlete = _.cloneDeep(_.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"}));
 				desktopDataStore.setup();
-				desktopDataStore.database.put(fakeAthlete);
-				return Promise.resolve();
+				desktopDataStore.database.put(fakeAthlete).then(() => {
+					return Promise.resolve();
+				});
 			});
 
 			// When
@@ -572,6 +758,28 @@ describe("DesktopDataStore", () => {
 				done();
 			});
 
+		});
+
+		it("should get by id a FakeDateTime as single value", (done: Function) => {
+
+			// Given
+			const id = "fakeDateTime";
+			const expectedFakeDateTime: FakeDateTime = <FakeDateTime> _.find(FAKE_EXISTING_DOCUMENTS, {_id: id});
+
+			// When
+			const promise: Promise<number> = desktopDataStore.getById(FAKE_DATE_TIME_STORAGE_LOCATION, id);
+
+			// Then
+			promise.then((fakeDateTime: number) => {
+
+				expect(fakeDateTime).toEqual(expectedFakeDateTime.$value);
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
 		});
 
 		it("should save and replace a FakeDateTime single value", (done: Function) => {
@@ -601,12 +809,21 @@ describe("DesktopDataStore", () => {
 
 			// Given
 			const newDateTime = _.random(10000);
+			const expectedCalledWith: FakeDateTime = {
+				_id: FAKE_DATE_TIME_STORAGE_LOCATION.key,
+				$doctype: FAKE_DATE_TIME_STORAGE_LOCATION.key,
+				$value: newDateTime
+			};
+
+			let putSpy: Spy;
 
 			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
 				const fakeAthlete = _.cloneDeep(_.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"}));
 				desktopDataStore.setup();
-				desktopDataStore.database.put(fakeAthlete);
-				return Promise.resolve();
+				desktopDataStore.database.put(fakeAthlete).then(() => {
+					putSpy = spyOn(desktopDataStore.database, "put").and.callThrough();
+					return Promise.resolve();
+				});
 			});
 
 			// When
@@ -617,6 +834,7 @@ describe("DesktopDataStore", () => {
 			// Then
 			promise.then((fakeDateTime: number) => {
 				expect(fakeDateTime).toEqual(newDateTime);
+				expect(putSpy).toHaveBeenCalledWith(expectedCalledWith);
 				done();
 			}, error => {
 				expect(error).toBeNull();
@@ -624,6 +842,81 @@ describe("DesktopDataStore", () => {
 				done();
 			});
 
+		});
+
+		it("should put (create) a FakeDateTime as single value", (done: Function) => {
+
+			// Given
+			const newDateTime = _.random(10000);
+			const expectedCalledWith: FakeDateTime = {
+				_id: FAKE_DATE_TIME_STORAGE_LOCATION.key,
+				$doctype: FAKE_DATE_TIME_STORAGE_LOCATION.key,
+				$value: newDateTime
+			};
+
+			let putSpy: Spy;
+
+			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
+				desktopDataStore.setup();
+				putSpy = spyOn(desktopDataStore.database, "put").and.callThrough();
+				return Promise.resolve();
+			});
+
+			// When
+			const promise: Promise<number> = promiseMissingCollection.then(() => {
+				return desktopDataStore.put(FAKE_DATE_TIME_STORAGE_LOCATION, newDateTime);
+			});
+
+			// Then
+			promise.then((fakeDateTime: number) => {
+				expect(fakeDateTime).toEqual(newDateTime);
+				expect(putSpy).toHaveBeenCalledWith(expectedCalledWith);
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+		});
+
+		it("should put (update) a FakeDateTime as single value", (done: Function) => {
+
+			// Given
+			const newDateTime = 666;
+			const docId = FAKE_DATE_TIME_STORAGE_LOCATION.key;
+			const expectedCalledWith: FakeDateTime = {
+				_id: docId,
+				$doctype: docId,
+				$value: newDateTime
+			};
+
+			let putSpy: Spy;
+
+			const promiseSetRevision = desktopDataStore.database.get(docId).then(doc => {
+				expectedCalledWith[DesktopDataStore.POUCH_DB_REV_FIELD] = doc._rev;
+				putSpy = spyOn(desktopDataStore.database, "put").and.callThrough();
+				return Promise.resolve();
+			});
+
+			// When
+			const promise: Promise<number> = promiseSetRevision.then(() => {
+				return desktopDataStore.put(FAKE_DATE_TIME_STORAGE_LOCATION, newDateTime);
+			});
+
+			// Then
+			promise.then((fakeDateTime: number) => {
+
+				expect(fakeDateTime).toEqual(newDateTime);
+				expect(putSpy).toHaveBeenCalledWith(expectedCalledWith);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
 		});
 
 		it("should reject upsert of a FakeDateTime value", (done: Function) => {
@@ -674,4 +967,61 @@ describe("DesktopDataStore", () => {
 
 	});
 
+	it("should return null when get by id a has no results (collection, object & single value)", (done: Function) => {
+
+		// Given
+		const id = "fakeSyncedActivity:00010";
+
+		// When
+		const promise: Promise<FakeActivity> = desktopDataStore.getById(FAKE_ACTIVITIES_STORAGE_LOCATION, id);
+
+		// Then
+		promise.then((fakeActivity: FakeActivity) => {
+
+			expect(fakeActivity).toEqual(null);
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			expect(false).toBeTruthy("Whoops! I should not be here!");
+			done();
+		});
+	});
+
 });
+
+/*
+TODO Usefull for later
+it("should fetch and sort a FakeActivity collection", (done: Function) => {
+
+	// Given
+	const expectedFakeActivities: FakeActivity[] = <FakeActivity[]> _.filter(FAKE_EXISTING_DOCUMENTS, (doc: FakeDoc) => {
+		return doc._id.match("fakeSyncedActivity:") !== null;
+	});
+
+	const findRequest = {
+		selector: {
+			name: {$gte: null}
+		},
+		sort: ["name"]
+	};
+
+	// When
+	const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>> desktopDataStore.fetch(FAKE_ACTIVITIES_STORAGE_LOCATION, null, findRequest);
+
+	// Then
+	promise.then((fakeActivities: FakeActivity[]) => {
+
+		expect(fakeActivities.length).toEqual(3);
+		expect(fakeActivities[0].name).toEqual(expectedFakeActivities[2].name);
+		expect(fakeActivities[1].name).toEqual(expectedFakeActivities[1].name);
+		expect(fakeActivities[2].name).toEqual(expectedFakeActivities[0].name);
+
+		done();
+
+	}, error => {
+		expect(error).toBeNull();
+		expect(false).toBeTruthy("Whoops! I should not be here!");
+		done();
+	});
+});*/

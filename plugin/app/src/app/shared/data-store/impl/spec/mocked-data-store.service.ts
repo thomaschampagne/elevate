@@ -35,6 +35,14 @@ export class MockedDataStore<T> extends DataStore<T> {
 		return this.fetch(storageLocation, defaultStorageValue);
 	}
 
+	public getById(storageLocation: StorageLocationModel, id: string): Promise<T> {
+		return undefined;
+	}
+
+	public put(storageLocation: StorageLocationModel, value: T): Promise<T> {
+		return undefined;
+	}
+
 	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
 
 		return this.fetch(storageLocation, defaultStorageValue).then((dataStore: T[] | T) => {

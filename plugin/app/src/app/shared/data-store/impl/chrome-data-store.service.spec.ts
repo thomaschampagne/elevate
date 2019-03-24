@@ -16,6 +16,7 @@ describe("ChromeDataStore", () => {
 	}
 
 	class Foo extends Object {
+		id: string;
 		bar: string | boolean;
 		nested?: DreamInception;
 	}
@@ -107,6 +108,7 @@ describe("ChromeDataStore", () => {
 		browserStorageLocalSpy = spyOn(chromeDataStore, "chromeLocalStorageArea").and.callFake(chromeStorageBehaviour);
 		CHROME_STORAGE_STUB = {}; // Erase storage
 		DEFAULT_FOO = {
+			id: "0001",
 			bar: "I am the default one"
 		};
 
@@ -126,6 +128,7 @@ describe("ChromeDataStore", () => {
 
 		// Given
 		const expectedData: Foo[] = [{
+			id: "0001",
 			bar: "john doe"
 		}];
 
@@ -177,6 +180,7 @@ describe("ChromeDataStore", () => {
 		// Given
 		CHROME_STORAGE_STUB = {};
 		const defaultValue: Foo = {
+			id: "0001",
 			bar: "john doe"
 		};
 
@@ -201,6 +205,7 @@ describe("ChromeDataStore", () => {
 
 		// Given
 		const expectedData: Foo = {
+			id: "0001",
 			bar: "john doe"
 		};
 
@@ -230,6 +235,7 @@ describe("ChromeDataStore", () => {
 
 		// Given
 		const defaultValue: Foo = {
+			id: "0001",
 			bar: "Default Bar"
 		};
 
@@ -258,6 +264,7 @@ describe("ChromeDataStore", () => {
 		CHROME_STORAGE_STUB[storageLocation.key] = null;
 
 		const toBeSaved: Foo[] = [{
+			id: "0001",
 			bar: "john doe"
 		}];
 
@@ -288,6 +295,7 @@ describe("ChromeDataStore", () => {
 
 		// Given
 		const toBeSaved: Foo = {
+			id: "0001",
 			bar: "john doe"
 		};
 
@@ -316,6 +324,7 @@ describe("ChromeDataStore", () => {
 
 		// Given
 		const saveData: Foo[] = [{
+			id: "0001",
 			bar: "john doe"
 		}];
 
@@ -341,6 +350,7 @@ describe("ChromeDataStore", () => {
 
 		// Given
 		const currentFoo: Foo = {
+			id: "0001",
 			bar: "sheldon"
 		};
 
@@ -374,6 +384,7 @@ describe("ChromeDataStore", () => {
 
 		// Given
 		const currentFoo: Foo = {
+			id: "0001",
 			bar: false
 		};
 
@@ -407,6 +418,7 @@ describe("ChromeDataStore", () => {
 
 		// Given
 		const currentFoo: Foo = {
+			id: "0001",
 			bar: "sheldon",
 			nested: {
 				dream0: {
@@ -449,6 +461,7 @@ describe("ChromeDataStore", () => {
 		storageLocation = new StorageLocationModel(); // Override CHROME_STORAGE_STUB location with no key
 
 		const currentFoo: Foo = {
+			id: "0001",
 			bar: "sheldon",
 			nested: {
 				dream0: {
@@ -603,6 +616,90 @@ describe("ChromeDataStore", () => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedAppUsageDetails);
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
+	it("should get by id a Foo into a collection", (done: Function) => {
+
+		// Given
+		const id = "0002";
+		const expectedResult = {
+			id: id,
+			bar: "jean kevin"
+		};
+
+		const expectedData: Foo[] = [{
+			id: "0001",
+			bar: "john doe"
+		}, expectedResult, {
+			id: "0003",
+			bar: "colette sterolle"
+		}];
+
+		storageLocation = {
+			key: "foo",
+			storageType: null,
+			collectionFieldId: "id"
+		};
+
+
+		CHROME_STORAGE_STUB[storageLocation.key] = expectedData;
+
+		// When
+		const promise: Promise<Foo> = chromeDataStore.getById(storageLocation, id);
+
+		// Then
+		promise.then((result: Foo) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(expectedResult);
+			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
+	it("should get by id a Foo as object or property", (done: Function) => {
+
+		// Given
+		const expectedFoo: Foo = {
+			id: "0001",
+			bar: "jean kevin"
+		};
+
+		CHROME_STORAGE_STUB = {
+			other01: {},
+			foo: expectedFoo,
+			other02: {},
+		};
+
+		storageLocation = {
+			key: "foo",
+			storageType: null,
+			collectionFieldId: null
+		};
+
+		const id = "foo";
+
+		// When
+		const promise: Promise<Foo> = chromeDataStore.getById(storageLocation, id);
+
+		// Then
+		promise.then((result: Foo) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(expectedFoo);
+			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
+
 			done();
 
 		}, error => {

@@ -19,6 +19,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 	public static readonly POUCH_DB_ID_FIELD: string = "_id";
 	public static readonly POUCH_DB_ID_LIST_SEPARATOR: string = ":";
+	public static readonly POUCH_DB_DOCTYPE_FIELD: string = "$doctype";
 	public static readonly POUCH_DB_SINGLE_VALUE_FIELD: string = "$value";
 	public static readonly POUCH_DB_DELETED_FIELD: string = "_deleted";
 	public static readonly POUCH_DB_REV_FIELD: string = "_rev";
@@ -170,6 +171,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 						} else {
 							const collectionDocId = storageLocation.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR + _.get(newDoc, storageLocation.collectionFieldId);
 							newDoc[DesktopDataStore.POUCH_DB_ID_FIELD] = collectionDocId;
+							newDoc[DesktopDataStore.POUCH_DB_DOCTYPE_FIELD] = storageLocation.key;
 						}
 						return newDoc;
 					});
@@ -180,10 +182,11 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 				} else if (storageLocation.storageType === StorageType.OBJECT) {
 
-					value[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key;
-
 					if (result[DesktopDataStore.POUCH_DB_REV_FIELD]) {
 						value[DesktopDataStore.POUCH_DB_REV_FIELD] = result[DesktopDataStore.POUCH_DB_REV_FIELD];
+					} else {
+						value[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key;
+						value[DesktopDataStore.POUCH_DB_DOCTYPE_FIELD] = storageLocation.key;
 					}
 
 					promise = this.database.put(value);
@@ -202,12 +205,13 @@ export class DesktopDataStore<T> extends DataStore<T> {
 				let newDoc;
 				if (result.docs[0]) {
 					newDoc = result.docs[0];
-					newDoc[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD] = value;
 				} else {
 					newDoc = {};
 					newDoc[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key;
-					newDoc[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD] = value;
+					newDoc[DesktopDataStore.POUCH_DB_DOCTYPE_FIELD] = storageLocation.key;
 				}
+
+				newDoc[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD] = value;
 
 				return this.database.put(newDoc).then(() => {
 					return this.fetch(storageLocation, defaultStorageValue);
@@ -215,12 +219,80 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 			});
 
-
 		} else {
 			throw new Error("Unknown StorageType");
 		}
 
 		return savePromise;
+	}
+
+	public getById(storageLocation: StorageLocationModel, id: string): Promise<T> {
+
+		return this.database.get(id).then(result => {
+
+			if (storageLocation.storageType === StorageType.SINGLE_VALUE) {
+				return <Promise<T>> Promise.resolve(result[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD]);
+			}
+
+			return <Promise<T>> Promise.resolve(result);
+
+		}, error => {
+
+			if (error.status === 404) { // Not found
+				return Promise.resolve(null);
+			}
+
+			return Promise.reject(error);
+		});
+	}
+
+	public put(storageLocation: StorageLocationModel, value: T): Promise<T> {
+
+		const promisePutDocReady = () => {
+
+			if (storageLocation.storageType === StorageType.COLLECTION || storageLocation.storageType === StorageType.OBJECT) {
+				if (!value[DesktopDataStore.POUCH_DB_ID_FIELD]) { // Create
+
+					if (storageLocation.storageType === StorageType.COLLECTION) {
+						value[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR + _.get(value, storageLocation.collectionFieldId);
+
+					} else if (storageLocation.storageType === StorageType.OBJECT) {
+						value[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key;
+					}
+
+					value[DesktopDataStore.POUCH_DB_DOCTYPE_FIELD] = storageLocation.key;
+				}
+
+				return Promise.resolve(value);
+
+			} else if (storageLocation.storageType === StorageType.SINGLE_VALUE) {
+
+				return this.database.get(storageLocation.key).then(doc => {
+
+					// Just update
+					doc[DesktopDataStore.POUCH_DB_REV_FIELD] = doc[DesktopDataStore.POUCH_DB_REV_FIELD];
+					doc[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD] = value;
+					return Promise.resolve(<T> doc);
+
+				}, error => {
+					if (error.status === 404) { // Not found
+						const newDoc = <T> {}; // Create new doc
+						newDoc[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key;
+						newDoc[DesktopDataStore.POUCH_DB_DOCTYPE_FIELD] = storageLocation.key;
+						newDoc[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD] = value;
+						return Promise.resolve(newDoc);
+					} else {
+						return Promise.reject(error);
+					}
+				});
+			}
+		};
+
+		return promisePutDocReady().then(putDoc => {
+			return this.database.put(putDoc);
+		}).then(result => {
+			return this.getById(storageLocation, result.id);
+		});
 	}
 
 	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
@@ -239,4 +311,5 @@ export class DesktopDataStore<T> extends DataStore<T> {
 			return <Promise<T>> this.save(storageLocation, doc, defaultStorageValue);
 		});
 	}
+
 }

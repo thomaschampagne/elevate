@@ -17,6 +17,7 @@
 		"start:desktop": "npm run clean && npm run build:desktop:runner && npm-run-all --print-label --race --parallel watch:desktop electron:dev",
 		"electron:dev": "run-electron ./dist/desktop.run.js",
 		"electron:build:win64": "npm-run-all clean build:desktop:runner build:desktop@prod && electron-builder build --windows --x64",
+		"electron:build:linux": "npm-run-all clean build:desktop:runner build:desktop@prod && electron-builder build --linux --x64",
 		"----------END-DESKTOP-WIP----------": "----------------------------",
 		"clean": "npm-run-all clean:*",
 		"clean:dist": "node ./node_modules/del-cli/cli.js ./dist/",

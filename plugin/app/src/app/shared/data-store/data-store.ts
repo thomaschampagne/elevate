@@ -27,14 +27,14 @@ export abstract class DataStore<T> {
 	 * @param storageLocation
 	 * @param value
 	 */
-	// TODO abstract put(storageLocation: StorageLocationModel, value: T): Promise<T[] | T>;
+	abstract put(storageLocation: StorageLocationModel, value: T): Promise<T>;
 
 	/**
 	 *
 	 * @param storageLocation
-	 * @param value
+	 * @param id
 	 */
-	// TODO abstract getById(storageLocation: StorageLocationModel, id: string): Promise<T>;
+	abstract getById(storageLocation: StorageLocationModel, id: string): Promise<T>;
 
 	/**
 	 *
