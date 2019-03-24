@@ -708,4 +708,178 @@ describe("ChromeDataStore", () => {
 		});
 	});
 
+	it("should put (create) a Foo into a collection", (done: Function) => {
+
+		// Given
+		const foo: Foo = {
+			id: "0001",
+			bar: "jean kevin"
+		};
+		const expectedStorage = [foo];
+
+		storageLocation = {
+			key: "foo",
+			storageType: null,
+			collectionFieldId: "id"
+		};
+
+		CHROME_STORAGE_STUB[storageLocation.key] = [];
+
+		// When
+		const promise: Promise<Foo> = chromeDataStore.put(storageLocation, foo);
+
+		// Then
+		promise.then((result: Foo) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(foo);
+			expect(CHROME_STORAGE_STUB[storageLocation.key]).toEqual(expectedStorage);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
+	it("should put (create) a Foo as object or property", (done: Function) => {
+
+		// Given
+		const foo: Foo = {
+			id: "0001",
+			bar: "jean kevin"
+		};
+
+		CHROME_STORAGE_STUB = {
+			other01: {},
+			other02: {},
+		};
+
+		const expectedStorage = <any> _.cloneDeep(CHROME_STORAGE_STUB);
+		expectedStorage.foo = foo;
+
+		storageLocation = {
+			key: "foo",
+			storageType: null,
+			collectionFieldId: null
+		};
+
+		// When
+		const promise: Promise<Foo> = chromeDataStore.put(storageLocation, foo);
+
+		// Then
+		promise.then((result: Foo) => {
+
+			// console.log(CHROME_STORAGE_STUB)
+			// console.log(expectedStorage)
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(foo);
+			expect(CHROME_STORAGE_STUB).toEqual(expectedStorage);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
+	it("should put (update) a Foo into a collection", (done: Function) => {
+
+		// Given
+		const foo: Foo = {
+			id: "0001",
+			bar: "jean kevin"
+		};
+
+		const foo2: Foo = {
+			id: "0002",
+			bar: "colette sterolle"
+		};
+
+		const foo3: Foo = {
+			id: "0003",
+			bar: "John doo"
+		};
+
+		const newFoo2 = _.cloneDeep(foo2);
+		newFoo2.bar = "New name"!;
+
+		storageLocation = {
+			key: "foo",
+			storageType: null,
+			collectionFieldId: "id"
+		};
+
+		CHROME_STORAGE_STUB[storageLocation.key] = [foo, foo2, foo3];
+
+		const expectedStorage = [foo, newFoo2, foo3];
+
+		// When
+		const promise: Promise<Foo> = chromeDataStore.put(storageLocation, newFoo2);
+
+		// Then
+		promise.then((result: Foo) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(newFoo2);
+			expect(CHROME_STORAGE_STUB[storageLocation.key]).toEqual(expectedStorage);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
+	it("should put (update) a Foo as object or property", (done: Function) => {
+
+		// Given
+		const foo: Foo = {
+			id: "0001",
+			bar: "jean kevin"
+		};
+
+		CHROME_STORAGE_STUB = {
+			other01: {},
+			foo: foo,
+			other02: {},
+		};
+
+		const newFoo = _.cloneDeep(foo);
+		newFoo.bar = "Robert des plages!";
+
+		const expectedStorage = {
+			other01: {},
+			foo: newFoo,
+			other02: {},
+		};
+
+		storageLocation = {
+			key: "foo",
+			storageType: null,
+			collectionFieldId: null
+		};
+
+		// When
+		const promise: Promise<Foo> = chromeDataStore.put(storageLocation, newFoo);
+
+		// Then
+		promise.then((result: Foo) => {
+
+			expect(result).not.toBeNull();
+			expect(result).toEqual(newFoo);
+			expect(CHROME_STORAGE_STUB).toEqual(expectedStorage);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
 });

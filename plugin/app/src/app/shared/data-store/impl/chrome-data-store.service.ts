@@ -77,12 +77,41 @@ export class ChromeDataStore<T> extends DataStore<T> {
 				result = dataStore;
 			}
 
-			return <Promise<T>> Promise.resolve((result) ? result : null);
+			return Promise.resolve((result) ? result : null);
 		});
 	}
 
 	public put(storageLocation: StorageLocationModel, value: T): Promise<T> {
-		return undefined;
+
+		return this.fetch(storageLocation, null).then((dataStore: T[] | T) => {
+
+			if (_.isArray(dataStore)) {
+				const predicate = {};
+				predicate[storageLocation.collectionFieldId] = value[storageLocation.collectionFieldId];
+				const found = <T> _.find(dataStore, predicate);
+
+				if (found) {
+					const foundIndex = _.indexOf(dataStore, found);
+					dataStore[foundIndex] = value;
+				} else {
+					dataStore.push(value);
+				}
+
+			} else {
+				dataStore = value;
+			}
+
+			return this.save(storageLocation, dataStore, null).then(() => {
+
+				if (_.isArray(dataStore)) {
+					return this.getById(storageLocation, value[storageLocation.collectionFieldId]);
+				} else {
+					return this.fetch(storageLocation, null).then(result => {
+						return <Promise<T>> Promise.resolve(result);
+					});
+				}
+			});
+		});
 	}
 
 
@@ -94,7 +123,6 @@ export class ChromeDataStore<T> extends DataStore<T> {
 	 * @param defaultStorageValue
 	 */
 	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
-
 
 		return this.fetch(storageLocation, defaultStorageValue).then((dataStore: T[] | T) => {
 
