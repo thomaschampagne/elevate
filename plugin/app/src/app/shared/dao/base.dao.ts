@@ -52,6 +52,26 @@ export abstract class BaseDao<T> {
 	}
 
 	/**
+	 * Add or replace
+	 * @param value
+	 */
+	public put(value: T): Promise<T> {
+		return this.checkCompliantDao().then(() => {
+			return this.dataStore.put(this.storageLocation, value);
+		});
+	}
+
+	/**
+	 *
+	 * @param id
+	 */
+	public getById(id: string): Promise<T> {
+		return this.checkCompliantDao().then(() => {
+			return this.dataStore.getById(this.storageLocation, id);
+		});
+	}
+
+	/**
 	 * Update or insert a specific property of data handled at given path (create path if needed)
 	 * @param path key or array of keys to describe the nested path
 	 * @param value
