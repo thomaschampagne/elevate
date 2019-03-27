@@ -48,7 +48,7 @@ function add_selector(selector: JQuery) {
 }
 
 // "appeared" custom filter
-(<any>$).expr[":"].appeared = function (element: HTMLElement) {
+(<any> $).expr[":"].appeared = function (element: HTMLElement) {
 	const $element: JQuery = $(element);
 	if (!$element.is(":visible")) {
 		return false;
