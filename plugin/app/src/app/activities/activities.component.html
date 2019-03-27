@@ -1,8 +1,28 @@
 <!--Loading-->
-<div *ngIf="!initialized">
+<div *ngIf="(!initialized)">
 	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>
-<mat-card>
+
+<mat-card *ngIf="(isSynced === false || hasActivities === false)" class="no-data">
+	<mat-card-title>
+		Synchronise your activities
+	</mat-card-title>
+	<mat-card-content>
+
+		<div>
+			Please synchronize your activities to turn on the feature.
+		</div>
+
+		<div>
+			You can synchronize by clicking on
+			<mat-icon color="primary">sync_disabled</mat-icon>
+			icon in the upper toolbar. The activities will be locally saved in the storage allocated by the extension.
+		</div>
+
+	</mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="(isSynced === true)" [fxHide]="!hasActivities">
 	<div fxLayout="row" fxLayoutAlign="center center" class="mat-subheading-2">
 		<mat-form-field fxFlex="50">
 			<span matPrefix>

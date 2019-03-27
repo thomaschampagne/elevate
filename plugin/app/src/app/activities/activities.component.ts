@@ -11,6 +11,9 @@ import { Parser as Json2CsvParser } from "json2csv";
 import * as moment from "moment";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { LoggerService } from "../shared/services/logging/logger.service";
+import { SyncService } from "../shared/services/sync/sync.service";
+import { SyncState } from "../shared/services/sync/sync-state.enum";
+import { AppError } from "../shared/models/app-error.model";
 import NumberColumn = ActivityColumns.NumberColumn;
 
 @Component({
@@ -20,17 +23,19 @@ import NumberColumn = ActivityColumns.NumberColumn;
 })
 export class ActivitiesComponent implements OnInit {
 
-	constructor(public activityService: ActivityService,
+	constructor(public syncService: SyncService,
+				public activityService: ActivityService,
 				public userSettingsService: UserSettingsService,
 				public appEventsService: AppEventsService,
 				public snackBar: MatSnackBar,
 				public dialog: MatDialog,
 				public logger: LoggerService) {
+		this.hasActivities = null; // Can be null: don't know yet true/false status
 		this.initialized = false;
 	}
 
-	public static readonly LS_SELECTED_COLUMNS: string = "activitiesTable_selectedColumns";
-	public static readonly LS_PAGE_SIZE_PREFERENCE: string = "activitiesTable_pageSize";
+	public static readonly LS_SELECTED_COLUMNS: string = "activities_selectedColumns";
+	public static readonly LS_PAGE_SIZE_PREFERENCE: string = "activities_pageSize";
 
 	public readonly ColumnType = ActivityColumns.ColumnType;
 
@@ -46,8 +51,11 @@ export class ActivitiesComponent implements OnInit {
 	public columnsCategories: ActivityColumns.Category[];
 	public displayedColumns: string[];
 	public isImperial: boolean;
-	public initialized: boolean;
 	public searchText: string;
+
+	public hasActivities: boolean;
+	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
+	public initialized: boolean;
 
 	public static printAthleteSettings(activity: SyncedActivityModel, isImperial: boolean): string {
 
@@ -99,7 +107,18 @@ export class ActivitiesComponent implements OnInit {
 
 	public ngOnInit(): void {
 
-		this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
+		this.syncService.getSyncState().then((syncState: SyncState) => {
+
+			this.isSynced = syncState === SyncState.SYNCED;
+
+			if (!this.isSynced) {
+				this.initialized = true;
+			}
+
+			return (this.isSynced) ? this.userSettingsService.fetch() : Promise.reject(new AppError(AppError.SYNC_NOT_SYNCED,
+				"Not synced. SyncState is: " + SyncState[syncState].toString()));
+
+		}).then((userSettings: UserSettingsModel) => {
 
 			this.isImperial = (userSettings.systemUnit === UserSettingsModel.SYSTEM_UNIT_IMPERIAL_KEY);
 
@@ -145,7 +164,7 @@ export class ActivitiesComponent implements OnInit {
 		this.dataSource = new MatTableDataSource<SyncedActivityModel>();
 		this.dataSource.paginator = this.matPaginator;
 
-		const pageSizePreference = parseInt(localStorage.getItem(ActivitiesComponent.LS_PAGE_SIZE_PREFERENCE));
+		const pageSizePreference = parseInt(localStorage.getItem(ActivitiesComponent.LS_PAGE_SIZE_PREFERENCE), 10);
 		if (!_.isNaN(pageSizePreference)) {
 			this.dataSource.paginator.pageSize = pageSizePreference;
 		}
@@ -172,9 +191,13 @@ export class ActivitiesComponent implements OnInit {
 	public fetchApplyData(): void {
 
 		this.activityService.fetch().then((syncedActivityModels: SyncedActivityModel[]) => {
+
+			this.hasActivities = syncedActivityModels.length > 0;
+
 			this.dataSource.data = _.sortBy(syncedActivityModels, (dayFitnessTrendModel: SyncedActivityModel) => {
 				return dayFitnessTrendModel.id * -1;
 			});
+
 		}).catch(error => {
 			const message = error.toString() + ". Press (F12) to see a more detailed error message in browser console.";
 			this.snackBar.open(message, "Close");
@@ -228,8 +251,8 @@ export class ActivitiesComponent implements OnInit {
 
 	public createColumnsCategories(columns: ActivityColumns.Column<SyncedActivityModel>[]): ActivityColumns.Category[] {
 		return _.map(_.groupBy(columns, "category"),
-			(columns: ActivityColumns.Column<SyncedActivityModel>[], categoryLabel: string) => {
-				return new ActivityColumns.Category(categoryLabel, columns);
+			(columnsGroup: ActivityColumns.Column<SyncedActivityModel>[], categoryLabel: string) => {
+				return new ActivityColumns.Category(categoryLabel, columnsGroup);
 			});
 	}
 
