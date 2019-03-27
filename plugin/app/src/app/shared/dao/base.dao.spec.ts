@@ -106,7 +106,7 @@ describe("BaseDao", () => {
 	it("should fetch data as vector", (done: Function) => {
 
 		// Given,  When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>>baseDao.fetch();
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> baseDao.fetch();
 
 		// Then
 		promise.then(() => {
@@ -128,7 +128,7 @@ describe("BaseDao", () => {
 		});
 
 		// When
-		const promise: Promise<Foo> = <Promise<Foo>>baseDao.fetch();
+		const promise: Promise<Foo> = <Promise<Foo>> baseDao.fetch();
 
 		// Then
 		promise.then(() => {
@@ -149,7 +149,7 @@ describe("BaseDao", () => {
 		}];
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>>baseDao.save(foo);
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> baseDao.save(foo);
 
 		// Then
 		promise.then(() => {

@@ -34,7 +34,7 @@ export class SyncService {
 	 * @returns {Promise<number>}
 	 */
 	public getLastSyncDateTime(): Promise<number> {
-		return (<Promise<number>>this.lastSyncDateTimeDao.fetch());
+		return (<Promise<number>> this.lastSyncDateTimeDao.fetch());
 	}
 
 	/**
@@ -43,7 +43,7 @@ export class SyncService {
 	 * @returns {Promise<number>}
 	 */
 	public saveLastSyncTime(value: number): Promise<number> {
-		return (<Promise<number>>this.lastSyncDateTimeDao.save(value));
+		return (<Promise<number>> this.lastSyncDateTimeDao.save(value));
 	}
 
 	/**

@@ -86,7 +86,7 @@ export class ChromeDataStore<T> extends DataStore<T> {
 			dataStore = _.set(dataStore as Object, path, value) as T;
 
 			return this.save(storageLocation, dataStore, defaultStorageValue).then((dataStoreSaved: T[] | T) => {
-				return Promise.resolve(<T>dataStoreSaved);
+				return Promise.resolve(<T> dataStoreSaved);
 			});
 		});
 	}

@@ -10,9 +10,9 @@ export class Helper {
 	 * @returns {SpeedUnitDataModel}
 	 */
 	public static getSpeedUnitData(measurementPreference: string): SpeedUnitDataModel {
-		const units: string = (measurementPreference == "meters") ? "km" : "mi";
-		const speedUnitPerHour: string = (measurementPreference == "meters") ? "km/h" : "mi/h";
-		const speedUnitFactor: number = (speedUnitPerHour == "km/h") ? 1 : Constant.KM_TO_MILE_FACTOR;
+		const units: string = (measurementPreference === "meters") ? "km" : "mi";
+		const speedUnitPerHour: string = (measurementPreference === "meters") ? "km/h" : "mi/h";
+		const speedUnitFactor: number = (speedUnitPerHour === "km/h") ? 1 : Constant.KM_TO_MILE_FACTOR;
 
 		const speedUnitData: SpeedUnitDataModel = {
 			speedUnitPerHour,
@@ -110,8 +110,8 @@ export class Helper {
 	public static formatNumber(n: any, c?: any, d?: any, t?: any): string {
 
 		c = isNaN(c = Math.abs(c)) ? 2 : c,
-			d = d == undefined ? "." : d,
-			t = t == undefined ? "," : t;
+			d = d === undefined ? "." : d,
+			t = t === undefined ? "," : t;
 
 		const s: any = n < 0 ? "-" : "";
 
@@ -163,11 +163,11 @@ export class Helper {
 	}
 
 	public static safeMax(a: number, b: number): number {
-		return a == null ? b : Math.max(a, b);
+		return a === null ? b : Math.max(a, b);
 	}
 
 	public static safeMin(a: number, b: number): number {
-		return a == null ? b : Math.min(a, b);
+		return a === null ? b : Math.min(a, b);
 	}
 
 	public static convertMetersPerSecondsToKph(meterPerSeconds: number): number {

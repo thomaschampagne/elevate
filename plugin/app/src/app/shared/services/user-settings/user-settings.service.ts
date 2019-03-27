@@ -63,7 +63,7 @@ export class UserSettingsService {
 	 * @returns {Promise<UserSettingsModel>}
 	 */
 	public resetZones(): Promise<UserSettingsModel> {
-		const defaultZones = (<UserSettingsModel>this.userSettingsDao.getDefaultStorageValue()).zones;
+		const defaultZones = (<UserSettingsModel> this.userSettingsDao.getDefaultStorageValue()).zones;
 		return this.saveProperty<UserZonesModel>(["zones"], defaultZones);
 	}
 }
