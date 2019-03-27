@@ -2,6 +2,22 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.11.0",
+		date: "2019-03-30",
+		message: "New \"Activities\" menu in Elevate App: this feature lists all your activities with ALL EXTENDED STATS (+ spreadsheet export feature).",
+		hotFixes: [],
+		features: [
+			"Added new \"Activities\" menu in Elevate App: this feature lists activities with ALL EXTENDED STATS (+ spreadsheet export feature)",
+			"Forced use of \"Dated Athlete Settings\" over \"Single Athlete Settings\". Indeed having \"Single Athlete Settings\" don't make sense since athlete physiological attributes evolve over time.",
+		],
+		isPatch: false,
+		fixes: [
+			"Improve user's location request only when the \"global heat map\" is requested.",
+			"[Technical] Implemented a new improved logging service into Elevate App.",
+			"[Technical] Upgraded Angular & others npm libraries."
+		]
+	},
+	{
 		version: "6.10.2",
 		date: "2019-03-17",
 		message: "👨‍⚕️💉 Fixed some syncing errors + Year progressions not displayed in some cases + Restored activity summary stats panel. <u>V6.10 Reminder</u>: Analyze your training volume variations and intensity with the new \"Rolling\" mode available in \"Year progressions\".",
