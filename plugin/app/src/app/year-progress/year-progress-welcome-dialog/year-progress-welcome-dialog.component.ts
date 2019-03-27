@@ -43,7 +43,7 @@ import { MatDialogRef } from "@angular/material";
 					</mat-checkbox>
 				</div>
 				<div fxFlex>
-					<button mat-button mat-dialog-close color="primary" (click)="onGotIt()">Got it</button>
+					<button mat-stroked-button mat-dialog-close color="primary" (click)="onGotIt()">Got it</button>
 				</div>
 			</div>
 		</mat-dialog-actions>

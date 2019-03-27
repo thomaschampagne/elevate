@@ -114,6 +114,7 @@ export class AppComponent implements OnInit, OnDestroy {
 				public sanitizer: DomSanitizer,
 				public appEventsService: AppEventsService) {
 
+		this.syncState = null;
 		this.registerCustomIcons();
 
 	}
