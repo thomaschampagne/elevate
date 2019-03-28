@@ -76,7 +76,7 @@ export class AthleteService {
 	 */
 	public save(athleteModel: AthleteModel): Promise<AthleteModel> {
 		return this.validate(athleteModel.datedAthleteSettings).then(() => {
-			return (<Promise<AthleteModel>>this.athleteModelDao.save(athleteModel));
+			return (<Promise<AthleteModel>> this.athleteModelDao.save(athleteModel));
 		});
 	}
 

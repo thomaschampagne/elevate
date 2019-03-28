@@ -36,8 +36,8 @@
 
 			<span class="toolbar-spacer"></span>
 
-			<ng-container>
-				<button mat-button color="primary" [matMenuTriggerFor]="syncMenu">
+			<ng-container *ngIf="(syncState !== null)">
+				<button mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
 					<mat-icon *ngIf="(syncState === SyncState.NOT_SYNCED)">
 						sync_disabled
 					</mat-icon>
