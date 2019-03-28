@@ -86,7 +86,7 @@
 					<ng-container *ngIf="column.type === ColumnType.TEXT">
 						{{column.print(activity, column.id)}}
 					</ng-container>
-					<ng-container *ngIf="column.type === ColumnType.STRAVA_ACTIVITY_LINK">
+					<ng-container *ngIf="column.type === ColumnType.ACTIVITY_LINK">
 						<a href="https://www.strava.com/activities/{{activity.id}}"
 						   target="_blank">{{column.print(activity, column.id)}}</a>
 					</ng-container>
@@ -97,6 +97,12 @@
 						<button *ngIf="activity.id" mat-icon-button color="primary"
 								(click)="onViewAthleteSettings(activity)">
 							<mat-icon>accessibility</mat-icon>
+						</button>
+					</ng-container>
+					<ng-container *ngIf="column.type === ColumnType.ACTIVITY_DELETE">
+						<button *ngIf="activity.id" mat-icon-button color="primary"
+								(click)="onDeleteActivity(activity)">
+							<mat-icon>delete</mat-icon>
 						</button>
 					</ng-container>
 				</mat-cell>
