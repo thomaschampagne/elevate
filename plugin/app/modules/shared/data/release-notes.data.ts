@@ -13,6 +13,7 @@ export let releaseNotesData: ReleaseNoteModel[] = [
 		isPatch: false,
 		fixes: [
 			"Improve user's location request only when the \"global heat map\" is requested.",
+			"Fix wrong odo displayed in russian only",
 			"[Technical] Implemented a new improved logging service into Elevate App.",
 			"[Technical] Upgraded Angular & others npm libraries."
 		]
