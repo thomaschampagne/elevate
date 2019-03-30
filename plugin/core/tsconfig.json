@@ -31,6 +31,9 @@
 			],
 			"@elevate/shared/exceptions": [
 				"../app/modules/shared/exceptions/"
+			],
+			"@elevate/shared/tools": [
+				"../app/modules/shared/tools/"
 			]
 		},
 		"skipLibCheck": true

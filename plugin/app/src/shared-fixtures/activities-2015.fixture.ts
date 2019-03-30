@@ -28,7 +28,7 @@ import { SyncedActivityModel } from "@elevate/shared/models";
  * @type {SyncedActivityModel[]}
  */
 export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityModel[]> [{
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -149,7 +149,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Run"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -288,7 +288,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -419,7 +419,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -558,7 +558,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -644,7 +644,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "AlpineSki"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -734,7 +734,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "AlpineSki"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -820,7 +820,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "AlpineSki"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -937,7 +937,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Run"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -1043,7 +1043,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -1182,7 +1182,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -1272,7 +1272,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "AlpineSki"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -1403,7 +1403,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -1546,7 +1546,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -1685,7 +1685,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -1824,7 +1824,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -1955,7 +1955,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -2098,7 +2098,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -2241,7 +2241,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -2372,7 +2372,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -2511,7 +2511,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -2650,7 +2650,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -2789,7 +2789,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -2920,7 +2920,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -3051,7 +3051,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -3182,7 +3182,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -3321,7 +3321,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -3464,7 +3464,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -3603,7 +3603,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -3742,7 +3742,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -3772,7 +3772,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Swim"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -3903,7 +3903,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -4042,7 +4042,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -4173,7 +4173,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -4304,7 +4304,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -4435,7 +4435,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -4566,7 +4566,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -4705,7 +4705,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -4844,7 +4844,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -4983,7 +4983,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -5114,7 +5114,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -5253,7 +5253,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -5396,7 +5396,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -5521,7 +5521,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -5652,7 +5652,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -5783,7 +5783,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -5912,7 +5912,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -6033,7 +6033,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -6164,7 +6164,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -6307,7 +6307,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -6446,7 +6446,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -6577,7 +6577,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -6716,7 +6716,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -6855,7 +6855,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -6986,7 +6986,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -7117,7 +7117,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -7256,7 +7256,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -7387,7 +7387,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -7526,7 +7526,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -7665,7 +7665,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -7804,7 +7804,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -7943,7 +7943,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -8082,7 +8082,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -8221,7 +8221,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -8360,7 +8360,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -8499,7 +8499,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -8616,7 +8616,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -8755,7 +8755,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -8894,7 +8894,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -8996,7 +8996,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -9098,7 +9098,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -9214,7 +9214,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -9316,7 +9316,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -9433,7 +9433,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -9572,7 +9572,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -9703,7 +9703,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -9842,7 +9842,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -9944,7 +9944,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -10046,7 +10046,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -10152,7 +10152,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -10258,7 +10258,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -10360,7 +10360,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -10466,7 +10466,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -10583,7 +10583,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -10718,7 +10718,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -10857,7 +10857,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -10959,7 +10959,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -11090,7 +11090,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -11221,7 +11221,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -11307,7 +11307,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Walk"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -11409,7 +11409,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -11548,7 +11548,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -11665,7 +11665,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -11804,7 +11804,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -11906,7 +11906,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -12045,7 +12045,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -12135,7 +12135,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Hike"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -12274,7 +12274,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -12304,7 +12304,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Swim"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -12435,7 +12435,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -12537,7 +12537,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -12639,7 +12639,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -12741,7 +12741,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -12880,7 +12880,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -13011,7 +13011,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -13150,7 +13150,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -13267,7 +13267,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -13392,7 +13392,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -13509,7 +13509,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -13648,7 +13648,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -13738,7 +13738,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Hike"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -13841,7 +13841,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Run"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -13931,7 +13931,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Hike"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -14062,7 +14062,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -14193,7 +14193,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -14324,7 +14324,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -14463,7 +14463,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -14570,7 +14570,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Run"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -14672,7 +14672,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -14774,7 +14774,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -14880,7 +14880,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -14982,7 +14982,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -15084,7 +15084,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -15190,7 +15190,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -15292,7 +15292,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -15394,7 +15394,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -15496,7 +15496,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -15635,7 +15635,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -15766,7 +15766,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -15882,7 +15882,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "VirtualRide"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -16013,7 +16013,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -16144,7 +16144,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -16264,7 +16264,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "VirtualRide"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -16384,7 +16384,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "VirtualRide"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -16523,7 +16523,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "Ride"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -16639,7 +16639,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "VirtualRide"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -16759,7 +16759,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "VirtualRide"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},
@@ -16879,7 +16879,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"trainer": false,
 	"type": "VirtualRide"
 }, {
-	"athleteModel": {
+	"athleteSnapshot": {
 		"athleteSettings": {
 			"cyclingFtp": 180,
 			"lthr": {"cycling": null, "default": null, "running": null},

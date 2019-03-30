@@ -1,26 +1,26 @@
 import { TestBed } from "@angular/core/testing";
-import { ExternalUpdatesService } from "./external-updates.service";
-import { CoreMessages } from "@elevate/shared/models";
+import { ChromeEventsService } from "./chrome-events.service";
+import { CoreMessages } from "../../../../../../modules/shared/models";
 
-describe("ExternalUpdatesService", () => {
+describe("ChromeEventsService", () => {
 
 	const pluginId = "c061d18abea0";
-	let service: ExternalUpdatesService;
+	let service: ChromeEventsService;
 
 	beforeEach((done: Function) => {
 
-		spyOn(ExternalUpdatesService, "getBrowserExternalMessages").and.returnValue({
+		spyOn(ChromeEventsService, "getBrowserExternalMessages").and.returnValue({
 			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
 			}
 		});
 
-		spyOn(ExternalUpdatesService, "getBrowserPluginId").and.returnValue(pluginId);
+		spyOn(ChromeEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
 		TestBed.configureTestingModule({
-			providers: [ExternalUpdatesService]
+			providers: [ChromeEventsService]
 		});
 
-		service = TestBed.get(ExternalUpdatesService);
+		service = TestBed.get(ChromeEventsService);
 
 		done();
 	});
@@ -43,7 +43,7 @@ describe("ExternalUpdatesService", () => {
 		const senderId: string = pluginId;
 
 		// When
-		service.onExternalRequestReceived(message, senderId);
+		service.onBrowserRequestReceived(message, senderId);
 
 		// Then
 		expect(spy).toHaveBeenCalledTimes(expectedCallCount);
@@ -62,7 +62,7 @@ describe("ExternalUpdatesService", () => {
 		const senderId = "fakeId";
 
 		// When
-		service.onExternalRequestReceived(message, senderId);
+		service.onBrowserRequestReceived(message, senderId);
 
 		// Then
 		expect(spy).not.toHaveBeenCalled();

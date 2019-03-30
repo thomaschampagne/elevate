@@ -7,7 +7,7 @@ export class Constant {
 	/**
 	 * Backup version threshold at which a "greater or equal" imported backup version is compatible with current code.
 	 */
-	public static readonly COMPATIBLE_BACKUP_VERSION_THRESHOLD: string = "6.5.0";
+	public static readonly COMPATIBLE_BACKUP_VERSION_THRESHOLD: string = "6.11.0";
 
 	/**
 	 * Factors

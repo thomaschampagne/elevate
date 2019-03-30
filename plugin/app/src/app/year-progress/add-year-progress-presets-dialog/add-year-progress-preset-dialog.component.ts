@@ -7,6 +7,7 @@ import { AppError } from "../../shared/models/app-error.model";
 import { ProgressMode } from "../shared/enums/progress-mode.enum";
 import { RollingProgressPresetModel } from "../shared/models/rolling-progress-preset.model";
 import { AddRollingProgressPresetDialogData } from "../shared/models/add-rolling-progress-preset-dialog-data";
+import { LoggerService } from "../../shared/services/logging/logger.service";
 
 @Component({
 	selector: "app-add-year-progress-presets-dialog",
@@ -26,7 +27,8 @@ export class AddYearProgressPresetDialogComponent implements OnInit {
 	constructor(@Inject(MAT_DIALOG_DATA) public dialogData: any /*AddYearToDateProgressPresetDialogData | AddRollingProgressPresetDialogData*/,
 				public dialogRef: MatDialogRef<AddYearProgressPresetDialogComponent>,
 				public yearProgressService: YearProgressService,
-				public snackBar: MatSnackBar) {
+				public snackBar: MatSnackBar,
+				public logger: LoggerService) {
 	}
 
 	public ngOnInit(): void {
@@ -37,7 +39,7 @@ export class AddYearProgressPresetDialogComponent implements OnInit {
 
 			const rollingPresetDialogData = new AddRollingProgressPresetDialogData(this.dialogData.yearProgressTypeModel, this.dialogData.activityTypes,
 				this.dialogData.includeCommuteRide, this.dialogData.includeIndoorRide, this.dialogData.targetValue,
-				(<AddRollingProgressPresetDialogData>this.dialogData).rollingPeriod, (<AddRollingProgressPresetDialogData>this.dialogData).periodMultiplier);
+				(<AddRollingProgressPresetDialogData> this.dialogData).rollingPeriod, (<AddRollingProgressPresetDialogData> this.dialogData).periodMultiplier);
 
 			this.progressPresetModel = new RollingProgressPresetModel(rollingPresetDialogData.yearProgressTypeModel.type, rollingPresetDialogData.activityTypes,
 				rollingPresetDialogData.includeCommuteRide, rollingPresetDialogData.includeIndoorRide, rollingPresetDialogData.targetValue, rollingPresetDialogData.rollingPeriod, rollingPresetDialogData.periodMultiplier);
@@ -62,13 +64,13 @@ export class AddYearProgressPresetDialogComponent implements OnInit {
 
 	private handleErrors(error: any) {
 		if (error instanceof AppError) {
-			console.warn(error);
-			const message = (<AppError>error).message;
+			this.logger.warn(error);
+			const message = (<AppError> error).message;
 			this.snackBar.open(message, "Close", {
 				duration: 5000
 			});
 		} else {
-			console.error(error);
+			this.logger.error(error);
 		}
 	}
 }

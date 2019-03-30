@@ -380,7 +380,7 @@ export class VacuumProcessor {
 	public getAthleteGear<T extends GearModel>(athleteId: number, type: GearType): Promise<T[]> {
 
 		const parseOdo = (odo: string) => {
-			return (parseInt(odo.replace(".", "").replace(",", "")) / 10);
+			return (parseInt(odo.match(/\d+/g).join(""), 10) / 10);
 		};
 
 		let gearType;

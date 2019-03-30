@@ -27,7 +27,7 @@ import { MatDialogRef } from "@angular/material";
 						Estimated <i>Cycling Power Stress Score (PSS)</i>:
 						<ul>
 							<li>Your <i>Cycling Functional Threshold Power (FTP)</i> must be set in <a
-								[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">single or dated athlete
+								[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">dated athlete
 								settings</a>. A wrong ftp
 								can cause too big/low PSS scores on activities.
 							</li>
@@ -55,7 +55,7 @@ import { MatDialogRef } from "@angular/material";
 						<i>Estimated Running Stress Score (RSS)</i>:
 						<ul>
 							<li>Your <i>Running Functional Threshold Pace</i> must be set in <a
-								[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">single or dated athlete
+								[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">dated athlete
 								settings</a>.
 							</li>
 						</ul>
@@ -71,7 +71,7 @@ import { MatDialogRef } from "@angular/material";
 					</mat-checkbox>
 				</div>
 				<div fxFlex>
-					<button mat-button mat-dialog-close color="primary" (click)="onGotIt()">Got it</button>
+					<button mat-stroked-button mat-dialog-close color="primary" (click)="onGotIt()">Got it</button>
 				</div>
 			</div>
 		</mat-dialog-actions>

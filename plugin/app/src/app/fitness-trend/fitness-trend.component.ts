@@ -11,12 +11,13 @@ import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enu
 import { AppError } from "../shared/models/app-error.model";
 import { MatDialog, MatSnackBar } from "@angular/material";
 import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
-import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
 import { SyncResultModel } from "@elevate/shared/models";
 import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.model";
 import { FitnessTrendInputsComponent } from "./fitness-trend-inputs/fitness-trend-inputs.component";
 import { FitnessTrendConfigDialogData } from "./shared/models/fitness-trend-config-dialog-data.model";
 import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog/fitness-trend-config-dialog.component";
+import { AppEventsService } from "../shared/services/external-updates/app-events-service";
+import { LoggerService } from "../shared/services/logging/logger.service";
 
 @Component({
 	selector: "app-fitness-trend",
@@ -27,9 +28,10 @@ export class FitnessTrendComponent implements OnInit {
 
 	constructor(public syncService: SyncService,
 				public fitnessService: FitnessService,
-				public externalUpdatesService: ExternalUpdatesService,
+				public appEventsService: AppEventsService,
 				public dialog: MatDialog,
-				public snackBar: MatSnackBar) {
+				public snackBar: MatSnackBar,
+				public logger: LoggerService) {
 	}
 
 	public static readonly DEFAULT_CONFIG: FitnessTrendConfigModel = {
@@ -162,7 +164,7 @@ export class FitnessTrendComponent implements OnInit {
 			const url = "https://www.strava.com/activities/{activityId}";
 			window.open(url.replace("{activityId}", id.toString()), "_blank");
 		} else {
-			console.warn("No activity found");
+			throw new Error("No activity found");
 		}
 	}
 
@@ -173,13 +175,13 @@ export class FitnessTrendComponent implements OnInit {
 				window.open(url.replace("{activityId}", id.toString()), "_blank");
 			});
 		} else {
-			console.warn("No activities found");
+			throw new Error("No activities found");
 		}
 	}
 
 	public ngOnInit(): void {
 		this.initialize().then(() => {
-			console.debug("FitnessTrend component initialized");
+			this.logger.debug("FitnessTrend component initialized");
 		});
 	}
 
@@ -209,7 +211,8 @@ export class FitnessTrendComponent implements OnInit {
 			this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 
 			// Then compute fitness trend
-			return this.fitnessService.computeTrend(this.fitnessTrendConfigModel, this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes);
+			return this.fitnessService.computeTrend(this.fitnessTrendConfigModel, this.isPowerMeterEnabled,
+				this.isSwimEnabled, this.skipActivityTypes);
 
 		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
@@ -227,7 +230,7 @@ export class FitnessTrendComponent implements OnInit {
 				this.lastFitnessActiveDate = (lastDayFitnessTrendModel && lastDayFitnessTrendModel.date) ? lastDayFitnessTrendModel.date : null;
 
 				// Listen for syncFinished update then reload graph if necessary.
-				this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
+				this.appEventsService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
 					if (syncResult.activitiesChangesModel.added.length > 0
 						|| syncResult.activitiesChangesModel.edited.length > 0
 						|| syncResult.activitiesChangesModel.deleted.length > 0) {
@@ -251,7 +254,7 @@ export class FitnessTrendComponent implements OnInit {
 			} else {
 				const message = appError.toString() + ". Press (F12) to see a more detailed error message in browser console.";
 				this.snackBar.open(message, "Close");
-				console.error(message);
+				this.logger.error(message);
 			}
 
 		});
@@ -385,7 +388,7 @@ export class FitnessTrendComponent implements OnInit {
 			this.fitnessTrend = fitnessTrend;
 			this.updateDateRangeAndPeriods();
 
-		}, (appError: AppError) => console.error(appError.toString()));
+		}, (appError: AppError) => this.logger.error(appError.toString()));
 	}
 
 	public updateSkipActivityTypes(isEBikeRidesEnabled: boolean): void {

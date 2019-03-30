@@ -10,6 +10,7 @@ import { AppError } from "../../shared/models/app-error.model";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import { YearProgressPresetsDialogResponse } from "../shared/models/year-progress-presets-dialog-response.model";
 import { ProgressMode } from "../shared/enums/progress-mode.enum";
+import { LoggerService } from "../../shared/services/logging/logger.service";
 
 @Component({
 	selector: "app-manage-year-progress-presets-dialog",
@@ -56,7 +57,8 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
 				public dialogRef: MatDialogRef<ManageYearProgressPresetsDialogComponent>,
 				public yearProgressService: YearProgressService,
 				public dialog: MatDialog,
-				public snackBar: MatSnackBar) {
+				public snackBar: MatSnackBar,
+				public logger: LoggerService) {
 	}
 
 	public ngOnInit(): void {
@@ -81,11 +83,12 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
 		return (yearProgressTypeModel && yearProgressTypeModel.shortUnit) ? yearProgressTypeModel.shortUnit : "";
 	}
 
-	public onLoad(rowId: number): void {
-		this.dialogRef.close(new YearProgressPresetsDialogResponse(this.deletedPresets, this.yearProgressPresetModels[rowId]));
+	public onLoad(presetId: string): void {
+		const presetModel = _.find(this.yearProgressPresetModels, {id: presetId});
+		this.dialogRef.close(new YearProgressPresetsDialogResponse(this.deletedPresets, presetModel));
 	}
 
-	public onDelete(rowId: number): void {
+	public onDelete(presetId: string): void {
 
 		const confirmDialogDataModel = new ConfirmDialogDataModel(null, "Are you sure to remove this preset?");
 
@@ -95,8 +98,8 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
 
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirmed: boolean) => {
 			if (confirmed) {
-				const deletedPresetCopy = this.yearProgressPresetModels[rowId];
-				this.yearProgressService.deletePreset(rowId).then(() => {
+				const deletedPresetCopy = _.find(this.yearProgressPresetModels, {id: presetId});
+				this.yearProgressService.deletePreset(presetId).then(() => {
 					this.loadData();
 					this.deletedPresets.push(deletedPresetCopy);
 				}, error => this.handleErrors(error));
@@ -113,13 +116,13 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
 
 	private handleErrors(error: any) {
 		if (error instanceof AppError) {
-			console.warn(error);
+			this.logger.warn(error);
 			const message = (<AppError> error).message;
 			this.snackBar.open(message, "Close", {
 				duration: 5000
 			});
 		} else {
-			console.error(error);
+			this.logger.error(error);
 		}
 	}
 

@@ -6,12 +6,13 @@ import * as moment from "moment";
 import * as _ from "lodash";
 import { SyncState } from "./sync-state.enum";
 import { environment } from "../../../../environments/environment";
-import { DatedAthleteSettingsModel, SyncedActivityModel } from "@elevate/shared/models";
+import { AthleteModel, SyncedActivityModel } from "@elevate/shared/models";
 import { SyncedBackupModel } from "./synced-backup.model";
 import * as semver from "semver";
-import { DatedAthleteSettingsService } from "../dated-athlete-settings/dated-athlete-settings.service";
+import { AthleteService } from "../athlete/athlete.service";
 import { UserSettingsService } from "../user-settings/user-settings.service";
 import { Constant } from "@elevate/shared/constants";
+import { LoggerService } from "../logging/logger.service";
 
 @Injectable()
 export class SyncService {
@@ -22,8 +23,9 @@ export class SyncService {
 
 	constructor(public lastSyncDateTimeDao: LastSyncDateTimeDao,
 				public activityDao: ActivityDao,
-				public datedAthleteSettingsService: DatedAthleteSettingsService,
-				public userSettingsService: UserSettingsService) {
+				public athleteService: AthleteService,
+				public userSettingsService: UserSettingsService,
+				public logger: LoggerService) {
 
 	}
 
@@ -32,7 +34,7 @@ export class SyncService {
 	 * @returns {Promise<number>}
 	 */
 	public getLastSyncDateTime(): Promise<number> {
-		return (<Promise<number>>this.lastSyncDateTimeDao.fetch());
+		return (<Promise<number>> this.lastSyncDateTimeDao.fetch());
 	}
 
 	/**
@@ -41,7 +43,7 @@ export class SyncService {
 	 * @returns {Promise<number>}
 	 */
 	public saveLastSyncTime(value: number): Promise<number> {
-		return (<Promise<number>>this.lastSyncDateTimeDao.save(value));
+		return (<Promise<number>> this.lastSyncDateTimeDao.save(value));
 	}
 
 	/**
@@ -79,10 +81,10 @@ export class SyncService {
 			let promiseImportDatedAthleteSettings;
 
 			// If no dated athlete settings provided in backup then reset dated athlete settings
-			if (_.isEmpty(importedBackupModel.datedAthleteSettings)) {
-				promiseImportDatedAthleteSettings = this.datedAthleteSettingsService.reset();
+			if (_.isEmpty(importedBackupModel.athleteModel)) {
+				promiseImportDatedAthleteSettings = this.athleteService.resetSettings();
 			} else {
-				promiseImportDatedAthleteSettings = this.datedAthleteSettingsService.save(importedBackupModel.datedAthleteSettings);
+				promiseImportDatedAthleteSettings = this.athleteService.save(importedBackupModel.athleteModel);
 			}
 
 			return Promise.all([
@@ -96,12 +98,12 @@ export class SyncService {
 
 			const lastSyncDateTime: number = result[0] as number;
 			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
-			const datedAthleteSettings: DatedAthleteSettingsModel[] = result[2] as DatedAthleteSettingsModel[];
+			const athleteModel: AthleteModel = result[2] as AthleteModel;
 
 			const backupModel: SyncedBackupModel = {
 				lastSyncDateTime: lastSyncDateTime,
 				syncedActivities: syncedActivityModels,
-				datedAthleteSettings: datedAthleteSettings,
+				athleteModel: athleteModel,
 				pluginVersion: importedBackupModel.pluginVersion
 			};
 
@@ -141,13 +143,13 @@ export class SyncService {
 
 			this.lastSyncDateTimeDao.fetch(),
 			this.activityDao.fetch(),
-			this.datedAthleteSettingsService.fetch()
+			this.athleteService.fetch()
 
 		]).then((result: Object[]) => {
 
 			const lastSyncDateTime: number = result[0] as number;
 			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
-			const datedAthleteSettings: DatedAthleteSettingsModel[] = result[2] as DatedAthleteSettingsModel[];
+			const athleteModel: AthleteModel = result[2] as AthleteModel;
 
 			if (!_.isNumber(lastSyncDateTime)) {
 				return Promise.reject("Cannot export. No last synchronization date found.");
@@ -156,7 +158,7 @@ export class SyncService {
 			const backupModel: SyncedBackupModel = {
 				lastSyncDateTime: lastSyncDateTime,
 				syncedActivities: syncedActivityModels,
-				datedAthleteSettings: datedAthleteSettings,
+				athleteModel: athleteModel,
 				pluginVersion: this.getAppVersion()
 			};
 
@@ -176,7 +178,7 @@ export class SyncService {
 		]).then(() => {
 			return Promise.resolve();
 		}).catch(error => {
-			console.error(error);
+			this.logger.error(error);
 			return Promise.reject("Athlete synced data has not been cleared totally. Some properties cannot be deleted. You may need to uninstall/install the software.");
 		});
 	}

@@ -27,16 +27,22 @@ import { CoreModule } from "../core/core.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
 import { AdvancedMenuComponent } from "../advanced-menu/advanced-menu.component";
-import { ExternalUpdatesService } from "./services/external-updates/external-updates.service";
-import { AthleteModelResolverService } from "./services/athlete-settings/athlete-model-resolver.service";
-import { DatedAthleteSettingsService } from "./services/dated-athlete-settings/dated-athlete-settings.service";
-import { DatedAthleteSettingsDao } from "./dao/dated-athlete-settings/dated-athlete-settings.dao";
+import { ChromeEventsService } from "./services/external-updates/impl/chrome-events.service";
+import { AthleteSnapshotResolverService } from "./services/athlete-snapshot-resolver/athlete-snapshot-resolver.service";
+import { AthleteService } from "./services/athlete/athlete.service";
+import { AthleteDao } from "./dao/athlete/athlete-dao.service";
 import { DataStore } from "./data-store/data-store";
 import { ChromeDataStore } from "./data-store/impl/chrome-data-store.service";
 import { ActivityDao } from "./dao/activity/activity.dao";
 import { FaqComponent } from "../faq/faq.component";
+import { ActivitiesComponent } from "../activities/activities.component";
+import { AppEventsService } from "./services/external-updates/app-events-service";
+import { ConsoleLoggerService } from "./services/logging/console-logger.service";
+import { LoggerService } from "./services/logging/logger.service";
 
 const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
+const AppEventsServiceProvider = {provide: AppEventsService, useClass: ChromeEventsService};
+const LoggerServiceProvider = {provide: LoggerService, useClass: ConsoleLoggerService};
 
 @NgModule({
 	imports: [
@@ -53,6 +59,7 @@ const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
 	],
 	declarations: [
 		// Components
+		ActivitiesComponent,
 		GlobalSettingsComponent,
 		ZonesSettingsComponent,
 		ZoneComponent,
@@ -85,9 +92,9 @@ const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
 		LastSyncDateTimeDao,
 		UserSettingsService,
 		UserSettingsDao,
-		DatedAthleteSettingsService,
-		DatedAthleteSettingsDao,
-		AthleteModelResolverService,
+		AthleteService,
+		AthleteDao,
+		AthleteSnapshotResolverService,
 		ActivityService,
 		ActivityDao,
 		GlobalSettingsService,
@@ -95,7 +102,8 @@ const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
 		ZonesService,
 		SideNavService,
 		WindowService,
-		ExternalUpdatesService
+		AppEventsServiceProvider,
+		LoggerServiceProvider
 	]
 })
 export class SharedModule {
