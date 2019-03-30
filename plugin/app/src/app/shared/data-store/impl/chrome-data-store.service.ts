@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { AppStorageType } from "@elevate/shared/models";
 import { DataStore } from "../data-store";
 import { StorageLocationModel } from "../storage-location.model";
 import * as _ from "lodash";
@@ -20,7 +19,7 @@ export class ChromeDataStore<T> extends DataStore<T> {
 				query = null; // Means fetch all
 			}
 
-			this.getChromeStorageArea(storageLocation).get(query, (result: T[] | T) => {
+			this.chromeLocalStorageArea().get(query, (result: T[] | T) => {
 				const error = this.getLastError();
 				if (error) {
 					reject(error.message);
@@ -53,7 +52,7 @@ export class ChromeDataStore<T> extends DataStore<T> {
 				saveQuery = value;
 			}
 
-			this.getChromeStorageArea(storageLocation).set(saveQuery, () => {
+			this.chromeLocalStorageArea().set(saveQuery, () => {
 				const error = this.getLastError();
 				if (error) {
 					reject(error.message);
@@ -99,12 +98,12 @@ export class ChromeDataStore<T> extends DataStore<T> {
 	public clear(storageLocation: StorageLocationModel): Promise<void> {
 		return new Promise<void>((resolve: Function, reject: Function) => {
 			if (storageLocation.key) {
-				this.getChromeStorageArea(storageLocation).remove(storageLocation.key, () => {
+				this.chromeLocalStorageArea().remove(storageLocation.key, () => {
 					const error = this.getLastError();
 					(error) ? reject(error.message) : resolve();
 				});
 			} else {
-				this.getChromeStorageArea(storageLocation).clear(() => {
+				this.chromeLocalStorageArea().clear(() => {
 					const error = this.getLastError();
 					if (error) {
 						reject(error.message);
@@ -120,34 +119,20 @@ export class ChromeDataStore<T> extends DataStore<T> {
 	 *
 	 * @param type
 	 */
-	public getAppUsageDetails(type: AppStorageType): Promise<AppUsageDetails> {
+	public getAppUsageDetails(): Promise<AppUsageDetails> {
 
 		return new Promise<AppUsageDetails>((resolve) => {
 
 
-			let chromeStorageArea;
-			let quotaBytes;
-
-			if (type === AppStorageType.SYNC) {
-				chromeStorageArea = this.chromeSyncStorageArea();
-				quotaBytes = chromeStorageArea.QUOTA_BYTES;
-			} else {
-				chromeStorageArea = this.chromeLocalStorageArea();
-				quotaBytes = chromeStorageArea.QUOTA_BYTES;
-			}
-
-			chromeStorageArea.getBytesInUse((bytesInUse: number) => {
-				const appUsage = new AppUsage(bytesInUse, quotaBytes);
+			const localStorageArea = this.chromeLocalStorageArea();
+			localStorageArea.getBytesInUse((bytesInUse: number) => {
+				const appUsage = new AppUsage(bytesInUse, localStorageArea.QUOTA_BYTES);
 				const megaBytesInUse = appUsage.bytesInUse / (1024 * 1024);
 				const percentUsage = appUsage.bytesInUse / appUsage.quotaBytes * 100;
 				const appUsageDetails: AppUsageDetails = new AppUsageDetails(appUsage, megaBytesInUse, percentUsage);
 				resolve(appUsageDetails);
 			});
 		});
-	}
-
-	public getChromeStorageArea(storageLocation: StorageLocationModel): chrome.storage.StorageArea {
-		return (storageLocation.type === AppStorageType.SYNC) ? this.chromeSyncStorageArea() : this.chromeLocalStorageArea();
 	}
 
 	/**

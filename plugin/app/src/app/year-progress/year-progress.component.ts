@@ -32,8 +32,9 @@ import { MediaObserver } from "@angular/flex-layout";
 import { AddYearToDateProgressPresetDialogData } from "./shared/models/add-year-to-date-progress-preset-dialog-data";
 import { AddRollingProgressPresetDialogData } from "./shared/models/add-rolling-progress-preset-dialog-data";
 import { RollingProgressPresetModel } from "./shared/models/rolling-progress-preset.model";
-import { ExternalUpdatesService } from "../shared/services/external-updates/external-updates.service";
 import { YearProgressWelcomeDialogComponent } from "./year-progress-welcome-dialog/year-progress-welcome-dialog.component";
+import { AppEventsService } from "../shared/services/external-updates/app-events-service";
+import { LoggerService } from "../shared/services/logging/logger.service";
 
 /* Legacy tasks */
 // TODO Style of target line!
@@ -50,9 +51,10 @@ export class YearProgressComponent implements OnInit {
 				public syncService: SyncService,
 				public activityService: ActivityService,
 				public yearProgressService: YearProgressService,
-				public externalUpdatesService: ExternalUpdatesService,
+				public appEventsService: AppEventsService,
 				public dialog: MatDialog,
-				public mediaObserver: MediaObserver) {
+				public mediaObserver: MediaObserver,
+				public logger: LoggerService) {
 
 		this.availableYears = [];
 		this.availableActivityTypes = [];
@@ -212,7 +214,7 @@ export class YearProgressComponent implements OnInit {
 	 * @param periodMultiplier
 	 */
 	public static findRollingDays(rollingPeriod: string, periodMultiplier: number): number {
-		return moment.duration(periodMultiplier, <moment.DurationInputArg2>rollingPeriod.toLowerCase()).asDays();
+		return moment.duration(periodMultiplier, <moment.DurationInputArg2> rollingPeriod.toLowerCase()).asDays();
 	}
 
 	public ngOnInit(): void {
@@ -220,7 +222,7 @@ export class YearProgressComponent implements OnInit {
 		this.initialize();
 
 		// Listen for syncFinished update then reload year progressions if necessary.
-		this.externalUpdatesService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
+		this.appEventsService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
 			if (syncResult.activitiesChangesModel.added.length > 0
 				|| syncResult.activitiesChangesModel.edited.length > 0
 				|| syncResult.activitiesChangesModel.deleted.length > 0) {
@@ -267,7 +269,7 @@ export class YearProgressComponent implements OnInit {
 			this.showYearProgressWelcomeDialog();
 
 		}, (appError: AppError) => {
-			console.error(appError.toString());
+			this.logger.error(appError.toString());
 		});
 	}
 
@@ -332,7 +334,7 @@ export class YearProgressComponent implements OnInit {
 
 		this.isProgressionInitialized = true;
 
-		console.log("Setup done");
+		this.logger.info("Setup done");
 
 	}
 

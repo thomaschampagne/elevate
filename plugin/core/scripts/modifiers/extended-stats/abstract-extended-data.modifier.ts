@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import * as $ from "jquery";
 import { Helper } from "../../helper";
-import { ActivityInfoModel, AnalysisDataModel, AthleteModel, SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared/models";
+import { ActivityInfoModel, AnalysisDataModel, AthleteSnapshotModel, SpeedUnitDataModel, UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AbstractDataView } from "./views/abstract-data.view";
@@ -18,7 +18,7 @@ export abstract class AbstractExtendedDataModifier {
 	protected activityType: string;
 	protected appResources: AppResourcesModel;
 	protected userSettings: UserSettingsModel;
-	protected athleteModel: AthleteModel;
+	protected athleteSnapshot: AthleteSnapshotModel;
 	protected activityInfo: ActivityInfoModel;
 	protected speedUnitsData: SpeedUnitDataModel;
 	protected type: number;
@@ -46,9 +46,9 @@ export abstract class AbstractExtendedDataModifier {
 		}
 
 		// Getting data to display at least summary panel. Cache will be normally used next if user click 'Show extended stats' in ACTIVITY mode
-		this.getFullAnalysisData().then((result: { athleteModel: AthleteModel, analysisData: AnalysisDataModel }) => {
+		this.getFullAnalysisData().then((result: { athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel }) => {
 
-			this.athleteModel = result.athleteModel;
+			this.athleteSnapshot = result.athleteSnapshot;
 			this.analysisData = result.analysisData;
 
 			if (this.type === AbstractExtendedDataModifier.TYPE_ACTIVITY) {
@@ -160,10 +160,10 @@ export abstract class AbstractExtendedDataModifier {
 
 			$("#extendedStatsButton").click(() => {
 
-				this.getFullAnalysisData().then((result: { athleteModel: AthleteModel, analysisData: AnalysisDataModel }) => {
+				this.getFullAnalysisData().then((result: { athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel }) => {
 
-					if (!this.athleteModel) {
-						this.athleteModel = result.athleteModel;
+					if (!this.athleteSnapshot) {
+						this.athleteSnapshot = result.athleteSnapshot;
 					}
 
 					this.analysisData = result.analysisData;
@@ -178,11 +178,11 @@ export abstract class AbstractExtendedDataModifier {
 		});
 	}
 
-	protected getFullAnalysisData(): Promise<{ athleteModel: AthleteModel, analysisData: AnalysisDataModel }> {
+	protected getFullAnalysisData(): Promise<{ athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel }> {
 
-		return new Promise<{ athleteModel: AthleteModel, analysisData: AnalysisDataModel }>(resolve => {
-			this.activityProcessor.getAnalysisData(this.activityInfo, null, (athleteModel: AthleteModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
-				resolve({athleteModel: athleteModel, analysisData: analysisData});
+		return new Promise<{ athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel }>(resolve => {
+			this.activityProcessor.getAnalysisData(this.activityInfo, null, (athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
+				resolve({athleteSnapshot: athleteSnapshot, analysisData: analysisData});
 			});
 		});
 	}
@@ -207,10 +207,10 @@ export abstract class AbstractExtendedDataModifier {
 				this.activityProcessor.getAnalysisData(
 					this.activityInfo,
 					[segmentInfosResponse.start_index, segmentInfosResponse.end_index], // Bounds given, full activity requested
-					(athleteModel: AthleteModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
+					(athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
 
-						if (!this.athleteModel) {
-							this.athleteModel = athleteModel;
+						if (!this.athleteSnapshot) {
+							this.athleteSnapshot = athleteSnapshot;
 						}
 
 						this.analysisData = analysisData;
@@ -321,7 +321,7 @@ export abstract class AbstractExtendedDataModifier {
 
 		// Heart view
 		if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
-			const heartRateDataView: HeartRateDataView = new HeartRateDataView(this.analysisData.heartRateData, "hrr", this.athleteModel);
+			const heartRateDataView: HeartRateDataView = new HeartRateDataView(this.analysisData.heartRateData, "hrr", this.athleteSnapshot);
 			heartRateDataView.setAppResources(this.appResources);
 			heartRateDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
 			heartRateDataView.setActivityType(this.activityType);

@@ -3,7 +3,6 @@ import { TestBed } from "@angular/core/testing";
 import { DataStore } from "../data-store/data-store";
 import { StorageLocationModel } from "../data-store/storage-location.model";
 import { Injectable } from "@angular/core";
-import { AppStorageType } from "@elevate/shared/models";
 import { MockedDataStore } from "../data-store/impl/spec/mocked-data-store.service";
 import { BaseDao } from "./base.dao";
 
@@ -16,7 +15,7 @@ describe("BaseDao", () => {
 	@Injectable()
 	class TestBaseDao extends BaseDao<Foo> {
 
-		public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel(AppStorageType.LOCAL, "foo");
+		public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("foo");
 		public static readonly DEFAULT_STORAGE_VALUE: Foo[] = [];
 
 		public getStorageLocation(): StorageLocationModel {

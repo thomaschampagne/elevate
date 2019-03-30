@@ -2,8 +2,9 @@ import { Injectable } from "@angular/core";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import * as _ from "lodash";
-import { AthleteModelResolverService } from "../athlete-settings/athlete-model-resolver.service";
+import { AthleteSnapshotResolverService } from "../athlete-snapshot-resolver/athlete-snapshot-resolver.service";
 import { Subject } from "rxjs";
+import { LoggerService } from "../logging/logger.service";
 
 @Injectable()
 export class ActivityService {
@@ -11,7 +12,8 @@ export class ActivityService {
 	public athleteSettingsConsistency: Subject<boolean>;
 
 	constructor(public activityDao: ActivityDao,
-				public athleteModelResolverService: AthleteModelResolverService) {
+				public athleteSnapshotResolverService: AthleteSnapshotResolverService,
+				public logger: LoggerService) {
 		this.athleteSettingsConsistency = new Subject<boolean>();
 	}
 
@@ -51,13 +53,13 @@ export class ActivityService {
 	 */
 	public isAthleteSettingsConsistent(): Promise<boolean> {
 
-		return this.athleteModelResolverService.update().then(() => {
+		return this.athleteSnapshotResolverService.update().then(() => {
 			return this.activityDao.fetch();
 		}).then((syncedActivityModels: SyncedActivityModel[]) => {
 			let isCompliant = true;
 			_.forEachRight(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
-				const athleteModelFound = this.athleteModelResolverService.resolve(new Date(syncedActivityModel.start_time));
-				if (!athleteModelFound.equals(syncedActivityModel.athleteModel)) {
+				const athleteModelFound = this.athleteSnapshotResolverService.resolve(new Date(syncedActivityModel.start_time));
+				if (!athleteModelFound.equals(syncedActivityModel.athleteSnapshot)) {
 					isCompliant = false;
 					return false;
 				}
@@ -71,10 +73,10 @@ export class ActivityService {
 	 */
 	public verifyConsistencyWithAthleteSettings(): void {
 
-		console.debug("checking athlete settings consistency");
+		this.logger.debug("checking athlete settings consistency");
 		this.isAthleteSettingsConsistent().then(isConsistent => {
 			this.athleteSettingsConsistency.next(isConsistent);
-			console.debug("Athlete settings consistent: " + isConsistent);
+			this.logger.debug("Athlete settings consistent: " + isConsistent);
 		}, error => this.athleteSettingsConsistency.error(error));
 
 	}
@@ -85,13 +87,13 @@ export class ActivityService {
 	 */
 	public nonConsistentActivitiesWithAthleteSettings(): Promise<number[]> {
 
-		return this.athleteModelResolverService.update().then(() => {
+		return this.athleteSnapshotResolverService.update().then(() => {
 			return this.activityDao.fetch();
 		}).then((syncedActivityModels: SyncedActivityModel[]) => {
 			const nonConsistentIds = [];
 			_.forEachRight(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
-				const athleteModelFound = this.athleteModelResolverService.resolve(new Date(syncedActivityModel.start_time));
-				if (!athleteModelFound.equals(syncedActivityModel.athleteModel)) {
+				const athleteModelFound = this.athleteSnapshotResolverService.resolve(new Date(syncedActivityModel.start_time));
+				if (!athleteModelFound.equals(syncedActivityModel.athleteSnapshot)) {
 					nonConsistentIds.push(syncedActivityModel.id);
 				}
 			});

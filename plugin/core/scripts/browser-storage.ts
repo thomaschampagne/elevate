@@ -1,8 +1,8 @@
-import { AppStorageType } from "@elevate/shared/models";
 import { AppStorageUsage } from "./models/app-storage-usage.model";
 import * as _ from "lodash";
+import { BrowserStorageType } from "./models/browser-storage-type.enum";
 
-export class AppStorage {
+export class BrowserStorage {
 
 	constructor(extensionId?: string) {
 		this.extensionId = (extensionId) ? extensionId : null;
@@ -14,13 +14,13 @@ export class AppStorage {
 	public static readonly ON_CLEAR_MESSAGE: string = "ON_CLEAR_MESSAGE";
 	public static readonly ON_USAGE_MESSAGE: string = "ON_USAGE_MESSAGE";
 
-	private static instance: AppStorage = null;
+	private static instance: BrowserStorage = null;
 
 	private extensionId: string = null;
 
-	public static getInstance(): AppStorage {
+	public static getInstance(): BrowserStorage {
 		if (!this.instance) {
-			this.instance = new AppStorage((chrome && chrome.runtime && chrome.runtime.id) ? chrome.runtime.id : null);
+			this.instance = new BrowserStorage((chrome && chrome.runtime && chrome.runtime.id) ? chrome.runtime.id : null);
 		}
 		return this.instance;
 	}
@@ -38,7 +38,7 @@ export class AppStorage {
 	 * @param storageType
 	 * @param key
 	 */
-	public get<T>(storageType: AppStorageType, key?: string): Promise<T> {
+	public get<T>(storageType: BrowserStorageType, key?: string): Promise<T> {
 
 		this.verifyExtensionId();
 
@@ -64,7 +64,7 @@ export class AppStorage {
 
 			} else {
 
-				this.backgroundStorageQuery<T>(AppStorage.ON_GET_MESSAGE, storageType, key).then((result: T) => {
+				this.backgroundStorageQuery<T>(BrowserStorage.ON_GET_MESSAGE, storageType, key).then((result: T) => {
 					resolve(result);
 				});
 			}
@@ -77,7 +77,7 @@ export class AppStorage {
 	 * @param key
 	 * @param value
 	 */
-	public set<T>(storageType: AppStorageType, key: string, value: T): Promise<void> {
+	public set<T>(storageType: BrowserStorageType, key: string, value: T): Promise<void> {
 
 		this.verifyExtensionId();
 
@@ -103,7 +103,7 @@ export class AppStorage {
 
 			} else {
 
-				this.backgroundStorageQuery<T>(AppStorage.ON_SET_MESSAGE, storageType, key, value).then(() => {
+				this.backgroundStorageQuery<T>(BrowserStorage.ON_SET_MESSAGE, storageType, key, value).then(() => {
 					resolve();
 				});
 			}
@@ -116,7 +116,7 @@ export class AppStorage {
 	 * @param path
 	 * @param value
 	 */
-	public upsertProperty<T, V>(storageType: AppStorageType, path: string[], value: V): Promise<void> {
+	public upsertProperty<T, V>(storageType: BrowserStorageType, path: string[], value: V): Promise<void> {
 		const key = path.shift();
 		return this.get<T>(storageType, key).then((result: T) => {
 			result = (path.length > 0) ? (_.set(result as Object, path, value) as T) : (value as any);
@@ -129,7 +129,7 @@ export class AppStorage {
 	 * @param storageType
 	 * @param key
 	 */
-	public rm<T>(storageType: AppStorageType, key: string | string[]): Promise<void> {
+	public rm<T>(storageType: BrowserStorageType, key: string | string[]): Promise<void> {
 
 		this.verifyExtensionId();
 
@@ -137,7 +137,7 @@ export class AppStorage {
 
 			if (this.hasStorageAccess()) {
 
-				chrome.storage[storageType].remove(<any>key, () => {
+				chrome.storage[storageType].remove(<any> key, () => {
 					const error = chrome.runtime.lastError;
 					if (error) {
 						reject(error.message);
@@ -148,7 +148,7 @@ export class AppStorage {
 
 			} else {
 
-				this.backgroundStorageQuery<T>(AppStorage.ON_RM_MESSAGE, storageType, key).then(() => {
+				this.backgroundStorageQuery<T>(BrowserStorage.ON_RM_MESSAGE, storageType, key).then(() => {
 					resolve();
 				});
 			}
@@ -159,7 +159,7 @@ export class AppStorage {
 	 *
 	 * @param storageType
 	 */
-	public clear<T>(storageType: AppStorageType): Promise<void> {
+	public clear<T>(storageType: BrowserStorageType): Promise<void> {
 
 		this.verifyExtensionId();
 
@@ -178,7 +178,7 @@ export class AppStorage {
 
 			} else {
 
-				this.backgroundStorageQuery<T>(AppStorage.ON_CLEAR_MESSAGE, storageType).then(() => {
+				this.backgroundStorageQuery<T>(BrowserStorage.ON_CLEAR_MESSAGE, storageType).then(() => {
 					resolve();
 				});
 			}
@@ -189,7 +189,7 @@ export class AppStorage {
 	 *
 	 * @param storageType
 	 */
-	public usage(storageType: AppStorageType): Promise<AppStorageUsage> {
+	public usage(storageType: BrowserStorageType): Promise<AppStorageUsage> {
 
 		this.verifyExtensionId();
 
@@ -213,7 +213,7 @@ export class AppStorage {
 				});
 
 			} else {
-				this.backgroundStorageQuery(AppStorage.ON_USAGE_MESSAGE, storageType).then((result: AppStorageUsage) => {
+				this.backgroundStorageQuery(BrowserStorage.ON_USAGE_MESSAGE, storageType).then((result: AppStorageUsage) => {
 					resolve(result);
 				});
 			}
@@ -243,7 +243,7 @@ export class AppStorage {
 	 * @param key
 	 * @param value
 	 */
-	private backgroundStorageQuery<T>(method: string, storageType: AppStorageType, key?: string | string[], value?: T): Promise<T> {
+	private backgroundStorageQuery<T>(method: string, storageType: BrowserStorageType, key?: string | string[], value?: T): Promise<T> {
 
 		return new Promise<T>((resolve: Function, reject: Function) => {
 

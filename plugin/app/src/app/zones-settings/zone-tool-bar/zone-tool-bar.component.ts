@@ -7,6 +7,7 @@ import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/conf
 import { ZoneImportExportDataModel } from "../zones-import-export-dialog/zone-import-export-data.model";
 import { Mode } from "../zones-import-export-dialog/mode.enum";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
+import { LoggerService } from "../../shared/services/logging/logger.service";
 
 @Component({
 	selector: "app-zone-tool-bar",
@@ -29,7 +30,8 @@ export class ZoneToolBarComponent implements OnInit {
 
 	constructor(public zonesService: ZonesService,
 				private dialog: MatDialog,
-				private snackBar: MatSnackBar) {
+				private snackBar: MatSnackBar,
+				public logger: LoggerService) {
 	}
 
 	public ngOnInit(): void {
@@ -49,7 +51,7 @@ export class ZoneToolBarComponent implements OnInit {
 		this.zonesService.addLastZone().then(
 			message => this.popSnack(message),
 			error => {
-				console.error(error);
+				this.logger.error(error);
 				this.popSnack(error);
 			}
 		);
@@ -59,7 +61,7 @@ export class ZoneToolBarComponent implements OnInit {
 		this.zonesService.removeLastZone().then(
 			message => this.popSnack(message),
 			error => {
-				console.error(error);
+				this.logger.error(error);
 				this.popSnack(error);
 			}
 		);
@@ -83,7 +85,7 @@ export class ZoneToolBarComponent implements OnInit {
 				this.zonesService.resetZonesToDefault().then(() => {
 						this.popSnack(this.zonesService.zoneDefinition.name + " zones have been set to default");
 					}, error => {
-						console.error(error);
+					this.logger.error(error);
 						this.popSnack(error);
 					}
 				);
@@ -97,7 +99,7 @@ export class ZoneToolBarComponent implements OnInit {
 		this.zonesService.saveZones().then(
 			() => this.popSnack(this.zonesService.zoneDefinition.name + " zones have been saved"),
 			error => {
-				console.error(error);
+				this.logger.error(error);
 				this.popSnack(error);
 			}
 		);

@@ -11,9 +11,9 @@
 					<mat-icon>{{item.icon}}</mat-icon>
 					<span class="mat-body-1">{{item.name}}</span>
 				</mat-list-item>
-				<mat-list-item (click)="onOpenLink('https://www.strava.com/athlete/training')">
+				<mat-list-item (click)="onOpenLink('https://www.strava.com/dashboard')">
 					<mat-icon svgIcon="strava"></mat-icon>
-					<span class="mat-body-1">Strava Activities</span>
+					<span class="mat-body-1">Strava Dashboard</span>
 				</mat-list-item>
 				<mat-list-item routerLink="/donate">
 					<mat-icon>favorite</mat-icon>
@@ -35,8 +35,8 @@
 
 			<span class="toolbar-spacer"></span>
 
-			<ng-container>
-				<button mat-button color="primary" [matMenuTriggerFor]="syncMenu">
+			<ng-container *ngIf="(syncState !== null)">
+				<button mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
 					<mat-icon *ngIf="(syncState === SyncState.NOT_SYNCED)">
 						sync_disabled
 					</mat-icon>

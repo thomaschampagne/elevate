@@ -1,6 +1,5 @@
 import { TestBed } from "@angular/core/testing";
 import { ChromeDataStore } from "./chrome-data-store.service";
-import { AppStorageType } from "@elevate/shared/models";
 import { StorageLocationModel } from "../storage-location.model";
 import * as _ from "lodash";
 import { AppUsage } from "../../models/app-usage.model";
@@ -91,8 +90,7 @@ describe("ChromeDataStore", () => {
 	beforeEach((done: Function) => {
 
 		storageLocation = {
-			key: "foo",
-			type: AppStorageType.LOCAL
+			key: "foo"
 		};
 
 		TestBed.configureTestingModule({
@@ -206,7 +204,7 @@ describe("ChromeDataStore", () => {
 
 		CHROME_STORAGE_STUB = expectedData;
 
-		storageLocation = new StorageLocationModel(AppStorageType.LOCAL); // Override CHROME_STORAGE_STUB location with no key
+		storageLocation = new StorageLocationModel(); // Override CHROME_STORAGE_STUB location with no key
 
 		// When
 		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, null, DEFAULT_FOO);
@@ -233,7 +231,7 @@ describe("ChromeDataStore", () => {
 			bar: "Default Bar"
 		};
 
-		storageLocation = new StorageLocationModel(AppStorageType.LOCAL); // Override CHROME_STORAGE_STUB location with no key
+		storageLocation = new StorageLocationModel(); // Override CHROME_STORAGE_STUB location with no key
 
 		// When
 		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, null, defaultValue);
@@ -291,7 +289,7 @@ describe("ChromeDataStore", () => {
 			bar: "john doe"
 		};
 
-		storageLocation = new StorageLocationModel(AppStorageType.LOCAL); // Override CHROME_STORAGE_STUB location with no key
+		storageLocation = new StorageLocationModel(); // Override CHROME_STORAGE_STUB location with no key
 
 		// When
 		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.save(storageLocation, toBeSaved, DEFAULT_FOO);
@@ -446,7 +444,7 @@ describe("ChromeDataStore", () => {
 	it("should save nested property (no key provided)", (done: Function) => {
 
 		// Given
-		storageLocation = new StorageLocationModel(AppStorageType.LOCAL); // Override CHROME_STORAGE_STUB location with no key
+		storageLocation = new StorageLocationModel(); // Override CHROME_STORAGE_STUB location with no key
 
 		const currentFoo: Foo = {
 			bar: "sheldon",
@@ -547,7 +545,7 @@ describe("ChromeDataStore", () => {
 
 		// Given
 		CHROME_STORAGE_STUB = {nothing: "everything"};
-		storageLocation = new StorageLocationModel(AppStorageType.LOCAL); // Override CHROME_STORAGE_STUB location with no key
+		storageLocation = new StorageLocationModel(); // Override CHROME_STORAGE_STUB location with no key
 		const expectedResult = <Foo> {};
 
 		// When
@@ -596,7 +594,7 @@ describe("ChromeDataStore", () => {
 			CHROME_BYTES_IN_USE / CHROME_QUOTA_BYTES * 100);
 
 		// When
-		const promise: Promise<AppUsageDetails> = chromeDataStore.getAppUsageDetails(AppStorageType.LOCAL);
+		const promise: Promise<AppUsageDetails> = chromeDataStore.getAppUsageDetails();
 
 		// Then
 		promise.then((result: AppUsageDetails) => {

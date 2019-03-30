@@ -78,7 +78,7 @@
 			<mat-icon color="warn" [style.vertical-align]="'middle'">warning</mat-icon>
 			Your fitness trend configuration may also have exclusion patterns and date that are probably too
 			restrictive &nbsp;&nbsp;➔
-			<button mat-button color="primary" (click)="onOpenFitnessTrendConfig()">
+			<button mat-stroked-button color="primary" (click)="onOpenFitnessTrendConfig()">
 				<mat-icon>settings</mat-icon>
 				Verify your fitness trend configuration
 			</button>
@@ -107,7 +107,7 @@
 						Backup activities</i>
 				</li>
 				<li>
-					Make sure you properly configured all your <a [routerLink]="'/athleteSettings'">single or dated
+					Make sure you properly configured all your <a [routerLink]="'/athleteSettings'">dated
 					athlete settings</a>. Indeed if cycling, running or swim FTPs are not defined in athlete settings,
 					then stress scores that depend on these settings will not be calculated resulting in missing data
 					in fitness trend.

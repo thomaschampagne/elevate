@@ -13,6 +13,7 @@ import { SectionModel } from "./models/section.model";
 import { OptionModel } from "./models/option.model";
 import { OptionHelperDataModel } from "./option-helper-dialog/option-helper-data.model";
 import { Subscription } from "rxjs";
+import { LoggerService } from "../shared/services/logging/logger.service";
 
 @Component({
 	selector: "app-global-settings",
@@ -43,7 +44,8 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 				public globalSettingsService: GlobalSettingsService,
 				public optionHelperReaderService: OptionHelperReaderService,
 				public route: ActivatedRoute,
-				public dialog: MatDialog) {
+				public dialog: MatDialog,
+				public logger: LoggerService) {
 	}
 
 	public ngOnInit(): void {
@@ -101,7 +103,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 					option.value = _.propertyOf(userSettingsSynced)(option.key);
 
 				} else {
-					console.error("Option type not supported");
+					this.logger.error("Option type not supported");
 				}
 			});
 		});
@@ -116,7 +118,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 		if (option.type === GlobalSettingsService.TYPE_OPTION_CHECKBOX) {
 
 			this.userSettingsService.saveProperty(option.key, option.active).then(() => {
-				console.log(option.key + " has been updated to ", option.active);
+				this.logger.info(option.key + " has been updated to ", option.active);
 			});
 
 			// Enable/disable sub option if needed
@@ -129,7 +131,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 		} else if (option.type === GlobalSettingsService.TYPE_OPTION_LIST) {
 
 			this.userSettingsService.saveProperty(option.key, option.active.key).then(() => {
-				console.log(option.key + " has been updated to ", option.active);
+				this.logger.info(option.key + " has been updated to ", option.active);
 			});
 
 		} else if (option.type === GlobalSettingsService.TYPE_OPTION_NUMBER) {
@@ -146,7 +148,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 				}
 
 				this.userSettingsService.saveProperty(option.key, option.value).then(() => {
-					console.log(option.key + " has been updated to " + option.value);
+					this.logger.info(option.key + " has been updated to " + option.value);
 				});
 			}
 		}
@@ -160,7 +162,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 	 */
 	public resetOptionToDefaultValue(option: OptionModel): void {
 		const resetValue = _.propertyOf(userSettingsData)(option.key);
-		console.log(option.key + " value not compliant, Reset to  " + resetValue);
+		this.logger.info(option.key + " value not compliant, Reset to  " + resetValue);
 		option.value = resetValue;
 	}
 

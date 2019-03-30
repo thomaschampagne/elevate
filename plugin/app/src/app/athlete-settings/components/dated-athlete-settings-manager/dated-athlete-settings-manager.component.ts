@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { MatDialog, MatSnackBar, MatTableDataSource } from "@angular/material";
-import { DatedAthleteSettingsModel } from "@elevate/shared/models";
-import { DatedAthleteSettingsService } from "../../../shared/services/dated-athlete-settings/dated-athlete-settings.service";
+import { AthleteModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
+import { AthleteService } from "../../../shared/services/athlete/athlete.service";
 import { EditDatedAthleteSettingsDialogComponent } from "../edit-dated-athlete-settings-dialog/edit-dated-athlete-settings-dialog.component";
 import * as _ from "lodash";
 import { DatedAthleteSettingsTableModel } from "./models/dated-athlete-settings-table.model";
@@ -10,6 +10,7 @@ import { DatedAthleteSettingsDialogData } from "../edit-dated-athlete-settings-d
 import { ConfirmDialogComponent } from "../../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { ConfirmDialogDataModel } from "../../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { AppError } from "../../../shared/models/app-error.model";
+import { LoggerService } from "../../../shared/services/logging/logger.service";
 
 @Component({
 	selector: "app-dated-athlete-settings-manager",
@@ -55,9 +56,10 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 	@Output("datedAthleteSettingsModelsChange")
 	public datedAthleteSettingsModelsChange: EventEmitter<void> = new EventEmitter<void>();
 
-	constructor(public datedAthleteSettingsService: DatedAthleteSettingsService,
+	constructor(public athleteService: AthleteService,
 				public dialog: MatDialog,
-				public snackBar: MatSnackBar) {
+				public snackBar: MatSnackBar,
+				public logger: LoggerService) {
 	}
 
 	public ngOnInit(): void {
@@ -67,13 +69,13 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
 	private loadData(): void {
 
-		this.datedAthleteSettingsService.fetch().then((models: DatedAthleteSettingsModel[]) => {
+		this.athleteService.fetch().then((athleteModel: AthleteModel) => {
 
-			this.datedAthleteSettingsModels = models;
+			this.datedAthleteSettingsModels = athleteModel.datedAthleteSettings;
 
 			// Auto creates a dated athlete settings if no one exists
 			if (this.datedAthleteSettingsModels.length === 0) {
-				this.datedAthleteSettingsService.add(DatedAthleteSettingsModel.DEFAULT_MODEL).then(() => {
+				this.athleteService.addSettings(DatedAthleteSettingsModel.DEFAULT_MODEL).then(() => {
 					this.datedAthleteSettingsModelsChange.emit();
 					this.loadData();
 				}, error => {
@@ -116,7 +118,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((datedAthleteSettingsModel: DatedAthleteSettingsModel) => {
 
 			if (datedAthleteSettingsModel) {
-				this.datedAthleteSettingsService.add(datedAthleteSettingsModel).then(() => {
+				this.athleteService.addSettings(datedAthleteSettingsModel).then(() => {
 					this.datedAthleteSettingsModelsChange.emit();
 					this.loadData();
 				}, error => {
@@ -145,7 +147,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((datedAthleteSettingsModel: DatedAthleteSettingsModel) => {
 
 			if (datedAthleteSettingsModel) {
-				this.datedAthleteSettingsService.edit(sinceIdentifier, datedAthleteSettingsModel).then(() => {
+				this.athleteService.editSettings(sinceIdentifier, datedAthleteSettingsModel).then(() => {
 					this.datedAthleteSettingsModelsChange.emit();
 					this.loadData();
 				}, error => {
@@ -168,7 +170,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirmed: boolean) => {
 			if (confirmed) {
-				this.datedAthleteSettingsService.remove(sinceIdentifier).then(() => {
+				this.athleteService.removeSettings(sinceIdentifier).then(() => {
 					this.datedAthleteSettingsModelsChange.emit();
 					this.loadData();
 				}, error => {
@@ -197,7 +199,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
 			if (confirm) {
 
-				this.datedAthleteSettingsService.reset().then(() => {
+				this.athleteService.resetSettings().then(() => {
 					this.datedAthleteSettingsModelsChange.emit();
 					this.loadData();
 				}, error => {
@@ -211,7 +213,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
 	private handleErrors(error: any) {
 
-		console.error(error);
+		this.logger.error(error);
 
 		if (error instanceof AppError) {
 			const message = (<AppError> error).message;

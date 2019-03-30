@@ -21,13 +21,14 @@ export class SegmentRankPercentageModifier extends AbstractModifier {
 
 		let percentage: string;
 
-		if (_.isNaN(parseInt(ranking[0]))) {
+		if (_.isNaN(parseInt(ranking[0], 10))) {
 			percentage = "-";
 		} else {
-			percentage = (parseInt(ranking[0]) / parseInt(ranking[1]) * 100).toFixed(2) + "%";
+			percentage = (parseInt(ranking[0], 10) / parseInt(ranking[1], 10) * 100).toFixed(2) + "%";
 		}
 		// Rewrite percentage after ranking
-		standing.after("<td class=\"percentageRanking standing text-nowrap\"><h5 class=\"topless text-uppercase\">Rank</h5><strong>" + percentage + "</strong></td>");
+		standing.after("<td class=\"percentageRanking standing text-nowrap\">" +
+			"<h5 class=\"topless text-uppercase\">Rank</h5><span class=\"text-title1\">" + percentage + "</span></td>");
 
 		if ($(".percentageRanking").length) {
 			clearInterval(this.intervalId);

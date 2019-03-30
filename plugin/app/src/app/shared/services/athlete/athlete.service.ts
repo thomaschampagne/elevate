@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { DatedAthleteSettingsModel } from "@elevate/shared/models";
-import { DatedAthleteSettingsDao } from "../../dao/dated-athlete-settings/dated-athlete-settings.dao";
+import { AthleteModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
+import { AthleteDao } from "../../dao/athlete/athlete-dao.service";
 import * as _ from "lodash";
 import { AppError } from "../../models/app-error.model";
 
@@ -8,23 +8,25 @@ import { AppError } from "../../models/app-error.model";
  * The latest managed period must have "since" as "forever"
  */
 @Injectable()
-export class DatedAthleteSettingsService {
+export class AthleteService {
 
-	constructor(public datedAthleteSettingsDao: DatedAthleteSettingsDao) {
+	constructor(public athleteModelDao: AthleteDao) {
 	}
 
 	/**
-	 * Provides athlete dated settings sorted by descending periods
-	 * @returns {Promise<DatedAthleteSettingsModel[]>}
+	 * Provides athlete model with dated settings sorted by descending periods
+	 * @returns {Promise<AthleteModel>}
 	 */
-	public fetch(): Promise<DatedAthleteSettingsModel[]> {
-		return this.datedAthleteSettingsDao.fetch()
-			.then((datedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
-				datedAthleteSettingsModels = _.sortBy(datedAthleteSettingsModels, (model: DatedAthleteSettingsModel) => {
+	public fetch(): Promise<AthleteModel> {
+		return this.athleteModelDao.fetch()
+			.then((athleteModel: AthleteModel) => {
+
+				athleteModel.datedAthleteSettings = _.sortBy(athleteModel.datedAthleteSettings, (model: DatedAthleteSettingsModel) => {
 					const sortOnDate: Date = (_.isNull(model.since)) ? new Date(0) : new Date(model.since);
 					return sortOnDate.getTime() * -1;
 				});
-				return Promise.resolve(datedAthleteSettingsModels);
+
+				return Promise.resolve(athleteModel);
 			});
 	}
 
@@ -33,57 +35,71 @@ export class DatedAthleteSettingsService {
 	 * @param {DatedAthleteSettingsModel} datedAthleteSettings
 	 * @returns {Promise<DatedAthleteSettingsModel[]>}
 	 */
-	public add(datedAthleteSettings: DatedAthleteSettingsModel): Promise<DatedAthleteSettingsModel[]> {
+	public addSettings(datedAthleteSettings: DatedAthleteSettingsModel): Promise<DatedAthleteSettingsModel[]> {
 
 		return this.validateSingle(datedAthleteSettings).then(() => {
 
 			return this.fetch();
 
-		}).then((datedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
+		}).then((athleteModel: AthleteModel) => {
 
 			// Check if period already exists
-			const alreadyExistingDatedSettings = _.find(datedAthleteSettingsModels, {since: datedAthleteSettings.since});
+			const alreadyExistingDatedSettings = _.find(athleteModel.datedAthleteSettings, {since: datedAthleteSettings.since});
 
 			if (!_.isEmpty(alreadyExistingDatedSettings)) {
 				return Promise.reject(new AppError(AppError.DATED_ATHLETE_SETTINGS_EXISTS, "Dated athlete settings already exists. You should edit it instead."));
 			}
 
-			if (datedAthleteSettingsModels.length > 0) {
-				datedAthleteSettingsModels = _.flatten([datedAthleteSettings, datedAthleteSettingsModels]);
+			if (athleteModel.datedAthleteSettings.length > 0) {
+				athleteModel.datedAthleteSettings = _.flatten([datedAthleteSettings, athleteModel.datedAthleteSettings]);
 			} else {
 
 				// No existing DatedAthleteSettingsModel stored... Add the current
-				datedAthleteSettingsModels.push(datedAthleteSettings);
+				athleteModel.datedAthleteSettings.push(datedAthleteSettings);
 
 				// And append a default forever DatedAthleteSettingsModel must be created
 				const defaultForeverDatedAthleteSettings = _.cloneDeep(datedAthleteSettings);
 				defaultForeverDatedAthleteSettings.since = null;
-				datedAthleteSettingsModels.push(defaultForeverDatedAthleteSettings);
+				athleteModel.datedAthleteSettings.push(defaultForeverDatedAthleteSettings);
 			}
 
-			return this.save(datedAthleteSettingsModels);
+			return this.save(athleteModel).then(savedAthleteModel => {
+				return Promise.resolve(savedAthleteModel.datedAthleteSettings);
+			});
 		});
 	}
 
 	/**
-	 * Save (replace existing) athlete dated settings.
-	 * @param datedAthleteSettingsModels
-	 * @returns {Promise<DatedAthleteSettingsModel[]>}
+	 * Save (replace existing) athlete model.
+	 * @param athleteModel
+	 * @returns {Promise<AthleteModel>}
 	 */
-	public save(datedAthleteSettingsModels: DatedAthleteSettingsModel[]): Promise<DatedAthleteSettingsModel[]> {
-		return this.validate(datedAthleteSettingsModels).then(() => {
-			return (<Promise<DatedAthleteSettingsModel[]>> this.datedAthleteSettingsDao.save(datedAthleteSettingsModels));
+	public save(athleteModel: AthleteModel): Promise<AthleteModel> {
+		return this.validate(athleteModel.datedAthleteSettings).then(() => {
+			return (<Promise<AthleteModel>> this.athleteModelDao.save(athleteModel));
 		});
 	}
 
 	/**
-	 * Reset (replace existing) athlete dated settings with default DatedAthleteSettingsModel
+	 *
+	 * @param path
+	 * @param value
+	 */
+	public saveProperty<V>(path: string | string[], value: V): Promise<AthleteModel> {
+		return this.athleteModelDao.upsertProperty<V>(path, value);
+	}
+
+	/**
+	 * Reset (replace existing) athlete DatedAthleteSettings with default AthleteSettings
 	 * @returns {Promise<DatedAthleteSettingsModel[]>}
 	 */
-	public reset(): Promise<DatedAthleteSettingsModel[]> {
-		// Force save empty and add default DatedAthleteSettingsModel
-		return this.datedAthleteSettingsDao.save([]).then(() => {
-			return this.add(DatedAthleteSettingsModel.DEFAULT_MODEL);
+	public resetSettings(): Promise<DatedAthleteSettingsModel[]> {
+
+		return this.fetch().then((athleteModel: AthleteModel) => {
+			athleteModel.datedAthleteSettings = [];
+			return this.athleteModelDao.save(athleteModel);
+		}).then(() => {
+			return this.addSettings(DatedAthleteSettingsModel.DEFAULT_MODEL);
 		});
 	}
 
@@ -93,17 +109,17 @@ export class DatedAthleteSettingsService {
 	 * @param {DatedAthleteSettingsModel} datedAthleteSettings
 	 * @returns {Promise<DatedAthleteSettingsModel[]>}
 	 */
-	public edit(sinceIdentifier: string, datedAthleteSettings: DatedAthleteSettingsModel): Promise<DatedAthleteSettingsModel[]> {
+	public editSettings(sinceIdentifier: string, datedAthleteSettings: DatedAthleteSettingsModel): Promise<DatedAthleteSettingsModel[]> {
 
 		return this.validateSingle(datedAthleteSettings).then(() => {
 
 			return this.fetch();
 
-		}).then((datedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
+		}).then((athleteModel: AthleteModel) => {
 
 			// Test if the edited dated athlete settings 'since' conflicts with an existing one
 			const isEditChangingSince = (sinceIdentifier !== datedAthleteSettings.since);
-			const isEditOverridingExistingSettings = (_.findIndex(datedAthleteSettingsModels, {since: datedAthleteSettings.since}) !== -1);
+			const isEditOverridingExistingSettings = (_.findIndex(athleteModel.datedAthleteSettings, {since: datedAthleteSettings.since}) !== -1);
 			const isEditConflictWithExistingSettings = (isEditChangingSince && isEditOverridingExistingSettings);
 
 			if (isEditConflictWithExistingSettings) {
@@ -111,7 +127,7 @@ export class DatedAthleteSettingsService {
 					"Dated athlete settings do not exists. You should add it instead."));
 			}
 
-			const indexOfSettingsToEdit = _.findIndex(datedAthleteSettingsModels, {since: sinceIdentifier});
+			const indexOfSettingsToEdit = _.findIndex(athleteModel.datedAthleteSettings, {since: sinceIdentifier});
 
 			if (indexOfSettingsToEdit === -1) {
 				return Promise.reject(new AppError(AppError.DATED_ATHLETE_SETTINGS_DO_NOT_EXISTS,
@@ -119,9 +135,11 @@ export class DatedAthleteSettingsService {
 			}
 
 			// Replace with settings given by the user
-			datedAthleteSettingsModels[indexOfSettingsToEdit] = datedAthleteSettings;
+			athleteModel.datedAthleteSettings[indexOfSettingsToEdit] = datedAthleteSettings;
 
-			return this.save(datedAthleteSettingsModels);
+			return this.save(athleteModel).then(savedAthleteModel => {
+				return Promise.resolve(savedAthleteModel.datedAthleteSettings);
+			});
 		});
 	}
 
@@ -130,16 +148,16 @@ export class DatedAthleteSettingsService {
 	 * @param {string} sinceIdentifier
 	 * @returns {Promise<DatedAthleteSettingsModel[]>}
 	 */
-	public remove(sinceIdentifier: string): Promise<DatedAthleteSettingsModel[]> {
+	public removeSettings(sinceIdentifier: string): Promise<DatedAthleteSettingsModel[]> {
 
-		return this.fetch().then((datedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
+		return this.fetch().then((athleteModel: AthleteModel) => {
 
 			if (_.isNull(sinceIdentifier)) {
 				return Promise.reject(new AppError(AppError.DATED_ATHLETE_SETTINGS_FOREVER_MUST_EXISTS,
 					"Default forever dated athlete settings cannot be removed."));
 			}
 
-			const indexOfSettingsToRemove = _.findIndex(datedAthleteSettingsModels, {since: sinceIdentifier});
+			const indexOfSettingsToRemove = _.findIndex(athleteModel.datedAthleteSettings, {since: sinceIdentifier});
 
 			if (indexOfSettingsToRemove === -1) {
 				return Promise.reject(new AppError(AppError.DATED_ATHLETE_SETTINGS_DO_NOT_EXISTS,
@@ -147,22 +165,25 @@ export class DatedAthleteSettingsService {
 			}
 
 			// Remove dated athlete settings
-			datedAthleteSettingsModels.splice(indexOfSettingsToRemove, 1);
+			athleteModel.datedAthleteSettings.splice(indexOfSettingsToRemove, 1);
 
-			return this.save(datedAthleteSettingsModels);
+			return this.save(athleteModel).then(savedAthleteModel => {
+				return Promise.resolve(savedAthleteModel.datedAthleteSettings);
+			});
+
 		});
 	}
 
 	/**
 	 *
-	 * @param periodAthleteSettings
+	 * @param datedAthleteSettings
 	 */
-	public validate(periodAthleteSettings: DatedAthleteSettingsModel[]): Promise<void> {
+	public validate(datedAthleteSettings: DatedAthleteSettingsModel[]): Promise<void> {
 
 		let hasForeverSettings = false;
 		let hasDuplicate = false;
 
-		const keyOccurrences = _.countBy(periodAthleteSettings, "since");
+		const keyOccurrences = _.countBy(datedAthleteSettings, "since");
 
 		_.mapKeys(keyOccurrences, (count: number, key: string) => {
 			if (key === "null") {
