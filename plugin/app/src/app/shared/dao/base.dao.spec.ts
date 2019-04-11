@@ -3,7 +3,7 @@ import { TestBed } from "@angular/core/testing";
 import { DataStore } from "../data-store/data-store";
 import { StorageLocationModel } from "../data-store/storage-location.model";
 import { Injectable } from "@angular/core";
-import { MockedDataStore } from "../data-store/impl/spec/mocked-data-store.service";
+import { MockedDataStore } from "../data-store/impl/mock/mocked-data-store.service";
 import { BaseDao } from "./base.dao";
 
 describe("BaseDao", () => {

@@ -34,7 +34,6 @@ describe("FitnessTrendComponent", () => {
 		}
 	}
 
-
 	beforeEach((done: Function) => {
 
 		TestBed.configureTestingModule({

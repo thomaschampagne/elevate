@@ -1,7 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 
 import { LastSyncDateTimeDao } from "./last-sync-date-time.dao";
-import { MockedDataStore } from "../../data-store/impl/spec/mocked-data-store.service";
+import { MockedDataStore } from "../../data-store/impl/mock/mocked-data-store.service";
 import { DataStore } from "../../data-store/data-store";
 
 

@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { DataStore } from "../../data-store/data-store";
-import { MockedDataStore } from "../../data-store/impl/spec/mocked-data-store.service";
+import { MockedDataStore } from "../../data-store/impl/mock/mocked-data-store.service";
 
 describe("ActivityDao", () => {
 

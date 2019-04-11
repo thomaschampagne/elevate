@@ -16,7 +16,7 @@ import { YearProgressModule } from "../../year-progress.module";
 import { AppError } from "../../../shared/models/app-error.model";
 import { TargetProgressModel } from "../models/target-progress.model";
 import { DataStore } from "../../../shared/data-store/data-store";
-import { MockedDataStore } from "../../../shared/data-store/impl/spec/mocked-data-store.service";
+import { MockedDataStore } from "../../../shared/data-store/impl/mock/mocked-data-store.service";
 import { ProgressMode } from "../enums/progress-mode.enum";
 import { RollingProgressConfigModel } from "../models/rolling-progress-config.model";
 import { RollingProgressPresetModel } from "../models/rolling-progress-preset.model";

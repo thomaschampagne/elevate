@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { YearProgressPresetDao } from "./year-progress-preset.dao";
-import { MockedDataStore } from "../../../shared/data-store/impl/spec/mocked-data-store.service";
+import { MockedDataStore } from "../../../shared/data-store/impl/mock/mocked-data-store.service";
 import { YearToDateProgressPresetModel } from "../models/year-to-date-progress-preset.model";
 import { DataStore } from "../../../shared/data-store/data-store";
 

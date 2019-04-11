@@ -4,7 +4,7 @@ import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel, Gender }
 import * as _ from "lodash";
 import { AthleteDao } from "../../dao/athlete/athlete-dao.service";
 import { AppError } from "../../models/app-error.model";
-import { MockedDataStore } from "../../data-store/impl/spec/mocked-data-store.service";
+import { MockedDataStore } from "../../data-store/impl/mock/mocked-data-store.service";
 import { DataStore } from "../../data-store/data-store";
 
 describe("AthleteService", () => {

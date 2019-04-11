@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { AthleteDao } from "./athlete-dao.service";
-import { MockedDataStore } from "../../data-store/impl/spec/mocked-data-store.service";
+import { MockedDataStore } from "../../data-store/impl/mock/mocked-data-store.service";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { DataStore } from "../../data-store/data-store";
 

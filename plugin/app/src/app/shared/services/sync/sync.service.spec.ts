@@ -8,9 +8,9 @@ import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import * as _ from "lodash";
 import { VERSIONS_PROVIDER } from "../versions/versions-provider.interface";
-import { MockedVersionsProvider } from "../versions/impl/spec/mocked-versions-provider";
+import { MockedVersionsProvider } from "../versions/impl/mock/mocked-versions-provider";
 import { SyncService } from "./sync.service";
-import { MockSyncService } from "./impl/spec/mock-sync.service";
+import { MockSyncService } from "./impl/mock/mock-sync.service";
 
 describe("SyncService", () => {
 
