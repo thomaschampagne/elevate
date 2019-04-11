@@ -818,6 +818,80 @@ describe("YearProgressService", () => {
 
 		});
 
+		it("should calculate 1 day rolling distance progression with multiple activities per day (no previous year)", (done: Function) => {
+
+			// Given
+			const expectedYearsLength = 1;
+			const expectedYear = 2019;
+			const expectedDaysInYear = 365;
+			const rollingDays = 1;
+			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, rollingDays);
+
+			const todayTime = "2019-02-15 20:00";
+			getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
+
+			/* History definition */
+			syncedActivityModels.push(createActivity("2019-02-01", "Ride", 10000, 3600, 100));
+
+			syncedActivityModels.push(createActivity("2019-02-02", "Ride", 10000, 3600, 100)); // 1st activity on 2019-02-02 => 10km
+			syncedActivityModels.push(createActivity("2019-02-02", "Ride", 15000, 3600, 100)); // 2nd activity on 2019-02-02 => 15km
+
+			syncedActivityModels.push(createActivity("2019-02-03", "Ride", 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-04", "Ride", 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-05", "Ride", 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-06", "Ride", 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-07", "Ride", 10000, 3600, 100));
+			/* (Rest) 2019-02-08 */
+			/* (Rest) 2019-02-09 */
+			/* (Rest) 2019-02-10 */
+			/* (Rest) 2019-02-11 */
+			/* (Rest) 2019-02-12 */
+			/* (Rest) 2019-02-13 */
+			/* (Rest) 2019-02-14 */
+			/* (Rest) 2019-02-15 */
+			/* (Rest) 2019-02-16 */
+			/* ... */
+
+			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, syncedActivityModels as SyncedActivityModel[]);
+
+			// Then
+			/* Common checks */
+			expect(yearProgressions).not.toBeNull();
+			expect(yearProgressions).not.toBeNull();
+			expect(yearProgressions.length).toEqual(expectedYearsLength);
+
+			const yearProgressModel = yearProgressions[0];
+			const rollingWeekProgress = yearProgressModel.progressions;
+
+			expect(yearProgressModel.mode).toEqual(ProgressMode.ROLLING);
+			expect(yearProgressModel.year).toEqual(expectedYear);
+			expect(rollingWeekProgress.length).toEqual(expectedDaysInYear);
+			expect(rollingWeekProgress[0].year).toEqual(expectedYear);
+			expect(rollingWeekProgress[0].dayOfYear).toEqual(1);
+
+			/* Rolling checks */
+			const januaryDaysOffset = 31;
+			expect(rollingWeekProgress[/* Feb 1, 2019 */ januaryDaysOffset].distance).toEqual(10);
+			expect(rollingWeekProgress[/* Feb 2, 2019 */ 1 + januaryDaysOffset].distance).toEqual(25); // 25km expected on 2019-02-02
+			expect(rollingWeekProgress[/* Feb 3, 2019 */ 2 + januaryDaysOffset].distance).toEqual(10);
+			expect(rollingWeekProgress[/* Feb 4, 2019 */ 3 + januaryDaysOffset].distance).toEqual(10);
+			expect(rollingWeekProgress[/* Feb 5, 2019 */ 4 + januaryDaysOffset].distance).toEqual(10);
+			expect(rollingWeekProgress[/* Feb 6, 2019 */ 5 + januaryDaysOffset].distance).toEqual(10);
+			expect(rollingWeekProgress[/* Feb 7, 2019 */ 6 + januaryDaysOffset].distance).toEqual(10);
+			expect(rollingWeekProgress[/* Feb 8, 2019 */ 7 + januaryDaysOffset].distance).toEqual(0);
+			expect(rollingWeekProgress[/* Feb 9, 2019 */ 8 + januaryDaysOffset].distance).toEqual(0);
+			expect(rollingWeekProgress[/* Feb 10, 2019 */ 9 + januaryDaysOffset].distance).toEqual(0);
+			expect(rollingWeekProgress[/* Feb 11, 2019 */ 10 + januaryDaysOffset].distance).toEqual(0);
+			expect(rollingWeekProgress[/* Feb 12, 2019 */ 11 + januaryDaysOffset].distance).toEqual(0);
+			expect(rollingWeekProgress[/* Feb 13, 2019 */ 12 + januaryDaysOffset].distance).toEqual(0);
+			expect(rollingWeekProgress[/* Feb 14, 2019 */ 13 + januaryDaysOffset].distance).toEqual(0);
+			expect(rollingWeekProgress[/* Feb 15, 2019 */ 14 + januaryDaysOffset].distance).toEqual(0);
+			expect(rollingWeekProgress[/* Feb 16, 2019 */ 15 + januaryDaysOffset].distance).toEqual(0);
+
+			done();
+
+		});
+
 	});
 
 	describe("compute target progression", () => {

@@ -14,6 +14,8 @@ import { LoggerService } from "../shared/services/logging/logger.service";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { AppError } from "../shared/models/app-error.model";
+import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
+import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import NumberColumn = ActivityColumns.NumberColumn;
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
@@ -78,9 +80,12 @@ export class ActivitiesComponent implements OnInit {
 
 				let lthrStr = "Lthr ";
 
-				lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.default) ? "D:" + activity.athleteSnapshot.athleteSettings.lthr.default + "bpm, " : "";
-				lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.cycling) ? "C:" + activity.athleteSnapshot.athleteSettings.lthr.cycling + "bpm, " : "";
-				lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.running) ? "R:" + activity.athleteSnapshot.athleteSettings.lthr.running + "bpm, " : "";
+				lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.default) ? "D:" +
+					activity.athleteSnapshot.athleteSettings.lthr.default + "bpm, " : "";
+				lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.cycling) ? "C:" +
+					activity.athleteSnapshot.athleteSettings.lthr.cycling + "bpm, " : "";
+				lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.running) ? "R:" +
+					activity.athleteSnapshot.athleteSettings.lthr.running + "bpm, " : "";
 				lthrStr = lthrStr.slice(0, -2);
 
 				inlineSettings += lthrStr + ". ";
@@ -88,11 +93,13 @@ export class ActivitiesComponent implements OnInit {
 
 		}
 
-		if (activity.extendedStats && activity.extendedStats.powerData && (_.isNumber(activity.extendedStats.powerData.powerStressScore) && activity.athleteSnapshot.athleteSettings.cyclingFtp)) {
+		if (activity.extendedStats && activity.extendedStats.powerData && (_.isNumber(activity.extendedStats.powerData.powerStressScore)
+			&& activity.athleteSnapshot.athleteSettings.cyclingFtp)) {
 			inlineSettings += "Cycling Ftp " + activity.athleteSnapshot.athleteSettings.cyclingFtp + "w. ";
 		}
 
-		if (activity.extendedStats && activity.extendedStats.paceData && (_.isNumber(activity.extendedStats.paceData.runningStressScore) && activity.athleteSnapshot.athleteSettings.runningFtp)) {
+		if (activity.extendedStats && activity.extendedStats.paceData && (_.isNumber(activity.extendedStats.paceData.runningStressScore)
+			&& activity.athleteSnapshot.athleteSettings.runningFtp)) {
 			inlineSettings += "Run Ftp " + activity.athleteSnapshot.athleteSettings.runningFtp + "s/" + ((isImperial) ? "mi" : "km") + ".";
 		}
 
@@ -271,6 +278,34 @@ export class ActivitiesComponent implements OnInit {
 		});
 	}
 
+	public onDeleteActivity(activity: SyncedActivityModel): void {
+
+		const data: ConfirmDialogDataModel = {
+			title: "Deleting activity \"" + activity.name + "\"",
+			content: "Are you sure to perform this action? You will be able to fetch back this activity with a \"Sync all activities\".",
+			confirmText: "Delete"
+		};
+
+		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+			minWidth: ConfirmDialogComponent.MIN_WIDTH,
+			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+			data: data
+		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+
+			if (confirm) {
+				this.activityService.removeByIds([activity.id]).then(() => {
+					this.fetchApplyData();
+				}, error => {
+					this.snackBar.open(error, "Close");
+				});
+			}
+			afterClosedSubscription.unsubscribe();
+		});
+
+	}
+
 	public tickAll(): void {
 		this.selectedColumns = _.clone(ActivityColumns.Definition.ALL);
 		this.onSelectedColumns();
@@ -340,7 +375,7 @@ export class ActivitiesComponent implements OnInit {
 								cellValue = column.print(activity, column.id);
 								break;
 
-							case ActivityColumns.ColumnType.STRAVA_ACTIVITY_LINK:
+							case ActivityColumns.ColumnType.ACTIVITY_LINK:
 								cellValue = column.print(activity, column.id);
 								break;
 
