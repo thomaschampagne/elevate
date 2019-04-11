@@ -9,7 +9,6 @@ import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
 import { Subscription } from "rxjs";
 import { WindowService } from "./shared/services/window/window.service";
-import { SyncService } from "./shared/services/sync/sync.service";
 import { ConfirmDialogComponent } from "./shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { ConfirmDialogDataModel } from "./shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { GotItDialogComponent } from "./shared/dialogs/got-it-dialog/got-it-dialog.component";
@@ -24,6 +23,7 @@ import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
 import { AppEventsService } from "./shared/services/external-updates/app-events-service";
 import { EnvTarget } from "./shared/enums/env-target";
 import { environment } from "../environments/environment";
+import { SyncService } from "./shared/services/sync/sync.service";
 
 class MenuItemModel {
 	public name: string;

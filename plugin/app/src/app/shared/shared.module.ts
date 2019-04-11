@@ -19,7 +19,6 @@ import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
 import { LastSyncDateTimeDao } from "./dao/sync/last-sync-date-time.dao";
-import { SyncService } from "./services/sync/sync.service";
 import { ImportBackupDialogComponent } from "./dialogs/import-backup-dialog/import-backup-dialog.component";
 import { ShareComponent } from "../share/share.component";
 import { ReportComponent } from "../report/report.component";
@@ -84,7 +83,6 @@ import { EnvTarget } from "./enums/env-target";
 		ImportBackupDialogComponent
 	],
 	providers: [
-		SyncService,
 		LastSyncDateTimeDao,
 		UserSettingsService,
 		UserSettingsDao,

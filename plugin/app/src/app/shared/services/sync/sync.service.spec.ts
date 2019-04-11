@@ -1,6 +1,5 @@
-import { inject, TestBed } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import { LastSyncDateTimeDao } from "../../dao/sync/last-sync-date-time.dao";
-import { SyncService } from "./sync.service";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { SyncState } from "./sync-state.enum";
 import { SyncedBackupModel } from "./synced-backup.model";
@@ -10,11 +9,11 @@ import { SharedModule } from "../../shared.module";
 import * as _ from "lodash";
 import { VERSIONS_PROVIDER } from "../versions/versions-provider.interface";
 import { MockedVersionsProvider } from "../versions/impl/spec/mocked-versions-provider";
+import { SyncService } from "./sync.service";
+import { MockSyncService } from "./impl/spec/mock-sync.service";
 
 describe("SyncService", () => {
 
-
-	const tabId = 101;
 	const installedVersion = "2.0.0";
 	let athleteModel: AthleteModel;
 	let syncService: SyncService;
@@ -30,6 +29,7 @@ describe("SyncService", () => {
 				SharedModule,
 			],
 			providers: [
+				{provide: SyncService, useClass: MockSyncService},
 				{provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider}
 			]
 		});
@@ -39,22 +39,16 @@ describe("SyncService", () => {
 		syncService = TestBed.get(SyncService);
 		lastSyncDateTimeDao = TestBed.get(LastSyncDateTimeDao);
 
-		spyOn(syncService, "getCurrentTab").and.callFake((callback: (tab: chrome.tabs.Tab) => void) => {
-			const tab: Partial<chrome.tabs.Tab> = {
-				id: tabId
-			};
-			callback(tab as chrome.tabs.Tab);
-		});
-
 		spyOn(window, "open").and.stub(); // Avoid opening window in tests
 
 		done();
 
 	});
 
-	it("should be created", inject([SyncService], (service: SyncService) => {
-		expect(service).toBeTruthy();
-	}));
+	it("should be created", (done: Function) => {
+		expect(syncService).toBeTruthy();
+		done();
+	});
 
 	it("should get last sync date time", (done: Function) => {
 
@@ -571,24 +565,6 @@ describe("SyncService", () => {
 			done();
 		});
 
-	});
-
-	it("should open sync window", (done: Function) => {
-
-		// Given
-		const fastSync = false;
-		const forceSync = false;
-		const expectedUrl = "https://www.strava.com/dashboard?elevateSync=true&fastSync=" + forceSync + "&forceSync=" + forceSync + "&sourceTabId=" + tabId;
-
-		// When
-		syncService.sync(fastSync, forceSync);
-
-		// Then
-		expect(syncService.getCurrentTab).toHaveBeenCalled();
-		expect(window.open).toHaveBeenCalled();
-		expect(window.open).toHaveBeenCalledWith(expectedUrl, jasmine.any(String), jasmine.any(String));
-
-		done();
 	});
 
 	it("should provide NOT_SYNCED state", (done: Function) => {

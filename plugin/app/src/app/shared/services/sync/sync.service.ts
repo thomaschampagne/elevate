@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@angular/core";
+import { Inject } from "@angular/core";
 import { LastSyncDateTimeDao } from "../../dao/sync/last-sync-date-time.dao";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import { saveAs } from "file-saver";
@@ -15,12 +15,7 @@ import { Constant } from "@elevate/shared/constants";
 import { LoggerService } from "../logging/logger.service";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../versions/versions-provider.interface";
 
-@Injectable()
-export class SyncService {
-
-	public static readonly SYNC_URL_BASE: string = "https://www.strava.com/dashboard";
-	public static readonly SYNC_WINDOW_WIDTH: number = 690;
-	public static readonly SYNC_WINDOW_HEIGHT: number = 720;
+export abstract class SyncService {
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
 				public lastSyncDateTimeDao: LastSyncDateTimeDao,
@@ -30,6 +25,8 @@ export class SyncService {
 				public logger: LoggerService) {
 
 	}
+
+	public abstract sync(fastSync: boolean, forceSync: boolean): void;
 
 	/**
 	 *
@@ -231,38 +228,6 @@ export class SyncService {
 		});
 	}
 
-	/**
-	 *
-	 * @param {boolean} fastSync
-	 * @param {boolean} forceSync
-	 */
-	public sync(fastSync: boolean, forceSync: boolean): void { // TODO abstract method?
-		this.getCurrentTab((tab: chrome.tabs.Tab) => { // TODO chrome.* should be not directly used, Inject a specific chrome implementation here
-			const params = "?elevateSync=true&fastSync=" + fastSync + "&forceSync=" + forceSync + "&sourceTabId=" + tab.id;
-			const features = "width=" + SyncService.SYNC_WINDOW_WIDTH + ", height=" + SyncService.SYNC_WINDOW_HEIGHT + ", location=0";
-			window.open(SyncService.SYNC_URL_BASE + params, "_blank", features);
-		});
-	}
-
-	/**
-	 *
-	 * @param {(tab: chrome.tabs.Tab) => void} callback
-	 */
-	public getCurrentTab(callback: (tab: chrome.tabs.Tab) => void): void {
-		chrome.tabs.getCurrent((tab: chrome.tabs.Tab) => { // TODO chrome.* should be not directly used
-			callback(tab);
-		});
-	}
-
-	/*
-		/!**
-		 *
-		 * @returns {string}
-		 *!/
-		public getAppVersion(): string { // TODO Inject a specific chrome implementation here to getAppVersion or use Root Package.json
-			return chrome.runtime.getManifest().version; // TODO chrome.* should be not directly used
-		}
-	*/
 
 	/**
 	 * @returns {string} Backup version threshold at which a "greater or equal" imported backup version is compatible with current code.
@@ -280,4 +245,3 @@ export class SyncService {
 		saveAs(blob, filename);
 	}
 }
-
