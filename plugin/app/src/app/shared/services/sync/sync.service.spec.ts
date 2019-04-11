@@ -8,8 +8,11 @@ import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel } from "@
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import * as _ from "lodash";
+import { VERSIONS_PROVIDER } from "../versions/versions-provider.interface";
+import { MockedVersionsProvider } from "../versions/impl/spec/mocked-versions-provider";
 
 describe("SyncService", () => {
+
 
 	const tabId = 101;
 	const installedVersion = "2.0.0";
@@ -19,10 +22,15 @@ describe("SyncService", () => {
 
 	beforeEach((done: Function) => {
 
+		const mockedVersionsProvider: MockedVersionsProvider = new MockedVersionsProvider();
+
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
 				SharedModule,
+			],
+			providers: [
+				{provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider}
 			]
 		});
 
