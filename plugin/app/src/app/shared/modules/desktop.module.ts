@@ -7,9 +7,11 @@ import { VERSIONS_PROVIDER } from "../services/versions/versions-provider.interf
 import { DesktopVersionsProvider } from "../services/versions/impl/desktop-versions-provider.service";
 import { SyncService } from "../services/sync/sync.service";
 import { DesktopSyncService } from "../services/sync/impl/desktop-sync.service";
+import { ElectronService } from "../services/electron/electron.service";
 
 @NgModule({
 	providers: [
+		ElectronService,
 		{provide: DataStore, useClass: DesktopDataStore},
 		{provide: AppEventsService, useClass: DesktopEventsService},
 		{provide: SyncService, useClass: DesktopSyncService},
