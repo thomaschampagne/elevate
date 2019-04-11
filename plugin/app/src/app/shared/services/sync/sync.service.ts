@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { LastSyncDateTimeDao } from "../../dao/sync/last-sync-date-time.dao";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import { saveAs } from "file-saver";
@@ -13,6 +13,7 @@ import { AthleteService } from "../athlete/athlete.service";
 import { UserSettingsService } from "../user-settings/user-settings.service";
 import { Constant } from "@elevate/shared/constants";
 import { LoggerService } from "../logging/logger.service";
+import { VERSIONS_PROVIDER, VersionsProvider } from "../versions/versions-provider.interface";
 
 @Injectable()
 export class SyncService {
@@ -21,7 +22,8 @@ export class SyncService {
 	public static readonly SYNC_WINDOW_WIDTH: number = 690;
 	public static readonly SYNC_WINDOW_HEIGHT: number = 720;
 
-	constructor(public lastSyncDateTimeDao: LastSyncDateTimeDao,
+	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
+				public lastSyncDateTimeDao: LastSyncDateTimeDao,
 				public activityDao: ActivityDao,
 				public athleteService: AthleteService,
 				public userSettingsService: UserSettingsService,
@@ -69,14 +71,25 @@ export class SyncService {
 			return Promise.reject("Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.");
 		}
 
-		if (!environment.skipRestoreSyncedBackupCheck) {
+		return this.versionsProvider.getInstalledAppVersion().then(appVersion => {
+
+			if (environment.skipRestoreSyncedBackupCheck) {
+				return Promise.resolve();
+			}
+
 			// Check if imported backup is compatible with current code
 			if (semver.lt(importedBackupModel.pluginVersion, this.getCompatibleBackupVersionThreshold())) {
-				return Promise.reject("Imported backup version " + importedBackupModel.pluginVersion + " is not compatible with current installed version " + this.getAppVersion() + ".");
+				return Promise.reject("Imported backup version " + importedBackupModel.pluginVersion
+					+ " is not compatible with current installed version " + appVersion + ".");
+			} else {
+				return Promise.resolve();
 			}
-		}
 
-		return this.clearSyncedData().then(() => {
+		}).then(() => {
+
+			return this.clearSyncedData();
+
+		}).then(() => {
 
 			let promiseImportDatedAthleteSettings;
 
@@ -143,13 +156,15 @@ export class SyncService {
 
 			this.lastSyncDateTimeDao.fetch(),
 			this.activityDao.fetch(),
-			this.athleteService.fetch()
+			this.athleteService.fetch(),
+			this.versionsProvider.getInstalledAppVersion()
 
 		]).then((result: Object[]) => {
 
 			const lastSyncDateTime: number = result[0] as number;
 			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
 			const athleteModel: AthleteModel = result[2] as AthleteModel;
+			const appVersion: string = result[3] as string;
 
 			if (!_.isNumber(lastSyncDateTime)) {
 				return Promise.reject("Cannot export. No last synchronization date found.");
@@ -159,7 +174,7 @@ export class SyncService {
 				lastSyncDateTime: lastSyncDateTime,
 				syncedActivities: syncedActivityModels,
 				athleteModel: athleteModel,
-				pluginVersion: this.getAppVersion()
+				pluginVersion: appVersion
 			};
 
 			return Promise.resolve(backupModel);
@@ -179,7 +194,8 @@ export class SyncService {
 			return Promise.resolve();
 		}).catch(error => {
 			this.logger.error(error);
-			return Promise.reject("Athlete synced data has not been cleared totally. Some properties cannot be deleted. You may need to uninstall/install the software.");
+			return Promise.reject("Athlete synced data has not been cleared totally. " +
+				"Some properties cannot be deleted. You may need to uninstall/install the software.");
 		});
 	}
 
@@ -238,13 +254,15 @@ export class SyncService {
 		});
 	}
 
-	/**
-	 *
-	 * @returns {string}
-	 */
-	public getAppVersion(): string { // TODO Inject a specific chrome implementation here to getAppVersion or use Root Package.json
-		return chrome.runtime.getManifest().version; // TODO chrome.* should be not directly used
-	}
+	/*
+		/!**
+		 *
+		 * @returns {string}
+		 *!/
+		public getAppVersion(): string { // TODO Inject a specific chrome implementation here to getAppVersion or use Root Package.json
+			return chrome.runtime.getManifest().version; // TODO chrome.* should be not directly used
+		}
+	*/
 
 	/**
 	 * @returns {string} Backup version threshold at which a "greater or equal" imported backup version is compatible with current code.

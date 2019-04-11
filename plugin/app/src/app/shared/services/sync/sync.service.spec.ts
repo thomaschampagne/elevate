@@ -38,8 +38,6 @@ describe("SyncService", () => {
 			callback(tab as chrome.tabs.Tab);
 		});
 
-		spyOn(syncService, "getAppVersion").and.returnValue(installedVersion);
-
 		spyOn(window, "open").and.stub(); // Avoid opening window in tests
 
 		done();
