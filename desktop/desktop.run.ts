@@ -1,7 +1,10 @@
 import * as Electron from "electron";
-import { app, BrowserWindow, globalShortcut, screen } from "electron";
+import { app, BrowserWindow, globalShortcut } from "electron";
 import * as path from "path";
 import * as url from "url";
+import logger from "electron-log";
+
+logger.transports.file.maxSize = 1048576; // 1MB
 
 class DesktopRun {
 
@@ -18,7 +21,6 @@ class DesktopRun {
 	}
 
 	public createWindow(): void {
-		const size = screen.getPrimaryDisplay().workAreaSize;
 
 		// Create the browser window.
 		const winWidth = DesktopRun.WINDOW_WIDTH;
@@ -30,8 +32,6 @@ class DesktopRun {
 			center: true,
 			frame: true
 		});
-
-		this.appWindow.maximize();
 
 		this.appWindow.loadURL(
 			url.format({
@@ -55,17 +55,17 @@ class DesktopRun {
 
 		// Shortcuts
 		globalShortcut.register("f5", () => {
-			console.log("f5 is pressed, reload app");
+			logger.log("f5 is pressed, reload app");
 			this.appWindow.reload();
 		});
 
 		globalShortcut.register("CommandOrControl+R", () => {
-			console.log("CommandOrControl+R is pressed, reload app");
+			logger.log("CommandOrControl+R is pressed, reload app");
 			this.appWindow.reload();
 		});
 
 		globalShortcut.register("CommandOrControl+F12", () => {
-			console.log("CommandOrControl+F12 is pressed, toggle dev tools");
+			logger.log("CommandOrControl+F12 is pressed, toggle dev tools");
 			this.appWindow.webContents.toggleDevTools();
 		});
 
@@ -74,12 +74,12 @@ class DesktopRun {
 	public run(): void {
 
 		if (this.isPackaged) {
-			console.log("Running in production");
+			logger.log("Running in production");
 		} else {
-			console.log("Running in development");
+			logger.log("Running in development");
 		}
 
-		console.log("App running into: " + this.app.getAppPath());
+		logger.log("App running into: " + this.app.getAppPath());
 
 		// This method will be called when Electron has finished
 		// initialization and is ready to create browser windows.
@@ -102,13 +102,12 @@ class DesktopRun {
 				this.createWindow();
 			}
 		});
-
 	}
 }
 
-
 try {
+	require("electron-reloader")(module);
 	(new DesktopRun(app)).run();
 } catch (err) {
-	console.error(err);
+	logger.error(err);
 }

@@ -11,13 +11,14 @@
 		"build:core@prod": "npm run build:core@dev -- --mode production",
 		"--------START-DESKTOP-WIP----------": "----------------------------",
 		"build:desktop:runner": "node ./node_modules/typescript/lib/tsc.js -p desktop/tsconfig.desktop.json",
-		"build:desktop@dev": "npm run build:app@dev -- --base-href --configuration=desktop",
-		"build:desktop@prod": "npm run build:app@dev -- --base-href --configuration=desktop:prod",
-		"watch:desktop": "npm run build:desktop@dev -- --watch",
-		"start:desktop": "npm run clean && npm run build:desktop:runner && npm-run-all --print-label --race --parallel watch:desktop electron:dev",
-		"electron:dev": "run-electron ./dist/desktop.run.js",
-		"electron:build:win64": "npm-run-all clean build:desktop:runner build:desktop@prod && electron-builder build --windows --x64",
-		"electron:build:linux": "npm-run-all clean build:desktop:runner build:desktop@prod && electron-builder build --linux --x64",
+		"watch:desktop:runner": "npm run build:desktop:runner -- --watch",
+		"build:desktop:app@dev": "npm run build:app@dev -- --base-href --configuration=desktop",
+		"build:desktop:app@prod": "npm run build:app@dev -- --base-href --configuration=desktop:prod",
+		"watch:desktop:app": "npm run build:desktop:app@dev -- --watch",
+		"watch:desktop": "npm run clean && npm-run-all --print-label --race --parallel watch:desktop:runner watch:desktop:app",
+		"electron:develop": "run-electron ./dist/desktop.run.js",
+		"electron:build:win64": "npm-run-all clean build:desktop:runner build:desktop:app@prod && electron-builder build --windows --x64",
+		"electron:build:linux": "npm-run-all clean build:desktop:runner build:desktop:app@prod && electron-builder build --linux --x64",
 		"----------END-DESKTOP-WIP----------": "----------------------------",
 		"clean": "npm-run-all clean:*",
 		"clean:dist": "node ./node_modules/del-cli/cli.js ./dist/",
@@ -70,6 +71,7 @@
 		"del-cli": "^1.1.0",
 		"electron": "^4.0.6",
 		"electron-builder": "^20.38.5",
+		"electron-reloader": "^0.2.0",
 		"npm-run-all": "^4.1.5",
 		"run-electron": "^0.1.0",
 		"run-sequence": "^2.2.1",
@@ -101,5 +103,8 @@
 			]
 		}
 	},
-	"main": "./dist/desktop.run.js"
+	"main": "./dist/desktop.run.js",
+	"dependencies": {
+		"electron-log": "^3.0.5"
+	}
 }
