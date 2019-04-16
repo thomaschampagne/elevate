@@ -2,6 +2,21 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.11.1",
+		date: "2019-04-16",
+		message: "👨‍⚕️💉 Fixed issues with Dated Athlete Settings. <u>V6.11 Reminder</u>: New \"Activities\" menu in Elevate App: List activities with ALL EXTENDED STATS (+ spreadsheet export feature).",
+		hotFixes: [],
+		features: [
+			"Check the 6.11.0 release note for features related to v6.11.x"
+		],
+		isPatch: true,
+		fixes: [
+			"Fixed wrong default dated athlete settings when opening the Elevate app as a new user for the first time: no forever settings were declared.",
+			"Fixed wrong dated athlete settings during the migration process from 6.10.2 to 6.11.0 (no forever settings were created during migration). The migration to the current version (6.11.1) solves the issue.",
+			"[Technical] Upgraded Angular & others npm libraries."
+		]
+	},
+	{
 		version: "6.11.0",
 		date: "2019-03-30",
 		message: "New \"Activities\" menu in Elevate App: List activities with ALL EXTENDED STATS (+ spreadsheet export feature).",
