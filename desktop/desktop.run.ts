@@ -4,6 +4,10 @@ import * as path from "path";
 import * as url from "url";
 import logger from "electron-log";
 
+const IS_ELECTRON_DEV = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "dev");
+
+logger.transports.file.level = (IS_ELECTRON_DEV) ? "debug" : "info";
+logger.transports.console.level = (IS_ELECTRON_DEV) ? "debug" : "info";
 logger.transports.file.maxSize = 1048576; // 1MB
 
 class DesktopRun {
@@ -22,52 +26,58 @@ class DesktopRun {
 
 	public createWindow(): void {
 
-		// Create the browser window.
-		const winWidth = DesktopRun.WINDOW_WIDTH;
-		const winHeight = DesktopRun.WINDOW_HEIGHT;
+		const gotTheLock = app.requestSingleInstanceLock();
 
-		this.appWindow = new BrowserWindow({
-			width: winWidth,
-			height: winHeight,
-			center: true,
-			frame: true
-		});
+		// If failed to obtain the lock, another instance of application is already running with the lock => exit immediately.
+		// @see https://github.com/electron/electron/blob/master/docs/api/app.md#apprequestsingleinstancelock
+		if (!gotTheLock) {
+			logger.info("We failed to obtain application the lock. Exit now");
+			app.quit();
+		} else {
 
-		this.appWindow.loadURL(
-			url.format({
-				pathname: path.join(__dirname, "app", "index.html"),
-				protocol: "file:",
-				slashes: true,
-			}),
-		);
+			// Create the browser window.
+			const winWidth = DesktopRun.WINDOW_WIDTH;
+			const winHeight = DesktopRun.WINDOW_HEIGHT;
 
-		if (!this.isPackaged) {
-			this.appWindow.webContents.openDevTools();
+			this.appWindow = new BrowserWindow({
+				width: winWidth,
+				height: winHeight,
+				center: true,
+				frame: true
+			});
+
+			this.appWindow.loadURL(
+				url.format({
+					pathname: path.join(__dirname, "app", "index.html"),
+					protocol: "file:",
+					slashes: true,
+				}),
+			);
+
+			if (!this.isPackaged) {
+				this.appWindow.webContents.openDevTools();
+			}
+
+			// Emitted when the window is closed.
+			this.appWindow.on("closed", () => {
+				// Dereference the window object, usually you would store window
+				// in an array if your app supports multi windows, this is the time
+				// when you should delete the corresponding element.
+				this.appWindow = null;
+			});
+
+			// Shortcuts
+			globalShortcut.register("CommandOrControl+R", () => {
+				logger.debug("CommandOrControl+R is pressed, reload app");
+				this.appWindow.reload();
+			});
+
+			globalShortcut.register("CommandOrControl+F12", () => {
+				logger.debug("CommandOrControl+F12 is pressed, toggle dev tools");
+				this.appWindow.webContents.toggleDevTools();
+			});
+
 		}
-
-		// Emitted when the window is closed.
-		this.appWindow.on("closed", () => {
-			// Dereference the window object, usually you would store window
-			// in an array if your app supports multi windows, this is the time
-			// when you should delete the corresponding element.
-			this.appWindow = null;
-		});
-
-		// Shortcuts
-		globalShortcut.register("f5", () => {
-			logger.log("f5 is pressed, reload app");
-			this.appWindow.reload();
-		});
-
-		globalShortcut.register("CommandOrControl+R", () => {
-			logger.log("CommandOrControl+R is pressed, reload app");
-			this.appWindow.reload();
-		});
-
-		globalShortcut.register("CommandOrControl+F12", () => {
-			logger.log("CommandOrControl+F12 is pressed, toggle dev tools");
-			this.appWindow.webContents.toggleDevTools();
-		});
 
 	}
 
@@ -106,7 +116,12 @@ class DesktopRun {
 }
 
 try {
-	require("electron-reloader")(module);
+
+	if (IS_ELECTRON_DEV) {
+		require("electron-reloader")(module);
+		logger.debug("electron-reloader is ENABLED");
+	}
+
 	(new DesktopRun(app)).run();
 } catch (err) {
 	logger.error(err);
