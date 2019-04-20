@@ -67,7 +67,8 @@
 	"readme": "README.md",
 	"dependencies": {
 		"electron-log": "^3.0.5",
-		"lodash": "^4.17.11"
+		"lodash": "^4.17.11",
+		"promise-tron": "^1.0.0"
 	},
 	"devDependencies": {
 		"@types/lodash": "^4.14.123",
@@ -75,6 +76,7 @@
 		"cpy-cli": "^2.0.0",
 		"cross-env": "^5.2.0",
 		"del-cli": "^1.1.0",
+		"devtron": "^1.4.0",
 		"electron": "^4.0.6",
 		"electron-builder": "^20.38.5",
 		"electron-reloader": "^0.2.0",

@@ -28,6 +28,7 @@ module.exports = {
 		"https",
 		"url",
 		"path",
+		"crypto",
 		"electron"
 	],
 	plugins: [

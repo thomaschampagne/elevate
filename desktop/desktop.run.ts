@@ -4,6 +4,7 @@ import * as path from "path";
 import * as url from "url";
 import logger from "electron-log";
 
+
 const IS_ELECTRON_DEV = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "dev");
 
 logger.transports.file.level = (IS_ELECTRON_DEV) ? "debug" : "info";
