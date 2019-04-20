@@ -16,7 +16,7 @@
 		"build:desktop:app@prod": "npm run build:app@dev -- --base-href --configuration=desktop:prod",
 		"watch:desktop:app": "npm run build:desktop:app@dev -- --watch",
 		"watch:desktop": "npm run clean && npm-run-all --print-label --race --parallel watch:desktop:runner watch:desktop:app",
-		"electron:develop": "cross-env ELECTRON_ENV=dev run-electron ./dist/desktop.run.js",
+		"electron:develop": "cross-env ELECTRON_ENV=dev run-electron ./dist/main.js",
 		"electron:build:win64": "cross-env ELECTRON_ENV=prod npm-run-all clean build:desktop:runner build:desktop:app@prod && electron-builder build --windows --x64",
 		"electron:build:linux": "cross-env ELECTRON_ENV=prod npm-run-all clean build:desktop:runner build:desktop:app@prod && electron-builder build --linux --x64",
 		"----------END-DESKTOP-WIP----------": "----------------------------",
@@ -116,5 +116,5 @@
 			]
 		}
 	},
-	"main": "./dist/desktop.run.js"
+	"main": "./dist/main.js"
 }

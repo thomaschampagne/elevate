@@ -4,14 +4,13 @@ import * as path from "path";
 import * as url from "url";
 import logger from "electron-log";
 
-
 const IS_ELECTRON_DEV = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "dev");
 
 logger.transports.file.level = (IS_ELECTRON_DEV) ? "debug" : "info";
 logger.transports.console.level = (IS_ELECTRON_DEV) ? "debug" : "info";
 logger.transports.file.maxSize = 1048576; // 1MB
 
-class DesktopRun {
+class Main {
 
 	private static readonly WINDOW_WIDTH: number = 1600;
 	private static readonly WINDOW_HEIGHT: number = 1024;
@@ -37,8 +36,8 @@ class DesktopRun {
 		} else {
 
 			// Create the browser window.
-			const winWidth = DesktopRun.WINDOW_WIDTH;
-			const winHeight = DesktopRun.WINDOW_HEIGHT;
+			const winWidth = Main.WINDOW_WIDTH;
+			const winHeight = Main.WINDOW_HEIGHT;
 
 			this.appWindow = new BrowserWindow({
 				width: winWidth,
@@ -123,7 +122,7 @@ try {
 		logger.debug("electron-reloader is ENABLED");
 	}
 
-	(new DesktopRun(app)).run();
+	(new Main(app)).run();
 } catch (err) {
 	logger.error(err);
 }

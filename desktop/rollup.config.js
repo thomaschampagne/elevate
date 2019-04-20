@@ -10,10 +10,10 @@ const skipUglify = () => {
 };
 
 module.exports = {
-	input: "./desktop.run.ts",
+	input: "./src/main.ts",
 	output: [
 		{
-			file: "../dist/desktop.run.js",
+			file: "../dist/main.js",
 			format: "cjs"
 		}
 	],
