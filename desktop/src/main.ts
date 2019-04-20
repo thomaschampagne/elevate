@@ -77,6 +77,11 @@ class Main {
 				this.appWindow.reload();
 			});
 
+			globalShortcut.register("f5", () => {
+				logger.debug("f5 is pressed, reload app");
+				this.appWindow.reload();
+			});
+
 			globalShortcut.register("CommandOrControl+F12", () => {
 				logger.debug("CommandOrControl+F12 is pressed, toggle dev tools");
 				this.appWindow.webContents.toggleDevTools();
