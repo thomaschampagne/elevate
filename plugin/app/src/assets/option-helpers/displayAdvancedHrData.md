@@ -23,7 +23,7 @@ same goal than _Strava Suffer Score_ and both scores are correlated.
 
 _TRIMP_ is mathematically defined by:  
 
-> $Training Impulse = \displaystyle\sum_{t=0_{min}}^t{\delta t~\times~HRR~\times~0.64^{k~\times~HRR}}$
+> $Training Impulse = \displaystyle\sum_{t=0_{min}}^t{\delta t~\times~HRR~\times~0.64~\times~e^{k~\times~HRR}}$
 
 > $where~~k=1.92~~(for~mens)~~~or~~~k=1.67~~(for~womens)$ 
 

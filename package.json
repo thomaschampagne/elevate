@@ -1,6 +1,6 @@
 {
 	"name": "elevate",
-	"version": "6.11.0",
+	"version": "6.11.1",
 	"description": "Wrap the needed tools required to cook the Elevate Web Plugin",
 	"scripts": {
 		"build:extension@dev": "npm-run-all clean extension-res-copy:* build:core@dev build:app@dev",

@@ -15,7 +15,6 @@ export class AthleteModel extends AbstractAthleteModel {
 	public gender: Gender;
 	public datedAthleteSettings: DatedAthleteSettingsModel[];
 
-
 	/**
 	 *
 	 * @param {Gender} gender
