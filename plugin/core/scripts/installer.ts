@@ -581,6 +581,34 @@ class Installer {
 
 	}
 
+	protected migrate_to_6_11_1(): Promise<void> {
+
+		let promise: Promise<void> = Promise.resolve();
+
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.11.1")) {
+
+			promise = BrowserStorage.getInstance().get<AthleteModel>(BrowserStorageType.LOCAL, "athlete").then(athleteModel => {
+
+				if (athleteModel.datedAthleteSettings && athleteModel.datedAthleteSettings.length > 0) {
+
+					athleteModel.datedAthleteSettings = _.sortBy(athleteModel.datedAthleteSettings, (model: DatedAthleteSettingsModel) => {
+						const sortOnDate: Date = (_.isNull(model.since)) ? new Date(0) : new Date(model.since);
+						return sortOnDate.getTime() * -1;
+					});
+
+					if (_.last(athleteModel.datedAthleteSettings).since !== null) {
+						_.last(athleteModel.datedAthleteSettings).since = null; // Set forever settings
+						return BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "athlete", athleteModel);
+					} else {
+						return Promise.resolve();
+					}
+				}
+			});
+		}
+
+		return promise;
+	}
+
 	protected handleUpdate(): Promise<void> {
 
 		console.log("Updated from " + this.previousVersion + " to " + this.currentVersion);
@@ -605,6 +633,8 @@ class Installer {
 			return this.migrate_to_6_10_0();
 		}).then(() => {
 			return this.migrate_to_6_11_0();
+		}).then(() => {
+			return this.migrate_to_6_11_1();
 		}).catch(error => console.error(error));
 
 	}
