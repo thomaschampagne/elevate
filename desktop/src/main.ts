@@ -1,8 +1,9 @@
 import * as Electron from "electron";
-import { app, BrowserWindow, globalShortcut } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain } from "electron";
 import * as path from "path";
 import * as url from "url";
 import logger from "electron-log";
+import { RequestListener } from "./listeners/request-listener";
 
 const IS_ELECTRON_DEV = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "dev");
 
@@ -18,6 +19,7 @@ class Main {
 	private readonly app: Electron.App;
 	private readonly isPackaged: boolean;
 	private appWindow: BrowserWindow;
+	private requestListener: RequestListener;
 
 	constructor(app: Electron.App) {
 		this.app = app;
@@ -45,6 +47,9 @@ class Main {
 				center: true,
 				frame: true
 			});
+
+			// Create the request listener to listen renderer request events
+			this.requestListener = new RequestListener(ipcMain, this.appWindow.webContents);
 
 			this.appWindow.loadURL(
 				url.format({
