@@ -1,0 +1,28 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@elevate/shared/constants": [
+				"../plugin/app/modules/shared/constants/"
+			],
+			"@elevate/shared/data": [
+				"../plugin/app/modules/shared/data/"
+			],
+			"@elevate/shared/events": [
+				"../plugin/app/modules/shared/events/"
+			],
+			"@elevate/shared/models": [
+				"../plugin/app/modules/shared/models/"
+			],
+			"@elevate/shared/resolvers": [
+				"../plugin/app/modules/shared/resolvers/"
+			],
+			"@elevate/shared/exceptions": [
+				"../plugin/app/modules/shared/exceptions/"
+			],
+			"@elevate/shared/tools": [
+				"../plugin/app/modules/shared/tools/"
+			]
+		}
+	}
+}

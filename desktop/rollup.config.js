@@ -32,7 +32,13 @@ module.exports = {
 		"electron"
 	],
 	plugins: [
-		typescript(),
+		typescript({
+			include: [
+				"./src/**/*.ts",
+				"!./src/**/*.spec.ts",
+				"./../plugin/app/modules/**/*.ts"
+			]
+		}),
 		commonjs({
 			namedExports: {
 				"../node_modules/lodash/lodash.js": ["forEach"]
