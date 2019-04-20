@@ -1,6 +1,6 @@
 import { BaseConnector } from "./base.connector";
+import { SyncEvent } from "@elevate/shared/events";
 import { Subject } from "rxjs";
-import { SyncEvent } from "../events/sync.event";
 
 export class StravaConnector extends BaseConnector {
 
