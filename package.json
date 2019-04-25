@@ -16,6 +16,7 @@
 		"build:desktop:app@prod": "npm run build:app@dev -- --base-href --configuration=desktop:prod",
 		"watch:desktop:app": "npm run build:desktop:app@dev -- --watch",
 		"watch:desktop": "npm run clean && npm-run-all --print-label --race --parallel watch:desktop:runner watch:desktop:app",
+		"test:desktop": "cd desktop && jest",
 		"electron:develop": "cross-env ELECTRON_ENV=dev run-electron ./dist/main.js",
 		"electron:build:win64": "cross-env ELECTRON_ENV=prod npm-run-all clean build:desktop:runner build:desktop:app@prod && electron-builder build --windows --x64",
 		"electron:build:linux": "cross-env ELECTRON_ENV=prod npm-run-all clean build:desktop:runner build:desktop:app@prod && electron-builder build --linux --x64",
@@ -72,7 +73,9 @@
 		"rxjs": "^6.4.0"
 	},
 	"devDependencies": {
+		"@types/jest": "^24.0.11",
 		"@types/lodash": "^4.14.123",
+		"@types/node": "^11.13.7",
 		"bestzip": "^2.1.2",
 		"cpy-cli": "^2.0.0",
 		"cross-env": "^5.2.0",
@@ -81,14 +84,18 @@
 		"electron": "^4.0.6",
 		"electron-builder": "^20.38.5",
 		"electron-reloader": "^0.2.0",
+		"jest": "^24.7.1",
+		"jest-config": "^24.7.1",
 		"npm-run-all": "^4.1.5",
 		"rollup": "^1.10.0",
 		"rollup-plugin-commonjs": "^9.3.4",
 		"rollup-plugin-node-resolve": "^4.2.3",
+		"rollup-plugin-sourcemaps": "^0.4.2",
 		"rollup-plugin-typescript2": "^0.20.1",
 		"rollup-plugin-uglify": "^6.0.2",
 		"run-electron": "^0.1.0",
 		"run-sequence": "^2.2.1",
+		"ts-jest": "^24.0.2",
 		"typescript": "^3.3.0"
 	},
 	"build": {
