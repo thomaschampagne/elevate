@@ -8,8 +8,8 @@
 			"@elevate/shared/data": [
 				"../plugin/app/modules/shared/data/"
 			],
-			"@elevate/shared/events": [
-				"../plugin/app/modules/shared/events/"
+			"@elevate/shared/sync": [
+				"../plugin/app/modules/shared/sync/"
 			],
 			"@elevate/shared/models": [
 				"../plugin/app/modules/shared/models/"

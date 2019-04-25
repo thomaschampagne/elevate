@@ -48,9 +48,6 @@ class Main {
 				frame: true
 			});
 
-			// Create the request listener to listen renderer request events
-			this.requestListener = new RequestListener(ipcMain, this.appWindow.webContents);
-
 			this.appWindow.loadURL(
 				url.format({
 					pathname: path.join(__dirname, "app", "index.html"),
@@ -58,6 +55,10 @@ class Main {
 					slashes: true,
 				}),
 			);
+
+			// Create the request listener to listen renderer request events
+			this.requestListener = new RequestListener(ipcMain, this.appWindow.webContents);
+			this.requestListener.listen();
 
 			if (!this.isPackaged) {
 				this.appWindow.webContents.openDevTools();

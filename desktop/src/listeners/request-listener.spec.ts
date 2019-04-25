@@ -1,4 +1,4 @@
-import { SyncEventType } from "@elevate/shared/events";
+import { SyncEventType } from "@elevate/shared/sync";
 
 describe("Request listener", () => {
 
