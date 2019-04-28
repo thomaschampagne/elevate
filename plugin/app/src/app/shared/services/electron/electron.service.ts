@@ -2,9 +2,6 @@ import * as Electron from "electron";
 import { Injectable } from "@angular/core";
 import * as _ from "lodash";
 import { ChildProcess } from "child_process";
-import { Subject } from "rxjs";
-import { IpcRequest, PromiseTron } from "promise-tron";
-import { BaseConnector, SyncEvent, SyncRequest, SyncResponse } from "@elevate/shared/sync";
 
 declare let window: ElectronWindow;
 
@@ -16,11 +13,8 @@ export interface ElectronWindow extends Window {
 export class ElectronService {
 
 	public instance: Electron.RendererInterface;
-	public promiseTron: PromiseTron;
-	public syncEvents: Subject<SyncEvent>;
 
 	constructor() {
-		this.listenSyncEvents();
 	}
 
 	public get electron(): Electron.RendererInterface {
@@ -30,37 +24,6 @@ export class ElectronService {
 		}
 
 		return this.instance;
-	}
-
-	public listenSyncEvents(): void {
-
-		this.syncEvents = new Subject<SyncEvent>();
-
-		this.promiseTron = new PromiseTron(this.electron.ipcRenderer);
-
-		// Listen for sync events provided by main process
-		this.promiseTron.on/*TODO<SyncEvent>*/((ipcRequest: IpcRequest/*TODO<SyncEvent>*/, replyWith: Function) => {
-
-			if (ipcRequest.data) {
-				const syncEvent: SyncEvent = <SyncEvent> ipcRequest.data;
-				this.syncEvents.next(syncEvent);
-				replyWith("syncEvent received by renderer!");
-			}
-
-		});
-	}
-
-	public sync(fastSync: boolean, forceSync: boolean, connector: BaseConnector): Subject<SyncEvent> {
-
-		// Create request to start sync !
-		const syncRequest: SyncRequest = new SyncRequest(SyncRequest.START_SYNC, connector);
-
-		// Ask electron main to start sync for given connector
-		this.promiseTron.send<SyncResponse<SyncEvent>>(syncRequest).then((response: SyncResponse<SyncEvent>) => {
-			this.syncEvents.next(response.body);
-		});
-
-		return this.syncEvents;
 	}
 
 	/**

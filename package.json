@@ -69,7 +69,7 @@
 	"dependencies": {
 		"electron-log": "^3.0.5",
 		"lodash": "^4.17.11",
-		"promise-tron": "^1.0.0",
+		"promise-tron": "^1.1.0",
 		"rxjs": "^6.4.0"
 	},
 	"devDependencies": {

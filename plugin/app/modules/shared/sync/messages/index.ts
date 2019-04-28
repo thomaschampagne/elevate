@@ -1,2 +1,2 @@
-export * from "./sync-request";
-export * from "./sync-response";
+export * from "./sync-message";
+export * from "./sync-message-response";

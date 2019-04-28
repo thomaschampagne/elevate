@@ -8,10 +8,12 @@ import { DesktopVersionsProvider } from "../services/versions/impl/desktop-versi
 import { SyncService } from "../services/sync/sync.service";
 import { DesktopSyncService } from "../services/sync/impl/desktop-sync.service";
 import { ElectronService } from "../services/electron/electron.service";
+import { IpcRendererMessagesListenerService } from "../services/messages-listener/ipc-renderer-messages-listener.service";
 
 @NgModule({
 	providers: [
 		ElectronService,
+		IpcRendererMessagesListenerService,
 		{provide: DataStore, useClass: DesktopDataStore},
 		{provide: AppEventsService, useClass: DesktopEventsService},
 		{provide: SyncService, useClass: DesktopSyncService},
