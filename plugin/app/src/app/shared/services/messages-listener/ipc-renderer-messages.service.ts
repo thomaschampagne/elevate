@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { SyncEvent, SyncMessage, SyncMessageResponse } from "@elevate/shared/sync";
-import { IpcRequest, PromiseTron } from "promise-tron";
+import { SyncEvent, SyncMessage } from "@elevate/shared/sync";
+import { IpcRequest, PromiseTron, PromiseTronReply } from "promise-tron";
 import { ElectronService } from "../electron/electron.service";
 import { NotImplementedException } from "@elevate/shared/exceptions";
 import { Subject } from "rxjs";
@@ -8,7 +8,7 @@ import * as _ from "lodash";
 import { LoggerService } from "../logging/logger.service";
 
 @Injectable()
-export class IpcRendererMessagesListenerService {
+export class IpcRendererMessagesService {
 
 	public syncEvents: Subject<SyncEvent>;
 	public promiseTron: PromiseTron;
@@ -24,7 +24,7 @@ export class IpcRendererMessagesListenerService {
 		this.promiseTron = new PromiseTron(this.electronService.electron.ipcRenderer);
 
 		// Listen for sync events provided by main process
-		this.promiseTron.on((ipcRequest: IpcRequest, replyWith: Function) => {
+		this.promiseTron.on((ipcRequest: IpcRequest, replyWith: (promiseTronReply: PromiseTronReply) => void) => {
 
 			const syncMessage = IpcRequest.extractData<SyncMessage>(ipcRequest);
 
@@ -38,37 +38,43 @@ export class IpcRendererMessagesListenerService {
 		});
 	}
 
-	public forwardMessagesFromIpcMain(message: SyncMessage, replyWith: Function): void {
+	public forwardMessagesFromIpcMain(message: SyncMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
 
 		switch (message.flag) {
 
-			case SyncMessage.SYNC_EVENT:
+			case SyncMessage.FLAG_SYNC_EVENT:
 				this.handleSyncEventsMessages(message, replyWith);
 				break;
 
-			case SyncMessage.GET_ACTIVITY:
+			case SyncMessage.FLAG_GET_ACTIVITY:
 				this.handleGetActivityMessages(message, replyWith);
 				break;
 
 			default:
-				replyWith(new SyncMessageResponse<string>(message, "Unknown connector"));
+				replyWith({
+					success: null,
+					error: "Unknown connector"
+				});
 				break;
 
 		}
 	}
 
-	public handleSyncEventsMessages(message: SyncMessage, replyWith: Function): void {
+	public handleSyncEventsMessages(message: SyncMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
 		const syncEvent = <SyncEvent> _.first(message.payload);
 		this.syncEvents.next(syncEvent); // forward sync event
-		replyWith(new SyncMessageResponse(message, "Sync event received by IpcRendererMessagesListenerService"));
+		replyWith({
+			success: "Sync event received by IpcRendererMessagesListenerService",
+			error: null
+		});
+
 	}
 
-	public handleGetActivityMessages(message: SyncMessage, replyWith: Function): void {
+	public handleGetActivityMessages(message: SyncMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
 		throw new NotImplementedException("handleGetActivityMessages");
 	}
 
-	public sendMessage<R>(message: SyncMessage): Promise<R> {
-		return this.promiseTron.send<R>(message);
-
+	public sendMessage<T>(message: SyncMessage): Promise<T> {
+		return <Promise<T>> this.promiseTron.send(message);
 	}
 }

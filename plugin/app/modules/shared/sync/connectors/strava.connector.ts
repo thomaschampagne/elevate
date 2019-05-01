@@ -8,12 +8,12 @@ export class StravaConnector extends BaseConnector {
 	public static readonly ENABLED: boolean = true;
 	public static readonly NAME: string = "STRAVA_CONNECTOR";
 
-	public clientId: string;
+	public clientId: number;
 	public clientSecret: string;
 	public accessToken: string;
 	public updateSyncedActivitiesNameAndType: boolean;
 
-	constructor(priority: number, clientId: string, clientSecret: string, accessToken: string, updateSyncedActivitiesNameAndType: boolean) {
+	constructor(priority: number, clientId: number, clientSecret: string, accessToken: string, updateSyncedActivitiesNameAndType: boolean) {
 		super(StravaConnector.NAME, priority, StravaConnector.ENABLED);
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;

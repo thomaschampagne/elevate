@@ -1,8 +1,9 @@
 export class SyncMessage {
 
-	public static readonly START_SYNC: string = "START_SYNC";
-	public static readonly SYNC_EVENT: string = "SYNC_EVENT";
-	public static readonly GET_ACTIVITY: string = "GET_ACTIVITY";
+	public static readonly FLAG_LINK_STRAVA_CONNECTOR: string = "LINK_STRAVA";
+	public static readonly FLAG_START_SYNC: string = "START_SYNC";
+	public static readonly FLAG_SYNC_EVENT: string = "SYNC_EVENT";
+	public static readonly FLAG_GET_ACTIVITY: string = "GET_ACTIVITY";
 
 	public flag: string;
 	public payload: unknown[];

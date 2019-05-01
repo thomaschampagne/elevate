@@ -16,6 +16,7 @@ const routes: Routes = [
 		RouterModule.forChild(routes)
 	],
 	declarations: [ConnectorsComponent],
+	providers: []
 })
 export class ConnectorsModule {
 }

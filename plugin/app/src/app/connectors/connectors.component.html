@@ -3,6 +3,9 @@
 		Strava connector
 	</mat-card-title>
 	<mat-card-content>
-		<button mat-stroked-button color="primary" (click)="configure()">Configure</button>
+		<div>
+			{{stravaAccessToken}}
+		</div>
+		<button mat-stroked-button color="primary" (click)="linkStrava()">Link with Strava</button>
 	</mat-card-content>
 </mat-card>

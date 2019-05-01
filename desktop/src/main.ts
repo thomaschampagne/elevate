@@ -3,7 +3,7 @@ import { app, BrowserWindow, globalShortcut, ipcMain } from "electron";
 import * as path from "path";
 import * as url from "url";
 import logger from "electron-log";
-import { IpcMainMessageListener } from "./listeners/ipc-main-message-listener";
+import { IpcMainMessagesService } from "./listeners/ipc-main-messages-service";
 
 const IS_ELECTRON_DEV = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "dev");
 
@@ -19,7 +19,7 @@ class Main {
 	private readonly app: Electron.App;
 	private readonly isPackaged: boolean;
 	private appWindow: BrowserWindow;
-	private requestListener: IpcMainMessageListener;
+	private requestListener: IpcMainMessagesService;
 
 	constructor(app: Electron.App) {
 		this.app = app;
@@ -57,7 +57,7 @@ class Main {
 			);
 
 			// Create the request listener to listen renderer request events
-			this.requestListener = new IpcMainMessageListener(ipcMain, this.appWindow.webContents);
+			this.requestListener = new IpcMainMessagesService(ipcMain, this.appWindow.webContents);
 			this.requestListener.listen();
 
 			if (!this.isPackaged) {
