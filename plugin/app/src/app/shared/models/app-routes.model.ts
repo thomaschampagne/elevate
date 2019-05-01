@@ -5,6 +5,7 @@ export class AppRoutesModel {
 	public static readonly globalSettings: string = "globalSettings";
 	public static readonly athleteSettings: string = "athleteSettings";
 	public static readonly zonesSettings: string = "zonesSettings";
+	public static readonly connectors: string = "connectors";
 	public static readonly donate: string = "donate";
 	public static readonly releasesNotes: string = "releasesNotes";
 	public static readonly share: string = "share";

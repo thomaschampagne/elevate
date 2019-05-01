@@ -9,6 +9,8 @@ import { ReportComponent } from "../../report/report.component";
 import { AdvancedMenuComponent } from "../../advanced-menu/advanced-menu.component";
 import { FaqComponent } from "../../faq/faq.component";
 import { ActivitiesComponent } from "../../activities/activities.component";
+import { EnvTarget } from "../enums/env-target";
+import { environment } from "../../../environments/environment";
 
 const routes: Routes = [
 	{
@@ -67,6 +69,13 @@ const routes: Routes = [
 		path: "", redirectTo: AppRoutesModel.activities, pathMatch: "full"
 	},
 ];
+
+if (environment.target === EnvTarget.DESKTOP) {
+	routes.push({
+		path: AppRoutesModel.connectors,
+		loadChildren: "../../connectors/connectors.module#ConnectorsModule"
+	});
+}
 
 @NgModule({
 	imports: [
