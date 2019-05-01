@@ -29,6 +29,10 @@ module.exports = {
 		"url",
 		"path",
 		"crypto",
+		"net",
+		"tls",
+		"events",
+		"tty",
 		"electron"
 	],
 	plugins: [
@@ -41,7 +45,8 @@ module.exports = {
 		}),
 		commonjs({
 			namedExports: {
-				"../node_modules/lodash/lodash.js": ["forEach"]
+				"../node_modules/lodash/lodash.js": ["forEach"],
+				"../node_modules/https-proxy-agent/index.js": ["HttpsProxyAgent"]
 			}
 		}),
 		resolve(),

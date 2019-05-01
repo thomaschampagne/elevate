@@ -20,17 +20,21 @@ export class ConnectorsComponent implements OnInit {
 
 	public linkStrava(): void {
 
+
 		const clientId = 32792;
 		const clientSecret = "9ffa2c96affc5996d657e727c6a7081c7c7babc4";
 		// const clientSecret = "9ffa2c96affc5996d657e727c6a7081c7c7babc5";
 		const scope = "write";
+		const proxy = null;
+		// const proxy = "http://your_proxy:8080";
 
-		this.messagesListenerService.sendMessage<string>(new SyncMessage(SyncMessage.FLAG_LINK_STRAVA_CONNECTOR, clientId, clientSecret, scope)).then((accessToken: string) => {
-			this.stravaAccessToken = accessToken;
-		}, error => {
-			console.error(error);
-			this.stravaAccessToken = error;
-		});
+		this.messagesListenerService.sendMessage<string>(new SyncMessage(SyncMessage.FLAG_LINK_STRAVA_CONNECTOR, clientId, clientSecret, scope, proxy))
+			.then((accessToken: string) => {
+				this.stravaAccessToken = accessToken;
+			}, error => {
+				console.error(error);
+				this.stravaAccessToken = error;
+			});
 
 	}
 }

@@ -95,9 +95,10 @@ export class IpcMainMessagesService {
 		const clientId = <number> message.payload[0];
 		const clientSecret = <string> message.payload[1];
 		const scope = <string> message.payload[2];
+		const proxy = <string> message.payload[3];
 
 		const stravaAuth = new StravaAuthentication();
-		stravaAuth.authorize(scope, clientId, clientSecret, (error, accessToken) => {
+		stravaAuth.authorize(scope, clientId, clientSecret, proxy, (error, accessToken) => {
 			if (error) {
 				replyWith({
 					success: null,
