@@ -1,10 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { SyncMessage } from "@elevate/shared/sync";
 import { IpcRendererMessagesService } from "../../shared/services/messages-listener/ipc-renderer-messages.service";
 import { StravaApiCredentialsService } from "../../shared/services/strava-api-credentials/strava-api-credentials.service";
 import { StravaApiCredentials } from "@elevate/shared/sync/connectors/strava/strava-api-credentials";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MatSnackBar } from "@angular/material";
+import { FlaggedIpcMessage } from "@elevate/shared/electron";
+import { MessageFlag } from "@elevate/shared/electron/message-flag.enum";
 
 @Component({
 	selector: "app-strava-connector",
@@ -33,8 +34,8 @@ export class StravaConnectorComponent implements OnInit {
 
 	public stravaAuthentication(): void {
 
-		const linkStravaMessage = new SyncMessage(SyncMessage.FLAG_LINK_STRAVA_CONNECTOR, this.stravaApiCredentials.clientId, this.stravaApiCredentials.clientSecret);
-		this.messagesListenerService.sendMessage<string>(linkStravaMessage).then((accessToken: string) => {
+		const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.LINK_STRAVA_CONNECTOR, this.stravaApiCredentials.clientId, this.stravaApiCredentials.clientSecret);
+		this.messagesListenerService.send<string>(flaggedIpcMessage).then((accessToken: string) => {
 
 			this.stravaApiCredentials.accessToken = accessToken;
 			this.persistStravaApiCredentials();

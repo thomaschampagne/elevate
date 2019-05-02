@@ -7,8 +7,9 @@ import { AthleteService } from "../../athlete/athlete.service";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { LoggerService } from "../../logging/logger.service";
 import { Subscription } from "rxjs";
-import { StravaConnector, SyncEvent, SyncMessage } from "@elevate/shared/sync";
+import { StravaConnector, SyncEvent } from "@elevate/shared/sync";
 import { IpcRendererMessagesService } from "../../messages-listener/ipc-renderer-messages.service";
+import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 
 // TODO Handle cancel current sync => restart new sync!
 
@@ -44,8 +45,8 @@ export class DesktopSyncService extends SyncService implements OnDestroy {
 		});
 
 		// Create message to start sync on connector!
-		const startSyncMessage: SyncMessage = new SyncMessage(SyncMessage.FLAG_START_SYNC, stravaConnector);
-		this.messageListenerService.sendMessage<string>(startSyncMessage).then((response: string) => {
+		const startSyncMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, stravaConnector);
+		this.messageListenerService.send<string>(startSyncMessage).then((response: string) => {
 			this.logger.info("Message received by ipcMain. Response:", response);
 		});
 	}

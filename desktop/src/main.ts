@@ -4,7 +4,7 @@ import * as path from "path";
 import * as url from "url";
 import logger from "electron-log";
 import { IpcMainMessagesService } from "./listeners/ipc-main-messages-service";
-import { ProxyDetector } from "./proxyDetector";
+import { ProxyDetector } from "./proxy-detector";
 
 const IS_ELECTRON_DEV = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "dev");
 

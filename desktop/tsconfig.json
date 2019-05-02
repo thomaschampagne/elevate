@@ -8,6 +8,9 @@
 			"@elevate/shared/data": [
 				"../plugin/app/modules/shared/data/"
 			],
+			"@elevate/shared/electron": [
+				"../plugin/app/modules/shared/electron/"
+			],
 			"@elevate/shared/sync": [
 				"../plugin/app/modules/shared/sync/"
 			],

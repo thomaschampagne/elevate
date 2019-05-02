@@ -1,0 +1,6 @@
+export enum MessageFlag {
+	LINK_STRAVA_CONNECTOR,
+	START_SYNC,
+	SYNC_EVENT,
+	GET_ACTIVITY
+}

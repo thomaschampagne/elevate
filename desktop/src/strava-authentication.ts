@@ -3,7 +3,7 @@ import * as https from "https";
 import * as QueryString from "querystring";
 import { BrowserWindow } from "electron";
 import HttpsProxyAgent from "https-proxy-agent";
-import { ProxyDetector } from "./proxyDetector";
+import { ProxyDetector } from "./proxy-detector";
 
 export class StravaAuthentication {
 

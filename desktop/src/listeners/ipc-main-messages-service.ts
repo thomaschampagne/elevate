@@ -1,7 +1,8 @@
 import { IpcRequest, PromiseTron, PromiseTronReply } from "promise-tron";
-import { BaseConnector, SyncEvent, SyncEventType, SyncMessage } from "@elevate/shared/sync";
 import logger from "electron-log";
 import { StravaAuthentication } from "../strava-authentication";
+import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
+import { BaseConnector, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 
 export class IpcMainMessagesService {
 
@@ -18,10 +19,10 @@ export class IpcMainMessagesService {
 
 			logger.debug("[MAIN] Incoming ipcRequest", JSON.stringify(ipcRequest));
 
-			const syncMessage = IpcRequest.extractData<SyncMessage>(ipcRequest);
+			const flaggedIpcMessage = IpcRequest.extractData<FlaggedIpcMessage>(ipcRequest);
 
-			if (syncMessage) {
-				this.forwardMessagesFromIpcRenderer(syncMessage, replyWith);
+			if (flaggedIpcMessage) {
+				this.forwardMessagesFromIpcRenderer(flaggedIpcMessage, replyWith);
 			} else {
 				logger.error("[MAIN] No ipcRequest handler found for: ", ipcRequest);
 			}
@@ -29,15 +30,15 @@ export class IpcMainMessagesService {
 
 	}
 
-	public forwardMessagesFromIpcRenderer(message: SyncMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
+	public forwardMessagesFromIpcRenderer(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
 
 		switch (message.flag) {
 
-			case SyncMessage.FLAG_START_SYNC:
+			case MessageFlag.START_SYNC:
 				this.handleStartSyncAndFakeSync(message, replyWith);
 				break;
 
-			case SyncMessage.FLAG_LINK_STRAVA_CONNECTOR:
+			case MessageFlag.LINK_STRAVA_CONNECTOR:
 				this.handleLinkWithStrava(message, replyWith);
 				break;
 
@@ -57,7 +58,7 @@ export class IpcMainMessagesService {
 	 */
 	public syncingInterval = null;
 
-	public handleStartSyncAndFakeSync(message: SyncMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
+	public handleStartSyncAndFakeSync(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
 
 		const connector = <BaseConnector> message.payload[0];
 
@@ -73,8 +74,8 @@ export class IpcMainMessagesService {
 
 		// Sending fake sync events to renderer
 		this.syncingInterval = setInterval(() => {
-			const syncMessage: SyncMessage = new SyncMessage(SyncMessage.FLAG_SYNC_EVENT, new SyncEvent(SyncEventType.GENERIC, connector, (new Date()).toISOString()));
-			this.promiseTron.send(syncMessage).then((response: string) => {
+			const flaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, new SyncEvent(SyncEventType.GENERIC, connector, (new Date()).toISOString()));
+			this.promiseTron.send(flaggedIpcMessage).then((response: string) => {
 				logger.info("[MAIN]", response);
 			});
 		}, 1000);
@@ -90,7 +91,7 @@ export class IpcMainMessagesService {
 				*/
 	}
 
-	public handleLinkWithStrava(message: SyncMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
+	public handleLinkWithStrava(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
 
 		const clientId = <number> message.payload[0];
 		const clientSecret = <string> message.payload[1];
