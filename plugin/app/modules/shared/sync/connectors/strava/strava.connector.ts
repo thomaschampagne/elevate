@@ -1,7 +1,7 @@
-import { BaseConnector } from "./base.connector";
+import { BaseConnector } from "../base.connector";
 import { Subject } from "rxjs";
-import { SyncEvent } from "../events";
-import { NotImplementedException } from "../../exceptions";
+import { SyncEvent } from "../../events";
+import { NotImplementedException } from "../../../exceptions";
 
 export class StravaConnector extends BaseConnector {
 

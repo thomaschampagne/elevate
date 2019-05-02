@@ -9,6 +9,8 @@ import { SyncService } from "../services/sync/sync.service";
 import { DesktopSyncService } from "../services/sync/impl/desktop-sync.service";
 import { ElectronService } from "../services/electron/electron.service";
 import { IpcRendererMessagesService } from "../services/messages-listener/ipc-renderer-messages.service";
+import { StravaApiCredentialsDao } from "../dao/strava-api-credentials/strava-api-credentials.dao";
+import { StravaApiCredentialsService } from "../services/strava-api-credentials/strava-api-credentials.service";
 
 @NgModule({
 	providers: [
@@ -18,6 +20,8 @@ import { IpcRendererMessagesService } from "../services/messages-listener/ipc-re
 		{provide: AppEventsService, useClass: DesktopEventsService},
 		{provide: SyncService, useClass: DesktopSyncService},
 		{provide: VERSIONS_PROVIDER, useClass: DesktopVersionsProvider},
+		StravaApiCredentialsService,
+		StravaApiCredentialsDao,
 	]
 })
 export class DesktopModule {

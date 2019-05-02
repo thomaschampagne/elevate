@@ -4,6 +4,7 @@ import * as path from "path";
 import * as url from "url";
 import logger from "electron-log";
 import { IpcMainMessagesService } from "./listeners/ipc-main-messages-service";
+import { ProxyDetector } from "./proxyDetector";
 
 const IS_ELECTRON_DEV = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "dev");
 
@@ -133,7 +134,10 @@ try {
 		logger.debug("electron-reloader is ENABLED");
 	}
 
-	(new Main(app)).run();
+	ProxyDetector.init().then(() => {
+		(new Main(app)).run();
+	});
+
 } catch (err) {
 	logger.error(err);
 }

@@ -3,6 +3,7 @@ import * as https from "https";
 import * as QueryString from "querystring";
 import { BrowserWindow } from "electron";
 import HttpsProxyAgent from "https-proxy-agent";
+import { ProxyDetector } from "./proxyDetector";
 
 export class StravaAuthentication {
 
@@ -10,6 +11,7 @@ export class StravaAuthentication {
 	public static AUTH_WINDOW_HEIGHT: number = 800;
 	public static AUTH_WINDOW_WIDTH: number = 500;
 	public static REDIRECT_HTTP_BASE: string = "http://127.0.0.1";
+	public static STRAVA_SCOPE: string = "write";
 	public static STRAVA_HOSTNAME: string = "www.strava.com";
 	public static OAUTH_AUTHORIZE_PATH: string = "/oauth/authorize";
 	public static OAUTH_TOKEN_PATH: string = "/oauth/token";
@@ -39,7 +41,7 @@ export class StravaAuthentication {
 		this.server.close();
 	}
 
-	public makeTokenExchangeRequest(clientId, clientSecret, code, proxy, responseCallback): void {
+	public makeTokenExchangeRequest(clientId, clientSecret, code, responseCallback): void {
 
 		const form = {
 			client_id: clientId,
@@ -47,7 +49,7 @@ export class StravaAuthentication {
 			code: code
 		};
 
-		this.exchangeCodeAgainstToken(form, proxy, (error, bodyJson) => {
+		this.exchangeCodeAgainstToken(form, (error, bodyJson) => {
 			if (error) {
 				responseCallback(error, null);
 			} else {
@@ -74,7 +76,7 @@ export class StravaAuthentication {
 		});
 	}
 
-	public exchangeCodeAgainstToken(form, proxy, callback: (error, body) => void): void {
+	public exchangeCodeAgainstToken(form, callback: (error, body) => void): void {
 
 		const postData = QueryString.stringify(form);
 
@@ -87,7 +89,7 @@ export class StravaAuthentication {
 				"Content-Type": "application/x-www-form-urlencoded",
 				"Content-Length": postData.length
 			},
-			agent: (proxy) ? new HttpsProxyAgent(proxy) : null
+			agent: (ProxyDetector.httpProxy) ? new HttpsProxyAgent(ProxyDetector.httpProxy) : null
 		};
 
 		const request = https.request(options, (response: http.IncomingMessage) => {
@@ -122,11 +124,9 @@ export class StravaAuthentication {
 	 * Authorize against the Strava V3 API and return the Strava access token via a callback.
 	 * @param {string} clientId - Strava client ID.
 	 * @param {string} clientSecret - Strava client secret.
-	 * @param {string} scope - "write", "view_private", or the empty string.
-	 * @param proxy
 	 * @param {function} responseCallback - Callback that is passed (error, accessToken).
 	 */
-	public authorize(scope: string, clientId: number, clientSecret: string, proxy: string, responseCallback): void {
+	public authorize(clientId: number, clientSecret: string, responseCallback): void {
 
 		this.authenticationWindow = new BrowserWindow({
 			height: StravaAuthentication.AUTH_WINDOW_HEIGHT,
@@ -143,7 +143,7 @@ export class StravaAuthentication {
 		authUrl.searchParams.append("client_id", clientId.toString());
 		authUrl.searchParams.append("response_type", "code");
 		authUrl.searchParams.append("redirect_uri", redirectUrl);
-		authUrl.searchParams.append("scope", scope);
+		authUrl.searchParams.append("scope", StravaAuthentication.STRAVA_SCOPE);
 		authUrl.searchParams.append("approval_prompt", "auto");
 
 		this.authenticationWindow.loadURL(authUrl.href);
@@ -157,12 +157,8 @@ export class StravaAuthentication {
 			this.server.close();
 		});
 
-		if (!proxy || proxy.trim() === "") {
-			proxy = null;
-		}
-
 		this.startWebServer(StravaAuthentication.WEB_SERVER_HTTP_PORT, (code: string) => {
-			this.makeTokenExchangeRequest(clientId, clientSecret, code, proxy, responseCallback);
+			this.makeTokenExchangeRequest(clientId, clientSecret, code, responseCallback);
 		}, responseCallback);
 	}
 

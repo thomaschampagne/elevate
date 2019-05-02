@@ -1,6 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { IpcRendererMessagesService } from "../shared/services/messages-listener/ipc-renderer-messages.service";
-import { SyncMessage } from "@elevate/shared/sync";
 
 @Component({
 	selector: "app-connectors",
@@ -9,32 +7,10 @@ import { SyncMessage } from "@elevate/shared/sync";
 })
 export class ConnectorsComponent implements OnInit {
 
-	public stravaAccessToken: string;
-
-	constructor(public messagesListenerService: IpcRendererMessagesService) {
+	constructor() {
 	}
 
 	public ngOnInit(): void {
-
-	}
-
-	public linkStrava(): void {
-
-
-		const clientId = 32792;
-		const clientSecret = "9ffa2c96affc5996d657e727c6a7081c7c7babc4";
-		// const clientSecret = "9ffa2c96affc5996d657e727c6a7081c7c7babc5";
-		const scope = "write";
-		const proxy = null;
-		// const proxy = "http://your_proxy:8080";
-
-		this.messagesListenerService.sendMessage<string>(new SyncMessage(SyncMessage.FLAG_LINK_STRAVA_CONNECTOR, clientId, clientSecret, scope, proxy))
-			.then((accessToken: string) => {
-				this.stravaAccessToken = accessToken;
-			}, error => {
-				console.error(error);
-				this.stravaAccessToken = error;
-			});
 
 	}
 }

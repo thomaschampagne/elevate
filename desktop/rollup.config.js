@@ -3,6 +3,24 @@ import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import {uglify} from "rollup-plugin-uglify";
 
+const NODE_GLOBALS = [
+	"electron",
+	"fs",
+	"os",
+	"util",
+	"http",
+	"https",
+	"url",
+	"path",
+	"crypto",
+	"net",
+	"tls",
+	"events",
+	"tty",
+	"child_process",
+	"stream"
+];
+
 const IS_ELECTRON_PROD = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "prod");
 
 const skipUglify = () => {
@@ -20,21 +38,7 @@ module.exports = {
 	watch: {
 		chokidar: false
 	},
-	external: [
-		"fs",
-		"os",
-		"util",
-		"http",
-		"https",
-		"url",
-		"path",
-		"crypto",
-		"net",
-		"tls",
-		"events",
-		"tty",
-		"electron"
-	],
+	external: NODE_GLOBALS,
 	plugins: [
 		typescript({
 			include: [
@@ -46,7 +50,8 @@ module.exports = {
 		commonjs({
 			namedExports: {
 				"../node_modules/lodash/lodash.js": ["forEach"],
-				"../node_modules/https-proxy-agent/index.js": ["HttpsProxyAgent"]
+				"../node_modules/https-proxy-agent/index.js": ["HttpsProxyAgent"],
+				"../node_modules/get-proxy-settings/dist/index.js": ["getProxySettings"]
 			}
 		}),
 		resolve(),
