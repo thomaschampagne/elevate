@@ -68,7 +68,6 @@
 	"readme": "README.md",
 	"dependencies": {
 		"electron-log": "^3.0.5",
-		"get-proxy-settings": "^0.1.10",
 		"https-proxy-agent": "^2.2.1",
 		"lodash": "^4.17.11",
 		"promise-tron": "^2.0.0",

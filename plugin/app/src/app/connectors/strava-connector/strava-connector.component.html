@@ -6,7 +6,8 @@
 		<div *ngIf="stravaApiCredentials">
 			<div>
 				<mat-form-field fxFlex="50">
-					<input matInput type="number" placeholder="Client id" [(ngModel)]="stravaApiCredentials.clientId"
+					<input matInput type="number" min="0" placeholder="Client id"
+						   [(ngModel)]="stravaApiCredentials.clientId"
 						   (change)="onChanges()">
 				</mat-form-field>
 			</div>

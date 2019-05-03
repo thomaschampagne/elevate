@@ -14,7 +14,7 @@ export class StravaApiCredentialsService {
 		return <Promise<StravaApiCredentials>> this.stravaApiCredentialsDao.fetch();
 	}
 
-	public put(stravaApiCredentials: StravaApiCredentials): Promise<StravaApiCredentials> {
-		return this.stravaApiCredentialsDao.put(stravaApiCredentials);
+	public save(stravaApiCredentials: StravaApiCredentials): Promise<StravaApiCredentials> {
+		return <Promise<StravaApiCredentials>> this.stravaApiCredentialsDao.save(stravaApiCredentials);
 	}
 }

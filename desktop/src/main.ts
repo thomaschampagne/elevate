@@ -4,7 +4,7 @@ import * as path from "path";
 import * as url from "url";
 import logger from "electron-log";
 import { IpcMainMessagesService } from "./listeners/ipc-main-messages-service";
-import { ProxyDetector } from "./proxy-detector";
+import { Proxy } from "./proxy";
 
 const IS_ELECTRON_DEV = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "dev");
 
@@ -57,9 +57,12 @@ class Main {
 				}),
 			);
 
-			// Create the request listener to listen renderer request events
-			this.requestListener = new IpcMainMessagesService(ipcMain, this.appWindow.webContents);
-			this.requestListener.listen();
+			// Detect a proxy on the system before listening for message from renderer
+			Proxy.resolve(this.appWindow).then(() => {
+				// Create the request listener to listen renderer request events
+				this.requestListener = new IpcMainMessagesService(ipcMain, this.appWindow.webContents);
+				this.requestListener.listen();
+			});
 
 			if (!this.isPackaged) {
 				this.appWindow.webContents.openDevTools();
@@ -134,9 +137,7 @@ try {
 		logger.debug("electron-reloader is ENABLED");
 	}
 
-	ProxyDetector.init().then(() => {
-		(new Main(app)).run();
-	});
+	(new Main(app)).run();
 
 } catch (err) {
 	logger.error(err);

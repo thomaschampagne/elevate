@@ -29,6 +29,11 @@ export class StravaConnectorComponent implements OnInit {
 	}
 
 	public onChanges(): void {
+
+		if (this.stravaApiCredentials.clientSecret) {
+			this.stravaApiCredentials.clientSecret = this.stravaApiCredentials.clientSecret.trim();
+		}
+
 		this.persistStravaApiCredentials();
 	}
 
@@ -55,7 +60,7 @@ export class StravaConnectorComponent implements OnInit {
 	}
 
 	public persistStravaApiCredentials(): void {
-		this.stravaApiCredentialsService.put(this.stravaApiCredentials).then(saveCredentials => {
+		this.stravaApiCredentialsService.save(this.stravaApiCredentials).then(saveCredentials => {
 			this.logger.debug("Strava api credentials saved to: ", saveCredentials);
 		}, error => {
 			throw error;

@@ -3,11 +3,11 @@ import * as https from "https";
 import * as QueryString from "querystring";
 import { BrowserWindow } from "electron";
 import HttpsProxyAgent from "https-proxy-agent";
-import { ProxyDetector } from "./proxy-detector";
+import { Proxy } from "./proxy";
 
 export class StravaAuthentication {
 
-	public static WEB_SERVER_HTTP_PORT: number = 8080;
+	public static WEB_SERVER_HTTP_PORT: number = 53445;
 	public static AUTH_WINDOW_HEIGHT: number = 800;
 	public static AUTH_WINDOW_WIDTH: number = 500;
 	public static REDIRECT_HTTP_BASE: string = "http://127.0.0.1";
@@ -36,7 +36,9 @@ export class StravaAuthentication {
 		handleAuthorizeCode(query.code);
 		response.end();
 
-		this.authenticationWindow.close();
+		if (!this.authenticationWindow.isDestroyed()) {
+			this.authenticationWindow.close();
+		}
 
 		this.server.close();
 	}
@@ -89,7 +91,7 @@ export class StravaAuthentication {
 				"Content-Type": "application/x-www-form-urlencoded",
 				"Content-Length": postData.length
 			},
-			agent: (ProxyDetector.httpProxy) ? new HttpsProxyAgent(ProxyDetector.httpProxy) : null
+			agent: (Proxy.getHttpProxy()) ? new HttpsProxyAgent(Proxy.getHttpProxy()) : null
 		};
 
 		const request = https.request(options, (response: http.IncomingMessage) => {
