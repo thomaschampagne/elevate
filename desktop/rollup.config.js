@@ -1,7 +1,7 @@
 import typescript from "rollup-plugin-typescript2";
-import commonjs from 'rollup-plugin-commonjs';
-import resolve from 'rollup-plugin-node-resolve';
-import {uglify} from "rollup-plugin-uglify";
+import commonjs from "rollup-plugin-commonjs";
+import resolve from "rollup-plugin-node-resolve";
+import {terser} from "rollup-plugin-terser";
 
 const NODE_GLOBALS = [
 	"electron",
@@ -22,10 +22,6 @@ const NODE_GLOBALS = [
 ];
 
 const IS_ELECTRON_PROD = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "prod");
-
-const skipUglify = () => {
-	console.debug("Uglify skipped.")
-};
 
 module.exports = {
 	input: "./src/main.ts",
@@ -55,6 +51,6 @@ module.exports = {
 			}
 		}),
 		resolve(),
-		(IS_ELECTRON_PROD) ? uglify() : skipUglify()
+		(IS_ELECTRON_PROD) ? terser() : null
 	]
 };
