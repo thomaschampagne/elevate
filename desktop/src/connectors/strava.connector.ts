@@ -1,12 +1,11 @@
-import { BaseConnector } from "../base.connector";
+import { BaseConnector } from "./base.connector";
 import { Subject } from "rxjs";
-import { SyncEvent } from "../../events";
-import { NotImplementedException } from "../../../exceptions";
+import { NotImplementedException } from "@elevate/shared/exceptions";
+import { ConnectorType, SyncEvent } from "@elevate/shared/sync";
 
 export class StravaConnector extends BaseConnector {
 
 	public static readonly ENABLED: boolean = true;
-	public static readonly NAME: string = "STRAVA_CONNECTOR";
 
 	public clientId: number;
 	public clientSecret: string;
@@ -14,7 +13,7 @@ export class StravaConnector extends BaseConnector {
 	public updateSyncedActivitiesNameAndType: boolean;
 
 	constructor(priority: number, clientId: number, clientSecret: string, accessToken: string, updateSyncedActivitiesNameAndType: boolean) {
-		super(StravaConnector.NAME, priority, StravaConnector.ENABLED);
+		super(ConnectorType.STRAVA, priority, StravaConnector.ENABLED);
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.accessToken = accessToken;

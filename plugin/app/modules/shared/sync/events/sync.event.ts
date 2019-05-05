@@ -1,15 +1,15 @@
 import { SyncEventType } from "./sync-event-type";
-import { BaseConnector } from "../connectors";
+import { ConnectorType } from "../connectors";
 
 export class SyncEvent {
 
 	public type: SyncEventType;
-	public fromConnector: BaseConnector;
+	public fromConnectorType: ConnectorType;
 	public description: string;
 
-	constructor(type: SyncEventType, fromConnector: BaseConnector, description: string) {
+	constructor(type: SyncEventType, fromConnectorType: ConnectorType, description: string) {
 		this.type = type;
-		this.fromConnector = fromConnector;
+		this.fromConnectorType = fromConnectorType;
 		this.description = description;
 	}
 }

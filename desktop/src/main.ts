@@ -46,7 +46,8 @@ class Main {
 				width: winWidth,
 				height: winHeight,
 				center: true,
-				frame: true
+				frame: true,
+				autoHideMenuBar: true
 			});
 
 			this.appWindow.loadURL(

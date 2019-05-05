@@ -1,11 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { IpcRendererMessagesService } from "../../shared/services/messages-listener/ipc-renderer-messages.service";
 import { StravaApiCredentialsService } from "../../shared/services/strava-api-credentials/strava-api-credentials.service";
-import { StravaApiCredentials } from "@elevate/shared/sync/connectors/strava/strava-api-credentials";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MatSnackBar } from "@angular/material";
 import { FlaggedIpcMessage } from "@elevate/shared/electron";
 import { MessageFlag } from "@elevate/shared/electron/message-flag.enum";
+import { StravaApiCredentials } from "@elevate/shared/sync";
 
 @Component({
 	selector: "app-strava-connector",

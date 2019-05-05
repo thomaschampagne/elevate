@@ -1,10 +1,8 @@
 import { Injectable } from "@angular/core";
 import { StravaApiCredentialsDao } from "../../dao/strava-api-credentials/strava-api-credentials.dao";
-import { StravaApiCredentials } from "@elevate/shared/sync/connectors/strava/strava-api-credentials";
+import { StravaApiCredentials } from "@elevate/shared/sync";
 
-@Injectable({
-	providedIn: "root"
-})
+@Injectable()
 export class StravaApiCredentialsService {
 
 	constructor(public stravaApiCredentialsDao: StravaApiCredentialsDao) {

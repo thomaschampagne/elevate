@@ -2,7 +2,7 @@ import { IpcRequest, PromiseTron, PromiseTronReply } from "promise-tron";
 import logger from "electron-log";
 import { StravaAuthentication } from "../strava-authentication";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
-import { BaseConnector, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import { ConnectorType, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 
 export class IpcMainMessagesService {
 
@@ -60,10 +60,10 @@ export class IpcMainMessagesService {
 
 	public handleStartSyncAndFakeSync(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
 
-		const connector = <BaseConnector> message.payload[0];
+		const connectorType = <ConnectorType> message.payload[0];
 
 		replyWith({
-			success: "Started sync for connector: " + JSON.stringify(connector),
+			success: "Started sync for connectorType: " + connectorType,
 			error: null
 		});
 
@@ -74,7 +74,7 @@ export class IpcMainMessagesService {
 
 		// Sending fake sync events to renderer
 		this.syncingInterval = setInterval(() => {
-			const flaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, new SyncEvent(SyncEventType.GENERIC, connector, (new Date()).toISOString()));
+			const flaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, new SyncEvent(SyncEventType.GENERIC, connectorType, (new Date()).toISOString()));
 			this.promiseTron.send(flaggedIpcMessage).then((response: string) => {
 				logger.info("[MAIN]", response);
 			});
