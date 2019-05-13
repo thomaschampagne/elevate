@@ -139,6 +139,13 @@ export class ActivitiesComponent implements OnInit {
 
 			// Get and apply data
 			this.fetchApplyData();
+
+		}).catch(error => {
+			if (error instanceof AppError && error.code === AppError.SYNC_NOT_SYNCED) {
+				// Do nothing
+			} else {
+				throw error;
+			}
 		});
 
 		// Listen for syncFinished update then table if necessary.
