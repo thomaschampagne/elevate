@@ -2,6 +2,21 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.12.0",
+		date: "2019-05-22",
+		message: "Added \"calories\" column in \"Activities\" section of elevate app. Update also adds various improvements & bugs fixes",
+		hotFixes: [],
+		features: [
+			"Added \"calories\" column in \"Activities\" section of elevate app",
+			"Updated \"distance\" column precision with 1 digits in \"Activities\" section of elevate app",
+			"Improved year progression curves on \"year to date\" feature. The old curves easing interpolation drawn descending curves after a data impulse which is not expected on this feature",
+		],
+		isPatch: false,
+		fixes: [
+			"[Technical] Upgraded Angular & others npm libraries."
+		]
+	},
+	{
 		version: "6.11.1",
 		date: "2019-04-16",
 		message: "👨‍⚕️💉 Fixed issues with Dated Athlete Settings. <u>V6.11 Reminder</u>: New \"Activities\" menu in Elevate App: List activities with ALL EXTENDED STATS (+ spreadsheet export feature).",
