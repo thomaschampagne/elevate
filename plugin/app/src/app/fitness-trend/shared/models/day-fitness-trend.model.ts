@@ -128,12 +128,12 @@ export class DayFitnessTrendModel extends DayStressModel {
 			return (defaultEmptyValue) ? defaultEmptyValue : "";
 		}
 
-		const typesCount = _(this.types).countBy().map((count, type) => {
+		const typesCount = _.chain(this.types).countBy().map((count, type) => {
 			return {type: type, count: count};
-		}).orderBy("count", "desc").value();
+		}).value();
 
 		let result = "";
-		_.forEach(typesCount, (obj: any, index: number) => {
+		_.forEach(_.orderBy(typesCount, "count", "desc"), (obj: any, index: number) => {
 
 			result += obj.count + " " + obj.type + ((obj.count > 1) ? "s" : "");
 
