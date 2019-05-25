@@ -87,18 +87,21 @@
 		],
 		"win": {
 			"target": [
-				"portable"
-			]
+				"zip"
+			],
+			"icon": "./desktop/res/icons/win/icon.ico"
 		},
 		"mac": {
 			"target": [
 				"dmg"
-			]
+			],
+			"icon": "./desktop/res/icons/mac/icon.icns"
 		},
 		"linux": {
 			"target": [
 				"AppImage"
-			]
+			],
+			"icon": "./desktop/res/icons/mac/icon.icns"
 		}
 	},
 	"main": "./dist/desktop.run.js"
