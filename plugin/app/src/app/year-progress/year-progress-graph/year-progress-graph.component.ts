@@ -328,7 +328,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 			animate_on_load: false,
 			transition_on_update: false,
 			aggregate_rollover: true,
-			interpolate: d3.curveNatural,
+			interpolate: d3.curveLinear,
 			missing_is_hidden: true,
 			missing_is_hidden_accessor: "hidden",
 			xax_count: 12,
