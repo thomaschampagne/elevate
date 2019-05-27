@@ -5,7 +5,7 @@ import { BikeGearModel } from "../models/gear/bike-gear.model";
 import { GearType } from "../models/gear/gear-type.enum";
 import { ShoesGearModel } from "../models/gear/shoes-gear.model";
 import { GearModel } from "../models/gear/gear.model";
-import { Gzip } from "../utils/gzip";
+import { Gzip } from "@elevate/shared/tools";
 import { Helper } from "../helper";
 
 export class VacuumProcessor {

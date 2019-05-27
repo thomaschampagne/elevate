@@ -8,7 +8,7 @@ export class Gzip {
 	 * @return base64 string
 	 */
 	public static toBase64<T>(object: T): string {
-		return btoa(gzip(JSON.stringify(object), {to: "string"}));
+		return Gzip.encode64(gzip(JSON.stringify(object), {to: "string"}));
 	}
 
 	/**
@@ -17,7 +17,31 @@ export class Gzip {
 	 * @return object of type {T}
 	 */
 	public static fromBase64<T>(base64: string): T {
-		return JSON.parse(inflate(atob(base64), {to: "string"}));
+		return JSON.parse(inflate(Gzip.decode64(base64), {to: "string"}));
+	}
+
+	/**
+	 * Encode string to base64
+	 * @param data
+	 */
+	public static encode64(data: string): string {
+		if (typeof btoa !== "undefined") {
+			return btoa(data);
+		} else {
+			return Buffer.from(data).toString("base64");
+		}
+	}
+
+	/**
+	 * Encode string to base64
+	 * @param data
+	 */
+	public static decode64(data: string): string {
+		if (typeof atob !== "undefined") {
+			return atob(data);
+		} else {
+			return Buffer.from(data, "base64").toString();
+		}
 	}
 
 	/**

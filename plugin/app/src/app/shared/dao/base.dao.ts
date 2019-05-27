@@ -27,7 +27,8 @@ export abstract class BaseDao<T> {
 	 */
 	public checkCompliantDao(): Promise<void> {
 		if (!this.storageLocation) {
-			return Promise.reject("StorageLocationModel not set in '" + this.constructor.name + "'. Please override init method to assign a StorageLocationModel.");
+			return Promise.reject("StorageLocationModel not set in '" + this.constructor.name
+				+ "'. Please override init method to assign a StorageLocationModel.");
 		}
 		return Promise.resolve();
 	}
@@ -39,6 +40,13 @@ export abstract class BaseDao<T> {
 		return this.checkCompliantDao().then(() => {
 			return this.dataStore.fetch(this.storageLocation, this.defaultStorage, findRequest);
 		});
+	}
+
+	/**
+	 * Find
+	 */
+	public find(findRequest: FindRequest<T[] | T>): Promise<T[] | T> {
+		return this.fetch(findRequest);
 	}
 
 	/**

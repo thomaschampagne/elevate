@@ -1,5 +1,5 @@
 import { OptionModel } from "./option.model";
-import { EnvTarget } from "../../shared/enums/env-target";
+import { EnvTarget } from "@elevate/shared/models";
 
 export class SectionModel {
 	public title: string;

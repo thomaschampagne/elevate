@@ -39,7 +39,9 @@ export class StravaConnectorComponent implements OnInit {
 
 	public stravaAuthentication(): void {
 
-		const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.LINK_STRAVA_CONNECTOR, this.stravaApiCredentials.clientId, this.stravaApiCredentials.clientSecret);
+		const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.LINK_STRAVA_CONNECTOR, this.stravaApiCredentials.clientId,
+			this.stravaApiCredentials.clientSecret);
+
 		this.messagesListenerService.send<string>(flaggedIpcMessage).then((accessToken: string) => {
 
 			this.stravaApiCredentials.accessToken = accessToken;

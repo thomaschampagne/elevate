@@ -11,7 +11,6 @@ export class SplitCalculator {
 		this.scale = scale;
 		this.data = data;
 		this.maxScaleGapThreshold = maxScaleGapThreshold;
-		this.start = performance.now();
 		this.normalize();
 	}
 
@@ -56,7 +55,7 @@ export class SplitCalculator {
 		this.data = interpolatedData;
 	}
 
-	public getBestSplit(scaleRange: number, showProcessTime?: boolean): number {
+	public getBestSplit(scaleRange: number): number {
 
 		if (scaleRange > this.scale.length) {
 			throw new Error("Requested scaleRange of " + scaleRange + " is greater than scale range length of " + this.scale.length + ".");
@@ -83,17 +82,10 @@ export class SplitCalculator {
 			maxSumFound = _.max(this.data);
 		}
 
-		const bestSplit = (maxSumFound / scaleRange);
-
-		if (showProcessTime) {
-			const processTime = performance.now() - this.start;
-			console.debug("Processed split of range " + scaleRange + " in " + _.floor(processTime, 4) + " ms.");
-		}
-
-		return bestSplit;
+		return (maxSumFound / scaleRange);
 	}
 
-	public getBestSplitRanges(ranges: number[], showProcessTime?: boolean): { range: number, result: number }[] {
+	public getBestSplitRanges(ranges: number[]): { range: number, result: number }[] {
 
 		const results: { range: number, result: number }[] = [];
 
@@ -103,11 +95,6 @@ export class SplitCalculator {
 				result: this.getBestSplit(range)
 			});
 		});
-
-		if (showProcessTime) {
-			const processTime = performance.now() - this.start;
-			console.debug("Processed split in " + _.floor(processTime, 4) + " ms.");
-		}
 
 		return results;
 	}

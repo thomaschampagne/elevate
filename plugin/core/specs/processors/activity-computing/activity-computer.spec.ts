@@ -7,45 +7,10 @@ import {
 	Gender,
 	UserSettings,
 } from "@elevate/shared/models";
-import { ActivityComputer } from "../../../scripts/processors/activity-computer";
-import { StreamVariationSplit } from "../../../scripts/models/stream-variation-split.model";
+import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 describe("ActivityComputer", () => {
-
-	it("should split stream variations (positive and negative) with time and distance", (done: Function) => {
-
-		// Given
-		const trackedStream = [10, 12, 15, 20, 10, 5, 2, 10, 15, 5, 5]; // e.g. Elevation
-		const timeScale = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]; // e.g. Time
-		const distanceScale = [1, 9, 13, 20, 26, 30, 34, 38, 42, 46, 50]; // e.g. Distance
-
-		const expectedStreamVariation: StreamVariationSplit[] = [{
-			variation: 10,
-			time: 3,
-			distance: 19
-		}, {
-			variation: -18,
-			time: 4,
-			distance: 14
-		}, {
-			variation: 13,
-			time: 2,
-			distance: 8
-		}, {
-			variation: -10,
-			time: 2,
-			distance: 8
-		}];
-
-		// When
-		const result = ActivityComputer.streamVariationsSplits(trackedStream, timeScale, distanceScale);
-
-		// Then
-		expect(result).toEqual(expectedStreamVariation);
-
-		done();
-	});
 
 	// Cycling
 	it("should compute correctly \"Bon rythme ! 33 KPH !\" @ https://www.strava.com/activities/723224273", (done: Function) => {

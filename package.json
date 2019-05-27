@@ -72,12 +72,14 @@
 		"lodash": "^4.17.11",
 		"promise-tron": "^2.0.0",
 		"querystring": "^0.2.0",
+		"pako": "^1.0.10",
 		"rxjs": "^6.4.0"
 	},
 	"devDependencies": {
 		"@types/jest": "^24.0.11",
 		"@types/lodash": "^4.14.123",
 		"@types/node": "^11.13.7",
+		"@types/pako": "^1.0.0",
 		"bestzip": "^2.1.2",
 		"cpy-cli": "^2.0.0",
 		"cross-env": "^5.2.0",

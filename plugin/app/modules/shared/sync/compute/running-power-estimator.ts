@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { InconsistentParametersException } from "@elevate/shared/exceptions";
+import { InconsistentParametersException } from "../../exceptions";
 
 export class RunningPowerEstimator {
 	/**

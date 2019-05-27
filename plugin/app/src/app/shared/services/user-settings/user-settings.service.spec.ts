@@ -1,11 +1,10 @@
 import { TestBed } from "@angular/core/testing";
 import { UserSettingsService } from "./user-settings.service";
-import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
+import { EnvTarget, UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
 import { SharedModule } from "../../shared.module";
 import { CoreModule } from "../../../core/core.module";
-import { EnvTarget } from "../../enums/env-target";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;

@@ -1,5 +1,5 @@
 import { LoggerService } from "../app/shared/services/logging/logger.service";
-import { EnvTarget } from "../app/shared/enums/env-target";
+import { EnvTarget } from "@elevate/shared/models";
 
 export const environment = {
 	target: EnvTarget.EXTENSION,

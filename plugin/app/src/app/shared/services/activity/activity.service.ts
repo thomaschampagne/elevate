@@ -29,11 +29,29 @@ export class ActivityService {
 
 	/**
 	 *
+	 * @param findRequest
+	 */
+	public find(findRequest: PouchDB.Find.FindRequest<SyncedActivityModel[]>): Promise<SyncedActivityModel[]> {
+		return (<Promise<SyncedActivityModel[]>> this.activityDao.find(findRequest)).then(activities => {
+			return Promise.resolve(_.sortBy(activities, "start_time"));
+		});
+	}
+
+	/**
+	 *
 	 * @param {SyncedActivityModel[]} syncedActivityModels
 	 * @returns {Promise<SyncedActivityModel[]>} saved SyncedActivityModels
 	 */
 	public save(syncedActivityModels: SyncedActivityModel[]): Promise<SyncedActivityModel[]> {
 		return (<Promise<SyncedActivityModel[]>> this.activityDao.save(syncedActivityModels));
+	}
+
+	/**
+	 *
+	 * @param syncedActivityModel
+	 */
+	public put(syncedActivityModel: SyncedActivityModel): Promise<SyncedActivityModel> {
+		return (<Promise<SyncedActivityModel>> this.activityDao.put(syncedActivityModel));
 	}
 
 	public clear(): Promise<void> {

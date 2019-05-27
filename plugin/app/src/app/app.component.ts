@@ -18,10 +18,9 @@ import { SyncState } from "./shared/services/sync/sync-state.enum";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/enums/theme.enum";
-import { SyncResultModel } from "@elevate/shared/models";
+import { EnvTarget, SyncResultModel } from "@elevate/shared/models";
 import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
 import { AppEventsService } from "./shared/services/external-updates/app-events-service";
-import { EnvTarget } from "./shared/enums/env-target";
 import { environment } from "../environments/environment";
 import { SyncService } from "./shared/services/sync/sync.service";
 

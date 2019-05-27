@@ -5,22 +5,25 @@ import * as url from "url";
 import logger from "electron-log";
 import { IpcMainMessagesService } from "./listeners/ipc-main-messages-service";
 import { Proxy } from "./proxy";
+import { Service } from "./service";
 
 const IS_ELECTRON_DEV = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "dev");
 
 logger.transports.file.level = (IS_ELECTRON_DEV) ? "debug" : "info";
 logger.transports.console.level = (IS_ELECTRON_DEV) ? "debug" : "info";
-logger.transports.file.maxSize = 1048576; // 1MB
+logger.transports.file.maxSize = 1048576 * 2; // 2MB
 
 class Main {
 
 	private static readonly WINDOW_WIDTH: number = 1600;
 	private static readonly WINDOW_HEIGHT: number = 1024;
 
+	public ipcMainMessagesService: IpcMainMessagesService;
+
 	private readonly app: Electron.App;
 	private readonly isPackaged: boolean;
 	private appWindow: BrowserWindow;
-	private requestListener: IpcMainMessagesService;
+
 
 	constructor(app: Electron.App) {
 		this.app = app;
@@ -59,10 +62,15 @@ class Main {
 			);
 
 			// Detect a proxy on the system before listening for message from renderer
-			Proxy.resolve(this.appWindow).then(() => {
+			Proxy.resolve(this.appWindow).then((httpProxy) => {
+
+				logger.info("Using proxy value: " + httpProxy);
+				Service.instance().httpProxy = httpProxy;
+
 				// Create the request listener to listen renderer request events
-				this.requestListener = new IpcMainMessagesService(ipcMain, this.appWindow.webContents);
-				this.requestListener.listen();
+				this.ipcMainMessagesService = new IpcMainMessagesService(ipcMain, this.appWindow.webContents);
+				this.ipcMainMessagesService.listen();
+				Service.instance().ipcMainMessages = this.ipcMainMessagesService;
 			});
 
 			if (!this.isPackaged) {

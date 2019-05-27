@@ -7,7 +7,7 @@ import {
 	Gender,
 	UserSettings,
 } from "@elevate/shared/models";
-import { ActivityComputer } from "../../../scripts/processors/activity-computer";
+import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import * as _ from "lodash";
 import { Helper } from "../../../scripts/helper";
 import UserSettingsModel = UserSettings.UserSettingsModel;

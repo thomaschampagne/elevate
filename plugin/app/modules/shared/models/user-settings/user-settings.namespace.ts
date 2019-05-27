@@ -1,5 +1,5 @@
 import { UserZonesModel } from "./user-zones.model";
-import { EnvTarget } from "../../../../src/app/shared/enums/env-target";
+import { EnvTarget } from "../env-target";
 
 export namespace UserSettings {
 

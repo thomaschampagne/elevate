@@ -1,17 +1,12 @@
 import * as _ from "lodash";
-import { Helper } from "../helper";
-import { RunningPowerEstimator } from "./running-power-estimator";
-import { SplitCalculator } from "./split-calculator";
+import { AthleteSettingsModel, AthleteSnapshotModel, Gender } from "../../models/athlete";
 import {
 	ActivitySourceDataModel,
 	ActivityStreamsModel,
 	AnalysisDataModel,
 	AscentSpeedDataModel,
-	AthleteSettingsModel,
-	AthleteSnapshotModel,
 	CadenceDataModel,
 	ElevationDataModel,
-	Gender,
 	GradeDataModel,
 	HeartRateDataModel,
 	MoveDataModel,
@@ -24,9 +19,9 @@ import {
 	UserSettings,
 	UserZonesModel,
 	ZoneModel
-} from "@elevate/shared/models";
-import { StreamVariationSplit } from "../models/stream-variation-split.model";
-import UserSettingsModel = UserSettings.UserSettingsModel;
+} from "../../models";
+import { RunningPowerEstimator } from "./running-power-estimator";
+import { SplitCalculator } from "./split-calculator";
 
 export class ActivityComputer {
 
@@ -42,10 +37,68 @@ export class ActivityComputer {
 	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
 	public static readonly SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
 
+
+	/**
+	 * @param speed in kph
+	 * @return pace in seconds/km, if NaN/Infinite then return -1
+	 */
+	public static convertSpeedToPace(speed: number): number {
+		if (!_.isFinite(speed) || speed <= 0) {
+			return -1;
+		}
+		return (1 / speed * 60 * 60);
+	}
+
+	/**
+	 *
+	 * @param hr
+	 * @param maxHr
+	 * @param restHr
+	 */
+	public static heartRateReserveFromHeartrate(hr: number, maxHr: number, restHr: number): number {
+		return (hr - restHr) / (maxHr - restHr);
+	}
+
+	/**
+	 * Inspired from https://en.wikipedia.org/wiki/Weighted_median
+	 * and https://en.wikipedia.org/wiki/Percentile#Definition_of_the_Weighted_Percentile_method
+	 * @param values
+	 * @param weights
+	 * @param percentiles
+	 */
+	public static weightedPercentiles(values: number[], weights: number[], percentiles: number[]): number[] {
+		const list: any[] = [];
+		let tot = 0;
+		for (let i = 0; i < values.length; i++) {
+			list.push({value: values[i], weight: weights[i]});
+			tot += weights[i];
+		}
+		list.sort((a, b) => {
+			return a.value - b.value;
+		});
+		const result: number[] = [];
+		for (let i = 0; i < percentiles.length; i++) {
+			result.push(0);
+		}
+
+		let cur = 0;
+		for (let i = 0; i < list.length; i++) {
+			for (let j = 0; j < percentiles.length; j++) {
+				// found the sample matching the percentile
+				if (cur < percentiles[j] * tot && (cur + list[i].weight) > (percentiles[j] - 0.00001) * tot) {
+					result[j] = list[i].value;
+				}
+			}
+			cur += list[i].weight;
+		}
+
+		return result;
+	}
+
 	protected athleteSnapshot: AthleteSnapshotModel;
 	protected activityType: string;
 	protected isTrainer: boolean;
-	protected userSettings: UserSettingsModel;
+	protected userSettings: UserSettings.UserSettingsModel;
 	protected movementData: MoveDataModel;
 	protected isOwner: boolean;
 	protected hasPowerMeter: boolean;
@@ -56,7 +109,7 @@ export class ActivityComputer {
 
 	constructor(activityType: string,
 				isTrainer: boolean,
-				userSettings: UserSettingsModel,
+				userSettings: UserSettings.UserSettingsModel,
 				athleteSnapshot: AthleteSnapshotModel,
 				isOwner: boolean,
 				hasPowerMeter: boolean,
@@ -77,46 +130,6 @@ export class ActivityComputer {
 		this.activityStream = activityStream;
 		this.bounds = bounds;
 		this.returnZones = returnZones;
-	}
-
-	public static streamVariationsSplits(trackedStream: number[], timeScale: number[], distanceScale: number[]): StreamVariationSplit[] {
-
-		const streamVariations = [];
-		let previousVariationSign = null;
-		let lastNonVariationIndex = null;
-
-		for (let i = 0; i < trackedStream.length; i++) {
-
-			const currentValue = trackedStream[i];
-			const nextValue = trackedStream[i + 1];
-			const hasNextValue = _.isNumber(nextValue);
-			const variationSign = Math.sign(nextValue - currentValue);
-
-			if (_.isNull(previousVariationSign)) {
-				previousVariationSign = variationSign;
-			}
-			if (_.isNull(lastNonVariationIndex)) {
-				lastNonVariationIndex = i;
-			}
-
-			const streamVariation: StreamVariationSplit = {
-				variation: (trackedStream[i] - trackedStream[lastNonVariationIndex]),
-				time: (timeScale[i] - timeScale[lastNonVariationIndex]),
-				distance: (distanceScale[i] - distanceScale[lastNonVariationIndex])
-			};
-
-			if (variationSign !== 0 && previousVariationSign !== variationSign && hasNextValue) { // Sign change
-
-				streamVariations.push(streamVariation);
-				previousVariationSign = variationSign;
-				lastNonVariationIndex = i;
-
-			} else if (!hasNextValue) { // negative
-				streamVariations.push(streamVariation);
-			}
-		}
-
-		return streamVariations;
 	}
 
 	/**
@@ -461,7 +474,7 @@ export class ActivityComputer {
 		}
 
 		const averageSpeed = distance / movingTime * 3.6;
-		const averagePace = Helper.convertSpeedToPace(averageSpeed);
+		const averagePace = ActivityComputer.convertSpeedToPace(averageSpeed);
 
 		const speedData: SpeedDataModel = {
 			genuineAvgSpeed: averageSpeed,
@@ -572,7 +585,7 @@ export class ActivityComputer {
 					}
 
 					// Find pace zone
-					const pace: number = Helper.convertSpeedToPace(currentSpeed);
+					const pace: number = ActivityComputer.convertSpeedToPace(currentSpeed);
 
 					const paceZoneId: number = this.getZoneId(this.userSettings.zones.get(UserZonesModel.TYPE_PACE), (pace === -1) ? 0 : pace);
 					if (!_.isUndefined(paceZoneId) && !_.isUndefined(paceZones[paceZoneId])) {
@@ -588,7 +601,7 @@ export class ActivityComputer {
 						const gradeAdjustedSpeed = gradeAdjustedSpeedArray[i] * 3.6;
 						gradeAdjustedSpeedsNonZero.push(gradeAdjustedSpeed);
 
-						const gradeAdjustedPace = Helper.convertSpeedToPace(gradeAdjustedSpeed);
+						const gradeAdjustedPace = ActivityComputer.convertSpeedToPace(gradeAdjustedSpeed);
 
 						const gradeAdjustedPaceZoneId: number = this.getZoneId(this.userSettings.zones.get(UserZonesModel.TYPE_GRADE_ADJUSTED_PACE), (gradeAdjustedPace === -1) ? 0 : gradeAdjustedPace);
 						if (!_.isUndefined(gradeAdjustedPaceZoneId) && !_.isUndefined(gradeAdjustedPaceZones[gradeAdjustedPaceZoneId])) {
@@ -608,13 +621,13 @@ export class ActivityComputer {
 		const genuineAvgSpeed: number = genuineAvgSpeedSum / genuineAvgSpeedSecondsSum;
 		const varianceSpeed: number = (speedVarianceSum / speedsNonZero.length) - Math.pow(genuineAvgSpeed, 2);
 		const standardDeviationSpeed: number = (varianceSpeed > 0) ? Math.sqrt(varianceSpeed) : 0;
-		const percentiles: number[] = Helper.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
+		const percentiles: number[] = ActivityComputer.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [0.25, 0.5, 0.75]);
 
 
 		let best20min = null;
 		try {
 			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(velocityArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
-			best20min = splitCalculator.getBestSplit(60 * 20, true) * 3.6;
+			best20min = splitCalculator.getBestSplit(60 * 20) * 3.6;
 		} catch (err) {
 			console.warn("No best 20min speed/pace available for this range");
 		}
@@ -625,7 +638,7 @@ export class ActivityComputer {
 			genuineAvgSpeed: genuineAvgSpeed,
 			totalAvgSpeed: genuineAvgSpeed * this.moveRatio(genuineAvgSpeedSecondsSum, elapsedSeconds),
 			best20min: best20min,
-			avgPace: Math.floor(Helper.convertSpeedToPace(genuineAvgSpeed)), // send in seconds
+			avgPace: Math.floor(ActivityComputer.convertSpeedToPace(genuineAvgSpeed)), // send in seconds
 			lowerQuartileSpeed: percentiles[0],
 			medianSpeed: percentiles[1],
 			upperQuartileSpeed: percentiles[2],
@@ -635,18 +648,18 @@ export class ActivityComputer {
 			speedZones: (this.returnZones) ? speedZones : null,
 		};
 
-		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed && genuineGradeAdjustedAvgSpeed > 0) ? Math.floor(Helper.convertSpeedToPace(genuineGradeAdjustedAvgSpeed)) : null;
+		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed && genuineGradeAdjustedAvgSpeed > 0) ? Math.floor(ActivityComputer.convertSpeedToPace(genuineGradeAdjustedAvgSpeed)) : null;
 
 		const runningStressScore = ((this.activityType === "Run" || this.activityType === "VirtualRun") && genuineGradeAdjustedAvgPace && this.athleteSnapshot.athleteSettings.runningFtp)
 			? ActivityComputer.computeRunningStressScore(this.activitySourceData.movingTime, genuineGradeAdjustedAvgPace, this.athleteSnapshot.athleteSettings.runningFtp) : null;
 
 		const paceData: PaceDataModel = {
-			avgPace: Math.floor(Helper.convertSpeedToPace(genuineAvgSpeed)), // send in seconds
-			best20min: (best20min) ? Math.floor(Helper.convertSpeedToPace(best20min)) : null,
-			lowerQuartilePace: Helper.convertSpeedToPace(percentiles[0]),
-			medianPace: Helper.convertSpeedToPace(percentiles[1]),
-			upperQuartilePace: Helper.convertSpeedToPace(percentiles[2]),
-			variancePace: Helper.convertSpeedToPace(varianceSpeed),
+			avgPace: Math.floor(ActivityComputer.convertSpeedToPace(genuineAvgSpeed)), // send in seconds
+			best20min: (best20min) ? Math.floor(ActivityComputer.convertSpeedToPace(best20min)) : null,
+			lowerQuartilePace: ActivityComputer.convertSpeedToPace(percentiles[0]),
+			medianPace: ActivityComputer.convertSpeedToPace(percentiles[1]),
+			upperQuartilePace: ActivityComputer.convertSpeedToPace(percentiles[2]),
+			variancePace: ActivityComputer.convertSpeedToPace(varianceSpeed),
 			genuineGradeAdjustedAvgPace: genuineGradeAdjustedAvgPace,
 			paceZones: (this.returnZones) ? paceZones : null,
 			gradeAdjustedPaceZones: (this.returnZones && hasGradeAdjustedSpeed) ? gradeAdjustedPaceZones : null,
@@ -762,7 +775,7 @@ export class ActivityComputer {
 		const weightedWattsPerKg: number = weightedPower / athleteWeight;
 		const avgWattsPerKg: number = avgWatts / athleteWeight;
 
-		const percentiles: number[] = Helper.weightedPercentiles(wattsSamplesOnMove, wattsSamplesOnMoveDuration, [0.25, 0.5, 0.75]);
+		const percentiles: number[] = ActivityComputer.weightedPercentiles(wattsSamplesOnMove, wattsSamplesOnMoveDuration, [0.25, 0.5, 0.75]);
 
 		// Update zone distribution percentage
 		powerZonesAlongActivityType = this.finalizeDistributionComputationZones(powerZonesAlongActivityType);
@@ -775,13 +788,13 @@ export class ActivityComputer {
 			const splitCalculator: SplitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
 
 			try {
-				bestEightyPercent = splitCalculator.getBestSplit(_.floor(_.last(timeArray) * 0.80), true);
+				bestEightyPercent = splitCalculator.getBestSplit(_.floor(_.last(timeArray) * 0.80));
 			} catch (err) {
 				console.warn("No best 80% power available for this range");
 			}
 
 			try {
-				best20min = splitCalculator.getBestSplit(60 * 20, true);
+				best20min = splitCalculator.getBestSplit(60 * 20);
 			} catch (err) {
 				console.warn("No best 20min power available for this range");
 			}
@@ -855,7 +868,7 @@ export class ActivityComputer {
 
 				// Compute trainingImpulse
 				hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
-				heartRateReserveAvg = Helper.heartRateReserveFromHeartrate(hr, athleteSnapshot.athleteSettings.maxHr, athleteSnapshot.athleteSettings.restHr); // (hr - userSettingsData.userRestHr) / (userSettingsData.userMaxHr - userSettingsData.userRestHr);
+				heartRateReserveAvg = ActivityComputer.heartRateReserveFromHeartrate(hr, athleteSnapshot.athleteSettings.maxHr, athleteSnapshot.athleteSettings.restHr); // (hr - userSettingsData.userRestHr) / (userSettingsData.userMaxHr - userSettingsData.userRestHr);
 				durationInMinutes = durationInSeconds / 60;
 
 				trainingImpulse += durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
@@ -873,7 +886,7 @@ export class ActivityComputer {
 		heartRateZones = this.finalizeDistributionComputationZones(heartRateZones);
 
 		const TRIMPPerHour: number = trainingImpulse / hrrSecondsCount * 60 * 60;
-		const percentiles: number[] = Helper.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
+		const percentiles: number[] = ActivityComputer.weightedPercentiles(heartRateArrayMoving, heartRateArrayMovingDuration, [0.25, 0.5, 0.75]);
 
 		const userLthrAlongActivityType: number = ActivityComputer.resolveLTHR(this.activityType, athleteSnapshot.athleteSettings);
 
@@ -887,7 +900,7 @@ export class ActivityComputer {
 		let best20min = null;
 		try {
 			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(heartRateArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
-			best20min = splitCalculator.getBestSplit(60 * 20, true);
+			best20min = splitCalculator.getBestSplit(60 * 20);
 		} catch (err) {
 			console.warn("No best 20min heart rate available for this range");
 		}
@@ -895,7 +908,7 @@ export class ActivityComputer {
 		let best60min = null;
 		try {
 			const splitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(heartRateArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
-			best60min = splitCalculator.getBestSplit(60 * 60, true);
+			best60min = splitCalculator.getBestSplit(60 * 60);
 		} catch (err) {
 			console.warn("No best 60min heart rate available for this range");
 		}
@@ -913,8 +926,8 @@ export class ActivityComputer {
 			upperQuartileHeartRate: percentiles[2],
 			averageHeartRate: averageHeartRate,
 			maxHeartRate: maxHeartRate,
-			activityHeartRateReserve: Helper.heartRateReserveFromHeartrate(averageHeartRate, athleteSnapshot.athleteSettings.maxHr, athleteSnapshot.athleteSettings.restHr) * 100,
-			activityHeartRateReserveMax: Helper.heartRateReserveFromHeartrate(maxHeartRate, athleteSnapshot.athleteSettings.maxHr, athleteSnapshot.athleteSettings.restHr) * 100,
+			activityHeartRateReserve: ActivityComputer.heartRateReserveFromHeartrate(averageHeartRate, athleteSnapshot.athleteSettings.maxHr, athleteSnapshot.athleteSettings.restHr) * 100,
+			activityHeartRateReserveMax: ActivityComputer.heartRateReserveFromHeartrate(maxHeartRate, athleteSnapshot.athleteSettings.maxHr, athleteSnapshot.athleteSettings.restHr) * 100,
 		};
 	}
 
@@ -1025,9 +1038,9 @@ export class ActivityComputer {
 		// Update zone distribution percentage
 		cadenceZones = this.finalizeDistributionComputationZones(cadenceZones);
 
-		const cadencesPercentiles: number[] = Helper.weightedPercentiles(cadencesOnMoving, cadencesDuration, [0.25, 0.5, 0.75]);
+		const cadencesPercentiles: number[] = ActivityComputer.weightedPercentiles(cadencesOnMoving, cadencesDuration, [0.25, 0.5, 0.75]);
 
-		const distancesPerOccurrencePercentiles: number[] = Helper.weightedPercentiles(distancesPerOccurrenceOnMoving, distancesPerOccurrenceDuration, [0.25, 0.5, 0.75]);
+		const distancesPerOccurrencePercentiles: number[] = ActivityComputer.weightedPercentiles(distancesPerOccurrenceOnMoving, distancesPerOccurrenceDuration, [0.25, 0.5, 0.75]);
 
 		const cadenceData: CadenceDataModel = {
 			cadencePercentageMoving: cadenceRatioOnMovingTime * 100,
@@ -1197,7 +1210,7 @@ export class ActivityComputer {
 
 		// Update zone distribution percentage
 		gradeZones = this.finalizeDistributionComputationZones(gradeZones);
-		const percentiles: number[] = Helper.weightedPercentiles(gradeArrayMoving, gradeArrayDistance, [0.25, 0.5, 0.75]);
+		const percentiles: number[] = ActivityComputer.weightedPercentiles(gradeArrayMoving, gradeArrayDistance, [0.25, 0.5, 0.75]);
 
 		const avgGrade: number = gradeSum / gradeCount;
 		// Find min and max grade
@@ -1329,8 +1342,8 @@ export class ActivityComputer {
 		elevationZones = this.finalizeDistributionComputationZones(elevationZones);
 		ascentSpeedZones = this.finalizeDistributionComputationZones(ascentSpeedZones);
 
-		const percentilesElevation: number[] = Helper.weightedPercentiles(elevationSamples, elevationSamplesDistance, [0.25, 0.5, 0.75]);
-		const percentilesAscent: number[] = Helper.weightedPercentiles(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, [0.25, 0.5, 0.75]);
+		const percentilesElevation: number[] = ActivityComputer.weightedPercentiles(elevationSamples, elevationSamplesDistance, [0.25, 0.5, 0.75]);
+		const percentilesAscent: number[] = ActivityComputer.weightedPercentiles(ascentSpeedMeterPerHourSamples, ascentSpeedMeterPerHourDistance, [0.25, 0.5, 0.75]);
 
 		const ascentSpeedData: AscentSpeedDataModel = {
 			avg: _.isFinite(avgAscentSpeed) ? avgAscentSpeed : -1,
@@ -1352,8 +1365,8 @@ export class ActivityComputer {
 		};
 
 		if (skipAscentSpeedCompute) {
-			elevationData = <ElevationDataModel>_.omit(elevationData, "ascentSpeedZones");
-			elevationData = <ElevationDataModel>_.omit(elevationData, "ascentSpeed");
+			elevationData = <ElevationDataModel> _.omit(elevationData, "ascentSpeedZones");
+			elevationData = <ElevationDataModel> _.omit(elevationData, "ascentSpeed");
 		}
 
 		return elevationData;

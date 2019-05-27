@@ -14,6 +14,11 @@ import FindRequest = PouchDB.Find.FindRequest;
 @Injectable()
 export class DesktopDataStore<T> extends DataStore<T> {
 
+	constructor(public logger: LoggerService) {
+		super();
+		this.setup();
+	}
+
 	public static readonly POUCH_DB_NAME: string = "elevate";
 	public static readonly POUCH_DB_DEBUG: string = null; // values: "*", "pouchdb:find", "pouchdb:http" ...
 
@@ -26,9 +31,11 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 	public database: PouchDB.Database<T[] | T>;
 
-	constructor(public logger: LoggerService) {
-		super();
-		this.setup();
+	public static getDbIdSelectorByStorageLocation(storageLocation: StorageLocationModel): PouchDB.Find.ConditionOperators {
+		const selector = (storageLocation.storageType === StorageType.COLLECTION) ?
+			{$regex: "^" + storageLocation.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR} : {$eq: storageLocation.key};
+		selector["$gte"] = null; // Solves "no matching index found, create an index to optimize query time"
+		return selector;
 	}
 
 	public setup(): void {
@@ -65,7 +72,8 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 				} else if (storageLocation.storageType === StorageType.OBJECT || storageLocation.storageType === StorageType.SINGLE_VALUE) {
 
-					promise = this.database.remove(result.docs[0][DesktopDataStore.POUCH_DB_ID_FIELD], result.docs[0][DesktopDataStore.POUCH_DB_REV_FIELD]);
+					promise = this.database.remove(result.docs[0][DesktopDataStore.POUCH_DB_ID_FIELD],
+						result.docs[0][DesktopDataStore.POUCH_DB_REV_FIELD]);
 
 				} else {
 					throw new Error("Unknown StorageType");
@@ -79,13 +87,6 @@ export class DesktopDataStore<T> extends DataStore<T> {
 		});
 	}
 
-	public static getDbIdSelectorByStorageLocation(storageLocation: StorageLocationModel): PouchDB.Find.ConditionOperators {
-		const selector = (storageLocation.storageType === StorageType.COLLECTION) ?
-			{$regex: "^" + storageLocation.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR + ".*"} : {$eq: storageLocation.key};
-		selector["$gte"] = null; // Solves "no matching index found, create an index to optimize query time"
-		return selector;
-	}
-
 	public findDocs(storageLocation: StorageLocationModel, findRequest?: FindRequest<T[] | T>): Promise<PouchDB.Find.FindResponse<T[] | T>> {
 
 		if (!findRequest) {
@@ -95,7 +96,8 @@ export class DesktopDataStore<T> extends DataStore<T> {
 				}
 			};
 		} else {
-			findRequest = _.set(findRequest, ["selector", DesktopDataStore.POUCH_DB_ID_FIELD], DesktopDataStore.getDbIdSelectorByStorageLocation(storageLocation));
+			findRequest = _.set(findRequest, ["selector", DesktopDataStore.POUCH_DB_ID_FIELD],
+				DesktopDataStore.getDbIdSelectorByStorageLocation(storageLocation));
 		}
 
 		return this.database.find(findRequest);
@@ -169,7 +171,8 @@ export class DesktopDataStore<T> extends DataStore<T> {
 						if (existingDoc) {
 							newDoc[DesktopDataStore.POUCH_DB_REV_FIELD] = existingDoc[DesktopDataStore.POUCH_DB_REV_FIELD];
 						} else {
-							const collectionDocId = storageLocation.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR + _.get(newDoc, storageLocation.collectionFieldId);
+							const collectionDocId = storageLocation.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR +
+								_.get(newDoc, storageLocation.collectionFieldId);
 							newDoc[DesktopDataStore.POUCH_DB_ID_FIELD] = collectionDocId;
 							newDoc[DesktopDataStore.POUCH_DB_DOCTYPE_FIELD] = storageLocation.key;
 						}
@@ -254,7 +257,8 @@ export class DesktopDataStore<T> extends DataStore<T> {
 				if (!value[DesktopDataStore.POUCH_DB_ID_FIELD]) { // Create
 
 					if (storageLocation.storageType === StorageType.COLLECTION) {
-						value[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR + _.get(value, storageLocation.collectionFieldId);
+						value[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR
+							+ _.get(value, storageLocation.collectionFieldId);
 
 					} else if (storageLocation.storageType === StorageType.OBJECT) {
 						value[DesktopDataStore.POUCH_DB_ID_FIELD] = storageLocation.key;
@@ -295,7 +299,8 @@ export class DesktopDataStore<T> extends DataStore<T> {
 		});
 	}
 
-	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
+	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V,
+							 defaultStorageValue: T[] | T): Promise<T> {
 
 		return this.fetch(storageLocation, defaultStorageValue).then((doc: T) => {
 

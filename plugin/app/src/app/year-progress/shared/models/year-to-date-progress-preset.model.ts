@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { ProgressType } from "../enums/progress-type.enum";
 import { ProgressMode } from "../enums/progress-mode.enum";
-import { Tools } from "@elevate/shared/tools";
+import { Identifier } from "@elevate/shared/tools";
 
 export class YearToDateProgressPresetModel {
 
@@ -15,8 +15,9 @@ export class YearToDateProgressPresetModel {
 	public includeIndoorRide: boolean;
 	public targetValue?: number;
 
-	constructor(progressType: ProgressType, activityTypes: string[], includeCommuteRide: boolean, includeIndoorRide: boolean, targetValue?: number) {
-		this.id = Tools.genId();
+	constructor(progressType: ProgressType, activityTypes: string[], includeCommuteRide: boolean,
+				includeIndoorRide: boolean, targetValue?: number) {
+		this.id = Identifier.generate();
 		this.progressType = progressType;
 		this.activityTypes = activityTypes;
 		this.includeCommuteRide = includeCommuteRide;

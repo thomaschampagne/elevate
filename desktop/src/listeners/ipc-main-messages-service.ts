@@ -2,7 +2,10 @@ import { IpcRequest, PromiseTron, PromiseTronReply } from "promise-tron";
 import logger from "electron-log";
 import { StravaAuthentication } from "../strava-authentication";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
-import { ConnectorType, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import { ConnectorType, ErrorSyncEvent, StravaApiCredentials, SyncEvent } from "@elevate/shared/sync";
+import { StravaConnector } from "../connectors/strava/strava.connector";
+import { AthleteModel, UserSettings } from "@elevate/shared/models";
+import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export class IpcMainMessagesService {
 
@@ -35,7 +38,7 @@ export class IpcMainMessagesService {
 		switch (message.flag) {
 
 			case MessageFlag.START_SYNC:
-				this.handleStartSyncAndFakeSync(message, replyWith);
+				this.handleStartSync(message, replyWith);
 				break;
 
 			case MessageFlag.LINK_STRAVA_CONNECTOR:
@@ -52,43 +55,57 @@ export class IpcMainMessagesService {
 		}
 	}
 
-	/**
-	 * TODO To be removed method: just emulate sync events when sync start
-	 * @param connector
-	 */
-	public syncingInterval = null;
+	public handleStartSync(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
 
-	public handleStartSyncAndFakeSync(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
+		const connectorType: ConnectorType = <ConnectorType.STRAVA> message.payload[0];
 
-		const connectorType = <ConnectorType> message.payload[0];
+		if (connectorType === ConnectorType.STRAVA) {
 
-		replyWith({
-			success: "Started sync for connectorType: " + connectorType,
-			error: null
-		});
+			const stravaApiCredentials: StravaApiCredentials = <StravaApiCredentials> message.payload[1];
+			const athleteModel: AthleteModel = <AthleteModel> message.payload[2];
+			const updateSyncedActivitiesNameAndType: boolean = <boolean> message.payload[3];
+			const userSettingsModel: UserSettingsModel = <UserSettingsModel> message.payload[4];
 
-		if (this.syncingInterval) { // FAKE "current sync" stop
-			clearInterval(this.syncingInterval);
-			logger.warn("[MAIN]", "stop current sync !!");
+			const stravaConnector = new StravaConnector(null /*TODO*/, athleteModel, userSettingsModel, stravaApiCredentials, updateSyncedActivitiesNameAndType);
+			stravaConnector.sync().subscribe((syncEvent: SyncEvent) => {
+				const syncEventMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, syncEvent);
+				this.send(syncEventMessage).then((renderedResponse: string) => {
+					logger.debug(renderedResponse);
+				});
+
+			}, (errorSyncEvent: ErrorSyncEvent) => {
+
+				logger.error("stravaConnector -> errorSyncEvent", errorSyncEvent);
+
+				/*
+				// TODO
+
+				const errorSyncEventMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, errorSyncEvent);
+				this.send(errorSyncEventMessage).then((renderedResponse: string) => {
+					logger.debug(renderedResponse);
+				});*/
+
+			}, () => {
+
+				logger.info("stravaConnector -> complete()");
+
+				/*
+				TODO
+				const completeSyncEventMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, new CompleteSyncEvent());
+				this.send(completeSyncEventMessage).then((renderedResponse: string) => {
+					logger.debug(renderedResponse);
+				});*/
+			});
+
+			replyWith({
+				success: "Started sync for connector type: " + connectorType,
+				error: null
+			});
+
+		} else {
+			throw new Error("Unknown connector. Can't start sync");
 		}
 
-		// Sending fake sync events to renderer
-		this.syncingInterval = setInterval(() => {
-			const flaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, new SyncEvent(SyncEventType.GENERIC, connectorType, (new Date()).toISOString()));
-			this.promiseTron.send(flaggedIpcMessage).then((response: string) => {
-				logger.info("[MAIN]", response);
-			});
-		}, 1000);
-
-
-		/*
-				// Sample: get synced activity from IpcMain
-
-				const getActivityMessage: SyncMessage = new SyncMessage(SyncMessage.GET_ACTIVITY, "activityId");
-				this.promiseTron.send<SyncMessageResponse<SyncedActivityModel>>(getActivityMessage).then((response: SyncMessageResponse<SyncedActivityModel>) => {
-					logger.info("[MAIN]", response.body);
-				});
-				*/
 	}
 
 	public handleLinkWithStrava(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
@@ -112,5 +129,9 @@ export class IpcMainMessagesService {
 			}
 		});
 
+	}
+
+	public send<T>(flaggedIpcMessage: FlaggedIpcMessage): Promise<T> {
+		return <Promise<T>> this.promiseTron.send(flaggedIpcMessage);
 	}
 }

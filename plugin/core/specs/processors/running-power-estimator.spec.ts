@@ -9,8 +9,8 @@ import {
 	Gender,
 	UserSettings
 } from "@elevate/shared/models";
-import { RunningPowerEstimator } from "../../scripts/processors/running-power-estimator";
-import { ActivityComputer } from "../../scripts/processors/activity-computer";
+import { RunningPowerEstimator } from "@elevate/shared/sync/compute/running-power-estimator";
+import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 describe("RunningPowerEstimator", () => {

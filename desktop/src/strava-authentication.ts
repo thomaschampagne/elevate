@@ -1,9 +1,9 @@
 import * as http from "http";
-import * as https from "https";
 import * as QueryString from "querystring";
 import { BrowserWindow } from "electron";
-import HttpsProxyAgent from "https-proxy-agent";
-import { Proxy } from "./proxy";
+import { HttpClient } from "./http-client";
+import logger from "electron-log";
+import { Service } from "./service";
 
 export class StravaAuthentication {
 
@@ -11,10 +11,11 @@ export class StravaAuthentication {
 	public static AUTH_WINDOW_HEIGHT: number = 800;
 	public static AUTH_WINDOW_WIDTH: number = 500;
 	public static REDIRECT_HTTP_BASE: string = "http://127.0.0.1";
-	public static STRAVA_SCOPE: string = "write";
+	public static STRAVA_SCOPE: string = "activity:read_all";
 	public static STRAVA_HOSTNAME: string = "www.strava.com";
 	public static OAUTH_AUTHORIZE_PATH: string = "/oauth/authorize";
 	public static OAUTH_TOKEN_PATH: string = "/oauth/token";
+	public static TOKEN_URL: string = "https://" + StravaAuthentication.STRAVA_HOSTNAME + StravaAuthentication.OAUTH_TOKEN_PATH;
 	public static AUTHORIZE_URL: string = "https://" + StravaAuthentication.STRAVA_HOSTNAME + StravaAuthentication.OAUTH_AUTHORIZE_PATH;
 
 	private authenticationWindow: Electron.BrowserWindow;
@@ -28,7 +29,7 @@ export class StravaAuthentication {
 
 		const url = new URL(request.url, StravaAuthentication.REDIRECT_HTTP_BASE);
 		if (url.pathname !== "/code") {
-			console.info(`Ignoring request to ${request.url}`);
+			logger.info(`Ignoring request to ${request.url}`);
 			return;
 		}
 
@@ -45,13 +46,13 @@ export class StravaAuthentication {
 
 	public makeTokenExchangeRequest(clientId, clientSecret, code, responseCallback): void {
 
-		const form = {
+		const body = {
 			client_id: clientId,
 			client_secret: clientSecret,
 			code: code
 		};
 
-		this.exchangeCodeAgainstToken(form, (error, bodyJson) => {
+		this.exchangeCodeAgainstToken(body, (error, bodyJson) => {
 			if (error) {
 				responseCallback(error, null);
 			} else {
@@ -78,49 +79,10 @@ export class StravaAuthentication {
 		});
 	}
 
-	public exchangeCodeAgainstToken(form, callback: (error, body) => void): void {
-
-		const postData = QueryString.stringify(form);
-
-		const options = {
-			hostname: StravaAuthentication.STRAVA_HOSTNAME,
-			port: 443,
-			path: StravaAuthentication.OAUTH_TOKEN_PATH,
-			method: "POST",
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded",
-				"Content-Length": postData.length
-			},
-			agent: (Proxy.getHttpProxy()) ? new HttpsProxyAgent(Proxy.getHttpProxy()) : null
-		};
-
-		const request = https.request(options, (response: http.IncomingMessage) => {
-
-			if (response.statusCode === 200) {
-				response.on("data", data => {
-					callback(null, Buffer.from(data).toString("utf8"));
-				});
-			} else {
-				request.abort();
-				callback("Strava authorization url replied with status code " + response.statusCode, null);
-			}
-		});
-
-		request.on("timeout", () => {
-			callback("Timeout has been reached", null);
-			request.abort();
-		});
-
-		request.setTimeout(10000); // 10 sec
-
-		request.on("error", err => {
-			callback(err, null);
-		});
-
-		request.write(postData);
-		request.end();
+	public exchangeCodeAgainstToken(body, callback: (error, body: any) => void): void {
+		HttpClient.post(StravaAuthentication.TOKEN_URL, body, Service.instance().httpProxy)
+			.then(data => callback(null, data), error => callback(error, null));
 	}
-
 
 	/**
 	 * Authorize against the Strava V3 API and return the Strava access token via a callback.

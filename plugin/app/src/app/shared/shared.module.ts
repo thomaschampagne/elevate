@@ -37,7 +37,7 @@ import { ConsoleLoggerService } from "./services/logging/console-logger.service"
 import { environment } from "../../environments/environment";
 import { DesktopModule } from "./modules/desktop.module";
 import { ExtensionModule } from "./modules/extension.module";
-import { EnvTarget } from "./enums/env-target";
+import { EnvTarget } from "@elevate/shared/models";
 
 @NgModule({
 	imports: [

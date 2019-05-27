@@ -21,13 +21,36 @@ const NODE_GLOBALS = [
 	"stream"
 ];
 
+const LODASH_METHODS_DECLARATION = [
+	"forEach",
+	"isEmpty",
+	"isArray",
+	"omit",
+	"mean",
+	"isUndefined",
+	"isFinite",
+	"last",
+	"slice",
+	"isNumber",
+	"propertyOf",
+	"sum",
+	"max",
+	"floor",
+	"isNull",
+	"isNaN",
+	"clone",
+	"sortBy",
+	"first",
+	"find"
+];
+
 const IS_ELECTRON_PROD = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "prod");
 
 module.exports = {
 	input: "./src/main.ts",
 	output: [
 		{
-			file: "../dist/main.js",
+			file: "../dist/main.js", // TODO Rename ../dist/desktop.bundle.js ?!
 			format: "cjs"
 		}
 	],
@@ -45,7 +68,9 @@ module.exports = {
 		}),
 		commonjs({
 			namedExports: {
-				"../node_modules/lodash/lodash.js": ["forEach"],
+				"../node_modules/lodash/lodash.js": LODASH_METHODS_DECLARATION,
+				"../plugin/app/node_modules/lodash/lodash.js": LODASH_METHODS_DECLARATION,
+				"../plugin/app/node_modules/pako/index.js": ["gzip", "inflate"],
 				"../node_modules/https-proxy-agent/index.js": ["HttpsProxyAgent"],
 				"../node_modules/get-proxy-settings/dist/index.js": ["getProxySettings"]
 			}

@@ -1,5 +1,4 @@
 export class BareActivityModel {
-
 	public id: number;
 	public name: string;
 	public type: string;
@@ -7,6 +6,7 @@ export class BareActivityModel {
 	public private: boolean;
 	public bike_id: number;
 	public start_time: string;
+	public end_time: string;
 	public distance_raw: number;
 	public short_unit: string;
 	public moving_time_raw: number;
@@ -17,5 +17,5 @@ export class BareActivityModel {
 	public elevation_unit: string;
 	public elevation_gain_raw: number;
 	public calories: number;
-
+	public map_summary_polyline?: string;
 }

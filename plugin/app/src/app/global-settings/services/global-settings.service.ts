@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
-import { EnvTarget } from "../../shared/enums/env-target";
-import { UserSettings } from "@elevate/shared/models";
+import { EnvTarget, UserSettings } from "@elevate/shared/models";
 import * as _ from "lodash";
 
 @Injectable()
@@ -10,23 +9,6 @@ export class GlobalSettingsService {
 	public static readonly TYPE_OPTION_CHECKBOX: string = "checkbox";
 	public static readonly TYPE_OPTION_LIST: string = "list";
 	public static readonly TYPE_OPTION_NUMBER: string = "number";
-
-	public getSectionsByEnvTarget(envTarget: EnvTarget): SectionModel[] {
-
-		const filteredSections: SectionModel[] = [];
-
-		_.forEach(this.sections, section => {
-			if (_.isUndefined(section.envTarget)) {
-				filteredSections.push(section);
-			} else {
-				if (section.envTarget === envTarget) {
-					filteredSections.push(section);
-				}
-			}
-		});
-
-		return filteredSections;
-	}
 
 	public readonly sections: SectionModel[] = [{
 		title: "Units",
@@ -318,5 +300,22 @@ export class GlobalSettingsService {
 			labels: ["Cycling", "Running"],
 		}]
 	}];
+
+	public getSectionsByEnvTarget(envTarget: EnvTarget): SectionModel[] {
+
+		const filteredSections: SectionModel[] = [];
+
+		_.forEach(this.sections, section => {
+			if (_.isUndefined(section.envTarget)) {
+				filteredSections.push(section);
+			} else {
+				if (section.envTarget === envTarget) {
+					filteredSections.push(section);
+				}
+			}
+		});
+
+		return filteredSections;
+	}
 
 }

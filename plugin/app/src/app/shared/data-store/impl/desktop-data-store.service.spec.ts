@@ -62,13 +62,22 @@ describe("DesktopDataStore", () => {
 		activityId: string;
 		name: string;
 		type: string;
+		start_time: string;
+		end_time: string;
+		duration: number;
 
-		constructor(activityId: string, name: string, type: string) {
+		constructor(activityId: string, name: string, type: string, start_time: string, duration: number) {
 			super("fakeSyncedActivity:" + activityId);
 			this.$doctype = "fakeSyncedActivity"; // Override to ensure doctype
 			this.activityId = activityId;
 			this.name = name;
 			this.type = type;
+			this.start_time = start_time;
+			this.duration = duration;
+
+			const endDate = new Date(start_time);
+			endDate.setSeconds(endDate.getSeconds() + this.duration);
+			this.end_time = endDate.toISOString();
 		}
 	}
 
@@ -80,9 +89,9 @@ describe("DesktopDataStore", () => {
 
 		new FakeDateTime(new Date().getTime()),
 
-		new FakeActivity("00001", "Zwift climb", "Ride"),
-		new FakeActivity("00002", "Recover session", "Ride"),
-		new FakeActivity("00003", "Easy running day!", "Run"),
+		new FakeActivity("00001", "Zwift climb", "Ride", "2019-03-12T16:00:00Z", 3600),
+		new FakeActivity("00002", "Recover session", "Ride", "2019-03-17T16:39:48Z", 3600),
+		new FakeActivity("00003", "Easy running day!", "Run", "2019-05-01T16:39:48Z", 3600),
 	];
 
 	const FAKE_ATHLETE_STORAGE_LOCATION = new StorageLocationModel("fakeAthlete", StorageType.OBJECT);
@@ -212,7 +221,6 @@ describe("DesktopDataStore", () => {
 				done();
 			});
 		});
-
 
 		it("should save and replace a FakeAthlete object", (done: Function) => {
 
@@ -360,14 +368,15 @@ describe("DesktopDataStore", () => {
 		it("should upsert property of a FakeAthlete object", (done: Function) => {
 
 			// Given
-			const newValue: number = 666;
+			const newValue = 666;
 			const updatePath = ["fakeSettings", "1", "weight"]; // eq "fakeSettings[1].weight"
 
 			const expectedFakeAthlete: FakeAthlete = <FakeAthlete> _.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"});
 			expectedFakeAthlete.fakeSettings[1].weight = newValue;
 
 			// When
-			const promise: Promise<FakeAthlete> = <Promise<FakeAthlete>> desktopDataStore.upsertProperty(FAKE_ATHLETE_STORAGE_LOCATION, updatePath, newValue, null);
+			const promise: Promise<FakeAthlete> = <Promise<FakeAthlete>> desktopDataStore.upsertProperty(FAKE_ATHLETE_STORAGE_LOCATION,
+				updatePath, newValue, null);
 
 			// Then
 			promise.then((savedFakeAthlete: FakeAthlete) => {
@@ -456,6 +465,77 @@ describe("DesktopDataStore", () => {
 			});
 		});
 
+		describe("Find in collection", () => {
+
+			it("should find FakeActivity 'Ride' collection", (done: Function) => {
+
+				// Given
+				const expectedType = "Ride";
+				const query: PouchDB.Find.FindRequest<FakeActivity[]> = {
+					selector: {
+						type: {
+							$eq: expectedType
+						}
+					}
+				};
+
+				const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>> desktopDataStore.fetch(FAKE_ACTIVITIES_STORAGE_LOCATION,
+					null, query);
+
+				// Then
+				promise.then((fakeActivities: FakeActivity[]) => {
+
+					expect(fakeActivities.length).toEqual(2);
+					expect(fakeActivities[0].type).toEqual(expectedType);
+					expect(fakeActivities[1].type).toEqual(expectedType);
+
+					done();
+
+				}, error => {
+					expect(error).toBeNull();
+					expect(false).toBeTruthy("Whoops! I should not be here!");
+					done();
+				});
+			});
+
+			it("should find FakeActivity between start & end time", (done: Function) => {
+
+				// Given
+				const expectedId = "00001";
+				const activityStartTime = "2019-03-12T15:00:00Z";
+				const activityEndTime = "2019-03-12T17:00:00Z";
+
+				const query: PouchDB.Find.FindRequest<FakeActivity[]> = {
+					selector: {
+						start_time: {
+							$gte: activityStartTime,
+						},
+						end_time: {
+							$lte: activityEndTime,
+						}
+					}
+				};
+
+				const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>> desktopDataStore.fetch(FAKE_ACTIVITIES_STORAGE_LOCATION,
+					null, query);
+
+				// Then
+				promise.then((fakeActivities: FakeActivity[]) => {
+
+					expect(fakeActivities.length).toEqual(1);
+					expect(fakeActivities[0].activityId).toEqual(expectedId);
+
+					done();
+
+				}, error => {
+					expect(error).toBeNull();
+					expect(false).toBeTruthy("Whoops! I should not be here!");
+					done();
+				});
+			});
+
+		});
+
 		it("should fetch default storage value when FakeActivity collection is missing in database", (done: Function) => {
 
 			// Given
@@ -520,7 +600,14 @@ describe("DesktopDataStore", () => {
 			const expectedDocType = "fakeSyncedActivity";
 			const id = "00009";
 			const expectedDocId = "fakeSyncedActivity:" + id;
-			const newFakeActivity: FakeActivity = {activityId: id, name: "New activity !", type: "Ride"};
+			const newFakeActivity: FakeActivity = {
+				activityId: id,
+				name: "New activity !",
+				type: "Ride",
+				start_time: "2019-03-12T16:39:48Z",
+				end_time: "2019-03-12T16:39:48Z",
+				duration: 3600,
+			};
 
 			// When
 			const promise: Promise<FakeActivity> = desktopDataStore.put(FAKE_ACTIVITIES_STORAGE_LOCATION, newFakeActivity);
@@ -554,6 +641,9 @@ describe("DesktopDataStore", () => {
 				activityId: id,
 				name: "Updated activity !",
 				type: "Run",
+				start_time: "2019-03-12T16:39:48Z",
+				duration: 3600,
+				end_time: "2019-03-12T16:39:48Z",
 				$doctype: docType
 			};
 
@@ -593,9 +683,30 @@ describe("DesktopDataStore", () => {
 			// Given
 			const expectedLength = 3;
 			const newFakeActivities: FakeActivity[] = [
-				{activityId: "00003", name: "Running day! (rename)", type: "Run"},
-				{activityId: "00004", name: "Recovery spins", type: "Ride"},
-				{activityId: "00005", name: "Marathon", type: "Run"}
+				{
+					activityId: "00003",
+					name: "Running day! (rename)",
+					type: "Run",
+					start_time: "2019-03-12T16:39:48Z",
+					end_time: "2019-03-12T16:39:48Z",
+					duration: 3600,
+				},
+				{
+					activityId: "00004",
+					name: "Recovery spins",
+					type: "Ride",
+					start_time: "2019-03-12T16:39:48Z",
+					end_time: "2019-03-12T16:39:48Z",
+					duration: 3600,
+				},
+				{
+					activityId: "00005",
+					name: "Marathon",
+					type: "Run",
+					start_time: "2019-03-12T16:39:48Z",
+					end_time: "2019-03-12T16:39:48Z",
+					duration: 3600,
+				},
 			];
 
 			const expectedExistRenamedActivity = <FakeActivity> _.find(_.cloneDeep(newFakeActivities), activity => {
@@ -618,7 +729,8 @@ describe("DesktopDataStore", () => {
 
 
 			// When
-			const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>> desktopDataStore.save(FAKE_ACTIVITIES_STORAGE_LOCATION, newFakeActivities, []);
+			const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>> desktopDataStore.save(FAKE_ACTIVITIES_STORAGE_LOCATION,
+				newFakeActivities, []);
 
 			// Then
 			promise.then((results: FakeActivity[]) => {
@@ -989,39 +1101,3 @@ describe("DesktopDataStore", () => {
 	});
 
 });
-
-/*
-TODO Usefull for later
-it("should fetch and sort a FakeActivity collection", (done: Function) => {
-
-	// Given
-	const expectedFakeActivities: FakeActivity[] = <FakeActivity[]> _.filter(FAKE_EXISTING_DOCUMENTS, (doc: FakeDoc) => {
-		return doc._id.match("fakeSyncedActivity:") !== null;
-	});
-
-	const findRequest = {
-		selector: {
-			name: {$gte: null}
-		},
-		sort: ["name"]
-	};
-
-	// When
-	const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>> desktopDataStore.fetch(FAKE_ACTIVITIES_STORAGE_LOCATION, null, findRequest);
-
-	// Then
-	promise.then((fakeActivities: FakeActivity[]) => {
-
-		expect(fakeActivities.length).toEqual(3);
-		expect(fakeActivities[0].name).toEqual(expectedFakeActivities[2].name);
-		expect(fakeActivities[1].name).toEqual(expectedFakeActivities[1].name);
-		expect(fakeActivities[2].name).toEqual(expectedFakeActivities[0].name);
-
-		done();
-
-	}, error => {
-		expect(error).toBeNull();
-		expect(false).toBeTruthy("Whoops! I should not be here!");
-		done();
-	});
-});*/

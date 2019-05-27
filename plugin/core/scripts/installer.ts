@@ -16,7 +16,7 @@ import { Constant } from "@elevate/shared/constants";
 import { YearToDateProgressPresetModel } from "../../app/src/app/year-progress/shared/models/year-to-date-progress-preset.model";
 import { ProgressMode } from "../../app/src/app/year-progress/shared/enums/progress-mode.enum";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
-import { Tools } from "@elevate/shared/tools";
+import { Identifier } from "@elevate/shared/tools";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 class Installer {
@@ -563,7 +563,7 @@ class Installer {
 				return BrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "yearProgressPresets").then((yearProgressPresets: object[]) => {
 
 					yearProgressPresets = _.map(yearProgressPresets, preset /* :YearToDateProgressPresetModel */ => {
-						preset["id"] = Tools.genId();
+						preset["id"] = Identifier.generate();
 						return preset;
 					});
 

@@ -23,6 +23,9 @@
 			"@elevate/shared/data": [
 				"../app/modules/shared/data/"
 			],
+			"@elevate/shared/sync": [
+				"../app/modules/shared/sync/"
+			],
 			"@elevate/shared/models": [
 				"../app/modules/shared/models/"
 			],
