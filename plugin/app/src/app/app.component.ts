@@ -52,7 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	public lastSyncDateMessage: string;
 	public routerEventsSubscription: Subscription;
 
-	@ViewChild(MatSidenav)
+	@ViewChild(MatSidenav, {static: true})
 	public sideNav: MatSidenav;
 	public sideNavMode: string;
 
