@@ -52,7 +52,7 @@ export class FitnessTrendComponent implements OnInit {
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
 	public static readonly LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY: string = "fitnessTrend_EBikeRidesEnabled";
 
-	@ViewChild(FitnessTrendInputsComponent)
+	@ViewChild(FitnessTrendInputsComponent, {static: false})
 	public fitnessTrendInputsComponent: FitnessTrendInputsComponent;
 
 	public fitnessTrend: DayFitnessTrendModel[];
