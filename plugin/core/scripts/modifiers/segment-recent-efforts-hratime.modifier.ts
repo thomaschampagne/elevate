@@ -100,8 +100,8 @@ export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
 			};
 
 			// scan area used by the effort marks
-			let maxY: number, minY: number;
-			let minX: number, maxX: number;
+			let maxY: number = null, minY: number = null;
+			let minX: number = null, maxX: number = null;
 			marks.each((i, m) => {
 				const xy = xyFromMark(m);
 				minY = Helper.safeMin(minY, xy.y);
