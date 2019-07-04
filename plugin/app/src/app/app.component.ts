@@ -52,7 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	public lastSyncDateMessage: string;
 	public routerEventsSubscription: Subscription;
 
-	@ViewChild(MatSidenav)
+	@ViewChild(MatSidenav, {static: true})
 	public sideNav: MatSidenav;
 	public sideNavMode: string;
 
@@ -114,6 +114,7 @@ export class AppComponent implements OnInit, OnDestroy {
 				public sanitizer: DomSanitizer,
 				public appEventsService: AppEventsService) {
 
+		this.syncState = null;
 		this.registerCustomIcons();
 
 	}
@@ -133,7 +134,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
 			if (routerEvent instanceof NavigationEnd) {
-				const route: string = (<NavigationEnd>routerEvent).urlAfterRedirects;
+				const route: string = (<NavigationEnd> routerEvent).urlAfterRedirects;
 				this.toolBarTitle = AppComponent.convertRouteToTitle(route);
 			}
 		});

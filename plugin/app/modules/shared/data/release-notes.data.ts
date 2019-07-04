@@ -2,6 +2,53 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.12.0",
+		date: "2019-05-22",
+		message: "Added \"calories\" column in \"Activities\" section of elevate app. Update also adds various improvements & bugs fixes",
+		hotFixes: [],
+		features: [
+			"Added \"calories\" column in \"Activities\" section of elevate app",
+			"Updated \"distance\" column precision with 1 digits in \"Activities\" section of elevate app",
+			"Improved year progression curves on \"year to date\" feature. The old curves easing interpolation drawn descending curves after a data impulse which is not expected on this feature",
+		],
+		isPatch: false,
+		fixes: [
+			"[Technical] Upgraded Angular & others npm libraries."
+		]
+	},
+	{
+		version: "6.11.1",
+		date: "2019-04-16",
+		message: "👨‍⚕️💉 Fixed issues with Dated Athlete Settings. <u>V6.11 Reminder</u>: New \"Activities\" menu in Elevate App: List activities with ALL EXTENDED STATS (+ spreadsheet export feature).",
+		hotFixes: [],
+		features: [
+			"Check the 6.11.0 release note for features related to v6.11.x"
+		],
+		isPatch: true,
+		fixes: [
+			"Fixed wrong default dated athlete settings when opening the Elevate app as a new user for the first time: no forever settings were declared.",
+			"Fixed wrong dated athlete settings during the migration process from 6.10.2 to 6.11.0 (no forever settings were created during migration). The migration to the current version (6.11.1) solves the issue.",
+			"[Technical] Upgraded Angular & others npm libraries."
+		]
+	},
+	{
+		version: "6.11.0",
+		date: "2019-03-30",
+		message: "New \"Activities\" menu in Elevate App: List activities with ALL EXTENDED STATS (+ spreadsheet export feature).",
+		hotFixes: [],
+		features: [
+			"Added new \"Activities\" menu in Elevate App: List activities with ALL EXTENDED STATS (+ spreadsheet export feature)",
+			"Forced use of \"Dated Athlete Settings\" over \"Single Athlete Settings\". Indeed having \"Single Athlete Settings\" don't make sense since athlete physiological attributes evolve over time.",
+		],
+		isPatch: false,
+		fixes: [
+			"Improve user's location request only when the \"global heat map\" is requested.",
+			"Fix wrong odo displayed in russian only",
+			"[Technical] Implemented a new improved logging service into Elevate App.",
+			"[Technical] Upgraded Angular & others npm libraries."
+		]
+	},
+	{
 		version: "6.10.2",
 		date: "2019-03-17",
 		message: "👨‍⚕️💉 Fixed some syncing errors + Year progressions not displayed in some cases + Restored activity summary stats panel. <u>V6.10 Reminder</u>: Analyze your training volume variations and intensity with the new \"Rolling\" mode available in \"Year progressions\".",

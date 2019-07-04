@@ -1,8 +1,28 @@
 <!--Loading-->
-<div *ngIf="!initialized">
+<div *ngIf="(!initialized)">
 	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>
-<mat-card>
+
+<mat-card *ngIf="(isSynced === false || hasActivities === false)" class="no-data">
+	<mat-card-title>
+		Synchronise your activities
+	</mat-card-title>
+	<mat-card-content>
+
+		<div>
+			Please synchronize your activities to turn on the feature.
+		</div>
+
+		<div>
+			You can synchronize by clicking on
+			<mat-icon color="primary">sync_disabled</mat-icon>
+			icon in the upper toolbar. The activities will be locally saved in the storage allocated by the extension.
+		</div>
+
+	</mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="(isSynced === true)" [fxHide]="!hasActivities">
 	<div fxLayout="row" fxLayoutAlign="center center" class="mat-subheading-2">
 		<mat-form-field fxFlex="50">
 			<span matPrefix>
@@ -66,7 +86,7 @@
 					<ng-container *ngIf="column.type === ColumnType.TEXT">
 						{{column.print(activity, column.id)}}
 					</ng-container>
-					<ng-container *ngIf="column.type === ColumnType.STRAVA_ACTIVITY_LINK">
+					<ng-container *ngIf="column.type === ColumnType.ACTIVITY_LINK">
 						<a href="https://www.strava.com/activities/{{activity.id}}"
 						   target="_blank">{{column.print(activity, column.id)}}</a>
 					</ng-container>
@@ -77,6 +97,12 @@
 						<button *ngIf="activity.id" mat-icon-button color="primary"
 								(click)="onViewAthleteSettings(activity)">
 							<mat-icon>accessibility</mat-icon>
+						</button>
+					</ng-container>
+					<ng-container *ngIf="column.type === ColumnType.ACTIVITY_DELETE">
+						<button *ngIf="activity.id" mat-icon-button color="primary"
+								(click)="onDeleteActivity(activity)">
+							<mat-icon>delete</mat-icon>
 						</button>
 					</ng-container>
 				</mat-cell>

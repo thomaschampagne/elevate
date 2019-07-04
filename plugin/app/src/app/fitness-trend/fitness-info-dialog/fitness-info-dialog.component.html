@@ -170,7 +170,7 @@
 
 			<div class="maths-area">
 				<katex
-					[expression]="'Training Impulse = \\displaystyle\\sum_{t=0_{min}}^t{\\delta t~\\times~HRR~\\times~0.64^{k~\\times~HRR}}~~where~~k=1.92~~(for~mens)~~~or~~~k=1.67~~(for~womens)'"></katex>
+					[expression]="'Training Impulse = \\displaystyle\\sum_{t=0_{min}}^t{\\delta t~\\times~HRR~\\times~0.64~\\times~e^{k~\\times~HRR}}~~where~~k=1.92~~(for~mens)~~~or~~~k=1.67~~(for~womens)'"></katex>
 			</div>
 
 			You can set the <i>TRIMP</i> as default heart rate stress score calculation method in the fitness trend.
@@ -214,7 +214,7 @@
 				<br/><br/>
 
 				<katex
-					[expression]="'Where~~OneHourTrimp@LTHR = 60min~\\times~HRR@LTHR~\\times~0.64^{k~\\times~HRR@LTHR}'"></katex>
+					[expression]="'Where~~OneHourTrimp@LTHR = 60min~\\times~HRR@LTHR~\\times~0.64~\\times~e^{k~\\times~HRR@LTHR}'"></katex>
 				<br/><br/>
 				<katex
 					[expression]="'And~~HRR@LTHR = \\frac{LTHR~-~HR_{rest}}{HR_{max}~-~HR_{rest}}~~and~~k=1.92~~(for~mens)~~~or~~~k=1.67~~(for~womens)'"></katex>
@@ -337,6 +337,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-	<button mat-button mat-dialog-close color="primary">Got It</button>
+	<button mat-stroked-button mat-dialog-close color="primary">Got It</button>
 </mat-dialog-actions>
 

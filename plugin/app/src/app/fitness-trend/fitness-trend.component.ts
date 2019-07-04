@@ -52,7 +52,7 @@ export class FitnessTrendComponent implements OnInit {
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
 	public static readonly LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY: string = "fitnessTrend_EBikeRidesEnabled";
 
-	@ViewChild(FitnessTrendInputsComponent)
+	@ViewChild(FitnessTrendInputsComponent, {static: false})
 	public fitnessTrendInputsComponent: FitnessTrendInputsComponent;
 
 	public fitnessTrend: DayFitnessTrendModel[];
@@ -211,7 +211,8 @@ export class FitnessTrendComponent implements OnInit {
 			this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 
 			// Then compute fitness trend
-			return this.fitnessService.computeTrend(this.fitnessTrendConfigModel, this.isPowerMeterEnabled, this.isSwimEnabled, this.skipActivityTypes);
+			return this.fitnessService.computeTrend(this.fitnessTrendConfigModel, this.isPowerMeterEnabled,
+				this.isSwimEnabled, this.skipActivityTypes);
 
 		}).then((fitnessTrend: DayFitnessTrendModel[]) => {
 
