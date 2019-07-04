@@ -35,7 +35,8 @@ export namespace ActivityColumns {
 		TEXT,
 		NUMBER,
 		ATHLETE_SETTINGS,
-		STRAVA_ACTIVITY_LINK
+		ACTIVITY_LINK,
+		ACTIVITY_DELETE,
 	}
 
 	/**
@@ -135,15 +136,17 @@ export namespace ActivityColumns {
 	 * Link based column
 	 */
 	export class ActivityLinkColumn<T> extends TextColumn<T> {
-		public type: ColumnType = ColumnType.STRAVA_ACTIVITY_LINK;
+		public type: ColumnType = ColumnType.ACTIVITY_LINK;
 
-		constructor(category: string, id: string, print?: (activity: SyncedActivityModel, path?: string) => string, header?: string, description?: string) {
+		constructor(category: string, id: string, print?: (activity: SyncedActivityModel, path?: string)
+			=> string, header?: string, description?: string) {
 			super(category, id, print, header, description);
 		}
 	}
 
+
 	/**
-	 * Link based column
+	 * Settings based column
 	 */
 	export class AthleteSettingsColumn<T> extends TextColumn<T> {
 		public type: ColumnType = ColumnType.ATHLETE_SETTINGS;
@@ -154,19 +157,32 @@ export namespace ActivityColumns {
 	}
 
 	/**
+	 * Delete based column
+	 */
+	export class ActivityDeleteColumn<T> extends TextColumn<T> {
+		public type: ColumnType = ColumnType.ACTIVITY_DELETE;
+
+		constructor(category: string) {
+			super(category, "deleteActivity", null, "Delete");
+		}
+	}
+
+	/**
 	 * Number based column
 	 */
 	export class NumberColumn<T> extends Column<T> {
 
 		public type: ColumnType = ColumnType.NUMBER;
-		public print: (activity: SyncedActivityModel, units: string | SpecificUnits, precision: number, factor: number, isImperial: boolean, imperialFactor: number, path?: string) => string;
+		public print: (activity: SyncedActivityModel, units: string | SpecificUnits, precision: number, factor: number, isImperial: boolean,
+					   imperialFactor: number, path?: string) => string;
 		public units: string | SpecificUnits;
 		public precision: number;
 		public factor: number;
 		public imperialFactor: number;
 
 		constructor(category: string, id: string, units?: string | SpecificUnits, header?: string,
-					print?: (activity: SyncedActivityModel, units: string | SpecificUnits, precision: number, factor: number, isImperial: boolean, imperialFactor: number, path?: string) => string,
+					print?: (activity: SyncedActivityModel, units: string | SpecificUnits, precision: number, factor: number, isImperial: boolean,
+							 imperialFactor: number, path?: string) => string,
 					precision?: number, factor?: number, imperialFactor?: number, description?: string) {
 
 			super(category, id, header, description);
@@ -220,8 +236,8 @@ export namespace ActivityColumns {
 		 * @param imperialFactor
 		 * @param path
 		 */
-		public static number(activity: SyncedActivityModel, units: string | SpecificUnits, precision: number, factor: number,
-							 isImperial: boolean, imperialFactor: number, path?: string): string {
+		public static number(activity: SyncedActivityModel, units: string | SpecificUnits, precision: number, factor: number, isImperial: boolean,
+							 imperialFactor: number, path?: string): string {
 
 			const value = Print.getConvertValueAtPath(path, activity, precision, factor, isImperial, imperialFactor);
 
@@ -378,11 +394,12 @@ export namespace ActivityColumns {
 			new ActivityLinkColumn(Category.COMMON, "name").setWidth("230px").setDefault(true),
 			new TextColumn(Category.COMMON, "type").setDefault(true),
 			new TextColumn(Category.COMMON, "moving_time_raw", Print.movingTime, "Moving Time").setDefault(true),
-			new NumberColumn(Category.COMMON, "distance_raw", Definition.LONG_DISTANCE_SYSTEM_UNITS, "Distance", Print.number, 0, 0.001, Constant.KM_TO_MILE_FACTOR).setDefault(true),
-			new NumberColumn(Category.COMMON, "elevation_gain_raw", Definition.ELEVATION_SYSTEM_UNITS, "Elevation Gain", Print.number, 0, 1, Constant.METER_TO_FEET_FACTOR).setDefault(true),
+			new NumberColumn(Category.COMMON, "distance_raw", Definition.LONG_DISTANCE_SYSTEM_UNITS, "Distance", Print.number, 1, 0.001, Constant.KM_TO_MILE_FACTOR).setDefault(true),
+			new NumberColumn(Category.COMMON, "elevation_gain_raw", Definition.ELEVATION_SYSTEM_UNITS, "Elevation Gain", Print.number, 1, 1, Constant.METER_TO_FEET_FACTOR).setDefault(true),
 			new NumberColumn(Category.COMMON, "extendedStats.speedData.genuineAvgSpeed", Definition.SPEED_SYSTEM_UNITS, "Avg Moving Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR).setDefault(true),
 			new NumberColumn(Category.COMMON, "extendedStats.paceData.avgPace", Definition.LONG_PACE_SYSTEM_UNITS, "Avg Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)).setDefault(true),
 			new NumberColumn(Category.COMMON, "extendedStats.runningPerformanceIndex", null, "Run Performance Index", Print.number, 2),
+			new NumberColumn(Category.COMMON, "calories", null, "Calories", Print.number).setDefault(true),
 			new NumberColumn(Category.COMMON, "extendedStats.moveRatio", null, "Move Ratio", Print.number, 2),
 
 			/**
@@ -475,7 +492,8 @@ export namespace ActivityColumns {
 			/**
 			 * Others
 			 */
-			new AthleteSettingsColumn(Category.OTHERS).setDefault(true)
+			new AthleteSettingsColumn(Category.OTHERS).setDefault(true),
+			new ActivityDeleteColumn(Category.OTHERS).setDefault(true)
 		];
 	}
 }

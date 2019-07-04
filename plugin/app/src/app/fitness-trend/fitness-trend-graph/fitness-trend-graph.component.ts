@@ -68,11 +68,11 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 	@Input("fitnessTrend")
 	public fitnessTrend: DayFitnessTrendModel[];
 
-	@ViewChild("viewedDayTooltip")
+	@ViewChild("viewedDayTooltip", {static: true})
 	public viewedDayTooltipElement: ElementRef;
 	public viewedDayTooltipBounds: ClientRect = null;
 
-	@ViewChild("fitnessTrendGraph")
+	@ViewChild("fitnessTrendGraph", {static: true})
 	public fitnessTrendGraphElement: ElementRef;
 	public fitnessTrendGraphBounds: ClientRect = null;
 

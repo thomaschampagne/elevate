@@ -11,7 +11,7 @@ export class KatexExpressionComponent implements AfterViewInit {
 	@Input("expression")
 	public expression: string;
 
-	@ViewChild("element")
+	@ViewChild("element", {static: true})
 	public element: ElementRef;
 
 	constructor() {

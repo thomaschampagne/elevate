@@ -137,7 +137,7 @@ export class BrowserStorage {
 
 			if (this.hasStorageAccess()) {
 
-				chrome.storage[storageType].remove(<any>key, () => {
+				chrome.storage[storageType].remove(<any> key, () => {
 					const error = chrome.runtime.lastError;
 					if (error) {
 						reject(error.message);

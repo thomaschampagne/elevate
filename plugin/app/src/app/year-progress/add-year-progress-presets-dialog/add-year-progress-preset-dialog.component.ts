@@ -39,7 +39,7 @@ export class AddYearProgressPresetDialogComponent implements OnInit {
 
 			const rollingPresetDialogData = new AddRollingProgressPresetDialogData(this.dialogData.yearProgressTypeModel, this.dialogData.activityTypes,
 				this.dialogData.includeCommuteRide, this.dialogData.includeIndoorRide, this.dialogData.targetValue,
-				(<AddRollingProgressPresetDialogData>this.dialogData).rollingPeriod, (<AddRollingProgressPresetDialogData>this.dialogData).periodMultiplier);
+				(<AddRollingProgressPresetDialogData> this.dialogData).rollingPeriod, (<AddRollingProgressPresetDialogData> this.dialogData).periodMultiplier);
 
 			this.progressPresetModel = new RollingProgressPresetModel(rollingPresetDialogData.yearProgressTypeModel.type, rollingPresetDialogData.activityTypes,
 				rollingPresetDialogData.includeCommuteRide, rollingPresetDialogData.includeIndoorRide, rollingPresetDialogData.targetValue, rollingPresetDialogData.rollingPeriod, rollingPresetDialogData.periodMultiplier);
@@ -65,7 +65,7 @@ export class AddYearProgressPresetDialogComponent implements OnInit {
 	private handleErrors(error: any) {
 		if (error instanceof AppError) {
 			this.logger.warn(error);
-			const message = (<AppError>error).message;
+			const message = (<AppError> error).message;
 			this.snackBar.open(message, "Close", {
 				duration: 5000
 			});

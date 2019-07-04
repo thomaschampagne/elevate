@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Import activities</h2>
 <mat-dialog-content class="mat-body-1">
 	<div *ngIf="!file">
-		<button mat-button color="primary" (click)="fileInput.click()">
+		<button mat-stroked-button color="primary" (click)="fileInput.click()">
 			Choose backup file
 			<input #fileInput type="file" (change)="onFileSelected($event.target.files[0])" [hidden]="true"/>
 		</button>
@@ -18,6 +18,7 @@
 
 </mat-dialog-content>
 <mat-dialog-actions>
-	<button mat-button mat-dialog-close color="primary" (click)="onCancel()">Cancel</button>
-	<button *ngIf="file" mat-button (click)="onRestore()">Restore</button>
+	<button mat-stroked-button mat-dialog-close color="primary" (click)="onCancel()">Cancel</button>
+	<span fxFlex="1"></span>
+	<button *ngIf="file" mat-stroked-button color="primary" (click)="onRestore()">Restore</button>
 </mat-dialog-actions>

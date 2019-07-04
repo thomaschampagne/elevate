@@ -75,7 +75,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
 			// Auto creates a dated athlete settings if no one exists
 			if (this.datedAthleteSettingsModels.length === 0) {
-				this.athleteService.addSettings(DatedAthleteSettingsModel.DEFAULT_MODEL).then(() => {
+				this.athleteService.resetSettings().then(() => {
 					this.datedAthleteSettingsModelsChange.emit();
 					this.loadData();
 				}, error => {
@@ -216,7 +216,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 		this.logger.error(error);
 
 		if (error instanceof AppError) {
-			const message = (<AppError>error).message;
+			const message = (<AppError> error).message;
 			this.snackBar.open(message, "Close");
 		}
 
