@@ -1,0 +1,1 @@
+This option allows you to display a performance index for your runs. This index accounts for differences in your level of effort and distance so that you have a way to check how your peak performance is trending even if you’re doing different workouts.
