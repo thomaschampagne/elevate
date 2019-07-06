@@ -149,13 +149,14 @@ describe("ActivitiesSynchronize", () => {
 			const activitiesComputed: Array<SyncedActivityModel> = [];
 			const fakeAnalysisData: AnalysisDataModel = {
 				moveRatio: null,
+				runningPerformanceIndex: 25.0,
 				speedData: null,
 				paceData: null,
 				powerData: null,
 				heartRateData: null,
 				cadenceData: null,
 				gradeData: null,
-				elevationData: null,
+				elevationData: null
 			};
 			_.forEach(activitiesWithStream, (awStream: StreamActivityModel) => {
 				const activityComputed: SyncedActivityModel = <SyncedActivityModel> _.pick(awStream, MultipleActivityProcessor.outputFields);
