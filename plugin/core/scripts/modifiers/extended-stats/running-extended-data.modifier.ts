@@ -105,6 +105,12 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
 
 			this.insertContentAtGridPosition(0, 5, runningStressScore, labelRSS, "", null);
 		}
+
+		if (this.userSettings.displayRunningPerformanceIndex && this.activityInfo.isOwner && _.isNumber(this.analysisData.runningPerformanceIndex)) {
+			const runIndex = this.printNumber(this.analysisData.runningPerformanceIndex, 1);
+			this.insertContentAtGridPosition(1, 4, runIndex, "Running Index", "", "displayRunningPerformanceIndex");
+		}
+
 	}
 
 	protected placeSummaryPanel(panelAdded: () => void): void {

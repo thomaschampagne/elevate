@@ -340,9 +340,14 @@ export class ActivityComputer {
 		// Q1/Q2/Q3 elevation
 		const elevationData: ElevationDataModel = this.elevationData(activityStream);
 
+		// Calculating running index (https://github.com/thomaschampagne/elevate/issues/704)
+		const isRunningActivity = this.activityType.match(/Run|VirtualRun/g) !== null;
+		const runningPerformanceIndex: number = (isRunningActivity && !_.isEmpty(elevationData) && !_.isEmpty(heartRateData)) ? this.runningPerformanceIndex(athleteSnapshot, this.activitySourceData, elevationData, heartRateData) : null;
+
 		// Return an array with all that shit...
 		return {
 			moveRatio: moveRatio,
+			runningPerformanceIndex: runningPerformanceIndex,
 			speedData: speedData,
 			paceData: paceData,
 			powerData: powerData,
@@ -390,9 +395,13 @@ export class ActivityComputer {
 		return ratio;
 	}
 
-	//noinspection JSUnusedGlobalSymbols
-	protected getZoneFromDistributionStep(value: number, distributionStep: number, minValue: number): number {
-		return ((value - minValue) / distributionStep);
+	protected runningPerformanceIndex(athleteSnapshot: AthleteSnapshotModel, activitySourceData: ActivitySourceDataModel, elevationData: ElevationDataModel, heartRateData: HeartRateDataModel): number {
+		const averageHeartRate: number = heartRateData.averageHeartRate;
+		const userMaxHr: number = athleteSnapshot.athleteSettings.maxHr;
+		const runIntensity: number = Math.round((averageHeartRate / userMaxHr * 1.45 - 0.3) * 100) / 100; // Calculate the run intensity; this is rounded to 2 decimal points
+		const gradeAdjustedDistance = activitySourceData.distance + (elevationData.accumulatedElevationAscent * 6) - (elevationData.accumulatedElevationDescent * 4);
+		const distanceRate: number = (213.9 / (activitySourceData.movingTime / 60) * ((gradeAdjustedDistance / 1000) ** 1.06)) + 3.5;
+		return distanceRate / runIntensity;
 	}
 
 	protected getZoneId(zones: ZoneModel[], value: number): number {
@@ -1351,8 +1360,8 @@ export class ActivityComputer {
 		};
 
 		if (skipAscentSpeedCompute) {
-			elevationData = <ElevationDataModel>_.omit(elevationData, "ascentSpeedZones");
-			elevationData = <ElevationDataModel>_.omit(elevationData, "ascentSpeed");
+			elevationData = <ElevationDataModel> _.omit(elevationData, "ascentSpeedZones");
+			elevationData = <ElevationDataModel> _.omit(elevationData, "ascentSpeed");
 		}
 
 		return elevationData;
@@ -1419,3 +1428,4 @@ export class ActivityComputer {
 	}
 
 }
+

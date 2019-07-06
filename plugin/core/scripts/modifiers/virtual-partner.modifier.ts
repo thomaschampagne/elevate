@@ -115,7 +115,7 @@ export class VirtualPartnerModifier extends AbstractModifier {
 
 		this.getSegmentInfos(effortId, (segmentData: any) => {
 
-			const activityInfo: ActivityInfoModel = <ActivityInfoModel>{
+			const activityInfo: ActivityInfoModel = <ActivityInfoModel> {
 				id: this.activityId
 			};
 
