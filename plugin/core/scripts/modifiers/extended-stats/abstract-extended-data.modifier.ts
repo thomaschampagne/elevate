@@ -144,12 +144,6 @@ export abstract class AbstractExtendedDataModifier {
 			climbTimeExtra = "<span class=\"summarySubGridTitle\">(" + this.printNumber((this.analysisData.gradeData.upFlatDownInSeconds.up / this.analysisData.gradeData.upFlatDownInSeconds.total * 100)) + "% of time)</span>";
 		}
 
-		let runIndex = "-";
-		if (this.analysisData.heartRateData && this.userSettings.displayRunningPerformanceIndex) {
-			runIndex = this.printNumber(this.analysisData.runningPerformanceIndex, 1);
-		}
-		this.insertContentAtGridPosition(1, 4, runIndex, "Running Index", "", "displayRunningPerformanceIndex");
-
 		this.insertContentAtGridPosition(0, 3, climbTime, "Time climbing", climbTimeExtra, "displayAdvancedGradeData");
 
 	}
