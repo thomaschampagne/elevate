@@ -8,6 +8,7 @@ import { ElevationDataModel } from "./elevation-data.model";
 
 export class AnalysisDataModel {
 	public moveRatio: number;
+	public runningPerformanceIndex: number;
 	public speedData: SpeedDataModel;
 	public paceData: PaceDataModel;
 	public powerData: PowerDataModel;
@@ -15,5 +16,4 @@ export class AnalysisDataModel {
 	public cadenceData: CadenceDataModel;
 	public gradeData: GradeDataModel;
 	public elevationData: ElevationDataModel;
-  public runningPerformanceIndex: number;
 }
