@@ -145,7 +145,7 @@ export abstract class AbstractExtendedDataModifier {
 		}
 
 		let runIndex = "-";
-		if(this.analysisData.heartRateData && this.userSettings.displayRunningPerformanceIndex) {
+		if (this.analysisData.heartRateData && this.userSettings.displayRunningPerformanceIndex) {
 			runIndex = this.printNumber(this.analysisData.runningPerformanceIndex, 1);
 		}
 		this.insertContentAtGridPosition(1, 4, runIndex, "Running Index", "", "displayRunningPerformanceIndex");
