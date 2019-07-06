@@ -2,6 +2,20 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.13.0",
+		date: "2019-07-06",
+		message: "✨ New \"Running Performance Index\" statistic added to your running activities. Update also adds various improvements & bugs fixes",
+		hotFixes: [],
+		features: [
+			"Added new \"Running Performance Index\" on your running activities. A heart rate monitor is required. This feature matches with Running Index of Polar(tm): https://support.polar.com/en/support/tips/Running_Index_feature"
+		],
+		isPatch: false,
+		fixes: [
+			"Fixed regression on  \"Running estimated paces & cycling estimated powers on segments\" (available in hidden/beta features)",
+			"[Technical] Upgraded to new Angular 8.0"
+		]
+	},
+	{
 		version: "6.12.0",
 		date: "2019-05-22",
 		message: "Added \"calories\" column in \"Activities\" section of elevate app. Update also adds various improvements & bugs fixes",
