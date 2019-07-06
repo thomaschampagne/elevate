@@ -148,7 +148,7 @@ export abstract class AbstractExtendedDataModifier {
 		if(this.analysisData.heartRateData && this.userSettings.displayRunningPerformanceIndex) {
 			runIndex = this.printNumber(this.analysisData.runningPerformanceIndex, 1);
 		}
-		this.insertContentAtGridPosition(1, 4, runIndex, "Run Index", "", "displayRunningPerformanceIndex");
+		this.insertContentAtGridPosition(1, 4, runIndex, "Running Index", "", "displayRunningPerformanceIndex");
 
 		this.insertContentAtGridPosition(0, 3, climbTime, "Time climbing", climbTimeExtra, "displayAdvancedGradeData");
 
