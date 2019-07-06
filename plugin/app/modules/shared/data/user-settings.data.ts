@@ -33,6 +33,7 @@ export const userSettingsData: UserSettingsModel = {
 	displayAdvancedGradeData: true,
 	displayAdvancedElevationData: true,
 	displayBikeOdoInActivity: true,
+	displayRunningPerformanceIndex: true,
 	enableBothLegsCadence: true,
 	feedChronologicalOrder: false,
 	feedHideChallenges: false,
