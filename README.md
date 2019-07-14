@@ -127,6 +127,20 @@ npm run build:prod
 
 This will disable TypeScript debug sources map and enable [Ahead-of-Time](https://angular.io/guide/aot-compiler) compilation for _embedded app_.
 
+### Build plugin with Docker
+
+Create docker image from `Dockerfile`
+
+```bash
+docker build . -t elevate-chrome-builder
+```
+
+Run a docker production build through a container. Replace `/path/to/your/directory/` with a folder on your host to fetch the packaged build when done.
+
+```bash
+docker run --rm --name elevate-chrome-build -v /path/to/your/directory/:/package elevate-chrome-builder
+```
+
 ### Load plugin into your browser
 
 Into your chrome based browser:
