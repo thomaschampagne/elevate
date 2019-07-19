@@ -18,7 +18,7 @@ describe("ActivitiesComponent", () => {
 	const pluginId = "c061d18abea0";
 	let activityService: ActivityService = null;
 	let userSettingsService: UserSettingsService = null;
-	let syncService: SyncService;
+	let syncService: SyncService<any>;
 
 	let component: ActivitiesComponent;
 	let fixture: ComponentFixture<ActivitiesComponent>;

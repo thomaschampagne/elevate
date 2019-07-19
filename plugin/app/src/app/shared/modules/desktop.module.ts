@@ -13,6 +13,7 @@ import { StravaApiCredentialsDao } from "../dao/strava-api-credentials/strava-ap
 import { StravaApiCredentialsService } from "../services/strava-api-credentials/strava-api-credentials.service";
 import { ConnectorsModule } from "../../connectors/connectors.module";
 import { StravaConnectorService } from "../../connectors/services/strava-connector.service";
+import { ConnectorLastSyncDateTimeDao } from "../dao/sync/last-sync-date-time.dao";
 
 @NgModule({
 	imports: [
@@ -28,6 +29,7 @@ import { StravaConnectorService } from "../../connectors/services/strava-connect
 		{provide: AppEventsService, useClass: DesktopEventsService},
 		{provide: SyncService, useClass: DesktopSyncService},
 		{provide: VERSIONS_PROVIDER, useClass: DesktopVersionsProvider},
+		ConnectorLastSyncDateTimeDao,
 		StravaApiCredentialsService,
 		StravaApiCredentialsDao,
 		StravaConnectorService

@@ -20,7 +20,7 @@ describe("FitnessTrendComponent", () => {
 
 	let activityService: ActivityService;
 	let userSettingsService: UserSettingsService;
-	let syncService: SyncService;
+	let syncService: SyncService<any>;
 	let component: FitnessTrendComponent;
 	let fixture: ComponentFixture<FitnessTrendComponent>;
 
@@ -82,7 +82,8 @@ describe("FitnessTrendComponent", () => {
 		component.isPowerMeterEnabled = true;
 		component.isSwimEnabled = true;
 		component.isEBikeRidesEnabled = true;
-		const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue("true"); // Indicate that toggles are enabled from user saved prefs (local storage)
+		const localStorageGetItemSpy = spyOn(localStorage, "getItem")
+			.and.returnValue("true"); // Indicate that toggles are enabled from user saved prefs (local storage)
 
 		// When
 		component.updateTogglesStatesAlongHrMode();
@@ -105,7 +106,8 @@ describe("FitnessTrendComponent", () => {
 		component.isPowerMeterEnabled = true;
 		component.isSwimEnabled = true;
 		component.isEBikeRidesEnabled = true;
-		const localStorageGetItemSpy = spyOn(localStorage, "getItem").and.returnValue(undefined); // Indicate that toggles are NOT enabled from user saved prefs (local storage)
+		const localStorageGetItemSpy = spyOn(localStorage, "getItem")
+			.and.returnValue(undefined); // Indicate that toggles are NOT enabled from user saved prefs (local storage)
 
 		// When
 		component.updateTogglesStatesAlongHrMode();

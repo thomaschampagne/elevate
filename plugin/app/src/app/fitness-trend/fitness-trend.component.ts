@@ -26,7 +26,7 @@ import { LoggerService } from "../shared/services/logging/logger.service";
 })
 export class FitnessTrendComponent implements OnInit {
 
-	constructor(public syncService: SyncService,
+	constructor(public syncService: SyncService<any>,
 				public fitnessService: FitnessService,
 				public appEventsService: AppEventsService,
 				public dialog: MatDialog,
@@ -430,7 +430,8 @@ export class FitnessTrendComponent implements OnInit {
 	 * Save current fitness config and reload fitness trend
 	 */
 	public saveConfigAndReloadFitnessTrend(): void {
-		localStorage.setItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY, JSON.stringify(this.fitnessTrendConfigModel)); // Save config local
+		localStorage.setItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY,
+			JSON.stringify(this.fitnessTrendConfigModel)); // Save config local
 		this.reloadFitnessTrend();
 	}
 }

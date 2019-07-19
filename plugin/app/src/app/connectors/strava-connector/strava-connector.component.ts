@@ -84,6 +84,6 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 	}
 
 	tmpSetLastSyncDateTime() {
-		this.stravaConnectorService.syncService.saveLastSyncTime(new Date().getTime());
+		this.stravaConnectorService.syncService.saveLastSyncDateTime(new Date().getTime());
 	}
 }

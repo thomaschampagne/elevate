@@ -26,7 +26,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 })
 export class ActivitiesComponent implements OnInit {
 
-	constructor(public syncService: SyncService,
+	constructor(public syncService: SyncService<any>,
 				public activityService: ActivityService,
 				public userSettingsService: UserSettingsService,
 				public appEventsService: AppEventsService,

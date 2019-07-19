@@ -30,7 +30,7 @@ describe("YearProgressComponent", () => {
 	let component: YearProgressComponent;
 	let fixture: ComponentFixture<YearProgressComponent>;
 
-	let syncService: SyncService;
+	let syncService: SyncService<any>;
 	let userSettingsService: UserSettingsService;
 	let activityDao: ActivityDao;
 	let TEST_SYNCED_ACTIVITIES: SyncedActivityModel[];

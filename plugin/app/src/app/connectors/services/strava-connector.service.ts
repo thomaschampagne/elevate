@@ -17,7 +17,7 @@ export class StravaConnectorService {
 
 	constructor(public stravaApiCredentialsService: StravaApiCredentialsService,
 				public messagesListenerService: IpcRendererMessagesService,
-				public syncService: SyncService,
+				public syncService: SyncService<any>,
 				public logger: LoggerService) {
 
 		this.stravaApiCredentials$ = new Subject<StravaApiCredentials>();

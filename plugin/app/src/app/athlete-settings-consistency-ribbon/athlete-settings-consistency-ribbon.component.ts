@@ -27,7 +27,7 @@ export class AthleteSettingsConsistencyRibbonComponent implements OnInit, OnDest
 
 	constructor(public router: Router,
 				public activityService: ActivityService,
-				public syncService: SyncService,
+				public syncService: SyncService<any>,
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar) {
 	}

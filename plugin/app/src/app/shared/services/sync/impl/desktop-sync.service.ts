@@ -1,7 +1,6 @@
 import { Inject, Injectable, OnDestroy } from "@angular/core";
 import { SyncService } from "../sync.service";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../../versions/versions-provider.interface";
-import { LastSyncDateTimeDao } from "../../../dao/sync/last-sync-date-time.dao";
 import { AthleteService } from "../../athlete/athlete.service";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { LoggerService } from "../../logging/logger.service";
@@ -15,6 +14,9 @@ import { ActivityService } from "../../activity/activity.service";
 import { SyncException } from "@elevate/shared/exceptions";
 import { isArray, isString } from "util";
 import * as _ from "lodash";
+import { ConnectorLastSyncDateTime, ConnectorLastSyncDateTimeDao } from "../../../dao/sync/last-sync-date-time.dao";
+import { SyncedBackupModel } from "../synced-backup.model";
+import { SyncState } from "../sync-state.enum";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 // TODO Handle sync complete
@@ -34,26 +36,26 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 // TODO Move "last sync date time" to  StravaApiCredentials storage key
 
 // TODO Test in a current sync is running on Service.currentConnector(setter)
+// tslint:disable-next-line:max-line-length
 // TODO Add unit add with try/catch on StravaConnector.prepareBareActivity() call ?! => 'bareActivity = this.prepareBareActivity(bareActivity);'
 // TODO Strava dont give "calories" from "getStravaBareActivityModels" bare activities. Only "kilojoules"! We have to get calories...
 
 @Injectable()
-export class DesktopSyncService extends SyncService implements OnDestroy {
+export class DesktopSyncService extends SyncService<ConnectorLastSyncDateTime[]> implements OnDestroy {
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
-				public lastSyncDateTimeDao: LastSyncDateTimeDao,
 				public activityService: ActivityService,
 				public athleteService: AthleteService,
 				public userSettingsService: UserSettingsService,
 				public messageListenerService: IpcRendererMessagesService,
 				public stravaApiCredentialsService: StravaApiCredentialsService,
-				public logger: LoggerService) {
-		super(versionsProvider, lastSyncDateTimeDao, activityService, athleteService, userSettingsService, logger);
+				public logger: LoggerService,
+				public connectorLastSyncDateTimeDao: ConnectorLastSyncDateTimeDao) {
+		super(versionsProvider, activityService, athleteService, userSettingsService, logger);
 		this.syncSubscription = null;
 		this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync // TODO ReplaySubject?! I think no
 		this.currentConnectorType = null;
 	}
-
 
 	public syncEvents$: Subject<SyncEvent>;
 	public syncSubscription: Subscription;
@@ -307,10 +309,42 @@ export class DesktopSyncService extends SyncService implements OnDestroy {
 
 	}
 
+	public clearLastSyncTime(): Promise<void> {
+		throw new Error("DesktopSyncService.clearLastSyncTime() to be implemented");
+	}
+
+	public export(): Promise<{ filename: string; size: number }> {
+		throw new Error("DesktopSyncService.export() to be implemented");
+	}
+
+	public import(importedBackupModel: SyncedBackupModel): Promise<SyncedBackupModel> {
+		throw new Error("DesktopSyncService.import() to be implemented");
+	}
+
+	public getSyncState(): Promise<SyncState> {
+		throw new Error("DesktopSyncService.getSyncState() to be implemented");
+	}
+
+	public getLastSyncDateTime(): Promise<ConnectorLastSyncDateTime[]> {
+
+		// this.connectorLastSyncDateTimeDao.fetch().then((connectorLastSyncDateTimes: ConnectorLastSyncDateTime[]) => {
+		// 	TODO Do stuff here...
+		// });
+
+		throw new Error("DesktopSyncService.getLastSyncDateTime() to be implemented");
+	}
+
+	public saveLastSyncDateTime(value: ConnectorLastSyncDateTime[]): Promise<ConnectorLastSyncDateTime[]> {
+
+		// const connectorLastSyncDateTime = new ConnectorLastSyncDateTime(this.currentConnectorType, value);
+		// this.connectorLastSyncDateTimeDao.save(value);
+
+		throw new Error("DesktopSyncService.saveLastSyncTime() to be implemented");
+	}
+
 	public ngOnDestroy(): void {
 		if (this.syncSubscription) {
 			this.syncSubscription.unsubscribe();
 		}
 	}
-
 }

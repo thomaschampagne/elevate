@@ -15,7 +15,7 @@ export class AdvancedMenuComponent implements OnInit {
 
 	constructor(public userSettingsService: UserSettingsService,
 				public athleteService: AthleteService,
-				public syncService: SyncService,
+				public syncService: SyncService<any>,
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar) {
 	}

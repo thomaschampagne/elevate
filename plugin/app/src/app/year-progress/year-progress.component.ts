@@ -49,7 +49,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 export class YearProgressComponent implements OnInit {
 
 	constructor(public userSettingsService: UserSettingsService,
-				public syncService: SyncService,
+				public syncService: SyncService<any>,
 				public activityService: ActivityService,
 				public yearProgressService: YearProgressService,
 				public appEventsService: AppEventsService,

@@ -107,7 +107,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	constructor(public router: Router,
-				public syncService: SyncService,
+				public syncService: SyncService<any>,
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar,
 				public sideNavService: SideNavService,
@@ -221,8 +221,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
 			const data: ConfirmDialogDataModel = {
 				title: "⚠️ First synchronisation",
-				content: "Your first synchronisation can take a long time and can be done in several times if you have more than 400 activities. Make sure you properly setup your " +
-					"athlete settings before (Cycling FTP, Running FTP, Swim FTP, Heart rate, ...) or may have missing results in Elevate features. This is to avoid a redo of the first synchronisation.",
+				content: "Your first synchronisation can take a long time and can be done in several times " +
+					"if you have more than 400 activities. Make sure you properly setup your " +
+					"athlete settings before (Cycling FTP, Running FTP, Swim FTP, Heart rate, ...) or may have missing results in " +
+					"Elevate features. This is to avoid a redo of the first synchronisation.",
 				confirmText: "Start sync",
 				cancelText: "Check my athlete settings"
 			};
