@@ -1,4 +1,4 @@
-export const sample_streams: any = [
+[
 	{
 		"type": "altitude",
 		"data": [
@@ -1179,4 +1179,4 @@ export const sample_streams: any = [
 		"original_size": 78,
 		"resolution": "high"
 	}
-];
+]

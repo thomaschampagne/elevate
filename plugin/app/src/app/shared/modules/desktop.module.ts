@@ -11,8 +11,16 @@ import { ElectronService } from "../services/electron/electron.service";
 import { IpcRendererMessagesService } from "../services/messages-listener/ipc-renderer-messages.service";
 import { StravaApiCredentialsDao } from "../dao/strava-api-credentials/strava-api-credentials.dao";
 import { StravaApiCredentialsService } from "../services/strava-api-credentials/strava-api-credentials.service";
+import { ConnectorsModule } from "../../connectors/connectors.module";
+import { StravaConnectorService } from "../../connectors/services/strava-connector.service";
 
 @NgModule({
+	imports: [
+		ConnectorsModule
+	],
+	exports: [
+		ConnectorsModule
+	],
 	providers: [
 		ElectronService,
 		IpcRendererMessagesService,
@@ -22,6 +30,7 @@ import { StravaApiCredentialsService } from "../services/strava-api-credentials/
 		{provide: VERSIONS_PROVIDER, useClass: DesktopVersionsProvider},
 		StravaApiCredentialsService,
 		StravaApiCredentialsDao,
+		StravaConnectorService
 	]
 })
 export class DesktopModule {

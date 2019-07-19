@@ -1,6 +1,5 @@
 import { Inject } from "@angular/core";
 import { LastSyncDateTimeDao } from "../../dao/sync/last-sync-date-time.dao";
-import { ActivityDao } from "../../dao/activity/activity.dao";
 import { saveAs } from "file-saver";
 import * as moment from "moment";
 import * as _ from "lodash";
@@ -14,19 +13,27 @@ import { UserSettingsService } from "../user-settings/user-settings.service";
 import { Constant } from "@elevate/shared/constants";
 import { LoggerService } from "../logging/logger.service";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../versions/versions-provider.interface";
+import { ActivityService } from "../activity/activity.service";
 
 export abstract class SyncService {
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
 				public lastSyncDateTimeDao: LastSyncDateTimeDao,
-				public activityDao: ActivityDao,
+				public activityService: ActivityService,
 				public athleteService: AthleteService,
 				public userSettingsService: UserSettingsService,
 				public logger: LoggerService) {
-
 	}
 
-	public abstract sync(fastSync: boolean, forceSync: boolean): void;
+	/**
+	 * Promise of sync start
+	 * @param fastSync
+	 * @param forceSync
+	 */
+	public abstract sync(fastSync: boolean, forceSync: boolean): Promise<void>;
+
+
+	public abstract stop(): Promise<void>;
 
 	/**
 	 *
@@ -99,7 +106,7 @@ export abstract class SyncService {
 
 			return Promise.all([
 				this.saveLastSyncTime(importedBackupModel.lastSyncDateTime),
-				this.activityDao.save(importedBackupModel.syncedActivities),
+				this.activityService.save(importedBackupModel.syncedActivities),
 				promiseImportDatedAthleteSettings,
 				this.userSettingsService.clearLocalStorageOnNextLoad()
 			]);
@@ -152,7 +159,7 @@ export abstract class SyncService {
 		return Promise.all([
 
 			this.lastSyncDateTimeDao.fetch(),
-			this.activityDao.fetch(),
+			this.activityService.fetch(),
 			this.athleteService.fetch(),
 			this.versionsProvider.getInstalledAppVersion()
 
@@ -186,7 +193,7 @@ export abstract class SyncService {
 
 		return Promise.all([
 			this.clearLastSyncTime(),
-			this.activityDao.clear()
+			this.activityService.clear()
 		]).then(() => {
 			return Promise.resolve();
 		}).catch(error => {
@@ -205,7 +212,7 @@ export abstract class SyncService {
 		return Promise.all([
 
 			this.getLastSyncDateTime(),
-			this.activityDao.fetch()
+			this.activityService.fetch()
 
 		]).then((result: Object[]) => {
 

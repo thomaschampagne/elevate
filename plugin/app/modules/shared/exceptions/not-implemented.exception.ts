@@ -1,5 +1,12 @@
-export class NotImplementedException extends Error {
+import { ElevateException } from "./elevate.exception";
+
+export class NotImplementedException extends ElevateException {
+
+	public static readonly DEFAULT_MESSAGE: string = "NotImplementedException";
+
 	constructor(message?: string) {
-		super("Not implemented method" + (message) ? " " + message : "");
+		message = !message ? NotImplementedException.DEFAULT_MESSAGE : NotImplementedException.DEFAULT_MESSAGE + ": " + message;
+		super(message);
+		Object.setPrototypeOf(this, NotImplementedException.prototype);
 	}
 }

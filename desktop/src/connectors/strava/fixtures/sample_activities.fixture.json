@@ -1,4 +1,4 @@
-export const sample_activities: any = [
+[
 	[
 		{
 			"resource_state": 2,
@@ -3361,4 +3361,4 @@ export const sample_activities: any = [
 			"has_kudoed": false
 		}
 	]
-];
+]

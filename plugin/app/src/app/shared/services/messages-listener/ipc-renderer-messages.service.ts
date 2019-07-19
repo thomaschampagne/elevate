@@ -14,14 +14,14 @@ import FindRequest = PouchDB.Find.FindRequest;
 @Injectable()
 export class IpcRendererMessagesService {
 
-	public syncEvents: Subject<SyncEvent>;
+	public syncEvents$: Subject<SyncEvent>;
 	public promiseTron: PromiseTron;
 	public isListening: boolean;
 
 	constructor(public electronService: ElectronService,
 				public activityService: ActivityService,
 				public logger: LoggerService) {
-		this.syncEvents = new Subject<SyncEvent>();
+		this.syncEvents$ = new Subject<SyncEvent>();
 		this.promiseTron = new PromiseTron(this.electronService.electron.ipcRenderer);
 		this.isListening = false;
 	}
@@ -58,7 +58,7 @@ export class IpcRendererMessagesService {
 		switch (message.flag) {
 
 			case MessageFlag.SYNC_EVENT:
-				this.handleSyncEventsMessages(message, replyWith);
+				this.handleSyncEventsMessages(message);
 				break;
 
 			case MessageFlag.FIND_ACTIVITY:
@@ -66,23 +66,15 @@ export class IpcRendererMessagesService {
 				break;
 
 			default:
-				replyWith({
-					success: null,
-					error: "Unknown connector"
-				});
+				this.handleUnknownMessage(message, replyWith);
 				break;
 
 		}
 	}
 
-	public handleSyncEventsMessages(flaggedIpcMessage: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
+	public handleSyncEventsMessages(flaggedIpcMessage: FlaggedIpcMessage): void {
 		const syncEvent = <SyncEvent> _.first(flaggedIpcMessage.payload);
-		this.syncEvents.next(syncEvent); // forward sync event
-		replyWith({
-			success: "Sync event received by IpcRendererMessagesListenerService",
-			error: null
-		});
-
+		this.syncEvents$.next(syncEvent); // forward sync event
 	}
 
 	public handleFindActivityMessages(flaggedIpcMessage: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
@@ -99,6 +91,14 @@ export class IpcRendererMessagesService {
 				success: null,
 				error: error
 			});
+		});
+	}
+
+	public handleUnknownMessage(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
+		const errorMessage = "Unknown message received by IpcRenderer. FlaggedIpcMessage: " + JSON.stringify(message);
+		replyWith({
+			success: null,
+			error: errorMessage
 		});
 	}
 

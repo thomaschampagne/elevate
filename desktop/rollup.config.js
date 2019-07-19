@@ -50,7 +50,7 @@ module.exports = {
 	input: "./src/main.ts",
 	output: [
 		{
-			file: "../dist/main.js", // TODO Rename ../dist/desktop.bundle.js ?!
+			file: "../dist/desktop.bundle.js",
 			format: "cjs"
 		}
 	],
@@ -73,7 +73,8 @@ module.exports = {
 				"../plugin/app/node_modules/pako/index.js": ["gzip", "inflate"],
 				"../node_modules/https-proxy-agent/index.js": ["HttpsProxyAgent"],
 				"../node_modules/get-proxy-settings/dist/index.js": ["getProxySettings"]
-			}
+			},
+			ignore: ["assert"]
 		}),
 		resolve(),
 		(IS_ELECTRON_PROD) ? terser() : null

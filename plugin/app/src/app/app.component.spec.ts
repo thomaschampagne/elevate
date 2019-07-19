@@ -34,7 +34,7 @@ describe("AppComponent", () => {
 		component = fixture.componentInstance;
 
 		spyOn(component.syncService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
-		spyOn(component.syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+		spyOn(component.syncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
 		fixture.detectChanges();
 

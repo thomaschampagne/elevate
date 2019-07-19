@@ -13,6 +13,12 @@ export class FileSystemConnector extends BaseConnector {
 	public deleteActivityFilesAfterSync: boolean;
 	public parseIntoArchiveFiles: boolean;
 
+	public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel, activitiesLocalPath: string,
+						 deleteActivityFilesAfterSync: boolean, parseIntoArchiveFiles: boolean) {
+		return new FileSystemConnector(null, athleteModel, userSettingsModel, activitiesLocalPath,
+			deleteActivityFilesAfterSync, parseIntoArchiveFiles);
+	}
+
 	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, activitiesLocalPath: string,
 				deleteActivityFilesAfterSync: boolean, parseIntoArchiveFiles: boolean) {
 		super(ConnectorType.FILE_SYSTEM, athleteModel, userSettingsModel, priority, FileSystemConnector.ENABLED);
@@ -24,4 +30,9 @@ export class FileSystemConnector extends BaseConnector {
 	public sync(): Subject<SyncEvent> {
 		throw new NotImplementedException();
 	}
+
+	public stop(): Promise<void> {
+		throw new Error("to be done");
+	}
+
 }

@@ -6,6 +6,7 @@ import logger from "electron-log";
 import { IpcMainMessagesService } from "./listeners/ipc-main-messages-service";
 import { Proxy } from "./proxy";
 import { Service } from "./service";
+import { HttpClient } from "typed-rest-client/HttpClient";
 
 const IS_ELECTRON_DEV = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "dev");
 
@@ -15,8 +16,24 @@ logger.transports.file.maxSize = 1048576 * 2; // 2MB
 
 class Main {
 
-	private static readonly WINDOW_WIDTH: number = 1600;
-	private static readonly WINDOW_HEIGHT: number = 1024;
+	private static readonly WINDOW_SIZE_RATIO: number = 0.8;
+	private static readonly ICON_PATH_WINDOWS: string = "res/icons/win/icon.ico";
+	private static readonly ICON_PATH_LINUX: string = "res/icons/linux/512x512.png";
+	private static readonly ICON_PATH_MACOS: string = "res/icons/mac/icon.icns";
+
+	public static getIconPath(): string {
+
+		switch (Service.currentPlatform()) {
+			case Service.PLATFORM.WINDOWS:
+				return path.join(__dirname, Main.ICON_PATH_WINDOWS);
+			case Service.PLATFORM.LINUX:
+				return path.join(__dirname, Main.ICON_PATH_LINUX);
+			case Service.PLATFORM.MACOS:
+				return path.join(__dirname, Main.ICON_PATH_MACOS);
+			default:
+				return null;
+		}
+	}
 
 	public ipcMainMessagesService: IpcMainMessagesService;
 
@@ -42,15 +59,17 @@ class Main {
 		} else {
 
 			// Create the browser window.
-			const winWidth = Main.WINDOW_WIDTH;
-			const winHeight = Main.WINDOW_HEIGHT;
+			const workAreaSize: Electron.Size = Electron.screen.getPrimaryDisplay().workAreaSize;
+			const width = Math.floor(workAreaSize.width * Main.WINDOW_SIZE_RATIO);
+			const height = Math.floor(workAreaSize.height * Main.WINDOW_SIZE_RATIO);
 
 			this.appWindow = new BrowserWindow({
-				width: winWidth,
-				height: winHeight,
+				width: width,
+				height: height,
 				center: true,
 				frame: true,
-				autoHideMenuBar: true
+				autoHideMenuBar: true,
+				icon: Main.getIconPath()
 			});
 
 			this.appWindow.loadURL(
@@ -62,10 +81,10 @@ class Main {
 			);
 
 			// Detect a proxy on the system before listening for message from renderer
-			Proxy.resolve(this.appWindow).then((httpProxy) => {
+			Proxy.resolve(this.appWindow).then(httpProxy => {
 
 				logger.info("Using proxy value: " + httpProxy);
-				Service.instance().httpProxy = httpProxy;
+				Service.instance().httpClient = new HttpClient("vsts-node-api", null, (httpProxy) ? {proxy: {proxyUrl: httpProxy}} : null);
 
 				// Create the request listener to listen renderer request events
 				this.ipcMainMessagesService = new IpcMainMessagesService(ipcMain, this.appWindow.webContents);
@@ -146,6 +165,7 @@ try {
 		logger.debug("electron-reloader is ENABLED");
 	}
 
+	logger.info("System", Service.printSystemDetails());
 	(new Main(app)).run();
 
 } catch (err) {

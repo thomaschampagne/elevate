@@ -1,9 +1,12 @@
-export class InconsistentParametersException extends Error {
+import { ElevateException } from "./elevate.exception";
+
+export class InconsistentParametersException extends ElevateException {
+
+	public static readonly DEFAULT_MESSAGE: string = "InconsistentParametersException";
+
 	constructor(message?: string) {
-		if (!message) {
-			super("InconsistentParametersException");
-		} else {
-			super("InconsistentParametersException: " + message);
-		}
+		message = !message ? InconsistentParametersException.DEFAULT_MESSAGE : InconsistentParametersException.DEFAULT_MESSAGE + ": " + message;
+		super(message);
+		Object.setPrototypeOf(this, InconsistentParametersException.prototype);
 	}
 }

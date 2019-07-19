@@ -5,10 +5,13 @@ export class StravaApiCredentials {
 	public clientId: number;
 	public clientSecret: string;
 	public accessToken: string;
+	public refreshToken: string;
+	public expiresAt: number;
 
-	constructor(clientId: number, clientSecret: string, accessToken?: string) {
+	constructor(clientId: number, clientSecret: string, accessToken: string = null, refreshToken: string = null) {
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
-		this.accessToken = (accessToken) ? accessToken : null;
+		this.accessToken = accessToken;
+		this.refreshToken = refreshToken;
 	}
 }

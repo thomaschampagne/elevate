@@ -15,6 +15,3 @@ specs.log
 !plugin/core/karma.conf.js
 !plugin/core/core.webpack.config.js
 browsers.karma.conf.js
-
-# rollup cache
-.rpt2_cache

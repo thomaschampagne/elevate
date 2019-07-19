@@ -2,6 +2,7 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"target": "es5",
+		"resolveJsonModule": true,
 		"paths": {
 			"@elevate/shared/constants": [
 				"../plugin/app/modules/shared/constants/"

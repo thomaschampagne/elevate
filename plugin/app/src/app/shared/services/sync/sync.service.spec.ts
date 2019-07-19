@@ -135,7 +135,7 @@ describe("SyncService", () => {
 		athleteModel.datedAthleteSettings = expectedPeriodAthleteSettings;
 
 		spyOn(syncService.lastSyncDateTimeDao, "fetch").and.returnValue(lastSyncDateTime);
-		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+		spyOn(syncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 		spyOn(syncService.athleteService, "fetch").and.returnValue(Promise.resolve(athleteModel));
 
 		// When
@@ -163,7 +163,7 @@ describe("SyncService", () => {
 		const lastSyncDateTime = 99;
 
 		spyOn(syncService.lastSyncDateTimeDao, "fetch").and.returnValue(lastSyncDateTime);
-		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+		spyOn(syncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 		spyOn(syncService.athleteService, "fetch").and.returnValue(Promise.resolve([]));
 
 		const prepareForExportSpy = spyOn(syncService, "prepareForExport").and.callThrough();
@@ -190,7 +190,7 @@ describe("SyncService", () => {
 
 		// Given
 		spyOn(syncService.lastSyncDateTimeDao, "fetch").and.returnValue(null);
-		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+		spyOn(syncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 		spyOn(syncService.athleteService, "fetch").and.returnValue(Promise.resolve([]));
 
 
@@ -241,11 +241,11 @@ describe("SyncService", () => {
 		};
 
 		spyOn(syncService.lastSyncDateTimeDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
-		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
+		spyOn(syncService.activityService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
 		spyOn(syncService.athleteService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.athleteModel));
 
 		spyOn(syncService.lastSyncDateTimeDao, "clear").and.returnValue(Promise.resolve());
-		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve());
+		spyOn(syncService.activityService, "clear").and.returnValue(Promise.resolve());
 
 		const spyClearSyncedData = spyOn(syncService, "clearSyncedData").and.callThrough();
 		const spyClearLocalStorage = spyOn(syncService.userSettingsService, "clearLocalStorageOnNextLoad").and.returnValue(Promise.resolve());
@@ -291,10 +291,10 @@ describe("SyncService", () => {
 		};
 
 		spyOn(syncService.lastSyncDateTimeDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
-		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
+		spyOn(syncService.activityService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
 
 		spyOn(syncService.lastSyncDateTimeDao, "clear").and.returnValue(Promise.resolve());
-		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve());
+		spyOn(syncService.activityService, "clear").and.returnValue(Promise.resolve());
 
 		const spyClearSyncedData = spyOn(syncService, "clearSyncedData").and.callThrough();
 		const spyResetDatedAthleteSettings = spyOn(syncService.athleteService, "resetSettings").and.stub();
@@ -345,7 +345,7 @@ describe("SyncService", () => {
 		};
 
 		spyOn(syncService.lastSyncDateTimeDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
-		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
+		spyOn(syncService.activityService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.import(importedSyncedBackupModel);
@@ -379,7 +379,7 @@ describe("SyncService", () => {
 		};
 
 		spyOn(syncService.lastSyncDateTimeDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
-		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
+		spyOn(syncService.activityService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.import(importedSyncedBackupModel);
@@ -408,7 +408,7 @@ describe("SyncService", () => {
 		};
 
 		spyOn(syncService.lastSyncDateTimeDao, "save").and.returnValue(Promise.resolve(syncedBackupModelPartial.lastSyncDateTime));
-		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(syncedBackupModelPartial.syncedActivities));
+		spyOn(syncService.activityService, "save").and.returnValue(Promise.resolve(syncedBackupModelPartial.syncedActivities));
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.import(syncedBackupModelPartial as SyncedBackupModel);
@@ -442,7 +442,7 @@ describe("SyncService", () => {
 		};
 
 		spyOn(syncService.lastSyncDateTimeDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
-		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
+		spyOn(syncService.activityService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.import(importedSyncedBackupModel);
@@ -506,7 +506,7 @@ describe("SyncService", () => {
 		};
 
 		spyOn(syncService.lastSyncDateTimeDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
-		spyOn(syncService.activityDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
+		spyOn(syncService.activityService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
 
 		// When
 		const promise: Promise<SyncedBackupModel> = syncService.import(importedSyncedBackupModel);
@@ -527,7 +527,7 @@ describe("SyncService", () => {
 
 		// Given
 		spyOn(syncService.lastSyncDateTimeDao, "clear").and.returnValue(Promise.resolve());
-		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.resolve());
+		spyOn(syncService.activityService, "clear").and.returnValue(Promise.resolve());
 
 		const spyResolve = spyOn(Promise, "resolve").and.callThrough();
 
@@ -550,7 +550,7 @@ describe("SyncService", () => {
 
 		// Given
 		spyOn(syncService.lastSyncDateTimeDao, "clear").and.returnValue(Promise.resolve());
-		spyOn(syncService.activityDao, "clear").and.returnValue(Promise.reject("Houston we have a problem"));
+		spyOn(syncService.activityService, "clear").and.returnValue(Promise.reject("Houston we have a problem"));
 
 		// When
 		const promise: Promise<void> = syncService.clearSyncedData();
@@ -572,7 +572,7 @@ describe("SyncService", () => {
 		// Given
 		const expectedState = SyncState.NOT_SYNCED;
 		spyOn(syncService.lastSyncDateTimeDao, "fetch").and.returnValue(Promise.resolve(null));
-		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(null));
+		spyOn(syncService.activityService, "fetch").and.returnValue(Promise.resolve(null));
 
 		// When
 		const promise: Promise<SyncState> = syncService.getSyncState();
@@ -589,7 +589,7 @@ describe("SyncService", () => {
 		// Given
 		const expectedState = SyncState.PARTIALLY_SYNCED;
 		spyOn(syncService.lastSyncDateTimeDao, "fetch").and.returnValue(Promise.resolve(null));
-		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+		spyOn(syncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
 		// When
 		const promise: Promise<SyncState> = syncService.getSyncState();
@@ -607,7 +607,7 @@ describe("SyncService", () => {
 		const expectedState = SyncState.SYNCED;
 		const lastSyncDateTime = 9999;
 		spyOn(syncService.lastSyncDateTimeDao, "fetch").and.returnValue(Promise.resolve(lastSyncDateTime));
-		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+		spyOn(syncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
 		// When
 		const promise: Promise<SyncState> = syncService.getSyncState();
@@ -625,7 +625,7 @@ describe("SyncService", () => {
 		const expectedState = SyncState.SYNCED;
 		const lastSyncDateTime = 9999;
 		spyOn(syncService.lastSyncDateTimeDao, "fetch").and.returnValue(Promise.resolve(lastSyncDateTime));
-		spyOn(syncService.activityDao, "fetch").and.returnValue(Promise.resolve(null));
+		spyOn(syncService.activityService, "fetch").and.returnValue(Promise.resolve(null));
 
 		// When
 		const promise: Promise<SyncState> = syncService.getSyncState();

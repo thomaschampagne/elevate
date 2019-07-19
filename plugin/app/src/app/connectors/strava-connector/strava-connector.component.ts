@@ -1,53 +1,64 @@
 import { Component, OnInit } from "@angular/core";
-import { IpcRendererMessagesService } from "../../shared/services/messages-listener/ipc-renderer-messages.service";
-import { StravaApiCredentialsService } from "../../shared/services/strava-api-credentials/strava-api-credentials.service";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MatSnackBar } from "@angular/material";
-import { FlaggedIpcMessage } from "@elevate/shared/electron";
-import { MessageFlag } from "@elevate/shared/electron/message-flag.enum";
 import { StravaApiCredentials } from "@elevate/shared/sync";
+import { ConnectorsComponent } from "../connectors.component";
+import { StravaConnectorService } from "../services/strava-connector.service";
+import * as moment from "moment";
 
 @Component({
 	selector: "app-strava-connector",
 	templateUrl: "./strava-connector.component.html",
 	styleUrls: ["./strava-connector.component.scss"]
 })
-export class StravaConnectorComponent implements OnInit {
+export class StravaConnectorComponent extends ConnectorsComponent implements OnInit {
 
 	public stravaApiCredentials: StravaApiCredentials;
+	public expiresAt: string;
 
-	constructor(public stravaApiCredentialsService: StravaApiCredentialsService,
-				public messagesListenerService: IpcRendererMessagesService,
+	constructor(public stravaConnectorService: StravaConnectorService,
 				public snackBar: MatSnackBar,
 				public logger: LoggerService) {
+		super();
 	}
 
 	public ngOnInit(): void {
-		this.stravaApiCredentialsService.fetch().then((stravaApiCredentials: StravaApiCredentials) => {
-			this.stravaApiCredentials = stravaApiCredentials;
+
+		this.stravaConnectorService.fetchCredentials().then((stravaApiCredentials: StravaApiCredentials) => {
+			this.handleCredentialsChanges(stravaApiCredentials);
+		});
+
+		this.stravaConnectorService.stravaApiCredentials$.subscribe((stravaApiCredentials: StravaApiCredentials) => {
+			this.handleCredentialsChanges(stravaApiCredentials);
 		});
 	}
 
-	public onChanges(): void {
+	public handleCredentialsChanges(stravaApiCredentials: StravaApiCredentials): void {
+		this.stravaApiCredentials = stravaApiCredentials;
+		this.expiresAt = (this.stravaApiCredentials.expiresAt > 0) ? moment(this.stravaApiCredentials.expiresAt).format("LLLL") : null;
+	}
 
-		if (this.stravaApiCredentials.clientSecret) {
-			this.stravaApiCredentials.clientSecret = this.stravaApiCredentials.clientSecret.trim();
-		}
+	public onClientIdChange(): void {
 
-		this.persistStravaApiCredentials();
+		this.stravaConnectorService.fetchCredentials().then((stravaApiCredentials: StravaApiCredentials) => {
+			stravaApiCredentials.clientId = this.stravaApiCredentials.clientId;
+			this.stravaConnectorService.stravaApiCredentialsService.save(stravaApiCredentials);
+		});
+	}
+
+	public onClientSecretChange(): void {
+		this.stravaConnectorService.fetchCredentials().then((stravaApiCredentials: StravaApiCredentials) => {
+			stravaApiCredentials.clientSecret = this.stravaApiCredentials.clientSecret;
+			this.stravaConnectorService.stravaApiCredentialsService.save(stravaApiCredentials);
+		});
 	}
 
 	public stravaAuthentication(): void {
 
-		const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.LINK_STRAVA_CONNECTOR, this.stravaApiCredentials.clientId,
-			this.stravaApiCredentials.clientSecret);
-
-		this.messagesListenerService.send<string>(flaggedIpcMessage).then((accessToken: string) => {
-
-			this.stravaApiCredentials.accessToken = accessToken;
-			this.persistStravaApiCredentials();
-
-		}, error => {
+		this.stravaConnectorService.authenticate().then((stravaApiCredentials: StravaApiCredentials) => {
+			this.stravaApiCredentials = stravaApiCredentials;
+		}).catch(error => {
+			// TODO Better handling of this...
 			if (error && error.code) {
 				if (error.code === "ECONNREFUSED") {
 					const message = `Unable to connect to ${error.address}:${error.port}. Please check your connection and proxy settings`;
@@ -58,15 +69,21 @@ export class StravaConnectorComponent implements OnInit {
 			} else {
 				throw error;
 			}
+
 		});
+
 	}
 
-	public persistStravaApiCredentials(): void {
-		this.stravaApiCredentialsService.save(this.stravaApiCredentials).then(saveCredentials => {
-			this.logger.debug("Strava api credentials saved to: ", saveCredentials);
-		}, error => {
-			throw error;
-		});
+	public sync(): void {
+		this.stravaConnectorService.sync(false, false);
 	}
 
+	public stop(): void {
+		// this.stravaConnectorService.stop();
+		alert("to be bind");
+	}
+
+	tmpSetLastSyncDateTime() {
+		this.stravaConnectorService.syncService.saveLastSyncTime(new Date().getTime());
+	}
 }

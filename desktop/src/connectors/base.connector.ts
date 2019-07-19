@@ -10,8 +10,11 @@ export abstract class BaseConnector {
 	public userSettingsModel: UserSettingsModel;
 	public priority: number;
 	public enabled: boolean;
+	public isSyncing: boolean;
 
 	public abstract sync(): Subject<SyncEvent>;
+
+	public abstract stop(): Promise<void>;
 
 	protected constructor(type: ConnectorType, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, priority: number, enabled: boolean) {
 		this.type = type;
@@ -19,5 +22,6 @@ export abstract class BaseConnector {
 		this.userSettingsModel = userSettingsModel;
 		this.priority = priority;
 		this.enabled = enabled;
+		this.isSyncing = false;
 	}
 }

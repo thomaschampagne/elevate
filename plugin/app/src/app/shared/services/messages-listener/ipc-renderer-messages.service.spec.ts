@@ -6,15 +6,16 @@ import { SharedModule } from "../../shared.module";
 import { CoreModule } from "../../../core/core.module";
 import { ElectronService, ElectronWindow } from "../electron/electron.service";
 import { IpcRequest } from "promise-tron";
-import { FlaggedIpcMessage } from "@elevate/shared/electron";
+import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { SyncedActivityModel } from "@elevate/shared/models";
+import { ActivitySyncEvent, ConnectorType } from "@elevate/shared/sync";
 import FindRequest = PouchDB.Find.FindRequest;
 
 describe("IpcRendererMessagesService", () => {
 
 	let ipcRendererMessagesService: IpcRendererMessagesService;
 
-	beforeEach(() => {
+	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -39,12 +40,6 @@ describe("IpcRendererMessagesService", () => {
 		ipcRendererMessagesService = TestBed.get(IpcRendererMessagesService);
 		spyOn(ipcRendererMessagesService.promiseTron, "on").and.stub();
 		ipcRendererMessagesService.listen();
-
-	});
-
-	it("should be created", (done: Function) => {
-		const service: IpcRendererMessagesService = TestBed.get(IpcRendererMessagesService);
-		expect(service).toBeTruthy();
 		done();
 	});
 
@@ -90,6 +85,83 @@ describe("IpcRendererMessagesService", () => {
 		expect(call).toThrow(expectedError);
 		expect(forwardMessagesFromIpcMainSpy).not.toHaveBeenCalled();
 
+		done();
+	});
+
+	describe("Forward received messages from IpcMain", () => {
+
+		it("should forward 'sync event' messages", (done: Function) => {
+			// Given
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT);
+			const replyWith = () => {
+			};
+			const handleSyncEventsMessagesSpy = spyOn(ipcRendererMessagesService, "handleSyncEventsMessages").and.stub();
+
+			// When
+			ipcRendererMessagesService.forwardMessagesFromIpcMain(flaggedIpcMessage, replyWith);
+
+			// Then
+			expect(handleSyncEventsMessagesSpy).toHaveBeenCalledWith(flaggedIpcMessage);
+
+			done();
+		});
+
+		it("should forward 'find activity' messages", (done: Function) => {
+			// Given
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.FIND_ACTIVITY);
+			const replyWith = () => {
+			};
+			const handleFindActivityMessagesSpy = spyOn(ipcRendererMessagesService, "handleFindActivityMessages").and.stub();
+
+			// When
+			ipcRendererMessagesService.forwardMessagesFromIpcMain(flaggedIpcMessage, replyWith);
+
+			// Then
+			expect(handleFindActivityMessagesSpy).toHaveBeenCalledWith(flaggedIpcMessage, replyWith);
+
+			done();
+		});
+
+		it("should handle unknown Messages received", (done: Function) => {
+
+			// Given
+			const fakeFlag = -1;
+			const flaggedIpcMessage = new FlaggedIpcMessage(fakeFlag);
+			const replyWith = {
+				callback: () => {
+				},
+				args: {
+					success: null,
+					error: "Unknown message received by IpcRenderer. FlaggedIpcMessage: " + JSON.stringify(flaggedIpcMessage)
+				}
+			};
+			const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
+
+			// When
+			ipcRendererMessagesService.forwardMessagesFromIpcMain(flaggedIpcMessage, replyWith.callback);
+
+			// Then
+			expect(replyWithCallbackSpy).toHaveBeenCalledWith(replyWith.args);
+			done();
+		});
+
+	});
+
+	it("should handle 'sync event' messages received", (done: Function) => {
+
+		// Given
+		const syncedActivity = <SyncedActivityModel> {}; // Fake SyncedActivityModel
+		const activitySyncEvent = new ActivitySyncEvent(ConnectorType.STRAVA, null,
+			syncedActivity, true);
+		const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, activitySyncEvent);
+		const syncEventsNextSpy = spyOn(ipcRendererMessagesService.syncEvents$, "next").and.stub();
+
+		// When
+		ipcRendererMessagesService.handleSyncEventsMessages(flaggedIpcMessage);
+
+		// Then
+		expect(syncEventsNextSpy).toHaveBeenCalledTimes(1);
+		expect(syncEventsNextSpy).toHaveBeenCalledWith(activitySyncEvent);
 		done();
 	});
 

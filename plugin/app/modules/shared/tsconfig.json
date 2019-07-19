@@ -10,6 +10,10 @@
 		"moduleResolution": "node",
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"lib": [
+			"es2018",
+			"dom"
+		]
 	}
 }

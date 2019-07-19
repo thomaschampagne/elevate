@@ -10,16 +10,17 @@
 		"build:core@dev": "cd ./plugin/core && node ./node_modules/webpack/bin/webpack.js --config ./core.webpack.config.js",
 		"build:core@prod": "npm run build:core@dev -- --mode production",
 		"--------START-DESKTOP-WIP----------": "----------------------------",
-		"build:desktop:runner": "cd desktop && rollup --config rollup.config.js",
+		"res:desktop:copy": "node ./node_modules/cpy-cli/cli.js \"**/*.*\" \"../../dist/res/\" --cwd=desktop/res/ --parents",
+		"build:desktop:runner": "cd desktop && npm run res:desktop:copy && rollup --config rollup.config.js",
 		"watch:desktop:runner": "npm run build:desktop:runner -- --watch",
 		"build:desktop:app@dev": "npm run build:app@dev -- --base-href --configuration=desktop",
 		"build:desktop:app@prod": "npm run build:app@dev -- --base-href --configuration=desktop:prod",
 		"watch:desktop:app": "npm run build:desktop:app@dev -- --watch",
 		"watch:desktop": "npm run clean && npm-run-all --print-label --race --parallel watch:desktop:runner watch:desktop:app",
-		"test:desktop": "cd desktop && jest",
-		"electron:develop": "cross-env ELECTRON_ENV=dev run-electron ./dist/main.js",
-		"electron:build:win64": "cross-env ELECTRON_ENV=prod npm-run-all clean build:desktop:runner build:desktop:app@prod && electron-builder build --windows --x64",
-		"electron:build:linux": "cross-env ELECTRON_ENV=prod npm-run-all clean build:desktop:runner build:desktop:app@prod && electron-builder build --linux --x64",
+		"test:desktop": "cd desktop && jest --coverage",
+		"electron:develop": "cross-env ELECTRON_ENV=dev run-electron ./dist/desktop.bundle.js",
+		"electron:build:win64": "cross-env ELECTRON_ENV=prod && npm-run-all clean build:desktop:runner build:desktop:app@prod && electron-builder build --windows --x64",
+		"electron:build:linux": "cross-env ELECTRON_ENV=prod && npm-run-all clean build:desktop:runner build:desktop:app@prod && electron-builder build --linux --x64",
 		"----------END-DESKTOP-WIP----------": "----------------------------",
 		"clean": "npm-run-all clean:*",
 		"clean:dist": "node ./node_modules/del-cli/cli.js ./dist/",
@@ -29,7 +30,7 @@
 		"extension-res-copy:manifest": "node ./node_modules/cpy-cli/cli.js ./plugin/manifest.json ./dist/",
 		"extension-res-copy:install-guide": "node ./node_modules/cpy-cli/cli.js ./plugin/INSTALL.txt ./dist/",
 		"test": "npm-run-all clean test:core test:app",
-		"test:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng test --watch=false",
+		"test:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng test --watch=false --code-coverage",
 		"test:app:no-source-map": "npm run test:app -- --source-map=false",
 		"test:app-ui-browser": "npm run test:app -- --browsers Chrome",
 		"test:core": "cd ./plugin/core && node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
@@ -70,10 +71,11 @@
 		"electron-log": "^3.0.5",
 		"https-proxy-agent": "^2.2.1",
 		"lodash": "^4.17.11",
+		"pako": "^1.0.10",
 		"promise-tron": "^2.0.0",
 		"querystring": "^0.2.0",
-		"pako": "^1.0.10",
-		"rxjs": "^6.4.0"
+		"rxjs": "^6.4.0",
+		"typed-rest-client": "^1.5.0"
 	},
 	"devDependencies": {
 		"@types/jest": "^24.0.11",
@@ -106,7 +108,7 @@
 		"appId": "com.thomaschampagne.elevate",
 		"productName": "elevate",
 		"directories": {
-			"output": "package/"
+			"output": "./package/"
 		},
 		"files": [
 			"!**/*",
@@ -115,21 +117,19 @@
 		"win": {
 			"target": [
 				"zip"
-			],
-			"icon": "./desktop/res/icons/win/icon.ico"
+			]
 		},
 		"mac": {
 			"target": [
 				"dmg"
-			],
-			"icon": "./desktop/res/icons/mac/icon.icns"
+			]
 		},
 		"linux": {
+			"category": "Sports",
 			"target": [
-				"AppImage"
-			],
-			"icon": "./desktop/res/icons/mac/icon.icns"
+				"deb"
+			]
 		}
 	},
-	"main": "./dist/main.js"
+	"main": "./dist/desktop.bundle.js"
 }

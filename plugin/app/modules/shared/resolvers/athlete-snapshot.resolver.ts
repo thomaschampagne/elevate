@@ -28,7 +28,8 @@ export class AthleteSnapshotResolver {
 			if (!isValidDate) {
 				return null;
 			}
-			onDateString = onDate.getFullYear() + "-" + (onDate.getMonth() + 1).toString().padStart(2, "0") + "-" + onDate.getDate().toString().padStart(2, "0");
+			onDateString = onDate.getFullYear() + "-" + (onDate.getMonth() + 1).toString().padStart(2, "0") + "-"
+				+ onDate.getDate().toString().padStart(2, "0");
 		} else {
 			if (_.isEmpty(onDate) || isNaN(new Date(onDate).getTime())) {
 				return null;
@@ -59,7 +60,8 @@ export class AthleteSnapshotResolver {
 			datedAthleteSettingsModel = this.resolveDatedAthleteSettingsAtDate(onDateString);
 		}
 
-		return (datedAthleteSettingsModel) ? new AthleteSnapshotModel(this.athleteModel.gender, datedAthleteSettingsModel.toAthleteSettingsModel())
+		return (datedAthleteSettingsModel) ? new AthleteSnapshotModel(this.athleteModel.gender,
+			datedAthleteSettingsModel.toAthleteSettingsModel())
 			: new AthleteSnapshotModel(this.athleteModel.gender, AthleteSettingsModel.DEFAULT_MODEL);
 	}
 
@@ -71,10 +73,11 @@ export class AthleteSnapshotResolver {
 
 		const onDateTime: number = new Date(onDate).getTime();
 
-		const datedAthleteSettingsModel: DatedAthleteSettingsModel = _.find(this.athleteModel.datedAthleteSettings, (datedAthleteSettings: DatedAthleteSettingsModel) => {
-			const fromDate = (datedAthleteSettings.since) ? new Date(datedAthleteSettings.since) : new Date(0);
-			return onDateTime >= fromDate.getTime();
-		});
+		const datedAthleteSettingsModel: DatedAthleteSettingsModel = _.find(this.athleteModel.datedAthleteSettings,
+			(datedAthleteSettings: DatedAthleteSettingsModel) => {
+				const fromDate = (datedAthleteSettings.since) ? new Date(datedAthleteSettings.since) : new Date(0);
+				return onDateTime >= fromDate.getTime();
+			});
 
 		return (datedAthleteSettingsModel) ? DatedAthleteSettingsModel.asInstance(datedAthleteSettingsModel) : null;
 	}
