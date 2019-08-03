@@ -169,6 +169,20 @@ A production build will be executed for this task.
 
 On packaging done, a release archive will be generated in **package/** directory.
 
+### Package with Docker
+
+Create docker image from `Dockerfile`
+
+```bash
+docker build . -t elevate-chrome-builder
+```
+
+Run a docker production build through a container. Replace `/path/to/your/directory/` with a folder on your host to fetch the packaged build when done.
+
+```bash
+docker run --rm --name elevate-chrome-build -v /path/to/your/directory/:/package elevate-chrome-builder
+```
+
 ### Clean project
 
 Simply run
