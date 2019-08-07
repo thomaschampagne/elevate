@@ -13,16 +13,22 @@ import { ConfirmDialogComponent } from "./shared/dialogs/confirm-dialog/confirm-
 import { ConfirmDialogDataModel } from "./shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { GotItDialogComponent } from "./shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "./shared/dialogs/got-it-dialog/got-it-dialog-data.model";
-import { ImportBackupDialogComponent } from "./shared/dialogs/import-backup-dialog/import-backup-dialog.component";
+import {
+	DesktopImportBackupDialogComponent,
+	ExtensionImportBackupDialogComponent,
+	ImportBackupDialogComponent
+} from "./shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { SyncState } from "./shared/services/sync/sync-state.enum";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/enums/theme.enum";
 import { EnvTarget, SyncResultModel } from "@elevate/shared/models";
-import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
 import { AppEventsService } from "./shared/services/external-updates/app-events-service";
 import { environment } from "../environments/environment";
 import { SyncService } from "./shared/services/sync/sync.service";
+import { ElevateException } from "@elevate/shared/exceptions";
+import { DesktopDumpModel } from "./shared/models/dumps/desktop-dump.model";
+import { DumpModel } from "./shared/models/dumps/dump.model";
 
 class MenuItemModel {
 	public name: string;
@@ -31,11 +37,7 @@ class MenuItemModel {
 	public routerLinkActive: boolean;
 }
 
-@Component({
-	selector: "app-root",
-	templateUrl: "./app.component.html",
-	styleUrls: ["./app.component.scss"]
-})
+@Component({template: ""})
 export class AppComponent implements OnInit, OnDestroy {
 
 	public static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
@@ -120,7 +122,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		this.syncState = null;
 		this.registerCustomIcons();
+	}
 
+	public updateLastSyncDateStatus(): void {
+		throw new ElevateException("updateLastSyncDateStatus method must be overridden and used by a child component of AppComponent.");
 	}
 
 	public ngOnInit(): void {
@@ -197,17 +202,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		// Change body theme class
 		this.renderer.setAttribute(document.body, "class", this.currentTheme);
-	}
-
-	public updateLastSyncDateStatus(): void {
-		this.syncService.getSyncState().then((syncState: SyncState) => {
-			this.syncState = syncState;
-			this.syncService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
-				if (_.isNumber(lastSyncDateTime)) {
-					this.lastSyncDateMessage = moment(lastSyncDateTime).fromNow();
-				}
-			});
-		});
 	}
 
 	@HostListener("window:resize")
@@ -291,28 +285,10 @@ export class AppComponent implements OnInit, OnDestroy {
 		}, error => {
 			this.snackBar.open(error, "Close");
 		});
-
 	}
 
 	public onSyncedBackupImport(): void {
-
-		const dialogRef = this.dialog.open(ImportBackupDialogComponent, {
-			minWidth: ImportBackupDialogComponent.MIN_WIDTH,
-			maxWidth: ImportBackupDialogComponent.MAX_WIDTH,
-		});
-
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((backupModel: SyncedBackupModel) => {
-
-			if (backupModel) {
-				this.syncService.import(backupModel).then(() => {
-					location.reload();
-				}, error => {
-					this.snackBar.open(error, "Close");
-				});
-			}
-
-			afterClosedSubscription.unsubscribe();
-		});
+		throw new ElevateException("onSyncedBackupImport method must be overridden and used by a child component of AppComponent.");
 	}
 
 	public onThemeToggle(): void {
@@ -373,3 +349,131 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.routerEventsSubscription.unsubscribe();
 	}
 }
+
+@Component({
+	selector: "app-root",
+	templateUrl: "./app.component.html",
+	styleUrls: ["./app.component.scss"]
+})
+export class DesktopAppComponent extends AppComponent {
+
+	constructor(public router: Router,
+				public syncService: SyncService<any>,
+				public dialog: MatDialog,
+				public snackBar: MatSnackBar,
+				public sideNavService: SideNavService,
+				public windowService: WindowService,
+				public overlayContainer: OverlayContainer,
+				public renderer: Renderer2,
+				public iconRegistry: MatIconRegistry,
+				public sanitizer: DomSanitizer,
+				public appEventsService: AppEventsService,
+				// @Inject(IMPORT_BACKUP_DIALOG_COMPONENT_TOKEN) public importBackupDialogComponentType: Type<ImportBackupDialogComponent>
+	) {
+		super(router, syncService, dialog, snackBar, sideNavService, windowService, overlayContainer, renderer,
+			iconRegistry, sanitizer, appEventsService);
+	}
+
+
+	public updateLastSyncDateStatus(): void {
+		console.log("Desktop.updateLastSyncDateStatus called");
+		/*	// TODO Remove below !
+			this.syncService.getSyncState().then((syncState: SyncState) => {
+
+				console.debug("syncState: ", syncState);
+				// debugger;
+
+				this.syncState = syncState;
+				this.syncService.getLastSyncDateTime().then((connectorLastSyncDateTimes: ConnectorLastSyncDateTime[]) => {
+					console.debug(connectorLastSyncDateTimes);
+					// if (_.isNumber(lastSyncDateTime)) {
+					// 	this.lastSyncDateMessage = moment(lastSyncDateTime).fromNow();
+					// }
+				});
+			});*/
+	}
+
+	public onSyncedBackupImport(): void {
+
+		const dialogRef = this.dialog.open(DesktopImportBackupDialogComponent, {
+			minWidth: ImportBackupDialogComponent.MIN_WIDTH,
+			maxWidth: ImportBackupDialogComponent.MAX_WIDTH,
+		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((serializedDumpModel: string) => {
+
+			if (serializedDumpModel) {
+				const desktopDumpModel: DesktopDumpModel = DesktopDumpModel.deserialize(serializedDumpModel);
+				this.syncService.import(desktopDumpModel).then(() => {
+					location.reload();
+				}, error => {
+					this.snackBar.open(error, "Close");
+				});
+			}
+
+			afterClosedSubscription.unsubscribe();
+		});
+	}
+
+}
+
+@Component({
+	selector: "app-root",
+	templateUrl: "./app.component.html",
+	styleUrls: ["./app.component.scss"]
+})
+export class ExtensionAppComponent extends AppComponent {
+
+	constructor(public router: Router,
+				public syncService: SyncService<any>,
+				public dialog: MatDialog,
+				public snackBar: MatSnackBar,
+				public sideNavService: SideNavService,
+				public windowService: WindowService,
+				public overlayContainer: OverlayContainer,
+				public renderer: Renderer2,
+				public iconRegistry: MatIconRegistry,
+				public sanitizer: DomSanitizer,
+				public appEventsService: AppEventsService,
+				// @Inject(IMPORT_BACKUP_DIALOG_COMPONENT_TOKEN) public importBackupDialogComponentType: Type<ImportBackupDialogComponent>
+	) {
+		super(router, syncService, dialog, snackBar, sideNavService, windowService, overlayContainer, renderer,
+			iconRegistry, sanitizer, appEventsService);
+	}
+
+
+	public updateLastSyncDateStatus(): void {
+
+		this.syncService.getSyncState().then((syncState: SyncState) => {
+			this.syncState = syncState;
+			this.syncService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
+				if (_.isNumber(lastSyncDateTime)) {
+					this.lastSyncDateMessage = moment(lastSyncDateTime).fromNow();
+				}
+			});
+		});
+	}
+
+	public onSyncedBackupImport(): void {
+
+		const dialogRef = this.dialog.open(ExtensionImportBackupDialogComponent, {
+			minWidth: ImportBackupDialogComponent.MIN_WIDTH,
+			maxWidth: ImportBackupDialogComponent.MAX_WIDTH,
+		});
+
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((dumpModel: DumpModel) => {
+
+			if (dumpModel) {
+				this.syncService.import(dumpModel).then(() => {
+					location.reload();
+				}, error => {
+					this.snackBar.open(error, "Close");
+				});
+			}
+
+			afterClosedSubscription.unsubscribe();
+		});
+	}
+
+}
+

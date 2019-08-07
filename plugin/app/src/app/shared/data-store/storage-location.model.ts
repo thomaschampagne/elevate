@@ -10,7 +10,8 @@ export class StorageLocationModel {
 	 *
 	 * @param key {string} key location in storage being used. If not set the whole storage will be used as location.
 	 * @param storageType can be object, list or single value
-	 * @param collectionFieldId if storage is type of collection, this "collectionFieldId" is used as ID concatenated with key of storage "key:MY_ID" (e.g. activity:09182094923)
+	 * @param collectionFieldId if storage is type of collection, this "collectionFieldId" is used as ID concatenated with key
+	 * of storage "key:MY_ID" (e.g. activity:09182094923)
 	 */
 	constructor(key?: string, storageType?: StorageType, collectionFieldId?: string) {
 		this.key = (key) ? key : null;

@@ -13,14 +13,23 @@ import { StravaApiCredentialsDao } from "../dao/strava-api-credentials/strava-ap
 import { StravaApiCredentialsService } from "../services/strava-api-credentials/strava-api-credentials.service";
 import { ConnectorsModule } from "../../connectors/connectors.module";
 import { StravaConnectorService } from "../../connectors/services/strava-connector.service";
-import { ConnectorLastSyncDateTimeDao } from "../dao/sync/last-sync-date-time.dao";
+import { DesktopImportBackupDialogComponent, } from "../dialogs/import-backup-dialog/import-backup-dialog.component";
+import { CoreModule } from "../../core/core.module";
+import { ConnectorLastSyncDateTimeDao } from "../dao/sync/connector-last-sync-date-time.dao";
 
 @NgModule({
 	imports: [
+		CoreModule,
 		ConnectorsModule
 	],
 	exports: [
 		ConnectorsModule
+	],
+	declarations: [
+		DesktopImportBackupDialogComponent
+	],
+	entryComponents: [
+		DesktopImportBackupDialogComponent
 	],
 	providers: [
 		ElectronService,
@@ -32,7 +41,8 @@ import { ConnectorLastSyncDateTimeDao } from "../dao/sync/last-sync-date-time.da
 		ConnectorLastSyncDateTimeDao,
 		StravaApiCredentialsService,
 		StravaApiCredentialsDao,
-		StravaConnectorService
+		StravaConnectorService,
+		// {provide: IMPORT_BACKUP_DIALOG_COMPONENT_TOKEN, useValue: DesktopImportBackupDialogComponent}
 	]
 })
 export class DesktopModule {

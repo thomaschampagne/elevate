@@ -2,13 +2,15 @@ import { Component, OnInit } from "@angular/core";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
 import { MatDialogRef } from "@angular/material";
 import * as _ from "lodash";
-import { SyncedBackupModel } from "../../services/sync/synced-backup.model";
+import { DumpModel } from "../../models/dumps/dump.model";
+import { ElevateException } from "@elevate/shared/exceptions";
 
-@Component({
-	selector: "app-import-backup-dialog",
-	templateUrl: "./import-backup-dialog.component.html",
-	styleUrls: ["./import-backup-dialog.component.scss"]
-})
+/*
+// Can be usefull later to inject a component along platform
+export const IMPORT_BACKUP_DIALOG_COMPONENT_TOKEN
+	= new InjectionToken<ImportBackupDialogComponent>("IMPORT_BACKUP_DIALOG_COMPONENT_TOKEN");*/
+
+@Component({template: ""})
 export class ImportBackupDialogComponent implements OnInit {
 
 	public static readonly MAX_WIDTH: string = "80%";
@@ -26,17 +28,7 @@ export class ImportBackupDialogComponent implements OnInit {
 	}
 
 	public onRestore(): void {
-
-		if (this.file) {
-
-			// Reading file, when load, import it
-			const reader = new FileReader();
-			reader.readAsText(this.file);
-			reader.onload = (event: Event) => {
-				const syncedBackupModel: SyncedBackupModel = JSON.parse((event.target as IDBRequest).result) as SyncedBackupModel;
-				this.dialogRef.close(syncedBackupModel);
-			};
-		}
+		throw new ElevateException("onRestore method must be overridden and used by a child component of ImportBackupDialogComponent.");
 	}
 
 	public onCancel(): void {
@@ -48,4 +40,58 @@ export class ImportBackupDialogComponent implements OnInit {
 		this.displayName = this.file.name;
 		this.displaySize = _.floor(this.file.size / (1024 * 1024), 2) + " MB";
 	}
+}
+
+@Component({
+	selector: "app-import-backup-dialog",
+	templateUrl: "./import-backup-dialog.component.html",
+	styleUrls: ["./import-backup-dialog.component.scss"]
+})
+export class DesktopImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
+
+	constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>) {
+		super(dialogRef);
+	}
+
+	public onRestore(): void {
+
+		if (this.file) {
+			// Reading file, when load, import it
+			const reader = new FileReader();
+			reader.readAsText(this.file);
+			reader.onload = (event: Event) => {
+				const result = (event.target as IDBRequest).result;
+				this.dialogRef.close(result);
+			};
+		}
+
+	}
+
+}
+
+@Component({
+	selector: "app-import-backup-dialog",
+	templateUrl: "./import-backup-dialog.component.html",
+	styleUrls: ["./import-backup-dialog.component.scss"]
+})
+export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
+
+	constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>) {
+		super(dialogRef);
+	}
+
+	public onRestore(): void {
+
+		if (this.file) {
+
+			// Reading file, when load, import it
+			const reader = new FileReader();
+			reader.readAsText(this.file);
+			reader.onload = (event: Event) => {
+				const syncedBackupModel: DumpModel = JSON.parse((event.target as IDBRequest).result) as DumpModel;
+				this.dialogRef.close(syncedBackupModel);
+			};
+		}
+	}
+
 }

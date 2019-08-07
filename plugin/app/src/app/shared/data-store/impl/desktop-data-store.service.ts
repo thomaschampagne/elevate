@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { StorageLocationModel } from "../storage-location.model";
 import { DataStore } from "../data-store";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
@@ -9,12 +9,16 @@ import { LoggerService } from "../../services/logging/logger.service";
 import { NotImplementedException } from "@elevate/shared/exceptions";
 import * as _ from "lodash";
 import { StorageType } from "../storage-type.enum";
+import { Gzip } from "@elevate/shared/tools/gzip";
+import { VERSIONS_PROVIDER, VersionsProvider } from "../../services/versions/versions-provider.interface";
+import { DesktopDumpModel } from "../../models/dumps/desktop-dump.model";
 import FindRequest = PouchDB.Find.FindRequest;
 
 @Injectable()
 export class DesktopDataStore<T> extends DataStore<T> {
 
-	constructor(public logger: LoggerService) {
+	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
+				public logger: LoggerService) {
 		super();
 		this.setup();
 	}
@@ -137,6 +141,49 @@ export class DesktopDataStore<T> extends DataStore<T> {
 	public getAppUsageDetails(): Promise<AppUsageDetails> {
 		throw new NotImplementedException();
 	}
+
+	public createDump(): Promise<Blob> {
+		return this.database.allDocs({include_docs: true, attachments: true}).then(docs => {
+
+			const dump: DesktopDumpModel = new DesktopDumpModel();
+
+			// Remove revision field before export
+			dump.gzippedDocs = Gzip.toBinaryString(JSON.stringify(docs.rows.map(wrappedDoc => {
+				delete wrappedDoc.doc[DesktopDataStore.POUCH_DB_REV_FIELD];
+				return wrappedDoc.doc;
+			})));
+
+			return this.versionsProvider.getInstalledAppVersion().then(version => {
+				dump.version = version;
+				const blob = new Blob([dump.serialize()], {type: "application/gzip"});
+				return Promise.resolve(blob);
+			});
+		});
+	}
+
+
+	public loadDump(dump: DesktopDumpModel): Promise<void> {
+
+		// TODO "version" of dump should compared to "the current code version".
+		return new Promise((resolve, reject) => {
+			try {
+				const inflatedDump = Gzip.fromBinaryString(dump.gzippedDocs);
+				const dumpObj = JSON.parse(inflatedDump);
+				this.database.destroy().then(() => {
+					this.setup(); // Recreate database
+					return this.database.bulkDocs(dumpObj);
+				}).then(() => {
+					resolve();
+				}).catch(error => {
+					reject(error.message);
+				});
+
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
 
 	public save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T> {
 
@@ -299,8 +346,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 		});
 	}
 
-	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V,
-							 defaultStorageValue: T[] | T): Promise<T> {
+	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
 
 		return this.fetch(storageLocation, defaultStorageValue).then((doc: T) => {
 

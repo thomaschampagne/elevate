@@ -18,7 +18,6 @@ import { DonateComponent } from "../donate/donate.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
-import { LastSyncDateTimeDao } from "./dao/sync/last-sync-date-time.dao";
 import { ImportBackupDialogComponent } from "./dialogs/import-backup-dialog/import-backup-dialog.component";
 import { ShareComponent } from "../share/share.component";
 import { ReportComponent } from "../report/report.component";
@@ -83,7 +82,6 @@ import { EnvTarget } from "@elevate/shared/models";
 		ImportBackupDialogComponent
 	],
 	providers: [
-		LastSyncDateTimeDao,
 		UserSettingsService,
 		UserSettingsDao,
 		AthleteService,

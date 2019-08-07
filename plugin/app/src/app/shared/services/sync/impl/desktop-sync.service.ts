@@ -11,12 +11,16 @@ import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { StravaApiCredentialsService } from "../../strava-api-credentials/strava-api-credentials.service";
 import { AthleteModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { ActivityService } from "../../activity/activity.service";
-import { SyncException } from "@elevate/shared/exceptions";
+import { ElevateException, SyncException } from "@elevate/shared/exceptions";
 import { isArray, isString } from "util";
 import * as _ from "lodash";
-import { ConnectorLastSyncDateTime, ConnectorLastSyncDateTimeDao } from "../../../dao/sync/last-sync-date-time.dao";
-import { SyncedBackupModel } from "../synced-backup.model";
 import { SyncState } from "../sync-state.enum";
+import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.service";
+import { DataStore } from "../../../data-store/data-store";
+import * as moment from "moment";
+import { ConnectorLastSyncDateTime } from "../../../../../../modules/shared/models/sync/connector-last-sync-date-time.model";
+import { ConnectorLastSyncDateTimeDao } from "../../../dao/sync/connector-last-sync-date-time.dao";
+import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 // TODO Handle sync complete
@@ -28,6 +32,8 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
     but allow user to mark a connector as "Primary" which will be synced when starting the app.
 	Also allow user to sync connector he wants manually on connectors page
  */
+
+// TODO "version" of dump should compared to "the current code version".
 
 // TODO Handle no strava access token (or expired) when starting strava sync
 // TODO Handle updateSyncedActivitiesNameAndType of strava over filesystem connector
@@ -50,7 +56,8 @@ export class DesktopSyncService extends SyncService<ConnectorLastSyncDateTime[]>
 				public messageListenerService: IpcRendererMessagesService,
 				public stravaApiCredentialsService: StravaApiCredentialsService,
 				public logger: LoggerService,
-				public connectorLastSyncDateTimeDao: ConnectorLastSyncDateTimeDao) {
+				public connectorLastSyncDateTimeDao: ConnectorLastSyncDateTimeDao,
+				@Inject(DataStore) public desktopDataStore: DesktopDataStore<void> /* Injected to create PouchDB dumps & load them */) {
 		super(versionsProvider, activityService, athleteService, userSettingsService, logger);
 		this.syncSubscription = null;
 		this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync // TODO ReplaySubject?! I think no
@@ -309,38 +316,78 @@ export class DesktopSyncService extends SyncService<ConnectorLastSyncDateTime[]>
 
 	}
 
-	public clearLastSyncTime(): Promise<void> {
-		throw new Error("DesktopSyncService.clearLastSyncTime() to be implemented");
-	}
-
 	public export(): Promise<{ filename: string; size: number }> {
-		throw new Error("DesktopSyncService.export() to be implemented");
+		return this.desktopDataStore.createDump().then(blob => {
+			return this.versionsProvider.getInstalledAppVersion().then(appVersion => {
+				const gzippedFilename = moment().format("Y.MM.DD-H.mm") + "_v" + appVersion + ".elevate";
+				this.saveAs(blob, gzippedFilename);
+				return Promise.resolve({filename: gzippedFilename, size: blob.size});
+			});
+		});
 	}
 
-	public import(importedBackupModel: SyncedBackupModel): Promise<SyncedBackupModel> {
-		throw new Error("DesktopSyncService.import() to be implemented");
+	public import(desktopDumpModel: DesktopDumpModel): Promise<void> {
+		return this.desktopDataStore.loadDump(desktopDumpModel);
 	}
 
 	public getSyncState(): Promise<SyncState> {
-		throw new Error("DesktopSyncService.getSyncState() to be implemented");
+
+		return Promise.all([
+
+			this.getLastSyncDateTime(),
+			this.activityService.fetch()
+
+		]).then((result: Object[]) => {
+
+			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = result[0] as ConnectorLastSyncDateTime[];
+			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
+
+			const hasALastSyncDateTime: boolean = (connectorLastSyncDateTimes.length > 0);
+			const hasSyncedActivityModels: boolean = !_.isEmpty(syncedActivityModels);
+
+			let syncState: SyncState = null;
+			if (!hasALastSyncDateTime && !hasSyncedActivityModels) {
+				syncState = SyncState.NOT_SYNCED;
+			} else if (!hasALastSyncDateTime && hasSyncedActivityModels) {
+				syncState = SyncState.PARTIALLY_SYNCED;
+			} else {
+				syncState = SyncState.SYNCED;
+			}
+
+			return Promise.resolve(syncState);
+		});
+
 	}
 
 	public getLastSyncDateTime(): Promise<ConnectorLastSyncDateTime[]> {
-
-		// this.connectorLastSyncDateTimeDao.fetch().then((connectorLastSyncDateTimes: ConnectorLastSyncDateTime[]) => {
-		// 	TODO Do stuff here...
-		// });
-
-		throw new Error("DesktopSyncService.getLastSyncDateTime() to be implemented");
+		return <Promise<ConnectorLastSyncDateTime[]>> this.connectorLastSyncDateTimeDao.fetch();
 	}
 
-	public saveLastSyncDateTime(value: ConnectorLastSyncDateTime[]): Promise<ConnectorLastSyncDateTime[]> {
+	public upsertLastSyncDateTimes(connectorLastSyncDateTimes: ConnectorLastSyncDateTime[]): Promise<ConnectorLastSyncDateTime[]> {
 
-		// const connectorLastSyncDateTime = new ConnectorLastSyncDateTime(this.currentConnectorType, value);
-		// this.connectorLastSyncDateTimeDao.save(value);
 
-		throw new Error("DesktopSyncService.saveLastSyncTime() to be implemented");
+		if (!_.isArray(connectorLastSyncDateTimes)) {
+			throw new Error("connectorLastSyncDateTimes param must be an array");
+		}
+
+		const putPromises = [];
+		_.forEach(connectorLastSyncDateTimes, (connectorLastSyncDateTime: ConnectorLastSyncDateTime) => {
+			putPromises.push(this.connectorLastSyncDateTimeDao.put(connectorLastSyncDateTime));
+		});
+
+		return Promise.all(putPromises).then(() => {
+			return <Promise<ConnectorLastSyncDateTime[]>> this.connectorLastSyncDateTimeDao.fetch();
+		});
 	}
+
+	public saveLastSyncDateTime(connectorLastSyncDateTimes: ConnectorLastSyncDateTime[]): Promise<ConnectorLastSyncDateTime[]> {
+		throw new ElevateException("Please use upsertLastSyncDateTimes() method when using DesktopSyncService");
+	}
+
+	public clearLastSyncTime(): Promise<void> {
+		return this.connectorLastSyncDateTimeDao.clear();
+	}
+
 
 	public ngOnDestroy(): void {
 		if (this.syncSubscription) {

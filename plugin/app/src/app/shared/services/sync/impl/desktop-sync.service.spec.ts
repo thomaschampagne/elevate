@@ -18,6 +18,12 @@ import { ElectronService, ElectronWindow } from "../../electron/electron.service
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
 import { ElevateException, SyncException } from "@elevate/shared/exceptions";
+import { Gzip } from "@elevate/shared/tools/gzip";
+import * as moment from "moment";
+import { TEST_SYNCED_ACTIVITIES } from "../../../../../shared-fixtures/activities-2015.fixture";
+import { SyncState } from "../sync-state.enum";
+import { ConnectorLastSyncDateTime } from "../../../../../../modules/shared/models/sync/connector-last-sync-date-time.model";
+import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 
 describe("DesktopSyncService", () => {
 
@@ -908,7 +914,6 @@ describe("DesktopSyncService", () => {
 			done();
 		});
 
-
 		it("should handle STRAVA_API_UNAUTHORIZED events, try to stop sync with failure", (done: Function) => {
 
 			// Given
@@ -938,6 +943,344 @@ describe("DesktopSyncService", () => {
 				throw new Error("Should not be here!" + JSON.stringify(error));
 			});
 
+		});
+
+	});
+
+	describe("Export", () => {
+
+		it("should export a compressed gzip dump", (done: Function) => {
+
+			// Given
+			const expectedData = {foo: "bar"};
+			const blob = new Blob([Gzip.toBinaryString(JSON.stringify(expectedData))], {type: "application/gzip"});
+			const dumpSpy = spyOn(desktopSyncService.desktopDataStore, "createDump").and.returnValue(Promise.resolve(blob));
+			const appVersion = "1.0.0";
+			const getInstalledAppVersionSpy = spyOn(desktopSyncService.versionsProvider, "getInstalledAppVersion")
+				.and.returnValue(Promise.resolve(appVersion));
+			const saveAsSpy = spyOn(desktopSyncService, "saveAs").and.stub();
+			const expectedFilename = moment().format("Y.MM.DD-H.mm") + "_v" + appVersion + ".elevate";
+
+			// When
+			const promise = desktopSyncService.export();
+
+			// Then
+			promise.then((result: { filename: string; size: number }) => {
+
+				expect(getInstalledAppVersionSpy).toHaveBeenCalledTimes(1);
+				expect(dumpSpy).toHaveBeenCalledTimes(1);
+
+				expect(result.filename).toEqual(expectedFilename);
+				expect(result.size).toEqual(blob.size);
+
+				expect(saveAsSpy).toHaveBeenCalledWith(blob, expectedFilename);
+
+				done();
+
+			}, () => {
+				throw new Error("Should not be here!");
+			});
+		});
+
+
+	});
+
+	describe("Import", () => {
+
+		it("should import a compressed gzip dump", (done: Function) => {
+
+			// Given
+			const loadDumpSpy = spyOn(desktopSyncService.desktopDataStore, "loadDump").and.returnValue(Promise.resolve());
+			const expectedData = {foo: "bar"};
+			const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel("1.0.0", Gzip.toBinaryString(JSON.stringify(expectedData)));
+
+			// When
+			const promise = desktopSyncService.import(desktopDumpModel);
+
+			// Then
+			promise.then(() => {
+				expect(loadDumpSpy).toHaveBeenCalledTimes(1);
+				done();
+
+			}, () => {
+				throw new Error("Should not be here!");
+			});
+		});
+
+	});
+
+	describe("Provide sync state", () => {
+
+		it("should provide NOT_SYNCED state", (done: Function) => {
+
+			// Given
+			const expectedState = SyncState.NOT_SYNCED;
+			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve([]));
+
+			const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
+				.and.returnValue(Promise.resolve([]));
+
+			// When
+			const promise = desktopSyncService.getSyncState();
+
+			// Then
+			promise.then(syncState => {
+				expect(syncState).toEqual(expectedState);
+				expect(fetchSpy).toHaveBeenCalledTimes(1);
+				expect(activityServiceSpy).toHaveBeenCalledTimes(1);
+				done();
+
+			}, () => {
+				throw new Error("Should not be here!");
+			});
+
+		});
+
+		it("should provide SYNCED state (2/2 connectors synced)", (done: Function) => {
+
+			// Given
+			const expectedState = SyncState.SYNCED;
+			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [
+				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111),
+				new ConnectorLastSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+			];
+
+			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+
+			const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
+				.and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+
+			// When
+			const promise = desktopSyncService.getSyncState();
+
+			// Then
+			promise.then(syncState => {
+				expect(syncState).toEqual(expectedState);
+				expect(fetchSpy).toHaveBeenCalledTimes(1);
+				expect(activityServiceSpy).toHaveBeenCalledTimes(1);
+				done();
+
+			}, () => {
+				throw new Error("Should not be here!");
+			});
+
+		});
+
+		it("should provide SYNCED state (1/2 connector synced)", (done: Function) => {
+
+			// Given
+			const expectedState = SyncState.SYNCED;
+			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [
+				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111), // Only one !
+			];
+
+			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+
+			const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
+				.and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+
+			// When
+			const promise = desktopSyncService.getSyncState();
+
+			// Then
+			promise.then(syncState => {
+				expect(syncState).toEqual(expectedState);
+				expect(fetchSpy).toHaveBeenCalledTimes(1);
+				expect(activityServiceSpy).toHaveBeenCalledTimes(1);
+				done();
+
+			}, () => {
+				throw new Error("Should not be here!");
+			});
+
+		});
+
+		it("should provide SYNCED state (2/2 connector synced and no activities)", (done: Function) => {
+
+			// Given
+			const expectedState = SyncState.SYNCED;
+			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [
+				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111),
+				new ConnectorLastSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+			];
+
+			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+
+			const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
+				.and.returnValue(Promise.resolve([]));
+
+			// When
+			const promise = desktopSyncService.getSyncState();
+
+			// Then
+			promise.then(syncState => {
+				expect(syncState).toEqual(expectedState);
+				expect(fetchSpy).toHaveBeenCalledTimes(1);
+				expect(activityServiceSpy).toHaveBeenCalledTimes(1);
+				done();
+
+			}, () => {
+				throw new Error("Should not be here!");
+			});
+
+		});
+
+		it("should provide SYNCED state (1/2 connector synced and no activities)", (done: Function) => {
+
+			// Given
+			const expectedState = SyncState.SYNCED;
+			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [
+				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111),
+			];
+
+			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+
+			const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
+				.and.returnValue(Promise.resolve([]));
+
+			// When
+			const promise = desktopSyncService.getSyncState();
+
+			// Then
+			promise.then(syncState => {
+				expect(syncState).toEqual(expectedState);
+				expect(fetchSpy).toHaveBeenCalledTimes(1);
+				expect(activityServiceSpy).toHaveBeenCalledTimes(1);
+				done();
+
+			}, () => {
+				throw new Error("Should not be here!");
+			});
+
+		});
+
+
+		it("should provide PARTIALLY_SYNCED state (0/2 connector synced and some activities stored)", (done: Function) => {
+
+			// Given
+			const expectedState = SyncState.PARTIALLY_SYNCED;
+			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [];
+
+			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+
+			const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
+				.and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+
+			// When
+			const promise = desktopSyncService.getSyncState();
+
+			// Then
+			promise.then(syncState => {
+				expect(syncState).toEqual(expectedState);
+				expect(fetchSpy).toHaveBeenCalledTimes(1);
+				expect(activityServiceSpy).toHaveBeenCalledTimes(1);
+				done();
+
+			}, () => {
+				throw new Error("Should not be here!");
+			});
+
+		});
+
+	});
+
+	describe("Provide access and modify sync date time", () => {
+
+		it("should get sync date times from synced connectors", (done: Function) => {
+
+			// Given
+			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [
+				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111),
+				new ConnectorLastSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+			];
+
+			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+
+			// When
+			const promise = desktopSyncService.getLastSyncDateTime();
+
+			// Then
+			promise.then(() => {
+
+				expect(fetchSpy).toHaveBeenCalledTimes(1);
+				done();
+
+			}, () => {
+				throw new Error("Should not be here!");
+			});
+		});
+
+		it("should upsert sync date times of synced connectors", (done: Function) => {
+
+			// Given
+			const connectorLastSyncDateTimesToSave: ConnectorLastSyncDateTime[] = [
+				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111),
+				new ConnectorLastSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+			];
+
+			spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorLastSyncDateTimesToSave));
+
+			const putSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "put")
+				.and.returnValue(Promise.resolve(connectorLastSyncDateTimesToSave));
+
+			// When
+			const promise = desktopSyncService.upsertLastSyncDateTimes(connectorLastSyncDateTimesToSave);
+
+			// Then
+			promise.then(() => {
+
+				expect(putSpy).toHaveBeenCalledTimes(2);
+				expect(putSpy).toHaveBeenCalledWith(connectorLastSyncDateTimesToSave[0]);
+				expect(putSpy).toHaveBeenCalledWith(connectorLastSyncDateTimesToSave[1]);
+				done();
+
+			}, () => {
+				throw new Error("Should not be here!");
+			});
+		});
+
+		it("should reject upsert if connectors sync date times param is not an array", (done: Function) => {
+
+			// Given
+			const expectedErrorMesage = "connectorLastSyncDateTimes param must be an array";
+			const connectorLastSyncDateTime = new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111); // No array
+
+			// When
+			const call = () => {
+				desktopSyncService.upsertLastSyncDateTimes(<any> connectorLastSyncDateTime);
+			};
+
+			// Then
+			expect(call).toThrow(new Error(expectedErrorMesage));
+			done();
+		});
+
+		it("should clear sync date times of synced connectors", (done: Function) => {
+
+			// Given
+			const clearSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "clear")
+				.and.returnValue(Promise.resolve());
+
+			// When
+			const promise = desktopSyncService.clearLastSyncTime();
+
+			// Then
+			promise.then(() => {
+
+				expect(clearSpy).toHaveBeenCalledTimes(1);
+				done();
+
+			}, () => {
+				throw new Error("Should not be here!");
+			});
 		});
 
 	});

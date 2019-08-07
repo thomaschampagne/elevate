@@ -6,6 +6,10 @@ import * as _ from "lodash";
 import { LoggerService } from "../../services/logging/logger.service";
 import { ConsoleLoggerService } from "../../services/logging/console-logger.service";
 import { StorageType } from "../storage-type.enum";
+import { VERSIONS_PROVIDER } from "../../services/versions/versions-provider.interface";
+import { MockedVersionsProvider } from "../../services/versions/impl/mock/mocked-versions-provider";
+import { Gzip } from "@elevate/shared/tools/gzip";
+import { DesktopDumpModel } from "../../models/dumps/desktop-dump.model";
 import Spy = jasmine.Spy;
 
 describe("DesktopDataStore", () => {
@@ -84,7 +88,7 @@ describe("DesktopDataStore", () => {
 	let desktopDataStore: DesktopDataStore<any[] | any>;
 
 	const FAKE_EXISTING_DOCUMENTS: FakeDoc[] = [
-		new FakeAthlete("Thomas", 31, [new FakeSettings(189, 60, 75),
+		new FakeAthlete("Thomas", 32, [new FakeSettings(189, 60, 75),
 			new FakeSettings(195, 50, 72)]),
 
 		new FakeDateTime(new Date().getTime()),
@@ -100,10 +104,13 @@ describe("DesktopDataStore", () => {
 
 	beforeEach((done: Function) => {
 
+		const mockedVersionsProvider: MockedVersionsProvider = new MockedVersionsProvider();
+
 		TestBed.configureTestingModule({
 			providers: [
 				DesktopDataStore,
-				{provide: LoggerService, useClass: ConsoleLoggerService}
+				{provide: LoggerService, useClass: ConsoleLoggerService},
+				{provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider}
 			]
 		});
 
@@ -1098,6 +1105,114 @@ describe("DesktopDataStore", () => {
 			expect(false).toBeTruthy("Whoops! I should not be here!");
 			done();
 		});
+	});
+
+	describe("Handle create & load PouchDB dumps", () => {
+
+		it("should create a PouchDB dump", (done: Function) => {
+
+			// Given
+			const expectedVersion = "2.0.0";
+			const allDocsSpy = spyOn(desktopDataStore.database, "allDocs").and.callThrough();
+			const stringifySpy = spyOn(JSON, "stringify").and.callThrough();
+
+
+			// When
+			const promise = desktopDataStore.createDump();
+
+			// Then
+			promise.then((blobResult: Blob) => {
+
+				expect(blobResult).not.toBeNull();
+				expect(allDocsSpy).toHaveBeenCalledTimes(1);
+				expect(stringifySpy).toHaveBeenCalledTimes(1);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+		});
+
+		it("should load an elevate dump", (done: Function) => {
+
+			// Given
+			const expectedVersion = "2.0.0";
+
+			const expectedRows = [
+				{_id: "foo", data: "foo"},
+				{_id: "bar", data: "bar"},
+			];
+			const docs = {
+				version: expectedVersion,
+				docs: expectedRows
+			};
+
+			const destroyDbSpy = spyOn(desktopDataStore.database, "destroy").and.callThrough();
+			const setupDbSpy = spyOn(desktopDataStore, "setup").and.callThrough();
+
+			const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel("1.0.0", Gzip.toBinaryString(JSON.stringify(docs)));
+
+			// When
+			const promise = desktopDataStore.loadDump(desktopDumpModel);
+
+			// Then
+			promise.then(() => {
+				expect(destroyDbSpy).toHaveBeenCalledTimes(1);
+				expect(setupDbSpy).toHaveBeenCalledTimes(1);
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+		});
+
+		it("should reject load of an elevate dump (corrupted)", (done: Function) => {
+
+			// Given
+			const expectedVersion = "2.0.0";
+			const bulkDocsSpy = spyOn(desktopDataStore.database, "bulkDocs").and.stub();
+			// const expectedErrorMessage = "SyntaxError: Unexpected end of JSON";
+
+			const expectedRows = [
+				{id: 1, data: "foo"},
+				{id: 2, data: "Bar"},
+			];
+
+			const docs = {
+				version: expectedVersion,
+				docs: expectedRows
+			};
+
+			// ... prepare dump
+			let fakeCompressedDocs = Gzip.toBinaryString(JSON.stringify(docs));
+
+			// ... Ensure dump is corrupted
+			fakeCompressedDocs = fakeCompressedDocs.slice(0, fakeCompressedDocs.length / 1.5);
+
+			const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel("1.0.0", fakeCompressedDocs);
+
+			// When
+			const promise = desktopDataStore.loadDump(desktopDumpModel);
+
+			// Then
+			promise.then(() => {
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+
+			}, error => {
+				expect(bulkDocsSpy).not.toHaveBeenCalled();
+				expect(error).not.toBeNull();
+				done();
+			});
+		});
+
+		// TODO "version" dump to be compared with "the current code version".
+
 	});
 
 });

@@ -2,7 +2,6 @@ import { TestBed } from "@angular/core/testing";
 import { LastSyncDateTimeDao } from "../../../dao/sync/last-sync-date-time.dao";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../../shared-fixtures/activities-2015.fixture";
 import { SyncState } from "../sync-state.enum";
-import { SyncedBackupModel } from "../synced-backup.model";
 import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { CoreModule } from "../../../../core/core.module";
 import { SharedModule } from "../../../shared.module";
@@ -11,6 +10,8 @@ import { VERSIONS_PROVIDER } from "../../versions/versions-provider.interface";
 import { MockedVersionsProvider } from "../../versions/impl/mock/mocked-versions-provider";
 import { SyncService } from "../sync.service";
 import { ChromeSyncService } from "./chrome-sync.service";
+import { DumpModel } from "../../../models/dumps/dump.model";
+import { ExtensionDumpModel } from "../../../models/dumps/extension-dump.model";
 
 describe("ChromeSyncService", () => {
 
@@ -162,10 +163,10 @@ describe("ChromeSyncService", () => {
 		spyOn(chromeSyncService.athleteService, "fetch").and.returnValue(Promise.resolve(athleteModel));
 
 		// When
-		const promise: Promise<SyncedBackupModel> = chromeSyncService.prepareForExport();
+		const promise: Promise<DumpModel> = chromeSyncService.prepareForExport();
 
 		// Then
-		promise.then((syncedBackupModel: SyncedBackupModel) => {
+		promise.then((syncedBackupModel: ExtensionDumpModel) => {
 
 			expect(syncedBackupModel).not.toBeNull();
 			expect(syncedBackupModel.pluginVersion).toEqual(installedVersion);
@@ -257,37 +258,41 @@ describe("ChromeSyncService", () => {
 		spyOn(chromeSyncService, "getCompatibleBackupVersionThreshold").and.returnValue(compatibleBackupVersionThreshold);
 
 
-		const importedSyncedBackupModel: SyncedBackupModel = {
+		const importedSyncedBackupModel: ExtensionDumpModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
 			athleteModel: athleteModel,
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: importedBackupVersion
 		};
 
-		spyOn(chromeSyncService.lastSyncDateTimeDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
-		spyOn(chromeSyncService.activityService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
-		spyOn(chromeSyncService.athleteService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.athleteModel));
-
-		spyOn(chromeSyncService.lastSyncDateTimeDao, "clear").and.returnValue(Promise.resolve());
-		spyOn(chromeSyncService.activityService, "clear").and.returnValue(Promise.resolve());
-
+		const lastSyncDateTimeSaveSpy = spyOn(chromeSyncService.lastSyncDateTimeDao, "save")
+			.and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
+		const activityServiceSaveSpy = spyOn(chromeSyncService.activityService, "save")
+			.and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
+		const athleteServiceSaveSpy = spyOn(chromeSyncService.athleteService, "save")
+			.and.returnValue(Promise.resolve(importedSyncedBackupModel.athleteModel));
+		const lastSyncDateTimeClearSpy = spyOn(chromeSyncService.lastSyncDateTimeDao, "clear")
+			.and.returnValue(Promise.resolve());
+		const activityServiceClearSpy = spyOn(chromeSyncService.activityService, "clear")
+			.and.returnValue(Promise.resolve());
 		const spyClearSyncedData = spyOn(chromeSyncService, "clearSyncedData").and.callThrough();
-		const spyClearLocalStorage = spyOn(chromeSyncService.userSettingsService, "clearLocalStorageOnNextLoad").and.returnValue(Promise.resolve());
+		const spyClearLocalStorage = spyOn(chromeSyncService.userSettingsService, "clearLocalStorageOnNextLoad")
+			.and.returnValue(Promise.resolve());
 
 		// When
-		const promise: Promise<SyncedBackupModel> = chromeSyncService.import(importedSyncedBackupModel);
+		const promise: Promise<void> = chromeSyncService.import(importedSyncedBackupModel);
 
 		// Then
-		promise.then((syncedBackupModel: SyncedBackupModel) => {
+		promise.then(() => {
 
+			expect(lastSyncDateTimeSaveSpy).toHaveBeenCalledTimes(1);
+			expect(activityServiceSaveSpy).toHaveBeenCalledTimes(1);
+			expect(athleteServiceSaveSpy).toHaveBeenCalledTimes(1);
+			expect(lastSyncDateTimeClearSpy).toHaveBeenCalledTimes(1);
+			expect(activityServiceClearSpy).toHaveBeenCalledTimes(1);
 			expect(spyClearSyncedData).toHaveBeenCalledTimes(1);
 			expect(spyClearLocalStorage).toHaveBeenCalledTimes(1);
 
-			expect(syncedBackupModel).not.toBeNull();
-			expect(syncedBackupModel.pluginVersion).toEqual(importedSyncedBackupModel.pluginVersion);
-			expect(syncedBackupModel.lastSyncDateTime).toEqual(importedSyncedBackupModel.lastSyncDateTime);
-			expect(syncedBackupModel.syncedActivities).toEqual(importedSyncedBackupModel.syncedActivities);
-			expect(syncedBackupModel.athleteModel).toEqual(importedSyncedBackupModel.athleteModel);
 			done();
 
 		}, error => {
@@ -308,40 +313,44 @@ describe("ChromeSyncService", () => {
 
 		athleteModel = null;
 
-		const importedSyncedBackupModel: SyncedBackupModel = {
+		const importedSyncedBackupModel: ExtensionDumpModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
 			athleteModel: athleteModel,
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: importedBackupVersion
 		};
 
-		spyOn(chromeSyncService.lastSyncDateTimeDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
-		spyOn(chromeSyncService.activityService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
-
-		spyOn(chromeSyncService.lastSyncDateTimeDao, "clear").and.returnValue(Promise.resolve());
-		spyOn(chromeSyncService.activityService, "clear").and.returnValue(Promise.resolve());
+		const lastSyncDateTimeSaveSpy = spyOn(chromeSyncService.lastSyncDateTimeDao, "save")
+			.and.returnValue(Promise.resolve(importedSyncedBackupModel.lastSyncDateTime));
+		const activityServiceSaveSpy = spyOn(chromeSyncService.activityService, "save")
+			.and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
+		const lastSyncDateTimeClearSpy = spyOn(chromeSyncService.lastSyncDateTimeDao, "clear")
+			.and.returnValue(Promise.resolve());
+		const athleteServiceSaveSpy = spyOn(chromeSyncService.activityService, "clear")
+			.and.returnValue(Promise.resolve());
 
 		const spyClearSyncedData = spyOn(chromeSyncService, "clearSyncedData").and.callThrough();
 		const spyResetDatedAthleteSettings = spyOn(chromeSyncService.athleteService, "resetSettings").and.stub();
 		const spySaveDatedAthleteSettings = spyOn(chromeSyncService.athleteService, "save")
 			.and.returnValue(Promise.resolve(importedSyncedBackupModel.athleteModel));
 
-		const spyClearLocalStorage = spyOn(chromeSyncService.userSettingsService, "clearLocalStorageOnNextLoad").and.returnValue(Promise.resolve());
+		const spyClearLocalStorage = spyOn(chromeSyncService.userSettingsService, "clearLocalStorageOnNextLoad")
+			.and.returnValue(Promise.resolve());
 
 		// When
-		const promise: Promise<SyncedBackupModel> = chromeSyncService.import(importedSyncedBackupModel);
+		const promise: Promise<void> = chromeSyncService.import(importedSyncedBackupModel);
 		// Then
-		promise.then((syncedBackupModel: SyncedBackupModel) => {
+		promise.then(() => {
 
 			expect(spyResetDatedAthleteSettings).toHaveBeenCalledTimes(1);
 			expect(spySaveDatedAthleteSettings).not.toHaveBeenCalled();
 			expect(spyClearSyncedData).toHaveBeenCalledTimes(1);
 			expect(spyClearLocalStorage).toHaveBeenCalledTimes(1);
 
-			expect(syncedBackupModel).not.toBeNull();
-			expect(syncedBackupModel.pluginVersion).toEqual(importedSyncedBackupModel.pluginVersion);
-			expect(syncedBackupModel.lastSyncDateTime).toEqual(importedSyncedBackupModel.lastSyncDateTime);
-			expect(syncedBackupModel.syncedActivities).toEqual(importedSyncedBackupModel.syncedActivities);
+			expect(lastSyncDateTimeSaveSpy).toHaveBeenCalledTimes(1);
+			expect(activityServiceSaveSpy).toHaveBeenCalledTimes(1);
+			expect(athleteServiceSaveSpy).toHaveBeenCalledTimes(1);
+			expect(lastSyncDateTimeClearSpy).toHaveBeenCalledTimes(1);
 			done();
 
 		}, error => {
@@ -363,7 +372,7 @@ describe("ChromeSyncService", () => {
 
 		athleteModel.datedAthleteSettings = [];
 
-		const importedSyncedBackupModel: SyncedBackupModel = {
+		const importedSyncedBackupModel: ExtensionDumpModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
 			athleteModel: athleteModel,
 			lastSyncDateTime: lastSyncDateTime,
@@ -374,7 +383,7 @@ describe("ChromeSyncService", () => {
 		spyOn(chromeSyncService.activityService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
 
 		// When
-		const promise: Promise<SyncedBackupModel> = chromeSyncService.import(importedSyncedBackupModel);
+		const promise: Promise<void> = chromeSyncService.import(importedSyncedBackupModel);
 
 		// Then
 		promise.then(() => {
@@ -397,7 +406,7 @@ describe("ChromeSyncService", () => {
 
 		athleteModel.datedAthleteSettings = [];
 
-		const importedSyncedBackupModel: SyncedBackupModel = {
+		const importedSyncedBackupModel: ExtensionDumpModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
 			athleteModel: athleteModel,
 			lastSyncDateTime: lastSyncDateTime,
@@ -408,7 +417,7 @@ describe("ChromeSyncService", () => {
 		spyOn(chromeSyncService.activityService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
 
 		// When
-		const promise: Promise<SyncedBackupModel> = chromeSyncService.import(importedSyncedBackupModel);
+		const promise: Promise<void> = chromeSyncService.import(importedSyncedBackupModel);
 
 		// Then
 		promise.then(() => {
@@ -428,7 +437,7 @@ describe("ChromeSyncService", () => {
 		const lastSyncDateTime = 99;
 		const expectedErrorMessage = "Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.";
 
-		const syncedBackupModelPartial: Partial<SyncedBackupModel> = {
+		const syncedBackupModelPartial: Partial<ExtensionDumpModel> = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,
 			lastSyncDateTime: lastSyncDateTime
 		};
@@ -437,7 +446,7 @@ describe("ChromeSyncService", () => {
 		spyOn(chromeSyncService.activityService, "save").and.returnValue(Promise.resolve(syncedBackupModelPartial.syncedActivities));
 
 		// When
-		const promise: Promise<SyncedBackupModel> = chromeSyncService.import(syncedBackupModelPartial as SyncedBackupModel);
+		const promise: Promise<void> = chromeSyncService.import(syncedBackupModelPartial as ExtensionDumpModel);
 
 		// Then
 		promise.then(() => {
@@ -460,7 +469,7 @@ describe("ChromeSyncService", () => {
 
 		athleteModel.datedAthleteSettings = [];
 
-		const importedSyncedBackupModel: SyncedBackupModel = {
+		const importedSyncedBackupModel: ExtensionDumpModel = {
 			syncedActivities: null,
 			athleteModel: athleteModel,
 			lastSyncDateTime: lastSyncDateTime,
@@ -471,7 +480,7 @@ describe("ChromeSyncService", () => {
 		spyOn(chromeSyncService.activityService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
 
 		// When
-		const promise: Promise<SyncedBackupModel> = chromeSyncService.import(importedSyncedBackupModel);
+		const promise: Promise<void> = chromeSyncService.import(importedSyncedBackupModel);
 
 		// Then
 		promise.then(() => {
@@ -493,7 +502,7 @@ describe("ChromeSyncService", () => {
 		const importedBackupVersion = "1.0.0";
 		const expectedErrorMessage = "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.";
 
-		const importedSyncedBackupModelPartial: Partial<SyncedBackupModel> = {
+		const importedSyncedBackupModelPartial: Partial<ExtensionDumpModel> = {
 			lastSyncDateTime: lastSyncDateTime,
 			pluginVersion: importedBackupVersion
 		};
@@ -501,7 +510,7 @@ describe("ChromeSyncService", () => {
 		spyOn(chromeSyncService.lastSyncDateTimeDao, "save").and.returnValue(Promise.resolve(importedSyncedBackupModelPartial.lastSyncDateTime));
 
 		// When
-		const promise: Promise<SyncedBackupModel> = chromeSyncService.import(importedSyncedBackupModelPartial as SyncedBackupModel);
+		const promise: Promise<void> = chromeSyncService.import(importedSyncedBackupModelPartial as ExtensionDumpModel);
 
 		// Then
 		promise.then(() => {
@@ -524,7 +533,7 @@ describe("ChromeSyncService", () => {
 
 		athleteModel.datedAthleteSettings = [];
 
-		const importedSyncedBackupModel: SyncedBackupModel = {
+		const importedSyncedBackupModel: ExtensionDumpModel = {
 			syncedActivities: [],
 			athleteModel: athleteModel,
 			lastSyncDateTime: lastSyncDateTime,
@@ -535,7 +544,7 @@ describe("ChromeSyncService", () => {
 		spyOn(chromeSyncService.activityService, "save").and.returnValue(Promise.resolve(importedSyncedBackupModel.syncedActivities));
 
 		// When
-		const promise: Promise<SyncedBackupModel> = chromeSyncService.import(importedSyncedBackupModel);
+		const promise: Promise<void> = chromeSyncService.import(importedSyncedBackupModel);
 
 		// Then
 		promise.then(() => {

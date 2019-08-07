@@ -1,13 +1,13 @@
 import { Inject } from "@angular/core";
 import { saveAs } from "file-saver";
 import { SyncState } from "./sync-state.enum";
-import { SyncedBackupModel } from "./synced-backup.model";
 import { AthleteService } from "../athlete/athlete.service";
 import { UserSettingsService } from "../user-settings/user-settings.service";
 import { Constant } from "@elevate/shared/constants";
 import { LoggerService } from "../logging/logger.service";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../versions/versions-provider.interface";
 import { ActivityService } from "../activity/activity.service";
+import { DumpModel } from "../../models/dumps/dump.model";
 
 export abstract class SyncService<T> {
 
@@ -27,19 +27,17 @@ export abstract class SyncService<T> {
 
 	public abstract stop(): Promise<void>;
 
-	public abstract getLastSyncDateTime(): Promise<T>;
+	public abstract getLastSyncDateTime(): Promise<T>; // TODO Rename getSyncDateTime
 
-	public abstract saveLastSyncDateTime(value: T): Promise<T>;
+	public abstract saveLastSyncDateTime(value: T): Promise<T>; // TODO Rename saveSyncDateTime
 
-	public abstract clearLastSyncTime(): Promise<void>;
+	public abstract clearLastSyncTime(): Promise<void>; // TODO Rename saveSyncDateTime
 
 	public abstract getSyncState(): Promise<SyncState>;
 
 	public abstract export(): Promise<{ filename: string, size: number }>;
 
-
-	// TODO SyncedBackupModel only suits for Extension (Desktop has severals last sync date times...)
-	public abstract import(importedBackupModel: SyncedBackupModel): Promise<SyncedBackupModel>;
+	public abstract import(dumpModel: DumpModel): Promise<void>;
 
 	/**
 	 *

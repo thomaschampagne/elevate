@@ -1,4 +1,4 @@
-import { gzip, inflate } from "pako";
+import { gzip, inflate, ungzip } from "pako";
 
 export class Gzip {
 
@@ -47,10 +47,10 @@ export class Gzip {
 	/**
 	 * Gzip compress an object to binary
 	 * @param object
-	 * @return Uint8Array bin
+	 * @return string bin
 	 */
-	public static toBin<T>(object: T): Uint8Array {
-		return gzip(JSON.stringify(object));
+	public static toBinaryString(object: string): string {
+		return gzip(object, {to: "string"});
 	}
 
 	/**
@@ -58,8 +58,7 @@ export class Gzip {
 	 * @param binary
 	 * @return object of type {T}
 	 */
-	public static fromBin<T>(binary: Uint8Array): Uint8Array {
-		// return inflate(binary);
-		return null; // TODO !!
+	public static fromBinaryString(binary: string): string {
+		return ungzip(binary, {to: "string"});
 	}
 }

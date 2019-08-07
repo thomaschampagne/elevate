@@ -70,7 +70,7 @@ module.exports = {
 			namedExports: {
 				"../node_modules/lodash/lodash.js": LODASH_METHODS_DECLARATION,
 				"../plugin/app/node_modules/lodash/lodash.js": LODASH_METHODS_DECLARATION,
-				"../plugin/app/node_modules/pako/index.js": ["gzip", "inflate"],
+				"../plugin/app/node_modules/pako/index.js": ["gzip", "inflate", "ungzip"],
 				"../node_modules/https-proxy-agent/index.js": ["HttpsProxyAgent"],
 				"../node_modules/get-proxy-settings/dist/index.js": ["getProxySettings"]
 			},

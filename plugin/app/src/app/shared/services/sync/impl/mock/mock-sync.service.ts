@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { SyncService } from "../../sync.service";
-import { SyncedBackupModel } from "../../synced-backup.model";
+import { DumpModel } from "../../../../models/dumps/dump.model";
 import { SyncState } from "../../sync-state.enum";
 
 @Injectable()
@@ -30,7 +30,7 @@ export class MockSyncService extends SyncService<any> {
 		return null;
 	}
 
-	public import(importedBackupModel: SyncedBackupModel): Promise<SyncedBackupModel> {
+	public import(importedBackupModel: DumpModel): Promise<void> {
 		return null;
 	}
 

@@ -5,7 +5,6 @@ import { ActivityService } from "../../activity/activity.service";
 import { AthleteService } from "../../athlete/athlete.service";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { LoggerService } from "../../logging/logger.service";
-import { SyncedBackupModel } from "../synced-backup.model";
 import { SyncedActivityModel } from "@elevate/shared/models/sync/synced-activity.model";
 import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 import * as _ from "lodash";
@@ -14,6 +13,8 @@ import { SyncService } from "../sync.service";
 import { environment } from "../../../../../environments/environment";
 import * as semver from "semver";
 import { SyncState } from "../sync-state.enum";
+import { ExtensionDumpModel } from "../../../models/dumps/extension-dump.model";
+import { DumpModel } from "../../../models/dumps/dump.model";
 
 @Injectable()
 export class ChromeSyncService extends SyncService<number> {
@@ -98,11 +99,7 @@ export class ChromeSyncService extends SyncService<number> {
 	 */
 	public export(): Promise<{ filename: string, size: number }> {
 
-		return this.prepareForExport().then((backupModel: SyncedBackupModel) => {
-
-			// // TODO compress/uncompressed later:
-			// const blob = new Blob([Utils.gzipToBin<SyncedBackupModel>(backupModel)], {type: "application/gzip"});
-			// const filename = moment().format("Y.M.D-H.mm") + "_v" + backupModel.pluginVersion + ".history.gzip";
+		return this.prepareForExport().then((backupModel: ExtensionDumpModel) => {
 
 			const blob = new Blob([JSON.stringify(backupModel)], {type: "application/json; charset=utf-8"});
 			const filename = moment().format("Y.M.D-H.mm") + "_v" + backupModel.pluginVersion + ".history.json";
@@ -116,9 +113,9 @@ export class ChromeSyncService extends SyncService<number> {
 
 	/**
 	 *
-	 * @returns {Promise<SyncedBackupModel>}
+	 * @returns {Promise<DumpModel>}
 	 */
-	public prepareForExport(): Promise<SyncedBackupModel> {
+	public prepareForExport(): Promise<DumpModel> {
 
 		return Promise.all([
 
@@ -138,7 +135,7 @@ export class ChromeSyncService extends SyncService<number> {
 				return Promise.reject("Cannot export. No last synchronization date found.");
 			}
 
-			const backupModel: SyncedBackupModel = {
+			const backupModel: DumpModel = {
 				lastSyncDateTime: lastSyncDateTime,
 				syncedActivities: syncedActivityModels,
 				athleteModel: athleteModel,
@@ -151,10 +148,10 @@ export class ChromeSyncService extends SyncService<number> {
 
 	/**
 	 *
-	 * @param {SyncedBackupModel} importedBackupModel
-	 * @returns {Promise<SyncedBackupModel>}
+	 * @param {DumpModel} importedBackupModel
+	 * @returns {Promise<DumpModel>}
 	 */
-	public import(importedBackupModel: SyncedBackupModel): Promise<SyncedBackupModel> {
+	public import(importedBackupModel: ExtensionDumpModel): Promise<void> {
 
 		if (_.isEmpty(importedBackupModel.syncedActivities)) {
 			return Promise.reject("Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.");
@@ -200,20 +197,8 @@ export class ChromeSyncService extends SyncService<number> {
 				this.userSettingsService.clearLocalStorageOnNextLoad()
 			]);
 
-		}).then((result: Object[]) => {
-
-			const lastSyncDateTime: number = result[0] as number;
-			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
-			const athleteModel: AthleteModel = result[2] as AthleteModel;
-
-			const backupModel: SyncedBackupModel = {
-				lastSyncDateTime: lastSyncDateTime,
-				syncedActivities: syncedActivityModels,
-				athleteModel: athleteModel,
-				pluginVersion: importedBackupModel.pluginVersion
-			};
-
-			return Promise.resolve(backupModel);
+		}).then(() => {
+			return Promise.resolve();
 		});
 	}
 

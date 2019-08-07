@@ -7,13 +7,27 @@ import { VERSIONS_PROVIDER } from "../services/versions/versions-provider.interf
 import { ChromeVersionsProvider } from "../services/versions/impl/chrome-versions-provider.service";
 import { SyncService } from "../services/sync/sync.service";
 import { ChromeSyncService } from "../services/sync/impl/chrome-sync.service";
+import { CoreModule } from "../../core/core.module";
+import { ExtensionImportBackupDialogComponent, } from "../dialogs/import-backup-dialog/import-backup-dialog.component";
+import { LastSyncDateTimeDao } from "../dao/sync/last-sync-date-time.dao";
 
 @NgModule({
+	imports: [
+		CoreModule,
+	],
+	declarations: [
+		ExtensionImportBackupDialogComponent
+	],
+	entryComponents: [
+		ExtensionImportBackupDialogComponent
+	],
 	providers: [
+		LastSyncDateTimeDao,
 		{provide: DataStore, useClass: ChromeDataStore},
 		{provide: AppEventsService, useClass: ChromeEventsService},
 		{provide: SyncService, useClass: ChromeSyncService},
 		{provide: VERSIONS_PROVIDER, useClass: ChromeVersionsProvider},
+		// {provide: IMPORT_BACKUP_DIALOG_COMPONENT_TOKEN, useValue: ExtensionImportBackupDialogComponent}
 	]
 })
 export class ExtensionModule {
