@@ -3,12 +3,6 @@ export class Constant {
 	public static readonly LANDING_PAGE_URL: string = "https://thomaschampagne.github.io/elevate/";
 	public static readonly APP_ROOT_URL: string = "/app/index.html";
 
-
-	/**
-	 * Backup version threshold at which a "greater or equal" imported backup version is compatible with current code.
-	 */
-	public static readonly COMPATIBLE_BACKUP_VERSION_THRESHOLD: string = "6.11.0";
-
 	/**
 	 * Factors
 	 */

@@ -10,14 +10,17 @@ import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 import * as _ from "lodash";
 import * as moment from "moment";
 import { SyncService } from "../sync.service";
-import { environment } from "../../../../../environments/environment";
-import * as semver from "semver";
 import { SyncState } from "../sync-state.enum";
 import { ExtensionDumpModel } from "../../../models/dumps/extension-dump.model";
 import { DumpModel } from "../../../models/dumps/dump.model";
 
 @Injectable()
-export class ChromeSyncService extends SyncService<number> {
+export class ChromeSyncService extends SyncService<number> { // TODO Rn ExtensionSyncService
+
+	/**
+	 * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
+	 */
+	public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "6.11.0";
 
 	public static readonly SYNC_URL_BASE: string = "https://www.strava.com/dashboard";
 	public static readonly SYNC_WINDOW_WIDTH: number = 690;
@@ -161,28 +164,11 @@ export class ChromeSyncService extends SyncService<number> {
 			return Promise.reject("Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.");
 		}
 
-		return this.versionsProvider.getInstalledAppVersion().then(appVersion => {
-
-			if (environment.skipRestoreSyncedBackupCheck) {
-				return Promise.resolve();
-			}
-
-			// Check if imported backup is compatible with current code
-			if (semver.lt(importedBackupModel.pluginVersion, this.getCompatibleBackupVersionThreshold())) {
-				return Promise.reject("Imported backup version " + importedBackupModel.pluginVersion
-					+ " is not compatible with current installed version " + appVersion + ".");
-			} else {
-				return Promise.resolve();
-			}
-
-		}).then(() => {
-
+		return this.isDumpCompatible(importedBackupModel.pluginVersion, this.getCompatibleBackupVersionThreshold()).then(() => {
 			return this.clearSyncedData();
-
 		}).then(() => {
 
 			let promiseImportDatedAthleteSettings;
-
 			// If no dated athlete settings provided in backup then reset dated athlete settings
 			if (_.isEmpty(importedBackupModel.athleteModel)) {
 				promiseImportDatedAthleteSettings = this.athleteService.resetSettings();
@@ -202,6 +188,9 @@ export class ChromeSyncService extends SyncService<number> {
 		});
 	}
 
+	public getCompatibleBackupVersionThreshold(): string {
+		return ChromeSyncService.COMPATIBLE_DUMP_VERSION_THRESHOLD;
+	}
 
 	/**
 	 *
@@ -227,4 +216,5 @@ export class ChromeSyncService extends SyncService<number> {
 	public clearLastSyncTime(): Promise<void> {
 		return this.lastSyncDateTimeDao.clear();
 	}
+
 }

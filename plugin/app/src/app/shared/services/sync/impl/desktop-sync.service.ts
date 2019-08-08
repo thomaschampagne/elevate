@@ -18,7 +18,7 @@ import { SyncState } from "../sync-state.enum";
 import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.service";
 import { DataStore } from "../../../data-store/data-store";
 import * as moment from "moment";
-import { ConnectorLastSyncDateTime } from "../../../../../../modules/shared/models/sync/connector-last-sync-date-time.model";
+import { ConnectorLastSyncDateTime } from "@elevate/shared/models/sync/connector-last-sync-date-time.model";
 import { ConnectorLastSyncDateTimeDao } from "../../../dao/sync/connector-last-sync-date-time.dao";
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 import UserSettingsModel = UserSettings.UserSettingsModel;
@@ -48,6 +48,10 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Injectable()
 export class DesktopSyncService extends SyncService<ConnectorLastSyncDateTime[]> implements OnDestroy {
+	/**
+	 * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
+	 */
+	public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "1.0.0";
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
 				public activityService: ActivityService,
@@ -327,7 +331,13 @@ export class DesktopSyncService extends SyncService<ConnectorLastSyncDateTime[]>
 	}
 
 	public import(desktopDumpModel: DesktopDumpModel): Promise<void> {
-		return this.desktopDataStore.loadDump(desktopDumpModel);
+		return this.isDumpCompatible(desktopDumpModel.version, this.getCompatibleBackupVersionThreshold()).then(() => {
+			return this.desktopDataStore.loadDump(desktopDumpModel);
+		});
+	}
+
+	public getCompatibleBackupVersionThreshold(): string {
+		return DesktopSyncService.COMPATIBLE_DUMP_VERSION_THRESHOLD;
 	}
 
 	public getSyncState(): Promise<SyncState> {

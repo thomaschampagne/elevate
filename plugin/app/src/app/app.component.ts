@@ -383,7 +383,7 @@ export class DesktopAppComponent extends AppComponent {
 				console.debug("syncState: ", syncState);
 				// debugger;
 
-				this.syncState = syncState;
+				this.syncState = SyncState.SYNCED;
 				this.syncService.getLastSyncDateTime().then((connectorLastSyncDateTimes: ConnectorLastSyncDateTime[]) => {
 					console.debug(connectorLastSyncDateTimes);
 					// if (_.isNumber(lastSyncDateTime)) {

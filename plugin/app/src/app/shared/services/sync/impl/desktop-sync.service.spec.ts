@@ -990,6 +990,7 @@ describe("DesktopSyncService", () => {
 		it("should import a compressed gzip dump", (done: Function) => {
 
 			// Given
+			const isDumpCompatibleSpy = spyOn(desktopSyncService, "isDumpCompatible").and.callThrough();
 			const loadDumpSpy = spyOn(desktopSyncService.desktopDataStore, "loadDump").and.returnValue(Promise.resolve());
 			const expectedData = {foo: "bar"};
 			const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel("1.0.0", Gzip.toBinaryString(JSON.stringify(expectedData)));
@@ -999,6 +1000,7 @@ describe("DesktopSyncService", () => {
 
 			// Then
 			promise.then(() => {
+				expect(isDumpCompatibleSpy).toHaveBeenCalledTimes(1);
 				expect(loadDumpSpy).toHaveBeenCalledTimes(1);
 				done();
 

@@ -3,11 +3,12 @@ import { saveAs } from "file-saver";
 import { SyncState } from "./sync-state.enum";
 import { AthleteService } from "../athlete/athlete.service";
 import { UserSettingsService } from "../user-settings/user-settings.service";
-import { Constant } from "@elevate/shared/constants";
 import { LoggerService } from "../logging/logger.service";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../versions/versions-provider.interface";
 import { ActivityService } from "../activity/activity.service";
 import { DumpModel } from "../../models/dumps/dump.model";
+import { environment } from "../../../../environments/environment";
+import * as semver from "semver";
 
 export abstract class SyncService<T> {
 
@@ -39,6 +40,8 @@ export abstract class SyncService<T> {
 
 	public abstract import(dumpModel: DumpModel): Promise<void>;
 
+	public abstract getCompatibleBackupVersionThreshold(): string;
+
 	/**
 	 *
 	 * @returns {Promise<void>}
@@ -58,18 +61,30 @@ export abstract class SyncService<T> {
 	}
 
 	/**
-	 * @returns {string} Backup version threshold at which a "greater or equal" imported backup version is compatible with current code.
-	 */
-	public getCompatibleBackupVersionThreshold(): string {
-		return Constant.COMPATIBLE_BACKUP_VERSION_THRESHOLD;
-	}
-
-	/**
 	 *
 	 * @param {Blob} blob
 	 * @param {string} filename
 	 */
 	public saveAs(blob: Blob, filename: string): void {
 		saveAs(blob, filename);
+	}
+
+	public isDumpCompatible(dumpVersion, compatibleDumpVersionThreshold): Promise<void> {
+
+		if (environment.skipRestoreSyncedBackupCheck) {
+			return Promise.resolve();
+		}
+
+		return this.versionsProvider.getInstalledAppVersion().then(appVersion => {
+
+			// Check if imported backup is compatible with current code
+			if (semver.lt(dumpVersion, compatibleDumpVersionThreshold)) {
+				return Promise.reject("Imported backup version " + dumpVersion
+					+ " is not compatible with current installed version " + appVersion + ".");
+			} else {
+				return Promise.resolve();
+			}
+		});
+
 	}
 }

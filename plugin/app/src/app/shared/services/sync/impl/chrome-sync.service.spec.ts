@@ -246,17 +246,14 @@ describe("ChromeSyncService", () => {
 		const lastSyncDateTime = 99;
 		const importedBackupVersion = "1.0.0";
 		const compatibleBackupVersionThreshold = "1.0.0";
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+		athleteModel.datedAthleteSettings = [
 			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, null, 190, null, null, 75)),
 			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, null, null, 150, null, null, 76)),
 			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
 			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
 		];
 
-		athleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-
 		spyOn(chromeSyncService, "getCompatibleBackupVersionThreshold").and.returnValue(compatibleBackupVersionThreshold);
-
 
 		const importedSyncedBackupModel: ExtensionDumpModel = {
 			syncedActivities: TEST_SYNCED_ACTIVITIES,

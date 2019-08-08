@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { SyncService } from "../../sync.service";
 import { DumpModel } from "../../../../models/dumps/dump.model";
 import { SyncState } from "../../sync-state.enum";
+import { NotImplementedException } from "@elevate/shared/exceptions";
 
 @Injectable()
 export class MockSyncService extends SyncService<any> {
@@ -36,6 +37,10 @@ export class MockSyncService extends SyncService<any> {
 
 	public getSyncState(): Promise<SyncState> {
 		return null;
+	}
+
+	public getCompatibleBackupVersionThreshold(): string {
+		throw new NotImplementedException("MockSyncService.getCompatibleBackupVersionThreshold() to be implemented");
 	}
 }
 
