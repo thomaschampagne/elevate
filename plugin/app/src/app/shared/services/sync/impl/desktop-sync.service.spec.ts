@@ -31,7 +31,6 @@ describe("DesktopSyncService", () => {
 
 	beforeEach((done: Function) => {
 
-
 		TestBed.configureTestingModule({
 			imports: [
 				CoreModule,
@@ -201,8 +200,6 @@ describe("DesktopSyncService", () => {
 			}, error => {
 				throw new Error("Should not be here!" + JSON.stringify(error));
 			});
-
-
 		});
 
 		it("should not upsert an incoming activity, stop the sync properly and throw the upsert exception", (done: Function) => {
@@ -286,6 +283,71 @@ describe("DesktopSyncService", () => {
 				throw new Error("Should not be here!" + JSON.stringify(error));
 			});
 
+		});
+
+	});
+
+	describe("Handle sync complete", () => {
+
+		beforeEach((done: Function) => {
+			desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
+			done();
+		});
+
+		it("should complete a first sync of a connector", (done: Function) => {
+
+			// Given
+			const syncEvent$ = new Subject<SyncEvent>();
+			const connectorType = ConnectorType.STRAVA;
+			const completeSyncEvent = new CompleteSyncEvent(connectorType);
+			// const connectorLastSyncDateTime = new ConnectorLastSyncDateTime(connectorType, oldDateTime);
+			const getConnectorLastSyncDateTimeByIdSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "getById")
+				.and.returnValue(Promise.resolve(null));
+			// const updateToNowSpy = spyOn(connectorLastSyncDateTime, "updateToNow").and.callThrough();
+			const upsertLastSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsLastSyncDateTimes").and.returnValue(Promise.resolve());
+
+			// When
+			setTimeout(() => desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent));
+
+			// Then
+			syncEvent$.subscribe(() => {
+				expect(getConnectorLastSyncDateTimeByIdSpy).toHaveBeenCalledWith(connectorType);
+				const createdConnectorLastSyncDateTime: ConnectorLastSyncDateTime = upsertLastSyncDateTimesSpy.calls.mostRecent().args[0][0];
+				expect(createdConnectorLastSyncDateTime.connectorType).toEqual(connectorType);
+				done();
+
+			}, error => {
+				throw new Error("Should not be here!" + JSON.stringify(error));
+			});
+		});
+
+		it("should complete sync of a already synced connector", (done: Function) => {
+
+			// Given
+			const syncEvent$ = new Subject<SyncEvent>();
+			const oldDateTime = 999;
+			const connectorType = ConnectorType.STRAVA;
+			const completeSyncEvent = new CompleteSyncEvent(connectorType);
+			const connectorLastSyncDateTime = new ConnectorLastSyncDateTime(connectorType, oldDateTime);
+			const getConnectorLastSyncDateTimeByIdSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "getById")
+				.and.returnValue(Promise.resolve(connectorLastSyncDateTime));
+			const updateToNowSpy = spyOn(connectorLastSyncDateTime, "updateToNow").and.callThrough();
+			const upsertLastSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsLastSyncDateTimes").and.returnValue(Promise.resolve());
+
+			// When
+			setTimeout(() => desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent));
+
+			// Then
+			syncEvent$.subscribe(() => {
+				expect(connectorLastSyncDateTime.dateTime).toBeGreaterThan(oldDateTime);
+				expect(getConnectorLastSyncDateTimeByIdSpy).toHaveBeenCalledWith(connectorType);
+				expect(updateToNowSpy).toHaveBeenCalledTimes(1);
+				expect(upsertLastSyncDateTimesSpy).toHaveBeenCalledWith([connectorLastSyncDateTime]);
+				done();
+
+			}, error => {
+				throw new Error("Should not be here!" + JSON.stringify(error));
+			});
 		});
 
 	});
@@ -441,6 +503,11 @@ describe("DesktopSyncService", () => {
 			const syncEvent$ = new Subject<SyncEvent>();
 			desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
 			const completeSyncEvent = new CompleteSyncEvent(desktopSyncService.currentConnectorType);
+			const handleSyncCompleteEventsSpy = spyOn(desktopSyncService, "handleSyncCompleteEvents").and.callThrough();
+			spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "getById")
+				.and.returnValue(Promise.resolve(null));
+			spyOn(desktopSyncService, "upsertConnectorsLastSyncDateTimes")
+				.and.returnValue(Promise.resolve());
 			const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
 			// When
@@ -448,6 +515,7 @@ describe("DesktopSyncService", () => {
 
 			// Then
 			syncEvent$.subscribe(() => {
+				expect(handleSyncCompleteEventsSpy).toHaveBeenCalledWith(syncEvent$, completeSyncEvent);
 				expect(syncEventNextSpy).toHaveBeenCalledWith(completeSyncEvent);
 				done();
 
@@ -489,7 +557,6 @@ describe("DesktopSyncService", () => {
 			expect(throwSyncErrorSpy).toHaveBeenCalledWith(expectedSyncException);
 			done();
 		});
-
 
 	});
 
@@ -1234,7 +1301,7 @@ describe("DesktopSyncService", () => {
 				.and.returnValue(Promise.resolve(connectorLastSyncDateTimesToSave));
 
 			// When
-			const promise = desktopSyncService.upsertLastSyncDateTimes(connectorLastSyncDateTimesToSave);
+			const promise = desktopSyncService.upsertConnectorsLastSyncDateTimes(connectorLastSyncDateTimesToSave);
 
 			// Then
 			promise.then(() => {
@@ -1257,7 +1324,7 @@ describe("DesktopSyncService", () => {
 
 			// When
 			const call = () => {
-				desktopSyncService.upsertLastSyncDateTimes(<any> connectorLastSyncDateTime);
+				desktopSyncService.upsertConnectorsLastSyncDateTimes(<any> connectorLastSyncDateTime);
 			};
 
 			// Then

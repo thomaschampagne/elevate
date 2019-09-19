@@ -5,7 +5,15 @@ import { AthleteService } from "../../athlete/athlete.service";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { LoggerService } from "../../logging/logger.service";
 import { Subject, Subscription } from "rxjs";
-import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, StravaApiCredentials, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+	ActivitySyncEvent,
+	CompleteSyncEvent,
+	ConnectorType,
+	ErrorSyncEvent,
+	StravaApiCredentials,
+	SyncEvent,
+	SyncEventType
+} from "@elevate/shared/sync";
 import { IpcRendererMessagesService } from "../../messages-listener/ipc-renderer-messages.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { StravaApiCredentialsService } from "../../strava-api-credentials/strava-api-credentials.service";
@@ -108,9 +116,7 @@ export class DesktopSyncService extends SyncService<ConnectorLastSyncDateTime[]>
 		];
 
 		if (this.currentConnectorType === ConnectorType.STRAVA) {
-
 			promisedDataToSync.push(this.stravaApiCredentialsService.fetch());
-
 		} else {
 			const errorMessage = "Unknown connector type to sync";
 			this.logger.error(errorMessage);
@@ -180,8 +186,7 @@ export class DesktopSyncService extends SyncService<ConnectorLastSyncDateTime[]>
 				break;
 
 			case SyncEventType.COMPLETE:
-				syncEvents$.next(syncEvent); // Forward for upward UI use.
-				this.logger.info(syncEvent);
+				this.handleSyncCompleteEvents(syncEvents$, <CompleteSyncEvent> syncEvent);
 				break;
 
 			case SyncEventType.ERROR:
@@ -226,14 +231,31 @@ export class DesktopSyncService extends SyncService<ConnectorLastSyncDateTime[]>
 			|| errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.code
 			|| errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_TIMEOUT.code
 		) {
-
 			syncEvents$.next(errorSyncEvent); // Forward for upward UI use.
-
 		} else {
 			const syncException = new SyncException("Unknown ErrorSyncEvent", errorSyncEvent);
 			this.throwSyncError(syncException);
 		}
 
+	}
+
+	public handleSyncCompleteEvents(syncEvents$: Subject<SyncEvent>, completeSyncEvent: CompleteSyncEvent): void {
+
+		this.connectorLastSyncDateTimeDao.getById(this.currentConnectorType)
+			.then((currentConnectorLastSyncDateTime: ConnectorLastSyncDateTime) => {
+
+				if (!currentConnectorLastSyncDateTime) {
+					currentConnectorLastSyncDateTime = new ConnectorLastSyncDateTime(this.currentConnectorType);
+				} else {
+					currentConnectorLastSyncDateTime.updateToNow();
+				}
+				return this.upsertConnectorsLastSyncDateTimes([currentConnectorLastSyncDateTime]);
+			}).then(() => {
+
+			this.logger.info(completeSyncEvent);
+			syncEvents$.next(completeSyncEvent); // Forward for upward UI use.
+
+		});
 	}
 
 	public stop(): Promise<void> {
@@ -373,8 +395,7 @@ export class DesktopSyncService extends SyncService<ConnectorLastSyncDateTime[]>
 		return <Promise<ConnectorLastSyncDateTime[]>> this.connectorLastSyncDateTimeDao.fetch();
 	}
 
-	public upsertLastSyncDateTimes(connectorLastSyncDateTimes: ConnectorLastSyncDateTime[]): Promise<ConnectorLastSyncDateTime[]> {
-
+	public upsertConnectorsLastSyncDateTimes(connectorLastSyncDateTimes: ConnectorLastSyncDateTime[]): Promise<ConnectorLastSyncDateTime[]> {
 
 		if (!_.isArray(connectorLastSyncDateTimes)) {
 			throw new Error("connectorLastSyncDateTimes param must be an array");

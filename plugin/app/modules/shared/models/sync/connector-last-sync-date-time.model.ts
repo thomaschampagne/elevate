@@ -7,8 +7,12 @@ export class ConnectorLastSyncDateTime {
 	public connectorType: ConnectorType;
 	public dateTime: number;
 
-	constructor(connectorType: ConnectorType, dateTime: number) {
+	constructor(connectorType: ConnectorType, dateTime: number = Date.now()) {
 		this.connectorType = connectorType;
 		this.dateTime = dateTime;
+	}
+
+	public updateToNow(): void {
+		this.dateTime = Date.now();
 	}
 }
