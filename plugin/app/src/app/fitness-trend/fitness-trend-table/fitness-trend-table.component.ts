@@ -289,7 +289,7 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 
 		const exportedFitnessTrend = [];
 
-		_.forEach(this.fitnessTrend, (dayFitnessTrendModel: DayFitnessTrendModel) => {
+		_.forEach(this.dataSource.filteredData, (dayFitnessTrendModel: DayFitnessTrendModel) => {
 
 			const exportedFitnessDay: any = _.clone(dayFitnessTrendModel);
 
