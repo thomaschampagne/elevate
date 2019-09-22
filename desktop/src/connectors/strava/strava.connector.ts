@@ -503,7 +503,7 @@ export class StravaConnector extends BaseConnector {
 
 				const activityStreamsModel: Partial<ActivityStreamsModel> = {};
 				_.forEach(stravaApiStreamTypes, (stravaApiStreamType: StravaApiStreamType) => {
-					activityStreamsModel[stravaApiStreamType.type] = stravaApiStreamType.data;
+					(<number[]> activityStreamsModel[stravaApiStreamType.type]) = stravaApiStreamType.data;
 				});
 
 				resolve(<ActivityStreamsModel> activityStreamsModel);
