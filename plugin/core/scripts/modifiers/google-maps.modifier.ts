@@ -4,10 +4,13 @@ import { UserSettingsModel } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { AbstractModifier } from "./abstract.modifier";
 import * as Cookies from "js-cookie";
+import MapOptions = google.maps.MapOptions;
 
 export class GoogleMapsModifier extends AbstractModifier {
 
-	private static ENABLED = false; // Disabled at the moment (Not free any more). Both settings keys 'reviveGoogleMaps' & 'reviveGoogleMapsLayerType' are hidden in GlobalSettingsService
+	// Disabled at the moment (Not free any more).
+	// Both settings keys 'reviveGoogleMaps' & 'reviveGoogleMapsLayerType' are hidden in GlobalSettingsService
+	private static ENABLED = false;
 
 	protected activityId: number;
 	protected appResources: AppResourcesModel;
@@ -332,7 +335,7 @@ export class GoogleMapsModifier extends AbstractModifier {
 		}
 
 		// if (!this.map) {
-		this.map = new google.maps.Map(document.getElementById("gmaps_canvas"), {
+		this.map = new google.maps.Map(document.getElementById("gmaps_canvas"), <MapOptions> {
 			mapTypeId: layerType,
 			overviewMapControl: true,
 		});
