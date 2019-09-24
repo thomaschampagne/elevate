@@ -91,7 +91,7 @@
 						   target="_blank">{{column.print(activity, column.id)}}</a>
 					</ng-container>
 					<ng-container *ngIf="column.type === ColumnType.NUMBER">
-						{{column.print(activity, column.units, column.precision, column.factor, isImperial, column.imperialFactor, column.id)}}
+						{{column.print(activity, column['units'], column['precision'], column['factor'], isImperial, column['imperialFactor'], column.id)}}
 					</ng-container>
 					<ng-container *ngIf="column.type === ColumnType.ATHLETE_SETTINGS">
 						<button *ngIf="activity.id" mat-icon-button color="primary"

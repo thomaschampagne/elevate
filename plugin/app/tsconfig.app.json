@@ -1,37 +1,41 @@
 {
-	"extends": "../tsconfig.json",
+	"extends": "./tsconfig.json",
 	"compilerOptions": {
-		"outDir": "../out-tsc/app",
+		"outDir": "./out-tsc/app",
 		"baseUrl": "./",
 		"types": [
 			"chrome"
 		],
 		"paths": {
 			"@elevate/shared/constants": [
-				"../modules/shared/constants/"
+				"./modules/shared/constants/"
 			],
 			"@elevate/shared/data": [
-				"../modules/shared/data/"
+				"./modules/shared/data/"
 			],
 			"@elevate/shared/models": [
-				"../modules/shared/models/"
+				"./modules/shared/models/"
 			],
 			"@elevate/shared/resolvers": [
-				"../modules/shared/resolvers/"
+				"./modules/shared/resolvers/"
 			],
 			"@elevate/shared/exceptions": [
-				"../modules/shared/exceptions/"
+				"./modules/shared/exceptions/"
 			],
 			"@elevate/shared/tools": [
-				"../modules/shared/tools/"
+				"./modules/shared/tools/"
 			]
 		}
 	},
+	"include": [
+		"src/main.ts",
+		"src/polyfills.ts"
+	],
+	"exclude": [
+		"src/test.ts",
+		"src/**/*.spec.ts"
+	],
 	"angularCompilerOptions": {
 		"enableIvy": true
-	},
-	"exclude": [
-		"test.ts",
-		"**/*.spec.ts"
-	]
+	}
 }
