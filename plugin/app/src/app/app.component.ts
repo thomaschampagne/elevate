@@ -54,7 +54,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	@ViewChild(MatSidenav, {static: true})
 	public sideNav: MatSidenav;
-	public sideNavMode: string;
 
 	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
 		{
@@ -161,8 +160,6 @@ export class AppComponent implements OnInit, OnDestroy {
 		if (sideNavOpened) {
 			this.sideNav.opened = (sideNavOpened === "true");
 		}
-
-		this.sideNavMode = AppComponent.DEFAULT_SIDE_NAV_MODE;
 	}
 
 	public setupThemeOnLoad(): void {
