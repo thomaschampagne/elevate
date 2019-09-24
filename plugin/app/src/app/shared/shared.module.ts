@@ -34,9 +34,9 @@ import { ActivitiesComponent } from "../activities/activities.component";
 import { LoggerService } from "./services/logging/logger.service";
 import { ConsoleLoggerService } from "./services/logging/console-logger.service";
 import { environment } from "../../environments/environment";
-import { DesktopModule } from "./modules/desktop.module";
-import { ExtensionModule } from "./modules/extension.module";
 import { EnvTarget } from "@elevate/shared/models";
+import { ExtensionModule } from "./modules/extension.module";
+import { DesktopModule } from "./modules/desktop.module";
 
 @NgModule({
 	imports: [

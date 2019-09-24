@@ -2,13 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
 import { MatDialogRef } from "@angular/material";
 import * as _ from "lodash";
-import { DumpModel } from "../../models/dumps/dump.model";
 import { ElevateException } from "@elevate/shared/exceptions";
-
-/*
-// Can be usefull later to inject a component along platform
-export const IMPORT_BACKUP_DIALOG_COMPONENT_TOKEN
-	= new InjectionToken<ImportBackupDialogComponent>("IMPORT_BACKUP_DIALOG_COMPONENT_TOKEN");*/
+import { ExtensionDumpModel } from "../../models/dumps/extension-dump.model";
 
 @Component({template: ""})
 export class ImportBackupDialogComponent implements OnInit {
@@ -88,8 +83,8 @@ export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComp
 			const reader = new FileReader();
 			reader.readAsText(this.file);
 			reader.onload = (event: Event) => {
-				const syncedBackupModel: DumpModel = JSON.parse((event.target as IDBRequest).result) as DumpModel;
-				this.dialogRef.close(syncedBackupModel);
+				const extensionDumpModel: ExtensionDumpModel = JSON.parse((event.target as IDBRequest).result) as ExtensionDumpModel;
+				this.dialogRef.close(extensionDumpModel);
 			};
 		}
 	}

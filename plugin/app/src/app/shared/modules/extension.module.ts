@@ -16,18 +16,19 @@ import { LastSyncDateTimeDao } from "../dao/sync/last-sync-date-time.dao";
 		CoreModule,
 	],
 	declarations: [
-		ExtensionImportBackupDialogComponent
+		ExtensionImportBackupDialogComponent,
 	],
 	entryComponents: [
-		ExtensionImportBackupDialogComponent
+		ExtensionImportBackupDialogComponent,
 	],
 	providers: [
 		LastSyncDateTimeDao,
 		{provide: DataStore, useClass: ChromeDataStore},
 		{provide: AppEventsService, useClass: ChromeEventsService},
-		{provide: SyncService, useClass: ChromeSyncService},
 		{provide: VERSIONS_PROVIDER, useClass: ChromeVersionsProvider},
-		// {provide: IMPORT_BACKUP_DIALOG_COMPONENT_TOKEN, useValue: ExtensionImportBackupDialogComponent}
+
+		{provide: SyncService, useClass: ChromeSyncService},
+		ChromeSyncService,
 	]
 })
 export class ExtensionModule {

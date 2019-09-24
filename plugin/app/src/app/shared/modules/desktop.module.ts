@@ -26,23 +26,25 @@ import { ConnectorLastSyncDateTimeDao } from "../dao/sync/connector-last-sync-da
 		ConnectorsModule
 	],
 	declarations: [
-		DesktopImportBackupDialogComponent
+		DesktopImportBackupDialogComponent,
 	],
 	entryComponents: [
-		DesktopImportBackupDialogComponent
+		DesktopImportBackupDialogComponent,
 	],
 	providers: [
 		ElectronService,
 		IpcRendererMessagesService,
 		{provide: DataStore, useClass: DesktopDataStore},
 		{provide: AppEventsService, useClass: DesktopEventsService},
-		{provide: SyncService, useClass: DesktopSyncService},
 		{provide: VERSIONS_PROVIDER, useClass: DesktopVersionsProvider},
+
+		{provide: SyncService, useClass: DesktopSyncService},
+		DesktopSyncService,
+
 		ConnectorLastSyncDateTimeDao,
 		StravaApiCredentialsService,
 		StravaApiCredentialsDao,
 		StravaConnectorService,
-		// {provide: IMPORT_BACKUP_DIALOG_COMPONENT_TOKEN, useValue: DesktopImportBackupDialogComponent}
 	]
 })
 export class DesktopModule {

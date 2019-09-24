@@ -5,7 +5,7 @@
 	"scripts": {
 		"build:extension@dev": "npm-run-all clean extension-res-copy:* build:core@dev build:app@dev",
 		"build:extension@prod": "npm-run-all clean extension-res-copy:* build:core@prod build:app@prod",
-		"build:app@dev": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build",
+		"build:app@dev": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build --aot",
 		"build:app@prod": "npm run build:app@dev -- --prod",
 		"build:core@dev": "cd ./plugin/core && node ./node_modules/webpack/bin/webpack.js --config ./core.webpack.config.js",
 		"build:core@prod": "npm run build:core@dev -- --mode production",
