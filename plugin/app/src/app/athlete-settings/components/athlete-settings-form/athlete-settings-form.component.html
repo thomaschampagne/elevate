@@ -19,7 +19,7 @@
 	</mat-card-title>
 	<mat-card-content>
 		<div class="howTo">
-			<a [routerLink]="" (click)="maxHrHint.style.display = 'block'">How to setup max heart rate</a>
+			<a (click)="maxHrHint.style.display = 'block'">How to setup max heart rate</a>
 		</div>
 		<div class="hint" #maxHrHint [style.display]="'none'">
 			Enter your max heart rate measured at full throttle. If you're not aware of your max heart rate you can
@@ -43,7 +43,7 @@
 	</mat-card-title>
 	<mat-card-content>
 		<div class="howTo">
-			<a [routerLink]="" (click)="restHrHint.style.display = 'block'">How to setup rest heart rate</a>
+			<a (click)="restHrHint.style.display = 'block'">How to setup rest heart rate</a>
 		</div>
 		<div class="hint" #restHrHint [style.display]="'none'">
 			Enter your rest heart rate. Lie down in your bed and measure the lower value with an hear rate monitor or <a
@@ -66,7 +66,7 @@
 	</mat-card-title>
 	<mat-card-content>
 		<div class="howTo">
-			<a [routerLink]="" (click)="lthrHint.style.display = 'block'">How to setup LTHR</a>
+			<a (click)="lthrHint.style.display = 'block'">How to setup LTHR</a>
 		</div>
 		<div class="hint" #lthrHint [style.display]="'none'">
 			The LTHR is the point, above which, increased blood acidification occurs in your body. Above this
@@ -84,9 +84,9 @@
 				<mat-placeholder>
 					Default LTHR in bpm
 					{{(!athleteSettingsModel.lthr.default) ? '(currently ' +
-					(athleteSettingsModel.restHr + DEFAULT_LTHR_KARVONEN_HRR_FACTOR *
-					(athleteSettingsModel.maxHr -
-					athleteSettingsModel.restHr)).toFixed(0) + ' bpm)' : ''}}
+                    (athleteSettingsModel.restHr + DEFAULT_LTHR_KARVONEN_HRR_FACTOR *
+                        (athleteSettingsModel.maxHr -
+                            athleteSettingsModel.restHr)).toFixed(0) + ' bpm)' : ''}}
 				</mat-placeholder>
 			</mat-form-field>
 			<span fxFlex="1"></span>
@@ -114,7 +114,8 @@
 			<span>
 				<mat-icon color="warn" [style.vertical-align]="'bottom'">warning</mat-icon>
 				Since no default lactate threshold heart rate is currently defined. The value being used by default
-				is <strong>{{(athleteSettingsModel.restHr +  DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (athleteSettingsModel.maxHr - athleteSettingsModel.restHr)).toFixed(0)}} bpm</strong> or 85% of your <i>Heart Rate Reserve</i> using the Karvonen method.
+				is <strong>{{(athleteSettingsModel.restHr + DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (athleteSettingsModel.maxHr - athleteSettingsModel.restHr)).toFixed(0)}}
+				bpm</strong> or 85% of your <i>Heart Rate Reserve</i> using the Karvonen method.
 			</span>
 		</div>
 	</mat-card-content>
@@ -125,7 +126,7 @@
 	</mat-card-title>
 	<mat-card-content>
 		<div class="howTo">
-			<a [routerLink]="" (click)="cyclingFtpHint.style.display = 'block'">How to setup cycling FTP</a>
+			<a (click)="cyclingFtpHint.style.display = 'block'">How to setup cycling FTP</a>
 		</div>
 		<div class="hint" #cyclingFtpHint [style.display]="'none'">
 			The FTP is the constant average power you are able to maintain during 1 hour. To measure it you must perform
@@ -155,7 +156,7 @@
 	</mat-card-title>
 	<mat-card-content>
 		<div class="howTo">
-			<a [routerLink]="" (click)="runningFtpHint.style.display = 'block'">How to setup running FTP</a>
+			<a (click)="runningFtpHint.style.display = 'block'">How to setup running FTP</a>
 		</div>
 		<div class="hint" #runningFtpHint [style.display]="'none'">
 			The Running Functional Threshold Pace is the maximal running pace an athlete can hold during an effort of
