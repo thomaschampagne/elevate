@@ -1,7 +1,8 @@
 <h2 mat-dialog-title>Progressions overview on {{data.momentWatched.format("MMMM Do")}}</h2>
 <div class="info mat-body-1">Progress Mode:
 	<i *ngIf="data.progressConfig.mode === ProgressMode.YEAR_TO_DATE">Year to date</i>
-	<i *ngIf="data.progressConfig.mode === ProgressMode.ROLLING">Rolling on {{data.progressConfig.rollingDays}} days</i>
+	<i *ngIf="data.progressConfig.mode === ProgressMode.ROLLING">Rolling on {{data.progressConfig['rollingDays']}}
+		days</i>
 </div>
 <div class="info mat-body-1">Activity types: <i>{{data.progressConfig.activityTypes.join(", ")}}</i></div>
 <mat-dialog-content class="mat-body-1">

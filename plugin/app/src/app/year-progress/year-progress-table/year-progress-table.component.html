@@ -12,7 +12,7 @@
 	<ng-container matColumnDef="progressTypeValue">
 		<mat-header-cell *matHeaderCellDef>
 			<span class="headerTooltip" [matTooltip]="(progressConfig.mode === ProgressMode.ROLLING) ?
-			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' you were able to maintain during the last ' + progressConfig.rollingDays + ' rolling days.' :
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' you were able to maintain during the last ' + progressConfig['rollingDays'] + ' rolling days.' :
 			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' accomplished since beginning of the year.'">
 				{{selectedProgressType.label}}
 			</span>
@@ -34,7 +34,7 @@
 	<ng-container matColumnDef="deltaPrevious">
 		<mat-header-cell *matHeaderCellDef>
 			<span class="headerTooltip" [matTooltip]="(progressConfig.mode === ProgressMode.ROLLING) ?
-			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta you were able to maintain during the last ' + progressConfig.rollingDays + ' rolling days & compared to last year.' :
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta you were able to maintain during the last ' + progressConfig['rollingDays'] + ' rolling days & compared to last year.' :
 			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta accomplished compared to last year.'">
 				&Delta; Prev. Year
 			</span>
@@ -74,7 +74,7 @@
 	<ng-container matColumnDef="deltaCurrent">
 		<mat-header-cell *matHeaderCellDef>
 			<span class="headerTooltip" [matTooltip]="(progressConfig.mode === ProgressMode.ROLLING) ?
-			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta you were able to maintain during the last ' + progressConfig.rollingDays + ' rolling days & compared to the current year.' :
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta you were able to maintain during the last ' + progressConfig['rollingDays'] + ' rolling days & compared to the current year.' :
 			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta accomplished compared to this year.'">
 				&Delta; With {{currentYear}}
 			</span>
@@ -115,7 +115,7 @@
 	<ng-container matColumnDef="deltaTarget">
 		<mat-header-cell *matHeaderCellDef>
 			<span class="headerTooltip" [matTooltip]="(progressConfig.mode === ProgressMode.ROLLING) ?
-			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta you were able to maintain during the last ' + progressConfig.rollingDays + ' rolling days & compared to target.' :
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta you were able to maintain during the last ' + progressConfig['rollingDays'] + ' rolling days & compared to target.' :
 			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta accomplished compared to target.'">
 				&Delta; With target
 			</span>

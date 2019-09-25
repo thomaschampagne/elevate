@@ -58,7 +58,7 @@ export class FitnessTrendComponent implements OnInit {
 	public fitnessTrend: DayFitnessTrendModel[];
 	public lastPeriods: LastPeriodModel[];
 	public periodViewed: PeriodModel;
-	public lastPeriodViewed: PeriodModel;
+	public lastPeriodViewed: LastPeriodModel;
 	public dateMin: Date;
 	public dateMax: Date;
 	public lastFitnessActiveDate: Date;
@@ -411,7 +411,7 @@ export class FitnessTrendComponent implements OnInit {
 		this.periodViewed = _.find(this.lastPeriods, {
 			key: (!_.isEmpty(lastPeriodViewedSaved) ? lastPeriodViewedSaved : FitnessTrendComponent.DEFAULT_LAST_PERIOD_KEY)
 		});
-		this.lastPeriodViewed = this.periodViewed;
+		this.lastPeriodViewed = <LastPeriodModel> this.periodViewed;
 	}
 
 	public showFitnessWelcomeDialog(): void {
