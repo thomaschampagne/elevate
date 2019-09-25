@@ -15,8 +15,8 @@
 		<span *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
 			Activities partially synced
 		</span>
-		<span *ngIf="(syncState === SyncState.SYNCED && lastSyncDateMessage)">
-			Synced {{lastSyncDateMessage}}
+		<span *ngIf="(syncState === SyncState.SYNCED && syncDateMessage)">
+			Synced {{syncDateMessage}}
 		</span>
 	</button>
 	<mat-menu #syncMenu="matMenu">

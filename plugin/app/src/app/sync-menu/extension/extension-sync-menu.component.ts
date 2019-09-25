@@ -32,13 +32,13 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
 		super.ngOnInit();
 	}
 
-	public updateLastSyncDateStatus(): void {
+	public updateSyncDateStatus(): void {
 
 		this.chromeSyncService.getSyncState().then((syncState: SyncState) => {
 			this.syncState = syncState;
 			this.chromeSyncService.getSyncDateTime().then((syncDateTime: number) => {
 				if (_.isNumber(syncDateTime)) {
-					this.lastSyncDateMessage = moment(syncDateTime).fromNow();
+					this.syncDateMessage = moment(syncDateTime).fromNow();
 				}
 			});
 		});

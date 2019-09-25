@@ -33,14 +33,14 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
 		super.ngOnInit();
 	}
 
-	public updateLastSyncDateStatus(): void {
+	public updateSyncDateStatus(): void {
 
 		this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
 			this.syncState = SyncState.SYNCED;
-			this.desktopSyncService.getMostRecentSyncedConnector().then((connectorLastSyncDateTime: ConnectorLastSyncDateTime) => {
-				if (_.isNumber(connectorLastSyncDateTime.dateTime)) {
-					this.lastSyncDateMessage = _.upperFirst(connectorLastSyncDateTime.connectorType.toLowerCase())
-						+ " connector synced " + moment(connectorLastSyncDateTime.dateTime).fromNow();
+			this.desktopSyncService.getMostRecentSyncedConnector().then((connectorSyncDateTime: ConnectorSyncDateTime) => {
+				if (_.isNumber(connectorSyncDateTime.dateTime)) {
+					this.syncDateMessage = _.upperFirst(connectorSyncDateTime.connectorType.toLowerCase())
+						+ " connector synced " + moment(connectorSyncDateTime.dateTime).fromNow();
 				}
 			});
 		});

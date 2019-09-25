@@ -124,8 +124,8 @@ describe("ChromeSyncService", () => {
 	it("should remove last sync date time (for activities clear)", (done: Function) => {
 
 		// Given
-		const lastSyncDateDaoClearSpy = spyOn(chromeSyncService.syncDateTimeDao, "clear");
-		lastSyncDateDaoClearSpy.and.returnValue(Promise.resolve());
+		const syncDateDaoClearSpy = spyOn(chromeSyncService.syncDateTimeDao, "clear");
+		syncDateDaoClearSpy.and.returnValue(Promise.resolve());
 
 		// When
 		const promise: Promise<void> = chromeSyncService.clearSyncTime();
@@ -133,7 +133,7 @@ describe("ChromeSyncService", () => {
 		// Then
 		promise.then(() => {
 
-			expect(lastSyncDateDaoClearSpy).toHaveBeenCalledTimes(1);
+			expect(syncDateDaoClearSpy).toHaveBeenCalledTimes(1);
 			done();
 
 		}, error => {

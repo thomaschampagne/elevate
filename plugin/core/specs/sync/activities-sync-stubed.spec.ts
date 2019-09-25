@@ -170,8 +170,8 @@ describe("ActivitiesSynchronize", () => {
 		 * Stub:
 		 * - saveSyncedActivitiesToLocal
 		 * - getSyncedActivitiesFromLocal
-		 * - saveLastSyncDateToLocal
-		 * - getLastSyncDateFromLocal
+		 * - saveSyncDateToLocal
+		 * - getSyncDateFromLocal
 		 * - clearSyncCache
 		 */
 		spyOn(activitiesSynchronize, "saveSyncedActivitiesToLocal").and.callFake((syncedActivities: Array<SyncedActivityModel>) => {
@@ -187,14 +187,14 @@ describe("ActivitiesSynchronize", () => {
 			return defer.promise;
 		});
 
-		spyOn(activitiesSynchronize, "saveLastSyncDateToLocal").and.callFake((timestamp: number) => {
+		spyOn(activitiesSynchronize, "saveSyncDateToLocal").and.callFake((timestamp: number) => {
 			const defer = Q.defer();
 			CHROME_STORAGE_STUB.syncDateTime = timestamp;
 			defer.resolve();
 			return defer.promise;
 		});
 
-		spyOn(activitiesSynchronize, "getLastSyncDateFromLocal").and.callFake(() => {
+		spyOn(activitiesSynchronize, "getSyncDateFromLocal").and.callFake(() => {
 			const defer = Q.defer();
 			defer.resolve((CHROME_STORAGE_STUB.syncDateTime) ? CHROME_STORAGE_STUB.syncDateTime : null);
 			return defer.promise;
@@ -401,7 +401,7 @@ describe("ActivitiesSynchronize", () => {
 
 		expect(activitiesSynchronize.hasBeenSyncedActivities).toBeNull(); // No mergedSyncedActivities at the moment
 
-		activitiesSynchronize.getLastSyncDateFromLocal().then((savedSyncDateTime: any) => {
+		activitiesSynchronize.getSyncDateFromLocal().then((savedSyncDateTime: any) => {
 			// Check no last sync date
 			expect(_.isNull(savedSyncDateTime) || _.isUndefined(savedSyncDateTime)).toBeTruthy();
 			return activitiesSynchronize.getSyncedActivitiesFromLocal();
@@ -414,8 +414,8 @@ describe("ActivitiesSynchronize", () => {
 			// Sync finished
 			expect(activitiesSynchronize.getSyncedActivitiesFromLocal).toHaveBeenCalled(); // Ensure spy call
 			expect(activitiesSynchronize.saveSyncedActivitiesToLocal).toHaveBeenCalled(); // Ensure spy call
-			expect(activitiesSynchronize.getLastSyncDateFromLocal).toHaveBeenCalledTimes(2); // Ensure spy call
-			expect(activitiesSynchronize.saveLastSyncDateToLocal).toHaveBeenCalledTimes(1); // Ensure spy call
+			expect(activitiesSynchronize.getSyncDateFromLocal).toHaveBeenCalledTimes(2); // Ensure spy call
+			expect(activitiesSynchronize.saveSyncDateToLocal).toHaveBeenCalledTimes(1); // Ensure spy call
 
 			expect(syncResult.syncedActivities).not.toBeNull();
 			expect(syncResult.syncedActivities.length).toEqual(140);
@@ -433,8 +433,8 @@ describe("ActivitiesSynchronize", () => {
 
 			expect(activitiesSynchronize.hasBeenSyncedActivities).not.toBeNull(); // Keep tracking of merged activities instance
 
-			// Check lastSyncDate & syncedAthleteProfile
-			return activitiesSynchronize.getLastSyncDateFromLocal();
+			// Check syncDate & syncedAthleteProfile
+			return activitiesSynchronize.getSyncDateFromLocal();
 
 		}).then((savedSyncDateTime: number) => {
 

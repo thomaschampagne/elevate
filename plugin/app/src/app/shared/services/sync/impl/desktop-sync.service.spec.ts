@@ -1273,7 +1273,7 @@ describe("DesktopSyncService", () => {
 				.and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
 			// When
-			const promise = desktopSyncService.getConnectorLastSyncDateTime();
+			const promise = desktopSyncService.getConnectorSyncDateTime();
 
 			// Then
 			promise.then(() => {
@@ -1289,20 +1289,20 @@ describe("DesktopSyncService", () => {
 		it("should get the most recent connector synced", (done: Function) => {
 
 			// Given
-			const expectedConnector = new ConnectorLastSyncDateTime(ConnectorType.FILE_SYSTEM, 22222);
-			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [
-				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111),
+			const expectedConnector = new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222);
+			const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
+				new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
 				expectedConnector
 			];
 
-			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
-				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+			const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
 			// When
 			const promise = desktopSyncService.getMostRecentSyncedConnector();
 
 			// Then
-			promise.then((mostRecentConnectorSynced: ConnectorLastSyncDateTime) => {
+			promise.then((mostRecentConnectorSynced: ConnectorSyncDateTime) => {
 
 				expect(fetchSpy).toHaveBeenCalledTimes(1);
 				expect(mostRecentConnectorSynced).toEqual(expectedConnector);

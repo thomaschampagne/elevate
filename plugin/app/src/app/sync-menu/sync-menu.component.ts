@@ -19,7 +19,7 @@ export class SyncMenuComponent implements OnInit {
 
 	public SyncState = SyncState;
 	public syncState: SyncState;
-	public lastSyncDateMessage: string;
+	public syncDateMessage: string;
 
 	constructor(public router: Router,
 				public syncService: SyncService<any>,
@@ -27,26 +27,26 @@ export class SyncMenuComponent implements OnInit {
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar) {
 		this.syncState = null;
-		this.lastSyncDateMessage = null;
+		this.syncDateMessage = null;
 	}
 
 	public ngOnInit(): void {
 
-		// Update sync status in toolbar and Refresh LastSyncDate displayed every minutes
-		this.updateLastSyncDateStatus();
+		// Update sync status in toolbar and Refresh SyncDate displayed every minutes
+		this.updateSyncDateStatus();
 		setInterval(() => {
-			this.updateLastSyncDateStatus();
+			this.updateSyncDateStatus();
 		}, 1000 * 60);
 
 		this.appEventsService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
 			if (syncResult) {
-				this.updateLastSyncDateStatus();
+				this.updateSyncDateStatus();
 			}
 		});
 	}
 
-	public updateLastSyncDateStatus(): void {
-		throw new ElevateException("updateLastSyncDateStatus must be implemented in a child class");
+	public updateSyncDateStatus(): void {
+		throw new ElevateException("updateSyncDateStatus must be implemented in a child class");
 	}
 
 	public onSyncedBackupImport(): void {

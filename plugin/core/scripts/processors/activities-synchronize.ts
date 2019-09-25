@@ -723,7 +723,7 @@ export class ActivitiesSynchronize {
 		this.initializeForSync();
 
 		// Check for syncDateTime
-		this.getLastSyncDateFromLocal().then((savedSyncDateTime: any) => {
+		this.getSyncDateFromLocal().then((savedSyncDateTime: any) => {
 
 			const syncDateTime: Date = (_.isNumber(savedSyncDateTime)) ? new Date(savedSyncDateTime) : null;
 
@@ -808,7 +808,7 @@ export class ActivitiesSynchronize {
 		}).then(() => {
 
 			// Compute Activities By Groups Of Pages done... Now updating the last sync date
-			return this.updateLastSyncDateToNow().then(() => {
+			return this.updateSyncDateToNow().then(() => {
 				return this.getAllSavedLocal();
 			});
 
@@ -872,8 +872,8 @@ export class ActivitiesSynchronize {
 		return syncedActivitiesStored;
 	}
 
-	public updateLastSyncDateToNow() {
-		return this.saveLastSyncDateToLocal((new Date()).getTime());
+	public updateSyncDateToNow() {
+		return this.saveSyncDateToLocal((new Date()).getTime());
 	}
 
 	protected initializeForSync() {
@@ -895,11 +895,11 @@ export class ActivitiesSynchronize {
 		return BrowserStorage.getInstance().get<any>(BrowserStorageType.LOCAL);
 	}
 
-	public saveLastSyncDateToLocal(timestamp: number) {
+	public saveSyncDateToLocal(timestamp: number) {
 		return BrowserStorage.getInstance().set<number>(BrowserStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY, timestamp);
 	}
 
-	public getLastSyncDateFromLocal() {
+	public getSyncDateFromLocal() {
 		const deferred = Q.defer<number>();
 		BrowserStorage.getInstance().get<number>(BrowserStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY).then((result: number) => {
 			deferred.resolve(result);

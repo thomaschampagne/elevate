@@ -32,6 +32,7 @@ import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 // TODO migrate lastSyncDateTime storage key to syncDateTime for the extension
+// TODO Rn ChromeSyncService => ExtensionSyncService
 // TODO Handle sync complete
 // TODO Add sync gen session id as string baseConnector. Goal: more easy to debug sync session with start/stop actions?
 // TODO Handle errors cases (continue or not the sync...)
@@ -72,7 +73,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 				@Inject(DataStore) public desktopDataStore: DesktopDataStore<void> /* Injected to create PouchDB dumps & load them */) {
 		super(versionsProvider, activityService, athleteService, userSettingsService, logger);
 		this.syncSubscription = null;
-		this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync // TODO ReplaySubject?! I think no
+		this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync // TODO ReplaySubject to get old values?! I think no
 		this.currentConnectorType = null;
 	}
 
@@ -391,19 +392,19 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 	}
 
-	public getMostRecentSyncedConnector(): Promise<ConnectorLastSyncDateTime> {
-		return this.getConnectorLastSyncDateTime().then((connectorSyncDateTimes: ConnectorLastSyncDateTime[]) => {
+	public getMostRecentSyncedConnector(): Promise<ConnectorSyncDateTime> {
+		return this.getConnectorSyncDateTime().then((connectorSyncDateTimes: ConnectorSyncDateTime[]) => {
 			const connectorSyncDateTime = _.last(_.sortBy(connectorSyncDateTimes, "dateTime"));
 			return Promise.resolve(connectorSyncDateTime);
 		});
 	}
 
-	public getConnectorLastSyncDateTime(): Promise<ConnectorLastSyncDateTime[]> {
-		return this.getLastSyncDateTime();
+	public getConnectorSyncDateTime(): Promise<ConnectorSyncDateTime[]> {
+		return this.getSyncDateTime();
 	}
 
-	public getLastSyncDateTime(): Promise<ConnectorLastSyncDateTime[]> {
-		return <Promise<ConnectorLastSyncDateTime[]>> this.connectorLastSyncDateTimeDao.fetch();
+	public getSyncDateTime(): Promise<ConnectorSyncDateTime[]> {
+		return <Promise<ConnectorSyncDateTime[]>> this.connectorSyncDateTimeDao.fetch();
 	}
 
 	public upsertConnectorsSyncDateTimes(connectorSyncDateTimes: ConnectorSyncDateTime[]): Promise<ConnectorSyncDateTime[]> {
