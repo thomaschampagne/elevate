@@ -54,6 +54,5 @@ export const userSettingsData: UserSettingsModel = {
 	displayActivityBestSplits: true,
 	temperatureUnit: "C",
 	showHiddenBetaFeatures: false,
-	displayReliveCCLink: true,
 	displayWindyOverlay: false
 };

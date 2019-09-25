@@ -587,6 +587,8 @@ class Installer {
 
 		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.11.1")) {
 
+			console.log("Migrate to 6.11.1");
+
 			promise = BrowserStorage.getInstance().get<AthleteModel>(BrowserStorageType.LOCAL, "athlete").then(athleteModel => {
 
 				if (athleteModel.datedAthleteSettings && athleteModel.datedAthleteSettings.length > 0) {
@@ -604,6 +606,28 @@ class Installer {
 					}
 				}
 			});
+		} else {
+			console.log("Skip migrate to 6.11.1");
+		}
+
+		return promise;
+	}
+
+	protected migrate_to_6_14_0(): Promise<void> {
+
+		let promise: Promise<void> = Promise.resolve();
+
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.14.0")) {
+
+			console.log("Migrate to 6.14.0");
+
+			promise = BrowserStorage.getInstance().get<UserSettingsModel>(BrowserStorageType.LOCAL, "userSettings").then((userSettingsModel: UserSettingsModel) => {
+				delete (<any> userSettingsModel).displayReliveCCLink;
+				return BrowserStorage.getInstance().set<UserSettingsModel>(BrowserStorageType.LOCAL, "userSettings", userSettingsModel);
+			});
+
+		} else {
+			console.log("Skip migrate to 6.14.0");
 		}
 
 		return promise;
@@ -636,6 +660,8 @@ class Installer {
 			return this.migrate_to_6_11_0();
 		}).then(() => {
 			return this.migrate_to_6_11_1();
+		}).then(() => {
+			return this.migrate_to_6_14_0();
 		}).catch(error => console.error(error));
 
 	}
