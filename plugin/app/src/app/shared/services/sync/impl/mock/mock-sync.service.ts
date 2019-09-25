@@ -15,7 +15,7 @@ export class MockSyncService extends SyncService<any> {
 		throw new Error("MockSyncService do not support stop");
 	}
 
-	public clearLastSyncTime(): Promise<void> {
+	public clearSyncTime(): Promise<void> {
 		return null;
 	}
 
@@ -23,11 +23,11 @@ export class MockSyncService extends SyncService<any> {
 		return null;
 	}
 
-	public getLastSyncDateTime(): Promise<number> {
+	public getSyncDateTime(): Promise<number> {
 		return null;
 	}
 
-	public saveLastSyncDateTime(value: number): Promise<number> {
+	public saveSyncDateTime(value: number): Promise<number> {
 		return null;
 	}
 

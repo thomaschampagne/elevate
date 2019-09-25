@@ -88,7 +88,7 @@ class Installer {
 
 			promise = BrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "computedActivities")
 				.then(() => {
-					return BrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "lastSyncDateTime");
+					return BrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "syncDateTime");
 				}).then(() => {
 					console.log("Local History cleared");
 					return Promise.resolve();

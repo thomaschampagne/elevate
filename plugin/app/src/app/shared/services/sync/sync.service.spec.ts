@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-import { LastSyncDateTimeDao } from "../../dao/sync/last-sync-date-time.dao";
+import { SyncDateTimeDao } from "../../dao/sync/sync-date-time-dao.service";
 import { AthleteModel } from "@elevate/shared/models";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
@@ -13,7 +13,7 @@ describe("SyncService", () => {
 
 	let athleteModel: AthleteModel;
 	let syncService: SyncService<any>;
-	let lastSyncDateTimeDao: LastSyncDateTimeDao;
+	let syncDateTimeDao: SyncDateTimeDao;
 
 	beforeEach((done: Function) => {
 
@@ -33,7 +33,7 @@ describe("SyncService", () => {
 		athleteModel = _.cloneDeep(AthleteModel.DEFAULT_MODEL);
 
 		syncService = TestBed.get(SyncService);
-		lastSyncDateTimeDao = TestBed.get(LastSyncDateTimeDao);
+		syncDateTimeDao = TestBed.get(SyncDateTimeDao);
 
 		spyOn(window, "open").and.stub(); // Avoid opening window in tests
 

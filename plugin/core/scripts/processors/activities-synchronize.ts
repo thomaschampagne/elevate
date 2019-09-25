@@ -32,7 +32,7 @@ export class ActivitiesSynchronize {
 		return this._activitiesChanges;
 	}
 
-	public static readonly LAST_SYNC_DATE_TIME_KEY = "lastSyncDateTime"; // TODO Move into BrowserStorage as static (do that for others too)
+	public static readonly LAST_SYNC_DATE_TIME_KEY = "syncDateTime"; // TODO Move into BrowserStorage as static (do that for others too)
 	public static readonly SYNCED_ACTIVITIES_KEY = "syncedActivities"; // TODO Move into BrowserStorage as static (do that for others too)
 	public static readonly PAGES_PER_GROUP = 1; // = 20 activities with 20 activities per page.
 	public static readonly ACTIVITIES_PER_PAGE = 20; // 20 usually
@@ -164,12 +164,12 @@ export class ActivitiesSynchronize {
 	/**
 	 * @return All activities with their stream
 	 */
-	public fetchWithStream(lastSyncDateTime: Date, fromPage: number, pagesToRead: number): Q.Promise<StreamActivityModel[]> {
+	public fetchWithStream(syncDateTime: Date, fromPage: number, pagesToRead: number): Q.Promise<StreamActivityModel[]> {
 
 		const deferred = Q.defer<StreamActivityModel[]>();
 
 		// Start fetching missing activities
-		this.fetchRawActivitiesRecursive(lastSyncDateTime, fromPage, pagesToRead).then((rawActivities: StravaActivityModel[]) => {
+		this.fetchRawActivitiesRecursive(syncDateTime, fromPage, pagesToRead).then((rawActivities: StravaActivityModel[]) => {
 
 			// Success
 			console.log("Activities fetched in group " + this.printGroupLimits(fromPage, pagesToRead) + ": " + rawActivities.length);
@@ -365,7 +365,7 @@ export class ActivitiesSynchronize {
 
 	/**
 	 *
-	 * @param lastSyncDateTime Last sync date existing. can be null
+	 * @param syncDateTime Last sync date existing. can be null
 	 * @param page page to start. Equals 1 if no from page given
 	 * @param pagesToRead Max pages to fetch from "fromPage". 0 gives unlimited pages
 	 * @param pagesRidden Number of page fetched
@@ -373,7 +373,7 @@ export class ActivitiesSynchronize {
 	 * @param activitiesList
 	 * @return {Q.Promise<Array<StravaActivityModel>>}
 	 */
-	public fetchRawActivitiesRecursive(lastSyncDateTime: Date, page?: number, pagesToRead?: number, pagesRidden?: number, deferred?: Q.Deferred<any>, activitiesList?: StravaActivityModel[]): Q.Promise<StravaActivityModel[]> {
+	public fetchRawActivitiesRecursive(syncDateTime: Date, page?: number, pagesToRead?: number, pagesRidden?: number, deferred?: Q.Deferred<any>, activitiesList?: StravaActivityModel[]): Q.Promise<StravaActivityModel[]> {
 
 		if (!page) {
 			page = 1; // Usually start from first page when no page given
@@ -433,7 +433,7 @@ export class ActivitiesSynchronize {
 					deferred.notify(notify);
 
 					setTimeout(() => {
-						this.fetchRawActivitiesRecursive(lastSyncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
+						this.fetchRawActivitiesRecursive(syncDateTime, page + 1, pagesToRead, pagesRidden + 1, deferred, activitiesList);
 					}, 50);
 				}
 			}
@@ -507,7 +507,7 @@ export class ActivitiesSynchronize {
 			console.log("syncedActivities removed from local storage");
 			return BrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY);
 		}).then(() => {
-			console.log("lastSyncDateTime removed from local storage");
+			console.log("syncDateTime removed from local storage");
 		});
 
 	}
@@ -516,11 +516,11 @@ export class ActivitiesSynchronize {
 	 * Trigger the fetch of activities (Along last sync date), their stream and the compute of each activities.
 	 * @returns {Q.Promise<Array<SyncedActivityModel>>} Promising an array of synced activities along the last sync date
 	 */
-	public fetchAndComputeGroupOfPages(lastSyncDateTime: Date, fromPage: number, pagesToRead: number): Q.Promise<SyncedActivityModel[]> {
+	public fetchAndComputeGroupOfPages(syncDateTime: Date, fromPage: number, pagesToRead: number): Q.Promise<SyncedActivityModel[]> {
 
 		const deferred = Q.defer();
 
-		this.fetchWithStream(lastSyncDateTime, fromPage, pagesToRead).then((activitiesWithStreams: StreamActivityModel[]) => {
+		this.fetchWithStream(syncDateTime, fromPage, pagesToRead).then((activitiesWithStreams: StreamActivityModel[]) => {
 
 			return this._multipleActivityProcessor.compute(activitiesWithStreams);
 
@@ -570,7 +570,7 @@ export class ActivitiesSynchronize {
 	 * For each group of pages: fetch activities, their stream, compute stats, and store result. And recursively handle next group if needed...
 	 * @return {Q.Promise<Array<SyncedActivityModel>>}
 	 */
-	public computeActivitiesByGroupsOfPages(lastSyncDateTime: Date, fromPage?: number, pagesPerGroupToRead?: number, maxGroupCount?: number, handledGroupCount?: number, deferred?: Q.Deferred<any>): Q.Promise<SyncedActivityModel[]> {
+	public computeActivitiesByGroupsOfPages(syncDateTime: Date, fromPage?: number, pagesPerGroupToRead?: number, maxGroupCount?: number, handledGroupCount?: number, deferred?: Q.Deferred<any>): Q.Promise<SyncedActivityModel[]> {
 
 		if (!maxGroupCount) {
 			maxGroupCount = 0;
@@ -600,7 +600,7 @@ export class ActivitiesSynchronize {
 
 		} else {
 
-			this.fetchAndComputeGroupOfPages(lastSyncDateTime, fromPage, pagesPerGroupToRead).then((syncedActivitiesPromised: SyncedActivityModel[]) => {
+			this.fetchAndComputeGroupOfPages(syncDateTime, fromPage, pagesPerGroupToRead).then((syncedActivitiesPromised: SyncedActivityModel[]) => {
 
 				handledGroupCount++;
 
@@ -654,7 +654,7 @@ export class ActivitiesSynchronize {
 							deferred.resolve();
 						} else {
 							// Continue to next group, recursive call.
-							this.computeActivitiesByGroupsOfPages(lastSyncDateTime, fromPage + pagesPerGroupToRead, pagesPerGroupToRead, maxGroupCount, handledGroupCount, deferred);
+							this.computeActivitiesByGroupsOfPages(syncDateTime, fromPage + pagesPerGroupToRead, pagesPerGroupToRead, maxGroupCount, handledGroupCount, deferred);
 						}
 
 						// Free mem !
@@ -680,7 +680,7 @@ export class ActivitiesSynchronize {
 						deferred.resolve();
 					} else {
 						// Continue to next group, recursive call.
-						this.computeActivitiesByGroupsOfPages(lastSyncDateTime, fromPage + pagesPerGroupToRead, pagesPerGroupToRead, maxGroupCount, handledGroupCount, deferred);
+						this.computeActivitiesByGroupsOfPages(syncDateTime, fromPage + pagesPerGroupToRead, pagesPerGroupToRead, maxGroupCount, handledGroupCount, deferred);
 					}
 
 					// Free mem !
@@ -722,10 +722,10 @@ export class ActivitiesSynchronize {
 		// Reset values for a sync
 		this.initializeForSync();
 
-		// Check for lastSyncDateTime
-		this.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
+		// Check for syncDateTime
+		this.getLastSyncDateFromLocal().then((savedSyncDateTime: any) => {
 
-			const lastSyncDateTime: Date = (_.isNumber(savedLastSyncDateTime)) ? new Date(savedLastSyncDateTime) : null;
+			const syncDateTime: Date = (_.isNumber(savedSyncDateTime)) ? new Date(savedSyncDateTime) : null;
 
 			if (fastSync && fastSync === true) {
 
@@ -741,7 +741,7 @@ export class ActivitiesSynchronize {
 						const fromPage = 1;
 						const pagesPerGroupToRead = 1;
 						const maxGroupCount = 1;
-						return this.computeActivitiesByGroupsOfPages(lastSyncDateTime, fromPage, pagesPerGroupToRead, maxGroupCount);
+						return this.computeActivitiesByGroupsOfPages(syncDateTime, fromPage, pagesPerGroupToRead, maxGroupCount);
 
 					} else {
 						console.log("Local and remote activities count matches.");
@@ -750,7 +750,7 @@ export class ActivitiesSynchronize {
 				});
 
 			} else {
-				return this.computeActivitiesByGroupsOfPages(lastSyncDateTime);
+				return this.computeActivitiesByGroupsOfPages(syncDateTime);
 			}
 
 		}).then(() => {
@@ -815,16 +815,16 @@ export class ActivitiesSynchronize {
 		}).then((saved: any) => {
 
 			// Last Sync Date Time saved... Now save syncedAthleteProfile
-			syncNotify.step = "updatingLastSyncDateTime";
+			syncNotify.step = "updatingSyncDateTime";
 			syncNotify.progress = 100;
 			deferred.notify(syncNotify);
 
-			console.log("Last sync date time saved: ", new Date(saved.lastSyncDateTime));
+			console.log("Last sync date time saved: ", new Date(saved.syncDateTime));
 
 			const syncResult: SyncResultModel = {
 				activitiesChangesModel: activitiesChangesModel,
 				syncedActivities: saved.syncedActivities,
-				lastSyncDateTime: saved.lastSyncDateTime
+				syncDateTime: saved.syncDateTime
 			};
 
 			deferred.resolve(syncResult); // Sync finish !!

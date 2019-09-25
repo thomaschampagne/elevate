@@ -83,7 +83,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 		alert("to be bind");
 	}
 
-	tmpSetLastSyncDateTime() {
-		this.stravaConnectorService.syncService.saveLastSyncDateTime(new Date().getTime());
+	tmpSetSyncDateTime() {
+		this.stravaConnectorService.syncService.saveSyncDateTime(new Date().getTime());
 	}
 }

@@ -28,11 +28,11 @@ export abstract class SyncService<T> {
 
 	public abstract stop(): Promise<void>;
 
-	public abstract getLastSyncDateTime(): Promise<T>; // TODO Rename getSyncDateTime
+	public abstract getSyncDateTime(): Promise<T>;
 
-	public abstract saveLastSyncDateTime(value: T): Promise<T>; // TODO Rename saveSyncDateTime
+	public abstract saveSyncDateTime(value: T): Promise<T>;
 
-	public abstract clearLastSyncTime(): Promise<void>; // TODO Rename saveSyncDateTime
+	public abstract clearSyncTime(): Promise<void>;
 
 	public abstract getSyncState(): Promise<SyncState>;
 
@@ -49,7 +49,7 @@ export abstract class SyncService<T> {
 	public clearSyncedData(): Promise<void> {
 
 		return Promise.all([
-			this.clearLastSyncTime(),
+			this.clearSyncTime(),
 			this.activityService.clear()
 		]).then(() => {
 			return Promise.resolve();

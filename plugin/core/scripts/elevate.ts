@@ -1031,11 +1031,11 @@ export class Elevate {
 		setTimeout(() => {
 
 			// Allow activities sync if previous sync exists and has been done 12 hours or more ago.
-			BrowserStorage.getInstance().get<number>(BrowserStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY).then((lastSyncDateTime: number) => {
+			BrowserStorage.getInstance().get<number>(BrowserStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY).then((syncDateTime: number) => {
 
-				if (_.isNumber(lastSyncDateTime)) {
+				if (_.isNumber(syncDateTime)) {
 
-					console.log("A previous sync exists on " + new Date(lastSyncDateTime).toString());
+					console.log("A previous sync exists on " + new Date(syncDateTime).toString());
 
 					// At first perform a fast sync to get the "just uploaded ride/run" ready
 					const fastSync = true;

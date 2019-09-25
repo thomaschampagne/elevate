@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@angular/core";
-import { LastSyncDateTimeDao } from "../../../dao/sync/last-sync-date-time.dao";
+import { SyncDateTimeDao } from "../../../dao/sync/sync-date-time-dao.service";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../../versions/versions-provider.interface";
 import { ActivityService } from "../../activity/activity.service";
 import { AthleteService } from "../../athlete/athlete.service";
@@ -31,7 +31,7 @@ export class ChromeSyncService extends SyncService<number> { // TODO Rn Extensio
 				public athleteService: AthleteService,
 				public userSettingsService: UserSettingsService,
 				public logger: LoggerService,
-				public lastSyncDateTimeDao: LastSyncDateTimeDao) {
+				public syncDateTimeDao: SyncDateTimeDao) {
 		super(versionsProvider, activityService, athleteService, userSettingsService, logger);
 	}
 
@@ -67,21 +67,21 @@ export class ChromeSyncService extends SyncService<number> { // TODO Rn Extensio
 
 		return Promise.all([
 
-			this.getLastSyncDateTime(),
+			this.getSyncDateTime(),
 			this.activityService.fetch()
 
 		]).then((result: Object[]) => {
 
-			const lastSyncDateTime: number = result[0] as number;
+			const syncDateTime: number = result[0] as number;
 			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
 
-			const hasLastSyncDateTime: boolean = _.isNumber(lastSyncDateTime);
+			const hasSyncDateTime: boolean = _.isNumber(syncDateTime);
 			const hasSyncedActivityModels: boolean = !_.isEmpty(syncedActivityModels);
 
 			let syncState: SyncState;
-			if (!hasLastSyncDateTime && !hasSyncedActivityModels) {
+			if (!hasSyncDateTime && !hasSyncedActivityModels) {
 				syncState = SyncState.NOT_SYNCED;
-			} else if (!hasLastSyncDateTime && hasSyncedActivityModels) {
+			} else if (!hasSyncDateTime && hasSyncedActivityModels) {
 				syncState = SyncState.PARTIALLY_SYNCED;
 			} else {
 				syncState = SyncState.SYNCED;
@@ -122,24 +122,24 @@ export class ChromeSyncService extends SyncService<number> { // TODO Rn Extensio
 
 		return Promise.all([
 
-			this.lastSyncDateTimeDao.fetch(),
+			this.syncDateTimeDao.fetch(),
 			this.activityService.fetch(),
 			this.athleteService.fetch(),
 			this.versionsProvider.getInstalledAppVersion()
 
 		]).then((result: Object[]) => {
 
-			const lastSyncDateTime: number = result[0] as number;
+			const syncDateTime: number = result[0] as number;
 			const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
 			const athleteModel: AthleteModel = result[2] as AthleteModel;
 			const appVersion: string = result[3] as string;
 
-			if (!_.isNumber(lastSyncDateTime)) {
+			if (!_.isNumber(syncDateTime)) {
 				return Promise.reject("Cannot export. No last synchronization date found.");
 			}
 
 			const backupModel: DumpModel = {
-				lastSyncDateTime: lastSyncDateTime,
+				syncDateTime: syncDateTime,
 				syncedActivities: syncedActivityModels,
 				athleteModel: athleteModel,
 				pluginVersion: appVersion
@@ -177,7 +177,7 @@ export class ChromeSyncService extends SyncService<number> { // TODO Rn Extensio
 			}
 
 			return Promise.all([
-				this.saveLastSyncDateTime(importedBackupModel.lastSyncDateTime),
+				this.saveSyncDateTime(importedBackupModel.syncDateTime),
 				this.activityService.save(importedBackupModel.syncedActivities),
 				promiseImportDatedAthleteSettings,
 				this.userSettingsService.clearLocalStorageOnNextLoad()
@@ -196,8 +196,8 @@ export class ChromeSyncService extends SyncService<number> { // TODO Rn Extensio
 	 *
 	 * @returns {Promise<number>}
 	 */
-	public getLastSyncDateTime(): Promise<number> {
-		return (<Promise<number>> this.lastSyncDateTimeDao.fetch());
+	public getSyncDateTime(): Promise<number> {
+		return (<Promise<number>> this.syncDateTimeDao.fetch());
 	}
 
 	/**
@@ -205,16 +205,16 @@ export class ChromeSyncService extends SyncService<number> { // TODO Rn Extensio
 	 * @param {number} value
 	 * @returns {Promise<number>}
 	 */
-	public saveLastSyncDateTime(value: number): Promise<number> {
-		return (<Promise<number>> this.lastSyncDateTimeDao.save(value));
+	public saveSyncDateTime(value: number): Promise<number> {
+		return (<Promise<number>> this.syncDateTimeDao.save(value));
 	}
 
 	/**
 	 *
 	 * @returns {Promise<number>}
 	 */
-	public clearLastSyncTime(): Promise<void> {
-		return this.lastSyncDateTimeDao.clear();
+	public clearSyncTime(): Promise<void> {
+		return this.syncDateTimeDao.clear();
 	}
 
 }

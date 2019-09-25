@@ -188,7 +188,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 					stepMessage = "Saving results to local extension storage...";
 					this.updateStorageUsage();
 					break;
-				case "updatingLastSyncDateTime":
+				case "updatingSyncDateTime":
 					stepMessage = "Updating your last synchronization date... And you're done.";
 					const totalSec = (performance.now() - syncStart) / 1000;
 					console.log("Sync time: " + Helper.secondsToHHMMSS(totalSec) + " (" + Math.round(totalSec) + "s)");

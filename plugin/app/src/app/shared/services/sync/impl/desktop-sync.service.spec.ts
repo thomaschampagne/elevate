@@ -22,7 +22,7 @@ import { Gzip } from "@elevate/shared/tools/gzip";
 import * as moment from "moment";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../../shared-fixtures/activities-2015.fixture";
 import { SyncState } from "../sync-state.enum";
-import { ConnectorLastSyncDateTime } from "../../../../../../modules/shared/models/sync/connector-last-sync-date-time.model";
+import { ConnectorSyncDateTime } from "../../../../../../modules/shared/models/sync/connector-sync-date-time.model";
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 
 describe("DesktopSyncService", () => {
@@ -300,20 +300,20 @@ describe("DesktopSyncService", () => {
 			const syncEvent$ = new Subject<SyncEvent>();
 			const connectorType = ConnectorType.STRAVA;
 			const completeSyncEvent = new CompleteSyncEvent(connectorType);
-			// const connectorLastSyncDateTime = new ConnectorLastSyncDateTime(connectorType, oldDateTime);
-			const getConnectorLastSyncDateTimeByIdSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "getById")
+			// const connectorSyncDateTime = new ConnectorSyncDateTime(connectorType, oldDateTime);
+			const getConnectorSyncDateTimeByIdSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "getById")
 				.and.returnValue(Promise.resolve(null));
-			// const updateToNowSpy = spyOn(connectorLastSyncDateTime, "updateToNow").and.callThrough();
-			const upsertLastSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsLastSyncDateTimes").and.returnValue(Promise.resolve());
+			// const updateToNowSpy = spyOn(connectorSyncDateTime, "updateToNow").and.callThrough();
+			const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(Promise.resolve());
 
 			// When
 			setTimeout(() => desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent));
 
 			// Then
 			syncEvent$.subscribe(() => {
-				expect(getConnectorLastSyncDateTimeByIdSpy).toHaveBeenCalledWith(connectorType);
-				const createdConnectorLastSyncDateTime: ConnectorLastSyncDateTime = upsertLastSyncDateTimesSpy.calls.mostRecent().args[0][0];
-				expect(createdConnectorLastSyncDateTime.connectorType).toEqual(connectorType);
+				expect(getConnectorSyncDateTimeByIdSpy).toHaveBeenCalledWith(connectorType);
+				const createdConnectorSyncDateTime: ConnectorSyncDateTime = upsertSyncDateTimesSpy.calls.mostRecent().args[0][0];
+				expect(createdConnectorSyncDateTime.connectorType).toEqual(connectorType);
 				done();
 
 			}, error => {
@@ -328,21 +328,21 @@ describe("DesktopSyncService", () => {
 			const oldDateTime = 999;
 			const connectorType = ConnectorType.STRAVA;
 			const completeSyncEvent = new CompleteSyncEvent(connectorType);
-			const connectorLastSyncDateTime = new ConnectorLastSyncDateTime(connectorType, oldDateTime);
-			const getConnectorLastSyncDateTimeByIdSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "getById")
-				.and.returnValue(Promise.resolve(connectorLastSyncDateTime));
-			const updateToNowSpy = spyOn(connectorLastSyncDateTime, "updateToNow").and.callThrough();
-			const upsertLastSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsLastSyncDateTimes").and.returnValue(Promise.resolve());
+			const connectorSyncDateTime = new ConnectorSyncDateTime(connectorType, oldDateTime);
+			const getConnectorSyncDateTimeByIdSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "getById")
+				.and.returnValue(Promise.resolve(connectorSyncDateTime));
+			const updateToNowSpy = spyOn(connectorSyncDateTime, "updateToNow").and.callThrough();
+			const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(Promise.resolve());
 
 			// When
 			setTimeout(() => desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent));
 
 			// Then
 			syncEvent$.subscribe(() => {
-				expect(connectorLastSyncDateTime.dateTime).toBeGreaterThan(oldDateTime);
-				expect(getConnectorLastSyncDateTimeByIdSpy).toHaveBeenCalledWith(connectorType);
+				expect(connectorSyncDateTime.dateTime).toBeGreaterThan(oldDateTime);
+				expect(getConnectorSyncDateTimeByIdSpy).toHaveBeenCalledWith(connectorType);
 				expect(updateToNowSpy).toHaveBeenCalledTimes(1);
-				expect(upsertLastSyncDateTimesSpy).toHaveBeenCalledWith([connectorLastSyncDateTime]);
+				expect(upsertSyncDateTimesSpy).toHaveBeenCalledWith([connectorSyncDateTime]);
 				done();
 
 			}, error => {
@@ -504,9 +504,9 @@ describe("DesktopSyncService", () => {
 			desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
 			const completeSyncEvent = new CompleteSyncEvent(desktopSyncService.currentConnectorType);
 			const handleSyncCompleteEventsSpy = spyOn(desktopSyncService, "handleSyncCompleteEvents").and.callThrough();
-			spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "getById")
+			spyOn(desktopSyncService.connectorSyncDateTimeDao, "getById")
 				.and.returnValue(Promise.resolve(null));
-			spyOn(desktopSyncService, "upsertConnectorsLastSyncDateTimes")
+			spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes")
 				.and.returnValue(Promise.resolve());
 			const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
@@ -1084,7 +1084,7 @@ describe("DesktopSyncService", () => {
 
 			// Given
 			const expectedState = SyncState.NOT_SYNCED;
-			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
+			const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
 				.and.returnValue(Promise.resolve([]));
 
 			const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
@@ -1110,13 +1110,13 @@ describe("DesktopSyncService", () => {
 
 			// Given
 			const expectedState = SyncState.SYNCED;
-			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [
-				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111),
-				new ConnectorLastSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+			const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
+				new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
+				new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
 			];
 
-			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
-				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+			const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
 			const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
 				.and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
@@ -1141,12 +1141,12 @@ describe("DesktopSyncService", () => {
 
 			// Given
 			const expectedState = SyncState.SYNCED;
-			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [
-				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111), // Only one !
+			const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
+				new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111), // Only one !
 			];
 
-			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
-				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+			const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
 			const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
 				.and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
@@ -1171,13 +1171,13 @@ describe("DesktopSyncService", () => {
 
 			// Given
 			const expectedState = SyncState.SYNCED;
-			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [
-				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111),
-				new ConnectorLastSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+			const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
+				new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
+				new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
 			];
 
-			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
-				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+			const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
 			const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
 				.and.returnValue(Promise.resolve([]));
@@ -1202,12 +1202,12 @@ describe("DesktopSyncService", () => {
 
 			// Given
 			const expectedState = SyncState.SYNCED;
-			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [
-				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111),
+			const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
+				new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
 			];
 
-			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
-				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+			const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
 			const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
 				.and.returnValue(Promise.resolve([]));
@@ -1233,10 +1233,10 @@ describe("DesktopSyncService", () => {
 
 			// Given
 			const expectedState = SyncState.PARTIALLY_SYNCED;
-			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [];
+			const connectorSyncDateTimes: ConnectorSyncDateTime[] = [];
 
-			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
-				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+			const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
 			const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
 				.and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
@@ -1264,16 +1264,16 @@ describe("DesktopSyncService", () => {
 		it("should get sync date times from synced connectors", (done: Function) => {
 
 			// Given
-			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [
-				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111),
-				new ConnectorLastSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+			const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
+				new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
+				new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
 			];
 
-			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
-				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+			const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
 			// When
-			const promise = desktopSyncService.getLastSyncDateTime();
+			const promise = desktopSyncService.getConnectorLastSyncDateTime();
 
 			// Then
 			promise.then(() => {
@@ -1286,29 +1286,56 @@ describe("DesktopSyncService", () => {
 			});
 		});
 
+		it("should get the most recent connector synced", (done: Function) => {
+
+			// Given
+			const expectedConnector = new ConnectorLastSyncDateTime(ConnectorType.FILE_SYSTEM, 22222);
+			const connectorLastSyncDateTimes: ConnectorLastSyncDateTime[] = [
+				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111),
+				expectedConnector
+			];
+
+			const fetchSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorLastSyncDateTimes));
+
+			// When
+			const promise = desktopSyncService.getMostRecentSyncedConnector();
+
+			// Then
+			promise.then((mostRecentConnectorSynced: ConnectorLastSyncDateTime) => {
+
+				expect(fetchSpy).toHaveBeenCalledTimes(1);
+				expect(mostRecentConnectorSynced).toEqual(expectedConnector);
+				done();
+
+			}, () => {
+				throw new Error("Should not be here!");
+			});
+		});
+
 		it("should upsert sync date times of synced connectors", (done: Function) => {
 
 			// Given
-			const connectorLastSyncDateTimesToSave: ConnectorLastSyncDateTime[] = [
-				new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111),
-				new ConnectorLastSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+			const connectorSyncDateTimesToSave: ConnectorSyncDateTime[] = [
+				new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
+				new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
 			];
 
-			spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "fetch")
-				.and.returnValue(Promise.resolve(connectorLastSyncDateTimesToSave));
+			spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+				.and.returnValue(Promise.resolve(connectorSyncDateTimesToSave));
 
-			const putSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "put")
-				.and.returnValue(Promise.resolve(connectorLastSyncDateTimesToSave));
+			const putSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "put")
+				.and.returnValue(Promise.resolve(connectorSyncDateTimesToSave));
 
 			// When
-			const promise = desktopSyncService.upsertConnectorsLastSyncDateTimes(connectorLastSyncDateTimesToSave);
+			const promise = desktopSyncService.upsertConnectorsSyncDateTimes(connectorSyncDateTimesToSave);
 
 			// Then
 			promise.then(() => {
 
 				expect(putSpy).toHaveBeenCalledTimes(2);
-				expect(putSpy).toHaveBeenCalledWith(connectorLastSyncDateTimesToSave[0]);
-				expect(putSpy).toHaveBeenCalledWith(connectorLastSyncDateTimesToSave[1]);
+				expect(putSpy).toHaveBeenCalledWith(connectorSyncDateTimesToSave[0]);
+				expect(putSpy).toHaveBeenCalledWith(connectorSyncDateTimesToSave[1]);
 				done();
 
 			}, () => {
@@ -1319,12 +1346,12 @@ describe("DesktopSyncService", () => {
 		it("should reject upsert if connectors sync date times param is not an array", (done: Function) => {
 
 			// Given
-			const expectedErrorMesage = "connectorLastSyncDateTimes param must be an array";
-			const connectorLastSyncDateTime = new ConnectorLastSyncDateTime(ConnectorType.STRAVA, 11111); // No array
+			const expectedErrorMesage = "connectorSyncDateTimes param must be an array";
+			const connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111); // No array
 
 			// When
 			const call = () => {
-				desktopSyncService.upsertConnectorsLastSyncDateTimes(<any> connectorLastSyncDateTime);
+				desktopSyncService.upsertConnectorsSyncDateTimes(<any> connectorSyncDateTime);
 			};
 
 			// Then
@@ -1335,11 +1362,11 @@ describe("DesktopSyncService", () => {
 		it("should clear sync date times of synced connectors", (done: Function) => {
 
 			// Given
-			const clearSpy = spyOn(desktopSyncService.connectorLastSyncDateTimeDao, "clear")
+			const clearSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "clear")
 				.and.returnValue(Promise.resolve());
 
 			// When
-			const promise = desktopSyncService.clearLastSyncTime();
+			const promise = desktopSyncService.clearSyncTime();
 
 			// Then
 			promise.then(() => {

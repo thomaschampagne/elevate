@@ -1,6 +1,6 @@
 import { ConnectorType } from "../../sync/connectors";
 
-export class ConnectorLastSyncDateTime {
+export class ConnectorSyncDateTime {
 
 	public static readonly ID_FIELD: string = "connectorType";
 

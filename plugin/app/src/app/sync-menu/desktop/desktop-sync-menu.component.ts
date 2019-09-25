@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { SyncMenuComponent } from "../sync-menu.component";
 import { Router } from "@angular/router";
 import { MatDialog, MatSnackBar } from "@angular/material";
-import { ConnectorLastSyncDateTime } from "@elevate/shared/models/sync/connector-last-sync-date-time.model";
+import { ConnectorSyncDateTime } from "@elevate/shared/models/sync";
 import {
 	DesktopImportBackupDialogComponent,
 	ImportBackupDialogComponent
@@ -11,6 +11,8 @@ import { DesktopDumpModel } from "../../shared/models/dumps/desktop-dump.model";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
+import moment from "moment";
+import _ from "lodash";
 
 @Component({
 	selector: "app-desktop-sync-menu",
@@ -33,20 +35,13 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
 
 	public updateLastSyncDateStatus(): void {
 
-		console.log("Desktop.updateLastSyncDateStatus called");
-
-		// TODO Remove below !
 		this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
-
-			console.debug("syncState: ", syncState);
-			// debugger;
-
 			this.syncState = SyncState.SYNCED;
-			this.desktopSyncService.getLastSyncDateTime().then((connectorLastSyncDateTimes: ConnectorLastSyncDateTime[]) => {
-				console.debug(connectorLastSyncDateTimes);
-				// if (_.isNumber(lastSyncDateTime)) {
-				// 	this.lastSyncDateMessage = moment(lastSyncDateTime).fromNow();
-				// }
+			this.desktopSyncService.getMostRecentSyncedConnector().then((connectorLastSyncDateTime: ConnectorLastSyncDateTime) => {
+				if (_.isNumber(connectorLastSyncDateTime.dateTime)) {
+					this.lastSyncDateMessage = _.upperFirst(connectorLastSyncDateTime.connectorType.toLowerCase())
+						+ " connector synced " + moment(connectorLastSyncDateTime.dateTime).fromNow();
+				}
 			});
 		});
 	}

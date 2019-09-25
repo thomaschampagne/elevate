@@ -4,15 +4,15 @@ import { StorageLocationModel } from "../../data-store/storage-location.model";
 import { StorageType } from "../../data-store/storage-type.enum";
 
 @Injectable()
-export class LastSyncDateTimeDao extends BaseDao<number> { // TODO Rn to "SyncDateTimeDao" (shorter ;))
+export class SyncDateTimeDao extends BaseDao<number> {
 
-	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("lastSyncDateTime", StorageType.SINGLE_VALUE);
+	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("syncDateTime", StorageType.SINGLE_VALUE);
 
 	public getDefaultStorageValue(): number {
 		return null;
 	}
 
 	public getStorageLocation(): StorageLocationModel {
-		return LastSyncDateTimeDao.STORAGE_LOCATION;
+		return SyncDateTimeDao.STORAGE_LOCATION;
 	}
 }

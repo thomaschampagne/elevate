@@ -1,13 +1,13 @@
 import { TestBed } from "@angular/core/testing";
 
-import { LastSyncDateTimeDao } from "./last-sync-date-time.dao";
+import { SyncDateTimeDao } from "./sync-date-time-dao.service";
 import { MockedDataStore } from "../../data-store/impl/mock/mocked-data-store.service";
 import { DataStore } from "../../data-store/data-store";
 
 
-describe("LastSyncDateTimeDao", () => {
+describe("SyncDateTimeDao", () => {
 
-	let lastSyncDateTimeDao: LastSyncDateTimeDao = null;
+	let syncDateTimeDao: SyncDateTimeDao = null;
 
 	beforeEach((done: Function) => {
 
@@ -16,18 +16,18 @@ describe("LastSyncDateTimeDao", () => {
 
 		TestBed.configureTestingModule({
 			providers: [
-				LastSyncDateTimeDao,
+				SyncDateTimeDao,
 				{provide: DataStore, useValue: mockedDataStore}
 			]
 		});
 
 		// Retrieve injected service
-		lastSyncDateTimeDao = TestBed.get(LastSyncDateTimeDao);
+		syncDateTimeDao = TestBed.get(SyncDateTimeDao);
 		done();
 	});
 
 	it("should be created", (done: Function) => {
-		expect(lastSyncDateTimeDao).toBeTruthy();
+		expect(syncDateTimeDao).toBeTruthy();
 		done();
 	});
 

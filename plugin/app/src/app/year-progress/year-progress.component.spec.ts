@@ -58,7 +58,7 @@ describe("YearProgressComponent", () => {
 		userSettingsService = TestBed.get(UserSettingsService);
 		activityDao = TestBed.get(ActivityDao);
 
-		spyOn(syncService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
+		spyOn(syncService, "getSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
 		spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
 		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(DesktopUserSettingsModel.DEFAULT_MODEL));
 		spyOn(activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));

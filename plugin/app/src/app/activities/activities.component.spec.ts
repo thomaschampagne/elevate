@@ -46,7 +46,7 @@ describe("ActivitiesComponent", () => {
 		spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
 		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
-		spyOn(syncService, "getLastSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
+		spyOn(syncService, "getSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
 		spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
 
 		done();

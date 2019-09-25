@@ -36,9 +36,9 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
 
 		this.chromeSyncService.getSyncState().then((syncState: SyncState) => {
 			this.syncState = syncState;
-			this.chromeSyncService.getLastSyncDateTime().then((lastSyncDateTime: number) => {
-				if (_.isNumber(lastSyncDateTime)) {
-					this.lastSyncDateMessage = moment(lastSyncDateTime).fromNow();
+			this.chromeSyncService.getSyncDateTime().then((syncDateTime: number) => {
+				if (_.isNumber(syncDateTime)) {
+					this.lastSyncDateMessage = moment(syncDateTime).fromNow();
 				}
 			});
 		});

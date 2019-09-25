@@ -4,5 +4,5 @@ import { ActivitiesChangesModel } from "./activities-changes.model";
 export class SyncResultModel {
 	public activitiesChangesModel: ActivitiesChangesModel;
 	public syncedActivities: SyncedActivityModel[];
-	public lastSyncDateTime: number;
+	public syncDateTime: number;
 }

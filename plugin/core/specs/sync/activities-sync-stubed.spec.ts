@@ -28,7 +28,7 @@ describe("ActivitiesSynchronize", () => {
 	let rawPagesOfActivities: Array<{ models: Array<StravaActivityModel>, total: number }>;
 	let CHROME_STORAGE_STUB: { // Fake stubed storage to simulate chrome local storage
 		syncedActivities?: SyncedActivityModel[],
-		lastSyncDateTime?: number
+		syncDateTime?: number
 	};
 
 	/**
@@ -189,14 +189,14 @@ describe("ActivitiesSynchronize", () => {
 
 		spyOn(activitiesSynchronize, "saveLastSyncDateToLocal").and.callFake((timestamp: number) => {
 			const defer = Q.defer();
-			CHROME_STORAGE_STUB.lastSyncDateTime = timestamp;
+			CHROME_STORAGE_STUB.syncDateTime = timestamp;
 			defer.resolve();
 			return defer.promise;
 		});
 
 		spyOn(activitiesSynchronize, "getLastSyncDateFromLocal").and.callFake(() => {
 			const defer = Q.defer();
-			defer.resolve((CHROME_STORAGE_STUB.lastSyncDateTime) ? CHROME_STORAGE_STUB.lastSyncDateTime : null);
+			defer.resolve((CHROME_STORAGE_STUB.syncDateTime) ? CHROME_STORAGE_STUB.syncDateTime : null);
 			return defer.promise;
 		});
 
@@ -401,9 +401,9 @@ describe("ActivitiesSynchronize", () => {
 
 		expect(activitiesSynchronize.hasBeenSyncedActivities).toBeNull(); // No mergedSyncedActivities at the moment
 
-		activitiesSynchronize.getLastSyncDateFromLocal().then((savedLastSyncDateTime: any) => {
+		activitiesSynchronize.getLastSyncDateFromLocal().then((savedSyncDateTime: any) => {
 			// Check no last sync date
-			expect(_.isNull(savedLastSyncDateTime) || _.isUndefined(savedLastSyncDateTime)).toBeTruthy();
+			expect(_.isNull(savedSyncDateTime) || _.isUndefined(savedSyncDateTime)).toBeTruthy();
 			return activitiesSynchronize.getSyncedActivitiesFromLocal();
 		}).then((syncedActivitiesStored: any) => {
 			// Check no syncedActivitiesStored
@@ -436,12 +436,12 @@ describe("ActivitiesSynchronize", () => {
 			// Check lastSyncDate & syncedAthleteProfile
 			return activitiesSynchronize.getLastSyncDateFromLocal();
 
-		}).then((savedLastSyncDateTime: number) => {
+		}).then((savedSyncDateTime: number) => {
 
-			expect(CHROME_STORAGE_STUB.lastSyncDateTime).not.toBeNull();
-			expect(_.isNumber(CHROME_STORAGE_STUB.lastSyncDateTime)).toBeTruthy();
-			expect(savedLastSyncDateTime).not.toBeNull();
-			expect(_.isNumber(savedLastSyncDateTime)).toBeTruthy();
+			expect(CHROME_STORAGE_STUB.syncDateTime).not.toBeNull();
+			expect(_.isNumber(CHROME_STORAGE_STUB.syncDateTime)).toBeTruthy();
+			expect(savedSyncDateTime).not.toBeNull();
+			expect(_.isNumber(savedSyncDateTime)).toBeTruthy();
 
 			done();
 
@@ -457,7 +457,7 @@ describe("ActivitiesSynchronize", () => {
 	it("should sync() when a new today training came up + an old one", (done: Function) => {
 
 		expect(CHROME_STORAGE_STUB.syncedActivities).toBeUndefined();
-		expect(CHROME_STORAGE_STUB.lastSyncDateTime).toBeUndefined();
+		expect(CHROME_STORAGE_STUB.syncDateTime).toBeUndefined();
 
 		// Get a full sync, with nothing stored...
 		// On sync done simulate 2 new added activities on strava.com
