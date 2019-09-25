@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
 import { UserSettingsModel } from "@elevate/shared/models";
+import { ListItemModel } from "../models/list-item.model";
 
 @Injectable()
 export class GlobalSettingsService {
@@ -15,7 +16,7 @@ export class GlobalSettingsService {
 			key: "systemUnit",
 			type: "list",
 			labels: ["All"],
-			list: [{
+			list: <ListItemModel[]> [{
 				key: UserSettingsModel.SYSTEM_UNIT_METRIC_KEY,
 				name: "Metric",
 			}, {
@@ -27,7 +28,7 @@ export class GlobalSettingsService {
 			key: "temperatureUnit",
 			type: "list",
 			labels: ["All"],
-			list: [{
+			list: <ListItemModel[]> [{
 				key: "F",
 				name: "Fahrenheit",
 			}, {
@@ -121,7 +122,7 @@ export class GlobalSettingsService {
 			key: "activityStravaMapType",
 			type: "list",
 			labels: ["All"],
-			list: [{
+			list: <ListItemModel[]> [{
 				key: "terrain",
 				name: "Terrain",
 			}, {
@@ -163,7 +164,7 @@ export class GlobalSettingsService {
 			key: "reviveGoogleMapsLayerType",
 			type: "list",
 			labels: ["All"],
-			list: [{
+			list: <ListItemModel[]> [{
 				key: "roadmap",
 				name: "Roadmap",
 			}, {
@@ -187,7 +188,7 @@ export class GlobalSettingsService {
 			key: "defaultLeaderBoardFilter",
 			type: "list",
 			labels: ["All"],
-			list: [{
+			list: <ListItemModel[]> [{
 				key: "overall",
 				name: "Overall",
 			}, {
