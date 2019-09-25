@@ -36,13 +36,15 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
 	public updateSyncDateStatus(): void {
 
 		this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
-			this.syncState = SyncState.SYNCED;
-			this.desktopSyncService.getMostRecentSyncedConnector().then((connectorSyncDateTime: ConnectorSyncDateTime) => {
-				if (_.isNumber(connectorSyncDateTime.dateTime)) {
-					this.syncDateMessage = _.upperFirst(connectorSyncDateTime.connectorType.toLowerCase())
-						+ " connector synced " + moment(connectorSyncDateTime.dateTime).fromNow();
-				}
-			});
+			this.syncState = syncState;
+			if (this.syncState === SyncState.SYNCED) {
+				this.desktopSyncService.getMostRecentSyncedConnector().then((connectorSyncDateTime: ConnectorSyncDateTime) => {
+					if (_.isNumber(connectorSyncDateTime.dateTime)) {
+						this.syncDateMessage = _.upperFirst(connectorSyncDateTime.connectorType.toLowerCase())
+							+ " connector synced " + moment(connectorSyncDateTime.dateTime).fromNow();
+					}
+				});
+			}
 		});
 	}
 
