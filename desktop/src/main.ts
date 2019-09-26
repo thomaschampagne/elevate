@@ -69,7 +69,10 @@ class Main {
 				center: true,
 				frame: false,
 				autoHideMenuBar: true,
-				icon: Main.getIconPath()
+				icon: Main.getIconPath(),
+				webPreferences: {
+					nodeIntegration: true
+				}
 			});
 
 			this.appWindow.loadURL(
