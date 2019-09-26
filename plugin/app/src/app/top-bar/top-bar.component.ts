@@ -19,16 +19,16 @@ export class TopBarComponent implements OnInit {
 			</span>
             <span class="toolbar-spacer"></span>
             <button mat-icon-button (click)="onMinimizeAppClicked()">
-                <mat-icon>minimize</mat-icon>
+                <mat-icon inline="true">minimize</mat-icon>
             </button>
             <button *ngIf="!isMaximized" mat-icon-button (click)="onMaximizeAppClicked()">
-                <mat-icon>fullscreen</mat-icon>
+                <mat-icon inline="true">fullscreen</mat-icon>
             </button>
             <button *ngIf="isMaximized" mat-icon-button (click)="onUnMaximizeAppClicked()">
-                <mat-icon>fullscreen_exit</mat-icon>
+                <mat-icon inline="true">fullscreen_exit</mat-icon>
             </button>
             <button mat-icon-button (click)="onCloseAppClicked()">
-                <mat-icon>close</mat-icon>
+                <mat-icon inline="true">close</mat-icon>
             </button>
         </div>
 	`,
@@ -53,8 +53,8 @@ export class TopBarComponent implements OnInit {
             -webkit-app-region: no-drag;
         }
 
-        .mat-icon {
-            transform: scale(0.75);
+        button:last-child:hover { /* Set close icon red */
+            color: #ff4643;
         }
 	`]
 })
