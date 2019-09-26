@@ -67,7 +67,7 @@ class Main {
 				width: width,
 				height: height,
 				center: true,
-				frame: true,
+				frame: false,
 				autoHideMenuBar: true,
 				icon: Main.getIconPath()
 			});

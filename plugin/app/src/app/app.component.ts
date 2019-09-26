@@ -15,6 +15,8 @@ import { EnvTarget } from "@elevate/shared/models";
 import { environment } from "../environments/environment";
 import { SYNC_MENU_COMPONENT_TOKEN, SyncMenuComponent } from "./sync-menu/sync-menu.component";
 import { SyncMenuDirective } from "./sync-menu/sync-menu.directive";
+import { TopBarDirective } from "./top-bar/top-bar.directive";
+import { TOP_BAR_COMPONENT_TOKEN, TopBarComponent } from "./top-bar/top-bar.component";
 
 class MenuItemModel {
 	public name: string;
@@ -44,6 +46,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	public toolBarTitle: string;
 	public routerEventsSubscription: Subscription;
+
+	@ViewChild(TopBarDirective)
+	public topBarDirective: TopBarDirective;
 
 	@ViewChild(SyncMenuDirective)
 	public syncMenuDirective: SyncMenuDirective;
@@ -108,11 +113,14 @@ export class AppComponent implements OnInit, OnDestroy {
 				public iconRegistry: MatIconRegistry,
 				public sanitizer: DomSanitizer,
 				public componentFactoryResolver: ComponentFactoryResolver,
+				@Inject(TOP_BAR_COMPONENT_TOKEN) public topBarComponentType: Type<TopBarComponent>,
 				@Inject(SYNC_MENU_COMPONENT_TOKEN) public syncMenuComponentImplType: Type<SyncMenuComponent>) {
 		this.registerCustomIcons();
 	}
 
 	public ngOnInit(): void {
+
+		this.instantiateTopBarComponent();
 
 		// Instantiate and inject the platform based sync menu component (desktop, extension, ...);
 		this.instantiateSyncMenuComponent();
@@ -134,6 +142,12 @@ export class AppComponent implements OnInit, OnDestroy {
 				this.toolBarTitle = AppComponent.convertRouteToTitle(route);
 			}
 		});
+	}
+
+	public instantiateTopBarComponent(): TopBarComponent {
+		const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.topBarComponentType);
+		const componentRef = this.topBarDirective.viewContainerRef.createComponent(componentFactory);
+		return <SyncMenuComponent> componentRef.instance;
 	}
 
 	public instantiateSyncMenuComponent(): SyncMenuComponent {

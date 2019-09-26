@@ -10,6 +10,8 @@ import { environment } from "../environments/environment";
 import { SyncMenuDirective } from "./sync-menu/sync-menu.directive";
 import { DesktopSyncMenuComponent } from "./sync-menu/desktop/desktop-sync-menu.component";
 import { ExtensionSyncMenuComponent } from "./sync-menu/extension/extension-sync-menu.component";
+import { DesktopTopBarComponent, ExtensionTopBarComponent, TOP_BAR_COMPONENT_TOKEN, TopBarComponent } from "./top-bar/top-bar.component";
+import { TopBarDirective } from "./top-bar/top-bar.directive";
 
 
 @NgModule({
@@ -20,12 +22,15 @@ import { ExtensionSyncMenuComponent } from "./sync-menu/extension/extension-sync
 		CoreModule
 	],
 	declarations: [
-		DesktopSyncMenuComponent
+		DesktopSyncMenuComponent,
+		DesktopTopBarComponent
 	],
 	entryComponents: [
-		DesktopSyncMenuComponent
+		DesktopSyncMenuComponent,
+		DesktopTopBarComponent
 	],
 	providers: [
+		{provide: TOP_BAR_COMPONENT_TOKEN, useValue: DesktopTopBarComponent},
 		{provide: SYNC_MENU_COMPONENT_TOKEN, useValue: DesktopSyncMenuComponent},
 	]
 })
@@ -40,12 +45,15 @@ export class DesktopBootModule {
 		CoreModule
 	],
 	declarations: [
-		ExtensionSyncMenuComponent
+		ExtensionSyncMenuComponent,
+		ExtensionTopBarComponent
 	],
 	entryComponents: [
-		ExtensionSyncMenuComponent
+		ExtensionSyncMenuComponent,
+		ExtensionTopBarComponent
 	],
 	providers: [
+		{provide: TOP_BAR_COMPONENT_TOKEN, useValue: ExtensionTopBarComponent},
 		{provide: SYNC_MENU_COMPONENT_TOKEN, useValue: ExtensionSyncMenuComponent},
 	]
 })
@@ -55,6 +63,8 @@ export class ExtensionBootModule {
 @NgModule({
 	declarations: [
 		AppComponent,
+		TopBarDirective,
+		TopBarComponent,
 		SyncMenuDirective,
 		SyncMenuComponent,
 		AthleteSettingsConsistencyRibbonComponent
