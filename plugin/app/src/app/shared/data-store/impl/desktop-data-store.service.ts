@@ -6,12 +6,12 @@ import PouchDB from "pouchdb-browser";
 import PouchDBFind from "pouchdb-find";
 import PouchDBDebug from "pouchdb-debug";
 import { LoggerService } from "../../services/logging/logger.service";
-import { NotImplementedException } from "@elevate/shared/exceptions";
 import * as _ from "lodash";
 import { StorageType } from "../storage-type.enum";
 import { Gzip } from "@elevate/shared/tools/gzip";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../../services/versions/versions-provider.interface";
 import { DesktopDumpModel } from "../../models/dumps/desktop-dump.model";
+import { AppUsage } from "../../models/app-usage.model";
 import FindRequest = PouchDB.Find.FindRequest;
 
 @Injectable()
@@ -137,9 +137,15 @@ export class DesktopDataStore<T> extends DataStore<T> {
 		});
 	}
 
-	// TODO
 	public getAppUsageDetails(): Promise<AppUsageDetails> {
-		throw new NotImplementedException();
+		return navigator.storage.estimate().then((storageEstimate: StorageEstimate) => {
+			const appUsage = new AppUsage(storageEstimate.usage, storageEstimate.quota);
+			const megaBytesInUse = appUsage.bytesInUse / (1024 * 1024);
+			const percentUsage = appUsage.bytesInUse / appUsage.quotaBytes * 100;
+			const appUsageDetails = new AppUsageDetails(appUsage, megaBytesInUse, percentUsage);
+			console.warn(appUsageDetails);
+			return Promise.resolve(appUsageDetails);
+		});
 	}
 
 	public createDump(): Promise<Blob> {

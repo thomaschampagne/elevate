@@ -4,6 +4,8 @@ import * as d3 from "d3";
 import { AppUsageDetails } from "../shared/models/app-usage-details.model";
 import { DataStore } from "../shared/data-store/data-store";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../shared/services/versions/versions-provider.interface";
+import { environment } from "../../environments/environment";
+import { EnvTarget } from "@elevate/shared/models";
 
 
 @Component({
@@ -15,6 +17,9 @@ export class AboutDialogComponent implements OnInit {
 
 	public static readonly MAX_WIDTH: string = "40%";
 	public static readonly MIN_WIDTH: string = "40%";
+
+	public envTarget: EnvTarget = environment.target;
+	public EnvTarget = EnvTarget;
 
 	public angularCoreVersion: string;
 	public angularMaterialVersion: string;

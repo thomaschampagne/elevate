@@ -1,24 +1,33 @@
-<h2 mat-dialog-title>About this plugin</h2>
+<h2 mat-dialog-title *ngIf="(envTarget === EnvTarget.EXTENSION)">About this plugin</h2>
+<h2 mat-dialog-title *ngIf="(envTarget === EnvTarget.DESKTOP)">About this app</h2>
 <mat-dialog-content class="mat-body-1">
 
-	<div>
-		Elevate extension is just adding some features that riders and runners would like to see in their Strava web.
-		If these features could be added by default in Strava... It could be cool! Consider getting Strava Premium.
-		There are a ton of features that you will love. Remember, this extension has for ambition to enhance the
-		experience of all users (Free and Premium) and tends to keep users loyal in Strava.
-	</div>
+	<ng-container *ngIf="(envTarget === EnvTarget.EXTENSION)">
+		<div>
+			Elevate extension is just adding some features that riders and runners would like to see in their Strava
+			web.
+			If these features could be added by default in Strava... It could be cool! Consider getting Strava Premium.
+			There are a ton of features that you will love. Remember, this extension has for ambition to enhance the
+			experience of all users (Free and Premium) and tends to keep users loyal in Strava.
+		</div>
+		<mat-divider></mat-divider>
+	</ng-container>
 
-	<mat-divider></mat-divider>
-
-	<div class="stravaNotes">
-		Strava logos, product and service names are the exclusive trademarks of, and are owned by, Strava, Inc. This
-		extension is not approved by Strava. Do not ask them for support.
-	</div>
-
-	<mat-divider></mat-divider>
+	<ng-container *ngIf="(envTarget === EnvTarget.EXTENSION)">
+		<div class="stravaNotes">
+			Strava logos, product and service names are the exclusive trademarks of, and are owned by, Strava, Inc. This
+			extension is not approved by Strava. Do not ask them for support.
+		</div>
+		<mat-divider></mat-divider>
+	</ng-container>
 
 	<div *ngIf="appUsageDetails">
-		Synced activities size: {{appUsageDetails.megaBytesInUse.toFixed(2)}} MB
+		<div>
+			Data size: {{appUsageDetails.megaBytesInUse.toFixed(2)}} MB
+		</div>
+		<div>
+			Quota used: {{appUsageDetails.percentUsage.toFixed(2)}} %
+		</div>
 	</div>
 
 	<mat-divider></mat-divider>
