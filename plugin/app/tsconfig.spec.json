@@ -1,17 +1,19 @@
 {
-	"extends": "../tsconfig.json",
+	"extends": "./tsconfig.json",
 	"compilerOptions": {
-		"outDir": "../out-tsc/app",
+		"outDir": "./out-tsc/spec",
 		"baseUrl": "./",
 		"types": [
+			"jasmine",
+			"node",
 			"chrome"
 		],
 		"paths": {
 			"@elevate/shared/constants": [
-				"../modules/shared/constants/"
+				"./modules/shared/constants/"
 			],
 			"@elevate/shared/data": [
-				"../modules/shared/data/"
+				"./modules/shared/data/"
 			],
 			"@elevate/shared/electron": [
 				"../modules/shared/electron/"
@@ -20,21 +22,25 @@
 				"../modules/shared/sync/"
 			],
 			"@elevate/shared/models": [
-				"../modules/shared/models/"
+				"./modules/shared/models/"
 			],
 			"@elevate/shared/resolvers": [
-				"../modules/shared/resolvers/"
+				"./modules/shared/resolvers/"
 			],
 			"@elevate/shared/exceptions": [
-				"../modules/shared/exceptions/"
+				"./modules/shared/exceptions/"
 			],
 			"@elevate/shared/tools": [
-				"../modules/shared/tools/"
+				"./modules/shared/tools/"
 			]
 		}
 	},
-	"exclude": [
-		"test.ts",
-		"**/*.spec.ts"
+	"files": [
+		"src/test.ts",
+		"src/polyfills.ts"
+	],
+	"include": [
+		"src/**/*.spec.ts",
+		"src/**/*.d.ts"
 	]
 }

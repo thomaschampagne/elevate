@@ -1,8 +1,9 @@
-import { Inject } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { DataStore } from "../data-store/data-store";
 import { StorageLocationModel } from "../data-store/storage-location.model";
 import FindRequest = PouchDB.Find.FindRequest;
 
+@Injectable()
 export abstract class BaseDao<T> {
 
 	public defaultStorage: T[] | T;

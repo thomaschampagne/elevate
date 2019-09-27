@@ -1,16 +1,17 @@
 {
 	"compileOnSave": false,
 	"compilerOptions": {
-		"downlevelIteration": true,
 		"module": "esnext",
 		"outDir": "./dist/out-tsc",
 		"sourceMap": true,
 		"declaration": false,
+		"downlevelIteration": true,
 		"moduleResolution": "node",
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"allowSyntheticDefaultImports": true,
 		"target": "es5",
+		"importHelpers": true,
 		"typeRoots": [
 			"node_modules/@types"
 		],
@@ -18,5 +19,9 @@
 			"es2018",
 			"dom"
 		]
+	},
+	"angularCompilerOptions": {
+		"fullTemplateTypeCheck": true,
+		"strictInjectionParameters": true
 	}
 }

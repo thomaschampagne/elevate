@@ -84,7 +84,6 @@
 	"displayBikeOdoInActivity": true,
 	"displayCadenceData": true,
 	"displayNearbySegments": true,
-	"displayReliveCCLink": true,
 	"displaySegmentRankPercentage": true,
 	"displaySegmentTimeComparisonPosition": true,
 	"displaySegmentTimeComparisonToCurrentYearPR": true,

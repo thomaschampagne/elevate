@@ -1,6 +1,6 @@
 {
 	"name": "elevate",
-	"version": "6.12.0",
+	"version": "6.14.0",
 	"description": "Wrap the needed tools required to cook the Elevate Web Plugin",
 	"scripts": {
 		"build:extension@dev": "npm-run-all clean extension-res-copy:* build:core@dev build:app@dev",
@@ -25,6 +25,7 @@
 		"clean": "npm-run-all clean:*",
 		"clean:dist": "node ./node_modules/del-cli/cli.js ./dist/",
 		"clean:package": "node ./node_modules/del-cli/cli.js ./package/",
+		"audit:fix": "npm audit fix && cd ./plugin/app/ && npm audit fix && cd ../core/ && npm audit fix",
 		"package": "npm-run-all clean build:extension@prod archive",
 		"postinstall": "cd ./plugin/core/ && npm install && cd ../app/ && npm install",
 		"extension-res-copy:manifest": "node ./node_modules/cpy-cli/cli.js ./plugin/manifest.json ./dist/",

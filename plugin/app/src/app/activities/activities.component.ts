@@ -413,7 +413,7 @@ export class ActivitiesComponent implements OnInit {
 			});
 
 			const parser = new Json2CsvParser({fields: fields});
-			const csvData = parser.parse(this.dataSource.data);
+			const csvData = parser.parse(this.dataSource.filteredData);
 			const blob = new Blob([csvData], {type: "application/csv; charset=utf-16"});
 			const filename = "elevate_activities_export." + moment().format("Y.M.D-H.mm.ss") + ".csv";
 			saveAs(blob, filename);

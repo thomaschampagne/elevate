@@ -1,5 +1,4 @@
 import { Component, InjectionToken, OnInit } from "@angular/core";
-import { SyncState } from "app/shared/services/sync/sync-state.enum";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { AppRoutesModel } from "../shared/models/app-routes.model";
@@ -12,6 +11,7 @@ import { Router } from "@angular/router";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { SyncResultModel } from "@elevate/shared/models";
 import { ElevateException } from "@elevate/shared/exceptions";
+import { SyncState } from "../shared/services/sync/sync-state.enum";
 
 export const SYNC_MENU_COMPONENT_TOKEN = new InjectionToken<SyncMenuComponent>("SYNC_MENU_COMPONENT_TOKEN");
 

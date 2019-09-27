@@ -14,8 +14,9 @@
 						"outputPath": "../../dist/app/",
 						"index": "src/index.html",
 						"main": "src/main.ts",
-						"tsConfig": "src/tsconfig.app.json",
+						"tsConfig": "tsconfig.app.json",
 						"polyfills": "src/polyfills.ts",
+						"aot": true,
 						"assets": [
 							"src/assets",
 							"src/favicon.ico"
@@ -46,6 +47,13 @@
 								{
 									"replace": "src/environments/environment.ts",
 									"with": "src/environments/environment.prod.ts"
+								}
+							],
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "3mb",
+									"maximumError": "5mb"
 								}
 							]
 						},
@@ -99,7 +107,7 @@
 						"main": "src/test.ts",
 						"karmaConfig": "./karma.conf.js",
 						"polyfills": "src/polyfills.ts",
-						"tsConfig": "src/tsconfig.spec.json",
+						"tsConfig": "tsconfig.spec.json",
 						"scripts": [
 							"node_modules/d3/dist/d3.js",
 							"node_modules/metrics-graphics/dist/metricsgraphics.js",
@@ -121,8 +129,8 @@
 					"builder": "@angular-devkit/build-angular:tslint",
 					"options": {
 						"tsConfig": [
-							"src/tsconfig.app.json",
-							"src/tsconfig.spec.json"
+							"tsconfig.app.json",
+							"tsconfig.spec.json"
 						],
 						"exclude": [
 							"**/node_modules/**"

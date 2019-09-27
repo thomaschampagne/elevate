@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
 import { EnvTarget, UserSettings } from "@elevate/shared/models";
+import { ListItemModel } from "../models/list-item.model";
 import * as _ from "lodash";
 
 @Injectable()
@@ -16,7 +17,7 @@ export class GlobalSettingsService {
 			key: "systemUnit",
 			type: "list",
 			labels: ["All"],
-			list: [{
+			list: <ListItemModel[]> [{
 				key: UserSettings.SYSTEM_UNIT_METRIC_KEY,
 				name: "Metric",
 			}, {
@@ -28,7 +29,7 @@ export class GlobalSettingsService {
 			key: "temperatureUnit",
 			type: "list",
 			labels: ["All"],
-			list: [{
+			list: <ListItemModel[]> [{
 				key: "F",
 				name: "Fahrenheit",
 			}, {
@@ -96,6 +97,11 @@ export class GlobalSettingsService {
 			title: "Enable bike odo display",
 			labels: ["Cycling"],
 		}, {
+			key: "displayRunningPerformanceIndex",
+			type: "checkbox",
+			title: "Display running performance index",
+			labels: ["Running"],
+		}, {
 			key: "activateRunningGradeAdjustedPace",
 			type: "checkbox",
 			title: "Enable Grade Adjusted Pace graph",
@@ -119,7 +125,7 @@ export class GlobalSettingsService {
 			key: "activityStravaMapType",
 			type: "list",
 			labels: ["All"],
-			list: [{
+			list: <ListItemModel[]> [{
 				key: "terrain",
 				name: "Terrain",
 			}, {
@@ -161,7 +167,7 @@ export class GlobalSettingsService {
 			key: "reviveGoogleMapsLayerType",
 			type: "list",
 			labels: ["All"],
-			list: [{
+			list: <ListItemModel[]> [{
 				key: "roadmap",
 				name: "Roadmap",
 			}, {
@@ -185,7 +191,7 @@ export class GlobalSettingsService {
 			key: "defaultLeaderBoardFilter",
 			type: "list",
 			labels: ["All"],
-			list: [{
+			list: <ListItemModel[]> [{
 				key: "overall",
 				name: "Overall",
 			}, {
@@ -202,11 +208,6 @@ export class GlobalSettingsService {
 				name: "My Results",
 			}],
 			title: "Default Leaderboard Filter",
-		}, {
-			key: "displayReliveCCLink",
-			type: "checkbox",
-			title: "Relive your rides/runs with relive.cc",
-			labels: ["Cycling", "Running"],
 		}, {
 			key: "displayWindyOverlay",
 			type: "checkbox",

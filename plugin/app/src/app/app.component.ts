@@ -36,8 +36,6 @@ class MenuItemModel {
 export class AppComponent implements OnInit, OnDestroy {
 
 	public static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
-	public static readonly DEFAULT_SIDE_NAV_MODE: string = "side";
-
 	public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
 	public static readonly LS_USER_THEME_PREF: string = "theme";
 
@@ -58,7 +56,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	@ViewChild(MatSidenav, {static: true})
 	public sideNav: MatSidenav;
-	public sideNavMode: string;
 
 	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
 		{
@@ -167,8 +164,6 @@ export class AppComponent implements OnInit, OnDestroy {
 		if (sideNavOpened) {
 			this.sideNav.opened = (sideNavOpened === "true");
 		}
-
-		this.sideNavMode = AppComponent.DEFAULT_SIDE_NAV_MODE;
 	}
 
 	public setupThemeOnLoad(): void {
