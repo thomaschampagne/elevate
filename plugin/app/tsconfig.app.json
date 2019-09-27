@@ -13,6 +13,12 @@
 			"@elevate/shared/data": [
 				"./modules/shared/data/"
 			],
+			"@elevate/shared/electron": [
+				"./modules/shared/electron/"
+			],
+			"@elevate/shared/sync": [
+				"./modules/shared/sync/"
+			],
 			"@elevate/shared/models": [
 				"./modules/shared/models/"
 			],

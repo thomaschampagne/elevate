@@ -14,7 +14,7 @@
 		"build:desktop:runner": "cd desktop && npm run res:desktop:copy && rollup --config rollup.config.js",
 		"watch:desktop:runner": "npm run build:desktop:runner -- --watch",
 		"build:desktop:app@dev": "npm run build:app@dev -- --base-href --configuration=desktop",
-		"build:desktop:app@prod": "npm run build:app@dev -- --base-href --configuration=desktop:prod",
+		"build:desktop:app@prod": "npm run build:app@dev -- --base-href --configuration=desktop-prod",
 		"watch:desktop:app": "npm run build:desktop:app@dev -- --watch",
 		"watch:desktop": "npm run clean && npm-run-all --print-label --race --parallel watch:desktop:runner watch:desktop:app",
 		"test:desktop": "cd desktop && jest --coverage",

@@ -65,7 +65,7 @@
 								}
 							]
 						},
-						"desktop:prod": {
+						"desktop-prod": {
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
