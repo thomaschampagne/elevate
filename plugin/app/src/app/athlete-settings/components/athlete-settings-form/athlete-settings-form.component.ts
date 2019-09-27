@@ -26,7 +26,7 @@ export class AthleteSettingsFormComponent implements OnInit {
 
 	public readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = FitnessService.DEFAULT_LTHR_KARVONEN_HRR_FACTOR;
 
-	@ViewChild("bottom")
+	@ViewChild("bottom", {static: true})
 	public bottomElement: ElementRef;
 
 	@Input("athleteSettingsModel")

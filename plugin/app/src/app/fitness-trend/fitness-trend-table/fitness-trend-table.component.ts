@@ -157,10 +157,10 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	@Input("isSwimEnabled")
 	public isSwimEnabled;
 
-	@ViewChild(MatPaginator)
+	@ViewChild(MatPaginator, {static: true})
 	public matPaginator: MatPaginator;
 
-	@ViewChild(MatSort)
+	@ViewChild(MatSort, {static: true})
 	public matSort: MatSort;
 
 	constructor(public dialog: MatDialog,

@@ -47,13 +47,13 @@ export class AppComponent implements OnInit, OnDestroy {
 	public toolBarTitle: string;
 	public routerEventsSubscription: Subscription;
 
-	@ViewChild(TopBarDirective)
+	@ViewChild(TopBarDirective, {static: true})
 	public topBarDirective: TopBarDirective;
 
-	@ViewChild(SyncMenuDirective)
+	@ViewChild(SyncMenuDirective, {static: true})
 	public syncMenuDirective: SyncMenuDirective;
 
-	@ViewChild(MatSidenav)
+	@ViewChild(MatSidenav, {static: true})
 	public sideNav: MatSidenav;
 	public sideNavMode: string;
 

@@ -17,11 +17,11 @@ const routes: Routes = [
 	},
 	{
 		path: AppRoutesModel.fitnessTrend,
-		loadChildren: "../../fitness-trend/fitness-trend.module#FitnessTrendModule"
+		loadChildren: () => import("../../fitness-trend/fitness-trend.module").then(m => m.FitnessTrendModule)
 	},
 	{
 		path: AppRoutesModel.yearProgressions,
-		loadChildren: "../../year-progress/year-progress.module#YearProgressModule"
+		loadChildren: () => import("../../year-progress/year-progress.module").then(m => m.YearProgressModule)
 	},
 	{
 		path: AppRoutesModel.globalSettings,
@@ -29,7 +29,7 @@ const routes: Routes = [
 	},
 	{
 		path: AppRoutesModel.athleteSettings,
-		loadChildren: "../../athlete-settings/athlete-settings.module#AthleteSettingsModule"
+		loadChildren: () => import("../../athlete-settings/athlete-settings.module").then(m => m.AthleteSettingsModule)
 	},
 	{
 		path: AppRoutesModel.zonesSettings,
@@ -41,7 +41,7 @@ const routes: Routes = [
 	},
 	{
 		path: AppRoutesModel.connectors,
-		loadChildren: "../../connectors/connectors.module#ConnectorsModule"
+		loadChildren: () => import("../../connectors/connectors.module").then(m => m.ConnectorsModule)
 	},
 	{
 		path: AppRoutesModel.donate,
@@ -49,7 +49,7 @@ const routes: Routes = [
 	},
 	{
 		path: AppRoutesModel.releasesNotes,
-		loadChildren: "../../releases-notes/releases-notes.module#ReleasesNotesModule"
+		loadChildren: () => import("../../releases-notes/releases-notes.module").then(m => m.ReleasesNotesModule)
 	},
 	{
 		path: AppRoutesModel.share,
