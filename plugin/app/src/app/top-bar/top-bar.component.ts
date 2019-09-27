@@ -14,17 +14,17 @@ export class TopBarComponent implements OnInit {
 	selector: "app-desktop-top-bar",
 	template: `
         <div class="top-bar">
-			<span class="top-bar-title mat-subheading-1">
+            <span class="top-bar-title mat-subheading-1">
 			Elevate v{{currentVersion}}
 			</span>
             <span class="toolbar-spacer"></span>
             <button mat-icon-button (click)="onMinimizeAppClicked()">
                 <mat-icon inline="true">minimize</mat-icon>
             </button>
-            <button *ngIf="!isMaximized" mat-icon-button (click)="onMaximizeAppClicked()">
+            <button *ngIf="!isFullscreen" mat-icon-button (click)="onFullscreenAppClicked()">
                 <mat-icon inline="true">fullscreen</mat-icon>
             </button>
-            <button *ngIf="isMaximized" mat-icon-button (click)="onUnMaximizeAppClicked()">
+            <button *ngIf="isFullscreen" mat-icon-button (click)="onNormalScreenAppClicked()">
                 <mat-icon inline="true">fullscreen_exit</mat-icon>
             </button>
             <button mat-icon-button (click)="onCloseAppClicked()">
@@ -60,7 +60,7 @@ export class TopBarComponent implements OnInit {
 })
 export class DesktopTopBarComponent implements OnInit {
 
-	public isMaximized: boolean;
+	public isFullscreen: boolean = null;
 	public currentVersion: string;
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
@@ -73,19 +73,15 @@ export class DesktopTopBarComponent implements OnInit {
 			this.currentVersion = version;
 		});
 
-		this.refreshWindowsMaximizedState();
-
-		this.electronService.remote.getCurrentWindow().on("maximize", () => {
-			this.refreshWindowsMaximizedState();
+		this.electronService.remote.getCurrentWindow().on("enter-full-screen", event => {
+			this.isFullscreen = this.electronService.remote.getCurrentWindow().isFullScreen();
 		});
 
-		this.electronService.remote.getCurrentWindow().on("unmaximize", () => {
-			this.refreshWindowsMaximizedState();
+		this.electronService.remote.getCurrentWindow().addListener("leave-full-screen", event => {
+			this.isFullscreen = this.electronService.remote.getCurrentWindow().isFullScreen();
 		});
-	}
 
-	public refreshWindowsMaximizedState() {
-		this.isMaximized = this.electronService.remote.getCurrentWindow().isMaximized();
+		this.isFullscreen = this.electronService.remote.getCurrentWindow().isFullScreen();
 	}
 
 	public onMinimizeAppClicked() {
@@ -96,12 +92,12 @@ export class DesktopTopBarComponent implements OnInit {
 		this.electronService.remote.getCurrentWindow().close();
 	}
 
-	public onMaximizeAppClicked() {
-		this.electronService.remote.getCurrentWindow().maximize();
+	public onFullscreenAppClicked() {
+		this.electronService.remote.getCurrentWindow().setFullScreen(true);
 	}
 
-	public onUnMaximizeAppClicked() {
-		this.electronService.remote.getCurrentWindow().unmaximize();
+	public onNormalScreenAppClicked() {
+		this.electronService.remote.getCurrentWindow().setFullScreen(false);
 	}
 }
 
