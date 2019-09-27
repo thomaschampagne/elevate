@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { LoggerService } from "../../shared/services/logging/logger.service";
-import { MatSnackBar } from "@angular/material";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { StravaApiCredentials } from "@elevate/shared/sync";
 import { ConnectorsComponent } from "../connectors.component";
 import { StravaConnectorService } from "../services/strava-connector.service";

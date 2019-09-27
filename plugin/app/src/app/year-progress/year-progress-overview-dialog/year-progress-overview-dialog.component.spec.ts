@@ -4,7 +4,7 @@ import { YearProgressOverviewDialogComponent } from "./year-progress-overview-di
 import { YearProgressModule } from "../year-progress.module";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { YearProgressForOverviewModel } from "../shared/models/year-progress-for-overview.model";
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
 import * as moment from "moment";

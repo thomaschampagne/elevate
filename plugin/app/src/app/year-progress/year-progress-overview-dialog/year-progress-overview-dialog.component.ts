@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA } from "@angular/material";
+import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { YearProgressForOverviewModel } from "../shared/models/year-progress-for-overview.model";
 import { ProgressMode } from "../shared/enums/progress-mode.enum";
 

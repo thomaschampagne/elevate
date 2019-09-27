@@ -8,7 +8,7 @@ import { AppRoutesModel } from "../shared/models/app-routes.model";
 import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
 import { Subscription } from "rxjs";
-import { MatSnackBar } from "@angular/material";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Component({

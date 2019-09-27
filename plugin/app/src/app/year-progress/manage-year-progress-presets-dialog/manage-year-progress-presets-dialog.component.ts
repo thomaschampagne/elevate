@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { YearProgressService } from "../shared/services/year-progress.service";
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatSnackBar, MatTableDataSource } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatTableDataSource } from "@angular/material/table";
 import { YearToDateProgressPresetModel } from "../shared/models/year-to-date-progress-preset.model";
 import { ProgressType } from "../shared/enums/progress-type.enum";
 import * as _ from "lodash";

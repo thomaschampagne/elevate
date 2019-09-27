@@ -10,7 +10,7 @@ import * as _ from "lodash";
 import { ProgressionAtDayRow } from "./models/progression-at-day-row.model";
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
 import { DeltaType } from "./models/delta-type.enum";
-import { MatTableDataSource } from "@angular/material";
+import { MatTableDataSource } from "@angular/material/table";
 import { Delta } from "./models/delta.model";
 import { TargetProgressModel } from "../shared/models/target-progress.model";
 import { ProgressConfig } from "../shared/interfaces/progress-config";

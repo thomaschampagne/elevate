@@ -1,6 +1,9 @@
 import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
 import * as _ from "lodash";
 import { FitnessTrendComponent } from "../fitness-trend.component";
 import * as moment from "moment";

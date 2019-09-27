@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { SyncMenuComponent } from "../sync-menu.component";
 import { Router } from "@angular/router";
-import { MatDialog, MatSnackBar } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync";
 import {
 	DesktopImportBackupDialogComponent,

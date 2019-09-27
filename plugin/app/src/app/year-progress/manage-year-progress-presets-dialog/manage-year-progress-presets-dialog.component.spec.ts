@@ -4,7 +4,7 @@ import { ManageYearProgressPresetsDialogComponent } from "./manage-year-progress
 import { YearProgressModule } from "../year-progress.module";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import { YearProgressService } from "../shared/services/year-progress.service";
 import { YearToDateProgressPresetModel } from "../shared/models/year-to-date-progress-preset.model";

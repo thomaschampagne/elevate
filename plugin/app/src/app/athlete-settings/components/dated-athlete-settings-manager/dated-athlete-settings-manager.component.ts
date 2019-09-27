@@ -1,5 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from "@angular/core";
-import { MatDialog, MatSnackBar, MatTableDataSource } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatTableDataSource } from "@angular/material/table";
 import { AthleteModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { AthleteService } from "../../../shared/services/athlete/athlete.service";
 import { EditDatedAthleteSettingsDialogComponent } from "../edit-dated-athlete-settings-dialog/edit-dated-athlete-settings-dialog.component";

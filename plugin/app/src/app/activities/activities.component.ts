@@ -1,6 +1,10 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivityService } from "../shared/services/activity/activity.service";
-import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
 import { SyncedActivityModel, SyncResultModel, UserSettings } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { ActivityColumns } from "./activity-columns.namespace";

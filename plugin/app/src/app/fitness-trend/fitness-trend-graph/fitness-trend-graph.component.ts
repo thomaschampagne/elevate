@@ -7,7 +7,7 @@ import { PeriodModel } from "../shared/models/period.model";
 import { GraphPointModel } from "../../shared/models/graphs/graph-point.model";
 import { MarkerModel } from "./models/marker.model";
 import { MetricsGraphicsEventModel } from "../../shared/models/graphs/metrics-graphics-event.model";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { FitnessTrendComponent } from "../fitness-trend.component";
 import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
 import { ViewableFitnessDataModel } from "./models/viewable-fitness-data.model";

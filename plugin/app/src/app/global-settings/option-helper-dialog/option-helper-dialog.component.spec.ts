@@ -4,7 +4,7 @@ import { OptionHelperDialogComponent } from "./option-helper-dialog.component";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { OptionHelperDataModel } from "./option-helper-data.model";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 
 describe("OptionHelperDialogComponent", () => {

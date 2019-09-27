@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog.component";
 import { CoreModule } from "../../core/core.module";
-import { MatDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material/dialog";
 import { SharedModule } from "../../shared/shared.module";
 import { YearProgressModule } from "../year-progress.module";
 

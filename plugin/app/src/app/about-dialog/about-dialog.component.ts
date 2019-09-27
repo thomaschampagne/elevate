@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, VERSION as angularCoreVersion } from "@angular/core";
-import { VERSION as angularMaterialVersion } from "@angular/material";
+import { VERSION as angularMaterialVersion } from "@angular/material/core";
 import * as d3 from "d3";
 import { AppUsageDetails } from "../shared/models/app-usage-details.model";
 import { DataStore } from "../shared/data-store/data-store";

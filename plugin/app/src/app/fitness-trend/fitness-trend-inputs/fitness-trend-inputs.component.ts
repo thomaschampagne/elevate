@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
 import { LastPeriodModel } from "../shared/models/last-period.model";
 import { PeriodModel } from "../shared/models/period.model";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 import { FitnessInfoDialogComponent } from "../fitness-info-dialog/fitness-info-dialog.component";
 import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.model";

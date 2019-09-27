@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ZonesImportExportDialogComponent } from "./zones-import-export-dialog.component";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
 import { ZoneImportExportDataModel } from "./zone-import-export-data.model";

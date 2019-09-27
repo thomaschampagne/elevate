@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { GlobalSettingsService } from "./services/global-settings.service";
 import * as _ from "lodash";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute } from "@angular/router";
 import { OptionHelperDialogComponent } from "./option-helper-dialog/option-helper-dialog.component";
 import { OptionHelperReaderService } from "./services/option-helper-reader.service";

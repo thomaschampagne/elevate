@@ -1,7 +1,8 @@
 import * as _ from "lodash";
 import * as moment from "moment";
 import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 import { FitnessTrendConfigDialogData } from "../shared/models/fitness-trend-config-dialog-data.model";
 

@@ -4,7 +4,7 @@ import { FitnessTrendActivitiesLinksDialogComponent } from "./fitness-trend-acti
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { FitnessTrendModule } from "../fitness-trend.module";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import { DayStressModel } from "../shared/models/day-stress.model";
 

@@ -9,7 +9,7 @@ import { YearProgressTypeModel } from "./shared/models/year-progress-type.model"
 import { ProgressType } from "./shared/enums/progress-type.enum";
 import { YearProgressStyleModel } from "./year-progress-graph/models/year-progress-style.model";
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { SyncedActivityModel, SyncResultModel, UserSettings } from "@elevate/shared/models";
 import { SyncService } from "../shared/services/sync/sync.service";

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
 import { FitnessTrendModule } from "../fitness-trend.module";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { FitnessTrendComponent } from "../fitness-trend.component";
 import { FitnessTrendConfigDialogData } from "../shared/models/fitness-trend-config-dialog-data.model";
 import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog.component";

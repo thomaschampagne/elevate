@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
-import { MatSnackBar } from "@angular/material";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { FitnessService } from "../../../fitness-trend/shared/services/fitness.service";
 import { AthleteSettingsModel, UserSettings } from "@elevate/shared/models";
 import { Helper } from "../../../../../../core/scripts/helper";

@@ -3,7 +3,8 @@ import * as moment from "moment";
 import { Component, OnInit } from "@angular/core";
 import { SyncMenuComponent } from "../sync-menu.component";
 import { Router } from "@angular/router";
-import { MatDialog, MatSnackBar } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
 import {
 	ExtensionImportBackupDialogComponent,

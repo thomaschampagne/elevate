@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ImportBackupDialogComponent } from "./import-backup-dialog.component";
 import { CoreModule } from "../../../core/core.module";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { SharedModule } from "../../shared.module";
 
 describe("ImportBackupDialogComponent", () => {

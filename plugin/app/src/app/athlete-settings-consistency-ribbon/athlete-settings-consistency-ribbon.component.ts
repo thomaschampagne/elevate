@@ -5,7 +5,8 @@ import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { Subscription } from "rxjs";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
-import { MatDialog, MatSnackBar } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { SyncService } from "../shared/services/sync/sync.service";
 import * as _ from "lodash";
 

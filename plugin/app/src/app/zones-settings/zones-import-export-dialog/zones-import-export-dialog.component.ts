@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { ZonesService } from "../shared/zones.service";
 import { ZoneImportExportDataModel } from "./zone-import-export-data.model";
 import { Mode } from "./mode.enum";

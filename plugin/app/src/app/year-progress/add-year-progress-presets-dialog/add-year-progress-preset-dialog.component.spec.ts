@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { AddYearProgressPresetDialogComponent } from "./add-year-progress-preset-dialog.component";
 import { YearProgressModule } from "../year-progress.module";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { AddYearToDateProgressPresetDialogData } from "../shared/models/add-year-to-date-progress-preset-dialog-data";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import { ProgressType } from "../shared/enums/progress-type.enum";

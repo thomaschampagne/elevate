@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { YearToDateProgressPresetModel } from "../shared/models/year-to-date-progress-preset.model";
 import { YearProgressService } from "../shared/services/year-progress.service";
-import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { ProgressType } from "../shared/enums/progress-type.enum";
 import { AppError } from "../../shared/models/app-error.model";
 import { ProgressMode } from "../shared/enums/progress-mode.enum";
