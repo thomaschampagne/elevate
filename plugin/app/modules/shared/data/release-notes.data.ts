@@ -2,6 +2,20 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.14.0",
+		date: "2019-09-28",
+		message: "✨ New UI engine implemented within Elevate App. Elevate UI should be faster than ever. Update also adds various improvements & bugs fixes.",
+		hotFixes: [],
+		features: [
+			"Upgraded the Elevate App user interface to the new Angular Ivy engine.",
+			"Removed Relive.cc integration after the take down initiated by strava :("
+		],
+		isPatch: false,
+		fixes: [
+			"Fixed activities not exported properly to spreadsheet when a filter is applied",
+		]
+	},
+	{
 		version: "6.13.0",
 		date: "2019-07-06",
 		message: "✨ New \"Running Performance Index\" statistic added to your running activities. Update also adds various improvements & bugs fixes",

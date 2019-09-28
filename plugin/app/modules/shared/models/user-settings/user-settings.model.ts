@@ -46,6 +46,5 @@ export class UserSettingsModel {
 	public displayActivityBestSplits: boolean;
 	public temperatureUnit: string;
 	public showHiddenBetaFeatures: boolean;
-	public displayReliveCCLink: boolean;
 	public displayWindyOverlay: boolean;
 }

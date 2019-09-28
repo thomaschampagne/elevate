@@ -20,7 +20,6 @@ import { GoogleMapsModifier } from "./modifiers/google-maps.modifier";
 import { HideFeedModifier } from "./modifiers/hide-feed.modifier";
 import { MenuModifier } from "./modifiers/menu.modifier";
 import { NearbySegmentsModifier } from "./modifiers/nearby-segments.modifier";
-import { ReliveCCModifier } from "./modifiers/relivecc.modifier";
 import { RemoteLinksModifier } from "./modifiers/remote-links.modifier";
 import {
 	RunningCadenceModifier,
@@ -106,7 +105,6 @@ export class Elevate {
 			this.handleMenu();
 			this.handleRemoteLinks();
 			this.handleWindyTyModifier();
-			this.handleReliveCCModifier();
 			this.handleDefaultLeaderboardFilter();
 			this.handleSegmentRankPercentage();
 			this.handleSegmentHRAP();
@@ -415,37 +413,6 @@ export class Elevate {
 
 		const windyTyModifier: WindyTyModifier = new WindyTyModifier(this.activityId, this.appResources, this.userSettings);
 		windyTyModifier.modify();
-	}
-
-	public handleReliveCCModifier(): void {
-
-		if (!this.userSettings.displayReliveCCLink) {
-			return;
-		}
-
-		// If we are not on a segment or activity page then return...
-		if (!this.pageMatches.activity) {
-			return;
-		}
-
-		if (!window.pageView) {
-			return;
-		}
-
-		const activityType: string = window.pageView.activity().get("type");
-
-		// Avoid running Extended data at the moment
-		if (activityType !== "Ride" && activityType !== "Run") {
-			return;
-		}
-
-		// If home trainer skip
-		if (window.pageView.activity().get("trainer")) {
-			return;
-		}
-
-		const reliveCCModifier: ReliveCCModifier = new ReliveCCModifier(this.activityId);
-		reliveCCModifier.modify();
 	}
 
 	public handleDefaultLeaderboardFilter(): void {
