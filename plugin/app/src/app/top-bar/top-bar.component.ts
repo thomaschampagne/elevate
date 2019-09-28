@@ -14,8 +14,9 @@ export class TopBarComponent implements OnInit {
 	selector: "app-desktop-top-bar",
 	template: `
         <div class="top-bar">
-            <span class="top-bar-title mat-subheading-1">
-			Elevate v{{currentVersion}}
+            <div class="draggable"></div>
+            <span class="top-bar-title mat-body-strong">
+			Elevate Desktop - Work in progress<!--v{{currentVersion}}-->
 			</span>
             <span class="toolbar-spacer"></span>
             <button mat-icon-button (click)="onMinimizeAppClicked()">
@@ -34,11 +35,19 @@ export class TopBarComponent implements OnInit {
 	`,
 	styles: [`
         .top-bar {
-            -webkit-app-region: drag;
             background-color: black;
             display: flex;
             align-items: center;
             color: white;
+        }
+
+        .draggable {
+            -webkit-app-region: drag;
+            position: absolute;
+            left: 3px;
+            right: 3px;
+            top: 3px;
+            height: 35px;
         }
 
         .top-bar-title {
