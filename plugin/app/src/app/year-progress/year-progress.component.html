@@ -58,8 +58,6 @@
 										matInput
 										min="1"
 										max="999"
-										minlength="1"
-										maxlength="3"
 										[(ngModel)]="periodMultiplier"
 										(change)="onPeriodMultiplierChanged()"
 										type="number"/>
@@ -211,7 +209,7 @@
 					<div fxLayout="row" fxLayoutAlign="space-between start" class="mat-subheading-2">
 						<span fxFlex="100">
 							<span *ngIf="progressConfig.mode === ProgressMode.ROLLING">
-								{{momentWatched.clone().subtract(progressConfig.rollingDays, "days").format("MMMM Do")}}
+								{{momentWatched.clone().subtract(progressConfig['rollingDays'], "days").format("MMMM Do")}}
 								<mat-icon inline="true" [style.vertical-align]="'middle'">arrow_forward</mat-icon>
 								{{momentWatched.format("MMMM Do")}}
 							</span>

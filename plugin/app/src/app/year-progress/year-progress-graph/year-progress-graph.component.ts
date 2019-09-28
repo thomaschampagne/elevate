@@ -7,6 +7,7 @@ import * as _ from "lodash";
 import { YearProgressModel } from "../shared/models/year-progress.model";
 import { ProgressModel } from "../shared/models/progress.model";
 import * as d3 from "d3";
+import * as MG from "metrics-graphics";
 import { MetricsGraphicsEventModel } from "../../shared/models/graphs/metrics-graphics-event.model";
 import { ProgressType } from "../shared/enums/progress-type.enum";
 import { GraphPointModel } from "../../shared/models/graphs/graph-point.model";
