@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- "10"
+	- "10"
 install:
   - npm install
 script:
@@ -10,12 +10,14 @@ after_success:
   - SHA01=$(echo $TRAVIS_COMMIT | cut -c1-8)
   - for f in package/*.zip; do mv "$f" "`echo $f | sed s/.zip/.$TRAVIS_BRANCH.$SHA01.zip/`"; done
   - ARTIFACT_FILENAME=package/$(ls package | grep .zip)
-  # Delete last build from bitbucket
-  #  - lastBuild=$(curl -X GET https://api.bitbucket.org/2.0/repositories/thomaschampagne/elevate-ci-builds/downloads?pagelen=100 | awk -F"[,:}]" '{for(i=1;i<=NF;i++){if($i~/'name'\042/){print $(i+1)}}}' | tr -d '"' | grep zip | tail -n1 | sed -e 's/^[ \t]*//')
-  #  - curl -u "$BITBUCKET_USERNAME:$BITBUCKET_PASSWORD" -X DELETE https://api.bitbucket.org/2.0/repositories/thomaschampagne/elevate-ci-builds/downloads/$lastBuild
-  # Push the new one to bitbucket
+	# Delete last build from bitbucket
+  - maxAvailableBuilds=5
+  - builds=$(curl -X GET https://api.bitbucket.org/2.0/repositories/thomaschampagne/elevate-ci-builds/downloads?pagelen=100 | awk -F"[,:}]" '{for(i=1;i<=NF;i++){if($i~/'name'\042/){print $(i+1)}}}' | tr -d '"' | grep zip  | sed -e 's/^[ \t]*//' )
+  - buildCount=$(echo $builds | tr ' ' '\n' | grep -c 'zip')
+  - if [ $buildCount -ge $maxAvailableBuilds ]; then lastBuild=$(echo $builds | tr ' ' '\n' | tail -n1);  echo Removing old $lastBuild; curl -u "$BITBUCKET_USERNAME:$BITBUCKET_PASSWORD" -X DELETE https://api.bitbucket.org/2.0/repositories/thomaschampagne/elevate-ci-builds/downloads/$lastBuild; fi
+	# Push the new one to bitbucket
   - curl -u "$BITBUCKET_USERNAME:$BITBUCKET_PASSWORD" -X POST https://api.bitbucket.org/2.0/repositories/thomaschampagne/elevate-ci-builds/downloads --form "files=@$ARTIFACT_FILENAME"
 branches:
-  only:
-  - master
-  - develop
+	only:
+		- master
+		- develop
