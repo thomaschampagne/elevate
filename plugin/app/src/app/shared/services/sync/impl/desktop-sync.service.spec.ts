@@ -24,6 +24,8 @@ import { TEST_SYNCED_ACTIVITIES } from "../../../../../shared-fixtures/activitie
 import { SyncState } from "../sync-state.enum";
 import { ConnectorSyncDateTime } from "../../../../../../modules/shared/models/sync/connector-sync-date-time.model";
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
+import { StravaCredentialsUpdateSyncEvent } from "../../../../../../modules/shared/sync/events";
+import { StravaApiCredentials } from "../../../../../../modules/shared/sync/strava";
 
 describe("DesktopSyncService", () => {
 
@@ -469,6 +471,27 @@ describe("DesktopSyncService", () => {
 			// Then
 			syncEvent$.subscribe(() => {
 				expect(syncEventNextSpy).toHaveBeenCalledWith(stoppedSyncEvent);
+				done();
+
+			}, error => {
+				throw new Error("Should not be here!" + JSON.stringify(error));
+			});
+		});
+
+		it("should handle strava credentials updates sync events", (done: Function) => {
+
+			// Given
+			const syncEvent$ = new Subject<SyncEvent>();
+			desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
+			const stravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(new StravaApiCredentials(null, null));
+			const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
+
+			// When
+			setTimeout(() => desktopSyncService.handleSyncEvents(syncEvent$, stravaCredentialsUpdateSyncEvent));
+
+			// Then
+			syncEvent$.subscribe(() => {
+				expect(syncEventNextSpy).toHaveBeenCalledWith(stravaCredentialsUpdateSyncEvent);
 				done();
 
 			}, error => {
@@ -1003,8 +1026,8 @@ describe("DesktopSyncService", () => {
 					expect(stopSpy).toHaveBeenCalledTimes(1);
 					expect(throwSyncErrorSpy).toHaveBeenCalledTimes(1);
 					expect(throwSyncErrorSpy).toHaveBeenCalledWith(expectedStopError);
+					done();
 				});
-				done();
 
 			}, error => {
 				throw new Error("Should not be here!" + JSON.stringify(error));

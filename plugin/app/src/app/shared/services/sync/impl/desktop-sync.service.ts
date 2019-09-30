@@ -186,6 +186,11 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 				this.logger.debug(syncEvent);
 				break;
 
+			case SyncEventType.STRAVA_CREDENTIALS_UPDATE:
+				syncEvents$.next(syncEvent); // Forward for upward UI use.
+				this.logger.debug(syncEvent);
+				break;
+
 			case SyncEventType.COMPLETE:
 				this.handleSyncCompleteEvents(syncEvents$, <CompleteSyncEvent> syncEvent);
 				break;
