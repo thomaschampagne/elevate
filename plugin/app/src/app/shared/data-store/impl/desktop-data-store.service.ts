@@ -143,7 +143,6 @@ export class DesktopDataStore<T> extends DataStore<T> {
 			const megaBytesInUse = appUsage.bytesInUse / (1024 * 1024);
 			const percentUsage = appUsage.bytesInUse / appUsage.quotaBytes * 100;
 			const appUsageDetails = new AppUsageDetails(appUsage, megaBytesInUse, percentUsage);
-			console.warn(appUsageDetails);
 			return Promise.resolve(appUsageDetails);
 		});
 	}

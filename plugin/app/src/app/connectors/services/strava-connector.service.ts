@@ -3,7 +3,6 @@ import { IpcRendererMessagesService } from "../../shared/services/messages-liste
 import { ConnectorType, StravaApiCredentials, StravaCredentialsUpdateSyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
-import { SyncService } from "../../shared/services/sync/sync.service";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { StravaApiCredentialsService } from "../../shared/services/strava-api-credentials/strava-api-credentials.service";
 import { LoggerService } from "../../shared/services/logging/logger.service";
@@ -17,7 +16,7 @@ export class StravaConnectorService {
 
 	constructor(public stravaApiCredentialsService: StravaApiCredentialsService,
 				public messagesListenerService: IpcRendererMessagesService,
-				public syncService: SyncService<any>,
+				public syncService: DesktopSyncService,
 				public logger: LoggerService) {
 
 		this.stravaApiCredentials$ = new Subject<StravaApiCredentials>();
