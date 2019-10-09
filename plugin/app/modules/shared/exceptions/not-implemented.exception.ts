@@ -7,6 +7,6 @@ export class NotImplementedException extends ElevateException {
 	constructor(message?: string) {
 		message = !message ? NotImplementedException.DEFAULT_MESSAGE : NotImplementedException.DEFAULT_MESSAGE + ": " + message;
 		super(message);
-		Object.setPrototypeOf(this, NotImplementedException.prototype);
+		this.name = NotImplementedException.name;
 	}
 }

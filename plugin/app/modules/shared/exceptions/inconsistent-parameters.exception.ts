@@ -7,6 +7,6 @@ export class InconsistentParametersException extends ElevateException {
 	constructor(message?: string) {
 		message = !message ? InconsistentParametersException.DEFAULT_MESSAGE : InconsistentParametersException.DEFAULT_MESSAGE + ": " + message;
 		super(message);
-		Object.setPrototypeOf(this, InconsistentParametersException.prototype);
+		this.name = InconsistentParametersException.name;
 	}
 }

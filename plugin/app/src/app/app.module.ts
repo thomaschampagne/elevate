@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { ErrorHandler, NgModule } from "@angular/core";
 
 import { AppComponent } from "./app.component";
 import { SharedModule } from "./shared/shared.module";
@@ -12,6 +12,7 @@ import { DesktopSyncMenuComponent } from "./sync-menu/desktop/desktop-sync-menu.
 import { ExtensionSyncMenuComponent } from "./sync-menu/extension/extension-sync-menu.component";
 import { DesktopTopBarComponent, ExtensionTopBarComponent, TOP_BAR_COMPONENT_TOKEN, TopBarComponent } from "./top-bar/top-bar.component";
 import { TopBarDirective } from "./top-bar/top-bar.directive";
+import { ElevateErrorHandler } from "./elevate-error-handler";
 
 
 @NgModule({
@@ -73,6 +74,7 @@ export class ExtensionBootModule {
 		(environment.target === EnvTarget.DESKTOP) ? DesktopBootModule : ExtensionBootModule,
 		SharedModule,
 	],
+	providers: [{provide: ErrorHandler, useClass: ElevateErrorHandler}],
 	bootstrap: [
 		AppComponent
 	]

@@ -83,10 +83,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 	public static transformErrorToSyncException(error: Error | Error[] | string | string[]): SyncException {
 
-		if (error instanceof SyncException) {
-			return error;
-		} else if (error instanceof Error) {
-			return SyncException.fromError(error);
+		if ((<any> error).name === SyncException.name) {
+			return <SyncException> error;
+		} else if ((<any> error).name === Error.name) {
+			return SyncException.fromError(<Error> error);
 		} else if (isString(error)) {
 			return new SyncException(error);
 		} else {
