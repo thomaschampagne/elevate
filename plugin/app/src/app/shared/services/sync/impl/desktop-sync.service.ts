@@ -101,7 +101,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 	 * @param connectorType
 	 * @return Subject<SyncEvent>
 	 */
-	public sync(fastSync: boolean, forceSync: boolean, connectorType: ConnectorType = null): Promise<void> {
+	public sync(fastSync: boolean = null, forceSync: boolean = null, connectorType: ConnectorType = null): Promise<void> {
 
 		if (!connectorType) {
 			throw new SyncException("ConnectorType param must be given");

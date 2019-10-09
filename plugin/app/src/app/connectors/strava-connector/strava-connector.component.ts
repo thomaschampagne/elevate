@@ -76,7 +76,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 	}
 
 	public sync(): void {
-		this.stravaConnectorService.sync(false, false);
+		this.stravaConnectorService.sync();
 	}
 
 	public stop(): void {

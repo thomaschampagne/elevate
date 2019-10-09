@@ -13,10 +13,70 @@ import {
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { ChromeSyncService } from "../../shared/services/sync/impl/chrome-sync.service";
 import { ExtensionDumpModel } from "../../shared/models/dumps/extension-dump.model";
+import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
+import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
+import { AppRoutesModel } from "../../shared/models/app-routes.model";
 
 @Component({
 	selector: "app-extension-sync-menu",
-	templateUrl: "./extension-sync-menu.component.html",
+	template: `
+        <div *ngIf="(syncState !== null)">
+            <button mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
+                <mat-icon *ngIf="(syncState === SyncState.NOT_SYNCED)">
+                    sync_disabled
+                </mat-icon>
+                <mat-icon *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
+                    sync_problem
+                </mat-icon>
+                <mat-icon *ngIf="(syncState === SyncState.SYNCED)">
+                    sync
+                </mat-icon>
+                <span *ngIf="(syncState === SyncState.NOT_SYNCED)">
+					Activities not synced
+				</span>
+                <span *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
+					Activities partially synced
+				</span>
+                <span *ngIf="(syncState === SyncState.SYNCED && syncDateMessage)">
+					Synced {{syncDateMessage}}
+				</span>
+            </button>
+            <mat-menu #syncMenu="matMenu">
+                <!--Force full re-sync even of not first synced (to clean up any old history still stored)-->
+                <button mat-menu-item (click)="onSync(true, false)"
+                        *ngIf="(syncState === SyncState.SYNCED)">
+                    <mat-icon>update</mat-icon>
+                    <span>Sync recent activities</span>
+                </button>
+                <button mat-menu-item
+                        (click)="onSync(false, syncState === SyncState.NOT_SYNCED)">
+                    <mat-icon>sync</mat-icon>
+                    <span *ngIf="(syncState === SyncState.NOT_SYNCED)">Sync</span>
+                    <span *ngIf="(syncState === SyncState.SYNCED)">Sync all activities</span>
+                    <span *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">Continue sync</span>
+                </button>
+                <button mat-menu-item (click)="onSync(false, true)"
+                        *ngIf="(syncState !== SyncState.NOT_SYNCED)">
+                    <mat-icon>redo</mat-icon>
+                    <span>Clear and re-sync activities</span>
+                </button>
+                <button mat-menu-item (click)="onClearSyncedData()"
+                        *ngIf="(syncState !== SyncState.NOT_SYNCED)">
+                    <mat-icon>clear</mat-icon>
+                    <span>Clear synced activities</span>
+                </button>
+                <button mat-menu-item (click)="onSyncedBackupExport()"
+                        *ngIf="(syncState === SyncState.SYNCED)">
+                    <mat-icon>file_download</mat-icon>
+                    <span>Backup activities</span>
+                </button>
+                <button mat-menu-item (click)="onSyncedBackupImport()">
+                    <mat-icon>file_upload</mat-icon>
+                    <span>Restore activities</span>
+                </button>
+            </mat-menu>
+        </div>
+	`,
 	styleUrls: ["./extension-sync-menu.component.scss"]
 })
 export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnInit {
@@ -64,5 +124,40 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
 
 			afterClosedSubscription.unsubscribe();
 		});
+	}
+
+	public onSync(fastSync: boolean, forceSync: boolean): void {
+
+		if (this.syncState === SyncState.NOT_SYNCED) {
+
+			const data: ConfirmDialogDataModel = {
+				title: "⚠️ First synchronisation",
+				content: "Your first synchronisation can take a long time and can be done in several times " +
+					"if you have more than 400 activities. Make sure you properly setup your " +
+					"athlete settings before (Cycling FTP, Running FTP, Swim FTP, Heart rate, ...) or may have missing results in " +
+					"Elevate features. This is to avoid a redo of the first synchronisation.",
+				confirmText: "Start sync",
+				cancelText: "Check my athlete settings"
+			};
+
+			const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+				minWidth: ConfirmDialogComponent.MIN_WIDTH,
+				maxWidth: "50%",
+				data: data
+			});
+
+			const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+
+				if (confirm) {
+					this.syncService.sync(fastSync, forceSync);
+				} else {
+					this.router.navigate([AppRoutesModel.athleteSettings]);
+				}
+				afterClosedSubscription.unsubscribe();
+			});
+
+		} else {
+			this.syncService.sync(fastSync, forceSync);
+		}
 	}
 }
