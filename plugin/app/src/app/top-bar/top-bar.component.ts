@@ -5,9 +5,7 @@ import { VERSIONS_PROVIDER, VersionsProvider } from "../shared/services/versions
 export const TOP_BAR_COMPONENT_TOKEN = new InjectionToken<TopBarComponent>("TOP_BAR_COMPONENT_TOKEN");
 
 @Component({template: ""})
-export class TopBarComponent implements OnInit {
-	public ngOnInit(): void {
-	}
+export class TopBarComponent {
 }
 
 @Component({
@@ -67,13 +65,14 @@ export class TopBarComponent implements OnInit {
         }
 	`]
 })
-export class DesktopTopBarComponent implements OnInit {
+export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
 
 	public isFullscreen: boolean = null;
 	public currentVersion: string;
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
 				public electronService: ElectronService) {
+		super();
 	}
 
 	public ngOnInit() {
@@ -115,7 +114,5 @@ export class DesktopTopBarComponent implements OnInit {
 	selector: "app-extension-top-bar",
 	template: ""
 })
-export class ExtensionTopBarComponent extends TopBarComponent implements OnInit {
-	public ngOnInit(): void {
-	}
+export class ExtensionTopBarComponent extends TopBarComponent {
 }

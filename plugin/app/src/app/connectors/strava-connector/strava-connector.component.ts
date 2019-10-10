@@ -1,11 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { ConnectorType, StravaApiCredentials } from "@elevate/shared/sync";
+import { StravaApiCredentials } from "@elevate/shared/sync";
 import { ConnectorsComponent } from "../connectors.component";
 import { StravaConnectorService } from "../services/strava-connector.service";
 import * as moment from "moment";
-import { ConnectorSyncDateTime } from "@elevate/shared/models";
 
 @Component({
 	selector: "app-strava-connector",
@@ -80,12 +79,6 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 	}
 
 	public stop(): void {
-		// this.stravaConnectorService.stop();
-		alert("to be bind");
-	}
-
-	tmpSetSyncDateTime() {
-		this.stravaConnectorService.syncService
-			.upsertConnectorsSyncDateTimes([new ConnectorSyncDateTime(ConnectorType.STRAVA)]);
+		this.stravaConnectorService.stop();
 	}
 }

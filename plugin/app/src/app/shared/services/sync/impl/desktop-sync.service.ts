@@ -436,7 +436,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 		return this.connectorSyncDateTimeDao.clear();
 	}
 
-
 	public ngOnDestroy(): void {
 		if (this.syncSubscription) {
 			this.syncSubscription.unsubscribe();

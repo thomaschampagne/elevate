@@ -1,5 +1,16 @@
 import * as _ from "lodash";
-import { Component, ComponentFactoryResolver, HostListener, Inject, OnDestroy, OnInit, Renderer2, Type, ViewChild } from "@angular/core";
+import {
+	Component,
+	ComponentFactoryResolver,
+	HostListener,
+	Inject,
+	OnDestroy,
+	OnInit,
+	Renderer2,
+	Type,
+	ViewChild,
+	ViewContainerRef
+} from "@angular/core";
 import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
@@ -20,6 +31,8 @@ import { SYNC_MENU_COMPONENT_TOKEN, SyncMenuComponent } from "./sync-menu/sync-m
 import { SyncMenuDirective } from "./sync-menu/sync-menu.directive";
 import { TopBarDirective } from "./top-bar/top-bar.directive";
 import { TOP_BAR_COMPONENT_TOKEN, TopBarComponent } from "./top-bar/top-bar.component";
+import { SYNC_BAR_COMPONENT_TOKEN, SyncBarComponent } from "./sync-bar/sync-bar.component";
+import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
 
 class MenuItemModel {
 	public name: string;
@@ -50,6 +63,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	@ViewChild(TopBarDirective, {static: true})
 	public topBarDirective: TopBarDirective;
+
+	@ViewChild(SyncBarDirective, {static: true})
+	public syncBarDirective: SyncBarDirective;
 
 	@ViewChild(SyncMenuDirective, {static: true})
 	public syncMenuDirective: SyncMenuDirective;
@@ -114,16 +130,17 @@ export class AppComponent implements OnInit, OnDestroy {
 				public sanitizer: DomSanitizer,
 				public componentFactoryResolver: ComponentFactoryResolver,
 				@Inject(TOP_BAR_COMPONENT_TOKEN) public topBarComponentType: Type<TopBarComponent>,
-				@Inject(SYNC_MENU_COMPONENT_TOKEN) public syncMenuComponentImplType: Type<SyncMenuComponent>) {
+				@Inject(SYNC_BAR_COMPONENT_TOKEN) public syncBarComponentType: Type<SyncBarComponent>,
+				@Inject(SYNC_MENU_COMPONENT_TOKEN) public syncMenuComponentType: Type<SyncMenuComponent>) {
 		this.registerCustomIcons();
 	}
 
 	public ngOnInit(): void {
 
-		this.instantiateTopBarComponent();
-
-		// Instantiate and inject the platform based sync menu component (desktop, extension, ...);
-		this.instantiateSyncMenuComponent();
+		// Inject top bar, sync bar, sync menu
+		this.injectHotComponent<TopBarComponent>(this.topBarComponentType, this.topBarDirective.viewContainerRef);
+		this.injectHotComponent<SyncBarComponent>(this.syncBarComponentType, this.syncBarDirective.viewContainerRef);
+		this.injectHotComponent<SyncMenuComponent>(this.syncMenuComponentType, this.syncMenuDirective.viewContainerRef);
 
 		this.setupThemeOnLoad();
 
@@ -144,16 +161,9 @@ export class AppComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	public instantiateTopBarComponent(): TopBarComponent {
-		const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.topBarComponentType);
-		const componentRef = this.topBarDirective.viewContainerRef.createComponent(componentFactory);
-		return <SyncMenuComponent> componentRef.instance;
-	}
-
-	public instantiateSyncMenuComponent(): SyncMenuComponent {
-		const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.syncMenuComponentImplType);
-		const componentRef = this.syncMenuDirective.viewContainerRef.createComponent(componentFactory);
-		return <SyncMenuComponent> componentRef.instance;
+	public injectHotComponent<C>(component: Type<C>, targetViewRef: ViewContainerRef): C {
+		const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
+		return <C> targetViewRef.createComponent(componentFactory).instance;
 	}
 
 	public sideNavSetup(): void {

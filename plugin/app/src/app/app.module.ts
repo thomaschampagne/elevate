@@ -13,6 +13,13 @@ import { ExtensionSyncMenuComponent } from "./sync-menu/extension/extension-sync
 import { DesktopTopBarComponent, ExtensionTopBarComponent, TOP_BAR_COMPONENT_TOKEN, TopBarComponent } from "./top-bar/top-bar.component";
 import { TopBarDirective } from "./top-bar/top-bar.directive";
 import { ElevateErrorHandler } from "./elevate-error-handler";
+import {
+	DesktopSyncBarComponent,
+	ExtensionSyncBarComponent,
+	SYNC_BAR_COMPONENT_TOKEN,
+	SyncBarComponent
+} from "./sync-bar/sync-bar.component";
+import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
 
 
 @NgModule({
@@ -24,14 +31,17 @@ import { ElevateErrorHandler } from "./elevate-error-handler";
 	],
 	declarations: [
 		DesktopSyncMenuComponent,
+		DesktopSyncBarComponent,
 		DesktopTopBarComponent
 	],
 	entryComponents: [
 		DesktopSyncMenuComponent,
+		DesktopSyncBarComponent,
 		DesktopTopBarComponent
 	],
 	providers: [
 		{provide: TOP_BAR_COMPONENT_TOKEN, useValue: DesktopTopBarComponent},
+		{provide: SYNC_BAR_COMPONENT_TOKEN, useValue: DesktopSyncBarComponent},
 		{provide: SYNC_MENU_COMPONENT_TOKEN, useValue: DesktopSyncMenuComponent},
 	]
 })
@@ -46,15 +56,18 @@ export class DesktopBootModule {
 		CoreModule
 	],
 	declarations: [
-		ExtensionSyncMenuComponent,
-		ExtensionTopBarComponent
+		ExtensionTopBarComponent,
+		ExtensionSyncBarComponent,
+		ExtensionSyncMenuComponent
 	],
 	entryComponents: [
-		ExtensionSyncMenuComponent,
-		ExtensionTopBarComponent
+		ExtensionTopBarComponent,
+		ExtensionSyncBarComponent,
+		ExtensionSyncMenuComponent
 	],
 	providers: [
 		{provide: TOP_BAR_COMPONENT_TOKEN, useValue: ExtensionTopBarComponent},
+		{provide: SYNC_BAR_COMPONENT_TOKEN, useValue: ExtensionSyncBarComponent},
 		{provide: SYNC_MENU_COMPONENT_TOKEN, useValue: ExtensionSyncMenuComponent},
 	]
 })
@@ -66,6 +79,8 @@ export class ExtensionBootModule {
 		AppComponent,
 		TopBarDirective,
 		TopBarComponent,
+		SyncBarDirective,
+		SyncBarComponent,
 		SyncMenuDirective,
 		SyncMenuComponent,
 		AthleteSettingsConsistencyRibbonComponent

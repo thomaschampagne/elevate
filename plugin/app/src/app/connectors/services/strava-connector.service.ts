@@ -7,6 +7,7 @@ import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync
 import { StravaApiCredentialsService } from "../../shared/services/strava-api-credentials/strava-api-credentials.service";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { filter } from "rxjs/operators";
+import { SyncException } from "@elevate/shared/exceptions";
 
 @Injectable()
 export class StravaConnectorService {
@@ -74,41 +75,14 @@ export class StravaConnectorService {
 		});
 
 		return desktopSyncService.sync(null, null, ConnectorType.STRAVA);
-
-		// const syncEventSubject$ = (<DesktopSyncService> this.syncService).sync2(fastSync, forceSync, ConnectorType.STRAVA);
-
-		/*const syncEventSubject$ = (<DesktopSyncService> this.syncService).sync(fastSync, forceSync, ConnectorType.STRAVA);
-
-		// Listen for StravaApiCredentials updates then store them & notify subscribers
-		syncEventSubject$.pipe(
-			filter(syncEvent => (syncEvent.type === SyncEventType.GENERIC && (<any> syncEvent).stravaApiCredentials))
-		).subscribe((stravaCredentialsUpdateSyncEvent: StravaCredentialsUpdateSyncEvent) => {
-			this.stravaApiCredentialsService.save(stravaCredentialsUpdateSyncEvent.stravaApiCredentials)
-				.then((stravaApiCredentials: StravaApiCredentials) => {
-					this.stravaApiCredentials$.next(stravaApiCredentials);
-				});
-		});
-
-		/!*
-		Sample for catching error only and snack them:
-
-		syncEventSubject$.pipe(
-			filter(syncEvent => syncEvent.type === SyncEventType.ERROR)
-		).subscribe((errorSyncEvent: ErrorSyncEvent) => {
-			this.snackBar.open("Whoops! " + errorSyncEvent.description, "Close");
-		});*!/
-
-		return syncEventSubject$;*/
 	}
 
-	/*public stop(): Promise<void> {
-		return (<DesktopSyncService> this.syncService).stop(ConnectorType.STRAVA).then(() => {
-			// this.snackBar.open("Sync cancelled", "Close");
+	public stop(): Promise<void> {
+		return (<DesktopSyncService> this.syncService).stop().then(() => {
 			return Promise.resolve();
 		}, error => {
-			this.logger.error(error);
-			throw new Error(error); // Should be caught by Error Handler
+			throw new SyncException(error); // Should be caught by Error Handler
 		});
-	}*/
+	}
 
 }

@@ -1,0 +1,14 @@
+@import "~@angular/material/theming";
+
+@mixin app-sync-bar-theming($theme) {
+
+	$primary: map-get($theme, accent);
+	$foreground: map-get($theme, background);
+	$text-color: mat-color($foreground, text);
+
+	.app-sync-bar {
+		color: $text-color;
+		background: mat-color($primary);
+	}
+
+}
