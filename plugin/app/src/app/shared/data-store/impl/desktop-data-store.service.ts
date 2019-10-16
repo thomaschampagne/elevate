@@ -283,6 +283,12 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 	public getById(storageLocation: StorageLocationModel, id: string): Promise<T> {
 
+		if (storageLocation.storageType === StorageType.COLLECTION) {
+			const keyPrefix = storageLocation.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR;
+			const hasIdKeyPrefix = id.startsWith(keyPrefix);
+			id = (hasIdKeyPrefix) ? id : (keyPrefix + id);
+		}
+
 		return this.database.get(id).then(result => {
 
 			if (storageLocation.storageType === StorageType.SINGLE_VALUE) {

@@ -12,7 +12,7 @@ import {
 	SyncEventType
 } from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
-import { AthleteModel, UserSettings } from "@elevate/shared/models";
+import { AthleteModel, ConnectorSyncDateTime, UserSettings } from "@elevate/shared/models";
 import { Service } from "../service";
 import * as _ from "lodash";
 import UserSettingsModel = UserSettings.UserSettingsModel;
@@ -80,12 +80,14 @@ export class IpcMainMessagesService {
 
 		if (connectorType === ConnectorType.STRAVA) {
 
-			const stravaApiCredentials: StravaApiCredentials = <StravaApiCredentials> message.payload[1];
-			const athleteModel: AthleteModel = <AthleteModel> message.payload[2];
-			const updateSyncedActivitiesNameAndType: boolean = <boolean> message.payload[3];
-			const userSettingsModel: UserSettingsModel = <UserSettingsModel> message.payload[4];
+			const stravaConnectorSyncDateTime: ConnectorSyncDateTime = <ConnectorSyncDateTime> message.payload[1];
+			const stravaApiCredentials: StravaApiCredentials = <StravaApiCredentials> message.payload[2];
+			const athleteModel: AthleteModel = <AthleteModel> message.payload[3];
+			const updateSyncedActivitiesNameAndType: boolean = <boolean> message.payload[4];
+			const userSettingsModel: UserSettingsModel = <UserSettingsModel> message.payload[5];
 
-			this.service.currentConnector = StravaConnector.create(athleteModel, userSettingsModel, stravaApiCredentials, updateSyncedActivitiesNameAndType);
+			this.service.currentConnector = StravaConnector.create(athleteModel, userSettingsModel, stravaConnectorSyncDateTime, stravaApiCredentials,
+				updateSyncedActivitiesNameAndType);
 
 		} else if (connectorType === ConnectorType.FILE_SYSTEM) {
 

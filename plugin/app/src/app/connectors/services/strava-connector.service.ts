@@ -74,7 +74,7 @@ export class StravaConnectorService {
 				});
 		});
 
-		return desktopSyncService.sync(null, null, ConnectorType.STRAVA);
+		return desktopSyncService.sync(true, null, ConnectorType.STRAVA);
 	}
 
 	public stop(): Promise<void> {

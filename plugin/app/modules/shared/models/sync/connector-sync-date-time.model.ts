@@ -11,8 +11,4 @@ export class ConnectorSyncDateTime {
 		this.connectorType = connectorType;
 		this.dateTime = dateTime;
 	}
-
-	public updateToNow(): void {
-		this.dateTime = Date.now();
-	}
 }

@@ -20,14 +20,13 @@ import { StravaApiCredentialsService } from "../../strava-api-credentials/strava
 import { AthleteModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { ActivityService } from "../../activity/activity.service";
 import { ElevateException, SyncException } from "@elevate/shared/exceptions";
-import { isArray, isString } from "util";
 import * as _ from "lodash";
 import { SyncState } from "../sync-state.enum";
 import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.service";
 import { DataStore } from "../../../data-store/data-store";
 import * as moment from "moment";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync";
-import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-time-dao.service";
+import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-time.dao";
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
@@ -87,7 +86,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 			return <SyncException> error;
 		} else if ((<any> error).name === Error.name) {
 			return SyncException.fromError(<Error> error);
-		} else if (isString(error)) {
+		} else if (_.isString(error)) {
 			return new SyncException(error);
 		} else {
 			return new SyncException(JSON.stringify(error));
@@ -113,7 +112,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 		const promisedDataToSync: Promise<any>[] = [
 			this.athleteService.fetch(),
-			this.userSettingsService.fetch()
+			this.userSettingsService.fetch(),
+			(fastSync) ? this.getConnectorSyncDateTime() : Promise.resolve(null)
 		];
 
 		if (this.currentConnectorType === ConnectorType.STRAVA) {
@@ -137,17 +137,21 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 			const athleteModel: AthleteModel = <AthleteModel> result[0];
 			const userSettingsModel: UserSettingsModel = <UserSettingsModel> result[1];
+			const allConnectorsSyncDateTime: ConnectorSyncDateTime[] = <ConnectorSyncDateTime[]> result[2];
 
 			let startSyncMessage: FlaggedIpcMessage;
 
+			const currentConnectorSyncDateTime = (allConnectorsSyncDateTime)
+				? _.find(allConnectorsSyncDateTime, {connectorType: this.currentConnectorType}) : null;
+
 			if (this.currentConnectorType === ConnectorType.STRAVA) {
 
-				const stravaApiCredentials: StravaApiCredentials = <StravaApiCredentials> result[2];
+				const stravaApiCredentials: StravaApiCredentials = <StravaApiCredentials> result[3];
 
 				// Create message to start sync on connector!
 				const updateSyncedActivitiesNameAndType = true;
-				startSyncMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, stravaApiCredentials, athleteModel,
-					updateSyncedActivitiesNameAndType, userSettingsModel);
+				startSyncMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, currentConnectorSyncDateTime,
+					stravaApiCredentials, athleteModel, updateSyncedActivitiesNameAndType, userSettingsModel);
 
 			}
 
@@ -250,11 +254,12 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 		this.connectorSyncDateTimeDao.getById(this.currentConnectorType)
 			.then((currentConnectorSyncDateTime: ConnectorSyncDateTime) => {
 
-				if (!currentConnectorSyncDateTime) {
-					currentConnectorSyncDateTime = new ConnectorSyncDateTime(this.currentConnectorType);
+				if (currentConnectorSyncDateTime) {
+					currentConnectorSyncDateTime.dateTime = Date.now();
 				} else {
-					currentConnectorSyncDateTime.updateToNow();
+					currentConnectorSyncDateTime = new ConnectorSyncDateTime(this.currentConnectorType);
 				}
+
 				return this.upsertConnectorsSyncDateTimes([currentConnectorSyncDateTime]);
 			}).then(() => {
 
@@ -332,7 +337,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 	public throwSyncError(error: Error | Error[] | string | string[]): void {
 
-		if (isArray(error)) {
+		if (_.isArray(error)) {
 
 			const syncExceptions = [];
 			_.forEach(error, err => {

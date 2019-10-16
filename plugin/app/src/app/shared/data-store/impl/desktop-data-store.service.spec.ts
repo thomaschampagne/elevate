@@ -351,7 +351,7 @@ describe("DesktopDataStore", () => {
 
 			// When
 			const promise: Promise<FakeAthlete> = promiseSetRevision.then(() => {
-				return desktopDataStore.put(FAKE_ACTIVITIES_STORAGE_LOCATION, updatedFakeAthlete);
+				return desktopDataStore.put(FAKE_ATHLETE_STORAGE_LOCATION, updatedFakeAthlete);
 			});
 
 			// Then
@@ -577,9 +577,10 @@ describe("DesktopDataStore", () => {
 		it("should get by id a FakeActivity into a collection", (done: Function) => {
 
 			// Given
-			const id = "fakeSyncedActivity:00002";
-			const expectedDocType = "fakeSyncedActivity";
-			const expectedFakeActivity: FakeActivity = <FakeActivity> _.find(FAKE_EXISTING_DOCUMENTS, {_id: id});
+			const id = "00002";
+			const key = "fakeSyncedActivity";
+			const expectedDocType = key;
+			const expectedFakeActivity: FakeActivity = <FakeActivity> _.find(FAKE_EXISTING_DOCUMENTS, {_id: key + ":" + id});
 
 			// When
 			const promise: Promise<FakeActivity> = desktopDataStore.getById(FAKE_ACTIVITIES_STORAGE_LOCATION, id);

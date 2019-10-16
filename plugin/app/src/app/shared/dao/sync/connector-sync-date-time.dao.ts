@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { BaseDao } from "../base.dao";
 import { StorageLocationModel } from "../../data-store/storage-location.model";
 import { StorageType } from "../../data-store/storage-type.enum";
-import { ConnectorSyncDateTime } from "../../../../../modules/shared/models/sync/connector-sync-date-time.model";
+import { ConnectorSyncDateTime } from "@elevate/shared/models";
 
 @Injectable()
 export class ConnectorSyncDateTimeDao extends BaseDao<ConnectorSyncDateTime> {

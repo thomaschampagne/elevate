@@ -17,6 +17,7 @@ import {
 	AnalysisDataModel,
 	AthleteModel,
 	BareActivityModel,
+	ConnectorSyncDateTime,
 	SyncedActivityModel,
 	UserSettings
 } from "@elevate/shared/models";
@@ -55,17 +56,18 @@ export class StravaConnector extends BaseConnector {
 	public static readonly STRAVA_RATELIMIT_USAGE_HEADER: string = "x-ratelimit-usage";
 	public static readonly QUARTER_HOUR_TIME_INTERVAL: number = 15 * 60;
 
-	public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel,
+	public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime,
 						 stravaApiCredentials: StravaApiCredentials, updateSyncedActivitiesNameAndType: boolean) {
-		return new StravaConnector(null, athleteModel, userSettingsModel, stravaApiCredentials, updateSyncedActivitiesNameAndType);
+		return new StravaConnector(null, athleteModel, userSettingsModel, connectorSyncDateTime, stravaApiCredentials, updateSyncedActivitiesNameAndType);
 	}
 
 	public static generateFetchStreamsEndpoint(activityId: number): string {
 		return `https://www.strava.com/api/v3/activities/${activityId}/streams?keys=time,distance,latlng,altitude,velocity_smooth,heartrate,cadence,watts,watts_calc,grade_smooth,grade_adjusted_speed`;
 	}
 
-	public static generateFetchBareActivitiesPageEndpoint(page: number, perPage: number): string {
-		return `https://www.strava.com/api/v3/athlete/activities?before&after&page=${page}&per_page=${perPage}`;
+	public static generateFetchBareActivitiesPageEndpoint(page: number, perPage: number, afterTimestamp: number): string {
+		const after = (_.isNumber(afterTimestamp)) ? "after=" + afterTimestamp : "";
+		return `https://www.strava.com/api/v3/athlete/activities?before&${after}&page=${page}&per_page=${perPage}`;
 	}
 
 	public static computeNextCallWaitTime(currentCallsCount: number, thresholdCount: number, timeIntervalSeconds: number): number {
@@ -115,9 +117,9 @@ export class StravaConnector extends BaseConnector {
 
 	public syncEvents$: ReplaySubject<SyncEvent>;
 
-	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel,
+	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime,
 				stravaApiCredentials: StravaApiCredentials, updateSyncedActivitiesNameAndType: boolean) {
-		super(ConnectorType.STRAVA, athleteModel, userSettingsModel, priority, StravaConnector.ENABLED);
+		super(ConnectorType.STRAVA, athleteModel, userSettingsModel, connectorSyncDateTime, priority, StravaConnector.ENABLED);
 		this.stravaApiCredentials = stravaApiCredentials;
 		this.updateSyncedActivitiesNameAndType = updateSyncedActivitiesNameAndType;
 		this.athleteSnapshotResolver = new AthleteSnapshotResolver(this.athleteModel);
@@ -194,15 +196,7 @@ export class StravaConnector extends BaseConnector {
 	 * @param stravaPageId
 	 * @param perPage
 	 */
-	public syncPages(syncEvents$: Subject<SyncEvent>, stravaPageId?: number, perPage?: number): Promise<void> {
-
-		if (stravaPageId === undefined) {
-			stravaPageId = 1;
-		}
-
-		if (perPage === undefined) {
-			perPage = StravaConnector.ACTIVITIES_PER_PAGES;
-		}
+	public syncPages(syncEvents$: Subject<SyncEvent>, stravaPageId: number = 1, perPage: number = StravaConnector.ACTIVITIES_PER_PAGES): Promise<void> {
 
 		// Check for stop request and stop sync
 		if (this.stopRequested) {
@@ -211,9 +205,7 @@ export class StravaConnector extends BaseConnector {
 
 		return new Promise((resolve, reject) => {
 
-			this.getStravaBareActivityModels(stravaPageId, perPage).then((bareActivities: BareActivityModel[]) => {
-
-				logger.debug("#DEBUG_0001", "bareActivities length", "stravaPageId=" + stravaPageId, "perPage=" + perPage, bareActivities.length);
+			this.getStravaBareActivityModels(stravaPageId, perPage, this.syncDateTime).then((bareActivities: BareActivityModel[]) => {
 
 				if (bareActivities.length > 0) {
 
@@ -361,8 +353,8 @@ export class StravaConnector extends BaseConnector {
 		return <BareActivityModel> _.omit(bareActivity, StravaConnector.STRAVA_OMIT_FIELDS);
 	}
 
-	public getStravaBareActivityModels(page: number, perPage: number): Promise<BareActivityModel[]> {
-		return this.fetchRemoteStravaBareActivityModels(page, perPage);
+	public getStravaBareActivityModels(page: number, perPage: number, after: number): Promise<BareActivityModel[]> {
+		return this.fetchRemoteStravaBareActivityModels(page, perPage, after);
 	}
 
 
@@ -534,10 +526,11 @@ export class StravaConnector extends BaseConnector {
 	/**
 	 * @param page
 	 * @param perPage
+	 * @param after
 	 * @return Reject ErrorSyncEvent if error
 	 */
-	public fetchRemoteStravaBareActivityModels(page: number, perPage: number): Promise<BareActivityModel[]> {
-		return this.stravaApiCall<BareActivityModel[]>(this.syncEvents$, StravaConnector.generateFetchBareActivitiesPageEndpoint(page, perPage));
+	public fetchRemoteStravaBareActivityModels(page: number, perPage: number, after: number): Promise<BareActivityModel[]> {
+		return this.stravaApiCall<BareActivityModel[]>(this.syncEvents$, StravaConnector.generateFetchBareActivitiesPageEndpoint(page, perPage, after));
 	}
 
 }

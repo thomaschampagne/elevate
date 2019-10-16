@@ -16,6 +16,7 @@ import {
 	ActivityStreamsModel,
 	AthleteModel,
 	BareActivityModel,
+	ConnectorSyncDateTime,
 	EnvTarget,
 	SyncedActivityModel,
 	UserSettings
@@ -82,8 +83,9 @@ describe("StravaConnector", () => {
 		fakeActivitiesFixture = <Array<BareActivityModel[]>> jsonFakeActivitiesFixture;
 		fakeStreamsFixture = <StravaApiStreamType[]> jsonFakeStreamsFixture;
 
+		const connectorSyncDateTime = null;
 		stravaConnector = new StravaConnector(priority, AthleteModel.DEFAULT_MODEL, UserSettings.getDefaultsByEnvTarget(EnvTarget.DESKTOP),
-			new StravaApiCredentials(clientId, clientSecret, accessToken), updateSyncedActivitiesNameAndType);
+			connectorSyncDateTime, new StravaApiCredentials(clientId, clientSecret, accessToken), updateSyncedActivitiesNameAndType);
 
 		// Simulate strava pages
 		fetchRemoteStravaBareActivityModelsSpy = spyOn(stravaConnector, "fetchRemoteStravaBareActivityModels");
@@ -107,6 +109,49 @@ describe("StravaConnector", () => {
 		Service.instance().httpClient = new HttpClient("vsts-node-api");
 
 		done();
+	});
+
+	describe("Create connector", () => {
+
+		it("should create strava connector without sync date time", (done: Function) => {
+
+			// Given
+			const athleteModel = null;
+			const updateSyncedActivitiesNameAndType = true;
+			const stravaApiCredentials = null;
+			const userSettingsModel = null;
+			const currentConnectorSyncDateTime = null;
+
+			// When
+			const connector = StravaConnector.create(athleteModel, userSettingsModel, currentConnectorSyncDateTime,
+				stravaApiCredentials, updateSyncedActivitiesNameAndType);
+
+			// Then
+			expect(connector.syncDateTime).toBeNull();
+			done();
+
+		});
+
+		it("should create strava connector with sync date time", (done: Function) => {
+
+			// Given
+			const athleteModel = null;
+			const updateSyncedActivitiesNameAndType = true;
+			const stravaApiCredentials = null;
+			const userSettingsModel = null;
+			const syncDateTime = Date.now();
+			const expectedSyncDateTime = Math.floor(syncDateTime / 1000);
+			const currentConnectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.STRAVA, syncDateTime);
+
+			// When
+			const connector = StravaConnector.create(athleteModel, userSettingsModel, currentConnectorSyncDateTime,
+				stravaApiCredentials, updateSyncedActivitiesNameAndType);
+
+			// Then
+			expect(connector.syncDateTime).toEqual(expectedSyncDateTime);
+			done();
+		});
+
 	});
 
 	describe("Root sync", () => {
@@ -829,6 +874,7 @@ describe("StravaConnector", () => {
 			const page = 1;
 			const perPage = 20;
 			const expectedResult = [];
+			const afterTimestamp = null;
 			const stravaApiCallSpy = spyOn(stravaConnector, "stravaApiCall").and.callThrough();
 			spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
 			const httpGetSpy = spyOn(Service.instance().httpClient, "get").and.returnValue(Promise.resolve(createSuccessResponse(expectedResult)));
@@ -836,7 +882,7 @@ describe("StravaConnector", () => {
 			const expectedCallsTimes = 1;
 
 			// When
-			const promise = stravaConnector.fetchRemoteStravaBareActivityModels(page, perPage);
+			const promise = stravaConnector.fetchRemoteStravaBareActivityModels(page, perPage, afterTimestamp);
 
 			// Then
 			promise.then(result => {
@@ -857,6 +903,7 @@ describe("StravaConnector", () => {
 			// Given
 			const page = 1;
 			const perPage = 20;
+			const afterTimestamp = null;
 			const stravaApiCallSpy = spyOn(stravaConnector, "stravaApiCall").and.callThrough();
 			spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
 			const httpGetSpy = spyOn(Service.instance().httpClient, "get").and.returnValue(Promise.resolve(createErrorResponse(HttpCodes.Unauthorized)));
@@ -865,7 +912,7 @@ describe("StravaConnector", () => {
 			const expectedErrorSync = ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create();
 
 			// When
-			const promise = stravaConnector.fetchRemoteStravaBareActivityModels(page, perPage);
+			const promise = stravaConnector.fetchRemoteStravaBareActivityModels(page, perPage, afterTimestamp);
 
 			// Then
 			promise.then(() => {

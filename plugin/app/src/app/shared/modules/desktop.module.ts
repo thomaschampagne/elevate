@@ -15,7 +15,7 @@ import { ConnectorsModule } from "../../connectors/connectors.module";
 import { StravaConnectorService } from "../../connectors/services/strava-connector.service";
 import { DesktopImportBackupDialogComponent, } from "../dialogs/import-backup-dialog/import-backup-dialog.component";
 import { CoreModule } from "../../core/core.module";
-import { ConnectorSyncDateTimeDao } from "../dao/sync/connector-sync-date-time-dao.service";
+import { ConnectorSyncDateTimeDao } from "../dao/sync/connector-sync-date-time.dao";
 
 @NgModule({
 	imports: [

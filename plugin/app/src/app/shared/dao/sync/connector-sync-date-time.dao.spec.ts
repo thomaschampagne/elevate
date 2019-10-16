@@ -2,9 +2,9 @@ import { TestBed } from "@angular/core/testing";
 
 import { MockedDataStore } from "../../data-store/impl/mock/mocked-data-store.service";
 import { DataStore } from "../../data-store/data-store";
-import { ConnectorSyncDateTimeDao } from "./connector-sync-date-time-dao.service";
-import { ConnectorSyncDateTime } from "../../../../../modules/shared/models/sync/connector-sync-date-time.model";
+import { ConnectorSyncDateTimeDao } from "./connector-sync-date-time.dao";
 import { ConnectorType } from "@elevate/shared/sync/connectors/connector.enum";
+import { ConnectorSyncDateTime } from "../../../../../modules/shared/models/sync";
 
 
 describe("ConnectorSyncDateTimeDao", () => {

@@ -2,7 +2,7 @@ import { BaseConnector } from "../base.connector";
 import { NotImplementedException } from "@elevate/shared/exceptions";
 import { ConnectorType, SyncEvent } from "@elevate/shared/sync";
 import { Subject } from "rxjs";
-import { AthleteModel, UserSettings } from "@elevate/shared/models";
+import { AthleteModel, ConnectorSyncDateTime, UserSettings } from "@elevate/shared/models";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export class FileSystemConnector extends BaseConnector {
@@ -13,15 +13,15 @@ export class FileSystemConnector extends BaseConnector {
 	public deleteActivityFilesAfterSync: boolean;
 	public parseIntoArchiveFiles: boolean;
 
-	public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel, activitiesLocalPath: string,
+	public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime, activitiesLocalPath: string,
 						 deleteActivityFilesAfterSync: boolean, parseIntoArchiveFiles: boolean) {
-		return new FileSystemConnector(null, athleteModel, userSettingsModel, activitiesLocalPath,
+		return new FileSystemConnector(null, athleteModel, userSettingsModel, connectorSyncDateTime, activitiesLocalPath,
 			deleteActivityFilesAfterSync, parseIntoArchiveFiles);
 	}
 
-	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, activitiesLocalPath: string,
+	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime, activitiesLocalPath: string,
 				deleteActivityFilesAfterSync: boolean, parseIntoArchiveFiles: boolean) {
-		super(ConnectorType.FILE_SYSTEM, athleteModel, userSettingsModel, priority, FileSystemConnector.ENABLED);
+		super(ConnectorType.FILE_SYSTEM, athleteModel, userSettingsModel, connectorSyncDateTime, priority, FileSystemConnector.ENABLED);
 		this.activitiesLocalPath = activitiesLocalPath;
 		this.deleteActivityFilesAfterSync = deleteActivityFilesAfterSync;
 		this.parseIntoArchiveFiles = parseIntoArchiveFiles;
