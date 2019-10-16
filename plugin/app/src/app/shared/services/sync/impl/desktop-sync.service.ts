@@ -31,7 +31,6 @@ import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 // TODO migrate lastSyncDateTime storage key to syncDateTime for the extension
-// TODO Rn ChromeSyncService => ExtensionSyncService
 // TODO Handle sync complete
 // TODO Add sync gen session id as string baseConnector. Goal: more easy to debug sync session with start/stop actions?
 // TODO Handle errors cases (continue or not the sync...)

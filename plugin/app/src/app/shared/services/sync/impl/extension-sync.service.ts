@@ -15,7 +15,7 @@ import { ExtensionDumpModel } from "../../../models/dumps/extension-dump.model";
 import { DumpModel } from "../../../models/dumps/dump.model";
 
 @Injectable()
-export class ChromeSyncService extends SyncService<number> { // TODO Rn ExtensionSyncService
+export class ExtensionSyncService extends SyncService<number> {
 
 	/**
 	 * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
@@ -40,13 +40,13 @@ export class ChromeSyncService extends SyncService<number> { // TODO Rn Extensio
 		this.getCurrentTab((tab: chrome.tabs.Tab) => {
 			const params = "?elevateSync=true&fastSync=" + fastSync + "&forceSync=" + forceSync + "&sourceTabId=" + tab.id;
 
-			const features = "width=" + ChromeSyncService.SYNC_WINDOW_WIDTH +
-				", height=" + ChromeSyncService.SYNC_WINDOW_HEIGHT + ", location=0";
+			const features = "width=" + ExtensionSyncService.SYNC_WINDOW_WIDTH +
+				", height=" + ExtensionSyncService.SYNC_WINDOW_HEIGHT + ", location=0";
 
-			window.open(ChromeSyncService.SYNC_URL_BASE + params, "_blank", features);
+			window.open(ExtensionSyncService.SYNC_URL_BASE + params, "_blank", features);
 		});
-		return Promise.reject("ChromeSyncService::sync() do not provide " +
-			"subscription data (events, error, complete). ChromeSyncService::sync() acts as method returning void.");
+		return Promise.reject("ExtensionSyncService::sync() do not provide " +
+			"subscription data (events, error, complete). ExtensionSyncService::sync() acts as method returning void.");
 	}
 
 	/**
@@ -93,7 +93,7 @@ export class ChromeSyncService extends SyncService<number> { // TODO Rn Extensio
 
 
 	public stop(): Promise<void> {
-		throw new Error("ChromeSyncService do not support sync stop");
+		throw new Error("ExtensionSyncService do not support sync stop");
 	}
 
 	/**
@@ -189,7 +189,7 @@ export class ChromeSyncService extends SyncService<number> { // TODO Rn Extensio
 	}
 
 	public getCompatibleBackupVersionThreshold(): string {
-		return ChromeSyncService.COMPATIBLE_DUMP_VERSION_THRESHOLD;
+		return ExtensionSyncService.COMPATIBLE_DUMP_VERSION_THRESHOLD;
 	}
 
 	/**

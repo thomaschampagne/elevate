@@ -6,7 +6,7 @@ import { AppUsage } from "../../models/app-usage.model";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
 
 @Injectable()
-export class ChromeDataStore<T> extends DataStore<T> {
+export class ExtensionDataStore<T> extends DataStore<T> {
 
 	/**
 	 * @return {Promise<T[] | T>}

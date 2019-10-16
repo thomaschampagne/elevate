@@ -11,7 +11,7 @@ import {
 	ImportBackupDialogComponent
 } from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
-import { ChromeSyncService } from "../../shared/services/sync/impl/chrome-sync.service";
+import { ExtensionSyncService } from "../../shared/services/sync/impl/extension-sync.service";
 import { ExtensionDumpModel } from "../../shared/models/dumps/extension-dump.model";
 import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
@@ -82,11 +82,11 @@ import { AppRoutesModel } from "../../shared/models/app-routes.model";
 export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnInit {
 
 	constructor(public router: Router,
-				public chromeSyncService: ChromeSyncService,
+				public extensionSyncService: ExtensionSyncService,
 				public appEventsService: AppEventsService,
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar) {
-		super(router, chromeSyncService, appEventsService, dialog, snackBar);
+		super(router, extensionSyncService, appEventsService, dialog, snackBar);
 	}
 
 	public ngOnInit() {
@@ -95,9 +95,9 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
 
 	public updateSyncDateStatus(): void {
 
-		this.chromeSyncService.getSyncState().then((syncState: SyncState) => {
+		this.extensionSyncService.getSyncState().then((syncState: SyncState) => {
 			this.syncState = syncState;
-			this.chromeSyncService.getSyncDateTime().then((syncDateTime: number) => {
+			this.extensionSyncService.getSyncDateTime().then((syncDateTime: number) => {
 				if (_.isNumber(syncDateTime)) {
 					this.syncDateMessage = moment(syncDateTime).fromNow();
 				}
@@ -115,7 +115,7 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((dumpModel: ExtensionDumpModel) => {
 
 			if (dumpModel) {
-				this.chromeSyncService.import(dumpModel).then(() => {
+				this.extensionSyncService.import(dumpModel).then(() => {
 					location.reload();
 				}, error => {
 					this.snackBar.open(error, "Close");

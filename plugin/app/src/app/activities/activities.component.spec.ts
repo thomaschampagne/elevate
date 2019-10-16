@@ -7,7 +7,7 @@ import { ActivityService } from "../shared/services/activity/activity.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import * as _ from "lodash";
 import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fixture";
-import { ChromeEventsService } from "../shared/services/external-updates/impl/chrome-events.service";
+import { ExtensionEventsService } from "../shared/services/external-updates/impl/extension-events.service";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { UserSettings } from "@elevate/shared/models";
 import { SyncService } from "../shared/services/sync/sync.service";
@@ -31,12 +31,12 @@ describe("ActivitiesComponent", () => {
 			]
 		}).compileComponents();
 
-		spyOn(ChromeEventsService, "getBrowserExternalMessages").and.returnValue({
+		spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
 			addListener: () => {
 			}
 		});
 
-		spyOn(ChromeEventsService, "getBrowserPluginId").and.returnValue(pluginId);
+		spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
 		activityService = TestBed.get(ActivityService);
 		userSettingsService = TestBed.get(UserSettingsService);

@@ -4,16 +4,16 @@ import { CoreMessages, SyncResultModel } from "../../../../../../modules/shared/
 import { AppEventsService } from "../app-events-service";
 
 @Injectable()
-export class ChromeEventsService extends AppEventsService {
+export class ExtensionEventsService extends AppEventsService {
 
 	constructor() {
 
 		super();
 
-		this.pluginId = ChromeEventsService.getBrowserPluginId();
+		this.pluginId = ExtensionEventsService.getBrowserPluginId();
 
 		// Listen for external messages
-		ChromeEventsService.getBrowserExternalMessages().addListener((request: any, sender: chrome.runtime.MessageSender) => {
+		ExtensionEventsService.getBrowserExternalMessages().addListener((request: any, sender: chrome.runtime.MessageSender) => {
 			this.onBrowserRequestReceived(request, sender.id);
 		});
 

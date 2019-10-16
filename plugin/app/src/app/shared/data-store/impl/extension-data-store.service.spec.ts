@@ -1,11 +1,11 @@
 import { TestBed } from "@angular/core/testing";
-import { ChromeDataStore } from "./chrome-data-store.service";
+import { ExtensionDataStore } from "./extension-data-store.service";
 import { StorageLocationModel } from "../storage-location.model";
 import * as _ from "lodash";
 import { AppUsage } from "../../models/app-usage.model";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
 
-describe("ChromeDataStore", () => {
+describe("ExtensionDataStore", () => {
 
 	class DreamInception {
 		dream0: {
@@ -21,23 +21,23 @@ describe("ChromeDataStore", () => {
 		nested?: DreamInception;
 	}
 
-	let chromeDataStore: ChromeDataStore<Foo>;
+	let extensionDataStore: ExtensionDataStore<Foo>;
 	let storageLocation: StorageLocationModel;
 	let browserStorageLocalSpy: jasmine.Spy;
 	let browserStorageErrorSpy: jasmine.Spy;
 
-	const CHROME_QUOTA_BYTES = 1024;
-	const CHROME_BYTES_IN_USE = 512;
-	let CHROME_STORAGE_STUB = {};
+	const EXTENSION_QUOTA_BYTES = 1024;
+	const EXTENSION_BYTES_IN_USE = 512;
+	let EXTENSION_STORAGE_STUB = {};
 	let DEFAULT_FOO: Foo;
 
-	const chromeStorageBehaviour = () => {
+	const extensionStorageBehaviour = () => {
 		return {
 			get: (query: Object | string | string[], callback: (item: Object) => {}) => {
 				if (_.isString(query)) {
 					const response = {};
-					if (CHROME_STORAGE_STUB[query]) {
-						response[query] = CHROME_STORAGE_STUB[query];
+					if (EXTENSION_STORAGE_STUB[query]) {
+						response[query] = EXTENSION_STORAGE_STUB[query];
 					}
 					callback(response);
 
@@ -45,21 +45,21 @@ describe("ChromeDataStore", () => {
 
 					const response = {};
 					_.forEach(query, (key: string) => {
-						if (!_.isUndefined(CHROME_STORAGE_STUB[key])) {
-							response[key] = CHROME_STORAGE_STUB[key];
+						if (!_.isUndefined(EXTENSION_STORAGE_STUB[key])) {
+							response[key] = EXTENSION_STORAGE_STUB[key];
 						}
 					});
 					callback(response);
 				} else if (_.isObject(query)) {
 					const response = _.cloneDeep(query);
 					_.forEach(_.keys(response), (key: string) => {
-						if (!_.isUndefined(CHROME_STORAGE_STUB[key])) {
-							response[key] = CHROME_STORAGE_STUB[key];
+						if (!_.isUndefined(EXTENSION_STORAGE_STUB[key])) {
+							response[key] = EXTENSION_STORAGE_STUB[key];
 						}
 					});
 					callback(response);
 				} else if (_.isUndefined(query) || _.isNull(query)) {
-					callback(CHROME_STORAGE_STUB);
+					callback(EXTENSION_STORAGE_STUB);
 				} else {
 					callback({});
 				}
@@ -69,21 +69,21 @@ describe("ChromeDataStore", () => {
 					throw new Error("Must be an object");
 				}
 				_.forEach(_.keys(object), (key: string) => {
-					CHROME_STORAGE_STUB[key] = object[key];
+					EXTENSION_STORAGE_STUB[key] = object[key];
 				});
 				callback();
 			},
 			remove: (key: string, callback: () => {}) => {
-				delete CHROME_STORAGE_STUB[key];
+				delete EXTENSION_STORAGE_STUB[key];
 				callback();
 			},
 			clear: (callback: () => {}) => {
-				CHROME_STORAGE_STUB = {};
+				EXTENSION_STORAGE_STUB = {};
 				callback();
 			},
-			QUOTA_BYTES: CHROME_QUOTA_BYTES,
+			QUOTA_BYTES: EXTENSION_QUOTA_BYTES,
 			getBytesInUse: (callback: (bytesInUse: number) => {}) => {
-				callback(CHROME_BYTES_IN_USE);
+				callback(EXTENSION_BYTES_IN_USE);
 			}
 		};
 	};
@@ -98,29 +98,29 @@ describe("ChromeDataStore", () => {
 
 		TestBed.configureTestingModule({
 			providers: [
-				ChromeDataStore
+				ExtensionDataStore
 			]
 		});
 
-		chromeDataStore = TestBed.get(ChromeDataStore);
+		extensionDataStore = TestBed.get(ExtensionDataStore);
 
-		// Mock CHROME_STORAGE_STUB
-		browserStorageLocalSpy = spyOn(chromeDataStore, "chromeLocalStorageArea").and.callFake(chromeStorageBehaviour);
-		CHROME_STORAGE_STUB = {}; // Erase storage
+		// Mock EXTENSION_STORAGE_STUB
+		browserStorageLocalSpy = spyOn(extensionDataStore, "chromeLocalStorageArea").and.callFake(extensionStorageBehaviour);
+		EXTENSION_STORAGE_STUB = {}; // Erase storage
 		DEFAULT_FOO = {
 			id: "0001",
 			bar: "I am the default one"
 		};
 
 		// Mock chrome errors. Return no errors by default
-		browserStorageErrorSpy = spyOn(chromeDataStore, "getLastError");
+		browserStorageErrorSpy = spyOn(extensionDataStore, "getLastError");
 		browserStorageErrorSpy.and.returnValue(null);
 
 		done();
 	});
 
 	it("should be created", (done: Function) => {
-		expect(chromeDataStore).toBeTruthy();
+		expect(extensionDataStore).toBeTruthy();
 		done();
 	});
 
@@ -132,10 +132,10 @@ describe("ChromeDataStore", () => {
 			bar: "john doe"
 		}];
 
-		CHROME_STORAGE_STUB[storageLocation.key] = expectedData;
+		EXTENSION_STORAGE_STUB[storageLocation.key] = expectedData;
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.fetch(storageLocation, DEFAULT_FOO);
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> extensionDataStore.fetch(storageLocation, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo[]) => {
@@ -155,11 +155,11 @@ describe("ChromeDataStore", () => {
 	it("should fetch empty data (vector)", (done: Function) => {
 
 		// Given
-		CHROME_STORAGE_STUB = {};
+		EXTENSION_STORAGE_STUB = {};
 		const defaultValue = [];
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.fetch(storageLocation, defaultValue);
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> extensionDataStore.fetch(storageLocation, defaultValue);
 
 		// Then
 		promise.then((result: Foo[]) => {
@@ -178,14 +178,14 @@ describe("ChromeDataStore", () => {
 	it("should fetch empty data (object))", (done: Function) => {
 
 		// Given
-		CHROME_STORAGE_STUB = {};
+		EXTENSION_STORAGE_STUB = {};
 		const defaultValue: Foo = {
 			id: "0001",
 			bar: "john doe"
 		};
 
 		// When
-		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, defaultValue);
+		const promise: Promise<Foo> = <Promise<Foo>> extensionDataStore.fetch(storageLocation, defaultValue);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -209,12 +209,12 @@ describe("ChromeDataStore", () => {
 			bar: "john doe"
 		};
 
-		CHROME_STORAGE_STUB = expectedData;
+		EXTENSION_STORAGE_STUB = expectedData;
 
-		storageLocation = new StorageLocationModel(); // Override CHROME_STORAGE_STUB location with no key
+		storageLocation = new StorageLocationModel(); // Override EXTENSION_STORAGE_STUB location with no key
 
 		// When
-		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, DEFAULT_FOO);
+		const promise: Promise<Foo> = <Promise<Foo>> extensionDataStore.fetch(storageLocation, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -239,10 +239,10 @@ describe("ChromeDataStore", () => {
 			bar: "Default Bar"
 		};
 
-		storageLocation = new StorageLocationModel(); // Override CHROME_STORAGE_STUB location with no key
+		storageLocation = new StorageLocationModel(); // Override EXTENSION_STORAGE_STUB location with no key
 
 		// When
-		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.fetch(storageLocation, defaultValue);
+		const promise: Promise<Foo> = <Promise<Foo>> extensionDataStore.fetch(storageLocation, defaultValue);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -261,7 +261,7 @@ describe("ChromeDataStore", () => {
 	it("should save data", (done: Function) => {
 
 		// Given
-		CHROME_STORAGE_STUB[storageLocation.key] = null;
+		EXTENSION_STORAGE_STUB[storageLocation.key] = null;
 
 		const toBeSaved: Foo[] = [{
 			id: "0001",
@@ -273,14 +273,14 @@ describe("ChromeDataStore", () => {
 		};
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.save(storageLocation, toBeSaved, DEFAULT_FOO);
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> extensionDataStore.save(storageLocation, toBeSaved, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo[]) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(toBeSaved);
-			expect(CHROME_STORAGE_STUB).toEqual(expectedChromeStorageStubState);
+			expect(EXTENSION_STORAGE_STUB).toEqual(expectedChromeStorageStubState);
 			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(2);
 
 			done();
@@ -299,17 +299,17 @@ describe("ChromeDataStore", () => {
 			bar: "john doe"
 		};
 
-		storageLocation = new StorageLocationModel(); // Override CHROME_STORAGE_STUB location with no key
+		storageLocation = new StorageLocationModel(); // Override EXTENSION_STORAGE_STUB location with no key
 
 		// When
-		const promise: Promise<Foo> = <Promise<Foo>> chromeDataStore.save(storageLocation, toBeSaved, DEFAULT_FOO);
+		const promise: Promise<Foo> = <Promise<Foo>> extensionDataStore.save(storageLocation, toBeSaved, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(toBeSaved);
-			expect(CHROME_STORAGE_STUB).toEqual(toBeSaved);
+			expect(EXTENSION_STORAGE_STUB).toEqual(toBeSaved);
 			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(2);
 
 			done();
@@ -332,7 +332,7 @@ describe("ChromeDataStore", () => {
 		browserStorageErrorSpy.and.returnValue(expectedChromeError);
 
 		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> chromeDataStore.save(storageLocation, saveData, DEFAULT_FOO);
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> extensionDataStore.save(storageLocation, saveData, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo[]) => {
@@ -354,23 +354,23 @@ describe("ChromeDataStore", () => {
 			bar: "sheldon"
 		};
 
-		CHROME_STORAGE_STUB[storageLocation.key] = currentFoo;
+		EXTENSION_STORAGE_STUB[storageLocation.key] = currentFoo;
 
 		const relativePath = "bar";
 		const newValue = "Bazinga!";
 
-		const expectedChromeStorageStubState: { foo: Foo } = _.cloneDeep(CHROME_STORAGE_STUB) as { foo: Foo };
+		const expectedChromeStorageStubState: { foo: Foo } = _.cloneDeep(EXTENSION_STORAGE_STUB) as { foo: Foo };
 		expectedChromeStorageStubState.foo.bar = newValue;
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
+		const promise: Promise<Foo> = extensionDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedChromeStorageStubState.foo);
-			expect(CHROME_STORAGE_STUB).toEqual(expectedChromeStorageStubState);
+			expect(EXTENSION_STORAGE_STUB).toEqual(expectedChromeStorageStubState);
 
 			done();
 
@@ -388,23 +388,23 @@ describe("ChromeDataStore", () => {
 			bar: false
 		};
 
-		CHROME_STORAGE_STUB[storageLocation.key] = currentFoo;
+		EXTENSION_STORAGE_STUB[storageLocation.key] = currentFoo;
 
 		const relativePath = "bar";
 		const newValue = true;
 
-		const expectedChromeStorageStubState: { foo: Foo } = _.cloneDeep(CHROME_STORAGE_STUB) as { foo: Foo };
+		const expectedChromeStorageStubState: { foo: Foo } = _.cloneDeep(EXTENSION_STORAGE_STUB) as { foo: Foo };
 		expectedChromeStorageStubState.foo.bar = newValue;
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.upsertProperty<boolean>(storageLocation, relativePath, newValue, DEFAULT_FOO);
+		const promise: Promise<Foo> = extensionDataStore.upsertProperty<boolean>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedChromeStorageStubState.foo);
-			expect(CHROME_STORAGE_STUB).toEqual(expectedChromeStorageStubState);
+			expect(EXTENSION_STORAGE_STUB).toEqual(expectedChromeStorageStubState);
 
 			done();
 
@@ -429,15 +429,15 @@ describe("ChromeDataStore", () => {
 			}
 		};
 
-		CHROME_STORAGE_STUB[storageLocation.key] = currentFoo;
+		EXTENSION_STORAGE_STUB[storageLocation.key] = currentFoo;
 
 		const relativePath = ["nested", "dream0", "dream1", "dream2"];
 		const newValue = "Bazinga!";
-		const expectedChromeStorageStubState: { foo: Foo } = _.cloneDeep(CHROME_STORAGE_STUB) as { foo: Foo };
+		const expectedChromeStorageStubState: { foo: Foo } = _.cloneDeep(EXTENSION_STORAGE_STUB) as { foo: Foo };
 		expectedChromeStorageStubState.foo.nested.dream0.dream1.dream2 = newValue;
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
+		const promise: Promise<Foo> = extensionDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -445,7 +445,7 @@ describe("ChromeDataStore", () => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedChromeStorageStubState.foo);
-			expect(CHROME_STORAGE_STUB).toEqual(expectedChromeStorageStubState);
+			expect(EXTENSION_STORAGE_STUB).toEqual(expectedChromeStorageStubState);
 
 			done();
 
@@ -458,7 +458,7 @@ describe("ChromeDataStore", () => {
 	it("should save nested property (no key provided)", (done: Function) => {
 
 		// Given
-		storageLocation = new StorageLocationModel(); // Override CHROME_STORAGE_STUB location with no key
+		storageLocation = new StorageLocationModel(); // Override EXTENSION_STORAGE_STUB location with no key
 
 		const currentFoo: Foo = {
 			id: "0001",
@@ -472,15 +472,15 @@ describe("ChromeDataStore", () => {
 			}
 		};
 
-		CHROME_STORAGE_STUB = currentFoo;
+		EXTENSION_STORAGE_STUB = currentFoo;
 
 		const relativePath = ["nested", "dream0", "dream1", "dream2"];
 		const newValue = "Bazinga!";
-		const expectedChromeStorageStubState: Foo = _.cloneDeep(CHROME_STORAGE_STUB) as Foo;
+		const expectedChromeStorageStubState: Foo = _.cloneDeep(EXTENSION_STORAGE_STUB) as Foo;
 		expectedChromeStorageStubState.nested.dream0.dream1.dream2 = newValue;
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
+		const promise: Promise<Foo> = extensionDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -488,7 +488,7 @@ describe("ChromeDataStore", () => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(expectedChromeStorageStubState);
-			expect(CHROME_STORAGE_STUB).toEqual(expectedChromeStorageStubState);
+			expect(EXTENSION_STORAGE_STUB).toEqual(expectedChromeStorageStubState);
 
 			done();
 
@@ -512,13 +512,13 @@ describe("ChromeDataStore", () => {
 			}
 		}];
 
-		CHROME_STORAGE_STUB[storageLocation.key] = currentFooList;
+		EXTENSION_STORAGE_STUB[storageLocation.key] = currentFooList;
 
 		const relativePath = ["nested", "dream0", "dream1", "dream2"];
 		const newValue = "Bazinga!";
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
+		const promise: Promise<Foo> = extensionDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -537,16 +537,16 @@ describe("ChromeDataStore", () => {
 
 		// Given
 		const otherData = {otherData: "I am another data"};
-		CHROME_STORAGE_STUB = otherData;
-		CHROME_STORAGE_STUB[storageLocation.key] = "FakeData";
+		EXTENSION_STORAGE_STUB = otherData;
+		EXTENSION_STORAGE_STUB[storageLocation.key] = "FakeData";
 
 		// When
-		const promise: Promise<void> = chromeDataStore.clear(storageLocation);
+		const promise: Promise<void> = extensionDataStore.clear(storageLocation);
 
 		// Then
 		promise.then(() => {
 
-			expect(CHROME_STORAGE_STUB).toEqual(otherData);
+			expect(EXTENSION_STORAGE_STUB).toEqual(otherData);
 			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
 			done();
 
@@ -559,16 +559,16 @@ describe("ChromeDataStore", () => {
 	it("should clear all chrome storage data (no key provided)", (done: Function) => {
 
 		// Given
-		CHROME_STORAGE_STUB = {nothing: "everything"};
-		storageLocation = new StorageLocationModel(); // Override CHROME_STORAGE_STUB location with no key
+		EXTENSION_STORAGE_STUB = {nothing: "everything"};
+		storageLocation = new StorageLocationModel(); // Override EXTENSION_STORAGE_STUB location with no key
 		const expectedResult = <Foo> {};
 
 		// When
-		const promise: Promise<void> = chromeDataStore.clear(storageLocation);
+		const promise: Promise<void> = extensionDataStore.clear(storageLocation);
 
 		// Then
 		promise.then(() => {
-			expect(CHROME_STORAGE_STUB).toEqual(expectedResult);
+			expect(EXTENSION_STORAGE_STUB).toEqual(expectedResult);
 			expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
 
 			done();
@@ -586,7 +586,7 @@ describe("ChromeDataStore", () => {
 		browserStorageErrorSpy.and.returnValue(expectedChromeError);
 
 		// When
-		const promise: Promise<void> = chromeDataStore.clear(storageLocation);
+		const promise: Promise<void> = extensionDataStore.clear(storageLocation);
 
 		// Then
 		promise.then(() => {
@@ -602,14 +602,14 @@ describe("ChromeDataStore", () => {
 	it("should provide AppUsageDetails", (done: Function) => {
 
 		// Given
-		const appUsage: AppUsage = new AppUsage(CHROME_BYTES_IN_USE, CHROME_QUOTA_BYTES);
+		const appUsage: AppUsage = new AppUsage(EXTENSION_BYTES_IN_USE, EXTENSION_QUOTA_BYTES);
 
 		const expectedAppUsageDetails: AppUsageDetails = new AppUsageDetails(appUsage,
-			CHROME_BYTES_IN_USE / (1024 * 1024),
-			CHROME_BYTES_IN_USE / CHROME_QUOTA_BYTES * 100);
+			EXTENSION_BYTES_IN_USE / (1024 * 1024),
+			EXTENSION_BYTES_IN_USE / EXTENSION_QUOTA_BYTES * 100);
 
 		// When
-		const promise: Promise<AppUsageDetails> = chromeDataStore.getAppUsageDetails();
+		const promise: Promise<AppUsageDetails> = extensionDataStore.getAppUsageDetails();
 
 		// Then
 		promise.then((result: AppUsageDetails) => {
@@ -648,10 +648,10 @@ describe("ChromeDataStore", () => {
 		};
 
 
-		CHROME_STORAGE_STUB[storageLocation.key] = expectedData;
+		EXTENSION_STORAGE_STUB[storageLocation.key] = expectedData;
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.getById(storageLocation, id);
+		const promise: Promise<Foo> = extensionDataStore.getById(storageLocation, id);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -676,7 +676,7 @@ describe("ChromeDataStore", () => {
 			bar: "jean kevin"
 		};
 
-		CHROME_STORAGE_STUB = {
+		EXTENSION_STORAGE_STUB = {
 			other01: {},
 			foo: expectedFoo,
 			other02: {},
@@ -691,7 +691,7 @@ describe("ChromeDataStore", () => {
 		const id = "foo";
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.getById(storageLocation, id);
+		const promise: Promise<Foo> = extensionDataStore.getById(storageLocation, id);
 
 		// Then
 		promise.then((result: Foo) => {
@@ -723,17 +723,17 @@ describe("ChromeDataStore", () => {
 			collectionFieldId: "id"
 		};
 
-		CHROME_STORAGE_STUB[storageLocation.key] = [];
+		EXTENSION_STORAGE_STUB[storageLocation.key] = [];
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.put(storageLocation, foo);
+		const promise: Promise<Foo> = extensionDataStore.put(storageLocation, foo);
 
 		// Then
 		promise.then((result: Foo) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(foo);
-			expect(CHROME_STORAGE_STUB[storageLocation.key]).toEqual(expectedStorage);
+			expect(EXTENSION_STORAGE_STUB[storageLocation.key]).toEqual(expectedStorage);
 
 			done();
 
@@ -751,12 +751,12 @@ describe("ChromeDataStore", () => {
 			bar: "jean kevin"
 		};
 
-		CHROME_STORAGE_STUB = {
+		EXTENSION_STORAGE_STUB = {
 			other01: {},
 			other02: {},
 		};
 
-		const expectedStorage = <any> _.cloneDeep(CHROME_STORAGE_STUB);
+		const expectedStorage = <any> _.cloneDeep(EXTENSION_STORAGE_STUB);
 		expectedStorage.foo = foo;
 
 		storageLocation = {
@@ -766,17 +766,17 @@ describe("ChromeDataStore", () => {
 		};
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.put(storageLocation, foo);
+		const promise: Promise<Foo> = extensionDataStore.put(storageLocation, foo);
 
 		// Then
 		promise.then((result: Foo) => {
 
-			// console.log(CHROME_STORAGE_STUB)
+			// console.log(EXTENSION_STORAGE_STUB)
 			// console.log(expectedStorage)
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(foo);
-			expect(CHROME_STORAGE_STUB).toEqual(expectedStorage);
+			expect(EXTENSION_STORAGE_STUB).toEqual(expectedStorage);
 
 			done();
 
@@ -813,19 +813,19 @@ describe("ChromeDataStore", () => {
 			collectionFieldId: "id"
 		};
 
-		CHROME_STORAGE_STUB[storageLocation.key] = [foo, foo2, foo3];
+		EXTENSION_STORAGE_STUB[storageLocation.key] = [foo, foo2, foo3];
 
 		const expectedStorage = [foo, newFoo2, foo3];
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.put(storageLocation, newFoo2);
+		const promise: Promise<Foo> = extensionDataStore.put(storageLocation, newFoo2);
 
 		// Then
 		promise.then((result: Foo) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(newFoo2);
-			expect(CHROME_STORAGE_STUB[storageLocation.key]).toEqual(expectedStorage);
+			expect(EXTENSION_STORAGE_STUB[storageLocation.key]).toEqual(expectedStorage);
 
 			done();
 
@@ -843,7 +843,7 @@ describe("ChromeDataStore", () => {
 			bar: "jean kevin"
 		};
 
-		CHROME_STORAGE_STUB = {
+		EXTENSION_STORAGE_STUB = {
 			other01: {},
 			foo: foo,
 			other02: {},
@@ -865,14 +865,14 @@ describe("ChromeDataStore", () => {
 		};
 
 		// When
-		const promise: Promise<Foo> = chromeDataStore.put(storageLocation, newFoo);
+		const promise: Promise<Foo> = extensionDataStore.put(storageLocation, newFoo);
 
 		// Then
 		promise.then((result: Foo) => {
 
 			expect(result).not.toBeNull();
 			expect(result).toEqual(newFoo);
-			expect(CHROME_STORAGE_STUB).toEqual(expectedStorage);
+			expect(EXTENSION_STORAGE_STUB).toEqual(expectedStorage);
 
 			done();
 

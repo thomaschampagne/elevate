@@ -1,12 +1,12 @@
 import { NgModule } from "@angular/core";
 import { DataStore } from "../data-store/data-store";
-import { ChromeDataStore } from "../data-store/impl/chrome-data-store.service";
+import { ExtensionDataStore } from "../data-store/impl/extension-data-store.service";
 import { AppEventsService } from "../services/external-updates/app-events-service";
-import { ChromeEventsService } from "../services/external-updates/impl/chrome-events.service";
+import { ExtensionEventsService } from "../services/external-updates/impl/extension-events.service";
 import { VERSIONS_PROVIDER } from "../services/versions/versions-provider.interface";
-import { ChromeVersionsProvider } from "../services/versions/impl/chrome-versions-provider.service";
+import { ExtensionVersionsProvider } from "../services/versions/impl/extension-versions-provider.service";
 import { SyncService } from "../services/sync/sync.service";
-import { ChromeSyncService } from "../services/sync/impl/chrome-sync.service";
+import { ExtensionSyncService } from "../services/sync/impl/extension-sync.service";
 import { CoreModule } from "../../core/core.module";
 import { ExtensionImportBackupDialogComponent, } from "../dialogs/import-backup-dialog/import-backup-dialog.component";
 import { SyncDateTimeDao } from "../dao/sync/sync-date-time-dao.service";
@@ -23,12 +23,12 @@ import { SyncDateTimeDao } from "../dao/sync/sync-date-time-dao.service";
 	],
 	providers: [
 		SyncDateTimeDao,
-		{provide: DataStore, useClass: ChromeDataStore},
-		{provide: AppEventsService, useClass: ChromeEventsService},
-		{provide: VERSIONS_PROVIDER, useClass: ChromeVersionsProvider},
+		{provide: DataStore, useClass: ExtensionDataStore},
+		{provide: AppEventsService, useClass: ExtensionEventsService},
+		{provide: VERSIONS_PROVIDER, useClass: ExtensionVersionsProvider},
 
-		{provide: SyncService, useClass: ChromeSyncService},
-		ChromeSyncService,
+		{provide: SyncService, useClass: ExtensionSyncService},
+		ExtensionSyncService,
 	]
 })
 export class ExtensionModule {

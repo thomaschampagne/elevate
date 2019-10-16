@@ -15,7 +15,7 @@ import { SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { YearProgressModule } from "./year-progress.module";
 import { YearToDateProgressPresetModel } from "./shared/models/year-to-date-progress-preset.model";
 import { ProgressType } from "./shared/enums/progress-type.enum";
-import { ChromeEventsService } from "../shared/services/external-updates/impl/chrome-events.service";
+import { ExtensionEventsService } from "../shared/services/external-updates/impl/extension-events.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("YearProgressComponent", () => {
@@ -37,12 +37,12 @@ describe("YearProgressComponent", () => {
 
 	beforeEach((done: Function) => {
 
-		spyOn(ChromeEventsService, "getBrowserExternalMessages").and.returnValue({
+		spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
 			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
 			}
 		});
 
-		spyOn(ChromeEventsService, "getBrowserPluginId").and.returnValue(pluginId);
+		spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
 		TestBed.configureTestingModule({
 			imports: [

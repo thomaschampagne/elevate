@@ -1,26 +1,26 @@
 import { TestBed } from "@angular/core/testing";
-import { ChromeEventsService } from "./chrome-events.service";
+import { ExtensionEventsService } from "./extension-events.service";
 import { CoreMessages } from "../../../../../../modules/shared/models";
 
-describe("ChromeEventsService", () => {
+describe("ExtensionSyncService", () => {
 
 	const pluginId = "c061d18abea0";
-	let service: ChromeEventsService;
+	let service: ExtensionEventsService;
 
 	beforeEach((done: Function) => {
 
-		spyOn(ChromeEventsService, "getBrowserExternalMessages").and.returnValue({
+		spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
 			addListener: () => {
 			}
 		});
 
-		spyOn(ChromeEventsService, "getBrowserPluginId").and.returnValue(pluginId);
+		spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
 		TestBed.configureTestingModule({
-			providers: [ChromeEventsService]
+			providers: [ExtensionEventsService]
 		});
 
-		service = TestBed.get(ChromeEventsService);
+		service = TestBed.get(ExtensionEventsService);
 
 		done();
 	});

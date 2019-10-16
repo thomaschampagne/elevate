@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { VersionsProvider } from "../versions-provider.interface";
 
 @Injectable()
-export class ChromeVersionsProvider implements VersionsProvider {
+export class ExtensionVersionsProvider implements VersionsProvider {
 
 	public static readonly MANIFEST_PRODUCTION: string = "https://raw.githubusercontent.com/thomaschampagne/elevate/master/plugin/manifest.json";
 
@@ -15,7 +15,7 @@ export class ChromeVersionsProvider implements VersionsProvider {
 	}
 
 	public getCurrentRemoteAppVersion(): Promise<string> {
-		return this.httpClient.get<chrome.runtime.Manifest>(ChromeVersionsProvider.MANIFEST_PRODUCTION).toPromise().then(response => {
+		return this.httpClient.get<chrome.runtime.Manifest>(ExtensionVersionsProvider.MANIFEST_PRODUCTION).toPromise().then(response => {
 			return Promise.resolve(response.version);
 		}, err => {
 			return Promise.reject(err);
