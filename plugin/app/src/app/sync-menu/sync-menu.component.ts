@@ -8,7 +8,6 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
-import { SyncResultModel } from "@elevate/shared/models";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 
@@ -38,10 +37,8 @@ export class SyncMenuComponent implements OnInit {
 			this.updateSyncDateStatus();
 		}, 1000 * 60);
 
-		this.appEventsService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
-			if (syncResult) {
-				this.updateSyncDateStatus();
-			}
+		this.appEventsService.onSyncDone.subscribe(() => {
+			this.updateSyncDateStatus();
 		});
 	}
 

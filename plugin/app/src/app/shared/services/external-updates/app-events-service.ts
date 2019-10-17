@@ -1,9 +1,9 @@
 import { Subject } from "rxjs";
-import { SyncResultModel } from "@elevate/shared/models";
 
 export abstract class AppEventsService {
-	/**
-	 *
-	 */
-	public abstract onSyncDone: Subject<SyncResultModel>;
+	public onSyncDone: Subject<boolean>;
+
+	protected constructor() {
+		this.onSyncDone = new Subject<boolean>();
+	}
 }

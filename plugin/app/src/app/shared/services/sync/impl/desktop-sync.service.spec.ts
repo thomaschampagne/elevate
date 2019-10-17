@@ -22,10 +22,10 @@ import { Gzip } from "@elevate/shared/tools/gzip";
 import * as moment from "moment";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../../shared-fixtures/activities-2015.fixture";
 import { SyncState } from "../sync-state.enum";
-import { ConnectorSyncDateTime } from "../../../../../../modules/shared/models/sync/connector-sync-date-time.model";
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 import { StravaCredentialsUpdateSyncEvent } from "../../../../../../modules/shared/sync/events";
 import { StravaApiCredentials } from "../../../../../../modules/shared/sync/strava";
+import { ConnectorSyncDateTime } from "../../../../../../modules/shared/models/sync";
 
 describe("DesktopSyncService", () => {
 
@@ -363,11 +363,10 @@ describe("DesktopSyncService", () => {
 			const syncEvent$ = new Subject<SyncEvent>();
 			const connectorType = ConnectorType.STRAVA;
 			const completeSyncEvent = new CompleteSyncEvent(connectorType);
-			// const connectorSyncDateTime = new ConnectorSyncDateTime(connectorType, oldDateTime);
 			const getConnectorSyncDateTimeByIdSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "getById")
 				.and.returnValue(Promise.resolve(null));
-			// const updateToNowSpy = spyOn(connectorSyncDateTime, "updateToNow").and.callThrough();
 			const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(Promise.resolve());
+			const syncEventDoneSpy = spyOn(desktopSyncService.appEventsService.onSyncDone, "next").and.stub();
 
 			// When
 			setTimeout(() => desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent));
@@ -375,6 +374,7 @@ describe("DesktopSyncService", () => {
 			// Then
 			syncEvent$.subscribe(() => {
 				expect(getConnectorSyncDateTimeByIdSpy).toHaveBeenCalledWith(connectorType);
+				expect(syncEventDoneSpy).toHaveBeenCalledTimes(1);
 				const createdConnectorSyncDateTime: ConnectorSyncDateTime = upsertSyncDateTimesSpy.calls.mostRecent().args[0][0];
 				expect(createdConnectorSyncDateTime.connectorType).toEqual(connectorType);
 				done();
@@ -395,6 +395,7 @@ describe("DesktopSyncService", () => {
 			const getConnectorSyncDateTimeByIdSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "getById")
 				.and.returnValue(Promise.resolve(connectorSyncDateTime));
 			const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(Promise.resolve());
+			const syncEventDoneSpy = spyOn(desktopSyncService.appEventsService.onSyncDone, "next").and.stub();
 
 			// When
 			setTimeout(() => desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent));
@@ -402,6 +403,7 @@ describe("DesktopSyncService", () => {
 			// Then
 			syncEvent$.subscribe(() => {
 				expect(connectorSyncDateTime.dateTime).toBeGreaterThan(oldDateTime);
+				expect(syncEventDoneSpy).toHaveBeenCalledTimes(1);
 				expect(getConnectorSyncDateTimeByIdSpy).toHaveBeenCalledWith(connectorType);
 				expect(upsertSyncDateTimesSpy).toHaveBeenCalledWith([connectorSyncDateTime]);
 				done();
@@ -470,8 +472,10 @@ describe("DesktopSyncService", () => {
 
 			// Given
 			const syncEvent$ = new Subject<SyncEvent>();
+			desktopSyncService.activityUpsertDetected = true; // Emulate some activities have been upserted (even if value would be false)
 			desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
 			const startedSyncEvent = new StartedSyncEvent(desktopSyncService.currentConnectorType);
+			const resetTrackChangesSpy = spyOn(desktopSyncService, "resetActivityTrackingUpsert").and.callThrough();
 			const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
 			// When
@@ -480,6 +484,8 @@ describe("DesktopSyncService", () => {
 			// Then
 			syncEvent$.subscribe(() => {
 				expect(syncEventNextSpy).toHaveBeenCalledWith(startedSyncEvent);
+				expect(resetTrackChangesSpy).toHaveBeenCalledTimes(1);
+				expect(desktopSyncService.activityUpsertDetected).toBeFalsy();
 				done();
 
 			}, error => {
@@ -491,13 +497,14 @@ describe("DesktopSyncService", () => {
 
 			// Given
 			const syncEvent$ = new Subject<SyncEvent>();
+			desktopSyncService.activityUpsertDetected = false; // Emulate some activities have not been upserted before
 			desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
-
 			const isNew = true;
 			const activity = new SyncedActivityModel();
 			activity.name = "No pain no gain";
 			activity.start_time = (new Date()).toISOString();
 			const activitySyncEvent = new ActivitySyncEvent(desktopSyncService.currentConnectorType, null, activity, isNew);
+			const trackChangeSpy = spyOn(desktopSyncService, "trackActivityUpsert").and.callThrough();
 			const activityServicePutSpy = spyOn(desktopSyncService.activityService, "put").and.returnValue(Promise.resolve(activity));
 			const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
@@ -509,6 +516,8 @@ describe("DesktopSyncService", () => {
 
 				expect(activityServicePutSpy).toHaveBeenCalledWith(activity);
 				expect(syncEventNextSpy).toHaveBeenCalledWith(activitySyncEvent);
+				expect(trackChangeSpy).toHaveBeenCalledTimes(1);
+				expect(desktopSyncService.activityUpsertDetected).toBeTruthy();
 				done();
 
 			}, error => {
@@ -520,8 +529,10 @@ describe("DesktopSyncService", () => {
 
 			// Given
 			const syncEvent$ = new Subject<SyncEvent>();
+			desktopSyncService.activityUpsertDetected = true; // Emulate some activities have been upserted
 			desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
 			const stoppedSyncEvent = new StoppedSyncEvent(desktopSyncService.currentConnectorType);
+			const resetTrackChangesSpy = spyOn(desktopSyncService, "resetActivityTrackingUpsert").and.callThrough();
 			const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
 			// When
@@ -530,6 +541,8 @@ describe("DesktopSyncService", () => {
 			// Then
 			syncEvent$.subscribe(() => {
 				expect(syncEventNextSpy).toHaveBeenCalledWith(stoppedSyncEvent);
+				expect(resetTrackChangesSpy).toHaveBeenCalledTimes(1);
+				expect(desktopSyncService.activityUpsertDetected).toBeFalsy();
 				done();
 
 			}, error => {
@@ -558,31 +571,12 @@ describe("DesktopSyncService", () => {
 			});
 		});
 
-		it("should handle stopped sync events", (done: Function) => {
-
-			// Given
-			const syncEvent$ = new Subject<SyncEvent>();
-			desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
-			const genericSyncEvent = new GenericSyncEvent(desktopSyncService.currentConnectorType);
-			const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
-
-			// When
-			setTimeout(() => desktopSyncService.handleSyncEvents(syncEvent$, genericSyncEvent));
-
-			// Then
-			syncEvent$.subscribe(() => {
-				expect(syncEventNextSpy).toHaveBeenCalledWith(genericSyncEvent);
-				done();
-
-			}, error => {
-				throw new Error("Should not be here!" + JSON.stringify(error));
-			});
-		});
-
 		it("should handle complete sync events", (done: Function) => {
 
 			// Given
 			const syncEvent$ = new Subject<SyncEvent>();
+			const expectedDetected = true;
+			desktopSyncService.activityUpsertDetected = true; // Emulate some activities have been upserted
 			desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
 			const completeSyncEvent = new CompleteSyncEvent(desktopSyncService.currentConnectorType);
 			const handleSyncCompleteEventsSpy = spyOn(desktopSyncService, "handleSyncCompleteEvents").and.callThrough();
@@ -590,6 +584,8 @@ describe("DesktopSyncService", () => {
 				.and.returnValue(Promise.resolve(null));
 			spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes")
 				.and.returnValue(Promise.resolve());
+			const onSyncDoneSpy = spyOn(desktopSyncService.appEventsService.onSyncDone, "next");
+			const resetTrackChangesSpy = spyOn(desktopSyncService, "resetActivityTrackingUpsert").and.callThrough();
 			const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
 			// When
@@ -599,6 +595,9 @@ describe("DesktopSyncService", () => {
 			syncEvent$.subscribe(() => {
 				expect(handleSyncCompleteEventsSpy).toHaveBeenCalledWith(syncEvent$, completeSyncEvent);
 				expect(syncEventNextSpy).toHaveBeenCalledWith(completeSyncEvent);
+				expect(onSyncDoneSpy).toHaveBeenCalledWith(expectedDetected);
+				expect(resetTrackChangesSpy).toHaveBeenCalledTimes(1);
+				expect(desktopSyncService.activityUpsertDetected).toBeFalsy();
 				done();
 
 			}, error => {
@@ -612,13 +611,15 @@ describe("DesktopSyncService", () => {
 			const syncEvent$ = new Subject<SyncEvent>();
 			desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
 			const errorSyncEvent = ErrorSyncEvent.SYNC_ALREADY_STARTED.create(desktopSyncService.currentConnectorType);
-			const handleErrorSyncEventsSpy = spyOn(desktopSyncService, "handleErrorSyncEvents").and.stub();
+			const resetTrackChangesSpy = spyOn(desktopSyncService, "resetActivityTrackingUpsert").and.callThrough();
+			const handleErrorSyncEventsSpy = spyOn(desktopSyncService, "handleErrorSyncEvents").and.callThrough();
 
 			// When
 			desktopSyncService.handleSyncEvents(syncEvent$, errorSyncEvent);
 
 			// Then
 			expect(handleErrorSyncEventsSpy).toHaveBeenCalledTimes(1);
+			expect(resetTrackChangesSpy).toHaveBeenCalledTimes(1);
 			done();
 		});
 

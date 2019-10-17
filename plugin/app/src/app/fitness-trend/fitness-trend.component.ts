@@ -12,7 +12,6 @@ import { AppError } from "../shared/models/app-error.model";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
-import { SyncResultModel } from "@elevate/shared/models";
 import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.model";
 import { FitnessTrendInputsComponent } from "./fitness-trend-inputs/fitness-trend-inputs.component";
 import { FitnessTrendConfigDialogData } from "./shared/models/fitness-trend-config-dialog-data.model";
@@ -231,10 +230,8 @@ export class FitnessTrendComponent implements OnInit {
 				this.lastFitnessActiveDate = (lastDayFitnessTrendModel && lastDayFitnessTrendModel.date) ? lastDayFitnessTrendModel.date : null;
 
 				// Listen for syncFinished update then reload graph if necessary.
-				this.appEventsService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
-					if (syncResult.activitiesChangesModel.added.length > 0
-						|| syncResult.activitiesChangesModel.edited.length > 0
-						|| syncResult.activitiesChangesModel.deleted.length > 0) {
+				this.appEventsService.onSyncDone.subscribe((changes: boolean) => {
+					if (changes) {
 						this.reloadFitnessTrend();
 					}
 				});

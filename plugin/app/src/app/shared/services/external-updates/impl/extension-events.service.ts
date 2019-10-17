@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
 import { CoreMessages, SyncResultModel } from "../../../../../../modules/shared/models";
 import { AppEventsService } from "../app-events-service";
 
@@ -7,7 +6,6 @@ import { AppEventsService } from "../app-events-service";
 export class ExtensionEventsService extends AppEventsService {
 
 	constructor() {
-
 		super();
 
 		this.pluginId = ExtensionEventsService.getBrowserPluginId();
@@ -16,12 +14,9 @@ export class ExtensionEventsService extends AppEventsService {
 		ExtensionEventsService.getBrowserExternalMessages().addListener((request: any, sender: chrome.runtime.MessageSender) => {
 			this.onBrowserRequestReceived(request, sender.id);
 		});
-
-		this.onSyncDone = new Subject<SyncResultModel>();
 	}
 
 	public pluginId: string;
-	public onSyncDone: Subject<SyncResultModel>;
 
 	public static getBrowserExternalMessages(): chrome.runtime.ExtensionMessageEvent {
 		return chrome.runtime.onMessage;
@@ -37,10 +32,12 @@ export class ExtensionEventsService extends AppEventsService {
 			return;
 		}
 
-		switch (request.message) {
-			case CoreMessages.ON_EXTERNAL_SYNC_DONE:
-				this.onSyncDone.next(request.results);
-				break;
+		if (request.message === CoreMessages.ON_EXTERNAL_SYNC_DONE) {
+			const syncResult = <SyncResultModel> request.results;
+			const hasChanges = syncResult.activitiesChangesModel.added.length > 0
+				|| syncResult.activitiesChangesModel.edited.length > 0
+				|| syncResult.activitiesChangesModel.deleted.length > 0;
+			this.onSyncDone.next(hasChanges);
 		}
 	}
 }

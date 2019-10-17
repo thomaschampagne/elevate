@@ -12,8 +12,7 @@ import { ActivityService } from "../shared/services/activity/activity.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { Injectable } from "@angular/core";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
-import { Subject } from "rxjs";
-import { SyncResultModel, UserSettings } from "@elevate/shared/models";
+import { UserSettings } from "@elevate/shared/models";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("FitnessTrendComponent", () => {
@@ -26,12 +25,6 @@ describe("FitnessTrendComponent", () => {
 
 	@Injectable()
 	class MockEventsService extends AppEventsService {
-		public onSyncDone: Subject<SyncResultModel>;
-
-		constructor() {
-			super();
-			this.onSyncDone = new Subject<SyncResultModel>();
-		}
 	}
 
 	beforeEach((done: Function) => {

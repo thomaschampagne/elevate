@@ -90,8 +90,8 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 		this.changeDetectorRef.detectChanges();
 	}
 
-	public onStop(): void {
-		this.desktopSyncService.stop().catch(error => {
+	public onStop(): Promise<void> {
+		return this.desktopSyncService.stop().catch(error => {
 			throw new SyncException(error); // Should be caught by Error Handler
 		});
 	}

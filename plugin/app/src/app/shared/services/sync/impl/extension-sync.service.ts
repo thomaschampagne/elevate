@@ -45,8 +45,7 @@ export class ExtensionSyncService extends SyncService<number> {
 
 			window.open(ExtensionSyncService.SYNC_URL_BASE + params, "_blank", features);
 		});
-		return Promise.reject("ExtensionSyncService::sync() do not provide " +
-			"subscription data (events, error, complete). ExtensionSyncService::sync() acts as method returning void.");
+		return Promise.resolve();
 	}
 
 	/**

@@ -136,7 +136,6 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	public ngOnInit(): void {
-
 		// Inject top bar, sync bar, sync menu
 		this.injectHotComponent<TopBarComponent>(this.topBarComponentType, this.topBarDirective.viewContainerRef);
 		this.injectHotComponent<SyncBarComponent>(this.syncBarComponentType, this.syncBarDirective.viewContainerRef);

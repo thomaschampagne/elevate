@@ -11,7 +11,7 @@ import { YearProgressStyleModel } from "./year-progress-graph/models/year-progre
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
-import { SyncedActivityModel, SyncResultModel, UserSettings } from "@elevate/shared/models";
+import { SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { ActivityService } from "../shared/services/activity/activity.service";
@@ -223,15 +223,11 @@ export class YearProgressComponent implements OnInit {
 		this.initialize();
 
 		// Listen for syncFinished update then reload year progressions if necessary.
-		this.appEventsService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
-			if (syncResult.activitiesChangesModel.added.length > 0
-				|| syncResult.activitiesChangesModel.edited.length > 0
-				|| syncResult.activitiesChangesModel.deleted.length > 0) {
-
+		this.appEventsService.onSyncDone.subscribe((changes: boolean) => {
+			if (changes) {
 				this.initialize();
 			}
 		});
-
 	}
 
 	public initialize(): void {

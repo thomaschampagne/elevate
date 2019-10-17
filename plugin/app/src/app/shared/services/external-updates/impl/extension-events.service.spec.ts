@@ -1,8 +1,8 @@
 import { TestBed } from "@angular/core/testing";
 import { ExtensionEventsService } from "./extension-events.service";
-import { CoreMessages } from "../../../../../../modules/shared/models";
+import { CoreMessages, SyncResultModel } from "../../../../../../modules/shared/models";
 
-describe("ExtensionSyncService", () => {
+describe("ExtensionEventsService", () => {
 
 	const pluginId = "c061d18abea0";
 	let service: ExtensionEventsService;
@@ -31,14 +31,21 @@ describe("ExtensionSyncService", () => {
 		done();
 	});
 
-	it("should handle a sync done from external messages", (done: Function) => {
+	it("should handle a sync done WITH changes from external messages", (done: Function) => {
 
 		// Given
 		const expectedCallCount = 1;
 		const spy = spyOn(service.onSyncDone, "next");
+		const expectedChangesFromSync = true;
 		const message: any = {
 			message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
-			results: {}
+			results: <SyncResultModel> {
+				activitiesChangesModel: {
+					added: [null, null],
+					edited: [null],
+					deleted: []
+				}
+			}
 		};
 		const senderId: string = pluginId;
 
@@ -47,6 +54,35 @@ describe("ExtensionSyncService", () => {
 
 		// Then
 		expect(spy).toHaveBeenCalledTimes(expectedCallCount);
+		expect(spy).toHaveBeenCalledWith(expectedChangesFromSync);
+
+		done();
+	});
+
+	it("should not handle a sync done WITHOUT changes from external messages", (done: Function) => {
+
+		// Given
+		const expectedCallCount = 1;
+		const spy = spyOn(service.onSyncDone, "next");
+		const expectedChangesFromSync = false;
+		const message: any = {
+			message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
+			results: <SyncResultModel> {
+				activitiesChangesModel: {
+					added: [],
+					edited: [],
+					deleted: []
+				}
+			}
+		};
+		const senderId: string = pluginId;
+
+		// When
+		service.onBrowserRequestReceived(message, senderId);
+
+		// Then
+		expect(spy).toHaveBeenCalledTimes(expectedCallCount);
+		expect(spy).toHaveBeenCalledWith(expectedChangesFromSync);
 
 		done();
 	});

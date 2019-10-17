@@ -28,9 +28,10 @@ import * as moment from "moment";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync";
 import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-time.dao";
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
+import { AppEventsService } from "../../external-updates/app-events-service";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
-// TODO migrate lastSyncDateTime storage key to syncDateTime for the extension
+// TODO migrate lastSyncDateTime storage key to syncDateTime for the extension (on develop)
 // TODO Handle sync complete
 // TODO Add sync gen session id as string baseConnector. Goal: more easy to debug sync session with start/stop actions?
 // TODO Handle errors cases (continue or not the sync...)
@@ -68,16 +69,19 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 				public stravaApiCredentialsService: StravaApiCredentialsService,
 				public logger: LoggerService,
 				public connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
+				public appEventsService: AppEventsService,
 				@Inject(DataStore) public desktopDataStore: DesktopDataStore<void> /* Injected to create PouchDB dumps & load them */) {
 		super(versionsProvider, activityService, athleteService, userSettingsService, logger);
 		this.syncSubscription = null;
 		this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync // TODO ReplaySubject to get old values?! I think no
 		this.currentConnectorType = null;
+		this.activityUpsertDetected = false;
 	}
 
 	public syncEvents$: Subject<SyncEvent>;
 	public syncSubscription: Subscription;
 	public currentConnectorType: ConnectorType;
+	public activityUpsertDetected: boolean;
 
 	public static transformErrorToSyncException(error: Error | Error[] | string | string[]): SyncException {
 
@@ -171,6 +175,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 		switch (syncEvent.type) {
 
 			case SyncEventType.STARTED:
+				this.resetActivityTrackingUpsert();
 				syncEvents$.next(syncEvent); // Forward for upward UI use.
 				this.logger.info(syncEvent);
 				break;
@@ -180,6 +185,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 				break;
 
 			case SyncEventType.STOPPED:
+				this.resetActivityTrackingUpsert();
 				syncEvents$.next(syncEvent); // Forward for upward UI use.
 				this.logger.info(syncEvent);
 				break;
@@ -211,6 +217,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 	}
 
 	public handleErrorSyncEvents(syncEvents$: Subject<SyncEvent>, errorSyncEvent: ErrorSyncEvent): void {
+
+		this.resetActivityTrackingUpsert();
 
 		this.logger.error(errorSyncEvent);
 
@@ -263,8 +271,9 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 			}).then(() => {
 
 			this.logger.info(completeSyncEvent);
+			this.appEventsService.onSyncDone.next(this.activityUpsertDetected);
+			this.resetActivityTrackingUpsert();
 			syncEvents$.next(completeSyncEvent); // Forward for upward UI use.
-
 		});
 	}
 
@@ -303,6 +312,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 		this.activityService.put(activitySyncEvent.activity).then((syncedActivityModel: SyncedActivityModel) => {
 
 			this.logger.info(`Activity "${syncedActivityModel.name}" saved`);
+			this.trackActivityUpsert();
 			syncEvents$.next(activitySyncEvent); // Forward for upward UI use.
 
 		}).catch((upsertError: Error) => {
@@ -438,6 +448,14 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 	public clearSyncTime(): Promise<void> {
 		return this.connectorSyncDateTimeDao.clear();
+	}
+
+	public trackActivityUpsert(): void {
+		this.activityUpsertDetected = true;
+	}
+
+	public resetActivityTrackingUpsert(): void {
+		this.activityUpsertDetected = false;
 	}
 
 	public ngOnDestroy(): void {

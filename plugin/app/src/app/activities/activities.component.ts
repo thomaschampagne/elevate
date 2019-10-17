@@ -5,7 +5,7 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import { SyncedActivityModel, SyncResultModel, UserSettings } from "@elevate/shared/models";
+import { SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { ActivityColumns } from "./activity-columns.namespace";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
@@ -154,10 +154,8 @@ export class ActivitiesComponent implements OnInit {
 		});
 
 		// Listen for syncFinished update then table if necessary.
-		this.appEventsService.onSyncDone.subscribe((syncResult: SyncResultModel) => {
-			if (syncResult.activitiesChangesModel.added.length > 0
-				|| syncResult.activitiesChangesModel.edited.length > 0
-				|| syncResult.activitiesChangesModel.deleted.length > 0) {
+		this.appEventsService.onSyncDone.subscribe((changes: boolean) => {
+			if (changes) {
 				this.initialized = false;
 				this.fetchApplyData();
 			}
