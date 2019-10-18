@@ -5,6 +5,7 @@ import { StravaApiCredentials } from "@elevate/shared/sync";
 import { ConnectorsComponent } from "../connectors.component";
 import { StravaConnectorService } from "../services/strava-connector.service";
 import * as moment from "moment";
+import * as HttpCodes from "http-status-codes";
 
 @Component({
 	selector: "app-strava-connector",
@@ -34,51 +35,54 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 	}
 
 	public handleCredentialsChanges(stravaApiCredentials: StravaApiCredentials): void {
-		this.stravaApiCredentials = stravaApiCredentials;
-		this.expiresAt = (this.stravaApiCredentials.expiresAt > 0) ? moment(this.stravaApiCredentials.expiresAt).format("LLLL") : null;
-	}
-
-	public onClientIdChange(): void {
-
-		this.stravaConnectorService.fetchCredentials().then((stravaApiCredentials: StravaApiCredentials) => {
-			stravaApiCredentials.clientId = this.stravaApiCredentials.clientId;
-			this.stravaConnectorService.stravaApiCredentialsService.save(stravaApiCredentials);
+		setTimeout(() => {
+			this.stravaApiCredentials = stravaApiCredentials;
+			this.expiresAt = (this.stravaApiCredentials.expiresAt > 0) ? moment(this.stravaApiCredentials.expiresAt).format("LLLL") : null;
 		});
 	}
 
+	public onClientIdChange(): void {
+		this.resetTokens();
+	}
+
 	public onClientSecretChange(): void {
+		this.resetTokens();
+	}
+
+	public resetTokens(): void {
 		this.stravaConnectorService.fetchCredentials().then((stravaApiCredentials: StravaApiCredentials) => {
+			stravaApiCredentials.clientId = this.stravaApiCredentials.clientId;
 			stravaApiCredentials.clientSecret = this.stravaApiCredentials.clientSecret;
-			this.stravaConnectorService.stravaApiCredentialsService.save(stravaApiCredentials);
+			stravaApiCredentials.accessToken = null;
+			stravaApiCredentials.refreshToken = null;
+			stravaApiCredentials.expiresAt = null;
+			return this.stravaConnectorService.stravaApiCredentialsService.save(stravaApiCredentials);
+		}).then((stravaApiCredentials: StravaApiCredentials) => {
+			this.stravaApiCredentials = stravaApiCredentials;
 		});
 	}
 
 	public stravaAuthentication(): void {
-
 		this.stravaConnectorService.authenticate().then((stravaApiCredentials: StravaApiCredentials) => {
 			this.stravaApiCredentials = stravaApiCredentials;
 		}).catch(error => {
-			// TODO Better handling of this...
-			if (error && error.code) {
-				if (error.code === "ECONNREFUSED") {
-					const message = `Unable to connect to ${error.address}:${error.port}. Please check your connection and proxy settings`;
-					this.snackBar.open(message, "Close");
-					this.logger.warn(message, JSON.stringify(error));
-				}
 
+			let errorMessage = null;
+
+			if (error.statusCode === HttpCodes.UNAUTHORIZED) {
+				errorMessage = "Unauthorized access to strava. Check your client id and client secret.";
+			} else if (error.statusCode === HttpCodes.FORBIDDEN) {
+				errorMessage = "Forbidden access to strava. Please check your client id and client secret.";
 			} else {
 				throw error;
 			}
 
+			this.snackBar.open(errorMessage, "Ok");
 		});
-
 	}
 
-	public sync(): void {
-		this.stravaConnectorService.sync();
+	public sync(fastSync: boolean = null): void {
+		this.stravaConnectorService.sync(fastSync);
 	}
 
-	public stop(): void {
-		this.stravaConnectorService.stop();
-	}
 }

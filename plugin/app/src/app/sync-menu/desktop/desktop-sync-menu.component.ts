@@ -54,7 +54,7 @@ import { ElevateException } from "@elevate/shared/exceptions";
                     <span>Continue sync via connectors</span>
                 </button>
                 <ng-container *ngIf="(syncState === SyncState.SYNCED)">
-                    <button mat-menu-item (click)="onSync()">
+                    <button mat-menu-item (click)="onSync(true)">
                         <mat-icon>sync</mat-icon>
                         <span>Sync "{{mostRecentConnectorSyncedType | lowercase}}" recent activities</span>
                     </button>
@@ -133,13 +133,13 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
 	}
 
 	public onSync(fastSync: boolean = null, forceSync: boolean = null): void {
-		this.onSyncMostRecentConnectorSynced();
+		this.onSyncMostRecentConnectorSynced(fastSync);
 	}
 
-	public onSyncMostRecentConnectorSynced(): void {
+	public onSyncMostRecentConnectorSynced(fastSync: boolean = null): void {
 
 		if (this.mostRecentConnectorSyncedType) {
-			this.desktopSyncService.sync(null, null, this.mostRecentConnectorSyncedType);
+			this.desktopSyncService.sync(fastSync, null, this.mostRecentConnectorSyncedType);
 		} else {
 			throw new ElevateException("No recent connector synced found. Please sync a connector completely.");
 		}

@@ -1,74 +1,94 @@
 <mat-card>
 	<mat-card-title>
-		Strava API
+		Strava
 	</mat-card-title>
 	<mat-card-content>
-		<div *ngIf="stravaApiCredentials">
-			<div>
-				<mat-form-field fxFlex="50">
-					<input matInput type="number" min="0" placeholder="Client id"
-						   [(ngModel)]="stravaApiCredentials.clientId"
-						   (change)="onClientIdChange()">
-				</mat-form-field>
-			</div>
-			<div>
-				<mat-form-field fxFlex="50">
-					<input matInput [type]="showSecret.checked ? 'text' : 'password'" placeholder="Client secret"
-						   [(ngModel)]="stravaApiCredentials.clientSecret" (change)="onClientSecretChange()">
-					<button mat-button matSuffix mat-icon-button (click)="showSecret.checked = !showSecret.checked">
-						<mat-icon>{{showSecret.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
-					</button>
-					<mat-checkbox fxHide #showSecret></mat-checkbox>
-				</mat-form-field>
-			</div>
-			<div *ngIf="stravaApiCredentials.accessToken">
-				<mat-form-field fxFlex="50">
-					<input matInput disabled [type]="showToken.checked ? 'text' : 'password'" placeholder="Access Token"
-						   [(ngModel)]="stravaApiCredentials.accessToken">
-					<button mat-button matSuffix mat-icon-button (click)="showToken.checked = !showToken.checked">
-						<mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
-					</button>
-					<mat-checkbox fxHide #showToken></mat-checkbox>
-				</mat-form-field>
-			</div>
-			<div *ngIf="stravaApiCredentials.refreshToken">
-				<mat-form-field fxFlex="50">
-					<input matInput disabled [type]="showToken.checked ? 'text' : 'password'"
-						   placeholder="Refresh Token"
-						   [(ngModel)]="stravaApiCredentials.refreshToken">
-					<button mat-button matSuffix mat-icon-button (click)="showToken.checked = !showToken.checked">
-						<mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
-					</button>
-					<mat-checkbox fxHide #showToken></mat-checkbox>
-				</mat-form-field>
-			</div>
-			<div *ngIf="stravaApiCredentials.expiresAt > 0">
-				<mat-form-field fxFlex="50">
-					<input matInput disabled [type]="showToken.checked ? 'text' : 'password'"
-						   placeholder="Session valid until" [value]="expiresAt">
-					<button mat-button matSuffix mat-icon-button (click)="showToken.checked = !showToken.checked">
-						<mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
-					</button>
-					<mat-checkbox fxHide #showToken></mat-checkbox>
-				</mat-form-field>
-			</div>
-			<button mat-stroked-button
+		<div class="connector" *ngIf="stravaApiCredentials">
+			<button mat-stroked-button *ngIf="!stravaApiCredentials.accessToken"
 					color="primary"
 					(click)="stravaAuthentication()"
 					[disabled]="(!stravaApiCredentials.clientId || !stravaApiCredentials.clientSecret)">
-				<span *ngIf="!stravaApiCredentials.accessToken">Connect to Strava</span>
-				<span *ngIf="stravaApiCredentials.accessToken">Reconnect to Strava</span>
+				<mat-icon>power</mat-icon>
+				<span>Connect to Strava</span>
 			</button>
-			<button mat-stroked-button
-					color="primary"
-					*ngIf="(stravaApiCredentials.clientId > 0 && stravaApiCredentials.clientSecret && stravaApiCredentials.accessToken)"
-					(click)="sync()">Sync
+
+			<button
+				*ngIf="(stravaApiCredentials.clientId > 0 && stravaApiCredentials.clientSecret && stravaApiCredentials.accessToken)"
+				mat-stroked-button
+				color="primary"
+				(click)="sync(true)">
+				<mat-icon>sync</mat-icon>
+				Sync recent activities
 			</button>
-			<button mat-stroked-button
-					color="primary"
-					*ngIf="(stravaApiCredentials.clientId > 0 && stravaApiCredentials.clientSecret && stravaApiCredentials.accessToken)"
-					(click)="stop()">Stop
+
+			<button
+				*ngIf="(stravaApiCredentials.clientId > 0 && stravaApiCredentials.clientSecret && stravaApiCredentials.accessToken)"
+				mat-stroked-button
+				color="primary"
+				(click)="sync()">
+				<mat-icon>sync</mat-icon>
+				Sync all activities
 			</button>
+
+			<span #configureButton [hidden]="false">
+				<button mat-stroked-button color="primary"
+						(click)="configureView.hidden = false; configureButton.hidden = true">
+					<mat-icon>build</mat-icon>
+					Configure
+				</button>
+			</span>
+
+			<div class="configureView" #configureView [hidden]="true">
+				<div>
+					<mat-form-field fxFlex="50">
+						<input matInput type="number" min="0" placeholder="Client id"
+							   [(ngModel)]="stravaApiCredentials.clientId"
+							   (change)="onClientIdChange()">
+					</mat-form-field>
+				</div>
+				<div>
+					<mat-form-field fxFlex="50">
+						<input matInput [type]="showSecret.checked ? 'text' : 'password'" placeholder="Client secret"
+							   [(ngModel)]="stravaApiCredentials.clientSecret" (change)="onClientSecretChange()">
+						<button mat-button matSuffix mat-icon-button (click)="showSecret.checked = !showSecret.checked">
+							<mat-icon>{{showSecret.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+						</button>
+						<mat-checkbox fxHide #showSecret></mat-checkbox>
+					</mat-form-field>
+				</div>
+				<div *ngIf="stravaApiCredentials.accessToken">
+					<mat-form-field fxFlex="50">
+						<input matInput disabled [type]="showToken.checked ? 'text' : 'password'"
+							   placeholder="Access Token"
+							   [(ngModel)]="stravaApiCredentials.accessToken">
+						<button mat-button matSuffix mat-icon-button (click)="showToken.checked = !showToken.checked">
+							<mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+						</button>
+						<mat-checkbox fxHide #showToken></mat-checkbox>
+					</mat-form-field>
+				</div>
+				<div *ngIf="stravaApiCredentials.refreshToken">
+					<mat-form-field fxFlex="50">
+						<input matInput disabled [type]="showToken.checked ? 'text' : 'password'"
+							   placeholder="Refresh Token"
+							   [(ngModel)]="stravaApiCredentials.refreshToken">
+						<button mat-button matSuffix mat-icon-button (click)="showToken.checked = !showToken.checked">
+							<mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+						</button>
+						<mat-checkbox fxHide #showToken></mat-checkbox>
+					</mat-form-field>
+				</div>
+				<div *ngIf="stravaApiCredentials.expiresAt > 0">
+					<mat-form-field fxFlex="50">
+						<input matInput disabled [type]="showToken.checked ? 'text' : 'password'"
+							   placeholder="Session valid until" [value]="expiresAt">
+						<button mat-button matSuffix mat-icon-button (click)="showToken.checked = !showToken.checked">
+							<mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+						</button>
+						<mat-checkbox fxHide #showToken></mat-checkbox>
+					</mat-form-field>
+				</div>
+			</div>
 		</div>
 	</mat-card-content>
 </mat-card>

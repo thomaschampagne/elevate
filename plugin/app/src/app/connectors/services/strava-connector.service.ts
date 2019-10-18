@@ -7,7 +7,6 @@ import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync
 import { StravaApiCredentialsService } from "../../shared/services/strava-api-credentials/strava-api-credentials.service";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { filter } from "rxjs/operators";
-import { SyncException } from "@elevate/shared/exceptions";
 
 @Injectable()
 export class StravaConnectorService {
@@ -60,7 +59,7 @@ export class StravaConnectorService {
 	/**
 	 *
 	 */
-	public sync(): Promise<void> {
+	public sync(fastSync: boolean = null): Promise<void> {
 
 		const desktopSyncService = <DesktopSyncService> this.syncService;
 
@@ -74,15 +73,7 @@ export class StravaConnectorService {
 				});
 		});
 
-		return desktopSyncService.sync(true, null, ConnectorType.STRAVA);
-	}
-
-	public stop(): Promise<void> {
-		return (<DesktopSyncService> this.syncService).stop().then(() => {
-			return Promise.resolve();
-		}, error => {
-			throw new SyncException(error); // Should be caught by Error Handler
-		});
+		return desktopSyncService.sync(fastSync, null, ConnectorType.STRAVA);
 	}
 
 }

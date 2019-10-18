@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, HostBinding, InjectionToken, OnInit } fro
 import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.service";
 import { ActivitySyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { NotImplementedException, SyncException } from "@elevate/shared/exceptions";
-import { MatSnackBar } from "@angular/material";
 import * as moment from "moment";
 
 export const SYNC_BAR_COMPONENT_TOKEN = new InjectionToken<SyncBarComponent>("SYNC_BAR_COMPONENT_TOKEN");
@@ -17,12 +16,11 @@ export class SyncBarComponent {
         <div class="app-sync-bar">
             <div fxLayout="row" fxLayoutAlign="space-between center">
                 <div>
-                    <span *ngIf="currentSyncEventText">{{currentSyncEventText}}</span>
+                    <span class="mat-body-1" *ngIf="currentSyncEventText">{{currentSyncEventText}}</span>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="space-between center">
-                    <button mat-stroked-button (click)="onDetails()">Details</button>
-                    <button mat-stroked-button *ngIf="!isStopped" (click)="onStop()">Stop</button>
-                    <button mat-flat-button *ngIf="isStopped" (click)="onClose()">Close</button>
+                    <button mat-flat-button color="warn" (click)="onDetails()">Details</button>
+                    <button mat-flat-button color="warn" *ngIf="!isStopped" (click)="onStop()">Stop</button>
                 </div>
             </div>
         </div>
@@ -48,8 +46,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 	public currentSyncEventText: string;
 
 	constructor(public desktopSyncService: DesktopSyncService,
-				public changeDetectorRef: ChangeDetectorRef,
-				public snackBar: MatSnackBar) {
+				public changeDetectorRef: ChangeDetectorRef) {
 		super();
 		this.hideSyncBar = true;
 		this.isStopped = false;
@@ -79,12 +76,17 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 
 		if (syncEvent.type === SyncEventType.ACTIVITY) {
 			const activitySyncEvent = <ActivitySyncEvent> syncEvent;
-			this.currentSyncEventText = (activitySyncEvent.isNew ? "Added" : "Updated") + " activity " + " \"" + activitySyncEvent.activity.name + "\". On Date" + moment(activitySyncEvent.activity.start_time).format("llll");
+			this.currentSyncEventText = moment(activitySyncEvent.activity.start_time).format("ll") + ": " + activitySyncEvent.activity.name;
 		}
 
 		if (syncEvent.type === SyncEventType.STOPPED) {
 			this.isStopped = true;
+			this.hideSyncBar = true;
 			this.currentSyncEventText = "Sync stopped on connector \"" + syncEvent.fromConnectorType.toLowerCase() + "\"";
+		}
+
+		if (syncEvent.type === SyncEventType.COMPLETE) {
+			this.hideSyncBar = true;
 		}
 
 		this.changeDetectorRef.detectChanges();
@@ -94,10 +96,6 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 		return this.desktopSyncService.stop().catch(error => {
 			throw new SyncException(error); // Should be caught by Error Handler
 		});
-	}
-
-	public onClose(): void {
-		this.hideSyncBar = true;
 	}
 
 	public onDetails(): void {
