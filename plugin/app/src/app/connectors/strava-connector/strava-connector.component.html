@@ -13,7 +13,7 @@
 			</button>
 
 			<button
-				*ngIf="(stravaApiCredentials.clientId > 0 && stravaApiCredentials.clientSecret && stravaApiCredentials.accessToken)"
+				*ngIf="isSynced && (stravaApiCredentials.clientId > 0 && stravaApiCredentials.clientSecret && stravaApiCredentials.accessToken)"
 				mat-stroked-button
 				color="primary"
 				(click)="sync(true)">

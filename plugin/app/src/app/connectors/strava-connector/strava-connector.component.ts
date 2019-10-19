@@ -6,6 +6,8 @@ import { ConnectorsComponent } from "../connectors.component";
 import { StravaConnectorService } from "../services/strava-connector.service";
 import * as moment from "moment";
 import * as HttpCodes from "http-status-codes";
+import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
+import { SyncState } from "../../shared/services/sync/sync-state.enum";
 
 @Component({
 	selector: "app-strava-connector",
@@ -16,8 +18,10 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 
 	public stravaApiCredentials: StravaApiCredentials;
 	public expiresAt: string;
+	public isSynced: boolean;
 
 	constructor(public stravaConnectorService: StravaConnectorService,
+				public desktopSyncService: DesktopSyncService,
 				public snackBar: MatSnackBar,
 				public logger: LoggerService) {
 		super();
@@ -25,7 +29,10 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 
 	public ngOnInit(): void {
 
-		this.stravaConnectorService.fetchCredentials().then((stravaApiCredentials: StravaApiCredentials) => {
+		this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
+			this.isSynced = syncState === SyncState.SYNCED;
+			return this.stravaConnectorService.fetchCredentials();
+		}).then((stravaApiCredentials: StravaApiCredentials) => {
 			this.handleCredentialsChanges(stravaApiCredentials);
 		});
 
@@ -52,7 +59,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 	public resetTokens(): void {
 		this.stravaConnectorService.fetchCredentials().then((stravaApiCredentials: StravaApiCredentials) => {
 			stravaApiCredentials.clientId = this.stravaApiCredentials.clientId;
-			stravaApiCredentials.clientSecret = this.stravaApiCredentials.clientSecret;
+			stravaApiCredentials.clientSecret = (this.stravaApiCredentials.clientSecret) ? this.stravaApiCredentials.clientSecret.trim() : null;
 			stravaApiCredentials.accessToken = null;
 			stravaApiCredentials.refreshToken = null;
 			stravaApiCredentials.expiresAt = null;

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, HostBinding, InjectionToken, OnInit } from "@angular/core";
 import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.service";
 import { ActivitySyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
-import { NotImplementedException, SyncException } from "@elevate/shared/exceptions";
+import { SyncException } from "@elevate/shared/exceptions";
 import * as moment from "moment";
 
 export const SYNC_BAR_COMPONENT_TOKEN = new InjectionToken<SyncBarComponent>("SYNC_BAR_COMPONENT_TOKEN");
@@ -19,8 +19,9 @@ export class SyncBarComponent {
                     <span class="mat-body-1" *ngIf="currentSyncEventText">{{currentSyncEventText}}</span>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="space-between center">
-                    <button mat-flat-button color="warn" (click)="onDetails()">Details</button>
-                    <button mat-flat-button color="warn" *ngIf="!isStopped" (click)="onStop()">Stop</button>
+                    <button mat-flat-button color="warn" (click)="onStop()">
+                        Stop
+                    </button>
                 </div>
             </div>
         </div>
@@ -42,6 +43,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 	public hideSyncBar: boolean;
 
 	public isStopped: boolean;
+	public isSyncCompleted: boolean;
 
 	public currentSyncEventText: string;
 
@@ -50,6 +52,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 		super();
 		this.hideSyncBar = true;
 		this.isStopped = false;
+		this.isSyncCompleted = false;
 		this.currentSyncEventText = null;
 	}
 
@@ -67,6 +70,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 		if (syncEvent.type === SyncEventType.STARTED) {
 			this.hideSyncBar = false;
 			this.isStopped = false;
+			this.isSyncCompleted = false;
 			this.currentSyncEventText = "Sync started on connector \"" + syncEvent.fromConnectorType.toLowerCase() + "\"";
 		}
 
@@ -79,13 +83,21 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 			this.currentSyncEventText = moment(activitySyncEvent.activity.start_time).format("ll") + ": " + activitySyncEvent.activity.name;
 		}
 
+		if (syncEvent.type === SyncEventType.ERROR) {
+			const message = JSON.stringify(syncEvent);
+			this.currentSyncEventText = message;
+			alert(message); // TODO !!
+		}
+
 		if (syncEvent.type === SyncEventType.STOPPED) {
 			this.isStopped = true;
-			this.hideSyncBar = true;
 			this.currentSyncEventText = "Sync stopped on connector \"" + syncEvent.fromConnectorType.toLowerCase() + "\"";
+			this.hideSyncBar = true;
 		}
 
 		if (syncEvent.type === SyncEventType.COMPLETE) {
+			this.isSyncCompleted = true;
+			this.currentSyncEventText = "Sync completed on connector \"" + syncEvent.fromConnectorType.toLowerCase() + "\"";
 			this.hideSyncBar = true;
 		}
 
@@ -98,9 +110,6 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 		});
 	}
 
-	public onDetails(): void {
-		throw new NotImplementedException();
-	}
 }
 
 @Component({

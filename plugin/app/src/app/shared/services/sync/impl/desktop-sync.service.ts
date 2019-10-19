@@ -258,20 +258,21 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 	public handleSyncCompleteEvents(syncEvents$: Subject<SyncEvent>, completeSyncEvent: CompleteSyncEvent): void {
 
-		this.connectorSyncDateTimeDao.getById(this.currentConnectorType)
-			.then((currentConnectorSyncDateTime: ConnectorSyncDateTime) => {
+		let syncState = null;
+		this.getSyncState().then(userSyncState => {
+			syncState = userSyncState;
+			return this.connectorSyncDateTimeDao.getById(this.currentConnectorType);
+		}).then((currentConnectorSyncDateTime: ConnectorSyncDateTime) => {
 
-				if (currentConnectorSyncDateTime) {
-					currentConnectorSyncDateTime.dateTime = Date.now();
-				} else {
-					currentConnectorSyncDateTime = new ConnectorSyncDateTime(this.currentConnectorType);
-				}
-
-				return this.upsertConnectorsSyncDateTimes([currentConnectorSyncDateTime]);
-			}).then(() => {
-
+			if (currentConnectorSyncDateTime) {
+				currentConnectorSyncDateTime.dateTime = Date.now();
+			} else {
+				currentConnectorSyncDateTime = new ConnectorSyncDateTime(this.currentConnectorType);
+			}
+			return this.upsertConnectorsSyncDateTimes([currentConnectorSyncDateTime]);
+		}).then(() => {
 			this.logger.info(completeSyncEvent);
-			this.appEventsService.onSyncDone.next(this.activityUpsertDetected);
+			(syncState && syncState === SyncState.SYNCED) ? this.appEventsService.onSyncDone.next(this.activityUpsertDetected) : this.reloadApp();
 			this.resetActivityTrackingUpsert();
 			syncEvents$.next(completeSyncEvent); // Forward for upward UI use.
 		});
@@ -456,6 +457,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 	public resetActivityTrackingUpsert(): void {
 		this.activityUpsertDetected = false;
+	}
+
+	public reloadApp(): void {
+		window.location.reload();
 	}
 
 	public ngOnDestroy(): void {
