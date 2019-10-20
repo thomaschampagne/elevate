@@ -2,7 +2,7 @@ import * as http from "http";
 import * as queryString from "querystring";
 import { BrowserWindow } from "electron";
 import logger from "electron-log";
-import { Service } from "./service";
+import { Service } from "../../service";
 import { HttpCodes } from "typed-rest-client/HttpClient";
 
 export class StravaAuthenticator {
@@ -45,7 +45,7 @@ export class StravaAuthenticator {
 	}
 
 	public makeTokensExchangeRequest(clientId: number, clientSecret: string, code: string, refreshToken: string,
-									 responseCallback: (error: any, accessToken: string, refreshToken: string, expiresAt: number) => void): void {
+									 responseCallback: (error: any, accessToken: string, refreshToken: string, expiresAt: number, athlete: object) => void): void {
 
 		let payload = null;
 
@@ -73,16 +73,24 @@ export class StravaAuthenticator {
 		}
 
 		if (!payload) {
-			responseCallback("Unable to exchange tokens. Body: " + JSON.stringify(payload), null, null, null);
+			responseCallback("Unable to exchange tokens. Body: " + JSON.stringify(payload), null, null, null, null);
 			return;
 		}
 
 		this.exchangeForTokens(payload, (error, body) => {
 			if (error) {
-				responseCallback(error, null, null, null);
+				responseCallback(error, null, null, null, null);
 			} else {
-				logger.info(body);
-				responseCallback(null, body.access_token, body.refresh_token, body.expires_at * 1000); // expires_at as milli seconds
+				responseCallback(null, body.access_token, body.refresh_token, body.expires_at * 1000  /* expires_at as milli seconds */, {
+					id: body.athlete.id,
+					username: body.athlete.username,
+					firstname: body.athlete.firstname,
+					lastname: body.athlete.lastname,
+					city: body.athlete.city,
+					state: body.athlete.state,
+					country: body.athlete.country,
+					sex: body.athlete.sex,
+				});
 			}
 		});
 
@@ -121,9 +129,9 @@ export class StravaAuthenticator {
 	 * @param {string} clientId - Strava client ID.
 	 * @param {string} clientSecret - Strava client secret.
 	 */
-	public authorize(clientId: number, clientSecret: string): Promise<{ accessToken: string, refreshToken: string, expiresAt: number }> {
+	public authorize(clientId: number, clientSecret: string): Promise<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: object }> {
 
-		return new Promise<{ accessToken: string, refreshToken: string, expiresAt: number }>((resolve, reject) => {
+		return new Promise<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: object }>((resolve, reject) => {
 
 			this.authenticationWindow = new BrowserWindow({
 				height: StravaAuthenticator.AUTH_WINDOW_HEIGHT,
@@ -154,12 +162,12 @@ export class StravaAuthenticator {
 				this.server.close();
 			});
 
-			const responseCallback = (error: any, accessToken: string, refreshToken: string, expiresAt: number) => {
+			const responseCallback = (error: any, accessToken: string, refreshToken: string, expiresAt: number, athlete: object) => {
 				if (error) {
 					logger.error(error);
 					reject(error);
 				} else {
-					resolve({accessToken: accessToken, refreshToken: refreshToken, expiresAt: expiresAt});
+					resolve({accessToken: accessToken, refreshToken: refreshToken, expiresAt: expiresAt, athlete: athlete});
 				}
 			};
 
@@ -177,16 +185,16 @@ export class StravaAuthenticator {
 	 * @param clientSecret
 	 * @param refreshToken
 	 */
-	public refresh(clientId: number, clientSecret: string, refreshToken: string): Promise<{ accessToken: string, refreshToken: string, expiresAt: number }> {
+	public refresh(clientId: number, clientSecret: string, refreshToken: string): Promise<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: object }> {
 
-		return new Promise<{ accessToken: string, refreshToken: string, expiresAt: number }>((resolve, reject) => {
+		return new Promise<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: object }>((resolve, reject) => {
 
-			this.makeTokensExchangeRequest(clientId, clientSecret, null, refreshToken, (error: any, accessToken: string, refreshToken: string, expiresAt: number) => {
+			this.makeTokensExchangeRequest(clientId, clientSecret, null, refreshToken, (error: any, accessToken: string, refreshToken: string, expiresAt: number, athlete: object) => {
 				if (error) {
 					logger.error(error);
 					reject(error);
 				} else {
-					resolve({accessToken: accessToken, refreshToken: refreshToken, expiresAt: expiresAt});
+					resolve({accessToken: accessToken, refreshToken: refreshToken, expiresAt: expiresAt, athlete: athlete});
 				}
 			});
 

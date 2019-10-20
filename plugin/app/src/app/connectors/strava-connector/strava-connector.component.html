@@ -2,6 +2,13 @@
 	<mat-card-title>
 		Strava
 	</mat-card-title>
+	<mat-card-subtitle>
+		<span *ngIf="!stravaApiCredentials || !stravaApiCredentials.accessToken">Not connected</span>
+		<span *ngIf="stravaApiCredentials && stravaApiCredentials.accessToken">
+			Connected as {{stravaApiCredentials.stravaAccount.firstname}} {{stravaApiCredentials.stravaAccount.lastname}}
+			(id: {{stravaApiCredentials.stravaAccount.id}})
+		</span>
+	</mat-card-subtitle>
 	<mat-card-content>
 		<div class="connector" *ngIf="stravaApiCredentials">
 			<button mat-stroked-button *ngIf="!stravaApiCredentials.accessToken"

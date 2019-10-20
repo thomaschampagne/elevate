@@ -7,6 +7,7 @@ import {
 	ErrorSyncEvent,
 	StartedSyncEvent,
 	StoppedSyncEvent,
+	StravaAccount,
 	StravaApiCredentials,
 	StravaCredentialsUpdateSyncEvent,
 	SyncEvent,
@@ -18,6 +19,7 @@ import {
 	AthleteModel,
 	BareActivityModel,
 	ConnectorSyncDateTime,
+	Gender,
 	SyncedActivityModel,
 	UserSettings
 } from "@elevate/shared/models";
@@ -28,7 +30,7 @@ import * as _ from "lodash";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { Gzip } from "@elevate/shared/tools";
 import { filter } from "rxjs/operators";
-import { StravaAuthenticator } from "../../strava-authenticator";
+import { StravaAuthenticator } from "./strava-authenticator";
 import { IHttpClientResponse } from "typed-rest-client/Interfaces";
 import { HttpCodes } from "typed-rest-client/HttpClient";
 import * as http from "http";
@@ -453,12 +455,14 @@ export class StravaConnector extends BaseConnector {
 			return Promise.reject("Case not supported in StravaConnector::stravaTokensUpdater(). stravaApiCredentials: " + JSON.stringify(stravaApiCredentials));
 		}
 
-		return authPromise.then((result: { accessToken: string, refreshToken: string, expiresAt: number }) => {
+		return authPromise.then((result: { accessToken: string, refreshToken: string, expiresAt: number, athlete: any }) => {
 
 			// Update credentials
 			stravaApiCredentials.accessToken = result.accessToken;
 			stravaApiCredentials.refreshToken = result.refreshToken;
 			stravaApiCredentials.expiresAt = result.expiresAt;
+			stravaApiCredentials.stravaAccount = new StravaAccount(result.athlete.id, result.athlete.username, result.athlete.firstname, result.athlete.lastname,
+				result.athlete.city, result.athlete.state, result.athlete.country, result.athlete.sex === "M" ? Gender.MEN : Gender.WOMEN);
 
 			// Notify
 			syncEvents$.next(new StravaCredentialsUpdateSyncEvent(stravaApiCredentials));

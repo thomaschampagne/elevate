@@ -1,6 +1,6 @@
 import { IpcRequest, PromiseTron, PromiseTronReply } from "promise-tron";
 import logger from "electron-log";
-import { StravaAuthenticator } from "../strava-authenticator";
+import { StravaAuthenticator } from "../connectors/strava/strava-authenticator";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import {
 	ActivitySyncEvent,
@@ -215,10 +215,15 @@ export class IpcMainMessagesService {
 			promise = stravaAuth.authorize(clientId, clientSecret);
 		}
 
-		promise.then((result: { accessToken: string, refreshToken: string, expiresAt: number }) => {
+		promise.then((result: { accessToken: string, refreshToken: string, expiresAt: number, athlete: object }) => {
 
 			replyWith({
-				success: {accessToken: result.accessToken, refreshToken: result.refreshToken, expiresAt: result.expiresAt},
+				success: {
+					accessToken: result.accessToken,
+					refreshToken: result.refreshToken,
+					expiresAt: result.expiresAt,
+					athlete: result.athlete
+				},
 				error: null
 			});
 
