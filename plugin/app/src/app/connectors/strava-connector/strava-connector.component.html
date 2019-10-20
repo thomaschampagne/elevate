@@ -38,6 +38,15 @@
 				</button>
 			</span>
 
+			<button
+				*ngIf="(stravaApiCredentials.clientId > 0 && stravaApiCredentials.clientSecret && stravaApiCredentials.accessToken)"
+				mat-stroked-button
+				color="primary"
+				(click)="disconnect()">
+				<mat-icon>power_off</mat-icon>
+				Disconnect
+			</button>
+
 			<div class="configureView" #configureView [hidden]="true">
 				<div>
 					<mat-form-field fxFlex="50">

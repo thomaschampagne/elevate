@@ -8,6 +8,7 @@ import * as moment from "moment";
 import * as HttpCodes from "http-status-codes";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
+import { ElectronService } from "../../shared/services/electron/electron.service";
 
 @Component({
 	selector: "app-strava-connector",
@@ -22,6 +23,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 
 	constructor(public stravaConnectorService: StravaConnectorService,
 				public desktopSyncService: DesktopSyncService,
+				public electronService: ElectronService,
 				public snackBar: MatSnackBar,
 				public logger: LoggerService) {
 		super();
@@ -66,6 +68,8 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 			return this.stravaConnectorService.stravaApiCredentialsService.save(stravaApiCredentials);
 		}).then((stravaApiCredentials: StravaApiCredentials) => {
 			this.stravaApiCredentials = stravaApiCredentials;
+			// Force clear cookie to allow connection with another strava account
+			this.electronService.electron.remote.getCurrentWindow().webContents.session.clearStorageData({storages: ["cookies"]});
 		});
 	}
 
@@ -90,6 +94,10 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 
 	public sync(fastSync: boolean = null): void {
 		this.stravaConnectorService.sync(fastSync);
+	}
+
+	public disconnect(): void {
+		this.resetTokens();
 	}
 
 }
