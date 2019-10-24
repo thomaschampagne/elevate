@@ -1,6 +1,6 @@
 import { powerTimeData } from "./power_data_1480020375";
 import * as _ from "lodash";
-import { SplitCalculator } from "@elevate/shared/sync/compute/split-calculator";
+import { SplitCalculator } from "@elevate/shared/sync";
 
 describe("SplitCalculator", () => {
 
@@ -41,11 +41,11 @@ describe("SplitCalculator", () => {
 		// When
 		const call = () => {
 			const splitCalculator = new SplitCalculator(scale, data, maxScaleGapThreshold);
-			splitCalculator.getBestSplit(scaleRange);
+			splitCalculator.getBestSplit(scaleRange, true);
 		};
 
 		// Then
-		expect(call).toThrow(new Error("Scale has a too important gaps. Cannot normalize scale"));
+		expect(call).toThrow(new Error("Scale has a too importants gap. Cannot normalize scale"));
 
 		done();
 	});
@@ -60,7 +60,7 @@ describe("SplitCalculator", () => {
 		// When
 		const call = () => {
 			const splitCalculator = new SplitCalculator(scale, data);
-			splitCalculator.getBestSplit(scaleRange);
+			splitCalculator.getBestSplit(scaleRange, true);
 		};
 
 		// Then
@@ -78,7 +78,7 @@ describe("SplitCalculator", () => {
 
 		// When
 		const splitCalculator = new SplitCalculator(scale, data);
-		const bestSplit = splitCalculator.getBestSplit(scaleRange);
+		const bestSplit = splitCalculator.getBestSplit(scaleRange, true);
 
 		// Then
 		expect(bestSplit).toEqual(50);
@@ -96,7 +96,7 @@ describe("SplitCalculator", () => {
 		// When
 		const splitCalculator = new SplitCalculator(scale, data);
 		const call = () => {
-			splitCalculator.getBestSplit(scaleRange);
+			splitCalculator.getBestSplit(scaleRange, true);
 		};
 
 		// Then
@@ -115,7 +115,7 @@ describe("SplitCalculator", () => {
 
 		// When
 		const splitCalculator = new SplitCalculator(timeScale, wattsData);
-		const riderFTP = splitCalculator.getBestSplit(scaleRange);
+		const riderFTP = splitCalculator.getBestSplit(scaleRange, true);
 
 		// Then
 		expect(Math.floor(riderFTP)).toEqual(expectedFTP);

@@ -29,8 +29,7 @@
 		"test:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng test --watch=false --code-coverage",
 		"test:app:no-source-map": "npm run test:app -- --source-map=false",
 		"test:app-ui-browser": "npm run test:app -- --browsers Chrome",
-		"test:core": "cd webextension && node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
-		"test:core-ui-browser": "npm run test:core -- --browsers Chrome",
+
 		"tslint-fix:core": "node webextension/node_modules/tslint/bin/tslint -c ./tslint.json ./plugin/core/**/*.ts ./plugin/shared/**/*.ts --fix",
 		"tslint-fix:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng lint app --fix",
 		"wipe": "npm run clean && npm run wipe:package-locks && npm run wipe:node-modules",
