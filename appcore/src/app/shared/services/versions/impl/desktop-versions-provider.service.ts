@@ -12,7 +12,7 @@ export class DesktopVersionsProvider implements VersionsProvider {
 	}
 
 	public getInstalledAppVersion(): Promise<string> {
-		const rootPackageJson = require("../../../../../../../../package.json");
+		const rootPackageJson = require("../../../../../../../package.json");
 		return Promise.resolve(rootPackageJson.version);
 	}
 

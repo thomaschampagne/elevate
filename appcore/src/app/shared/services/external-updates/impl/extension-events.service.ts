@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CoreMessages, SyncResultModel } from "../../../../../../modules/shared/models";
+import { CoreMessages, SyncResultModel } from "@elevate/shared/models";
 import { AppEventsService } from "../app-events-service";
 
 @Injectable()

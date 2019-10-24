@@ -13,7 +13,8 @@
 		"target": "es5",
 		"importHelpers": true,
 		"typeRoots": [
-			"node_modules/@types"
+			"node_modules/@types",
+			"../desktop/node_modules/"
 		],
 		"lib": [
 			"es2018",

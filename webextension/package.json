@@ -1,12 +1,6 @@
 {
 	"name": "elevate-web-extension",
 	"description": "Chrome Opera extension adding features for Strava website with new performances data and improved ergonomics. Made with AngularJs, UnderscoreJs and Bootstrap",
-	"keywords": [
-		"strava",
-		"cycling",
-		"running",
-		"tracking"
-	],
 	"maintainers": [
 		{
 			"name": "Thomas Champagne",
@@ -19,19 +13,22 @@
 		"url": "https://github.com/thomaschampagne/elevate"
 	},
 	"scripts": {
+		"archive": "node -e \"const bestzip = require('bestzip');const manifest = require('./dist/manifest.json');const fs = require('fs');const cwd = process.cwd() + '/dist/';const target = 'package/';const filename = 'v' + manifest.version_name.split(' ').join('_').toLowerCase() + '_' + (function now() {const pad = (num) => {return (num).toString().padStart(2, '0');}, d = new Date();return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + '-' + pad(d.getHours()) + '-' + pad(d.getMinutes());}()) + '.zip';const output = '../' + target + filename;if (!fs.existsSync(target)) fs.mkdirSync(target);bestzip.nodeZip({source: '*', cwd: cwd, destination: output}).then(() => {console.log('Generated archive ' + filename);process.exit(0);}).catch((err) => {console.error(err.stack);process.exit(1);});\"",
 		"build@prod": "npx npm-run-all clean extension-res-copy:* build:extension@prod build:appcore@prod",
+		"build:appcore@dev": "cd ../appcore/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build --outputPath=../webextension/dist/app/",
 		"build:appcore@prod": "npm run build:appcore@dev -- --prod",
-		"build:extension@prod": "npm run build:extension@dev -- --mode production",
-		"build:appcore@dev": "cd ../plugin/app/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build",
 		"build:extension@dev": "node ./node_modules/webpack/bin/webpack.js --config ./extension.webpack.config.js",
+		"build:extension@prod": "npm run build:extension@dev -- --mode production",
 		"clean": "npx npm-run-all clean:*",
-		"clean:dist": "node ../node_modules/del-cli/cli.js --force ../dist/",
-		"clean:package": "node ../node_modules/del-cli/cli.js --force ../package/",
-		"extension-res-copy:manifest": "node ../node_modules/cpy-cli/cli.js ./manifest.json ../dist/",
-		"extension-res-copy:install-guide": "node ../node_modules/cpy-cli/cli.js ./INSTALL.txt ../dist/",
+		"clean:dist": "node ../node_modules/del-cli/cli.js ./dist/",
+		"clean:package": "node ../node_modules/del-cli/cli.js ./package/",
+		"extension-res-copy:manifest": "node ../node_modules/cpy-cli/cli.js ./manifest.json ./dist/",
+		"extension-res-copy:install-guide": "node ../node_modules/cpy-cli/cli.js ./INSTALL.txt ./dist/",
+		"package": "npx npm-run-all clean build@prod archive",
 		"start": "npm run watch",
 		"test": "node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
 		"test:ui-browser": "npm run test -- --browsers Chrome",
+		"tslint": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./**/*.ts --fix",
 		"watch": "npm run clean && npx npm-run-all extension-res-copy:* && npx npm-run-all --print-label --parallel watch:appcore watch:extension",
 		"watch:appcore": "npm run build:appcore@dev -- --watch",
 		"watch:extension": "npm run build:extension@dev -- --watch"
@@ -41,9 +38,9 @@
 	},
 	"author": "Thomas Champagne",
 	"license": "MIT",
-	"readme": "None",
+	"readme": "README.md",
 	"dependencies": {
-		"@elevate/shared": "file:../plugin/app/modules/shared/",
+		"@elevate/shared": "file:../appcore/modules/shared/",
 		"chart.js": "^2.7.3",
 		"fancybox": "^3.0.1",
 		"file-saver": "^2.0.0-rc.4",
@@ -73,6 +70,7 @@
 		"@types/q": "^1.5.1",
 		"@types/qrcode": "^1.3.0",
 		"@types/semver": "^5.5.0",
+		"bestzip": "^2.1.2",
 		"copy-webpack-plugin": "^4.6.0",
 		"css-loader": "^1.0.1",
 		"file-loader": "^2.0.0",

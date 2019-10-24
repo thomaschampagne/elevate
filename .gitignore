@@ -1,7 +1,8 @@
 .idea/
 **/node_modules/
-dist/
-package/
+**/dist/
+**/package/
+**/coverage/
 
 # karma testing
 browsers.karma.conf.js

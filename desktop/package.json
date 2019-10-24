@@ -1,0 +1,98 @@
+{
+	"name": "elevate-desktop",
+	"description": "Elevate cross-platform desktop app based on ElectronJS",
+	"version": "7.0.0-concept",
+	"scripts": {
+		"res:copy": "node ../node_modules/cpy-cli/cli.js \"**/*.*\" \"../dist/res/\" --cwd=./res/ --parents",
+		"build:appcore@dev": "cd ../appcore/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build --outputPath=../desktop/dist/app/ --base-href --configuration=desktop",
+		"build:appcore@prod": "npm run build:appcore@dev -- --base-href --configuration=desktop-prod",
+		"build:electron": "npm run res:copy && rollup --config rollup.config.js",
+		"clean": "npx npm-run-all clean:*",
+		"clean:dist": "node ../node_modules/del-cli/cli.js ./dist/",
+		"clean:package": "node ../node_modules/del-cli/cli.js ./package/",
+		"launch:electron": "cross-env ELECTRON_ENV=dev run-electron ./dist/desktop.bundle.js",
+		"package:windows": "cross-env ELECTRON_ENV=prod && npx npm-run-all clean build:electron build:appcore@prod && electron-builder build --windows --x64",
+		"package:linux": "cross-env ELECTRON_ENV=prod && npx npm-run-all clean build:electron build:appcore@prod && electron-builder build --linux --x64",
+		"start": "npm run watch",
+		"test": "jest --coverage",
+		"tslint": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./src/**/*.ts --fix",
+		"watch": "npm run clean && npx npm-run-all --print-label --race --parallel watch:electron watch:appcore",
+		"watch:electron": "npm run build:electron -- --watch",
+		"watch:appcore": "npm run build:appcore@dev -- --watch"
+	},
+	"config": {
+		"unsafe-perm": true
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/thomaschampagne/elevate"
+	},
+	"author": {
+		"name": "Thomas Champagne",
+		"email": "th.champagne@gmail.com",
+		"web": "https://thomaschampagne.github.io"
+	},
+	"license": "MIT",
+	"readme": "README.md",
+	"dependencies": {
+		"electron-log": "^3.0.8",
+		"https-proxy-agent": "^2.2.2",
+		"lodash": "^4.17.15",
+		"pako": "^1.0.10",
+		"promise-tron": "^2.0.0",
+		"querystring": "^0.2.0",
+		"rxjs": "^6.5.3",
+		"typed-rest-client": "^1.5.0"
+	},
+	"devDependencies": {
+		"@types/jest": "^24.0.18",
+		"@types/lodash": "^4.14.140",
+		"@types/node": "^12.7.8",
+		"@types/pako": "^1.0.1",
+		"cross-env": "^6.0.0",
+		"devtron": "^1.4.0",
+		"electron": "^6.0.10",
+		"electron-builder": "^21.2.0",
+		"electron-reloader": "^0.3.0",
+		"jest": "^24.9.0",
+		"jest-config": "^24.9.0",
+		"rollup": "^1.21.4",
+		"rollup-plugin-commonjs": "^10.1.0",
+		"rollup-plugin-node-resolve": "^5.2.0",
+		"rollup-plugin-sourcemaps": "^0.4.2",
+		"rollup-plugin-terser": "^5.1.2",
+		"rollup-plugin-typescript2": "^0.24.3",
+		"run-electron": "^1.0.0",
+		"ts-jest": "^24.1.0",
+		"tslint": "^5.11.0",
+		"typescript": "^3.6.3"
+	},
+	"build": {
+		"appId": "com.thomaschampagne.elevate",
+		"productName": "elevate",
+		"directories": {
+			"output": "./package/"
+		},
+		"files": [
+			"!**/*",
+			"./dist/**/*.*"
+		],
+		"win": {
+			"target": [
+				"zip"
+			]
+		},
+		"mac": {
+			"target": [
+				"dmg"
+			]
+		},
+		"linux": {
+			"category": "Sports",
+			"target": [
+				"deb"
+			]
+		}
+	},
+	"main": "./dist/desktop.bundle.js"
+}

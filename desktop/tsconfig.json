@@ -5,28 +5,28 @@
 		"resolveJsonModule": true,
 		"paths": {
 			"@elevate/shared/constants": [
-				"../plugin/app/modules/shared/constants/"
+				"../appcore/modules/shared/constants/"
 			],
 			"@elevate/shared/data": [
-				"../plugin/app/modules/shared/data/"
+				"../appcore/modules/shared/data/"
 			],
 			"@elevate/shared/electron": [
-				"../plugin/app/modules/shared/electron/"
+				"../appcore/modules/shared/electron/"
 			],
 			"@elevate/shared/sync": [
-				"../plugin/app/modules/shared/sync/"
+				"../appcore/modules/shared/sync/"
 			],
 			"@elevate/shared/models": [
-				"../plugin/app/modules/shared/models/"
+				"../appcore/modules/shared/models/"
 			],
 			"@elevate/shared/resolvers": [
-				"../plugin/app/modules/shared/resolvers/"
+				"../appcore/modules/shared/resolvers/"
 			],
 			"@elevate/shared/exceptions": [
-				"../plugin/app/modules/shared/exceptions/"
+				"../appcore/modules/shared/exceptions/"
 			],
 			"@elevate/shared/tools": [
-				"../plugin/app/modules/shared/tools/"
+				"../appcore/modules/shared/tools/"
 			]
 		}
 	}

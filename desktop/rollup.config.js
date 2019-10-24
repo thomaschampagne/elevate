@@ -50,7 +50,7 @@ module.exports = {
 	input: "./src/main.ts",
 	output: [
 		{
-			file: "../dist/desktop.bundle.js",
+			file: "./dist/desktop.bundle.js",
 			format: "cjs"
 		}
 	],
@@ -63,16 +63,16 @@ module.exports = {
 			include: [
 				"./src/**/*.ts",
 				"!./src/**/*.spec.ts",
-				"./../plugin/app/modules/**/*.ts"
+				"./../appcore/modules/**/*.ts"
 			]
 		}),
 		commonjs({
 			namedExports: {
-				"../node_modules/lodash/lodash.js": LODASH_METHODS_DECLARATION,
-				"../plugin/app/node_modules/lodash/lodash.js": LODASH_METHODS_DECLARATION,
-				"../plugin/app/node_modules/pako/index.js": ["gzip", "inflate", "ungzip"],
-				"../node_modules/https-proxy-agent/index.js": ["HttpsProxyAgent"],
-				"../node_modules/get-proxy-settings/dist/index.js": ["getProxySettings"]
+				"./node_modules/lodash/lodash.js": LODASH_METHODS_DECLARATION,
+				"../appcore/node_modules/lodash/lodash.js": LODASH_METHODS_DECLARATION,
+				"../appcore/node_modules/pako/index.js": ["gzip", "inflate", "ungzip"],
+				"./node_modules/https-proxy-agent/index.js": ["HttpsProxyAgent"],
+				"./node_modules/get-proxy-settings/dist/index.js": ["getProxySettings"]
 			},
 			ignore: ["assert"]
 		}),

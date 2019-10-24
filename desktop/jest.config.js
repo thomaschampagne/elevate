@@ -8,13 +8,13 @@ module.exports = {
 		}
 	},
 	testEnvironment: "node",
-	testRegex: "desktop/src.*\\.(test|spec)\\.(ts|tsx|js)$",
+	testRegex: "./src.*\\.(test|spec)\\.(ts|tsx|js)$",
 	moduleFileExtensions: [
 		"ts",
 		"tsx",
 		"js"
 	],
 	moduleNameMapper: {
-		"^@elevate\/shared\/(.*)$": "<rootDir>/../plugin/app/modules/shared/$1/"
+		"^@elevate\/shared\/(.*)$": "<rootDir>/../appcore/modules/shared/$1/"
 	}
 };

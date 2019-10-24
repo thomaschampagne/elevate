@@ -1,9 +1,21 @@
 {
 	"name": "elevate",
 	"version": "6.14.0",
-	"description": "Wrap the needed tools required to cook the Elevate Web Plugin",
+	"description": "Wrap the needed tools required to cook the Elevate",
+	"maintainers": [
+		{
+			"name": "Thomas Champagne",
+			"email": "th.champagne@gmail.com",
+			"web": "https://thomaschampagne.github.io"
+		}
+	],
+	"keywords": [
+		"strava",
+		"cycling",
+		"running",
+		"tracking"
+	],
 	"scripts": {
-
 		"build:core@dev": "cd webextension && node ./node_modules/webpack/bin/webpack.js --config ./core.webpack.config.js",
 		"build:core@prod": "npm run build:core@dev -- --mode production",
 		"--------START-DESKTOP-WIP----------": "----------------------------",
@@ -22,20 +34,17 @@
 		"clean": "npm-run-all clean:*",
 		"clean:dist": "node ./node_modules/del-cli/cli.js ./dist/",
 		"clean:package": "node ./node_modules/del-cli/cli.js ./package/",
-		"audit:fix": "npm audit fix && cd ./plugin/app/ && npm audit fix && cd ../core/ && npm audit fix",
+		"audit:fix": "npm audit fix && cd appcore/ && npm audit fix && cd ../core/ && npm audit fix",
 		"package": "npm-run-all clean build:extension@prod archive",
-		"postinstall": "cd webextension/ && npm install && cd ../plugin/app/ && npm install",
+		"postinstall": "cd webextension/ && npm install && cd ../appcore/ && npm install && cd ../desktop/ && npm install",
 		"test": "npm-run-all clean test:core test:app",
-		"test:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng test --watch=false --code-coverage",
+		"test:app": "cd appcore/ && node ./node_modules/@angular/cli/bin/ng test --watch=false --code-coverage",
 		"test:app:no-source-map": "npm run test:app -- --source-map=false",
 		"test:app-ui-browser": "npm run test:app -- --browsers Chrome",
-
-		"tslint-fix:core": "node webextension/node_modules/tslint/bin/tslint -c ./tslint.json ./plugin/core/**/*.ts ./plugin/shared/**/*.ts --fix",
-		"tslint-fix:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng lint app --fix",
+		"tslint-fix:app": "cd appcore/ && node ./node_modules/@angular/cli/bin/ng lint appcore --fix",
 		"wipe": "npm run clean && npm run wipe:package-locks && npm run wipe:node-modules",
-		"wipe:node-modules": "node ./node_modules/del-cli/cli.js ./node_modules/ webextension/node_modules/ ./plugin/app/node_modules/",
-		"wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json webextension/package-lock.json ./plugin/app/package-lock.json",
-		"archive": "node -e \"const bestzip = require('bestzip');const manifest = require('./dist/manifest.json');const fs = require('fs');const cwd = process.cwd() + '/dist/';const target = 'package/';const filename = 'v' + manifest.version_name.split(' ').join('_').toLowerCase() + '_' + (function now() {const pad = (num) => {return (num).toString().padStart(2, '0');}, d = new Date();return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + '-' + pad(d.getHours()) + '-' + pad(d.getMinutes());}()) + '.zip';const output = '../' + target + filename;if (!fs.existsSync(target)) fs.mkdirSync(target);bestzip.nodeZip({source: '*', cwd: cwd, destination: output}).then(() => {console.log('Generated archive ' + filename);process.exit(0);}).catch((err) => {console.error(err.stack);process.exit(1);});\""
+		"wipe:node-modules": "node ./node_modules/del-cli/cli.js ./node_modules/ webextension/node_modules/ appcore/node_modules/",
+		"wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json webextension/package-lock.json appcore/package-lock.json"
 	},
 	"config": {
 		"unsafe-perm": true
@@ -49,78 +58,12 @@
 		"email": "th.champagne@gmail.com",
 		"web": "https://thomaschampagne.github.io"
 	},
-	"contributors": [
-		{
-			"name": "Thomas Champagne",
-			"email": "th.champagne@gmail.com",
-			"web": "https://thomaschampagne.github.io"
-		}
-	],
 	"license": "MIT",
 	"readme": "README.md",
-	"dependencies": {
-		"electron-log": "^3.0.8",
-		"https-proxy-agent": "^2.2.2",
-		"lodash": "^4.17.15",
-		"pako": "^1.0.10",
-		"promise-tron": "^2.0.0",
-		"querystring": "^0.2.0",
-		"rxjs": "^6.5.3",
-		"typed-rest-client": "^1.5.0"
-	},
 	"devDependencies": {
-		"@types/jest": "^24.0.18",
-		"@types/lodash": "^4.14.140",
-		"@types/node": "^12.7.8",
-		"@types/pako": "^1.0.1",
-		"bestzip": "^2.1.4",
 		"cpy-cli": "^2.0.0",
-		"cross-env": "^6.0.0",
-		"del-cli": "^3.0.0",
-		"devtron": "^1.4.0",
-		"electron": "^6.0.10",
-		"electron-builder": "^21.2.0",
-		"electron-reloader": "^0.3.0",
-		"jest": "^24.9.0",
-		"jest-config": "^24.9.0",
+		"del-cli": "^1.1.0",
 		"npm-run-all": "^4.1.5",
-		"rollup": "^1.21.4",
-		"rollup-plugin-commonjs": "^10.1.0",
-		"rollup-plugin-node-resolve": "^5.2.0",
-		"rollup-plugin-sourcemaps": "^0.4.2",
-		"rollup-plugin-terser": "^5.1.2",
-		"rollup-plugin-typescript2": "^0.24.3",
-		"run-electron": "^1.0.0",
-		"run-sequence": "^2.2.1",
-		"ts-jest": "^24.1.0",
-		"typescript": "^3.6.3"
-	},
-	"build": {
-		"appId": "com.thomaschampagne.elevate",
-		"productName": "elevate",
-		"directories": {
-			"output": "./package/"
-		},
-		"files": [
-			"!**/*",
-			"dist/**/*.*"
-		],
-		"win": {
-			"target": [
-				"zip"
-			]
-		},
-		"mac": {
-			"target": [
-				"dmg"
-			]
-		},
-		"linux": {
-			"category": "Sports",
-			"target": [
-				"deb"
-			]
-		}
-	},
-	"main": "./dist/desktop.bundle.js"
+		"run-sequence": "^2.2.1"
+	}
 }
