@@ -1,7 +1,7 @@
 {
 	"extends": "./tsconfig.json",
 	"files": [
-		"core.d.ts",
+		"extension.d.ts",
 		"specs/specs.d.ts"
 	],
 	"include": [

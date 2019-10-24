@@ -1,6 +1,5 @@
 const path = require("path");
 const copy = require("copy-webpack-plugin");
-const rootPath = path.join(__dirname, "../../");
 
 module.exports = (env, argv) => {
 	return {
@@ -12,7 +11,7 @@ module.exports = (env, argv) => {
 			installer: path.join(__dirname, "./scripts/installer.ts")
 		},
 		output: {
-			path: path.join(rootPath, "dist", "core"),
+			path: path.join(__dirname, "..", "dist", "core"),
 			filename: '[name].bundle.js',
 			chunkFilename: '[name].bundle.js'
 		},

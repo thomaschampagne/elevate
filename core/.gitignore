@@ -1,0 +1,15 @@
+# common
+.idea/
+*.git/
+*/.gitignore
+**/node_modules/
+dist/
+package/
+
+# Core karma testing
+plugin/core/**/*.js
+specs.log
+
+!karma.conf.js
+!extension.webpack.config.js
+browsers.karma.conf.js

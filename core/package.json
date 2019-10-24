@@ -1,5 +1,5 @@
 {
-	"name": "elevate-core",
+	"name": "elevate-web-extension",
 	"description": "Chrome Opera extension adding features for Strava website with new performances data and improved ergonomics. Made with AngularJs, UnderscoreJs and Bootstrap",
 	"keywords": [
 		"strava",
@@ -20,6 +20,17 @@
 	},
 	"main": "index.js",
 	"scripts": {
+		"build:appcore@dev": "cd ../plugin/app/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build",
+		"build:extension@dev": "node ./node_modules/webpack/bin/webpack.js --config ./extension.webpack.config.js",
+		"clean": "npx npm-run-all clean:*",
+		"clean:dist": "node ../node_modules/del-cli/cli.js ../dist/",
+		"clean:package": "node ../node_modules/del-cli/cli.js ../package/",
+		"extension-res-copy:manifest": "node ../node_modules/cpy-cli/cli.js ./manifest.json ../dist/",
+		"extension-res-copy:install-guide": "node ../node_modules/cpy-cli/cli.js ./INSTALL.txt ../dist/",
+		"start": "npm run watch",
+		"watch": "npm run clean && npx npm-run-all extension-res-copy:* && npx npm-run-all --print-label --parallel watch:appcore watch:extension",
+		"watch:appcore": "npm run build:appcore@dev -- --watch",
+		"watch:extension": "npm run build:extension@dev -- --watch",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"config": {
@@ -29,7 +40,7 @@
 	"license": "MIT",
 	"readme": "None",
 	"dependencies": {
-		"@elevate/shared": "file:../app/modules/shared/",
+		"@elevate/shared": "file:../plugin/app/modules/shared/",
 		"chart.js": "^2.7.3",
 		"fancybox": "^3.0.1",
 		"file-saver": "^2.0.0-rc.4",

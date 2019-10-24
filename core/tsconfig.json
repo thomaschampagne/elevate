@@ -18,25 +18,25 @@
 		"baseUrl": "./",
 		"paths": {
 			"@elevate/shared/constants": [
-				"../app/modules/shared/constants/"
+				"../plugin/app/modules/shared/constants/"
 			],
 			"@elevate/shared/data": [
-				"../app/modules/shared/data/"
+				"../plugin/app/modules/shared/data/"
 			],
 			"@elevate/shared/sync": [
-				"../app/modules/shared/sync/"
+				"../plugin/app/modules/shared/sync/"
 			],
 			"@elevate/shared/models": [
-				"../app/modules/shared/models/"
+				"../plugin/app/modules/shared/models/"
 			],
 			"@elevate/shared/resolvers": [
-				"../app/modules/shared/resolvers/"
+				"../plugin/app/modules/shared/resolvers/"
 			],
 			"@elevate/shared/exceptions": [
-				"../app/modules/shared/exceptions/"
+				"../plugin/app/modules/shared/exceptions/"
 			],
 			"@elevate/shared/tools": [
-				"../app/modules/shared/tools/"
+				"../plugin/app/modules/shared/tools/"
 			]
 		},
 		"skipLibCheck": true

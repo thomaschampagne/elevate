@@ -45,7 +45,7 @@ const browsersKarmaConfig = provideBrowsersKarmaConfig();
 
 module.exports = function (config) {
 	config.set({
-		basePath: "./",
+		basePath: "",
 		frameworks: ["jasmine", "promise"],
 		reporters: ["progress", "spec"],
 		plugins: [
