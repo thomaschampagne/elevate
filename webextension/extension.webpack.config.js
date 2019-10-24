@@ -11,7 +11,7 @@ module.exports = (env, argv) => {
 			installer: path.join(__dirname, "./scripts/installer.ts")
 		},
 		output: {
-			path: path.join(__dirname, "..", "dist", "core"),
+			path: path.join(__dirname, "..", "dist", "extension"),
 			filename: '[name].bundle.js',
 			chunkFilename: '[name].bundle.js'
 		},

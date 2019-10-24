@@ -76,6 +76,7 @@ export namespace UserSettings {
 			displaySegmentTimeComparisonToCurrentYearPR: true,
 			displaySegmentTimeComparisonPosition: true,
 			displayRecentEffortsHRAdjustedPacePower: false,
+			displayRunningPerformanceIndex: true,
 			reviveGoogleMaps: true,
 			displayRunningPowerEstimation: true,
 			reviveGoogleMapsLayerType: "terrain",
@@ -118,6 +119,7 @@ export namespace UserSettings {
 		public displaySegmentTimeComparisonToPR: boolean;
 		public displaySegmentTimeComparisonToCurrentYearPR: boolean;
 		public displaySegmentTimeComparisonPosition: boolean;
+		public displayRunningPerformanceIndex: boolean;
 		public reviveGoogleMaps: boolean;
 		public displayRecentEffortsHRAdjustedPacePower: boolean;
 		public displayRunningPowerEstimation: boolean;

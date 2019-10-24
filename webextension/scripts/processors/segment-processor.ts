@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { CoreEnv } from "../../config/core-env";
+import { ExtensionEnv } from "../../config/extension-env";
 import { VacuumProcessor } from "./vacuum-processor";
 import { LatLonSpherical } from "geodesy";
 
@@ -33,8 +33,8 @@ export class SegmentProcessor {
 		// NearbySegmentsAround cached?
 		const cacheResult: any = JSON.parse(localStorage.getItem(SegmentProcessor.cachePrefix + this.segmentId));
 
-		if (!_.isNull(cacheResult) && !CoreEnv.debugMode) {
-			if (CoreEnv.debugMode) {
+		if (!_.isNull(cacheResult) && !ExtensionEnv.debugMode) {
+			if (ExtensionEnv.debugMode) {
 				console.log("Using existing nearbySegments cache in non debug mode: " + JSON.stringify(cacheResult));
 			}
 			callback(cacheResult);
@@ -50,7 +50,7 @@ export class SegmentProcessor {
 			// Find segments in bounding box
 			this.getSegmentsInBoundingBox(boundingBox, (segmentsInBounds: ISegmentInfo[]) => {
 
-				if (CoreEnv.debugMode) {
+				if (ExtensionEnv.debugMode) {
 					console.log("Creating nearbySegments cache: " + JSON.stringify(segmentsInBounds));
 				}
 				try {

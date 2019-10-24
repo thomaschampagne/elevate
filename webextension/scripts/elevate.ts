@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import { Helper } from "./helper";
 import { ActivityInfoModel, AthleteModel, ReleaseNoteModel, SyncResultModel, UserSettings } from "@elevate/shared/models";
 import { BrowserStorage } from "./browser-storage";
-import { CoreEnv } from "../config/core-env";
+import { ExtensionEnv } from "../config/extension-env";
 import { AppResourcesModel } from "./models/app-resources.model";
 import { AthleteUpdateModel } from "./models/athlete-update.model";
 import { ActivitiesSyncModifier } from "./modifiers/activities-sync.modifier";
@@ -90,7 +90,7 @@ export class Elevate {
 			// Handle some tasks when install/update occurs
 			this.handlePluginInstallOrUpgrade();
 
-			if (CoreEnv.preview) {
+			if (ExtensionEnv.preview) {
 				this.handlePreviewRibbon();
 			}
 
@@ -156,7 +156,7 @@ export class Elevate {
 			this.athleteId = this.vacuumProcessor.getAthleteId();
 			this.athleteName = this.vacuumProcessor.getAthleteName();
 			this.activityAthleteId = this.vacuumProcessor.getActivityAthleteId();
-			this.isOwner = (this.activityAthleteId === this.athleteId || CoreEnv.forceIsActivityOwner);
+			this.isOwner = (this.activityAthleteId === this.athleteId || ExtensionEnv.forceIsActivityOwner);
 			this.isPremium = this.vacuumProcessor.getPremiumStatus();
 			this.isPro = this.vacuumProcessor.getProStatus();
 			this.activityId = this.vacuumProcessor.getActivityId();
@@ -289,7 +289,7 @@ export class Elevate {
 		BrowserStorage.getInstance().get<object>(BrowserStorageType.LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY).then((response: any) => {
 
 			// Override version with fake one to simulate update
-			if (CoreEnv.simulateUpdate) {
+			if (ExtensionEnv.simulateUpdate) {
 				response = {
 					data: {
 						version: "fakeVersion",
@@ -953,7 +953,7 @@ export class Elevate {
 			// Push IncomingConnection
 			const eventName: string = accountName + " #" + this.athleteId + " v" + this.appResources.extVersion;
 
-			if (!CoreEnv.debugMode) {
+			if (!ExtensionEnv.debugMode) {
 				follow("send", "event", "DailyConnection", eventAction, eventName);
 			}
 

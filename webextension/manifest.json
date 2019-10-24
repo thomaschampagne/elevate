@@ -7,8 +7,8 @@
 	"version_name": "6.14.0 Stable",
 	"background": {
 		"scripts": [
-			"core/installer.bundle.js",
-			"core/background.bundle.js"
+			"extension/installer.bundle.js",
+			"extension/background.bundle.js"
 		]
 	},
 	"browser_action": {
@@ -17,7 +17,7 @@
 	"content_scripts": [
 		{
 			"js": [
-				"core/content.bundle.js"
+				"extension/content.bundle.js"
 			],
 			"run_at": "document_end",
 			"matches": [
@@ -27,9 +27,9 @@
 		}
 	],
 	"icons": {
-		"16": "core/icons/16.png",
-		"48": "core/icons/48.png",
-		"128": "core/icons/128.png"
+		"16": "extension/icons/16.png",
+		"48": "extension/icons/48.png",
+		"128": "extension/icons/128.png"
 	},
 	"options_page": "app/index.html",
 	"content_security_policy": "script-src 'self' 'unsafe-eval' ; object-src 'self'",
@@ -40,7 +40,7 @@
 		"unlimitedStorage"
 	],
 	"web_accessible_resources": [
-		"core/*",
+		"extension/*",
 		"app/*"
 	],
 	"externally_connectable": {

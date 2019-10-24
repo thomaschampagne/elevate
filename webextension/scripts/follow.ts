@@ -1,5 +1,5 @@
 // This code is from Google, so let's not modify it too much, just add gaNewElem and gaElems:
-import { CoreEnv } from "../config/core-env";
+import { ExtensionEnv } from "../config/extension-env";
 
 const currentDate: any = new Date();
 (function (i: any, s: any, o: any, g: any, r: any, a?: any, m?: any) {
@@ -14,5 +14,5 @@ const currentDate: any = new Date();
 	m.parentNode.insertBefore(a, m);
 })(window, document, "script", "//www.google-analytics.com/analytics.js", "follow");
 
-follow("create", CoreEnv.analyticsTrackingID, "auto");
+follow("create", ExtensionEnv.analyticsTrackingID, "auto");
 follow("send", "pageview");

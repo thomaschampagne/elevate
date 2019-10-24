@@ -1,6 +1,6 @@
 import { Helper } from "../helper";
 import { BrowserStorage } from "../browser-storage";
-import { CoreEnv } from "../../config/core-env";
+import { ExtensionEnv } from "../../config/extension-env";
 import { ActivitiesSynchronize } from "../processors/activities-synchronize";
 import { SyncResultModel } from "@elevate/shared/models";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
@@ -143,7 +143,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 				error: {path: window.location.href, date: new Date(), content: error},
 			};
 
-			const endPoint = HerokuEndpointResolver.resolve(CoreEnv.endPoint) + "/api/errorReport";
+			const endPoint = HerokuEndpointResolver.resolve(ExtensionEnv.endPoint) + "/api/errorReport";
 
 			$.post({
 				url: endPoint,

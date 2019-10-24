@@ -3,7 +3,7 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { FitnessService } from "../../../fitness-trend/shared/services/fitness.service";
 import { AthleteSettingsModel, UserSettings } from "@elevate/shared/models";
-import { Helper } from "../../../../../../../core/scripts/helper";
+import { Helper } from "../../../../../../../webextension/scripts/helper";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
 import { Constant } from "@elevate/shared/constants";
 

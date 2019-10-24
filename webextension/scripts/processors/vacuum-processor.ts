@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { CoreEnv } from "../../config/core-env";
+import { ExtensionEnv } from "../../config/extension-env";
 import { ActivityInfoModel, ActivitySourceDataModel, ActivityStreamsModel, Gender } from "@elevate/shared/models";
 import { BikeGearModel } from "../models/gear/bike-gear.model";
 import { GearType } from "../models/gear/gear-type.enum";
@@ -24,7 +24,7 @@ export class VacuumProcessor {
 				athleteId = window.currentAthlete.id;
 			}
 		} catch (err) {
-			if (CoreEnv.debugMode) {
+			if (ExtensionEnv.debugMode) {
 				console.warn(err);
 			}
 		}
@@ -43,7 +43,7 @@ export class VacuumProcessor {
 				athleteName = window.currentAthlete.get("display_name");
 			}
 		} catch (err) {
-			if (CoreEnv.debugMode) {
+			if (ExtensionEnv.debugMode) {
 				console.warn(err);
 			}
 		}
@@ -83,7 +83,7 @@ export class VacuumProcessor {
 				premiumStatus = window.currentAthlete.attributes.premium;
 			}
 		} catch (err) {
-			if (CoreEnv.debugMode) {
+			if (ExtensionEnv.debugMode) {
 				console.warn(err);
 			}
 		}
@@ -110,7 +110,7 @@ export class VacuumProcessor {
 			}
 
 		} catch (err) {
-			if (CoreEnv.debugMode) {
+			if (ExtensionEnv.debugMode) {
 				console.warn(err);
 			}
 		}

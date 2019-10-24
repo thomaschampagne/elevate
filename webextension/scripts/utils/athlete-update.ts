@@ -1,4 +1,4 @@
-import { CoreEnv } from "../../config/core-env";
+import { ExtensionEnv } from "../../config/extension-env";
 import * as Q from "q";
 import * as _ from "lodash";
 import { AthleteUpdateModel } from "../models/athlete-update.model";
@@ -58,7 +58,7 @@ export class AthleteUpdate {
 	public static commit(athleteUpdate: AthleteUpdateModel): Q.IPromise<any> {
 
 		const deferred = Q.defer<SyncResultModel>();
-		const endPoint = HerokuEndpointResolver.resolve(CoreEnv.endPoint) + "/api/athlete/update";
+		const endPoint = HerokuEndpointResolver.resolve(ExtensionEnv.endPoint) + "/api/athlete/update";
 
 		$.post({
 			url: endPoint,
