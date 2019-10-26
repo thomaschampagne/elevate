@@ -145,7 +145,7 @@ describe("SplitCalculator", () => {
 		done();
 	});
 
-	it("should get full power curve of activity 1480020375", (done: Function) => {
+	it("full power curve of activity 1480020375 should be monotonically decreasing", (done: Function) => {
 
 		// Given
 		const timeScale: number[] = _POWER_TIME_DATA_.time;
