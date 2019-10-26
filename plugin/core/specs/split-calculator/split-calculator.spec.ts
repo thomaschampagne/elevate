@@ -145,4 +145,35 @@ describe("SplitCalculator", () => {
 		done();
 	});
 
+	it("should get full power curve of activity 1480020375", (done: Function) => {
+
+		// Given
+		const timeScale: number[] = _POWER_TIME_DATA_.time;
+		const wattsData: number[] = _POWER_TIME_DATA_.watts;
+
+		const maxTime = _.max(_POWER_TIME_DATA_.time);
+		const scaleRanges: number[] = Array.from(Array(maxTime + 1).keys()).slice(1);
+
+		// When
+		const splitCalculator = new SplitCalculator(timeScale, wattsData);
+		const results = splitCalculator.getBestSplitRanges(scaleRanges);
+
+		// Then
+		expect(results.length).toEqual(maxTime);
+		expect(results.some(r => Number.isNaN(r.result))).toBeFalsy();
+		expect(results.some(r => Number.isNaN(r.range))).toBeFalsy();
+		// Power can only decrease or be equal as we increase time
+		// e.g. if our best average power for 20 mins is X watts then for every time period below 20 mins our average must be at least X watts
+		// This is currently as issue with the Strava power curve
+		expect(results.every((r, i) => {
+			if (i === 0 || results[i].result <= results[i - 1].result) {
+				return true;
+			}
+			console.debug(`Power at ${results[i].range} s (${results[i].result} W) is more than`
+				+ ` at ${results[i - 1].range} s (${results[i - 1].result} W)`);
+			return false;
+		})).toBeTruthy();
+
+		done();
+	});
 });
