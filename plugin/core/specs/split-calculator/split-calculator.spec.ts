@@ -164,7 +164,7 @@ describe("SplitCalculator", () => {
 		expect(results.some(r => Number.isNaN(r.range))).toBeFalsy();
 		// Power can only decrease or be equal as we increase time
 		// e.g. if our best average power for 20 mins is X watts then for every time period below 20 mins our average must be at least X watts
-		// This is currently as issue with the Strava power curve
+		// This is currently an issue with the Strava power curve
 		expect(results.every((r, i) => {
 			if (i === 0 || results[i].result <= results[i - 1].result) {
 				return true;
