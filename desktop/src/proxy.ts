@@ -1,7 +1,7 @@
 export class Proxy {
 
-	private static RESOLVE_PROXY_TEST_URL: string = "https://no.where";
-	private static DIRECT_PROXY_TEST_URL: string = "DIRECT";
+	private static RESOLVE_PROXY_TEST_URL = "https://no.where";
+	private static DIRECT_PROXY_TEST_URL = "DIRECT";
 
 	/**
 	 * Resolve system proxy if exists

@@ -37,15 +37,26 @@ import * as http from "http";
 import { IncomingHttpHeaders } from "http";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
-export type StravaApiStreamType = {
+export interface StravaApiStreamType {
 	type: "time" | "distance" | "latlng" | "altitude" | "velocity_smooth" | "heartrate" | "cadence" | "watts" | "watts_calc" | "grade_smooth" | "grade_adjusted_speed";
 	data: number[];
 	series_type: string;
 	original_size: number;
 	resolution: string
-};
+}
 
 export class StravaConnector extends BaseConnector {
+
+	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime,
+				stravaApiCredentials: StravaApiCredentials, updateSyncedActivitiesNameAndType: boolean) {
+		super(ConnectorType.STRAVA, athleteModel, userSettingsModel, connectorSyncDateTime, priority, StravaConnector.ENABLED);
+		this.stravaApiCredentials = stravaApiCredentials;
+		this.updateSyncedActivitiesNameAndType = updateSyncedActivitiesNameAndType;
+		this.athleteSnapshotResolver = new AthleteSnapshotResolver(this.athleteModel);
+		this.stravaAuthenticator = new StravaAuthenticator();
+		this.stopRequested = false;
+		this.nextCallWaitTime = 0;
+	}
 
 	public static readonly ENABLED: boolean = true;
 	public static readonly ACTIVITIES_PER_PAGES: number = 20;
@@ -57,6 +68,15 @@ export class StravaConnector extends BaseConnector {
 	public static readonly STRAVA_RATELIMIT_LIMIT_HEADER: string = "x-ratelimit-limit";
 	public static readonly STRAVA_RATELIMIT_USAGE_HEADER: string = "x-ratelimit-usage";
 	public static readonly QUARTER_HOUR_TIME_INTERVAL: number = 15 * 60;
+
+	public stravaApiCredentials: StravaApiCredentials;
+	public updateSyncedActivitiesNameAndType: boolean;
+	public athleteSnapshotResolver: AthleteSnapshotResolver;
+	public stravaAuthenticator: StravaAuthenticator;
+	public stopRequested: boolean;
+	public nextCallWaitTime: number;
+
+	public syncEvents$: ReplaySubject<SyncEvent>;
 
 	public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime,
 						 stravaApiCredentials: StravaApiCredentials, updateSyncedActivitiesNameAndType: boolean) {
@@ -108,26 +128,6 @@ export class StravaConnector extends BaseConnector {
 
 		return rateLimits;
 
-	}
-
-	public stravaApiCredentials: StravaApiCredentials;
-	public updateSyncedActivitiesNameAndType: boolean;
-	public athleteSnapshotResolver: AthleteSnapshotResolver;
-	public stravaAuthenticator: StravaAuthenticator;
-	public stopRequested: boolean;
-	public nextCallWaitTime: number;
-
-	public syncEvents$: ReplaySubject<SyncEvent>;
-
-	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime,
-				stravaApiCredentials: StravaApiCredentials, updateSyncedActivitiesNameAndType: boolean) {
-		super(ConnectorType.STRAVA, athleteModel, userSettingsModel, connectorSyncDateTime, priority, StravaConnector.ENABLED);
-		this.stravaApiCredentials = stravaApiCredentials;
-		this.updateSyncedActivitiesNameAndType = updateSyncedActivitiesNameAndType;
-		this.athleteSnapshotResolver = new AthleteSnapshotResolver(this.athleteModel);
-		this.stravaAuthenticator = new StravaAuthenticator();
-		this.stopRequested = false;
-		this.nextCallWaitTime = 0;
 	}
 
 	/**

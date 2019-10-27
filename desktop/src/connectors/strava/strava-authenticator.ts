@@ -7,14 +7,14 @@ import { HttpCodes } from "typed-rest-client/HttpClient";
 
 export class StravaAuthenticator {
 
-	public static WEB_SERVER_HTTP_PORT: number = 53445;
-	public static AUTH_WINDOW_HEIGHT: number = 800;
-	public static AUTH_WINDOW_WIDTH: number = 500;
-	public static REDIRECT_HTTP_BASE: string = "http://127.0.0.1";
-	public static STRAVA_SCOPE: string = "activity:read_all";
-	public static STRAVA_HOSTNAME: string = "www.strava.com";
-	public static OAUTH_AUTHORIZE_PATH: string = "/oauth/authorize";
-	public static OAUTH_TOKEN_PATH: string = "/oauth/token";
+	public static WEB_SERVER_HTTP_PORT = 53445;
+	public static AUTH_WINDOW_HEIGHT = 800;
+	public static AUTH_WINDOW_WIDTH = 500;
+	public static REDIRECT_HTTP_BASE = "http://127.0.0.1";
+	public static STRAVA_SCOPE = "activity:read_all";
+	public static STRAVA_HOSTNAME = "www.strava.com";
+	public static OAUTH_AUTHORIZE_PATH = "/oauth/authorize";
+	public static OAUTH_TOKEN_PATH = "/oauth/token";
 	public static TOKEN_URL: string = "https://" + StravaAuthenticator.STRAVA_HOSTNAME + StravaAuthenticator.OAUTH_TOKEN_PATH;
 	public static AUTHORIZE_URL: string = "https://" + StravaAuthenticator.STRAVA_HOSTNAME + StravaAuthenticator.OAUTH_AUTHORIZE_PATH;
 

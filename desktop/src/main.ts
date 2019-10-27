@@ -16,10 +16,22 @@ logger.transports.file.maxSize = 1048576 * 2; // 2MB
 
 class Main {
 
+
+	constructor(app: Electron.App) {
+		this.app = app;
+		this.isPackaged = this.app.isPackaged;
+	}
+
 	private static readonly WINDOW_SIZE_RATIO: number = 0.8;
 	private static readonly ICON_PATH_WINDOWS: string = "res/icons/win/icon.ico";
 	private static readonly ICON_PATH_LINUX: string = "res/icons/linux/512x512.png";
 	private static readonly ICON_PATH_MACOS: string = "res/icons/mac/icon.icns";
+
+	public ipcMainMessagesService: IpcMainMessagesService;
+
+	private readonly app: Electron.App;
+	private readonly isPackaged: boolean;
+	private appWindow: BrowserWindow;
 
 	public static getIconPath(): string {
 
@@ -33,18 +45,6 @@ class Main {
 			default:
 				return null;
 		}
-	}
-
-	public ipcMainMessagesService: IpcMainMessagesService;
-
-	private readonly app: Electron.App;
-	private readonly isPackaged: boolean;
-	private appWindow: BrowserWindow;
-
-
-	constructor(app: Electron.App) {
-		this.app = app;
-		this.isPackaged = this.app.isPackaged;
 	}
 
 	public createWindow(): void {
