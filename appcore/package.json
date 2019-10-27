@@ -5,8 +5,10 @@
 		"ng": "ng",
 		"start": "ng serve",
 		"build": "ng build",
-		"test": "ng test",
-		"lint": "ng lint",
+		"test": "ng test --watch=false --code-coverage",
+		"test:no-source-map": "npm run test -- --source-map=false",
+		"test:ui-browser": "npm run test -- --browsers Chrome",
+		"lint": "ng lint app --fix",
 		"e2e": "ng e2e"
 	},
 	"config": {

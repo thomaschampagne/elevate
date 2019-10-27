@@ -6,7 +6,8 @@
 		"types": [
 			"jasmine",
 			"node",
-			"chrome"
+			"chrome",
+			"electron"
 		],
 		"paths": {
 			"@elevate/shared/constants": [

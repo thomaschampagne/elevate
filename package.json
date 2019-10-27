@@ -1,7 +1,7 @@
 {
 	"name": "elevate",
 	"version": "6.14.0",
-	"description": "Wrap the needed tools required to cook the Elevate",
+	"description": "Wrap the needed tools required to cook Elevate desktop and web extension",
 	"maintainers": [
 		{
 			"name": "Thomas Champagne",
@@ -16,35 +16,17 @@
 		"tracking"
 	],
 	"scripts": {
-		"build:core@dev": "cd webextension && node ./node_modules/webpack/bin/webpack.js --config ./core.webpack.config.js",
-		"build:core@prod": "npm run build:core@dev -- --mode production",
-		"--------START-DESKTOP-WIP----------": "----------------------------",
-		"res:desktop:copy": "node ./node_modules/cpy-cli/cli.js \"**/*.*\" \"../../dist/res/\" --cwd=desktop/res/ --parents",
-		"build:desktop:runner": "cd desktop && npm run res:desktop:copy && rollup --config rollup.config.js",
-		"watch:desktop:runner": "npm run build:desktop:runner -- --watch",
-		"build:desktop:app@dev": "npm run build:app@dev -- --base-href --configuration=desktop",
-		"build:desktop:app@prod": "npm run build:app@dev -- --base-href --configuration=desktop-prod",
-		"watch:desktop:app": "npm run build:desktop:app@dev -- --watch",
-		"watch:desktop": "npm run clean && npm-run-all --print-label --race --parallel watch:desktop:runner watch:desktop:app",
-		"test:desktop": "cd desktop && jest --coverage",
-		"electron:develop": "cross-env ELECTRON_ENV=dev run-electron ./dist/desktop.bundle.js",
-		"electron:build:win64": "cross-env ELECTRON_ENV=prod && npm-run-all clean build:desktop:runner build:desktop:app@prod && electron-builder build --windows --x64",
-		"electron:build:linux": "cross-env ELECTRON_ENV=prod && npm-run-all clean build:desktop:runner build:desktop:app@prod && electron-builder build --linux --x64",
-		"----------END-DESKTOP-WIP----------": "----------------------------",
-		"clean": "npm-run-all clean:*",
-		"clean:dist": "node ./node_modules/del-cli/cli.js ./dist/",
-		"clean:package": "node ./node_modules/del-cli/cli.js ./package/",
-		"audit:fix": "npm audit fix && cd appcore/ && npm audit fix && cd ../core/ && npm audit fix",
-		"package": "npm-run-all clean build:extension@prod archive",
+		"audit:fix": "npm audit fix && cd ./appcore/ && npm audit fix && cd ../desktop/ && npm audit fix && cd ../webextension/ && npm audit fix",
+		"clean": "node ./node_modules/del-cli/cli.js ./package && cd ./desktop/ && npm run clean && cd ../webextension/ && npm run clean",
+		"package:extension": "npm run clean && cd ./webextension/ && npm run package && node ../node_modules/cpy-cli/cli.js ./package/* ../package",
+		"package:desktop:windows": "npm run clean && cd ./desktop/ && npm run package:windows && node ../node_modules/cpy-cli/cli.js ./package/elevate-* ../package",
+		"package:desktop:linux": "npm run clean && cd ./desktop/ && npm run package:linux && node ../node_modules/cpy-cli/cli.js ./package/elevate-* ../package",
+		"package:desktop:osx": "echo to be done...",
 		"postinstall": "cd webextension/ && npm install && cd ../appcore/ && npm install && cd ../desktop/ && npm install",
-		"test": "npm-run-all clean test:core test:app",
-		"test:app": "cd appcore/ && node ./node_modules/@angular/cli/bin/ng test --watch=false --code-coverage",
-		"test:app:no-source-map": "npm run test:app -- --source-map=false",
-		"test:app-ui-browser": "npm run test:app -- --browsers Chrome",
-		"tslint-fix:app": "cd appcore/ && node ./node_modules/@angular/cli/bin/ng lint appcore --fix",
+		"test": "cd ./appcore/ && npm test && cd ../desktop/ && npm test && cd ../webextension/ && npm test",
 		"wipe": "npm run clean && npm run wipe:package-locks && npm run wipe:node-modules",
-		"wipe:node-modules": "node ./node_modules/del-cli/cli.js ./node_modules/ webextension/node_modules/ appcore/node_modules/",
-		"wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json webextension/package-lock.json appcore/package-lock.json"
+		"wipe:node-modules": "node ./node_modules/del-cli/cli.js ./node_modules/ ./appcore/node_modules/ ./desktop/node_modules/ ./webextension/node_modules/",
+		"wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json ./appcore/package-lock.json ./desktop/package-lock.json ./webextension/package-lock.json"
 	},
 	"config": {
 		"unsafe-perm": true
