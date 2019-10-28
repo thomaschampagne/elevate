@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
+import { DomSanitizer } from "@angular/platform-browser";
 import * as MarkDownIt from "markdown-it";
 import { LoggerService } from "../shared/services/logging/logger.service";
 
@@ -13,7 +13,7 @@ export class FaqComponent implements OnInit {
 
 	private static readonly FAQ_URL: string = "https://raw.githubusercontent.com/wiki/thomaschampagne/elevate/Frequently-Asked-Questions.md";
 
-	public html: SafeHtml;
+	public html: string;
 	public markDownParser: MarkDownIt;
 
 	public isFaqLoaded: boolean = null;
@@ -29,7 +29,7 @@ export class FaqComponent implements OnInit {
 
 		this.httpClient.get(FaqComponent.FAQ_URL, {responseType: "text"}).toPromise().then((markdownData: string) => {
 
-			this.html = this.domSanitizer.bypassSecurityTrustHtml(this.markDownParser.render(markdownData));
+			this.html = <string> this.domSanitizer.bypassSecurityTrustHtml(this.markDownParser.render(markdownData));
 			this.isFaqLoaded = true;
 
 		}, err => {
