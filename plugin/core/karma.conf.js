@@ -58,8 +58,7 @@ module.exports = function (config) {
 		browsers: browsersKarmaConfig.browsers,
 		customLaunchers: browsersKarmaConfig.customLaunchers,
 		files: [
-			"specs/**/split-calculator.spec.ts"
-			//"specs/**/*.spec.ts"
+			"specs/**/*.spec.ts"
 		],
 		preprocessors: {
 			"**/*.spec.ts": ["webpack"]
@@ -101,7 +100,7 @@ module.exports = function (config) {
 		singleRun: false,
 		browserConsoleLogOptions: {
 			// path: "./specs.log",
-			terminal: true
+			terminal: false
 		}
 	});
 };
