@@ -17,8 +17,8 @@ logger.transports.file.maxSize = 1048576 * 2; // 2MB
 class Main {
 
 
-	constructor(app: Electron.App) {
-		this.app = app;
+	constructor(electronApp: Electron.App) {
+		this.app = electronApp;
 		this.isPackaged = this.app.isPackaged;
 	}
 
@@ -169,6 +169,8 @@ try {
 	}
 
 	logger.info("System", Service.printSystemDetails());
+	logger.info("Device fingerprint", Service.getDeviceFingerPrint());
+
 	(new Main(app)).run();
 
 } catch (err) {

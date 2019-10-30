@@ -2,6 +2,7 @@ import { IpcMainMessagesService } from "./listeners/ipc-main-messages-service";
 import { BaseConnector } from "./connectors/base.connector";
 import { HttpClient } from "typed-rest-client/HttpClient";
 import * as os from "os";
+import * as crypto from "crypto";
 
 export class Service {
 
@@ -54,6 +55,11 @@ export class Service {
 		const cpuInfos = `${cpu.model} ${cpuCount} threads`;
 		const memorySizeGB = Math.round(((os.totalmem() / 1024) / 1024) / 1024) + "GB";
 		return `Hostname ${os.hostname()}; Platform ${os.platform()} ${os.arch()}; Processor ${cpuInfos}; Memory ${memorySizeGB}`;
+	}
+
+	public static getDeviceFingerPrint(): string {
+		const fingerPrint = `${os.hostname()};${os.cpus()[0].model};${os.cpus()[0].speed};${os.totalmem()};${os.homedir()};${os.platform()};${os.arch()};${os.endianness()}`;
+		return crypto.createHash("sha1").update(fingerPrint).digest("hex");
 	}
 
 	public static currentPlatform(): string {
