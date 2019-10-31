@@ -116,6 +116,22 @@ export abstract class AbstractDataView {
 		};
 	}
 
+	protected setupScatterLineGraph(dataPoints: Chart.ChartPoint[])
+	{
+		this.graphData = {
+			datasets: [{
+				label: this.graphTitle,
+				backgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
+				borderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+				borderWidth: 1,
+				hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
+				hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+				data: dataPoints,
+				showLine: true
+			}],
+		};
+	}
+
 	/**
 	 * Push grid, graph and table to content view
 	 */
@@ -155,7 +171,26 @@ export abstract class AbstractDataView {
 					} as LinearTickOptions],
 				},
 			},
-		});	
+		});
+	}
+
+	public displayScatterLineGraph(): void {
+
+		if (!this.canvasId) {
+			console.error("View Id must exist in " + typeof this);
+			return;
+		}
+
+		if (!this.hasGraph) {
+			return;
+		}
+
+		// Generating the chart
+		const canvas: HTMLCanvasElement = document.getElementById(this.canvasId) as HTMLCanvasElement;
+		this.chart = new Chart(canvas.getContext("2d"), {
+			type: "scatter",
+			data: this.graphData
+		});
 	}
 
 	protected customTooltips(tooltip: any): void {
