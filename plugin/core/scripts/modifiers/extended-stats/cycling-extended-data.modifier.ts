@@ -10,6 +10,7 @@ import { CyclingPowerDataView } from "./views/cycling-power-data.view";
 import { ElevationDataView } from "./views/elevation-data.view";
 import { SpeedDataView } from "./views/speed-data.view";
 import * as _ from "lodash";
+import { CyclingPowerCurveView } from "./views/cycling-power-curve.view";
 
 export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
@@ -151,7 +152,7 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 		if (this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData) {
 
 			const measurementPreference: string = window.currentAthlete.get("measurement_preference");
-			const units: string = (measurementPreference == "meters") ? "kph" : "mph";
+			const units: string = (measurementPreference === "meters") ? "kph" : "mph";
 
 			const speedDataView: SpeedDataView = new SpeedDataView(this.analysisData.speedData, units);
 			speedDataView.setAppResources(this.appResources);
@@ -168,6 +169,13 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 			powerDataView.setActivityType(this.activityType);
 			powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(powerDataView);
+
+			const powerCurveView: CyclingPowerCurveView = new CyclingPowerCurveView(this.analysisData.powerData, "w");
+			powerCurveView.setAppResources(this.appResources);
+			powerCurveView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
+			powerCurveView.setActivityType(this.activityType);
+			powerCurveView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
+			this.dataViews.push(powerCurveView);
 		}
 
 		if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {
