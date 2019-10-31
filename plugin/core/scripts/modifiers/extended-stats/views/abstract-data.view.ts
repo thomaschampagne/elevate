@@ -5,6 +5,8 @@ import { Helper } from "../../../helper";
 import { AppResourcesModel } from "../../../models/app-resources.model";
 import { SpeedUnitDataModel, ZoneModel } from "@elevate/shared/models";
 
+type GraphTypes = "histogram" | "scatter-line";
+
 export abstract class AbstractDataView {
 
 	protected units: string;
@@ -25,12 +27,15 @@ export abstract class AbstractDataView {
 	protected activityType: string;
 	protected speedUnitsData: SpeedUnitDataModel;
 
-	protected constructor(units?: string) {
+	private readonly graphType: GraphTypes;
+
+	protected constructor(units?: string, graphType?: GraphTypes) {
 		this.content = "";
 		this.viewTitle = "";
 		this.units = units;
 		this.hasGraph = true;
 		this.mainColor = [0, 0, 0]; // Default ribbon color is black
+		this.graphType = graphType || "histogram";
 		this.canvasId = Helper.guid();
 	}
 
@@ -116,8 +121,7 @@ export abstract class AbstractDataView {
 		};
 	}
 
-	protected setupScatterLineGraph(dataPoints: Chart.ChartPoint[])
-	{
+	protected setupScatterLineGraph(dataPoints: Chart.ChartPoint[])	{
 		this.graphData = {
 			datasets: [{
 				label: this.graphTitle,
@@ -156,7 +160,12 @@ export abstract class AbstractDataView {
 
 		// Generating the chart
 		const canvas: HTMLCanvasElement = document.getElementById(this.canvasId) as HTMLCanvasElement;
-		this.chart = new Chart(canvas.getContext("2d"), {
+		this.chart = this.graphType === "histogram" ?
+			this.generateHistogram(canvas) : this.generateScatterLinePlot(canvas);
+	}
+
+	private generateHistogram(canvas: HTMLCanvasElement) {
+		return new Chart(canvas.getContext("2d"), {
 			type: "bar",
 			data: this.graphData,
 			options: {
@@ -174,20 +183,8 @@ export abstract class AbstractDataView {
 		});
 	}
 
-	public displayScatterLineGraph(): void {
-
-		if (!this.canvasId) {
-			console.error("View Id must exist in " + typeof this);
-			return;
-		}
-
-		if (!this.hasGraph) {
-			return;
-		}
-
-		// Generating the chart
-		const canvas: HTMLCanvasElement = document.getElementById(this.canvasId) as HTMLCanvasElement;
-		this.chart = new Chart(canvas.getContext("2d"), {
+	private generateScatterLinePlot(canvas: HTMLCanvasElement) {
+		return new Chart(canvas.getContext("2d"), {
 			type: "scatter",
 			data: this.graphData
 		});
