@@ -100,10 +100,7 @@ export abstract class AbstractDataView {
 			labelsData.push(label);
 		}
 
-		const distributionArray: number[] = [];
-		for (zone in zones) {
-			distributionArray.push(Number((zones[zone].s / 60).toFixed(2)));
-		}
+		const distributionArray = zones.map(z => Number((z.s / 60).toFixed(2)) );
 
 		this.graphData = {
 			labels: labelsData,
