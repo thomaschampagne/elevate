@@ -77,9 +77,9 @@ export class HeartRateDataView extends AbstractDataView {
 			labelsData.push(label);
 		}
 
-		const hrDistributionInMinutesArray: string[] = [];
+		const hrDistributionInMinutesArray: number[] = [];
 		for (zone in this.heartRateData.heartRateZones) {
-			hrDistributionInMinutesArray.push((this.heartRateData.heartRateZones[zone].s / 60).toFixed(2));
+			hrDistributionInMinutesArray.push(Number((this.heartRateData.heartRateZones[zone].s / 60).toFixed(2)));
 		}
 
 		this.graphData = {

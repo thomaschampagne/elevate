@@ -105,14 +105,14 @@ export class PaceDataView extends AbstractDataView {
 		}
 
 		const labelsData: string[] = [];
-		const distributionArray: string[] = [];
+		const distributionArray: number[] = [];
 
 		_.forEach(zones, (zone: ZoneModel, index: number) => {
 			const from: string = (zone.from === 0) ? "Infinite" : Helper.secondsToHHMMSS(zone.from * ratio);
 			const label: string = "Z" + (index + 1) + ": " + from + " - " + Helper.secondsToHHMMSS(zone.to * ratio) + " " + this.units;
 			labelsData.push(label);
 
-			distributionArray.push((zone.s / 60).toFixed(2));
+			distributionArray.push(Number((zone.s / 60).toFixed(2)));
 		});
 
 		// Update labels

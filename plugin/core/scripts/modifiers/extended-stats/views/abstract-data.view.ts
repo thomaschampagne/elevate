@@ -8,14 +8,14 @@ import { SpeedUnitDataModel, ZoneModel } from "@elevate/shared/models";
 export abstract class AbstractDataView {
 
 	protected units: string;
-	protected chart: any;
+	protected chart: Chart;
 	protected canvasId: string;
 	protected viewTitle: string;
 	protected content: string;
 	protected grid: JQuery;
 	protected hasGraph: boolean;
 	protected graph: JQuery;
-	protected graphData: any;
+	protected graphData: Chart.ChartData;
 	protected graphTitle: string;
 	protected mainColor: number[];
 	protected table: JQuery;
@@ -100,9 +100,9 @@ export abstract class AbstractDataView {
 			labelsData.push(label);
 		}
 
-		const distributionArray: string[] = [];
+		const distributionArray: number[] = [];
 		for (zone in zones) {
-			distributionArray.push((zones[zone].s / 60).toFixed(2));
+			distributionArray.push(Number((zones[zone].s / 60).toFixed(2)));
 		}
 
 		this.graphData = {
@@ -158,8 +158,7 @@ export abstract class AbstractDataView {
 					} as LinearTickOptions],
 				},
 			},
-		});
-		this.chart = this.chart.clear();
+		});	
 	}
 
 	protected customTooltips(tooltip: any): void {
