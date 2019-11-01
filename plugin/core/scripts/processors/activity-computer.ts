@@ -24,7 +24,7 @@ import {
 	UserSettingsModel,
 	UserZonesModel,
 	ZoneModel,
-	PowerCurveDataPoint
+	PointDataModel
 } from "@elevate/shared/models";
 import { StreamVariationSplit } from "../models/stream-variation-split.model";
 
@@ -151,12 +151,11 @@ export class ActivityComputer {
 		return (movingTime * weightedPower * intensity) / (cyclingFtp * 3600) * 100;
 	}
 
-	public static computeBestPowerSplits(timeArray: number[], powerArray: number[])
-	{
+	public static computeBestPowerSplits(timeArray: number[], powerArray: number[]) {
 		// Find Best 20min, best 80% and an entire power curve of time power splits
 		let best20min = null;
 		let bestEightyPercent = null;
-		let powerCurve: PowerCurveDataPoint[] = [];
+		let powerCurve: PointDataModel[] = [];
 		try {
 
 			const splitCalculator: SplitCalculator =
@@ -181,7 +180,7 @@ export class ActivityComputer {
 				const maxTime = _.max(timeArray);
 				const timesToUse = [...defaultPowerCurveTimes.filter(t => t < maxTime), maxTime];
 				powerCurve = splitCalculator.getBestSplitRangesMonotonicDecrease(timesToUse, true)
-					.map(r => ({power: r.result, time: r.range}));
+					.map(r => ({y: r.result, x: r.range}));
 
 			} catch (err) {
 				console.warn("Power curve could not be calculated");
@@ -841,7 +840,7 @@ export class ActivityComputer {
 			medianWatts: percentiles[1],
 			upperQuartileWatts: percentiles[2],
 			powerZones: (this.returnZones) ? powerZonesAlongActivityType : null, // Only while moving
-			powerCurve: powerCurve || []
+			powerCurveWatts: powerCurve || []
 		};
 
 		if (!_.isUndefined(isEstimatedRunningPower)) {

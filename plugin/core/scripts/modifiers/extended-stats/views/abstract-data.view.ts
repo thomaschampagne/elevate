@@ -3,7 +3,7 @@ import { LinearTickOptions } from "chart.js";
 import * as _ from "lodash";
 import { Helper } from "../../../helper";
 import { AppResourcesModel } from "../../../models/app-resources.model";
-import { SpeedUnitDataModel, ZoneModel } from "@elevate/shared/models";
+import { SpeedUnitDataModel, ZoneModel, PointDataModel } from "@elevate/shared/models";
 
 type GraphTypes = "histogram" | "scatter-line";
 
@@ -121,7 +121,7 @@ export abstract class AbstractDataView {
 		};
 	}
 
-	protected setupScatterLineGraph(dataPoints: Chart.ChartPoint[])	{
+	protected setupScatterLineGraph(pointDataModel: PointDataModel[])	{
 		this.graphData = {
 			datasets: [{
 				label: this.graphTitle,
@@ -130,7 +130,7 @@ export abstract class AbstractDataView {
 				borderWidth: 1,
 				hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
 				hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
-				data: dataPoints,
+				data: pointDataModel,
 				showLine: true
 			}],
 		};

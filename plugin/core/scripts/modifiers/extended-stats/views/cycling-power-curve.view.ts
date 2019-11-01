@@ -11,7 +11,7 @@ export class CyclingPowerCurveView extends AbstractDataView {
 		this.mainColor = [63, 64, 72];
 		this.powerData = powerData;
 		this.graphTitle = "Power best efforts vs. time";
-		this.setupScatterLineGraph(this.powerData.powerCurve.map(p => ({ x: p.time, y: p.power })));
+		this.setupScatterLineGraph(this.powerData.powerCurveWatts);
 		this.setupDistributionTable(this.powerData.powerZones);
 	}
 
