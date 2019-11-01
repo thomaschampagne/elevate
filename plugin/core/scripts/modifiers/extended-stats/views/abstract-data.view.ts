@@ -172,7 +172,7 @@ export abstract class AbstractDataView {
 			data: this.graphData,
 			options: {
 				tooltips: {
-					custom: this.customTooltips,
+					custom: this.customTooltipsForZones,
 				},
 				scales: {
 					yAxes: [{
@@ -190,6 +190,9 @@ export abstract class AbstractDataView {
 			type: "scatter",
 			data: this.graphData,
 			options: {
+				tooltips: {
+					custom: this.customTooltipsForPoints,
+				},
 				scales: {
 					xAxes: [{
 						type: this.logYAxis ? "logarithmic" : "linear",
@@ -208,7 +211,7 @@ export abstract class AbstractDataView {
 		});
 	}
 
-	protected customTooltips(tooltip: any): void {
+	protected customTooltipsForZones(tooltip: any): void {
 
 		// tooltip will be false if tooltip is not visible or should be hidden
 		if (!tooltip || !tooltip.body || !tooltip.body[0] || !tooltip.body[0].lines || !tooltip.body[0].lines[0]) {
@@ -222,6 +225,28 @@ export abstract class AbstractDataView {
 		}));
 
 		tooltip.body[0].lines[0] = "Zone held during " + Helper.secondsToHHMMSS(parseFloat(timeInMinutes) * 60);
+	}
+
+	private customTooltipsForPoints = (tooltip: any) => {
+
+		// tooltip will be false if tooltip is not visible or should be hidden
+		if (!tooltip || !tooltip.body || !tooltip.body[0] || !tooltip.body[0].lines || !tooltip.body[0].lines[0]) {
+			return;
+		}
+
+		const lineValue: string = tooltip.body[0].lines[0];
+		const numbersInTooltip = lineValue.match(/[+-]?\d+(\.\d+)?/g).map((value: string) => {
+			return parseFloat(value);
+		});
+
+		if (numbersInTooltip.length < 2) {
+			return;
+		}
+
+		const xVar = numbersInTooltip[0];
+		const yVar = numbersInTooltip[1];
+
+		tooltip.body[0].lines[0] = Math.floor(yVar).toString() + this.units + " held during " + Helper.secondsToHHMMSS(xVar * 60, true);
 	}
 
 	protected setupDistributionTable(zones: ZoneModel[], ratio?: number): void {
