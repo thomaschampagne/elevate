@@ -175,7 +175,16 @@ export class ActivityComputer {
 
 			try {
 				// Set up some abitrary times here that we will use for the power curve
-				const defaultPowerCurveTimes = [1, 5, 10, 30, 60, 60 * 5, 60 * 10, 60 * 20, 60 * 30, 60 * 60];
+				const defaultPowerCurveTimes = [
+					..._.range(1, 30, 1), // 1s to 30s in 1s
+					..._.range(35, 60, 5), // to 60s in 5s
+					..._.range(70, 5 * 60, 10), // to 5m in 10s
+					..._.range(5 * 60 + 30, 20 * 60, 30), // to 20 min in 30s
+					..._.range(21 * 60, 60 * 60, 60), // to 60 min in minutes
+					..._.range(65 * 60, 5 * 60 * 60, 5 * 60), // to 5 hour in 5 min
+					..._.range(6 * 60 * 60, 24 * 60 * 60, 60 * 60) // to 24 hour in 1 hour
+				];
+
 				// Ensure the final value is the maximum time
 				const maxTime = _.max(timeArray);
 				const timesToUse = [...defaultPowerCurveTimes.filter(t => t < maxTime), maxTime];
