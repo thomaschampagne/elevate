@@ -28,14 +28,16 @@ export abstract class AbstractDataView {
 	protected speedUnitsData: SpeedUnitDataModel;
 
 	private readonly graphType: GraphTypes;
+	private readonly logYAxis: boolean; // Only for scatter plot
 
-	protected constructor(units?: string, graphType?: GraphTypes) {
+	protected constructor(units?: string, graphType?: GraphTypes, logYAxis?: boolean) {
 		this.content = "";
 		this.viewTitle = "";
 		this.units = units;
 		this.hasGraph = true;
 		this.mainColor = [0, 0, 0]; // Default ribbon color is black
 		this.graphType = graphType || "histogram";
+		this.logYAxis = logYAxis;
 		this.canvasId = Helper.guid();
 	}
 
@@ -186,7 +188,23 @@ export abstract class AbstractDataView {
 	private generateScatterLinePlot(canvas: HTMLCanvasElement) {
 		return new Chart(canvas.getContext("2d"), {
 			type: "scatter",
-			data: this.graphData
+			data: this.graphData,
+			options: {
+				scales: {
+					xAxes: [{
+						type: this.logYAxis ? "logarithmic" : "linear",
+						ticks: {
+							userCallback: (tick: number) => {
+								const remain = tick / (Math.pow(10, Math.floor(Math.log10(tick))));
+								if (remain === 1 || remain === 2 || remain === 5) {
+									return Helper.secondsToHHMMSS(tick, true);
+								}
+								return "";
+							}
+						} as Chart.TickOptions,
+					}],
+				},
+			}
 		});
 	}
 
