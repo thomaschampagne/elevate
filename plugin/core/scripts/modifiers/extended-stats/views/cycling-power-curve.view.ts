@@ -7,7 +7,7 @@ export class CyclingPowerCurveView extends AbstractDataView {
 	protected powerData: PowerDataModel;
 
 	constructor(powerData: PowerDataModel, units: string) {
-		super(units, "scatter-line");
+		super(units, "scatter-line", true);
 		this.mainColor = [63, 64, 72];
 		this.powerData = powerData;
 		this.graphTitle = "Power best efforts vs. time";
