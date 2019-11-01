@@ -1,9 +1,5 @@
 import { ZoneModel } from "../zone.model";
-
-export interface PowerCurveDataPoint {
-	power: number;
-	time: number;
-}
+import { PointDataModel } from "../point-data.model";
 
 export class PowerDataModel {
 	public hasPowerMeter: boolean;
@@ -21,6 +17,6 @@ export class PowerDataModel {
 	public medianWatts: number;
 	public upperQuartileWatts: number;
 	public powerZones: ZoneModel[];
-	public powerCurve: PowerCurveDataPoint[];
+	public powerCurveWatts: PointDataModel[];
 	public isEstimatedRunningPower?: boolean;
 }
