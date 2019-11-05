@@ -256,6 +256,38 @@ export abstract class AbstractDataView {
 		tooltip.body[0].lines[0] = Math.floor(yVar).toString() + this.units + " held during " + Helper.secondsToHHMMSS(xVar * 60, true);
 	}
 
+	protected setupPointDataTable(pointDataModel: PointDataModel[]): void {
+
+		if (!this.units) {
+			console.error("View must have units.");
+			return;
+		}
+
+		let htmlTable = "";
+		htmlTable += "<div>";
+		htmlTable += "<div style=\"height:500px; overflow:auto;\">";
+		htmlTable += "<table class=\"distributionTable\">";
+
+		// Generate htmlTable header
+		htmlTable += "<tr>";
+		htmlTable += "<td>TIME</td>";
+		htmlTable += "<td>" + this.units.toUpperCase() + "</td>";
+		htmlTable += "</tr>";
+
+		// Table body
+		htmlTable += pointDataModel.map(p => {
+			return "<tr>"
+				+ "<td>" + Helper.secondsToHHMMSS(p.x) + "</td>" // Time
+				+ "<td>" + p.y.toFixed(1) + "</td>" // Value
+				+ "</tr>";
+		}).join();
+
+		htmlTable += "</table>";
+		htmlTable += "</div>";
+		htmlTable += "</div>";
+		this.table = $(htmlTable);
+	}
+
 	protected setupDistributionTable(zones: ZoneModel[], ratio?: number): void {
 
 		if (!ratio) {
