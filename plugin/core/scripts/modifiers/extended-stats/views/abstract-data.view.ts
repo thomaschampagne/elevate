@@ -197,14 +197,14 @@ export abstract class AbstractDataView {
 					xAxes: [{
 						type: this.logXAxis ? "logarithmic" : "linear",
 						ticks: {
-							userCallback: (tick: number) => {
+							callback: (tick: number) => {
 								const remain = tick / (Math.pow(10, Math.floor(Math.log10(tick))));
 								if (remain === 1 || remain === 2 || remain === 5) {
 									return Helper.secondsToHHMMSS(tick, true);
 								}
 								return "";
 							}
-						} as Chart.TickOptions,
+						},
 					}],
 				},
 			}
