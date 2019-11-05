@@ -28,16 +28,16 @@ export abstract class AbstractDataView {
 	protected speedUnitsData: SpeedUnitDataModel;
 
 	private readonly graphType: GraphTypes;
-	private readonly logYAxis: boolean; // Only for scatter plot
+	private readonly logXAxis: boolean; // Only for scatter plot
 
-	protected constructor(units?: string, graphType?: GraphTypes, logYAxis?: boolean) {
+	protected constructor(units?: string, graphType?: GraphTypes, logXAxis?: boolean) {
 		this.content = "";
 		this.viewTitle = "";
 		this.units = units;
 		this.hasGraph = true;
 		this.mainColor = [0, 0, 0]; // Default ribbon color is black
 		this.graphType = graphType || "histogram";
-		this.logYAxis = logYAxis;
+		this.logXAxis = logXAxis;
 		this.canvasId = Helper.guid();
 	}
 
@@ -195,7 +195,7 @@ export abstract class AbstractDataView {
 				},
 				scales: {
 					xAxes: [{
-						type: this.logYAxis ? "logarithmic" : "linear",
+						type: this.logXAxis ? "logarithmic" : "linear",
 						ticks: {
 							userCallback: (tick: number) => {
 								const remain = tick / (Math.pow(10, Math.floor(Math.log10(tick))));
