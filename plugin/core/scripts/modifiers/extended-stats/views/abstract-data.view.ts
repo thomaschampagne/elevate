@@ -187,6 +187,9 @@ export abstract class AbstractDataView {
 	}
 
 	private generateScatterLinePlot(canvas: HTMLCanvasElement) {
+
+		const maxXData = _.max(this.graphData.datasets.map(d => _.max((d.data as Chart.ChartPoint[]).map(p => p.x)))) || 1;
+
 		return new Chart(canvas.getContext("2d"), {
 			type: "scatter",
 			data: this.graphData,
@@ -198,6 +201,8 @@ export abstract class AbstractDataView {
 					xAxes: [{
 						type: this.logXAxis ? "logarithmic" : "linear",
 						ticks: {
+							min: 0,
+							max: maxXData,
 							callback: (tick: number) => {
 								const remain = tick / (Math.pow(10, Math.floor(Math.log10(tick))));
 								if (remain === 1 || remain === 2 || remain === 5) {
