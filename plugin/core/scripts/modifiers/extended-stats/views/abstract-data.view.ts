@@ -107,7 +107,7 @@ export abstract class AbstractDataView {
 			labelsData.push(label);
 		}
 
-		const distributionArray = zones.map(z => Number((z.s / 60).toFixed(2)) );
+		const distributionArray = zones.map(z => Number((z.s / 60).toFixed(2)));
 
 		this.graphData = {
 			labels: labelsData,
@@ -123,7 +123,7 @@ export abstract class AbstractDataView {
 		};
 	}
 
-	protected setupScatterLineGraph(pointDataModel: PointDataModel[])	{
+	protected setupScatterLineGraph(pointDataModel: PointDataModel[]) {
 		this.graphData = {
 			datasets: [{
 				label: this.graphTitle,
@@ -196,7 +196,10 @@ export abstract class AbstractDataView {
 			data: this.graphData,
 			options: {
 				tooltips: {
-					custom: this.customTooltipsForPoints,
+					callbacks: {
+						label: (item) =>
+							Math.floor(item.y).toString() + this.units + " held during " + Helper.secondsToHHMMSS(item.x, true)
+					}
 				},
 				scales: {
 					xAxes: [{
@@ -232,28 +235,6 @@ export abstract class AbstractDataView {
 		}));
 
 		tooltip.body[0].lines[0] = "Zone held during " + Helper.secondsToHHMMSS(parseFloat(timeInMinutes) * 60);
-	}
-
-	private customTooltipsForPoints = (tooltip: any) => {
-
-		// tooltip will be false if tooltip is not visible or should be hidden
-		if (!tooltip || !tooltip.body || !tooltip.body[0] || !tooltip.body[0].lines || !tooltip.body[0].lines[0]) {
-			return;
-		}
-
-		const lineValue: string = tooltip.body[0].lines[0];
-		const numbersInTooltip = lineValue.match(/[+-]?\d+(\.\d+)?/g).map((value: string) => {
-			return parseFloat(value);
-		});
-
-		if (numbersInTooltip.length < 2) {
-			return;
-		}
-
-		const xVar = numbersInTooltip[0];
-		const yVar = numbersInTooltip[1];
-
-		tooltip.body[0].lines[0] = Math.floor(yVar).toString() + this.units + " held during " + Helper.secondsToHHMMSS(xVar * 60, true);
 	}
 
 	protected setupPointDataTable(pointDataModel: PointDataModel[]): void {
