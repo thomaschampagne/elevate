@@ -30,7 +30,7 @@ export class CyclingPowerCurveView extends AbstractDataView {
 	}
 
 	protected insertDataIntoGrid(): void {
-		// Virtual method to we have to define
+		// Empty virtual method
 		return;
 	}
 }
