@@ -188,7 +188,7 @@ export class ActivityComputer {
 				// Ensure the final value is the maximum time
 				const maxTime = _.max(timeArray);
 				const timesToUse = [...defaultPowerCurveTimes.filter(t => t < maxTime), maxTime];
-				powerCurve = splitCalculator.getBestSplitRangesMonotonicDecrease(timesToUse, true)
+				powerCurve = splitCalculator.getBestSplitRanges(timesToUse, true)
 					.map(r => ({y: r.result, x: r.range}));
 
 			} catch (err) {
