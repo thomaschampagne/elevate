@@ -197,8 +197,15 @@ export abstract class AbstractDataView {
 			options: {
 				tooltips: {
 					callbacks: {
-						label: (item) =>
-							Math.floor(item.y).toString() + this.units + " held during " + Helper.secondsToHHMMSS(item.x, true)
+						label: (item, data) => {
+							const dataSet = data.datasets[item.datasetIndex];
+							if (dataSet) {
+								const dataPoint = dataSet[item.index];
+								return dataPoint.y.toFixed(1) + this.units + " held during "
+									+ Helper.secondsToHHMMSS(dataPoint.x, true);
+							}
+							return "";
+						}
 					}
 				},
 				scales: {
