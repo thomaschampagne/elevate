@@ -262,7 +262,7 @@ export abstract class AbstractDataView {
 				+ "<td>" + Helper.secondsToHHMMSS(p.x) + "</td>" // Time
 				+ "<td>" + p.y.toFixed(1) + "</td>" // Value
 				+ "</tr>";
-		}).join();
+		}).join("");
 
 		htmlTable += "</table>";
 		htmlTable += "</div>";
