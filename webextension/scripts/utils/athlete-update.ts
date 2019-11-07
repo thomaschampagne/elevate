@@ -3,7 +3,7 @@ import * as Q from "q";
 import * as _ from "lodash";
 import { AthleteUpdateModel } from "../models/athlete-update.model";
 import { SyncResultModel } from "@elevate/shared/models";
-import { HerokuEndpointResolver } from "../resolvers/heroku-endpoint.resolver";
+import { DistributedEndpointsResolver } from "@elevate/shared/resolvers";
 
 export class AthleteUpdate {
 
@@ -19,13 +19,7 @@ export class AthleteUpdate {
 	 * @param hrMax
 	 * @returns {AthleteUpdateModel}
 	 */
-	public static create(stravaId: number,
-						 name: string,
-						 version: string,
-						 isPremium: boolean,
-						 isPro: boolean,
-						 locale?: string,
-						 hrMin?: number,
+	public static create(stravaId: number, name: string, version: string, isPremium: boolean, isPro: boolean, locale?: string, hrMin?: number,
 						 hrMax?: number): AthleteUpdateModel {
 
 		if (stravaId < 1 || _.isEmpty(name) || _.isEmpty(version) || !_.isBoolean(isPremium) || !_.isBoolean(isPro)) {
@@ -58,7 +52,7 @@ export class AthleteUpdate {
 	public static commit(athleteUpdate: AthleteUpdateModel): Q.IPromise<any> {
 
 		const deferred = Q.defer<SyncResultModel>();
-		const endPoint = HerokuEndpointResolver.resolve(ExtensionEnv.endPoint) + "/api/athlete/update";
+		const endPoint = DistributedEndpointsResolver.resolve(ExtensionEnv.endPoint) + "/api/athlete/update";
 
 		$.post({
 			url: endPoint,

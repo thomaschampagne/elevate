@@ -46,6 +46,8 @@ const LODASH_METHODS_DECLARATION = [
 
 const IS_ELECTRON_PROD = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "prod");
 
+console.info("Building desktop bundle in \"" + (IS_ELECTRON_PROD ? "production" : "development") + "\" mode.");
+
 module.exports = {
 	input: "./src/main.ts",
 	output: [
@@ -72,7 +74,8 @@ module.exports = {
 				"../appcore/node_modules/lodash/lodash.js": LODASH_METHODS_DECLARATION,
 				"../appcore/node_modules/pako/index.js": ["gzip", "inflate", "ungzip"],
 				"./node_modules/https-proxy-agent/index.js": ["HttpsProxyAgent"],
-				"./node_modules/get-proxy-settings/dist/index.js": ["getProxySettings"]
+				"./node_modules/get-proxy-settings/dist/index.js": ["getProxySettings"],
+				"./node_modules/node-machine-id/dist/index.js": ["machineIdSync"]
 			},
 			ignore: ["assert"]
 		}),

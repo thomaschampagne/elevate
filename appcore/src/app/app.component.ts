@@ -2,6 +2,7 @@ import * as _ from "lodash";
 import {
 	Component,
 	ComponentFactoryResolver,
+	ElementRef,
 	HostListener,
 	Inject,
 	OnDestroy,
@@ -12,7 +13,7 @@ import {
 	ViewContainerRef
 } from "@angular/core";
 import { AppRoutesModel } from "./shared/models/app-routes.model";
-import { NavigationEnd, Router, RouterEvent } from "@angular/router";
+import { GuardsCheckEnd, NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { MatIconRegistry } from "@angular/material/icon";
 import { MatSidenav } from "@angular/material/sidenav";
@@ -33,6 +34,7 @@ import { TopBarDirective } from "./top-bar/top-bar.directive";
 import { TOP_BAR_COMPONENT_TOKEN, TopBarComponent } from "./top-bar/top-bar.component";
 import { SYNC_BAR_COMPONENT_TOKEN, SyncBarComponent } from "./sync-bar/sync-bar.component";
 import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
+import { LoggerService } from "./shared/services/logging/logger.service";
 
 class MenuItemModel {
 	public name: string;
@@ -48,6 +50,26 @@ class MenuItemModel {
 })
 export class AppComponent implements OnInit, OnDestroy {
 
+	constructor(public router: Router,
+				public dialog: MatDialog,
+				public snackBar: MatSnackBar,
+				public sideNavService: SideNavService,
+				public windowService: WindowService,
+				public overlayContainer: OverlayContainer,
+				public renderer: Renderer2,
+				public iconRegistry: MatIconRegistry,
+				public sanitizer: DomSanitizer,
+				public logger: LoggerService,
+				public componentFactoryResolver: ComponentFactoryResolver,
+				@Inject(TOP_BAR_COMPONENT_TOKEN) public topBarComponentType: Type<TopBarComponent>,
+				@Inject(SYNC_BAR_COMPONENT_TOKEN) public syncBarComponentType: Type<SyncBarComponent>,
+				@Inject(SYNC_MENU_COMPONENT_TOKEN) public syncMenuComponentType: Type<SyncMenuComponent>) {
+		this.isAppUseAllowed = false;
+		this.isAppInitialized = false;
+		this.registerCustomIcons();
+	}
+
+	public static readonly DISPLAY_INIT_SPLASH_SCREEN_MILLIS: number = 1250;
 	public static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
 	public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
 	public static readonly LS_USER_THEME_PREF: string = "theme";
@@ -58,8 +80,14 @@ export class AppComponent implements OnInit, OnDestroy {
 	public Theme = Theme;
 	public currentTheme: Theme;
 
+	public isAppUseAllowed;
+	public isAppInitialized;
+
 	public toolBarTitle: string;
 	public routerEventsSubscription: Subscription;
+
+	@ViewChild("appContainer", {static: true})
+	public appContainer: ElementRef;
 
 	@ViewChild(TopBarDirective, {static: true})
 	public topBarDirective: TopBarDirective;
@@ -119,23 +147,32 @@ export class AppComponent implements OnInit, OnDestroy {
 		return _.startCase(_.upperFirst(title));
 	}
 
-	constructor(public router: Router,
-				public dialog: MatDialog,
-				public snackBar: MatSnackBar,
-				public sideNavService: SideNavService,
-				public windowService: WindowService,
-				public overlayContainer: OverlayContainer,
-				public renderer: Renderer2,
-				public iconRegistry: MatIconRegistry,
-				public sanitizer: DomSanitizer,
-				public componentFactoryResolver: ComponentFactoryResolver,
-				@Inject(TOP_BAR_COMPONENT_TOKEN) public topBarComponentType: Type<TopBarComponent>,
-				@Inject(SYNC_BAR_COMPONENT_TOKEN) public syncBarComponentType: Type<SyncBarComponent>,
-				@Inject(SYNC_MENU_COMPONENT_TOKEN) public syncMenuComponentType: Type<SyncMenuComponent>) {
-		this.registerCustomIcons();
+	public ngOnInit(): void {
+
+		this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
+
+			if (routerEvent instanceof GuardsCheckEnd) {
+				if (routerEvent.shouldActivate && !this.isAppInitialized) { // Then init app
+					setTimeout(() => {
+						this.isAppUseAllowed = routerEvent.shouldActivate;
+						this.initApp();
+					}, AppComponent.DISPLAY_INIT_SPLASH_SCREEN_MILLIS);
+				}
+
+				if (!routerEvent.shouldActivate) {
+					this.appContainer.nativeElement.remove();
+				}
+			}
+
+			if (routerEvent instanceof NavigationEnd) {
+				const route: string = (<NavigationEnd> routerEvent).urlAfterRedirects;
+				this.toolBarTitle = AppComponent.convertRouteToTitle(route);
+			}
+		});
 	}
 
-	public ngOnInit(): void {
+	public initApp(): void {
+
 		// Inject top bar, sync bar, sync menu
 		this.injectHotComponent<TopBarComponent>(this.topBarComponentType, this.topBarDirective.viewContainerRef);
 		this.injectHotComponent<SyncBarComponent>(this.syncBarComponentType, this.syncBarDirective.viewContainerRef);
@@ -150,14 +187,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
 		this.sideNavSetup();
 
-		this.toolBarTitle = AppComponent.convertRouteToTitle(this.router.url);
+		this.isAppInitialized = true;
 
-		this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
-			if (routerEvent instanceof NavigationEnd) {
-				const route: string = (<NavigationEnd> routerEvent).urlAfterRedirects;
-				this.toolBarTitle = AppComponent.convertRouteToTitle(route);
-			}
-		});
+		this.logger.info("App initialized.");
 	}
 
 	public injectHotComponent<C>(component: Type<C>, targetViewRef: ViewContainerRef): C {

@@ -1,0 +1,17 @@
+<app-desktop-top-bar></app-desktop-top-bar>
+<div class="dialog">
+	<h2 mat-dialog-title>Whoops!</h2>
+	<mat-dialog-content class="mat-body-1">
+		You are not allowed to use this App on this computer at the moment. Make sure you're connected to internet and
+		try again later...
+		<br/><br/>
+		If this message is still displayed, then this Elevate desktop build can be deprecated or your Elevate computer
+		ID is not authorized to run it.
+		<br/><br/>
+		For your information, your Elevate generated computer ID is: <i>{{this.machineId}}</i>
+	</mat-dialog-content>
+	<mat-dialog-actions>
+		<button mat-stroked-button color="primary" (click)="closeApp()">Close application</button>
+	</mat-dialog-actions>
+</div>
+

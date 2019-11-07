@@ -13,8 +13,8 @@ export class TopBarComponent {
 	template: `
         <div class="top-bar">
             <div class="draggable"></div>
-            <span class="top-bar-title mat-body-strong">
-			Elevate Desktop - Work in progress<!--v{{currentVersion}}-->
+            <span class="top-bar-title mat-body-strong" *ngIf="buildMetadata && buildMetadata.commit && buildMetadata.date">
+				Elevate Desktop - {{currentVersion}}+{{buildMetadata.date}}.{{buildMetadata.commit.slice(0, 8)}}
 			</span>
             <span class="toolbar-spacer"></span>
             <button mat-icon-button (click)="onMinimizeAppClicked()">
@@ -69,6 +69,7 @@ export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
 
 	public isFullscreen: boolean = null;
 	public currentVersion: string;
+	public buildMetadata: { commit: string, date: string };
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
 				public electronService: ElectronService) {
@@ -79,6 +80,11 @@ export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
 
 		this.versionsProvider.getInstalledAppVersion().then(version => {
 			this.currentVersion = version;
+		});
+
+		this.versionsProvider.getBuildMetadata().then((buildMetadata: { commit: string, date: string }) => {
+			this.buildMetadata = buildMetadata;
+			this.buildMetadata.date = this.buildMetadata.date.slice(0, 10).replace(/-/g, "");
 		});
 
 		this.electronService.remote.getCurrentWindow().on("enter-full-screen", event => {

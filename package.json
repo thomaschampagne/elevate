@@ -17,7 +17,7 @@
 	],
 	"scripts": {
 		"audit:fix": "npm audit fix && cd ./appcore/ && npm audit fix && cd ../desktop/ && npm audit fix && cd ../webextension/ && npm audit fix",
-		"clean": "node ./node_modules/del-cli/cli.js ./package && cd ./desktop/ && npm run clean && cd ../webextension/ && npm run clean",
+		"clean": "node ./node_modules/del-cli/cli.js ./dist/ ./package/ && cd ./desktop/ && npm run clean && cd ../webextension/ && npm run clean",
 		"package:extension": "npm run clean && cd ./webextension/ && npm run package && node ../node_modules/cpy-cli/cli.js ./package/* ../package",
 		"package:desktop:windows": "npm run clean && cd ./desktop/ && npm run package:windows && node ../node_modules/cpy-cli/cli.js ./package/elevate-* ../package",
 		"package:desktop:linux": "npm run clean && cd ./desktop/ && npm run package:linux && node ../node_modules/cpy-cli/cli.js ./package/elevate-* ../package",

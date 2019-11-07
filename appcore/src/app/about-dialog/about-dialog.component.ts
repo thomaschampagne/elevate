@@ -27,6 +27,7 @@ export class AboutDialogComponent implements OnInit {
 	public installedVersion: string;
 	public appUsageDetails: AppUsageDetails;
 	public remoteVersion: string;
+	public buildMetadata: { commit: string, date: string };
 
 	constructor(public dataStore: DataStore<void>,
 				@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider) {
@@ -44,6 +45,11 @@ export class AboutDialogComponent implements OnInit {
 
 		this.versionsProvider.getCurrentRemoteAppVersion().then(version => {
 			this.remoteVersion = version;
+		});
+
+		this.versionsProvider.getBuildMetadata().then((buildMetadata: { commit: string, date: string }) => {
+			this.buildMetadata = buildMetadata;
+			this.buildMetadata.date = this.buildMetadata.date.slice(0, 10).replace(/-/g, "");
 		});
 
 		this.angularCoreVersion = angularCoreVersion.full;

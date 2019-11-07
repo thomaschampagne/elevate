@@ -1,4 +1,12 @@
-<div id="app-container" class="mat-body-1">
+<div id="init-app-container" *ngIf="!isAppUseAllowed">
+	<div class="wrapper">
+		<div class="logo"></div>
+		<div class="text mat-body-1">
+			Warming up
+		</div>
+	</div>
+</div>
+<div id="app-container" class="mat-body-1" #appContainer [fxHide]="!isAppUseAllowed">
 	<ng-container appTopBar></ng-container>
 	<mat-sidenav-container>
 		<mat-sidenav #sidenav

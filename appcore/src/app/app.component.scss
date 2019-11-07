@@ -1,3 +1,38 @@
+#init-app-container {
+
+	height: 100%;
+	background: #d3d3d3;
+
+	.wrapper {
+		display: flex;
+		height: 100%;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		transform-origin: center;
+
+	}
+
+	.logo {
+		width: 100%;
+		height: 100px;
+		background-color: black;
+		-webkit-mask: url("../assets/icons/elevate.svg") no-repeat center;
+		mask: url("../assets/icons/elevate.svg") no-repeat center;
+		@keyframes beat {
+			to {
+				transform: scale(0.8);
+			}
+		}
+		animation: beat 0.9s infinite alternate;
+	}
+
+	.text {
+		position: fixed;
+		bottom: 20px;
+	}
+}
+
 #app-container {
 	height: 100%;
 	display: flex;
