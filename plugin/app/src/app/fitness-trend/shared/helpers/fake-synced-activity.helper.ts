@@ -5,14 +5,14 @@ import * as _ from "lodash";
 export class FakeSyncedActivityHelper {
 
 	public static create(id: number,
-						 athleteSnapshot: AthleteSnapshotModel,
-						 name: string,
-						 type: string,
-						 dateStr: string,
-						 avgHr: number,
-						 avgWatts: number,
-						 hasPowerMeter: boolean,
-						 avgPace?: number): SyncedActivityModel {
+		athleteSnapshot: AthleteSnapshotModel,
+		name: string,
+		type: string,
+		dateStr: string,
+		avgHr: number,
+		avgWatts: number,
+		hasPowerMeter: boolean,
+		avgPace?: number): SyncedActivityModel {
 
 		const fakeActivity = new SyncedActivityModel();
 		fakeActivity.id = id;
@@ -75,6 +75,7 @@ export class FakeSyncedActivityHelper {
 				best20min: avgWatts * 1.5,
 				bestEightyPercent: avgWatts,
 				weightedWattsPerKg: avgWatts * 1.25 / 70,
+				powerCurveWatts: []
 			};
 		}
 
