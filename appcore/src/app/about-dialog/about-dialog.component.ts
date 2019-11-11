@@ -28,6 +28,7 @@ export class AboutDialogComponent implements OnInit {
 	public appUsageDetails: AppUsageDetails;
 	public remoteVersion: string;
 	public buildMetadata: { commit: string, date: string };
+	public containerVersion: string;
 
 	constructor(public dataStore: DataStore<void>,
 				@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider) {
@@ -55,6 +56,7 @@ export class AboutDialogComponent implements OnInit {
 		this.angularCoreVersion = angularCoreVersion.full;
 		this.angularMaterialVersion = angularMaterialVersion.full;
 		this.d3Version = d3.version;
+		this.containerVersion = this.versionsProvider.getContainerVersion();
 
 	}
 }

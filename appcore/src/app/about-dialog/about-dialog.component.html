@@ -34,7 +34,7 @@
 
 	<div class="versions">
 		<div *ngIf="buildMetadata && buildMetadata.commit && buildMetadata.date">
-			Plugin version: {{installedVersion}}+{{buildMetadata.date}}.{{buildMetadata.commit.slice(0, 8)}}
+			App version: {{installedVersion}}+{{buildMetadata.date}}.{{buildMetadata.commit.slice(0, 8)}}
 		</div>
 		<div>
 			Angular Core version: {{angularCoreVersion}}
@@ -44,6 +44,9 @@
 		</div>
 		<div>
 			D3js version: {{d3Version}}
+		</div>
+		<div>
+			Wrapper version: {{containerVersion}}
 		</div>
 	</div>
 	<mat-divider></mat-divider>

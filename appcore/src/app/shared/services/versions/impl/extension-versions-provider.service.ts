@@ -27,4 +27,8 @@ export class ExtensionVersionsProvider implements VersionsProvider {
 		return Promise.resolve(buildMetadata);
 	}
 
+	public getContainerVersion(): string {
+		return "Chrome " + navigator.appVersion.match(/.*Chrome\/([0-9\.]+)/)[1];
+	}
+
 }

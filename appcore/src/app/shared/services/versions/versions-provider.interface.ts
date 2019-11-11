@@ -6,4 +6,6 @@ export interface VersionsProvider {
 	getBuildMetadata(): Promise<{ commit: string, date: string }>;
 	getInstalledAppVersion(): Promise<string>;
 	getCurrentRemoteAppVersion(): Promise<string>;
+
+	getContainerVersion(): string;
 }

@@ -28,5 +28,9 @@ export class DesktopVersionsProvider implements VersionsProvider {
 		const buildMetadata = require("../../../../../../../desktop/build_metadata.json");
 		return Promise.resolve(buildMetadata);
 	}
+
+	public getContainerVersion(): string {
+		return "Electron " + process.versions.electron;
+	}
 }
 

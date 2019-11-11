@@ -10,7 +10,7 @@ export class Proxy {
 	public static resolve(rootBrowserWindow: Electron.BrowserWindow): Promise<string> {
 
 		return new Promise(resolve => {
-			rootBrowserWindow.webContents.session.resolveProxy(Proxy.RESOLVE_PROXY_TEST_URL, (proxy: string) => {
+			rootBrowserWindow.webContents.session.resolveProxy(Proxy.RESOLVE_PROXY_TEST_URL).then((proxy: string) => {
 				const httpProxy = (proxy !== Proxy.DIRECT_PROXY_TEST_URL) ? "http://" + proxy.replace("PROXY", "").trim() : null;
 				resolve(httpProxy);
 			});
