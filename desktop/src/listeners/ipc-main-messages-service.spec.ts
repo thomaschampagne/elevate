@@ -59,7 +59,7 @@ describe("IpcMainMessagesService", () => {
 		it("should stop sync when MessageFlag.CANCEL_SYNC is received", (done: Function) => {
 
 			// Given
-			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.STOP_SYNC); // No need to provide extra payload to test forwardMessagesFromIpcRenderer
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.STOP_SYNC);
 			const replyWith = () => {
 			};
 
@@ -70,6 +70,23 @@ describe("IpcMainMessagesService", () => {
 
 			// Then
 			expect(handleLinkWithStravaSpy).toHaveBeenCalledTimes(1);
+			done();
+		});
+
+		it("should provide when a MessageFlag.GET_MACHINE_ID is received", (done: Function) => {
+
+			// Given
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.GET_MACHINE_ID);
+			const replyWith = () => {
+			};
+
+			const handleGetMachineIdSpy = spyOn(ipcMainMessagesService, "handleGetMachineId").and.stub();
+
+			// When
+			ipcMainMessagesService.forwardReceivedMessagesFromIpcRenderer(flaggedIpcMessage, replyWith);
+
+			// Then
+			expect(handleGetMachineIdSpy).toHaveBeenCalledTimes(1);
 			done();
 		});
 
@@ -392,6 +409,29 @@ describe("IpcMainMessagesService", () => {
 			expect(stopConnectorSyncSpy).not.toBeCalled();
 			expect(replyWithCallbackSpy).toBeCalledWith(replyWith.args);
 
+			done();
+		});
+
+	});
+
+	describe("Handle get machine id", () => {
+
+		it("should get machine id", (done: Function) => {
+
+			// Given
+			const replyWrapper = {
+				replyWith: () => {
+				}
+			};
+			const expectedMachineId = "fakeMachineId";
+			jest.spyOn(Service.instance(), "getMachineId").mockReturnValue(expectedMachineId);
+			const replyWithSpy = jest.spyOn(replyWrapper, "replyWith");
+
+			// When
+			ipcMainMessagesService.handleGetMachineId(replyWrapper.replyWith);
+
+			// Then
+			expect(replyWithSpy).toBeCalledWith({success: expectedMachineId, error: null});
 			done();
 		});
 

@@ -2,7 +2,7 @@ import { IpcMainMessagesService } from "./listeners/ipc-main-messages-service";
 import { BaseConnector } from "./connectors/base.connector";
 import { HttpClient } from "typed-rest-client/HttpClient";
 import * as os from "os";
-import * as crypto from "crypto";
+import { machineIdSync } from "node-machine-id";
 
 export class Service {
 
@@ -10,6 +10,7 @@ export class Service {
 		this._ipcMainMessages = null;
 		this._httpProxy = null;
 		this._currentConnector = null;
+		this._machineId = null;
 	}
 
 	get ipcMainMessages(): IpcMainMessagesService {
@@ -48,6 +49,7 @@ export class Service {
 	private _httpProxy: string;
 	private _httpClient: HttpClient;
 	private _currentConnector: BaseConnector;
+	private _machineId: string;
 
 	public static printSystemDetails(): string {
 		const cpuCount = os.cpus().length;
@@ -55,11 +57,6 @@ export class Service {
 		const cpuInfos = `${cpu.model} ${cpuCount} threads`;
 		const memorySizeGB = Math.round(((os.totalmem() / 1024) / 1024) / 1024) + "GB";
 		return `Hostname ${os.hostname()}; Platform ${os.platform()} ${os.arch()}; Processor ${cpuInfos}; Memory ${memorySizeGB}`;
-	}
-
-	public static getDeviceFingerPrint(): string {
-		const fingerPrint = `${os.hostname()};${os.cpus()[0].model};${os.cpus()[0].speed};${os.totalmem()};${os.homedir()};${os.platform()};${os.arch()};${os.endianness()}`;
-		return crypto.createHash("sha1").update(fingerPrint).digest("hex");
 	}
 
 	public static currentPlatform(): string {
@@ -71,5 +68,14 @@ export class Service {
 			Service._instance = new Service();
 		}
 		return Service._instance;
+	}
+
+	public getMachineId(): string {
+
+		if (!this._machineId) {
+			this._machineId = machineIdSync();
+		}
+
+		return this._machineId;
 	}
 }

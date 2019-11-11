@@ -22,4 +22,9 @@ export class ExtensionVersionsProvider implements VersionsProvider {
 		});
 	}
 
+	public getBuildMetadata(): Promise<{ commit: string, date: string }> {
+		const buildMetadata = require("../../../../../../../desktop/build_metadata.json");
+		return Promise.resolve(buildMetadata);
+	}
+
 }

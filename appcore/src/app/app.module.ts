@@ -20,6 +20,8 @@ import {
 	SyncBarComponent
 } from "./sync-bar/sync-bar.component";
 import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
+import { DesktopAppGuardDialogComponent } from "./desktop-app-guard/desktop-app-guard-dialog.component";
+import { DesktopAppGuardActivator } from "./desktop-app-guard/desktop-app-guard-activator.service";
 
 
 @NgModule({
@@ -32,17 +34,20 @@ import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
 	declarations: [
 		DesktopSyncMenuComponent,
 		DesktopSyncBarComponent,
-		DesktopTopBarComponent
+		DesktopTopBarComponent,
+		DesktopAppGuardDialogComponent
 	],
 	entryComponents: [
 		DesktopSyncMenuComponent,
 		DesktopSyncBarComponent,
-		DesktopTopBarComponent
+		DesktopTopBarComponent,
+		DesktopAppGuardDialogComponent
 	],
 	providers: [
 		{provide: TOP_BAR_COMPONENT_TOKEN, useValue: DesktopTopBarComponent},
 		{provide: SYNC_BAR_COMPONENT_TOKEN, useValue: DesktopSyncBarComponent},
 		{provide: SYNC_MENU_COMPONENT_TOKEN, useValue: DesktopSyncMenuComponent},
+		DesktopAppGuardActivator
 	]
 })
 export class DesktopBootModule {

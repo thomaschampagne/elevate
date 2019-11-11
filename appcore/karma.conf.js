@@ -22,7 +22,7 @@ const defaultBrowserKarmaConfig = {
 const provideBrowsersKarmaConfig = () => {
 
 	const fs = require("fs");
-	const customBrowsersKarmaConfigPath = __dirname + "/../../browsers.karma.conf.js";
+	const customBrowsersKarmaConfigPath = __dirname + "/../browsers.karma.conf.js";
 
 	let browsersKarmaConfig = null;
 	if (fs.existsSync(customBrowsersKarmaConfigPath)) {

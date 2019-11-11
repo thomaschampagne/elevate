@@ -59,6 +59,10 @@ export class IpcMainMessagesService {
 				this.handleLinkWithStrava(message, replyWith);
 				break;
 
+			case MessageFlag.GET_MACHINE_ID:
+				this.handleGetMachineId(replyWith);
+				break;
+
 			default:
 				this.handleUnknownMessage(message, replyWith);
 				break;
@@ -235,6 +239,13 @@ export class IpcMainMessagesService {
 			logger.error(error);
 		});
 
+	}
+
+	public handleGetMachineId(replyWith: (promiseTronReply: PromiseTronReply) => void): void {
+		replyWith({
+			success: Service.instance().getMachineId(),
+			error: null
+		});
 	}
 
 	public handleUnknownMessage(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {

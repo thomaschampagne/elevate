@@ -3,10 +3,6 @@
 # https://github.com/browserslist/browserslist#queries
 
 # You can see what browsers were selected by your queries by running:
-#   npx browserslist
+#  npx browserslist
 
-> 0.5%
-last 2 versions
-Firefox ESR
-not dead
-not IE 9-11 # For IE 9-11 support, remove 'not'.
+last 5 Chrome versions

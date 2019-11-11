@@ -4,11 +4,11 @@ import { ExtensionEnv } from "../../config/extension-env";
 import { ActivitiesSynchronize } from "../processors/activities-synchronize";
 import { SyncResultModel } from "@elevate/shared/models";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
-import { HerokuEndpointResolver } from "../resolvers/heroku-endpoint.resolver";
 import { AbstractModifier } from "./abstract.modifier";
 import * as _ from "lodash";
 import { AppStorageUsage } from "../models/app-storage-usage.model";
 import { BrowserStorageType } from "../models/browser-storage-type.enum";
+import { DistributedEndpointsResolver } from "@elevate/shared/resolvers";
 
 export class ActivitiesSyncModifier extends AbstractModifier {
 
@@ -143,7 +143,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 				error: {path: window.location.href, date: new Date(), content: error},
 			};
 
-			const endPoint = HerokuEndpointResolver.resolve(ExtensionEnv.endPoint) + "/api/errorReport";
+			const endPoint = DistributedEndpointsResolver.resolve(ExtensionEnv.endPoint) + "/api/errorReport";
 
 			$.post({
 				url: endPoint,

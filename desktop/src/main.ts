@@ -168,8 +168,8 @@ try {
 		logger.debug("electron-reloader is ENABLED");
 	}
 
-	logger.info("System", Service.printSystemDetails());
-	logger.info("Device fingerprint", Service.getDeviceFingerPrint());
+	logger.info("System details:", Service.printSystemDetails());
+	logger.info("Machine ID:", Service.instance().getMachineId());
 
 	(new Main(app)).run();
 
