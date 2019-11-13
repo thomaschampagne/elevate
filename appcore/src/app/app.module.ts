@@ -22,6 +22,9 @@ import {
 import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
 import { DesktopAppGuardDialogComponent } from "./desktop-app-guard/desktop-app-guard-dialog.component";
 import { DesktopAppGuardActivator } from "./desktop-app-guard/desktop-app-guard-activator.service";
+import { MENU_ITEMS_PROVIDER } from "./shared/services/menu-items/menu-items-provider.interface";
+import { DesktopMenuItemsProvider } from "./shared/services/menu-items/impl/desktop-menu-items-provider.service";
+import { ExtensionMenuItemsProvider } from "./shared/services/menu-items/impl/extension-menu-items-provider.service";
 
 
 @NgModule({
@@ -44,6 +47,7 @@ import { DesktopAppGuardActivator } from "./desktop-app-guard/desktop-app-guard-
 		DesktopAppGuardDialogComponent
 	],
 	providers: [
+		{provide: MENU_ITEMS_PROVIDER, useClass: DesktopMenuItemsProvider},
 		{provide: TOP_BAR_COMPONENT_TOKEN, useValue: DesktopTopBarComponent},
 		{provide: SYNC_BAR_COMPONENT_TOKEN, useValue: DesktopSyncBarComponent},
 		{provide: SYNC_MENU_COMPONENT_TOKEN, useValue: DesktopSyncMenuComponent},
@@ -71,6 +75,7 @@ export class DesktopBootModule {
 		ExtensionSyncMenuComponent
 	],
 	providers: [
+		{provide: MENU_ITEMS_PROVIDER, useClass: ExtensionMenuItemsProvider},
 		{provide: TOP_BAR_COMPONENT_TOKEN, useValue: ExtensionTopBarComponent},
 		{provide: SYNC_BAR_COMPONENT_TOKEN, useValue: ExtensionSyncBarComponent},
 		{provide: SYNC_MENU_COMPONENT_TOKEN, useValue: ExtensionSyncMenuComponent},

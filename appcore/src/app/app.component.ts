@@ -35,13 +35,7 @@ import { TOP_BAR_COMPONENT_TOKEN, TopBarComponent } from "./top-bar/top-bar.comp
 import { SYNC_BAR_COMPONENT_TOKEN, SyncBarComponent } from "./sync-bar/sync-bar.component";
 import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
 import { LoggerService } from "./shared/services/logging/logger.service";
-
-class MenuItemModel {
-	public name: string;
-	public icon: string;
-	public routerLink: string;
-	public routerLinkActive: boolean;
-}
+import { MENU_ITEMS_PROVIDER, MenuItemModel, MenuItemsProvider } from "./shared/services/menu-items/menu-items-provider.interface";
 
 @Component({
 	selector: "app-root",
@@ -61,6 +55,7 @@ export class AppComponent implements OnInit, OnDestroy {
 				public sanitizer: DomSanitizer,
 				public logger: LoggerService,
 				public componentFactoryResolver: ComponentFactoryResolver,
+				@Inject(MENU_ITEMS_PROVIDER) public menuItemsProvider: MenuItemsProvider,
 				@Inject(TOP_BAR_COMPONENT_TOKEN) public topBarComponentType: Type<TopBarComponent>,
 				@Inject(SYNC_BAR_COMPONENT_TOKEN) public syncBarComponentType: Type<SyncBarComponent>,
 				@Inject(SYNC_MENU_COMPONENT_TOKEN) public syncMenuComponentType: Type<SyncMenuComponent>) {
@@ -79,6 +74,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	public EnvTarget = EnvTarget;
 	public Theme = Theme;
 	public currentTheme: Theme;
+	public mainMenuItems: MenuItemModel[];
 
 	public isAppUseAllowed;
 	public isAppInitialized;
@@ -100,34 +96,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	@ViewChild(MatSidenav, {static: true})
 	public sideNav: MatSidenav;
-
-	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
-		{
-			icon: "view_list",
-			routerLink: AppRoutesModel.activities,
-			routerLinkActive: true
-		}, {
-			icon: "timeline",
-			routerLink: AppRoutesModel.fitnessTrend,
-			routerLinkActive: true
-		}, {
-			icon: "date_range",
-			routerLink: AppRoutesModel.yearProgressions,
-			routerLinkActive: true
-		}, {
-			icon: "settings",
-			routerLink: AppRoutesModel.globalSettings,
-			routerLinkActive: true
-		}, {
-			icon: "accessibility",
-			routerLink: AppRoutesModel.athleteSettings,
-			routerLinkActive: true
-		}, {
-			icon: "format_line_spacing",
-			routerLink: AppRoutesModel.zonesSettings,
-			routerLinkActive: true
-		}
-	];
 
 	public static convertRouteToTitle(route: string): string {
 
@@ -181,6 +149,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.setupThemeOnLoad();
 
 		// Update list of sections names displayed in sidebar
+		this.mainMenuItems = this.menuItemsProvider.getMenuItems();
 		_.forEach(this.mainMenuItems, (menuItemModel: MenuItemModel) => {
 			menuItemModel.name = AppComponent.convertRouteToTitle(menuItemModel.routerLink);
 		});
