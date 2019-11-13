@@ -2,7 +2,6 @@
 
 	height: 100%;
 	background: #d3d3d3;
-	-webkit-app-region: drag;
 
 	.wrapper {
 		display: flex;
@@ -11,7 +10,6 @@
 		align-items: center;
 		justify-content: center;
 		transform-origin: center;
-
 	}
 
 	.logo {
@@ -20,12 +18,18 @@
 		background-color: black;
 		-webkit-mask: url("../assets/icons/elevate.svg") no-repeat center;
 		mask: url("../assets/icons/elevate.svg") no-repeat center;
-		@keyframes beat {
-			to {
-				transform: scale(0.8);
+		animation: fadeAnimation 2s infinite;
+		@keyframes fadeAnimation {
+			0% {
+				opacity: 1;
+			}
+			50% {
+				opacity: .3;
+			}
+			100% {
+				opacity: 1;
 			}
 		}
-		animation: beat 0.9s infinite alternate;
 	}
 
 	.text {

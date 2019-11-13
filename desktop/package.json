@@ -1,7 +1,7 @@
 {
 	"name": "elevate-desktop",
 	"description": "Elevate cross-platform desktop app based on ElectronJS",
-	"version": "7.0.0-prototype",
+	"version": "7.0.0-prototype.0",
 	"scripts": {
 		"assert-app-exists": "node -e \"if ((require('fs').existsSync('./dist/app/')) === false) {console.log('Please run & wait for \\'npm start\\' task before.\\n\\n\\n\\n');process.exit(1);}\";",
 		"res:copy": "node ../node_modules/cpy-cli/cli.js \"**/*.*\" \"../dist/res/\" --cwd=./res/ --parents",
