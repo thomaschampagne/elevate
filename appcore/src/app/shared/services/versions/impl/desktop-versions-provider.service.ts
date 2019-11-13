@@ -29,7 +29,7 @@ export class DesktopVersionsProvider implements VersionsProvider {
 		return Promise.resolve(buildMetadata);
 	}
 
-	public getContainerVersion(): string {
+	public getWrapperVersion(): string {
 		return "Electron " + process.versions.electron;
 	}
 }

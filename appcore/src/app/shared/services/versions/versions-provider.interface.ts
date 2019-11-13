@@ -7,5 +7,5 @@ export interface VersionsProvider {
 	getInstalledAppVersion(): Promise<string>;
 	getCurrentRemoteAppVersion(): Promise<string>;
 
-	getContainerVersion(): string;
+	getWrapperVersion(): string;
 }
