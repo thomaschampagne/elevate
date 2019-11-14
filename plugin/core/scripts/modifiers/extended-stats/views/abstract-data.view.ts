@@ -130,7 +130,7 @@ export abstract class AbstractDataView {
 				backgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
 				borderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
 				borderWidth: 1,
-				pointRadius: 1.0,
+				pointRadius: 0,
 				hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
 				hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
 				data: pointDataModel,
@@ -195,11 +195,17 @@ export abstract class AbstractDataView {
 			type: "scatter",
 			data: this.graphData,
 			options: {
+				hover: {
+					intersect: false,
+					mode: "nearest"
+				},
 				tooltips: {
+					intersect: false,
+					mode: "nearest",
 					callbacks: {
 						label: (item) =>
 							Number(item.yLabel).toFixed(1) + this.units + " held during "
-								+ Helper.secondsToHHMMSS(Number(item.xLabel), true)
+							+ Helper.secondsToHHMMSS(Number(item.xLabel), true)
 					}
 				},
 				scales: {
