@@ -4,11 +4,10 @@
 	"version": "7.0.0-prototype.0",
 	"scripts": {
 		"assert-app-exists": "node -e \"if ((require('fs').existsSync('./dist/app/')) === false) {console.log('Please run & wait for \\'npm start\\' task before.\\n\\n\\n\\n');process.exit(1);}\";",
-		"res:copy": "node ../node_modules/cpy-cli/cli.js \"**/*.*\" \"../dist/res/\" --cwd=./res/ --parents",
 		"build:metadata": "node -e \"console.log('{\\\"commit\\\": \\\"' + require('child_process').execSync('git rev-parse HEAD').toString().trim() + '\\\", \\\"date\\\": \\\"' + (new Date()).toISOString() + '\\\"}')\" > build_metadata.json",
 		"build:appcore@dev": "npm run build:metadata && cd ../appcore/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build --outputPath=../desktop/dist/app/ --base-href --configuration=desktop",
 		"build:appcore@prod": "npm run build:appcore@dev -- --base-href --configuration=desktop-prod",
-		"build:electron@dev": "npm run res:copy && rollup --config rollup.config.js",
+		"build:electron@dev": "rollup --config rollup.config.js",
 		"build:electron@prod": "npm run build:electron@dev -- --environment ELECTRON_ENV:prod",
 		"clean": "npx npm-run-all clean:*",
 		"clean:dist": "node ../node_modules/del-cli/cli.js ./dist/",

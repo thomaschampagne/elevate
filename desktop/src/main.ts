@@ -23,29 +23,12 @@ class Main {
 	}
 
 	private static readonly WINDOW_SIZE_RATIO: number = 0.8;
-	private static readonly ICON_PATH_WINDOWS: string = "res/icons/win/icon.ico";
-	private static readonly ICON_PATH_LINUX: string = "res/icons/linux/512x512.png";
-	private static readonly ICON_PATH_MACOS: string = "res/icons/mac/icon.icns";
 
 	public ipcMainMessagesService: IpcMainMessagesService;
 
 	private readonly app: Electron.App;
 	private readonly isPackaged: boolean;
 	private appWindow: BrowserWindow;
-
-	public static getIconPath(): string {
-
-		switch (Service.currentPlatform()) {
-			case Service.PLATFORM.WINDOWS:
-				return path.join(__dirname, Main.ICON_PATH_WINDOWS);
-			case Service.PLATFORM.LINUX:
-				return path.join(__dirname, Main.ICON_PATH_LINUX);
-			case Service.PLATFORM.MACOS:
-				return path.join(__dirname, Main.ICON_PATH_MACOS);
-			default:
-				return null;
-		}
-	}
 
 	public createWindow(): void {
 
@@ -69,7 +52,6 @@ class Main {
 				center: true,
 				frame: false,
 				autoHideMenuBar: true,
-				icon: Main.getIconPath(),
 				webPreferences: {
 					nodeIntegration: true
 				}
