@@ -1,22 +1,16 @@
 <div fxLayout="row" fxLayoutAlign="start center">
 
 	<div fxFlex="3">
-		<button mat-icon-button matTooltip="Zoom In (UP key press)"
-				color="primary"
-				[disabled]="!canZoomInPeriodViewed"
-				(click)="onPeriodViewedZoomIn()">
+		<button mat-icon-button matTooltip="Zoom In (UP key press)" color="primary" [disabled]="!canZoomInPeriodViewed"
+			(click)="onPeriodViewedZoomIn()">
 			<mat-icon>add</mat-icon>
 		</button>
-		<button mat-icon-button matTooltip="Move Backward (LEFT key)"
-				color="primary"
-				[disabled]="!canPeriodViewedBackward"
-				(click)="onPeriodViewedBackward()">
+		<button mat-icon-button matTooltip="Move Backward (LEFT key)" color="primary"
+			[disabled]="!canPeriodViewedBackward" (click)="onPeriodViewedBackward()">
 			<mat-icon>arrow_back</mat-icon>
 		</button>
-		<button mat-icon-button matTooltip="Zoom Out (DOWN key)"
-				color="primary"
-				[disabled]="!canZoomOutPeriodViewed"
-				(click)="onPeriodViewedZoomOut()">
+		<button mat-icon-button matTooltip="Zoom Out (DOWN key)" color="primary" [disabled]="!canZoomOutPeriodViewed"
+			(click)="onPeriodViewedZoomOut()">
 			<mat-icon>remove</mat-icon>
 		</button>
 	</div>
@@ -24,7 +18,7 @@
 	<div fxFlex="94">
 
 		<div #fitnessTrendGraph id="fitnessTrendGraph" class="viewed-day-tooltip"
-			 [ngClass]='{"active-viewed-day": viewedDay?.hasActivities()}'>
+			[ngClass]='{"active-viewed-day": viewedDay?.hasActivities()}'>
 
 			<!--Tooltip shown on mouse move over graph-->
 			<div #viewedDayTooltip>
@@ -60,6 +54,12 @@
 						<td></td>
 					</tr>
 
+					<!--7-day rolling stress-->
+					<tr class="active">
+						<td>7-day stress</td>
+						<td>{{viewedDay.print7DayRollingStress()}}</td>
+					</tr>
+
 					<tr class="separator">
 						<td colspan="2"></td>
 					</tr>
@@ -67,17 +67,20 @@
 					<!--Fitness, Fatigue & Form-->
 					<tr class="ctl-value">
 						<td>Fitness</td>
-						<td>{{viewedDay.printFitness()}}<span *ngIf="viewedDay.prevCtl" class="mat-caption"> ({{viewedDay.printDeltaFitness()}})</span>
+						<td>{{viewedDay.printFitness()}}<span *ngIf="viewedDay.prevCtl" class="mat-caption">
+								({{viewedDay.printDeltaFitness()}})</span>
 						</td>
 					</tr>
 					<tr class="atl-value">
 						<td>Fatigue</td>
-						<td>{{viewedDay.printFatigue()}}<span *ngIf="viewedDay.prevAtl" class="mat-caption"> ({{viewedDay.printDeltaFatigue()}})</span>
+						<td>{{viewedDay.printFatigue()}}<span *ngIf="viewedDay.prevAtl" class="mat-caption">
+								({{viewedDay.printDeltaFatigue()}})</span>
 						</td>
 					</tr>
 					<tr class="tsb-value">
 						<td>Form <span *ngIf="isTrainingZonesEnabled"> ➔ {{viewedDay.printTrainingZone()}}</span></td>
-						<td>{{viewedDay.printForm()}}<span *ngIf="viewedDay.prevTsb" class="mat-caption"> ({{viewedDay.printDeltaForm()}})</span>
+						<td>{{viewedDay.printForm()}}<span *ngIf="viewedDay.prevTsb" class="mat-caption">
+								({{viewedDay.printDeltaForm()}})</span>
 						</td>
 					</tr>
 
@@ -90,10 +93,8 @@
 	</div>
 
 	<div fxFlex="3">
-		<button mat-icon-button matTooltip="Move Forward (RIGHT key)"
-				color="primary"
-				[disabled]="!canPeriodViewedForward"
-				(click)="onPeriodViewedForward()">
+		<button mat-icon-button matTooltip="Move Forward (RIGHT key)" color="primary"
+			[disabled]="!canPeriodViewedForward" (click)="onPeriodViewedForward()">
 			<mat-icon>arrow_forward</mat-icon>
 		</button>
 	</div>

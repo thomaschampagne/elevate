@@ -236,6 +236,8 @@ export class FitnessService {
 
 					let ctl, atl, tsb;
 
+					const prevSevenDayStress = Array<number>(7).fill(0);
+
 					const fitnessTrend: DayFitnessTrendModel[] = [];
 
 					let previousDayFitnessTrend: DayFitnessTrendModel = null;
@@ -262,11 +264,14 @@ export class FitnessService {
 
 						let dayFitnessTrend: DayFitnessTrendModel;
 
+						prevSevenDayStress[index % 7] = dayStress.finalStressScore;
+						const rolling7DayStressSum = _.sum(prevSevenDayStress);
+
 						if (previousDayFitnessTrend) {
-							dayFitnessTrend = new DayFitnessTrendModel(dayStress, ctl, atl, tsb, previousDayFitnessTrend.ctl,
+							dayFitnessTrend = new DayFitnessTrendModel(dayStress, rolling7DayStressSum, ctl, atl, tsb, previousDayFitnessTrend.ctl,
 								previousDayFitnessTrend.atl, previousDayFitnessTrend.tsb);
 						} else {
-							dayFitnessTrend = new DayFitnessTrendModel(dayStress, ctl, atl, tsb);
+							dayFitnessTrend = new DayFitnessTrendModel(dayStress, rolling7DayStressSum, ctl, atl, tsb);
 						}
 
 						if (_.isNumber(dayStress.heartRateStressScore) && dayStress.heartRateStressScore > 0) {
