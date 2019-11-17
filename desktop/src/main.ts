@@ -16,7 +16,6 @@ logger.transports.file.maxSize = 1048576 * 2; // 2MB
 
 class Main {
 
-
 	constructor(electronApp: Electron.App) {
 		this.app = electronApp;
 		this.isPackaged = this.app.isPackaged;
@@ -65,15 +64,14 @@ class Main {
 				}),
 			);
 
+			// Create the request listener to listen renderer request events
+			this.ipcMainMessagesService = new IpcMainMessagesService(ipcMain, this.appWindow.webContents);
+			this.ipcMainMessagesService.listen();
+
 			// Detect a proxy on the system before listening for message from renderer
 			Proxy.resolve(this.appWindow).then(httpProxy => {
-
 				logger.info("Using proxy value: " + httpProxy);
 				Service.instance().httpClient = new HttpClient("vsts-node-api", null, (httpProxy) ? {proxy: {proxyUrl: httpProxy}} : null);
-
-				// Create the request listener to listen renderer request events
-				this.ipcMainMessagesService = new IpcMainMessagesService(ipcMain, this.appWindow.webContents);
-				this.ipcMainMessagesService.listen();
 				Service.instance().ipcMainMessages = this.ipcMainMessagesService;
 			});
 

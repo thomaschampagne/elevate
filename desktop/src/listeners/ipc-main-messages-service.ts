@@ -90,8 +90,8 @@ export class IpcMainMessagesService {
 			const updateSyncedActivitiesNameAndType: boolean = <boolean> message.payload[4];
 			const userSettingsModel: UserSettingsModel = <UserSettingsModel> message.payload[5];
 
-			this.service.currentConnector = StravaConnector.create(athleteModel, userSettingsModel, stravaConnectorSyncDateTime, stravaApiCredentials,
-				updateSyncedActivitiesNameAndType);
+			this.service.currentConnector = StravaConnector.create(athleteModel, userSettingsModel, stravaConnectorSyncDateTime,
+				stravaApiCredentials, updateSyncedActivitiesNameAndType);
 
 		} else if (connectorType === ConnectorType.FILE_SYSTEM) {
 

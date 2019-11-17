@@ -11,7 +11,7 @@ export class SplitCalculator {
 		this.scale = scale;
 		this.data = data;
 		this.maxScaleGapThreshold = maxScaleGapThreshold;
-		this.start = performance.now();
+		this.start = performance ? performance.now() : 0;
 		this.normalize();
 	}
 
@@ -86,8 +86,8 @@ export class SplitCalculator {
 		const bestSplit = (maxSumFound / scaleRange);
 
 		if (showProcessTime) {
-			const processTime = performance.now() - this.start;
-			console.debug("Processed split of range " + scaleRange + " in " + _.floor(processTime, 4) + " ms.");
+			const processTime = performance ? _.floor((performance.now() - this.start), 4) : "N/A";
+			console.debug("Processed split of range " + scaleRange + " in " + processTime + " ms.");
 		}
 
 		return bestSplit;

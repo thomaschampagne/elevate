@@ -33,6 +33,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 
 // TODO migrate lastSyncDateTime storage key to syncDateTime for the extension (on develop)
 // TODO Handle sync complete
+// TODO Handle TooManyRequests 429 on Desktop::StravaConnector::stravaApiCall => replay query 3 min later?
 // TODO Add sync gen session id as string baseConnector. Goal: more easy to debug sync session with start/stop actions?
 // TODO Handle errors cases (continue or not the sync...)
 // TODO Provide a sync view with all sync events tracked (tmp saved?!) & displayed => to sum up a sync log view.
@@ -309,7 +310,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 		const errors = [];
 
 		// Insert new activity or update an existing one to database
-		this.logger.info(`Trying to upsert activity "${activitySyncEvent.activity.name}" started on "${activitySyncEvent.activity.start_time}".`);
+		this.logger.info(`Trying to upsert activity ${activitySyncEvent.isNew ? "new" : "existing"} "${activitySyncEvent.activity.name}" started on "${activitySyncEvent.activity.start_time}".`);
 
 		this.activityService.put(activitySyncEvent.activity).then((syncedActivityModel: SyncedActivityModel) => {
 

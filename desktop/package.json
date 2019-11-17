@@ -1,5 +1,5 @@
 {
-	"name": "elevate-desktop",
+	"name": "elevate",
 	"description": "Elevate cross-platform desktop app based on ElectronJS",
 	"version": "7.0.0-prototype.0",
 	"scripts": {
@@ -43,7 +43,7 @@
 		"lodash": "^4.17.15",
 		"node-machine-id": "^1.1.12",
 		"pako": "^1.0.10",
-		"promise-tron": "^2.0.0",
+		"promise-tron": "^2.1.0",
 		"querystring": "^0.2.0",
 		"rxjs": "^6.5.3",
 		"typed-rest-client": "^1.5.0"
