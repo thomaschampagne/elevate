@@ -10,5 +10,6 @@ export const environment = {
 	target: EnvTarget.DESKTOP,
 	production: false,
 	logLevel: LoggerService.LEVEL_DEBUG,
-	skipRestoreSyncedBackupCheck: false
+	skipRestoreSyncedBackupCheck: false,
+	bypassAthleteAccessCheck: false
 };

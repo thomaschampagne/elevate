@@ -11,7 +11,7 @@ import { MachineAuthenticator } from "./machine-authenticator";
 import * as HttpCodes from "http-status-codes";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { DistributedEndpointsResolver } from "@elevate/shared/resolvers";
-
+import { environment } from "../../environments/environment.desktop";
 
 @Injectable()
 export class DesktopAppGuardActivator implements CanActivate {
@@ -38,7 +38,7 @@ export class DesktopAppGuardActivator implements CanActivate {
 
 	public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 
-		if (this.isMachineAuthorized) {
+		if (this.isMachineAuthorized || environment.bypassAthleteAccessCheck) {
 			return Promise.resolve(true);
 		}
 

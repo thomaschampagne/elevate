@@ -42,7 +42,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
     but allow user to mark a connector as "Primary" which will be synced when starting the app.
 	Also allow user to sync connector he wants manually on connectors page
  */
-
+// TODO Application upgrade!?
 // TODO "version" of dump should compared to "the current code version".
 // TODO import/restore progress bar OR spinner
 
