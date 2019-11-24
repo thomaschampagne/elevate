@@ -49,18 +49,18 @@ export class StravaAuthenticator {
 
 		let payload = null;
 
-		if (code && !refreshToken) {
+		const isAuthCodeGrantType = code && !refreshToken;
+		const isRefreshTokenGrantType = !code && refreshToken;
 
+		if (isAuthCodeGrantType) {
 			logger.info("Getting tokens with grant_type=authorization_code");
-
 			payload = {
 				client_id: clientId,
 				client_secret: clientSecret,
 				grant_type: "authorization_code",
 				code: code
 			};
-
-		} else if (!code && refreshToken) {
+		} else if (isRefreshTokenGrantType) {
 
 			logger.info("Getting tokens with grant_type=refresh_token");
 
@@ -81,7 +81,8 @@ export class StravaAuthenticator {
 			if (error) {
 				responseCallback(error, null, null, null, null);
 			} else {
-				responseCallback(null, body.access_token, body.refresh_token, body.expires_at * 1000  /* expires_at as milli seconds */, {
+
+				const athlete = (isAuthCodeGrantType) ? {
 					id: body.athlete.id,
 					username: body.athlete.username,
 					firstname: body.athlete.firstname,
@@ -90,7 +91,9 @@ export class StravaAuthenticator {
 					state: body.athlete.state,
 					country: body.athlete.country,
 					sex: body.athlete.sex,
-				});
+				} : null;
+
+				responseCallback(null, body.access_token, body.refresh_token, body.expires_at * 1000  /* expires_at as milli seconds */, athlete);
 			}
 		});
 
@@ -117,8 +120,8 @@ export class StravaAuthenticator {
 
 		Service.instance().httpClient.post(StravaAuthenticator.TOKEN_URL, queryString.stringify(body)).then(response => {
 			return (response.message.statusCode === HttpCodes.OK) ? response.readBody() : Promise.reject(response.message);
-		}).then(body => {
-			callback(null, JSON.parse(body));
+		}).then(bodyResponse => {
+			callback(null, JSON.parse(bodyResponse));
 		}).catch((error: http.IncomingMessage) => {
 			callback(error, null);
 		});
@@ -189,12 +192,12 @@ export class StravaAuthenticator {
 
 		return new Promise<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: object }>((resolve, reject) => {
 
-			this.makeTokensExchangeRequest(clientId, clientSecret, null, refreshToken, (error: any, accessToken: string, refreshToken: string, expiresAt: number, athlete: object) => {
+			this.makeTokensExchangeRequest(clientId, clientSecret, null, refreshToken, (error: any, accessTokenUpdate: string, refreshTokenUpdate: string, expiresAt: number, athlete: object) => {
 				if (error) {
 					logger.error(error);
 					reject(error);
 				} else {
-					resolve({accessToken: accessToken, refreshToken: refreshToken, expiresAt: expiresAt, athlete: athlete});
+					resolve({accessToken: accessTokenUpdate, refreshToken: refreshTokenUpdate, expiresAt: expiresAt, athlete: athlete});
 				}
 			});
 

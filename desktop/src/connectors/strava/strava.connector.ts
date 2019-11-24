@@ -42,7 +42,7 @@ export interface StravaApiStreamType {
 	data: number[];
 	series_type: string;
 	original_size: number;
-	resolution: string
+	resolution: string;
 }
 
 export class StravaConnector extends BaseConnector {
@@ -457,12 +457,22 @@ export class StravaConnector extends BaseConnector {
 
 		return authPromise.then((result: { accessToken: string, refreshToken: string, expiresAt: number, athlete: any }) => {
 
+			let stravaAccount: StravaAccount;
+
+			if (result.athlete) { // First or reset authentication, use stravaAccount given by strava
+				stravaAccount = new StravaAccount(result.athlete.id, result.athlete.username, result.athlete.firstname, result.athlete.lastname,
+					result.athlete.city, result.athlete.state, result.athlete.country, result.athlete.sex === "M" ? Gender.MEN : Gender.WOMEN);
+			} else if (stravaApiCredentials.stravaAccount) { // Case of refresh token, re-use stored stravaAccount
+				stravaAccount = stravaApiCredentials.stravaAccount;
+			} else {
+				stravaAccount = null;
+			}
+
 			// Update credentials
 			stravaApiCredentials.accessToken = result.accessToken;
 			stravaApiCredentials.refreshToken = result.refreshToken;
 			stravaApiCredentials.expiresAt = result.expiresAt;
-			stravaApiCredentials.stravaAccount = new StravaAccount(result.athlete.id, result.athlete.username, result.athlete.firstname, result.athlete.lastname,
-				result.athlete.city, result.athlete.state, result.athlete.country, result.athlete.sex === "M" ? Gender.MEN : Gender.WOMEN);
+			stravaApiCredentials.stravaAccount = stravaAccount;
 
 			// Notify
 			syncEvents$.next(new StravaCredentialsUpdateSyncEvent(stravaApiCredentials));
