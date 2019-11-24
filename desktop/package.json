@@ -83,7 +83,12 @@
 		],
 		"win": {
 			"target": [
-				"zip"
+				{
+					"target": "nsis",
+					"arch": [
+						"x64"
+					]
+				}
 			]
 		},
 		"mac": {
