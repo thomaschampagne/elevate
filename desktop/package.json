@@ -71,7 +71,7 @@
 		"typescript": "^3.6.3"
 	},
 	"build": {
-		"appId": "com.thomaschampagne.elevate",
+		"appId": "com.elevate.app",
 		"productName": "elevate",
 		"directories": {
 			"output": "./package/"
