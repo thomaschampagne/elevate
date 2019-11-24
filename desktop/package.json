@@ -1,6 +1,6 @@
 {
 	"name": "elevate",
-	"description": "Elevate cross-platform desktop app based on ElectronJS",
+	"description": "Elevate your training experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...",
 	"version": "7.0.0-prototype.0",
 	"scripts": {
 		"assert-app-exists": "node -e \"if ((require('fs').existsSync('./dist/app/')) === false) {console.log('Please run & wait for \\'npm start\\' task before.\\n\\n\\n\\n');process.exit(1);}\";",
