@@ -16,6 +16,8 @@ import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { AppError } from "../shared/models/app-error.model";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
+import { Subject, timer } from "rxjs";
+import { debounce } from "rxjs/operators";
 import NumberColumn = ActivityColumns.NumberColumn;
 
 @Component({
@@ -34,6 +36,7 @@ export class ActivitiesComponent implements OnInit {
 				public logger: LoggerService) {
 		this.hasActivities = null; // Can be null: don't know yet true/false status
 		this.initialized = false;
+		this.searchText$ = new Subject();
 	}
 
 	public static readonly LS_SELECTED_COLUMNS: string = "activities_selectedColumns";
@@ -54,6 +57,7 @@ export class ActivitiesComponent implements OnInit {
 	public displayedColumns: string[];
 	public isImperial: boolean;
 	public searchText: string;
+	public searchText$: Subject<string>;
 
 	public hasActivities: boolean;
 	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
@@ -212,6 +216,14 @@ export class ActivitiesComponent implements OnInit {
 				return dayFitnessTrendModel.id * -1;
 			});
 
+			this.searchText$.pipe(
+				debounce(() => timer(350))
+			).subscribe(filterValue => {
+				filterValue = filterValue.trim(); // Remove whitespace
+				filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+				this.dataSource.filter = filterValue;
+			});
+
 		}).catch(error => {
 			const message = error.toString() + ". Press (F12) to see a more detailed error message in browser console.";
 			this.snackBar.open(message, "Close");
@@ -270,10 +282,11 @@ export class ActivitiesComponent implements OnInit {
 			});
 	}
 
-	public applyFilter(filterValue: string): void {
-		filterValue = filterValue.trim(); // Remove whitespace
-		filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-		this.dataSource.filter = filterValue;
+	public requestFilterFor(filterValue: string): void {
+		if (filterValue && filterValue.length <= 2) {
+			return;
+		}
+		this.searchText$.next(filterValue);
 	}
 
 	public onViewAthleteSettings(activity: SyncedActivityModel): void {
