@@ -148,8 +148,7 @@ try {
 		logger.debug("electron-reloader is ENABLED");
 	}
 
-	logger.info("System details:", Service.printSystemDetails());
-	logger.info("Machine ID:", Service.instance().getMachineId());
+	logger.info("System details:", Service.instance().printRuntimeInfo());
 
 	(new Main(app)).run();
 

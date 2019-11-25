@@ -3,6 +3,8 @@ import { BaseConnector } from "./connectors/base.connector";
 import { HttpClient } from "typed-rest-client/HttpClient";
 import * as os from "os";
 import { machineIdSync } from "node-machine-id";
+import { RuntimeInfo } from "@elevate/shared/electron";
+import * as crypto from "crypto";
 
 export class Service {
 
@@ -11,6 +13,7 @@ export class Service {
 		this._httpProxy = null;
 		this._currentConnector = null;
 		this._machineId = null;
+		this._runtimeInfo = null;
 	}
 
 	get ipcMainMessages(): IpcMainMessagesService {
@@ -50,14 +53,7 @@ export class Service {
 	private _httpClient: HttpClient;
 	private _currentConnector: BaseConnector;
 	private _machineId: string;
-
-	public static printSystemDetails(): string {
-		const cpuCount = os.cpus().length;
-		const cpu = os.cpus()[0];
-		const cpuInfos = `${cpu.model} ${cpuCount} threads`;
-		const memorySizeGB = Math.round(((os.totalmem() / 1024) / 1024) / 1024) + "GB";
-		return `Hostname ${os.hostname()}; Platform ${os.platform()} ${os.arch()}; Processor ${cpuInfos}; Memory ${memorySizeGB}`;
-	}
+	private _runtimeInfo: RuntimeInfo;
 
 	public static currentPlatform(): string {
 		return os.platform();
@@ -70,12 +66,23 @@ export class Service {
 		return Service._instance;
 	}
 
-	public getMachineId(): string {
+	public getRuntimeInfo(): RuntimeInfo {
 
-		if (!this._machineId) {
-			this._machineId = machineIdSync();
+		if (!this._runtimeInfo) {
+			const osPlatform = {name: os.platform(), arch: os.arch()};
+			const osHostname = os.hostname();
+			const osUsername = os.userInfo().username;
+			const osMachineId = machineIdSync();
+			const athleteMachineId = crypto.createHash("sha1").update(osMachineId + ":" + osUsername).digest("hex");
+			const cpuName = {name: os.cpus()[0].model, threads: os.cpus().length};
+			const memorySize = Math.round(((os.totalmem() / 1024) / 1024) / 1024);
+			this._runtimeInfo = new RuntimeInfo(osPlatform, osHostname, osUsername, osMachineId, athleteMachineId, cpuName, memorySize);
 		}
+		return this._runtimeInfo;
+	}
 
-		return this._machineId;
+	public printRuntimeInfo(): string {
+		const runtimeInfo = this.getRuntimeInfo();
+		return `Hostname ${runtimeInfo.osHostname}; Platform ${runtimeInfo.osPlatform.name} ${runtimeInfo.osPlatform.arch}; Cpu ${runtimeInfo.cpu.name}; Memory ${runtimeInfo.memorySizeGb}GB; athleteMachineId ${runtimeInfo.athleteMachineId}`;
 	}
 }

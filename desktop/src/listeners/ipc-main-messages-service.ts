@@ -59,8 +59,8 @@ export class IpcMainMessagesService {
 				this.handleLinkWithStrava(message, replyWith);
 				break;
 
-			case MessageFlag.GET_MACHINE_ID:
-				this.handleGetMachineId(replyWith);
+			case MessageFlag.GET_RUNTIME_INFO:
+				this.handleGetRuntimeInfo(message, replyWith);
 				break;
 
 			default:
@@ -241,9 +241,9 @@ export class IpcMainMessagesService {
 
 	}
 
-	public handleGetMachineId(replyWith: (promiseTronReply: PromiseTronReply) => void): void {
+	public handleGetRuntimeInfo(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
 		replyWith({
-			success: Service.instance().getMachineId(),
+			success: Service.instance().getRuntimeInfo(),
 			error: null
 		});
 	}

@@ -1,5 +1,5 @@
 import { IpcMainMessagesService } from "./ipc-main-messages-service";
-import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
+import { FlaggedIpcMessage, MessageFlag, RuntimeInfo } from "@elevate/shared/electron";
 import { CompleteSyncEvent, ConnectorType, ErrorSyncEvent, GenericSyncEvent, SyncEvent } from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
 import { Subject } from "rxjs";
@@ -25,7 +25,8 @@ describe("IpcMainMessagesService", () => {
 		it("should start sync when a MessageFlag.START_SYNC is received", (done: Function) => {
 
 			// Given
-			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA); // No need to provide extra payload to test forwardMessagesFromIpcRenderer
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC,
+				ConnectorType.STRAVA); // No need to provide extra payload to test forwardMessagesFromIpcRenderer
 			const replyWith = () => {
 			};
 
@@ -42,7 +43,8 @@ describe("IpcMainMessagesService", () => {
 		it("should link strava account when a MessageFlag.LINK_STRAVA_CONNECTOR is received", (done: Function) => {
 
 			// Given
-			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.LINK_STRAVA_CONNECTOR, ConnectorType.STRAVA); // No need to provide extra payload to test forwardMessagesFromIpcRenderer
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.LINK_STRAVA_CONNECTOR,
+				ConnectorType.STRAVA); // No need to provide extra payload to test forwardMessagesFromIpcRenderer
 			const replyWith = () => {
 			};
 
@@ -73,20 +75,21 @@ describe("IpcMainMessagesService", () => {
 			done();
 		});
 
-		it("should provide when a MessageFlag.GET_MACHINE_ID is received", (done: Function) => {
+		it("should provide when a MessageFlag.GET_RUNTIME_INFO is received", (done: Function) => {
 
 			// Given
-			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.GET_MACHINE_ID);
+			const runtimeInfo = new RuntimeInfo(null, null, null, null, null, null, null);
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.GET_RUNTIME_INFO, runtimeInfo);
 			const replyWith = () => {
 			};
 
-			const handleGetMachineIdSpy = spyOn(ipcMainMessagesService, "handleGetMachineId").and.stub();
+			const handleGetRuntimeInfoSpy = spyOn(ipcMainMessagesService, "handleGetRuntimeInfo").and.stub();
 
 			// When
 			ipcMainMessagesService.forwardReceivedMessagesFromIpcRenderer(flaggedIpcMessage, replyWith);
 
 			// Then
-			expect(handleGetMachineIdSpy).toHaveBeenCalledTimes(1);
+			expect(handleGetRuntimeInfoSpy).toHaveBeenCalledTimes(1);
 			done();
 		});
 
@@ -125,7 +128,8 @@ describe("IpcMainMessagesService", () => {
 			const stravaApiCredentials = null;
 			const userSettingsModel = null;
 			const currentConnectorSyncDateTime = null;
-			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, currentConnectorSyncDateTime, athleteModel, userSettingsModel,
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA,
+				currentConnectorSyncDateTime, athleteModel, userSettingsModel,
 				stravaApiCredentials, updateSyncedActivitiesNameAndType);
 			const replyWith = {
 				callback: () => {
@@ -208,7 +212,8 @@ describe("IpcMainMessagesService", () => {
 				}
 			};
 			const stravaConnectorSyncCalls = 1;
-			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaApiCredentials, updateSyncedActivitiesNameAndType);
+			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaApiCredentials,
+				updateSyncedActivitiesNameAndType);
 			const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
 			const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(syncEvent$);
 			const sendMessageSpy = spyOn(ipcMainMessagesService, "send").and.returnValue(Promise.resolve("Message received by IpcMain"));
@@ -255,7 +260,8 @@ describe("IpcMainMessagesService", () => {
 				}
 			};
 			const stravaConnectorSyncCalls = 1;
-			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaApiCredentials, updateSyncedActivitiesNameAndType);
+			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaApiCredentials,
+				updateSyncedActivitiesNameAndType);
 			const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
 			const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(syncEvent$);
 			const sendMessageSpy = spyOn(ipcMainMessagesService, "send").and.returnValue(Promise.resolve("Message received by IpcMain"));
@@ -306,7 +312,8 @@ describe("IpcMainMessagesService", () => {
 				}
 			};
 			const stravaConnectorSyncCalls = 1;
-			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaApiCredentials, updateSyncedActivitiesNameAndType);
+			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaApiCredentials,
+				updateSyncedActivitiesNameAndType);
 			const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
 			const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(syncEvent$);
 			const sendMessageSpy = spyOn(ipcMainMessagesService, "send").and.returnValue(Promise.resolve("Message received by IpcMain"));
@@ -416,22 +423,23 @@ describe("IpcMainMessagesService", () => {
 
 	describe("Handle get machine id", () => {
 
-		it("should get machine id", (done: Function) => {
+		it("should get runtime info", (done: Function) => {
 
 			// Given
 			const replyWrapper = {
 				replyWith: () => {
 				}
 			};
-			const expectedMachineId = "fakeMachineId";
-			jest.spyOn(Service.instance(), "getMachineId").mockReturnValue(expectedMachineId);
+			const fakeRuntimeInfo = new RuntimeInfo(null, null, null, null, null, null, null);
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.GET_RUNTIME_INFO, fakeRuntimeInfo);
+			jest.spyOn(Service.instance(), "getRuntimeInfo").mockReturnValue(fakeRuntimeInfo);
 			const replyWithSpy = jest.spyOn(replyWrapper, "replyWith");
 
 			// When
-			ipcMainMessagesService.handleGetMachineId(replyWrapper.replyWith);
+			ipcMainMessagesService.handleGetRuntimeInfo(flaggedIpcMessage, replyWrapper.replyWith);
 
 			// Then
-			expect(replyWithSpy).toBeCalledWith({success: expectedMachineId, error: null});
+			expect(replyWithSpy).toBeCalledWith({success: fakeRuntimeInfo, error: null});
 			done();
 		});
 

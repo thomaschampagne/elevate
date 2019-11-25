@@ -1,17 +1,20 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
 import { MatDialog } from "@angular/material";
 import { DesktopAppGuardDialogComponent } from "./desktop-app-guard-dialog.component";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { IpcRendererMessagesService } from "../shared/services/messages-listener/ipc-renderer-messages.service";
-import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
+import { FlaggedIpcMessage, MessageFlag, RuntimeInfo } from "@elevate/shared/electron";
 import { concatMap, delay, retryWhen } from "rxjs/operators";
 import { of, throwError } from "rxjs";
-import { MachineAuthenticator } from "./machine-authenticator";
+import { AthleteAccessChecker } from "./athlete-access-checker";
 import * as HttpCodes from "http-status-codes";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { DistributedEndpointsResolver } from "@elevate/shared/resolvers";
 import { environment } from "../../environments/environment.desktop";
+import { StravaApiCredentialsService } from "../shared/services/strava-api-credentials/strava-api-credentials.service";
+import { VERSIONS_PROVIDER, VersionsProvider } from "../shared/services/versions/versions-provider.interface";
+import { StravaApiCredentials } from "@elevate/shared/sync";
 
 @Injectable()
 export class DesktopAppGuardActivator implements CanActivate {
@@ -19,37 +22,39 @@ export class DesktopAppGuardActivator implements CanActivate {
 	private static readonly AUTH_RETRY_COUNT = 1;
 	private static readonly AUTH_RETRY_DELAY = 1000;
 
-	public machineId: string;
-	public isMachineAuthorized: boolean;
+	public runtimeInfo: RuntimeInfo;
+	public isAccessAuthorized: boolean;
 
-	constructor(public httpClient: HttpClient,
+	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
 				public ipcRendererMessagesService: IpcRendererMessagesService,
+				public stravaApiCredentialsService: StravaApiCredentialsService,
+				public httpClient: HttpClient,
 				public router: Router,
 				public dialog: MatDialog,
 				public logger: LoggerService) {
-		this.machineId = null;
-		this.isMachineAuthorized = false;
+		this.runtimeInfo = null;
+		this.isAccessAuthorized = false;
 	}
 
-	private static AUTH_MACHINE_API_URL(machineId: string) {
-		const currentBaseEndPoint = `${DistributedEndpointsResolver.resolve("https://elevate-concept-${id}.herokuapp.com")}`;
-		return `${currentBaseEndPoint}/api/machine/auth/${machineId}`;
+	private static ATHLETE_ACCESS_API_URL() {
+		const currentBaseEndPoint = `${DistributedEndpointsResolver.resolve("https://elevate-prototype-${id}.herokuapp.com")}`;
+		return `${currentBaseEndPoint}/api/athlete/access`;
 	}
 
 	public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 
-		if (this.isMachineAuthorized || environment.bypassAthleteAccessCheck) {
+		if (this.isAccessAuthorized || environment.bypassAthleteAccessCheck) {
 			return Promise.resolve(true);
 		}
 
-		return this.getMachineId().then(machineId => {
-			this.machineId = machineId;
-			return this.checkIfMachineIsAuthorized(this.machineId);
-		}).then(machineAuthorized => {
+		return this.getRuntimeInfo().then(runtimeInfo => {
+			this.runtimeInfo = runtimeInfo;
+			return this.checkAthleteAccess(this.runtimeInfo);
+		}).then(accessAuthorized => {
 
-			this.isMachineAuthorized = machineAuthorized;
+			this.isAccessAuthorized = accessAuthorized;
 
-			if (!machineAuthorized) {
+			if (!accessAuthorized) {
 				this.dialog.open(DesktopAppGuardDialogComponent, {
 					minHeight: "100%",
 					maxHeight: "100%",
@@ -60,53 +65,75 @@ export class DesktopAppGuardActivator implements CanActivate {
 					hasBackdrop: true,
 					closeOnNavigation: false,
 					disableClose: true,
-					data: this.machineId
+					data: this.runtimeInfo.athleteMachineId
 				});
 			}
 
-			return Promise.resolve(machineAuthorized);
+			return Promise.resolve(accessAuthorized);
 		});
 	}
 
-	public getMachineId(): Promise<string> {
-		return this.ipcRendererMessagesService.send<string>(new FlaggedIpcMessage(MessageFlag.GET_MACHINE_ID));
+	public getRuntimeInfo(): Promise<RuntimeInfo> {
+		return this.ipcRendererMessagesService.send<RuntimeInfo>(new FlaggedIpcMessage(MessageFlag.GET_RUNTIME_INFO));
 	}
 
-	public checkIfMachineIsAuthorized(machineId: string, authRetry: boolean = false): Promise<boolean> {
+	public checkAthleteAccess(runtimeInfo: RuntimeInfo, authRetry: boolean = false): Promise<boolean> {
 
-		return new Promise<boolean>(((resolve, reject) => {
-			this.httpClient.get(DesktopAppGuardActivator.AUTH_MACHINE_API_URL(machineId), {responseType: "text"}).pipe(
-				retryWhen(errors => errors.pipe(concatMap((error: HttpErrorResponse, tryIndex: number) => {
-					if (error.status === HttpCodes.UNAUTHORIZED) {
-						return throwError(error);
+		return Promise.all([
+			this.versionsProvider.getInstalledAppVersion(),
+			this.stravaApiCredentialsService.fetch()
+		]).then(result => {
+
+			const installedVersion = result[0];
+			const stravaApiCredentials: StravaApiCredentials = result[1];
+
+			return new Promise<boolean>((resolve => {
+
+				const athleteAccessBodyData = {
+					athleteMachineId: this.runtimeInfo.athleteMachineId,
+					version: installedVersion,
+					osPlatform: this.runtimeInfo.osPlatform,
+					osUsername: this.runtimeInfo.osUsername,
+					memorySizeGb: this.runtimeInfo.memorySizeGb,
+					cpu: this.runtimeInfo.cpu,
+					stravaAccount: (stravaApiCredentials.stravaAccount) ? stravaApiCredentials.stravaAccount : null
+				};
+
+				this.httpClient.post(DesktopAppGuardActivator.ATHLETE_ACCESS_API_URL(), athleteAccessBodyData, {responseType: "text"}).pipe(
+					retryWhen(errors => errors.pipe(concatMap((error: HttpErrorResponse, tryIndex: number) => {
+						if (error.status === HttpCodes.UNAUTHORIZED) {
+							return throwError(error);
+						}
+						return ((tryIndex + 1) > DesktopAppGuardActivator.AUTH_RETRY_COUNT)
+							? throwError(error) : of(error).pipe(delay(DesktopAppGuardActivator.AUTH_RETRY_DELAY));
+					})))
+				).subscribe(authCode => {
+					const authenticated = this.verifyAthleteMachineId(this.runtimeInfo.athleteMachineId, authCode);
+
+					if (authenticated) {
+						resolve(authenticated);
+					} else if (authRetry) {
+						resolve(authenticated);
+					} else {
+						setTimeout(() => {
+							this.logger.info("Retry machine authentication");
+							this.checkAthleteAccess(runtimeInfo, true).then(isAuthenticated => {
+								resolve(isAuthenticated);
+							});
+						}, DesktopAppGuardActivator.AUTH_RETRY_DELAY);
 					}
-					return ((tryIndex + 1) > DesktopAppGuardActivator.AUTH_RETRY_COUNT)
-						? throwError(error) : of(error).pipe(delay(DesktopAppGuardActivator.AUTH_RETRY_DELAY));
-				})))
-			).subscribe(authCode => {
-				const authenticated = this.authMachine(this.machineId, authCode);
+				}, error => {
+					resolve(false);
+				});
 
-				if (authenticated) {
-					resolve(authenticated);
-				} else if (authRetry) {
-					resolve(authenticated);
-				} else {
-					setTimeout(() => {
-						this.logger.info("Retry machine authentication");
-						this.checkIfMachineIsAuthorized(machineId, true).then(isAuthenticated => {
-							resolve(isAuthenticated);
-						});
-					}, DesktopAppGuardActivator.AUTH_RETRY_DELAY);
-				}
-			}, error => {
-				resolve(false);
-			});
+			}));
 
-		}));
+		});
+
 	}
 
-	public authMachine(machineId: string, remoteAuthCode: string): boolean {
-		return MachineAuthenticator.auth(machineId, remoteAuthCode);
+	public verifyAthleteMachineId(athleteMachineId: string, remoteAuthCode: string): boolean {
+		return AthleteAccessChecker.test(athleteMachineId, remoteAuthCode);
 	}
 }
 

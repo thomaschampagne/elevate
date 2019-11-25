@@ -9,11 +9,11 @@ import { ElectronService } from "../shared/services/electron/electron.service";
 })
 export class DesktopAppGuardDialogComponent implements OnInit {
 
-	public machineId: string;
+	public athleteMachineId: string;
 
 	constructor(public electronService: ElectronService,
-				@Inject(MAT_DIALOG_DATA) machineId: string) {
-		this.machineId = machineId;
+				@Inject(MAT_DIALOG_DATA) athleteMachineId: string) {
+		this.athleteMachineId = athleteMachineId;
 	}
 
 	public ngOnInit(): void {
