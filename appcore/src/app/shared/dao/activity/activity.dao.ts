@@ -20,6 +20,13 @@ export class ActivityDao extends BaseDao<SyncedActivityModel> {
 		return ActivityDao.DEFAULT_STORAGE_VALUE;
 	}
 
+	public fetchMinimalFields(): Promise<SyncedActivityModel[]> {
+		return <Promise<SyncedActivityModel[]>> super.fetch({
+			selector: null,
+			fields: SyncedActivityModel.MINIMAL_FIELDS
+		});
+	}
+
 	/**
 	 *
 	 * @param {number[]} activitiesToDelete

@@ -19,10 +19,12 @@ export class ActivityService {
 
 	/**
 	 *
+	 * @param minimalFields
 	 * @returns {Promise<SyncedActivityModel[]>} stored SyncedActivityModels
 	 */
-	public fetch(): Promise<SyncedActivityModel[]> {
-		return (<Promise<SyncedActivityModel[]>> this.activityDao.fetch()).then(activities => {
+	public fetch(minimalFields: boolean = true): Promise<SyncedActivityModel[]> {
+		const fetchPromise = minimalFields ? this.activityDao.fetchMinimalFields() : this.activityDao.fetch();
+		return (<Promise<SyncedActivityModel[]>> fetchPromise).then(activities => {
 			return Promise.resolve(_.sortBy(activities, "start_time"));
 		});
 	}
@@ -74,7 +76,7 @@ export class ActivityService {
 	public isAthleteSettingsConsistent(): Promise<boolean> {
 
 		return this.athleteSnapshotResolverService.update().then(() => {
-			return this.activityDao.fetch();
+			return this.activityDao.fetchMinimalFields();
 		}).then((syncedActivityModels: SyncedActivityModel[]) => {
 			let isCompliant = true;
 			_.forEachRight(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
