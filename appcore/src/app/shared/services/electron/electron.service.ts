@@ -15,6 +15,16 @@ export class ElectronService {
 	public instance: Electron.RendererInterface;
 
 	constructor() {
+		this.forwardHtmlLinkClicksToDefaultBrowser();
+	}
+
+	public forwardHtmlLinkClicksToDefaultBrowser(): void {
+		document.querySelector("body").addEventListener("click", (event: any) => {
+			if (event.target.tagName.toLowerCase() === "a") {
+				event.preventDefault();
+				this.electron.shell.openExternal(event.target.href);
+			}
+		});
 	}
 
 	public get electron(): Electron.RendererInterface {
