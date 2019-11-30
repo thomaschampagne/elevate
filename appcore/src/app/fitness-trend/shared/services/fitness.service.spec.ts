@@ -121,7 +121,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -193,7 +193,7 @@ describe("FitnessService", () => {
 				190,
 				true));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -324,7 +324,7 @@ describe("FitnessService", () => {
 				false,
 				300));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -447,7 +447,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -571,7 +571,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -695,7 +695,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -820,7 +820,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -908,7 +908,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -977,7 +977,7 @@ describe("FitnessService", () => {
 				190,
 				true));
 
-			spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+			spyOn(activityService.activityDao, "fetchMinimalFields").and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
 			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessTrendConfigModel,
@@ -1032,7 +1032,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			spyOn(activityService.activityDao, "fetch")
+			spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -1110,7 +1110,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+			spyOn(activityService.activityDao, "fetchMinimalFields").and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
 			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessTrendConfigModel, powerMeterEnable,
@@ -1197,7 +1197,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+			spyOn(activityService.activityDao, "fetchMinimalFields").and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
 			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessTrendConfigModel,
@@ -1313,7 +1313,7 @@ describe("FitnessService", () => {
 				150,
 				false));
 
-			spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+			spyOn(activityService.activityDao, "fetchMinimalFields").and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
 			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessTrendConfigModel,
@@ -1399,7 +1399,7 @@ describe("FitnessService", () => {
 				190,
 				true));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -1555,7 +1555,7 @@ describe("FitnessService", () => {
 			syncedActivityModel_10.athleteSnapshot.athleteSettings.cyclingFtp = null;
 			syncedActivityModels.push(syncedActivityModel_10);
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -1713,7 +1713,7 @@ describe("FitnessService", () => {
 			syncedActivityModel_10.athleteSnapshot.athleteSettings.cyclingFtp = null;
 			syncedActivityModels.push(syncedActivityModel_10);
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -1798,7 +1798,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -1879,7 +1879,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -1976,7 +1976,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -2064,7 +2064,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -2164,7 +2164,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -2205,7 +2205,7 @@ describe("FitnessService", () => {
 			swimEnable = false;
 
 			const emptyModels: SyncedActivityModel[] = [];
-			spyOn(activityService.activityDao, "fetch")
+			spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(emptyModels));
 
 			// When
@@ -2251,7 +2251,7 @@ describe("FitnessService", () => {
 			activityModel.athleteSnapshot = undefined;
 			syncedActivityModels.push(activityModel);
 
-			spyOn(activityService.activityDao, "fetch")
+			spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -2313,7 +2313,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+			spyOn(activityService.activityDao, "fetchMinimalFields").and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
 			const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessTrendConfigModel,
@@ -2518,7 +2518,7 @@ describe("FitnessService", () => {
 			swimActivity.distance_raw = 3000; // SSS => 419 (priority)
 			syncedActivityModels.push(swimActivity);
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -2670,7 +2670,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+			spyOn(activityService.activityDao, "fetchMinimalFields").and.returnValue(Promise.resolve(syncedActivityModels));
 
 			const promise: Promise<DayStressModel[]> = fitnessService.generateDailyStress(fitnessTrendConfigModel,
 				powerMeterEnable, swimEnable);
@@ -2893,7 +2893,7 @@ describe("FitnessService", () => {
 			swimActivity_2.distance_raw = 3000; // SSS => 419 (priority)
 			syncedActivityModels.push(swimActivity_2);
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			// When
@@ -2976,7 +2976,7 @@ describe("FitnessService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 

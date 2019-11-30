@@ -47,7 +47,7 @@ describe("IpcRendererMessagesService", () => {
 
 		// Given
 		const data = {hello: "world"};
-		const ipcRequest = new IpcRequest("fakeResponseId", data);
+		const ipcRequest = new IpcRequest(data);
 		const replyWith = () => {
 		};
 		const expectedFlaggedIpcMessage = IpcRequest.extractData<FlaggedIpcMessage>(ipcRequest);
@@ -67,7 +67,7 @@ describe("IpcRendererMessagesService", () => {
 
 		// Given
 		const data = {hello: "world"};
-		const ipcRequest = new IpcRequest("fakeResponseId", data);
+		const ipcRequest = new IpcRequest(data);
 		const replyWith = () => {
 		};
 		const expectedError = new Error("Unknown IpcRequest received from IpcMain: " + JSON.stringify(ipcRequest));

@@ -110,7 +110,7 @@ export class ActivityService {
 	public nonConsistentActivitiesWithAthleteSettings(): Promise<number[]> {
 
 		return this.athleteSnapshotResolverService.update().then(() => {
-			return this.activityDao.fetch();
+			return this.fetch();
 		}).then((syncedActivityModels: SyncedActivityModel[]) => {
 			const nonConsistentIds = [];
 			_.forEachRight(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
