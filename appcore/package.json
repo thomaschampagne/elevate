@@ -30,6 +30,7 @@
 		"@angular/router": "~8.2.13",
 		"@elevate/shared": "file:modules/shared",
 		"@iktakahiro/markdown-it-katex": "^3.0.4",
+		"@sentry/browser": "^5.9.1",
 		"d3": "^5.12.0",
 		"file-saver": "^2.0.2",
 		"github-markdown-css": "^3.0.1",

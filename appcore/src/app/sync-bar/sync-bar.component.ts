@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, HostBinding, InjectionToken, OnInit } from "@angular/core";
 import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.service";
-import { ActivitySyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import { ActivitySyncEvent, ErrorSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { SyncException } from "@elevate/shared/exceptions";
 import * as moment from "moment";
 
@@ -13,28 +13,28 @@ export class SyncBarComponent {
 @Component({
 	selector: "app-desktop-sync-bar",
 	template: `
-        <div class="app-sync-bar">
-            <div fxLayout="row" fxLayoutAlign="space-between center">
-                <div>
-                    <span class="mat-body-1" *ngIf="currentSyncEventText">{{currentSyncEventText}}</span>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="space-between center">
-                    <button mat-flat-button color="warn" (click)="onStop()">
-                        Stop
-                    </button>
-                </div>
-            </div>
-        </div>
+		<div class="app-sync-bar">
+			<div fxLayout="row" fxLayoutAlign="space-between center">
+				<div>
+					<span class="mat-body-1" *ngIf="currentSyncEventText">{{currentSyncEventText}}</span>
+				</div>
+				<div fxLayout="row" fxLayoutAlign="space-between center">
+					<button mat-flat-button color="warn" (click)="onStop()">
+						Stop
+					</button>
+				</div>
+			</div>
+		</div>
 	`,
 	styles: [`
 
-        .app-sync-bar {
-            padding: 10px 20px;
-        }
+		.app-sync-bar {
+			padding: 10px 20px;
+		}
 
-        button {
-            margin-left: 10px;
-        }
+		button {
+			margin-left: 10px;
+		}
 	`]
 })
 export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit {
@@ -86,7 +86,6 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 		if (syncEvent.type === SyncEventType.ERROR) {
 			const message = JSON.stringify(syncEvent);
 			this.currentSyncEventText = message;
-			alert(message); // TODO !!
 		}
 
 		if (syncEvent.type === SyncEventType.STOPPED) {
