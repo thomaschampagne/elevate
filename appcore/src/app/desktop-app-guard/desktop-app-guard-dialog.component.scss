@@ -6,6 +6,7 @@ app-desktop-top-bar {
 }
 
 .dialog {
+	-webkit-app-region: no-drag;
 	top: 50px;
 	position: absolute;
 }
