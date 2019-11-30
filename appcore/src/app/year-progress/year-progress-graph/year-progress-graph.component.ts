@@ -18,6 +18,7 @@ import { SideNavService } from "../../shared/services/side-nav/side-nav.service"
 import { WindowService } from "../../shared/services/window/window.service";
 import { Subscription } from "rxjs";
 import { LoggerService } from "../../shared/services/logging/logger.service";
+import { ElevateException } from "@elevate/shared/exceptions";
 
 @Component({
 	selector: "app-year-progress-graph",
@@ -63,8 +64,12 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public windowResizingSubscription: Subscription;
 	public initialized = false;
 
+	public static getGraphHtmlElement(): HTMLElement {
+		return document.getElementById(YearProgressGraphComponent.GRAPH_DOM_ELEMENT_ID);
+	}
+
 	public static clearSvgGraphContent(): void {
-		const svgElement = document.getElementById(YearProgressGraphComponent.GRAPH_DOM_ELEMENT_ID).children[0];
+		const svgElement = YearProgressGraphComponent.getGraphHtmlElement().children[0];
 		if (svgElement) {
 			svgElement.remove();
 		}
@@ -227,10 +232,13 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 	public draw(): void {
 		_.defer(() => {
-			MG.data_graphic(this.graphConfig);
+			if (YearProgressGraphComponent.getGraphHtmlElement()) {
+				MG.data_graphic(this.graphConfig);
+			} else {
+				throw new ElevateException("Year progress graph crashed. You may reload the app.");
+			}
 		});
 	}
-
 
 	public reloadGraph(): void {
 		this.setupViewableGraphData();

@@ -17,6 +17,7 @@ import { WindowService } from "../../shared/services/window/window.service";
 import { ViewedDayService } from "../shared/services/viewed-day.service";
 import { FitnessTrendActivitiesLinksDialogComponent } from "../fitness-trend-activities-links-dialog/fitness-trend-activities-links-dialog.component";
 import { LoggerService } from "../../shared/services/logging/logger.service";
+import { ElevateException } from "@elevate/shared/exceptions";
 
 @Component({
 	selector: "app-fitness-trend-graph",
@@ -24,6 +25,15 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 	styleUrls: ["./fitness-trend-graph.component.scss"]
 })
 export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy {
+
+	constructor(public sideNavService: SideNavService,
+				public windowService: WindowService,
+				public viewedDayService: ViewedDayService,
+				public dialog: MatDialog,
+				public logger: LoggerService) {
+	}
+
+	private static readonly GRAPH_DOM_ELEMENT_ID: string = "fitnessTrendGraph";
 
 	private static readonly KEY_CODES = {
 		DOWN_ARROW: "ArrowDown",
@@ -79,11 +89,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
 	public initialized = false;
 
-	constructor(public sideNavService: SideNavService,
-				public windowService: WindowService,
-				public viewedDayService: ViewedDayService,
-				public dialog: MatDialog,
-				public logger: LoggerService) {
+	public static getGraphHtmlElement(): HTMLElement {
+		return document.getElementById(FitnessTrendGraphComponent.GRAPH_DOM_ELEMENT_ID);
 	}
 
 	public ngOnInit(): void {
@@ -230,9 +237,14 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 	public draw(): void {
 
 		_.defer(() => {
-			MG.data_graphic(this.graphConfig);
-			this.logger.info("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
+			if (FitnessTrendGraphComponent.getGraphHtmlElement()) {
+				MG.data_graphic(this.graphConfig);
+				this.logger.info("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
+			} else {
+				throw new ElevateException("Fitness trend graph crashed. You may reload the app.");
+			}
 		});
+
 	}
 
 	public setupComponentSizeChangeHandlers(): void {
@@ -240,7 +252,8 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 		this.windowResizingSubscription = this.windowService.resizing.subscribe(() => {
 			this.findGraphHeightFactor();
 			this.onComponentSizeChanged();
-			this.fitnessTrendGraphBounds = null; // Reset stored fitness graph bounds. It will be updated again by 'onTooltipMouseMove(event: MouseEvent)'
+			// Reset stored fitness graph bounds. It will be updated again by 'onTooltipMouseMove(event: MouseEvent)'
+			this.fitnessTrendGraphBounds = null;
 		});
 
 		// Or user toggles the side nav (open/close states)
@@ -512,7 +525,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 			point_size: 4,
 			yax_count: 8,
 			y_extended_ticks: true,
-			target: "#fitnessTrendGraph",
+			target: "#" + FitnessTrendGraphComponent.GRAPH_DOM_ELEMENT_ID,
 			x_accessor: "date",
 			y_accessor: "value",
 			inflator: 1.01,
