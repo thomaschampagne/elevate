@@ -47,12 +47,6 @@ describe("AppComponent", () => {
 		done();
 	});
 
-	it("should have main menu items", (done: Function) => {
-		const app = fixture.debugElement.componentInstance;
-		expect(app.mainMenuItems.length).toEqual(6);
-		done();
-	});
-
 	it("should update tool bar title (1)", (done: Function) => {
 
 		// Given
