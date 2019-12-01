@@ -9,8 +9,15 @@ import { ReportComponent } from "../../report/report.component";
 import { AdvancedMenuComponent } from "../../advanced-menu/advanced-menu.component";
 import { FaqComponent } from "../../faq/faq.component";
 import { ActivitiesComponent } from "../../activities/activities.component";
+import { PromoteDesktopComponent } from "../../promote-desktop/promote-desktop.component";
+
+const redirectTo = (localStorage.getItem(PromoteDesktopComponent.NO_PROMOTE_DESKTOP_MENU_LC_KEY)) ? AppRoutesModel.activities : AppRoutesModel.newAppInProgress;
 
 const routes: Routes = [
+	{
+		path: AppRoutesModel.newAppInProgress,
+		component: PromoteDesktopComponent
+	},
 	{
 		path: AppRoutesModel.activities,
 		component: ActivitiesComponent
@@ -64,7 +71,7 @@ const routes: Routes = [
 		component: FaqComponent
 	},
 	{
-		path: "", redirectTo: AppRoutesModel.activities, pathMatch: "full"
+		path: "", redirectTo: redirectTo, pathMatch: "full"
 	},
 ];
 
