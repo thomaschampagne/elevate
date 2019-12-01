@@ -39,6 +39,7 @@ import { ActivitiesComponent } from "../activities/activities.component";
 import { AppEventsService } from "./services/external-updates/app-events-service";
 import { ConsoleLoggerService } from "./services/logging/console-logger.service";
 import { LoggerService } from "./services/logging/logger.service";
+import { PromoteDesktopComponent } from "../promote-desktop/promote-desktop.component";
 
 const ChromeDataStoreProvider = {provide: DataStore, useClass: ChromeDataStore};
 const AppEventsServiceProvider = {provide: AppEventsService, useClass: ChromeEventsService};
@@ -59,6 +60,7 @@ const LoggerServiceProvider = {provide: LoggerService, useClass: ConsoleLoggerSe
 	],
 	declarations: [
 		// Components
+		PromoteDesktopComponent,
 		ActivitiesComponent,
 		GlobalSettingsComponent,
 		ZonesSettingsComponent,
