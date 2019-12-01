@@ -22,6 +22,7 @@ import { Theme } from "./shared/enums/theme.enum";
 import { SyncResultModel } from "@elevate/shared/models";
 import { SyncedBackupModel } from "./shared/services/sync/synced-backup.model";
 import { AppEventsService } from "./shared/services/external-updates/app-events-service";
+import { PromoteDesktopComponent } from "./promote-desktop/promote-desktop.component";
 
 class MenuItemModel {
 	public name: string;
@@ -56,6 +57,11 @@ export class AppComponent implements OnInit, OnDestroy {
 	public sideNav: MatSidenav;
 
 	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
+		{
+			icon: "desktop_windows",
+			routerLink: AppRoutesModel.newAppInProgress,
+			routerLinkActive: true
+		},
 		{
 			icon: "view_list",
 			routerLink: AppRoutesModel.activities,
@@ -121,6 +127,11 @@ export class AppComponent implements OnInit, OnDestroy {
 	public ngOnInit(): void {
 
 		this.setupThemeOnLoad();
+
+		const noPromoteDesktopApp = localStorage.getItem(PromoteDesktopComponent.NO_PROMOTE_DESKTOP_MENU_LC_KEY);
+		if (noPromoteDesktopApp) {
+			this.mainMenuItems.splice(0, 1);
+		}
 
 		// Update list of sections names displayed in sidebar
 		_.forEach(this.mainMenuItems, (menuItemModel: MenuItemModel) => {
