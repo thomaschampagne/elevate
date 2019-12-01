@@ -2,6 +2,21 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.15.0",
+		date: "2019-12-01",
+		message: "\"✨ New desktop cross-platform app in progress. Details in the \"New App In Progress\" section of Elevate. Update also adds various improvements & bugs fixes.",
+		hotFixes: [],
+		features: [
+			"Added \"New desktop app in progress\" menu",
+			"Optimized the activities search feature"
+		],
+		isPatch: false,
+		fixes: [
+			"Fixed template rendering issues on maths expressions included in features explanations",
+			"[Technical] Upgraded libraries used within the app."
+		]
+	},
+	{
 		version: "6.14.0",
 		date: "2019-09-28",
 		message: "✨ New UI engine implemented within Elevate App. Elevate UI should be faster than ever. Update also adds various improvements & bugs fixes.",

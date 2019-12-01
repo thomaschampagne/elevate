@@ -5,7 +5,7 @@ import { StorageLocationModel } from "../../data-store/storage-location.model";
 @Injectable()
 export class LastSyncDateTimeDao extends BaseDao<number> {
 
-	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("lastSyncDateTime");
+	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("syncDateTime");
 
 	public getDefaultStorageValue(): number {
 		return null;
