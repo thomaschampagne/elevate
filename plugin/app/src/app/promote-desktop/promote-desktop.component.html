@@ -1,0 +1,43 @@
+<mat-card>
+	<mat-card-title>
+		News: "Elevate for Strava" is jumping the "Strava Fence" to become an independent desktop training app 🗽!
+	</mat-card-title>
+	<mat-card-content>
+		<div class="mat-h3" style="cursor: pointer;">
+			<a (click)="onReadStory()">Quoted from the medium.com story:</a>
+		</div>
+		<div class="mat-h4" style="display: flex; width: 900px; align-items: center">
+			<div style="border-left: 7px solid grey; padding-left: 10px; text-align: justify; align-self: center">
+				<i>A new desktop training app is in development since early 2019. App is simply called "Elevate". It’s
+					cross-platform. It has been triggered by "incompatibilities" between Strava & the current chrome
+					extension "Elevate For Strava" (e.g. sync problems limitations). Desktop app features will match the
+					chrome extension ones at the beginning. The GPS data will be imported from athletes local files and
+					third-party online "connectors". You will own your data & the app!! The old chrome extension will
+					remain available on Chrome Store as long as necessary. Desktop app will be available on Windows &
+					Linux first. Later on MacOS (MacBook investment required). Still developed on free time.</i>
+			</div>
+			<div style="padding-left: 35px; align-self: center; cursor: pointer;" (click)="onReadStory()">
+				<img style="border: 3px solid white" src="https://miro.medium.com/max/1919/1*WnXYU4EM08EN1pLDmIZHGw.png"
+					 width="350px"/>
+				<div class="mat-caption" style="text-align: center">
+					<i>Elevate Desktop prototype on Windows 10</i>
+				</div>
+			</div>
+		</div>
+		<div>
+			<button mat-flat-button color="primary" (click)="onDonateClicked()">
+				Accelerate this new project 😊 ❤️
+			</button>
+		</div>
+		<div>
+			<button mat-stroked-button color="primary" (click)="onReadStory()">
+				Read full story on Medium
+			</button>
+		</div>
+		<div>
+			<button mat-stroked-button color="primary" (click)="onHideMenu()">
+				Hide menu
+			</button>
+		</div>
+	</mat-card-content>
+</mat-card>
