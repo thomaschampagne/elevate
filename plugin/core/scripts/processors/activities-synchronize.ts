@@ -31,7 +31,7 @@ export class ActivitiesSynchronize {
 		return this._activitiesChanges;
 	}
 
-	public static readonly LAST_SYNC_DATE_TIME_KEY = "lastSyncDateTime"; // TODO Move into BrowserStorage as static (do that for others too)
+	public static readonly LAST_SYNC_DATE_TIME_KEY = "syncDateTime"; // TODO Move into BrowserStorage as static (do that for others too)
 	public static readonly SYNCED_ACTIVITIES_KEY = "syncedActivities"; // TODO Move into BrowserStorage as static (do that for others too)
 	public static readonly PAGES_PER_GROUP = 1; // = 20 activities with 20 activities per page.
 	public static readonly ACTIVITIES_PER_PAGE = 20; // 20 usually
