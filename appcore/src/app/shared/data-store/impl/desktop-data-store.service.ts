@@ -45,6 +45,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 	public setup(): void {
 		PouchDB.plugin(PouchDBFind); // Register find plugin
 		this.database = new PouchDB(DesktopDataStore.POUCH_DB_NAME, {auto_compaction: true});
+		(<any> window).elevateDb = this.database;
 
 		if (DesktopDataStore.POUCH_DB_DEBUG) {
 			PouchDB.plugin(PouchDBDebug); // Register debug plugin

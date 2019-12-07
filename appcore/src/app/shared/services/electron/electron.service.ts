@@ -20,7 +20,7 @@ export class ElectronService {
 
 	public forwardHtmlLinkClicksToDefaultBrowser(): void {
 		document.querySelector("body").addEventListener("click", (event: any) => {
-			if (event.target.tagName.toLowerCase() === "a") {
+			if (event.target.tagName.toLowerCase() === "a" && !event.target.attributes.download) {
 				event.preventDefault();
 				this.electron.shell.openExternal(event.target.href);
 			}
@@ -28,11 +28,9 @@ export class ElectronService {
 	}
 
 	public get electron(): Electron.RendererInterface {
-
 		if (!this.instance) {
 			this.instance = window.require("electron");
 		}
-
 		return this.instance;
 	}
 
