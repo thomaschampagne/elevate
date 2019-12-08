@@ -7,6 +7,7 @@ import { IpcMainMessagesService } from "./listeners/ipc-main-messages-service";
 import { Proxy } from "./proxy";
 import { Service } from "./service";
 import { HttpClient } from "typed-rest-client/HttpClient";
+import * as pkg from "../package.json";
 
 const IS_ELECTRON_DEV = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "dev");
 
@@ -148,6 +149,7 @@ try {
 		logger.debug("electron-reloader is ENABLED");
 	}
 
+	logger.info("Version: " + pkg.version);
 	logger.info("System details:", Service.instance().printRuntimeInfo());
 
 	(new Main(app)).run();

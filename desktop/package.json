@@ -38,6 +38,7 @@
 	"license": "MIT",
 	"readme": "README.md",
 	"dependencies": {
+		"@rollup/plugin-json": "^4.0.0",
 		"electron-log": "^3.0.9",
 		"https-proxy-agent": "^2.2.4",
 		"lodash": "^4.17.15",
