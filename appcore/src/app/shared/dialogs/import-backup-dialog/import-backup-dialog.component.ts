@@ -4,6 +4,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 import * as _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { ExtensionDumpModel } from "../../models/dumps/extension-dump.model";
+import { MatSnackBar } from "@angular/material";
 
 @Component({template: ""})
 export class ImportBackupDialogComponent implements OnInit {
@@ -44,11 +45,14 @@ export class ImportBackupDialogComponent implements OnInit {
 })
 export class DesktopImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
 
-	constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>) {
+	constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>,
+				public snackBar: MatSnackBar) {
 		super(dialogRef);
 	}
 
 	public onRestore(): void {
+
+		this.snackBar.open("Currently restoring your profile. This can take few minutes. Please wait...");
 
 		if (this.file) {
 			// Reading file, when load, import it
