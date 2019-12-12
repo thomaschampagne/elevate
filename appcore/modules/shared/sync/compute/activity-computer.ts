@@ -25,6 +25,31 @@ import { SplitCalculator } from "./split-calculator";
 
 export class ActivityComputer {
 
+	constructor(activityType: string,
+				isTrainer: boolean,
+				userSettings: UserSettings.UserSettingsModel,
+				athleteSnapshot: AthleteSnapshotModel,
+				isOwner: boolean,
+				hasPowerMeter: boolean,
+				activitySourceData: ActivitySourceDataModel,
+				activityStream: ActivityStreamsModel,
+				bounds: number[],
+				returnZones: boolean) {
+
+		// Store activityType, isTrainer, input activity params and userSettingsData
+		this.activityType = activityType;
+		this.isTrainer = isTrainer;
+		this.userSettings = userSettings;
+		this.userSettings.zones = UserZonesModel.asInstance(this.userSettings.zones);
+		this.athleteSnapshot = athleteSnapshot;
+		this.isOwner = isOwner;
+		this.hasPowerMeter = hasPowerMeter;
+		this.activitySourceData = activitySourceData;
+		this.activityStream = activityStream;
+		this.bounds = bounds;
+		this.returnZones = returnZones;
+	}
+
 	public static readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = 0.85;
 	public static readonly MOVING_THRESHOLD_KPH: number = 0.1; // Kph
 	public static readonly CADENCE_THRESHOLD_RPM: number = 35; // RPMs
@@ -36,6 +61,18 @@ export class ActivityComputer {
 	public static readonly ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
 	public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
 	public static readonly SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
+
+	protected athleteSnapshot: AthleteSnapshotModel;
+	protected activityType: string;
+	protected isTrainer: boolean;
+	protected userSettings: UserSettings.UserSettingsModel;
+	protected movementData: MoveDataModel;
+	protected isOwner: boolean;
+	protected hasPowerMeter: boolean;
+	protected activitySourceData: ActivitySourceDataModel;
+	protected activityStream: ActivityStreamsModel;
+	protected bounds: number[];
+	protected returnZones: boolean;
 
 
 	/**
@@ -93,43 +130,6 @@ export class ActivityComputer {
 		}
 
 		return result;
-	}
-
-	protected athleteSnapshot: AthleteSnapshotModel;
-	protected activityType: string;
-	protected isTrainer: boolean;
-	protected userSettings: UserSettings.UserSettingsModel;
-	protected movementData: MoveDataModel;
-	protected isOwner: boolean;
-	protected hasPowerMeter: boolean;
-	protected activitySourceData: ActivitySourceDataModel;
-	protected activityStream: ActivityStreamsModel;
-	protected bounds: number[];
-	protected returnZones: boolean;
-
-	constructor(activityType: string,
-				isTrainer: boolean,
-				userSettings: UserSettings.UserSettingsModel,
-				athleteSnapshot: AthleteSnapshotModel,
-				isOwner: boolean,
-				hasPowerMeter: boolean,
-				activitySourceData: ActivitySourceDataModel,
-				activityStream: ActivityStreamsModel,
-				bounds: number[],
-				returnZones: boolean) {
-
-		// Store activityType, isTrainer, input activity params and userSettingsData
-		this.activityType = activityType;
-		this.isTrainer = isTrainer;
-		this.userSettings = userSettings;
-		this.userSettings.zones = UserZonesModel.asInstance(this.userSettings.zones);
-		this.athleteSnapshot = athleteSnapshot;
-		this.isOwner = isOwner;
-		this.hasPowerMeter = hasPowerMeter;
-		this.activitySourceData = activitySourceData;
-		this.activityStream = activityStream;
-		this.bounds = bounds;
-		this.returnZones = returnZones;
 	}
 
 	/**

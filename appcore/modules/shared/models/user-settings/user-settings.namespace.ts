@@ -3,9 +3,9 @@ import { EnvTarget } from "../env-target";
 
 export namespace UserSettings {
 
-	export const SYSTEM_UNIT_METRIC_KEY: string = "metric";
-	export const SYSTEM_UNIT_IMPERIAL_KEY: string = "imperial";
-	export const DEFAULT_TEMP_KEY: string = "C"; // TODO use Enum "C" or "F"
+	export const SYSTEM_UNIT_METRIC_KEY = "metric";
+	export const SYSTEM_UNIT_IMPERIAL_KEY = "imperial";
+	export const DEFAULT_TEMP_KEY = "C"; // TODO use Enum "C" or "F"
 
 	export const getDefaultsByEnvTarget = (envTarget: EnvTarget): UserSettingsModel => {
 
