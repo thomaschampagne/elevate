@@ -5,7 +5,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import {
 	DesktopImportBackupDialogComponent,
-	ImportBackupDialogComponent
+	ImportBackupDialogComponent,
+	ProgressDesktopImportBackupDialogComponent
 } from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { DesktopDumpModel } from "../../shared/models/dumps/desktop-dump.model";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
@@ -117,16 +118,26 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
 			maxWidth: ImportBackupDialogComponent.MAX_WIDTH,
 		});
 
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((serializedDumpModel: string) => {
+		const afterClosedSubscription = dialogRef.afterClosed().subscribe((file: File) => {
 
-			if (serializedDumpModel) {
-				const desktopDumpModel: DesktopDumpModel = DesktopDumpModel.deserialize(serializedDumpModel);
-				this.desktopSyncService.import(desktopDumpModel).then(() => {
-					location.reload();
-				}, error => {
-					this.snackBar.open(error, "Close");
-				});
-			}
+			this.dialog.open(ProgressDesktopImportBackupDialogComponent, {
+				disableClose: true,
+			});
+
+			// Reading file, when load, import it
+			const reader = new FileReader();
+			reader.readAsText(file);
+			reader.onload = (event: Event) => {
+				const serializedDumpModel = (event.target as IDBRequest).result;
+				if (serializedDumpModel) {
+					const desktopDumpModel: DesktopDumpModel = DesktopDumpModel.deserialize(serializedDumpModel);
+					this.desktopSyncService.import(desktopDumpModel).then(() => {
+						location.reload();
+					}, error => {
+						this.snackBar.open(error, "Close");
+					});
+				}
+			};
 
 			afterClosedSubscription.unsubscribe();
 		});
