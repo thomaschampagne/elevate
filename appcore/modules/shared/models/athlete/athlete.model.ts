@@ -4,17 +4,6 @@ import { AbstractAthleteModel } from "./abstract-athlete.model";
 
 export class AthleteModel extends AbstractAthleteModel {
 
-	public static readonly DEFAULT_MODEL: AthleteModel = new AthleteModel(Gender.MEN, AthleteModel.getDefaultDatedAthleteSettings());
-
-	public static getDefaultDatedAthleteSettings(): DatedAthleteSettingsModel[] {
-		const foreverSettings = Object.assign({}, DatedAthleteSettingsModel.DEFAULT_MODEL);
-		foreverSettings.since = null;
-		return [DatedAthleteSettingsModel.DEFAULT_MODEL, foreverSettings];
-	}
-
-	public gender: Gender;
-	public datedAthleteSettings: DatedAthleteSettingsModel[];
-
 	/**
 	 *
 	 * @param {Gender} gender
@@ -25,6 +14,17 @@ export class AthleteModel extends AbstractAthleteModel {
 		this.gender = gender;
 		this.datedAthleteSettings = (!datedAthleteSettings || datedAthleteSettings.length === 0)
 			? [DatedAthleteSettingsModel.DEFAULT_MODEL] : datedAthleteSettings;
+	}
+
+	public static readonly DEFAULT_MODEL: AthleteModel = new AthleteModel(Gender.MEN, AthleteModel.getDefaultDatedAthleteSettings());
+
+	public gender: Gender;
+	public datedAthleteSettings: DatedAthleteSettingsModel[];
+
+	public static getDefaultDatedAthleteSettings(): DatedAthleteSettingsModel[] {
+		const foreverSettings = Object.assign({}, DatedAthleteSettingsModel.DEFAULT_MODEL);
+		foreverSettings.since = null;
+		return [DatedAthleteSettingsModel.DEFAULT_MODEL, foreverSettings];
 	}
 
 	/**

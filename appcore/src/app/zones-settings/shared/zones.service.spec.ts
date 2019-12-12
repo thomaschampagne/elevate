@@ -803,7 +803,7 @@ describe("ZonesService", () => {
 
 		// Given
 		const jsonInput = "[{\"from\":120,\"to\":140},{\"from\":140,\"to\":150},{\"from\":150,\"to\":160}]";
-		const zonesToImport: ZoneModel[] = <ZoneModel[]>JSON.parse(jsonInput);
+		const zonesToImport: ZoneModel[] = <ZoneModel[]> JSON.parse(jsonInput);
 
 		const saveZonesSpy = spyOn(zonesService, "saveZones").and.returnValue(Promise.resolve(true));
 		const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");
