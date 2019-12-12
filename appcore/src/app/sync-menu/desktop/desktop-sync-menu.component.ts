@@ -6,7 +6,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import {
 	DesktopImportBackupDialogComponent,
 	ImportBackupDialogComponent,
-	ProgressDesktopImportBackupDialogComponent
+	ImportExportProgressDialogComponent
 } from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { DesktopDumpModel } from "../../shared/models/dumps/desktop-dump.model";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
@@ -120,8 +120,9 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
 
 		const afterClosedSubscription = dialogRef.afterClosed().subscribe((file: File) => {
 
-			this.dialog.open(ProgressDesktopImportBackupDialogComponent, {
+			this.dialog.open(ImportExportProgressDialogComponent, {
 				disableClose: true,
+				data: ImportExportProgressDialogComponent.MODE_IMPORT
 			});
 
 			// Reading file, when load, import it

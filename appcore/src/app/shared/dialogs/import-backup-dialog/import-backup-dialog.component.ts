@@ -1,5 +1,5 @@
-import { Component, OnInit } from "@angular/core";
-import { MatDialogRef } from "@angular/material/dialog";
+import { Component, Inject, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import * as _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { ExtensionDumpModel } from "../../models/dumps/extension-dump.model";
@@ -55,42 +55,6 @@ export class DesktopImportBackupDialogComponent extends ImportBackupDialogCompon
 }
 
 @Component({
-	selector: "app-progress-import-backup-dialog",
-	template: `
-        <mat-dialog-content class="mat-body-1">
-            <div class="progress" fxLayout="column" fxLayoutAlign="center center">
-                <div fxFlex="10"></div>
-                <div fxFlex fxLayout="column" fxLayoutAlign="center center">
-                    <div>
-                        <i>Restoring your profile...</i>
-                    </div>
-                    <div>
-                        <i>This can take few minutes. Don't close the application.</i>
-                    </div>
-                    <div>
-                        <i>(App will be automatically reloaded when done)</i>
-                    </div>
-                </div>
-                <div fxFlex="5"></div>
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                <div fxFlex="10"></div>
-            </div>
-        </mat-dialog-content>
-	`,
-	styles: [`
-        .progress {
-            height: 100px;
-            width: 450px;
-        }
-	`]
-})
-export class ProgressDesktopImportBackupDialogComponent implements OnInit {
-	public ngOnInit(): void {
-	}
-}
-
-
-@Component({
 	selector: "app-import-backup-dialog",
 	templateUrl: "./import-backup-dialog.component.html",
 	styleUrls: ["./import-backup-dialog.component.scss"]
@@ -115,4 +79,52 @@ export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComp
 		}
 	}
 
+}
+
+@Component({
+	selector: "app-desktop-import-export-progress-backup-dialog",
+	template: `
+        <mat-dialog-content class="mat-body-1">
+            <div class="progress" fxLayout="column" fxLayoutAlign="center center">
+                <div fxFlex="10"></div>
+                <div fxFlex fxLayout="column" fxLayoutAlign="center center">
+                    <div>
+                        <i *ngIf="isImportMode">Restoring your profile...</i>
+                        <i *ngIf="isExportMode">Backing up your profile...</i>
+                    </div>
+                    <div>
+                        <i>This can take few minutes. Don't close the application.</i>
+                    </div>
+                    <div *ngIf="isImportMode">
+                        <i>(App will be automatically reloaded when done)</i>
+                    </div>
+                </div>
+                <div fxFlex="5"></div>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                <div fxFlex="10"></div>
+            </div>
+        </mat-dialog-content>
+	`,
+	styles: [`
+        .progress {
+            height: 100px;
+            width: 450px;
+        }
+	`]
+})
+export class ImportExportProgressDialogComponent implements OnInit {
+
+	public static readonly MODE_IMPORT: string = "MODE_IMPORT";
+	public static readonly MODE_EXPORT: string = "MODE_EXPORT";
+
+	public isImportMode: boolean;
+	public isExportMode: boolean;
+
+	constructor(@Inject(MAT_DIALOG_DATA) public mode: string) {
+		this.isImportMode = (mode === ImportExportProgressDialogComponent.MODE_IMPORT);
+		this.isExportMode = !this.isImportMode;
+	}
+
+	public ngOnInit(): void {
+	}
 }

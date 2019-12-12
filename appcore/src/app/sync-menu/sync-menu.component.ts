@@ -10,6 +10,7 @@ import { Router } from "@angular/router";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
+import { ImportExportProgressDialogComponent } from "../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 
 export const SYNC_MENU_COMPONENT_TOKEN = new InjectionToken<SyncMenuComponent>("SYNC_MENU_COMPONENT_TOKEN");
 
@@ -82,14 +83,21 @@ export class SyncMenuComponent implements OnInit {
 
 	public onSyncedBackupExport(): void {
 
-		this.syncService.export().then((result: any) => {
+		const progressDialogRef = this.dialog.open(ImportExportProgressDialogComponent, {
+			disableClose: true,
+			data: ImportExportProgressDialogComponent.MODE_EXPORT
+		});
 
+		progressDialogRef.afterClosed().toPromise().then(result => {
 			this.dialog.open(GotItDialogComponent, {
 				minWidth: GotItDialogComponent.MIN_WIDTH,
 				maxWidth: GotItDialogComponent.MAX_WIDTH,
 				data: new GotItDialogDataModel(null, "File \"" + result.filename + "\" is being saved to your download folder.")
 			});
+		});
 
+		this.syncService.export().then(result => {
+			progressDialogRef.close(result);
 		}, error => {
 			this.snackBar.open(error, "Close");
 		});
