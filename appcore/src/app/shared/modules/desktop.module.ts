@@ -13,7 +13,10 @@ import { StravaApiCredentialsDao } from "../dao/strava-api-credentials/strava-ap
 import { StravaApiCredentialsService } from "../services/strava-api-credentials/strava-api-credentials.service";
 import { ConnectorsModule } from "../../connectors/connectors.module";
 import { StravaConnectorService } from "../../connectors/services/strava-connector.service";
-import { DesktopImportBackupDialogComponent, } from "../dialogs/import-backup-dialog/import-backup-dialog.component";
+import {
+	DesktopImportBackupDialogComponent,
+	ProgressDesktopImportBackupDialogComponent,
+} from "../dialogs/import-backup-dialog/import-backup-dialog.component";
 import { CoreModule } from "../../core/core.module";
 import { ConnectorSyncDateTimeDao } from "../dao/sync/connector-sync-date-time.dao";
 
@@ -27,9 +30,11 @@ import { ConnectorSyncDateTimeDao } from "../dao/sync/connector-sync-date-time.d
 	],
 	declarations: [
 		DesktopImportBackupDialogComponent,
+		ProgressDesktopImportBackupDialogComponent,
 	],
 	entryComponents: [
 		DesktopImportBackupDialogComponent,
+		ProgressDesktopImportBackupDialogComponent,
 	],
 	providers: [
 		ElectronService,

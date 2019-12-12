@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { FileSystemConnectorComponent } from "./file-system-connector.component";
+import { CoreModule } from "../../core/core.module";
+import { SharedModule } from "../../shared/shared.module";
+import { DesktopModule } from "../../shared/modules/desktop.module";
 
 describe("FileSystemConnectorComponent", () => {
 	let component: FileSystemConnectorComponent;
@@ -8,9 +11,12 @@ describe("FileSystemConnectorComponent", () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [FileSystemConnectorComponent]
-		})
-			.compileComponents();
+			imports: [
+				CoreModule,
+				SharedModule,
+				DesktopModule
+			]
+		}).compileComponents();
 	}));
 
 	beforeEach(() => {

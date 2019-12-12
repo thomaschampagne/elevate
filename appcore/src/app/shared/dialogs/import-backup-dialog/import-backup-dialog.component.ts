@@ -1,10 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
 import { MatDialogRef } from "@angular/material/dialog";
 import * as _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { ExtensionDumpModel } from "../../models/dumps/extension-dump.model";
-import { MatSnackBar } from "@angular/material";
 
 @Component({template: ""})
 export class ImportBackupDialogComponent implements OnInit {
@@ -16,7 +14,7 @@ export class ImportBackupDialogComponent implements OnInit {
 	public displayName: string;
 	public displaySize: string;
 
-	constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>) {
+	constructor(public dialogRef: MatDialogRef<ImportBackupDialogComponent>) {
 	}
 
 	public ngOnInit(): void {
@@ -45,28 +43,52 @@ export class ImportBackupDialogComponent implements OnInit {
 })
 export class DesktopImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
 
-	constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-				public snackBar: MatSnackBar) {
+	constructor(public dialogRef: MatDialogRef<DesktopImportBackupDialogComponent>) {
 		super(dialogRef);
 	}
 
 	public onRestore(): void {
-
-		this.snackBar.open("Currently restoring your profile. This can take few minutes. Please wait...");
-
 		if (this.file) {
-			// Reading file, when load, import it
-			const reader = new FileReader();
-			reader.readAsText(this.file);
-			reader.onload = (event: Event) => {
-				const result = (event.target as IDBRequest).result;
-				this.dialogRef.close(result);
-			};
+			this.dialogRef.close(this.file);
 		}
-
 	}
-
 }
+
+@Component({
+	selector: "app-progress-import-backup-dialog",
+	template: `
+        <mat-dialog-content class="mat-body-1">
+            <div class="progress" fxLayout="column" fxLayoutAlign="center center">
+                <div fxFlex="10"></div>
+                <div fxFlex fxLayout="column" fxLayoutAlign="center center">
+                    <div>
+                        <i>Restoring your profile...</i>
+                    </div>
+                    <div>
+                        <i>This can take few minutes. Don't close the application.</i>
+                    </div>
+                    <div>
+                        <i>(App will be automatically reloaded when done)</i>
+                    </div>
+                </div>
+                <div fxFlex="5"></div>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                <div fxFlex="10"></div>
+            </div>
+        </mat-dialog-content>
+	`,
+	styles: [`
+        .progress {
+            height: 100px;
+            width: 450px;
+        }
+	`]
+})
+export class ProgressDesktopImportBackupDialogComponent implements OnInit {
+	public ngOnInit(): void {
+	}
+}
+
 
 @Component({
 	selector: "app-import-backup-dialog",
@@ -75,7 +97,7 @@ export class DesktopImportBackupDialogComponent extends ImportBackupDialogCompon
 })
 export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
 
-	constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>) {
+	constructor(public dialogRef: MatDialogRef<ExtensionImportBackupDialogComponent>) {
 		super(dialogRef);
 	}
 
