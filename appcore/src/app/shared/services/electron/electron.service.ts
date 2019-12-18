@@ -22,9 +22,13 @@ export class ElectronService {
 		document.querySelector("body").addEventListener("click", (event: any) => {
 			if (event.target.tagName.toLowerCase() === "a" && !event.target.attributes.download) {
 				event.preventDefault();
-				this.electron.shell.openExternal(event.target.href);
+				this.openExternalUrl(event.target.href);
 			}
 		});
+	}
+
+	public openExternalUrl(url: string): void {
+		this.electron.shell.openExternal(url);
 	}
 
 	public get electron(): Electron.RendererInterface {

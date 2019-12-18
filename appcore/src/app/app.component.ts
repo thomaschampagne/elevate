@@ -12,13 +12,11 @@ import {
 	ViewChild,
 	ViewContainerRef
 } from "@angular/core";
-import { AppRoutesModel } from "./shared/models/app-routes.model";
 import { GuardsCheckEnd, NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { MatIconRegistry } from "@angular/material/icon";
 import { MatSidenav } from "@angular/material/sidenav";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { AboutDialogComponent } from "./about-dialog/about-dialog.component";
 import { SideNavService } from "./shared/services/side-nav/side-nav.service";
 import { SideNavStatus } from "./shared/services/side-nav/side-nav-status.enum";
 import { Subscription } from "rxjs";
@@ -36,6 +34,8 @@ import { SYNC_BAR_COMPONENT_TOKEN, SyncBarComponent } from "./sync-bar/sync-bar.
 import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
 import { LoggerService } from "./shared/services/logging/logger.service";
 import { MENU_ITEMS_PROVIDER, MenuItemModel, MenuItemsProvider } from "./shared/services/menu-items/menu-items-provider.interface";
+import { APP_MORE_MENU_COMPONENT_TOKEN, AppMoreMenuComponent } from "./app-more-menu/app-more-menu.component";
+import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
 
 @Component({
 	selector: "app-root",
@@ -58,7 +58,8 @@ export class AppComponent implements OnInit, OnDestroy {
 				@Inject(MENU_ITEMS_PROVIDER) public menuItemsProvider: MenuItemsProvider,
 				@Inject(TOP_BAR_COMPONENT_TOKEN) public topBarComponentType: Type<TopBarComponent>,
 				@Inject(SYNC_BAR_COMPONENT_TOKEN) public syncBarComponentType: Type<SyncBarComponent>,
-				@Inject(SYNC_MENU_COMPONENT_TOKEN) public syncMenuComponentType: Type<SyncMenuComponent>) {
+				@Inject(SYNC_MENU_COMPONENT_TOKEN) public syncMenuComponentType: Type<SyncMenuComponent>,
+				@Inject(APP_MORE_MENU_COMPONENT_TOKEN) public appMoreMenuComponentType: Type<AppMoreMenuComponent>) {
 		this.isAppUseAllowed = false;
 		this.isAppInitialized = false;
 		this.registerCustomIcons();
@@ -93,6 +94,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	@ViewChild(SyncMenuDirective, {static: true})
 	public syncMenuDirective: SyncMenuDirective;
+
+	@ViewChild(AppMoreMenuDirective, {static: true})
+	public appMoreMenuDirective: AppMoreMenuDirective;
 
 	@ViewChild(MatSidenav, {static: true})
 	public sideNav: MatSidenav;
@@ -145,6 +149,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.injectHotComponent<TopBarComponent>(this.topBarComponentType, this.topBarDirective.viewContainerRef);
 		this.injectHotComponent<SyncBarComponent>(this.syncBarComponentType, this.syncBarDirective.viewContainerRef);
 		this.injectHotComponent<SyncMenuComponent>(this.syncMenuComponentType, this.syncMenuDirective.viewContainerRef);
+		this.injectHotComponent<AppMoreMenuComponent>(this.appMoreMenuComponentType, this.appMoreMenuDirective.viewContainerRef);
 
 		this.setupThemeOnLoad();
 
@@ -217,33 +222,6 @@ export class AppComponent implements OnInit, OnDestroy {
 		localStorage.setItem(AppComponent.LS_USER_THEME_PREF, targetTheme);
 	}
 
-	public onShowReleaseNotes(): void {
-		this.router.navigate([AppRoutesModel.releasesNotes]);
-	}
-
-	public onShowShare(): void {
-		this.router.navigate([AppRoutesModel.share]);
-	}
-
-	public onShowReport(): void {
-		this.router.navigate([AppRoutesModel.report]);
-	}
-
-	public onShowFaq(): void {
-		this.router.navigate([AppRoutesModel.frequentlyAskedQuestions]);
-	}
-
-	public onShowAbout(): void {
-		this.dialog.open(AboutDialogComponent, {
-			minWidth: AboutDialogComponent.MIN_WIDTH,
-			maxWidth: AboutDialogComponent.MAX_WIDTH,
-		});
-	}
-
-	public onAdvanceMenu(): void {
-		this.router.navigate([AppRoutesModel.advancedMenu]);
-	}
-
 	public onSideNavClosed(): void {
 		this.sideNavService.onChange(SideNavStatus.CLOSED);
 	}
@@ -255,10 +233,6 @@ export class AppComponent implements OnInit, OnDestroy {
 	public onSideNavToggle(): void {
 		this.sideNav.toggle();
 		localStorage.setItem(AppComponent.LS_SIDE_NAV_OPENED_KEY, (this.sideNav.opened) ? "true" : "false");
-	}
-
-	public onOpenLink(url: string): void {
-		window.open(url, "_blank");
 	}
 
 	public registerCustomIcons(): void {
