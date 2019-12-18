@@ -25,6 +25,13 @@ import { DesktopAppGuardActivator } from "./desktop-app-guard/desktop-app-guard-
 import { MENU_ITEMS_PROVIDER } from "./shared/services/menu-items/menu-items-provider.interface";
 import { DesktopMenuItemsProvider } from "./shared/services/menu-items/impl/desktop-menu-items-provider.service";
 import { ExtensionMenuItemsProvider } from "./shared/services/menu-items/impl/extension-menu-items-provider.service";
+import {
+	APP_MORE_MENU_COMPONENT_TOKEN,
+	AppMoreMenuComponent,
+	DesktopAppMoreMenuComponent,
+	ExtensionAppMoreMenuComponent
+} from "./app-more-menu/app-more-menu.component";
+import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
 
 
 @NgModule({
@@ -38,19 +45,22 @@ import { ExtensionMenuItemsProvider } from "./shared/services/menu-items/impl/ex
 		DesktopSyncMenuComponent,
 		DesktopSyncBarComponent,
 		DesktopTopBarComponent,
-		DesktopAppGuardDialogComponent
+		DesktopAppGuardDialogComponent,
+		DesktopAppMoreMenuComponent
 	],
 	entryComponents: [
 		DesktopSyncMenuComponent,
 		DesktopSyncBarComponent,
 		DesktopTopBarComponent,
-		DesktopAppGuardDialogComponent
+		DesktopAppGuardDialogComponent,
+		DesktopAppMoreMenuComponent
 	],
 	providers: [
 		{provide: MENU_ITEMS_PROVIDER, useClass: DesktopMenuItemsProvider},
 		{provide: TOP_BAR_COMPONENT_TOKEN, useValue: DesktopTopBarComponent},
 		{provide: SYNC_BAR_COMPONENT_TOKEN, useValue: DesktopSyncBarComponent},
 		{provide: SYNC_MENU_COMPONENT_TOKEN, useValue: DesktopSyncMenuComponent},
+		{provide: APP_MORE_MENU_COMPONENT_TOKEN, useValue: DesktopAppMoreMenuComponent},
 		DesktopAppGuardActivator
 	]
 })
@@ -67,18 +77,21 @@ export class DesktopBootModule {
 	declarations: [
 		ExtensionTopBarComponent,
 		ExtensionSyncBarComponent,
-		ExtensionSyncMenuComponent
+		ExtensionSyncMenuComponent,
+		ExtensionAppMoreMenuComponent
 	],
 	entryComponents: [
 		ExtensionTopBarComponent,
 		ExtensionSyncBarComponent,
-		ExtensionSyncMenuComponent
+		ExtensionSyncMenuComponent,
+		ExtensionAppMoreMenuComponent
 	],
 	providers: [
 		{provide: MENU_ITEMS_PROVIDER, useClass: ExtensionMenuItemsProvider},
 		{provide: TOP_BAR_COMPONENT_TOKEN, useValue: ExtensionTopBarComponent},
 		{provide: SYNC_BAR_COMPONENT_TOKEN, useValue: ExtensionSyncBarComponent},
 		{provide: SYNC_MENU_COMPONENT_TOKEN, useValue: ExtensionSyncMenuComponent},
+		{provide: APP_MORE_MENU_COMPONENT_TOKEN, useValue: ExtensionAppMoreMenuComponent},
 	]
 })
 export class ExtensionBootModule {
@@ -92,7 +105,9 @@ export class ExtensionBootModule {
 		SyncBarDirective,
 		SyncBarComponent,
 		SyncMenuDirective,
+		AppMoreMenuDirective,
 		SyncMenuComponent,
+		AppMoreMenuComponent,
 		AthleteSettingsConsistencyRibbonComponent
 	],
 	imports: [
