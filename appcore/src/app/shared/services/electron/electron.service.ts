@@ -2,6 +2,7 @@ import * as Electron from "electron";
 import { Injectable } from "@angular/core";
 import * as _ from "lodash";
 import { ChildProcess } from "child_process";
+import { LoggerService } from "../logging/logger.service";
 
 declare let window: ElectronWindow;
 
@@ -14,7 +15,7 @@ export class ElectronService {
 
 	public instance: Electron.RendererInterface;
 
-	constructor() {
+	constructor(public logger: LoggerService) {
 		this.forwardHtmlLinkClicksToDefaultBrowser();
 	}
 
@@ -29,6 +30,33 @@ export class ElectronService {
 
 	public openExternalUrl(url: string): void {
 		this.electron.shell.openExternal(url);
+	}
+
+	public clearAppDataAndRestart(): void {
+		const appDataPath = this.electron.remote.app.getPath("appData") + "/" + this.electron.remote.app.name + "/";
+		this.logger.info(`Deleting ${appDataPath} and restart`);
+		this.rmDirSync(appDataPath); // Delete AppData path
+		this.restart();
+	}
+
+	public rmDirSync(path: string): void {
+		const fs = this.getNodeFsModule();
+		if (fs.existsSync(path)) {
+			fs.readdirSync(path).forEach(file => {
+				const curPath = path + "/" + file;
+				if (fs.lstatSync(curPath).isDirectory()) { // recurse
+					this.rmDirSync(curPath);
+				} else { // delete file
+					fs.unlinkSync(curPath);
+				}
+			});
+			fs.rmdirSync(path);
+		}
+	}
+
+	public restart(): void {
+		this.electron.remote.app.relaunch();
+		this.electron.remote.app.exit(0);
 	}
 
 	public get electron(): Electron.RendererInterface {

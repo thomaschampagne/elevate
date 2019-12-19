@@ -1,7 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 
 import { IpcRendererMessagesService } from "./ipc-renderer-messages.service";
-import { DesktopModule } from "../../modules/desktop.module";
+import { DesktopModule } from "../../modules/desktop/desktop.module";
 import { SharedModule } from "../../shared.module";
 import { CoreModule } from "../../../core/core.module";
 import { ElectronService, ElectronWindow } from "../electron/electron.service";

@@ -242,4 +242,8 @@ export class AppComponent implements OnInit, OnDestroy {
 	public ngOnDestroy(): void {
 		this.routerEventsSubscription.unsubscribe();
 	}
+
+	public onOpenLink(url: string) {
+		window.open(url, "_blank");
+	}
 }
