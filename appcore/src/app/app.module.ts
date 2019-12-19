@@ -32,14 +32,17 @@ import {
 	ExtensionAppMoreMenuComponent
 } from "./app-more-menu/app-more-menu.component";
 import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
-
+import { DesktopRoutingModule } from "./shared/modules/desktop/desktop-routing.module";
+import { ExtensionRoutingModule } from "./shared/modules/extension/extension-routing.module";
 
 @NgModule({
 	imports: [
-		CoreModule
+		CoreModule,
+		DesktopRoutingModule
 	],
 	exports: [
-		CoreModule
+		CoreModule,
+		DesktopRoutingModule
 	],
 	declarations: [
 		DesktopSyncMenuComponent,
@@ -69,10 +72,12 @@ export class DesktopBootModule {
 
 @NgModule({
 	imports: [
-		CoreModule
+		CoreModule,
+		ExtensionRoutingModule
 	],
 	exports: [
-		CoreModule
+		CoreModule,
+		ExtensionRoutingModule
 	],
 	declarations: [
 		ExtensionTopBarComponent,
@@ -91,7 +96,7 @@ export class DesktopBootModule {
 		{provide: TOP_BAR_COMPONENT_TOKEN, useValue: ExtensionTopBarComponent},
 		{provide: SYNC_BAR_COMPONENT_TOKEN, useValue: ExtensionSyncBarComponent},
 		{provide: SYNC_MENU_COMPONENT_TOKEN, useValue: ExtensionSyncMenuComponent},
-		{provide: APP_MORE_MENU_COMPONENT_TOKEN, useValue: ExtensionAppMoreMenuComponent},
+		{provide: APP_MORE_MENU_COMPONENT_TOKEN, useValue: ExtensionAppMoreMenuComponent}
 	]
 })
 export class ExtensionBootModule {

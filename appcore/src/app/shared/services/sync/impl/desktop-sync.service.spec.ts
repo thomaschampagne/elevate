@@ -1,7 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { CoreModule } from "../../../../core/core.module";
 import { SharedModule } from "../../../shared.module";
-import { DesktopModule } from "../../../modules/desktop.module";
+import { DesktopModule } from "../../../modules/desktop/desktop.module";
 import { DesktopSyncService } from "./desktop-sync.service";
 import {
 	ActivitySyncEvent,

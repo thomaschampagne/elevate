@@ -3,7 +3,7 @@ import { TestBed } from "@angular/core/testing";
 import { StravaApiCredentialsService } from "./strava-api-credentials.service";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
-import { DesktopModule } from "../../modules/desktop.module";
+import { DesktopModule } from "../../modules/desktop/desktop.module";
 
 describe("StravaApiCredentialsService", () => {
 

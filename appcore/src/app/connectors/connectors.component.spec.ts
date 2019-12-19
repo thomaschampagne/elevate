@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ConnectorsComponent } from "./connectors.component";
 import { CoreModule } from "../core/core.module";
 import { SharedModule } from "../shared/shared.module";
-import { DesktopModule } from "../shared/modules/desktop.module";
+import { DesktopModule } from "../shared/modules/desktop/desktop.module";
 import { ElectronService, ElectronWindow } from "../shared/services/electron/electron.service";
 
 describe("ConnectorsComponent", () => {

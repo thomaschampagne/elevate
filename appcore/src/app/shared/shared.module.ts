@@ -13,7 +13,6 @@ import { ActivityService } from "./services/activity/activity.service";
 import { UserSettingsDao } from "./dao/user-settings/user-settings.dao";
 import { OptionHelperReaderService } from "../global-settings/services/option-helper-reader.service";
 import { ZonesService } from "../zones-settings/shared/zones.service";
-import { AppRoutingModule } from "./modules/app-routing.module";
 import { DonateComponent } from "../donate/donate.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { WindowService } from "./services/window/window.service";
@@ -27,7 +26,6 @@ import { ReportComponent } from "../report/report.component";
 import { CoreModule } from "../core/core.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
-import { AdvancedMenuComponent } from "../advanced-menu/advanced-menu.component";
 import { AthleteSnapshotResolverService } from "./services/athlete-snapshot-resolver/athlete-snapshot-resolver.service";
 import { AthleteService } from "./services/athlete/athlete.service";
 import { AthleteDao } from "./dao/athlete/athlete-dao.service";
@@ -38,22 +36,20 @@ import { LoggerService } from "./services/logging/logger.service";
 import { ConsoleLoggerService } from "./services/logging/console-logger.service";
 import { environment } from "../../environments/environment";
 import { EnvTarget } from "@elevate/shared/models";
-import { ExtensionModule } from "./modules/extension.module";
-import { DesktopModule } from "./modules/desktop.module";
+import { ExtensionModule } from "./modules/extension/extension.module";
+import { DesktopModule } from "./modules/desktop/desktop.module";
 
 @NgModule({
 	imports: [
 		CoreModule,
 		BrowserModule,
 		BrowserAnimationsModule,
-		AppRoutingModule,
 		(environment.target === EnvTarget.DESKTOP) ? DesktopModule : ExtensionModule
 	],
 	exports: [
 		CoreModule,
 		BrowserModule,
-		BrowserAnimationsModule,
-		AppRoutingModule
+		BrowserAnimationsModule
 	],
 	declarations: [
 		// Components
@@ -64,7 +60,6 @@ import { DesktopModule } from "./modules/desktop.module";
 		DonateComponent,
 		ShareComponent,
 		ReportComponent,
-		AdvancedMenuComponent,
 		FaqComponent,
 
 		// Dialogs
