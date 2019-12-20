@@ -32,11 +32,30 @@ export class ElectronService {
 		this.electron.shell.openExternal(url);
 	}
 
+	public openItem(path: string): void {
+		this.electron.shell.openItem(path);
+	}
+
+	public openLogFile(): void {
+		const logPath = this.getAppDataPath() + "log.log";
+		this.openItem(logPath);
+	}
+
+	public openAppDataFolder(): void {
+		this.openItem(this.getAppDataPath());
+	}
+
 	public clearAppDataAndRestart(): void {
-		const appDataPath = this.electron.remote.app.getPath("appData") + "/" + this.electron.remote.app.name + "/";
-		this.logger.info(`Deleting ${appDataPath} and restart`);
-		this.rmDirSync(appDataPath); // Delete AppData path
-		this.restart();
+		const session = this.electron.remote.getCurrentWindow().webContents.session;
+		session.clearStorageData().then(() => {
+			return session.clearCache();
+		}).then(() => {
+			return session.clearAuthCache(null);
+		}).then(() => {
+			return session.clearHostResolverCache();
+		}).then(() => {
+			this.restart();
+		});
 	}
 
 	public rmDirSync(path: string): void {
@@ -95,6 +114,13 @@ export class ElectronService {
 	 */
 	public getNodeFsModule(): any {
 		return this.require("fs");
+	}
+
+	/**
+	 *
+	 */
+	public getAppDataPath(): string {
+		return this.electron.remote.app.getPath("appData") + "/" + this.electron.remote.app.name + "/";
 	}
 
 	/**
