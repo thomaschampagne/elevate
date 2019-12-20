@@ -12,36 +12,42 @@ import { ElectronService } from "../../shared/services/electron/electron.service
 @Component({
 	selector: "app-advanced-menu",
 	template: `
-        <mat-card>
-            <mat-card-content>
-                <div>
-                    In case of problem with the app this section might help you.
-                </div>
-                <div>
-                    <button mat-stroked-button color="primary" (click)="onSyncedBackupClear()">Delete athlete's activities</button>
-                </div>
-                <div>
-                    <button mat-stroked-button color="primary" (click)="onUserSettingsReset()">Reset athlete & global settings</button>
-                </div>
-                <div>
-                    <button mat-stroked-button color="primary" (click)="onFullAppReset()">Application reset</button>
-                </div>
-                <div>
-                    If problem still persist, consider uninstall/install the app or report a bug.
-                </div>
-            </mat-card-content>
-        </mat-card>
+		<mat-card>
+			<mat-card-content>
+				<div>
+					In case of problem with the app this section might help you.
+				</div>
+				<div>
+					<button mat-stroked-button color="primary" (click)="onSyncedBackupClear()">Delete athlete's activities</button>
+				</div>
+				<div>
+					<button mat-stroked-button color="primary" (click)="onUserSettingsReset()">Reset athlete & global settings</button>
+				</div>
+				<div>
+					<button mat-stroked-button color="primary" (click)="openLogFile()">Open log file</button>
+				</div>
+				<div>
+					<button mat-stroked-button color="primary" (click)="openAppDataFolder()">Open application data folder</button>
+				</div>
+				<div>
+					<button mat-stroked-button color="primary" (click)="onFullAppReset()">Application reset</button>
+				</div>
+				<div>
+					If problem still persist, consider uninstall/install the app or report a bug.
+				</div>
+			</mat-card-content>
+		</mat-card>
 	`,
 	styles: [
 			`
-            button {
-                width: 300px;
-            }
+			button {
+				width: 300px;
+			}
 
-            div {
-                padding-top: 10px;
-                padding-bottom: 10px;
-            }
+			div {
+				padding-top: 10px;
+				padding-bottom: 10px;
+			}
 		`
 	]
 })
@@ -100,6 +106,14 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 				this.electronService.clearAppDataAndRestart();
 			}
 		});
+	}
+
+	public openLogFile(): void {
+		this.electronService.openLogFile();
+	}
+
+	public openAppDataFolder(): void {
+		this.electronService.openAppDataFolder();
 	}
 
 	public onZoneSettingsReset(): void {
