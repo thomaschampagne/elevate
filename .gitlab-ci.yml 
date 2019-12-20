@@ -1,0 +1,8 @@
+image: node:lts-alpine
+
+
+before_script:
+  - npm install
+  
+test:
+  - npm test
