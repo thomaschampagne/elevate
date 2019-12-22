@@ -64,7 +64,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.registerCustomIcons();
 	}
 
-	public static readonly DISPLAY_INIT_SPLASH_SCREEN_MILLIS: number = 1250;
+	public static readonly DISPLAY_INIT_SPLASH_SCREEN_MILLIS: number = 1000;
 	public static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
 	public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
 	public static readonly LS_USER_THEME_PREF: string = "theme";

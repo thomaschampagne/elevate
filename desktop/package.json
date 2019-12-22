@@ -1,26 +1,29 @@
 {
-	"name": "elevate",
+	"name": "elevate-training",
 	"description": "Elevate your training experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...",
-	"version": "7.0.0-prototype.0",
+	"version": "7.0.0-alpha.0",
 	"scripts": {
 		"assert-app-exists": "node -e \"if ((require('fs').existsSync('./dist/app/')) === false) {console.log('Please run & wait for \\'npm start\\' task before.\\n\\n\\n\\n');process.exit(1);}\";",
 		"build:metadata": "node -e \"console.log('{\\\"commit\\\": \\\"' + require('child_process').execSync('git rev-parse HEAD').toString().trim() + '\\\", \\\"date\\\": \\\"' + (new Date()).toISOString() + '\\\"}')\" > build_metadata.json",
 		"build:appcore@dev": "npm run build:metadata && cd ../appcore/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build --outputPath=../desktop/dist/app/ --base-href --configuration=desktop",
 		"build:appcore@prod": "npm run build:appcore@dev -- --base-href --configuration=desktop-prod",
-		"build:electron@dev": "rollup --config rollup.config.js",
-		"build:electron@prod": "npm run build:electron@dev -- --environment ELECTRON_ENV:prod",
+		"build:updater@dev": "node ../node_modules/cpy-cli/cli.js ./src/updater/window/index.html ./dist/updater/ && rollup --config rollup-updater.config.js",
+		"build:updater@prod": "npm run build:updater@dev -- --environment ELECTRON_ENV:prod",
+		"build:electron@base": "rollup --config rollup-app.config.js",
+		"build:electron@dev": "npm run build:updater@dev && npm run build:electron@base",
+		"build:electron@prod": "npm run build:updater@prod && npm run build:electron@base -- --environment ELECTRON_ENV:prod",
 		"clean": "npx npm-run-all clean:*",
 		"clean:dist": "node ../node_modules/del-cli/cli.js ./dist/",
 		"clean:package": "node ../node_modules/del-cli/cli.js ./package/",
 		"clean:metadata": "node ../node_modules/del-cli/cli.js ./build_metadata.json",
 		"launch:electron": "npm run assert-app-exists && run-electron ./dist/desktop.bundle.js",
-		"package:windows": "npx npm-run-all clean build:electron@prod build:appcore@prod && electron-builder build --windows --x64",
+		"package:windows": "npx npm-run-all clean build:electron@prod build:appcore@prod && electron-builder build --windows --x64 --publish onTagOrDraft",
 		"package:linux": "npx npm-run-all clean build:electron@prod build:appcore@prod && electron-builder build --linux --x64",
 		"start": "npm run watch",
 		"test": "jest --coverage",
 		"tslint": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./src/**/*.ts --fix",
-		"watch": "npm run clean && npx npm-run-all --print-label --race --parallel watch:electron watch:appcore",
-		"watch:electron": "npm run build:electron@dev -- --watch",
+		"watch": "npm run clean && node ../node_modules/cpy-cli/cli.js ./dev-app-update.yml ./dist && npx npm-run-all --print-label --race --parallel watch:electron watch:appcore",
+		"watch:electron": "npm run build:electron@dev -- -- --watch",
 		"watch:appcore": "npm run build:appcore@dev -- --watch"
 	},
 	"config": {
@@ -40,6 +43,7 @@
 	"dependencies": {
 		"@rollup/plugin-json": "^4.0.0",
 		"electron-log": "^3.0.9",
+		"electron-updater": "^4.2.0",
 		"https-proxy-agent": "^2.2.4",
 		"lodash": "^4.17.15",
 		"node-machine-id": "^1.1.12",
@@ -47,7 +51,8 @@
 		"promise-tron": "^2.1.0",
 		"querystring": "^0.2.0",
 		"rxjs": "^6.5.3",
-		"typed-rest-client": "^1.5.0"
+		"typed-rest-client": "^1.5.0",
+		"vue": "^2.6.11"
 	},
 	"devDependencies": {
 		"@types/jest": "^24.0.18",
@@ -65,7 +70,7 @@
 		"rollup-plugin-node-resolve": "^5.2.0",
 		"rollup-plugin-sourcemaps": "^0.4.2",
 		"rollup-plugin-terser": "^5.1.2",
-		"rollup-plugin-typescript2": "^0.25.2",
+		"rollup-plugin-typescript2": "^0.25.3",
 		"run-electron": "^1.0.0",
 		"ts-jest": "^24.1.0",
 		"tslint": "^5.20.1",
@@ -80,8 +85,15 @@
 		"files": [
 			"!**/*",
 			"./dist/**/*.*",
-			"./build/**/*.*"
+			"./build/**/*.*",
+			"./node_modules/**/*"
 		],
+		"publish": {
+			"owner": "thomaschampagne",
+			"provider": "github",
+			"repo": "levitate",
+			"vPrefixedTagName": false
+		},
 		"win": {
 			"target": [
 				{
@@ -91,6 +103,10 @@
 					]
 				}
 			]
+		},
+		"nsis": {
+			"deleteAppDataOnUninstall": true,
+			"artifactName": "elevate_installer.${ext}"
 		},
 		"mac": {
 			"target": [

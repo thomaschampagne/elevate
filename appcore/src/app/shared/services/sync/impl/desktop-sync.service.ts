@@ -45,7 +45,6 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 // TODO Open path to log file from a button
 // TODO Application upgrade!?
 // TODO "version" of dump should compared to "the current code version".
-// TODO import/restore progress bar OR spinner
 
 // TODO Handle no strava access token (or expired) when starting strava sync
 // TODO Handle updateSyncedActivitiesNameAndType of strava over filesystem connector
