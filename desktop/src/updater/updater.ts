@@ -75,7 +75,6 @@ export class Updater {
 				});
 
 				this.appUpdater.on(UpdateEvent.UPDATE_NOT_AVAILABLE, (updateInfo: UpdateInfo) => {
-					this.notifyUpdateStatus("Current version " + updateInfo.version + " up to date.");
 					resolve(updateInfo);
 				});
 
@@ -84,7 +83,6 @@ export class Updater {
 				});
 
 				this.appUpdater.on(UpdateEvent.DOWNLOAD_PROGRESS, progressObj => {
-					logger.info("Downloading", JSON.stringify(progressObj));
 					this.notifyDownloadProgress(progressObj);
 				});
 
@@ -103,12 +101,13 @@ export class Updater {
 
 		}).then((updateInfo: UpdateInfo) => {
 			setTimeout(() => {
-				this.updateWindow.close();
+				this.updateWindow.destroy();
 			});
 			return Promise.resolve(updateInfo);
+
 		}).catch(err => {
 			setTimeout(() => {
-				this.updateWindow.close();
+				this.updateWindow.destroy();
 			});
 			logger.error("Update error", err);
 			return Promise.reject(err);
@@ -116,10 +115,12 @@ export class Updater {
 	}
 
 	private notifyUpdateStatus(message: string): void {
+		logger.info(message);
 		this.updateWindow.webContents.send("update-status", message);
 	}
 
 	private notifyDownloadProgress(progress: object): void {
+		logger.info("Downloading", JSON.stringify(progress));
 		this.updateWindow.webContents.send("download-progress", progress);
 	}
 }

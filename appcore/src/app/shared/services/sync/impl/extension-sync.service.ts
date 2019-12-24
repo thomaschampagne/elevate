@@ -124,7 +124,7 @@ export class ExtensionSyncService extends SyncService<number> {
 			this.syncDateTimeDao.fetch(),
 			this.activityService.fetch(),
 			this.athleteService.fetch(),
-			this.versionsProvider.getInstalledAppVersion()
+			this.versionsProvider.getPackageVersion()
 
 		]).then((result: Object[]) => {
 

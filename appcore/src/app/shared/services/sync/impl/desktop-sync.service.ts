@@ -367,7 +367,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 	public export(): Promise<{ filename: string; size: number }> {
 		return this.desktopDataStore.createDump().then(blob => {
-			return this.versionsProvider.getInstalledAppVersion().then(appVersion => {
+			return this.versionsProvider.getPackageVersion().then(appVersion => {
 				const gzippedFilename = moment().format("Y.MM.DD-H.mm") + "_v" + appVersion + ".elevate";
 				this.saveAs(blob, gzippedFilename);
 				return Promise.resolve({filename: gzippedFilename, size: blob.size});

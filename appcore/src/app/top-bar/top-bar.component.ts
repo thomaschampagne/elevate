@@ -78,7 +78,7 @@ export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
 
 	public ngOnInit() {
 
-		this.versionsProvider.getInstalledAppVersion().then(version => {
+		this.versionsProvider.getPackageVersion().then(version => {
 			this.currentVersion = version;
 		});
 

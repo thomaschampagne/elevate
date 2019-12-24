@@ -8,8 +8,8 @@ import { Proxy } from "./proxy";
 import { Service } from "./service";
 import { HttpClient } from "typed-rest-client/HttpClient";
 import * as pkg from "../package.json";
-import { UpdateInfo } from "electron-updater";
 import { Updater } from "./updater/updater";
+import { UpdateInfo } from "electron-updater";
 
 const {autoUpdater} = require("electron-updater"); // Import should remains w/ "require"
 

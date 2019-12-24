@@ -18,6 +18,7 @@ import { CoreModule } from "../../../core/core.module";
 import { ConnectorSyncDateTimeDao } from "../../dao/sync/connector-sync-date-time.dao";
 import { DesktopRoutingModule } from "./desktop-routing.module";
 import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/desktop-advanced-menu.component";
+import { DesktopMigrationService } from "../../../desktop/migration/desktop-migration.service";
 
 @NgModule({
 	imports: [
@@ -39,13 +40,12 @@ import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/des
 	providers: [
 		ElectronService,
 		IpcRendererMessagesService,
+		DesktopMigrationService,
 		{provide: DataStore, useClass: DesktopDataStore},
 		{provide: AppEventsService, useClass: DesktopEventsService},
 		{provide: VERSIONS_PROVIDER, useClass: DesktopVersionsProvider},
-
 		{provide: SyncService, useClass: DesktopSyncService},
 		DesktopSyncService,
-
 		ConnectorSyncDateTimeDao,
 		StravaApiCredentialsService,
 		StravaApiCredentialsDao,

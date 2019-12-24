@@ -75,7 +75,7 @@ export abstract class SyncService<T> {
 			return Promise.resolve();
 		}
 
-		return this.versionsProvider.getInstalledAppVersion().then(appVersion => {
+		return this.versionsProvider.getPackageVersion().then(appVersion => {
 
 			// Check if imported backup is compatible with current code
 			if (semver.lt(dumpVersion, compatibleDumpVersionThreshold)) {

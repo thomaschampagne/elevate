@@ -40,11 +40,11 @@ export class AboutDialogComponent implements OnInit {
 			this.appUsageDetails = appUsageDetails;
 		});
 
-		this.versionsProvider.getInstalledAppVersion().then(version => {
+		this.versionsProvider.getPackageVersion().then(version => {
 			this.installedVersion = version;
 		});
 
-		this.versionsProvider.getCurrentRemoteAppVersion().then(version => {
+		this.versionsProvider.getRemoteVersion().then(version => {
 			this.remoteVersion = version;
 		});
 
