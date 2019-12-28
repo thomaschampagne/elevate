@@ -11,22 +11,18 @@ import * as pkg from "../package.json";
 import { Updater } from "./updater/updater";
 import { UpdateInfo } from "electron-updater";
 
-const {autoUpdater} = require("electron-updater"); // Import should remains w/ "require"
-
 const IS_ELECTRON_DEV = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "dev");
 
 logger.transports.file.level = (IS_ELECTRON_DEV) ? "debug" : "info";
 logger.transports.console.level = (IS_ELECTRON_DEV) ? "debug" : "info";
 logger.transports.file.maxSize = 1048576 * 2; // 2MB
 
-// TODO:
-// tslint:disable-next-line:max-line-length
-// [] Brainstorm "safe" download> Bypass browser malware check with signed app windows? Mac?
-// 			=> Could be bypassed by multiple trust downloads of a "web installer" on static URL.
-// 			e.g. http://github.com/thomaschampagne/levitate/releases/latest/download/elevate-web-installer.exe
-// [] Brainstorm "safe" download with zip package only? Does it support update? => Prompt shortcut startup + desktop!!!
-// [] Detect old verion & new version from elevate app => data migration
-// [] electron-updater not working with rollup. Push Ticket on their github.
+/*
+TODO: Fix electron-updater not fully integrated with rollup:
+The current workaround to import electron-updater is: package.json > build > files > "./node_modules/%%/%"
+*/
+
+const {autoUpdater} = require("electron-updater"); // Import should remains w/ "require"
 
 class Main {
 

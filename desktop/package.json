@@ -92,7 +92,7 @@
 		"publish": {
 			"owner": "thomaschampagne",
 			"provider": "github",
-			"repo": "levitate",
+			"repo": "elevate-alpha",
 			"vPrefixedTagName": false
 		},
 		"win": {
