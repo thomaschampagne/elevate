@@ -159,7 +159,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 				return wrappedDoc.doc;
 			})));
 
-			return this.versionsProvider.getInstalledAppVersion().then(version => {
+			return this.versionsProvider.getPackageVersion().then(version => {
 				dump.version = version;
 				const blob = new Blob([dump.serialize()], {type: "application/gzip"});
 				return Promise.resolve(blob);

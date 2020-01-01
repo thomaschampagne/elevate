@@ -45,7 +45,6 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 // TODO Open path to log file from a button
 // TODO Application upgrade!?
 // TODO "version" of dump should compared to "the current code version".
-// TODO import/restore progress bar OR spinner
 
 // TODO Handle no strava access token (or expired) when starting strava sync
 // TODO Handle updateSyncedActivitiesNameAndType of strava over filesystem connector
@@ -368,7 +367,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 	public export(): Promise<{ filename: string; size: number }> {
 		return this.desktopDataStore.createDump().then(blob => {
-			return this.versionsProvider.getInstalledAppVersion().then(appVersion => {
+			return this.versionsProvider.getPackageVersion().then(appVersion => {
 				const gzippedFilename = moment().format("Y.MM.DD-H.mm") + "_v" + appVersion + ".elevate";
 				this.saveAs(blob, gzippedFilename);
 				return Promise.resolve({filename: gzippedFilename, size: blob.size});

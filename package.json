@@ -43,8 +43,8 @@
 	"license": "MIT",
 	"readme": "README.md",
 	"devDependencies": {
-		"cpy-cli": "^2.0.0",
-		"del-cli": "^1.1.0",
+		"cpy-cli": "^3.0.0",
+		"del-cli": "^3.0.0",
 		"run-sequence": "^2.2.1"
 	}
 }

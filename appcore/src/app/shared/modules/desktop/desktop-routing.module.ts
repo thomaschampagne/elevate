@@ -9,7 +9,7 @@ import { ShareComponent } from "../../../share/share.component";
 import { ReportComponent } from "../../../report/report.component";
 import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/desktop-advanced-menu.component";
 import { FaqComponent } from "../../../faq/faq.component";
-import { DesktopAppGuardActivator } from "../../../desktop-app-guard/desktop-app-guard-activator.service";
+import { DesktopPreRunGuard } from "../../../desktop/pre-run-guard/desktop-pre-run-guard.service";
 
 @NgModule({
 	imports: [
@@ -85,7 +85,7 @@ export class DesktopRoutingModule {
 
 	public static provideRoutes(): Routes {
 		for (let i = 0; i < DesktopRoutingModule.routes.length; i++) {
-			DesktopRoutingModule.routes[i].canActivate = [DesktopAppGuardActivator];
+			DesktopRoutingModule.routes[i].canActivate = [DesktopPreRunGuard];
 		}
 		return DesktopRoutingModule.routes;
 	}

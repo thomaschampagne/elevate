@@ -20,8 +20,6 @@ import {
 	SyncBarComponent
 } from "./sync-bar/sync-bar.component";
 import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
-import { DesktopAppGuardDialogComponent } from "./desktop-app-guard/desktop-app-guard-dialog.component";
-import { DesktopAppGuardActivator } from "./desktop-app-guard/desktop-app-guard-activator.service";
 import { MENU_ITEMS_PROVIDER } from "./shared/services/menu-items/menu-items-provider.interface";
 import { DesktopMenuItemsProvider } from "./shared/services/menu-items/impl/desktop-menu-items-provider.service";
 import { ExtensionMenuItemsProvider } from "./shared/services/menu-items/impl/extension-menu-items-provider.service";
@@ -34,6 +32,8 @@ import {
 import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
 import { DesktopRoutingModule } from "./shared/modules/desktop/desktop-routing.module";
 import { ExtensionRoutingModule } from "./shared/modules/extension/extension-routing.module";
+import { DesktopPreRunGuard } from "./desktop/pre-run-guard/desktop-pre-run-guard.service";
+import { DesktopPreRunGuardDialogComponent } from "./desktop/pre-run-guard/desktop-pre-run-guard-dialog.component";
 
 @NgModule({
 	imports: [
@@ -48,14 +48,14 @@ import { ExtensionRoutingModule } from "./shared/modules/extension/extension-rou
 		DesktopSyncMenuComponent,
 		DesktopSyncBarComponent,
 		DesktopTopBarComponent,
-		DesktopAppGuardDialogComponent,
+		DesktopPreRunGuardDialogComponent,
 		DesktopAppMoreMenuComponent
 	],
 	entryComponents: [
 		DesktopSyncMenuComponent,
 		DesktopSyncBarComponent,
 		DesktopTopBarComponent,
-		DesktopAppGuardDialogComponent,
+		DesktopPreRunGuardDialogComponent,
 		DesktopAppMoreMenuComponent
 	],
 	providers: [
@@ -64,7 +64,7 @@ import { ExtensionRoutingModule } from "./shared/modules/extension/extension-rou
 		{provide: SYNC_BAR_COMPONENT_TOKEN, useValue: DesktopSyncBarComponent},
 		{provide: SYNC_MENU_COMPONENT_TOKEN, useValue: DesktopSyncMenuComponent},
 		{provide: APP_MORE_MENU_COMPONENT_TOKEN, useValue: DesktopAppMoreMenuComponent},
-		DesktopAppGuardActivator
+		DesktopPreRunGuard
 	]
 })
 export class DesktopBootModule {

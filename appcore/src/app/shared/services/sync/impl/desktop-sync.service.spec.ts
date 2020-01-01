@@ -1111,7 +1111,7 @@ describe("DesktopSyncService", () => {
 			const blob = new Blob([Gzip.toBinaryString(JSON.stringify(expectedData))], {type: "application/gzip"});
 			const dumpSpy = spyOn(desktopSyncService.desktopDataStore, "createDump").and.returnValue(Promise.resolve(blob));
 			const appVersion = "1.0.0";
-			const getInstalledAppVersionSpy = spyOn(desktopSyncService.versionsProvider, "getInstalledAppVersion")
+			const getInstalledAppVersionSpy = spyOn(desktopSyncService.versionsProvider, "getPackageVersion")
 				.and.returnValue(Promise.resolve(appVersion));
 			const saveAsSpy = spyOn(desktopSyncService, "saveAs").and.stub();
 			const expectedFilename = moment().format("Y.MM.DD-H.mm") + "_v" + appVersion + ".elevate";

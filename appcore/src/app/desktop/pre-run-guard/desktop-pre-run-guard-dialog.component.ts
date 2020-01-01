@@ -1,13 +1,13 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material";
-import { ElectronService } from "../shared/services/electron/electron.service";
+import { ElectronService } from "../../shared/services/electron/electron.service";
 
 @Component({
 	selector: "app-guard",
-	templateUrl: "./desktop-app-guard-dialog.component.html",
-	styleUrls: ["./desktop-app-guard-dialog.component.scss"]
+	templateUrl: "./desktop-pre-run-guard-dialog.component.html",
+	styleUrls: ["./desktop-pre-run-guard-dialog.component.scss"]
 })
-export class DesktopAppGuardDialogComponent implements OnInit {
+export class DesktopPreRunGuardDialogComponent implements OnInit {
 
 	public athleteMachineId: string;
 
