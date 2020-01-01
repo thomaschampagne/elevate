@@ -9,7 +9,6 @@ import { of, throwError } from "rxjs";
 import { AthleteAccessChecker } from "./athlete-access-checker";
 import * as HttpCodes from "http-status-codes";
 import { LoggerService } from "../../shared/services/logging/logger.service";
-import { DistributedEndpointsResolver } from "@elevate/shared/resolvers";
 import { environment } from "../../../environments/environment.desktop";
 import { StravaApiCredentialsService } from "../../shared/services/strava-api-credentials/strava-api-credentials.service";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../../shared/services/versions/versions-provider.interface";
@@ -20,6 +19,8 @@ import { DesktopPreRunGuardDialogComponent } from "./desktop-pre-run-guard-dialo
 
 @Injectable()
 export class DesktopPreRunGuard implements CanActivate {
+
+	private static readonly ATHLETE_ACCESS_API_URL = "https://api.elevate.duckdns.org/api/athlete/access";
 
 	private static readonly AUTH_RETRY_COUNT = 1;
 	private static readonly AUTH_RETRY_DELAY = 1000;
@@ -37,11 +38,6 @@ export class DesktopPreRunGuard implements CanActivate {
 				public logger: LoggerService) {
 		this.runtimeInfo = null;
 		this.isAccessAuthorized = false;
-	}
-
-	private static ATHLETE_ACCESS_API_URL() {
-		const currentBaseEndPoint = `${DistributedEndpointsResolver.resolve("https://elevate-prototype-${id}.herokuapp.com")}`;
-		return `${currentBaseEndPoint}/api/athlete/access`;
 	}
 
 	public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
@@ -100,15 +96,17 @@ export class DesktopPreRunGuard implements CanActivate {
 
 				const athleteAccessBodyData = {
 					athleteMachineId: this.runtimeInfo.athleteMachineId,
-					version: installedVersion,
-					osPlatform: this.runtimeInfo.osPlatform,
+					version: {
+						name: installedVersion
+					},
+					osPlatform: `${this.runtimeInfo.osPlatform.name}; ${this.runtimeInfo.osPlatform.arch}`,
 					osUsername: this.runtimeInfo.osUsername,
 					memorySizeGb: this.runtimeInfo.memorySizeGb,
-					cpu: this.runtimeInfo.cpu,
+					cpu: `${this.runtimeInfo.cpu.name}; ${this.runtimeInfo.cpu.threads}`,
 					stravaAccount: (stravaApiCredentials.stravaAccount) ? stravaApiCredentials.stravaAccount : null
 				};
 
-				this.httpClient.post(DesktopPreRunGuard.ATHLETE_ACCESS_API_URL(), athleteAccessBodyData, {responseType: "text"}).pipe(
+				this.httpClient.post(DesktopPreRunGuard.ATHLETE_ACCESS_API_URL, athleteAccessBodyData, {responseType: "text"}).pipe(
 					retryWhen(errors => errors.pipe(concatMap((error: HttpErrorResponse, tryIndex: number) => {
 						if (error.status === HttpCodes.UNAUTHORIZED) {
 							return throwError(error);
