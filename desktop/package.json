@@ -19,6 +19,7 @@
 		"launch:electron": "npm run assert-app-exists && run-electron ./dist/desktop.bundle.js",
 		"package:windows": "npm-run-all clean build:electron@prod build:appcore@prod && electron-builder build --windows --x64 --publish onTagOrDraft",
 		"package:linux": "npm-run-all clean build:electron@prod build:appcore@prod && electron-builder build --linux --x64",
+		"package:mac": "npm-run-all clean build:electron@prod build:appcore@prod && electron-builder build --mac --x64",
 		"start": "npm run watch",
 		"test": "jest --coverage",
 		"tslint": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./src/**/*.ts --fix",

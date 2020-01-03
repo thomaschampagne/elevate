@@ -8,156 +8,200 @@
 
 # Install Elevate
 
-## From a Chrome based browser
+## Desktop App
+
+### From installer
+
+_TBD_
+
+### From continuous integration
+
+_TBD_
+
+### From the sources
+
+Go to chapter [Environment setup](#environments-setup).
+
+## Chrome based browser extension
+
+### From a Chrome based browser
 
 Go to [https://thomaschampagne.github.io/elevate/](https://thomaschampagne.github.io/elevate/)
 
 You should be able to install it in all Chrome based browser such as Chrome, Chrome Canary, Chromium, Opera, Vivaldi, Yandex, and more ...
 
-## From continuous integration
-Using latest **develop** branch builds: https://thomaschampagne.github.io/elevate/#/builds
+### From continuous integration
+Using latest `develop` branch builds: https://thomaschampagne.github.io/elevate/#/builds
 
 Install steps with a standalone build: https://github.com/thomaschampagne/elevate/wiki/How-to-install-elevate-build-archive
 
-## From the sources
+### From the sources
 
-Go to chapter [Environment setup](#environment-setup).
+Go to chapter [Environment setup](#environments-setup).
 
 # Development
 
-## Project structure description
+This section covers the environment setup to develop and build both desktop app and web extension. 
 
-The project is split into 2 sub-projects: the _core_ and the _embedded app_.
+## Global solution structure
 
-### Core
+The solution is cut in 3 folders/projects: the `appcore`, the `desktop` & `webextension`
 
-The core contains the plugin's behaviour that acts directly on _strava.com_ website. This includes _extended stats on activities & segments efforts, best splits, google maps support, etc..._
+### App-core project
 
-> The core sources are located in **plugin/core** directory
+Contains the _Elevate App_ shared and loaded by both `desktop` and `webextension`projects. Appcore contains core features like _fitness trend, year progressions, athlete settings..._
 
-### Embedded app
+The `Appcore` main technology stack is:
 
-The embedded app contains features like fitness trend, year progressions, ... and global plugin settings such as _common settings, athlete settings & zones settings._
-
-> The embedded app sources are located in **plugin/app** directory
-
-**Notice**: The **plugin/common** directory contains sources shared by both sub-projects.
-
-## Description of frameworks & tools used.
-
-_Core_ and _embedded app_ have been developed using [TypeScript](https://www.typescriptlang.org) language. TypeScript adds typing & class-based syntax over javascript then compiles back to JavaScript. [Understand TypeScript in 5 minutes](https://learnxinyminutes.com/docs/typescript/).
-
-### At a glance...
-
-### Core dependencies
-* [Webpack](https://github.com/webpack/webpack) as packager and dynamic EcmaScript module loader.
-* [Q](http://documentup.com/kriskowal/q/) as promise library for JavaScript.
-* [Chart.js](http://www.chartjs.org/) for JavaScript charting.
-
-
-### Embedded app dependencies
-* [Angular](https://angular.io/) as frontend framework
+* [Typescript](https://www.typescriptlang.org/) as programming language.
+* [Angular](https://angular.io/) as frontend (build with [@angular/cli](https://cli.angular.io/)). 
 * [Angular Material](https://material.angular.io/) for material designed components.
 * [Metrics Graphics](https://www.metricsgraphicsjs.org/) and [d3js](https://d3js.org/) for charting.
 
-### Shared dependencies
-* [Lodash](https://lodash.com) to get a whole mess of useful functional programming helpers in typescript/javascript.
-* [MomentJS](https://momentjs.com/) to parse, validate, manipulate, and display dates and times.
+If build target is desktop, it also includes:
 
-### Tools
+* [PouchDB](https://pouchdb.com/) as local key-value database (working over IndexedDB). Can sync easily with a remote [CouchDB-like database](https://pouchdb.com/faq.html#what_can_pouchdb_sync_with). 
 
-* [NodeJS](https://nodejs.org/en/) as javascript runtime environment.
-* [Npm](https://www.npmjs.com/) as package manager to fetch project dependencies
+### Desktop project
 
-## Environment setup
+Holds the container behaviour to provide a cross-platform desktop app under _Windows, Linux & MacOS_. It contains desktop specific features like _connectors synchronization_ (to fetch athlete activities from external).
+
+The `Desktop` main technology stack is:
+
+* [Typescript](https://www.typescriptlang.org/) as programming language.
+* [Jest](https://jestjs.io/) as Javascript test framework.
+* [Electron](https://electronjs.org/) as cross-platform desktop container.
+* [Electron-builder](https://www.electron.build/) to build, sign and publish installers per platform. Also handle app updates process (via `electron-updater`).
+* [Rollup.js](https://rollupjs.org/guide/en/) to load & bundle modules.
+* [Vue.js](https://vuejs.org/) for splash-screen update window.
+
+### Web-extension project
+
+Contains the web extension behaviour that acts directly on _strava.com_ website. This includes _extended stats on activities & segments efforts, best splits, etc..._
+
+## Environments setup
 
 ### Install requirements
 
-Here's what you need to install to run the extension in a chrome based browser:
+You will need to install [NodeJS](https://nodejs.org) (version 12 minimum) to build both desktop and chrome web extension.
 
-- Chrome based browser (Chrome, Chromium, Chrome Canary, Opera,...), of course...
-- NodeJS [here](https://nodejs.org). Version 10.x is required.
+### Clone the [git-flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) based project.
 
-That's all :)
-
-### Clone the project
-
-Using HTTPS
 ```bash
 git clone https://github.com/thomaschampagne/elevate.git
 ```
-
-Or using SSH
-
+or
 ```bash
 git clone git@github.com:thomaschampagne/elevate.git
 ```
 
-### Fetch NPM dependencies
+The new mono-repo including the desktop app and the web extension is on `develop-new` branch at the moment. So checkout/track this branch to build the desktop app:
 
-The `npm` command should be installed on your system through the NodeJS installation. 
-
-Enter in project directory
 ```bash
-cd elevate
+cd ./elevate
+git checkout --track origin/develop-new
 ```
 
-Then install NPM dependencies with
+Then install npm dependencies:
+
 ```bash
 npm install
 ```
 
-### Build plugin
-
-Once you have installed the NPM dependencies, you can build the plugin with the following command:
-
-```bash
-npm run build
-```
-
-Both _core_ and _embedded app_ will be built.
-
-Once the build is completed, the plugin will be located in **dist/** directory.
-
-A production build can be also run with
-
-```bash
-npm run build:prod
-```
-
-This will disable TypeScript debug sources map and enable [Ahead-of-Time](https://angular.io/guide/aot-compiler) compilation for _embedded app_.
-
-### Load plugin into your browser
-
-Into your chrome based browser:
-
-* Open new tab and type **chrome://extensions**, then enter.
-* Tick **Developer Mode** checkbox.
-* Click **Load Unpacked Extension** button, then choose **dist/** directory (this is where you have the **manifest.json** file)
-* Make sure to disable other instances of elevate. You can re-enable them back from same tab.
-* Open strava.com
-
-### Build plugin on files changes
-
-In order to avoid to re-run the painful `npm run build` task on each file changes. You could run the following command:
-
-```bash
-npm start
-```
-
-This task will watch for files changes and automatically rebuild plugin to **dist/** directory. It's a way more suitable and faster for a development workflow.
-
-### Run unit tests
-
-The below command will run _core_ and _embedded app_ unit tests into a headless chrome.
+Run solution tests (`appcore` + `desktop` + `webextension`):
 
 ```bash
 npm test
 ```
 
-Should be **run** and has to **pass** before any work submission.
+(_Should be executed with success for any pull request submission_).
 
-### Packaging
+### Desktop development environment
+
+All commands displayed in this section will be executed in `./desktop/` folder. So:
+
+```bash
+cd ./desktop/
+```
+
+* Run in development:
+
+```bash
+npm start
+```
+
+> This npm task will create a `./desktop/dist` output folder and re-compile both `appcore` and `desktop` projects on any code changes
+
+To open the desktop app, open another terminal, then run: 
+
+```bash
+npm run launch:electron
+```
+
+* Run unit tests:
+
+```bash
+npm test
+```
+
+* Generate production installers per platforms:
+
+    - Build `Windows` `x64` `.exe`:
+    ```bash
+    npm run package:windows
+    ```
+    - Build `Linux` `x64` `.deb`:
+    ```bash
+    npm run package:linux
+    ```
+    - Build `MacOS` `x64` `.dmg` :
+    ```bash
+    npm run package:mac
+    ```
+> Output installers will be located in `./desktop/package/`
+
+> The build targets are defined in `./desktop/package.json` (`build` key section). See [https://www.electron.build](https://www.electron.build) for more info.
+
+* Clean outputs:
+
+```
+npm run clean
+```
+
+### Web extension development environment
+
+_To develop the web extension, you need a Chrome based browser (Chrome, Chromium, Chrome Canary, Opera,...), of course..._
+
+All commands displayed in this section will be executed in `./webextension/` folder. So:
+
+```bash
+cd ./webextension/
+```
+
+
+* Run in development:
+
+```bash
+npm start
+```
+
+> This npm task will create a `./webextension/dist` output folder and re-compile both `appcore` and `webextension` projects on any code changes
+
+* To load the web extension into your chrome based browser:
+
+    * Open new tab and type `chrome://extensions`, then enter.
+    * Tick `Developer Mode` checkbox.
+    * Click `Load Unpacked Extension` button, then choose `./webextension/dist` directory (this is where you have the `manifest.json` file)
+    * Make sure to disable other instances of elevate. You can re-enable them back from same tab.
+    * Open strava.com OR click on the Elevate icon in the browser toolbar.
+
+* Run unit tests
+
+```bash
+npm test
+```
+
+* Production package
 
 You can package the extension with the following command
 
@@ -165,13 +209,23 @@ You can package the extension with the following command
 npm run package
 ```
 
-A production build will be executed for this task.
+> Output release will be located in `./webextension/package/`
 
-On packaging done, a release archive will be generated in **package/** directory.
+* Clean outputs:
 
-### Package with Docker
+```
+npm run clean
+```
 
-Create docker image from `Dockerfile`
+## Build with docker
+
+### Desktop app
+
+TBD
+
+### Web extension
+
+Create docker your image from `Dockerfile`
 
 ```bash
 docker build . -t elevate-chrome-builder
@@ -182,19 +236,3 @@ Run a docker production build through a container. Replace `/path/to/your/direct
 ```bash
 docker run --rm --name elevate-chrome-build -v /path/to/your/directory/:/package elevate-chrome-builder
 ```
-
-### Clean project
-
-Simply run
-
-```
-npm run clean
-```
-
-This will clean **dist/**, **package/** & __*.js *.map__ generated files
-
-# Git-Flow Repository structure
-
-The project repository is fitted for **GitFlow** branches management workflow.
-
-Learn more @  http://nvie.com/posts/a-successful-git-branching-model/
