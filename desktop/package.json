@@ -12,14 +12,15 @@
 		"build:electron@base": "rollup --config rollup-app.config.js",
 		"build:electron@dev": "npm run build:updater@dev && npm run build:electron@base",
 		"build:electron@prod": "npm run build:updater@prod && npm run build:electron@base -- --environment ELECTRON_ENV:prod",
+		"build:prod": "npm-run-all clean build:electron@prod build:appcore@prod",
 		"clean": "npm-run-all clean:*",
 		"clean:dist": "node ../node_modules/del-cli/cli.js ./dist/",
 		"clean:package": "node ../node_modules/del-cli/cli.js ./package/",
 		"clean:metadata": "node ../node_modules/del-cli/cli.js ./build_metadata.json",
 		"launch:electron": "npm run assert-app-exists && run-electron ./dist/desktop.bundle.js",
-		"package:windows": "npm-run-all clean build:electron@prod build:appcore@prod && electron-builder build --windows --x64 --publish onTagOrDraft",
-		"package:linux": "npm-run-all clean build:electron@prod build:appcore@prod && electron-builder build --linux --x64",
-		"package:mac": "npm-run-all clean build:electron@prod build:appcore@prod && electron-builder build --mac --x64",
+		"package:windows": "npm run build:prod && electron-builder build --windows --x64 --publish onTagOrDraft",
+		"package:linux": "npm run build:prod && electron-builder build --linux --x64",
+		"package:mac": "npm run build:prod && electron-builder build --mac --x64",
 		"start": "npm run watch",
 		"test": "jest --coverage",
 		"tslint": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./src/**/*.ts --fix",
@@ -91,12 +92,13 @@
 			"./node_modules/**/*"
 		],
 		"publish": {
-			"owner": "thomaschampagne",
 			"provider": "github",
+			"owner": "thomaschampagne",
 			"repo": "elevate-alpha",
 			"vPrefixedTagName": false
 		},
 		"win": {
+			"publisherName": "Thomas Champagne",
 			"target": [
 				{
 					"target": "nsis",

@@ -162,6 +162,10 @@ npm test
 
 > The build targets are defined in `./desktop/package.json` (`build` key section). See [https://www.electron.build](https://www.electron.build) for more info.
 
+* (Optional) To sign the production installers read the [how to sign appendix](#sign-application)
+
+* (Optional) To publish the production installers on github read the [how to publish on github appendix](#publish-to-github-releases)
+
 * Clean outputs:
 
 ```
@@ -177,7 +181,6 @@ All commands displayed in this section will be executed in `./webextension/` fol
 ```bash
 cd ./webextension/
 ```
-
 
 * Run in development:
 
@@ -236,3 +239,115 @@ Run a docker production build through a container. Replace `/path/to/your/direct
 ```bash
 docker run --rm --name elevate-chrome-build -v /path/to/your/directory/:/package elevate-chrome-builder
 ```
+
+# Appendix
+## Sign application
+### Self-sign with OpenSSL for windows build
+
+* Create & edit a `code_sign.cnf` openssl config:
+
+```bash
+[req]
+distinguished_name = req_distinguished_name
+x509_extensions = v3_req
+prompt = no
+[req_distinguished_name]
+C = US
+ST = CA
+L = Los Angeles
+O = Elevate
+OU = Elevate Training App
+CN = John Doo
+stateOrProvinceName = California
+emailAddress = your.email@domain.com
+[usr_cert]
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature
+extendedKeyUsage = codeSigning
+[v3_req]
+keyUsage = digitalSignature
+extendedKeyUsage = codeSigning
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = your.domain.com
+DNS.2 = your.domain2.com
+```
+
+* Generate private key and certificate with a `passphrase`
+
+```bash
+openssl req -x509 -newkey rsa:4096 -sha256 -keyout code_sign.key -out code_sign.crt -days 7300 -config code_sign.cnf
+```  
+
+* Create `.pxf` file from the private key and certificate previously generated. `.pxf` file will be used to sign app under windows.
+
+```bash
+openssl pkcs12 -export -name "elevate" -out code_sign.pfx -inkey code_sign.key -in code_sign.crt
+```
+
+* Convert `.pxf` file to `base64`
+```bash
+base64 code_sign.pfx -w 0
+```
+
+* Create/edit `electron-builder.env` file under `./desktop/` folder, and add following keys:
+
+```bash
+CSC_LINK=
+CSC_KEY_PASSWORD=
+```
+
+* Assign the `base64` previously generated to the key `CSC_LINK`
+
+* Assign the `passphrase` previously used to the key `CSC_KEY_PASSWORD`
+
+* Then run packaging for windows:
+
+```bash
+npm run package:windows
+```
+
+## Publish to github releases
+
+* Generate a github personal access token at [https://github.com/settings/tokens/new](https://github.com/settings/tokens/new)
+
+* Tick `write:packages` scope. The `repo` and `read:packages` scopes should be automatically ticked too. Leave them ticked.
+
+* Enter a `Note` for your token, then click `Generate token`. Keep this token safe. If lost you will have to re-generate one.
+
+* Create/edit `electron-builder.env` file under `./desktop/` folder, and add following key:
+
+```bash
+GH_TOKEN=
+```
+
+* Assign the generated token to the key `GH_TOKEN`.
+
+* Open `./desktop/package.json` file and go to the key `build.publish`.
+
+* Edit the `owner` and `repo` variables to match with your target github repository.
+
+_Note: To publish a new version on github, a github `draft release` has to exist on the remote target repo. 
+The github `draft release` value should match the `version` value of `./desktop/package.json` file. 
+New version must be compliant with [semver convention](https://semver.org/) and higher than previous version if exists.
+You can use this [semver compare tool](https://semvercompare.azurewebsites.net/) that your new version is higher than your previous one._
+
+* Open [https://github.com/your_owner/your_repo/releases](https://github.com/your_owner/your_repo/releases) and click `Draft a new release`.
+
+* Enter the semver version to draft and click `Save draft`. 
+
+_Note: You may already pushed a git tag matching your version. If not, the git tag will be created on publish._
+
+* Run packaging to publish installer:
+
+```bash
+npm run package:windows
+```
+or
+```bash
+npm run package:mac
+```
+
+* Open [https://github.com/your_owner/your_repo/releases/edit/your_version](https://github.com/your_owner/your_repo/releases/edit/your_version): Some files should have been uploaded on the github draft release.
+
+* You can update the uploaded files draft with a new packaging process. Once ready, click `Publish release`: users will receive the update.
