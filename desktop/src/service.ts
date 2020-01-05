@@ -55,15 +55,23 @@ export class Service {
 	private _machineId: string;
 	private _runtimeInfo: RuntimeInfo;
 
-	public static currentPlatform(): string {
-		return os.platform();
-	}
-
 	public static instance(): Service {
 		if (!Service._instance) {
 			Service._instance = new Service();
 		}
 		return Service._instance;
+	}
+
+	public isWindows(): boolean {
+		return this.getRuntimeInfo().osPlatform.name === Service.PLATFORM.WINDOWS;
+	}
+
+	public isLinux(): boolean {
+		return this.getRuntimeInfo().osPlatform.name === Service.PLATFORM.LINUX;
+	}
+
+	public isMacOS(): boolean {
+		return this.getRuntimeInfo().osPlatform.name === Service.PLATFORM.MACOS;
 	}
 
 	public getRuntimeInfo(): RuntimeInfo {
