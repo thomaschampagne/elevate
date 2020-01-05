@@ -60,11 +60,6 @@ class Main {
 				}
 			});
 
-			if(Service.instance().isLinux()) {
-				this.startElevate();
-				return;
-			}
-
 			const elevateUpdater = new Updater(autoUpdater, logger);
 			elevateUpdater.update().then((updateInfo: UpdateInfo) => {
 				logger.info(`Updated to ${updateInfo.version} or already up to date.`);
@@ -83,7 +78,7 @@ class Main {
 		const width = Math.floor(workAreaSize.width * Main.WINDOW_SIZE_RATIO);
 		const height = Math.floor(workAreaSize.height * Main.WINDOW_SIZE_RATIO);
 
-		this.appWindow = new BrowserWindow({
+		const windowOptions: Electron.BrowserWindowConstructorOptions = {
 			width: width,
 			height: height,
 			center: true,
@@ -93,7 +88,13 @@ class Main {
 			webPreferences: {
 				nodeIntegration: true
 			}
-		});
+		};
+
+		if (Service.instance().isLinux()) {
+			windowOptions.icon = path.join(__dirname, "/../build/icon.png");
+		}
+
+		this.appWindow = new BrowserWindow(windowOptions);
 
 		// Create the request listener to listen renderer request events
 		this.ipcMainMessagesService = new IpcMainMessagesService(ipcMain, this.appWindow.webContents);

@@ -108,10 +108,6 @@
 				}
 			]
 		},
-		"nsis": {
-			"deleteAppDataOnUninstall": true,
-			"artifactName": "elevate_installer.${ext}"
-		},
 		"mac": {
 			"target": [
 				"dmg"
@@ -120,13 +116,16 @@
 		"linux": {
 			"category": "Sports",
 			"target": [
-				"deb"
+				"appImage"
 			]
 		},
-		"deb": {
-			"maintainer": "Thomas Champagne",
-			"category": "Sports",
+		"nsis": {
+			"deleteAppDataOnUninstall": true,
 			"artifactName": "elevate_installer.${ext}"
+		},
+		"appImage": {
+			"category": "Sports",
+			"artifactName": "elevate.${ext}"
 		}
 	},
 	"main": "./dist/desktop.bundle.js"

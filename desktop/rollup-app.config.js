@@ -19,7 +19,8 @@ const NODE_GLOBALS = [
 	"events",
 	"tty",
 	"child_process",
-	"stream"
+	"stream",
+	"zlib"
 ];
 
 const LODASH_METHODS_DECLARATION = [

@@ -5,6 +5,7 @@ import logger, { IElectronLog } from "electron-log";
 import * as url from "url";
 import * as path from "path";
 import { UpdateInfo } from "electron-updater";
+import { Service } from "src/service";
 
 enum UpdateEvent {
 	CHECKING_FOR_UPDATE = "checking-for-update",
@@ -31,7 +32,7 @@ export class Updater {
 
 	public createUpdateWindow(): Promise<BrowserWindow> {
 
-		const updateWindow = new BrowserWindow({
+		const windowOptions: Electron.BrowserWindowConstructorOptions = {
 			width: 400,
 			height: 200,
 			center: true,
@@ -43,7 +44,13 @@ export class Updater {
 			webPreferences: {
 				nodeIntegration: true
 			}
-		});
+		};
+
+		if (Service.instance().isLinux()) {
+			windowOptions.icon = path.join(__dirname, "/../build/icon.png");
+		}
+
+		const updateWindow = new BrowserWindow(windowOptions);
 
 		updateWindow.once("ready-to-show", () => {
 			updateWindow.show();
