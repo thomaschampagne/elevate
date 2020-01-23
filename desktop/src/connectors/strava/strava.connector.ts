@@ -274,7 +274,7 @@ export class StravaConnector extends BaseConnector {
 							}
 
 							// Gunzip stream as base64
-							syncedActivityModel.streams = (syncedActivityModel.streams) ? Gzip.toBase64(syncedActivityModel.streams) : null;
+							syncedActivityModel.streams = (syncedActivityModel.streams) ? Gzip.pack64(syncedActivityModel.streams) : null;
 
 							// Track connector type
 							syncedActivityModel.sourceConnectorType = ConnectorType.STRAVA;

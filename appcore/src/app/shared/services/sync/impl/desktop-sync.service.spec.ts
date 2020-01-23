@@ -1108,7 +1108,7 @@ describe("DesktopSyncService", () => {
 
 			// Given
 			const expectedData = {foo: "bar"};
-			const blob = new Blob([Gzip.toBinaryString(JSON.stringify(expectedData))], {type: "application/gzip"});
+			const blob = new Blob([Gzip.pack(JSON.stringify(expectedData))], {type: "application/gzip"});
 			const dumpSpy = spyOn(desktopSyncService.desktopDataStore, "createDump").and.returnValue(Promise.resolve(blob));
 			const appVersion = "1.0.0";
 			const getInstalledAppVersionSpy = spyOn(desktopSyncService.versionsProvider, "getPackageVersion")
@@ -1148,7 +1148,7 @@ describe("DesktopSyncService", () => {
 			const isDumpCompatibleSpy = spyOn(desktopSyncService, "isDumpCompatible").and.callThrough();
 			const loadDumpSpy = spyOn(desktopSyncService.desktopDataStore, "loadDump").and.returnValue(Promise.resolve());
 			const expectedData = {foo: "bar"};
-			const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel("1.0.0", Gzip.toBinaryString(JSON.stringify(expectedData)));
+			const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel("1.0.0", Gzip.pack(JSON.stringify(expectedData)));
 
 			// When
 			const promise = desktopSyncService.import(desktopDumpModel);

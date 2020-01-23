@@ -154,7 +154,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 			const dump: DesktopDumpModel = new DesktopDumpModel();
 
 			// Remove revision field before export
-			dump.gzippedDocs = Gzip.toBinaryString(JSON.stringify(docs.rows.map(wrappedDoc => {
+			dump.gzippedDocs = Gzip.pack(JSON.stringify(docs.rows.map(wrappedDoc => {
 				delete wrappedDoc.doc[DesktopDataStore.POUCH_DB_REV_FIELD];
 				return wrappedDoc.doc;
 			})));
@@ -173,7 +173,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 		// TODO "version" of dump should compared to "the current code version".
 		return new Promise((resolve, reject) => {
 			try {
-				const inflatedDump = Gzip.fromBinaryString(dump.gzippedDocs);
+				const inflatedDump = Gzip.unpack(dump.gzippedDocs);
 				const dumpObj = JSON.parse(inflatedDump);
 				this.database.destroy().then(() => {
 					this.setup(); // Recreate database

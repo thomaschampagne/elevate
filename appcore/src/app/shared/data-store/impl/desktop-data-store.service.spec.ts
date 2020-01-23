@@ -1154,7 +1154,7 @@ describe("DesktopDataStore", () => {
 			const destroyDbSpy = spyOn(desktopDataStore.database, "destroy").and.callThrough();
 			const setupDbSpy = spyOn(desktopDataStore, "setup").and.callThrough();
 
-			const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel("1.0.0", Gzip.toBinaryString(JSON.stringify(docs)));
+			const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel("1.0.0", Gzip.pack(JSON.stringify(docs)));
 
 			// When
 			const promise = desktopDataStore.loadDump(desktopDumpModel);
@@ -1190,7 +1190,7 @@ describe("DesktopDataStore", () => {
 			};
 
 			// ... prepare dump
-			let fakeCompressedDocs = Gzip.toBinaryString(JSON.stringify(docs));
+			let fakeCompressedDocs = Gzip.pack(JSON.stringify(docs));
 
 			// ... Ensure dump is corrupted
 			fakeCompressedDocs = fakeCompressedDocs.slice(0, fakeCompressedDocs.length / 1.5);
