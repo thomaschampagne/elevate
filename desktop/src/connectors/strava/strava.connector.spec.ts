@@ -713,6 +713,37 @@ describe("StravaConnector", () => {
 
 	describe("Perform strava api calls", () => {
 
+		describe("Wait time before retry", () => {
+
+			it("should retry 2 minutes later when 1st try failed", (done: Function) => {
+
+				// Given
+				const expectedMinutes = 2 * 60 * 1000;
+
+				// When
+				const result = stravaConnector.calculateRetryInTime(1);
+
+				// Then
+				expect(result).toEqual(expectedMinutes);
+				done();
+			});
+
+			it("should retry 5 minutes later when 2nd try failed", (done: Function) => {
+
+				// Given
+				const expectedMinutes = 5 * 60 * 1000;
+
+				// When
+				const result = stravaConnector.calculateRetryInTime(2);
+
+				// Then
+				expect(result).toEqual(expectedMinutes);
+				done();
+
+			});
+
+		});
+
 		it("should perform a successful strava api request", (done: Function) => {
 
 			// Given
@@ -765,7 +796,7 @@ describe("StravaConnector", () => {
 
 		});
 
-		it("should reject if strava api replied with HTTP error (unauthorized)", (done: Function) => {
+		it("should reject if strava api replied with HTTP error (401 unauthorized)", (done: Function) => {
 
 			// Given
 			const syncEvents$ = new Subject<SyncEvent>();
@@ -790,63 +821,7 @@ describe("StravaConnector", () => {
 
 		});
 
-		it("should reject if strava api replied with instant quota reached (403 Forbidden)", (done: Function) => {
-
-			// Given
-			const syncEvents$ = new Subject<SyncEvent>();
-			const url = "http://api.strava.com/v3/fake";
-			const httpClientResponse = createErrorResponse(HttpCodes.Forbidden);
-			httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
-			httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_USAGE_HEADER] = "666,3000"; // Quarter hour usage reached !
-			spyOn(Service.instance().httpClient, "get").and.returnValue(Promise.resolve(httpClientResponse));
-			spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-			const expectedErrorDetails = ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.create(666, 600);
-
-			// When
-			const promise = stravaConnector.stravaApiCall(syncEvents$, url);
-
-			// Then
-			promise.then(() => {
-				throw new Error("Should not be here!");
-
-			}, error => {
-				expect(error).not.toBeNull();
-
-				expect(error).toEqual(new ErrorSyncEvent(ConnectorType.STRAVA, expectedErrorDetails));
-				done();
-			});
-
-		});
-
-		it("should reject if strava api replied with daily quota reached (403 Forbidden)", (done: Function) => {
-
-			// Given
-			const syncEvents$ = new Subject<SyncEvent>();
-			const url = "http://api.strava.com/v3/fake";
-			const httpClientResponse = createErrorResponse(HttpCodes.Forbidden);
-			httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
-			httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_USAGE_HEADER] = "30,31000"; // Daily usage reached !
-			spyOn(Service.instance().httpClient, "get").and.returnValue(Promise.resolve(httpClientResponse));
-			spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-			const expectedErrorDetails = ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED.create(31000, 30000);
-
-			// When
-			const promise = stravaConnector.stravaApiCall(syncEvents$, url);
-
-			// Then
-			promise.then(() => {
-				throw new Error("Should not be here!");
-
-			}, error => {
-				expect(error).not.toBeNull();
-
-				expect(error).toEqual(new ErrorSyncEvent(ConnectorType.STRAVA, expectedErrorDetails));
-				done();
-			});
-
-		});
-
-		it("should reject if strava api replied with a 'classic' 403 Forbidden", (done: Function) => {
+		it("should reject if strava api replied with HTTP error (403 Forbidden)", (done: Function) => {
 
 			// Given
 			const syncEvents$ = new Subject<SyncEvent>();
@@ -862,11 +837,66 @@ describe("StravaConnector", () => {
 			// Then
 			promise.then(() => {
 				throw new Error("Should not be here!");
-
 			}, error => {
 				expect(error).not.toBeNull();
 
 				expect(error).toEqual(new ErrorSyncEvent(ConnectorType.STRAVA, expectedErrorDetails));
+				done();
+			});
+
+		});
+
+		it("should retry later & 3 times in total before failing when instant quota reached", (done: Function) => {
+
+			// Given
+			const syncEvents$ = new Subject<SyncEvent>();
+			const url = "http://api.strava.com/v3/fake";
+			const httpClientResponse = createErrorResponse(HttpCodes.TooManyRequests);
+			httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
+			httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_USAGE_HEADER] = "666,3000"; // Quarter hour usage reached !
+			spyOn(Service.instance().httpClient, "get").and.returnValue(Promise.resolve(httpClientResponse));
+			spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
+			const stravaApiCallSpy = spyOn(stravaConnector, "stravaApiCall").and.callThrough();
+			spyOn(stravaConnector, "calculateRetryInTime").and.returnValue(1000);
+			const expectedErrorDetails = ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.create(666, 600);
+
+			// When
+			const promise = stravaConnector.stravaApiCall(syncEvents$, url);
+
+			// Then
+			promise.then(() => {
+				throw new Error("Should not be here!");
+			}, error => {
+				expect(stravaApiCallSpy).toHaveBeenCalledTimes(3);
+				expect(error).toEqual(expectedErrorDetails);
+				done();
+			});
+
+		});
+
+		it("should retry later & 3 times in total before failing when daily quota reached", (done: Function) => {
+
+			// Given
+			const syncEvents$ = new Subject<SyncEvent>();
+			const url = "http://api.strava.com/v3/fake";
+			const httpClientResponse = createErrorResponse(HttpCodes.TooManyRequests);
+			httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
+			httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_USAGE_HEADER] = "30,31000"; // Daily usage reached !
+			spyOn(Service.instance().httpClient, "get").and.returnValue(Promise.resolve(httpClientResponse));
+			spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
+			const stravaApiCallSpy = spyOn(stravaConnector, "stravaApiCall").and.callThrough();
+			spyOn(stravaConnector, "calculateRetryInTime").and.returnValue(1000);
+			const expectedErrorDetails = ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED.create(31000, 30000);
+
+			// When
+			const promise = stravaConnector.stravaApiCall(syncEvents$, url);
+
+			// Then
+			promise.then(() => {
+				throw new Error("Should not be here!");
+			}, error => {
+				expect(stravaApiCallSpy).toHaveBeenCalledTimes(3);
+				expect(error).toEqual(expectedErrorDetails);
 				done();
 			});
 
@@ -1040,7 +1070,6 @@ describe("StravaConnector", () => {
 			});
 
 		});
-
 
 		it("should perform a successful strava api request and compute next call wait time properly", (done: Function) => {
 

@@ -5,6 +5,7 @@ import {
 	ActivitySyncEvent,
 	ConnectorType,
 	ErrorSyncEvent,
+	GenericSyncEvent,
 	StartedSyncEvent,
 	StoppedSyncEvent,
 	StravaAccount,
@@ -28,7 +29,7 @@ import logger from "electron-log";
 import { Service } from "../../service";
 import * as _ from "lodash";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
-import { Gzip } from "@elevate/shared/tools";
+import { Gzip, sleep } from "@elevate/shared/tools";
 import { filter } from "rxjs/operators";
 import { StravaAuthenticator } from "./strava-authenticator";
 import { IHttpClientResponse } from "typed-rest-client/Interfaces";
@@ -68,6 +69,7 @@ export class StravaConnector extends BaseConnector {
 	public static readonly STRAVA_RATELIMIT_LIMIT_HEADER: string = "x-ratelimit-limit";
 	public static readonly STRAVA_RATELIMIT_USAGE_HEADER: string = "x-ratelimit-usage";
 	public static readonly QUARTER_HOUR_TIME_INTERVAL: number = 15 * 60;
+	public static readonly QUOTA_REACHED_RETRY_COUNT: number = 2;
 
 	public stravaApiCredentials: StravaApiCredentials;
 	public updateSyncedActivitiesNameAndType: boolean;
@@ -120,11 +122,11 @@ export class StravaConnector extends BaseConnector {
 		const limits = (<string> headers[StravaConnector.STRAVA_RATELIMIT_LIMIT_HEADER]).split(",");
 		const usages = (<string> headers[StravaConnector.STRAVA_RATELIMIT_USAGE_HEADER]).split(",");
 
-		rateLimits.instant.limit = parseInt(limits[0].trim());
-		rateLimits.instant.usage = parseInt(usages[0].trim());
+		rateLimits.instant.limit = parseInt(limits[0].trim(), 10);
+		rateLimits.instant.usage = parseInt(usages[0].trim(), 10);
 
-		rateLimits.daily.limit = parseInt(limits[1].trim());
-		rateLimits.daily.usage = parseInt(usages[1].trim());
+		rateLimits.daily.limit = parseInt(limits[1].trim(), 10);
+		rateLimits.daily.usage = parseInt(usages[1].trim(), 10);
 
 		return rateLimits;
 
@@ -364,8 +366,9 @@ export class StravaConnector extends BaseConnector {
 	 * @return Promise<T> or reject an ErrorSyncEvent
 	 * @param syncEvents$
 	 * @param url
+	 * @param tries
 	 */
-	public stravaApiCall<T>(syncEvents$: Subject<SyncEvent>, url: string): Promise<T> {
+	public stravaApiCall<T>(syncEvents$: Subject<SyncEvent>, url: string, tries: number = 1): Promise<T> {
 
 		if (!_.isNumber(this.stravaApiCredentials.clientId) || _.isEmpty(this.stravaApiCredentials.clientSecret)) {
 			return Promise.reject(ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create());
@@ -376,7 +379,7 @@ export class StravaConnector extends BaseConnector {
 			logger.debug(`Waiting ${this.nextCallWaitTime} seconds before calling strava api`);
 
 			// Wait during next call wait time
-			return new Promise(resolve => setTimeout(resolve, this.nextCallWaitTime)).then(() => {
+			return sleep(this.nextCallWaitTime).then(() => {
 				return Service.instance().httpClient.get(url, {
 					"Authorization": `Bearer ${this.stravaApiCredentials.accessToken}`,
 					"Content-Type": "application/json"
@@ -399,6 +402,8 @@ export class StravaConnector extends BaseConnector {
 
 		}).catch((error: http.IncomingMessage) => {
 
+			logger.error("strava api http.IncomingMessage", "statusCode: " + error.statusCode, "headers: " + JSON.stringify(error.headers));
+
 			switch (error.statusCode) {
 
 				case HttpCodes.Unauthorized:
@@ -406,16 +411,39 @@ export class StravaConnector extends BaseConnector {
 
 				case HttpCodes.Forbidden:
 
-					let forbiddenPromise;
+					return Promise.reject(ErrorSyncEvent.STRAVA_API_FORBIDDEN.create());
+
+				case HttpCodes.TooManyRequests:
+
 					const parseRateLimits = StravaConnector.parseRateLimits(error.headers);
-					if (parseRateLimits.instant.usage > parseRateLimits.instant.limit) {
-						forbiddenPromise = Promise.reject(ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.create(parseRateLimits.instant.usage, parseRateLimits.instant.limit));
-					} else if (parseRateLimits.daily.usage > parseRateLimits.daily.limit) {
-						forbiddenPromise = Promise.reject(ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED.create(parseRateLimits.daily.usage, parseRateLimits.daily.limit));
-					} else {
-						forbiddenPromise = Promise.reject(ErrorSyncEvent.STRAVA_API_FORBIDDEN.create());
+					const isInstantQuotaReached = parseRateLimits.instant.usage > parseRateLimits.instant.limit;
+					const isDailyQuotaReached = parseRateLimits.daily.usage > parseRateLimits.daily.limit;
+
+					const maxTriesReached = tries >= (StravaConnector.QUOTA_REACHED_RETRY_COUNT + 1);
+					if (maxTriesReached) {
+						if (isInstantQuotaReached) {
+							return Promise.reject(ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED
+								.create(parseRateLimits.instant.usage, parseRateLimits.instant.limit));
+						}
+						if (isDailyQuotaReached) {
+							return Promise.reject(ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED
+								.create(parseRateLimits.daily.usage, parseRateLimits.daily.limit));
+						}
+
+						const errDesc = `Strava ${(isInstantQuotaReached ? "instant quota reached" : (isDailyQuotaReached ? "daily quota reached" : ""))}, retry sync later.`;
+						return ErrorSyncEvent.UNHANDLED_ERROR_SYNC.create(ConnectorType.STRAVA, errDesc);
 					}
-					return forbiddenPromise;
+
+					// Retry call later
+					const retryInTime = this.calculateRetryInTime(tries);
+					syncEvents$.next(new GenericSyncEvent(ConnectorType.STRAVA, `Still processing... Please wait few minutes.`));
+					const logMessage = `${(isInstantQuotaReached ? "Instant quota reached" : (isDailyQuotaReached ? "Daily quota reached" : ""))}. Waiting ${retryInTime} before continue.`;
+					logger.info(logMessage, JSON.stringify(parseRateLimits));
+
+					return sleep(retryInTime).then(() => {
+						tries++;
+						return this.stravaApiCall(syncEvents$, url, tries);
+					});
 
 				case HttpCodes.NotFound:
 					return Promise.reject(ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.create(url));
@@ -426,6 +454,11 @@ export class StravaConnector extends BaseConnector {
 
 			}
 		});
+	}
+
+	public calculateRetryInTime(tryCount: number): number {
+		const minutes = Math.round(Math.exp(tryCount) / 1.5);
+		return minutes * 60 * 1000;
 	}
 
 	/**
