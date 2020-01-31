@@ -60,6 +60,11 @@ class Main {
 				}
 			});
 
+			if (Service.instance().isLinux()) {
+				this.startElevate();
+				return;
+			}
+
 			const elevateUpdater = new Updater(autoUpdater, logger);
 			elevateUpdater.update().then((updateInfo: UpdateInfo) => {
 				logger.info(`Updated to ${updateInfo.version} or already up to date.`);
@@ -89,10 +94,6 @@ class Main {
 				nodeIntegration: true
 			}
 		};
-
-		if (Service.instance().isLinux()) {
-			windowOptions.icon = path.join(__dirname, "/../build/icon.png");
-		}
 
 		this.appWindow = new BrowserWindow(windowOptions);
 
