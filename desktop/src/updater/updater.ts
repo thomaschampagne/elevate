@@ -5,7 +5,6 @@ import logger, { IElectronLog } from "electron-log";
 import * as url from "url";
 import * as path from "path";
 import { UpdateInfo } from "electron-updater";
-import { Service } from "src/service";
 
 enum UpdateEvent {
 	CHECKING_FOR_UPDATE = "checking-for-update",
@@ -45,10 +44,6 @@ export class Updater {
 				nodeIntegration: true
 			}
 		};
-
-		if (Service.instance().isLinux()) {
-			windowOptions.icon = path.join(__dirname, "/../build/icon.png");
-		}
 
 		const updateWindow = new BrowserWindow(windowOptions);
 

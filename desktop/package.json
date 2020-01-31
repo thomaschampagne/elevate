@@ -116,16 +116,17 @@
 		"linux": {
 			"category": "Sports",
 			"target": [
-				"appImage"
+				"deb"
 			]
 		},
 		"nsis": {
 			"deleteAppDataOnUninstall": true,
 			"artifactName": "elevate_installer.${ext}"
 		},
-		"appImage": {
+		"deb": {
+			"maintainer": "Thomas Champagne",
 			"category": "Sports",
-			"artifactName": "elevate.${ext}"
+			"artifactName": "elevate_installer.${ext}"
 		}
 	},
 	"main": "./dist/desktop.bundle.js"
