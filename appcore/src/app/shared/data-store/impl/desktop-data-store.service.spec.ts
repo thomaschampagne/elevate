@@ -791,6 +791,64 @@ describe("DesktopDataStore", () => {
 			});
 		});
 
+		it("should remove FakeActivities by ids in collection", (done: Function) => {
+
+			// Given
+			const ids = ["00001", "00003"];
+
+			// When
+			const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>>
+				desktopDataStore.removeByIds(FAKE_ACTIVITIES_STORAGE_LOCATION, ids, []);
+
+			// Then
+			promise.then((fakeActivities: FakeActivity[]) => {
+
+				expect(fakeActivities.length).toEqual(1);
+
+				let compressedStreams = _.find(fakeActivities, {activityId: ids[0]});
+				expect(_.isEmpty(compressedStreams)).toBeTruthy();
+
+				compressedStreams = _.find(fakeActivities, {activityId: ids[1]});
+				expect(_.isEmpty(compressedStreams)).toBeTruthy();
+
+				compressedStreams = _.find(fakeActivities, {activityId: "00002"});
+				expect(_.isEmpty(compressedStreams)).toBeFalsy();
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
+		it("should reject remove FakeActivities by ids when not a collection", (done: Function) => {
+
+			// Given
+			const ids = ["00001", "00003"];
+
+			const fakeObjectStorageLocationModel = new StorageLocationModel("fakeSyncedActivity", StorageType.OBJECT, "activityId");
+
+			// When
+			const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>>
+				desktopDataStore.removeByIds(fakeObjectStorageLocationModel, ids, []);
+
+			// Then
+			promise.then(() => {
+
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+
+			}, error => {
+				expect(error).not.toBeNull();
+
+				done();
+			});
+
+		});
+
 		it("should reject upsert of a FakeActivity collection", (done: Function) => {
 
 			// Given
@@ -1205,7 +1263,6 @@ describe("DesktopDataStore", () => {
 			// Given
 			const expectedVersion = "2.0.0";
 			const bulkDocsSpy = spyOn(testDatabase, "bulkDocs").and.stub();
-			// const expectedErrorMessage = "SyntaxError: Unexpected end of JSON";
 
 			const expectedRows = [
 				{id: 1, data: "foo"},
@@ -1239,8 +1296,6 @@ describe("DesktopDataStore", () => {
 				done();
 			});
 		});
-
-		// TODO "version" dump to be compared with "the current code version".
 
 	});
 

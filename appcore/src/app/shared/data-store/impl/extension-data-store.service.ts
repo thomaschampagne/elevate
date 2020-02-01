@@ -138,6 +138,23 @@ export class ExtensionDataStore<T> extends DataStore<T> {
 		});
 	}
 
+	public removeByIds(storageLocation: StorageLocationModel, ids: (string | number)[], defaultStorageValue: T[] | T): Promise<T | T[]> {
+
+		return this.fetch(storageLocation, defaultStorageValue).then((dataStore: T[] | T) => {
+
+			if (!_.isArray(dataStore)) {
+				return Promise.reject("Cannot save property to a storage type 'vector'");
+			}
+
+			const newDataStore = _.filter(dataStore, entry => {
+				return (_.indexOf(ids, entry[storageLocation.collectionFieldId]) === -1);
+			});
+
+			return (<Promise<T | T[]>> this.save(storageLocation, newDataStore, defaultStorageValue));
+
+		});
+	}
+
 	/**
 	 *
 	 * @param storageLocation
@@ -162,10 +179,6 @@ export class ExtensionDataStore<T> extends DataStore<T> {
 		});
 	}
 
-	/**
-	 *
-	 * @param type
-	 */
 	public getAppUsageDetails(): Promise<AppUsageDetails> {
 
 		return new Promise<AppUsageDetails>((resolve) => {

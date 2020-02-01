@@ -405,6 +405,27 @@ export class DesktopDataStore<T> extends DataStore<T> {
 		});
 	}
 
+	public removeByIds(storageLocation: StorageLocationModel, ids: (string | number)[], defaultStorageValue: T[] | T): Promise<T | T[]> {
+
+		if (storageLocation.storageType !== StorageType.COLLECTION) {
+			return Promise.reject("removeByIds must be called on a collection only");
+		}
+
+		const database = this.provideDatabase(storageLocation.key);
+		return ids.reduce((previousPromise, id: string | number) => {
+			return previousPromise.then(() => {
+				return this.getById(storageLocation, <string> id).then((doc: PouchDB.Core.ExistingDocument<T>) => {
+					return database.remove(doc);
+				}).then(() => {
+					return Promise.resolve();
+				});
+			});
+
+		}, Promise.resolve()).then(() => {
+			return this.fetch(storageLocation, defaultStorageValue);
+		});
+	}
+
 	public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
 
 		return this.fetch(storageLocation, defaultStorageValue).then((doc: T) => {
