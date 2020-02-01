@@ -22,6 +22,7 @@ import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { Subject, timer } from "rxjs";
 import { debounce } from "rxjs/operators";
+import { StreamsService } from "../shared/services/streams/streams.service";
 import NumberColumn = ActivityColumns.NumberColumn;
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
@@ -34,6 +35,7 @@ export class ActivitiesComponent implements OnInit {
 
 	constructor(public syncService: SyncService<any>,
 				public activityService: ActivityService,
+				public streamsService: StreamsService,
 				public userSettingsService: UserSettingsService,
 				public appEventsService: AppEventsService,
 				public snackBar: MatSnackBar,
@@ -216,8 +218,8 @@ export class ActivitiesComponent implements OnInit {
 			this.hasActivities = syncedActivityModels.length > 0;
 
 			this.dataSource.data = _.sortBy(syncedActivityModels, (dayFitnessTrendModel: SyncedActivityModel) => {
-				return dayFitnessTrendModel.id * -1;
-			});
+				return dayFitnessTrendModel.start_time;
+			}).reverse();
 
 			this.searchText$.pipe(
 				debounce(() => timer(350))
@@ -318,6 +320,8 @@ export class ActivitiesComponent implements OnInit {
 
 			if (confirm) {
 				this.activityService.removeByIds([activity.id]).then(() => {
+					return this.streamsService.removeByIds([activity.id]);
+				}).then(() => {
 					this.fetchApplyData();
 				}, error => {
 					this.snackBar.open(error, "Close");

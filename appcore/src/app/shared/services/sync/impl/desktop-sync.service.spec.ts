@@ -25,7 +25,7 @@ import { SyncState } from "../sync-state.enum";
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 import { StravaCredentialsUpdateSyncEvent } from "../../../../../../modules/shared/sync/events";
 import { StravaApiCredentials } from "../../../../../../modules/shared/sync/strava";
-import { ConnectorSyncDateTime } from "../../../../../../modules/shared/models/sync";
+import { CompressedStreamModel, ConnectorSyncDateTime } from "../../../../../../modules/shared/models/sync";
 import Spy = jasmine.Spy;
 
 describe("DesktopSyncService", () => {
@@ -246,10 +246,14 @@ describe("DesktopSyncService", () => {
 			const syncEvent$ = new Subject<SyncEvent>();
 			const isNew = true;
 			const activity = new SyncedActivityModel();
+			activity.id = "7dsa12ads8d";
 			activity.name = "No pain no gain";
 			activity.start_time = (new Date()).toISOString();
-			const activitySyncEvent = new ActivitySyncEvent(ConnectorType.FILE_SYSTEM, null, activity, isNew);
+			const compressedStream = "fakeCompressedData";
+			const expectedStreamModel = new CompressedStreamModel(activity.id, compressedStream);
+			const activitySyncEvent = new ActivitySyncEvent(ConnectorType.FILE_SYSTEM, null, activity, isNew, compressedStream);
 			const activityServicePutSpy = spyOn(desktopSyncService.activityService, "put").and.returnValue(Promise.resolve(activity));
+			const streamsServicePutSpy = spyOn(desktopSyncService.streamsService, "put").and.returnValue(Promise.resolve(expectedStreamModel));
 			const stopSpy = spyOn(desktopSyncService, "stop").and.returnValue(Promise.resolve());
 
 			// When
@@ -258,6 +262,7 @@ describe("DesktopSyncService", () => {
 			// Then
 			syncEvent$.subscribe(() => {
 				expect(activityServicePutSpy).toHaveBeenCalledWith(activity);
+				expect(streamsServicePutSpy).toHaveBeenCalledWith(expectedStreamModel);
 				expect(stopSpy).not.toHaveBeenCalled();
 				done();
 

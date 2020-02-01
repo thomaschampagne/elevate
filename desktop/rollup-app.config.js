@@ -43,7 +43,8 @@ const LODASH_METHODS_DECLARATION = [
 	"clone",
 	"sortBy",
 	"first",
-	"find"
+	"find",
+	"set"
 ];
 
 const IS_ELECTRON_PROD = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "prod");

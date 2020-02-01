@@ -47,7 +47,7 @@ describe("ActivityService", () => {
 		it("should fetch activities", (done: Function) => {
 
 			// Given
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 			// When
@@ -119,7 +119,7 @@ describe("ActivityService", () => {
 			});
 		});
 
-		it("should remove SyncedActivityModel by strava activity ids", (done: Function) => {
+		it("should remove SyncedActivityModel by activity ids", (done: Function) => {
 
 			// Given
 			const activitiesToDelete = [
@@ -203,7 +203,7 @@ describe("ActivityService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
@@ -276,7 +276,7 @@ describe("ActivityService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
@@ -349,7 +349,7 @@ describe("ActivityService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
@@ -416,7 +416,7 @@ describe("ActivityService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")

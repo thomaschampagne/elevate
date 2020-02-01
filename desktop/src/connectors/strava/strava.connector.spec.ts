@@ -32,6 +32,7 @@ import * as http from "http";
 import { IncomingHttpHeaders } from "http";
 import { HttpClient, HttpCodes } from "typed-rest-client/HttpClient";
 import { Service } from "../../service";
+import { BaseConnector } from "../base.connector";
 
 const getActivitiesFixture = (page: number, perPage: number, activities: Array<BareActivityModel[]>) => {
 	const from = (page > 1) ? ((page - 1) * perPage) : 0;
@@ -179,6 +180,7 @@ describe("StravaConnector", () => {
 				} else {
 					expect(syncEvent.type).toEqual(SyncEventType.ACTIVITY);
 					expect((<ActivitySyncEvent> syncEvent).activity).toBeDefined();
+					expect((<ActivitySyncEvent> syncEvent).compressedStream).toBeDefined();
 				}
 
 				expect(stravaConnector.isSyncing).toBeTruthy();
@@ -1257,10 +1259,10 @@ describe("StravaConnector", () => {
 			promise.then(() => {
 
 				const activitySyncEventSent = <ActivitySyncEvent> syncEventsSpy.calls.argsFor(trackCallId)[0]; // Catching call args
-
 				expect(activitySyncEventSent.fromConnectorType).toEqual(expectedActivitySyncEvent.fromConnectorType);
 				expect(activitySyncEventSent.description).toEqual(expectedActivitySyncEvent.description);
 				expect(activitySyncEventSent.isNew).toEqual(expectedActivitySyncEvent.isNew);
+				expect(activitySyncEventSent.compressedStream).toBeNull();
 				expect(activitySyncEventSent.activity.name).toEqual(expectedActivitySyncEvent.activity.name);
 				expect(activitySyncEventSent.activity.type).toEqual(expectedActivitySyncEvent.activity.type);
 				expect(syncEventsSpy).toBeCalledTimes(perPage);
@@ -1309,6 +1311,7 @@ describe("StravaConnector", () => {
 				_.forEach(syncEventsSpy.calls.all(), call => {
 					const activitySyncEventSent = <ActivitySyncEvent> call.args[0];
 					expect(activitySyncEventSent.isNew).toEqual(true); // Call is always a new activity
+					expect(activitySyncEventSent.compressedStream).not.toBeNull();
 				});
 
 				done();
@@ -1381,7 +1384,8 @@ describe("StravaConnector", () => {
 			const expectedSyncedActivityModelUpdate = _.cloneDeep(<SyncedActivityModel> _.cloneDeep(bareActivities[trackCallId])); // "Mini Zwift & Pschitt"
 			const expectedStartTime = "2019-03-10T16:17:32.000Z";
 			const expectedEndTime = "2019-03-10T16:49:23.000Z";
-
+			const expectedStravaId = 2204692225;
+			const expectedActivityId = expectedStravaId + "-" + BaseConnector.hashData(expectedStartTime, 8);
 			const expectedActivitySyncEvent = new ActivitySyncEvent(ConnectorType.STRAVA, null, expectedSyncedActivityModelUpdate, true);
 
 			// Emulate 1 existing activity
@@ -1396,10 +1400,12 @@ describe("StravaConnector", () => {
 				const activitySyncEventSent = <ActivitySyncEvent> syncEventsSpy.calls.argsFor(trackCallId)[0]; // Catching 2nd call
 				expect(activitySyncEventSent.activity.start_time).toEqual(expectedStartTime);
 				expect(activitySyncEventSent.activity.end_time).toEqual(expectedEndTime);
+				expect(activitySyncEventSent.activity.id).toEqual(expectedActivityId);
 				expect(activitySyncEventSent.activity.name).toEqual(expectedActivitySyncEvent.activity.name);
 				expect(activitySyncEventSent.activity.type).toEqual(expectedActivitySyncEvent.activity.type);
 				expect(activitySyncEventSent.activity.sourceConnectorType).toEqual(ConnectorType.STRAVA);
-				expect(activitySyncEventSent.activity.streams).not.toBeNull();
+				expect(activitySyncEventSent.compressedStream).not.toBeNull();
+				expect(activitySyncEventSent.activity.extras[StravaConnector.EXTRA_ACTIVITY_ID]).toEqual(expectedStravaId);
 				expect(activitySyncEventSent.activity.athleteSnapshot).toEqual(stravaConnector.athleteSnapshotResolver.getCurrent());
 				expect(activitySyncEventSent.activity.extendedStats).not.toBeNull();
 				done();

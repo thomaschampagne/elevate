@@ -17,7 +17,7 @@ import {
 import { IpcRendererMessagesService } from "../../messages-listener/ipc-renderer-messages.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { StravaApiCredentialsService } from "../../strava-api-credentials/strava-api-credentials.service";
-import { AthleteModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import { AthleteModel, CompressedStreamModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { ActivityService } from "../../activity/activity.service";
 import { ElevateException, SyncException } from "@elevate/shared/exceptions";
 import * as _ from "lodash";
@@ -29,11 +29,10 @@ import { ConnectorSyncDateTime } from "@elevate/shared/models/sync";
 import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-time.dao";
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 import { AppEventsService } from "../../external-updates/app-events-service";
+import { StreamsService } from "../../streams/streams.service";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
-// TODO migrate lastSyncDateTime storage key to syncDateTime for the extension (on develop)
 // TODO Handle sync complete
-// TODO Handle TooManyRequests 429 on Desktop::StravaConnector::stravaApiCall => replay query 3 min later?
 // TODO Add sync gen session id as string baseConnector. Goal: more easy to debug sync session with start/stop actions?
 // TODO Handle errors cases (continue or not the sync...)
 // TODO Provide a sync view with all sync events tracked (tmp saved?!) & displayed => to sum up a sync log view.
@@ -42,11 +41,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
     but allow user to mark a connector as "Primary" which will be synced when starting the app.
 	Also allow user to sync connector he wants manually on connectors page
  */
-// TODO Open path to log file from a button
-// TODO Application upgrade!?
-// TODO "version" of dump should compared to "the current code version".
 
-// TODO Handle no strava access token (or expired) when starting strava sync
 // TODO Handle updateSyncedActivitiesNameAndType of strava over filesystem connector
 
 // TODO Forward toolbar sync button to Connectors
@@ -61,10 +56,11 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 	/**
 	 * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
 	 */
-	public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "1.0.0";
+	public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "7.0.0-alpha.1";
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
 				public activityService: ActivityService,
+				public streamsService: StreamsService,
 				public athleteService: AthleteService,
 				public userSettingsService: UserSettingsService,
 				public messageListenerService: IpcRendererMessagesService,
@@ -73,7 +69,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 				public connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
 				public appEventsService: AppEventsService,
 				@Inject(DataStore) public desktopDataStore: DesktopDataStore<void> /* Injected to create PouchDB dumps & load them */) {
-		super(versionsProvider, activityService, athleteService, userSettingsService, logger);
+		super(versionsProvider, activityService, streamsService, athleteService, userSettingsService, logger);
 		this.syncSubscription = null;
 		this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync // TODO ReplaySubject to get old values?! I think no
 		this.currentConnectorType = null;
@@ -316,7 +312,14 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 			this.logger.info(`Activity "${syncedActivityModel.name}" saved`);
 			this.trackActivityUpsert();
-			syncEvents$.next(activitySyncEvent); // Forward for upward UI use.
+
+			const promiseHandlePutStreams: Promise<void | CompressedStreamModel> = (activitySyncEvent.compressedStream) ?
+				this.streamsService.put(new CompressedStreamModel(`${activitySyncEvent.activity.id}`, activitySyncEvent.compressedStream))
+				: Promise.resolve();
+
+			promiseHandlePutStreams.then(() => {
+				syncEvents$.next(activitySyncEvent); // Forward for upward UI use
+			});
 
 		}).catch((upsertError: Error) => {
 

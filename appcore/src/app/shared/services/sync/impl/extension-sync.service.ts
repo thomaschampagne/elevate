@@ -13,6 +13,7 @@ import { SyncService } from "../sync.service";
 import { SyncState } from "../sync-state.enum";
 import { ExtensionDumpModel } from "../../../models/dumps/extension-dump.model";
 import { DumpModel } from "../../../models/dumps/dump.model";
+import { StreamsService } from "../../streams/streams.service";
 
 @Injectable()
 export class ExtensionSyncService extends SyncService<number> {
@@ -28,11 +29,12 @@ export class ExtensionSyncService extends SyncService<number> {
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
 				public activityService: ActivityService,
+				public streamsService: StreamsService,
 				public athleteService: AthleteService,
 				public userSettingsService: UserSettingsService,
 				public logger: LoggerService,
 				public syncDateTimeDao: SyncDateTimeDao) {
-		super(versionsProvider, activityService, athleteService, userSettingsService, logger);
+		super(versionsProvider, activityService, streamsService, athleteService, userSettingsService, logger);
 	}
 
 	public sync(fastSync: boolean, forceSync: boolean): Promise<void> {

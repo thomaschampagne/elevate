@@ -20,19 +20,12 @@ export class ActivityDao extends BaseDao<SyncedActivityModel> {
 		return ActivityDao.DEFAULT_STORAGE_VALUE;
 	}
 
-	public fetchMinimalFields(): Promise<SyncedActivityModel[]> {
-		return <Promise<SyncedActivityModel[]>> super.fetch({
-			selector: null,
-			fields: SyncedActivityModel.MINIMAL_FIELDS
-		});
-	}
-
 	/**
 	 *
 	 * @param {number[]} activitiesToDelete
 	 * @returns {Promise<SyncedActivityModel[]>}
 	 */
-	public removeByIds(activitiesToDelete: number[]): Promise<SyncedActivityModel[]> {
+	public removeByIds(activitiesToDelete: (string | number)[]): Promise<SyncedActivityModel[]> {
 		return this.fetch().then((models: SyncedActivityModel[]) => {
 			const modelsToBeSaved = _.filter(models, (syncedActivityModel: SyncedActivityModel) => {
 				return (_.indexOf(activitiesToDelete, syncedActivityModel.id) === -1);

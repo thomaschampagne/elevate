@@ -2,7 +2,7 @@ import { AthleteSnapshotModel } from "@elevate/shared/models";
 
 export class DayStressModel {
 
-	public ids: number[];
+	public ids: (string | number)[];
 	public date: Date;
 	public timestamp: number;
 	public types: string[];
