@@ -1383,6 +1383,7 @@ describe("StravaConnector", () => {
 
 			const expectedSyncedActivityModelUpdate = _.cloneDeep(<SyncedActivityModel> _.cloneDeep(bareActivities[trackCallId])); // "Mini Zwift & Pschitt"
 			const expectedStartTime = "2019-03-10T16:17:32.000Z";
+			const expectedStartTimeStamp = new Date(expectedStartTime).getTime() / 1000;
 			const expectedEndTime = "2019-03-10T16:49:23.000Z";
 			const expectedStravaId = 2204692225;
 			const expectedActivityId = expectedStravaId + "-" + BaseConnector.hashData(expectedStartTime, 8);
@@ -1399,6 +1400,7 @@ describe("StravaConnector", () => {
 
 				const activitySyncEventSent = <ActivitySyncEvent> syncEventsSpy.calls.argsFor(trackCallId)[0]; // Catching 2nd call
 				expect(activitySyncEventSent.activity.start_time).toEqual(expectedStartTime);
+				expect(activitySyncEventSent.activity.start_timestamp).toEqual(expectedStartTimeStamp);
 				expect(activitySyncEventSent.activity.end_time).toEqual(expectedEndTime);
 				expect(activitySyncEventSent.activity.id).toEqual(expectedActivityId);
 				expect(activitySyncEventSent.activity.name).toEqual(expectedActivitySyncEvent.activity.name);

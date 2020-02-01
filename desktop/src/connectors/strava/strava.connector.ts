@@ -258,8 +258,10 @@ export class StravaConnector extends BaseConnector {
 						// Fetch stream of the activity
 						return this.getStravaActivityStreams(<number> bareActivity.id).then((activityStreamsModel: ActivityStreamsModel) => {
 
-							// Assign stream
 							const syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
+							syncedActivityModel.start_timestamp = new Date(bareActivity.start_time).getTime() / 1000;
+
+							// Assign reference to strava activity
 							_.set(syncedActivityModel, ["extras", StravaConnector.EXTRA_ACTIVITY_ID], syncedActivityModel.id); // Keep tracking  of activity id
 							syncedActivityModel.id = syncedActivityModel.id + "-" + BaseConnector.hashData(syncedActivityModel.start_time, 8);
 

@@ -217,9 +217,9 @@ export class ActivitiesComponent implements OnInit {
 
 			this.hasActivities = syncedActivityModels.length > 0;
 
-			this.dataSource.data = _.sortBy(syncedActivityModels, (dayFitnessTrendModel: SyncedActivityModel) => {
-				return dayFitnessTrendModel.start_time;
-			}).reverse();
+			this.dataSource.data = _.sortBy(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
+				return syncedActivityModel.start_timestamp * -1;
+			});
 
 			this.searchText$.pipe(
 				debounce(() => timer(350))
