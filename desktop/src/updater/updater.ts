@@ -103,13 +103,13 @@ export class Updater {
 
 		}).then((updateInfo: UpdateInfo) => {
 			setTimeout(() => {
-				this.updateWindow.destroy();
+				this.updateWindow.close();
 			});
 			return Promise.resolve(updateInfo);
 
 		}).catch(err => {
 			setTimeout(() => {
-				this.updateWindow.destroy();
+				this.updateWindow.close();
 			});
 			logger.error("Update error", err);
 			return Promise.reject(err);
