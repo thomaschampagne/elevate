@@ -12,6 +12,8 @@ import { SyncService } from "../sync.service";
 import { ExtensionSyncService } from "./extension-sync.service";
 import { DumpModel } from "../../../models/dumps/dump.model";
 import { ExtensionDumpModel } from "../../../models/dumps/extension-dump.model";
+import { DataStore } from "../../../data-store/data-store";
+import { MockedDataStore } from "../../../data-store/impl/mock/mocked-data-store.service";
 
 describe("ExtensionSyncService", () => {
 
@@ -23,6 +25,7 @@ describe("ExtensionSyncService", () => {
 	beforeEach((done: Function) => {
 
 		const mockedVersionsProvider: MockedVersionsProvider = new MockedVersionsProvider();
+		const mockedDataStore = new MockedDataStore();
 
 		TestBed.configureTestingModule({
 			imports: [
@@ -31,7 +34,8 @@ describe("ExtensionSyncService", () => {
 			],
 			providers: [
 				{provide: SyncService, useClass: ExtensionSyncService},
-				{provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider}
+				{provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider},
+				{provide: DataStore, useValue: mockedDataStore},
 			]
 		});
 
@@ -558,8 +562,9 @@ describe("ExtensionSyncService", () => {
 	it("should remove athlete activities", (done: Function) => {
 
 		// Given
-		spyOn(extensionSyncService.syncDateTimeDao, "clear").and.returnValue(Promise.resolve());
-		spyOn(extensionSyncService.activityService, "clear").and.returnValue(Promise.resolve());
+		const syncDateTimeDaoSpy = spyOn(extensionSyncService.syncDateTimeDao, "clear").and.returnValue(Promise.resolve());
+		const activityServiceSpy = spyOn(extensionSyncService.activityService, "clear").and.returnValue(Promise.resolve());
+		const streamsServiceSpy = spyOn(extensionSyncService.streamsService, "clear").and.returnValue(Promise.resolve());
 
 		const spyResolve = spyOn(Promise, "resolve").and.callThrough();
 
@@ -568,7 +573,10 @@ describe("ExtensionSyncService", () => {
 
 		// Then
 		promise.then(() => {
-			expect(spyResolve).toHaveBeenCalled();
+			expect(spyResolve).toHaveBeenCalledTimes(1);
+			expect(syncDateTimeDaoSpy).toHaveBeenCalledTimes(1);
+			expect(activityServiceSpy).toHaveBeenCalledTimes(1);
+			expect(streamsServiceSpy).toHaveBeenCalledTimes(1);
 			done();
 
 		}, error => {

@@ -1154,6 +1154,7 @@ describe("DesktopSyncService", () => {
 			const loadDumpSpy = spyOn(desktopSyncService.desktopDataStore, "loadDump").and.returnValue(Promise.resolve());
 			const expectedData = {foo: "bar"};
 			const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel("1.0.0", Gzip.pack(JSON.stringify(expectedData)));
+			spyOn(desktopSyncService, "getCompatibleBackupVersionThreshold").and.returnValue("1.0.0");
 
 			// When
 			const promise = desktopSyncService.import(desktopDumpModel);
