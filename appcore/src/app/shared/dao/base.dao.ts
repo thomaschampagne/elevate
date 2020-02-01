@@ -91,6 +91,12 @@ export abstract class BaseDao<T> {
 		});
 	}
 
+	public removeByIds(ids: (string | number)[]): Promise<T[]> {
+		return this.checkCompliantDao().then(() => {
+			return <Promise<T[]>> this.dataStore.removeByIds(this.storageLocation, ids, this.defaultStorage);
+		});
+	}
+
 	/**
 	 * Clear all data
 	 */

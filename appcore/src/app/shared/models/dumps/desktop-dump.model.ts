@@ -2,15 +2,15 @@ import { DumpModel } from "./dump.model";
 
 export class DesktopDumpModel extends DumpModel {
 
-	constructor(version: string = null, compressedDump: string = null) {
+	constructor(version: string = null, gzippedDatabases: string = null) {
 		super();
 		this.version = version;
-		this.gzippedDocs = compressedDump;
+		this.gzippedDatabases = gzippedDatabases;
 	}
 
 	private static readonly SERIALIZE_SEPARATOR: string = ";";
 	public version: string;
-	public gzippedDocs: string;
+	public gzippedDatabases: string;
 
 	public static deserialize(serialized: string): DesktopDumpModel {
 		const separatorPos = serialized.indexOf(DesktopDumpModel.SERIALIZE_SEPARATOR);
@@ -18,6 +18,6 @@ export class DesktopDumpModel extends DumpModel {
 	}
 
 	public serialize(): string {
-		return this.version + DesktopDumpModel.SERIALIZE_SEPARATOR + this.gzippedDocs;
+		return this.version + DesktopDumpModel.SERIALIZE_SEPARATOR + this.gzippedDatabases;
 	}
 }

@@ -9,11 +9,13 @@ import { ActivityService } from "../activity/activity.service";
 import { DumpModel } from "../../models/dumps/dump.model";
 import { environment } from "../../../../environments/environment";
 import * as semver from "semver";
+import { StreamsService } from "../streams/streams.service";
 
 export abstract class SyncService<T> {
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
 				public activityService: ActivityService,
+				public streamsService: StreamsService,
 				public athleteService: AthleteService,
 				public userSettingsService: UserSettingsService,
 				public logger: LoggerService) {
@@ -50,7 +52,8 @@ export abstract class SyncService<T> {
 
 		return Promise.all([
 			this.clearSyncTime(),
-			this.activityService.clear()
+			this.activityService.clear(),
+			this.streamsService.clear()
 		]).then(() => {
 			return Promise.resolve();
 		}).catch(error => {

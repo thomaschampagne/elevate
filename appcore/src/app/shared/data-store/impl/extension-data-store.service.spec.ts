@@ -882,4 +882,54 @@ describe("ExtensionDataStore", () => {
 		});
 	});
 
+	it("should remove by id some Foo into a collection", (done: Function) => {
+
+		// Given
+		const data: Foo[] = [{
+			id: "0001",
+			bar: "john doe"
+		}, {
+			id: "0002",
+			bar: "jean kevin"
+		}, {
+			id: "0003",
+			bar: "colette sterolle"
+		}];
+
+		storageLocation = {
+			key: "foo",
+			storageType: null,
+			collectionFieldId: "id"
+		};
+
+		EXTENSION_STORAGE_STUB[storageLocation.key] = data;
+
+		const ids = ["0001", "0003"];
+
+		// When
+		const promise: Promise<Foo[]> = <Promise<Foo[]>> extensionDataStore.removeByIds(storageLocation, ids, []);
+
+		// Then
+		promise.then((result: Foo[]) => {
+
+			expect(result).not.toBeNull();
+			expect(result.length).toEqual(1);
+
+			let foo = _.find(result, {id: ids[0]});
+			expect(_.isEmpty(foo)).toBeTruthy();
+
+			foo = _.find(result, {id: ids[1]});
+			expect(_.isEmpty(foo)).toBeTruthy();
+
+			foo = _.find(result, {id: "0002"});
+			expect(_.isEmpty(foo)).toBeFalsy();
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
 });

@@ -159,7 +159,7 @@ export class FitnessTrendComponent implements OnInit {
 		}];
 	}
 
-	public static openActivity(id: number) {
+	public static openActivity(id: string | number) {
 		if (_.isNumber(id)) {
 			const url = "https://www.strava.com/activities/{activityId}";
 			window.open(url.replace("{activityId}", id.toString()), "_blank");
@@ -168,7 +168,7 @@ export class FitnessTrendComponent implements OnInit {
 		}
 	}
 
-	public static openActivities(ids: number[]) {
+	public static openActivities(ids: (string | number)[]) {
 		if (ids.length > 0) {
 			const url = "https://www.strava.com/activities/{activityId}";
 			_.forEach(ids, (id: number) => {
