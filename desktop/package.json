@@ -99,6 +99,7 @@
 		},
 		"win": {
 			"publisherName": "Thomas Champagne",
+			"verifyUpdateCodeSignature": false,
 			"target": [
 				{
 					"target": "nsis",

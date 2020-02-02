@@ -18,6 +18,7 @@ enum UpdateEvent {
 export class Updater {
 
 	public static readonly ENABLE_AUTO_INSTALL_ON_APP_QUIT: boolean = false;
+	public static readonly ENABLE_UPDATE_PRE_RELEASE: boolean = false;
 
 	private appUpdater: AppUpdater;
 	private updateWindow: Electron.BrowserWindow;
@@ -25,6 +26,7 @@ export class Updater {
 	constructor(appUpdater: AppUpdater, updateLogger: IElectronLog) {
 		this.appUpdater = appUpdater;
 		this.appUpdater.autoInstallOnAppQuit = Updater.ENABLE_AUTO_INSTALL_ON_APP_QUIT;
+		this.appUpdater.allowPrerelease = Updater.ENABLE_UPDATE_PRE_RELEASE;
 		this.appUpdater.logger = updateLogger;
 		this.updateWindow = null;
 	}
@@ -81,6 +83,7 @@ export class Updater {
 				});
 
 				this.appUpdater.on(UpdateEvent.ERROR, err => {
+					logger.error("App updater on error called", err);
 					reject(err);
 				});
 
@@ -97,23 +100,20 @@ export class Updater {
 
 				// Start update checking
 				this.appUpdater.checkForUpdates().catch(err => {
-					logger.error("Update error", err);
+					logger.error("Check for updates error", err);
 				});
 			});
 
 		}).then((updateInfo: UpdateInfo) => {
-			setTimeout(() => {
-				this.updateWindow.close();
-			});
 			return Promise.resolve(updateInfo);
-
 		}).catch(err => {
-			setTimeout(() => {
-				this.updateWindow.close();
-			});
 			logger.error("Update error", err);
 			return Promise.reject(err);
 		});
+	}
+
+	public close(): void {
+		this.updateWindow.close();
 	}
 
 	private notifyUpdateStatus(message: string): void {

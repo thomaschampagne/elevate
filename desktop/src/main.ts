@@ -68,15 +68,19 @@ class Main {
 			const elevateUpdater = new Updater(autoUpdater, logger);
 			elevateUpdater.update().then((updateInfo: UpdateInfo) => {
 				logger.info(`Updated to ${updateInfo.version} or already up to date.`);
-				this.startElevate();
+				this.startElevate(() => {
+					elevateUpdater.close();
+				});
 			}, error => {
 				logger.warn("Update failed", error);
-				this.startElevate();
+				this.startElevate(() => {
+					elevateUpdater.close();
+				});
 			});
 		}
 	}
 
-	private startElevate(): void {
+	private startElevate(onReady: () => void = null): void {
 
 		// Create the browser window.
 		const workAreaSize: Electron.Size = Electron.screen.getPrimaryDisplay().workAreaSize;
@@ -111,6 +115,9 @@ class Main {
 
 		this.appWindow.once("ready-to-show", () => {
 			this.appWindow.show();
+			if (onReady) {
+				onReady();
+			}
 		});
 
 		// Detect a proxy on the system before listening for message from renderer
