@@ -659,6 +659,30 @@ class Installer {
 		return promise;
 	}
 
+	protected migrate_to_6_15_1(): Promise<void> {
+
+		let promise: Promise<void> = Promise.resolve();
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.15.1")) {
+
+			console.log("Migrate to 6.15.1");
+
+			promise = BrowserStorage.getInstance().get<number>(BrowserStorageType.LOCAL, "lastSyncDateTime").then((lastSyncDateTime: number) => {
+				if (!lastSyncDateTime) {
+					console.log("Skip migrate to 6.15.1");
+					return Promise.resolve();
+				}
+				return BrowserStorage.getInstance().set<number>(BrowserStorageType.LOCAL, "syncDateTime", lastSyncDateTime);
+			}).then(() => {
+				return BrowserStorage.getInstance().rm<number>(BrowserStorageType.LOCAL, "lastSyncDateTime");
+			});
+
+		} else {
+			console.log("Skip migrate to 6.15.1");
+		}
+
+		return promise;
+	}
+
 
 	protected handleUpdate(): Promise<void> {
 
@@ -690,6 +714,8 @@ class Installer {
 			return this.migrate_to_6_14_0();
 		}).then(() => {
 			return this.migrate_to_6_15_0();
+		}).then(() => {
+			return this.migrate_to_6_15_1();
 		}).catch(error => console.error(error));
 
 	}

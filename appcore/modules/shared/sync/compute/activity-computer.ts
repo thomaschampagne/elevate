@@ -11,6 +11,7 @@ import {
 	HeartRateDataModel,
 	MoveDataModel,
 	PaceDataModel,
+	PowerBestSplitModel,
 	PowerDataModel,
 	SpeedDataModel,
 	UpFlatDownModel,
@@ -162,6 +163,57 @@ export class ActivityComputer {
 
 		const intensity = (weightedPower / cyclingFtp);
 		return (movingTime * weightedPower * intensity) / (cyclingFtp * 3600) * 100;
+	}
+
+	public static computeBestPowerSplits(timeArray: number[], powerArray: number[]) {
+		// Find Best 20min, best 80% and an entire power curve of time power splits
+		let best20min = null;
+		let bestEightyPercent = null;
+		let powerCurve: PowerBestSplitModel[] = [];
+		try {
+
+			const splitCalculator: SplitCalculator =
+				new SplitCalculator(_.clone(timeArray), _.clone(powerArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
+
+			try {
+				bestEightyPercent = splitCalculator.getBestSplit(_.floor(_.last(timeArray) * 0.80));
+			} catch (err) {
+				console.warn("No best 80% power available for this range");
+			}
+
+			try {
+				best20min = splitCalculator.getBestSplit(60 * 20);
+			} catch (err) {
+				console.warn("No best 20min power available for this range");
+			}
+
+			try {
+				// Set up some abitrary times here that we will use for the power curve
+				const defaultPowerCurveTimes = [
+					..._.range(1, 30, 1), // 1s to 30s in 1s
+					..._.range(30, 60, 5), // to 60s in 5s
+					..._.range(60, 5 * 60, 10), // to 5m in 10s
+					..._.range(5 * 60 + 30, 20 * 60, 30), // to 20 min in 30s
+					..._.range(20 * 60, 60 * 60, 60), // to 60 min in minutes
+					..._.range(60 * 60, 5 * 60 * 60, 5 * 60), // to 5 hour in 5 min
+					..._.range(5 * 60 * 60, 24 * 60 * 60, 60 * 60) // to 24 hour in 1 hour
+				];
+
+				// Ensure the final value is the maximum time
+				const maxTime = _.max(timeArray);
+				const timesToUse = [...defaultPowerCurveTimes.filter(t => t < maxTime), maxTime];
+				powerCurve = splitCalculator.getBestSplitRanges(timesToUse)
+					.map(r => ({watts: r.result, time: r.range}));
+
+			} catch (err) {
+				console.warn("Power curve could not be calculated");
+			}
+
+		} catch (err) {
+			console.warn(err);
+		}
+
+		return {best20min, bestEightyPercent, powerCurve};
 	}
 
 	/**
@@ -789,28 +841,8 @@ export class ActivityComputer {
 		// Update zone distribution percentage
 		powerZonesAlongActivityType = this.finalizeDistributionComputationZones(powerZonesAlongActivityType);
 
-		// Find Best 20min and best 80% of time power splits
-		let best20min = null;
-		let bestEightyPercent = null;
-		try {
-
-			const splitCalculator: SplitCalculator = new SplitCalculator(_.clone(timeArray), _.clone(powerArray), ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD);
-
-			try {
-				bestEightyPercent = splitCalculator.getBestSplit(_.floor(_.last(timeArray) * 0.80));
-			} catch (err) {
-				console.warn("No best 80% power available for this range");
-			}
-
-			try {
-				best20min = splitCalculator.getBestSplit(60 * 20);
-			} catch (err) {
-				console.warn("No best 20min power available for this range");
-			}
-
-		} catch (err) {
-			console.warn(err);
-		}
+		// Find default set of best powers
+		const {best20min, bestEightyPercent, powerCurve} = ActivityComputer.computeBestPowerSplits(timeArray, powerArray);
 
 		const powerStressScore = ActivityComputer.computePowerStressScore(totalMovingInSeconds, weightedPower, cyclingFtp);
 		const powerStressScorePerHour: number = powerStressScore / totalMovingInSeconds * 60 * 60;
@@ -831,6 +863,7 @@ export class ActivityComputer {
 			medianWatts: percentiles[1],
 			upperQuartileWatts: percentiles[2],
 			powerZones: (this.returnZones) ? powerZonesAlongActivityType : null, // Only while moving
+			powerCurve: powerCurve || []
 		};
 
 		if (!_.isUndefined(isEstimatedRunningPower)) {
