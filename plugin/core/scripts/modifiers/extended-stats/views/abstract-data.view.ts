@@ -1,9 +1,9 @@
 import * as Chart from "chart.js";
-import { LinearTickOptions } from "chart.js";
+import { ChartPoint, LinearTickOptions } from "chart.js";
 import * as _ from "lodash";
 import { Helper } from "../../../helper";
 import { AppResourcesModel } from "../../../models/app-resources.model";
-import { PointDataModel, SpeedUnitDataModel, ZoneModel } from "@elevate/shared/models";
+import { PowerBestSplitModel, SpeedUnitDataModel, ZoneModel } from "@elevate/shared/models";
 
 type GraphTypes = "histogram" | "scatter-line";
 
@@ -123,7 +123,7 @@ export abstract class AbstractDataView {
 		};
 	}
 
-	protected setupScatterLineGraph(pointDataModel: PointDataModel[]): void {
+	protected setupScatterLineGraph(chartPoints: ChartPoint[]): void {
 		this.graphData = {
 			datasets: [{
 				label: this.graphTitle,
@@ -133,7 +133,7 @@ export abstract class AbstractDataView {
 				pointRadius: 0,
 				hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
 				hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
-				data: pointDataModel,
+				data: chartPoints,
 				fill: false,
 				showLine: true
 			}],
@@ -244,7 +244,7 @@ export abstract class AbstractDataView {
 		tooltip.body[0].lines[0] = "Zone held during " + Helper.secondsToHHMMSS(parseFloat(timeInMinutes) * 60);
 	}
 
-	protected setupPointDataTable(pointDataModel: PointDataModel[]): void {
+	protected setupPointDataTable(pointDataModel: PowerBestSplitModel[]): void {
 
 		if (!this.units) {
 			console.error("View must have units.");
@@ -265,8 +265,8 @@ export abstract class AbstractDataView {
 		// Table body
 		htmlTable += pointDataModel.map(p => {
 			return "<tr>"
-				+ "<td>" + Helper.secondsToHHMMSS(p.x) + "</td>" // Time
-				+ "<td>" + p.y.toFixed(1) + "</td>" // Value
+				+ "<td>" + Helper.secondsToHHMMSS(p.time) + "</td>" // Time
+				+ "<td>" + p.watts.toFixed(1) + "</td>" // Value
 				+ "</tr>";
 		}).join("");
 

@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import { AbstractDataView } from "./abstract-data.view";
 import { PowerDataModel } from "@elevate/shared/models";
 
@@ -11,8 +10,10 @@ export class CyclingPowerCurveView extends AbstractDataView {
 		this.mainColor = [63, 64, 72];
 		this.powerData = powerData;
 		this.graphTitle = "Power best efforts vs. time";
-		this.setupScatterLineGraph(this.powerData.powerCurveWatts);
-		this.setupPointDataTable(this.powerData.powerCurveWatts);
+		this.setupScatterLineGraph(this.powerData.powerCurve.map(split => {
+			return {x: split.time, y: split.watts};
+		}));
+		this.setupPointDataTable(this.powerData.powerCurve);
 	}
 
 	public render(): void {

@@ -5,4 +5,4 @@ export * from "./user-settings";
 export * from "./core-messages";
 export * from "./release-note.model";
 export * from "./zone.model";
-export * from "./point-data.model";
+export * from "./power-best-split.model";

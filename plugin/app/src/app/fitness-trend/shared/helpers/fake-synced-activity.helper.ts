@@ -75,7 +75,7 @@ export class FakeSyncedActivityHelper {
 				best20min: avgWatts * 1.5,
 				bestEightyPercent: avgWatts,
 				weightedWattsPerKg: avgWatts * 1.25 / 70,
-				powerCurveWatts: []
+				powerCurve: []
 			};
 		}
 
