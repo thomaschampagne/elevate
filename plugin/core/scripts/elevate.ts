@@ -44,6 +44,7 @@ import { ActivitiesChronologicalFeedModifier } from "./modifiers/activities-chro
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { releaseNotesData } from "@elevate/shared/data";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
+import { GenericExtendedDataModifier } from "./modifiers/extended-stats/generic-extended-data.modifier";
 
 export class Elevate {
 
@@ -560,12 +561,9 @@ export class Elevate {
 				extendedDataModifier.apply();
 				break;
 			default:
-				/*			extendedDataModifier = new GenericExtendedDataModifier(
-								activityProcessor,
-								activityInfo,
-								this.appResources,
-								this.userSettings,
-								AbstractExtendedDataModifier.TYPE_ACTIVITY);*/
+				extendedDataModifier = new GenericExtendedDataModifier(activityProcessor, activityInfo, this.appResources,
+					this.userSettings, AbstractExtendedDataModifier.TYPE_ACTIVITY);
+				extendedDataModifier.apply();
 				break;
 		}
 
@@ -646,11 +644,13 @@ export class Elevate {
 							AbstractExtendedDataModifier.TYPE_SEGMENT);
 						extendedDataModifier.apply();
 						break;
+
 					default:
+						extendedDataModifier = new GenericExtendedDataModifier(activityProcessor, activityInfo, that.appResources,
+							that.userSettings, AbstractExtendedDataModifier.TYPE_SEGMENT);
+						extendedDataModifier.apply();
 						break;
 				}
-
-
 				return r;
 			};
 
