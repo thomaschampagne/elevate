@@ -8,7 +8,7 @@ import { YearProgressTypeModel } from "../shared/models/year-progress-type.model
 import { ProgressType } from "../shared/enums/progress-type.enum";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
-import { ElevateSport } from "../../../../modules/shared/enums";
+import { ElevateSport } from "@elevate/shared/enums";
 
 describe("AddYearProgressPresetDialogComponent", () => {
 	let component: AddYearProgressPresetDialogComponent;

@@ -23,10 +23,11 @@ import {
 } from "../../models";
 import { RunningPowerEstimator } from "./running-power-estimator";
 import { SplitCalculator } from "./split-calculator";
+import { ElevateSport } from "../../enums";
 
 export class ActivityComputer {
 
-	constructor(activityType: string,
+	constructor(activityType: ElevateSport,
 				isTrainer: boolean,
 				userSettings: UserSettings.UserSettingsModel,
 				athleteSnapshot: AthleteSnapshotModel,
@@ -64,7 +65,7 @@ export class ActivityComputer {
 	public static readonly SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
 
 	protected athleteSnapshot: AthleteSnapshotModel;
-	protected activityType: string;
+	protected activityType: ElevateSport;
 	protected isTrainer: boolean;
 	protected userSettings: UserSettings.UserSettingsModel;
 	protected movementData: MoveDataModel;
@@ -235,16 +236,16 @@ export class ActivityComputer {
 	 * @param activityType
 	 * @param athleteSettingsModel
 	 */
-	public static resolveLTHR(activityType: string, athleteSettingsModel: AthleteSettingsModel): number {
+	public static resolveLTHR(activityType: ElevateSport, athleteSettingsModel: AthleteSettingsModel): number {
 
 		if (athleteSettingsModel.lthr) {
-			if (activityType === "Ride" || activityType === "VirtualRide" || activityType === "EBikeRide") {
+			if (activityType === ElevateSport.Ride || activityType === ElevateSport.VirtualRide || activityType === ElevateSport.EBikeRide) {
 				if (_.isNumber(athleteSettingsModel.lthr.cycling)) {
 					return athleteSettingsModel.lthr.cycling;
 				}
 			}
 
-			if (activityType === "Run") {
+			if (activityType === ElevateSport.Run) {
 				if (_.isNumber(athleteSettingsModel.lthr.running)) {
 					return athleteSettingsModel.lthr.running;
 				}
@@ -345,7 +346,7 @@ export class ActivityComputer {
 		const hasActivityStream = !_.isEmpty(activityStream);
 		if (hasActivityStream && activityStream.velocity_smooth) {
 			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_adjusted_speed);
-		} else if (!hasActivityStream && this.activityType === "Run") { // Allow to estimate running move data if no stream available (goal is to get RSS computation for manual activities)
+		} else if (!hasActivityStream && this.activityType === ElevateSport.Run) { // Allow to estimate running move data if no stream available (goal is to get RSS computation for manual activities)
 			this.movementData = this.moveDataEstimate(this.activitySourceData.movingTime, this.activitySourceData.distance);
 		} else {
 			return null;
@@ -372,7 +373,7 @@ export class ActivityComputer {
 		let powerData: PowerDataModel;
 
 		// If Running activity with no power data, then try to estimate it for the author of activity...
-		if (this.activityType === "Run"
+		if (this.activityType === ElevateSport.Run
 			&& !this.hasPowerMeter
 			&& this.isOwner) {
 			powerData = this.estimatedRunningPower(activityStream, athleteSnapshot.athleteSettings.weight, hasPowerMeter, athleteSnapshot.athleteSettings.cyclingFtp);
@@ -551,7 +552,7 @@ export class ActivityComputer {
 			speedZones: null
 		};
 
-		const runningStressScore = (this.activityType === "Run" && averagePace && this.athleteSnapshot.athleteSettings.runningFtp)
+		const runningStressScore = (this.activityType === ElevateSport.Run && averagePace && this.athleteSnapshot.athleteSettings.runningFtp)
 			? ActivityComputer.computeRunningStressScore(movingTime, averagePace, this.athleteSnapshot.athleteSettings.runningFtp) : null;
 
 		const paceData: PaceDataModel = {
@@ -591,7 +592,7 @@ export class ActivityComputer {
 
 		// No grade adjusted speed if treadmill indoor run
 		if (this.isTrainer
-			&& this.activityType === "Run"
+			&& this.activityType === ElevateSport.Run
 			&& _.mean(gradeAdjustedSpeedArray) === 0) {
 			gradeAdjustedSpeedArray = velocityArray;
 		}
@@ -711,7 +712,7 @@ export class ActivityComputer {
 
 		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed && genuineGradeAdjustedAvgSpeed > 0) ? Math.floor(ActivityComputer.convertSpeedToPace(genuineGradeAdjustedAvgSpeed)) : null;
 
-		const runningStressScore = ((this.activityType === "Run" || this.activityType === "VirtualRun") && genuineGradeAdjustedAvgPace && this.athleteSnapshot.athleteSettings.runningFtp)
+		const runningStressScore = ((this.activityType === ElevateSport.Run || this.activityType === "VirtualRun") && genuineGradeAdjustedAvgPace && this.athleteSnapshot.athleteSettings.runningFtp)
 			? ActivityComputer.computeRunningStressScore(this.activitySourceData.movingTime, genuineGradeAdjustedAvgPace, this.athleteSnapshot.athleteSettings.runningFtp) : null;
 
 		const paceData: PaceDataModel = {
@@ -754,9 +755,9 @@ export class ActivityComputer {
 		}
 
 		let powerZonesAlongActivityType: ZoneModel[];
-		if (this.activityType === "Ride") {
+		if (this.activityType === ElevateSport.Ride) {
 			powerZonesAlongActivityType = this.userSettings.zones.get(UserZonesModel.TYPE_POWER);
-		} else if (this.activityType === "Run") {
+		} else if (this.activityType === ElevateSport.Run) {
 			powerZonesAlongActivityType = this.userSettings.zones.get(UserZonesModel.TYPE_RUNNING_POWER);
 		} else {
 			powerZonesAlongActivityType = null;
@@ -993,9 +994,9 @@ export class ActivityComputer {
 		let movingSampleCount = 0;
 
 		let cadenceZoneTyped: ZoneModel[];
-		if (this.activityType === "Ride") {
+		if (this.activityType === ElevateSport.Ride) {
 			cadenceZoneTyped = this.userSettings.zones.get(UserZonesModel.TYPE_CYCLING_CADENCE);
-		} else if (this.activityType === "Run") {
+		} else if (this.activityType === ElevateSport.Run) {
 			cadenceZoneTyped = this.userSettings.zones.get(UserZonesModel.TYPE_RUNNING_CADENCE);
 		} else {
 			return null;
@@ -1041,17 +1042,17 @@ export class ActivityComputer {
 						// Compute distance traveled foreach "hit":
 						// - Running: Each time a foot touch the ground
 						// - Cycling: Each crank revolution for Cycling
-						if (hasDistanceData && (this.activityType === "Ride" || this.activityType === "Run")) {
+						if (hasDistanceData && (this.activityType === ElevateSport.Ride || this.activityType === ElevateSport.Run)) {
 
 							const metersTravelled = (distanceArray[i] - distanceArray[i - 1]);
 
 							let occurrenceDistance: number = null;
 
-							if (this.activityType === "Ride") {
+							if (this.activityType === ElevateSport.Ride) {
 								occurrenceDistance = metersTravelled / occurrencesOnPeriod; // Aka Crank revolutions on delta time
 							}
 
-							if (this.activityType === "Run") {
+							if (this.activityType === ElevateSport.Run) {
 								occurrenceDistance = metersTravelled / (occurrencesOnPeriod * 2); // Aka strides with 2 legs representation on delta time
 							}
 

@@ -13,7 +13,7 @@ import {
 import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/fake-synced-activity.helper";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
-import { ElevateSport } from "../../../../../modules/shared/enums";
+import { ElevateSport } from "@elevate/shared/enums";
 
 describe("ActivityService", () => {
 

@@ -22,7 +22,7 @@ import { RollingProgressConfigModel } from "../models/rolling-progress-config.mo
 import { RollingProgressPresetModel } from "../models/rolling-progress-preset.model";
 import { YearToDateProgressConfigModel } from "../models/year-to-date-progress-config.model";
 import { Identifier } from "@elevate/shared/tools";
-import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { ElevateSport } from "@elevate/shared/enums";
 import Spy = jasmine.Spy;
 
 describe("YearProgressService", () => {

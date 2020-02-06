@@ -10,6 +10,7 @@ import {
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import * as _ from "lodash";
 import { Helper } from "../../../scripts/helper";
+import { ElevateSport } from "@elevate/shared/enums";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 const expectPace = (expectPaceString: string, toEqualPaceString: string, secondsTolerance: number) => {
@@ -27,7 +28,7 @@ const expectPace = (expectPaceString: string, toEqualPaceString: string, seconds
 
 describe("ActivityComputer Paces", () => {
 
-	const activityType = "Run";
+	const activityType = ElevateSport.Run;
 	const isTrainer = false;
 	const isOwner = true;
 	const hasPowerMeter = false;

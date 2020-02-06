@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import { ProgressType } from "../enums/progress-type.enum";
 import { ProgressMode } from "../enums/progress-mode.enum";
 import { Identifier } from "@elevate/shared/tools";
-import { ElevateSport } from "../../../../../modules/shared/enums";
+import { ElevateSport } from "@elevate/shared/enums";
 
 export class YearToDateProgressPresetModel {
 

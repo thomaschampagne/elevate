@@ -11,6 +11,7 @@ import {
 } from "@elevate/shared/models";
 import { RunningPowerEstimator } from "@elevate/shared/sync/compute/running-power-estimator";
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
+import { ElevateSport } from "@elevate/shared/enums";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 describe("RunningPowerEstimator", () => {
@@ -249,7 +250,7 @@ describe("RunningPowerEstimator", () => {
 		"@ https://www.strava.com/activities/887284960", (done: Function) => {
 
 		// Given
-		const activityType = "Run";
+		const activityType = ElevateSport.Run;
 		const isTrainer = false;
 		const isOwner = true;
 		const hasPowerMeter = false;

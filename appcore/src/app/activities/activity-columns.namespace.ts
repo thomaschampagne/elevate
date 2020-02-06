@@ -2,6 +2,7 @@ import { SyncedActivityModel } from "@elevate/shared/models";
 import * as _ from "lodash";
 import * as moment from "moment";
 import { Constant } from "@elevate/shared/constants";
+import { ElevateSport } from "@elevate/shared/enums";
 
 export namespace ActivityColumns {
 
@@ -247,9 +248,9 @@ export namespace ActivityColumns {
 
 			if (units && units instanceof CadenceUnits) {
 
-				if (activity.type === "Run") {
+				if (activity.type === ElevateSport.Run) {
 					units = units.running;
-				} else if (activity.type === "Ride" || activity.type === "VirtualRide" || activity.type === "EBikeRide") {
+				} else if (activity.type === ElevateSport.Ride || activity.type === ElevateSport.VirtualRide || activity.type === ElevateSport.EBikeRide) {
 					units = units.cycling;
 				}
 			}

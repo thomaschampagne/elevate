@@ -15,7 +15,7 @@ import { DeltaType } from "./models/delta-type.enum";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { YearProgressModule } from "../year-progress.module";
 import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-progress-config.model";
-import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { ElevateSport } from "@elevate/shared/enums";
 
 describe("YearProgressTableComponent", () => {
 

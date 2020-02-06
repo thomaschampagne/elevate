@@ -11,6 +11,7 @@ import { MockedVersionsProvider } from "../../services/versions/impl/mock/mocked
 import { Gzip } from "@elevate/shared/tools/gzip";
 import { DesktopDumpModel } from "../../models/dumps/desktop-dump.model";
 import PouchDB from "pouchdb-browser";
+import { ElevateSport } from "@elevate/shared/enums";
 import Spy = jasmine.Spy;
 
 describe("DesktopDataStore", () => {
@@ -95,9 +96,9 @@ describe("DesktopDataStore", () => {
 
 		new FakeDateTime(new Date().getTime()),
 
-		new FakeActivity("00001", "Zwift climb", "Ride", "2019-03-12T16:00:00Z", 3600),
-		new FakeActivity("00002", "Recover session", "Ride", "2019-03-17T16:39:48Z", 3600),
-		new FakeActivity("00003", "Easy running day!", "Run", "2019-05-01T16:39:48Z", 3600),
+		new FakeActivity("00001", "Zwift climb", ElevateSport.Ride, "2019-03-12T16:00:00Z", 3600),
+		new FakeActivity("00002", "Recover session", ElevateSport.Ride, "2019-03-17T16:39:48Z", 3600),
+		new FakeActivity("00003", "Easy running day!", ElevateSport.Run, "2019-05-01T16:39:48Z", 3600),
 	];
 
 	const FAKE_ATHLETE_STORAGE_LOCATION = new StorageLocationModel("fakeAthlete", StorageType.OBJECT);
@@ -488,7 +489,7 @@ describe("DesktopDataStore", () => {
 			it("should find FakeActivity 'Ride' collection", (done: Function) => {
 
 				// Given
-				const expectedType = "Ride";
+				const expectedType = ElevateSport.Ride;
 				const query: PouchDB.Find.FindRequest<FakeActivity[]> = {
 					selector: {
 						type: {
@@ -622,7 +623,7 @@ describe("DesktopDataStore", () => {
 			const newFakeActivity: FakeActivity = {
 				activityId: id,
 				name: "New activity !",
-				type: "Ride",
+				type: ElevateSport.Ride,
 				start_time: "2019-03-12T16:39:48Z",
 				end_time: "2019-03-12T16:39:48Z",
 				duration: 3600,
@@ -659,7 +660,7 @@ describe("DesktopDataStore", () => {
 				_id: docId,
 				activityId: id,
 				name: "Updated activity !",
-				type: "Run",
+				type: ElevateSport.Run,
 				start_time: "2019-03-12T16:39:48Z",
 				duration: 3600,
 				end_time: "2019-03-12T16:39:48Z",
@@ -705,7 +706,7 @@ describe("DesktopDataStore", () => {
 				{
 					activityId: "00003",
 					name: "Running day! (rename)",
-					type: "Run",
+					type: ElevateSport.Run,
 					start_time: "2019-03-12T16:39:48Z",
 					end_time: "2019-03-12T16:39:48Z",
 					duration: 3600,
@@ -713,7 +714,7 @@ describe("DesktopDataStore", () => {
 				{
 					activityId: "00004",
 					name: "Recovery spins",
-					type: "Ride",
+					type: ElevateSport.Ride,
 					start_time: "2019-03-12T16:39:48Z",
 					end_time: "2019-03-12T16:39:48Z",
 					duration: 3600,
@@ -721,7 +722,7 @@ describe("DesktopDataStore", () => {
 				{
 					activityId: "00005",
 					name: "Marathon",
-					type: "Run",
+					type: ElevateSport.Run,
 					start_time: "2019-03-12T16:39:48Z",
 					end_time: "2019-03-12T16:39:48Z",
 					duration: 3600,

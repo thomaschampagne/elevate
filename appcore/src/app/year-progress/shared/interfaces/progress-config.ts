@@ -1,5 +1,5 @@
 import { ProgressMode } from "../enums/progress-mode.enum";
-import { ElevateSport } from "../../../../../modules/shared/enums";
+import { ElevateSport } from "@elevate/shared/enums";
 
 export interface ProgressConfig {
 	readonly mode: ProgressMode;

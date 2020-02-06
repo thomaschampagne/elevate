@@ -9,6 +9,7 @@ import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { StreamActivityModel } from "../models/sync/stream-activity.model";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { BrowserStorageType } from "../models/browser-storage-type.enum";
+import { ElevateSport } from "@elevate/shared/enums";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class ActivitiesSynchronize {
@@ -75,7 +76,7 @@ export class ActivitiesSynchronize {
 
 		const added: number[] = [];
 		const deleted: number[] = [];
-		const edited: Array<{ id: number, name: string, type: string, display_type: string }> = [];
+		const edited: Array<{ id: number, name: string, type: ElevateSport, display_type: string }> = [];
 
 		if (_.isNull(syncedActivities) || _.isUndefined(syncedActivities) || !syncedActivities) {
 			syncedActivities = [];
@@ -94,9 +95,9 @@ export class ActivitiesSynchronize {
 					if (foundSyncedActivity.name !== rawActivity.name || foundSyncedActivity.type !== rawActivity.type) {
 						// foundSyncedActivity.name = rawActivity.name; // Update name
 						edited.push({
-							id: foundSyncedActivity.id,
+							id: <number> foundSyncedActivity.id,
 							name: rawActivity.name,
-							type: rawActivity.type,
+							type: <ElevateSport> rawActivity.type,
 							display_type: rawActivity.display_type,
 						});
 					}
@@ -138,13 +139,13 @@ export class ActivitiesSynchronize {
 
 		const added: number[] = [];
 		const deleted: number[] = [];
-		const edited: Array<{ id: number, name: string, type: string, display_type: string }> = [];
+		const edited: Array<{ id: number, name: string, type: ElevateSport, display_type: string }> = [];
 
 		_.forEach(syncedActivities, (syncedActivityModel: SyncedActivityModel) => {
 			// Seek for activity in just interrogated pages
 			const notFound: boolean = (_.indexOf(rawActivityIds, syncedActivityModel.id) == -1);
 			if (notFound) {
-				deleted.push(syncedActivityModel.id);
+				deleted.push(<number> syncedActivityModel.id);
 			}
 		});
 
@@ -862,7 +863,7 @@ export class ActivitiesSynchronize {
 		return syncedActivitiesStored;
 	}
 
-	public applyEditedActivitiesChanges(syncedActivitiesStored: SyncedActivityModel[], edited: Array<{ id: number, name: string, type: string, display_type: string }>): SyncedActivityModel[] {
+	public applyEditedActivitiesChanges(syncedActivitiesStored: SyncedActivityModel[], edited: Array<{ id: number, name: string, type: ElevateSport, display_type: string }>): SyncedActivityModel[] {
 		_.forEach(edited, (editData) => {
 			const activityToEdit: SyncedActivityModel = _.find((syncedActivitiesStored), {id: editData.id});
 			activityToEdit.name = editData.name;

@@ -8,6 +8,7 @@ import {
 	UserSettings,
 } from "@elevate/shared/models";
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
+import { ElevateSport } from "@elevate/shared/enums";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 describe("ActivityComputer", () => {
@@ -25,7 +26,7 @@ describe("ActivityComputer", () => {
 		stream.watts = stream.watts_calc; // because powerMeter is false
 
 		const isOwner = true;
-		const activityComputer: ActivityComputer = new ActivityComputer("Ride", powerMeter, userSettingsMock, athleteSnapshot,
+		const activityComputer: ActivityComputer = new ActivityComputer(ElevateSport.Ride, powerMeter, userSettingsMock, athleteSnapshot,
 			isOwner, powerMeter, activitySourceData, stream, null, true);
 
 		const result: AnalysisDataModel = activityComputer.compute();
@@ -208,7 +209,7 @@ describe("ActivityComputer", () => {
 		it("should resolve LTHR without user LTHR preferences, activityType='Ride'", (done: Function) => {
 
 			// Given
-			const activityType = "Ride";
+			const activityType = ElevateSport.Ride;
 			const expectedLTHR = 170.5;
 			_ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
 				default: null,
@@ -227,7 +228,7 @@ describe("ActivityComputer", () => {
 		it("should resolve LTHR without user LTHR preferences (empty), activityType='Ride'", (done: Function) => {
 
 			// Given
-			const activityType = "Ride";
+			const activityType = ElevateSport.Ride;
 			const expectedLTHR = 170.5;
 			_ATHLETE_MODEL_SNAP_.athleteSettings.lthr = null;
 
@@ -242,7 +243,7 @@ describe("ActivityComputer", () => {
 		it("should resolve LTHR without user LTHR preferences, activityType='Run'", (done: Function) => {
 
 			// Given
-			const activityType = "Run";
+			const activityType = ElevateSport.Run;
 			const expectedLTHR = 170.5;
 			_ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
 				default: null,
@@ -261,7 +262,7 @@ describe("ActivityComputer", () => {
 		it("should resolve LTHR without user LTHR preferences, activityType='Rowing'", (done: Function) => {
 
 			// Given
-			const activityType = "Rowing";
+			const activityType = ElevateSport.Rowing;
 			const expectedLTHR = 163;
 			_ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
 				default: 163,
@@ -280,7 +281,7 @@ describe("ActivityComputer", () => {
 		it("should resolve LTHR with user Default LTHR=163, activityType='Ride'", (done: Function) => {
 
 			// Given
-			const activityType = "Ride";
+			const activityType = ElevateSport.Ride;
 			const expectedLTHR = 163;
 			_ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
 				default: 163,
@@ -299,7 +300,7 @@ describe("ActivityComputer", () => {
 		it("should resolve LTHR with user Default LTHR=163, activityType='Run'", (done: Function) => {
 
 			// Given
-			const activityType = "Run";
+			const activityType = ElevateSport.Run;
 			const expectedLTHR = 163;
 			_ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
 				default: 163,
@@ -318,7 +319,7 @@ describe("ActivityComputer", () => {
 		it("should resolve LTHR with user Default LTHR=163, activityType='Rowing'", (done: Function) => {
 
 			// Given
-			const activityType = "Rowing";
+			const activityType = ElevateSport.Rowing;
 			const expectedLTHR = 163;
 			_ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
 				default: 163,
@@ -337,7 +338,7 @@ describe("ActivityComputer", () => {
 		it("should resolve LTHR with user Default LTHR=163, Cycling LTHR=175, activityType='Ride'", (done: Function) => {
 
 			// Given
-			const activityType = "Ride";
+			const activityType = ElevateSport.Ride;
 			const expectedLTHR = 175;
 			_ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
 				default: 163,
@@ -356,7 +357,7 @@ describe("ActivityComputer", () => {
 		it("should resolve LTHR with user Cycling LTHR=175, activityType='VirtualRide'", (done: Function) => {
 
 			// Given
-			const activityType = "VirtualRide";
+			const activityType = ElevateSport.VirtualRide;
 			const expectedLTHR = 175;
 			_ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
 				default: null,
@@ -375,7 +376,7 @@ describe("ActivityComputer", () => {
 		it("should resolve LTHR with user Cycling LTHR=175, Running LTHR=185, activityType='EBikeRide'", (done: Function) => {
 
 			// Given
-			const activityType = "EBikeRide";
+			const activityType = ElevateSport.EBikeRide;
 			const expectedLTHR = 175;
 			_ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
 				default: null,
@@ -394,7 +395,7 @@ describe("ActivityComputer", () => {
 		it("should resolve LTHR with user Cycling LTHR=175, Running LTHR=185, activityType='Run'", (done: Function) => {
 
 			// Given
-			const activityType = "Run";
+			const activityType = ElevateSport.Run;
 			const expectedLTHR = 185;
 			_ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
 				default: null,
@@ -413,7 +414,7 @@ describe("ActivityComputer", () => {
 		it("should resolve LTHR with user Default LTHR=163, Cycling LTHR=175, Running LTHR=185, activityType='Run'", (done: Function) => {
 
 			// Given
-			const activityType = "Run";
+			const activityType = ElevateSport.Run;
 			const expectedLTHR = 185;
 			_ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
 				default: 163,
@@ -432,7 +433,7 @@ describe("ActivityComputer", () => {
 		it("should resolve LTHR with user Default LTHR=163, Cycling LTHR=175, Running LTHR=185, activityType='Rowing'", (done: Function) => {
 
 			// Given
-			const activityType = "Rowing";
+			const activityType = ElevateSport.Rowing;
 			const expectedLTHR = 163;
 			_ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
 				default: 163,

@@ -10,6 +10,7 @@ import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { AppError } from "../../../shared/models/app-error.model";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { FitnessTrendConfigModel } from "../models/fitness-trend-config.model";
+import { ElevateSport } from "@elevate/shared/enums";
 
 @Injectable()
 export class FitnessService {
@@ -74,7 +75,7 @@ export class FitnessService {
 						&& ((_.isNumber(activity.extendedStats.heartRateData.TRIMP) && fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)
 							|| (_.isNumber(activity.extendedStats.heartRateData.HRSS) && fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS));
 
-					const hasPowerData: boolean = (activity.type === "Ride" || activity.type === "VirtualRide" || activity.type === "EBikeRide")
+					const hasPowerData: boolean = (activity.type === ElevateSport.Ride || activity.type === ElevateSport.VirtualRide || activity.type === ElevateSport.EBikeRide)
 						&& powerMeterEnable
 						&& fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP
 						&& _.isNumber(activity.athleteSnapshot.athleteSettings.cyclingFtp)
@@ -83,7 +84,7 @@ export class FitnessService {
 						&& (activity.extendedStats.powerData.hasPowerMeter || fitnessTrendConfigModel.allowEstimatedPowerStressScore)
 						&& _.isNumber(activity.extendedStats.powerData.powerStressScore);
 
-					const hasRunningData: boolean = (activity.type === "Run" || activity.type === "VirtualRun")
+					const hasRunningData: boolean = (activity.type === ElevateSport.Run || activity.type === ElevateSport.VirtualRun)
 						&& fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP
 						&& _.isNumber(activity.athleteSnapshot.athleteSettings.runningFtp)
 						&& activity.extendedStats
@@ -94,7 +95,7 @@ export class FitnessService {
 					const hasSwimmingData: boolean = (swimEnable
 						&& _.isNumber(activity.athleteSnapshot.athleteSettings.swimFtp)
 						&& activity.athleteSnapshot.athleteSettings.swimFtp > 0
-						&& activity.type === "Swim"
+						&& activity.type === ElevateSport.Swim
 						&& fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP
 						&& _.isNumber(activity.distance_raw) && _.isNumber(activity.moving_time_raw)
 						&& activity.moving_time_raw > 0);

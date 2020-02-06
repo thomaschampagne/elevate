@@ -9,6 +9,7 @@ import {
 } from "@elevate/shared/models";
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import * as _ from "lodash";
+import { ElevateSport } from "@elevate/shared/enums";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 const expectBetween = (expectValue: number, toEqual: number, tolerance: number) => {
@@ -24,7 +25,7 @@ const expectBetween = (expectValue: number, toEqual: number, tolerance: number) 
 
 describe("ActivityComputer Cycling Power", () => {
 
-	const activityType = "Ride";
+	const activityType = ElevateSport.Ride;
 	const isTrainer = false;
 	const isOwner = true;
 	const bounds: number[] = null;

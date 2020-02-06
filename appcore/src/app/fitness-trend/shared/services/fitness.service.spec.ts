@@ -14,7 +14,7 @@ import { FakeSyncedActivityHelper } from "../helpers/fake-synced-activity.helper
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
 import { FitnessTrendModule } from "../../fitness-trend.module";
-import { ElevateSport } from "../../../../../modules/shared/enums";
+import { ElevateSport } from "@elevate/shared/enums";
 
 describe("FitnessService", () => {
 
@@ -2276,7 +2276,7 @@ describe("FitnessService", () => {
 		it("should reject all activities filtered", (done: Function) => {
 
 			// Given
-			fitnessTrendConfigModel.ignoreActivityNamePatterns = ["Ride"];
+			fitnessTrendConfigModel.ignoreActivityNamePatterns = [ElevateSport.Ride];
 			const syncedActivityModels: SyncedActivityModel[] = [];
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				_ATHLETE_MODEL_SNAPSHOT_,

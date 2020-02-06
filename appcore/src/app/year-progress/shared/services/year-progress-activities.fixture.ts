@@ -1,5 +1,6 @@
 import * as moment from "moment";
 import { SyncedActivityModel } from "@elevate/shared/models";
+import { ElevateSport } from "@elevate/shared/enums";
 
 export class YearProgressActivitiesFixture {
 
@@ -36,7 +37,7 @@ export class YearProgressActivitiesFixture {
 			switch (dayType) {
 
 				case YearProgressActivitiesFixture.TYPE_RIDE:
-					type = "Ride";
+					type = ElevateSport.Ride;
 					time = 3600;
 					distanceRaw = 40000; // 40 km
 					elevationGainRaw = 500; // 500 meters
@@ -57,7 +58,7 @@ export class YearProgressActivitiesFixture {
 					break;
 
 				case YearProgressActivitiesFixture.TYPE_COMMUTE:
-					type = "Ride";
+					type = ElevateSport.Ride;
 					time = 1800;
 					commute = true;
 					distanceRaw = 15000; // 15 km

@@ -1,6 +1,7 @@
 import { DayFitnessTrendModel } from "./day-fitness-trend.model";
 import { DayStressModel } from "./day-stress.model";
 import { TrainingZone } from "../enums/training-zone.enum";
+import { ElevateSport } from "@elevate/shared/enums";
 
 describe("DayFitnessTrendModel", () => {
 
@@ -198,7 +199,7 @@ describe("DayFitnessTrendModel", () => {
 		const previewDay = false;
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
-		dayStressModel.types = ["Ride", "Ride", "Ride", "Run", "Run"];
+		dayStressModel.types = [ElevateSport.Ride, ElevateSport.Ride, ElevateSport.Ride, ElevateSport.Run, ElevateSport.Run];
 
 		const expectedResult = "3 Rides, 2 Runs";
 		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, 30);
@@ -219,7 +220,7 @@ describe("DayFitnessTrendModel", () => {
 		const previewDay = false;
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
-		dayStressModel.types = ["Ride", "VirtualRide", "AlpineSki", "Run", "Ride", "Run", "Ride"];
+		dayStressModel.types = [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.AlpineSki, ElevateSport.Run, ElevateSport.Ride, ElevateSport.Run, ElevateSport.Ride];
 
 		const expectedResult = "3 Rides, 2 Runs, 1 VirtualRide, 1 AlpineSki";
 		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, 30);
@@ -241,7 +242,7 @@ describe("DayFitnessTrendModel", () => {
 		const previewDay = false;
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
-		dayStressModel.types = ["Ride", "VirtualRide", "AlpineSki", "Run", "Ride", "Run", "Ride"];
+		dayStressModel.types = [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.AlpineSki, ElevateSport.Run, ElevateSport.Ride, ElevateSport.Run, ElevateSport.Ride];
 
 		const expectedResult = "3 Rides, 2 Runs & 2 more";
 		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, 30);
@@ -263,7 +264,7 @@ describe("DayFitnessTrendModel", () => {
 		const previewDay = false;
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
-		dayStressModel.types = ["Ride", "Run", "Ride", "Run", "Ride"];
+		dayStressModel.types = [ElevateSport.Ride, ElevateSport.Run, ElevateSport.Ride, ElevateSport.Run, ElevateSport.Ride];
 
 		const expectedResult = "3 Rides, 2 Runs";
 		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, 30);

@@ -21,7 +21,7 @@ import { ProgressConfig } from "../interfaces/progress-config";
 import { YearToDateProgressConfigModel } from "../models/year-to-date-progress-config.model";
 import { RollingProgressConfigModel } from "../models/rolling-progress-config.model";
 import { RollingProgressPresetModel } from "../models/rolling-progress-preset.model";
-import { ElevateSport } from "../../../../../modules/shared/enums";
+import { ElevateSport } from "@elevate/shared/enums";
 
 @Injectable()
 export class YearProgressService {

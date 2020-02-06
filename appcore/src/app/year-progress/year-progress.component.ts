@@ -35,7 +35,7 @@ import { RollingProgressPresetModel } from "./shared/models/rolling-progress-pre
 import { YearProgressWelcomeDialogComponent } from "./year-progress-welcome-dialog/year-progress-welcome-dialog.component";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { LoggerService } from "../shared/services/logging/logger.service";
-import { ElevateSport } from "../../../modules/shared/enums";
+import { ElevateSport } from "@elevate/shared/enums";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 /* Legacy tasks */
