@@ -1,18 +1,16 @@
 import { AbstractExtendedDataModifier } from "./abstract-extended-data.modifier";
 import { SpeedDataView } from "./views/speed-data.view";
 import { CyclingGradeDataView } from "./views/cycling-grade-data.view";
-import { AscentSpeedDataView } from "./views/ascent-speed-data.view";
 import { ElevationDataView } from "./views/elevation-data.view";
 import { PaceDataView } from "./views/pace-data.view";
-import { RunningCadenceDataView } from "./views/running-cadence.data.view";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityInfoModel, UserSettingsModel } from "@elevate/shared/models";
 
 export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 
-	constructor(activityProcessor: ActivityProcessor, activityId: number, activityType: string, supportsGap: boolean,
-				appResources: AppResourcesModel, userSettings: UserSettingsModel, isOwner: boolean, activityInfo: ActivityInfoModel, type: number) {
+	constructor(activityProcessor: ActivityProcessor, activityInfo: ActivityInfoModel, appResources: AppResourcesModel,
+				userSettings: UserSettingsModel, type: number) {
 		super(activityProcessor, activityInfo, appResources, userSettings, type);
 	}
 
@@ -48,14 +46,6 @@ export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 			this.dataViews.push(paceDataView);
 		}
 
-		if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {
-			const runningCadenceDataView: RunningCadenceDataView = new RunningCadenceDataView(this.analysisData.cadenceData, "spm", this.userSettings);
-			runningCadenceDataView.setAppResources(this.appResources);
-			runningCadenceDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
-			runningCadenceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
-			this.dataViews.push(runningCadenceDataView);
-		}
-
 		if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
 			const cyclingGradeDataView: CyclingGradeDataView = new CyclingGradeDataView(this.analysisData.gradeData, "%");
 			cyclingGradeDataView.setAppResources(this.appResources);
@@ -72,14 +62,21 @@ export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 			elevationDataView.setActivityType(this.activityType);
 			elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
 			this.dataViews.push(elevationDataView);
+		}
+	}
 
-			if (this.analysisData.elevationData.ascentSpeed && this.analysisData.elevationData.ascentSpeedZones) {
-				const ascentSpeedDataView: AscentSpeedDataView = new AscentSpeedDataView(this.analysisData.elevationData, "Vm/h");
-				ascentSpeedDataView.setAppResources(this.appResources);
-				ascentSpeedDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
-				ascentSpeedDataView.setActivityType(this.activityType);
-				this.dataViews.push(ascentSpeedDataView);
-			}
+	protected placeExtendedStatsButtonSegment(buttonAdded: () => void): void {
+
+		let htmlButton = "<section>";
+		htmlButton += "<a class=\"btn-block btn-xs button raceshape-btn btn-primary\" data-xtd-seg-effort-stats id=\"" + this.segmentEffortButtonId + "\">";
+		htmlButton += "Show extended statistics of effort";
+		htmlButton += "</a>";
+		htmlButton += "</section>";
+
+		if ($("[data-xtd-seg-effort-stats]").length === 0) {
+			$(".raceshape-btn").last().after(htmlButton).each(() => {
+				super.placeExtendedStatsButtonSegment(buttonAdded);
+			});
 		}
 	}
 }
