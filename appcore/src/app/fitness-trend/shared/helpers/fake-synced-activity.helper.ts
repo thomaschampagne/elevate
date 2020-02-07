@@ -1,13 +1,14 @@
 import { AthleteSnapshotModel, SyncedActivityModel } from "@elevate/shared/models";
 import * as moment from "moment";
 import * as _ from "lodash";
+import { ElevateSport } from "../../../../../modules/shared/enums";
 
 export class FakeSyncedActivityHelper {
 
 	public static create(id: number,
 						 athleteSnapshot: AthleteSnapshotModel,
 						 name: string,
-						 type: string,
+						 type: ElevateSport,
 						 dateStr: string,
 						 avgHr: number,
 						 avgWatts: number,
@@ -75,6 +76,7 @@ export class FakeSyncedActivityHelper {
 				best20min: avgWatts * 1.5,
 				bestEightyPercent: avgWatts,
 				weightedWattsPerKg: avgWatts * 1.25 / 70,
+				powerCurve: []
 			};
 		}
 

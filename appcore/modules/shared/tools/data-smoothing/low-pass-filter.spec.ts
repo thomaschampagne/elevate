@@ -1,4 +1,4 @@
-import { LowPassFilter } from "@elevate/shared/tools/low-pass-filter/low-pass-filter";
+import { LowPassFilter } from "./low-pass-filter";
 
 describe("LowPassFilter", () => {
 

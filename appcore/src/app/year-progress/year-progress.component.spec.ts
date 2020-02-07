@@ -16,15 +16,16 @@ import { YearProgressModule } from "./year-progress.module";
 import { YearToDateProgressPresetModel } from "./shared/models/year-to-date-progress-preset.model";
 import { ProgressType } from "./shared/enums/progress-type.enum";
 import { ExtensionEventsService } from "../shared/services/external-updates/impl/extension-events.service";
+import { ElevateSport } from "@elevate/shared/enums";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("YearProgressComponent", () => {
 
 	const pluginId = "c061d18abea0";
 	const yearProgressPresetModels = [
-		new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false, 750),
-		new YearToDateProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
-		new YearToDateProgressPresetModel(ProgressType.ELEVATION, ["Ride"], false, false, 30000),
+		new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false, 750),
+		new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
+		new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], false, false, 30000),
 	];
 
 	let component: YearProgressComponent;
@@ -82,17 +83,17 @@ describe("YearProgressComponent", () => {
 	it("should determine most performed activity type", (done: Function) => {
 
 		// Given
-		const expected = "Ride";
+		const expected = ElevateSport.Ride;
 		const activitiesCountByTypeModels: ActivityCountByTypeModel[] = [
-			{type: "AlpineSki", count: 12},
-			{type: "Ride", count: 522},
-			{type: "Run", count: 25},
-			{type: "Walk", count: 32},
-			{type: "Hike", count: 8},
-			{type: "Swim", count: 5},
-			{type: "VirtualRide", count: 29},
-			{type: "InlineSkate", count: 3},
-			{type: "Workout", count: 6}
+			{type: ElevateSport.AlpineSki, count: 12},
+			{type: ElevateSport.Ride, count: 522},
+			{type: ElevateSport.Run, count: 25},
+			{type: ElevateSport.Walk, count: 32},
+			{type: ElevateSport.Hike, count: 8},
+			{type: ElevateSport.Swim, count: 5},
+			{type: ElevateSport.VirtualRide, count: 29},
+			{type: ElevateSport.InlineSkate, count: 3},
+			{type: ElevateSport.Workout, count: 6}
 		];
 
 		// When

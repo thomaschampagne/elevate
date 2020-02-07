@@ -60,6 +60,22 @@ export class MockedDataStore<T> extends DataStore<T> {
 
 	}
 
+	public removeByIds(storageLocation: StorageLocationModel, ids: (string | number)[], defaultStorageValue: T[] | T): Promise<T | T[]> {
+		return this.fetch(storageLocation, defaultStorageValue).then((dataStore: T[] | T) => {
+
+			if (!_.isArray(dataStore)) {
+				return Promise.reject("Cannot save property to a storage type 'vector'");
+			}
+
+			const newDataStore = _.filter(dataStore, entry => {
+				return (_.indexOf(ids, entry[storageLocation.collectionFieldId]) === -1);
+			});
+
+			return this.save(storageLocation, newDataStore, defaultStorageValue);
+
+		});
+	}
+
 	public getAppUsageDetails(): Promise<AppUsageDetails> {
 
 		const CHROME_QUOTA_BYTES = 1024;

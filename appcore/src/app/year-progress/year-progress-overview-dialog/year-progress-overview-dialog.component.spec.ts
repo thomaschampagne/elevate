@@ -9,6 +9,7 @@ import { YearProgressForOverviewModel } from "../shared/models/year-progress-for
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
 import * as moment from "moment";
 import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-progress-config.model";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 
 describe("YearProgressOverviewDialogComponent", () => {
 
@@ -23,7 +24,7 @@ describe("YearProgressOverviewDialogComponent", () => {
 	const colors: string [] = ["red", "blue", "green", "purple"];
 
 	const yearProgressForOverviewModel: YearProgressForOverviewModel = {
-		progressConfig: new YearToDateProgressConfigModel(["Ride", "Run"], true, true),
+		progressConfig: new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.Run], true, true),
 		momentWatched: moment(),
 		selectedYears: [2017, 2016],
 		yearProgressStyleModel: new YearProgressStyleModel(yearsColorsMap, colors),

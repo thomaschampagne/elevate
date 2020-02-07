@@ -32,12 +32,12 @@ export abstract class BaseConnector {
 		return sha1.slice(0, divide ? sha1.length / divide : sha1.length);
 	}
 
-
 	protected constructor(type: ConnectorType, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime, priority: number, enabled: boolean) {
 		this.type = type;
 		this.athleteModel = athleteModel;
 		this.userSettingsModel = userSettingsModel;
-		this.syncDateTime = (connectorSyncDateTime && connectorSyncDateTime.dateTime >= 0) ? Math.floor(connectorSyncDateTime.dateTime / 1000) : null; // Convert timestamp to seconds instead of millis
+		this.syncDateTime = (connectorSyncDateTime && connectorSyncDateTime.dateTime >= 0)
+			? Math.floor(connectorSyncDateTime.dateTime / 1000) : null; // Convert timestamp to seconds instead of millis
 		this.priority = priority;
 		this.enabled = enabled;
 		this.isSyncing = false;

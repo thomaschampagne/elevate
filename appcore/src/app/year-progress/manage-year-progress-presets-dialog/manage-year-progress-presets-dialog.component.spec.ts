@@ -9,13 +9,14 @@ import { YearProgressTypeModel } from "../shared/models/year-progress-type.model
 import { YearProgressService } from "../shared/services/year-progress.service";
 import { YearToDateProgressPresetModel } from "../shared/models/year-to-date-progress-preset.model";
 import { ProgressType } from "../shared/enums/progress-type.enum";
+import { ElevateSport } from "../../../../modules/shared/enums";
 
 describe("ManageYearProgressPresetsDialogComponent", () => {
 
 	const yearProgressPresetModels = [
-		new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false, 750),
-		new YearToDateProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
-		new YearToDateProgressPresetModel(ProgressType.ELEVATION, ["Ride"], false, false, 30000),
+		new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false, 750),
+		new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
+		new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], false, false, 30000),
 	];
 
 	let component: ManageYearProgressPresetsDialogComponent;

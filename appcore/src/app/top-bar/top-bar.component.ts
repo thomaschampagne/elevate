@@ -11,25 +11,25 @@ export class TopBarComponent {
 @Component({
 	selector: "app-desktop-top-bar",
 	template: `
-        <div class="top-bar">
-            <div class="draggable"></div>
-            <span class="top-bar-title mat-body-strong" *ngIf="buildMetadata && buildMetadata.commit && buildMetadata.date">
-				Elevate Desktop - {{currentVersion}}+{{buildMetadata.date}}.{{buildMetadata.commit.slice(0, 8)}}
+		<div class="top-bar">
+			<div class="draggable"></div>
+			<span class="top-bar-title mat-body-strong" *ngIf="buildMetadata && buildMetadata.commit && buildMetadata.date">
+				Elevate v{{currentVersion}}
 			</span>
-            <span class="toolbar-spacer"></span>
-            <button mat-icon-button (click)="onMinimizeAppClicked()">
-                <mat-icon inline="true">minimize</mat-icon>
-            </button>
-            <button *ngIf="!isFullscreen" mat-icon-button (click)="onFullscreenAppClicked()">
-                <mat-icon inline="true">fullscreen</mat-icon>
-            </button>
-            <button *ngIf="isFullscreen" mat-icon-button (click)="onNormalScreenAppClicked()">
-                <mat-icon inline="true">fullscreen_exit</mat-icon>
-            </button>
-            <button mat-icon-button (click)="onCloseAppClicked()">
-                <mat-icon inline="true">close</mat-icon>
-            </button>
-        </div>
+			<span class="toolbar-spacer"></span>
+			<button mat-icon-button (click)="onMinimizeAppClicked()">
+				<mat-icon inline="true">minimize</mat-icon>
+			</button>
+			<button *ngIf="!isFullscreen" mat-icon-button (click)="onFullscreenAppClicked()">
+				<mat-icon inline="true">fullscreen</mat-icon>
+			</button>
+			<button *ngIf="isFullscreen" mat-icon-button (click)="onNormalScreenAppClicked()">
+				<mat-icon inline="true">fullscreen_exit</mat-icon>
+			</button>
+			<button mat-icon-button (click)="onCloseAppClicked()">
+				<mat-icon inline="true">close</mat-icon>
+			</button>
+		</div>
 	`,
 	styles: [`
         .top-bar {

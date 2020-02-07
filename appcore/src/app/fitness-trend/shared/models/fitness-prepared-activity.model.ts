@@ -1,7 +1,7 @@
 import { AthleteSnapshotModel } from "@elevate/shared/models";
 
 export class FitnessPreparedActivityModel {
-	public id: number;
+	public id: number | string;
 	public date: Date;
 	public timestamp: number;
 	public dayOfYear: number;

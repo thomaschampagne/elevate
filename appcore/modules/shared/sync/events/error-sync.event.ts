@@ -84,6 +84,7 @@ export class ErrorSyncEvent extends SyncEvent {
 		}
 	};
 
+
 	public static STRAVA_INSTANT_QUOTA_REACHED = {
 		code: "STRAVA_INSTANT_QUOTA_REACHED",
 		create: (usage: number, limit: number): ErrorSyncEvent => {

@@ -13,28 +13,28 @@ export class SyncBarComponent {
 @Component({
 	selector: "app-desktop-sync-bar",
 	template: `
-        <div class="app-sync-bar">
-            <div fxLayout="row" fxLayoutAlign="space-between center">
-                <div>
-                    <span class="mat-body-1" *ngIf="currentSyncEventText">{{currentSyncEventText}}</span>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="space-between center">
-                    <button mat-flat-button color="warn" (click)="onStop()">
-                        Stop
-                    </button>
-                </div>
-            </div>
-        </div>
+		<div class="app-sync-bar">
+			<div fxLayout="row" fxLayoutAlign="space-between center">
+				<div>
+					<span class="mat-body-1" *ngIf="currentSyncEventText">{{currentSyncEventText}}</span>
+				</div>
+				<div fxLayout="row" fxLayoutAlign="space-between center">
+					<button mat-flat-button color="warn" (click)="onStop()">
+						Stop
+					</button>
+				</div>
+			</div>
+		</div>
 	`,
 	styles: [`
 
-        .app-sync-bar {
-            padding: 10px 20px;
-        }
+		.app-sync-bar {
+			padding: 10px 20px;
+		}
 
-        button {
-            margin-left: 10px;
-        }
+		button {
+			margin-left: 10px;
+		}
 	`]
 })
 export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit {
@@ -76,6 +76,10 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 
 		if (this.isStopped) {
 			return;
+		}
+
+		if (syncEvent.type === SyncEventType.GENERIC) {
+			this.currentSyncEventText = syncEvent.description;
 		}
 
 		if (syncEvent.type === SyncEventType.ACTIVITY) {

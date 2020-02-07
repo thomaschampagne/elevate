@@ -35,6 +35,7 @@ import { RollingProgressPresetModel } from "./shared/models/rolling-progress-pre
 import { YearProgressWelcomeDialogComponent } from "./year-progress-welcome-dialog/year-progress-welcome-dialog.component";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { LoggerService } from "../shared/services/logging/logger.service";
+import { ElevateSport } from "../../../modules/shared/enums";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 /* Legacy tasks */
@@ -184,7 +185,7 @@ export class YearProgressComponent implements OnInit {
 	public selectedRollingPeriod: string;
 	public periodMultiplier: number;
 	public progressTypes: YearProgressTypeModel[];
-	public availableActivityTypes: string[];
+	public availableActivityTypes: ElevateSport[];
 	public availableYears: number[];
 	public selectedProgressType: YearProgressTypeModel;
 	public selectedYears: number[];
@@ -205,7 +206,7 @@ export class YearProgressComponent implements OnInit {
 	 * @param {ActivityCountByTypeModel[]} activitiesCountByTypeModels
 	 * @returns {string}
 	 */
-	public static findMostPerformedActivityType(activitiesCountByTypeModels: ActivityCountByTypeModel[]): string {
+	public static findMostPerformedActivityType(activitiesCountByTypeModels: ActivityCountByTypeModel[]): ElevateSport {
 		return _.maxBy(activitiesCountByTypeModels, "count").type;
 	}
 

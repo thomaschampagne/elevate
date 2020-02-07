@@ -21,6 +21,7 @@ import { ProgressConfig } from "../interfaces/progress-config";
 import { YearToDateProgressConfigModel } from "../models/year-to-date-progress-config.model";
 import { RollingProgressConfigModel } from "../models/rolling-progress-config.model";
 import { RollingProgressPresetModel } from "../models/rolling-progress-preset.model";
+import { ElevateSport } from "../../../../../modules/shared/enums";
 
 @Injectable()
 export class YearProgressService {
@@ -375,7 +376,7 @@ export class YearProgressService {
 
 		const activitiesCountByTypes: ActivityCountByTypeModel[] = [];
 
-		_.forIn(_.countBy(_.map(syncedActivityModels, "type")), (count: number, type: string) => {
+		_.forIn(_.countBy(_.map(syncedActivityModels, "type")), (count: number, type: ElevateSport) => {
 			activitiesCountByTypes.push({
 				type: type,
 				count: count

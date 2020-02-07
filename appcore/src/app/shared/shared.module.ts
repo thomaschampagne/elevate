@@ -38,6 +38,8 @@ import { environment } from "../../environments/environment";
 import { EnvTarget } from "@elevate/shared/models";
 import { ExtensionModule } from "./modules/extension/extension.module";
 import { DesktopModule } from "./modules/desktop/desktop.module";
+import { StreamsDao } from "./dao/streams/streams.dao";
+import { StreamsService } from "./services/streams/streams.service";
 
 @NgModule({
 	imports: [
@@ -89,6 +91,8 @@ import { DesktopModule } from "./modules/desktop/desktop.module";
 		AthleteSnapshotResolverService,
 		ActivityService,
 		ActivityDao,
+		StreamsService,
+		StreamsDao,
 		GlobalSettingsService,
 		OptionHelperReaderService,
 		ZonesService,

@@ -10,6 +10,7 @@ import { VERSIONS_PROVIDER } from "../../services/versions/versions-provider.int
 import { MockedVersionsProvider } from "../../services/versions/impl/mock/mocked-versions-provider";
 import { Gzip } from "@elevate/shared/tools/gzip";
 import { DesktopDumpModel } from "../../models/dumps/desktop-dump.model";
+import PouchDB from "pouchdb-browser";
 import Spy = jasmine.Spy;
 
 describe("DesktopDataStore", () => {
@@ -86,6 +87,7 @@ describe("DesktopDataStore", () => {
 	}
 
 	let desktopDataStore: DesktopDataStore<any[] | any>;
+	let testDatabase: PouchDB.Database<any[] | any>;
 
 	const FAKE_EXISTING_DOCUMENTS: FakeDoc[] = [
 		new FakeAthlete("Thomas", 32, [new FakeSettings(189, 60, 75),
@@ -102,6 +104,13 @@ describe("DesktopDataStore", () => {
 	const FAKE_ACTIVITIES_STORAGE_LOCATION = new StorageLocationModel("fakeSyncedActivity", StorageType.COLLECTION, "activityId");
 	const FAKE_DATE_TIME_STORAGE_LOCATION = new StorageLocationModel("fakeDateTime", StorageType.SINGLE_VALUE);
 
+	let provideDatabaseSpy;
+
+	const resetTestDatabase = () => {
+		testDatabase = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_test", {auto_compaction: true});
+		provideDatabaseSpy.and.returnValue(testDatabase);
+	};
+
 	beforeEach((done: Function) => {
 
 		const mockedVersionsProvider: MockedVersionsProvider = new MockedVersionsProvider();
@@ -114,13 +123,15 @@ describe("DesktopDataStore", () => {
 			]
 		});
 
-		desktopDataStore = TestBed.get(DesktopDataStore);
-
 		const fakeDocs = _.cloneDeep(FAKE_EXISTING_DOCUMENTS);
 
-		desktopDataStore.database.allDocs().then(results => {
+		desktopDataStore = TestBed.get(DesktopDataStore);
+		provideDatabaseSpy = spyOn(desktopDataStore, "provideDatabase");
+		resetTestDatabase();
+
+		testDatabase.allDocs().then(results => {
 			expect(results.total_rows).toEqual(0);
-			return desktopDataStore.database.bulkDocs(fakeDocs);
+			return testDatabase.bulkDocs(fakeDocs);
 
 		}).then(results => {
 			expect(results.length).toEqual(fakeDocs.length);
@@ -135,7 +146,7 @@ describe("DesktopDataStore", () => {
 	afterEach((done: Function) => {
 
 		// Cleaning database
-		desktopDataStore.database.destroy().then(() => {
+		testDatabase.destroy().then(() => {
 			done();
 		}).catch(error => {
 			console.error(error);
@@ -176,8 +187,8 @@ describe("DesktopDataStore", () => {
 			// Given
 			const defaultFakeAthlete: FakeAthlete = new FakeAthlete("Your Name", 30, []);
 
-			const promiseMissing = desktopDataStore.database.get(FAKE_ATHLETE_STORAGE_LOCATION.key).then(fakeAthlete => {
-				return desktopDataStore.database.remove(fakeAthlete);
+			const promiseMissing = testDatabase.get(FAKE_ATHLETE_STORAGE_LOCATION.key).then(fakeAthlete => {
+				return testDatabase.remove(fakeAthlete);
 			});
 
 			// When
@@ -275,8 +286,8 @@ describe("DesktopDataStore", () => {
 				fakeSettings: [new FakeSettings(99, 99, 99)]
 			};
 
-			const promiseMissing = desktopDataStore.database.get(FAKE_ATHLETE_STORAGE_LOCATION.key).then(fakeAthlete => {
-				return desktopDataStore.database.remove(fakeAthlete);
+			const promiseMissing = testDatabase.get(FAKE_ATHLETE_STORAGE_LOCATION.key).then(fakeAthlete => {
+				return testDatabase.remove(fakeAthlete);
 			});
 
 			// When
@@ -310,8 +321,8 @@ describe("DesktopDataStore", () => {
 			const docType = "fakeAthlete";
 			const newFakeAthlete: FakeAthlete = {name: "Jean kevin", age: 30, fakeSettings: []};
 
-			const promiseMissing = desktopDataStore.database.get(FAKE_ATHLETE_STORAGE_LOCATION.key).then(fakeAthlete => {
-				return desktopDataStore.database.remove(fakeAthlete);
+			const promiseMissing = testDatabase.get(FAKE_ATHLETE_STORAGE_LOCATION.key).then(fakeAthlete => {
+				return testDatabase.remove(fakeAthlete);
 			});
 
 			// When
@@ -344,7 +355,7 @@ describe("DesktopDataStore", () => {
 			const docType = "fakeAthlete";
 			const updatedFakeAthlete: FakeAthlete = {_id: docId, name: "Jean kevin", age: 30, fakeSettings: [], $doctype: docType};
 
-			const promiseSetRevision = desktopDataStore.database.get(docId).then(doc => {
+			const promiseSetRevision = testDatabase.get(docId).then(doc => {
 				updatedFakeAthlete[DesktopDataStore.POUCH_DB_REV_FIELD] = doc._rev;
 				return Promise.resolve();
 			});
@@ -413,7 +424,7 @@ describe("DesktopDataStore", () => {
 			// Then
 			promise.then(() => {
 
-				desktopDataStore.database.find({
+				testDatabase.find({
 					selector: {
 						_id: {$eq: FAKE_ATHLETE_STORAGE_LOCATION.key}
 					}
@@ -547,10 +558,10 @@ describe("DesktopDataStore", () => {
 
 			// Given
 			const defaultStorageValue = [];
-			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
+			const promiseMissingCollection = testDatabase.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
 				const fakeAthlete = _.cloneDeep(_.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"}));
-				desktopDataStore.setup();
-				desktopDataStore.database.put(fakeAthlete).then(() => {
+				resetTestDatabase();
+				testDatabase.put(fakeAthlete).then(() => {
 					return Promise.resolve();
 				});
 			});
@@ -655,9 +666,9 @@ describe("DesktopDataStore", () => {
 				$doctype: docType
 			};
 
-			const putSpy = spyOn(desktopDataStore.database, "put").and.callThrough();
+			const putSpy = spyOn(testDatabase, "put").and.callThrough();
 
-			const promiseSetRevision = desktopDataStore.database.get(docId).then(doc => {
+			const promiseSetRevision = testDatabase.get(docId).then(doc => {
 				updatedFakeActivity[DesktopDataStore.POUCH_DB_REV_FIELD] = doc._rev;
 				return Promise.resolve();
 			});
@@ -780,6 +791,64 @@ describe("DesktopDataStore", () => {
 			});
 		});
 
+		it("should remove FakeActivities by ids in collection", (done: Function) => {
+
+			// Given
+			const ids = ["00001", "00003"];
+
+			// When
+			const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>>
+				desktopDataStore.removeByIds(FAKE_ACTIVITIES_STORAGE_LOCATION, ids, []);
+
+			// Then
+			promise.then((fakeActivities: FakeActivity[]) => {
+
+				expect(fakeActivities.length).toEqual(1);
+
+				let compressedStreams = _.find(fakeActivities, {activityId: ids[0]});
+				expect(_.isEmpty(compressedStreams)).toBeTruthy();
+
+				compressedStreams = _.find(fakeActivities, {activityId: ids[1]});
+				expect(_.isEmpty(compressedStreams)).toBeTruthy();
+
+				compressedStreams = _.find(fakeActivities, {activityId: "00002"});
+				expect(_.isEmpty(compressedStreams)).toBeFalsy();
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+			});
+
+		});
+
+		it("should reject remove FakeActivities by ids when not a collection", (done: Function) => {
+
+			// Given
+			const ids = ["00001", "00003"];
+
+			const fakeObjectStorageLocationModel = new StorageLocationModel("fakeSyncedActivity", StorageType.OBJECT, "activityId");
+
+			// When
+			const promise: Promise<FakeActivity[]> = <Promise<FakeActivity[]>>
+				desktopDataStore.removeByIds(fakeObjectStorageLocationModel, ids, []);
+
+			// Then
+			promise.then(() => {
+
+				expect(false).toBeTruthy("Whoops! I should not be here!");
+				done();
+
+			}, error => {
+				expect(error).not.toBeNull();
+
+				done();
+			});
+
+		});
+
 		it("should reject upsert of a FakeActivity collection", (done: Function) => {
 
 			// Given
@@ -809,7 +878,7 @@ describe("DesktopDataStore", () => {
 			// Then
 			promise.then(() => {
 
-				desktopDataStore.database.find({
+				testDatabase.find({
 					selector: {
 						_id: {$regex: "^" + FAKE_ACTIVITIES_STORAGE_LOCATION.key + DesktopDataStore.POUCH_DB_ID_LIST_SEPARATOR + ".*"}
 					}
@@ -855,10 +924,10 @@ describe("DesktopDataStore", () => {
 
 			// Given
 			const defaultStorageValue = null;
-			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
+			const promiseMissingCollection = testDatabase.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
 				const fakeAthlete = _.cloneDeep(_.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"}));
-				desktopDataStore.setup();
-				desktopDataStore.database.put(fakeAthlete).then(() => {
+				resetTestDatabase();
+				testDatabase.put(fakeAthlete).then(() => {
 					return Promise.resolve();
 				});
 			});
@@ -937,11 +1006,11 @@ describe("DesktopDataStore", () => {
 
 			let putSpy: Spy;
 
-			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
+			const promiseMissingCollection = testDatabase.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
 				const fakeAthlete = _.cloneDeep(_.find(FAKE_EXISTING_DOCUMENTS, {_id: "fakeAthlete"}));
-				desktopDataStore.setup();
-				desktopDataStore.database.put(fakeAthlete).then(() => {
-					putSpy = spyOn(desktopDataStore.database, "put").and.callThrough();
+				resetTestDatabase();
+				testDatabase.put(fakeAthlete).then(() => {
+					putSpy = spyOn(testDatabase, "put").and.callThrough();
 					return Promise.resolve();
 				});
 			});
@@ -976,9 +1045,9 @@ describe("DesktopDataStore", () => {
 
 			let putSpy: Spy;
 
-			const promiseMissingCollection = desktopDataStore.database.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
-				desktopDataStore.setup();
-				putSpy = spyOn(desktopDataStore.database, "put").and.callThrough();
+			const promiseMissingCollection = testDatabase.destroy().then(() => { // Clean database and only enter 1 row (a fake athlete)
+				resetTestDatabase();
+				putSpy = spyOn(testDatabase, "put").and.callThrough();
 				return Promise.resolve();
 			});
 
@@ -1013,9 +1082,9 @@ describe("DesktopDataStore", () => {
 
 			let putSpy: Spy;
 
-			const promiseSetRevision = desktopDataStore.database.get(docId).then(doc => {
+			const promiseSetRevision = testDatabase.get(docId).then(doc => {
 				expectedCalledWith[DesktopDataStore.POUCH_DB_REV_FIELD] = doc._rev;
-				putSpy = spyOn(desktopDataStore.database, "put").and.callThrough();
+				putSpy = spyOn(testDatabase, "put").and.callThrough();
 				return Promise.resolve();
 			});
 
@@ -1069,7 +1138,7 @@ describe("DesktopDataStore", () => {
 			// Then
 			promise.then(() => {
 
-				desktopDataStore.database.find({
+				testDatabase.find({
 					selector: {
 						_id: {$eq: FAKE_DATE_TIME_STORAGE_LOCATION.key}
 					}
@@ -1113,10 +1182,10 @@ describe("DesktopDataStore", () => {
 		it("should create a PouchDB dump", (done: Function) => {
 
 			// Given
-			const expectedVersion = "2.0.0";
-			const allDocsSpy = spyOn(desktopDataStore.database, "allDocs").and.callThrough();
+			const defaultAllDocsSpy = spyOn(DesktopDataStore.DATABASES.main, "allDocs").and.callThrough();
+			const activitiesAllDocsSpy = spyOn(DesktopDataStore.DATABASES.activities, "allDocs").and.callThrough();
+			const streamsAllDocsSpy = spyOn(DesktopDataStore.DATABASES.streams, "allDocs").and.callThrough();
 			const stringifySpy = spyOn(JSON, "stringify").and.callThrough();
-
 
 			// When
 			const promise = desktopDataStore.createDump();
@@ -1125,7 +1194,9 @@ describe("DesktopDataStore", () => {
 			promise.then((blobResult: Blob) => {
 
 				expect(blobResult).not.toBeNull();
-				expect(allDocsSpy).toHaveBeenCalledTimes(1);
+				expect(defaultAllDocsSpy).toHaveBeenCalledTimes(1);
+				expect(activitiesAllDocsSpy).toHaveBeenCalledTimes(1);
+				expect(streamsAllDocsSpy).toHaveBeenCalledTimes(1);
 				expect(stringifySpy).toHaveBeenCalledTimes(1);
 
 				done();
@@ -1142,27 +1213,42 @@ describe("DesktopDataStore", () => {
 			// Given
 			const expectedVersion = "2.0.0";
 
-			const expectedRows = [
+			const docs = [
 				{_id: "foo", data: "foo"},
 				{_id: "bar", data: "bar"},
 			];
-			const docs = {
-				version: expectedVersion,
-				docs: expectedRows
+			const gzippedDatabases = {
+				main: docs,
+				activities: docs,
+				streams: docs,
 			};
 
-			const destroyDbSpy = spyOn(desktopDataStore.database, "destroy").and.callThrough();
-			const setupDbSpy = spyOn(desktopDataStore, "setup").and.callThrough();
+			const defaultDestroySpy = spyOn(DesktopDataStore.DATABASES.main, "destroy").and.returnValue(Promise.resolve());
+			const activitiesDestroySpy = spyOn(DesktopDataStore.DATABASES.activities, "destroy").and.returnValue(Promise.resolve());
+			const streamsDestroySpy = spyOn(DesktopDataStore.DATABASES.streams, "destroy").and.returnValue(Promise.resolve());
 
-			const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel("1.0.0", Gzip.toBinaryString(JSON.stringify(docs)));
+			const defaultAllDocsSpy = spyOn(DesktopDataStore.DATABASES.main, "bulkDocs").and.returnValue(Promise.resolve());
+			const activitiesAllDocsSpy = spyOn(DesktopDataStore.DATABASES.activities, "bulkDocs").and.returnValue(Promise.resolve());
+			const streamsAllDocsSpy = spyOn(DesktopDataStore.DATABASES.streams, "bulkDocs").and.returnValue(Promise.resolve());
+
+			const setupDbSpy = spyOn(desktopDataStore, "setup").and.stub();
+
+			const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel("1.0.0", Gzip.pack(JSON.stringify(gzippedDatabases)));
 
 			// When
 			const promise = desktopDataStore.loadDump(desktopDumpModel);
 
 			// Then
 			promise.then(() => {
-				expect(destroyDbSpy).toHaveBeenCalledTimes(1);
+
+				expect(defaultDestroySpy).toHaveBeenCalledTimes(1);
+				expect(activitiesDestroySpy).toHaveBeenCalledTimes(1);
+				expect(streamsDestroySpy).toHaveBeenCalledTimes(1);
 				expect(setupDbSpy).toHaveBeenCalledTimes(1);
+				expect(defaultAllDocsSpy).toHaveBeenCalledTimes(1);
+				expect(activitiesAllDocsSpy).toHaveBeenCalledTimes(1);
+				expect(streamsAllDocsSpy).toHaveBeenCalledTimes(1);
+
 				done();
 
 			}, error => {
@@ -1176,8 +1262,7 @@ describe("DesktopDataStore", () => {
 
 			// Given
 			const expectedVersion = "2.0.0";
-			const bulkDocsSpy = spyOn(desktopDataStore.database, "bulkDocs").and.stub();
-			// const expectedErrorMessage = "SyntaxError: Unexpected end of JSON";
+			const bulkDocsSpy = spyOn(testDatabase, "bulkDocs").and.stub();
 
 			const expectedRows = [
 				{id: 1, data: "foo"},
@@ -1190,7 +1275,7 @@ describe("DesktopDataStore", () => {
 			};
 
 			// ... prepare dump
-			let fakeCompressedDocs = Gzip.toBinaryString(JSON.stringify(docs));
+			let fakeCompressedDocs = Gzip.pack(JSON.stringify(docs));
 
 			// ... Ensure dump is corrupted
 			fakeCompressedDocs = fakeCompressedDocs.slice(0, fakeCompressedDocs.length / 1.5);
@@ -1211,8 +1296,6 @@ describe("DesktopDataStore", () => {
 				done();
 			});
 		});
-
-		// TODO "version" dump to be compared with "the current code version".
 
 	});
 

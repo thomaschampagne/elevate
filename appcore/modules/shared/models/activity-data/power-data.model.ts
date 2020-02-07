@@ -1,4 +1,5 @@
 import { ZoneModel } from "../zone.model";
+import { PowerBestSplitModel } from "../power-best-split.model";
 
 export class PowerDataModel {
 	public hasPowerMeter: boolean;
@@ -16,5 +17,6 @@ export class PowerDataModel {
 	public medianWatts: number;
 	public upperQuartileWatts: number;
 	public powerZones: ZoneModel[];
+	public powerCurve: PowerBestSplitModel[];
 	public isEstimatedRunningPower?: boolean;
 }

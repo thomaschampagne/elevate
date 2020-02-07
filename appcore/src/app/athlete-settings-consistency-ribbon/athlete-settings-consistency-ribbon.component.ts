@@ -9,6 +9,11 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { SyncService } from "../shared/services/sync/sync.service";
 import * as _ from "lodash";
+import { LoggerService } from "../shared/services/logging/logger.service";
+import { environment } from "../../environments/environment";
+import { EnvTarget } from "@elevate/shared/models";
+import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
+import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 
 @Component({
 	selector: "app-athlete-settings-consistency-ribbon",
@@ -29,6 +34,7 @@ export class AthleteSettingsConsistencyRibbonComponent implements OnInit, OnDest
 	constructor(public router: Router,
 				public activityService: ActivityService,
 				public syncService: SyncService<any>,
+				public logger: LoggerService,
 				public dialog: MatDialog,
 				public snackBar: MatSnackBar) {
 	}
@@ -57,6 +63,17 @@ export class AthleteSettingsConsistencyRibbonComponent implements OnInit, OnDest
 	}
 
 	public onFixActivities(): void {
+
+		if (environment.target === EnvTarget.DESKTOP) {
+			this.dialog.open(GotItDialogComponent, {
+				minWidth: GotItDialogComponent.MIN_WIDTH,
+				maxWidth: GotItDialogComponent.MAX_WIDTH,
+				data: <GotItDialogDataModel> {
+					content: "This feature is not developed on the desktop app yet. You may reset your activities in the \"Advanced menu\" and start a new sync."
+				}
+			});
+			return;
+		}
 
 		const data: ConfirmDialogDataModel = {
 			title: "Fix synced activities affected by athlete settings changes",
@@ -90,6 +107,7 @@ export class AthleteSettingsConsistencyRibbonComponent implements OnInit, OnDest
 					this.syncService.sync(false, false);
 
 				}).catch(error => {
+					this.logger.error(error);
 					this.snackBar.open(error, "Close");
 				});
 			}

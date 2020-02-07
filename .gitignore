@@ -6,3 +6,6 @@
 
 # karma testing
 browsers.karma.conf.js
+
+# local workspace folders
+.vscode/

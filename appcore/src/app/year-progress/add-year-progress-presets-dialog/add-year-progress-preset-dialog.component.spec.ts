@@ -8,6 +8,7 @@ import { YearProgressTypeModel } from "../shared/models/year-progress-type.model
 import { ProgressType } from "../shared/enums/progress-type.enum";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
+import { ElevateSport } from "../../../../modules/shared/enums";
 
 describe("AddYearProgressPresetDialogComponent", () => {
 	let component: AddYearProgressPresetDialogComponent;
@@ -17,7 +18,7 @@ describe("AddYearProgressPresetDialogComponent", () => {
 
 		const addYearProgressPresetsDialogData: AddYearToDateProgressPresetDialogData =
 			new AddYearToDateProgressPresetDialogData(new YearProgressTypeModel(ProgressType.DISTANCE, "Distance"),
-				["Ride", "VirtualRide"],
+				[ElevateSport.Ride, ElevateSport.VirtualRide],
 				true,
 				true,
 				5000);

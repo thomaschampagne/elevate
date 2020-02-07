@@ -78,11 +78,11 @@ export class Service {
 
 		if (!this._runtimeInfo) {
 			const osPlatform = {name: os.platform(), arch: os.arch()};
-			const osHostname = os.hostname();
-			const osUsername = os.userInfo().username;
+			const osHostname = os.hostname().trim();
+			const osUsername = os.userInfo().username.trim();
 			const osMachineId = machineIdSync();
 			const athleteMachineId = crypto.createHash("sha1").update(osMachineId + ":" + osUsername).digest("hex");
-			const cpuName = {name: os.cpus()[0].model, threads: os.cpus().length};
+			const cpuName = {name: os.cpus()[0].model.trim(), threads: os.cpus().length};
 			const memorySize = Math.round(((os.totalmem() / 1024) / 1024) / 1024);
 			this._runtimeInfo = new RuntimeInfo(osPlatform, osHostname, osUsername, osMachineId, athleteMachineId, cpuName, memorySize);
 		}

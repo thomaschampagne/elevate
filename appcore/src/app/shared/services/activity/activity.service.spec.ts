@@ -13,6 +13,7 @@ import {
 import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/fake-synced-activity.helper";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
+import { ElevateSport } from "../../../../../modules/shared/enums";
 
 describe("ActivityService", () => {
 
@@ -47,7 +48,7 @@ describe("ActivityService", () => {
 		it("should fetch activities", (done: Function) => {
 
 			// Given
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 			// When
@@ -119,7 +120,7 @@ describe("ActivityService", () => {
 			});
 		});
 
-		it("should remove SyncedActivityModel by strava activity ids", (done: Function) => {
+		it("should remove SyncedActivityModel by activity ids", (done: Function) => {
 
 			// Given
 			const activitiesToDelete = [
@@ -179,7 +180,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				athleteSnapshot,
 				"SuperHeartRateRide 01",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-01",
 				150,
 				null,
@@ -188,7 +189,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				athleteSnapshot,
 				"SuperHeartRateRide 02",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-15",
 				180,
 				null,
@@ -197,13 +198,13 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				athleteSnapshot,
 				"SuperHeartRateRide 03",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-30",
 				135,
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
@@ -252,7 +253,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				athleteSnapshot01,
 				"SuperHeartRateRide 01",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-01",
 				150,
 				null,
@@ -261,7 +262,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				athleteSnapshot02,
 				"SuperHeartRateRide 02",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-15",
 				180,
 				null,
@@ -270,13 +271,13 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				athleteSnapshot02,
 				"SuperHeartRateRide 03",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-30",
 				135,
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
@@ -325,7 +326,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				athleteModel01,
 				"SuperHeartRateRide 01",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-01",
 				150,
 				null,
@@ -334,7 +335,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				athleteModel01,
 				"SuperHeartRateRide 02",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-15",
 				180,
 				null,
@@ -343,13 +344,13 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				athleteModel01,
 				"SuperHeartRateRide 03",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-30",
 				135,
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
@@ -390,7 +391,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				athleteSnapshot,
 				"SuperHeartRateRide 01",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-01",
 				150,
 				null,
@@ -401,7 +402,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				variousAthleteSnapshotModel,
 				"SuperHeartRateRide 02",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-15",
 				180,
 				null,
@@ -410,13 +411,13 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				athleteSnapshot,
 				"SuperHeartRateRide 03",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-30",
 				135,
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
