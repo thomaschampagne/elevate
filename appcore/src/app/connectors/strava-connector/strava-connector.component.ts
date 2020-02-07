@@ -12,6 +12,7 @@ import { ElectronService } from "../../shared/services/electron/electron.service
 import { adjectives, animals, colors, names, uniqueNamesGenerator } from "unique-names-generator";
 import _ from "lodash";
 import jdenticon from "jdenticon";
+import { MatDialog } from "@angular/material";
 
 class GeneratedStravaApiApplication {
 	public appName: string;
@@ -37,8 +38,9 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 				public desktopSyncService: DesktopSyncService,
 				public electronService: ElectronService,
 				public snackBar: MatSnackBar,
-				public logger: LoggerService) {
-		super();
+				public logger: LoggerService,
+				public dialog: MatDialog) {
+		super(electronService, dialog);
 		this.isSynced = false;
 		this.generatedStravaApiApplication = null;
 		this.showConfigure = false;

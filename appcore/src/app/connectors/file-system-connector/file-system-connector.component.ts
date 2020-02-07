@@ -1,6 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { ConnectorsComponent } from "../connectors.component";
-import { MatSnackBar } from "@angular/material";
+import { MatDialog, MatSnackBar } from "@angular/material";
+import { ElectronService } from "../../shared/services/electron/electron.service";
+import { FileSystemConnectorInfo } from "./file-system-connector-info.model";
+import { FileSystemConnectorInfoService } from "../../shared/services/file-system-connector-info/file-system-connector-info.service";
+import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
+import { ConnectorType } from "@elevate/shared/sync";
 
 @Component({
 	selector: "app-file-system-connector",
@@ -9,14 +14,45 @@ import { MatSnackBar } from "@angular/material";
 })
 export class FileSystemConnectorComponent extends ConnectorsComponent implements OnInit {
 
-	constructor(public snackBar: MatSnackBar) {
-		super();
+	public showConfigure: boolean;
+	public fileSystemConnectorInfo: FileSystemConnectorInfo;
+
+	constructor(public fileSystemConnectorInfoService: FileSystemConnectorInfoService,
+				public syncService: DesktopSyncService,
+				public electronService: ElectronService,
+				public snackBar: MatSnackBar,
+				public dialog: MatDialog) {
+		super(electronService, dialog);
+		this.showConfigure = false;
+		this.fileSystemConnectorInfo = null;
 	}
 
 	public ngOnInit(): void {
+		this.fileSystemConnectorInfo = this.fileSystemConnectorInfoService.fetch();
 	}
 
-	public onConfigure(): void {
-		this.snackBar.open("This connector is in work in progress.", "Got it");
+	public onUserDirectorySelection(): void {
+		this.configureSourceDirectory(this.electronService.userDirectorySelection());
+	}
+
+	public configureSourceDirectory(path: string): void {
+		const compliant = path && this.electronService.isDirectory(path);
+		if (compliant) {
+			this.fileSystemConnectorInfo.sourceDirectory = path;
+			this.saveChanges();
+		} else {
+			if (path) {
+				this.snackBar.open(`Directory ${path} is invalid`);
+			}
+		}
+	}
+
+	public saveChanges(): void {
+		this.fileSystemConnectorInfoService.save(this.fileSystemConnectorInfo);
+	}
+
+	public sync(): Promise<void> {
+		const desktopSyncService = <DesktopSyncService> this.syncService;
+		return desktopSyncService.sync(null, null, ConnectorType.FILE_SYSTEM);
 	}
 }

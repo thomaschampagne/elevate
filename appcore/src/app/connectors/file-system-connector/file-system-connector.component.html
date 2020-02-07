@@ -2,13 +2,54 @@
 	<mat-card-title>
 		File system
 	</mat-card-title>
-	<mat-card-subtitle>
-		The connector is in work in progress
+	<mat-card-subtitle *ngIf="fileSystemConnectorInfo">
+		<span *ngIf="!fileSystemConnectorInfo.sourceDirectory">Not configured.</span>
+		<span
+			*ngIf="fileSystemConnectorInfo.sourceDirectory">Configured to scan directory <i>{{fileSystemConnectorInfo.sourceDirectory}}</i></span>
 	</mat-card-subtitle>
 	<mat-card-content>
-		<button mat-stroked-button color="primary" (click)="onConfigure()">
-			<mat-icon>build</mat-icon>
-			Configure
-		</button>
+		<div>
+			<button
+				*ngIf="fileSystemConnectorInfo.sourceDirectory" mat-stroked-button color="primary" (click)="sync()">
+				<mat-icon>sync</mat-icon>
+				Sync activities
+			</button>
+
+			<button mat-stroked-button color="primary" (click)="showConfigure = !showConfigure" *ngIf="!showConfigure">
+				<mat-icon>build</mat-icon>
+				Configure
+			</button>
+		</div>
+		<div *ngIf="showConfigure && fileSystemConnectorInfo">
+			<div>
+				<mat-form-field fxFill *ngIf="fileSystemConnectorInfo.sourceDirectory">
+					<input matInput type="text" [disabled]="true" placeholder="Current activities directory location"
+						   [(ngModel)]="fileSystemConnectorInfo.sourceDirectory">
+				</mat-form-field>
+				<button mat-button matSuffix mat-stroked-button type="button" color="primary"
+						(click)="onUserDirectorySelection()">
+					<mat-icon>folder_open</mat-icon>&nbsp;&nbsp;
+					<span *ngIf="!fileSystemConnectorInfo.sourceDirectory">Browse activities directory location.</span>
+					<span *ngIf="fileSystemConnectorInfo.sourceDirectory">Change activities directory location.</span>
+				</button>
+			</div>
+			<div>
+				<mat-checkbox (change)="saveChanges()" [(ngModel)]="fileSystemConnectorInfo.scanSubDirectories">Scan
+					subdirectory
+				</mat-checkbox>
+			</div>
+			<!--<div>
+				<mat-checkbox (change)="saveChanges()"
+							  [(ngModel)]="fileSystemConnectorInfo.deleteActivityFilesAfterSync">Delete activity which
+					have been synced
+				</mat-checkbox>
+			</div>-->
+			<!--<div>
+				<mat-checkbox [(ngModel)]="fileSystemConnectorInfo.scanArchivesFiles">Seek for activities in archive files (.zip, .tar, .tar.gz)</mat-checkbox>
+			</div>-->
+		</div>
+		<div class="note">
+			<u>Note:</u> the connector supports only <strong>GPX, TCX & FIT</strong> formats at the moment.
+		</div>
 	</mat-card-content>
 </mat-card>

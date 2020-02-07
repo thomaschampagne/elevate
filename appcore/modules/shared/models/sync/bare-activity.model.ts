@@ -1,7 +1,9 @@
+import { ElevateSport } from "../../enums";
+
 export class BareActivityModel {
-	public id: number;
+	public id: number | string;
 	public name: string;
-	public type: string;
+	public type: ElevateSport;
 	public display_type: string;
 	public private: boolean;
 	public bike_id: number;

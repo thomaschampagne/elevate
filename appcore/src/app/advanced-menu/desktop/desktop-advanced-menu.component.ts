@@ -24,13 +24,13 @@ import { ElectronService } from "../../shared/services/electron/electron.service
 					<button mat-stroked-button color="primary" (click)="onUserSettingsReset()">Reset athlete & global settings</button>
 				</div>
 				<div>
+					<button mat-stroked-button color="primary" (click)="onFullAppReset()">Application reset</button>
+				</div>
+				<div>
 					<button mat-stroked-button color="primary" (click)="openLogFile()">Open log file</button>
 				</div>
 				<div>
 					<button mat-stroked-button color="primary" (click)="openAppDataFolder()">Open application data folder</button>
-				</div>
-				<div>
-					<button mat-stroked-button color="primary" (click)="onFullAppReset()">Application reset</button>
 				</div>
 				<div>
 					If problem still persist, consider uninstall/install the app or report a bug.

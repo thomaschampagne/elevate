@@ -51,16 +51,19 @@
 		"node-machine-id": "^1.1.12",
 		"pako": "^1.0.10",
 		"promise-tron": "^2.1.0",
+		"sports-lib": "file:../../sports-lib/",
 		"querystring": "^0.2.0",
 		"rxjs": "^6.5.3",
 		"typed-rest-client": "^1.7.1",
-		"vue": "^2.6.11"
+		"vue": "^2.6.11",
+		"xmldom": "^0.2.1"
 	},
 	"devDependencies": {
 		"@types/jest": "^24.0.25",
 		"@types/lodash": "^4.14.149",
 		"@types/node": "^12.7.8",
 		"@types/pako": "^1.0.1",
+		"@types/xmldom": "^0.1.29",
 		"devtron": "^1.4.0",
 		"electron": "^7.1.7",
 		"electron-builder": "^21.2.0",

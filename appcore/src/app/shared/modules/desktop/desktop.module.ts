@@ -19,6 +19,7 @@ import { ConnectorSyncDateTimeDao } from "../../dao/sync/connector-sync-date-tim
 import { DesktopRoutingModule } from "./desktop-routing.module";
 import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/desktop-advanced-menu.component";
 import { DesktopMigrationService } from "../../../desktop/migration/desktop-migration.service";
+import { FileSystemConnectorInfoService } from "../../services/file-system-connector-info/file-system-connector-info.service";
 
 @NgModule({
 	imports: [
@@ -50,6 +51,7 @@ import { DesktopMigrationService } from "../../../desktop/migration/desktop-migr
 		StravaApiCredentialsService,
 		StravaApiCredentialsDao,
 		StravaConnectorService,
+		FileSystemConnectorInfoService,
 	]
 })
 export class DesktopModule {
