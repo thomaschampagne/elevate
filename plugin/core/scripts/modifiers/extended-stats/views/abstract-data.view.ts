@@ -1,21 +1,23 @@
 import * as Chart from "chart.js";
-import { LinearTickOptions } from "chart.js";
+import { ChartPoint, LinearTickOptions } from "chart.js";
 import * as _ from "lodash";
 import { Helper } from "../../../helper";
 import { AppResourcesModel } from "../../../models/app-resources.model";
-import { SpeedUnitDataModel, ZoneModel } from "@elevate/shared/models";
+import { PowerBestSplitModel, SpeedUnitDataModel, ZoneModel } from "@elevate/shared/models";
+
+type GraphTypes = "histogram" | "scatter-line";
 
 export abstract class AbstractDataView {
 
 	protected units: string;
-	protected chart: any;
+	protected chart: Chart;
 	protected canvasId: string;
 	protected viewTitle: string;
 	protected content: string;
 	protected grid: JQuery;
 	protected hasGraph: boolean;
 	protected graph: JQuery;
-	protected graphData: any;
+	protected graphData: Chart.ChartData;
 	protected graphTitle: string;
 	protected mainColor: number[];
 	protected table: JQuery;
@@ -25,12 +27,17 @@ export abstract class AbstractDataView {
 	protected activityType: string;
 	protected speedUnitsData: SpeedUnitDataModel;
 
-	protected constructor(units?: string) {
+	private readonly graphType: GraphTypes;
+	private readonly logXAxis: boolean; // Only for scatter plot
+
+	protected constructor(units?: string, graphType?: GraphTypes, logXAxis?: boolean) {
 		this.content = "";
 		this.viewTitle = "";
 		this.units = units;
 		this.hasGraph = true;
 		this.mainColor = [0, 0, 0]; // Default ribbon color is black
+		this.graphType = graphType || "histogram";
+		this.logXAxis = logXAxis;
 		this.canvasId = Helper.guid();
 	}
 
@@ -100,10 +107,7 @@ export abstract class AbstractDataView {
 			labelsData.push(label);
 		}
 
-		const distributionArray: string[] = [];
-		for (zone in zones) {
-			distributionArray.push((zones[zone].s / 60).toFixed(2));
-		}
+		const distributionArray = zones.map(z => Number((z.s / 60).toFixed(2)));
 
 		this.graphData = {
 			labels: labelsData,
@@ -115,6 +119,23 @@ export abstract class AbstractDataView {
 				hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
 				hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
 				data: distributionArray,
+			}],
+		};
+	}
+
+	protected setupScatterLineGraph(chartPoints: ChartPoint[]): void {
+		this.graphData = {
+			datasets: [{
+				label: this.graphTitle,
+				backgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
+				borderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+				borderWidth: 1,
+				pointRadius: 0,
+				hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
+				hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+				data: chartPoints,
+				fill: false,
+				showLine: true
 			}],
 		};
 	}
@@ -143,12 +164,17 @@ export abstract class AbstractDataView {
 
 		// Generating the chart
 		const canvas: HTMLCanvasElement = document.getElementById(this.canvasId) as HTMLCanvasElement;
-		this.chart = new Chart(canvas.getContext("2d"), {
+		this.chart = this.graphType === "histogram" ?
+			this.generateHistogram(canvas) : this.generateScatterLinePlot(canvas);
+	}
+
+	private generateHistogram(canvas: HTMLCanvasElement) {
+		return new Chart(canvas.getContext("2d"), {
 			type: "bar",
 			data: this.graphData,
 			options: {
 				tooltips: {
-					custom: this.customTooltips,
+					custom: this.customTooltipsForZones,
 				},
 				scales: {
 					yAxes: [{
@@ -159,10 +185,50 @@ export abstract class AbstractDataView {
 				},
 			},
 		});
-		this.chart = this.chart.clear();
 	}
 
-	protected customTooltips(tooltip: any): void {
+	private generateScatterLinePlot(canvas: HTMLCanvasElement) {
+
+		const maxXData = _.max(this.graphData.datasets.map(d => _.max((d.data as Chart.ChartPoint[]).map(p => p.x)))) || 1;
+
+		return new Chart(canvas.getContext("2d"), {
+			type: "scatter",
+			data: this.graphData,
+			options: {
+				hover: {
+					intersect: false,
+					mode: "nearest"
+				},
+				tooltips: {
+					intersect: false,
+					mode: "nearest",
+					callbacks: {
+						label: (item) =>
+							Number(item.yLabel).toFixed(1) + this.units + " held during "
+							+ Helper.secondsToHHMMSS(Number(item.xLabel), true)
+					}
+				},
+				scales: {
+					xAxes: [{
+						type: this.logXAxis ? "logarithmic" : "linear",
+						ticks: {
+							min: 0,
+							max: maxXData,
+							callback: (tick: number) => {
+								const remain = tick / (Math.pow(10, Math.floor(Math.log10(tick))));
+								if (remain === 1 || remain === 2 || remain === 5) {
+									return Helper.secondsToHHMMSS(tick, true);
+								}
+								return "";
+							}
+						},
+					}],
+				},
+			}
+		});
+	}
+
+	protected customTooltipsForZones(tooltip: any): void {
 
 		// tooltip will be false if tooltip is not visible or should be hidden
 		if (!tooltip || !tooltip.body || !tooltip.body[0] || !tooltip.body[0].lines || !tooltip.body[0].lines[0]) {
@@ -176,6 +242,38 @@ export abstract class AbstractDataView {
 		}));
 
 		tooltip.body[0].lines[0] = "Zone held during " + Helper.secondsToHHMMSS(parseFloat(timeInMinutes) * 60);
+	}
+
+	protected setupPointDataTable(pointDataModel: PowerBestSplitModel[]): void {
+
+		if (!this.units) {
+			console.error("View must have units.");
+			return;
+		}
+
+		let htmlTable = "";
+		htmlTable += "<div>";
+		htmlTable += "<div style=\"height:500px; overflow:auto;\">";
+		htmlTable += "<table class=\"distributionTable\">";
+
+		// Generate htmlTable header
+		htmlTable += "<tr>";
+		htmlTable += "<td>TIME</td>";
+		htmlTable += "<td>" + this.units.toUpperCase() + "</td>";
+		htmlTable += "</tr>";
+
+		// Table body
+		htmlTable += pointDataModel.map(p => {
+			return "<tr>"
+				+ "<td>" + Helper.secondsToHHMMSS(p.time) + "</td>" // Time
+				+ "<td>" + p.watts.toFixed(1) + "</td>" // Value
+				+ "</tr>";
+		}).join("");
+
+		htmlTable += "</table>";
+		htmlTable += "</div>";
+		htmlTable += "</div>";
+		this.table = $(htmlTable);
 	}
 
 	protected setupDistributionTable(zones: ZoneModel[], ratio?: number): void {
