@@ -115,7 +115,7 @@ describe("SplitCalculator", () => {
 
 		// When
 		const splitCalculator = new SplitCalculator(timeScale, wattsData);
-		const riderFTP = splitCalculator.getBestSplit(scaleRange, true);
+		const riderFTP = splitCalculator.getBestSplit(scaleRange);
 
 		// Then
 		expect(Math.floor(riderFTP)).toEqual(expectedFTP);
@@ -144,5 +144,4 @@ describe("SplitCalculator", () => {
 
 		done();
 	});
-
 });
