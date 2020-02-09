@@ -28,7 +28,7 @@ describe("ViewedDayService", () => {
 		const expectedCallCount = 1;
 		const spy = spyOn(service.changes, "next");
 		const dayStressModel = new DayStressModel(new Date(), false);
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 10, 10);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 10, 10, 10);
 
 		// When
 		service.onChange(dayFitnessTrendModel);

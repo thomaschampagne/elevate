@@ -12,7 +12,7 @@ describe("FitnessTrendActivitiesLinksDialogComponent", () => {
 	let component: FitnessTrendActivitiesLinksDialogComponent;
 	let fixture: ComponentFixture<FitnessTrendActivitiesLinksDialogComponent>;
 
-	const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(new DayStressModel(new Date(), false), 0, 0, 0);
+	const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(new DayStressModel(new Date(), false), 0, 0, 0, 0);
 
 	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
