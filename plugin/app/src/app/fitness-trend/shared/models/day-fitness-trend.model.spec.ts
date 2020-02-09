@@ -11,7 +11,7 @@ describe("DayFitnessTrendModel", () => {
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
 		const tsb = -39;
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, tsb);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, tsb);
 
 		// When
 		const trainingZone: TrainingZone = dayFitnessTrendModel.findTrainingZone(tsb);
@@ -28,7 +28,7 @@ describe("DayFitnessTrendModel", () => {
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
 		const tsb = -30;
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, tsb);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, tsb);
 
 		// When
 		const trainingZone: TrainingZone = dayFitnessTrendModel.findTrainingZone(tsb);
@@ -45,7 +45,7 @@ describe("DayFitnessTrendModel", () => {
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
 		const tsb = -15;
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, tsb);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, tsb);
 
 		// When
 		const trainingZone: TrainingZone = dayFitnessTrendModel.findTrainingZone(tsb);
@@ -63,7 +63,7 @@ describe("DayFitnessTrendModel", () => {
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
 		const tsb = -10;
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, tsb);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, tsb);
 
 		// When
 		const trainingZone: TrainingZone = dayFitnessTrendModel.findTrainingZone(tsb);
@@ -80,7 +80,7 @@ describe("DayFitnessTrendModel", () => {
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
 		const tsb = 0;
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, tsb);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, tsb);
 
 		// When
 		const trainingZone: TrainingZone = dayFitnessTrendModel.findTrainingZone(tsb);
@@ -97,7 +97,7 @@ describe("DayFitnessTrendModel", () => {
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
 		const tsb = 5;
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, tsb);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, tsb);
 
 		// When
 		const trainingZone: TrainingZone = dayFitnessTrendModel.findTrainingZone(tsb);
@@ -114,7 +114,7 @@ describe("DayFitnessTrendModel", () => {
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
 		const tsb = 10;
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, tsb);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, tsb);
 
 		// When
 		const trainingZone: TrainingZone = dayFitnessTrendModel.findTrainingZone(tsb);
@@ -131,7 +131,7 @@ describe("DayFitnessTrendModel", () => {
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
 		const tsb = 15;
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, tsb);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, tsb);
 
 		// When
 		const trainingZone: TrainingZone = dayFitnessTrendModel.findTrainingZone(tsb);
@@ -148,7 +148,7 @@ describe("DayFitnessTrendModel", () => {
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
 		const tsb = 25;
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, tsb);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, tsb);
 
 		// When
 		const trainingZone: TrainingZone = dayFitnessTrendModel.findTrainingZone(tsb);
@@ -165,7 +165,7 @@ describe("DayFitnessTrendModel", () => {
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
 		const tsb = 26;
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, tsb);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, tsb);
 
 		// When
 		const trainingZone: TrainingZone = dayFitnessTrendModel.findTrainingZone(tsb);
@@ -182,7 +182,7 @@ describe("DayFitnessTrendModel", () => {
 		const date = new Date();
 		const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
 		const tsb = 99;
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, tsb);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 0, 20, tsb);
 
 		// When
 		const trainingZone: TrainingZone = dayFitnessTrendModel.findTrainingZone(tsb);
@@ -201,7 +201,7 @@ describe("DayFitnessTrendModel", () => {
 		dayStressModel.types = ["Ride", "Ride", "Ride", "Run", "Run"];
 
 		const expectedResult = "3 Rides, 2 Runs";
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, 30);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, 30);
 
 		// When
 		const result: string = dayFitnessTrendModel.printTypesCount();
@@ -222,7 +222,7 @@ describe("DayFitnessTrendModel", () => {
 		dayStressModel.types = ["Ride", "VirtualRide", "AlpineSki", "Run", "Ride", "Run", "Ride"];
 
 		const expectedResult = "3 Rides, 2 Runs, 1 VirtualRide, 1 AlpineSki";
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, 30);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, 30);
 
 		// When
 		const result: string = dayFitnessTrendModel.printTypesCount();
@@ -244,7 +244,7 @@ describe("DayFitnessTrendModel", () => {
 		dayStressModel.types = ["Ride", "VirtualRide", "AlpineSki", "Run", "Ride", "Run", "Ride"];
 
 		const expectedResult = "3 Rides, 2 Runs & 2 more";
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, 30);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, 30);
 
 		// When
 		const result: string = dayFitnessTrendModel.printTypesCount(maxTypes);
@@ -266,7 +266,7 @@ describe("DayFitnessTrendModel", () => {
 		dayStressModel.types = ["Ride", "Run", "Ride", "Run", "Ride"];
 
 		const expectedResult = "3 Rides, 2 Runs";
-		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, 30);
+		const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 100, 10, 20, 30);
 
 		// When
 		const result: string = dayFitnessTrendModel.printTypesCount(maxTypes);

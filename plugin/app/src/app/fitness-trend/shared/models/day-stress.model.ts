@@ -50,6 +50,4 @@ export class DayStressModel {
 	public printFinalStressScore(): string {
 		return (this.finalStressScore) ? Math.floor(this.finalStressScore).toString() : "-";
 	}
-
-
 }

@@ -7,7 +7,9 @@ export class DayFitnessTrendModel extends DayStressModel {
 
 	public static readonly DATE_FORMAT: string = "YYYY-MM-DD";
 
-	constructor(dayStress: DayStressModel, ctl: number, atl: number, tsb: number, prevCtl?: number, prevAtl?: number, prevTsb?: number) {
+	constructor(dayStress: DayStressModel, rolling7DayStress: number,
+		ctl: number, atl: number, tsb: number,
+		prevCtl?: number, prevAtl?: number, prevTsb?: number) {
 		super(dayStress.date, dayStress.previewDay);
 
 		this.ids = dayStress.ids;
@@ -31,6 +33,8 @@ export class DayFitnessTrendModel extends DayStressModel {
 		this.prevAtl = (prevAtl) ? prevAtl : null;
 		this.prevTsb = (prevTsb) ? prevTsb : null;
 
+		this.rolling7DayStress = rolling7DayStress;
+
 		this.trainingZone = this.findTrainingZone(this.tsb);
 	}
 
@@ -44,8 +48,14 @@ export class DayFitnessTrendModel extends DayStressModel {
 	public prevAtl: number;
 	public prevTsb: number;
 
+	public rolling7DayStress: number;
+
 	public trainingZone: TrainingZone;
 	public trainingZoneAsString: string;
+
+	public print7DayRollingStress(): string {
+		return Math.floor(this.rolling7DayStress).toString();
+	}
 
 	public printFitness(): number {
 		return _.floor(this.ctl, 1);
@@ -129,7 +139,7 @@ export class DayFitnessTrendModel extends DayStressModel {
 		}
 
 		const typesCount = _.chain(this.types).countBy().map((count, type) => {
-			return {type: type, count: count};
+			return { type: type, count: count };
 		}).value();
 
 		let result = "";
