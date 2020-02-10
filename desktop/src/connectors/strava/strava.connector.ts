@@ -1,7 +1,6 @@
 import { BaseConnector } from "../base.connector";
 import { ReplaySubject, Subject } from "rxjs";
 import {
-	ActivityComputer,
 	ActivitySyncEvent,
 	ConnectorType,
 	ErrorSyncEvent,
@@ -16,7 +15,6 @@ import {
 } from "@elevate/shared/sync";
 import {
 	ActivityStreamsModel,
-	AnalysisDataModel,
 	AthleteModel,
 	BareActivityModel,
 	ConnectorSyncDateTime,
@@ -27,7 +25,6 @@ import {
 import logger from "electron-log";
 import { Service } from "../../service";
 import * as _ from "lodash";
-import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { Gzip, sleep } from "@elevate/shared/tools";
 import { StravaAuthenticator } from "./strava-authenticator";
 import { IHttpClientResponse } from "typed-rest-client/Interfaces";
@@ -51,7 +48,6 @@ export class StravaConnector extends BaseConnector {
 		super(ConnectorType.STRAVA, athleteModel, userSettingsModel, connectorSyncDateTime, priority, StravaConnector.ENABLED);
 		this.stravaApiCredentials = stravaApiCredentials;
 		this.updateSyncedActivitiesNameAndType = updateSyncedActivitiesNameAndType;
-		this.athleteSnapshotResolver = new AthleteSnapshotResolver(this.athleteModel);
 		this.stravaAuthenticator = new StravaAuthenticator();
 		this.nextCallWaitTime = 0;
 	}
@@ -73,7 +69,6 @@ export class StravaConnector extends BaseConnector {
 
 	public stravaApiCredentials: StravaApiCredentials;
 	public updateSyncedActivitiesNameAndType: boolean;
-	public athleteSnapshotResolver: AthleteSnapshotResolver;
 	public stravaAuthenticator: StravaAuthenticator;
 	public nextCallWaitTime: number;
 
@@ -303,16 +298,6 @@ export class StravaConnector extends BaseConnector {
 			});
 
 		}, Promise.resolve());
-	}
-
-	public computeExtendedStats(syncedActivityModel: Partial<SyncedActivityModel>, streams: ActivityStreamsModel): AnalysisDataModel {
-		return (new ActivityComputer(syncedActivityModel.type, syncedActivityModel.trainer,
-			this.userSettingsModel, syncedActivityModel.athleteSnapshot, true, syncedActivityModel.hasPowerMeter,
-			{
-				distance: syncedActivityModel.distance_raw,
-				elevation: syncedActivityModel.elevation_gain_raw,
-				movingTime: syncedActivityModel.moving_time_raw,
-			}, streams, null, false)).compute();
 	}
 
 	public prepareBareActivity(bareActivity: BareActivityModel): BareActivityModel {

@@ -21,7 +21,7 @@ export class ErrorSyncEvent extends SyncEvent {
 		create: (fromConnectorType: ConnectorType, activityName: string, onDate: Date, existingActivities: string[]): ErrorSyncEvent => {
 			return new ErrorSyncEvent(fromConnectorType, {
 				code: ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.code,
-				description: `Unable to save the new activity "${activityName}" on date "${onDate.toString()}" because multiple activities are already saved in database for same date: ${existingActivities.join("; ")}`,
+				description: `Unable to save the new activity "${activityName}" starting on date "${onDate.toISOString()}" because multiple activities are already saved in database for same date: ${existingActivities.join("; ")}`,
 				stacktrace: null
 			});
 		},

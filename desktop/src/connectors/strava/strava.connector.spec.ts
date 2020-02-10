@@ -1343,7 +1343,6 @@ describe("StravaConnector", () => {
 
 			// Emulate 1 existing activity
 			findSyncedActivityModelsSpy.and.callFake(() => {
-
 				if (findSyncedActivityModelsSpy.calls.count() === (trackCallId + 1)) {
 					return Promise.resolve([expectedSyncedActivityModelUpdate, expectedSyncedActivityModelUpdate]);
 				}

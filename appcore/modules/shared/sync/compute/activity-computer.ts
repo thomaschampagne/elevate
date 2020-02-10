@@ -614,6 +614,15 @@ export class ActivityComputer {
 
 		const hasGradeAdjustedSpeed: boolean = !_.isEmpty(gradeAdjustedSpeedArray);
 
+		let speedThreshold: number;
+		if (this.activityType === ElevateSport.Ride || this.activityType === ElevateSport.VirtualRide) {
+			speedThreshold = 1.8 * 3.6;
+		} else if (this.activityType === ElevateSport.Run || this.activityType === ElevateSport.VirtualRun) {
+			speedThreshold = 3.6;
+		} else {
+			speedThreshold = 0;
+		}
+
 		// End Preparing zone
 		for (let i = 0; i < velocityArray.length; i++) { // Loop on samples
 
@@ -627,7 +636,7 @@ export class ActivityComputer {
 
 				movingSeconds = (timeArray[i] - timeArray[i - 1]); // Getting deltaTime in seconds (current sample and previous one)
 
-				if (currentSpeed > 0) { // If moving...
+				if (currentSpeed > speedThreshold) { // If moving...
 
 					speedsNonZero.push(currentSpeed);
 					speedsNonZeroDuration.push(movingSeconds);

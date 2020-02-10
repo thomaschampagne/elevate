@@ -1,11 +1,19 @@
 import { ReplaySubject, Subject } from "rxjs";
-import { ConnectorType, SyncEvent, SyncEventType } from "@elevate/shared/sync";
-import { AthleteModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import { ActivityComputer, ConnectorType, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+	ActivityStreamsModel,
+	AnalysisDataModel,
+	AthleteModel,
+	ConnectorSyncDateTime,
+	SyncedActivityModel,
+	UserSettings
+} from "@elevate/shared/models";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Service } from "../service";
 import { filter } from "rxjs/operators";
 import * as crypto from "crypto";
 import { BinaryLike } from "crypto";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export abstract class BaseConnector {
@@ -13,6 +21,7 @@ export abstract class BaseConnector {
 	public type: ConnectorType;
 	public athleteModel: AthleteModel;
 	public userSettingsModel: UserSettingsModel;
+	public athleteSnapshotResolver: AthleteSnapshotResolver;
 	public priority: number;
 	public enabled: boolean;
 	public isSyncing: boolean;
@@ -35,6 +44,7 @@ export abstract class BaseConnector {
 	protected constructor(type: ConnectorType, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime, priority: number, enabled: boolean) {
 		this.type = type;
 		this.athleteModel = athleteModel;
+		this.athleteSnapshotResolver = new AthleteSnapshotResolver(this.athleteModel);
 		this.userSettingsModel = userSettingsModel;
 		this.syncDateTime = (connectorSyncDateTime && connectorSyncDateTime.dateTime >= 0)
 			? Math.floor(connectorSyncDateTime.dateTime / 1000) : null; // Convert timestamp to seconds instead of millis
@@ -65,6 +75,16 @@ export abstract class BaseConnector {
 				});
 			}
 		});
+	}
+
+	public computeExtendedStats(syncedActivityModel: Partial<SyncedActivityModel>, streams: ActivityStreamsModel): AnalysisDataModel {
+		return (new ActivityComputer(syncedActivityModel.type, syncedActivityModel.trainer,
+			this.userSettingsModel, syncedActivityModel.athleteSnapshot, true, syncedActivityModel.hasPowerMeter,
+			{
+				distance: syncedActivityModel.distance_raw,
+				elevation: syncedActivityModel.elevation_gain_raw,
+				movingTime: syncedActivityModel.moving_time_raw,
+			}, streams, null, false)).compute();
 	}
 
 	/**

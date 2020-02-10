@@ -1,5 +1,13 @@
 import { BaseConnector } from "../base.connector";
-import { ConnectorType, ErrorSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+	ActivitySyncEvent,
+	ConnectorType,
+	ErrorSyncEvent,
+	StartedSyncEvent,
+	StoppedSyncEvent,
+	SyncEvent,
+	SyncEventType
+} from "@elevate/shared/sync";
 import { ReplaySubject, Subject } from "rxjs";
 import {
 	ActivityStreamsModel,
@@ -34,6 +42,7 @@ import { GradeCalculator } from "./grade-calculator/grade-calculator";
 import { CyclingPower } from "./cycling-power-estimator/cycling-power-estimator";
 import { Partial } from "rollup-plugin-typescript2/dist/partial";
 import { ElevateException } from "@elevate/shared/exceptions";
+import { Gzip } from "@elevate/shared/tools";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export enum ActivityFileType {
@@ -88,7 +97,8 @@ export class FileSystemConnector extends BaseConnector {
 
 		public static resolve(date: Date): string {
 			const currentHour = date.getHours();
-			if (currentHour >= FileSystemConnector.HumanizedDayMoment.SPLIT_AFTERNOON_AT && currentHour <= FileSystemConnector.HumanizedDayMoment.SPLIT_EVENING_AT) { // Between 12 PM and 5PM
+			if (currentHour >= FileSystemConnector.HumanizedDayMoment.SPLIT_AFTERNOON_AT
+				&& currentHour <= FileSystemConnector.HumanizedDayMoment.SPLIT_EVENING_AT) { // Between 12 PM and 5PM
 				return FileSystemConnector.HumanizedDayMoment.AFTERNOON;
 			} else if (currentHour >= FileSystemConnector.HumanizedDayMoment.SPLIT_EVENING_AT) {
 				return FileSystemConnector.HumanizedDayMoment.EVENING;
@@ -96,6 +106,8 @@ export class FileSystemConnector extends BaseConnector {
 			return FileSystemConnector.HumanizedDayMoment.MORNING;
 		}
 	};
+
+	public static readonly EXTRA_ACTIVITY_LOCATION: string = "activity_location";
 
 	private static readonly ENABLED: boolean = true;
 
@@ -271,43 +283,111 @@ export class FileSystemConnector extends BaseConnector {
 					return Promise.reject(new StoppedSyncEvent(ConnectorType.FILE_SYSTEM));
 				}
 
-				let eventPromise: Promise<EventInterface> = null;
+				let parseSportsLibActivity: Promise<EventInterface> = null;
 
 				const activityFileBuffer = fs.readFileSync(activityFile.location.path);
 
 				switch (activityFile.type) {
 					case ActivityFileType.GPX:
-						eventPromise = SportsLib.importFromGPX(activityFileBuffer.toString(), xmldom.DOMParser);
+						parseSportsLibActivity = SportsLib.importFromGPX(activityFileBuffer.toString(), xmldom.DOMParser);
 						break;
 
 					case ActivityFileType.TCX:
 						const doc = (new xmldom.DOMParser()).parseFromString(activityFileBuffer.toString(), "application/xml");
-						eventPromise = SportsLib.importFromTCX(doc);
+						parseSportsLibActivity = SportsLib.importFromTCX(doc);
 						break;
 
 					case ActivityFileType.FIT:
-						eventPromise = SportsLib.importFromFit(activityFileBuffer);
+						parseSportsLibActivity = SportsLib.importFromFit(activityFileBuffer);
 						break;
+
+					default:
+						const errorMessage = `Type ${activityFile.type} not supported. Failed to parse ${activityFile.location.path}`;
+						logger.error(errorMessage);
+						return Promise.reject(errorMessage);
 				}
 
-				return eventPromise.then((event: EventInterface) => {
+				return parseSportsLibActivity.then((event: EventInterface) => {
 
 					// Loop on all activities
 					return event.getActivities().reduce((previousActivityProcessed: Promise<void>, sportsLibActivity: ActivityInterface) => {
 
 						return previousActivityProcessed.then(() => {
+
 							return this.findSyncedActivityModels(sportsLibActivity.startDate.toISOString(), sportsLibActivity.getDuration().getValue())
 								.then((syncedActivityModels: SyncedActivityModel[]) => {
 									if (_.isEmpty(syncedActivityModels)) {
-										// TODO Case not exists => parse => compute => Save
-										// ...
 
 										// Create bare activity from "sports-lib" activity
-										const bareActivityModel = this.createBareActivity(sportsLibActivity);
+										const bareActivity = this.createBareActivity(sportsLibActivity);
+
+										const syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
+										syncedActivityModel.start_timestamp = new Date(bareActivity.start_time).getTime() / 1000;
+
+										// Assign reference to strava activity
+										_.set(syncedActivityModel, ["extras", FileSystemConnector.EXTRA_ACTIVITY_LOCATION], activityFile.location); // Keep tracking  of activity id
+										syncedActivityModel.id = BaseConnector.hashData(syncedActivityModel.start_time, 6) + "-" + BaseConnector.hashData(syncedActivityModel.end_time, 6);
+
+										// Resolve athlete snapshot for current activity date
+										syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(syncedActivityModel.start_time);
+
+										// Prepare streams
+										const activityStreamsModel = this.appendAdditionalStreams(bareActivity,
+											this.extractActivityStreams(sportsLibActivity), syncedActivityModel.athleteSnapshot.athleteSettings);
+
+										// Compute activity
+										try {
+											syncedActivityModel.extendedStats = this.computeExtendedStats(syncedActivityModel, activityStreamsModel);
+										} catch (error) {
+											const errorSyncEvent = (error instanceof Error)
+												? ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE_SYSTEM, error.message, error.stack)
+												: ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE_SYSTEM, error.toString());
+
+											syncEvents$.next(errorSyncEvent); // Notify error
+											return Promise.resolve(); // Continue to next activity
+										}
+
+										// Update
+										if (syncedActivityModel.extendedStats) {
+											syncedActivityModel.moving_time_raw = syncedActivityModel.elapsed_time_raw * syncedActivityModel.extendedStats.moveRatio;
+											syncedActivityModel.elevation_gain_raw = Math.round(syncedActivityModel.extendedStats.elevationData.accumulatedElevationAscent);
+										}
+
+										// Track connector type
+										syncedActivityModel.sourceConnectorType = ConnectorType.FILE_SYSTEM;
+
+										// Gunzip stream as base64
+										const compressedStream = (activityStreamsModel) ? Gzip.pack64(activityStreamsModel) : null;
+
+										// Notify the new SyncedActivityModel
+										syncEvents$.next(new ActivitySyncEvent(ConnectorType.FILE_SYSTEM,
+											null, <SyncedActivityModel> syncedActivityModel, true, compressedStream));
+
+										return Promise.resolve();
 
 									} else {
-										// TODO Case exists => Skip
-										// ...
+
+										if (_.isArray(syncedActivityModels) && syncedActivityModels.length === 1) { // One activity found
+
+											// Notify the new SyncedActivityModel
+											syncEvents$.next(new ActivitySyncEvent(ConnectorType.FILE_SYSTEM,
+												null, <SyncedActivityModel> syncedActivityModels[0], false));
+										} else {
+											const activitiesFound = [];
+											_.forEach(syncedActivityModels, (activityModel: SyncedActivityModel) => {
+												activitiesFound.push(activityModel.name + " (" + new Date(activityModel.start_time).toString() + ")");
+											});
+
+											const activityName = `${FileSystemConnector.HumanizedDayMoment.resolve(sportsLibActivity.startDate)} ${this.convertToElevateSport(sportsLibActivity.type)}`;
+
+											const errorSyncEvent = new ErrorSyncEvent(ConnectorType.FILE_SYSTEM,
+												ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.create(ConnectorType.FILE_SYSTEM, activityName,
+													sportsLibActivity.startDate, activitiesFound));
+
+											syncEvents$.next(errorSyncEvent);
+										}
+
+										return Promise.resolve();
 									}
 								});
 						});
@@ -329,6 +409,7 @@ export class FileSystemConnector extends BaseConnector {
 		bareActivityModel.end_time = sportsLibActivity.endDate.toISOString();
 		bareActivityModel.distance_raw = sportsLibActivity.getDistance().getValue();
 		bareActivityModel.elevation_gain_raw = <number> sportsLibActivity.getStats().get(DataAscent.type).getValue();
+		bareActivityModel.elapsed_time_raw = <number> sportsLibActivity.getDuration().getValue();
 		bareActivityModel.hasPowerMeter = sportsLibActivity.hasPowerMeter();
 		bareActivityModel.trainer = sportsLibActivity.isTrainer();
 		bareActivityModel.commute = null; // Unsupported at the moment
@@ -412,7 +493,8 @@ export class FileSystemConnector extends BaseConnector {
 		return activityStreamsModel;
 	}
 
-	public appendAdditionalStreams(bareActivityModel: BareActivityModel, activityStreamsModel: ActivityStreamsModel, athleteSettingsModel: AthleteSettingsModel): ActivityStreamsModel {
+	public appendAdditionalStreams(bareActivityModel: BareActivityModel, activityStreamsModel: ActivityStreamsModel,
+								   athleteSettingsModel: AthleteSettingsModel): ActivityStreamsModel {
 
 		// Grade
 		try {

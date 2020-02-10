@@ -3,6 +3,7 @@
 		"baseUrl": ".",
 		"target": "es5",
 		"resolveJsonModule": true,
+		"allowJs": true,
 		"paths": {
 			"@elevate/shared/constants": [
 				"../appcore/modules/shared/constants/"

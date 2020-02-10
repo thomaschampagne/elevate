@@ -6,13 +6,22 @@ import {
 	BareActivityModel,
 	ConnectorSyncDateTime,
 	EnvTarget,
+	SyncedActivityModel,
 	UserSettings
 } from "@elevate/shared/models";
 import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
 import * as xmldom from "xmldom";
-import { ConnectorType, ErrorSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+	ActivitySyncEvent,
+	ConnectorType,
+	ErrorSyncEvent,
+	StartedSyncEvent,
+	StoppedSyncEvent,
+	SyncEvent,
+	SyncEventType
+} from "@elevate/shared/sync";
 import { filter } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { SportsLib } from "sports-lib";
@@ -24,6 +33,72 @@ import { ActivityTypes } from "sports-lib/lib/activities/activity.types";
 import { DataHeartRate } from "sports-lib/lib/data/data.heart-rate";
 import { DataCadence } from "sports-lib/lib/data/data.cadence";
 import { DataPower } from "sports-lib/lib/data/data.power";
+
+/**
+ * Test activities in "fixtures/activities-02" sorted by date ascent.
+ * 15 Activities total
+[
+	{
+		date: '2015-11-30T17:14:38.000Z',
+		path: '.../virtual_rides/garmin_export/20151130_virtualride_971150603.fit'
+	},
+	{
+		date: '2016-01-16T14:33:51.000Z',
+		path: '.../virtual_rides/garmin_export/20160126_virtualride_1023441137.tcx'
+	},
+	{
+		date: '2016-01-19T17:34:55.000Z',
+		path: '.../virtual_rides/garmin_export/20160119_virtualride_1023440829.gpx'
+	},
+	{
+		date: '2016-02-23T17:37:15.000Z',
+		path: '.../virtual_rides/strava_export/20160223_virtualride_500553714.tcx'
+	},
+	{
+		date: '2016-04-22T16:44:13.000Z',
+		path: '.../virtual_rides/strava_export/20160422_virtualride_553573871.gpx'
+	},
+	{
+		date: '2016-09-11T15:57:36.000Z',
+		path: '.../runs/strava_export/20160911_run_708752345.tcx'
+	},
+	{
+		date: '2017-03-19T16:49:30.000Z',
+		path: '.../runs/strava_export/20170319_run_906581465.gpx'
+	},
+	{
+		date: '2017-10-08T14:54:11.000Z',
+		path: '.../runs/garmin_export/20171008_run_2067489619.gpx'
+	},
+	{
+		date: '2017-10-11T16:48:25.000Z',
+		path: '.../runs/garmin_export/20171011_run_2088390344.fit'
+	},
+	{
+		date: '2018-06-22T15:58:38.000Z',
+		path: '.../rides/strava_export/20180622_ride_1655245835.tcx'
+	},
+	{
+		date: '2018-10-21T13:50:14.000Z',
+		path: '.../runs/garmin_export/20181021_run_3106033902.tcx'
+	},
+	{
+		date: '2019-07-21T14:13:16.000Z',
+		path: '.../rides/strava_export/20190721_ride_2551623996.gpx'
+	},
+	{
+		date: '2019-08-11T12:52:20.000Z',
+		path: '.../rides/garmin_export/20190811_ride_3939576645.fit'
+	},
+	{
+		date: '2019-08-15T11:10:49.000Z',
+		path: '.../rides/garmin_export/20190815_ride_3953195468.tcx'
+	},
+	{
+		date: '2019-09-29T13:58:25.000Z',
+		path: '.../rides/garmin_export/20190929_ride_4108490848.gpx'
+	}
+]*/
 
 describe("FileSystemConnector", () => {
 
@@ -343,7 +418,7 @@ describe("FileSystemConnector", () => {
 
 	describe("Sync files", () => {
 
-		it("should sync an input folder never synced", (done: Function) => {
+		it("should sync fully an input folder never synced before", (done: Function) => {
 
 			// Given
 			const syncDateTime = null; // Never synced before !!
@@ -359,12 +434,23 @@ describe("FileSystemConnector", () => {
 			const importFromFITSpy = spyOn(SportsLib, "importFromFit").and.callThrough();
 			const findSyncedActivityModelsSpy = spyOn(fileSystemConnector, "findSyncedActivityModels")
 				.and.returnValue(Promise.resolve(null));
+			const extractActivityStreamsSpy = spyOn(fileSystemConnector, "extractActivityStreams").and.callThrough();
+			const appendAdditionalStreamsSpy = spyOn(fileSystemConnector, "appendAdditionalStreams").and.callThrough();
+			const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
+
+			const expectedName = "Afternoon Ride";
+			const expectedStartTime = "2019-08-15T11:10:49.000Z";
+			const expectedStartTimeStamp = new Date(expectedStartTime).getTime() / 1000;
+			const expectedEndTime = "2019-08-15T14:06:03.000Z";
+			const expectedActivityId = BaseConnector.hashData(expectedStartTime, 6) + "-" + BaseConnector.hashData(expectedEndTime, 6);
+			const expectedActivityFilePathMatch = "20190815_ride_3953195468.tcx";
 
 			// When
 			const promise = fileSystemConnector.syncFiles(syncEvents);
 
 			// Then
 			promise.then(() => {
+
 				expect(scanForActivitiesSpy).toHaveBeenCalledWith(activitiesLocalPath_02, syncDateTime, scanSubDirectories);
 				expect(importFromGPXSpy).toHaveBeenCalledTimes(6);
 				expect(importFromTCXSpy).toHaveBeenCalledTimes(6);
@@ -372,6 +458,34 @@ describe("FileSystemConnector", () => {
 
 				expect(findSyncedActivityModelsSpy).toHaveBeenCalledTimes(15);
 				expect(findSyncedActivityModelsSpy).toHaveBeenNthCalledWith(1, "2019-08-11T12:52:20.000Z", 7263.962);
+
+				expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(15);
+				expect(appendAdditionalStreamsSpy).toHaveBeenCalledTimes(15);
+
+				const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(1)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
+				expect(activitySyncEvent).not.toBeNull();
+				expect(activitySyncEvent.fromConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
+				expect(activitySyncEvent.compressedStream).toBeDefined();
+				expect(activitySyncEvent.isNew).toBeTruthy();
+
+				expect(activitySyncEvent.activity.start_time).toEqual(expectedStartTime);
+				expect(activitySyncEvent.activity.start_timestamp).toEqual(expectedStartTimeStamp);
+				expect(activitySyncEvent.activity.end_time).toEqual(expectedEndTime);
+				expect(activitySyncEvent.activity.id).toEqual(expectedActivityId);
+				expect(activitySyncEvent.activity.name).toEqual(expectedName);
+				expect(activitySyncEvent.activity.type).toEqual(ElevateSport.Ride);
+				expect(activitySyncEvent.activity.hasPowerMeter).toBeFalsy();
+				expect(activitySyncEvent.activity.trainer).toBeFalsy();
+				expect(activitySyncEvent.activity.moving_time_raw).toEqual(9958);
+				expect(activitySyncEvent.activity.elevation_gain_raw).toEqual(671);
+				expect(activitySyncEvent.activity.sourceConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
+				expect(activitySyncEvent.activity.extras[FileSystemConnector.EXTRA_ACTIVITY_LOCATION].onMachineId).toBeDefined();
+				expect(activitySyncEvent.activity.extras[FileSystemConnector.EXTRA_ACTIVITY_LOCATION].path).toContain(expectedActivityFilePathMatch);
+				expect(activitySyncEvent.activity.athleteSnapshot).toEqual(fileSystemConnector.athleteSnapshotResolver.getCurrent());
+				expect(activitySyncEvent.activity.extendedStats).not.toBeNull();
+
+				expect(activitySyncEvent.compressedStream).not.toBeNull();
+
 				done();
 
 			}, error => {
@@ -381,7 +495,126 @@ describe("FileSystemConnector", () => {
 
 		});
 
-		// TODO "should sync ONLY new files added or modified in the input folder"
+		it("should sync fully activities of an input folder already synced (no recent activities => syncDate = null)", (done: Function) => {
+
+			// Given
+			const syncDate = null; // Force sync on all scanned files
+			const syncEvents = new Subject<SyncEvent>();
+			const scanSubDirectories = true;
+			fileSystemConnector = FileSystemConnector.create(AthleteModel.DEFAULT_MODEL, defaultsByEnvTarget,
+				new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDate), activitiesLocalPath_02);
+			fileSystemConnector.scanSubDirectories = scanSubDirectories;
+
+			const scanForActivitiesSpy = spyOn(fileSystemConnector, "scanForActivities").and.callThrough();
+			const importFromGPXSpy = spyOn(SportsLib, "importFromGPX").and.callThrough();
+			const importFromTCXSpy = spyOn(SportsLib, "importFromTCX").and.callThrough();
+			const importFromFITSpy = spyOn(SportsLib, "importFromFit").and.callThrough();
+
+			const expectedExistingSyncedActivity = new SyncedActivityModel();
+			expectedExistingSyncedActivity.name = "Existing activity";
+			expectedExistingSyncedActivity.type = ElevateSport.Ride;
+			const expectedActivitySyncEvent = new ActivitySyncEvent(ConnectorType.FILE_SYSTEM, null, expectedExistingSyncedActivity, false);
+			const findSyncedActivityModelsSpy = spyOn(fileSystemConnector, "findSyncedActivityModels")
+				.and.callFake((activityStartDate: string) => {
+					expectedExistingSyncedActivity.start_time = activityStartDate;
+					return Promise.resolve([expectedExistingSyncedActivity]);
+				});
+			const createBareActivitySpy = spyOn(fileSystemConnector, "createBareActivity").and.callThrough();
+			const extractActivityStreamsSpy = spyOn(fileSystemConnector, "extractActivityStreams").and.callThrough();
+			const appendAdditionalStreamsSpy = spyOn(fileSystemConnector, "appendAdditionalStreams").and.callThrough();
+			const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
+
+			// When
+			const promise = fileSystemConnector.syncFiles(syncEvents);
+
+			// Then
+			promise.then(() => {
+				expect(scanForActivitiesSpy).toHaveBeenCalledWith(activitiesLocalPath_02, syncDate, scanSubDirectories);
+				expect(importFromGPXSpy).toHaveBeenCalledTimes(6);
+				expect(importFromTCXSpy).toHaveBeenCalledTimes(6);
+				expect(importFromFITSpy).toHaveBeenCalledTimes(3);
+
+				expect(findSyncedActivityModelsSpy).toHaveBeenCalledTimes(15);
+				expect(createBareActivitySpy).toHaveBeenCalledTimes(0);
+				expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(0);
+				expect(appendAdditionalStreamsSpy).toHaveBeenCalledTimes(0);
+
+				expect(syncEventNextSpy).toHaveBeenCalledTimes(15);
+				expect(syncEventNextSpy).toHaveBeenCalledWith(expectedActivitySyncEvent);
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				done();
+			});
+		});
+
+		it("should send sync error when multiple activities are found", (done: Function) => {
+
+			// Given
+			const syncDate = null; // Force sync on all scanned files
+			const syncEvents = new Subject<SyncEvent>();
+			const scanSubDirectories = true;
+			fileSystemConnector = FileSystemConnector.create(AthleteModel.DEFAULT_MODEL, defaultsByEnvTarget,
+				new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDate), activitiesLocalPath_02);
+			fileSystemConnector.scanSubDirectories = scanSubDirectories;
+
+			const scanForActivitiesSpy = spyOn(fileSystemConnector, "scanForActivities").and.callThrough();
+			const importFromGPXSpy = spyOn(SportsLib, "importFromGPX").and.callThrough();
+			const importFromTCXSpy = spyOn(SportsLib, "importFromTCX").and.callThrough();
+			const importFromFITSpy = spyOn(SportsLib, "importFromFit").and.callThrough();
+
+			const expectedActivityNameToCreate = "Afternoon Ride";
+			const expectedExistingSyncedActivity = new SyncedActivityModel();
+			expectedExistingSyncedActivity.name = "Existing activity";
+			expectedExistingSyncedActivity.type = ElevateSport.Ride;
+			expectedExistingSyncedActivity.start_time = new Date().toISOString();
+
+			// Emulate 1 existing activity
+			const findSyncedActivityModelsSpy = spyOn(fileSystemConnector, "findSyncedActivityModels")
+				.and.callFake(() => {
+					return Promise.resolve([expectedExistingSyncedActivity, expectedExistingSyncedActivity]);
+				});
+
+			const createBareActivitySpy = spyOn(fileSystemConnector, "createBareActivity").and.callThrough();
+			const extractActivityStreamsSpy = spyOn(fileSystemConnector, "extractActivityStreams").and.callThrough();
+			const appendAdditionalStreamsSpy = spyOn(fileSystemConnector, "appendAdditionalStreams").and.callThrough();
+			const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
+			const expectedActivitiesFound = expectedExistingSyncedActivity.name + " (" + new Date(expectedExistingSyncedActivity.start_time).toString() + ")";
+
+			// When
+			const promise = fileSystemConnector.syncFiles(syncEvents);
+
+			// Then
+			promise.then(() => {
+				expect(scanForActivitiesSpy).toHaveBeenCalledWith(activitiesLocalPath_02, syncDate, scanSubDirectories);
+				expect(importFromGPXSpy).toHaveBeenCalledTimes(6);
+				expect(importFromTCXSpy).toHaveBeenCalledTimes(6);
+				expect(importFromFITSpy).toHaveBeenCalledTimes(3);
+
+				expect(findSyncedActivityModelsSpy).toHaveBeenCalledTimes(15);
+				expect(createBareActivitySpy).toHaveBeenCalledTimes(0);
+				expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(0);
+				expect(appendAdditionalStreamsSpy).toHaveBeenCalledTimes(0);
+
+				expect(syncEventNextSpy).toHaveBeenCalledTimes(15);
+
+				syncEventNextSpy.calls.argsFor(1).forEach((errorSyncEvent: ErrorSyncEvent) => {
+					expect(errorSyncEvent.code).toEqual(ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.code);
+					expect(errorSyncEvent.fromConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
+					expect(errorSyncEvent.description).toContain(expectedActivityNameToCreate);
+					expect(errorSyncEvent.description).toContain(expectedExistingSyncedActivity.type);
+					expect(errorSyncEvent.description).toContain(expectedActivitiesFound);
+				});
+
+				done();
+
+			}, error => {
+				expect(error).toBeNull();
+				done();
+			});
+		});
 
 	});
 
@@ -394,9 +627,9 @@ describe("FileSystemConnector", () => {
 			const endISODate = "2019-08-15T14:06:03.000Z";
 			const expectedId = BaseConnector.hashData(startISODate);
 			const expectedName = "Afternoon Ride";
-			const path = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
+			const filePath = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
 
-			SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(path).toString(), "application/xml")).then(event => {
+			SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")).then(event => {
 				const sportsLibActivity = event.getFirstActivity();
 
 				// When
@@ -409,6 +642,7 @@ describe("FileSystemConnector", () => {
 				expect(bareActivity.name).toEqual(expectedName);
 				expect(bareActivity.start_time).toEqual(startISODate);
 				expect(bareActivity.end_time).toEqual(endISODate);
+				expect(bareActivity.elapsed_time_raw).toEqual(10514);
 				expect(bareActivity.hasPowerMeter).toEqual(false);
 				expect(bareActivity.trainer).toEqual(false);
 				expect(bareActivity.commute).toEqual(null);
@@ -455,9 +689,9 @@ describe("FileSystemConnector", () => {
 			it("should add estimated grade stream to activity having distance and altitude stream data", (done: Function) => {
 
 				// Given
-				const path = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
+				const filePath = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
 				const expectedSamplesLength = 3179;
-				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(path).toString(), "application/xml")).then(event => {
+				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")).then(event => {
 					return Promise.resolve(fileSystemConnector.extractActivityStreams(event.getFirstActivity()));
 				});
 
@@ -492,9 +726,9 @@ describe("FileSystemConnector", () => {
 			it("should calculate grade adjusted speed", (done: Function) => {
 
 				// Given
-				const path = __dirname + "/fixtures/activities-02/runs/strava_export/20160911_run_708752345.tcx";
+				const filePath = __dirname + "/fixtures/activities-02/runs/strava_export/20160911_run_708752345.tcx";
 				const expectedSamplesLength = 1495;
-				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(path).toString(), "application/xml")).then(event => {
+				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")).then(event => {
 					return Promise.resolve(fileSystemConnector.extractActivityStreams(event.getFirstActivity()));
 				}).then((activityStreamsModel: ActivityStreamsModel) => {
 					activityStreamsModel.grade_smooth = fileSystemConnector.calculateGradeStream(activityStreamsModel.distance, activityStreamsModel.altitude);
@@ -549,9 +783,9 @@ describe("FileSystemConnector", () => {
 
 				// Given
 				const riderWeight = 75;
-				const path = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
+				const filePath = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
 				const expectedSamplesLength = 3179;
-				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(path).toString(), "application/xml")).then(event => {
+				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")).then(event => {
 					return Promise.resolve(fileSystemConnector.extractActivityStreams(event.getFirstActivity()));
 				}).then((activityStreamsModel: ActivityStreamsModel) => {
 					activityStreamsModel.grade_smooth = fileSystemConnector.calculateGradeStream(activityStreamsModel.distance, activityStreamsModel.altitude);
@@ -639,10 +873,10 @@ describe("FileSystemConnector", () => {
 			it("should convert sports-lib cycling streams (with cadence, power, heartrate) to ActivityStreamsModel", (done: Function) => {
 
 				// Given
-				const path = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
+				const filePath = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
 				const expectedSamplesLength = 3179;
 
-				SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(path).toString(), "application/xml")).then(event => {
+				SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")).then(event => {
 					const sportsLibActivity = event.getFirstActivity();
 
 					// When
@@ -670,9 +904,9 @@ describe("FileSystemConnector", () => {
 
 				// Given
 				let bareActivityModel: BareActivityModel;
-				const path = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
+				const filePath = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
 				const expectedSamplesLength = 3179;
-				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(path).toString(), "application/xml")).then(event => {
+				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")).then(event => {
 					const sportsLibActivity = event.getFirstActivity();
 					bareActivityModel = fileSystemConnector.createBareActivity(sportsLibActivity);
 					return Promise.resolve(fileSystemConnector.extractActivityStreams(sportsLibActivity));
@@ -690,8 +924,8 @@ describe("FileSystemConnector", () => {
 
 					// Then
 					expect(activityStreamsFullModel.grade_smooth.length).toEqual(expectedSamplesLength);
-					expect(activityStreamsFullModel.watts.length).toEqual(expectedSamplesLength); // TODO what became watts_calc? Refer to legacy code... could be cool to delete (less space)
-					expect(activityStreamsFullModel.watts_calc).toBeUndefined(); // TODO what became watts_calc? Refer to legacy code... could be cool to delete (less space)
+					expect(activityStreamsFullModel.watts.length).toEqual(expectedSamplesLength);
+					expect(activityStreamsFullModel.watts_calc).toBeUndefined();
 					expect(calculateGradeStreamSpy).toHaveBeenCalledTimes(1);
 					expect(estimateCyclingPowerStreamSpy).toHaveBeenCalledTimes(1);
 					expect(calculateGradeAdjustedSpeedSpy).not.toHaveBeenCalled();
@@ -703,9 +937,9 @@ describe("FileSystemConnector", () => {
 
 				// Given
 				let bareActivityModel: BareActivityModel;
-				const path = __dirname + "/fixtures/activities-02/runs/strava_export/20160911_run_708752345.tcx";
+				const filePath = __dirname + "/fixtures/activities-02/runs/strava_export/20160911_run_708752345.tcx";
 				const expectedSamplesLength = 1495;
-				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(path).toString(), "application/xml")).then(event => {
+				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")).then(event => {
 					const sportsLibActivity = event.getFirstActivity();
 					bareActivityModel = fileSystemConnector.createBareActivity(sportsLibActivity);
 					return Promise.resolve(fileSystemConnector.extractActivityStreams(sportsLibActivity));
