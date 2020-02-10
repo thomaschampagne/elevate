@@ -77,10 +77,17 @@
 		</span>
 	</div>
 
-	<!--Fitness, Fatigue, Form values-->
+	<!--Stress, Fitness, Fatigue, Form values-->
 	<div fxFill fxLayout="row" fxLayoutAlign="end start" class="mat-headline">
 
 		<div fxFlex fxLayout="row" fxLayoutAlign="end start">
+
+			<div fxFlex="150px" class="rolling-stress-value">
+				7-day {{viewedDay.print7DayRollingStress()}}
+			</div>
+
+			<span fxFlex="1"></span>
+
 			<div fxFlex="150px" class="ctl-value">
 				Fitness {{viewedDay.printFitness()}}
 			</div>
