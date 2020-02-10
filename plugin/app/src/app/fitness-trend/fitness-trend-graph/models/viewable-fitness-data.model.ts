@@ -21,6 +21,7 @@ export class ViewableFitnessDataModel {
 	public fitnessTrendLines: GraphPointModel[][] = [];
 	public markers: MarkerModel[] = [];
 
+	public previewRollingStressLine: GraphPointModel[] = [];
 	public previewFatigueLine: GraphPointModel[] = [];
 	public previewFitnessLine: GraphPointModel[] = [];
 	public previewFormLine: GraphPointModel[] = [];
@@ -31,6 +32,7 @@ export class ViewableFitnessDataModel {
 				fatigueLine: GraphPointModel[],
 				fitnessLine: GraphPointModel[],
 				formLine: GraphPointModel[],
+				previewRollingStressLine: GraphPointModel[],
 				previewFatigueLine: GraphPointModel[],
 				previewFitnessLine: GraphPointModel[],
 				previewFormLine: GraphPointModel[],
@@ -42,6 +44,7 @@ export class ViewableFitnessDataModel {
 		this.fatigueLine = fatigueLine;
 		this.fitnessLine = fitnessLine;
 		this.formLine = formLine;
+		this.previewRollingStressLine = previewRollingStressLine;
 		this.previewFatigueLine = previewFatigueLine;
 		this.previewFitnessLine = previewFitnessLine;
 		this.previewFormLine = previewFormLine;
@@ -51,6 +54,7 @@ export class ViewableFitnessDataModel {
 		this.fitnessTrendLines.push(MG.convert.date(this.fatigueLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.fitnessLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.formLine, "date"));
+		this.fitnessTrendLines.push(MG.convert.date(this.previewRollingStressLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.previewFatigueLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.previewFitnessLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.previewFormLine, "date"));

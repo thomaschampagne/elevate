@@ -141,6 +141,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 		const previewFatigueLine: GraphPointModel[] = [];
 		const previewFitnessLine: GraphPointModel[] = [];
 		const previewFormLine: GraphPointModel[] = [];
+		const previewRollingStressLine: GraphPointModel[] = [];
 		const activeLine: GraphPointModel[] = [];
 
 		_.forEach(this.fitnessTrend, (dayFitnessTrend: DayFitnessTrendModel) => {
@@ -190,6 +191,12 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 				hidden: isHiddenGraphPoint
 			});
 
+			previewRollingStressLine.push({
+				date: dayFitnessTrend.dateString,
+				value: dayFitnessTrend.rolling7DayStress / 7.0,
+				hidden: isHiddenGraphPoint
+			});
+
 			activeLine.push({
 				date: dayFitnessTrend.dateString,
 				value: 0,
@@ -213,6 +220,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 			fatigueLine,
 			fitnessLine,
 			formLine,
+			previewRollingStressLine,
 			previewFatigueLine,
 			previewFitnessLine,
 			previewFormLine,
@@ -511,11 +519,11 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 			aggregate_rollover: true,
 			interpolate: d3.curveLinear,
 			missing_is_hidden: true,
-			max_data_size: 7,
+			max_data_size: 8,
 			missing_is_hidden_accessor: "hidden",
 			active_point_on_lines: true,
 			active_point_size: 2.5,
-			area: [false, false, false, true, false, false, true],
+			area: [false, false, false, true, false, false, false, true],
 			flip_area_under_y_value: 0,
 			point_size: 4,
 			yax_count: 8,
