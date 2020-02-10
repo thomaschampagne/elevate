@@ -31,6 +31,7 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	public static readonly COLUMN_RUNNING_STRESS_SCORE: string = "runningStressScore";
 	public static readonly COLUMN_SWIM_STRESS_SCORE: string = "swimStressScore";
 	public static readonly COLUMN_FINAL_STRESS_SCORE: string = "finalStressScore";
+	public static readonly COLUMN_ROLLING_STRESS_SCORE: string = "rollingStressScore";
 	public static readonly COLUMN_CTL: string = "ctl";
 	public static readonly COLUMN_ATL: string = "atl";
 	public static readonly COLUMN_TSB: string = "tsb";
@@ -97,6 +98,12 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 			header: "Final Stress",
 			type: FitnessTrendColumnType.TEXT,
 			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFinalStressScore()}`
+		},
+		{
+			id: FitnessTrendTableComponent.COLUMN_ROLLING_STRESS_SCORE,
+			header: "7-day Stress",
+			type: FitnessTrendColumnType.TEXT,
+			printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.print7DayRollingStress()}`
 		},
 		{
 			id: FitnessTrendTableComponent.COLUMN_CTL,
@@ -229,6 +236,9 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 
 				case FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE:
 					return dayFitnessTrendModel.swimStressScore;
+
+				case FitnessTrendTableComponent.COLUMN_ROLLING_STRESS_SCORE:
+					return dayFitnessTrendModel.rolling7DayStress;
 
 				case FitnessTrendTableComponent.COLUMN_FINAL_STRESS_SCORE:
 					return dayFitnessTrendModel.finalStressScore;
