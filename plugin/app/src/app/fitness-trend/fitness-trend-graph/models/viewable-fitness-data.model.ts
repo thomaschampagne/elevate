@@ -14,6 +14,7 @@ export class ViewableFitnessDataModel {
 			{value: -30, label: "Overload"}
 		];
 
+	public rollingStressLine: GraphPointModel[] = [];
 	public fatigueLine: GraphPointModel[] = [];
 	public fitnessLine: GraphPointModel[] = [];
 	public formLine: GraphPointModel[] = [];
@@ -26,6 +27,7 @@ export class ViewableFitnessDataModel {
 	public activeLine: GraphPointModel[] = [];
 
 	constructor(markers: MarkerModel[],
+				rollingStressLine: GraphPointModel[],
 				fatigueLine: GraphPointModel[],
 				fitnessLine: GraphPointModel[],
 				formLine: GraphPointModel[],
@@ -36,6 +38,7 @@ export class ViewableFitnessDataModel {
 
 		this.markers = markers;
 
+		this.rollingStressLine = rollingStressLine;
 		this.fatigueLine = fatigueLine;
 		this.fitnessLine = fitnessLine;
 		this.formLine = formLine;
@@ -44,6 +47,7 @@ export class ViewableFitnessDataModel {
 		this.previewFormLine = previewFormLine;
 		this.activeLine = activeLine;
 
+		this.fitnessTrendLines.push(MG.convert.date(this.rollingStressLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.fatigueLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.fitnessLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.formLine, "date"));
