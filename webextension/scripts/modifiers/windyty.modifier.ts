@@ -3,7 +3,7 @@ import * as $ from "jquery";
 import { SpeedUnitDataModel, UserSettings } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { Helper } from "../helper";
-import { LatLonSpherical } from "geodesy";
+import LatLonSpherical from "geodesy/latlon-spherical";
 import { AbstractModifier } from "./abstract.modifier";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 

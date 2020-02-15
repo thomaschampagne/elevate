@@ -94,7 +94,7 @@ export class ActivitiesSynchronize {
 					if (foundSyncedActivity.name !== rawActivity.name || foundSyncedActivity.type !== rawActivity.type) {
 						// foundSyncedActivity.name = rawActivity.name; // Update name
 						edited.push({
-							id: foundSyncedActivity.id,
+							id: <number> foundSyncedActivity.id,
 							name: rawActivity.name,
 							type: rawActivity.type,
 							display_type: rawActivity.display_type,
@@ -142,9 +142,9 @@ export class ActivitiesSynchronize {
 
 		_.forEach(syncedActivities, (syncedActivityModel: SyncedActivityModel) => {
 			// Seek for activity in just interrogated pages
-			const notFound: boolean = (_.indexOf(rawActivityIds, syncedActivityModel.id) == -1);
+			const notFound: boolean = (_.indexOf(rawActivityIds, syncedActivityModel.id) === -1);
 			if (notFound) {
-				deleted.push(syncedActivityModel.id);
+				deleted.push(<number> syncedActivityModel.id);
 			}
 		});
 

@@ -3,7 +3,7 @@ import { VERSIONS_PROVIDER } from "../../shared/services/versions/versions-provi
 import * as semver from "semver";
 import { DesktopVersionsProvider } from "../../shared/services/versions/impl/desktop-versions-provider.service";
 import { LoggerService } from "../../shared/services/logging/logger.service";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 

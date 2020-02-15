@@ -1,7 +1,7 @@
 import { AppUpdater } from "electron-updater/out/AppUpdater";
 import * as Electron from "electron";
 import { BrowserWindow } from "electron";
-import logger, { IElectronLog } from "electron-log";
+import logger, { ElectronLog } from "electron-log";
 import * as url from "url";
 import * as path from "path";
 import { UpdateInfo } from "electron-updater";
@@ -23,7 +23,7 @@ export class Updater {
 	private appUpdater: AppUpdater;
 	private updateWindow: Electron.BrowserWindow;
 
-	constructor(appUpdater: AppUpdater, updateLogger: IElectronLog) {
+	constructor(appUpdater: AppUpdater, updateLogger: ElectronLog) {
 		this.appUpdater = appUpdater;
 		this.appUpdater.autoInstallOnAppQuit = Updater.ENABLE_AUTO_INSTALL_ON_APP_QUIT;
 		this.appUpdater.allowPrerelease = Updater.ENABLE_UPDATE_PRE_RELEASE;

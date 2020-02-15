@@ -52,10 +52,10 @@ export class ActivitiesComponent implements OnInit {
 
 	public readonly ColumnType = ActivityColumns.ColumnType;
 
-	@ViewChild(MatPaginator, {static: false})
+	@ViewChild(MatPaginator)
 	public matPaginator: MatPaginator;
 
-	@ViewChild(MatSort, {static: false})
+	@ViewChild(MatSort)
 	public matSort: MatSort;
 
 	public dataSource: MatTableDataSource<SyncedActivityModel>;

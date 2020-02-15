@@ -2,14 +2,7 @@ import * as _ from "lodash";
 import * as Q from "q";
 import * as $ from "jquery";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/specs-tools";
-import {
-	ActivitiesChangesModel,
-	AnalysisDataModel,
-	AthleteModel,
-	SyncedActivityModel,
-	SyncResultModel,
-	UserSettings,
-} from "@elevate/shared/models";
+import { ActivitiesChangesModel, AnalysisDataModel, AthleteModel, SyncedActivityModel, SyncResultModel, UserSettings, } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { ActivitiesSynchronize } from "../../scripts/processors/activities-synchronize";
 import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";
@@ -118,7 +111,7 @@ describe("ActivitiesSynchronize", () => {
 			} else {
 				defer.resolve({models: []}, "success"); // No models to give
 			}
-			return defer.promise();
+			return <any> defer.promise();
 		});
 
 		/**
@@ -128,7 +121,7 @@ describe("ActivitiesSynchronize", () => {
 		stream.watts = stream.watts_calc; // because powerMeter is false
 
 		spyOn(activitiesSynchronize, "fetchStreamByActivityId").and.callFake((activityId: number) => {
-			const defer = Q.defer();
+			const defer = Q.defer<any>();
 			const data: any = {};
 			_.forEach(_.keys(stream), (key: string) => {
 				data[key] = stream[key].slice(0, 50);
@@ -144,7 +137,7 @@ describe("ActivitiesSynchronize", () => {
 		 * Stub MultipleActivityProcessor:compute. Create fake analysis results
 		 */
 		spyOn(activitiesSynchronize.multipleActivityProcessor, "compute").and.callFake((activitiesWithStream: Array<StreamActivityModel>) => {
-			const defer = Q.defer();
+			const defer = Q.defer<Array<SyncedActivityModel>>();
 			console.log("Spy activitiesSynchronize.multipleActivityProcessor:compute called");
 			const activitiesComputed: Array<SyncedActivityModel> = [];
 			const fakeAnalysisData: AnalysisDataModel = {
@@ -176,36 +169,36 @@ describe("ActivitiesSynchronize", () => {
 		 * - clearSyncCache
 		 */
 		spyOn(activitiesSynchronize, "saveSyncedActivitiesToLocal").and.callFake((syncedActivities: Array<SyncedActivityModel>) => {
-			const defer = Q.defer();
+			const defer = Q.defer<Array<SyncedActivityModel>>();
 			CHROME_STORAGE_STUB.syncedActivities = syncedActivities;
 			defer.resolve();
-			return defer.promise;
+			return <any> defer.promise;
 		});
 
 		spyOn(activitiesSynchronize, "getSyncedActivitiesFromLocal").and.callFake(() => {
-			const defer = Q.defer();
+			const defer = Q.defer<Array<SyncedActivityModel>>();
 			defer.resolve(CHROME_STORAGE_STUB.syncedActivities);
 			return defer.promise;
 		});
 
 		spyOn(activitiesSynchronize, "saveSyncDateToLocal").and.callFake((timestamp: number) => {
-			const defer = Q.defer();
+			const defer = Q.defer<void>();
 			CHROME_STORAGE_STUB.syncDateTime = timestamp;
 			defer.resolve();
-			return defer.promise;
+			return <any> defer.promise;
 		});
 
 		spyOn(activitiesSynchronize, "getSyncDateFromLocal").and.callFake(() => {
-			const defer = Q.defer();
+			const defer = Q.defer<number>();
 			defer.resolve((CHROME_STORAGE_STUB.syncDateTime) ? CHROME_STORAGE_STUB.syncDateTime : null);
 			return defer.promise;
 		});
 
 		spyOn(activitiesSynchronize, "clearSyncCache").and.callFake(() => {
-			const defer = Q.defer();
+			const defer = Q.defer<void>();
 			CHROME_STORAGE_STUB = {}; // Remove all
 			defer.resolve();
-			return defer.promise;
+			return <any> defer.promise;
 		});
 
 		spyOn(activitiesSynchronize, "getAllSavedLocal").and.callFake(() => {
