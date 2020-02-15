@@ -504,38 +504,25 @@ export class YearProgressService {
 
 	/**
 	 *
-	 * @param {number} hours
 	 * @returns {string}
+	 * @param hoursIn
 	 */
-	public readableTimeProgress(hours: number): string {
+	public readableTimeProgress(hoursIn: number): string {
 
-		let readableTime = "";
-
-		if (!_.isNumber(hours) || hours === 0) {
-
-			readableTime = "0 h";
-
-		} else {
-
-			hours = Math.abs(hours);
-
-			if (hours > 0) {
-
-				const hoursFloored = Math.floor(hours);
-
-				if (hoursFloored > 0) {
-					readableTime = readableTime + hoursFloored + " h";
-				}
-
-				const remainingMinutes = (hours - hoursFloored) * 60;
-
-				if (remainingMinutes > 0) {
-					readableTime = readableTime + ((hoursFloored > 0) ? ", " : "") + Math.round(remainingMinutes) + " min";
-				}
-			}
+		if (!hoursIn) {
+			return "0h";
 		}
 
-		return readableTime;
+		const duration = moment.duration(Math.abs(hoursIn), "hours");
+		const days = duration.days();
+		const hours = duration.hours();
+		const minutes = duration.minutes();
+
+		const showDays = days ? `${days}d` + ((hours) ? ", " : "") : "";
+		const showHours = hours ? `${hours}h` + ((minutes) ? ", " : "") : "";
+		const showMinutes = minutes ? `${minutes}m` : "";
+
+		return `${showDays}${showHours}${showMinutes}`;
 	}
 
 	/**

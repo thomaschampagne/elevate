@@ -2,6 +2,21 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.16.0",
+		date: "2020-01-08",
+		message: "✨ Added Cycling Power Curve on your ride activities!! ✨ Added \"Elevate Extended Stats\" on ALL activities types (nordic ski, rowing, ...). Update also adds various improvements & bugs fixes.",
+		hotFixes: [],
+		features: [
+			"Added cycling power curve on cycling activities. Works for real power and estimated power",
+			"Added Elevate Extended Stats on all activities types"
+		],
+		isPatch: false,
+		fixes: [
+			"Fixed wrong time format displayed in Year Progressions",
+			"[Technical] Upgraded libraries used within the app."
+		]
+	},
+	{
 		version: "6.15.1",
 		date: "2019-12-01",
 		message: "\"✨ New desktop cross-platform app in progress. Details in the \"New App In Progress\" section of Elevate. Update also adds various improvements & bugs fixes.",

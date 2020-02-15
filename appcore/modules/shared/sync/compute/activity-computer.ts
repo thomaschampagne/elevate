@@ -1416,7 +1416,7 @@ export class ActivityComputer {
 
 	protected smoothAltitude(activityStream: ActivityStreamsModel, stravaElevation: number): number[] {
 
-		if (!activityStream || !activityStream.altitude) {
+		if (_.isEmpty(activityStream) || _.isEmpty(activityStream.altitude)) {
 			return null;
 		}
 

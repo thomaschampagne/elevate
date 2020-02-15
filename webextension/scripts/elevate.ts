@@ -21,12 +21,7 @@ import { HideFeedModifier } from "./modifiers/hide-feed.modifier";
 import { MenuModifier } from "./modifiers/menu.modifier";
 import { NearbySegmentsModifier } from "./modifiers/nearby-segments.modifier";
 import { RemoteLinksModifier } from "./modifiers/remote-links.modifier";
-import {
-	RunningCadenceModifier,
-	RunningGradeAdjustedPaceModifier,
-	RunningHeartRateModifier,
-	RunningTemperatureModifier,
-} from "./modifiers/running-data.modifier";
+import { RunningCadenceModifier, RunningGradeAdjustedPaceModifier, RunningHeartRateModifier, RunningTemperatureModifier, } from "./modifiers/running-data.modifier";
 import { RunningAnalysisGraph } from "./modifiers/running-analysis-graph.modifier";
 import { SegmentRankPercentageModifier } from "./modifiers/segment-rank-percentage.modifier";
 import { SegmentRecentEffortsHRATimeModifier } from "./modifiers/segment-recent-efforts-hratime.modifier";
@@ -44,6 +39,7 @@ import { ActivitiesChronologicalFeedModifier } from "./modifiers/activities-chro
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { releaseNotesData } from "@elevate/shared/data";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
+import { GenericExtendedDataModifier } from "./modifiers/extended-stats/generic-extended-data.modifier";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class Elevate {
@@ -561,12 +557,9 @@ export class Elevate {
 				extendedDataModifier.apply();
 				break;
 			default:
-				/*			extendedDataModifier = new GenericExtendedDataModifier(
-								activityProcessor,
-								activityInfo,
-								this.appResources,
-								this.userSettings,
-								AbstractExtendedDataModifier.TYPE_ACTIVITY);*/
+				extendedDataModifier = new GenericExtendedDataModifier(activityProcessor, activityInfo, this.appResources,
+					this.userSettings, AbstractExtendedDataModifier.TYPE_ACTIVITY);
+				extendedDataModifier.apply();
 				break;
 		}
 
@@ -647,11 +640,13 @@ export class Elevate {
 							AbstractExtendedDataModifier.TYPE_SEGMENT);
 						extendedDataModifier.apply();
 						break;
+
 					default:
+						extendedDataModifier = new GenericExtendedDataModifier(activityProcessor, activityInfo, that.appResources,
+							that.userSettings, AbstractExtendedDataModifier.TYPE_SEGMENT);
+						extendedDataModifier.apply();
 						break;
 				}
-
-
 				return r;
 			};
 
