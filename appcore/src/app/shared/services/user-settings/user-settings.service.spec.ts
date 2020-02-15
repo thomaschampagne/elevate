@@ -23,7 +23,7 @@ describe("UserSettingsService", () => {
 		});
 
 		// Retrieve injected service
-		userSettingsService = TestBed.get(UserSettingsService);
+		userSettingsService = TestBed.inject(UserSettingsService);
 		done();
 	});
 

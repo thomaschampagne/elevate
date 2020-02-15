@@ -2,14 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { ActivityService } from "./activity.service";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import * as _ from "lodash";
-import {
-	AthleteModel,
-	AthleteSettingsModel,
-	AthleteSnapshotModel,
-	DatedAthleteSettingsModel,
-	Gender,
-	SyncedActivityModel
-} from "@elevate/shared/models";
+import { AthleteModel, AthleteSettingsModel, AthleteSnapshotModel, DatedAthleteSettingsModel, Gender, SyncedActivityModel } from "@elevate/shared/models";
 import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/fake-synced-activity.helper";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
@@ -32,7 +25,7 @@ describe("ActivityService", () => {
 		_TEST_SYNCED_ACTIVITIES_ = _.cloneDeep(TEST_SYNCED_ACTIVITIES);
 
 		// Retrieve injected service
-		activityService = TestBed.get(ActivityService);
+		activityService = TestBed.inject(ActivityService);
 
 		done();
 	});

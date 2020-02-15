@@ -54,9 +54,9 @@ describe("YearProgressComponent", () => {
 		}).compileComponents();
 
 		TEST_SYNCED_ACTIVITIES = YearProgressActivitiesFixture.provide();
-		syncService = TestBed.get(SyncService);
-		userSettingsService = TestBed.get(UserSettingsService);
-		activityDao = TestBed.get(ActivityDao);
+		syncService = TestBed.inject(SyncService);
+		userSettingsService = TestBed.inject(UserSettingsService);
+		activityDao = TestBed.inject(ActivityDao);
 
 		spyOn(syncService, "getSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
 		spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));

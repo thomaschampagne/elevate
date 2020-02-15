@@ -49,8 +49,8 @@ describe("BaseDao", () => {
 			]
 		});
 
-		baseDao = TestBed.get(BaseDao);
-		dataStore = TestBed.get(DataStore);
+		baseDao = TestBed.inject(BaseDao);
+		dataStore = TestBed.inject(DataStore);
 
 		checkStorageLocationSpy = spyOn(baseDao, "checkCompliantDao").and.callThrough();
 		dataStoreFetchSpy = spyOn(dataStore, "fetch").and.callThrough();

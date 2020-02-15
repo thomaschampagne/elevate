@@ -53,7 +53,7 @@ describe("YearProgressService", () => {
 			]
 		});
 
-		service = TestBed.get(YearProgressService);
+		service = TestBed.inject(YearProgressService);
 
 		TEST_SYNCED_MODELS = YearProgressActivitiesFixture.provide();
 

@@ -34,9 +34,6 @@ import { DesktopMigrationService } from "../../../desktop/migration/desktop-migr
 		DesktopAdvancedMenuComponent,
 		DesktopImportBackupDialogComponent
 	],
-	entryComponents: [
-		DesktopImportBackupDialogComponent
-	],
 	providers: [
 		ElectronService,
 		IpcRendererMessagesService,

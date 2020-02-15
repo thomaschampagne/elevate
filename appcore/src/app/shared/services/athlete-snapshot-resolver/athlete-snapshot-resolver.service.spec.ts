@@ -22,7 +22,7 @@ describe("AthleteSnapshotResolverService", () => {
 			]
 		});
 
-		athleteSnapshotResolverService = TestBed.get(AthleteSnapshotResolverService);
+		athleteSnapshotResolverService = TestBed.inject(AthleteSnapshotResolverService);
 
 		defaultAthleteModel = _.cloneDeep(AthleteModel.DEFAULT_MODEL);
 

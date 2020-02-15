@@ -36,7 +36,7 @@ describe("AthleteService", () => {
 		});
 
 		// Retrieve injected service
-		service = TestBed.get(AthleteService);
+		service = TestBed.inject(AthleteService);
 
 		defaultAthleteModel = new AthleteModel(Gender.MEN, null);
 

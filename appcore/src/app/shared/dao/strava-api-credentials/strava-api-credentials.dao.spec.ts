@@ -15,7 +15,7 @@ describe("StravaApiCredentialsDao", () => {
 	}));
 
 	it("should be created", () => {
-		const service: StravaApiCredentialsDao = TestBed.get(StravaApiCredentialsDao);
+		const service: StravaApiCredentialsDao = TestBed.inject(StravaApiCredentialsDao);
 		expect(service).toBeTruthy();
 	});
 });

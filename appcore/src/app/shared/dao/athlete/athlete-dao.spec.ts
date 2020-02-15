@@ -20,7 +20,7 @@ describe("AthleteDao", () => {
 		});
 
 		// Retrieve injected service
-		athleteDao = TestBed.get(AthleteDao);
+		athleteDao = TestBed.inject(AthleteDao);
 		done();
 	});
 

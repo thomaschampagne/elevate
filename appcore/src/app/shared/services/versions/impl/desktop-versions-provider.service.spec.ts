@@ -29,7 +29,7 @@ describe("DesktopVersionsProvider", () => {
 		});
 
 		// Retrieve injected preferencesService
-		service = TestBed.get(DesktopVersionsProvider);
+		service = TestBed.inject(DesktopVersionsProvider);
 
 		done();
 	});

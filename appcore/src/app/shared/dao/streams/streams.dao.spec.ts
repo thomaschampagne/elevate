@@ -19,7 +19,7 @@ describe("StreamsDaoService", () => {
 			]
 		});
 
-		streamsDao = TestBed.get(StreamsDao);
+		streamsDao = TestBed.inject(StreamsDao);
 	});
 
 	it("should be created", (done: Function) => {

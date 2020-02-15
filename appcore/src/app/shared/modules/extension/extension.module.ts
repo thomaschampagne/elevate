@@ -25,9 +25,6 @@ import { ExtensionAdvancedMenuComponent } from "../../../advanced-menu/extension
 		ExtensionAdvancedMenuComponent,
 		ExtensionImportBackupDialogComponent,
 	],
-	entryComponents: [
-		ExtensionImportBackupDialogComponent
-	],
 	providers: [
 		SyncDateTimeDao,
 		{provide: DataStore, useClass: ExtensionDataStore},

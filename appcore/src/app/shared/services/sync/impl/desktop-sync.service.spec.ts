@@ -3,16 +3,7 @@ import { CoreModule } from "../../../../core/core.module";
 import { SharedModule } from "../../../shared.module";
 import { DesktopModule } from "../../../modules/desktop/desktop.module";
 import { DesktopSyncService } from "./desktop-sync.service";
-import {
-	ActivitySyncEvent,
-	CompleteSyncEvent,
-	ConnectorType,
-	ErrorSyncEvent,
-	GenericSyncEvent,
-	StartedSyncEvent,
-	StoppedSyncEvent,
-	SyncEvent
-} from "@elevate/shared/sync";
+import { ActivitySyncEvent, CompleteSyncEvent, ConnectorType, ErrorSyncEvent, GenericSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent } from "@elevate/shared/sync";
 import { AthleteModel, SyncedActivityModel } from "@elevate/shared/models";
 import { ElectronService, ElectronWindow } from "../../electron/electron.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
@@ -46,7 +37,7 @@ describe("DesktopSyncService", () => {
 			]
 		});
 
-		const electronService: ElectronService = TestBed.get(ElectronService);
+		const electronService: ElectronService = TestBed.inject(ElectronService);
 		electronService.instance = <Electron.RendererInterface> {
 			ipcRenderer: {}
 		};
@@ -58,7 +49,7 @@ describe("DesktopSyncService", () => {
 		};
 		electronWindow.require = electronRequire;
 		spyOn(electronWindow, "require").and.callFake(electronRequire);
-		desktopSyncService = TestBed.get(DesktopSyncService);
+		desktopSyncService = TestBed.inject(DesktopSyncService);
 		reloadAppSpy = spyOn(desktopSyncService, "reloadApp").and.stub();
 		done();
 

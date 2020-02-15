@@ -4,6 +4,7 @@
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
+		"postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
 		"build": "ng build",
 		"test": "ng test --watch=false --code-coverage",
 		"test:no-source-map": "npm run test -- --source-map=false",

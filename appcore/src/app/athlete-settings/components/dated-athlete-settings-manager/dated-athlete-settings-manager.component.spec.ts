@@ -20,7 +20,7 @@ describe("DatedAthleteSettingsManagerComponent", () => {
 			]
 		}).compileComponents();
 
-		const athleteService = TestBed.get(AthleteService);
+		const athleteService = TestBed.inject(AthleteService);
 
 		const datedAthleteSettings: DatedAthleteSettingsModel[] = [
 			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, null, 190, null, null, 75)),

@@ -32,8 +32,8 @@ describe("SyncService", () => {
 
 		athleteModel = _.cloneDeep(AthleteModel.DEFAULT_MODEL);
 
-		syncService = TestBed.get(SyncService);
-		syncDateTimeDao = TestBed.get(SyncDateTimeDao);
+		syncService = TestBed.inject(SyncService);
+		syncDateTimeDao = TestBed.inject(SyncDateTimeDao);
 
 		spyOn(window, "open").and.stub(); // Avoid opening window in tests
 

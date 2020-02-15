@@ -48,8 +48,8 @@ describe("FitnessService", () => {
 		}, 150, 300, 31, 70));
 
 		// Retrieve injected service
-		fitnessService = TestBed.get(FitnessService);
-		activityService = TestBed.get(ActivityService);
+		fitnessService = TestBed.inject(FitnessService);
+		activityService = TestBed.inject(ActivityService);
 
 		fitnessTrendConfigModel = {
 			heartRateImpulseMode: HeartRateImpulseMode.HRSS,

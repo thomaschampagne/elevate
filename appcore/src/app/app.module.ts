@@ -13,22 +13,12 @@ import { ExtensionSyncMenuComponent } from "./sync-menu/extension/extension-sync
 import { DesktopTopBarComponent, ExtensionTopBarComponent, TOP_BAR_COMPONENT_TOKEN, TopBarComponent } from "./top-bar/top-bar.component";
 import { TopBarDirective } from "./top-bar/top-bar.directive";
 import { ElevateErrorHandler } from "./elevate-error-handler";
-import {
-	DesktopSyncBarComponent,
-	ExtensionSyncBarComponent,
-	SYNC_BAR_COMPONENT_TOKEN,
-	SyncBarComponent
-} from "./sync-bar/sync-bar.component";
+import { DesktopSyncBarComponent, ExtensionSyncBarComponent, SYNC_BAR_COMPONENT_TOKEN, SyncBarComponent } from "./sync-bar/sync-bar.component";
 import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
 import { MENU_ITEMS_PROVIDER } from "./shared/services/menu-items/menu-items-provider.interface";
 import { DesktopMenuItemsProvider } from "./shared/services/menu-items/impl/desktop-menu-items-provider.service";
 import { ExtensionMenuItemsProvider } from "./shared/services/menu-items/impl/extension-menu-items-provider.service";
-import {
-	APP_MORE_MENU_COMPONENT_TOKEN,
-	AppMoreMenuComponent,
-	DesktopAppMoreMenuComponent,
-	ExtensionAppMoreMenuComponent
-} from "./app-more-menu/app-more-menu.component";
+import { APP_MORE_MENU_COMPONENT_TOKEN, AppMoreMenuComponent, DesktopAppMoreMenuComponent, ExtensionAppMoreMenuComponent } from "./app-more-menu/app-more-menu.component";
 import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
 import { DesktopRoutingModule } from "./shared/modules/desktop/desktop-routing.module";
 import { ExtensionRoutingModule } from "./shared/modules/extension/extension-routing.module";
@@ -45,13 +35,6 @@ import { DesktopPreRunGuardDialogComponent } from "./desktop/pre-run-guard/deskt
 		DesktopRoutingModule
 	],
 	declarations: [
-		DesktopSyncMenuComponent,
-		DesktopSyncBarComponent,
-		DesktopTopBarComponent,
-		DesktopPreRunGuardDialogComponent,
-		DesktopAppMoreMenuComponent
-	],
-	entryComponents: [
 		DesktopSyncMenuComponent,
 		DesktopSyncBarComponent,
 		DesktopTopBarComponent,
@@ -80,12 +63,6 @@ export class DesktopBootModule {
 		ExtensionRoutingModule
 	],
 	declarations: [
-		ExtensionTopBarComponent,
-		ExtensionSyncBarComponent,
-		ExtensionSyncMenuComponent,
-		ExtensionAppMoreMenuComponent
-	],
-	entryComponents: [
 		ExtensionTopBarComponent,
 		ExtensionSyncBarComponent,
 		ExtensionSyncMenuComponent,

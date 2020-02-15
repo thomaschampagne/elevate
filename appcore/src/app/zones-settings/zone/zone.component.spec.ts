@@ -23,7 +23,7 @@ describe("ZoneComponent", () => {
 			]
 		}).compileComponents();
 
-		zonesService = TestBed.get(ZonesService);
+		zonesService = TestBed.inject(ZonesService);
 
 		done();
 	});

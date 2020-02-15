@@ -28,8 +28,8 @@ describe("FitnessTrendTableComponent", () => {
 			],
 		}).compileComponents();
 
-		activityService = TestBed.get(ActivityService);
-		userSettingsService = TestBed.get(UserSettingsService);
+		activityService = TestBed.inject(ActivityService);
+		userSettingsService = TestBed.inject(UserSettingsService);
 
 		// Mocking
 		spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));

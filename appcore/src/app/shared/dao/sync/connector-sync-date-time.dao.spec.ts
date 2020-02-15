@@ -29,7 +29,7 @@ describe("ConnectorSyncDateTimeDao", () => {
 		});
 
 		// Retrieve injected service
-		connectorSyncDateTimeDao = TestBed.get(ConnectorSyncDateTimeDao);
+		connectorSyncDateTimeDao = TestBed.inject(ConnectorSyncDateTimeDao);
 		done();
 	});
 

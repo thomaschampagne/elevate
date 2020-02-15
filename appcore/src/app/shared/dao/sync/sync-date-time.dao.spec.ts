@@ -22,7 +22,7 @@ describe("SyncDateTimeDao", () => {
 		});
 
 		// Retrieve injected service
-		syncDateTimeDao = TestBed.get(SyncDateTimeDao);
+		syncDateTimeDao = TestBed.inject(SyncDateTimeDao);
 		done();
 	});
 

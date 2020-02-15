@@ -17,10 +17,7 @@ import { DonateComponent } from "../donate/donate.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
-import {
-	ImportBackupDialogComponent,
-	ImportExportProgressDialogComponent
-} from "./dialogs/import-backup-dialog/import-backup-dialog.component";
+import { ImportBackupDialogComponent, ImportExportProgressDialogComponent } from "./dialogs/import-backup-dialog/import-backup-dialog.component";
 import { ShareComponent } from "../share/share.component";
 import { ReportComponent } from "../report/report.component";
 import { CoreModule } from "../core/core.module";
@@ -66,15 +63,6 @@ import { StreamsService } from "./services/streams/streams.service";
 
 		// Dialogs
 		ZoneToolBarComponent,
-		GotItDialogComponent,
-		ConfirmDialogComponent,
-		OptionHelperDialogComponent,
-		ZonesImportExportDialogComponent,
-		AboutDialogComponent,
-		ImportBackupDialogComponent,
-		ImportExportProgressDialogComponent
-	],
-	entryComponents: [
 		GotItDialogComponent,
 		ConfirmDialogComponent,
 		OptionHelperDialogComponent,
