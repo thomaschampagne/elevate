@@ -44,6 +44,7 @@
 	"readme": "README.md",
 	"dependencies": {
 		"@rollup/plugin-json": "^4.0.2",
+		"all-unpacker": "^0.1.3",
 		"electron-log": "^3.0.9",
 		"electron-updater": "^4.2.0",
 		"https-proxy-agent": "^2.2.4",
@@ -51,9 +52,9 @@
 		"node-machine-id": "^1.1.12",
 		"pako": "^1.0.11",
 		"promise-tron": "^2.1.0",
-		"sports-lib": "file:../../sports-lib/",
 		"querystring": "^0.2.0",
 		"rxjs": "^6.5.4",
+		"sports-lib": "file:../../sports-lib/",
 		"typed-rest-client": "^1.7.1",
 		"vue": "^2.6.11",
 		"xmldom": "^0.2.1"

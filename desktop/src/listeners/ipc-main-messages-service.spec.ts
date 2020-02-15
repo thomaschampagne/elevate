@@ -1,6 +1,6 @@
 import { IpcMainMessagesService } from "./ipc-main-messages-service";
 import { FlaggedIpcMessage, MessageFlag, RuntimeInfo } from "@elevate/shared/electron";
-import { CompleteSyncEvent, ConnectorType, ErrorSyncEvent, GenericSyncEvent, SyncEvent } from "@elevate/shared/sync";
+import { CompleteSyncEvent, ConnectorType, ErrorSyncEvent, FileSystemConnectorInfo, GenericSyncEvent, SyncEvent } from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
 import { Subject } from "rxjs";
 import { FileSystemConnector } from "../connectors/filesystem/file-system.connector";
@@ -120,7 +120,7 @@ describe("IpcMainMessagesService", () => {
 
 	describe("Handle start sync", () => {
 
-		it("should start strava sync", (done: Function) => {
+		it("should start strava connector sync", (done: Function) => {
 
 			// Given
 			const athleteModel = null;
@@ -129,8 +129,7 @@ describe("IpcMainMessagesService", () => {
 			const userSettingsModel = null;
 			const currentConnectorSyncDateTime = null;
 			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA,
-				currentConnectorSyncDateTime, athleteModel, userSettingsModel,
-				stravaApiCredentials, updateSyncedActivitiesNameAndType);
+				currentConnectorSyncDateTime, stravaApiCredentials, athleteModel, updateSyncedActivitiesNameAndType, userSettingsModel);
 			const replyWith = {
 				callback: () => {
 				},
@@ -151,13 +150,51 @@ describe("IpcMainMessagesService", () => {
 			ipcMainMessagesService.handleStartSync(flaggedIpcMessage, replyWith.callback);
 
 			// Then
-			expect(createStravaConnectorSpy).toBeCalled();
+			expect(createStravaConnectorSpy).toBeCalledTimes(1);
 			expect(ipcMainMessagesService.service.currentConnector).not.toBeNull();
 			expect(stravaConnectorSyncSpy).toBeCalledTimes(stravaConnectorSyncCalls);
 			expect(replyWithCallbackSpy).toBeCalledWith(replyWith.args);
 
 			done();
 		});
+
+		it("should start file system connector sync", (done: Function) => {
+
+			// Given
+			const athleteModel = null;
+			const userSettingsModel = null;
+			const currentConnectorSyncDateTime = null;
+			const expectedFileSystemConnectorInfo = new FileSystemConnectorInfo("/path/to/dir/");
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.FILE_SYSTEM,
+				currentConnectorSyncDateTime, expectedFileSystemConnectorInfo, athleteModel, userSettingsModel);
+			const replyWith = {
+				callback: () => {
+				},
+				args: {
+					success: "Started sync of connector " + ConnectorType.FILE_SYSTEM,
+					error: null
+				}
+			};
+			const fsConnectorSyncCalls = 1;
+
+			const fileSystemConnectorMock = FileSystemConnector.create(athleteModel, userSettingsModel, currentConnectorSyncDateTime,
+				expectedFileSystemConnectorInfo.sourceDirectory, expectedFileSystemConnectorInfo.scanSubDirectories);
+			const createFileSystemConnectorSpy = spyOn(FileSystemConnector, "create").and.returnValue(fileSystemConnectorMock);
+			const fileSystemConnectorSyncSpy = spyOn(fileSystemConnectorMock, "sync").and.returnValue(new Subject<SyncEvent>());
+			const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
+
+			// When
+			ipcMainMessagesService.handleStartSync(flaggedIpcMessage, replyWith.callback);
+
+			// Then
+			expect(createFileSystemConnectorSpy).toBeCalled();
+			expect(ipcMainMessagesService.service.currentConnector).not.toBeNull();
+			expect(fileSystemConnectorSyncSpy).toBeCalledTimes(fsConnectorSyncCalls);
+			expect(replyWithCallbackSpy).toBeCalledWith(replyWith.args);
+
+			done();
+		});
+
 
 		it("should not start a sync already running", (done: Function) => {
 

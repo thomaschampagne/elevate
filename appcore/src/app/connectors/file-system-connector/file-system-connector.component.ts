@@ -2,10 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { ConnectorsComponent } from "../connectors.component";
 import { MatDialog, MatSnackBar } from "@angular/material";
 import { ElectronService } from "../../shared/services/electron/electron.service";
-import { FileSystemConnectorInfo } from "./file-system-connector-info.model";
+import { ConnectorType, FileSystemConnectorInfo } from "@elevate/shared/sync";
 import { FileSystemConnectorInfoService } from "../../shared/services/file-system-connector-info/file-system-connector-info.service";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
-import { ConnectorType } from "@elevate/shared/sync";
 
 @Component({
 	selector: "app-file-system-connector",
@@ -48,6 +47,9 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
 	}
 
 	public saveChanges(): void {
+		if (!this.fileSystemConnectorInfo.extractArchiveFiles) {
+			this.fileSystemConnectorInfo.deleteArchivesAfterExtract = false;
+		}
 		this.fileSystemConnectorInfoService.save(this.fileSystemConnectorInfo);
 	}
 

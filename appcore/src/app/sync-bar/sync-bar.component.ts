@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, HostBinding, InjectionToken, OnInit } from "@angular/core";
 import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.service";
-import { ActivitySyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import { ActivitySyncEvent, ErrorSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { SyncException } from "@elevate/shared/exceptions";
 import * as moment from "moment";
 
@@ -15,8 +15,9 @@ export class SyncBarComponent {
 	template: `
 		<div class="app-sync-bar">
 			<div fxLayout="row" fxLayoutAlign="space-between center">
-				<div>
-					<span class="mat-body-1" *ngIf="currentSyncEventText">{{currentSyncEventText}}</span>
+				<div fxLayout="column" fxLayoutAlign="center start">
+					<span fxFlex class="mat-body-1" *ngIf="currentSyncEventText">{{currentSyncEventText}}</span>
+					<span fxFlex class="mat-caption" *ngIf="counter > 0">{{counter}} activities processed</span>
 				</div>
 				<div fxLayout="row" fxLayoutAlign="space-between center">
 					<button mat-flat-button color="warn" (click)="onStop()">
@@ -46,6 +47,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 	public isSyncCompleted: boolean;
 
 	public currentSyncEventText: string;
+	public counter: number;
 
 	constructor(public desktopSyncService: DesktopSyncService,
 				public changeDetectorRef: ChangeDetectorRef) {
@@ -54,6 +56,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 		this.isStopped = false;
 		this.isSyncCompleted = false;
 		this.currentSyncEventText = null;
+		this.counter = 0;
 	}
 
 	public ngOnInit(): void {
@@ -71,6 +74,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 			this.hideSyncBar = false;
 			this.isStopped = false;
 			this.isSyncCompleted = false;
+			this.counter = 0;
 			this.currentSyncEventText = "Sync started on connector \"" + syncEvent.fromConnectorType.toLowerCase() + "\"";
 		}
 
@@ -83,13 +87,15 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 		}
 
 		if (syncEvent.type === SyncEventType.ACTIVITY) {
+			this.counter++;
 			const activitySyncEvent = <ActivitySyncEvent> syncEvent;
 			this.currentSyncEventText = moment(activitySyncEvent.activity.start_time).format("ll") + ": " + activitySyncEvent.activity.name;
 		}
 
 		if (syncEvent.type === SyncEventType.ERROR) {
-			const message = JSON.stringify(syncEvent);
-			this.currentSyncEventText = message;
+			const errorSyncEvent = <ErrorSyncEvent> syncEvent;
+			this.currentSyncEventText = errorSyncEvent.description;
+			const message = JSON.stringify(errorSyncEvent);
 			alert(message); // TODO !!
 		}
 

@@ -5,12 +5,15 @@ export class FileSystemConnectorInfo {
 	public sourceDirectory: string;
 	public scanSubDirectories: boolean;
 	public deleteActivityFilesAfterSync: boolean;
-	public scanArchivesFiles: boolean;
+	public extractArchiveFiles: boolean;
+	public deleteArchivesAfterExtract: boolean;
 
-	constructor(sourceDirectory: string, scanSubDirectories: boolean = false, deleteActivityFilesAfterSync: boolean = false, scanArchivesFiles: boolean = false) {
+	constructor(sourceDirectory: string, scanSubDirectories: boolean = false, deleteActivityFilesAfterSync: boolean = false,
+				extractArchiveFiles: boolean = false, deleteArchivesAfterExtract: boolean = false) {
 		this.sourceDirectory = sourceDirectory;
 		this.scanSubDirectories = scanSubDirectories;
 		this.deleteActivityFilesAfterSync = deleteActivityFilesAfterSync;
-		this.scanArchivesFiles = scanArchivesFiles;
+		this.extractArchiveFiles = extractArchiveFiles;
+		this.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
 	}
 }

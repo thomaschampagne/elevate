@@ -170,7 +170,7 @@
 						<input matInput [type]="showSecret.checked ? 'text' : 'password'"
 							   placeholder="Client secret"
 							   [(ngModel)]="stravaApiCredentials.clientSecret" (change)="onClientSecretChange()">
-						<button mat-button matSuffix mat-icon-button
+						<button matSuffix mat-icon-button
 								(click)="showSecret.checked = !showSecret.checked">
 							<mat-icon>{{showSecret.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
 						</button>
@@ -182,7 +182,7 @@
 						<input matInput disabled [type]="showToken.checked ? 'text' : 'password'"
 							   placeholder="Access Token"
 							   [(ngModel)]="stravaApiCredentials.accessToken">
-						<button mat-button matSuffix mat-icon-button
+						<button matSuffix mat-icon-button
 								(click)="showToken.checked = !showToken.checked">
 							<mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
 						</button>
@@ -194,7 +194,7 @@
 						<input matInput disabled [type]="showToken.checked ? 'text' : 'password'"
 							   placeholder="Refresh Token"
 							   [(ngModel)]="stravaApiCredentials.refreshToken">
-						<button mat-button matSuffix mat-icon-button
+						<button matSuffix mat-icon-button
 								(click)="showToken.checked = !showToken.checked">
 							<mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
 						</button>
@@ -205,7 +205,7 @@
 					<mat-form-field fxFlex="50">
 						<input matInput disabled [type]="showToken.checked ? 'text' : 'password'"
 							   placeholder="Session valid until" [value]="expiresAt">
-						<button mat-button matSuffix mat-icon-button
+						<button matSuffix mat-icon-button
 								(click)="showToken.checked = !showToken.checked">
 							<mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
 						</button>

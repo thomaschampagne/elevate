@@ -3,53 +3,64 @@
 		File system
 	</mat-card-title>
 	<mat-card-subtitle *ngIf="fileSystemConnectorInfo">
-		<span *ngIf="!fileSystemConnectorInfo.sourceDirectory">Not configured.</span>
-		<span
-			*ngIf="fileSystemConnectorInfo.sourceDirectory">Configured to scan directory <i>{{fileSystemConnectorInfo.sourceDirectory}}</i></span>
+		<span *ngIf="!fileSystemConnectorInfo.sourceDirectory">Not configured</span>
+		<span *ngIf="fileSystemConnectorInfo.sourceDirectory">Configured</span>
+		<br/>
+		<span class="note">Files supported: GPX, TCX & FIT</span>
 	</mat-card-subtitle>
 	<mat-card-content>
 		<div>
 			<button
 				*ngIf="fileSystemConnectorInfo.sourceDirectory" mat-stroked-button color="primary" (click)="sync()">
 				<mat-icon>sync</mat-icon>
-				Sync activities
+				Sync recent activities
 			</button>
-
+			<button
+				*ngIf="fileSystemConnectorInfo.sourceDirectory" mat-stroked-button color="primary" (click)="sync()">
+				<mat-icon>sync</mat-icon>
+				Sync all activities
+			</button>
 			<button mat-stroked-button color="primary" (click)="showConfigure = !showConfigure" *ngIf="!showConfigure">
 				<mat-icon>build</mat-icon>
 				Configure
 			</button>
 		</div>
-		<div *ngIf="showConfigure && fileSystemConnectorInfo">
+		<div fxFill class="configureView" *ngIf="showConfigure && fileSystemConnectorInfo">
 			<div>
-				<mat-form-field fxFill *ngIf="fileSystemConnectorInfo.sourceDirectory">
-					<input matInput type="text" [disabled]="true" placeholder="Current activities directory location"
+				<mat-form-field fxFill>
+					<input matInput type="text" [disabled]="true"
+						   placeholder="{{ (!fileSystemConnectorInfo.sourceDirectory) ? 'Browse for a directory to scan...' : 'Scan directory' }}"
 						   [(ngModel)]="fileSystemConnectorInfo.sourceDirectory">
+					<button matSuffix mat-button color="primary"
+							(click)="onUserDirectorySelection()">
+						Browse
+					</button>
 				</mat-form-field>
-				<button mat-button matSuffix mat-stroked-button type="button" color="primary"
-						(click)="onUserDirectorySelection()">
-					<mat-icon>folder_open</mat-icon>&nbsp;&nbsp;
-					<span *ngIf="!fileSystemConnectorInfo.sourceDirectory">Browse activities directory location.</span>
-					<span *ngIf="fileSystemConnectorInfo.sourceDirectory">Change activities directory location.</span>
-				</button>
 			</div>
-			<div>
-				<mat-checkbox (change)="saveChanges()" [(ngModel)]="fileSystemConnectorInfo.scanSubDirectories">Scan
-					subdirectory
-				</mat-checkbox>
+
+			<div *ngIf="fileSystemConnectorInfo.sourceDirectory">
+				<div>
+					<mat-checkbox (change)="saveChanges()" [(ngModel)]="fileSystemConnectorInfo.scanSubDirectories">
+						Scan subdirectories
+					</mat-checkbox>
+				</div>
+				<div fxLayout="row" fxLayoutAlign="start start">
+					<mat-checkbox (change)="saveChanges()" [(ngModel)]="fileSystemConnectorInfo.extractArchiveFiles"
+								  matTooltip="Activities found in 'zip, rar, 7z, tar, gz, bz2, zipx or xz' files will be extracted into the scan directory.">
+						Extract activities from archives files *
+					</mat-checkbox>
+					<div fxFlex="3"></div>
+					<mat-checkbox (change)="saveChanges()"
+								  [(ngModel)]="fileSystemConnectorInfo.deleteArchivesAfterExtract"
+								  [disabled]="!fileSystemConnectorInfo.extractArchiveFiles"
+								  matTooltip="Once activities have been extracted from a 'zip, rar, 7z, tar, gz, bz2, zipx or xz' file, the archive file will be removed from scan directory">
+						Delete archives when activities have been extracted (recommended) *
+					</mat-checkbox>
+				</div>
+				<div>
+					* Only when <u>syncing all activities</u>
+				</div>
 			</div>
-			<!--<div>
-				<mat-checkbox (change)="saveChanges()"
-							  [(ngModel)]="fileSystemConnectorInfo.deleteActivityFilesAfterSync">Delete activity which
-					have been synced
-				</mat-checkbox>
-			</div>-->
-			<!--<div>
-				<mat-checkbox [(ngModel)]="fileSystemConnectorInfo.scanArchivesFiles">Seek for activities in archive files (.zip, .tar, .tar.gz)</mat-checkbox>
-			</div>-->
-		</div>
-		<div class="note">
-			<u>Note:</u> the connector supports only <strong>GPX, TCX & FIT</strong> formats at the moment.
 		</div>
 	</mat-card-content>
 </mat-card>

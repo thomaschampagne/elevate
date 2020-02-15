@@ -1,23 +1,7 @@
 import { BaseConnector } from "../base.connector";
-import {
-	ActivitySyncEvent,
-	ConnectorType,
-	ErrorSyncEvent,
-	StartedSyncEvent,
-	StoppedSyncEvent,
-	SyncEvent,
-	SyncEventType
-} from "@elevate/shared/sync";
+import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, GenericSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { ReplaySubject, Subject } from "rxjs";
-import {
-	ActivityStreamsModel,
-	AthleteModel,
-	AthleteSettingsModel,
-	BareActivityModel,
-	ConnectorSyncDateTime,
-	SyncedActivityModel,
-	UserSettings
-} from "@elevate/shared/models";
+import { ActivityStreamsModel, AthleteModel, AthleteSettingsModel, BareActivityModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
@@ -78,12 +62,14 @@ export class ActivityFile {
 export class FileSystemConnector extends BaseConnector {
 
 	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel,
-				connectorSyncDateTime: ConnectorSyncDateTime, inputDirectory: string, scanSubDirectories: boolean, deleteActivityFilesAfterSync: boolean, parseIntoArchiveFiles: boolean) {
+				connectorSyncDateTime: ConnectorSyncDateTime, inputDirectory: string, scanSubDirectories: boolean,
+				deleteActivityFilesAfterSync: boolean, extractArchiveFiles: boolean, deleteArchivesAfterExtract: boolean) {
 		super(ConnectorType.FILE_SYSTEM, athleteModel, userSettingsModel, connectorSyncDateTime, priority, FileSystemConnector.ENABLED);
 		this.inputDirectory = inputDirectory;
 		this.scanSubDirectories = scanSubDirectories;
 		this.deleteActivityFilesAfterSync = deleteActivityFilesAfterSync;
-		this.parseIntoArchiveFiles = parseIntoArchiveFiles;
+		this.extractArchiveFiles = extractArchiveFiles;
+		this.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
 		this.athleteMachineId = Service.instance().getRuntimeInfo().athleteMachineId;
 	}
 
@@ -224,18 +210,21 @@ export class FileSystemConnector extends BaseConnector {
 		{from: ActivityTypes.YogaPilates, to: ElevateSport.Yoga},
 	];
 
+	public static readonly UNPACKER = require("all-unpacker");
+
 	public inputDirectory: string;
 	public scanSubDirectories: boolean;
 	public deleteActivityFilesAfterSync: boolean;
-	public parseIntoArchiveFiles: boolean;
+	public extractArchiveFiles: boolean;
+	public deleteArchivesAfterExtract: boolean;
 	public athleteMachineId: string;
 
 
 	public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel,
 						 connectorSyncDateTime: ConnectorSyncDateTime, inputDirectory: string, scanSubDirectories: boolean = false,
-						 deleteActivityFilesAfterSync: boolean = false, parseIntoArchiveFiles: boolean = false) {
+						 deleteActivityFilesAfterSync: boolean = false, extractArchiveFiles: boolean = false, deleteArchivesAfterExtract: boolean = false) {
 		return new FileSystemConnector(null, athleteModel, userSettingsModel, connectorSyncDateTime, inputDirectory, scanSubDirectories,
-			deleteActivityFilesAfterSync, parseIntoArchiveFiles);
+			deleteActivityFilesAfterSync, extractArchiveFiles, deleteArchivesAfterExtract);
 	}
 
 	public sync(): Subject<SyncEvent> {
@@ -262,6 +251,7 @@ export class FileSystemConnector extends BaseConnector {
 				if (isCancelEvent) {
 					this.syncEvents$.next(syncEvent);
 				} else {
+					logger.error(syncEvent);
 					this.syncEvents$.error(syncEvent);
 				}
 			});
@@ -273,143 +263,202 @@ export class FileSystemConnector extends BaseConnector {
 	public syncFiles(syncEvents$: Subject<SyncEvent>): Promise<void> {
 
 		const afterDate = this.syncDateTime ? new Date(this.syncDateTime * 1000) : null;
-		const activityFiles: ActivityFile[] = this.scanForActivities(this.inputDirectory, afterDate, this.scanSubDirectories);
 
-		return activityFiles.reduce((previousPromise: Promise<void>, activityFile: ActivityFile) => {
+		let prepareScanDirectory: Promise<void> = Promise.resolve();
 
-			return previousPromise.then(() => {
-
-				if (this.stopRequested) {
-					return Promise.reject(new StoppedSyncEvent(ConnectorType.FILE_SYSTEM));
-				}
-
-				let parseSportsLibActivity: Promise<EventInterface> = null;
-
-				const activityFileBuffer = fs.readFileSync(activityFile.location.path);
-
-				switch (activityFile.type) {
-					case ActivityFileType.GPX:
-						parseSportsLibActivity = SportsLib.importFromGPX(activityFileBuffer.toString(), xmldom.DOMParser);
-						break;
-
-					case ActivityFileType.TCX:
-						const doc = (new xmldom.DOMParser()).parseFromString(activityFileBuffer.toString(), "application/xml");
-						parseSportsLibActivity = SportsLib.importFromTCX(doc);
-						break;
-
-					case ActivityFileType.FIT:
-						parseSportsLibActivity = SportsLib.importFromFit(activityFileBuffer);
-						break;
-
-					default:
-						const errorMessage = `Type ${activityFile.type} not supported. Failed to parse ${activityFile.location.path}`;
-						logger.error(errorMessage);
-						return Promise.reject(errorMessage);
-				}
-
-				return parseSportsLibActivity.then((event: EventInterface) => {
-
-					// Loop on all activities
-					return event.getActivities().reduce((previousActivityProcessed: Promise<void>, sportsLibActivity: ActivityInterface) => {
-
-						return previousActivityProcessed.then(() => {
-
-							return this.findSyncedActivityModels(sportsLibActivity.startDate.toISOString(), sportsLibActivity.getDuration().getValue())
-								.then((syncedActivityModels: SyncedActivityModel[]) => {
-									if (_.isEmpty(syncedActivityModels)) {
-
-										// Create bare activity from "sports-lib" activity
-										const bareActivity = this.createBareActivity(sportsLibActivity);
-
-										const syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
-										syncedActivityModel.start_timestamp = new Date(bareActivity.start_time).getTime() / 1000;
-
-										// Assign reference to strava activity
-										_.set(syncedActivityModel, ["extras", FileSystemConnector.EXTRA_ACTIVITY_LOCATION], activityFile.location); // Keep tracking  of activity id
-										syncedActivityModel.id = BaseConnector.hashData(syncedActivityModel.start_time, 6) + "-" + BaseConnector.hashData(syncedActivityModel.end_time, 6);
-
-										// Resolve athlete snapshot for current activity date
-										syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(syncedActivityModel.start_time);
-
-										// Prepare streams
-										const activityStreamsModel = this.appendAdditionalStreams(bareActivity,
-											this.extractActivityStreams(sportsLibActivity), syncedActivityModel.athleteSnapshot.athleteSettings);
-
-										// Compute activity
-										try {
-											syncedActivityModel.extendedStats = this.computeExtendedStats(syncedActivityModel, activityStreamsModel);
-										} catch (error) {
-											const errorSyncEvent = (error instanceof Error)
-												? ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE_SYSTEM, error.message, error.stack)
-												: ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE_SYSTEM, error.toString());
-
-											syncEvents$.next(errorSyncEvent); // Notify error
-											return Promise.resolve(); // Continue to next activity
-										}
-
-										// Update
-										if (syncedActivityModel.extendedStats) {
-											syncedActivityModel.moving_time_raw = syncedActivityModel.elapsed_time_raw * syncedActivityModel.extendedStats.moveRatio;
-											syncedActivityModel.elevation_gain_raw = Math.round(syncedActivityModel.extendedStats.elevationData.accumulatedElevationAscent);
-										}
-
-										// Track connector type
-										syncedActivityModel.sourceConnectorType = ConnectorType.FILE_SYSTEM;
-
-										// Gunzip stream as base64
-										const compressedStream = (activityStreamsModel) ? Gzip.pack64(activityStreamsModel) : null;
-
-										// Notify the new SyncedActivityModel
-										syncEvents$.next(new ActivitySyncEvent(ConnectorType.FILE_SYSTEM,
-											null, <SyncedActivityModel> syncedActivityModel, true, compressedStream));
-
-										return Promise.resolve();
-
-									} else {
-
-										if (_.isArray(syncedActivityModels) && syncedActivityModels.length === 1) { // One activity found
-
-											// Notify the new SyncedActivityModel
-											syncEvents$.next(new ActivitySyncEvent(ConnectorType.FILE_SYSTEM,
-												null, <SyncedActivityModel> syncedActivityModels[0], false));
-										} else {
-											const activitiesFound = [];
-											_.forEach(syncedActivityModels, (activityModel: SyncedActivityModel) => {
-												activitiesFound.push(activityModel.name + " (" + new Date(activityModel.start_time).toString() + ")");
-											});
-
-											const activityName = `${FileSystemConnector.HumanizedDayMoment.resolve(sportsLibActivity.startDate)} ${this.convertToElevateSport(sportsLibActivity.type)}`;
-
-											const errorSyncEvent = new ErrorSyncEvent(ConnectorType.FILE_SYSTEM,
-												ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.create(ConnectorType.FILE_SYSTEM, activityName,
-													sportsLibActivity.startDate, activitiesFound));
-
-											syncEvents$.next(errorSyncEvent);
-										}
-
-										return Promise.resolve();
-									}
-								});
-						});
-
-					}, Promise.resolve());
-				});
+		if (!afterDate && this.extractArchiveFiles) {
+			const deflateNotifier = new Subject<string>();
+			deflateNotifier.subscribe(extractedArchivePath => {
+				const extractedArchiveFileName = path.basename(extractedArchivePath);
+				syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE_SYSTEM, `Activities in "${extractedArchiveFileName}" file have been extracted.`));
 			});
+			prepareScanDirectory = this.scanDeflateActivitiesFromArchives(this.inputDirectory, this.deleteArchivesAfterExtract, deflateNotifier, this.scanSubDirectories);
+		}
 
-		}, Promise.resolve());
+		return prepareScanDirectory.then(() => {
+
+			const activityFiles: ActivityFile[] = this.scanForActivities(this.inputDirectory, afterDate, this.scanSubDirectories);
+			return Promise.resolve(activityFiles);
+
+		}).then(activityFiles => {
+
+			return activityFiles.reduce((previousPromise: Promise<void>, activityFile: ActivityFile) => {
+
+				return previousPromise.then(() => {
+
+					if (this.stopRequested) {
+						return Promise.reject(new StoppedSyncEvent(ConnectorType.FILE_SYSTEM));
+					}
+
+					const activityFileBuffer = fs.readFileSync(activityFile.location.path);
+
+					let parseSportsLibActivity: Promise<EventInterface> = null;
+
+					logger.info("Parsing activity file: " + activityFile.location.path);
+
+					switch (activityFile.type) {
+						case ActivityFileType.GPX:
+							parseSportsLibActivity = SportsLib.importFromGPX(activityFileBuffer.toString(), xmldom.DOMParser);
+							break;
+
+						case ActivityFileType.TCX:
+							const doc = (new xmldom.DOMParser()).parseFromString(activityFileBuffer.toString(), "application/xml");
+							parseSportsLibActivity = SportsLib.importFromTCX(doc);
+							break;
+
+						case ActivityFileType.FIT:
+							parseSportsLibActivity = SportsLib.importFromFit(activityFileBuffer);
+							break;
+
+						default:
+							const errorMessage = `Type ${activityFile.type} not supported. Failed to parse ${activityFile.location.path}`;
+							logger.error(errorMessage);
+							return Promise.reject(errorMessage);
+					}
+
+					return parseSportsLibActivity.then((event: EventInterface) => {
+
+						// Loop on all activities
+						return event.getActivities().reduce((previousActivityProcessed: Promise<void>, sportsLibActivity: ActivityInterface) => {
+
+							return previousActivityProcessed.then(() => {
+
+								return this.findSyncedActivityModels(sportsLibActivity.startDate.toISOString(), sportsLibActivity.getDuration().getValue())
+									.then((syncedActivityModels: SyncedActivityModel[]) => {
+										if (_.isEmpty(syncedActivityModels)) {
+
+											try {
+												// Create bare activity from "sports-lib" activity
+												const bareActivity = this.createBareActivity(sportsLibActivity);
+
+												const syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
+												syncedActivityModel.start_timestamp = new Date(bareActivity.start_time).getTime() / 1000;
+
+												// Assign reference to strava activity
+												_.set(syncedActivityModel, ["extras", FileSystemConnector.EXTRA_ACTIVITY_LOCATION], activityFile.location); // Keep tracking  of activity id
+												syncedActivityModel.id = BaseConnector.hashData(syncedActivityModel.start_time, 6) + "-" + BaseConnector.hashData(syncedActivityModel.end_time, 6);
+
+												// Resolve athlete snapshot for current activity date
+												syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(syncedActivityModel.start_time);
+
+												// Prepare streams
+												const activityStreamsModel = this.appendAdditionalStreams(bareActivity,
+													this.extractActivityStreams(sportsLibActivity), syncedActivityModel.athleteSnapshot.athleteSettings);
+
+												// Compute activity
+												syncedActivityModel.extendedStats = this.computeExtendedStats(syncedActivityModel, activityStreamsModel);
+
+												// Update
+												if (syncedActivityModel.extendedStats) {
+													syncedActivityModel.moving_time_raw = (syncedActivityModel.extendedStats.moveRatio >= 0)
+														? syncedActivityModel.elapsed_time_raw * syncedActivityModel.extendedStats.moveRatio : null;
+
+													if (syncedActivityModel.extendedStats.elevationData && syncedActivityModel.extendedStats.elevationData.accumulatedElevationAscent >= 0) {
+														syncedActivityModel.elevation_gain_raw = Math.round(syncedActivityModel.extendedStats.elevationData.accumulatedElevationAscent);
+													} else {
+														syncedActivityModel.elevation_gain_raw = null;
+													}
+												}
+
+												// Track connector type
+												syncedActivityModel.sourceConnectorType = ConnectorType.FILE_SYSTEM;
+
+												// Gunzip stream as base64
+												const compressedStream = (activityStreamsModel) ? Gzip.pack64(activityStreamsModel) : null;
+
+												// Notify the new SyncedActivityModel
+												syncEvents$.next(new ActivitySyncEvent(ConnectorType.FILE_SYSTEM,
+													null, <SyncedActivityModel> syncedActivityModel, true, compressedStream));
+
+											} catch (error) {
+												const errorMessage = "Unable to compute activity started '"
+													+ sportsLibActivity.startDate.toISOString() + "' cause: " + ((error.message) ? error.message : error.toString());
+												const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE_SYSTEM, errorMessage, (error.stack) ? error.stack : null);
+												errorSyncEvent.activity = new BareActivityModel();
+												errorSyncEvent.activity.type = <any> sportsLibActivity.type;
+												errorSyncEvent.activity.start_time = sportsLibActivity.startDate.toISOString();
+												_.set(errorSyncEvent.activity, ["extras", FileSystemConnector.EXTRA_ACTIVITY_LOCATION], activityFile.location); // Keep tracking  of activity id
+
+												return Promise.reject(errorSyncEvent);
+											}
+
+											return Promise.resolve();
+
+										} else {
+
+											if (_.isArray(syncedActivityModels) && syncedActivityModels.length === 1) { // One activity found
+
+												// Notify the new SyncedActivityModel
+												syncEvents$.next(new ActivitySyncEvent(ConnectorType.FILE_SYSTEM,
+													null, <SyncedActivityModel> syncedActivityModels[0], false));
+											} else {
+												const activitiesFound = [];
+												_.forEach(syncedActivityModels, (activityModel: SyncedActivityModel) => {
+													activitiesFound.push(activityModel.name + " (" + new Date(activityModel.start_time).toString() + ")");
+												});
+
+												const activityName = `${FileSystemConnector.HumanizedDayMoment.resolve(sportsLibActivity.startDate)} ${this.convertToElevateSport(sportsLibActivity.type)}`;
+
+												const errorSyncEvent = new ErrorSyncEvent(ConnectorType.FILE_SYSTEM,
+													ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.create(ConnectorType.FILE_SYSTEM, activityName,
+														sportsLibActivity.startDate, activitiesFound));
+
+												syncEvents$.next(errorSyncEvent);
+											}
+
+											return Promise.resolve();
+										}
+									});
+							});
+
+						}, Promise.resolve());
+
+					}).catch(error => {
+
+						if (error.code) { // Already an ErrorSyncEvent
+							return Promise.reject(error);
+						}
+
+						const errorMessage = "Activity file parsing error: " + ((error.message) ? error.message : error.toString());
+						const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE_SYSTEM, errorMessage, (error.stack) ? error.stack : null);
+						errorSyncEvent.activity = new BareActivityModel();
+						_.set(errorSyncEvent.activity, ["extras", FileSystemConnector.EXTRA_ACTIVITY_LOCATION], activityFile.location); // Keep tracking  of activity id
+						return Promise.reject(errorSyncEvent);
+					});
+				});
+
+			}, Promise.resolve());
+		});
 	}
 
 	public createBareActivity(sportsLibActivity: ActivityInterface): BareActivityModel {
-		const bareActivityModel: BareActivityModel = new BareActivityModel();
+		const bareActivityModel: BareActivityModel = <BareActivityModel> new SyncedActivityModel();
 		bareActivityModel.id = BaseConnector.hashData(sportsLibActivity.startDate.toISOString());
 		bareActivityModel.type = this.convertToElevateSport(sportsLibActivity.type);
 		bareActivityModel.display_type = bareActivityModel.type;
 		bareActivityModel.name = FileSystemConnector.HumanizedDayMoment.resolve(sportsLibActivity.startDate) + " " + bareActivityModel.type;
 		bareActivityModel.start_time = sportsLibActivity.startDate.toISOString();
 		bareActivityModel.end_time = sportsLibActivity.endDate.toISOString();
-		bareActivityModel.distance_raw = sportsLibActivity.getDistance().getValue();
-		bareActivityModel.elevation_gain_raw = <number> sportsLibActivity.getStats().get(DataAscent.type).getValue();
-		bareActivityModel.elapsed_time_raw = <number> sportsLibActivity.getDuration().getValue();
+
+		if (sportsLibActivity.getDistance()) {
+			bareActivityModel.distance_raw = (sportsLibActivity.getDistance().getValue()) ? sportsLibActivity.getDistance().getValue() : null;
+		} else {
+			bareActivityModel.distance_raw = null;
+		}
+
+		if (sportsLibActivity.getStats().get(DataAscent.type)) {
+			const ascentValue = sportsLibActivity.getStats().get(DataAscent.type).getValue();
+			bareActivityModel.elevation_gain_raw = <number> ((ascentValue > 0) ? ascentValue : null);
+		} else {
+			bareActivityModel.elevation_gain_raw = null;
+		}
+
+		if (sportsLibActivity.getDuration()) {
+			bareActivityModel.elapsed_time_raw = (sportsLibActivity.getDuration().getValue()) ? sportsLibActivity.getDuration().getValue() : null;
+		} else {
+			bareActivityModel.elapsed_time_raw = null;
+		}
+
 		bareActivityModel.hasPowerMeter = sportsLibActivity.hasPowerMeter();
 		bareActivityModel.trainer = sportsLibActivity.isTrainer();
 		bareActivityModel.commute = null; // Unsupported at the moment
@@ -434,8 +483,12 @@ export class FileSystemConnector extends BaseConnector {
 
 		const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
 
-		// Time
-		activityStreamsModel.time = sportsLibActivity.getStream(DataDistance.type).getDurationOfData(true, true);
+		// Time via distance stream
+		try {
+			activityStreamsModel.time = sportsLibActivity.getStream(DataDistance.type).getDurationOfData(true, true);
+		} catch (err) {
+			logger.info("No distance stream found for activity starting at " + sportsLibActivity.startDate);
+		}
 
 		// Lat long
 		try {
@@ -649,4 +702,107 @@ export class FileSystemConnector extends BaseConnector {
 		return stats.mtime;
 	}
 
+	public deflateActivitiesFromArchive(archiveFilePath: string, deleteArchive: boolean = false): Promise<string[]> {
+
+		return new Promise((resolve, reject) => {
+
+			const fileName = path.basename(archiveFilePath);
+			const currentArchiveDir = path.dirname(archiveFilePath);
+			const archiveFileNameFingerPrint = BaseConnector.hashData(fileName, 6);
+			const extractDir = currentArchiveDir + "/" + archiveFileNameFingerPrint;
+
+			// Create extract directory
+			if (fs.existsSync(extractDir)) {
+				fs.rmdirSync(extractDir, {recursive: true});
+			}
+			fs.mkdirSync(extractDir);
+
+			FileSystemConnector.UNPACKER.unpack(archiveFilePath, {
+				targetDir: extractDir,
+				noDirectory: true,
+				quiet: true,
+			}, (err) => {
+				if (err) {
+					fs.rmdirSync(extractDir, {recursive: true});
+					reject(err);
+				} else {
+					// When archive un-packaged
+					try {
+						const extractedActivityFiles = this.scanForActivities(extractDir, null, true);
+						const trackedNewPaths = [];
+						extractedActivityFiles.forEach(extractedActivityFile => {
+							const extractedFileName = path.basename(extractedActivityFile.location.path);
+							const extractedDirName = path.dirname(extractedActivityFile.location.path);
+							const relativeExtractedDirName = extractedDirName
+								.slice(currentArchiveDir.length + archiveFileNameFingerPrint.length + 1)
+								.replace(/\\/gm, "/");
+							const newActivityPath = currentArchiveDir + "/" + archiveFileNameFingerPrint
+								+ ((relativeExtractedDirName) ? "-" + BaseConnector.hashData(relativeExtractedDirName, 6) : "") + "-" + extractedFileName;
+							fs.renameSync(extractedActivityFile.location.path, newActivityPath);
+							trackedNewPaths.push(newActivityPath);
+						});
+
+						// Remove extract directory
+						fs.rmdirSync(extractDir, {recursive: true});
+
+						if (deleteArchive) {
+							fs.unlinkSync(archiveFilePath);
+						}
+
+						resolve(trackedNewPaths);
+					} catch (err) {
+						fs.rmdirSync(extractDir, {recursive: true});
+						reject(err);
+					}
+				}
+			});
+		});
+	}
+
+	/**
+	 *
+	 * @return Observable of archive paths being deflated.
+	 * @param sourceDir
+	 * @param deleteArchives
+	 * @param deflateNotifier
+	 * @param recursive
+	 */
+	public scanDeflateActivitiesFromArchives(sourceDir: string, deleteArchives: boolean, deflateNotifier: Subject<string> = new Subject<string>(), recursive: boolean = false): Promise<void> {
+
+		const files = fs.readdirSync(sourceDir);
+
+		return files.reduce((previousPromise: Promise<void>, file: string) => {
+
+			return previousPromise.then(() => {
+
+				const isDirectory = fs.statSync(sourceDir + "/" + file).isDirectory();
+
+				if (recursive && isDirectory) {
+					return this.scanDeflateActivitiesFromArchives(sourceDir + "/" + file, deleteArchives, deflateNotifier, recursive);
+				}
+
+				if (!isDirectory) {
+					const absolutePath = path.join(sourceDir, file);
+					const fileExtension = path.extname(file).slice(1);
+					const isArchiveFile = (["zip", "rar", "gz", "tar", "7z", "bz2", "zipx", "xz"].indexOf(fileExtension) !== -1);
+					if (isArchiveFile) {
+						return this.deflateActivitiesFromArchive(absolutePath, deleteArchives).then(() => {
+							if (deflateNotifier) {
+								deflateNotifier.next(absolutePath);
+							}
+							return Promise.resolve();
+						});
+					}
+				}
+
+				return Promise.resolve();
+			});
+
+		}, Promise.resolve()).then(() => {
+			if (deflateNotifier) {
+				deflateNotifier.complete();
+			}
+			return Promise.resolve();
+		});
+	}
 }

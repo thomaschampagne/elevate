@@ -5,15 +5,7 @@ import { AthleteService } from "../../athlete/athlete.service";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { LoggerService } from "../../logging/logger.service";
 import { Subject, Subscription } from "rxjs";
-import {
-	ActivitySyncEvent,
-	CompleteSyncEvent,
-	ConnectorType,
-	ErrorSyncEvent,
-	StravaApiCredentials,
-	SyncEvent,
-	SyncEventType
-} from "@elevate/shared/sync";
+import { ActivitySyncEvent, CompleteSyncEvent, ConnectorType, ErrorSyncEvent, FileSystemConnectorInfo, StravaApiCredentials, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { IpcRendererMessagesService } from "../../messages-listener/ipc-renderer-messages.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { StravaApiCredentialsService } from "../../strava-api-credentials/strava-api-credentials.service";
@@ -30,6 +22,7 @@ import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 import { AppEventsService } from "../../external-updates/app-events-service";
 import { StreamsService } from "../../streams/streams.service";
+import { FileSystemConnectorInfoService } from "../../file-system-connector-info/file-system-connector-info.service";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 // TODO Handle sync complete
@@ -65,6 +58,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 				public userSettingsService: UserSettingsService,
 				public messageListenerService: IpcRendererMessagesService,
 				public stravaApiCredentialsService: StravaApiCredentialsService,
+				public fileSystemConnectorInfoService: FileSystemConnectorInfoService,
 				public logger: LoggerService,
 				public connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
 				public appEventsService: AppEventsService,
@@ -119,6 +113,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 		if (this.currentConnectorType === ConnectorType.STRAVA) {
 			promisedDataToSync.push(this.stravaApiCredentialsService.fetch());
+		} else if (this.currentConnectorType === ConnectorType.FILE_SYSTEM) {
+			promisedDataToSync.push(Promise.resolve(this.fileSystemConnectorInfoService.fetch()));
 		} else {
 			const errorMessage = "Unknown connector type to sync";
 			this.logger.error(errorMessage);
@@ -150,10 +146,15 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 				const stravaApiCredentials: StravaApiCredentials = <StravaApiCredentials> result[3];
 
 				// Create message to start sync on connector!
-				const updateSyncedActivitiesNameAndType = true;
+				const updateSyncedActivitiesNameAndType = false;
 				startSyncMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, currentConnectorSyncDateTime,
 					stravaApiCredentials, athleteModel, updateSyncedActivitiesNameAndType, userSettingsModel);
 
+			} else if (this.currentConnectorType === ConnectorType.FILE_SYSTEM) {
+
+				const fileSystemConnectorInfo: FileSystemConnectorInfo = <FileSystemConnectorInfo> result[3];
+				startSyncMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.FILE_SYSTEM, currentConnectorSyncDateTime,
+					fileSystemConnectorInfo, athleteModel, userSettingsModel);
 			}
 
 			// Trigger sync start

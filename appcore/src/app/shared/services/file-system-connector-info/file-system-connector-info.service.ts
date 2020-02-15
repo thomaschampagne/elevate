@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { FileSystemConnectorInfo } from "../../../connectors/file-system-connector/file-system-connector-info.model";
+import { FileSystemConnectorInfo } from "@elevate/shared/sync";
 import { StorageLocationModel } from "../../data-store/storage-location.model";
 import { StorageType } from "../../data-store/storage-type.enum";
 
@@ -18,7 +18,8 @@ export class FileSystemConnectorInfoService {
 			const storedConnectorInfo = localStorage.getItem(FileSystemConnectorInfoService.FileSystemConnectorInfoDao.STORAGE_LOCATION.key);
 			const connectorInfo: FileSystemConnectorInfo = storedConnectorInfo ? JSON.parse(storedConnectorInfo) : null;
 			if (connectorInfo) {
-				return new FileSystemConnectorInfo(connectorInfo.sourceDirectory, connectorInfo.scanSubDirectories, connectorInfo.scanArchivesFiles);
+				return new FileSystemConnectorInfo(connectorInfo.sourceDirectory, connectorInfo.scanSubDirectories, connectorInfo.deleteActivityFilesAfterSync,
+					connectorInfo.extractArchiveFiles, connectorInfo.deleteArchivesAfterExtract);
 			} else {
 				return FileSystemConnectorInfoService.FileSystemConnectorInfoDao.DEFAULT_STORAGE_VALUE;
 			}

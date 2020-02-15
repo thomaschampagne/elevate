@@ -2,19 +2,12 @@ import { IpcRequest, PromiseTron, PromiseTronReply } from "promise-tron";
 import logger from "electron-log";
 import { StravaAuthenticator } from "../connectors/strava/strava-authenticator";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
-import {
-	ActivitySyncEvent,
-	CompleteSyncEvent,
-	ConnectorType,
-	ErrorSyncEvent,
-	StravaApiCredentials,
-	SyncEvent,
-	SyncEventType
-} from "@elevate/shared/sync";
+import { ActivitySyncEvent, CompleteSyncEvent, ConnectorType, ErrorSyncEvent, FileSystemConnectorInfo, StravaApiCredentials, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
 import { AthleteModel, ConnectorSyncDateTime, UserSettings } from "@elevate/shared/models";
 import { Service } from "../service";
 import * as _ from "lodash";
+import { FileSystemConnector } from "../connectors/filesystem/file-system.connector";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export class IpcMainMessagesService {
@@ -95,7 +88,14 @@ export class IpcMainMessagesService {
 
 		} else if (connectorType === ConnectorType.FILE_SYSTEM) {
 
-			throw new Error("To be done");
+			const fsConnectorSyncDateTime: ConnectorSyncDateTime = <ConnectorSyncDateTime> message.payload[1];
+			const fileSystemConnectorInfo: FileSystemConnectorInfo = <FileSystemConnectorInfo> message.payload[2];
+			const athleteModel: AthleteModel = <AthleteModel> message.payload[3];
+			const userSettingsModel: UserSettingsModel = <UserSettingsModel> message.payload[4];
+
+			this.service.currentConnector = FileSystemConnector.create(athleteModel, userSettingsModel, fsConnectorSyncDateTime,
+				fileSystemConnectorInfo.sourceDirectory, fileSystemConnectorInfo.scanSubDirectories, fileSystemConnectorInfo.deleteActivityFilesAfterSync,
+				fileSystemConnectorInfo.extractArchiveFiles, fileSystemConnectorInfo.deleteArchivesAfterExtract);
 
 		} else {
 
