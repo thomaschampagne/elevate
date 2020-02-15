@@ -43,9 +43,9 @@ describe("FitnessTrendGraphComponent", () => {
 		}).compileComponents();
 
 		// Retrieve injected service
-		userSettingsService = TestBed.get(UserSettingsService);
-		activityService = TestBed.get(ActivityService);
-		fitnessService = TestBed.get(FitnessService);
+		userSettingsService = TestBed.inject(UserSettingsService);
+		activityService = TestBed.inject(ActivityService);
+		fitnessService = TestBed.inject(FitnessService);
 
 		// Mocking
 		spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));

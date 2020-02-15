@@ -143,7 +143,7 @@ export class ActivitiesSynchronize {
 
 		_.forEach(syncedActivities, (syncedActivityModel: SyncedActivityModel) => {
 			// Seek for activity in just interrogated pages
-			const notFound: boolean = (_.indexOf(rawActivityIds, syncedActivityModel.id) == -1);
+			const notFound: boolean = (_.indexOf(rawActivityIds, syncedActivityModel.id) === -1);
 			if (notFound) {
 				deleted.push(<number> syncedActivityModel.id);
 			}

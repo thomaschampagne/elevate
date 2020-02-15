@@ -25,7 +25,7 @@ describe("ZonesService", () => {
 		});
 
 		// Retrieve injected service
-		zonesService = TestBed.get(ZonesService);
+		zonesService = TestBed.inject(ZonesService);
 		saveZonesSpy = spyOn(zonesService.userSettingsService, "saveZones");
 		saveZonesSpy.and.returnValue(Promise.resolve());
 

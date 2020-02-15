@@ -21,7 +21,7 @@ describe("UserSettingsDao", () => {
 		});
 
 		// Retrieve injected service
-		userSettingsDao = TestBed.get(UserSettingsDao);
+		userSettingsDao = TestBed.inject(UserSettingsDao);
 
 		done();
 	});

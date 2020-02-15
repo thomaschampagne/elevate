@@ -19,7 +19,7 @@ describe("ConnectorsComponent", () => {
 			]
 		}).compileComponents();
 
-		const electronService: ElectronService = TestBed.get(ElectronService);
+		const electronService: ElectronService = TestBed.inject(ElectronService);
 		electronService.instance = <Electron.RendererInterface> {
 			ipcRenderer: {}
 		};

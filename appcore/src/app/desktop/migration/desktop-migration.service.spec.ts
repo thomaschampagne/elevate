@@ -19,7 +19,7 @@ describe("DesktopMigrationService", () => {
 			]
 		});
 
-		service = TestBed.get(DesktopMigrationService);
+		service = TestBed.inject(DesktopMigrationService);
 		done();
 	});
 

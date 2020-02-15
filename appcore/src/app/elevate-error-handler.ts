@@ -1,6 +1,6 @@
 import { ErrorHandler, Injectable } from "@angular/core";
 import { LoggerService } from "./shared/services/logging/logger.service";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { environment } from "../environments/environment";
 import { EnvTarget } from "@elevate/shared/models";
 

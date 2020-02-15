@@ -13,7 +13,7 @@ describe("ViewedDayService", () => {
 			providers: [ViewedDayService]
 		});
 
-		service = TestBed.get(ViewedDayService);
+		service = TestBed.inject(ViewedDayService);
 		done();
 	});
 

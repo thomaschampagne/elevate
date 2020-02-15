@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ElectronService } from "../shared/services/electron/electron.service";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
 	selector: "app-connectors",

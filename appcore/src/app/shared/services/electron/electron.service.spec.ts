@@ -24,7 +24,7 @@ describe("ElectronService", () => {
 		});
 
 		// Retrieve injected preferencesService
-		service = TestBed.get(ElectronService);
+		service = TestBed.inject(ElectronService);
 
 		done();
 	});

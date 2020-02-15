@@ -12,7 +12,7 @@ describe("SideNavService", () => {
 			providers: [SideNavService]
 		});
 
-		service = TestBed.get(SideNavService);
+		service = TestBed.inject(SideNavService);
 		done();
 	});
 

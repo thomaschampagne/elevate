@@ -26,7 +26,7 @@ describe("ActivityDao", () => {
 		});
 
 		// Retrieve injected service
-		activityDao = TestBed.get(ActivityDao);
+		activityDao = TestBed.inject(ActivityDao);
 		done();
 	});
 

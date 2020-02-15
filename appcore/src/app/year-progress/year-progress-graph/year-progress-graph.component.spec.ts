@@ -33,7 +33,7 @@ describe("YearProgressGraphComponent", () => {
 			providers: [YearProgressService]
 		}).compileComponents();
 
-		yearProgressService = TestBed.get(YearProgressService);
+		yearProgressService = TestBed.inject(YearProgressService);
 
 		done();
 	});

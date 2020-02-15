@@ -8,7 +8,7 @@ describe("DesktopEventsService", () => {
 	}));
 
 	it("should be created", () => {
-		const service: DesktopEventsService = TestBed.get(DesktopEventsService);
+		const service: DesktopEventsService = TestBed.inject(DesktopEventsService);
 		expect(service).toBeTruthy();
 	});
 });

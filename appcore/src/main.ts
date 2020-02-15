@@ -3,8 +3,6 @@ import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 
 import { AppModule } from "./app/app.module";
 import { environment } from "./environments/environment";
-import "hammerjs";
-
 import { Theme } from "./app/shared/enums/theme.enum";
 
 if (environment.production) {

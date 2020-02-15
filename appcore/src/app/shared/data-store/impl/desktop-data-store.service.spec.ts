@@ -126,7 +126,7 @@ describe("DesktopDataStore", () => {
 
 		const fakeDocs = _.cloneDeep(FAKE_EXISTING_DOCUMENTS);
 
-		desktopDataStore = TestBed.get(DesktopDataStore);
+		desktopDataStore = TestBed.inject(DesktopDataStore);
 		provideDatabaseSpy = spyOn(desktopDataStore, "provideDatabase");
 		resetTestDatabase();
 

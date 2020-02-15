@@ -46,7 +46,7 @@ describe("DesktopSyncService", () => {
 			]
 		});
 
-		const electronService: ElectronService = TestBed.get(ElectronService);
+		const electronService: ElectronService = TestBed.inject(ElectronService);
 		electronService.instance = <Electron.RendererInterface> {
 			ipcRenderer: {}
 		};
@@ -58,7 +58,7 @@ describe("DesktopSyncService", () => {
 		};
 		electronWindow.require = electronRequire;
 		spyOn(electronWindow, "require").and.callFake(electronRequire);
-		desktopSyncService = TestBed.get(DesktopSyncService);
+		desktopSyncService = TestBed.inject(DesktopSyncService);
 		reloadAppSpy = spyOn(desktopSyncService, "reloadApp").and.stub();
 		done();
 

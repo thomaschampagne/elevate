@@ -12,7 +12,7 @@ import { ElectronService } from "../../shared/services/electron/electron.service
 import { adjectives, animals, colors, names, uniqueNamesGenerator } from "unique-names-generator";
 import _ from "lodash";
 import jdenticon from "jdenticon";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 
 class GeneratedStravaApiApplication {
 	public appName: string;

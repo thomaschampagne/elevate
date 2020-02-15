@@ -16,7 +16,7 @@ describe("FileSystemConnectorInfoService", () => {
 	}));
 
 	it("should be created", () => {
-		const service: FileSystemConnectorInfoService = TestBed.get(FileSystemConnectorInfoService);
+		const service: FileSystemConnectorInfoService = TestBed.inject(FileSystemConnectorInfoService);
 		expect(service).toBeTruthy();
 	});
 });

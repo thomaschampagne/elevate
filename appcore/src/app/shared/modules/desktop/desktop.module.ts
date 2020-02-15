@@ -35,9 +35,6 @@ import { FileSystemConnectorInfoService } from "../../services/file-system-conne
 		DesktopAdvancedMenuComponent,
 		DesktopImportBackupDialogComponent
 	],
-	entryComponents: [
-		DesktopImportBackupDialogComponent
-	],
 	providers: [
 		ElectronService,
 		IpcRendererMessagesService,

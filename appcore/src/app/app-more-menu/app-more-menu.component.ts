@@ -2,7 +2,7 @@ import { Component, InjectionToken, OnInit } from "@angular/core";
 import { AppRoutesModel } from "../shared/models/app-routes.model";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { Router } from "@angular/router";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { ElectronService } from "../shared/services/electron/electron.service";
 
 export const APP_MORE_MENU_COMPONENT_TOKEN = new InjectionToken<AppMoreMenuComponent>("APP_MORE_MENU_COMPONENT_TOKEN");

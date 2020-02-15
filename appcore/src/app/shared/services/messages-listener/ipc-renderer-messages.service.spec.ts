@@ -24,7 +24,7 @@ describe("IpcRendererMessagesService", () => {
 			]
 		});
 
-		const electronService: ElectronService = TestBed.get(ElectronService);
+		const electronService: ElectronService = TestBed.inject(ElectronService);
 		electronService.instance = <Electron.RendererInterface> {
 			ipcRenderer: {}
 		};
@@ -37,7 +37,7 @@ describe("IpcRendererMessagesService", () => {
 		electronWindow.require = electronRequire;
 		spyOn(electronWindow, "require").and.callFake(electronRequire);
 
-		ipcRendererMessagesService = TestBed.get(IpcRendererMessagesService);
+		ipcRendererMessagesService = TestBed.inject(IpcRendererMessagesService);
 		spyOn(ipcRendererMessagesService.promiseTron, "on").and.stub();
 		ipcRendererMessagesService.listen();
 		done();

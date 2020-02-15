@@ -15,7 +15,7 @@ describe("StreamsService", () => {
 	});
 
 	it("should be created", () => {
-		const service: StreamsService = TestBed.get(StreamsService);
+		const service: StreamsService = TestBed.inject(StreamsService);
 		expect(service).toBeTruthy();
 	});
 });

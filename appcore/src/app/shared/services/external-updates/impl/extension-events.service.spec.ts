@@ -20,7 +20,7 @@ describe("ExtensionEventsService", () => {
 			providers: [ExtensionEventsService]
 		});
 
-		service = TestBed.get(ExtensionEventsService);
+		service = TestBed.inject(ExtensionEventsService);
 
 		done();
 	});

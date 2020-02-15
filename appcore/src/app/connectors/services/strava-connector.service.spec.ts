@@ -16,7 +16,7 @@ describe("StravaConnectorService", () => {
 			]
 		}).compileComponents();
 
-		const electronService: ElectronService = TestBed.get(ElectronService);
+		const electronService: ElectronService = TestBed.inject(ElectronService);
 		electronService.instance = <Electron.RendererInterface> {
 			ipcRenderer: {}
 		};
@@ -33,7 +33,7 @@ describe("StravaConnectorService", () => {
 	});
 
 	it("should be created", () => {
-		const service: StravaConnectorService = TestBed.get(StravaConnectorService);
+		const service: StravaConnectorService = TestBed.inject(StravaConnectorService);
 		expect(service).toBeTruthy();
 	});
 });

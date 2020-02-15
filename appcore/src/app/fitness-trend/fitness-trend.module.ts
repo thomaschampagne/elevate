@@ -29,12 +29,6 @@ import { FitnessTrendActivitiesLinksDialogComponent } from "./fitness-trend-acti
 		FitnessTrendWelcomeDialogComponent,
 		FitnessTrendActivitiesLinksDialogComponent
 	],
-	entryComponents: [
-		FitnessInfoDialogComponent,
-		FitnessTrendConfigDialogComponent,
-		FitnessTrendWelcomeDialogComponent,
-		FitnessTrendActivitiesLinksDialogComponent
-	],
 	providers: [
 		FitnessService,
 		ViewedDayService

@@ -1,10 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { ConnectorsComponent } from "../connectors.component";
-import { MatDialog, MatSnackBar } from "@angular/material";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { ElectronService } from "../../shared/services/electron/electron.service";
 import { ConnectorType, FileSystemConnectorInfo } from "@elevate/shared/sync";
 import { FileSystemConnectorInfoService } from "../../shared/services/file-system-connector-info/file-system-connector-info.service";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
 	selector: "app-file-system-connector",

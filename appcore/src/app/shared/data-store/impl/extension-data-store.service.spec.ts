@@ -102,7 +102,7 @@ describe("ExtensionDataStore", () => {
 			]
 		});
 
-		extensionDataStore = TestBed.get(ExtensionDataStore);
+		extensionDataStore = TestBed.inject(ExtensionDataStore);
 
 		// Mock EXTENSION_STORAGE_STUB
 		browserStorageLocalSpy = spyOn(extensionDataStore, "chromeLocalStorageArea").and.callFake(extensionStorageBehaviour);
