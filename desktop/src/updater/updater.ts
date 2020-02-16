@@ -1,9 +1,11 @@
 import { AppUpdater } from "electron-updater/out/AppUpdater";
 import * as Electron from "electron";
-import { BrowserWindow } from "electron";
+import { app, BrowserWindow } from "electron";
 import logger, { ElectronLog } from "electron-log";
 import * as url from "url";
 import * as path from "path";
+import * as fs from "fs";
+import * as ini from "ini";
 import { UpdateInfo } from "electron-updater";
 
 enum UpdateEvent {
@@ -26,9 +28,19 @@ export class Updater {
 	constructor(appUpdater: AppUpdater, updateLogger: ElectronLog) {
 		this.appUpdater = appUpdater;
 		this.appUpdater.autoInstallOnAppQuit = Updater.ENABLE_AUTO_INSTALL_ON_APP_QUIT;
-		this.appUpdater.allowPrerelease = Updater.ENABLE_UPDATE_PRE_RELEASE;
+		this.appUpdater.allowPrerelease = this.arePreReleasesAllowed();
 		this.appUpdater.logger = updateLogger;
 		this.updateWindow = null;
+	}
+
+	public arePreReleasesAllowed(): boolean {
+		const execFolder = path.basename(app.getAppPath()); // Should return .../elevate-training/resources/ folder
+		const configFilePath = execFolder + "/config.ini";
+		if (fs.existsSync(configFilePath)) {
+			const config = ini.parse(fs.readFileSync(configFilePath, "utf-8"));
+			return (config && config.allowPrerelease === true);
+		}
+		return Updater.ENABLE_UPDATE_PRE_RELEASE;
 	}
 
 	public createUpdateWindow(): Promise<BrowserWindow> {
@@ -63,6 +75,8 @@ export class Updater {
 	}
 
 	public update(): Promise<UpdateInfo> {
+
+		logger.info("Allowing pre-releases upgrades: " + this.appUpdater.allowPrerelease);
 
 		return this.createUpdateWindow().then(updateWindow => {
 

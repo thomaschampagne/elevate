@@ -47,6 +47,7 @@
 		"electron-log": "^4.0.6",
 		"electron-updater": "^4.2.0",
 		"https-proxy-agent": "^5.0.0",
+		"ini": "^1.3.5",
 		"lodash": "^4.17.15",
 		"node-machine-id": "^1.1.12",
 		"pako": "^1.0.11",
