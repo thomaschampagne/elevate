@@ -13,6 +13,7 @@ import { adjectives, animals, colors, names, uniqueNamesGenerator } from "unique
 import _ from "lodash";
 import jdenticon from "jdenticon";
 import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
 
 class GeneratedStravaApiApplication {
 	public appName: string;
@@ -37,10 +38,11 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 	constructor(public stravaConnectorService: StravaConnectorService,
 				public desktopSyncService: DesktopSyncService,
 				public electronService: ElectronService,
+				public router: Router,
 				public snackBar: MatSnackBar,
 				public logger: LoggerService,
 				public dialog: MatDialog) {
-		super(electronService, dialog);
+		super(desktopSyncService, electronService, router, dialog);
 		this.isSynced = false;
 		this.generatedStravaApiApplication = null;
 		this.showConfigure = false;
@@ -123,8 +125,15 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 		});
 	}
 
-	public sync(fastSync: boolean = null): void {
-		this.stravaConnectorService.sync(fastSync);
+	public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
+		return super.sync().then(() => {
+			return this.stravaConnectorService.sync(fastSync, forceSync);
+		}).catch(err => {
+			if (err !== ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE) {
+				return Promise.reject(err);
+			}
+			return Promise.resolve();
+		});
 	}
 
 	public disconnect(): void {

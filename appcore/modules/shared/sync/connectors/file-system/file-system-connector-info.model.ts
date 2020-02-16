@@ -8,7 +8,7 @@ export class FileSystemConnectorInfo {
 	public extractArchiveFiles: boolean;
 	public deleteArchivesAfterExtract: boolean;
 
-	constructor(sourceDirectory: string, scanSubDirectories: boolean = false, deleteActivityFilesAfterSync: boolean = false,
+	constructor(sourceDirectory: string, scanSubDirectories: boolean = true, deleteActivityFilesAfterSync: boolean = false,
 				extractArchiveFiles: boolean = false, deleteArchivesAfterExtract: boolean = false) {
 		this.sourceDirectory = sourceDirectory;
 		this.scanSubDirectories = scanSubDirectories;

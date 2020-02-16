@@ -63,7 +63,7 @@ export class StravaConnectorService {
 	/**
 	 *
 	 */
-	public sync(fastSync: boolean = null): Promise<void> {
+	public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
 
 		const desktopSyncService = <DesktopSyncService> this.syncService;
 
@@ -77,7 +77,7 @@ export class StravaConnectorService {
 				});
 		});
 
-		return desktopSyncService.sync(fastSync, null, ConnectorType.STRAVA);
+		return desktopSyncService.sync(fastSync, forceSync, ConnectorType.STRAVA);
 	}
 
 }

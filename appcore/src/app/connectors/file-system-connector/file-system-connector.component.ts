@@ -6,6 +6,7 @@ import { ConnectorType, FileSystemConnectorInfo } from "@elevate/shared/sync";
 import { FileSystemConnectorInfoService } from "../../shared/services/file-system-connector-info/file-system-connector-info.service";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
 
 @Component({
 	selector: "app-file-system-connector",
@@ -18,11 +19,12 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
 	public fileSystemConnectorInfo: FileSystemConnectorInfo;
 
 	constructor(public fileSystemConnectorInfoService: FileSystemConnectorInfoService,
-				public syncService: DesktopSyncService,
+				public desktopSyncService: DesktopSyncService,
 				public electronService: ElectronService,
+				public router: Router,
 				public snackBar: MatSnackBar,
 				public dialog: MatDialog) {
-		super(electronService, dialog);
+		super(desktopSyncService, electronService, router, dialog);
 		this.showConfigure = false;
 		this.fileSystemConnectorInfo = null;
 	}
@@ -54,8 +56,14 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
 		this.fileSystemConnectorInfoService.save(this.fileSystemConnectorInfo);
 	}
 
-	public sync(): Promise<void> {
-		const desktopSyncService = <DesktopSyncService> this.syncService;
-		return desktopSyncService.sync(null, null, ConnectorType.FILE_SYSTEM);
+	public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
+		return super.sync().then(() => {
+			return this.desktopSyncService.sync(fastSync, forceSync, ConnectorType.FILE_SYSTEM);
+		}).catch(err => {
+			if (err !== ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE) {
+				return Promise.reject(err);
+			}
+			return Promise.resolve();
+		});
 	}
 }
