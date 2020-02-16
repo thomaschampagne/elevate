@@ -3,6 +3,10 @@ import { AthleteSnapshotModel } from "../athlete";
 import { BareActivityModel } from "./bare-activity.model";
 import { ConnectorType } from "../../sync/connectors";
 
+interface Extras {
+	strava_activity_id?: number;
+}
+
 export class SyncedActivityModel extends BareActivityModel {
 
 	public static readonly ID_FIELD: string = "id";
@@ -11,6 +15,6 @@ export class SyncedActivityModel extends BareActivityModel {
 	public extendedStats: AnalysisDataModel;
 	public athleteSnapshot: AthleteSnapshotModel;
 	public sourceConnectorType: ConnectorType;
-	public extras?: object = {};
+	public extras?: Extras = {};
 
 }

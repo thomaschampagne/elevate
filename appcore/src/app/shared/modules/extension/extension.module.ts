@@ -12,6 +12,8 @@ import { ExtensionImportBackupDialogComponent, } from "../../dialogs/import-back
 import { SyncDateTimeDao } from "../../dao/sync/sync-date-time-dao.service";
 import { ExtensionRoutingModule } from "./extension-routing.module";
 import { ExtensionAdvancedMenuComponent } from "../../../advanced-menu/extension/extension-advanced-menu.component";
+import { OPEN_RESOURCE_RESOLVER } from "../../services/links-opener/open-resource-resolver";
+import { ExtensionOpenResourceResolver } from "../../services/links-opener/impl/extension-open-resource-resolver.service";
 
 @NgModule({
 	imports: [
@@ -30,6 +32,7 @@ import { ExtensionAdvancedMenuComponent } from "../../../advanced-menu/extension
 		{provide: DataStore, useClass: ExtensionDataStore},
 		{provide: AppEventsService, useClass: ExtensionEventsService},
 		{provide: VERSIONS_PROVIDER, useClass: ExtensionVersionsProvider},
+		{provide: OPEN_RESOURCE_RESOLVER, useClass: ExtensionOpenResourceResolver},
 		{provide: SyncService, useClass: ExtensionSyncService},
 		ExtensionSyncService,
 	]

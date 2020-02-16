@@ -13,16 +13,7 @@ import {
 } from "@elevate/shared/sync";
 import * as jsonFakeActivitiesFixture from "./fixtures/sample_activities.fixture.json";
 import * as jsonFakeStreamsFixture from "./fixtures/sample_streams.fixture.json";
-import {
-	ActivityStreamsModel,
-	AthleteModel,
-	BareActivityModel,
-	ConnectorSyncDateTime,
-	EnvTarget,
-	Gender,
-	SyncedActivityModel,
-	UserSettings
-} from "@elevate/shared/models";
+import { ActivityStreamsModel, AthleteModel, BareActivityModel, ConnectorSyncDateTime, EnvTarget, Gender, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { Subject } from "rxjs";
 import { filter } from "rxjs/operators";
@@ -1407,7 +1398,7 @@ describe("StravaConnector", () => {
 				expect(activitySyncEventSent.activity.type).toEqual(expectedActivitySyncEvent.activity.type);
 				expect(activitySyncEventSent.activity.sourceConnectorType).toEqual(ConnectorType.STRAVA);
 				expect(activitySyncEventSent.compressedStream).not.toBeNull();
-				expect(activitySyncEventSent.activity.extras[StravaConnector.EXTRA_ACTIVITY_ID]).toEqual(expectedStravaId);
+				expect(activitySyncEventSent.activity.extras.strava_activity_id).toEqual(expectedStravaId);
 				expect(activitySyncEventSent.activity.athleteSnapshot).toEqual(stravaConnector.athleteSnapshotResolver.getCurrent());
 				expect(activitySyncEventSent.activity.extendedStats).not.toBeNull();
 				done();
