@@ -1,11 +1,10 @@
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, Inject, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import * as _ from "lodash";
-import { FitnessTrendComponent } from "../fitness-trend.component";
 import * as moment from "moment";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.model";
@@ -17,6 +16,7 @@ import { FitnessTrendColumnModel } from "./fitness-trend-column.model";
 import { FitnessTrendColumnType } from "./fitness-trend-column.enum";
 import { FitnessTrendActivitiesLinksDialogComponent } from "../fitness-trend-activities-links-dialog/fitness-trend-activities-links-dialog.component";
 import { LoggerService } from "../../shared/services/logging/logger.service";
+import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../../shared/services/links-opener/open-resource-resolver";
 
 @Component({
 	selector: "app-fitness-trend-table",
@@ -166,7 +166,8 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 	@ViewChild(MatSort, {static: true})
 	public matSort: MatSort;
 
-	constructor(public dialog: MatDialog,
+	constructor(@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
+				public dialog: MatDialog,
 				public logger: LoggerService) {
 	}
 
@@ -328,7 +329,7 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 				data: dayFitnessTrend
 			});
 		} else {
-			FitnessTrendComponent.openActivity(_.first(dayFitnessTrend.ids));
+			this.openResourceResolver.openActivity(_.first(dayFitnessTrend.ids));
 		}
 
 	}

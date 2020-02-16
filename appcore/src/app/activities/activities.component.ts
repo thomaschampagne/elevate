@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
@@ -24,6 +24,7 @@ import { Subject, timer } from "rxjs";
 import { debounce } from "rxjs/operators";
 import { StreamsService } from "../shared/services/streams/streams.service";
 import { environment } from "../../environments/environment";
+import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 import NumberColumn = ActivityColumns.NumberColumn;
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
@@ -39,6 +40,7 @@ export class ActivitiesComponent implements OnInit {
 				public streamsService: StreamsService,
 				public userSettingsService: UserSettingsService,
 				public appEventsService: AppEventsService,
+				@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
 				public snackBar: MatSnackBar,
 				public dialog: MatDialog,
 				public logger: LoggerService) {
@@ -299,6 +301,10 @@ export class ActivitiesComponent implements OnInit {
 			return;
 		}
 		this.searchText$.next(filterValue);
+	}
+
+	public openActivity(id: number | string) {
+		this.openResourceResolver.openActivity(id);
 	}
 
 	public onViewAthleteSettings(activity: SyncedActivityModel): void {

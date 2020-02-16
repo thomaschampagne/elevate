@@ -19,13 +19,20 @@ export class ActivityService {
 
 	/**
 	 *
-	 * @param minimalFields
 	 * @returns {Promise<SyncedActivityModel[]>} stored SyncedActivityModels
 	 */
 	public fetch(): Promise<SyncedActivityModel[]> {
 		return (<Promise<SyncedActivityModel[]>> this.activityDao.fetch()).then(activities => {
 			return Promise.resolve(_.sortBy(activities, "start_time"));
 		});
+	}
+
+	/**
+	 *
+	 * @param id
+	 */
+	public getById(id: number | string): Promise<SyncedActivityModel> {
+		return this.activityDao.getById(<string> id);
 	}
 
 	/**
