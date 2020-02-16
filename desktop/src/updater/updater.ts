@@ -85,7 +85,7 @@ export class Updater {
 			return new Promise((resolve, reject) => {
 
 				this.appUpdater.on(UpdateEvent.CHECKING_FOR_UPDATE, () => {
-					this.notifyUpdateStatus("Checking for update...");
+					this.notifyUpdateStatus("Checking for updates...");
 				});
 
 				this.appUpdater.on(UpdateEvent.UPDATE_AVAILABLE, (updateInfo: UpdateInfo) => {

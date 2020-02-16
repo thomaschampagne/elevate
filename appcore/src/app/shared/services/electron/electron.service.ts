@@ -45,6 +45,11 @@ export class ElectronService {
 		this.openItem(this.getAppDataPath());
 	}
 
+	public openAppExecFolder(): void {
+		const appPath = this.electron.remote.app.getAppPath();
+		this.openItem(appPath.substring(0, Math.max(appPath.lastIndexOf("/"), appPath.lastIndexOf("\\"))));
+	}
+
 	public clearAppDataAndRestart(): void {
 		const session = this.electron.remote.getCurrentWindow().webContents.session;
 		session.clearStorageData().then(() => {
