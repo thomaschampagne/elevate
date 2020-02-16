@@ -38,9 +38,9 @@ describe("ActivitiesComponent", () => {
 
 		spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
-		activityService = TestBed.get(ActivityService);
-		userSettingsService = TestBed.get(UserSettingsService);
-		syncService = TestBed.get(SyncService);
+		activityService = TestBed.inject(ActivityService);
+		userSettingsService = TestBed.inject(UserSettingsService);
+		syncService = TestBed.inject(SyncService);
 
 		// Mocking
 		spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));

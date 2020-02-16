@@ -1,23 +1,26 @@
 import { Inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
-import { MatDialog } from "@angular/material";
-import { DesktopAppGuardDialogComponent } from "./desktop-app-guard-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { IpcRendererMessagesService } from "../shared/services/messages-listener/ipc-renderer-messages.service";
+import { IpcRendererMessagesService } from "../../shared/services/messages-listener/ipc-renderer-messages.service";
 import { FlaggedIpcMessage, MessageFlag, RuntimeInfo } from "@elevate/shared/electron";
 import { concatMap, delay, retryWhen } from "rxjs/operators";
 import { of, throwError } from "rxjs";
 import { AthleteAccessChecker } from "./athlete-access-checker";
 import * as HttpCodes from "http-status-codes";
-import { LoggerService } from "../shared/services/logging/logger.service";
-import { DistributedEndpointsResolver } from "@elevate/shared/resolvers";
-import { environment } from "../../environments/environment.desktop";
-import { StravaApiCredentialsService } from "../shared/services/strava-api-credentials/strava-api-credentials.service";
-import { VERSIONS_PROVIDER, VersionsProvider } from "../shared/services/versions/versions-provider.interface";
+import { LoggerService } from "../../shared/services/logging/logger.service";
+import { environment } from "../../../environments/environment.desktop";
+import { StravaApiCredentialsService } from "../../shared/services/strava-api-credentials/strava-api-credentials.service";
+import { VERSIONS_PROVIDER, VersionsProvider } from "../../shared/services/versions/versions-provider.interface";
 import { StravaApiCredentials } from "@elevate/shared/sync";
+import { DesktopMigrationService } from "../migration/desktop-migration.service";
+import { ElevateException } from "@elevate/shared/exceptions";
+import { DesktopPreRunGuardDialogComponent } from "./desktop-pre-run-guard-dialog.component";
 
 @Injectable()
-export class DesktopAppGuardActivator implements CanActivate {
+export class DesktopPreRunGuard implements CanActivate {
+
+	private static readonly ATHLETE_ACCESS_API_URL = "https://api.elevate.duckdns.org/api/athlete/access";
 
 	private static readonly AUTH_RETRY_COUNT = 1;
 	private static readonly AUTH_RETRY_DELAY = 1000;
@@ -28,6 +31,7 @@ export class DesktopAppGuardActivator implements CanActivate {
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
 				public ipcRendererMessagesService: IpcRendererMessagesService,
 				public stravaApiCredentialsService: StravaApiCredentialsService,
+				public desktopMigrationService: DesktopMigrationService,
 				public httpClient: HttpClient,
 				public router: Router,
 				public dialog: MatDialog,
@@ -36,26 +40,24 @@ export class DesktopAppGuardActivator implements CanActivate {
 		this.isAccessAuthorized = false;
 	}
 
-	private static ATHLETE_ACCESS_API_URL() {
-		const currentBaseEndPoint = `${DistributedEndpointsResolver.resolve("https://elevate-prototype-${id}.herokuapp.com")}`;
-		return `${currentBaseEndPoint}/api/athlete/access`;
-	}
-
 	public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 
 		if (this.isAccessAuthorized || environment.bypassAthleteAccessCheck) {
 			return Promise.resolve(true);
 		}
 
-		return this.getRuntimeInfo().then(runtimeInfo => {
+		return this.desktopMigrationService.upgrade().then(() => {
+			return this.getRuntimeInfo();
+		}).then(runtimeInfo => {
 			this.runtimeInfo = runtimeInfo;
+		}).then(() => {
 			return this.checkAthleteAccess(this.runtimeInfo);
 		}).then(accessAuthorized => {
 
 			this.isAccessAuthorized = accessAuthorized;
 
 			if (!accessAuthorized) {
-				this.dialog.open(DesktopAppGuardDialogComponent, {
+				this.dialog.open(DesktopPreRunGuardDialogComponent, {
 					minHeight: "100%",
 					maxHeight: "100%",
 					minWidth: "100%",
@@ -70,6 +72,9 @@ export class DesktopAppGuardActivator implements CanActivate {
 			}
 
 			return Promise.resolve(accessAuthorized);
+		}).catch(error => {
+			this.logger.error(error);
+			throw new ElevateException(error);
 		});
 	}
 
@@ -80,7 +85,7 @@ export class DesktopAppGuardActivator implements CanActivate {
 	public checkAthleteAccess(runtimeInfo: RuntimeInfo, authRetry: boolean = false): Promise<boolean> {
 
 		return Promise.all([
-			this.versionsProvider.getInstalledAppVersion(),
+			this.versionsProvider.getPackageVersion(),
 			this.stravaApiCredentialsService.fetch()
 		]).then(result => {
 
@@ -91,21 +96,23 @@ export class DesktopAppGuardActivator implements CanActivate {
 
 				const athleteAccessBodyData = {
 					athleteMachineId: this.runtimeInfo.athleteMachineId,
-					version: installedVersion,
-					osPlatform: this.runtimeInfo.osPlatform,
+					version: {
+						name: installedVersion
+					},
+					osPlatform: `${this.runtimeInfo.osPlatform.name}; ${this.runtimeInfo.osPlatform.arch}`,
 					osUsername: this.runtimeInfo.osUsername,
 					memorySizeGb: this.runtimeInfo.memorySizeGb,
-					cpu: this.runtimeInfo.cpu,
+					cpu: `${this.runtimeInfo.cpu.name}; ${this.runtimeInfo.cpu.threads}`,
 					stravaAccount: (stravaApiCredentials.stravaAccount) ? stravaApiCredentials.stravaAccount : null
 				};
 
-				this.httpClient.post(DesktopAppGuardActivator.ATHLETE_ACCESS_API_URL(), athleteAccessBodyData, {responseType: "text"}).pipe(
+				this.httpClient.post(DesktopPreRunGuard.ATHLETE_ACCESS_API_URL, athleteAccessBodyData, {responseType: "text"}).pipe(
 					retryWhen(errors => errors.pipe(concatMap((error: HttpErrorResponse, tryIndex: number) => {
 						if (error.status === HttpCodes.UNAUTHORIZED) {
 							return throwError(error);
 						}
-						return ((tryIndex + 1) > DesktopAppGuardActivator.AUTH_RETRY_COUNT)
-							? throwError(error) : of(error).pipe(delay(DesktopAppGuardActivator.AUTH_RETRY_DELAY));
+						return ((tryIndex + 1) > DesktopPreRunGuard.AUTH_RETRY_COUNT)
+							? throwError(error) : of(error).pipe(delay(DesktopPreRunGuard.AUTH_RETRY_DELAY));
 					})))
 				).subscribe(authCode => {
 					const authenticated = this.verifyAthleteMachineId(this.runtimeInfo.athleteMachineId, authCode);
@@ -120,7 +127,7 @@ export class DesktopAppGuardActivator implements CanActivate {
 							this.checkAthleteAccess(runtimeInfo, true).then(isAuthenticated => {
 								resolve(isAuthenticated);
 							});
-						}, DesktopAppGuardActivator.AUTH_RETRY_DELAY);
+						}, DesktopPreRunGuard.AUTH_RETRY_DELAY);
 					}
 				}, error => {
 					resolve(false);

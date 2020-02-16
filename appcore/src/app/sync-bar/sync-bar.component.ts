@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, HostBinding, InjectionToken, OnInit } from "@angular/core";
 import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.service";
-import { ActivitySyncEvent, ErrorSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import { ActivitySyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { SyncException } from "@elevate/shared/exceptions";
 import * as moment from "moment";
 
@@ -76,6 +76,10 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 
 		if (this.isStopped) {
 			return;
+		}
+
+		if (syncEvent.type === SyncEventType.GENERIC) {
+			this.currentSyncEventText = syncEvent.description;
 		}
 
 		if (syncEvent.type === SyncEventType.ACTIVITY) {

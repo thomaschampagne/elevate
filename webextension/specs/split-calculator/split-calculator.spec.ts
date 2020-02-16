@@ -41,7 +41,7 @@ describe("SplitCalculator", () => {
 		// When
 		const call = () => {
 			const splitCalculator = new SplitCalculator(scale, data, maxScaleGapThreshold);
-			splitCalculator.getBestSplit(scaleRange, true);
+			splitCalculator.getBestSplit(scaleRange);
 		};
 
 		// Then
@@ -60,7 +60,7 @@ describe("SplitCalculator", () => {
 		// When
 		const call = () => {
 			const splitCalculator = new SplitCalculator(scale, data);
-			splitCalculator.getBestSplit(scaleRange, true);
+			splitCalculator.getBestSplit(scaleRange);
 		};
 
 		// Then
@@ -78,7 +78,7 @@ describe("SplitCalculator", () => {
 
 		// When
 		const splitCalculator = new SplitCalculator(scale, data);
-		const bestSplit = splitCalculator.getBestSplit(scaleRange, true);
+		const bestSplit = splitCalculator.getBestSplit(scaleRange);
 
 		// Then
 		expect(bestSplit).toEqual(50);
@@ -96,7 +96,7 @@ describe("SplitCalculator", () => {
 		// When
 		const splitCalculator = new SplitCalculator(scale, data);
 		const call = () => {
-			splitCalculator.getBestSplit(scaleRange, true);
+			splitCalculator.getBestSplit(scaleRange);
 		};
 
 		// Then
@@ -115,7 +115,7 @@ describe("SplitCalculator", () => {
 
 		// When
 		const splitCalculator = new SplitCalculator(timeScale, wattsData);
-		const riderFTP = splitCalculator.getBestSplit(scaleRange, true);
+		const riderFTP = splitCalculator.getBestSplit(scaleRange);
 
 		// Then
 		expect(Math.floor(riderFTP)).toEqual(expectedFTP);
@@ -144,5 +144,4 @@ describe("SplitCalculator", () => {
 
 		done();
 	});
-
 });

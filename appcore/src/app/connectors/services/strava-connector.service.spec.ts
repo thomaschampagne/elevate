@@ -3,7 +3,7 @@ import { TestBed } from "@angular/core/testing";
 import { StravaConnectorService } from "./strava-connector.service";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
-import { DesktopModule } from "../../shared/modules/desktop.module";
+import { DesktopModule } from "../../shared/modules/desktop/desktop.module";
 import { ElectronService, ElectronWindow } from "../../shared/services/electron/electron.service";
 
 describe("StravaConnectorService", () => {
@@ -16,7 +16,7 @@ describe("StravaConnectorService", () => {
 			]
 		}).compileComponents();
 
-		const electronService: ElectronService = TestBed.get(ElectronService);
+		const electronService: ElectronService = TestBed.inject(ElectronService);
 		electronService.instance = <Electron.RendererInterface> {
 			ipcRenderer: {}
 		};
@@ -33,7 +33,7 @@ describe("StravaConnectorService", () => {
 	});
 
 	it("should be created", () => {
-		const service: StravaConnectorService = TestBed.get(StravaConnectorService);
+		const service: StravaConnectorService = TestBed.inject(StravaConnectorService);
 		expect(service).toBeTruthy();
 	});
 });

@@ -52,7 +52,7 @@ export class FitnessTrendComponent implements OnInit {
 	public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
 	public static readonly LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY: string = "fitnessTrend_EBikeRidesEnabled";
 
-	@ViewChild(FitnessTrendInputsComponent, {static: false})
+	@ViewChild(FitnessTrendInputsComponent)
 	public fitnessTrendInputsComponent: FitnessTrendInputsComponent;
 
 	public fitnessTrend: DayFitnessTrendModel[];
@@ -157,26 +157,6 @@ export class FitnessTrendComponent implements OnInit {
 			key: "beginning",
 			label: "Since beginning"
 		}];
-	}
-
-	public static openActivity(id: number) {
-		if (_.isNumber(id)) {
-			const url = "https://www.strava.com/activities/{activityId}";
-			window.open(url.replace("{activityId}", id.toString()), "_blank");
-		} else {
-			throw new Error("No activity found");
-		}
-	}
-
-	public static openActivities(ids: number[]) {
-		if (ids.length > 0) {
-			const url = "https://www.strava.com/activities/{activityId}";
-			_.forEach(ids, (id: number) => {
-				window.open(url.replace("{activityId}", id.toString()), "_blank");
-			});
-		} else {
-			throw new Error("No activities found");
-		}
 	}
 
 	public ngOnInit(): void {

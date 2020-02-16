@@ -1,26 +1,31 @@
 {
-	"name": "elevate",
+	"name": "elevate-training",
 	"description": "Elevate your training experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...",
-	"version": "7.0.0-prototype.0",
+	"version": "7.0.0-alpha.1",
 	"scripts": {
 		"assert-app-exists": "node -e \"if ((require('fs').existsSync('./dist/app/')) === false) {console.log('Please run & wait for \\'npm start\\' task before.\\n\\n\\n\\n');process.exit(1);}\";",
 		"build:metadata": "node -e \"console.log('{\\\"commit\\\": \\\"' + require('child_process').execSync('git rev-parse HEAD').toString().trim() + '\\\", \\\"date\\\": \\\"' + (new Date()).toISOString() + '\\\"}')\" > build_metadata.json",
 		"build:appcore@dev": "npm run build:metadata && cd ../appcore/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build --outputPath=../desktop/dist/app/ --base-href --configuration=desktop",
 		"build:appcore@prod": "npm run build:appcore@dev -- --base-href --configuration=desktop-prod",
-		"build:electron@dev": "rollup --config rollup.config.js",
-		"build:electron@prod": "npm run build:electron@dev -- --environment ELECTRON_ENV:prod",
-		"clean": "npx npm-run-all clean:*",
+		"build:updater@dev": "node ../node_modules/cpy-cli/cli.js ./src/updater/window/index.html ./dist/updater/ && rollup --config rollup-updater.config.js",
+		"build:updater@prod": "npm run build:updater@dev -- --environment ELECTRON_ENV:prod",
+		"build:electron@base": "rollup --config rollup-app.config.js",
+		"build:electron@dev": "npm run build:updater@dev && npm run build:electron@base",
+		"build:electron@prod": "npm run build:updater@prod && npm run build:electron@base -- --environment ELECTRON_ENV:prod",
+		"build:prod": "npm-run-all clean build:electron@prod build:appcore@prod",
+		"clean": "npm-run-all clean:*",
 		"clean:dist": "node ../node_modules/del-cli/cli.js ./dist/",
 		"clean:package": "node ../node_modules/del-cli/cli.js ./package/",
 		"clean:metadata": "node ../node_modules/del-cli/cli.js ./build_metadata.json",
 		"launch:electron": "npm run assert-app-exists && run-electron ./dist/desktop.bundle.js",
-		"package:windows": "npx npm-run-all clean build:electron@prod build:appcore@prod && electron-builder build --windows --x64",
-		"package:linux": "npx npm-run-all clean build:electron@prod build:appcore@prod && electron-builder build --linux --x64",
+		"package:windows": "npm run build:prod && electron-builder build --windows --x64 --publish onTagOrDraft",
+		"package:linux": "npm run build:prod && electron-builder build --linux --x64 --publish onTagOrDraft",
+		"package:mac": "npm run build:prod && electron-builder build --mac --x64",
 		"start": "npm run watch",
 		"test": "jest --coverage",
 		"tslint": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./src/**/*.ts --fix",
-		"watch": "npm run clean && npx npm-run-all --print-label --race --parallel watch:electron watch:appcore",
-		"watch:electron": "npm run build:electron@dev -- --watch",
+		"watch": "npm run clean && node ../node_modules/cpy-cli/cli.js ./dev-app-update.yml ./dist && npm-run-all --print-label --race --parallel watch:electron watch:appcore",
+		"watch:electron": "npm run build:electron@dev -- -- --watch",
 		"watch:appcore": "npm run build:appcore@dev -- --watch"
 	},
 	"config": {
@@ -38,37 +43,41 @@
 	"license": "MIT",
 	"readme": "README.md",
 	"dependencies": {
-		"electron-log": "^3.0.9",
-		"https-proxy-agent": "^2.2.4",
+		"@rollup/plugin-json": "^4.0.2",
+		"electron-log": "^4.0.6",
+		"electron-updater": "^4.2.0",
+		"https-proxy-agent": "^5.0.0",
 		"lodash": "^4.17.15",
 		"node-machine-id": "^1.1.12",
-		"pako": "^1.0.10",
+		"pako": "^1.0.11",
 		"promise-tron": "^2.1.0",
 		"querystring": "^0.2.0",
-		"rxjs": "^6.5.3",
-		"typed-rest-client": "^1.5.0"
+		"rxjs": "^6.5.4",
+		"typed-rest-client": "^1.7.1",
+		"vue": "^2.6.11"
 	},
 	"devDependencies": {
-		"@types/jest": "^24.0.18",
-		"@types/lodash": "^4.14.140",
-		"@types/node": "^12.7.8",
+		"@types/jest": "^25.1.2",
+		"@types/lodash": "^4.14.149",
+		"@types/node": "^12.12.27",
 		"@types/pako": "^1.0.1",
 		"devtron": "^1.4.0",
-		"electron": "^7.1.1",
-		"electron-builder": "^22.1.0",
-		"electron-reloader": "^0.3.0",
-		"jest": "^24.9.0",
-		"jest-config": "^24.9.0",
-		"rollup": "^1.26.5",
-		"rollup-plugin-commonjs": "^10.1.0",
-		"rollup-plugin-node-resolve": "^5.2.0",
-		"rollup-plugin-sourcemaps": "^0.4.2",
-		"rollup-plugin-terser": "^5.1.2",
-		"rollup-plugin-typescript2": "^0.25.2",
+		"electron": "^8.0.1",
+		"electron-builder": "^22.3.2",
+		"electron-reloader": "^1.0.0",
+		"jest": "^25.1.0",
+		"jest-config": "^25.1.0",
+		"npm-run-all": "^4.1.5",
+		"rollup": "^1.31.1",
+		"@rollup/plugin-commonjs": "^11.0.2",
+		"@rollup/plugin-node-resolve": "^7.1.1",
+		"rollup-plugin-sourcemaps": "^0.5.0",
+		"rollup-plugin-terser": "^5.2.0",
+		"rollup-plugin-typescript2": "^0.26.0",
 		"run-electron": "^1.0.0",
-		"ts-jest": "^24.1.0",
-		"tslint": "^5.20.1",
-		"typescript": "^3.6.3"
+		"ts-jest": "^25.2.0",
+		"tslint": "^6.0.0",
+		"typescript": "^3.7.5"
 	},
 	"build": {
 		"appId": "com.elevate.app",
@@ -79,9 +88,18 @@
 		"files": [
 			"!**/*",
 			"./dist/**/*.*",
-			"./build/**/*.*"
+			"./build/**/*.*",
+			"./node_modules/**/*"
 		],
+		"publish": {
+			"provider": "github",
+			"owner": "thomaschampagne",
+			"repo": "elevate-alpha",
+			"vPrefixedTagName": false
+		},
 		"win": {
+			"publisherName": "Thomas Champagne",
+			"verifyUpdateCodeSignature": false,
 			"target": [
 				{
 					"target": "nsis",
@@ -101,6 +119,15 @@
 			"target": [
 				"deb"
 			]
+		},
+		"nsis": {
+			"deleteAppDataOnUninstall": true,
+			"artifactName": "elevate_installer.${ext}"
+		},
+		"deb": {
+			"maintainer": "Thomas Champagne",
+			"category": "Sports",
+			"artifactName": "elevate_installer.${ext}"
 		}
 	},
 	"main": "./dist/desktop.bundle.js"

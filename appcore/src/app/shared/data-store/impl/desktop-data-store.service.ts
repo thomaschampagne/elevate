@@ -8,10 +8,12 @@ import PouchDBDebug from "pouchdb-debug";
 import { LoggerService } from "../../services/logging/logger.service";
 import * as _ from "lodash";
 import { StorageType } from "../storage-type.enum";
-import { Gzip } from "@elevate/shared/tools/gzip";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../../services/versions/versions-provider.interface";
 import { DesktopDumpModel } from "../../models/dumps/desktop-dump.model";
 import { AppUsage } from "../../models/app-usage.model";
+import { ActivityDao } from "../../dao/activity/activity.dao";
+import { Gzip } from "@elevate/shared/tools";
+import { StreamsDao } from "../../dao/streams/streams.dao";
 import FindRequest = PouchDB.Find.FindRequest;
 
 @Injectable()
@@ -33,7 +35,16 @@ export class DesktopDataStore<T> extends DataStore<T> {
 	public static readonly POUCH_DB_DELETED_FIELD: string = "_deleted";
 	public static readonly POUCH_DB_REV_FIELD: string = "_rev";
 
-	public database: PouchDB.Database<T[] | T>;
+	public static readonly DATABASES: { main: PouchDB.Database, activities: PouchDB.Database, streams: PouchDB.Database } = {
+		main: null,
+		activities: null,
+		streams: null,
+	};
+
+	public static readonly STORAGE_TO_DB_MAP: { storageKey: string, dbKey: string, database?: PouchDB.Database }[] = [
+		{storageKey: ActivityDao.STORAGE_LOCATION.key, dbKey: "activities"},
+		{storageKey: StreamsDao.STORAGE_LOCATION.key, dbKey: "streams"}
+	];
 
 	public static getDbIdSelectorByStorageLocation(storageLocation: StorageLocationModel): PouchDB.Find.ConditionOperators {
 		const selector = (storageLocation.storageType === StorageType.COLLECTION) ?
@@ -43,8 +54,19 @@ export class DesktopDataStore<T> extends DataStore<T> {
 	}
 
 	public setup(): void {
+
 		PouchDB.plugin(PouchDBFind); // Register find plugin
-		this.database = new PouchDB(DesktopDataStore.POUCH_DB_NAME, {auto_compaction: true});
+		const options = {auto_compaction: true};
+		DesktopDataStore.DATABASES.main = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_main", options);
+		DesktopDataStore.DATABASES.activities = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_activities", options);
+		DesktopDataStore.DATABASES.streams = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_streams", options);
+
+		// Update STORAGE_TO_DB_MAP with the proper associated database
+		DesktopDataStore.STORAGE_TO_DB_MAP.forEach(entry => {
+			entry.database = DesktopDataStore.DATABASES[entry.dbKey];
+		});
+
+		(<any> window).elevateDatabases = DesktopDataStore.DATABASES;
 
 		if (DesktopDataStore.POUCH_DB_DEBUG) {
 			PouchDB.plugin(PouchDBDebug); // Register debug plugin
@@ -52,9 +74,16 @@ export class DesktopDataStore<T> extends DataStore<T> {
 		}
 	}
 
+	public provideDatabase(storageKey: string): PouchDB.Database<T[] | T> {
+		const foundEntry = _.find(DesktopDataStore.STORAGE_TO_DB_MAP, {storageKey: storageKey});
+		return <PouchDB.Database<T[] | T>> ((foundEntry) ? foundEntry.database : DesktopDataStore.DATABASES.main);
+	}
+
 	public clear(storageLocation: StorageLocationModel): Promise<void> {
 
-		return this.database.find({
+		const database = this.provideDatabase(storageLocation.key);
+
+		return database.find({
 			selector: {
 				_id: DesktopDataStore.getDbIdSelectorByStorageLocation(storageLocation)
 			},
@@ -72,13 +101,12 @@ export class DesktopDataStore<T> extends DataStore<T> {
 						return doc;
 					});
 
-					promise = this.database.bulkDocs(result.docs);
+					promise = database.bulkDocs(result.docs);
 
 				} else if (storageLocation.storageType === StorageType.OBJECT || storageLocation.storageType === StorageType.SINGLE_VALUE) {
 
-					promise = this.database.remove(result.docs[0][DesktopDataStore.POUCH_DB_ID_FIELD],
+					promise = database.remove(result.docs[0][DesktopDataStore.POUCH_DB_ID_FIELD],
 						result.docs[0][DesktopDataStore.POUCH_DB_REV_FIELD]);
-
 				} else {
 					throw new Error("Unknown StorageType");
 				}
@@ -104,17 +132,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 				DesktopDataStore.getDbIdSelectorByStorageLocation(storageLocation));
 		}
 
-		return this.database.find(findRequest);
-	}
-
-	public createIndexes(indexes: string[]): Promise<PouchDB.Find.CreateIndexResponse<T[] | T>> {
-
-		const indexesToCreate = _.without(indexes, DesktopDataStore.POUCH_DB_ID_FIELD);
-		return this.database.createIndex({
-			index: {
-				fields: indexesToCreate
-			}
-		});
+		return this.provideDatabase(storageLocation.key).find(findRequest);
 	}
 
 	public fetch(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T, findRequest?: FindRequest<T[] | T>): Promise<T[] | T> {
@@ -148,35 +166,62 @@ export class DesktopDataStore<T> extends DataStore<T> {
 	}
 
 	public createDump(): Promise<Blob> {
-		return this.database.allDocs({include_docs: true, attachments: true}).then(docs => {
 
-			const dump: DesktopDumpModel = new DesktopDumpModel();
-
-			// Remove revision field before export
-			dump.gzippedDocs = Gzip.toBinaryString(JSON.stringify(docs.rows.map(wrappedDoc => {
+		const prepare = docs => {
+			return docs.rows.map(wrappedDoc => {
 				delete wrappedDoc.doc[DesktopDataStore.POUCH_DB_REV_FIELD];
 				return wrappedDoc.doc;
-			})));
+			});
+		};
 
-			return this.versionsProvider.getInstalledAppVersion().then(version => {
-				dump.version = version;
-				const blob = new Blob([dump.serialize()], {type: "application/gzip"});
+		const options = {include_docs: true, attachments: true};
+
+		const databases: any = {};
+
+		return DesktopDataStore.DATABASES.main.allDocs(options).then(mainDocs => {
+			databases.main = prepare(mainDocs);
+			return DesktopDataStore.DATABASES.activities.allDocs(options);
+		}).then(activitiesDocs => {
+			databases.activities = prepare(activitiesDocs);
+			return DesktopDataStore.DATABASES.streams.allDocs(options);
+		}).then(streamsDocs => {
+			databases.streams = prepare(streamsDocs);
+
+			const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel();
+
+			// Remove revision field before export
+			desktopDumpModel.gzippedDatabases = Gzip.pack(JSON.stringify(databases));
+			return this.versionsProvider.getPackageVersion().then(version => {
+				desktopDumpModel.version = version;
+				const blob = new Blob([desktopDumpModel.serialize()], {type: "application/gzip"});
 				return Promise.resolve(blob);
 			});
+
 		});
 	}
 
 
 	public loadDump(dump: DesktopDumpModel): Promise<void> {
-
-		// TODO "version" of dump should compared to "the current code version".
 		return new Promise((resolve, reject) => {
 			try {
-				const inflatedDump = Gzip.fromBinaryString(dump.gzippedDocs);
-				const dumpObj = JSON.parse(inflatedDump);
-				this.database.destroy().then(() => {
-					this.setup(); // Recreate database
-					return this.database.bulkDocs(dumpObj);
+				const inflatedDatabases = Gzip.unpack(dump.gzippedDatabases);
+				const databases = JSON.parse(inflatedDatabases);
+
+				const cleanDatabasesPromise = DesktopDataStore.DATABASES.main.destroy().then(() => {
+					return DesktopDataStore.DATABASES.activities.destroy();
+				}).then(() => {
+					return DesktopDataStore.DATABASES.streams.destroy();
+				}).then(() => {
+					this.setup(); // Recreate databases
+					return Promise.resolve();
+				});
+
+				cleanDatabasesPromise.then(() => {
+					return DesktopDataStore.DATABASES.main.bulkDocs(databases.main);
+				}).then(() => {
+					return DesktopDataStore.DATABASES.activities.bulkDocs(databases.activities);
+				}).then(() => {
+					return DesktopDataStore.DATABASES.streams.bulkDocs(databases.streams);
 				}).then(() => {
 					resolve();
 				}).catch(error => {
@@ -189,10 +234,11 @@ export class DesktopDataStore<T> extends DataStore<T> {
 		});
 	}
 
-
 	public save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T> {
 
 		let savePromise: Promise<T[] | T>;
+
+		const database = this.provideDatabase(storageLocation.key);
 
 		if (storageLocation.storageType === StorageType.COLLECTION || storageLocation.storageType === StorageType.OBJECT) {
 
@@ -233,7 +279,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 					// Now apply all changes to collection
 					const docsChanges = _.union(removeDocs, putDocs);
-					promise = this.database.bulkDocs(docsChanges);
+					promise = database.bulkDocs(docsChanges);
 
 				} else if (storageLocation.storageType === StorageType.OBJECT) {
 
@@ -244,7 +290,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 						value[DesktopDataStore.POUCH_DB_DOCTYPE_FIELD] = storageLocation.key;
 					}
 
-					promise = this.database.put(value);
+					promise = database.put(value);
 				}
 
 				return promise.then(() => {
@@ -268,7 +314,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 				newDoc[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD] = value;
 
-				return this.database.put(newDoc).then(() => {
+				return database.put(newDoc).then(() => {
 					return this.fetch(storageLocation, defaultStorageValue);
 				});
 
@@ -289,7 +335,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 			id = (hasIdKeyPrefix) ? id : (keyPrefix + id);
 		}
 
-		return this.database.get(id).then(result => {
+		return this.provideDatabase(storageLocation.key).get(id).then(result => {
 
 			if (storageLocation.storageType === StorageType.SINGLE_VALUE) {
 				return <Promise<T>> Promise.resolve(result[DesktopDataStore.POUCH_DB_SINGLE_VALUE_FIELD]);
@@ -308,6 +354,8 @@ export class DesktopDataStore<T> extends DataStore<T> {
 	}
 
 	public put(storageLocation: StorageLocationModel, value: T): Promise<T> {
+
+		const database = this.provideDatabase(storageLocation.key);
 
 		const promisePutDocReady = () => {
 
@@ -329,7 +377,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
 			} else if (storageLocation.storageType === StorageType.SINGLE_VALUE) {
 
-				return this.database.get(storageLocation.key).then(doc => {
+				return database.get(storageLocation.key).then(doc => {
 
 					// Just update
 					doc[DesktopDataStore.POUCH_DB_REV_FIELD] = doc[DesktopDataStore.POUCH_DB_REV_FIELD];
@@ -351,9 +399,30 @@ export class DesktopDataStore<T> extends DataStore<T> {
 		};
 
 		return promisePutDocReady().then(putDoc => {
-			return this.database.put(putDoc);
+			return database.put(putDoc);
 		}).then(result => {
 			return this.getById(storageLocation, result.id);
+		});
+	}
+
+	public removeByIds(storageLocation: StorageLocationModel, ids: (string | number)[], defaultStorageValue: T[] | T): Promise<T | T[]> {
+
+		if (storageLocation.storageType !== StorageType.COLLECTION) {
+			return Promise.reject("removeByIds must be called on a collection only");
+		}
+
+		const database = this.provideDatabase(storageLocation.key);
+		return ids.reduce((previousPromise, id: string | number) => {
+			return previousPromise.then(() => {
+				return this.getById(storageLocation, <string> id).then((doc: PouchDB.Core.ExistingDocument<T>) => {
+					return database.remove(doc);
+				}).then(() => {
+					return Promise.resolve();
+				});
+			});
+
+		}, Promise.resolve()).then(() => {
+			return this.fetch(storageLocation, defaultStorageValue);
 		});
 	}
 

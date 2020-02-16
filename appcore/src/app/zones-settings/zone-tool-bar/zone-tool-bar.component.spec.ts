@@ -41,7 +41,7 @@ describe("ZoneToolBarComponent", () => {
 			]
 		}).compileComponents();
 
-		userSettingsService = TestBed.get(UserSettingsService);
+		userSettingsService = TestBed.inject(UserSettingsService);
 		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 		done();
 	});

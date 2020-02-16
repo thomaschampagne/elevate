@@ -2,14 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { ActivityService } from "./activity.service";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import * as _ from "lodash";
-import {
-	AthleteModel,
-	AthleteSettingsModel,
-	AthleteSnapshotModel,
-	DatedAthleteSettingsModel,
-	Gender,
-	SyncedActivityModel
-} from "@elevate/shared/models";
+import { AthleteModel, AthleteSettingsModel, AthleteSnapshotModel, DatedAthleteSettingsModel, Gender, SyncedActivityModel } from "@elevate/shared/models";
 import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/fake-synced-activity.helper";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
@@ -32,7 +25,7 @@ describe("ActivityService", () => {
 		_TEST_SYNCED_ACTIVITIES_ = _.cloneDeep(TEST_SYNCED_ACTIVITIES);
 
 		// Retrieve injected service
-		activityService = TestBed.get(ActivityService);
+		activityService = TestBed.inject(ActivityService);
 
 		done();
 	});
@@ -47,7 +40,7 @@ describe("ActivityService", () => {
 		it("should fetch activities", (done: Function) => {
 
 			// Given
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
 			// When
@@ -119,7 +112,7 @@ describe("ActivityService", () => {
 			});
 		});
 
-		it("should remove SyncedActivityModel by strava activity ids", (done: Function) => {
+		it("should remove SyncedActivityModel by activity ids", (done: Function) => {
 
 			// Given
 			const activitiesToDelete = [
@@ -203,7 +196,7 @@ describe("ActivityService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
@@ -276,7 +269,7 @@ describe("ActivityService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
@@ -349,7 +342,7 @@ describe("ActivityService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
@@ -416,7 +409,7 @@ describe("ActivityService", () => {
 				null,
 				false));
 
-			const fetchDaoSpy = spyOn(activityService.activityDao, "fetchMinimalFields")
+			const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")

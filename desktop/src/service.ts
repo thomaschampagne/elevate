@@ -55,10 +55,6 @@ export class Service {
 	private _machineId: string;
 	private _runtimeInfo: RuntimeInfo;
 
-	public static currentPlatform(): string {
-		return os.platform();
-	}
-
 	public static instance(): Service {
 		if (!Service._instance) {
 			Service._instance = new Service();
@@ -66,15 +62,27 @@ export class Service {
 		return Service._instance;
 	}
 
+	public isWindows(): boolean {
+		return this.getRuntimeInfo().osPlatform.name === Service.PLATFORM.WINDOWS;
+	}
+
+	public isLinux(): boolean {
+		return this.getRuntimeInfo().osPlatform.name === Service.PLATFORM.LINUX;
+	}
+
+	public isMacOS(): boolean {
+		return this.getRuntimeInfo().osPlatform.name === Service.PLATFORM.MACOS;
+	}
+
 	public getRuntimeInfo(): RuntimeInfo {
 
 		if (!this._runtimeInfo) {
 			const osPlatform = {name: os.platform(), arch: os.arch()};
-			const osHostname = os.hostname();
-			const osUsername = os.userInfo().username;
+			const osHostname = os.hostname().trim();
+			const osUsername = os.userInfo().username.trim();
 			const osMachineId = machineIdSync();
 			const athleteMachineId = crypto.createHash("sha1").update(osMachineId + ":" + osUsername).digest("hex");
-			const cpuName = {name: os.cpus()[0].model, threads: os.cpus().length};
+			const cpuName = {name: os.cpus()[0].model.trim(), threads: os.cpus().length};
 			const memorySize = Math.round(((os.totalmem() / 1024) / 1024) / 1024);
 			this._runtimeInfo = new RuntimeInfo(osPlatform, osHostname, osUsername, osMachineId, athleteMachineId, cpuName, memorySize);
 		}
@@ -83,6 +91,6 @@ export class Service {
 
 	public printRuntimeInfo(): string {
 		const runtimeInfo = this.getRuntimeInfo();
-		return `Hostname ${runtimeInfo.osHostname}; Platform ${runtimeInfo.osPlatform.name} ${runtimeInfo.osPlatform.arch}; Cpu ${runtimeInfo.cpu.name}; Memory ${runtimeInfo.memorySizeGb}GB; athleteMachineId ${runtimeInfo.athleteMachineId}`;
+		return `Hostname ${runtimeInfo.osHostname}; Platform ${runtimeInfo.osPlatform.name} ${runtimeInfo.osPlatform.arch}; Cpu ${runtimeInfo.cpu.name}; Memory ${runtimeInfo.memorySizeGb}GB; athleteMachineId ${runtimeInfo.athleteMachineId}; Node v${process.versions.node}`;
 	}
 }

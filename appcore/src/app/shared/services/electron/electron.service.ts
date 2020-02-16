@@ -2,6 +2,7 @@ import * as Electron from "electron";
 import { Injectable } from "@angular/core";
 import * as _ from "lodash";
 import { ChildProcess } from "child_process";
+import { LoggerService } from "../logging/logger.service";
 
 declare let window: ElectronWindow;
 
@@ -14,25 +15,73 @@ export class ElectronService {
 
 	public instance: Electron.RendererInterface;
 
-	constructor() {
+	constructor(public logger: LoggerService) {
 		this.forwardHtmlLinkClicksToDefaultBrowser();
 	}
 
 	public forwardHtmlLinkClicksToDefaultBrowser(): void {
 		document.querySelector("body").addEventListener("click", (event: any) => {
-			if (event.target.tagName.toLowerCase() === "a") {
+			if (event.target.tagName.toLowerCase() === "a" && !event.target.attributes.download) {
 				event.preventDefault();
-				this.electron.shell.openExternal(event.target.href);
+				this.openExternalUrl(event.target.href);
 			}
 		});
 	}
 
-	public get electron(): Electron.RendererInterface {
+	public openExternalUrl(url: string): void {
+		this.electron.shell.openExternal(url);
+	}
 
+	public openItem(path: string): void {
+		this.electron.shell.openItem(path);
+	}
+
+	public openLogFile(): void {
+		const logPath = this.getAppDataPath() + "log.log";
+		this.openItem(logPath);
+	}
+
+	public openAppDataFolder(): void {
+		this.openItem(this.getAppDataPath());
+	}
+
+	public clearAppDataAndRestart(): void {
+		const session = this.electron.remote.getCurrentWindow().webContents.session;
+		session.clearStorageData().then(() => {
+			return session.clearCache();
+		}).then(() => {
+			return session.clearAuthCache(null);
+		}).then(() => {
+			return session.clearHostResolverCache();
+		}).then(() => {
+			this.restart();
+		});
+	}
+
+	public rmDirSync(path: string): void {
+		const fs = this.getNodeFsModule();
+		if (fs.existsSync(path)) {
+			fs.readdirSync(path).forEach(file => {
+				const curPath = path + "/" + file;
+				if (fs.lstatSync(curPath).isDirectory()) { // recurse
+					this.rmDirSync(curPath);
+				} else { // delete file
+					fs.unlinkSync(curPath);
+				}
+			});
+			fs.rmdirSync(path);
+		}
+	}
+
+	public restart(): void {
+		this.electron.remote.app.relaunch();
+		this.electron.remote.app.exit(0);
+	}
+
+	public get electron(): Electron.RendererInterface {
 		if (!this.instance) {
 			this.instance = window.require("electron");
 		}
-
 		return this.instance;
 	}
 
@@ -65,6 +114,13 @@ export class ElectronService {
 	 */
 	public getNodeFsModule(): any {
 		return this.require("fs");
+	}
+
+	/**
+	 *
+	 */
+	public getAppDataPath(): string {
+		return this.electron.remote.app.getPath("appData") + "/" + this.electron.remote.app.name + "/";
 	}
 
 	/**

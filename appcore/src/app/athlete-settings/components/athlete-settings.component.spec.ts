@@ -26,8 +26,8 @@ describe("AthleteSettingsComponent", () => {
 			]
 		}).compileComponents();
 
-		userSettingsService = TestBed.get(UserSettingsService);
-		athleteService = TestBed.get(AthleteService);
+		userSettingsService = TestBed.inject(UserSettingsService);
+		athleteService = TestBed.inject(AthleteService);
 
 		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 		spyOn(athleteService, "fetch").and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));

@@ -9,6 +9,15 @@ import * as HttpCodes from "http-status-codes";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { ElectronService } from "../../shared/services/electron/electron.service";
+import { adjectives, animals, colors, names, uniqueNamesGenerator } from "unique-names-generator";
+import _ from "lodash";
+import jdenticon from "jdenticon";
+
+class GeneratedStravaApiApplication {
+	public appName: string;
+	public webSite: string;
+	public imageFileName: string;
+}
 
 @Component({
 	selector: "app-strava-connector",
@@ -20,6 +29,9 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 	public stravaApiCredentials: StravaApiCredentials;
 	public expiresAt: string;
 	public isSynced: boolean;
+	public generatedStravaApiApplication: GeneratedStravaApiApplication;
+	public showConfigure: boolean;
+	public showHowTo: boolean;
 
 	constructor(public stravaConnectorService: StravaConnectorService,
 				public desktopSyncService: DesktopSyncService,
@@ -27,6 +39,10 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 				public snackBar: MatSnackBar,
 				public logger: LoggerService) {
 		super();
+		this.isSynced = false;
+		this.generatedStravaApiApplication = null;
+		this.showConfigure = false;
+		this.showHowTo = false;
 	}
 
 	public ngOnInit(): void {
@@ -40,6 +56,15 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 
 		this.stravaConnectorService.stravaApiCredentials$.subscribe((stravaApiCredentials: StravaApiCredentials) => {
 			this.handleCredentialsChanges(stravaApiCredentials);
+		});
+	}
+
+	public refreshRandomStravaApiApplication(): void {
+		this.randomStravaApiApplication().then((generatedStravaApiApplication: GeneratedStravaApiApplication) => {
+			this.generatedStravaApiApplication = generatedStravaApiApplication;
+			setTimeout(() => jdenticon.update("#appIcon", this.generatedStravaApiApplication.appName));
+		}).catch(err => {
+			throw err;
 		});
 	}
 
@@ -76,6 +101,8 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 	public stravaAuthentication(): void {
 		this.stravaConnectorService.authenticate().then((stravaApiCredentials: StravaApiCredentials) => {
 			this.stravaApiCredentials = stravaApiCredentials;
+			this.showConfigure = false;
+			this.showHowTo = false;
 		}).catch(error => {
 
 			let errorMessage = null;
@@ -84,6 +111,8 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 				errorMessage = "Unauthorized access to strava. Check your client id and client secret.";
 			} else if (error.statusCode === HttpCodes.FORBIDDEN) {
 				errorMessage = "Forbidden access to strava. Please check your client id and client secret.";
+			} else if (error.code === "EADDRINUSE") {
+				errorMessage = "A Strava login window is already opened. Please use it.";
 			} else {
 				throw error;
 			}
@@ -100,4 +129,44 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 		this.resetTokens();
 	}
 
+	public randomStravaApiApplication(): Promise<GeneratedStravaApiApplication> {
+
+		return new Promise(resolve => {
+
+			this.logger.info("Generating a random strava api application");
+
+			const appNameDictionaries = Math.floor(Math.random() * 10) % 2 === 0 ? [colors, adjectives, animals] : [adjectives, colors, names];
+
+			const appName = uniqueNamesGenerator({
+				dictionaries: appNameDictionaries,
+				style: "lowerCase",
+				separator: " "
+			});
+
+			const webSite = "https://" + uniqueNamesGenerator({
+				dictionaries: [adjectives, names],
+				style: "lowerCase",
+				separator: ".",
+				length: 2
+			}) + "." + ["com", "org", "io"][Math.floor(Math.random() * 10) % 3];
+
+			const imageFileName = Math.floor(Math.random() * 10000000).toString(16) + ".png";
+
+			resolve({
+				appName: _.upperFirst(appName),
+				imageFileName: imageFileName,
+				webSite: webSite
+			});
+
+		});
+	}
+
+	public onConfigure(): void {
+		this.showConfigure = true;
+	}
+
+	public onHowToClicked(): void {
+		this.showHowTo = true;
+		this.refreshRandomStravaApiApplication();
+	}
 }

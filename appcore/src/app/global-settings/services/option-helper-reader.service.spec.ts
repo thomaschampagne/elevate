@@ -15,8 +15,8 @@ describe("OptionHelperReaderService", () => {
 			providers: [OptionHelperReaderService, HttpClient]
 		});
 
-		http = TestBed.get(HttpClient);
-		optionHelperReaderService = TestBed.get(OptionHelperReaderService);
+		http = TestBed.inject(HttpClient);
+		optionHelperReaderService = TestBed.inject(OptionHelperReaderService);
 		done();
 	});
 

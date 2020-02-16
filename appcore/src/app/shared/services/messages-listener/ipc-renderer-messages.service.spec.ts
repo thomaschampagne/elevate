@@ -1,7 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 
 import { IpcRendererMessagesService } from "./ipc-renderer-messages.service";
-import { DesktopModule } from "../../modules/desktop.module";
+import { DesktopModule } from "../../modules/desktop/desktop.module";
 import { SharedModule } from "../../shared.module";
 import { CoreModule } from "../../../core/core.module";
 import { ElectronService, ElectronWindow } from "../electron/electron.service";
@@ -24,7 +24,7 @@ describe("IpcRendererMessagesService", () => {
 			]
 		});
 
-		const electronService: ElectronService = TestBed.get(ElectronService);
+		const electronService: ElectronService = TestBed.inject(ElectronService);
 		electronService.instance = <Electron.RendererInterface> {
 			ipcRenderer: {}
 		};
@@ -37,7 +37,7 @@ describe("IpcRendererMessagesService", () => {
 		electronWindow.require = electronRequire;
 		spyOn(electronWindow, "require").and.callFake(electronRequire);
 
-		ipcRendererMessagesService = TestBed.get(IpcRendererMessagesService);
+		ipcRendererMessagesService = TestBed.inject(IpcRendererMessagesService);
 		spyOn(ipcRendererMessagesService.promiseTron, "on").and.stub();
 		ipcRendererMessagesService.listen();
 		done();

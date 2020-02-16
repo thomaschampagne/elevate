@@ -18,9 +18,6 @@ import { EditDatedAthleteSettingsDialogComponent } from "./components/edit-dated
 		DatedAthleteSettingsManagerComponent,
 		SwimFtpHelperComponent,
 		EditDatedAthleteSettingsDialogComponent
-	],
-	entryComponents: [
-		EditDatedAthleteSettingsDialogComponent
 	]
 })
 export class AthleteSettingsModule {

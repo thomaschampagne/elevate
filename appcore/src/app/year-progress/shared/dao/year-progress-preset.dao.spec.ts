@@ -19,7 +19,7 @@ describe("YearProgressPresetDao", () => {
 			]
 		});
 
-		yearProgressPresetDao = TestBed.get(YearProgressPresetDao);
+		yearProgressPresetDao = TestBed.inject(YearProgressPresetDao);
 		done();
 	});
 

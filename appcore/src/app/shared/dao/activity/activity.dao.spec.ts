@@ -26,7 +26,7 @@ describe("ActivityDao", () => {
 		});
 
 		// Retrieve injected service
-		activityDao = TestBed.get(ActivityDao);
+		activityDao = TestBed.inject(ActivityDao);
 		done();
 	});
 
@@ -34,40 +34,4 @@ describe("ActivityDao", () => {
 		expect(activityDao).toBeTruthy();
 		done();
 	});
-
-	it("should remove SyncedActivityModel by strava activity ids", (done: Function) => {
-
-		// Given
-		const activitiesToDelete = [
-			302537043, // Chamrousse 1750
-			296692980, // Fondo 100
-		];
-
-		const expectedExistingActivity = 353633586; // Venon PR 01
-
-		// When
-		const promise: Promise<SyncedActivityModel[]> = activityDao.removeByIds(activitiesToDelete);
-
-		// Then
-		promise.then((result: SyncedActivityModel[]) => {
-
-			expect(result.length).toEqual(_TEST_SYNCED_ACTIVITIES_.length - activitiesToDelete.length);
-
-			let activity = _.find(result, {id: activitiesToDelete[0]});
-			expect(_.isEmpty(activity)).toBeTruthy();
-
-			activity = _.find(result, {id: activitiesToDelete[1]});
-			expect(_.isEmpty(activity)).toBeTruthy();
-
-			activity = _.find(result, {id: expectedExistingActivity});
-			expect(_.isEmpty(activity)).toBeFalsy();
-
-			done();
-
-		}, error => {
-			expect(error).toBeNull();
-			done();
-		});
-	});
-
 });

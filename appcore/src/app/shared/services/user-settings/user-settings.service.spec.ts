@@ -23,7 +23,7 @@ describe("UserSettingsService", () => {
 		});
 
 		// Retrieve injected service
-		userSettingsService = TestBed.get(UserSettingsService);
+		userSettingsService = TestBed.inject(UserSettingsService);
 		done();
 	});
 
@@ -64,7 +64,7 @@ describe("UserSettingsService", () => {
 		// Given
 		const key = "displayAdvancedHrData";
 		const displayAdvancedHrData = false;
-		const userSettingsData = <ExtensionUserSettingsModel>UserSettings.getDefaultsByEnvTarget(EnvTarget.EXTENSION);
+		const userSettingsData = <ExtensionUserSettingsModel> UserSettings.getDefaultsByEnvTarget(EnvTarget.EXTENSION);
 		const expectedSettings: ExtensionUserSettingsModel = _.cloneDeep(userSettingsData);
 		expectedSettings.displayAdvancedHrData = displayAdvancedHrData;
 
@@ -72,7 +72,7 @@ describe("UserSettingsService", () => {
 			.and.returnValue(Promise.resolve(expectedSettings));
 
 		// When
-		const promiseUpdate: Promise<ExtensionUserSettingsModel> = <Promise<ExtensionUserSettingsModel>>userSettingsService.saveProperty<boolean>(key, displayAdvancedHrData);
+		const promiseUpdate: Promise<ExtensionUserSettingsModel> = <Promise<ExtensionUserSettingsModel>> userSettingsService.saveProperty<boolean>(key, displayAdvancedHrData);
 
 		// Then
 		promiseUpdate.then((result: ExtensionUserSettingsModel) => {

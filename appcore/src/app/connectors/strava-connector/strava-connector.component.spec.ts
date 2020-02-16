@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { StravaConnectorComponent } from "./strava-connector.component";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
-import { DesktopModule } from "../../shared/modules/desktop.module";
+import { DesktopModule } from "../../shared/modules/desktop/desktop.module";
 import { ElectronService, ElectronWindow } from "../../shared/services/electron/electron.service";
 
 describe("StravaConnectorComponent", () => {
@@ -20,7 +20,7 @@ describe("StravaConnectorComponent", () => {
 			]
 		}).compileComponents();
 
-		const electronService: ElectronService = TestBed.get(ElectronService);
+		const electronService: ElectronService = TestBed.inject(ElectronService);
 		electronService.instance = <Electron.RendererInterface> {
 			ipcRenderer: {}
 		};

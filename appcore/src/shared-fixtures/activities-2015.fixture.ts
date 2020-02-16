@@ -9,8 +9,7 @@ import { SyncedActivityModel } from "@elevate/shared/models";
  // Copy paste all this code (upper line included). then enter...
  // You should see activities synced locally between dates from and to
  chrome.storage.local.get(null,(result) => {
-
-	let activitiesBetweenDates = _.filter(result.syncedActivities, (activity) => {
+ let activitiesBetweenDates = _.filter(result.syncedActivities, (activity) => {
 		return (from <= new Date(activity.start_time) && new Date(activity.start_time) <= to);
 	});
 	activitiesBetweenDates = _.sortBy(activitiesBetweenDates, (item) => {
@@ -39,14 +38,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 202.969212372,
 	"commute": null,
 	"display_type": "Entraînement",
 	"distance_raw": 2388.7,
 	"elapsed_time_raw": 1195,
 	"elevation_gain_raw": 2,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -143,8 +140,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 237250976,
 	"moving_time_raw": 1058,
 	"name": "Reprise course à pied",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-01-05T14:30:44+0000",
 	"trainer": false,
 	"type": "Run"
@@ -160,14 +156,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 94.58323115,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 4524.1,
 	"elapsed_time_raw": 701,
 	"elevation_gain_raw": 63,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 67.23985890652557,
@@ -282,8 +276,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 239185425,
 	"moving_time_raw": 701,
 	"name": "10/01/2015 Meylan, RA, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-01-10T11:57:15+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -299,14 +292,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 922.0196344849999,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 39127.2,
 	"elapsed_time_raw": 6567,
 	"elevation_gain_raw": 604,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 69.88344396720031,
@@ -413,8 +404,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 239185861,
 	"moving_time_raw": 6101,
 	"name": "Murianette low perfs :(",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-01-10T13:26:41+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -430,14 +420,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 335.68067082399995,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 19183.9,
 	"elapsed_time_raw": 4022,
 	"elevation_gain_raw": 98,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 68.2213567839196,
@@ -552,8 +540,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 239727858,
 	"moving_time_raw": 3704,
 	"name": "Sortie Républicaine",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-01-11T14:32:39+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -569,14 +556,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": null,
 	"commute": null,
 	"display_type": "Ski alpin",
 	"distance_raw": 54052.4,
 	"elapsed_time_raw": 25712,
 	"elevation_gain_raw": 4765,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -638,8 +623,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 245459929,
 	"moving_time_raw": 11574,
 	"name": "\"Professeur\" de ski à Chamrousse",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-01-24T08:50:56+0000",
 	"trainer": false,
 	"type": "AlpineSki"
@@ -655,14 +639,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": null,
 	"commute": null,
 	"display_type": "Ski alpin",
 	"distance_raw": 55809.7,
 	"elapsed_time_raw": 23211,
 	"elevation_gain_raw": 5263.2,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -728,8 +710,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 248932866,
 	"moving_time_raw": 11365,
 	"name": "\"Professeur\" de ski à Chamrousse. Ep2",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-01-31T08:40:23+0000",
 	"trainer": false,
 	"type": "AlpineSki"
@@ -745,14 +726,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": null,
 	"commute": null,
 	"display_type": "Ski alpin",
 	"distance_raw": 120438,
 	"elapsed_time_raw": 24956,
 	"elevation_gain_raw": 12933,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -814,8 +793,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 251641603,
 	"moving_time_raw": 17827,
 	"name": "Val Thorens avec Pierre et Vik",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-02-07T08:03:06+0000",
 	"trainer": false,
 	"type": "AlpineSki"
@@ -831,14 +809,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 612.849856896,
 	"commute": null,
 	"display_type": "Course",
 	"distance_raw": 7184.5,
 	"elapsed_time_raw": 3004,
 	"elevation_gain_raw": 54.2,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -931,8 +907,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 260637750,
 	"moving_time_raw": 2901,
 	"name": "New ankle test (re-up by strava)",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-02-26T17:09:31+0000",
 	"trainer": false,
 	"type": "Run"
@@ -948,14 +923,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 824321,
 	"calories": 189.180177915,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 12610.9,
 	"elapsed_time_raw": 3697,
 	"elevation_gain_raw": 25,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -1037,8 +1010,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 262615809,
 	"moving_time_raw": 2010,
 	"name": "Supeerr Markettt !!",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-03-03T17:22:33+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -1054,14 +1026,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 1337.33663075,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 64561.5,
 	"elapsed_time_raw": 10346,
 	"elevation_gain_raw": 703,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 68.2588461077126,
@@ -1176,8 +1146,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 264280115,
 	"moving_time_raw": 10018,
 	"name": "Reprise",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-03-07T12:18:17+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -1193,14 +1162,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": null,
 	"commute": null,
 	"display_type": "Ski alpin",
 	"distance_raw": 81220.2,
 	"elapsed_time_raw": 20907,
 	"elevation_gain_raw": 9760.6,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -1266,8 +1233,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 264947554,
 	"moving_time_raw": 14551,
 	"name": "Les 7 Laux avec Vik, 130 kph :)",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-03-08T07:47:10+0000",
 	"trainer": false,
 	"type": "AlpineSki"
@@ -1283,14 +1249,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 495.069616875,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 22476.4,
 	"elapsed_time_raw": 2544,
 	"elevation_gain_raw": 86,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 79.43247721623861,
@@ -1397,8 +1361,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 270802574,
 	"moving_time_raw": 2525,
 	"name": "Mini Turbo",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-03-19T17:35:22+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -1414,14 +1377,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 1509.906791925,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 62729.5,
 	"elapsed_time_raw": 14770,
 	"elevation_gain_raw": 1030,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 66.39622204195156,
@@ -1540,8 +1501,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 271244292,
 	"moving_time_raw": 10045,
 	"name": "Reprise ep2",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-03-20T12:41:37+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -1557,14 +1517,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 621.0536976800001,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 30715.8,
 	"elapsed_time_raw": 4019,
 	"elevation_gain_raw": 130,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 77.16856457896314,
@@ -1679,8 +1637,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 273477702,
 	"moving_time_raw": 3952,
 	"name": "Train",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-03-24T17:35:03+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -1696,14 +1653,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 887.2320213900001,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 51939.9,
 	"elapsed_time_raw": 7637,
 	"elevation_gain_raw": 216,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 72.3490977443609,
@@ -1818,8 +1773,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 274883979,
 	"moving_time_raw": 7566,
 	"name": "Relax ep 01",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-03-27T15:04:14+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -1835,14 +1789,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 679.476534425,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 36507.8,
 	"elapsed_time_raw": 4927,
 	"elevation_gain_raw": 145,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 72.33978220574606,
@@ -1949,8 +1901,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 275456782,
 	"moving_time_raw": 4927,
 	"name": "Relax ep 02",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-03-28T14:32:01+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -1966,14 +1917,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 559.1831713304999,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 40451.4,
 	"elapsed_time_raw": 17667,
 	"elevation_gain_raw": 234,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 50.75324543610547,
@@ -2092,8 +2041,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 282212953,
 	"moving_time_raw": 8647,
 	"name": "Picnic",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-06T09:02:44+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -2109,14 +2057,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 461.88127281,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 25904.3,
 	"elapsed_time_raw": 3709,
 	"elevation_gain_raw": 102,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 71.79096937164509,
@@ -2235,8 +2181,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 282212940,
 	"moving_time_raw": 3634,
 	"name": "Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-07T16:15:57+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -2252,14 +2197,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 67.7253917955,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 3619.9,
 	"elapsed_time_raw": 1316,
 	"elevation_gain_raw": 111,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 74.22457627118644,
@@ -2366,8 +2309,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 282212296,
 	"moving_time_raw": 849,
 	"name": "Puncture !",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-08T16:26:20+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -2383,14 +2325,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 481.84372214,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 27730.9,
 	"elapsed_time_raw": 3899,
 	"elevation_gain_raw": 91,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 69.33850746268656,
@@ -2505,8 +2445,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 282212375,
 	"moving_time_raw": 3883,
 	"name": "Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-09T16:45:52+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -2522,14 +2461,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 818.072004475,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 31469,
 	"elapsed_time_raw": 5610,
 	"elevation_gain_raw": 567,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 71.99688697318008,
@@ -2644,8 +2581,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 284737783,
 	"moving_time_raw": 4895,
 	"name": "Pérérrée",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-13T15:59:16+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -2661,14 +2597,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 907.3793154200001,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 35194.2,
 	"elapsed_time_raw": 7803,
 	"elevation_gain_raw": 672,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 68.76873875674595,
@@ -2783,8 +2717,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 285393369,
 	"moving_time_raw": 5839,
 	"name": "Pérérrée",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-14T16:14:52+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -2800,14 +2733,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 672.3802652200001,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 31451.8,
 	"elapsed_time_raw": 4481,
 	"elevation_gain_raw": 235,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 72.93457432247467,
@@ -2914,8 +2845,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 286667453,
 	"moving_time_raw": 4286,
 	"name": "Train",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-16T16:29:13+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -2931,14 +2861,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 1039.91747215,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 49583.7,
 	"elapsed_time_raw": 9866,
 	"elevation_gain_raw": 305,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 75.12729869666131,
@@ -3045,8 +2973,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 287794642,
 	"moving_time_raw": 6410,
 	"name": "Train",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-18T12:47:34+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -3062,14 +2989,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 1165.9384193150001,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 48077.6,
 	"elapsed_time_raw": 6844,
 	"elevation_gain_raw": 621,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 75.38994143988977,
@@ -3176,8 +3101,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 289256521,
 	"moving_time_raw": 6689,
 	"name": "Pérérrée",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-20T16:11:00+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -3193,14 +3117,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 998.1949437300001,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 39291.5,
 	"elapsed_time_raw": 5688,
 	"elevation_gain_raw": 672,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 76.42428362267309,
@@ -3315,8 +3237,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 289885825,
 	"moving_time_raw": 5591,
 	"name": "Murianette - Pinet // Burned !",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-21T16:21:12+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -3332,14 +3253,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 1147.4593403400002,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 44186.2,
 	"elapsed_time_raw": 7815,
 	"elevation_gain_raw": 830,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 67.51126690035052,
@@ -3458,8 +3377,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 290654204,
 	"moving_time_raw": 7156,
 	"name": "Saint-Jean-le-Vieux - Revel",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-22T16:11:38+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -3475,14 +3393,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 834.8754882100001,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 40534.2,
 	"elapsed_time_raw": 5423,
 	"elevation_gain_raw": 203,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 72.03725184028552,
@@ -3597,8 +3513,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 291227883,
 	"moving_time_raw": 5267,
 	"name": "Train",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-23T16:26:44+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -3614,14 +3529,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 270.64587672,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 16061.7,
 	"elapsed_time_raw": 2384,
 	"elevation_gain_raw": 64,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 62.71908396946565,
@@ -3736,8 +3649,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 294194932,
 	"moving_time_raw": 2384,
 	"name": "24/04/2015 Meylan, RA, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-24T16:39:30+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -3753,21 +3665,18 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": null,
 	"commute": false,
 	"display_type": "Natation",
 	"distance_raw": 0,
 	"elapsed_time_raw": 2100,
 	"elevation_gain_raw": 0,
-	"elevation_unit": "m",
 	"extendedStats": null,
 	"hasPowerMeter": null,
 	"id": 350019578,
 	"moving_time_raw": 2100,
 	"name": "Swimming, breaststroke, general - MyFitnessPal",
-	"private": false,
-	"short_unit": "m",
+
 	"start_time": "2015-04-29T10:00:00+0000",
 	"trainer": false,
 	"type": "Swim"
@@ -3783,14 +3692,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 835.55686248,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 30797.7,
 	"elapsed_time_raw": 6083,
 	"elevation_gain_raw": 611,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 70.64291139240507,
@@ -3897,8 +3804,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 294909522,
 	"moving_time_raw": 4946,
 	"name": "Pérrérée et Pschitt",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-29T16:16:43+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -3914,14 +3820,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 956.57403864,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 40002.6,
 	"elapsed_time_raw": 6874,
 	"elevation_gain_raw": 588,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 69.44788650839607,
@@ -4036,8 +3940,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 295523202,
 	"moving_time_raw": 6204,
 	"name": "Pérrérée et pas Pschitt",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-04-30T16:20:03+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -4053,14 +3956,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 2153.039182175,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 101824,
 	"elapsed_time_raw": 15509,
 	"elevation_gain_raw": 814,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 71.66230594802023,
@@ -4167,8 +4068,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 296692980,
 	"moving_time_raw": 13405,
 	"name": "Fondo 100",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-05-02T11:18:26+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -4184,14 +4084,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 951.2261373800002,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 39237.2,
 	"elapsed_time_raw": 6646,
 	"elevation_gain_raw": 676,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 70.30935102633215,
@@ -4298,8 +4196,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 299340910,
 	"moving_time_raw": 6089,
 	"name": "Pérrérée",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-05-06T15:59:48+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -4315,14 +4212,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 2069.902777405,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 105867,
 	"elapsed_time_raw": 13366,
 	"elevation_gain_raw": 283,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 79.63053078188588,
@@ -4429,8 +4324,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 301786155,
 	"moving_time_raw": 12773,
 	"name": "100k @ 30kph",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-05-10T10:26:22+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -4446,14 +4340,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 1894.1709824399998,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 69259.1,
 	"elapsed_time_raw": 12575,
 	"elevation_gain_raw": 1701,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 75.19801874733703,
@@ -4560,8 +4452,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 302537043,
 	"moving_time_raw": 11066,
 	"name": "Chamrousse 1750",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-05-11T14:29:34+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -4577,14 +4468,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 1477.6289546300002,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 60100.7,
 	"elapsed_time_raw": 11205,
 	"elevation_gain_raw": 1172,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 67.11181957728185,
@@ -4699,8 +4588,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 303080029,
 	"moving_time_raw": 10399,
 	"name": "Col de Clémencière + Pérérrée",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-05-12T13:07:05+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -4716,14 +4604,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 819.2678364,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 31605,
 	"elapsed_time_raw": 4694,
 	"elevation_gain_raw": 559,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 69.28950103950103,
@@ -4838,8 +4724,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 304491323,
 	"moving_time_raw": 4584,
 	"name": "Pérérrée",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-05-14T15:20:54+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -4855,14 +4740,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 596.337656585,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 37078.1,
 	"elapsed_time_raw": 5232,
 	"elevation_gain_raw": 53,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 68.50064571674558,
@@ -4977,8 +4860,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 313660900,
 	"moving_time_raw": 5203,
 	"name": "F**k CalcaneoNavicular EP 01",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-05-28T16:23:16+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -4994,14 +4876,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 618.2974618339999,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 39682.7,
 	"elapsed_time_raw": 6108,
 	"elevation_gain_raw": 71,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 69.04056774713106,
@@ -5108,8 +4988,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 316281840,
 	"moving_time_raw": 5801,
 	"name": "30/05/2015 Meylan, RA, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-05-30T13:12:19+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -5125,14 +5004,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 527.08110966,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 23501.3,
 	"elapsed_time_raw": 4585,
 	"elevation_gain_raw": 311,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 70.52399232245682,
@@ -5247,8 +5124,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 316282392,
 	"moving_time_raw": 4116,
 	"name": "Plouf !",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-01T16:22:00+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -5264,14 +5140,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 421.42695988500003,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 24769.8,
 	"elapsed_time_raw": 3804,
 	"elevation_gain_raw": 97,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 67.46450973918785,
@@ -5390,8 +5264,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 319062713,
 	"moving_time_raw": 3681,
 	"name": "Corenc Cyclisme",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-02T16:17:26+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -5407,14 +5280,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 364.37182941599997,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 22786.4,
 	"elapsed_time_raw": 3590,
 	"elevation_gain_raw": 39,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 67.83388765705838,
@@ -5514,9 +5385,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"hasPowerMeter": false,
 	"id": 322731272,
 	"moving_time_raw": 3528,
-	"name": "Private",
-	"private": true,
-	"short_unit": "km",
+
+
 	"start_time": "2015-06-10T17:00:39+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -5532,14 +5402,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 518.443524665,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 27238.5,
 	"elapsed_time_raw": 4769,
 	"elevation_gain_raw": 56,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 70.18715536814791,
@@ -5646,8 +5514,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 323354228,
 	"moving_time_raw": 4219,
 	"name": "Papy fait de la résistance aux bléssures",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-11T16:34:52+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -5663,14 +5530,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 720.18775896,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 34939,
 	"elapsed_time_raw": 5282,
 	"elevation_gain_raw": 165,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 70.72252891692955,
@@ -5777,8 +5642,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 324511047,
 	"moving_time_raw": 5052,
 	"name": "13/06/2015 Meylan, RA, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-13T13:08:56+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -5794,14 +5658,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 230.37576558599997,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 14358.2,
 	"elapsed_time_raw": 2186,
 	"elevation_gain_raw": 32,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 67.88478535353535,
@@ -5906,8 +5768,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 327425583,
 	"moving_time_raw": 2186,
 	"name": "14/06/2015 Meylan, RA, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-14T13:34:53+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -5923,14 +5784,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 243.49256493,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 14351.2,
 	"elapsed_time_raw": 2154,
 	"elevation_gain_raw": 31,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 69.20825574177529,
@@ -6027,8 +5886,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 327425606,
 	"moving_time_raw": 2154,
 	"name": "15/06/2015 Meylan, RA, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-15T16:03:13+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -6044,14 +5902,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 678.8782131600001,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 37323.6,
 	"elapsed_time_raw": 5068,
 	"elevation_gain_raw": 49,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 71.04236232245204,
@@ -6158,8 +6014,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 327425584,
 	"moving_time_raw": 5068,
 	"name": "17/06/2015 Meylan, RA, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-17T15:59:21+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -6175,14 +6030,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 181.63908168999998,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 8947.9,
 	"elapsed_time_raw": 1073,
 	"elevation_gain_raw": 17,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 79.29709364908504,
@@ -6301,8 +6154,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 328043275,
 	"moving_time_raw": 1073,
 	"name": "Oups 1/2",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-18T15:59:10+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -6318,14 +6170,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 690.38845405,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 29319.4,
 	"elapsed_time_raw": 5222,
 	"elevation_gain_raw": 487,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 68.10143995885832,
@@ -6440,8 +6290,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 328196791,
 	"moving_time_raw": 5186,
 	"name": "Oups 2/2",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-18T16:17:42+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -6457,14 +6306,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 953.55583176,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 39845.9,
 	"elapsed_time_raw": 6458,
 	"elevation_gain_raw": 609,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 72.64798671647986,
@@ -6571,8 +6418,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 328739521,
 	"moving_time_raw": 6384,
 	"name": "Test Aeroad CF SLX",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-19T16:03:36+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -6588,14 +6434,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 412.80061186000006,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 19958.7,
 	"elapsed_time_raw": 3329,
 	"elevation_gain_raw": 201,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 73.14101423487544,
@@ -6710,8 +6554,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 329236603,
 	"moving_time_raw": 3068,
 	"name": "20/06/2015 Meylan, RA, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-20T09:14:40+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -6727,14 +6570,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 577.25843555,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 30618.5,
 	"elapsed_time_raw": 5028,
 	"elevation_gain_raw": 82,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 71.94411860540893,
@@ -6849,8 +6690,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 329236648,
 	"moving_time_raw": 4439,
 	"name": "Reeduc",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-20T12:09:43+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -6866,14 +6706,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 342.20952032,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 18217.2,
 	"elapsed_time_raw": 2575,
 	"elevation_gain_raw": 38,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 71.44331872946331,
@@ -6980,8 +6818,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 329349712,
 	"moving_time_raw": 2528,
 	"name": ".",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-20T14:39:07+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -6997,14 +6834,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1289.355777925,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 51897.3,
 	"elapsed_time_raw": 8704,
 	"elevation_gain_raw": 873,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 73.15392994804759,
@@ -7111,8 +6946,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 330098749,
 	"moving_time_raw": 8335,
 	"name": "Pinet - St Jean le vieux",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-21T13:43:51+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -7128,14 +6962,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 987.94664423,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 38201.1,
 	"elapsed_time_raw": 5759,
 	"elevation_gain_raw": 552,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 77.12787810383747,
@@ -7250,8 +7082,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 330753578,
 	"moving_time_raw": 5558,
 	"name": "22/06/2015 Meylan, Rhone-Alpes, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-22T16:08:30+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -7267,14 +7098,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1113.2518361,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 46969,
 	"elapsed_time_raw": 7528,
 	"elevation_gain_raw": 567,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 73.88532196969697,
@@ -7381,8 +7210,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 332833796,
 	"moving_time_raw": 7220,
 	"name": "Mal au derrière !",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-25T16:02:43+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -7398,14 +7226,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1494.60247475,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 60850.6,
 	"elapsed_time_raw": 10124,
 	"elevation_gain_raw": 939,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 74.28662083553675,
@@ -7520,8 +7346,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 333536909,
 	"moving_time_raw": 9647,
 	"name": "Balcon de Belledone",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-26T15:49:37+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -7537,14 +7362,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 2579.5925608350003,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 104155,
 	"elapsed_time_raw": 17364,
 	"elevation_gain_raw": 1528,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 72.7558311880802,
@@ -7659,8 +7482,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 334111753,
 	"moving_time_raw": 16311,
 	"name": "Pallaquit - Porte - Placette",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-27T11:20:30+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -7676,14 +7498,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1180.9330285149997,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 54779.7,
 	"elapsed_time_raw": 8933,
 	"elevation_gain_raw": 580,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 67.98689924724957,
@@ -7798,8 +7618,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 335068858,
 	"moving_time_raw": 8639,
 	"name": "Recup",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-28T13:07:57+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -7815,14 +7634,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 871.78388148,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 33952.9,
 	"elapsed_time_raw": 4968,
 	"elevation_gain_raw": 529,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 76.84448462929475,
@@ -7937,8 +7754,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 335573787,
 	"moving_time_raw": 4868,
 	"name": "20:31",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-29T16:29:35+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -7954,14 +7770,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1090.84674735,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 47288.3,
 	"elapsed_time_raw": 5417,
 	"elevation_gain_raw": 117,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 82.27388815499779,
@@ -8076,8 +7890,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 336354220,
 	"moving_time_raw": 5290,
 	"name": "32.2 kph",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-06-30T17:38:55+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -8093,14 +7906,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1423.0161185999998,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 52222.9,
 	"elapsed_time_raw": 8905,
 	"elevation_gain_raw": 1008,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 69.9775804995486,
@@ -8215,8 +8026,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 337740078,
 	"moving_time_raw": 8403,
 	"name": "Col de Palaquit mon kiki !",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-02T16:18:52+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -8232,14 +8042,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1265.7555195599998,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 58179.5,
 	"elapsed_time_raw": 7030,
 	"elevation_gain_raw": 136,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 76.12000349101065,
@@ -8354,8 +8162,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 340466401,
 	"moving_time_raw": 6934,
 	"name": "__________",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-06T16:37:17+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -8371,14 +8178,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 723.377179665,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 29302.2,
 	"elapsed_time_raw": 4760,
 	"elevation_gain_raw": 491,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 70.10217842323651,
@@ -8493,8 +8298,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 341057035,
 	"moving_time_raw": 4683,
 	"name": "__/\\__",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-07T16:15:08+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -8510,14 +8314,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 303.20390125,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 15048.5,
 	"elapsed_time_raw": 12197,
 	"elevation_gain_raw": 99,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 73.09547888161808,
@@ -8610,8 +8412,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 342901792,
 	"moving_time_raw": 2182,
 	"name": "08/07/2015 Meylan, RA, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-08T16:23:02+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -8627,14 +8428,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 3846.37527972,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 141925,
 	"elapsed_time_raw": 22033,
 	"elevation_gain_raw": 2052,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 78.24111585972719,
@@ -8749,8 +8548,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 343080886,
 	"moving_time_raw": 19671,
 	"name": "Alpe d'Huez",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-10T08:58:32+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -8766,14 +8564,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 797.6640056049998,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 40452.4,
 	"elapsed_time_raw": 5970,
 	"elevation_gain_raw": 140,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 72.5420848540146,
@@ -8888,8 +8684,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 344445749,
 	"moving_time_raw": 5549,
 	"name": "11/07/2015 Meylan, Rhone-Alpes, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-11T15:36:20+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -8905,14 +8700,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 824309,
 	"calories": 811.238814837,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 33423.8,
 	"elapsed_time_raw": 12207,
 	"elevation_gain_raw": 631,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -8990,8 +8783,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 344445817,
 	"moving_time_raw": 9218,
 	"name": "MTB",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-12T09:17:59+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -9007,14 +8799,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 462.91715241,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 26312.3,
 	"elapsed_time_raw": 11935,
 	"elevation_gain_raw": 117,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -9092,8 +8882,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 345256833,
 	"moving_time_raw": 4029,
 	"name": ".",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-12T14:08:29+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -9109,14 +8898,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 824309,
 	"calories": 544.447407262,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 13069.3,
 	"elapsed_time_raw": 15655,
 	"elevation_gain_raw": 776,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -9208,8 +8995,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 345256865,
 	"moving_time_raw": 7522,
 	"name": "MTB Biathlon en chartreuse et en douleur",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-13T09:21:49+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -9225,14 +9011,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 503.73786726899993,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 30728.6,
 	"elapsed_time_raw": 14608,
 	"elevation_gain_raw": 105,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -9310,8 +9094,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 346420018,
 	"moving_time_raw": 5382,
 	"name": ".",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-14T10:45:08+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -9327,14 +9110,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 818.932846915,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 37835.1,
 	"elapsed_time_raw": 5168,
 	"elevation_gain_raw": 144,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 77.03375032577534,
@@ -9427,8 +9208,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 346420035,
 	"moving_time_raw": 4769,
 	"name": ".",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-14T15:31:11+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -9444,14 +9224,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 2909.6918420399998,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 123791,
 	"elapsed_time_raw": 16362,
 	"elevation_gain_raw": 739,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 81.97129204605312,
@@ -9566,8 +9344,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 346535547,
 	"moving_time_raw": 15336,
 	"name": "Lac de Paladru @ 29 kph",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-15T08:27:00+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -9583,14 +9360,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1941.264781405,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 73266.2,
 	"elapsed_time_raw": 14399,
 	"elevation_gain_raw": 1437,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 67.23485384848792,
@@ -9697,8 +9472,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 348186050,
 	"moving_time_raw": 12797,
 	"name": "Monteymont - Les Adrets",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-17T12:35:01+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -9714,14 +9488,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1124.0665779,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 47324.7,
 	"elapsed_time_raw": 10001,
 	"elevation_gain_raw": 496,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 68.40069905000897,
@@ -9836,8 +9608,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 348840376,
 	"moving_time_raw": 7530,
 	"name": "Vive le vent avec vik",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-18T15:08:52+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -9853,14 +9624,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 166.24429676,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 10164.7,
 	"elapsed_time_raw": 8020,
 	"elevation_gain_raw": 60,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -9938,8 +9707,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 349674579,
 	"moving_time_raw": 1928,
 	"name": ".",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-19T14:00:16+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -9955,14 +9723,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 174.616828638,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 10902.8,
 	"elapsed_time_raw": 1869,
 	"elevation_gain_raw": 34,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -10040,8 +9806,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 349674619,
 	"moving_time_raw": 1604,
 	"name": "Test Columbus",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-19T18:04:41+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -10057,14 +9822,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 44.857425290500004,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 3075,
 	"elapsed_time_raw": 479,
 	"elevation_gain_raw": 11,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -10146,8 +9909,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 350952822,
 	"moving_time_raw": 479,
 	"name": "20/07/2015 Meylan, RA, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-20T06:55:11+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -10163,14 +9925,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 60.49898012500001,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 2340.8,
 	"elapsed_time_raw": 395,
 	"elevation_gain_raw": 32,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -10252,8 +10012,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 350952833,
 	"moving_time_raw": 395,
 	"name": "20/07/2015 Montbonnot-Saint-Martin, Rhône-Alpes, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-20T10:12:17+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -10269,14 +10028,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 30.317346621,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 2276.6,
 	"elapsed_time_raw": 379,
 	"elevation_gain_raw": 4,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -10354,8 +10111,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 350952841,
 	"moving_time_raw": 379,
 	"name": "20/07/2015 Montbonnot-Saint-Martin, Rhône-Alpes, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-20T11:35:58+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -10371,14 +10127,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 58.97811901000001,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 3199,
 	"elapsed_time_raw": 523,
 	"elevation_gain_raw": 15,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -10460,8 +10214,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 350952856,
 	"moving_time_raw": 523,
 	"name": "20/07/2015 Montbonnot-Saint-Martin, Rhône-Alpes, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-20T16:01:23+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -10477,14 +10230,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 329.64839527500004,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 15111.7,
 	"elapsed_time_raw": 1955,
 	"elevation_gain_raw": 50,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 77.00732728541522,
@@ -10577,8 +10328,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 350265303,
 	"moving_time_raw": 1955,
 	"name": "À César ce qui est à César ^^",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-20T17:03:16+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -10594,14 +10344,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 445.11193818,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 19739.8,
 	"elapsed_time_raw": 2653,
 	"elevation_gain_raw": 80,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 82.26748251748252,
@@ -10712,8 +10460,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 350952876,
 	"moving_time_raw": 2421,
 	"name": "Aie ! Des glaçons sur la tête",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-21T16:25:34+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -10729,14 +10476,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 838.6583442500001,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 31057.2,
 	"elapsed_time_raw": 5200,
 	"elevation_gain_raw": 512,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 76.04299142936135,
@@ -10851,8 +10596,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 352513047,
 	"moving_time_raw": 4759,
 	"name": "Venon",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-23T16:46:31+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -10868,14 +10612,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 190.76622415999998,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 11906.8,
 	"elapsed_time_raw": 35360,
 	"elevation_gain_raw": 50,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -10953,8 +10695,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 353113683,
 	"moving_time_raw": 2120,
 	"name": "KOMMut3",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-24T06:54:18+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -10970,14 +10711,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1784.573044215,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 67928.5,
 	"elapsed_time_raw": 10666,
 	"elevation_gain_raw": 1013,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 79.25149389451806,
@@ -11084,8 +10823,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 353633586,
 	"moving_time_raw": 10061,
 	"name": "Venon PR 01",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-25T10:01:08+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -11101,14 +10839,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 726.97380283,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 25646.8,
 	"elapsed_time_raw": 4068,
 	"elevation_gain_raw": 473,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 76.86304128902316,
@@ -11215,8 +10951,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 353805002,
 	"moving_time_raw": 3806,
 	"name": "Revel & KOM",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-25T15:37:56+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -11232,14 +10967,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 1078.6001783040003,
 	"commute": false,
 	"display_type": "Marche",
 	"distance_raw": 12909.6,
 	"elapsed_time_raw": 23093,
 	"elevation_gain_raw": 223.255,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -11301,8 +11034,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 355886705,
 	"moving_time_raw": 10530,
 	"name": "Rando et plouf à l'île de Porquerolles",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-28T07:56:39+0000",
 	"trainer": false,
 	"type": "Walk"
@@ -11318,14 +11050,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 1493775,
 	"calories": 312.8579294995,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 11759.9,
 	"elapsed_time_raw": 6750,
 	"elevation_gain_raw": 103.688,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -11403,8 +11133,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 356460422,
 	"moving_time_raw": 4627,
 	"name": "Sortie à vélo matinale",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-07-29T08:00:32+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -11420,14 +11149,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 876.971551665,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 50019.7,
 	"elapsed_time_raw": 7354,
 	"elevation_gain_raw": 111,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 72.28912085807316,
@@ -11542,8 +11269,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 360360173,
 	"moving_time_raw": 7121,
 	"name": "02/08/2015 Meylan, Rhone-Alpes, France",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-08-02T15:22:39+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -11559,14 +11285,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 818.5759030800001,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 32280.3,
 	"elapsed_time_raw": 5002,
 	"elevation_gain_raw": 518,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 74.5886309680823,
@@ -11659,8 +11383,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 360424486,
 	"moving_time_raw": 4933,
 	"name": "Venon",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-08-03T16:14:32+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -11676,14 +11399,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 672.94784928,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 24249.4,
 	"elapsed_time_raw": 3662,
 	"elevation_gain_raw": 441,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 79.96731672083784,
@@ -11798,8 +11519,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 361131285,
 	"moving_time_raw": 3507,
 	"name": "Giro Climbing Challenge Finished",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-08-04T16:14:55+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -11815,14 +11535,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 183.92834059499998,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 8654.6,
 	"elapsed_time_raw": 42665,
 	"elevation_gain_raw": 14.5889,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -11900,8 +11618,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 362748671,
 	"moving_time_raw": 1698,
 	"name": "Work",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-08-06T07:09:25+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -11917,14 +11634,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 600.460531875,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 29137.5,
 	"elapsed_time_raw": 3925,
 	"elevation_gain_raw": 137,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 75.45283620140216,
@@ -12039,8 +11754,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 364024554,
 	"moving_time_raw": 3925,
 	"name": "zzzZZzzZZzz",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-08-08T10:19:49+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -12056,14 +11770,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 172.21375468799997,
 	"commute": false,
 	"display_type": "Randonnée",
 	"distance_raw": 2061.2,
 	"elapsed_time_raw": 5083,
 	"elevation_gain_raw": 199.106,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -12129,8 +11841,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 366535437,
 	"moving_time_raw": 2184,
 	"name": "Sea of Ice - Chamonix-Mont-Blanc",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-08-11T14:01:22+0000",
 	"trainer": false,
 	"type": "Hike"
@@ -12146,14 +11857,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 956.592687015,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 34118.5,
 	"elapsed_time_raw": 5795,
 	"elevation_gain_raw": 688,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 76.12866762866763,
@@ -12268,8 +11977,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 367463594,
 	"moving_time_raw": 5419,
 	"name": "Venon",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-08-12T16:39:14+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -12285,21 +11993,18 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": null,
 	"commute": false,
 	"display_type": "Natation",
 	"distance_raw": 0,
 	"elapsed_time_raw": 1900,
 	"elevation_gain_raw": 0,
-	"elevation_unit": "m",
 	"extendedStats": null,
 	"hasPowerMeter": null,
 	"id": 368210547,
 	"moving_time_raw": 1900,
 	"name": "Natation",
-	"private": false,
-	"short_unit": "m",
+
 	"start_time": "2015-08-13T16:20:00+0000",
 	"trainer": false,
 	"type": "Swim"
@@ -12315,14 +12020,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 997.8805605600002,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 40729.6,
 	"elapsed_time_raw": 4462,
 	"elevation_gain_raw": 107,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 84.8538258575198,
@@ -12429,8 +12132,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 371317512,
 	"moving_time_raw": 4366,
 	"name": "Fast Fast Fast & Pschitt",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-08-17T16:24:18+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -12446,14 +12148,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 824309,
 	"calories": 282.40540485,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 18248.3,
 	"elapsed_time_raw": 4547,
 	"elevation_gain_raw": 83,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -12531,8 +12231,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 372761597,
 	"moving_time_raw": 4317,
 	"name": "Rodage plaquettes",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-08-19T17:09:02+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -12548,14 +12247,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 824309,
 	"calories": 431.79680508900003,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 29460.4,
 	"elapsed_time_raw": 6399,
 	"elevation_gain_raw": 58,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -12633,8 +12330,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 375518573,
 	"moving_time_raw": 5941,
 	"name": "Evening Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-08-20T17:09:13+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -12650,14 +12346,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 824309,
 	"calories": 2435.9427656800003,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 43347.6,
 	"elapsed_time_raw": 14172,
 	"elevation_gain_raw": 2621,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -12735,8 +12429,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 375518033,
 	"moving_time_raw": 9202,
 	"name": "MTB Chamrousse - GoPro @ http://youtu.be/C05qJKfJjmQ #MTBDH",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-08-22T09:19:07+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -12752,14 +12445,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 829.9940472,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 30404,
 	"elapsed_time_raw": 4671,
 	"elevation_gain_raw": 523,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 80.84410069760388,
@@ -12874,8 +12565,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 377239233,
 	"moving_time_raw": 4315,
 	"name": "Cramé !!",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-08-25T16:30:19+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -12891,14 +12581,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 499.04194151999997,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 21275,
 	"elapsed_time_raw": 2474,
 	"elevation_gain_raw": 51,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 83.65486500254713,
@@ -13005,8 +12693,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 377946066,
 	"moving_time_raw": 2416,
 	"name": "Evening Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-08-26T16:23:42+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -13022,14 +12709,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 826.09327545,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 31335.7,
 	"elapsed_time_raw": 5046,
 	"elevation_gain_raw": 534,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 74.86615959434214,
@@ -13144,8 +12829,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 384884871,
 	"moving_time_raw": 4670,
 	"name": "Test Cam | http://youtu.be/i2hHnrgTj_s + http://youtu.be/5D6ZcfpzO74",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-09-04T15:57:50+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -13161,14 +12845,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1278.17165112,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 70064.2,
 	"elapsed_time_raw": 8996,
 	"elevation_gain_raw": 153,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 79.10667188928059,
@@ -13261,8 +12943,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 385490294,
 	"moving_time_raw": 8996,
 	"name": "Afternoon Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-09-05T13:29:59+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -13278,14 +12959,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 209.11589958,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 10000.1,
 	"elapsed_time_raw": 4729,
 	"elevation_gain_raw": 73,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 73.68204868154159,
@@ -13386,8 +13065,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 386268058,
 	"moving_time_raw": 1519,
 	"name": "Empty",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-09-06T14:04:53+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -13403,14 +13081,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 709.0235271,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 28933.4,
 	"elapsed_time_raw": 3332,
 	"elevation_gain_raw": 146,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 81.95845864661653,
@@ -13503,8 +13179,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 387059955,
 	"moving_time_raw": 3332,
 	"name": "Evening Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-09-07T16:07:00+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -13520,14 +13195,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 837.6778021,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 31477.5,
 	"elapsed_time_raw": 4764,
 	"elevation_gain_raw": 542,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 77.27267861921327,
@@ -13642,8 +13315,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 387847432,
 	"moving_time_raw": 4660,
 	"name": "Ptite Pérérrée",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-09-08T16:17:57+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -13659,14 +13331,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 311.450229648,
 	"commute": false,
 	"display_type": "Randonnée",
 	"distance_raw": 3727.7,
 	"elapsed_time_raw": 5202,
 	"elevation_gain_raw": 180.592,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -13732,8 +13402,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 392354127,
 	"moving_time_raw": 3187,
 	"name": "Val Jalbert walk, QC, Canada",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-09-14T18:04:39+0000",
 	"trainer": false,
 	"type": "Hike"
@@ -13749,14 +13418,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 476.27322839999994,
 	"commute": false,
 	"display_type": "Entraînement",
 	"distance_raw": 5218.7,
 	"elapsed_time_raw": 2586,
 	"elevation_gain_raw": 63.8963,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -13835,8 +13502,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 393116784,
 	"moving_time_raw": 2198,
 	"name": "Chicoutimi Run, QC, Canada",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-09-15T22:25:25+0000",
 	"trainer": false,
 	"type": "Run"
@@ -13852,14 +13518,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 255.15407793600005,
 	"commute": false,
 	"display_type": "Randonnée",
 	"distance_raw": 3053.9,
 	"elapsed_time_raw": 5745,
 	"elevation_gain_raw": 77.9225,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -13925,8 +13589,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 393874622,
 	"moving_time_raw": 3076,
 	"name": "Tadoussac walk, QC, Canada",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-09-16T21:28:01+0000",
 	"trainer": false,
 	"type": "Hike"
@@ -13942,14 +13605,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 850.8935213450001,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 31551,
 	"elapsed_time_raw": 4613,
 	"elevation_gain_raw": 544,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 80.3780487804878,
@@ -14056,8 +13717,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 397193741,
 	"moving_time_raw": 4613,
 	"name": "Canada diet week 01",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-09-21T16:01:46+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -14073,14 +13733,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 827.3318955,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 31314.1,
 	"elapsed_time_raw": 4983,
 	"elevation_gain_raw": 534,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 78.14077798359354,
@@ -14187,8 +13845,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 403560013,
 	"moving_time_raw": 4884,
 	"name": "Afternoon Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-09-22T15:47:48+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -14204,14 +13861,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 873.9592777,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 31451.5,
 	"elapsed_time_raw": 4768,
 	"elevation_gain_raw": 538,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 76.45495618838993,
@@ -14318,8 +13973,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 403560066,
 	"moving_time_raw": 4751,
 	"name": "Evening Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-09-30T16:03:22+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -14335,14 +13989,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1106.41489917,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 39737.4,
 	"elapsed_time_raw": 6072,
 	"elevation_gain_raw": 784.8,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 79.063046724984,
@@ -14457,8 +14109,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 406217194,
 	"moving_time_raw": 5901,
 	"name": "Afternoon Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-10-04T13:18:03+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -14474,14 +14125,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": null,
 	"calories": 499.0554129600001,
 	"commute": false,
 	"display_type": "Entraînement",
 	"distance_raw": 5547.8,
 	"elapsed_time_raw": 2752,
 	"elevation_gain_raw": 33.6,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -14564,8 +14213,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 406963466,
 	"moving_time_raw": 2302,
 	"name": "Evening Run",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-10-05T16:31:52+0000",
 	"trainer": false,
 	"type": "Run"
@@ -14581,14 +14229,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 102.91963569,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 6312.8,
 	"elapsed_time_raw": 962,
 	"elevation_gain_raw": 11,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -14666,8 +14312,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 420019631,
 	"moving_time_raw": 894,
 	"name": "Morning Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-10-17T08:45:47+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -14683,14 +14328,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 256.733509935,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 12223.4,
 	"elapsed_time_raw": 1659,
 	"elevation_gain_raw": 57,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -14768,8 +14411,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 420019708,
 	"moving_time_raw": 1659,
 	"name": "Lunch Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-10-17T09:58:56+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -14785,14 +14427,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 76.197678375,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 4528.3,
 	"elapsed_time_raw": 651,
 	"elevation_gain_raw": 23,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -14874,8 +14514,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 420019810,
 	"moving_time_raw": 651,
 	"name": "Afternoon Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-10-17T14:14:52+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -14891,14 +14530,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 259.563098955,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 12052.5,
 	"elapsed_time_raw": 32401,
 	"elevation_gain_raw": 49.6433,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -14976,8 +14613,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 417483106,
 	"moving_time_raw": 2281,
 	"name": "Tafe",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-10-21T07:00:36+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -14993,14 +14629,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 191.92554674800002,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 10642.1,
 	"elapsed_time_raw": 31457,
 	"elevation_gain_raw": 64,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -15078,8 +14712,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 420019949,
 	"moving_time_raw": 1768,
 	"name": "Morning Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-10-22T07:06:30+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -15095,14 +14728,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 43.6032808725,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 3003.3,
 	"elapsed_time_raw": 465,
 	"elevation_gain_raw": 8,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -15184,8 +14815,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 420019984,
 	"moving_time_raw": 465,
 	"name": "Morning Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-10-23T07:00:12+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -15201,14 +14831,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 199.9254575565,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 10935.3,
 	"elapsed_time_raw": 20748,
 	"elevation_gain_raw": 62,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -15286,8 +14914,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 420020088,
 	"moving_time_raw": 1833,
 	"name": "Lunch Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-10-23T09:58:49+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -15303,14 +14930,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 169.16904879999998,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 8807.2,
 	"elapsed_time_raw": 11992,
 	"elevation_gain_raw": 65,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -15388,8 +15013,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 420018674,
 	"moving_time_raw": 1346,
 	"name": "Lunch Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-10-24T10:47:07+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -15405,14 +15029,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 193.535379065,
 	"commute": true,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 10749.2,
 	"elapsed_time_raw": 30949,
 	"elevation_gain_raw": 75,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -15490,8 +15112,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 420778529,
 	"moving_time_raw": 1669,
 	"name": "Morning Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-10-26T08:07:54+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -15507,14 +15128,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1831.93190544,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 66132.7,
 	"elapsed_time_raw": 14436,
 	"elevation_gain_raw": 1225,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 72.10133578995854,
@@ -15629,8 +15248,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 423706687,
 	"moving_time_raw": 10948,
 	"name": "Couleurs d'Automne",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-10-31T10:53:28+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -15646,14 +15264,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1995.4309740800002,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 78345.7,
 	"elapsed_time_raw": 14427,
 	"elevation_gain_raw": 1321,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 70.8853151720024,
@@ -15760,8 +15376,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 424565561,
 	"moving_time_raw": 13322,
 	"name": "Chartreuse Rousse et Herbe fluo !!",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-11-01T12:38:37+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -15777,14 +15392,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 241.81931788,
 	"commute": false,
 	"display_type": "Sortie à vélo virtuelle",
 	"distance_raw": 11051.3,
 	"elapsed_time_raw": 1813,
 	"elevation_gain_raw": 160,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -15876,8 +15489,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 427606185,
 	"moving_time_raw": 1813,
 	"name": "1st zwift ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-11-06T17:31:29+0000",
 	"trainer": false,
 	"type": "VirtualRide"
@@ -15893,14 +15505,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 850.272513175,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 34069.8,
 	"elapsed_time_raw": 5481,
 	"elevation_gain_raw": 545,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 74.52030148310236,
@@ -16007,8 +15617,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 428142857,
 	"moving_time_raw": 5407,
 	"name": "Afternoon Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-11-07T13:54:46+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -16024,14 +15633,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1711.59159003,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 86591.7,
 	"elapsed_time_raw": 11021,
 	"elevation_gain_raw": 172,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 78.89345387960631,
@@ -16138,8 +15745,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 429009625,
 	"moving_time_raw": 10801,
 	"name": "86k",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-11-08T13:15:01+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -16155,14 +15761,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 598.81470156,
 	"commute": false,
 	"display_type": "Sortie à vélo virtuelle",
 	"distance_raw": 28998.8,
 	"elapsed_time_raw": 3669,
 	"elevation_gain_raw": 166,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -16258,8 +15862,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 429628737,
 	"moving_time_raw": 3669,
 	"name": "Zwift - Richmond, VA 11/09/2015",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-11-09T17:24:39+0000",
 	"trainer": false,
 	"type": "VirtualRide"
@@ -16275,14 +15878,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 450.4447289600001,
 	"commute": false,
 	"display_type": "Sortie à vélo virtuelle",
 	"distance_raw": 20933.4,
 	"elapsed_time_raw": 2732,
 	"elevation_gain_raw": 144,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -16378,8 +15979,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 430204077,
 	"moving_time_raw": 2732,
 	"name": "Zwift - Richmond, VA - FTP Test (shorter)",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-11-10T17:22:44+0000",
 	"trainer": false,
 	"type": "VirtualRide"
@@ -16395,14 +15995,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 864.2161869299999,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 31756.3,
 	"elapsed_time_raw": 5118,
 	"elevation_gain_raw": 549,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 75.61905384213277,
@@ -16517,8 +16115,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 430765595,
 	"moving_time_raw": 4959,
 	"name": "Afternoon Ride",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-11-11T13:29:05+0000",
 	"trainer": false,
 	"type": "Ride"
@@ -16534,14 +16131,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 205.85531400000002,
 	"commute": false,
 	"display_type": "Sortie à vélo virtuelle",
 	"distance_raw": 8989.7,
 	"elapsed_time_raw": 1243,
 	"elevation_gain_raw": 100.8,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -16633,8 +16228,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 431464624,
 	"moving_time_raw": 1050,
 	"name": "Zwift - Watopia 11/12/2015 // Cut // Crashed app",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-11-12T17:12:06+0000",
 	"trainer": false,
 	"type": "VirtualRide"
@@ -16650,14 +16244,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 378.89437616,
 	"commute": false,
 	"display_type": "Sortie à vélo virtuelle",
 	"distance_raw": 19097.1,
 	"elapsed_time_raw": 2431,
 	"elevation_gain_raw": 218,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -16753,8 +16345,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 431449241,
 	"moving_time_raw": 2336,
 	"name": "Zwift - Watopia 11/12/2015",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-11-12T17:40:11+0000",
 	"trainer": false,
 	"type": "VirtualRide"
@@ -16770,14 +16361,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2179055,
 	"calories": 640.62999798,
 	"commute": false,
 	"display_type": "Sortie à vélo virtuelle",
 	"distance_raw": 28100.3,
 	"elapsed_time_raw": 3510,
 	"elevation_gain_raw": 326,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": null,
 		"elevationData": {
@@ -16873,8 +16462,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 432040117,
 	"moving_time_raw": 3292,
 	"name": "Zwift - Watopia 11/13/2015",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-11-13T17:39:09+0000",
 	"trainer": false,
 	"type": "VirtualRide"
@@ -16890,14 +16478,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 			"weight": 70
 		}, "gender": "men"
 	},
-	"bike_id": 2042105,
 	"calories": 1540.28403144,
 	"commute": false,
 	"display_type": "Sortie à vélo",
 	"distance_raw": 61501.5,
 	"elapsed_time_raw": 9537,
 	"elevation_gain_raw": 908,
-	"elevation_unit": "m",
 	"extendedStats": {
 		"cadenceData": {
 			"averageCadenceMoving": 74.63564251718667,
@@ -17012,8 +16598,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
 	"id": 432548748,
 	"moving_time_raw": 9156,
 	"name": "Petit Pinet malgré la crève :/",
-	"private": false,
-	"short_unit": "km",
+
 	"start_time": "2015-11-14T13:01:07+0000",
 	"trainer": false,
 	"type": "Ride"

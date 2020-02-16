@@ -13,7 +13,7 @@ describe("WindowService", () => {
 			providers: [WindowService, MediaObserver]
 		});
 
-		service = TestBed.get(WindowService);
+		service = TestBed.inject(WindowService);
 
 		done();
 	});

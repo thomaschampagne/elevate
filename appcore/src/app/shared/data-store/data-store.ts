@@ -37,15 +37,6 @@ export abstract class DataStore<T> {
 	abstract getById(storageLocation: StorageLocationModel, id: string): Promise<T>;
 
 	/**
-	 *
-	 * @param storageLocation
-	 * @param defaultStorageValue
-	 * TODO Only for collections
-	 */
-
-	// TODO abstract count(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T): number;
-
-	/**
 	 * Update or insert a specific property at given path. Path is created if unknown.
 	 * @param storageLocation {StorageLocationModel} location
 	 * @param path
@@ -53,6 +44,15 @@ export abstract class DataStore<T> {
 	 * @param defaultStorageValue
 	 */
 	abstract upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T>;
+
+	/**
+	 *
+	 * @param storageLocation
+	 * @param ids
+	 * @param defaultStorageValue
+	 * @return new existing data
+	 */
+	abstract removeByIds(storageLocation: StorageLocationModel, ids: (string | number)[], defaultStorageValue: T[] | T): Promise<T[] | T>;
 
 	/**
 	 * Clear all data

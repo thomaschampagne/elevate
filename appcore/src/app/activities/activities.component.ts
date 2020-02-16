@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import { SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import { EnvTarget, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { ActivityColumns } from "./activity-columns.namespace";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
@@ -22,6 +22,9 @@ import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { Subject, timer } from "rxjs";
 import { debounce } from "rxjs/operators";
+import { StreamsService } from "../shared/services/streams/streams.service";
+import { environment } from "../../environments/environment";
+import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 import NumberColumn = ActivityColumns.NumberColumn;
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
@@ -34,8 +37,10 @@ export class ActivitiesComponent implements OnInit {
 
 	constructor(public syncService: SyncService<any>,
 				public activityService: ActivityService,
+				public streamsService: StreamsService,
 				public userSettingsService: UserSettingsService,
 				public appEventsService: AppEventsService,
+				@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
 				public snackBar: MatSnackBar,
 				public dialog: MatDialog,
 				public logger: LoggerService) {
@@ -49,10 +54,10 @@ export class ActivitiesComponent implements OnInit {
 
 	public readonly ColumnType = ActivityColumns.ColumnType;
 
-	@ViewChild(MatPaginator, {static: false})
+	@ViewChild(MatPaginator)
 	public matPaginator: MatPaginator;
 
-	@ViewChild(MatSort, {static: false})
+	@ViewChild(MatSort)
 	public matSort: MatSort;
 
 	public dataSource: MatTableDataSource<SyncedActivityModel>;
@@ -215,9 +220,15 @@ export class ActivitiesComponent implements OnInit {
 
 			this.hasActivities = syncedActivityModels.length > 0;
 
-			this.dataSource.data = _.sortBy(syncedActivityModels, (dayFitnessTrendModel: SyncedActivityModel) => {
-				return dayFitnessTrendModel.id * -1;
-			});
+			if (environment.target === EnvTarget.DESKTOP) {
+				this.dataSource.data = _.sortBy(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
+					return syncedActivityModel.start_timestamp * -1;
+				});
+			} else if (environment.target === EnvTarget.EXTENSION) {
+				this.dataSource.data = _.sortBy(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
+					return (<number> syncedActivityModel.id) * -1;
+				});
+			}
 
 			this.searchText$.pipe(
 				debounce(() => timer(350))
@@ -292,6 +303,10 @@ export class ActivitiesComponent implements OnInit {
 		this.searchText$.next(filterValue);
 	}
 
+	public openActivity(id: number | string) {
+		this.openResourceResolver.openActivity(id);
+	}
+
 	public onViewAthleteSettings(activity: SyncedActivityModel): void {
 		this.dialog.open(GotItDialogComponent, {
 			minWidth: GotItDialogComponent.MIN_WIDTH,
@@ -318,6 +333,8 @@ export class ActivitiesComponent implements OnInit {
 
 			if (confirm) {
 				this.activityService.removeByIds([activity.id]).then(() => {
+					return this.streamsService.removeByIds([activity.id]);
+				}).then(() => {
 					this.fetchApplyData();
 				}, error => {
 					this.snackBar.open(error, "Close");

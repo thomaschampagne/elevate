@@ -17,7 +17,7 @@ describe("ConsoleLoggerService", () => {
 			]
 		});
 
-		service = TestBed.get(LoggerService);
+		service = TestBed.inject(LoggerService);
 
 		done();
 	});

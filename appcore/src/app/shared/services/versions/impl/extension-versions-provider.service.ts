@@ -10,11 +10,11 @@ export class ExtensionVersionsProvider implements VersionsProvider {
 	constructor(public httpClient: HttpClient) {
 	}
 
-	public getInstalledAppVersion(): Promise<string> {
+	public getPackageVersion(): Promise<string> {
 		return Promise.resolve(chrome.runtime.getManifest().version);
 	}
 
-	public getCurrentRemoteAppVersion(): Promise<string> {
+	public getRemoteVersion(): Promise<string> {
 		return this.httpClient.get<chrome.runtime.Manifest>(ExtensionVersionsProvider.MANIFEST_PRODUCTION).toPromise().then(response => {
 			return Promise.resolve(response.version);
 		}, err => {

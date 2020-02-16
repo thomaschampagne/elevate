@@ -2,22 +2,22 @@ import { VersionsProvider } from "../../versions-provider.interface";
 
 export class MockedVersionsProvider implements VersionsProvider {
 
-	getCurrentRemoteAppVersion(): Promise<string> {
+	public getRemoteVersion(): Promise<string> {
 		return Promise.resolve("2.0.0");
 	}
 
-	getInstalledAppVersion(): Promise<string> {
+	public getPackageVersion(): Promise<string> {
 		return Promise.resolve("2.0.0");
 	}
 
-	getBuildMetadata(): Promise<{ commit: string; date: string }> {
+	public getBuildMetadata(): Promise<{ commit: string; date: string }> {
 		return Promise.resolve({
 			commit: "xxxxxxx",
 			date: new Date().toISOString()
 		});
 	}
 
-	getWrapperVersion(): string {
+	public getWrapperVersion(): string {
 		return "1.0.0";
 	}
 

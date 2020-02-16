@@ -168,7 +168,7 @@ export class VacuumProcessor {
 			let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + activityInfo.id);
 
 			if (cache) {
-				cache = Gzip.fromBase64(cache);
+				cache = Gzip.unpack64(cache);
 				callback(cache.activityCommonStats, cache.stream, cache.athleteWeight, cache.athleteGender, cache.hasPowerMeter);
 				console.log("Using stream cache for activity '" + activityInfo.name + "' (id:" + activityInfo.id + ")");
 				return;
@@ -289,7 +289,7 @@ export class VacuumProcessor {
 					hasPowerMeter,
 				};
 
-				localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), Gzip.toBase64(cache));
+				localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), Gzip.pack64(cache));
 			} catch (err) {
 				console.warn(err);
 				localStorage.clear();

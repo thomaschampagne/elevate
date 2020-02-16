@@ -1,4 +1,5 @@
-import { gzip, inflate, ungzip } from "pako";
+import { gzip, ungzip } from "pako";
+import { Base64 } from "./base64";
 
 export class Gzip {
 
@@ -7,7 +8,7 @@ export class Gzip {
 	 * @param object
 	 * @return base64 string
 	 */
-	public static toBase64<T>(object: T): string {
+	public static pack64<T>(object: T): string {
 		return Gzip.encode64(gzip(JSON.stringify(object), {to: "string"}));
 	}
 
@@ -16,17 +17,17 @@ export class Gzip {
 	 * @param base64
 	 * @return object of type {T}
 	 */
-	public static fromBase64<T>(base64: string): T {
-		return JSON.parse(inflate(Gzip.decode64(base64), {to: "string"}));
+	public static unpack64<T>(base64: string): T {
+		return JSON.parse(ungzip(Gzip.decode64(base64), {to: "string"}));
 	}
 
 	/**
 	 * Encode string to base64
 	 * @param data
 	 */
-	public static encode64(data: string): string {
-		if (typeof btoa !== "undefined") {
-			return btoa(data);
+	private static encode64(data: string): string {
+		if (typeof Buffer === "undefined") {
+			return Base64.encode(data);
 		} else {
 			return Buffer.from(data).toString("base64");
 		}
@@ -36,9 +37,9 @@ export class Gzip {
 	 * Encode string to base64
 	 * @param data
 	 */
-	public static decode64(data: string): string {
-		if (typeof atob !== "undefined") {
-			return atob(data);
+	private static decode64(data: string): string {
+		if (typeof Buffer === "undefined") {
+			return Base64.decode(data);
 		} else {
 			return Buffer.from(data, "base64").toString();
 		}
@@ -49,7 +50,7 @@ export class Gzip {
 	 * @param object
 	 * @return string bin
 	 */
-	public static toBinaryString(object: string): string {
+	public static pack(object: string): string {
 		return gzip(object, {to: "string"});
 	}
 
@@ -58,7 +59,7 @@ export class Gzip {
 	 * @param binary
 	 * @return object of type {T}
 	 */
-	public static fromBinaryString(binary: string): string {
+	public static unpack(binary: string): string {
 		return ungzip(binary, {to: "string"});
 	}
 }

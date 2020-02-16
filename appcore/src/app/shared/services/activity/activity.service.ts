@@ -19,14 +19,20 @@ export class ActivityService {
 
 	/**
 	 *
-	 * @param minimalFields
 	 * @returns {Promise<SyncedActivityModel[]>} stored SyncedActivityModels
 	 */
-	public fetch(minimalFields: boolean = true): Promise<SyncedActivityModel[]> {
-		const fetchPromise = minimalFields ? this.activityDao.fetchMinimalFields() : this.activityDao.fetch();
-		return (<Promise<SyncedActivityModel[]>> fetchPromise).then(activities => {
+	public fetch(): Promise<SyncedActivityModel[]> {
+		return (<Promise<SyncedActivityModel[]>> this.activityDao.fetch()).then(activities => {
 			return Promise.resolve(_.sortBy(activities, "start_time"));
 		});
+	}
+
+	/**
+	 *
+	 * @param id
+	 */
+	public getById(id: number | string): Promise<SyncedActivityModel> {
+		return this.activityDao.getById(<string> id);
 	}
 
 	/**
@@ -65,7 +71,7 @@ export class ActivityService {
 	 * @param {number[]} activitiesToDelete
 	 * @returns {Promise<SyncedActivityModel[]>}
 	 */
-	public removeByIds(activitiesToDelete: number[]): Promise<SyncedActivityModel[]> {
+	public removeByIds(activitiesToDelete: (string | number)[]): Promise<SyncedActivityModel[]> {
 		return this.activityDao.removeByIds(activitiesToDelete);
 	}
 
@@ -76,7 +82,7 @@ export class ActivityService {
 	public isAthleteSettingsConsistent(): Promise<boolean> {
 
 		return this.athleteSnapshotResolverService.update().then(() => {
-			return this.activityDao.fetchMinimalFields();
+			return this.activityDao.fetch();
 		}).then((syncedActivityModels: SyncedActivityModel[]) => {
 			let isCompliant = true;
 			_.forEachRight(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {

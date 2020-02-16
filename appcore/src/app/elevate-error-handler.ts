@@ -1,12 +1,13 @@
 import { ErrorHandler, Inject, Injectable } from "@angular/core";
 import { LoggerService } from "./shared/services/logging/logger.service";
-import { MatDialog, MatSnackBar } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import * as Sentry from "@sentry/browser";
 import { environment } from "../environments/environment";
 import { EnvTarget } from "@elevate/shared/models";
 import { ConfirmDialogComponent } from "./shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { ConfirmDialogDataModel } from "./shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { VERSIONS_PROVIDER, VersionsProvider } from "./shared/services/versions/versions-provider.interface";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Injectable()
 export class ElevateErrorHandler implements ErrorHandler {
@@ -19,7 +20,7 @@ export class ElevateErrorHandler implements ErrorHandler {
 				public loggerService: LoggerService) {
 
 		if (environment.target === EnvTarget.DESKTOP) {
-			this.versionsProvider.getInstalledAppVersion().then(version => {
+			this.versionsProvider.getPackageVersion().then(version => {
 				Sentry.init({
 					dsn: ElevateErrorHandler.SENTRY_DATA_SOURCE_NAME,
 					release: version,

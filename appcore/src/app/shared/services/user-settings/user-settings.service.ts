@@ -16,7 +16,7 @@ export class UserSettingsService {
 	}
 
 	public fetch(): Promise<UserSettingsModel> {
-		return (<Promise<UserSettingsModel>>this.userSettingsDao.fetch());
+		return (<Promise<UserSettingsModel>> this.userSettingsDao.fetch());
 	}
 
 	/**
@@ -57,7 +57,7 @@ export class UserSettingsService {
 	 * @returns {Promise<UserSettingsModel>}
 	 */
 	public reset(): Promise<UserSettingsModel> {
-		return (<Promise<UserSettingsModel>>this.userSettingsDao.save(UserSettings.getDefaultsByEnvTarget(environment.target)));
+		return (<Promise<UserSettingsModel>> this.userSettingsDao.save(UserSettings.getDefaultsByEnvTarget(environment.target)));
 	}
 
 	/**

@@ -35,6 +35,7 @@ describe("BaseDao", () => {
 	let dataStoreSaveSpy: jasmine.Spy;
 	let dataStoreUpsertPropertySpy: jasmine.Spy;
 	let dataStoreClearSpy: jasmine.Spy;
+	let removeByIdsSpy: jasmine.Spy;
 	let mockedDataStore: MockedDataStore<Foo>;
 
 	beforeEach((done: Function) => {
@@ -48,14 +49,15 @@ describe("BaseDao", () => {
 			]
 		});
 
-		baseDao = TestBed.get(BaseDao);
-		dataStore = TestBed.get(DataStore);
+		baseDao = TestBed.inject(BaseDao);
+		dataStore = TestBed.inject(DataStore);
 
 		checkStorageLocationSpy = spyOn(baseDao, "checkCompliantDao").and.callThrough();
 		dataStoreFetchSpy = spyOn(dataStore, "fetch").and.callThrough();
 		dataStoreSaveSpy = spyOn(dataStore, "save").and.callThrough();
 		dataStoreUpsertPropertySpy = spyOn(dataStore, "upsertProperty").and.callThrough();
 		dataStoreClearSpy = spyOn(dataStore, "clear").and.callThrough();
+		removeByIdsSpy = spyOn(dataStore, "removeByIds").and.callThrough();
 
 		done();
 	});
@@ -181,6 +183,26 @@ describe("BaseDao", () => {
 
 			expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
 			expect(dataStoreUpsertPropertySpy).toHaveBeenCalledTimes(1);
+			done();
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
+	it("should remove by ids", (done: Function) => {
+
+		// Given
+		const ids = [1, 2];
+
+		// When
+		const promise: Promise<Foo[]> = baseDao.removeByIds(ids);
+
+		// Then
+		promise.then(() => {
+
+			expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
+			expect(removeByIdsSpy).toHaveBeenCalledTimes(1);
 			done();
 		}, error => {
 			expect(error).toBeNull();

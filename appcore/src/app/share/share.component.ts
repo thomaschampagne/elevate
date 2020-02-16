@@ -1,6 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
+import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 
 @Component({
 	selector: "app-share",
@@ -9,15 +10,16 @@ import { DomSanitizer } from "@angular/platform-browser";
 })
 export class ShareComponent implements OnInit {
 
-	public static readonly TWEET: string = "https://twitter.com/intent/tweet?text=As%20%23strava%20user,%20you" +
-		"%20should%20try%20%23elevatestrava%20web%20extension%20by%20%40champagnethomas." +
-		"%20Get%20it%20here%20%20http://thomaschampagne.github.io/elevate/.%20%23cycling%20%23running%20%23geek";
+	public static readonly TWEET: string = "https://twitter.com/intent/tweet?text=As%20an%20athlete%2C%20you%20should%20try" +
+		"%20the%20%23ElevateTraining%20app%20developed%20by%20%40champagnethomas.%20Get%20it%20here%20%20http%3A%2F%2Fthomaschampagne.github.io%2Felevate%2F%20for%20free." +
+		"%20%23cycling%20%23running%20%40GarminFitness%20%40wahoofitness%20%40suunto%20%40PolarGlobal%20%40fitbit%20%40strava";
 
 	public static readonly FACEBOOK_POST: string = "https://www.facebook.com/sharer/sharer.php?u=https%3A//www.facebook.com/elevatestrava";
 	public static readonly LANDING_PAGE_URL: string = "http://thomaschampagne.github.io/elevate/";
 
 	constructor(public iconRegistry: MatIconRegistry,
-				public sanitizer: DomSanitizer) {
+				public sanitizer: DomSanitizer,
+				@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver) {
 	}
 
 	public ngOnInit(): void {
@@ -26,15 +28,15 @@ export class ShareComponent implements OnInit {
 	}
 
 	public onOpenTweet(): void {
-		window.open(ShareComponent.TWEET, "_blank", "width=600,height=300");
+		this.openResourceResolver.openWebLink(ShareComponent.TWEET);
 	}
 
 	public onOpenFacebook(): void {
-		window.open(ShareComponent.FACEBOOK_POST, "_blank", "width=600,height=600");
+		this.openResourceResolver.openWebLink(ShareComponent.FACEBOOK_POST);
 	}
 
 	public onOpenLandingPage(): void {
-		window.open(ShareComponent.LANDING_PAGE_URL, "_blank");
+		this.openResourceResolver.openWebLink(ShareComponent.LANDING_PAGE_URL);
 	}
 
 
