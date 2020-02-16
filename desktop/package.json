@@ -1,7 +1,7 @@
 {
 	"name": "elevate-training",
 	"description": "Elevate your training experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...",
-	"version": "7.0.0-alpha.1",
+	"version": "7.0.0-alpha.2",
 	"scripts": {
 		"assert-app-exists": "node -e \"if ((require('fs').existsSync('./dist/app/')) === false) {console.log('Please run & wait for \\'npm start\\' task before.\\n\\n\\n\\n');process.exit(1);}\";",
 		"build:metadata": "node -e \"console.log('{\\\"commit\\\": \\\"' + require('child_process').execSync('git rev-parse HEAD').toString().trim() + '\\\", \\\"date\\\": \\\"' + (new Date()).toISOString() + '\\\"}')\" > build_metadata.json",
@@ -18,7 +18,7 @@
 		"clean:package": "node ../node_modules/del-cli/cli.js ./package/",
 		"clean:metadata": "node ../node_modules/del-cli/cli.js ./build_metadata.json",
 		"launch:electron": "npm run assert-app-exists && run-electron ./dist/desktop.bundle.js",
-		"package:windows": "npm run build:prod && electron-builder build --windows --x64 --publish onTagOrDraft",
+		"package:windows": "electron-builder build --windows --x64 --publish onTagOrDraft",
 		"package:linux": "npm run build:prod && electron-builder build --linux --x64 --publish onTagOrDraft",
 		"package:mac": "npm run build:prod && electron-builder build --mac --x64",
 		"start": "npm run watch",

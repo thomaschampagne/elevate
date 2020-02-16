@@ -75,7 +75,8 @@ export class Updater {
 				});
 
 				this.appUpdater.on(UpdateEvent.UPDATE_AVAILABLE, (updateInfo: UpdateInfo) => {
-					this.notifyUpdateStatus("New version " + updateInfo.version + " available.");
+					logger.info("update-available", JSON.stringify(updateInfo));
+					this.notifyUpdateStatus("Downloading new version " + updateInfo.version + "...");
 				});
 
 				this.appUpdater.on(UpdateEvent.UPDATE_NOT_AVAILABLE, (updateInfo: UpdateInfo) => {

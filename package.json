@@ -1,6 +1,6 @@
 {
 	"name": "elevate",
-	"version": "6.14.0",
+	"version": "7.0.0-alpha.2",
 	"description": "Wrap the needed tools required to cook Elevate desktop and web extension",
 	"maintainers": [
 		{
