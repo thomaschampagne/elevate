@@ -20,6 +20,8 @@ import { DesktopRoutingModule } from "./desktop-routing.module";
 import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/desktop-advanced-menu.component";
 import { DesktopMigrationService } from "../../../desktop/migration/desktop-migration.service";
 import { FileSystemConnectorInfoService } from "../../services/file-system-connector-info/file-system-connector-info.service";
+import { OPEN_RESOURCE_RESOLVER } from "../../services/links-opener/open-resource-resolver";
+import { DesktopOpenResourceResolver } from "../../services/links-opener/impl/desktop-open-resource-resolver.service";
 
 @NgModule({
 	imports: [
@@ -42,6 +44,7 @@ import { FileSystemConnectorInfoService } from "../../services/file-system-conne
 		{provide: DataStore, useClass: DesktopDataStore},
 		{provide: AppEventsService, useClass: DesktopEventsService},
 		{provide: VERSIONS_PROVIDER, useClass: DesktopVersionsProvider},
+		{provide: OPEN_RESOURCE_RESOLVER, useClass: DesktopOpenResourceResolver},
 		{provide: SyncService, useClass: DesktopSyncService},
 		DesktopSyncService,
 		ConnectorSyncDateTimeDao,

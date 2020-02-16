@@ -13,15 +13,7 @@ import {
 	SyncEvent,
 	SyncEventType
 } from "@elevate/shared/sync";
-import {
-	ActivityStreamsModel,
-	AthleteModel,
-	BareActivityModel,
-	ConnectorSyncDateTime,
-	Gender,
-	SyncedActivityModel,
-	UserSettings
-} from "@elevate/shared/models";
+import { ActivityStreamsModel, AthleteModel, BareActivityModel, ConnectorSyncDateTime, Gender, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import logger from "electron-log";
 import { Service } from "../../service";
 import * as _ from "lodash";
@@ -65,7 +57,6 @@ export class StravaConnector extends BaseConnector {
 	public static readonly STRAVA_RATELIMIT_USAGE_HEADER: string = "x-ratelimit-usage";
 	public static readonly QUARTER_HOUR_TIME_INTERVAL: number = 15 * 60;
 	public static readonly QUOTA_REACHED_RETRY_COUNT: number = 2;
-	public static readonly EXTRA_ACTIVITY_ID: string = "strava_activity_id";
 
 	public stravaApiCredentials: StravaApiCredentials;
 	public updateSyncedActivitiesNameAndType: boolean;
@@ -231,7 +222,7 @@ export class StravaConnector extends BaseConnector {
 								syncedActivityModel.start_timestamp = new Date(bareActivity.start_time).getTime() / 1000;
 
 								// Assign reference to strava activity
-								_.set(syncedActivityModel, ["extras", StravaConnector.EXTRA_ACTIVITY_ID], syncedActivityModel.id); // Keep tracking  of activity id
+								syncedActivityModel.extras = {strava_activity_id: <number> syncedActivityModel.id}; // Keep tracking  of activity id
 								syncedActivityModel.id = syncedActivityModel.id + "-" + BaseConnector.hashData(syncedActivityModel.start_time, 8);
 
 								// Resolve athlete snapshot for current activity date

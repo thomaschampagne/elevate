@@ -1,4 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
+import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 
 @Component({
 	selector: "app-donate",
@@ -13,7 +14,7 @@ export class DonateComponent implements OnInit {
 
 	public donateUrl: string;
 
-	constructor() {
+	constructor(@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver) {
 	}
 
 	public ngOnInit() {
@@ -23,6 +24,6 @@ export class DonateComponent implements OnInit {
 	}
 
 	public onDonateClicked() {
-		window.open(this.donateUrl, "_blank");
+		this.openResourceResolver.openWebLink(this.donateUrl);
 	}
 }

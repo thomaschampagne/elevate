@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import { Component, ElementRef, HostListener, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as d3 from "d3";
@@ -9,7 +9,6 @@ import { GraphPointModel } from "../../shared/models/graphs/graph-point.model";
 import { MarkerModel } from "./models/marker.model";
 import { MetricsGraphicsEventModel } from "../../shared/models/graphs/metrics-graphics-event.model";
 import { MatDialog } from "@angular/material/dialog";
-import { FitnessTrendComponent } from "../fitness-trend.component";
 import { SideNavService } from "../../shared/services/side-nav/side-nav.service";
 import { ViewableFitnessDataModel } from "./models/viewable-fitness-data.model";
 import { Subscription } from "rxjs";
@@ -18,6 +17,7 @@ import { ViewedDayService } from "../shared/services/viewed-day.service";
 import { FitnessTrendActivitiesLinksDialogComponent } from "../fitness-trend-activities-links-dialog/fitness-trend-activities-links-dialog.component";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { ElevateException } from "@elevate/shared/exceptions";
+import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../../shared/services/links-opener/open-resource-resolver";
 
 @Component({
 	selector: "app-fitness-trend-graph",
@@ -29,6 +29,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 	constructor(public sideNavService: SideNavService,
 				public windowService: WindowService,
 				public viewedDayService: ViewedDayService,
+				@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
 				public dialog: MatDialog,
 				public logger: LoggerService) {
 	}
@@ -413,7 +414,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 				data: dayFitnessTrend
 			});
 		} else {
-			FitnessTrendComponent.openActivity(_.first(dayFitnessTrend.ids));
+			this.openResourceResolver.openActivity(_.first(dayFitnessTrend.ids));
 		}
 	}
 

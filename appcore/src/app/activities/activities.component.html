@@ -87,8 +87,8 @@
 						{{column.print(activity, column.id)}}
 					</ng-container>
 					<ng-container *ngIf="column.type === ColumnType.ACTIVITY_LINK">
-						<a href="https://www.strava.com/activities/{{activity.id}}"
-						   target="_blank">{{column.print(activity, column.id)}}</a>
+						<button mat-button color="primary"
+								(click)="openActivity(activity.id)">{{column.print(activity, column.id)}}</button>
 					</ng-container>
 					<ng-container *ngIf="column.type === ColumnType.NUMBER">
 						{{column.print(activity, column['units'], column['precision'], column['factor'], isImperial, column['imperialFactor'], column.id)}}

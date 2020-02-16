@@ -159,26 +159,6 @@ export class FitnessTrendComponent implements OnInit {
 		}];
 	}
 
-	public static openActivity(id: string | number) {
-		if (_.isNumber(id)) {
-			const url = "https://www.strava.com/activities/{activityId}";
-			window.open(url.replace("{activityId}", id.toString()), "_blank");
-		} else {
-			throw new Error("No activity found");
-		}
-	}
-
-	public static openActivities(ids: (string | number)[]) {
-		if (ids.length > 0) {
-			const url = "https://www.strava.com/activities/{activityId}";
-			_.forEach(ids, (id: number) => {
-				window.open(url.replace("{activityId}", id.toString()), "_blank");
-			});
-		} else {
-			throw new Error("No activities found");
-		}
-	}
-
 	public ngOnInit(): void {
 		this.initialize().then(() => {
 			this.logger.debug("FitnessTrend component initialized");

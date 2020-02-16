@@ -93,8 +93,6 @@ export class FileSystemConnector extends BaseConnector {
 		}
 	};
 
-	public static readonly EXTRA_ACTIVITY_LOCATION: string = "activity_location";
-
 	private static readonly ENABLED: boolean = true;
 
 	private static readonly SPORTS_LIB_TYPES_MAP: { from: string, to: ElevateSport }[] = [
@@ -335,7 +333,7 @@ export class FileSystemConnector extends BaseConnector {
 												syncedActivityModel.start_timestamp = new Date(bareActivity.start_time).getTime() / 1000;
 
 												// Assign reference to strava activity
-												_.set(syncedActivityModel, ["extras", FileSystemConnector.EXTRA_ACTIVITY_LOCATION], activityFile.location); // Keep tracking  of activity id
+												syncedActivityModel.extras = {fs_activity_location: activityFile.location}; // Keep tracking  of activity id
 												syncedActivityModel.id = BaseConnector.hashData(syncedActivityModel.start_time, 6) + "-" + BaseConnector.hashData(syncedActivityModel.end_time, 6);
 
 												// Resolve athlete snapshot for current activity date
@@ -374,10 +372,10 @@ export class FileSystemConnector extends BaseConnector {
 												const errorMessage = "Unable to compute activity started '"
 													+ sportsLibActivity.startDate.toISOString() + "' cause: " + ((error.message) ? error.message : error.toString());
 												const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE_SYSTEM, errorMessage, (error.stack) ? error.stack : null);
-												errorSyncEvent.activity = new BareActivityModel();
+												errorSyncEvent.activity = new SyncedActivityModel();
 												errorSyncEvent.activity.type = <any> sportsLibActivity.type;
 												errorSyncEvent.activity.start_time = sportsLibActivity.startDate.toISOString();
-												_.set(errorSyncEvent.activity, ["extras", FileSystemConnector.EXTRA_ACTIVITY_LOCATION], activityFile.location); // Keep tracking  of activity id
+												(<SyncedActivityModel> errorSyncEvent.activity).extras = {fs_activity_location: activityFile.location}; // Keep tracking  of activity id
 
 												return Promise.reject(errorSyncEvent);
 											}
@@ -421,8 +419,8 @@ export class FileSystemConnector extends BaseConnector {
 
 						const errorMessage = "Activity file parsing error: " + ((error.message) ? error.message : error.toString());
 						const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE_SYSTEM, errorMessage, (error.stack) ? error.stack : null);
-						errorSyncEvent.activity = new BareActivityModel();
-						_.set(errorSyncEvent.activity, ["extras", FileSystemConnector.EXTRA_ACTIVITY_LOCATION], activityFile.location); // Keep tracking  of activity id
+						errorSyncEvent.activity = new SyncedActivityModel();
+						(<SyncedActivityModel> errorSyncEvent.activity).extras = {fs_activity_location: activityFile.location}; // Keep tracking  of activity id
 						return Promise.reject(errorSyncEvent);
 					});
 				});

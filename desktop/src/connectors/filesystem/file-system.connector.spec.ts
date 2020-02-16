@@ -637,8 +637,8 @@ describe("FileSystemConnector", () => {
 				expect(activitySyncEvent.activity.moving_time_raw).toEqual(9958);
 				expect(activitySyncEvent.activity.elevation_gain_raw).toEqual(671);
 				expect(activitySyncEvent.activity.sourceConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
-				expect(activitySyncEvent.activity.extras[FileSystemConnector.EXTRA_ACTIVITY_LOCATION].onMachineId).toBeDefined();
-				expect(activitySyncEvent.activity.extras[FileSystemConnector.EXTRA_ACTIVITY_LOCATION].path).toContain(expectedActivityFilePathMatch);
+				expect(activitySyncEvent.activity.extras.fs_activity_location.onMachineId).toBeDefined();
+				expect(activitySyncEvent.activity.extras.fs_activity_location.path).toContain(expectedActivityFilePathMatch);
 				expect(activitySyncEvent.activity.athleteSnapshot).toEqual(fileSystemConnector.athleteSnapshotResolver.getCurrent());
 				expect(activitySyncEvent.activity.extendedStats).not.toBeNull();
 
@@ -894,7 +894,7 @@ describe("FileSystemConnector", () => {
 				expect(errorSyncEvent.fromConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
 				expect(errorSyncEvent.description).toContain(errorMessage);
 				expect(errorSyncEvent.activity.type).toContain(ActivityTypes.Cycling);
-				expect(errorSyncEvent.activity.extras[FileSystemConnector.EXTRA_ACTIVITY_LOCATION].path).toContain("20190811_ride_3939576645.fit");
+				expect(errorSyncEvent.activity.extras.fs_activity_location.path).toContain("20190811_ride_3939576645.fit");
 				done();
 			});
 		});
@@ -936,7 +936,7 @@ describe("FileSystemConnector", () => {
 				expect(errorSyncEvent.code).toEqual(ErrorSyncEvent.SYNC_ERROR_COMPUTE.code);
 				expect(errorSyncEvent.fromConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
 				expect(errorSyncEvent.description).toContain(errorMessage);
-				expect(errorSyncEvent.activity.extras[FileSystemConnector.EXTRA_ACTIVITY_LOCATION].path).toContain("20190811_ride_3939576645.fit");
+				expect(errorSyncEvent.activity.extras.fs_activity_location.path).toContain("20190811_ride_3939576645.fit");
 				done();
 			});
 		});
