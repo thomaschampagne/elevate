@@ -2,7 +2,17 @@ import { IpcRequest, PromiseTron, PromiseTronReply } from "promise-tron";
 import logger from "electron-log";
 import { StravaAuthenticator } from "../connectors/strava/strava-authenticator";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
-import { ActivityComputer,ActivitySyncEvent, CompleteSyncEvent, ConnectorType, ErrorSyncEvent, FileSystemConnectorInfo, StravaApiCredentials, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+	ActivityComputer,
+	ActivitySyncEvent,
+	CompleteSyncEvent,
+	ConnectorType,
+	ErrorSyncEvent,
+	FileSystemConnectorInfo,
+	StravaApiCredentials,
+	SyncEvent,
+	SyncEventType
+} from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
 import {
 	ActivityStreamsModel,
@@ -151,7 +161,7 @@ export class IpcMainMessagesService {
 			this.service.currentConnector = null;
 
 			const completeSyncEventMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT,
-				new CompleteSyncEvent(ConnectorType.STRAVA, "Sync done"));
+				new CompleteSyncEvent(connectorType, "Sync done"));
 			this.send(completeSyncEventMessage).then((renderedResponse: string) => {
 				logger.debug(renderedResponse);
 			});

@@ -1,7 +1,8 @@
 import { IpcMainMessagesService } from "./ipc-main-messages-service";
 import { FlaggedIpcMessage, MessageFlag, RuntimeInfo } from "@elevate/shared/electron";
 import {
-	ActivityComputer,CompleteSyncEvent,
+	ActivityComputer,
+	CompleteSyncEvent,
 	ConnectorType,
 	ErrorSyncEvent,
 	FileSystemConnectorInfo,
@@ -234,7 +235,6 @@ describe("IpcMainMessagesService", () => {
 
 			done();
 		});
-
 
 		it("should not start a sync already running", (done: Function) => {
 

@@ -42,7 +42,7 @@
 
 			<ng-container appSyncMenu></ng-container>
 
-			<button mat-icon-button (click)="onThemeToggle()">
+			<button id="theme-toggle" mat-icon-button (click)="onThemeToggle()">
 				<mat-icon *ngIf="currentTheme === Theme.LIGHT"
 						  style="transform: rotate(-35deg) scaleX(-1);">
 					brightness_3 <!--Moon icon rotate by -35deg-->
