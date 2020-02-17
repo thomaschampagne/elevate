@@ -14,8 +14,9 @@ import { ElectronService } from "../../shared/services/electron/electron.service
 	template: `
 		<mat-card>
 			<mat-card-content>
-				<div>
-					In case of problem with the app this section might help you.
+				<div class="mat-h3">
+					In case of problem with the app this section might help you. If problem continues, consider uninstall/install the app or
+					report a bug.
 				</div>
 				<div>
 					<button mat-stroked-button color="primary" (click)="onSyncedBackupClear()">Delete athlete's activities</button>
@@ -27,13 +28,18 @@ import { ElectronService } from "../../shared/services/electron/electron.service
 					<button mat-stroked-button color="primary" (click)="onFullAppReset()">Application reset</button>
 				</div>
 				<div>
+					<br/>
+					<mat-divider></mat-divider>
+					<br/>
+				</div>
+				<div>
 					<button mat-stroked-button color="primary" (click)="openLogFile()">Open log file</button>
 				</div>
 				<div>
-					<button mat-stroked-button color="primary" (click)="openAppDataFolder()">Open application data folder</button>
+					<button mat-stroked-button color="primary" (click)="openAppDataFolder()">Open user program data folder</button>
 				</div>
 				<div>
-					If problem still persist, consider uninstall/install the app or report a bug.
+					<button mat-stroked-button color="primary" (click)="openAppExecFolder()">Open executable program folder</button>
 				</div>
 			</mat-card-content>
 		</mat-card>
@@ -114,6 +120,10 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 
 	public openAppDataFolder(): void {
 		this.electronService.openAppDataFolder();
+	}
+
+	public openAppExecFolder(): void {
+		this.electronService.openAppExecFolder();
 	}
 
 	public onZoneSettingsReset(): void {

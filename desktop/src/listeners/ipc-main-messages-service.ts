@@ -2,13 +2,21 @@ import { IpcRequest, PromiseTron, PromiseTronReply } from "promise-tron";
 import logger from "electron-log";
 import { StravaAuthenticator } from "../connectors/strava/strava-authenticator";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
-import { ActivitySyncEvent, CompleteSyncEvent, ConnectorType, ErrorSyncEvent, FileSystemConnectorInfo, StravaApiCredentials, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import { ActivityComputer,ActivitySyncEvent, CompleteSyncEvent, ConnectorType, ErrorSyncEvent, FileSystemConnectorInfo, StravaApiCredentials, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
-import { AthleteModel, ConnectorSyncDateTime, UserSettings } from "@elevate/shared/models";
+import {
+	ActivityStreamsModel,
+	AthleteModel,
+	AthleteSnapshotModel,
+	ConnectorSyncDateTime,
+	SyncedActivityModel,
+	UserSettings
+} from "@elevate/shared/models";
 import { Service } from "../service";
 import * as _ from "lodash";
 import { FileSystemConnector } from "../connectors/filesystem/file-system.connector";
 import UserSettingsModel = UserSettings.UserSettingsModel;
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 export class IpcMainMessagesService {
 
@@ -54,6 +62,10 @@ export class IpcMainMessagesService {
 
 			case MessageFlag.GET_RUNTIME_INFO:
 				this.handleGetRuntimeInfo(message, replyWith);
+				break;
+
+			case MessageFlag.COMPUTE_ACTIVITY:
+				this.handleComputeActivitySpy(message, replyWith);
 				break;
 
 			default:
@@ -238,6 +250,34 @@ export class IpcMainMessagesService {
 			});
 			logger.error(error);
 		});
+
+	}
+
+	public handleComputeActivitySpy(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
+
+		const syncedActivityModel = <SyncedActivityModel> message.payload[0];
+		const athleteSnapshotModel = <AthleteSnapshotModel> message.payload[1];
+		const userSettingsModel = <DesktopUserSettingsModel> message.payload[2];
+		const streams = <ActivityStreamsModel> ((message.payload[3]) ? message.payload[3] : null);
+
+		try {
+			const analysisDataModel = ActivityComputer.calculate(syncedActivityModel, athleteSnapshotModel, userSettingsModel, streams);
+
+			// Update synced activity with new AthleteSnapshotModel & stats results
+			syncedActivityModel.athleteSnapshot = athleteSnapshotModel;
+			syncedActivityModel.extendedStats = analysisDataModel;
+
+			replyWith({
+				success: syncedActivityModel,
+				error: null
+			});
+
+		} catch (error) {
+			replyWith({
+				success: null,
+				error: error
+			});
+		}
 
 	}
 

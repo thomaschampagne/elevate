@@ -1,7 +1,7 @@
 {
 	"name": "elevate-training",
 	"description": "Elevate your training experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...",
-	"version": "7.0.0-alpha.1",
+	"version": "7.0.0-alpha.2",
 	"scripts": {
 		"assert-app-exists": "node -e \"if ((require('fs').existsSync('./dist/app/')) === false) {console.log('Please run & wait for \\'npm start\\' task before.\\n\\n\\n\\n');process.exit(1);}\";",
 		"build:metadata": "node -e \"console.log('{\\\"commit\\\": \\\"' + require('child_process').execSync('git rev-parse HEAD').toString().trim() + '\\\", \\\"date\\\": \\\"' + (new Date()).toISOString() + '\\\"}')\" > build_metadata.json",
@@ -48,6 +48,7 @@
 		"electron-log": "^4.0.6",
 		"electron-updater": "^4.2.0",
 		"https-proxy-agent": "^5.0.0",
+		"ini": "^1.3.5",
 		"lodash": "^4.17.15",
 		"node-machine-id": "^1.1.12",
 		"pako": "^1.0.11",

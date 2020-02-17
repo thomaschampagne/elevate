@@ -1,10 +1,29 @@
 import { IpcMainMessagesService } from "./ipc-main-messages-service";
 import { FlaggedIpcMessage, MessageFlag, RuntimeInfo } from "@elevate/shared/electron";
-import { CompleteSyncEvent, ConnectorType, ErrorSyncEvent, FileSystemConnectorInfo, GenericSyncEvent, SyncEvent } from "@elevate/shared/sync";
+import {
+	ActivityComputer,CompleteSyncEvent,
+	ConnectorType,
+	ErrorSyncEvent,
+	FileSystemConnectorInfo,
+	GenericSyncEvent,
+	SyncEvent
+} from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
 import { Subject } from "rxjs";
 import { FileSystemConnector } from "../connectors/filesystem/file-system.connector";
 import { Service } from "../service";
+import {
+	ActivityStreamsModel,
+	AnalysisDataModel,
+	AthleteSettingsModel,
+	AthleteSnapshotModel,
+	Gender,
+	SyncedActivityModel,
+	UserSettings
+} from "@elevate/shared/models";
+import * as _ from "lodash";
+import { ElevateException } from "@elevate/shared/exceptions";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("IpcMainMessagesService", () => {
 
@@ -90,6 +109,27 @@ describe("IpcMainMessagesService", () => {
 
 			// Then
 			expect(handleGetRuntimeInfoSpy).toHaveBeenCalledTimes(1);
+			done();
+		});
+
+		it("should compute activity when a MessageFlag.COMPUTE_ACTIVITY is received", (done: Function) => {
+
+			// Given
+			const syncedActivityModel = new SyncedActivityModel();
+			const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
+			const userSettingsModel = new DesktopUserSettingsModel();
+			const streams = new ActivityStreamsModel();
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.COMPUTE_ACTIVITY, syncedActivityModel, athleteSnapshotModel, userSettingsModel, streams);
+			const replyWith = () => {
+			};
+
+			const handleComputeActivitySpy = spyOn(ipcMainMessagesService, "handleComputeActivitySpy").and.stub();
+
+			// When
+			ipcMainMessagesService.forwardReceivedMessagesFromIpcRenderer(flaggedIpcMessage, replyWith);
+
+			// Then
+			expect(handleComputeActivitySpy).toHaveBeenCalledTimes(1);
 			done();
 		});
 
@@ -456,6 +496,73 @@ describe("IpcMainMessagesService", () => {
 			done();
 		});
 
+	});
+
+	describe("Handle compute activity (case: fix activities, recompute single activity)", () => {
+
+		it("should compute activity", (done: Function) => {
+
+			// Given
+			const syncedActivityModel = new SyncedActivityModel();
+			syncedActivityModel.name = "My activity";
+			syncedActivityModel.start_time = new Date().toISOString();
+			const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
+			const streams = new ActivityStreamsModel();
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.COMPUTE_ACTIVITY, syncedActivityModel, athleteSnapshotModel, streams);
+			const analysisDataModel = new AnalysisDataModel();
+			const expectedSyncedActivityModel = _.cloneDeep(syncedActivityModel);
+			expectedSyncedActivityModel.extendedStats = analysisDataModel;
+			expectedSyncedActivityModel.athleteSnapshot = athleteSnapshotModel;
+			const replyWrapper = {
+				replyWith: () => {
+				}
+			};
+
+			const calculateSpy = spyOn(ActivityComputer, "calculate").and.returnValue(analysisDataModel);
+			const replyWithSpy = spyOn(replyWrapper, "replyWith");
+
+			// When
+			ipcMainMessagesService.handleComputeActivitySpy(flaggedIpcMessage, replyWrapper.replyWith);
+
+			// Then
+			expect(calculateSpy).toBeCalledTimes(1);
+			expect(replyWithSpy).toBeCalledWith({success: expectedSyncedActivityModel, error: null});
+			done();
+		});
+
+		it("should reject compute activity", (done: Function) => {
+
+			// Given
+			const syncedActivityModel = new SyncedActivityModel();
+			syncedActivityModel.name = "My activity";
+			syncedActivityModel.start_time = new Date().toISOString();
+			const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
+			const streams = new ActivityStreamsModel();
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.COMPUTE_ACTIVITY, syncedActivityModel, athleteSnapshotModel, streams);
+			const analysisDataModel = new AnalysisDataModel();
+			const expectedSyncedActivityModel = _.cloneDeep(syncedActivityModel);
+			expectedSyncedActivityModel.extendedStats = analysisDataModel;
+			expectedSyncedActivityModel.athleteSnapshot = athleteSnapshotModel;
+			const expectedErrorMessage = `Ùnable to calculate activity ${syncedActivityModel.name} started at ${syncedActivityModel.start_timestamp}: Whoops.`;
+			const expectedElevateException = new ElevateException(expectedErrorMessage);
+			const replyWrapper = {
+				replyWith: () => {
+				}
+			};
+
+			const calculateSpy = spyOn(ActivityComputer, "calculate").and.callFake(() => {
+				throw expectedElevateException;
+			});
+			const replyWithSpy = spyOn(replyWrapper, "replyWith");
+
+			// When
+			ipcMainMessagesService.handleComputeActivitySpy(flaggedIpcMessage, replyWrapper.replyWith);
+
+			// Then
+			expect(calculateSpy).toBeCalledTimes(1);
+			expect(replyWithSpy).toBeCalledWith({success: null, error: expectedElevateException});
+			done();
+		});
 	});
 
 	describe("Handle get machine id", () => {

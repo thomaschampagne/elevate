@@ -5,6 +5,7 @@ import {
 	ActivityStreamsModel,
 	AnalysisDataModel,
 	AscentSpeedDataModel,
+	BareActivityModel,
 	CadenceDataModel,
 	ElevationDataModel,
 	GradeDataModel,
@@ -24,8 +25,19 @@ import {
 import { RunningPowerEstimator } from "./running-power-estimator";
 import { SplitCalculator } from "./split-calculator";
 import { ElevateSport } from "../../enums";
+import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export class ActivityComputer {
+
+	public static calculate(bareActivityModel: BareActivityModel, athleteSnapshotModel: AthleteSnapshotModel, userSettingsModel: UserSettingsModel,
+							streams: ActivityStreamsModel, returnZones: boolean = false, bounds: number[] = null, isOwner: boolean = true): AnalysisDataModel {
+		const activitySourceData: ActivitySourceDataModel = {
+			distance: bareActivityModel.distance_raw,
+			elevation: bareActivityModel.elevation_gain_raw,
+			movingTime: bareActivityModel.moving_time_raw,
+		};
+		return new ActivityComputer(bareActivityModel.type, bareActivityModel.trainer, userSettingsModel, athleteSnapshotModel, isOwner, bareActivityModel.hasPowerMeter, activitySourceData, streams, bounds, returnZones).compute();
+	}
 
 	constructor(activityType: ElevateSport,
 				isTrainer: boolean,

@@ -4,6 +4,7 @@ export enum MessageFlag {
 	STOP_SYNC,
 	LINK_STRAVA_CONNECTOR,
 	GET_RUNTIME_INFO,
+	COMPUTE_ACTIVITY,
 
 	// From main to renderer
 	SYNC_EVENT,
