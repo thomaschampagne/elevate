@@ -1,7 +1,24 @@
 import { BaseConnector } from "../base.connector";
-import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, GenericSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+	ActivitySyncEvent,
+	ConnectorType,
+	ErrorSyncEvent,
+	GenericSyncEvent,
+	StartedSyncEvent,
+	StoppedSyncEvent,
+	SyncEvent,
+	SyncEventType
+} from "@elevate/shared/sync";
 import { ReplaySubject, Subject } from "rxjs";
-import { ActivityStreamsModel, AthleteModel, AthleteSettingsModel, BareActivityModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import {
+	ActivityStreamsModel,
+	AthleteModel,
+	AthleteSettingsModel,
+	BareActivityModel,
+	ConnectorSyncDateTime,
+	SyncedActivityModel,
+	UserSettings
+} from "@elevate/shared/models";
 import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
@@ -344,7 +361,8 @@ export class FileSystemConnector extends BaseConnector {
 													this.extractActivityStreams(sportsLibActivity), syncedActivityModel.athleteSnapshot.athleteSettings);
 
 												// Compute activity
-												syncedActivityModel.extendedStats = this.computeExtendedStats(syncedActivityModel, activityStreamsModel);
+												syncedActivityModel.extendedStats = this.computeExtendedStats(syncedActivityModel,
+													syncedActivityModel.athleteSnapshot, this.userSettingsModel, activityStreamsModel);
 
 												// Update
 												if (syncedActivityModel.extendedStats) {

@@ -36,7 +36,8 @@ export class ActivityComputer {
 			elevation: bareActivityModel.elevation_gain_raw,
 			movingTime: bareActivityModel.moving_time_raw,
 		};
-		return new ActivityComputer(bareActivityModel.type, bareActivityModel.trainer, userSettingsModel, athleteSnapshotModel, isOwner, bareActivityModel.hasPowerMeter, activitySourceData, streams, bounds, returnZones).compute();
+		return new ActivityComputer(bareActivityModel.type, bareActivityModel.trainer, userSettingsModel, athleteSnapshotModel, isOwner,
+			bareActivityModel.hasPowerMeter, activitySourceData, streams, bounds, returnZones).compute();
 	}
 
 	constructor(activityType: ElevateSport,

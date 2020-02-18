@@ -4,6 +4,8 @@ import {
 	ActivityStreamsModel,
 	AnalysisDataModel,
 	AthleteModel,
+	AthleteSnapshotModel,
+	BareActivityModel,
 	ConnectorSyncDateTime,
 	SyncedActivityModel,
 	UserSettings
@@ -77,14 +79,9 @@ export abstract class BaseConnector {
 		});
 	}
 
-	public computeExtendedStats(syncedActivityModel: Partial<SyncedActivityModel>, streams: ActivityStreamsModel): AnalysisDataModel {
-		return (new ActivityComputer(syncedActivityModel.type, syncedActivityModel.trainer,
-			this.userSettingsModel, syncedActivityModel.athleteSnapshot, true, syncedActivityModel.hasPowerMeter,
-			{
-				distance: syncedActivityModel.distance_raw,
-				elevation: syncedActivityModel.elevation_gain_raw,
-				movingTime: syncedActivityModel.moving_time_raw,
-			}, streams, null, false)).compute();
+	public computeExtendedStats(syncedActivityModel: Partial<SyncedActivityModel>, athleteSnapshotModel: AthleteSnapshotModel,
+								userSettingsModel: UserSettingsModel, streams: ActivityStreamsModel): AnalysisDataModel {
+		return ActivityComputer.calculate(<BareActivityModel> syncedActivityModel, athleteSnapshotModel, userSettingsModel, streams);
 	}
 
 	/**

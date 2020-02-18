@@ -13,7 +13,15 @@ import {
 	SyncEvent,
 	SyncEventType
 } from "@elevate/shared/sync";
-import { ActivityStreamsModel, AthleteModel, BareActivityModel, ConnectorSyncDateTime, Gender, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import {
+	ActivityStreamsModel,
+	AthleteModel,
+	BareActivityModel,
+	ConnectorSyncDateTime,
+	Gender,
+	SyncedActivityModel,
+	UserSettings
+} from "@elevate/shared/models";
 import logger from "electron-log";
 import { Service } from "../../service";
 import * as _ from "lodash";
@@ -230,7 +238,8 @@ export class StravaConnector extends BaseConnector {
 
 								// Compute activity
 								try {
-									syncedActivityModel.extendedStats = this.computeExtendedStats(syncedActivityModel, activityStreamsModel);
+									syncedActivityModel.extendedStats = this.computeExtendedStats(syncedActivityModel,
+										syncedActivityModel.athleteSnapshot, this.userSettingsModel, activityStreamsModel);
 								} catch (error) {
 
 									const errorSyncEvent = (error instanceof Error)
