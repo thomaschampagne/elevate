@@ -56,7 +56,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 	public setup(): void {
 
 		PouchDB.plugin(PouchDBFind); // Register find plugin
-		const options = {auto_compaction: true};
+		const options = {auto_compaction: true, adapter: "idb"};
 		DesktopDataStore.DATABASES.main = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_main", options);
 		DesktopDataStore.DATABASES.activities = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_activities", options);
 		DesktopDataStore.DATABASES.streams = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_streams", options);

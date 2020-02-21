@@ -41,6 +41,11 @@ export class DesktopVersionsProvider implements VersionsProvider {
 		});
 	}
 
+	public getLatestReleaseUrl(): string {
+		const packageManifest = <any> this.packageManifest();
+		return `https://github.com/${packageManifest.build.publish.owner}/${packageManifest.build.publish.repo}/releases/latest`;
+	}
+
 	public getBuildMetadata(): Promise<{ commit: string, date: string }> {
 		const buildMetadata = require("../../../../../../../desktop/build_metadata.json");
 		return Promise.resolve(buildMetadata);
