@@ -12,7 +12,7 @@ import { ElevateException } from "@elevate/shared/exceptions";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { ImportExportProgressDialogComponent } from "../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 
-export const SYNC_MENU_COMPONENT_TOKEN = new InjectionToken<SyncMenuComponent>("SYNC_MENU_COMPONENT_TOKEN");
+export const SYNC_MENU_COMPONENT = new InjectionToken<SyncMenuComponent>("SYNC_MENU_COMPONENT");
 
 @Component({template: ""})
 export class SyncMenuComponent implements OnInit {

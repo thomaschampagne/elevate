@@ -1,6 +1,15 @@
 import * as _ from "lodash";
+import { Gzip } from "../../tools";
 
 export class ActivityStreamsModel {
+
+	public static inflate(activityStreamsModel: ActivityStreamsModel): string {
+		return Gzip.pack64(activityStreamsModel);
+	}
+
+	public static deflate(inflatedStream: string): ActivityStreamsModel {
+		return Gzip.unpack64(inflatedStream);
+	}
 
 	public time: number[];
 	public distance: number[];

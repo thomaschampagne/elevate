@@ -8,6 +8,8 @@ import { AdvancedMenuComponent } from "../advanced-menu.component";
 import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { ElectronService } from "../../shared/services/electron/electron.service";
+import { ActivityService } from "../../shared/services/activity/activity.service";
+import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
 
 @Component({
 	selector: "app-advanced-menu",
@@ -18,6 +20,16 @@ import { ElectronService } from "../../shared/services/electron/electron.service
 					In case of problem with the app this section might help you. If problem continues, consider uninstall/install the app or
 					report a bug.
 				</div>
+				<div class="mat-title">
+					Activities tools
+				</div>
+				<div>
+					<button mat-stroked-button color="primary" (click)="onRecalculateActivities()">Recalculate stats on all activities
+					</button>
+				</div>
+				<div class="mat-title">
+					Clean / Reset
+				</div>
 				<div>
 					<button mat-stroked-button color="primary" (click)="onSyncedBackupClear()">Delete athlete's activities</button>
 				</div>
@@ -25,15 +37,16 @@ import { ElectronService } from "../../shared/services/electron/electron.service
 					<button mat-stroked-button color="primary" (click)="onUserSettingsReset()">Reset athlete & global settings</button>
 				</div>
 				<div>
-					<button mat-stroked-button color="primary" (click)="onFullAppReset()">Application reset</button>
+					<button mat-stroked-button color="primary" (click)="onFullAppReset()">Full application reset</button>
 				</div>
-				<div>
-					<br/>
-					<mat-divider></mat-divider>
-					<br/>
+				<div class="mat-title">
+					Debugging
 				</div>
 				<div>
 					<button mat-stroked-button color="primary" (click)="openLogFile()">Open log file</button>
+				</div>
+				<div class="mat-title">
+					Others
 				</div>
 				<div>
 					<button mat-stroked-button color="primary" (click)="openAppDataFolder()">Open user program data folder</button>
@@ -54,12 +67,17 @@ import { ElectronService } from "../../shared/services/electron/electron.service
 				padding-top: 10px;
 				padding-bottom: 10px;
 			}
+
+			.spacer {
+				padding-bottom: 25px;
+			}
 		`
 	]
 })
 export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 
 	constructor(public userSettingsService: UserSettingsService,
+				public activityService: ActivityService,
 				public athleteService: AthleteService,
 				public syncService: SyncService<any>,
 				public electronService: ElectronService,
@@ -89,6 +107,28 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 				]).then(() => {
 					this.snackBar.open("Settings have been reset", "Close");
 					afterClosedSubscription.unsubscribe();
+				});
+			}
+		});
+	}
+
+	public onRecalculateActivities(): void {
+
+		const data: ConfirmDialogDataModel = {
+			title: "Recalculate stats of all activities",
+			content: "This will recompute stats on all your activities based on your current dated athlete settings and sensors' streams of each activity."
+		};
+
+		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+			minWidth: ConfirmDialogComponent.MIN_WIDTH,
+			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+			data: data
+		});
+
+		dialogRef.afterClosed().subscribe((confirm: boolean) => {
+			if (confirm) {
+				this.userSettingsService.fetch().then(userSettingsModel => {
+					(<DesktopActivityService> this.activityService).bulkRefreshStatsAll(userSettingsModel);
 				});
 			}
 		});

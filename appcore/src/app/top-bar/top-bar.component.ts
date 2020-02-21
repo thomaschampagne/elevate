@@ -2,7 +2,7 @@ import { Component, Inject, InjectionToken, OnInit } from "@angular/core";
 import { ElectronService } from "../shared/services/electron/electron.service";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../shared/services/versions/versions-provider.interface";
 
-export const TOP_BAR_COMPONENT_TOKEN = new InjectionToken<TopBarComponent>("TOP_BAR_COMPONENT_TOKEN");
+export const TOP_BAR_COMPONENT = new InjectionToken<TopBarComponent>("TOP_BAR_COMPONENT");
 
 @Component({template: ""})
 export class TopBarComponent {
@@ -14,7 +14,7 @@ export class TopBarComponent {
 		<div class="top-bar">
 			<div class="draggable"></div>
 			<span class="top-bar-title mat-body-strong" *ngIf="buildMetadata && buildMetadata.commit && buildMetadata.date">
-				Elevate v{{currentVersion}}
+				<span class="alpha-tag">alpha</span>&nbsp;&nbsp;Elevate v{{currentVersion}}
 			</span>
 			<span class="toolbar-spacer"></span>
 			<button mat-icon-button (click)="onMinimizeAppClicked()">
@@ -32,37 +32,45 @@ export class TopBarComponent {
 		</div>
 	`,
 	styles: [`
-        .top-bar {
-            background-color: black;
-            display: flex;
-            align-items: center;
-            color: white;
-        }
+		.alpha-tag {
+			background-color: #FF004C;
+			color: white;
+			padding: 1px 5px 1px 5px;
+			font-weight: bold;
+			border-radius: 3px;
+		}
 
-        .draggable {
-            -webkit-app-region: drag;
-            position: absolute;
-            left: 3px;
-            right: 3px;
-            top: 3px;
-            height: 35px;
-        }
+		.top-bar {
+			background-color: black;
+			display: flex;
+			align-items: center;
+			color: white;
+		}
 
-        .top-bar-title {
-            margin: 0 0 0 16px;
-        }
+		.draggable {
+			-webkit-app-region: drag;
+			position: absolute;
+			left: 3px;
+			right: 3px;
+			top: 3px;
+			height: 35px;
+		}
 
-        .toolbar-spacer {
-            flex: 1 1 auto;
-        }
+		.top-bar-title {
+			margin: 0 0 0 16px;
+		}
 
-        button {
-            -webkit-app-region: no-drag;
-        }
+		.toolbar-spacer {
+			flex: 1 1 auto;
+		}
 
-        button:last-child:hover { /* Set close icon red */
-            color: #ff4643;
-        }
+		button {
+			-webkit-app-region: no-drag;
+		}
+
+		button:last-child:hover { /* Set close icon red */
+			color: #ff4643;
+		}
 	`]
 })
 export class DesktopTopBarComponent extends TopBarComponent implements OnInit {

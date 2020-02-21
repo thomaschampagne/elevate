@@ -13,19 +13,11 @@ import {
 	SyncEvent,
 	SyncEventType
 } from "@elevate/shared/sync";
-import {
-	ActivityStreamsModel,
-	AthleteModel,
-	BareActivityModel,
-	ConnectorSyncDateTime,
-	Gender,
-	SyncedActivityModel,
-	UserSettings
-} from "@elevate/shared/models";
+import { ActivityStreamsModel, AthleteModel, BareActivityModel, ConnectorSyncDateTime, Gender, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import logger from "electron-log";
 import { Service } from "../../service";
 import * as _ from "lodash";
-import { Gzip, sleep } from "@elevate/shared/tools";
+import { sleep } from "@elevate/shared/tools";
 import { StravaAuthenticator } from "./strava-authenticator";
 import { IHttpClientResponse } from "typed-rest-client/Interfaces";
 import { HttpCodes } from "typed-rest-client/HttpClient";
@@ -255,7 +247,7 @@ export class StravaConnector extends BaseConnector {
 								syncedActivityModel.sourceConnectorType = ConnectorType.STRAVA;
 
 								// Gunzip stream as base64
-								const compressedStream = (activityStreamsModel) ? Gzip.pack64(activityStreamsModel) : null;
+								const compressedStream = (activityStreamsModel) ? ActivityStreamsModel.inflate(activityStreamsModel) : null;
 
 								// Notify the new SyncedActivityModel
 								syncEvents$.next(new ActivitySyncEvent(ConnectorType.STRAVA, null, <SyncedActivityModel> syncedActivityModel, true, compressedStream));

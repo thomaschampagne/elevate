@@ -6,7 +6,7 @@ import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { LoggerService } from "../../logging/logger.service";
 import { Subject, Subscription } from "rxjs";
 import { ActivitySyncEvent, CompleteSyncEvent, ConnectorType, ErrorSyncEvent, FileSystemConnectorInfo, StravaApiCredentials, SyncEvent, SyncEventType } from "@elevate/shared/sync";
-import { IpcRendererMessagesService } from "../../messages-listener/ipc-renderer-messages.service";
+import { IpcMessagesReceiver } from "../../../../desktop/ipc-messages/ipc-messages-receiver.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { StravaApiCredentialsService } from "../../strava-api-credentials/strava-api-credentials.service";
 import { AthleteModel, CompressedStreamModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
@@ -23,6 +23,7 @@ import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 import { AppEventsService } from "../../external-updates/app-events-service";
 import { StreamsService } from "../../streams/streams.service";
 import { FileSystemConnectorInfoService } from "../../file-system-connector-info/file-system-connector-info.service";
+import { IpcMessagesSender } from "../../../../desktop/ipc-messages/ipc-messages-sender.service";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 // TODO Handle sync complete
@@ -56,7 +57,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 				public streamsService: StreamsService,
 				public athleteService: AthleteService,
 				public userSettingsService: UserSettingsService,
-				public messageListenerService: IpcRendererMessagesService,
+				public ipcMessagesReceiver: IpcMessagesReceiver,
+				public ipcMessagesSender: IpcMessagesSender,
 				public stravaApiCredentialsService: StravaApiCredentialsService,
 				public fileSystemConnectorInfoService: FileSystemConnectorInfoService,
 				public logger: LoggerService,
@@ -103,7 +105,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 		this.currentConnectorType = connectorType;
 
-		this.messageListenerService.listen();
+		this.ipcMessagesReceiver.listen();
 
 		const promisedDataToSync: Promise<any>[] = [
 			this.athleteService.fetch(),
@@ -126,7 +128,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 		}
 
 		// Subscribe for sync events
-		this.syncSubscription = this.messageListenerService.syncEvents$.subscribe((syncEvent: SyncEvent) => {
+		this.syncSubscription = this.ipcMessagesReceiver.syncEvents$.subscribe((syncEvent: SyncEvent) => {
 			this.handleSyncEvents(this.syncEvents$, syncEvent);
 		});
 
@@ -158,7 +160,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 			}
 
 			// Trigger sync start
-			return this.messageListenerService.send<string>(startSyncMessage).then((response: string) => {
+			return this.ipcMessagesSender.send<string>(startSyncMessage).then((response: string) => {
 				this.logger.info("Message received by ipcMain. Response:", response);
 				return Promise.resolve();
 			}, error => {
@@ -290,7 +292,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 			const stopSyncMessage = new FlaggedIpcMessage(MessageFlag.STOP_SYNC, this.currentConnectorType);
 
-			this.messageListenerService.send<string>(stopSyncMessage).then((response: string) => {
+			this.ipcMessagesSender.send<string>(stopSyncMessage).then((response: string) => {
 				this.logger.info("Sync stopped. Response from main:", response);
 				resolve();
 			}, error => {

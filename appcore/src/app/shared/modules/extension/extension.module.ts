@@ -14,6 +14,8 @@ import { ExtensionRoutingModule } from "./extension-routing.module";
 import { ExtensionAdvancedMenuComponent } from "../../../advanced-menu/extension/extension-advanced-menu.component";
 import { OPEN_RESOURCE_RESOLVER } from "../../services/links-opener/open-resource-resolver";
 import { ExtensionOpenResourceResolver } from "../../services/links-opener/impl/extension-open-resource-resolver.service";
+import { ActivityService } from "../../services/activity/activity.service";
+import { ExtensionActivityService } from "../../services/activity/impl/extension-activity.service";
 
 @NgModule({
 	imports: [
@@ -29,6 +31,7 @@ import { ExtensionOpenResourceResolver } from "../../services/links-opener/impl/
 	],
 	providers: [
 		SyncDateTimeDao,
+		{provide: ActivityService, useClass: ExtensionActivityService},
 		{provide: DataStore, useClass: ExtensionDataStore},
 		{provide: AppEventsService, useClass: ExtensionEventsService},
 		{provide: VERSIONS_PROVIDER, useClass: ExtensionVersionsProvider},

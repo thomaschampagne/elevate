@@ -1,24 +1,7 @@
 import { BaseConnector } from "../base.connector";
-import {
-	ActivitySyncEvent,
-	ConnectorType,
-	ErrorSyncEvent,
-	GenericSyncEvent,
-	StartedSyncEvent,
-	StoppedSyncEvent,
-	SyncEvent,
-	SyncEventType
-} from "@elevate/shared/sync";
+import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, GenericSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { ReplaySubject, Subject } from "rxjs";
-import {
-	ActivityStreamsModel,
-	AthleteModel,
-	AthleteSettingsModel,
-	BareActivityModel,
-	ConnectorSyncDateTime,
-	SyncedActivityModel,
-	UserSettings
-} from "@elevate/shared/models";
+import { ActivityStreamsModel, AthleteModel, AthleteSettingsModel, BareActivityModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
@@ -43,7 +26,6 @@ import { GradeCalculator } from "./grade-calculator/grade-calculator";
 import { CyclingPower } from "./cycling-power-estimator/cycling-power-estimator";
 import { Partial } from "rollup-plugin-typescript2/dist/partial";
 import { ElevateException } from "@elevate/shared/exceptions";
-import { Gzip } from "@elevate/shared/tools";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export enum ActivityFileType {
@@ -380,7 +362,7 @@ export class FileSystemConnector extends BaseConnector {
 												syncedActivityModel.sourceConnectorType = ConnectorType.FILE_SYSTEM;
 
 												// Gunzip stream as base64
-												const compressedStream = (activityStreamsModel) ? Gzip.pack64(activityStreamsModel) : null;
+												const compressedStream = (activityStreamsModel) ? ActivityStreamsModel.inflate(activityStreamsModel) : null;
 
 												// Notify the new SyncedActivityModel
 												syncEvents$.next(new ActivitySyncEvent(ConnectorType.FILE_SYSTEM,

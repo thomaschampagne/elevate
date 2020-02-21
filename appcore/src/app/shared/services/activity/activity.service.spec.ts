@@ -7,6 +7,7 @@ import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import { ElevateSport } from "@elevate/shared/enums";
+import FindRequest = PouchDB.Find.FindRequest;
 
 describe("ActivityService", () => {
 
@@ -435,5 +436,60 @@ describe("ActivityService", () => {
 		});
 
 	});
+
+	it("should find activity by start time and duration", (done: Function) => {
+
+		// Given
+		const date = "2019-03-01T10:00:00.000Z";
+		const activityDuration = 3600;
+
+		const query: FindRequest<SyncedActivityModel[]> = {
+			selector: {
+				$or: [
+					{
+						start_time: {
+							$gte: "2019-03-01T10:00:00.000Z",
+						},
+						end_time: {
+							$lte: "2019-03-01T11:00:00.000Z",
+						}
+					},
+					{
+						start_time: {
+							$gte: "2019-03-01T10:00:00.000Z",
+							$lte: "2019-03-01T11:00:00.000Z",
+						}
+					},
+					{
+						end_time: {
+							$gte: "2019-03-01T10:00:00.000Z",
+							$lte: "2019-03-01T11:00:00.000Z",
+						}
+					}
+
+				]
+
+			}
+		};
+
+		const findActivitySpy = spyOn(activityService, "find").and.returnValue(Promise.resolve([]));
+
+		// When
+		const promise = activityService.findByDatedSession(date, activityDuration);
+
+		// Then
+		promise.then(() => {
+
+			expect(findActivitySpy).toHaveBeenCalledTimes(1);
+			expect(findActivitySpy).toHaveBeenCalledWith(query);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
 
 });

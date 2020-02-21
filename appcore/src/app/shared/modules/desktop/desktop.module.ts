@@ -8,7 +8,7 @@ import { DesktopVersionsProvider } from "../../services/versions/impl/desktop-ve
 import { SyncService } from "../../services/sync/sync.service";
 import { DesktopSyncService } from "../../services/sync/impl/desktop-sync.service";
 import { ElectronService } from "../../services/electron/electron.service";
-import { IpcRendererMessagesService } from "../../services/messages-listener/ipc-renderer-messages.service";
+import { IpcMessagesReceiver } from "../../../desktop/ipc-messages/ipc-messages-receiver.service";
 import { StravaApiCredentialsDao } from "../../dao/strava-api-credentials/strava-api-credentials.dao";
 import { StravaApiCredentialsService } from "../../services/strava-api-credentials/strava-api-credentials.service";
 import { ConnectorsModule } from "../../../connectors/connectors.module";
@@ -22,6 +22,11 @@ import { DesktopMigrationService } from "../../../desktop/migration/desktop-migr
 import { FileSystemConnectorInfoService } from "../../services/file-system-connector-info/file-system-connector-info.service";
 import { OPEN_RESOURCE_RESOLVER } from "../../services/links-opener/open-resource-resolver";
 import { DesktopOpenResourceResolver } from "../../services/links-opener/impl/desktop-open-resource-resolver.service";
+import { ActivityService } from "../../services/activity/activity.service";
+import { DesktopActivityService } from "../../services/activity/impl/desktop-activity.service";
+import { PromiseTronService } from "../../../desktop/ipc-messages/promise-tron.service";
+import { IpcMessagesSender } from "../../../desktop/ipc-messages/ipc-messages-sender.service";
+import { PROMISE_TRON } from "../../../desktop/ipc-messages/promise-tron.interface";
 
 @NgModule({
 	imports: [
@@ -39,8 +44,11 @@ import { DesktopOpenResourceResolver } from "../../services/links-opener/impl/de
 	],
 	providers: [
 		ElectronService,
-		IpcRendererMessagesService,
+		IpcMessagesReceiver,
+		IpcMessagesSender,
 		DesktopMigrationService,
+		{provide: PROMISE_TRON, useClass: PromiseTronService},
+		{provide: ActivityService, useClass: DesktopActivityService},
 		{provide: DataStore, useClass: DesktopDataStore},
 		{provide: AppEventsService, useClass: DesktopEventsService},
 		{provide: VERSIONS_PROVIDER, useClass: DesktopVersionsProvider},

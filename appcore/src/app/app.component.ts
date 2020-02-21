@@ -1,17 +1,5 @@
 import * as _ from "lodash";
-import {
-	Component,
-	ComponentFactoryResolver,
-	ElementRef,
-	HostListener,
-	Inject,
-	OnDestroy,
-	OnInit,
-	Renderer2,
-	Type,
-	ViewChild,
-	ViewContainerRef
-} from "@angular/core";
+import { Component, ComponentFactoryResolver, ElementRef, HostListener, Inject, OnDestroy, OnInit, Renderer2, Type, ViewChild, ViewContainerRef } from "@angular/core";
 import { GuardsCheckEnd, NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { MatIconRegistry } from "@angular/material/icon";
@@ -26,16 +14,18 @@ import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/enums/theme.enum";
 import { EnvTarget } from "@elevate/shared/models";
 import { environment } from "../environments/environment";
-import { SYNC_MENU_COMPONENT_TOKEN, SyncMenuComponent } from "./sync-menu/sync-menu.component";
+import { SYNC_MENU_COMPONENT, SyncMenuComponent } from "./sync-menu/sync-menu.component";
 import { SyncMenuDirective } from "./sync-menu/sync-menu.directive";
 import { TopBarDirective } from "./top-bar/top-bar.directive";
-import { TOP_BAR_COMPONENT_TOKEN, TopBarComponent } from "./top-bar/top-bar.component";
-import { SYNC_BAR_COMPONENT_TOKEN, SyncBarComponent } from "./sync-bar/sync-bar.component";
+import { TOP_BAR_COMPONENT, TopBarComponent } from "./top-bar/top-bar.component";
+import { SYNC_BAR_COMPONENT, SyncBarComponent } from "./sync-bar/sync-bar.component";
 import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
 import { LoggerService } from "./shared/services/logging/logger.service";
 import { MENU_ITEMS_PROVIDER, MenuItemModel, MenuItemsProvider } from "./shared/services/menu-items/menu-items-provider.interface";
-import { APP_MORE_MENU_COMPONENT_TOKEN, AppMoreMenuComponent } from "./app-more-menu/app-more-menu.component";
+import { APP_MORE_MENU_COMPONENT, AppMoreMenuComponent } from "./app-more-menu/app-more-menu.component";
 import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
+import { REFRESH_STATS_BAR_COMPONENT, RefreshStatsBarComponent } from "./refresh-stats-bar/refresh-stats-bar.component";
+import { RefreshStatsBarDirective } from "./refresh-stats-bar/refresh-stats-bar.directive";
 
 @Component({
 	selector: "app-root",
@@ -56,10 +46,11 @@ export class AppComponent implements OnInit, OnDestroy {
 				public logger: LoggerService,
 				public componentFactoryResolver: ComponentFactoryResolver,
 				@Inject(MENU_ITEMS_PROVIDER) public menuItemsProvider: MenuItemsProvider,
-				@Inject(TOP_BAR_COMPONENT_TOKEN) public topBarComponentType: Type<TopBarComponent>,
-				@Inject(SYNC_BAR_COMPONENT_TOKEN) public syncBarComponentType: Type<SyncBarComponent>,
-				@Inject(SYNC_MENU_COMPONENT_TOKEN) public syncMenuComponentType: Type<SyncMenuComponent>,
-				@Inject(APP_MORE_MENU_COMPONENT_TOKEN) public appMoreMenuComponentType: Type<AppMoreMenuComponent>) {
+				@Inject(TOP_BAR_COMPONENT) public topBarComponentType: Type<TopBarComponent>,
+				@Inject(SYNC_BAR_COMPONENT) public syncBarComponentType: Type<SyncBarComponent>,
+				@Inject(REFRESH_STATS_BAR_COMPONENT) public refreshStatsBarComponentType: Type<RefreshStatsBarComponent>,
+				@Inject(SYNC_MENU_COMPONENT) public syncMenuComponentType: Type<SyncMenuComponent>,
+				@Inject(APP_MORE_MENU_COMPONENT) public appMoreMenuComponentType: Type<AppMoreMenuComponent>) {
 		this.isAppUseAllowed = false;
 		this.isAppInitialized = false;
 		this.registerCustomIcons();
@@ -91,6 +82,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	@ViewChild(SyncBarDirective, {static: true})
 	public syncBarDirective: SyncBarDirective;
+
+	@ViewChild(RefreshStatsBarDirective, {static: true})
+	public refreshStatsBarDirective: RefreshStatsBarDirective;
 
 	@ViewChild(SyncMenuDirective, {static: true})
 	public syncMenuDirective: SyncMenuDirective;
@@ -148,6 +142,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		// Inject top bar, sync bar, sync menu
 		this.injectHotComponent<TopBarComponent>(this.topBarComponentType, this.topBarDirective.viewContainerRef);
 		this.injectHotComponent<SyncBarComponent>(this.syncBarComponentType, this.syncBarDirective.viewContainerRef);
+		this.injectHotComponent<RefreshStatsBarComponent>(this.refreshStatsBarComponentType, this.refreshStatsBarDirective.viewContainerRef);
 		this.injectHotComponent<SyncMenuComponent>(this.syncMenuComponentType, this.syncMenuDirective.viewContainerRef);
 		this.injectHotComponent<AppMoreMenuComponent>(this.appMoreMenuComponentType, this.appMoreMenuDirective.viewContainerRef);
 

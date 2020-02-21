@@ -1,28 +1,24 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { SyncEvent } from "@elevate/shared/sync";
 import { FlaggedIpcMessage } from "@elevate/shared/electron";
-import { IpcRequest, PromiseTron, PromiseTronReply } from "promise-tron";
-import { ElectronService } from "../electron/electron.service";
+import { IpcRequest, PromiseTronReply } from "promise-tron";
 import { Subject } from "rxjs";
 import * as _ from "lodash";
-import { LoggerService } from "../logging/logger.service";
+import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MessageFlag } from "@elevate/shared/electron/message-flag.enum";
-import { SyncedActivityModel } from "@elevate/shared/models";
-import { ActivityService } from "../activity/activity.service";
-import FindRequest = PouchDB.Find.FindRequest;
+import { ActivityService } from "../../shared/services/activity/activity.service";
+import { IPromiseTron, PROMISE_TRON } from "./promise-tron.interface";
 
 @Injectable()
-export class IpcRendererMessagesService {
+export class IpcMessagesReceiver {
 
 	public syncEvents$: Subject<SyncEvent>;
-	public promiseTron: PromiseTron;
 	public isListening: boolean;
 
-	constructor(public electronService: ElectronService,
+	constructor(@Inject(PROMISE_TRON) public promiseTron: IPromiseTron,
 				public activityService: ActivityService,
 				public logger: LoggerService) {
 		this.syncEvents$ = new Subject<SyncEvent>();
-		this.promiseTron = new PromiseTron(this.electronService.electron.ipcRenderer);
 		this.isListening = false;
 	}
 
@@ -81,7 +77,7 @@ export class IpcRendererMessagesService {
 		const startTime = <string> flaggedIpcMessage.payload[0];
 		const activityDurationSeconds = <number> flaggedIpcMessage.payload[1];
 
-		this.findActivities(startTime, activityDurationSeconds).then(activities => {
+		this.activityService.findByDatedSession(startTime, activityDurationSeconds).then(activities => {
 			replyWith({
 				success: activities,
 				error: null
@@ -100,48 +96,5 @@ export class IpcRendererMessagesService {
 			success: null,
 			error: errorMessage
 		});
-	}
-
-	public send<T>(flaggedIpcMessage: FlaggedIpcMessage): Promise<T> {
-		return <Promise<T>> this.promiseTron.send(flaggedIpcMessage);
-	}
-
-	public findActivities(startTime: string, activityDurationSeconds: number): Promise<SyncedActivityModel[]> {
-
-		const activityStartTime = new Date(startTime).toISOString();
-		const endDate = new Date(activityStartTime);
-		endDate.setSeconds(endDate.getSeconds() + activityDurationSeconds);
-		const activityEndTime = endDate.toISOString();
-
-		const query: FindRequest<SyncedActivityModel[]> = {
-			selector: {
-				$or: [
-					{
-						start_time: {
-							$gte: activityStartTime,
-						},
-						end_time: {
-							$lte: activityEndTime,
-						}
-					},
-					{
-						start_time: {
-							$gte: activityStartTime,
-							$lte: activityEndTime,
-						}
-					},
-					{
-						end_time: {
-							$gte: activityStartTime,
-							$lte: activityEndTime,
-						}
-					}
-
-				]
-
-			}
-		};
-
-		return this.activityService.find(query);
 	}
 }

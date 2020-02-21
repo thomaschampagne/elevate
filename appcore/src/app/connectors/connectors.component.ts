@@ -33,11 +33,11 @@ export class ConnectorsComponent implements OnInit {
 			if (syncState === SyncState.NOT_SYNCED) {
 
 				const data: ConfirmDialogDataModel = {
-					title: "⚠️ Please check your athlete settings",
-					content: "It's your first synchronisation, please make sure you properly configure your dated athlete settings (Cycling FTP, Running FTP, Swim FTP, Heart rate, Weight, ...) before." +
-						"Missing athlete settings can cause missing stats which are required by most of the Elevate features.",
-					confirmText: "Start sync",
-					cancelText: "Check my athlete settings"
+					title: "Important: check your athlete settings before",
+					content: "No activities were synced before. Please make sure you properly configure your dated athlete settings (cycling FTP, running FTP, swim FTP, heart rate, weight, ...) before starting a synchronization. " +
+						"A lack of athlete settings configuration can cause empty stats and empty charts.",
+					confirmText: "I configured my athlete settings, start sync",
+					cancelText: "Configure athlete settings"
 				};
 
 				const dialogRef = this.dialog.open(ConfirmDialogComponent, {

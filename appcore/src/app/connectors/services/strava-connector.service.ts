@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { IpcRendererMessagesService } from "../../shared/services/messages-listener/ipc-renderer-messages.service";
 import { ConnectorType, StravaAccount, StravaApiCredentials, StravaCredentialsUpdateSyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
@@ -8,6 +7,7 @@ import { StravaApiCredentialsService } from "../../shared/services/strava-api-cr
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { filter } from "rxjs/operators";
 import { Gender } from "@elevate/shared/models";
+import { IpcMessagesSender } from "../../desktop/ipc-messages/ipc-messages-sender.service";
 
 @Injectable()
 export class StravaConnectorService {
@@ -16,7 +16,7 @@ export class StravaConnectorService {
 	public stravaApiCredentials$: Subject<StravaApiCredentials>;
 
 	constructor(public stravaApiCredentialsService: StravaApiCredentialsService,
-				public messagesListenerService: IpcRendererMessagesService,
+				public ipcMessagesSender: IpcMessagesSender,
 				public syncService: DesktopSyncService,
 				public logger: LoggerService) {
 
@@ -39,7 +39,7 @@ export class StravaConnectorService {
 			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.LINK_STRAVA_CONNECTOR, this.stravaApiCredentials.clientId,
 				this.stravaApiCredentials.clientSecret, this.stravaApiCredentials.refreshToken);
 
-			return this.messagesListenerService
+			return this.ipcMessagesSender
 				.send<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: any }>(flaggedIpcMessage);
 
 		}).then(result => {

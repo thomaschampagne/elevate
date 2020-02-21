@@ -1,19 +1,19 @@
 import { TestBed } from "@angular/core/testing";
 
-import { IpcRendererMessagesService } from "./ipc-renderer-messages.service";
-import { DesktopModule } from "../../modules/desktop/desktop.module";
-import { SharedModule } from "../../shared.module";
-import { CoreModule } from "../../../core/core.module";
-import { ElectronService, ElectronWindow } from "../electron/electron.service";
+import { IpcMessagesReceiver } from "./ipc-messages-receiver.service";
+import { DesktopModule } from "../../shared/modules/desktop/desktop.module";
+import { SharedModule } from "../../shared/shared.module";
+import { CoreModule } from "../../core/core.module";
 import { IpcRequest } from "promise-tron";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { ActivitySyncEvent, ConnectorType } from "@elevate/shared/sync";
-import FindRequest = PouchDB.Find.FindRequest;
+import { PROMISE_TRON } from "./promise-tron.interface";
+import { PromiseTronServiceMock } from "./promise-tron.service.mock";
 
-describe("IpcRendererMessagesService", () => {
+describe("IpcMessagesReceiver", () => {
 
-	let ipcRendererMessagesService: IpcRendererMessagesService;
+	let ipcMessagesReceiver: IpcMessagesReceiver;
 
 	beforeEach((done: Function) => {
 		TestBed.configureTestingModule({
@@ -21,25 +21,15 @@ describe("IpcRendererMessagesService", () => {
 				CoreModule,
 				SharedModule,
 				DesktopModule
+			],
+			providers: [
+				{provide: PROMISE_TRON, useClass: PromiseTronServiceMock}
 			]
 		});
 
-		const electronService: ElectronService = TestBed.inject(ElectronService);
-		electronService.instance = <Electron.RendererInterface> {
-			ipcRenderer: {}
-		};
-
-		const electronWindow = (window as ElectronWindow);
-		const electronRequire = (module: string) => {
-			console.log("Loading module: " + module);
-			return {} as Electron.RendererInterface;
-		};
-		electronWindow.require = electronRequire;
-		spyOn(electronWindow, "require").and.callFake(electronRequire);
-
-		ipcRendererMessagesService = TestBed.inject(IpcRendererMessagesService);
-		spyOn(ipcRendererMessagesService.promiseTron, "on").and.stub();
-		ipcRendererMessagesService.listen();
+		ipcMessagesReceiver = TestBed.inject(IpcMessagesReceiver);
+		spyOn(ipcMessagesReceiver.promiseTron, "on").and.stub();
+		ipcMessagesReceiver.listen();
 		done();
 	});
 
@@ -51,10 +41,10 @@ describe("IpcRendererMessagesService", () => {
 		const replyWith = () => {
 		};
 		const expectedFlaggedIpcMessage = IpcRequest.extractData<FlaggedIpcMessage>(ipcRequest);
-		const forwardMessagesFromIpcMainSpy = spyOn(ipcRendererMessagesService, "forwardMessagesFromIpcMain");
+		const forwardMessagesFromIpcMainSpy = spyOn(ipcMessagesReceiver, "forwardMessagesFromIpcMain");
 
 		// When
-		ipcRendererMessagesService.onIpcRequest(ipcRequest, replyWith);
+		ipcMessagesReceiver.onIpcRequest(ipcRequest, replyWith);
 
 		// Then
 		expect(forwardMessagesFromIpcMainSpy).toHaveBeenCalledTimes(1);
@@ -74,11 +64,11 @@ describe("IpcRendererMessagesService", () => {
 
 		spyOn(IpcRequest, "extractData").and.returnValue(null);
 
-		const forwardMessagesFromIpcMainSpy = spyOn(ipcRendererMessagesService, "forwardMessagesFromIpcMain");
+		const forwardMessagesFromIpcMainSpy = spyOn(ipcMessagesReceiver, "forwardMessagesFromIpcMain");
 
 		// When
 		const call = () => {
-			ipcRendererMessagesService.onIpcRequest(ipcRequest, replyWith);
+			ipcMessagesReceiver.onIpcRequest(ipcRequest, replyWith);
 		};
 
 		// Then
@@ -95,10 +85,10 @@ describe("IpcRendererMessagesService", () => {
 			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT);
 			const replyWith = () => {
 			};
-			const handleSyncEventsMessagesSpy = spyOn(ipcRendererMessagesService, "handleSyncEventsMessages").and.stub();
+			const handleSyncEventsMessagesSpy = spyOn(ipcMessagesReceiver, "handleSyncEventsMessages").and.stub();
 
 			// When
-			ipcRendererMessagesService.forwardMessagesFromIpcMain(flaggedIpcMessage, replyWith);
+			ipcMessagesReceiver.forwardMessagesFromIpcMain(flaggedIpcMessage, replyWith);
 
 			// Then
 			expect(handleSyncEventsMessagesSpy).toHaveBeenCalledWith(flaggedIpcMessage);
@@ -111,10 +101,10 @@ describe("IpcRendererMessagesService", () => {
 			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.FIND_ACTIVITY);
 			const replyWith = () => {
 			};
-			const handleFindActivityMessagesSpy = spyOn(ipcRendererMessagesService, "handleFindActivityMessages").and.stub();
+			const handleFindActivityMessagesSpy = spyOn(ipcMessagesReceiver, "handleFindActivityMessages").and.stub();
 
 			// When
-			ipcRendererMessagesService.forwardMessagesFromIpcMain(flaggedIpcMessage, replyWith);
+			ipcMessagesReceiver.forwardMessagesFromIpcMain(flaggedIpcMessage, replyWith);
 
 			// Then
 			expect(handleFindActivityMessagesSpy).toHaveBeenCalledWith(flaggedIpcMessage, replyWith);
@@ -138,7 +128,7 @@ describe("IpcRendererMessagesService", () => {
 			const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 
 			// When
-			ipcRendererMessagesService.forwardMessagesFromIpcMain(flaggedIpcMessage, replyWith.callback);
+			ipcMessagesReceiver.forwardMessagesFromIpcMain(flaggedIpcMessage, replyWith.callback);
 
 			// Then
 			expect(replyWithCallbackSpy).toHaveBeenCalledWith(replyWith.args);
@@ -154,69 +144,14 @@ describe("IpcRendererMessagesService", () => {
 		const activitySyncEvent = new ActivitySyncEvent(ConnectorType.STRAVA, null,
 			syncedActivity, true);
 		const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, activitySyncEvent);
-		const syncEventsNextSpy = spyOn(ipcRendererMessagesService.syncEvents$, "next").and.stub();
+		const syncEventsNextSpy = spyOn(ipcMessagesReceiver.syncEvents$, "next").and.stub();
 
 		// When
-		ipcRendererMessagesService.handleSyncEventsMessages(flaggedIpcMessage);
+		ipcMessagesReceiver.handleSyncEventsMessages(flaggedIpcMessage);
 
 		// Then
 		expect(syncEventsNextSpy).toHaveBeenCalledTimes(1);
 		expect(syncEventsNextSpy).toHaveBeenCalledWith(activitySyncEvent);
 		done();
 	});
-
-	it("should find activity from ipc main message", (done: Function) => {
-
-		// Given
-		const date = "2019-03-01T10:00:00.000Z";
-		const activityDuration = 3600;
-
-		const query: FindRequest<SyncedActivityModel[]> = {
-			selector: {
-				$or: [
-					{
-						start_time: {
-							$gte: "2019-03-01T10:00:00.000Z",
-						},
-						end_time: {
-							$lte: "2019-03-01T11:00:00.000Z",
-						}
-					},
-					{
-						start_time: {
-							$gte: "2019-03-01T10:00:00.000Z",
-							$lte: "2019-03-01T11:00:00.000Z",
-						}
-					},
-					{
-						end_time: {
-							$gte: "2019-03-01T10:00:00.000Z",
-							$lte: "2019-03-01T11:00:00.000Z",
-						}
-					}
-
-				]
-
-			}
-		};
-
-		const findActivitySpy = spyOn(ipcRendererMessagesService.activityService, "find").and.returnValue(Promise.resolve([]));
-
-		// When
-		const promise = ipcRendererMessagesService.findActivities(date, activityDuration);
-
-		// Then
-		promise.then(() => {
-
-			expect(findActivitySpy).toHaveBeenCalledTimes(1);
-			expect(findActivitySpy).toHaveBeenCalledWith(query);
-
-			done();
-
-		}, error => {
-			expect(error).toBeNull();
-			done();
-		});
-	});
-
 });

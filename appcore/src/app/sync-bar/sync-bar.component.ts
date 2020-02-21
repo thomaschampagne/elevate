@@ -4,7 +4,7 @@ import { ActivitySyncEvent, ErrorSyncEvent, SyncEvent, SyncEventType } from "@el
 import { SyncException } from "@elevate/shared/exceptions";
 import * as moment from "moment";
 
-export const SYNC_BAR_COMPONENT_TOKEN = new InjectionToken<SyncBarComponent>("SYNC_BAR_COMPONENT_TOKEN");
+export const SYNC_BAR_COMPONENT = new InjectionToken<SyncBarComponent>("SYNC_BAR_COMPONENT");
 
 @Component({template: ""})
 export class SyncBarComponent {

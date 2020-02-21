@@ -5,7 +5,7 @@ import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 
-export const APP_MORE_MENU_COMPONENT_TOKEN = new InjectionToken<AppMoreMenuComponent>("APP_MORE_MENU_COMPONENT_TOKEN");
+export const APP_MORE_MENU_COMPONENT = new InjectionToken<AppMoreMenuComponent>("APP_MORE_MENU_COMPONENT");
 
 @Component({template: ""})
 export class AppMoreMenuComponent implements OnInit {

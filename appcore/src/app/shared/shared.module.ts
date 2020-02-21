@@ -9,7 +9,6 @@ import { ConfirmDialogComponent } from "./dialogs/confirm-dialog/confirm-dialog.
 import { OptionHelperDialogComponent } from "../global-settings/option-helper-dialog/option-helper-dialog.component";
 import { UserSettingsService } from "./services/user-settings/user-settings.service";
 import { GlobalSettingsService } from "../global-settings/services/global-settings.service";
-import { ActivityService } from "./services/activity/activity.service";
 import { UserSettingsDao } from "./dao/user-settings/user-settings.dao";
 import { OptionHelperReaderService } from "../global-settings/services/option-helper-reader.service";
 import { ZonesService } from "../zones-settings/shared/zones.service";
@@ -77,7 +76,6 @@ import { StreamsService } from "./services/streams/streams.service";
 		AthleteService,
 		AthleteDao,
 		AthleteSnapshotResolverService,
-		ActivityService,
 		ActivityDao,
 		StreamsService,
 		StreamsDao,

@@ -2,7 +2,6 @@ import { Inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { IpcRendererMessagesService } from "../../shared/services/messages-listener/ipc-renderer-messages.service";
 import { FlaggedIpcMessage, MessageFlag, RuntimeInfo } from "@elevate/shared/electron";
 import { concatMap, delay, retryWhen } from "rxjs/operators";
 import { of, throwError } from "rxjs";
@@ -16,6 +15,7 @@ import { StravaApiCredentials } from "@elevate/shared/sync";
 import { DesktopMigrationService } from "../migration/desktop-migration.service";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { DesktopPreRunGuardDialogComponent } from "./desktop-pre-run-guard-dialog.component";
+import { IpcMessagesSender } from "../ipc-messages/ipc-messages-sender.service";
 
 @Injectable()
 export class DesktopPreRunGuard implements CanActivate {
@@ -29,7 +29,7 @@ export class DesktopPreRunGuard implements CanActivate {
 	public isAccessAuthorized: boolean;
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
-				public ipcRendererMessagesService: IpcRendererMessagesService,
+				public ipcMessagesSender: IpcMessagesSender,
 				public stravaApiCredentialsService: StravaApiCredentialsService,
 				public desktopMigrationService: DesktopMigrationService,
 				public httpClient: HttpClient,
@@ -79,7 +79,7 @@ export class DesktopPreRunGuard implements CanActivate {
 	}
 
 	public getRuntimeInfo(): Promise<RuntimeInfo> {
-		return this.ipcRendererMessagesService.send<RuntimeInfo>(new FlaggedIpcMessage(MessageFlag.GET_RUNTIME_INFO));
+		return this.ipcMessagesSender.send<RuntimeInfo>(new FlaggedIpcMessage(MessageFlag.GET_RUNTIME_INFO));
 	}
 
 	public checkAthleteAccess(runtimeInfo: RuntimeInfo, authRetry: boolean = false): Promise<boolean> {
