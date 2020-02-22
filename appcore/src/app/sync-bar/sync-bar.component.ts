@@ -75,7 +75,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 			this.isStopped = false;
 			this.isSyncCompleted = false;
 			this.counter = 0;
-			this.currentSyncEventText = "Sync started on connector \"" + syncEvent.fromConnectorType.toLowerCase() + "\"";
+			this.currentSyncEventText = "Sync started on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
 		}
 
 		if (this.isStopped) {

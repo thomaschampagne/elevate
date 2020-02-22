@@ -90,6 +90,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 		}
 	}
 
+	public static niceConnectorPrint(fromConnectorType: ConnectorType): string {
+		return _.startCase(_.replace(fromConnectorType.toString().toLowerCase(), "_", " "));
+	}
+
 	/**
 	 *
 	 * @param fastSync
