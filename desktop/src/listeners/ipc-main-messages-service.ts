@@ -14,14 +14,7 @@ import {
 	SyncEventType
 } from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
-import {
-	ActivityStreamsModel,
-	AthleteModel,
-	AthleteSnapshotModel,
-	ConnectorSyncDateTime,
-	SyncedActivityModel,
-	UserSettings
-} from "@elevate/shared/models";
+import { ActivityStreamsModel, AthleteModel, AthleteSnapshotModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { Service } from "../service";
 import * as _ from "lodash";
 import { FileSystemConnector } from "../connectors/filesystem/file-system.connector";
@@ -139,6 +132,8 @@ export class IpcMainMessagesService {
 			if (syncEvent.type === SyncEventType.ACTIVITY) {
 				const activitySyncEvent = <ActivitySyncEvent> syncEvent;
 				logger.info("[Connector (" + connectorType + ")]", `Notify to insert or update activity name: "${activitySyncEvent.activity.name}", started on "${activitySyncEvent.activity.start_time}", isNew: "${activitySyncEvent.isNew}"`);
+			} else if (syncEvent.type === SyncEventType.ERROR) {
+				logger.error("[Connector (" + connectorType + ")]", syncEvent);
 			} else {
 				logger.debug("[Connector (" + connectorType + ")]", syncEvent);
 			}

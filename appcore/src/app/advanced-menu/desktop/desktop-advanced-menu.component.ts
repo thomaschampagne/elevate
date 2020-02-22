@@ -43,7 +43,7 @@ import { DesktopActivityService } from "../../shared/services/activity/impl/desk
 					Debugging
 				</div>
 				<div>
-					<button mat-stroked-button color="primary" (click)="openLogFile()">Open log file</button>
+					<button mat-stroked-button color="primary" (click)="openLogsFolder()">Open logs folder</button>
 				</div>
 				<div class="mat-title">
 					Others
@@ -154,8 +154,8 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 		});
 	}
 
-	public openLogFile(): void {
-		this.electronService.openLogFile();
+	public openLogsFolder(): void {
+		this.electronService.openLogsFolder();
 	}
 
 	public openAppDataFolder(): void {

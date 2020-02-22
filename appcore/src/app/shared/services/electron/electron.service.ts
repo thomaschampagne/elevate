@@ -47,8 +47,8 @@ export class ElectronService {
 		this.electron.shell.openItem(path);
 	}
 
-	public openLogFile(): void {
-		const logPath = this.getAppDataPath() + "log.log";
+	public openLogsFolder(): void {
+		const logPath = this.getAppDataPath() + "/logs/";
 		this.openItem(logPath);
 	}
 

@@ -242,6 +242,8 @@ export class StravaConnector extends BaseConnector {
 										? ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.STRAVA, error.message, error.stack)
 										: ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.STRAVA, error.toString());
 
+									errorSyncEvent.activity = bareActivity;
+
 									syncEvents$.next(errorSyncEvent); // Notify error
 
 									return Promise.resolve(); // Continue to next activity
@@ -318,6 +320,10 @@ export class StravaConnector extends BaseConnector {
 	}
 
 	public appendPowerStream(bareActivityModel: BareActivityModel, activityStreamsModel: ActivityStreamsModel, weight: number): ActivityStreamsModel {
+
+		if (!activityStreamsModel) {
+			return null;
+		}
 
 		if (!bareActivityModel.hasPowerMeter) {
 			if (!_.isEmpty(activityStreamsModel.watts_calc)) {
