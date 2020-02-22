@@ -4,7 +4,6 @@ import { DataStore } from "../data-store";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
 import PouchDB from "pouchdb-browser";
 import PouchDBFind from "pouchdb-find";
-import PouchDBIndexedAdapter from "pouchdb-adapter-indexeddb";
 import PouchDBDebug from "pouchdb-debug";
 import { LoggerService } from "../../services/logging/logger.service";
 import * as _ from "lodash";
@@ -57,11 +56,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 	public setup(): void {
 
 		PouchDB.plugin(PouchDBFind); // Register find plugin
-		PouchDB.plugin(PouchDBIndexedAdapter);
-		const options = {
-			auto_compaction: true,
-			adapter: "indexeddb"
-		};
+		const options = {auto_compaction: true, adapter: "idb"};
 		DesktopDataStore.DATABASES.main = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_main", options);
 		DesktopDataStore.DATABASES.activities = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_activities", options);
 		DesktopDataStore.DATABASES.streams = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_streams", options);
