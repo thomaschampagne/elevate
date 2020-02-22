@@ -25,6 +25,7 @@ import logger from "electron-log";
 import { GradeCalculator } from "../../estimators/grade-calculator/grade-calculator";
 import { Partial } from "rollup-plugin-typescript2/dist/partial";
 import { ElevateException } from "@elevate/shared/exceptions";
+import { EventLibError } from "sports-lib/src/errors/event-lib.error";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export enum ActivityFileType {
@@ -414,6 +415,11 @@ export class FileSystemConnector extends BaseConnector {
 
 						if (error.code) { // Already an ErrorSyncEvent
 							return Promise.reject(error);
+						}
+
+						if ((<EventLibError> error).event === null) { // No event available from sports-lib
+							logger.warn("No sports-lib event available. Skip " + activityFile.location.path);
+							return Promise.resolve();
 						}
 
 						const errorMessage = "Activity file parsing error: " + ((error.message) ? error.message : error.toString());

@@ -143,6 +143,8 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
 					this.appEventsService.onSyncDone.next(true);
 					setTimeout(() => {
 						this.hideRefreshStatsBar = true;
+						this.hideRecalculation = true;
+						this.hideWarning = true;
 					}, 2000);
 				}
 
