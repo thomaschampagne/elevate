@@ -75,7 +75,7 @@ describe("StravaConnector", () => {
 
 	beforeEach((done: Function) => {
 
-		fakeActivitiesFixture = <Array<BareActivityModel[]>> jsonFakeActivitiesFixture;
+		fakeActivitiesFixture = <any> jsonFakeActivitiesFixture;
 		fakeStreamsFixture = <StravaApiStreamType[]> jsonFakeStreamsFixture;
 
 		const connectorSyncDateTime = null;
@@ -1188,6 +1188,98 @@ describe("StravaConnector", () => {
 			done();
 		});
 
+	});
+
+	describe("Prepare streams", () => {
+
+		it("should use existing estimated power stream when no power meter detected", (done: Function) => {
+
+			// Given
+			const bareActivity = <BareActivityModel> {
+				type: ElevateSport.Ride,
+				hasPowerMeter: false
+			};
+			const weight = 75;
+			const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
+			const expectedPowerStreams = [1, 2, 3, 4];
+			activityStreamsModel.watts_calc = expectedPowerStreams;
+
+			// When
+			const result: ActivityStreamsModel = stravaConnector.appendPowerStream(bareActivity, activityStreamsModel, weight);
+
+			// Then
+			expect(result.watts).toEqual(expectedPowerStreams);
+			expect(result.watts_calc).toBeUndefined();
+
+			done();
+		});
+
+		it("should use existing given power stream when a power meter is detected", (done: Function) => {
+
+			// Given
+			const bareActivity = <BareActivityModel> {
+				type: ElevateSport.Ride,
+				hasPowerMeter: true
+			};
+			const weight = 75;
+			const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
+			const expectedPowerStreams = [1, 2, 3, 4];
+			activityStreamsModel.watts = expectedPowerStreams;
+
+			// When
+			const result: ActivityStreamsModel = stravaConnector.appendPowerStream(bareActivity, activityStreamsModel, weight);
+
+			// Then
+			expect(result.watts).toEqual(expectedPowerStreams);
+			expect(result.watts_calc).toBeUndefined();
+
+			done();
+		});
+
+		it("should estimate power stream when no power meter detected and activity type is on a bike (velocity & grade stream available)", (done: Function) => {
+
+			// Given
+			const bareActivity = <BareActivityModel> {
+				type: ElevateSport.Ride,
+				hasPowerMeter: false
+			};
+			const weight = 75;
+			const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
+			activityStreamsModel.velocity_smooth = [1, 2, 3, 4];
+			activityStreamsModel.grade_smooth = [1, 2, 3, 4];
+
+			// When
+			const result: ActivityStreamsModel = stravaConnector.appendPowerStream(bareActivity, activityStreamsModel, weight);
+
+			// Then
+			expect(result.watts).toBeDefined();
+			expect(result.watts.length).toEqual(4);
+			expect(result.watts_calc).toBeUndefined();
+
+			done();
+		});
+
+		it("should 'try' estimate power stream when no power meter detected and activity type is on a bike (velocity & grade stream NOT available)", (done: Function) => {
+
+			// Given
+			const bareActivity = <BareActivityModel> {
+				type: ElevateSport.Ride,
+				hasPowerMeter: false
+			};
+			const weight = 75;
+			const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
+			activityStreamsModel.velocity_smooth = [1, 2, 3, 4];
+			activityStreamsModel.grade_smooth = [];
+
+			// When
+			const result: ActivityStreamsModel = stravaConnector.appendPowerStream(bareActivity, activityStreamsModel, weight);
+
+			// Then
+			expect(result.watts).toBeUndefined();
+			expect(result.watts_calc).toBeUndefined();
+
+			done();
+		});
 
 	});
 

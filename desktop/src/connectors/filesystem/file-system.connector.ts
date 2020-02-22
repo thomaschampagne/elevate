@@ -22,8 +22,7 @@ import { DataCadence } from "sports-lib/lib/data/data.cadence";
 import { DataHeartRate } from "sports-lib/lib/data/data.heart-rate";
 import { DataPower } from "sports-lib/lib/data/data.power";
 import logger from "electron-log";
-import { GradeCalculator } from "./grade-calculator/grade-calculator";
-import { CyclingPower } from "./cycling-power-estimator/cycling-power-estimator";
+import { GradeCalculator } from "../../estimators/grade-calculator/grade-calculator";
 import { Partial } from "rollup-plugin-typescript2/dist/partial";
 import { ElevateException } from "@elevate/shared/exceptions";
 import UserSettingsModel = UserSettings.UserSettingsModel;
@@ -622,40 +621,6 @@ export class FileSystemConnector extends BaseConnector {
 		}
 
 		return gradeAdjustedSpeedStream;
-	}
-
-	public estimateCyclingPowerStream(type: ElevateSport, velocityStream: number[], gradeStream: number[], riderWeight: number): number[] {
-
-		if (_.isEmpty(velocityStream)) {
-			throw new ElevateException("Velocity stream cannot be empty to calculate grade stream");
-		}
-
-		if (_.isEmpty(gradeStream)) {
-			throw new ElevateException("Grade stream cannot be empty to calculate grade stream");
-		}
-
-		if (type !== ElevateSport.Ride && type !== ElevateSport.VirtualRide) {
-			throw new ElevateException(`Cannot compute estimated cycling power data on activity type: ${type}. Must be done with a bike.`);
-		}
-
-		if (!riderWeight || riderWeight < 0) {
-			throw new ElevateException(`Cannot compute estimated cycling power with a rider weight of ${riderWeight}`);
-		}
-
-		const powerEstimatorParams: Partial<CyclingPower.Params> = {
-			riderWeightKg: riderWeight
-		};
-
-		const estimatedPowerStream = [];
-
-		for (let i = 0; i < velocityStream.length; i++) {
-			const kph = velocityStream[i] * 3.6;
-			powerEstimatorParams.gradePercentage = gradeStream[i];
-			const power = CyclingPower.Estimator.calc(kph, powerEstimatorParams);
-			estimatedPowerStream.push(power);
-		}
-
-		return estimatedPowerStream;
 	}
 
 	public scanForActivities(directory: string, afterDate: Date = null, recursive: boolean = false, pathsList = []): ActivityFile[] {

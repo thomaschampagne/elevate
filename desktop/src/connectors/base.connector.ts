@@ -16,6 +16,11 @@ import { filter } from "rxjs/operators";
 import * as crypto from "crypto";
 import { BinaryLike } from "crypto";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
+import { ElevateSport } from "@elevate/shared/enums";
+import * as _ from "lodash";
+import { ElevateException } from "@elevate/shared/exceptions";
+import { Partial } from "rollup-plugin-typescript2/dist/partial";
+import { CyclingPower } from "../estimators/cycling-power-estimator/cycling-power-estimator";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export abstract class BaseConnector {
@@ -92,5 +97,39 @@ export abstract class BaseConnector {
 	public findSyncedActivityModels(activityStartDate: string, activityDurationSeconds: number): Promise<SyncedActivityModel[]> {
 		const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.FIND_ACTIVITY, activityStartDate, activityDurationSeconds);
 		return Service.instance().ipcMainMessages.send<SyncedActivityModel[]>(flaggedIpcMessage);
+	}
+
+	public estimateCyclingPowerStream(type: ElevateSport, velocityStream: number[], gradeStream: number[], riderWeight: number): number[] {
+
+		if (_.isEmpty(velocityStream)) {
+			throw new ElevateException("Velocity stream cannot be empty to calculate grade stream");
+		}
+
+		if (_.isEmpty(gradeStream)) {
+			throw new ElevateException("Grade stream cannot be empty to calculate grade stream");
+		}
+
+		if (type !== ElevateSport.Ride && type !== ElevateSport.VirtualRide) {
+			throw new ElevateException(`Cannot compute estimated cycling power data on activity type: ${type}. Must be done with a bike.`);
+		}
+
+		if (!riderWeight || riderWeight < 0) {
+			throw new ElevateException(`Cannot compute estimated cycling power with a rider weight of ${riderWeight}`);
+		}
+
+		const powerEstimatorParams: Partial<CyclingPower.Params> = {
+			riderWeightKg: riderWeight
+		};
+
+		const estimatedPowerStream = [];
+
+		for (let i = 0; i < velocityStream.length; i++) {
+			const kph = velocityStream[i] * 3.6;
+			powerEstimatorParams.gradePercentage = gradeStream[i];
+			const power = CyclingPower.Estimator.calc(kph, powerEstimatorParams);
+			estimatedPowerStream.push(power);
+		}
+
+		return estimatedPowerStream;
 	}
 }

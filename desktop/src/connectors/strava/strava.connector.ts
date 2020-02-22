@@ -23,6 +23,7 @@ import { IHttpClientResponse } from "typed-rest-client/Interfaces";
 import { HttpCodes } from "typed-rest-client/HttpClient";
 import * as http from "http";
 import { IncomingHttpHeaders } from "http";
+import { ElevateSport } from "@elevate/shared/enums";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export interface StravaApiStreamType {
@@ -230,8 +231,11 @@ export class StravaConnector extends BaseConnector {
 
 								// Compute activity
 								try {
+
+									activityStreamsModel = this.appendPowerStream(bareActivity, activityStreamsModel, syncedActivityModel.athleteSnapshot.athleteSettings.weight);
 									syncedActivityModel.extendedStats = this.computeExtendedStats(syncedActivityModel,
 										syncedActivityModel.athleteSnapshot, this.userSettingsModel, activityStreamsModel);
+
 								} catch (error) {
 
 									const errorSyncEvent = (error instanceof Error)
@@ -311,6 +315,28 @@ export class StravaConnector extends BaseConnector {
 
 		// Bare activity cleaning
 		return <BareActivityModel> _.omit(bareActivity, StravaConnector.STRAVA_OMIT_FIELDS);
+	}
+
+	public appendPowerStream(bareActivityModel: BareActivityModel, activityStreamsModel: ActivityStreamsModel, weight: number): ActivityStreamsModel {
+
+		if (!bareActivityModel.hasPowerMeter) {
+			if (!_.isEmpty(activityStreamsModel.watts_calc)) {
+				activityStreamsModel.watts = activityStreamsModel.watts_calc;
+			} else {
+				// No power at all. Trying to estimated it on elevate side
+				if (bareActivityModel.type === ElevateSport.Ride || bareActivityModel.type === ElevateSport.VirtualRide) {
+					try {
+						activityStreamsModel.watts = this.estimateCyclingPowerStream(bareActivityModel.type, activityStreamsModel.velocity_smooth, activityStreamsModel.grade_smooth, weight);
+					} catch (err) {
+						logger.error("Unable to estimated power on activity started at: " + bareActivityModel.start_time, err);
+						delete activityStreamsModel.watts;
+					}
+				}
+			}
+		}
+
+		delete activityStreamsModel.watts_calc;
+		return activityStreamsModel;
 	}
 
 	public getStravaBareActivityModels(page: number, perPage: number, after: number): Promise<BareActivityModel[]> {
