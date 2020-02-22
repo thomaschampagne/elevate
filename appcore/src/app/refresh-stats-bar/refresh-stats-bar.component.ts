@@ -13,6 +13,7 @@ import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { LoggerService } from "../shared/services/logging/logger.service";
+import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 
 export const REFRESH_STATS_BAR_COMPONENT = new InjectionToken<RefreshStatsBarComponent>("REFRESH_STATS_BAR_COMPONENT");
 
@@ -112,6 +113,7 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
 	constructor(public router: Router,
 				public activityService: ActivityService,
 				public userSettingsService: UserSettingsService,
+				public appEventsService: AppEventsService,
 				public dialog: MatDialog) {
 		super(router, activityService, dialog);
 		this.hideRecalculation = true;
@@ -137,10 +139,11 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
 				this.statusText = moment(notification.syncedActivityModel.start_time).format("ll") + ": " + notification.syncedActivityModel.name;
 
 				if (notification.isLast) {
-					this.statusText = "Recalculation done. App is being reloaded...";
+					this.statusText = "Recalculation done. App is being refreshed...";
+					this.appEventsService.onSyncDone.next(true);
 					setTimeout(() => {
-						this.reloadApp();
-					}, 1500);
+						this.hideRefreshStatsBar = true;
+					}, 2000);
 				}
 
 				this.processed = notification.currentlyProcessed;
