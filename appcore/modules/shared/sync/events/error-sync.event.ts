@@ -29,12 +29,12 @@ export class ErrorSyncEvent extends SyncEvent {
 
 	public static SYNC_ERROR_COMPUTE = {
 		code: "SYNC_ERROR_COMPUTE",
-		create: (fromConnectorType: ConnectorType, description: string, stacktrace: string = null): ErrorSyncEvent => {
+		create: (fromConnectorType: ConnectorType, description: string, activity: BareActivityModel = null, stacktrace: string = null): ErrorSyncEvent => {
 			return new ErrorSyncEvent(fromConnectorType, {
 				code: ErrorSyncEvent.SYNC_ERROR_COMPUTE.code,
 				description: description,
 				stacktrace: stacktrace
-			});
+			}, activity);
 		},
 	};
 
@@ -134,10 +134,10 @@ export class ErrorSyncEvent extends SyncEvent {
 	public activity?: BareActivityModel;
 
 	constructor(fromConnectorType: ConnectorType, errorDetails: { code: string; description: string; stacktrace: string; },
-				activity?: BareActivityModel) {
+				activity: BareActivityModel = null) {
 		super(SyncEventType.ERROR, fromConnectorType, errorDetails.description);
 		this.code = (errorDetails.code) ? errorDetails.code : null;
 		this.stacktrace = (errorDetails.stacktrace) ? errorDetails.stacktrace : null;
-		this.activity = (activity) ? activity : null;
+		this.activity = activity;
 	}
 }

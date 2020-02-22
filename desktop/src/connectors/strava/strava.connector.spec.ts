@@ -250,7 +250,8 @@ describe("StravaConnector", () => {
 			spyOn(stravaConnector, "computeExtendedStats").and.callFake(() => {
 				throw computationError;
 			});
-			const expectedErrorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.STRAVA, computationError.message, computationError.stack);
+			const activity = new BareActivityModel();
+			const expectedErrorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.STRAVA, computationError.message, activity, computationError.stack);
 
 			// When
 			const syncEvent$ = stravaConnector.sync();
@@ -263,7 +264,10 @@ describe("StravaConnector", () => {
 
 				if (syncEvent.type !== SyncEventType.STARTED) {
 					expect(syncEvent.type).toEqual(SyncEventType.ERROR);
-					expect(syncEvent).toEqual(expectedErrorSyncEvent);
+					expect((<ErrorSyncEvent> syncEvent).fromConnectorType).toEqual(expectedErrorSyncEvent.fromConnectorType);
+					expect((<ErrorSyncEvent> syncEvent).description).toEqual(expectedErrorSyncEvent.description);
+					expect((<ErrorSyncEvent> syncEvent).activity).toBeDefined();
+					expect((<ErrorSyncEvent> syncEvent).stacktrace).toBeDefined();
 				}
 
 				expect(stravaConnector.isSyncing).toBeTruthy();

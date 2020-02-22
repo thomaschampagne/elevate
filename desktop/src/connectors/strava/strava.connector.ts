@@ -239,10 +239,8 @@ export class StravaConnector extends BaseConnector {
 								} catch (error) {
 
 									const errorSyncEvent = (error instanceof Error)
-										? ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.STRAVA, error.message, error.stack)
-										: ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.STRAVA, error.toString());
-
-									errorSyncEvent.activity = bareActivity;
+										? ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.STRAVA, error.message, bareActivity, error.stack)
+										: ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.STRAVA, error.toString(), bareActivity);
 
 									syncEvents$.next(errorSyncEvent); // Notify error
 
