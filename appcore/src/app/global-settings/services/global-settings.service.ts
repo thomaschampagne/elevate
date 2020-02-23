@@ -39,6 +39,14 @@ export class GlobalSettingsService {
 			title: "Temperature",
 		}],
 	}, {
+		title: "Debug",
+		options: [{
+			key: "debugMode",
+			type: "checkbox",
+			title: "Enable debug mode",
+			labels: ["All"],
+		}],
+	}, {
 		title: "Activities Extended Statistics",
 		envTarget: EnvTarget.EXTENSION,
 		options: [{

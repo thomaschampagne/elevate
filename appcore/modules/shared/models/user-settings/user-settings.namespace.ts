@@ -23,6 +23,7 @@ export namespace UserSettings {
 		public systemUnit: string;
 		public temperatureUnit: string;
 		public zones: UserZonesModel;
+		public debugMode: boolean;
 	}
 
 	export class DesktopUserSettingsModel extends UserSettingsModel {
@@ -32,16 +33,17 @@ export namespace UserSettings {
 			systemUnit: UserSettings.SYSTEM_UNIT_METRIC_KEY,
 			zones: UserZonesModel.DEFAULT_MODEL,
 			temperatureUnit: UserSettings.DEFAULT_TEMP_KEY,
+			debugMode: UserZonesModel.DEFAULT_DEBUG_MODE
 		};
 
 		public envTarget: EnvTarget = EnvTarget.DESKTOP;
-
 	}
 
 	export class ExtensionUserSettingsModel extends UserSettingsModel {
 
 		public static readonly DEFAULT_MODEL: ExtensionUserSettingsModel = {
 			envTarget: EnvTarget.EXTENSION,
+			debugMode: UserZonesModel.DEFAULT_DEBUG_MODE,
 			localStorageMustBeCleared: false,
 			systemUnit: UserSettings.SYSTEM_UNIT_METRIC_KEY,
 			zones: UserZonesModel.DEFAULT_MODEL,

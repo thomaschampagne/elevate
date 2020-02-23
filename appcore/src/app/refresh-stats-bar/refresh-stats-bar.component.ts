@@ -168,10 +168,6 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
 			});
 		});
 	}
-
-	public reloadApp(): void {
-		window.location.reload();
-	}
 }
 
 @Component({
