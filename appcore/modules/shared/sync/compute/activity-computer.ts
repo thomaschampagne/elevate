@@ -375,10 +375,10 @@ export class ActivityComputer {
 		// Standard deviation Pace
 		const paceData: PaceDataModel = (_.isEmpty(this.movementData)) ? null : this.movementData.pace;
 
-		const moveRatio: number = (_.isEmpty(this.movementData)) ? null : this.moveRatio(this.movementData.movingTime, this.movementData.elapsedTime);
-		const elapsedTime: number = (_.isEmpty(this.movementData)) ? null : this.movementData.elapsedTime;
 		const movingTime: number = (_.isEmpty(this.movementData)) ? null : this.movementData.movingTime;
+		const elapsedTime: number = (_.isEmpty(this.activityStream.time)) ? movingTime : _.last(this.activityStream.time);
 		const pauseTime: number = (elapsedTime && movingTime) ? (elapsedTime - movingTime) : null;
+		const moveRatio: number = (_.isEmpty(this.movementData)) ? null : this.moveRatio(movingTime, elapsedTime);
 
 		// Estimated Normalized power
 		// Estimated Variability index
@@ -592,7 +592,6 @@ export class ActivityComputer {
 
 		return {
 			movingTime: movingTime,
-			elapsedTime: movingTime,
 			speed: speedData,
 			pace: paceData,
 		};
@@ -761,7 +760,6 @@ export class ActivityComputer {
 
 		return {
 			movingTime: genuineAvgSpeedSecondsSum,
-			elapsedTime: elapsedSeconds,
 			speed: speedData,
 			pace: paceData,
 		};
