@@ -13,7 +13,15 @@ import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
 import * as xmldom from "xmldom";
-import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+	ActivitySyncEvent,
+	ConnectorType,
+	ErrorSyncEvent,
+	StartedSyncEvent,
+	StoppedSyncEvent,
+	SyncEvent,
+	SyncEventType
+} from "@elevate/shared/sync";
 import { filter } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { SportsLib } from "sports-lib";
@@ -363,7 +371,7 @@ describe("FileSystemConnector", () => {
 			const oldDate = new Date("2020-01-05T09:00:00.000Z");
 			const recursive = true;
 
-			const getLastModificationDateSpy = spyOn(fileSystemConnector, "getLastModificationDate").and.callFake(absolutePath => {
+			const getLastAccessDateSpy = spyOn(fileSystemConnector, "getLastAccessDate").and.callFake(absolutePath => {
 				if (path.basename(absolutePath) === "virtual_ride.fit") { // This file should not be returned
 					return oldDate;
 				}
@@ -387,7 +395,7 @@ describe("FileSystemConnector", () => {
 			const virtual_ride_gpx = _.find(activityFiles, {type: ActivityFileType.FIT});
 			expect(virtual_ride_gpx).toBeUndefined();
 
-			expect(getLastModificationDateSpy).toHaveBeenCalledTimes(3);
+			expect(getLastAccessDateSpy).toHaveBeenCalledTimes(3);
 			done();
 		});
 
@@ -731,7 +739,7 @@ describe("FileSystemConnector", () => {
 			const scanForActivitiesSpy = spyOn(fileSystemConnector, "scanForActivities").and.callThrough();
 
 			// Return lastModificationDate greater than syncDateTime when file name contains "2019"
-			spyOn(fileSystemConnector, "getLastModificationDate").and.callFake((absolutePath: string) => {
+			spyOn(fileSystemConnector, "getLastAccessDate").and.callFake((absolutePath: string) => {
 				return (absolutePath.match(/2019/gm))
 					? new Date("2019-06-01T12:00:00.000Z") // Fake 2019 date
 					: new Date("2018-06-01T12:00:00.000Z"); // Fake 2018 date

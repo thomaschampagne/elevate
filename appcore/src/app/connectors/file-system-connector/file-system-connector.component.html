@@ -11,12 +11,13 @@
 	<mat-card-content>
 		<div>
 			<button
-				*ngIf="fileSystemConnectorInfo.sourceDirectory" mat-stroked-button color="primary" (click)="sync()">
+				*ngIf="fileSystemConnectorInfo.sourceDirectory" mat-stroked-button color="primary" (click)="sync(true)">
 				<mat-icon>sync</mat-icon>
 				Sync recent activities
 			</button>
 			<button
-				*ngIf="fileSystemConnectorInfo.sourceDirectory" mat-stroked-button color="primary" (click)="sync()">
+				*ngIf="fileSystemConnectorInfo.sourceDirectory" mat-stroked-button color="primary"
+				(click)="sync(false)">
 				<mat-icon>sync</mat-icon>
 				Sync all activities
 			</button>

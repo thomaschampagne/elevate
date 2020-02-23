@@ -1,7 +1,24 @@
 import { BaseConnector } from "../base.connector";
-import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, GenericSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+	ActivitySyncEvent,
+	ConnectorType,
+	ErrorSyncEvent,
+	GenericSyncEvent,
+	StartedSyncEvent,
+	StoppedSyncEvent,
+	SyncEvent,
+	SyncEventType
+} from "@elevate/shared/sync";
 import { ReplaySubject, Subject } from "rxjs";
-import { ActivityStreamsModel, AthleteModel, AthleteSettingsModel, BareActivityModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import {
+	ActivityStreamsModel,
+	AthleteModel,
+	AthleteSettingsModel,
+	BareActivityModel,
+	ConnectorSyncDateTime,
+	SyncedActivityModel,
+	UserSettings
+} from "@elevate/shared/models";
 import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
@@ -277,6 +294,8 @@ export class FileSystemConnector extends BaseConnector {
 			return Promise.resolve(activityFiles);
 
 		}).then(activityFiles => {
+
+			logger.info("Parsing " + activityFiles.length + " activity files.");
 
 			return activityFiles.reduce((previousPromise: Promise<void>, activityFile: ActivityFile) => {
 
@@ -640,13 +659,13 @@ export class FileSystemConnector extends BaseConnector {
 				const fileExtension = path.extname(file).slice(1);
 				if (fileExtension === ActivityFileType.GPX || fileExtension === ActivityFileType.TCX || fileExtension === ActivityFileType.FIT) {
 					const absolutePath = path.join(directory, file);
-					const lastModificationDate = this.getLastModificationDate(absolutePath);
+					const lastAccessDate = this.getLastAccessDate(absolutePath);
 					if (afterDate) {
-						if (lastModificationDate.getTime() >= afterDate.getTime()) {
-							trackFile(absolutePath, fileExtension, lastModificationDate);
+						if (lastAccessDate.getTime() >= afterDate.getTime()) {
+							trackFile(absolutePath, fileExtension, lastAccessDate);
 						}
 					} else {
-						trackFile(absolutePath, fileExtension, lastModificationDate);
+						trackFile(absolutePath, fileExtension, lastAccessDate);
 					}
 				}
 			}
@@ -655,9 +674,9 @@ export class FileSystemConnector extends BaseConnector {
 		return (recursive) ? _.flatten(pathsList) : pathsList;
 	}
 
-	public getLastModificationDate(absolutePath: string): Date {
+	public getLastAccessDate(absolutePath: string): Date {
 		const stats = fs.statSync(absolutePath);
-		return stats.mtime;
+		return stats.atime;
 	}
 
 	public deflateActivitiesFromArchive(archiveFilePath: string, deleteArchive: boolean = false): Promise<string[]> {
