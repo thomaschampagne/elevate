@@ -3,7 +3,7 @@
 	"name": "Elevate for Strava",
 	"short_name": "Elevate",
 	"description": "Elevate your strava experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...",
-	"version": "7.0.0-alpha.4",
+	"version": "7.0.0.0",
 	"version_name": "7.0.0-alpha.4",
 	"background": {
 		"scripts": [
