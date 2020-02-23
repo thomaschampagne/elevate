@@ -369,7 +369,7 @@ export namespace ActivityColumns {
 		 * @param activity
 		 */
 		public static movingTime(activity: SyncedActivityModel): string {
-			return moment.utc(activity.moving_time_raw * 1000).format("HH:mm:ss");
+			return _.isNumber(activity.moving_time_raw) ? moment.utc(activity.moving_time_raw * 1000).format("HH:mm:ss") : Print.NO_DATA;
 		}
 
 	}

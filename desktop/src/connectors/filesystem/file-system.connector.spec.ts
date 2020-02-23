@@ -634,8 +634,10 @@ describe("FileSystemConnector", () => {
 				expect(activitySyncEvent.activity.type).toEqual(ElevateSport.Ride);
 				expect(activitySyncEvent.activity.hasPowerMeter).toBeFalsy();
 				expect(activitySyncEvent.activity.trainer).toBeFalsy();
+				expect(Math.floor(activitySyncEvent.activity.distance_raw)).toEqual(59853);
 				expect(activitySyncEvent.activity.moving_time_raw).toEqual(9958);
-				expect(activitySyncEvent.activity.elevation_gain_raw).toEqual(671);
+				expect(activitySyncEvent.activity.elapsed_time_raw).toEqual(10514);
+				expect(activitySyncEvent.activity.elevation_gain_raw).toEqual(693);
 				expect(activitySyncEvent.activity.sourceConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
 				expect(activitySyncEvent.activity.extras.fs_activity_location.onMachineId).toBeDefined();
 				expect(activitySyncEvent.activity.extras.fs_activity_location.path).toContain(expectedActivityFilePathMatch);
@@ -968,12 +970,9 @@ describe("FileSystemConnector", () => {
 				expect(bareActivity.name).toEqual(expectedName);
 				expect(bareActivity.start_time).toEqual(startISODate);
 				expect(bareActivity.end_time).toEqual(endISODate);
-				expect(bareActivity.elapsed_time_raw).toEqual(10514);
 				expect(bareActivity.hasPowerMeter).toEqual(false);
 				expect(bareActivity.trainer).toEqual(false);
 				expect(bareActivity.commute).toEqual(null);
-				expect(Math.floor(bareActivity.distance_raw)).toEqual(59853);
-
 				done();
 			});
 		});

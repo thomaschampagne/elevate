@@ -10,7 +10,6 @@ import * as xmldom from "xmldom";
 import { EventInterface } from "sports-lib/lib/events/event.interface";
 import { ActivityInterface } from "sports-lib/lib/activities/activity.interface";
 import { ElevateSport } from "@elevate/shared/enums";
-import { DataAscent } from "sports-lib/lib/data/data.ascent";
 import { SportsLib } from "sports-lib";
 import { ActivityTypes } from "sports-lib/lib/activities/activity.types";
 import { DataSpeed } from "sports-lib/lib/data/data.speed";
@@ -346,11 +345,21 @@ export class FileSystemConnector extends BaseConnector {
 												syncedActivityModel.extendedStats = this.computeExtendedStats(syncedActivityModel,
 													syncedActivityModel.athleteSnapshot, this.userSettingsModel, activityStreamsModel);
 
-												// Update
+												// Update missing fields using computation data
 												if (syncedActivityModel.extendedStats) {
-													syncedActivityModel.moving_time_raw = (syncedActivityModel.extendedStats.moveRatio >= 0)
-														? syncedActivityModel.elapsed_time_raw * syncedActivityModel.extendedStats.moveRatio : null;
 
+													// Moving time
+													syncedActivityModel.moving_time_raw = _.isNumber(syncedActivityModel.extendedStats.movingTime) ? syncedActivityModel.extendedStats.movingTime : null;
+													syncedActivityModel.elapsed_time_raw = _.isNumber(syncedActivityModel.extendedStats.elapsedTime) ? syncedActivityModel.extendedStats.elapsedTime : null;
+
+													// Distance
+													if (activityStreamsModel.distance && activityStreamsModel.distance.length > 0) {
+														syncedActivityModel.distance_raw = _.last(activityStreamsModel.distance);
+													} else {
+														syncedActivityModel.distance_raw = null;
+													}
+
+													// Elevation
 													if (syncedActivityModel.extendedStats.elevationData && syncedActivityModel.extendedStats.elevationData.accumulatedElevationAscent >= 0) {
 														syncedActivityModel.elevation_gain_raw = Math.round(syncedActivityModel.extendedStats.elevationData.accumulatedElevationAscent);
 													} else {
@@ -442,26 +451,6 @@ export class FileSystemConnector extends BaseConnector {
 		bareActivityModel.name = FileSystemConnector.HumanizedDayMoment.resolve(sportsLibActivity.startDate) + " " + bareActivityModel.type;
 		bareActivityModel.start_time = sportsLibActivity.startDate.toISOString();
 		bareActivityModel.end_time = sportsLibActivity.endDate.toISOString();
-
-		if (sportsLibActivity.getDistance()) {
-			bareActivityModel.distance_raw = (sportsLibActivity.getDistance().getValue()) ? sportsLibActivity.getDistance().getValue() : null;
-		} else {
-			bareActivityModel.distance_raw = null;
-		}
-
-		if (sportsLibActivity.getStats().get(DataAscent.type)) {
-			const ascentValue = sportsLibActivity.getStats().get(DataAscent.type).getValue();
-			bareActivityModel.elevation_gain_raw = <number> ((ascentValue > 0) ? ascentValue : null);
-		} else {
-			bareActivityModel.elevation_gain_raw = null;
-		}
-
-		if (sportsLibActivity.getDuration()) {
-			bareActivityModel.elapsed_time_raw = (sportsLibActivity.getDuration().getValue()) ? sportsLibActivity.getDuration().getValue() : null;
-		} else {
-			bareActivityModel.elapsed_time_raw = null;
-		}
-
 		bareActivityModel.hasPowerMeter = sportsLibActivity.hasPowerMeter();
 		bareActivityModel.trainer = sportsLibActivity.isTrainer();
 		bareActivityModel.commute = null; // Unsupported at the moment

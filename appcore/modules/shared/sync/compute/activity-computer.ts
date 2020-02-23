@@ -25,20 +25,10 @@ import {
 import { RunningPowerEstimator } from "./running-power-estimator";
 import { SplitCalculator } from "./split-calculator";
 import { ElevateSport } from "../../enums";
+import { LowPassFilter } from "../../tools";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export class ActivityComputer {
-
-	public static calculate(bareActivityModel: BareActivityModel, athleteSnapshotModel: AthleteSnapshotModel, userSettingsModel: UserSettingsModel,
-							streams: ActivityStreamsModel, returnZones: boolean = false, bounds: number[] = null, isOwner: boolean = true): AnalysisDataModel {
-		const activitySourceData: ActivitySourceDataModel = {
-			distance: bareActivityModel.distance_raw,
-			elevation: bareActivityModel.elevation_gain_raw,
-			movingTime: bareActivityModel.moving_time_raw,
-		};
-		return new ActivityComputer(bareActivityModel.type, bareActivityModel.trainer, userSettingsModel, athleteSnapshotModel, isOwner,
-			bareActivityModel.hasPowerMeter, activitySourceData, streams, bounds, returnZones).compute();
-	}
 
 	constructor(activityType: ElevateSport,
 				isTrainer: boolean,
@@ -88,6 +78,17 @@ export class ActivityComputer {
 	protected activityStream: ActivityStreamsModel;
 	protected bounds: number[];
 	protected returnZones: boolean;
+
+	public static calculate(bareActivityModel: BareActivityModel, athleteSnapshotModel: AthleteSnapshotModel, userSettingsModel: UserSettingsModel,
+							streams: ActivityStreamsModel, returnZones: boolean = false, bounds: number[] = null, isOwner: boolean = true): AnalysisDataModel {
+		const activitySourceData: ActivitySourceDataModel = {
+			distance: bareActivityModel.distance_raw,
+			elevation: bareActivityModel.elevation_gain_raw,
+			movingTime: bareActivityModel.moving_time_raw,
+		};
+		return new ActivityComputer(bareActivityModel.type, bareActivityModel.trainer, userSettingsModel, athleteSnapshotModel, isOwner,
+			bareActivityModel.hasPowerMeter, activitySourceData, streams, bounds, returnZones).compute();
+	}
 
 
 	/**
@@ -282,7 +283,7 @@ export class ActivityComputer {
 		if (hasActivityStream) {
 
 			// Append altitude_smooth to fetched strava activity stream before compute analysis data
-			this.activityStream.altitude_smooth = this.smoothAltitudeStream(this.activityStream, this.activitySourceData);
+			this.activityStream.altitude = this.smoothAltitudeStream(this.activityStream.altitude);
 
 			// Slices array stream if activity bounds are given.
 			// It's mainly used for segment effort extended stats
@@ -337,20 +338,16 @@ export class ActivityComputer {
 				activityStream.distance = activityStream.distance.slice(bounds[0], bounds[1]);
 			}
 
-			if (!_.isEmpty(activityStream.altitude_smooth)) {
-				activityStream.altitude_smooth = activityStream.altitude_smooth.slice(bounds[0], bounds[1]);
-			}
-
 			if (!_.isEmpty(activityStream.grade_adjusted_speed)) {
 				activityStream.grade_adjusted_speed = activityStream.grade_adjusted_speed.slice(bounds[0], bounds[1]);
 			}
 		}
 	}
 
-	protected smoothAltitudeStream(activityStream: ActivityStreamsModel, activitySourceData: ActivitySourceDataModel): any {
-		return this.smoothAltitude(activityStream, activitySourceData.elevation);
+	protected smoothAltitudeStream(altitudeStream: number[]): number[] {
+		const lowPassFilter = new LowPassFilter(0.2);
+		return lowPassFilter.smoothArray(altitudeStream);
 	}
-
 
 	protected computeAnalysisData(athleteSnapshot: AthleteSnapshotModel, hasPowerMeter: boolean, activitySourceData: ActivitySourceDataModel,
 								  activityStream: ActivityStreamsModel): AnalysisDataModel {
@@ -359,7 +356,8 @@ export class ActivityComputer {
 		const hasActivityStream = !_.isEmpty(activityStream);
 		if (hasActivityStream && activityStream.velocity_smooth) {
 			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_adjusted_speed);
-		} else if (!hasActivityStream && this.activityType === ElevateSport.Run) { // Allow to estimate running move data if no stream available (goal is to get RSS computation for manual activities)
+		} else if (!hasActivityStream && this.activityType === ElevateSport.Run) {
+			// Allow to estimate running move data if no stream available (goal is to get RSS computation for manual activities)
 			this.movementData = this.moveDataEstimate(this.activitySourceData.movingTime, this.activitySourceData.distance);
 		} else {
 			return null;
@@ -378,6 +376,9 @@ export class ActivityComputer {
 		const paceData: PaceDataModel = (_.isEmpty(this.movementData)) ? null : this.movementData.pace;
 
 		const moveRatio: number = (_.isEmpty(this.movementData)) ? null : this.moveRatio(this.movementData.movingTime, this.movementData.elapsedTime);
+		const elapsedTime: number = (_.isEmpty(this.movementData)) ? null : this.movementData.elapsedTime;
+		const movingTime: number = (_.isEmpty(this.movementData)) ? null : this.movementData.movingTime;
+		const pauseTime: number = (elapsedTime && movingTime) ? (elapsedTime - movingTime) : null;
 
 		// Estimated Normalized power
 		// Estimated Variability index
@@ -401,16 +402,19 @@ export class ActivityComputer {
 		// Q1 HR
 		// Median HR
 		// Q3 HR
-		const heartRateData: HeartRateDataModel = (!_.isEmpty(activityStream)) ? this.heartRateData(athleteSnapshot, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth) : null;
+		const heartRateData: HeartRateDataModel = (!_.isEmpty(activityStream))
+			? this.heartRateData(athleteSnapshot, activityStream.heartrate, activityStream.time, activityStream.velocity_smooth) : null;
 
 		// Avg grade
 		// Q1/Q2/Q3 grade
-		const gradeData: GradeDataModel = (!_.isEmpty(activityStream)) ? this.gradeData(activityStream.grade_smooth, activityStream.velocity_smooth, activityStream.time, activityStream.distance, activityStream.cadence) : null;
+		const gradeData: GradeDataModel = (!_.isEmpty(activityStream))
+			? this.gradeData(activityStream.grade_smooth, activityStream.velocity_smooth, activityStream.time, activityStream.distance, activityStream.cadence) : null;
 
 		// Cadence percentage
 		// Time Cadence
 		// Crank revolution
-		const cadenceData: CadenceDataModel = (!_.isEmpty(activityStream)) ? this.cadenceData(activityStream.cadence, activityStream.velocity_smooth, activityStream.distance, activityStream.time) : null;
+		const cadenceData: CadenceDataModel = (!_.isEmpty(activityStream))
+			? this.cadenceData(activityStream.cadence, activityStream.velocity_smooth, activityStream.distance, activityStream.time) : null;
 		// ... if exists cadenceData then append cadence pace (climbing, flat & downhill) if she has been previously provided by "gradeData"
 		if (cadenceData && gradeData && gradeData.upFlatDownCadencePaceData) {
 			cadenceData.upFlatDownCadencePaceData = gradeData.upFlatDownCadencePaceData;
@@ -422,11 +426,15 @@ export class ActivityComputer {
 
 		// Calculating running index (https://github.com/thomaschampagne/elevate/issues/704)
 		const isRunningActivity = this.activityType.match(/Run|VirtualRun/g) !== null;
-		const runningPerformanceIndex: number = (isRunningActivity && !_.isEmpty(elevationData) && !_.isEmpty(heartRateData)) ? this.runningPerformanceIndex(athleteSnapshot, this.activitySourceData, elevationData, heartRateData) : null;
+		const runningPerformanceIndex: number = (isRunningActivity && !_.isEmpty(elevationData) && !_.isEmpty(heartRateData))
+			? this.runningPerformanceIndex(athleteSnapshot, this.activitySourceData, elevationData, heartRateData) : null;
 
 		// Return an array with all that shit...
 		return {
 			moveRatio: moveRatio,
+			elapsedTime: elapsedTime,
+			movingTime: movingTime,
+			pauseTime: pauseTime,
 			runningPerformanceIndex: runningPerformanceIndex,
 			speedData: speedData,
 			paceData: paceData,
@@ -1318,7 +1326,7 @@ export class ActivityComputer {
 		const distanceArray: any = activityStream.distance;
 		const timeArray: any = activityStream.time;
 		const velocityArray: any = activityStream.velocity_smooth;
-		const altitudeArray: any = activityStream.altitude_smooth;
+		const altitudeArray: any = activityStream.altitude;
 
 		if (_.isEmpty(distanceArray) || _.isEmpty(timeArray) || _.isEmpty(velocityArray) || _.isEmpty(altitudeArray) || _.mean(distanceArray) === 0 || _.mean(velocityArray) === 0) {
 			return null;
@@ -1419,8 +1427,8 @@ export class ActivityComputer {
 
 		let elevationData: ElevationDataModel = {
 			avgElevation: parseFloat(avgElevation.toFixed(0)),
-			accumulatedElevationAscent,
-			accumulatedElevationDescent,
+			accumulatedElevationAscent: accumulatedElevationAscent,
+			accumulatedElevationDescent: accumulatedElevationDescent,
 			lowerQuartileElevation: parseFloat(percentilesElevation[0].toFixed(0)),
 			medianElevation: parseFloat(percentilesElevation[1].toFixed(0)),
 			upperQuartileElevation: parseFloat(percentilesElevation[2].toFixed(0)),
@@ -1436,66 +1444,5 @@ export class ActivityComputer {
 
 		return elevationData;
 	}
-
-	protected smoothAltitude(activityStream: ActivityStreamsModel, stravaElevation: number): number[] {
-
-		if (_.isEmpty(activityStream) || _.isEmpty(activityStream.altitude)) {
-			return null;
-		}
-
-		const activityAltitudeArray: number[] = activityStream.altitude;
-		const distanceArray: number[] = activityStream.distance;
-		//  let timeArray = activityStream.time;  // for smoothing by time
-		const velocityArray: number[] = activityStream.velocity_smooth;
-		let smoothingL = 10;
-		let smoothingH = 600;
-		let smoothing: number;
-		let altitudeArray: number[] = [];
-		while (smoothingH - smoothingL >= 1) {
-			smoothing = smoothingL + (smoothingH - smoothingL) / 2;
-			altitudeArray = this.lowPassDataSmoothing(activityAltitudeArray, distanceArray, smoothing); // smoothing by distance
-			// altitudeArray = this.lowPassDataSmoothing(activityAltitudeArray, timeArray, smoothing);  // smoothing by time
-			let totalElevation = 0;
-			for (let i = 0; i < altitudeArray.length; i++) { // Loop on samples
-				if (i > 0 && velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) {
-					const elevationDiff: number = altitudeArray[i] - altitudeArray[i - 1];
-					if (elevationDiff > 0) {
-						totalElevation += elevationDiff;
-					}
-				}
-			}
-
-			if (totalElevation < stravaElevation) {
-				smoothingH = smoothing;
-			} else {
-				smoothingL = smoothing;
-			}
-		}
-		return altitudeArray;
-	}
-
-	protected lowPassDataSmoothing(data: number[], distance: number[], smoothing: number): number[] {
-		// Below algorithm is applied in this method
-		// http://phrogz.net/js/framerate-independent-low-pass-filter.html
-		// value += (currentValue - value) / (smoothing / timeSinceLastSample);
-		// it is adapted for stability - if (smoothing / timeSinceLastSample) is less then 1, set it to 1 -> no smoothing for that sample
-		let smooth_factor = 0;
-		const result: number[] = [];
-		if (data && distance) {
-			result[0] = data[0];
-			for (let i = 1, max = data.length; i < max; i++) {
-				if (smoothing === 0) {
-					result[i] = data[i];
-				} else {
-					smooth_factor = smoothing / (distance[i] - distance[i - 1]);
-					// only apply filter if smooth_factor > 1, else this leads to instability !!!
-					result[i] = result[i - 1] + (data[i] - result[i - 1]) / (smooth_factor > 1 ? smooth_factor : 1); // low limit smooth_factor to 1!!!
-					// result[i] = result[i - 1] + (data[i] - result[i - 1]) / ( smooth_factor ); // no stability check
-				}
-			}
-		}
-		return result;
-	}
-
 }
 
