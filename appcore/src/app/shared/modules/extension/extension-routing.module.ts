@@ -9,6 +9,7 @@ import { ShareComponent } from "../../../share/share.component";
 import { ReportComponent } from "../../../report/report.component";
 import { FaqComponent } from "../../../faq/faq.component";
 import { ExtensionAdvancedMenuComponent } from "../../../advanced-menu/extension/extension-advanced-menu.component";
+import { ActivityViewComponent } from "../../../activity-view/activity-view.component";
 
 @NgModule({
 	imports: [
@@ -24,6 +25,10 @@ export class ExtensionRoutingModule {
 		{
 			path: AppRoutesModel.activities,
 			component: ActivitiesComponent,
+		},
+		{
+			path: AppRoutesModel.activityView + "/:id",
+			component: ActivityViewComponent,
 		},
 		{
 			path: AppRoutesModel.fitnessTrend,

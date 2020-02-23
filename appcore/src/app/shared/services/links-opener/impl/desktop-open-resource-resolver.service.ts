@@ -5,12 +5,15 @@ import { ActivityService } from "../../activity/activity.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ConnectorType } from "@elevate/shared/sync";
 import { SyncedActivityModel } from "@elevate/shared/models";
+import { Router } from "@angular/router";
+import { AppRoutesModel } from "../../../models/app-routes.model";
 
 @Injectable()
 export class DesktopOpenResourceResolver extends OpenResourceResolver {
 
 	constructor(public electronService: ElectronService,
 				public activityService: ActivityService,
+				public router: Router,
 				public snackBar: MatSnackBar) {
 		super(snackBar);
 	}
@@ -23,7 +26,7 @@ export class DesktopOpenResourceResolver extends OpenResourceResolver {
 						this.openStravaActivity(activity);
 						break;
 					default:
-						this.snackBar.open("Activity synced with " + activity.sourceConnectorType + " connector. Opening is not supported yet.", "Got it");
+						this.router.navigate([AppRoutesModel.activityView, activity.id]);
 						break;
 				}
 			} else {

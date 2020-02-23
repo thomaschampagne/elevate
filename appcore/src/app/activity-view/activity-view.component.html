@@ -1,0 +1,19 @@
+<mat-toolbar color="warn">
+	<span class="mat-body-1">This is a raw debug view. Activity streams are in console (CTRL + F12)</span>
+</mat-toolbar>
+<mat-card *ngIf="syncedActivityModel">
+	<mat-card-title>
+		<button mat-icon-button color="primary" (click)="onBack()">
+			<mat-icon>arrow_back</mat-icon>
+		</button>
+		{{syncedActivityModel.name}}
+	</mat-card-title>
+	<mat-card-subtitle>
+		Date: {{syncedActivityModel.start_time}}
+	</mat-card-subtitle>
+	<mat-card-content>
+		<pre class="mat-caption">
+			{{syncedActivityModel | json}}
+		</pre>
+	</mat-card-content>
+</mat-card>

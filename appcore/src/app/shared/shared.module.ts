@@ -36,6 +36,7 @@ import { ExtensionModule } from "./modules/extension/extension.module";
 import { DesktopModule } from "./modules/desktop/desktop.module";
 import { StreamsDao } from "./dao/streams/streams.dao";
 import { StreamsService } from "./services/streams/streams.service";
+import { ActivityViewComponent } from "../activity-view/activity-view.component";
 
 @NgModule({
 	imports: [
@@ -52,6 +53,7 @@ import { StreamsService } from "./services/streams/streams.service";
 	declarations: [
 		// Components
 		ActivitiesComponent,
+		ActivityViewComponent,
 		GlobalSettingsComponent,
 		ZonesSettingsComponent,
 		ZoneComponent,
