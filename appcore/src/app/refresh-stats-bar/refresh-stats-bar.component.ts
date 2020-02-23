@@ -133,8 +133,8 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
 					return;
 				}
 
-				this.hideRefreshStatsBar = false; // We have to force display back of bar
-				this.hideRecalculation = false;
+				this.hideRefreshStatsBar = false; // We have to force the display back of bar
+				this.hideRecalculation = false; // Show calculation
 
 				this.statusText = moment(notification.syncedActivityModel.start_time).format("ll") + ": " + notification.syncedActivityModel.name;
 

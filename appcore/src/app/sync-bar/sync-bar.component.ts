@@ -6,6 +6,12 @@ import * as moment from "moment";
 
 export const SYNC_BAR_COMPONENT = new InjectionToken<SyncBarComponent>("SYNC_BAR_COMPONENT");
 
+class CurrentActivitySynced {
+	public date: string;
+	public name: string;
+	public isNew: boolean;
+}
+
 @Component({template: ""})
 export class SyncBarComponent {
 }
@@ -16,7 +22,11 @@ export class SyncBarComponent {
 		<div class="app-sync-bar">
 			<div fxLayout="row" fxLayoutAlign="space-between center">
 				<div fxLayout="column" fxLayoutAlign="center start">
-					<span fxFlex class="mat-body-1" *ngIf="currentSyncEventText">{{currentSyncEventText}}</span>
+					<span fxFlex class="mat-body-1">
+						<span *ngIf="currentActivitySynced">{{currentActivitySynced.date}}: {{currentActivitySynced.name}} <span
+							class="activity-existence-tag">{{currentActivitySynced.isNew ? 'new' : 'already exists'}}</span></span>
+						<span *ngIf="syncStatusText">{{this.syncStatusText}}</span>
+					</span>
 					<span fxFlex class="mat-caption" *ngIf="counter > 0">{{counter}} activities processed</span>
 				</div>
 				<div fxLayout="row" fxLayoutAlign="space-between center">
@@ -46,7 +56,8 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 	public isStopped: boolean;
 	public isSyncCompleted: boolean;
 
-	public currentSyncEventText: string;
+	public syncStatusText: string;
+	public currentActivitySynced: CurrentActivitySynced;
 	public counter: number;
 
 	constructor(public desktopSyncService: DesktopSyncService,
@@ -55,7 +66,8 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 		this.hideSyncBar = true;
 		this.isStopped = false;
 		this.isSyncCompleted = false;
-		this.currentSyncEventText = null;
+		this.syncStatusText = null;
+		this.currentActivitySynced = null;
 		this.counter = 0;
 	}
 
@@ -70,44 +82,52 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 
 		this.changeDetectorRef.markForCheck();
 
-		if (syncEvent.type === SyncEventType.STARTED) {
-			this.hideSyncBar = false;
-			this.isStopped = false;
-			this.isSyncCompleted = false;
-			this.counter = 0;
-			this.currentSyncEventText = "Sync started on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
-		}
 
 		if (this.isStopped) {
 			return;
 		}
 
-		if (syncEvent.type === SyncEventType.GENERIC) {
-			this.currentSyncEventText = syncEvent.description;
-		}
+		this.currentActivitySynced = null;
+		this.syncStatusText = null;
 
-		if (syncEvent.type === SyncEventType.ACTIVITY) {
+		if (syncEvent.type === SyncEventType.STARTED) {
+
+			this.hideSyncBar = false;
+			this.isStopped = false;
+			this.isSyncCompleted = false;
+			this.counter = 0;
+			this.syncStatusText = "Sync started on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
+
+		} else if (syncEvent.type === SyncEventType.GENERIC) {
+
+			this.syncStatusText = syncEvent.description;
+
+		} else if (syncEvent.type === SyncEventType.ACTIVITY) {
+
 			this.counter++;
 			const activitySyncEvent = <ActivitySyncEvent> syncEvent;
-			this.currentSyncEventText = moment(activitySyncEvent.activity.start_time).format("ll") + ": " + activitySyncEvent.activity.name;
-		}
+			this.currentActivitySynced = {
+				date: moment(activitySyncEvent.activity.start_time).format("ll"),
+				name: activitySyncEvent.activity.name,
+				isNew: activitySyncEvent.isNew,
+			};
 
-		if (syncEvent.type === SyncEventType.ERROR) {
+		} else if (syncEvent.type === SyncEventType.ERROR) {
+
 			const errorSyncEvent = <ErrorSyncEvent> syncEvent;
-			this.currentSyncEventText = errorSyncEvent.description;
+			this.syncStatusText = errorSyncEvent.description;
 			const message = JSON.stringify(errorSyncEvent);
 			alert(message); // TODO !!
-		}
 
-		if (syncEvent.type === SyncEventType.STOPPED) {
+		} else if (syncEvent.type === SyncEventType.STOPPED) {
+
 			this.isStopped = true;
-			this.currentSyncEventText = "Sync stopped on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
+			this.syncStatusText = "Sync stopped on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
 			this.hideSyncBar = true;
-		}
 
-		if (syncEvent.type === SyncEventType.COMPLETE) {
+		} else if (syncEvent.type === SyncEventType.COMPLETE) {
 			this.isSyncCompleted = true;
-			this.currentSyncEventText = "Sync completed on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
+			this.syncStatusText = "Sync completed on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
 			this.hideSyncBar = true;
 		}
 
