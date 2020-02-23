@@ -28,6 +28,9 @@ export class FakeSyncedActivityHelper {
 		fakeActivity.elevation_gain_raw = 0;
 		fakeActivity.extendedStats = {
 			moveRatio: 1,
+			elapsedTime: 1,
+			movingTime: 1,
+			pauseTime: 1,
 			runningPerformanceIndex: 25.0,
 			cadenceData: null,
 			elevationData: null,
