@@ -5,10 +5,19 @@ import { AthleteService } from "../../athlete/athlete.service";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { LoggerService } from "../../logging/logger.service";
 import { Subject, Subscription } from "rxjs";
-import { ActivitySyncEvent, CompleteSyncEvent, ConnectorType, ErrorSyncEvent, FileSystemConnectorInfo, StravaApiCredentials, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+	ActivitySyncEvent,
+	CompleteSyncEvent,
+	ConnectorType,
+	ErrorSyncEvent,
+	FileSystemConnectorInfo,
+	StravaConnectorInfo,
+	SyncEvent,
+	SyncEventType
+} from "@elevate/shared/sync";
 import { IpcMessagesReceiver } from "../../../../desktop/ipc-messages/ipc-messages-receiver.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
-import { StravaApiCredentialsService } from "../../strava-api-credentials/strava-api-credentials.service";
+import { StravaConnectorInfoService } from "../../strava-connector-info/strava-connector-info.service";
 import { AthleteModel, CompressedStreamModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { ActivityService } from "../../activity/activity.service";
 import { ElevateException, SyncException } from "@elevate/shared/exceptions";
@@ -39,7 +48,6 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 // TODO Handle updateSyncedActivitiesNameAndType of strava over filesystem connector
 
 // TODO Forward toolbar sync button to Connectors
-// TODO Move "last sync date time" to  StravaApiCredentials storage key
 // TODO Test in a current sync is running on Service.currentConnector(setter)
 // tslint:disable-next-line:max-line-length
 // TODO Add unit add with try/catch on StravaConnector.prepareBareActivity() call ?! => 'bareActivity = this.prepareBareActivity(bareActivity);'
@@ -59,7 +67,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 				public userSettingsService: UserSettingsService,
 				public ipcMessagesReceiver: IpcMessagesReceiver,
 				public ipcMessagesSender: IpcMessagesSender,
-				public stravaApiCredentialsService: StravaApiCredentialsService,
+				public stravaConnectorInfoService: StravaConnectorInfoService,
 				public fileSystemConnectorInfoService: FileSystemConnectorInfoService,
 				public logger: LoggerService,
 				public connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
@@ -118,7 +126,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 		];
 
 		if (this.currentConnectorType === ConnectorType.STRAVA) {
-			promisedDataToSync.push(this.stravaApiCredentialsService.fetch());
+			promisedDataToSync.push(this.stravaConnectorInfoService.fetch());
 		} else if (this.currentConnectorType === ConnectorType.FILE_SYSTEM) {
 			promisedDataToSync.push(Promise.resolve(this.fileSystemConnectorInfoService.fetch()));
 		} else {
@@ -149,12 +157,12 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
 			if (this.currentConnectorType === ConnectorType.STRAVA) {
 
-				const stravaApiCredentials: StravaApiCredentials = <StravaApiCredentials> result[3];
+				const stravaConnectorInfo: StravaConnectorInfo = <StravaConnectorInfo> result[3];
 
 				// Create message to start sync on connector!
 				const updateSyncedActivitiesNameAndType = false;
 				startSyncMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, currentConnectorSyncDateTime,
-					stravaApiCredentials, athleteModel, updateSyncedActivitiesNameAndType, userSettingsModel);
+					stravaConnectorInfo, athleteModel, updateSyncedActivitiesNameAndType, userSettingsModel);
 
 			} else if (this.currentConnectorType === ConnectorType.FILE_SYSTEM) {
 

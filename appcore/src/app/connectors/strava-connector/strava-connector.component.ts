@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { StravaApiCredentials } from "@elevate/shared/sync";
+import { StravaConnectorInfo } from "@elevate/shared/sync";
 import { ConnectorsComponent } from "../connectors.component";
 import { StravaConnectorService } from "../services/strava-connector.service";
 import * as moment from "moment";
@@ -28,7 +28,7 @@ class GeneratedStravaApiApplication {
 })
 export class StravaConnectorComponent extends ConnectorsComponent implements OnInit {
 
-	public stravaApiCredentials: StravaApiCredentials;
+	public stravaConnectorInfo: StravaConnectorInfo;
 	public expiresAt: string;
 	public isSynced: boolean;
 	public generatedStravaApiApplication: GeneratedStravaApiApplication;
@@ -54,12 +54,12 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 		this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
 			this.isSynced = syncState === SyncState.SYNCED;
 			return this.stravaConnectorService.fetchCredentials();
-		}).then((stravaApiCredentials: StravaApiCredentials) => {
-			this.handleCredentialsChanges(stravaApiCredentials);
+		}).then((stravaConnectorInfo: StravaConnectorInfo) => {
+			this.handleCredentialsChanges(stravaConnectorInfo);
 		});
 
-		this.stravaConnectorService.stravaApiCredentials$.subscribe((stravaApiCredentials: StravaApiCredentials) => {
-			this.handleCredentialsChanges(stravaApiCredentials);
+		this.stravaConnectorService.stravaConnectorInfo$.subscribe((stravaConnectorInfo: StravaConnectorInfo) => {
+			this.handleCredentialsChanges(stravaConnectorInfo);
 		});
 	}
 
@@ -72,10 +72,10 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 		});
 	}
 
-	public handleCredentialsChanges(stravaApiCredentials: StravaApiCredentials): void {
+	public handleCredentialsChanges(stravaConnectorInfo: StravaConnectorInfo): void {
 		setTimeout(() => {
-			this.stravaApiCredentials = stravaApiCredentials;
-			this.expiresAt = (this.stravaApiCredentials.expiresAt > 0) ? moment(this.stravaApiCredentials.expiresAt).format("LLLL") : null;
+			this.stravaConnectorInfo = stravaConnectorInfo;
+			this.expiresAt = (this.stravaConnectorInfo.expiresAt > 0) ? moment(this.stravaConnectorInfo.expiresAt).format("LLLL") : null;
 		});
 	}
 
@@ -88,23 +88,23 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 	}
 
 	public resetTokens(): void {
-		this.stravaConnectorService.fetchCredentials().then((stravaApiCredentials: StravaApiCredentials) => {
-			stravaApiCredentials.clientId = this.stravaApiCredentials.clientId;
-			stravaApiCredentials.clientSecret = (this.stravaApiCredentials.clientSecret) ? this.stravaApiCredentials.clientSecret.trim() : null;
-			stravaApiCredentials.accessToken = null;
-			stravaApiCredentials.refreshToken = null;
-			stravaApiCredentials.expiresAt = null;
-			return this.stravaConnectorService.stravaApiCredentialsService.save(stravaApiCredentials);
-		}).then((stravaApiCredentials: StravaApiCredentials) => {
-			this.stravaApiCredentials = stravaApiCredentials;
+		this.stravaConnectorService.fetchCredentials().then((stravaConnectorInfo: StravaConnectorInfo) => {
+			stravaConnectorInfo.clientId = this.stravaConnectorInfo.clientId;
+			stravaConnectorInfo.clientSecret = (this.stravaConnectorInfo.clientSecret) ? this.stravaConnectorInfo.clientSecret.trim() : null;
+			stravaConnectorInfo.accessToken = null;
+			stravaConnectorInfo.refreshToken = null;
+			stravaConnectorInfo.expiresAt = null;
+			return this.stravaConnectorService.stravaConnectorInfoService.save(stravaConnectorInfo);
+		}).then((stravaConnectorInfo: StravaConnectorInfo) => {
+			this.stravaConnectorInfo = stravaConnectorInfo;
 			// Force clear cookie to allow connection with another strava account
 			this.electronService.electron.remote.getCurrentWindow().webContents.session.clearStorageData({storages: ["cookies"]});
 		});
 	}
 
 	public stravaAuthentication(): void {
-		this.stravaConnectorService.authenticate().then((stravaApiCredentials: StravaApiCredentials) => {
-			this.stravaApiCredentials = stravaApiCredentials;
+		this.stravaConnectorService.authenticate().then((stravaConnectorInfo: StravaConnectorInfo) => {
+			this.stravaConnectorInfo = stravaConnectorInfo;
 			this.showConfigure = false;
 			this.showHowTo = false;
 		}).catch(error => {

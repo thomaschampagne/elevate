@@ -9,12 +9,19 @@ import {
 	ConnectorType,
 	ErrorSyncEvent,
 	FileSystemConnectorInfo,
-	StravaApiCredentials,
+	StravaConnectorInfo,
 	SyncEvent,
 	SyncEventType
 } from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
-import { ActivityStreamsModel, AthleteModel, AthleteSnapshotModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import {
+	ActivityStreamsModel,
+	AthleteModel,
+	AthleteSnapshotModel,
+	ConnectorSyncDateTime,
+	SyncedActivityModel,
+	UserSettings
+} from "@elevate/shared/models";
 import { Service } from "../service";
 import * as _ from "lodash";
 import { FileSystemConnector } from "../connectors/filesystem/file-system.connector";
@@ -93,13 +100,13 @@ export class IpcMainMessagesService {
 		if (connectorType === ConnectorType.STRAVA) {
 
 			const stravaConnectorSyncDateTime: ConnectorSyncDateTime = <ConnectorSyncDateTime> message.payload[1];
-			const stravaApiCredentials: StravaApiCredentials = <StravaApiCredentials> message.payload[2];
+			const stravaConnectorInfo: StravaConnectorInfo = <StravaConnectorInfo> message.payload[2];
 			const athleteModel: AthleteModel = <AthleteModel> message.payload[3];
 			const updateSyncedActivitiesNameAndType: boolean = <boolean> message.payload[4];
 			const userSettingsModel: UserSettingsModel = <UserSettingsModel> message.payload[5];
 
 			this.service.currentConnector = StravaConnector.create(athleteModel, userSettingsModel, stravaConnectorSyncDateTime,
-				stravaApiCredentials, updateSyncedActivitiesNameAndType);
+				stravaConnectorInfo, updateSyncedActivitiesNameAndType);
 
 		} else if (connectorType === ConnectorType.FILE_SYSTEM) {
 

@@ -12,7 +12,7 @@ import {
 	GenericSyncEvent,
 	StartedSyncEvent,
 	StoppedSyncEvent,
-	StravaApiCredentials,
+	StravaConnectorInfo,
 	StravaCredentialsUpdateSyncEvent,
 	SyncEvent
 } from "@elevate/shared/sync";
@@ -88,7 +88,7 @@ describe("DesktopSyncService", () => {
 				const fetchConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
 					.and.returnValue(connectorSyncDateTimes);
 
-				const fetchStravaApiCredentialsSpy = spyOn(desktopSyncService.stravaApiCredentialsService, "fetch").and.returnValue(null);
+				const fetchStravaConnectorInfoSpy = spyOn(desktopSyncService.stravaConnectorInfoService, "fetch").and.returnValue(null);
 				const sendStartSyncSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(Promise.resolve("Started"));
 
 				// When
@@ -103,7 +103,7 @@ describe("DesktopSyncService", () => {
 					expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
 					expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
 					expect(fetchConnectorSyncDateTimeSpy).not.toHaveBeenCalled();
-					expect(fetchStravaApiCredentialsSpy).toHaveBeenCalledTimes(1);
+					expect(fetchStravaConnectorInfoSpy).toHaveBeenCalledTimes(1);
 					expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
 
 					const flaggedStartSyncIpcMessage: FlaggedIpcMessage = <FlaggedIpcMessage> sendStartSyncSpy.calls.mostRecent().args[0];
@@ -135,7 +135,7 @@ describe("DesktopSyncService", () => {
 				const fetchConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
 					.and.returnValue(connectorSyncDateTimes);
 
-				const fetchStravaApiCredentialsSpy = spyOn(desktopSyncService.stravaApiCredentialsService, "fetch").and.returnValue(null);
+				const fetchStravaConnectorInfoSpy = spyOn(desktopSyncService.stravaConnectorInfoService, "fetch").and.returnValue(null);
 				const sendStartSyncSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(Promise.resolve("Started"));
 
 				// When
@@ -150,7 +150,7 @@ describe("DesktopSyncService", () => {
 					expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
 					expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
 					expect(fetchConnectorSyncDateTimeSpy).toHaveBeenCalledTimes(1);
-					expect(fetchStravaApiCredentialsSpy).toHaveBeenCalledTimes(1);
+					expect(fetchStravaConnectorInfoSpy).toHaveBeenCalledTimes(1);
 					expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
 
 					const flaggedStartSyncIpcMessage: FlaggedIpcMessage = <FlaggedIpcMessage> sendStartSyncSpy.calls.mostRecent().args[0];
@@ -174,7 +174,7 @@ describe("DesktopSyncService", () => {
 				spyOn(desktopSyncService.ipcMessagesReceiver, "listen").and.stub();
 				spyOn(desktopSyncService.athleteService, "fetch").and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
 				spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
-				spyOn(desktopSyncService.stravaApiCredentialsService, "fetch").and.returnValue(null);
+				spyOn(desktopSyncService.stravaConnectorInfoService, "fetch").and.returnValue(null);
 				spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(Promise.resolve("Started"));
 				const handleSyncEventsSpy = spyOn(desktopSyncService, "handleSyncEvents").and.stub();
 				const genericSyncEvent = new GenericSyncEvent(desktopSyncService.currentConnectorType);
@@ -208,7 +208,7 @@ describe("DesktopSyncService", () => {
 				const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch")
 					.and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
 				const fetchUserSettingsSpy = spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
-				const fetchStravaApiCredentialsSpy = spyOn(desktopSyncService.stravaApiCredentialsService, "fetch").and.returnValue(null);
+				const fetchStravaConnectorInfoSpy = spyOn(desktopSyncService.stravaConnectorInfoService, "fetch").and.returnValue(null);
 				const sendStartSyncSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(Promise.reject(errorMessage));
 
 				// When
@@ -227,7 +227,7 @@ describe("DesktopSyncService", () => {
 					expect(listenSyncEventsSpy).toHaveBeenCalledTimes(1);
 					expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
 					expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
-					expect(fetchStravaApiCredentialsSpy).toHaveBeenCalledTimes(1);
+					expect(fetchStravaConnectorInfoSpy).toHaveBeenCalledTimes(1);
 					expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
 					done();
 				});
@@ -624,7 +624,7 @@ describe("DesktopSyncService", () => {
 			// Given
 			const syncEvent$ = new Subject<SyncEvent>();
 			desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
-			const stravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(new StravaApiCredentials(null, null));
+			const stravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(new StravaConnectorInfo(null, null));
 			const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
 			// When

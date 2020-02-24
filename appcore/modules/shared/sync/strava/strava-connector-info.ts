@@ -1,8 +1,8 @@
 import { StravaAccount } from "./strava-account";
 
-export class StravaApiCredentials {
+export class StravaConnectorInfo {
 
-	public static readonly DEFAULT_MODEL: StravaApiCredentials = new StravaApiCredentials(null, null);
+	public static readonly DEFAULT_MODEL: StravaConnectorInfo = new StravaConnectorInfo(null, null);
 
 	public clientId: number;
 	public clientSecret: string;

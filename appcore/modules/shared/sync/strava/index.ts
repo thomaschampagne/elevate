@@ -1,2 +1,2 @@
-export * from "./strava-api-credentials";
+export * from "./strava-connector-info";
 export * from "./strava-account";

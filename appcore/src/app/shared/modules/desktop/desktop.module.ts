@@ -9,8 +9,8 @@ import { SyncService } from "../../services/sync/sync.service";
 import { DesktopSyncService } from "../../services/sync/impl/desktop-sync.service";
 import { ElectronService } from "../../services/electron/electron.service";
 import { IpcMessagesReceiver } from "../../../desktop/ipc-messages/ipc-messages-receiver.service";
-import { StravaApiCredentialsDao } from "../../dao/strava-api-credentials/strava-api-credentials.dao";
-import { StravaApiCredentialsService } from "../../services/strava-api-credentials/strava-api-credentials.service";
+import { StravaConnectorInfoDao } from "../../dao/strava-connector-info/strava-connector-info.dao";
+import { StravaConnectorInfoService } from "../../services/strava-connector-info/strava-connector-info.service";
 import { ConnectorsModule } from "../../../connectors/connectors.module";
 import { StravaConnectorService } from "../../../connectors/services/strava-connector.service";
 import { DesktopImportBackupDialogComponent } from "../../dialogs/import-backup-dialog/import-backup-dialog.component";
@@ -56,8 +56,8 @@ import { PROMISE_TRON } from "../../../desktop/ipc-messages/promise-tron.interfa
 		{provide: SyncService, useClass: DesktopSyncService},
 		DesktopSyncService,
 		ConnectorSyncDateTimeDao,
-		StravaApiCredentialsService,
-		StravaApiCredentialsDao,
+		StravaConnectorInfoService,
+		StravaConnectorInfoDao,
 		StravaConnectorService,
 		FileSystemConnectorInfoService,
 	]

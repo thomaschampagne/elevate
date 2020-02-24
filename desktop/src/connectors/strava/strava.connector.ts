@@ -8,12 +8,20 @@ import {
 	StartedSyncEvent,
 	StoppedSyncEvent,
 	StravaAccount,
-	StravaApiCredentials,
+	StravaConnectorInfo,
 	StravaCredentialsUpdateSyncEvent,
 	SyncEvent,
 	SyncEventType
 } from "@elevate/shared/sync";
-import { ActivityStreamsModel, AthleteModel, BareActivityModel, ConnectorSyncDateTime, Gender, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import {
+	ActivityStreamsModel,
+	AthleteModel,
+	BareActivityModel,
+	ConnectorSyncDateTime,
+	Gender,
+	SyncedActivityModel,
+	UserSettings
+} from "@elevate/shared/models";
 import logger from "electron-log";
 import { Service } from "../../service";
 import * as _ from "lodash";
@@ -37,9 +45,9 @@ export interface StravaApiStreamType {
 export class StravaConnector extends BaseConnector {
 
 	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime,
-				stravaApiCredentials: StravaApiCredentials, updateSyncedActivitiesNameAndType: boolean) {
+				stravaConnectorInfo: StravaConnectorInfo, updateSyncedActivitiesNameAndType: boolean) {
 		super(ConnectorType.STRAVA, athleteModel, userSettingsModel, connectorSyncDateTime, priority, StravaConnector.ENABLED);
-		this.stravaApiCredentials = stravaApiCredentials;
+		this.stravaConnectorInfo = stravaConnectorInfo;
 		this.updateSyncedActivitiesNameAndType = updateSyncedActivitiesNameAndType;
 		this.stravaAuthenticator = new StravaAuthenticator();
 		this.nextCallWaitTime = 0;
@@ -59,14 +67,14 @@ export class StravaConnector extends BaseConnector {
 	public static readonly QUARTER_HOUR_TIME_INTERVAL: number = 15 * 60;
 	public static readonly QUOTA_REACHED_RETRY_COUNT: number = 2;
 
-	public stravaApiCredentials: StravaApiCredentials;
+	public stravaConnectorInfo: StravaConnectorInfo;
 	public updateSyncedActivitiesNameAndType: boolean;
 	public stravaAuthenticator: StravaAuthenticator;
 	public nextCallWaitTime: number;
 
 	public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime,
-						 stravaApiCredentials: StravaApiCredentials, updateSyncedActivitiesNameAndType: boolean) {
-		return new StravaConnector(null, athleteModel, userSettingsModel, connectorSyncDateTime, stravaApiCredentials, updateSyncedActivitiesNameAndType);
+						 stravaConnectorInfo: StravaConnectorInfo, updateSyncedActivitiesNameAndType: boolean) {
+		return new StravaConnector(null, athleteModel, userSettingsModel, connectorSyncDateTime, stravaConnectorInfo, updateSyncedActivitiesNameAndType);
 	}
 
 	public static generateFetchStreamsEndpoint(activityId: number): string {
@@ -356,18 +364,18 @@ export class StravaConnector extends BaseConnector {
 	 */
 	public stravaApiCall<T>(syncEvents$: Subject<SyncEvent>, url: string, tries: number = 1): Promise<T> {
 
-		if (!_.isNumber(this.stravaApiCredentials.clientId) || _.isEmpty(this.stravaApiCredentials.clientSecret)) {
+		if (!_.isNumber(this.stravaConnectorInfo.clientId) || _.isEmpty(this.stravaConnectorInfo.clientSecret)) {
 			return Promise.reject(ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create());
 		}
 
-		return this.stravaTokensUpdater(syncEvents$, this.stravaApiCredentials).then(() => {
+		return this.stravaTokensUpdater(syncEvents$, this.stravaConnectorInfo).then(() => {
 
 			logger.debug(`Waiting ${this.nextCallWaitTime} seconds before calling strava api`);
 
 			// Wait during next call wait time
 			return sleep(this.nextCallWaitTime).then(() => {
 				return Service.instance().httpClient.get(url, {
-					"Authorization": `Bearer ${this.stravaApiCredentials.accessToken}`,
+					"Authorization": `Bearer ${this.stravaConnectorInfo.accessToken}`,
 					"Content-Type": "application/json"
 				});
 			});
@@ -451,29 +459,29 @@ export class StravaConnector extends BaseConnector {
 	 * Ensure proper connection to Strava API:
 	 * - Authenticate to Strava API if no "access token" is stored
 	 * - Authenticate to Strava API if no "refresh token" is stored
-	 * - Notify new StravaApiCredentials updated with proper accessToken & refreshToken using StravaCredentialsUpdateSyncEvent
+	 * - Notify new StravaConnectorInfo updated with proper accessToken & refreshToken using StravaCredentialsUpdateSyncEvent
 	 * @param syncEvents$
-	 * @param stravaApiCredentials
+	 * @param stravaConnectorInfo
 	 */
-	public stravaTokensUpdater(syncEvents$: Subject<SyncEvent>, stravaApiCredentials: StravaApiCredentials): Promise<void> {
+	public stravaTokensUpdater(syncEvents$: Subject<SyncEvent>, stravaConnectorInfo: StravaConnectorInfo): Promise<void> {
 
 		let authPromise: Promise<{ accessToken: string, refreshToken: string, expiresAt: number }> = null;
 
-		const isAccessTokenValid = (stravaApiCredentials.accessToken && stravaApiCredentials.expiresAt > this.getCurrentTime());
+		const isAccessTokenValid = (stravaConnectorInfo.accessToken && stravaConnectorInfo.expiresAt > this.getCurrentTime());
 
-		if (!stravaApiCredentials.accessToken || !stravaApiCredentials.refreshToken) {
-			authPromise = this.stravaAuthenticator.authorize(stravaApiCredentials.clientId, stravaApiCredentials.clientSecret);
+		if (!stravaConnectorInfo.accessToken || !stravaConnectorInfo.refreshToken) {
+			authPromise = this.stravaAuthenticator.authorize(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret);
 			logger.info("No accessToken or refreshToken found. Now authenticating to strava");
-		} else if (!isAccessTokenValid && stravaApiCredentials.refreshToken) {
+		} else if (!isAccessTokenValid && stravaConnectorInfo.refreshToken) {
 			authPromise = this.stravaAuthenticator
-				.refresh(stravaApiCredentials.clientId, stravaApiCredentials.clientSecret, stravaApiCredentials.refreshToken);
+				.refresh(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret, stravaConnectorInfo.refreshToken);
 			logger.info("Access token is expired, Refreshing token");
 		} else if (isAccessTokenValid) {
 			logger.debug("Access token is still valid, we keep current access token, no authorize and no refresh token");
 			return Promise.resolve();
 		} else {
-			return Promise.reject("Case not supported in StravaConnector::stravaTokensUpdater(). stravaApiCredentials: "
-				+ JSON.stringify(stravaApiCredentials));
+			return Promise.reject("Case not supported in StravaConnector::stravaTokensUpdater(). stravaConnectorInfo: "
+				+ JSON.stringify(stravaConnectorInfo));
 		}
 
 		return authPromise.then((result: { accessToken: string, refreshToken: string, expiresAt: number, athlete: any }) => {
@@ -483,20 +491,20 @@ export class StravaConnector extends BaseConnector {
 			if (result.athlete) { // First or reset authentication, use stravaAccount given by strava
 				stravaAccount = new StravaAccount(result.athlete.id, result.athlete.username, result.athlete.firstname, result.athlete.lastname,
 					result.athlete.city, result.athlete.state, result.athlete.country, result.athlete.sex === "M" ? Gender.MEN : Gender.WOMEN);
-			} else if (stravaApiCredentials.stravaAccount) { // Case of refresh token, re-use stored stravaAccount
-				stravaAccount = stravaApiCredentials.stravaAccount;
+			} else if (stravaConnectorInfo.stravaAccount) { // Case of refresh token, re-use stored stravaAccount
+				stravaAccount = stravaConnectorInfo.stravaAccount;
 			} else {
 				stravaAccount = null;
 			}
 
 			// Update credentials
-			stravaApiCredentials.accessToken = result.accessToken;
-			stravaApiCredentials.refreshToken = result.refreshToken;
-			stravaApiCredentials.expiresAt = result.expiresAt;
-			stravaApiCredentials.stravaAccount = stravaAccount;
+			stravaConnectorInfo.accessToken = result.accessToken;
+			stravaConnectorInfo.refreshToken = result.refreshToken;
+			stravaConnectorInfo.expiresAt = result.expiresAt;
+			stravaConnectorInfo.stravaAccount = stravaAccount;
 
 			// Notify
-			syncEvents$.next(new StravaCredentialsUpdateSyncEvent(stravaApiCredentials));
+			syncEvents$.next(new StravaCredentialsUpdateSyncEvent(stravaConnectorInfo));
 
 			return Promise.resolve();
 		}, error => {

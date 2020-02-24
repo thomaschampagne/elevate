@@ -6,14 +6,23 @@ import {
 	StartedSyncEvent,
 	StoppedSyncEvent,
 	StravaAccount,
-	StravaApiCredentials,
+	StravaConnectorInfo,
 	StravaCredentialsUpdateSyncEvent,
 	SyncEvent,
 	SyncEventType
 } from "@elevate/shared/sync";
 import * as jsonFakeActivitiesFixture from "./fixtures/sample_activities.fixture.json";
 import * as jsonFakeStreamsFixture from "./fixtures/sample_streams.fixture.json";
-import { ActivityStreamsModel, AthleteModel, BareActivityModel, ConnectorSyncDateTime, EnvTarget, Gender, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import {
+	ActivityStreamsModel,
+	AthleteModel,
+	BareActivityModel,
+	ConnectorSyncDateTime,
+	EnvTarget,
+	Gender,
+	SyncedActivityModel,
+	UserSettings
+} from "@elevate/shared/models";
 import * as _ from "lodash";
 import { Subject } from "rxjs";
 import { filter } from "rxjs/operators";
@@ -80,7 +89,7 @@ describe("StravaConnector", () => {
 
 		const connectorSyncDateTime = null;
 		stravaConnector = new StravaConnector(priority, AthleteModel.DEFAULT_MODEL, UserSettings.getDefaultsByEnvTarget(EnvTarget.DESKTOP),
-			connectorSyncDateTime, new StravaApiCredentials(clientId, clientSecret, accessToken), updateSyncedActivitiesNameAndType);
+			connectorSyncDateTime, new StravaConnectorInfo(clientId, clientSecret, accessToken), updateSyncedActivitiesNameAndType);
 
 		// Simulate strava pages
 		fetchRemoteStravaBareActivityModelsSpy = spyOn(stravaConnector, "fetchRemoteStravaBareActivityModels");
@@ -113,13 +122,13 @@ describe("StravaConnector", () => {
 			// Given
 			const athleteModel = null;
 			const updateSyncedActivitiesNameAndType = true;
-			const stravaApiCredentials = null;
+			const stravaConnectorInfo = null;
 			const userSettingsModel = null;
 			const currentConnectorSyncDateTime = null;
 
 			// When
 			const connector = StravaConnector.create(athleteModel, userSettingsModel, currentConnectorSyncDateTime,
-				stravaApiCredentials, updateSyncedActivitiesNameAndType);
+				stravaConnectorInfo, updateSyncedActivitiesNameAndType);
 
 			// Then
 			expect(connector.syncDateTime).toBeNull();
@@ -132,7 +141,7 @@ describe("StravaConnector", () => {
 			// Given
 			const athleteModel = null;
 			const updateSyncedActivitiesNameAndType = true;
-			const stravaApiCredentials = null;
+			const stravaConnectorInfo = null;
 			const userSettingsModel = null;
 			const syncDateTime = Date.now();
 			const expectedSyncDateTime = Math.floor(syncDateTime / 1000);
@@ -140,7 +149,7 @@ describe("StravaConnector", () => {
 
 			// When
 			const connector = StravaConnector.create(athleteModel, userSettingsModel, currentConnectorSyncDateTime,
-				stravaApiCredentials, updateSyncedActivitiesNameAndType);
+				stravaConnectorInfo, updateSyncedActivitiesNameAndType);
 
 			// Then
 			expect(connector.syncDateTime).toEqual(expectedSyncDateTime);
@@ -446,7 +455,7 @@ describe("StravaConnector", () => {
 
 			// Given
 			const syncEvents$ = new Subject<SyncEvent>();
-			const stravaApiCredentials = new StravaApiCredentials(666, "secret");
+			const stravaConnectorInfo = new StravaConnectorInfo(666, "secret");
 			const authorizeResponse = {
 				accessToken: "fakeAccessToken",
 				refreshToken: "fakeRefreshToken",
@@ -457,19 +466,19 @@ describe("StravaConnector", () => {
 				.and.returnValue(Promise.resolve(authorizeResponse));
 
 			const syncEventNextSpy = spyOn(syncEvents$, "next").and.callThrough();
-			const expectedStravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(_.cloneDeep(stravaApiCredentials));
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.accessToken = authorizeResponse.accessToken;
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.refreshToken = authorizeResponse.refreshToken;
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.expiresAt = authorizeResponse.expiresAt;
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.stravaAccount = expectedStravaAccount;
+			const expectedStravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(_.cloneDeep(stravaConnectorInfo));
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.accessToken = authorizeResponse.accessToken;
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.refreshToken = authorizeResponse.refreshToken;
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.expiresAt = authorizeResponse.expiresAt;
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.stravaAccount = expectedStravaAccount;
 
 			// When
-			const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaApiCredentials));
+			const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaConnectorInfo));
 
 			// Then
 			promise.then(() => {
 
-				expect(authorizeSpy).toBeCalledWith(stravaApiCredentials.clientId, stravaApiCredentials.clientSecret);
+				expect(authorizeSpy).toBeCalledWith(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret);
 				expect(syncEventNextSpy).toBeCalledWith(expectedStravaCredentialsUpdateSyncEvent);
 				done();
 
@@ -482,7 +491,7 @@ describe("StravaConnector", () => {
 
 			// Given
 			const syncEvents$ = new Subject<SyncEvent>();
-			const stravaApiCredentials = new StravaApiCredentials(666, "secret", "oldAccessToken");
+			const stravaConnectorInfo = new StravaConnectorInfo(666, "secret", "oldAccessToken");
 			const authorizeResponse = {
 				accessToken: "fakeAccessToken",
 				refreshToken: "fakeRefreshToken",
@@ -493,19 +502,19 @@ describe("StravaConnector", () => {
 				.and.returnValue(Promise.resolve(authorizeResponse));
 
 			const syncEventNextSpy = spyOn(syncEvents$, "next").and.callThrough();
-			const expectedStravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(_.cloneDeep(stravaApiCredentials));
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.accessToken = authorizeResponse.accessToken;
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.refreshToken = authorizeResponse.refreshToken;
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.expiresAt = authorizeResponse.expiresAt;
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.stravaAccount = expectedStravaAccount;
+			const expectedStravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(_.cloneDeep(stravaConnectorInfo));
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.accessToken = authorizeResponse.accessToken;
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.refreshToken = authorizeResponse.refreshToken;
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.expiresAt = authorizeResponse.expiresAt;
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.stravaAccount = expectedStravaAccount;
 
 			// When
-			const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaApiCredentials));
+			const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaConnectorInfo));
 
 			// Then
 			promise.then(() => {
 
-				expect(authorizeSpy).toBeCalledWith(stravaApiCredentials.clientId, stravaApiCredentials.clientSecret);
+				expect(authorizeSpy).toBeCalledWith(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret);
 				expect(syncEventNextSpy).toBeCalledWith(expectedStravaCredentialsUpdateSyncEvent);
 				done();
 
@@ -518,8 +527,8 @@ describe("StravaConnector", () => {
 
 			// Given
 			const syncEvents$ = new Subject<SyncEvent>();
-			const stravaApiCredentials = new StravaApiCredentials(666, "secret", "oldAccessToken", "oldRefreshToken");
-			stravaApiCredentials.expiresAt = 0; // Access token expired
+			const stravaConnectorInfo = new StravaConnectorInfo(666, "secret", "oldAccessToken", "oldRefreshToken");
+			stravaConnectorInfo.expiresAt = 0; // Access token expired
 			const refreshResponse = {
 				accessToken: "fakeAccessToken",
 				refreshToken: "fakeRefreshToken",
@@ -530,19 +539,19 @@ describe("StravaConnector", () => {
 				.and.returnValue(Promise.resolve(refreshResponse));
 
 			const syncEventNextSpy = spyOn(syncEvents$, "next").and.callThrough();
-			const expectedStravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(_.cloneDeep(stravaApiCredentials));
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.accessToken = refreshResponse.accessToken;
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.refreshToken = refreshResponse.refreshToken;
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.expiresAt = refreshResponse.expiresAt;
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.stravaAccount = expectedStravaAccount;
+			const expectedStravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(_.cloneDeep(stravaConnectorInfo));
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.accessToken = refreshResponse.accessToken;
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.refreshToken = refreshResponse.refreshToken;
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.expiresAt = refreshResponse.expiresAt;
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.stravaAccount = expectedStravaAccount;
 
 			// When
-			const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaApiCredentials));
+			const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaConnectorInfo));
 
 			// Then
 			promise.then(() => {
 
-				expect(refreshSpy).toBeCalledWith(stravaApiCredentials.clientId, stravaApiCredentials.clientSecret, stravaApiCredentials.refreshToken);
+				expect(refreshSpy).toBeCalledWith(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret, stravaConnectorInfo.refreshToken);
 				expect(syncEventNextSpy).toBeCalledWith(expectedStravaCredentialsUpdateSyncEvent);
 				done();
 
@@ -555,8 +564,8 @@ describe("StravaConnector", () => {
 
 			// Given
 			const syncEvents$ = new Subject<SyncEvent>();
-			const stravaApiCredentials = new StravaApiCredentials(666, "secret", "oldAccessToken");
-			stravaApiCredentials.expiresAt = 0; // Access token expired
+			const stravaConnectorInfo = new StravaConnectorInfo(666, "secret", "oldAccessToken");
+			stravaConnectorInfo.expiresAt = 0; // Access token expired
 			const authorizeResponse = {
 				accessToken: "fakeAccessToken",
 				refreshToken: "fakeRefreshToken",
@@ -567,19 +576,19 @@ describe("StravaConnector", () => {
 				.and.returnValue(Promise.resolve(authorizeResponse));
 
 			const syncEventNextSpy = spyOn(syncEvents$, "next").and.callThrough();
-			const expectedStravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(_.cloneDeep(stravaApiCredentials));
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.accessToken = authorizeResponse.accessToken;
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.refreshToken = authorizeResponse.refreshToken;
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.expiresAt = authorizeResponse.expiresAt;
-			expectedStravaCredentialsUpdateSyncEvent.stravaApiCredentials.stravaAccount = expectedStravaAccount;
+			const expectedStravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(_.cloneDeep(stravaConnectorInfo));
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.accessToken = authorizeResponse.accessToken;
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.refreshToken = authorizeResponse.refreshToken;
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.expiresAt = authorizeResponse.expiresAt;
+			expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.stravaAccount = expectedStravaAccount;
 
 			// When
-			const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaApiCredentials));
+			const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaConnectorInfo));
 
 			// Then
 			promise.then(() => {
 
-				expect(authorizeSpy).toBeCalledWith(stravaApiCredentials.clientId, stravaApiCredentials.clientSecret);
+				expect(authorizeSpy).toBeCalledWith(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret);
 				expect(syncEventNextSpy).toBeCalledWith(expectedStravaCredentialsUpdateSyncEvent);
 				done();
 
@@ -592,8 +601,8 @@ describe("StravaConnector", () => {
 
 			// Given
 			const syncEvents$ = new Subject<SyncEvent>();
-			const stravaApiCredentials = new StravaApiCredentials(666, "secret", "oldAccessToken", "oldRefreshToken");
-			stravaApiCredentials.expiresAt = (new Date()).getTime();
+			const stravaConnectorInfo = new StravaConnectorInfo(666, "secret", "oldAccessToken", "oldRefreshToken");
+			stravaConnectorInfo.expiresAt = (new Date()).getTime();
 			const authorizeResponse = {
 				accessToken: "fakeAccessToken",
 				refreshToken: "fakeRefreshToken",
@@ -606,10 +615,10 @@ describe("StravaConnector", () => {
 				.and.returnValue(Promise.resolve(authorizeResponse));
 			const syncEventNextSpy = spyOn(syncEvents$, "next").and.callThrough();
 
-			spyOn(stravaConnector, "getCurrentTime").and.returnValue(stravaApiCredentials.expiresAt - 10000); // Access token not expired
+			spyOn(stravaConnector, "getCurrentTime").and.returnValue(stravaConnectorInfo.expiresAt - 10000); // Access token not expired
 
 			// When
-			const promise = stravaConnector.stravaTokensUpdater(syncEvents$, stravaApiCredentials);
+			const promise = stravaConnector.stravaTokensUpdater(syncEvents$, stravaConnectorInfo);
 
 			// Then
 			promise.then(() => {
@@ -627,14 +636,14 @@ describe("StravaConnector", () => {
 
 			// Given
 			const syncEvents$ = new Subject<SyncEvent>();
-			const stravaApiCredentials = new StravaApiCredentials(666, "secret");
+			const stravaConnectorInfo = new StravaConnectorInfo(666, "secret");
 			const authorizeSpy = spyOn(stravaConnector.stravaAuthenticator, "authorize")
 				.and.returnValue(Promise.reject());
 
 			const syncEventNextSpy = spyOn(syncEvents$, "next").and.callThrough();
 
 			// When
-			const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaApiCredentials));
+			const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaConnectorInfo));
 
 			// Then
 			promise.then(() => {
@@ -643,7 +652,7 @@ describe("StravaConnector", () => {
 
 			}, () => {
 
-				expect(authorizeSpy).toBeCalledWith(stravaApiCredentials.clientId, stravaApiCredentials.clientSecret);
+				expect(authorizeSpy).toBeCalledWith(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret);
 				expect(syncEventNextSpy).not.toBeCalled();
 
 				done();
@@ -758,7 +767,7 @@ describe("StravaConnector", () => {
 			// Then
 			promise.then(result => {
 				expect(stravaTokensUpdaterSpy).toHaveBeenCalledTimes(1);
-				expect(stravaTokensUpdaterSpy).toHaveBeenCalledWith(syncEvents$, stravaConnector.stravaApiCredentials);
+				expect(stravaTokensUpdaterSpy).toHaveBeenCalledWith(syncEvents$, stravaConnector.stravaConnectorInfo);
 				expect(computeNextCallWaitTimeSpy).toHaveBeenCalledTimes(1);
 				expect(result).toEqual(expectedResult);
 				done();
@@ -775,8 +784,8 @@ describe("StravaConnector", () => {
 			// Given
 			const syncEvents$ = new Subject<SyncEvent>();
 			const url = "http://api.strava.com/v3/fake";
-			stravaConnector.stravaApiCredentials.clientId = null;
-			stravaConnector.stravaApiCredentials.clientSecret = null;
+			stravaConnector.stravaConnectorInfo.clientId = null;
+			stravaConnector.stravaConnectorInfo.clientSecret = null;
 			const expectedErrorDetails = ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create();
 
 			// When
@@ -1091,7 +1100,7 @@ describe("StravaConnector", () => {
 			// Then
 			promise.then(result => {
 				expect(stravaTokensUpdaterSpy).toHaveBeenCalledTimes(1);
-				expect(stravaTokensUpdaterSpy).toHaveBeenCalledWith(syncEvents$, stravaConnector.stravaApiCredentials);
+				expect(stravaTokensUpdaterSpy).toHaveBeenCalledWith(syncEvents$, stravaConnector.stravaConnectorInfo);
 				expect(computeNextCallWaitTimeSpy).toHaveBeenCalledTimes(1);
 				expect(stravaConnector.nextCallWaitTime).toEqual(expectedNextCallWaitTime);
 				expect(result).toEqual(expectedResult);

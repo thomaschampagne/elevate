@@ -9,9 +9,9 @@ import { AthleteAccessChecker } from "./athlete-access-checker";
 import * as HttpCodes from "http-status-codes";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { environment } from "../../../environments/environment.desktop";
-import { StravaApiCredentialsService } from "../../shared/services/strava-api-credentials/strava-api-credentials.service";
+import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../../shared/services/versions/versions-provider.interface";
-import { StravaApiCredentials } from "@elevate/shared/sync";
+import { StravaConnectorInfo } from "@elevate/shared/sync";
 import { DesktopMigrationService } from "../migration/desktop-migration.service";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { DesktopPreRunGuardDialogComponent } from "./desktop-pre-run-guard-dialog.component";
@@ -30,7 +30,7 @@ export class DesktopPreRunGuard implements CanActivate {
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
 				public ipcMessagesSender: IpcMessagesSender,
-				public stravaApiCredentialsService: StravaApiCredentialsService,
+				public stravaConnectorInfoService: StravaConnectorInfoService,
 				public desktopMigrationService: DesktopMigrationService,
 				public httpClient: HttpClient,
 				public router: Router,
@@ -86,11 +86,11 @@ export class DesktopPreRunGuard implements CanActivate {
 
 		return Promise.all([
 			this.versionsProvider.getPackageVersion(),
-			this.stravaApiCredentialsService.fetch()
+			this.stravaConnectorInfoService.fetch()
 		]).then(result => {
 
 			const installedVersion = result[0];
-			const stravaApiCredentials: StravaApiCredentials = result[1];
+			const stravaConnectorInfo: StravaConnectorInfo = result[1];
 
 			return new Promise<boolean>((resolve => {
 
@@ -103,7 +103,7 @@ export class DesktopPreRunGuard implements CanActivate {
 					osUsername: this.runtimeInfo.osUsername,
 					memorySizeGb: this.runtimeInfo.memorySizeGb,
 					cpu: `${this.runtimeInfo.cpu.name}; ${this.runtimeInfo.cpu.threads}`,
-					stravaAccount: (stravaApiCredentials.stravaAccount) ? stravaApiCredentials.stravaAccount : null
+					stravaAccount: (stravaConnectorInfo.stravaAccount) ? stravaConnectorInfo.stravaAccount : null
 				};
 
 				this.httpClient.post(DesktopPreRunGuard.ATHLETE_ACCESS_API_URL, athleteAccessBodyData, {responseType: "text"}).pipe(

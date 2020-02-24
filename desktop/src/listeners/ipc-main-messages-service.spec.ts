@@ -166,11 +166,11 @@ describe("IpcMainMessagesService", () => {
 			// Given
 			const athleteModel = null;
 			const updateSyncedActivitiesNameAndType = true;
-			const stravaApiCredentials = null;
+			const stravaConnectorInfo = null;
 			const userSettingsModel = null;
 			const currentConnectorSyncDateTime = null;
 			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA,
-				currentConnectorSyncDateTime, stravaApiCredentials, athleteModel, updateSyncedActivitiesNameAndType, userSettingsModel);
+				currentConnectorSyncDateTime, stravaConnectorInfo, athleteModel, updateSyncedActivitiesNameAndType, userSettingsModel);
 			const replyWith = {
 				callback: () => {
 				},
@@ -182,7 +182,7 @@ describe("IpcMainMessagesService", () => {
 			const stravaConnectorSyncCalls = 1;
 
 			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, currentConnectorSyncDateTime,
-				stravaApiCredentials, updateSyncedActivitiesNameAndType);
+				stravaConnectorInfo, updateSyncedActivitiesNameAndType);
 			const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
 			const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(new Subject<SyncEvent>());
 			const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
@@ -271,11 +271,11 @@ describe("IpcMainMessagesService", () => {
 			// Given
 			const athleteModel = null;
 			const updateSyncedActivitiesNameAndType = true;
-			const stravaApiCredentials = null;
+			const stravaConnectorInfo = null;
 			const userSettingsModel = null;
 			const connectorSyncDateTime = null;
 			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, athleteModel, userSettingsModel,
-				stravaApiCredentials, updateSyncedActivitiesNameAndType);
+				stravaConnectorInfo, updateSyncedActivitiesNameAndType);
 
 			const syncEvent$ = new Subject<SyncEvent>();
 			const fakeGenericSyncEvent = new GenericSyncEvent(ConnectorType.STRAVA, "Fake event");
@@ -289,7 +289,7 @@ describe("IpcMainMessagesService", () => {
 				}
 			};
 			const stravaConnectorSyncCalls = 1;
-			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaApiCredentials,
+			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaConnectorInfo,
 				updateSyncedActivitiesNameAndType);
 			const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
 			const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(syncEvent$);
@@ -315,11 +315,11 @@ describe("IpcMainMessagesService", () => {
 			// Given
 			const athleteModel = null;
 			const updateSyncedActivitiesNameAndType = true;
-			const stravaApiCredentials = null;
+			const stravaConnectorInfo = null;
 			const userSettingsModel = null;
 			const connectorSyncDateTime = null;
 			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, athleteModel, userSettingsModel,
-				stravaApiCredentials, updateSyncedActivitiesNameAndType);
+				stravaConnectorInfo, updateSyncedActivitiesNameAndType);
 
 			const syncEvent$ = new Subject<SyncEvent>();
 			const fakeErrorSyncEvent = new ErrorSyncEvent(ConnectorType.STRAVA, {
@@ -337,7 +337,7 @@ describe("IpcMainMessagesService", () => {
 				}
 			};
 			const stravaConnectorSyncCalls = 1;
-			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaApiCredentials,
+			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaConnectorInfo,
 				updateSyncedActivitiesNameAndType);
 			const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
 			const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(syncEvent$);
@@ -371,11 +371,11 @@ describe("IpcMainMessagesService", () => {
 			// Given
 			const athleteModel = null;
 			const updateSyncedActivitiesNameAndType = true;
-			const stravaApiCredentials = null;
+			const stravaConnectorInfo = null;
 			const connectorSyncDateTime = null;
 			const userSettingsModel = null;
 			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, athleteModel, userSettingsModel,
-				stravaApiCredentials, updateSyncedActivitiesNameAndType);
+				stravaConnectorInfo, updateSyncedActivitiesNameAndType);
 
 			const syncEvent$ = new Subject<SyncEvent>();
 			const fakeCompleteSyncEvent = new CompleteSyncEvent(ConnectorType.STRAVA, "Sync done");
@@ -389,7 +389,7 @@ describe("IpcMainMessagesService", () => {
 				}
 			};
 			const stravaConnectorSyncCalls = 1;
-			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaApiCredentials,
+			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaConnectorInfo,
 				updateSyncedActivitiesNameAndType);
 			const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
 			const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(syncEvent$);
