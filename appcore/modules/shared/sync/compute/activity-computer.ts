@@ -283,7 +283,9 @@ export class ActivityComputer {
 		if (hasActivityStream) {
 
 			// Append altitude_smooth to fetched strava activity stream before compute analysis data
-			this.activityStream.altitude = this.smoothAltitudeStream(this.activityStream.altitude);
+			if (this.activityStream.altitude && this.activityStream.altitude.length > 0) {
+				this.activityStream.altitude = this.smoothAltitudeStream(this.activityStream.altitude);
+			}
 
 			// Slices array stream if activity bounds are given.
 			// It's mainly used for segment effort extended stats
@@ -376,7 +378,7 @@ export class ActivityComputer {
 		const paceData: PaceDataModel = (_.isEmpty(this.movementData)) ? null : this.movementData.pace;
 
 		const movingTime: number = (_.isEmpty(this.movementData)) ? null : this.movementData.movingTime;
-		const elapsedTime: number = (_.isEmpty(this.activityStream.time)) ? movingTime : _.last(this.activityStream.time);
+		const elapsedTime: number = (this.activityStream && !_.isEmpty(this.activityStream.time)) ? _.last(this.activityStream.time) : movingTime;
 		const pauseTime: number = (elapsedTime && movingTime) ? (elapsedTime - movingTime) : null;
 		const moveRatio: number = (_.isEmpty(this.movementData)) ? null : this.moveRatio(movingTime, elapsedTime);
 
