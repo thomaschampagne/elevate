@@ -23,7 +23,7 @@ export class StravaConnectorService {
 		this.stravaConnectorInfo$ = new Subject<StravaConnectorInfo>();
 	}
 
-	public fetchCredentials(): Promise<StravaConnectorInfo> {
+	public fetch(): Promise<StravaConnectorInfo> {
 		return this.stravaConnectorInfoService.fetch();
 	}
 
@@ -32,7 +32,7 @@ export class StravaConnectorService {
 	 */
 	public authenticate(): Promise<StravaConnectorInfo> {
 
-		return this.fetchCredentials().then((stravaConnectorInfo: StravaConnectorInfo) => {
+		return this.fetch().then((stravaConnectorInfo: StravaConnectorInfo) => {
 
 			this.stravaConnectorInfo = stravaConnectorInfo;
 

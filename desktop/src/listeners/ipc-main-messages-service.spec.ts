@@ -165,12 +165,11 @@ describe("IpcMainMessagesService", () => {
 
 			// Given
 			const athleteModel = null;
-			const updateSyncedActivitiesNameAndType = true;
 			const stravaConnectorInfo = null;
 			const userSettingsModel = null;
 			const currentConnectorSyncDateTime = null;
 			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA,
-				currentConnectorSyncDateTime, stravaConnectorInfo, athleteModel, updateSyncedActivitiesNameAndType, userSettingsModel);
+				currentConnectorSyncDateTime, stravaConnectorInfo, athleteModel, userSettingsModel);
 			const replyWith = {
 				callback: () => {
 				},
@@ -181,8 +180,7 @@ describe("IpcMainMessagesService", () => {
 			};
 			const stravaConnectorSyncCalls = 1;
 
-			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, currentConnectorSyncDateTime,
-				stravaConnectorInfo, updateSyncedActivitiesNameAndType);
+			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, currentConnectorSyncDateTime, stravaConnectorInfo);
 			const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
 			const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(new Subject<SyncEvent>());
 			const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
@@ -270,12 +268,10 @@ describe("IpcMainMessagesService", () => {
 
 			// Given
 			const athleteModel = null;
-			const updateSyncedActivitiesNameAndType = true;
 			const stravaConnectorInfo = null;
 			const userSettingsModel = null;
 			const connectorSyncDateTime = null;
-			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, athleteModel, userSettingsModel,
-				stravaConnectorInfo, updateSyncedActivitiesNameAndType);
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, athleteModel, userSettingsModel, stravaConnectorInfo);
 
 			const syncEvent$ = new Subject<SyncEvent>();
 			const fakeGenericSyncEvent = new GenericSyncEvent(ConnectorType.STRAVA, "Fake event");
@@ -289,8 +285,7 @@ describe("IpcMainMessagesService", () => {
 				}
 			};
 			const stravaConnectorSyncCalls = 1;
-			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaConnectorInfo,
-				updateSyncedActivitiesNameAndType);
+			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaConnectorInfo);
 			const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
 			const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(syncEvent$);
 			const sendMessageSpy = spyOn(ipcMainMessagesService, "send").and.returnValue(Promise.resolve("Message received by IpcMain"));
@@ -314,12 +309,10 @@ describe("IpcMainMessagesService", () => {
 
 			// Given
 			const athleteModel = null;
-			const updateSyncedActivitiesNameAndType = true;
 			const stravaConnectorInfo = null;
 			const userSettingsModel = null;
 			const connectorSyncDateTime = null;
-			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, athleteModel, userSettingsModel,
-				stravaConnectorInfo, updateSyncedActivitiesNameAndType);
+			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, athleteModel, userSettingsModel, stravaConnectorInfo);
 
 			const syncEvent$ = new Subject<SyncEvent>();
 			const fakeErrorSyncEvent = new ErrorSyncEvent(ConnectorType.STRAVA, {
@@ -337,8 +330,7 @@ describe("IpcMainMessagesService", () => {
 				}
 			};
 			const stravaConnectorSyncCalls = 1;
-			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaConnectorInfo,
-				updateSyncedActivitiesNameAndType);
+			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaConnectorInfo);
 			const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
 			const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(syncEvent$);
 			const sendMessageSpy = spyOn(ipcMainMessagesService, "send").and.returnValue(Promise.resolve("Message received by IpcMain"));
@@ -389,8 +381,7 @@ describe("IpcMainMessagesService", () => {
 				}
 			};
 			const stravaConnectorSyncCalls = 1;
-			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaConnectorInfo,
-				updateSyncedActivitiesNameAndType);
+			const stravaConnectorMock = StravaConnector.create(athleteModel, userSettingsModel, connectorSyncDateTime, stravaConnectorInfo);
 			const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
 			const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(syncEvent$);
 			const sendMessageSpy = spyOn(ipcMainMessagesService, "send").and.returnValue(Promise.resolve("Message received by IpcMain"));
@@ -427,7 +418,7 @@ describe("IpcMainMessagesService", () => {
 			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.STOP_SYNC, ConnectorType.STRAVA);
 			const replyWith = () => {
 			};
-			const connector = StravaConnector.create(null, null, null, null, null);
+			const connector = StravaConnector.create(null, null, null, null);
 			jest.spyOn(ipcMainMessagesService.service, "currentConnector", "get").mockReturnValue(connector);
 			const stopConnectorSyncSpy = spyOn(connector, "stop").and.returnValue(Promise.resolve());
 
@@ -452,7 +443,7 @@ describe("IpcMainMessagesService", () => {
 				}
 			};
 
-			const connector = StravaConnector.create(null, null, null, null, null);
+			const connector = StravaConnector.create(null, null, null, null);
 			jest.spyOn(ipcMainMessagesService.service, "currentConnector", "get").mockReturnValue(null);
 			const stopConnectorSyncSpy = spyOn(connector, "stop").and.stub();
 			const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();

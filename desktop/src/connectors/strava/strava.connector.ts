@@ -44,11 +44,9 @@ export interface StravaApiStreamType {
 
 export class StravaConnector extends BaseConnector {
 
-	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime,
-				stravaConnectorInfo: StravaConnectorInfo, updateSyncedActivitiesNameAndType: boolean) {
+	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime, stravaConnectorInfo: StravaConnectorInfo) {
 		super(ConnectorType.STRAVA, athleteModel, userSettingsModel, connectorSyncDateTime, priority, StravaConnector.ENABLED);
 		this.stravaConnectorInfo = stravaConnectorInfo;
-		this.updateSyncedActivitiesNameAndType = updateSyncedActivitiesNameAndType;
 		this.stravaAuthenticator = new StravaAuthenticator();
 		this.nextCallWaitTime = 0;
 	}
@@ -68,13 +66,12 @@ export class StravaConnector extends BaseConnector {
 	public static readonly QUOTA_REACHED_RETRY_COUNT: number = 2;
 
 	public stravaConnectorInfo: StravaConnectorInfo;
-	public updateSyncedActivitiesNameAndType: boolean;
 	public stravaAuthenticator: StravaAuthenticator;
 	public nextCallWaitTime: number;
 
 	public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime,
-						 stravaConnectorInfo: StravaConnectorInfo, updateSyncedActivitiesNameAndType: boolean) {
-		return new StravaConnector(null, athleteModel, userSettingsModel, connectorSyncDateTime, stravaConnectorInfo, updateSyncedActivitiesNameAndType);
+						 stravaConnectorInfo: StravaConnectorInfo) {
+		return new StravaConnector(null, athleteModel, userSettingsModel, connectorSyncDateTime, stravaConnectorInfo);
 	}
 
 	public static generateFetchStreamsEndpoint(activityId: number): string {
@@ -273,7 +270,7 @@ export class StravaConnector extends BaseConnector {
 						} else {  // Activities exists
 
 							if (_.isArray(syncedActivityModels) && syncedActivityModels.length === 1) { // One activity found
-								if (this.updateSyncedActivitiesNameAndType) {
+								if (this.stravaConnectorInfo.updateSyncedActivitiesNameAndType) {
 									const syncedActivityModel = syncedActivityModels[0];
 									syncedActivityModel.name = bareActivity.name;
 									syncedActivityModel.type = bareActivity.type;

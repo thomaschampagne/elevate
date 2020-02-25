@@ -3,10 +3,10 @@
 		Strava
 	</mat-card-title>
 	<mat-card-subtitle>
-		<span *ngIf="!stravaApiCredentials || !stravaApiCredentials.accessToken">Not connected</span>
-		<span *ngIf="stravaApiCredentials && stravaApiCredentials.accessToken">
-			Connected as {{stravaApiCredentials.stravaAccount.firstname}} {{stravaApiCredentials.stravaAccount.lastname}}
-			(id: {{stravaApiCredentials.stravaAccount.id}})
+		<span *ngIf="!stravaConnectorInfo || !stravaConnectorInfo.accessToken">Not connected</span>
+		<span *ngIf="stravaConnectorInfo && stravaConnectorInfo.accessToken">
+			Connected as {{stravaConnectorInfo.stravaAccount.firstname}} {{stravaConnectorInfo.stravaAccount.lastname}}
+			(id: {{stravaConnectorInfo.stravaAccount.id}})
 		</span>
 	</mat-card-subtitle>
 	<mat-card-content>
@@ -121,10 +121,10 @@
 			</ol>
 		</div>
 
-		<div class="connector" *ngIf="stravaApiCredentials">
+		<div class="connector" *ngIf="stravaConnectorInfo">
 
 			<button
-				*ngIf="isSynced && (stravaApiCredentials.clientId > 0 && stravaApiCredentials.clientSecret && stravaApiCredentials.accessToken)"
+				*ngIf="isSynced && (stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
 				mat-stroked-button
 				color="primary"
 				(click)="sync(true)">
@@ -133,7 +133,7 @@
 			</button>
 
 			<button
-				*ngIf="(stravaApiCredentials.clientId > 0 && stravaApiCredentials.clientSecret && stravaApiCredentials.accessToken)"
+				*ngIf="(stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
 				mat-stroked-button
 				color="primary"
 				(click)="sync()">
@@ -146,7 +146,7 @@
 				Configure
 			</button>
 			<button
-				*ngIf="(stravaApiCredentials.clientId > 0 && stravaApiCredentials.clientSecret && stravaApiCredentials.accessToken)"
+				*ngIf="(stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
 				mat-stroked-button
 				color="primary"
 				(click)="disconnect()">
@@ -161,7 +161,7 @@
 				<div>
 					<mat-form-field fxFlex="50">
 						<input matInput type="number" min="0" placeholder="Client id"
-							   [(ngModel)]="stravaApiCredentials.clientId"
+							   [(ngModel)]="stravaConnectorInfo.clientId"
 							   (change)="onClientIdChange()">
 					</mat-form-field>
 				</div>
@@ -169,7 +169,7 @@
 					<mat-form-field fxFlex="50">
 						<input matInput [type]="showSecret.checked ? 'text' : 'password'"
 							   placeholder="Client secret"
-							   [(ngModel)]="stravaApiCredentials.clientSecret" (change)="onClientSecretChange()">
+							   [(ngModel)]="stravaConnectorInfo.clientSecret" (change)="onClientSecretChange()">
 						<button matSuffix mat-icon-button
 								(click)="showSecret.checked = !showSecret.checked">
 							<mat-icon>{{showSecret.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -177,11 +177,11 @@
 						<mat-checkbox fxHide #showSecret></mat-checkbox>
 					</mat-form-field>
 				</div>
-				<div *ngIf="stravaApiCredentials.accessToken">
+				<div *ngIf="stravaConnectorInfo.accessToken">
 					<mat-form-field fxFlex="50">
 						<input matInput disabled [type]="showToken.checked ? 'text' : 'password'"
 							   placeholder="Access Token"
-							   [(ngModel)]="stravaApiCredentials.accessToken">
+							   [(ngModel)]="stravaConnectorInfo.accessToken">
 						<button matSuffix mat-icon-button
 								(click)="showToken.checked = !showToken.checked">
 							<mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -189,11 +189,11 @@
 						<mat-checkbox fxHide #showToken></mat-checkbox>
 					</mat-form-field>
 				</div>
-				<div *ngIf="stravaApiCredentials.refreshToken">
+				<div *ngIf="stravaConnectorInfo.refreshToken">
 					<mat-form-field fxFlex="50">
 						<input matInput disabled [type]="showToken.checked ? 'text' : 'password'"
 							   placeholder="Refresh Token"
-							   [(ngModel)]="stravaApiCredentials.refreshToken">
+							   [(ngModel)]="stravaConnectorInfo.refreshToken">
 						<button matSuffix mat-icon-button
 								(click)="showToken.checked = !showToken.checked">
 							<mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -201,7 +201,7 @@
 						<mat-checkbox fxHide #showToken></mat-checkbox>
 					</mat-form-field>
 				</div>
-				<div *ngIf="stravaApiCredentials.expiresAt > 0">
+				<div *ngIf="stravaConnectorInfo.expiresAt > 0">
 					<mat-form-field fxFlex="50">
 						<input matInput disabled [type]="showToken.checked ? 'text' : 'password'"
 							   placeholder="Session valid until" [value]="expiresAt">
@@ -212,22 +212,27 @@
 						<mat-checkbox fxHide #showToken></mat-checkbox>
 					</mat-form-field>
 				</div>
+				<div class="others-options">
+					<mat-checkbox (change)="onUpdateActivitiesNameAndTypeChanged()"
+								  [(ngModel)]="stravaConnectorInfo.updateSyncedActivitiesNameAndType">
+						Override existing activities names and types with those fetched from Strava.
+					</mat-checkbox>
+				</div>
 				<div>
 					<button mat-stroked-button color="primary"
 							*ngIf="!showHowTo"
 							(click)="onHowToClicked()">
 						<mat-icon>help</mat-icon>&nbsp;How to get your client id & secret
 					</button>
-					<button mat-stroked-button *ngIf="!stravaApiCredentials.accessToken"
+					<button mat-stroked-button *ngIf="!stravaConnectorInfo.accessToken"
 							color="primary"
 							(click)="stravaAuthentication()"
-							[disabled]="(!stravaApiCredentials.clientId || !stravaApiCredentials.clientSecret)">
+							[disabled]="(!stravaConnectorInfo.clientId || !stravaConnectorInfo.clientSecret)">
 						<mat-icon>power</mat-icon>
 						<span>Connect to Strava</span>
 					</button>
 				</div>
 			</div>
-
 		</div>
 	</mat-card-content>
 </mat-card>

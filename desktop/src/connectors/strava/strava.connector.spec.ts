@@ -70,7 +70,6 @@ describe("StravaConnector", () => {
 	const clientId = 9999;
 	const clientSecret = "9999";
 	const accessToken = "fakeToken";
-	const updateSyncedActivitiesNameAndType = false;
 
 	let stravaConnector: StravaConnector;
 	let fetchRemoteStravaBareActivityModelsSpy: jasmine.Spy;
@@ -89,7 +88,7 @@ describe("StravaConnector", () => {
 
 		const connectorSyncDateTime = null;
 		stravaConnector = new StravaConnector(priority, AthleteModel.DEFAULT_MODEL, UserSettings.getDefaultsByEnvTarget(EnvTarget.DESKTOP),
-			connectorSyncDateTime, new StravaConnectorInfo(clientId, clientSecret, accessToken), updateSyncedActivitiesNameAndType);
+			connectorSyncDateTime, new StravaConnectorInfo(clientId, clientSecret, accessToken));
 
 		// Simulate strava pages
 		fetchRemoteStravaBareActivityModelsSpy = spyOn(stravaConnector, "fetchRemoteStravaBareActivityModels");
@@ -121,14 +120,12 @@ describe("StravaConnector", () => {
 
 			// Given
 			const athleteModel = null;
-			const updateSyncedActivitiesNameAndType = true;
 			const stravaConnectorInfo = null;
 			const userSettingsModel = null;
 			const currentConnectorSyncDateTime = null;
 
 			// When
-			const connector = StravaConnector.create(athleteModel, userSettingsModel, currentConnectorSyncDateTime,
-				stravaConnectorInfo, updateSyncedActivitiesNameAndType);
+			const connector = StravaConnector.create(athleteModel, userSettingsModel, currentConnectorSyncDateTime, stravaConnectorInfo);
 
 			// Then
 			expect(connector.syncDateTime).toBeNull();
@@ -140,7 +137,6 @@ describe("StravaConnector", () => {
 
 			// Given
 			const athleteModel = null;
-			const updateSyncedActivitiesNameAndType = true;
 			const stravaConnectorInfo = null;
 			const userSettingsModel = null;
 			const syncDateTime = Date.now();
@@ -148,8 +144,7 @@ describe("StravaConnector", () => {
 			const currentConnectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.STRAVA, syncDateTime);
 
 			// When
-			const connector = StravaConnector.create(athleteModel, userSettingsModel, currentConnectorSyncDateTime,
-				stravaConnectorInfo, updateSyncedActivitiesNameAndType);
+			const connector = StravaConnector.create(athleteModel, userSettingsModel, currentConnectorSyncDateTime, stravaConnectorInfo);
 
 			// Then
 			expect(connector.syncDateTime).toEqual(expectedSyncDateTime);
@@ -1333,7 +1328,7 @@ describe("StravaConnector", () => {
 			const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
 			const trackCallId = 1; // the 2nd one
 
-			stravaConnector.updateSyncedActivitiesNameAndType = true;
+			stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = true;
 
 			const expectedSyncedActivityModelUpdate = _.cloneDeep(<SyncedActivityModel> _.cloneDeep(bareActivities[trackCallId]));
 			expectedSyncedActivityModelUpdate.name = "FakeName";
@@ -1383,7 +1378,7 @@ describe("StravaConnector", () => {
 			const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
 			const trackCallId = 1; // the 2nd one
 
-			stravaConnector.updateSyncedActivitiesNameAndType = false;
+			stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = false;
 
 			const expectedSyncedActivityModelUpdate = _.cloneDeep(<SyncedActivityModel> _.cloneDeep(bareActivities[trackCallId]));
 			expectedSyncedActivityModelUpdate.name = "FakeName";
@@ -1430,7 +1425,7 @@ describe("StravaConnector", () => {
 			const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
 			const trackCallId = 1; // the 2nd one
 
-			stravaConnector.updateSyncedActivitiesNameAndType = true;
+			stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = true;
 
 			const expectedSyncedActivityModelUpdate = _.cloneDeep(<SyncedActivityModel> _.cloneDeep(bareActivities[trackCallId]));
 			expectedSyncedActivityModelUpdate.name = "FakeName";
@@ -1475,7 +1470,7 @@ describe("StravaConnector", () => {
 			const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
 			const trackCallId = 1; // the 2nd one
 
-			stravaConnector.updateSyncedActivitiesNameAndType = true;
+			stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = true;
 
 			const expectedSyncedActivityModelUpdate = _.cloneDeep(<SyncedActivityModel> _.cloneDeep(bareActivities[trackCallId])); // "Mini Zwift & Pschitt"
 			const expectedStartTime = "2019-03-10T16:17:32.000Z";
@@ -1525,7 +1520,7 @@ describe("StravaConnector", () => {
 			const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
 			const trackCallId = 1; // the 2nd one
 
-			stravaConnector.updateSyncedActivitiesNameAndType = true;
+			stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = true;
 
 			const expectedSyncedActivityModelUpdate = _.cloneDeep(<SyncedActivityModel> _.cloneDeep(bareActivities[trackCallId]));
 			expectedSyncedActivityModelUpdate.name = "FakeName";

@@ -53,7 +53,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 
 		this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
 			this.isSynced = syncState === SyncState.SYNCED;
-			return this.stravaConnectorService.fetchCredentials();
+			return this.stravaConnectorService.fetch();
 		}).then((stravaConnectorInfo: StravaConnectorInfo) => {
 			this.handleCredentialsChanges(stravaConnectorInfo);
 		});
@@ -88,7 +88,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 	}
 
 	public resetTokens(): void {
-		this.stravaConnectorService.fetchCredentials().then((stravaConnectorInfo: StravaConnectorInfo) => {
+		this.stravaConnectorService.fetch().then((stravaConnectorInfo: StravaConnectorInfo) => {
 			stravaConnectorInfo.clientId = this.stravaConnectorInfo.clientId;
 			stravaConnectorInfo.clientSecret = (this.stravaConnectorInfo.clientSecret) ? this.stravaConnectorInfo.clientSecret.trim() : null;
 			stravaConnectorInfo.accessToken = null;
@@ -99,6 +99,12 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 			this.stravaConnectorInfo = stravaConnectorInfo;
 			// Force clear cookie to allow connection with another strava account
 			this.electronService.electron.remote.getCurrentWindow().webContents.session.clearStorageData({storages: ["cookies"]});
+		});
+	}
+
+	public onUpdateActivitiesNameAndTypeChanged(): void {
+		this.stravaConnectorService.stravaConnectorInfoService.save(this.stravaConnectorInfo).then((stravaConnectorInfo: StravaConnectorInfo) => {
+			this.stravaConnectorInfo = stravaConnectorInfo;
 		});
 	}
 

@@ -160,9 +160,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 				const stravaConnectorInfo: StravaConnectorInfo = <StravaConnectorInfo> result[3];
 
 				// Create message to start sync on connector!
-				const updateSyncedActivitiesNameAndType = false;
 				startSyncMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, currentConnectorSyncDateTime,
-					stravaConnectorInfo, athleteModel, updateSyncedActivitiesNameAndType, userSettingsModel);
+					stravaConnectorInfo, athleteModel, userSettingsModel);
 
 			} else if (this.currentConnectorType === ConnectorType.FILE_SYSTEM) {
 
