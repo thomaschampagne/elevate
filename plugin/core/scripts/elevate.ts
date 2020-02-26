@@ -898,6 +898,10 @@ export class Elevate {
 			return;
 		}
 
+		const type = window.pageView.activity().get("type");
+		if (type !== "Ride" && type !== "VirtualRide") {
+			return;
+		}
 		const virtualPartnerModifier: VirtualPartnerModifier = new VirtualPartnerModifier(this.activityId, this.vacuumProcessor);
 		virtualPartnerModifier.modify();
 	}

@@ -514,15 +514,13 @@ export class YearProgressService {
 		}
 
 		const duration = moment.duration(Math.abs(hoursIn), "hours");
-		const days = duration.days();
-		const hours = duration.hours();
+		const hours = Math.floor(duration.asHours());
 		const minutes = duration.minutes();
 
-		const showDays = days ? `${days}d` + ((hours) ? ", " : "") : "";
 		const showHours = hours ? `${hours}h` + ((minutes) ? ", " : "") : "";
 		const showMinutes = minutes ? `${minutes}m` : "";
 
-		return `${showDays}${showHours}${showMinutes}`;
+		return `${showHours}${showMinutes}`;
 	}
 
 	/**
