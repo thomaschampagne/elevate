@@ -39,12 +39,13 @@ export class VirtualPartnerModifier extends AbstractModifier {
 
 			const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-			const exportButtonHtml = "<a class=\"btn-block btn-xs button raceshape-btn btn-primary elevate_exportVpu\" id=\"elevate_exportVpu\">Export this Segment Effort to your GPS</a>";
+			const exportButtonHtml = "<div class=\"analysis-link-js btn-block button btn-primary elevate_exportVpu\" id=\"elevate_exportVpu\">" +
+				"Export GPS segment effort" +
+				"</div>";
 			if ($(".elevate_exportVpu").length < 1) {
+				$(".effort-actions").first().append(exportButtonHtml).each(() => {
 
-				$(".effort-actions").first().after(exportButtonHtml).each(() => {
-
-					$("#elevate_exportVpu").click((evt) => {
+					$("#elevate_exportVpu").on("click", (evt) => {
 						evt.preventDefault();
 						evt.stopPropagation();
 						that.displayDownloadPopup();

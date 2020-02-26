@@ -2,8 +2,20 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.16.1",
+		date: "2020-02-26",
+		message: "👨‍⚕️💉 UI issues bugfixes. Note: v6.16.x introduces Cycling Power Curve on your ride activities and \"Elevate Extended Stats\" on ALL activities types (nordic ski, rowing, ...).",
+		hotFixes: [],
+		features: [],
+		isPatch: true,
+		fixes: [
+			"Fix UI rendering issues in segments efforts of activities",
+			"Fixed year progress time to be displayed only with hours and minutes"
+		]
+	},
+	{
 		version: "6.16.0",
-		date: "2020-01-08",
+		date: "2020-02-08",
 		message: "✨ Added Cycling Power Curve on your ride activities!! ✨ Added \"Elevate Extended Stats\" on ALL activities types (nordic ski, rowing, ...). Update also adds various improvements & bugs fixes.",
 		hotFixes: [],
 		features: [
