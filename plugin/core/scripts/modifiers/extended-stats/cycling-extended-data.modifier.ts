@@ -11,6 +11,7 @@ import { ElevationDataView } from "./views/elevation-data.view";
 import { SpeedDataView } from "./views/speed-data.view";
 import * as _ from "lodash";
 import { CyclingPowerCurveView } from "./views/cycling-power-curve.view";
+import * as $ from "jquery";
 
 export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
@@ -132,13 +133,13 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 	protected placeExtendedStatsButtonSegment(buttonAdded: () => void): void {
 
 		let htmlButton = "<section>";
-		htmlButton += "<a class=\"btn-block btn-xs button raceshape-btn btn-primary\" data-xtd-seg-effort-stats id=\"" + this.segmentEffortButtonId + "\">";
+		htmlButton += "<div class=\"analysis-link-js btn-block button btn-primary\" data-xtd-seg-effort-stats id=\"" + this.segmentEffortButtonId + "\">";
 		htmlButton += "Show extended statistics of effort";
-		htmlButton += "</a>";
+		htmlButton += "</div>";
 		htmlButton += "</section>";
 
 		if ($("[data-xtd-seg-effort-stats]").length === 0) {
-			$(".raceshape-btn").last().after(htmlButton).each(() => {
+			$(".effort-actions").first().append(htmlButton).each(() => {
 				super.placeExtendedStatsButtonSegment(buttonAdded);
 			});
 		}
