@@ -17,7 +17,12 @@ import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
 import { MENU_ITEMS_PROVIDER } from "./shared/services/menu-items/menu-items-provider.interface";
 import { DesktopMenuItemsProvider } from "./shared/services/menu-items/impl/desktop-menu-items-provider.service";
 import { ExtensionMenuItemsProvider } from "./shared/services/menu-items/impl/extension-menu-items-provider.service";
-import { APP_MORE_MENU_COMPONENT, AppMoreMenuComponent, DesktopAppMoreMenuComponent, ExtensionAppMoreMenuComponent } from "./app-more-menu/app-more-menu.component";
+import {
+	APP_MORE_MENU_COMPONENT,
+	AppMoreMenuComponent,
+	DesktopAppMoreMenuComponent,
+	ExtensionAppMoreMenuComponent
+} from "./app-more-menu/app-more-menu.component";
 import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
 import { DesktopRoutingModule } from "./shared/modules/desktop/desktop-routing.module";
 import { ExtensionRoutingModule } from "./shared/modules/extension/extension-routing.module";
@@ -30,6 +35,7 @@ import {
 	RefreshStatsBarComponent
 } from "./refresh-stats-bar/refresh-stats-bar.component";
 import { RefreshStatsBarDirective } from "./refresh-stats-bar/refresh-stats-bar.directive";
+import { DesktopErrorsSyncDetailsDialog } from "./sync-bar/desktop-errors-sync-details-dialog.component";
 
 @NgModule({
 	imports: [
@@ -43,6 +49,7 @@ import { RefreshStatsBarDirective } from "./refresh-stats-bar/refresh-stats-bar.
 	declarations: [
 		DesktopSyncMenuComponent,
 		DesktopSyncBarComponent,
+		DesktopErrorsSyncDetailsDialog,
 		DesktopRefreshStatsBarComponent,
 		DesktopTopBarComponent,
 		DesktopPreRunGuardDialogComponent,

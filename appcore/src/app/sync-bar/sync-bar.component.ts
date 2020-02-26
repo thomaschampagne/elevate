@@ -3,6 +3,8 @@ import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.se
 import { ActivitySyncEvent, ErrorSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { SyncException } from "@elevate/shared/exceptions";
 import * as moment from "moment";
+import { MatDialog } from "@angular/material/dialog";
+import { DesktopErrorsSyncDetailsDialog } from "./desktop-errors-sync-details-dialog.component";
 
 export const SYNC_BAR_COMPONENT = new InjectionToken<SyncBarComponent>("SYNC_BAR_COMPONENT");
 
@@ -30,8 +32,14 @@ export class SyncBarComponent {
 					<span fxFlex class="mat-caption" *ngIf="counter > 0">{{counter}} activities processed</span>
 				</div>
 				<div fxLayout="row" fxLayoutAlign="space-between center">
-					<button mat-flat-button color="warn" (click)="onActionStop()">
+					<button *ngIf="eventErrors && eventErrors.length > 0" mat-flat-button color="warn" (click)="onActionShowErrors()">
+						{{eventErrors.length}} error{{ (eventErrors.length > 1) ? 's' : ''}}
+					</button>
+					<button *ngIf="isSyncing" mat-flat-button color="accent" (click)="onActionStop()">
 						Stop
+					</button>
+					<button *ngIf="!hideCloseButton" mat-flat-button color="accent" (click)="onActionClose()">
+						Close
 					</button>
 				</div>
 			</div>
@@ -52,17 +60,24 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 	@HostBinding("hidden")
 	public hideSyncBar: boolean;
 
+	public hideCloseButton: boolean;
+	public isSyncing: boolean;
 	public syncStatusText: string;
 	public currentActivitySynced: CurrentActivitySynced;
 	public counter: number;
+	public eventErrors: ErrorSyncEvent[];
 
 	constructor(public desktopSyncService: DesktopSyncService,
+				public dialog: MatDialog,
 				public changeDetectorRef: ChangeDetectorRef) {
 		super();
 		this.hideSyncBar = true;
+		this.hideCloseButton = true;
+		this.isSyncing = false;
 		this.syncStatusText = null;
 		this.currentActivitySynced = null;
 		this.counter = 0;
+		this.eventErrors = [];
 	}
 
 	public ngOnInit(): void {
@@ -82,8 +97,28 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 		});
 	}
 
+	public onActionClose(): void {
+		this.hideSyncBar = true;
+	}
+
+	public onActionShowErrors(): void {
+
+		// Stop sync before showing errors
+		const stopSync = (this.isSyncing) ? this.onActionStop() : Promise.resolve();
+		stopSync.finally(() => {
+			this.dialog.open(DesktopErrorsSyncDetailsDialog, {
+				minWidth: DesktopErrorsSyncDetailsDialog.MIN_WIDTH,
+				maxWidth: DesktopErrorsSyncDetailsDialog.MAX_WIDTH,
+				data: this.eventErrors
+			});
+		});
+	}
+
 	private onStartedSyncEvent(syncEvent: SyncEvent): void {
+		this.eventErrors = [];
 		this.hideSyncBar = false;
+		this.isSyncing = true;
+		this.hideCloseButton = true;
 		this.counter = 0;
 		this.syncStatusText = "Sync started on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
 	}
@@ -103,19 +138,30 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 	}
 
 	private onErrorSyncEvent(errorSyncEvent: ErrorSyncEvent): void {
-		this.syncStatusText = errorSyncEvent.description;
-		const message = JSON.stringify(errorSyncEvent);
-		alert(message); // TODO !!
+		this.eventErrors.push(errorSyncEvent);
 	}
 
 	private onStoppedSyncEvent(syncEvent: SyncEvent): void {
+
+		this.isSyncing = false;
+
 		this.syncStatusText = "Sync stopped on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
-		this.hideSyncBar = true;
+
+		if (this.eventErrors.length > 0) {
+			this.hideCloseButton = false;
+		} else {
+			this.hideSyncBar = true;
+		}
 	}
 
 	private onCompleteSyncEvent(syncEvent: SyncEvent): void {
 		this.syncStatusText = "Sync completed on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
-		this.hideSyncBar = true;
+		if (this.eventErrors.length > 0) {
+			this.hideCloseButton = false;
+			this.isSyncing = false;
+		} else {
+			this.hideSyncBar = true;
+		}
 	}
 
 	public handleSyncEventDisplay(syncEvent: SyncEvent) {
