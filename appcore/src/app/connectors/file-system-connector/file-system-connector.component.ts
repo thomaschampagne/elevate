@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { ConnectorsComponent } from "../connectors.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ElectronService } from "../../shared/services/electron/electron.service";
@@ -7,6 +7,7 @@ import { FileSystemConnectorInfoService } from "../../shared/services/file-syste
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
+import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../../shared/services/links-opener/open-resource-resolver";
 
 @Component({
 	selector: "app-file-system-connector",
@@ -20,11 +21,12 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
 
 	constructor(public fileSystemConnectorInfoService: FileSystemConnectorInfoService,
 				public desktopSyncService: DesktopSyncService,
+				@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
 				public electronService: ElectronService,
 				public router: Router,
 				public snackBar: MatSnackBar,
 				public dialog: MatDialog) {
-		super(desktopSyncService, electronService, router, dialog);
+		super(desktopSyncService, openResourceResolver, router, dialog);
 		this.connectorType = ConnectorType.FILE_SYSTEM;
 		this.showConfigure = false;
 		this.fileSystemConnectorInfo = null;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ConnectorType, StravaConnectorInfo } from "@elevate/shared/sync";
@@ -7,13 +7,13 @@ import { StravaConnectorService } from "../services/strava-connector.service";
 import * as moment from "moment";
 import * as HttpCodes from "http-status-codes";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
-import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { ElectronService } from "../../shared/services/electron/electron.service";
 import { adjectives, animals, colors, names, uniqueNamesGenerator } from "unique-names-generator";
 import _ from "lodash";
 import jdenticon from "jdenticon";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
+import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../../shared/services/links-opener/open-resource-resolver";
 
 class GeneratedStravaApiApplication {
 	public appName: string;
@@ -30,21 +30,21 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 
 	public stravaConnectorInfo: StravaConnectorInfo;
 	public expiresAt: string;
-	public isSynced: boolean;
+
 	public generatedStravaApiApplication: GeneratedStravaApiApplication;
 	public showConfigure: boolean;
 	public showHowTo: boolean;
 
 	constructor(public stravaConnectorService: StravaConnectorService,
 				public desktopSyncService: DesktopSyncService,
+				@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
 				public electronService: ElectronService,
 				public router: Router,
 				public snackBar: MatSnackBar,
 				public logger: LoggerService,
 				public dialog: MatDialog) {
-		super(desktopSyncService, electronService, router, dialog);
+		super(desktopSyncService, openResourceResolver, router, dialog);
 		this.connectorType = ConnectorType.STRAVA;
-		this.isSynced = false;
 		this.generatedStravaApiApplication = null;
 		this.showConfigure = false;
 		this.showHowTo = false;
@@ -52,10 +52,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 
 	public ngOnInit(): void {
 
-		this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
-			this.isSynced = syncState === SyncState.SYNCED;
-			return this.stravaConnectorService.fetch();
-		}).then((stravaConnectorInfo: StravaConnectorInfo) => {
+		this.stravaConnectorService.fetch().then((stravaConnectorInfo: StravaConnectorInfo) => {
 			this.updateSyncDateTimeText();
 			this.handleCredentialsChanges(stravaConnectorInfo);
 		});

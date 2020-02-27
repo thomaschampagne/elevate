@@ -5,19 +5,22 @@
 	<mat-card-subtitle *ngIf="fileSystemConnectorInfo">
 		<span *ngIf="!fileSystemConnectorInfo.sourceDirectory">Not configured. </span>
 		<span *ngIf="fileSystemConnectorInfo.sourceDirectory">Configured. </span>
-		<span *ngIf="connectorSyncDateTimeText">{{connectorSyncDateTimeText}}</span>
+		<span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
 		<br/>
 		<span class="note">Formats supported: gpx, tcx & fit</span>
 	</mat-card-subtitle>
 	<mat-card-content>
 		<div>
 			<button
-				*ngIf="fileSystemConnectorInfo.sourceDirectory" mat-stroked-button color="primary" (click)="sync(true)">
+				*ngIf="syncDateTime && fileSystemConnectorInfo.sourceDirectory" mat-stroked-button color="primary"
+				matTooltip="Activity files added or modified after date '{{syncDateTime | date:'medium'}}' will be synced"
+				(click)="sync(true)">
 				<mat-icon>sync</mat-icon>
 				Sync recent activities
 			</button>
 			<button
 				*ngIf="fileSystemConnectorInfo.sourceDirectory" mat-stroked-button color="primary"
+				matTooltip="All activity files will be synced."
 				(click)="sync(false)">
 				<mat-icon>sync</mat-icon>
 				Sync all activities

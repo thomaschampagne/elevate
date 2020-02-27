@@ -8,7 +8,7 @@
 			Connected as {{stravaConnectorInfo.stravaAccount.firstname}} {{stravaConnectorInfo.stravaAccount.lastname}}
 			(id: {{stravaConnectorInfo.stravaAccount.id}}).
 		</span>
-		<span *ngIf="connectorSyncDateTimeText">{{connectorSyncDateTimeText}}</span>
+		<span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
 	</mat-card-subtitle>
 	<mat-card-content>
 		<div *ngIf="showHowTo">
@@ -125,9 +125,10 @@
 		<div class="connector" *ngIf="stravaConnectorInfo">
 
 			<button
-				*ngIf="isSynced && (stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
+				*ngIf="syncDateTime && (stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
 				mat-stroked-button
 				color="primary"
+				matTooltip="Activities performed after date '{{syncDateTime | date:'medium'}}' will be synced"
 				(click)="sync(true)">
 				<mat-icon>sync</mat-icon>
 				Sync recent activities
@@ -137,6 +138,7 @@
 				*ngIf="(stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
 				mat-stroked-button
 				color="primary"
+				matTooltip="All Strava activities will be synced"
 				(click)="sync()">
 				<mat-icon>sync</mat-icon>
 				Sync all activities

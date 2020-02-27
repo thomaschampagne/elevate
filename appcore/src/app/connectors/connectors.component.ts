@@ -1,5 +1,4 @@
-import { Component, OnInit } from "@angular/core";
-import { ElectronService } from "../shared/services/electron/electron.service";
+import { Component, Inject, OnInit } from "@angular/core";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
@@ -10,6 +9,7 @@ import { Router } from "@angular/router";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync/index";
 import { ConnectorType } from "@elevate/shared/sync";
 import moment from "moment";
+import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 
 @Component({
 	selector: "app-connectors",
@@ -21,14 +21,16 @@ export class ConnectorsComponent implements OnInit {
 	public static readonly ATHLETE_CHECKING_FIRST_SYNC_MESSAGE: string = "ATHLETE_CHECKING_FIRST_SYNC";
 
 	public connectorType: ConnectorType;
-	public connectorSyncDateTimeText: string;
+	public syncDateTime: Date;
+	public humanSyncDateTime: string;
 
 	constructor(public desktopSyncService: DesktopSyncService,
-				public electronService: ElectronService,
+				@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
 				public router: Router,
 				public dialog: MatDialog) {
 		this.connectorType = null;
-		this.connectorSyncDateTimeText = null;
+		this.syncDateTime = null;
+		this.humanSyncDateTime = null;
 	}
 
 	public ngOnInit(): void {
@@ -36,7 +38,9 @@ export class ConnectorsComponent implements OnInit {
 
 	public updateSyncDateTimeText(): void {
 		this.getSyncDateTime().then(connectorSyncDateTime => {
-			this.connectorSyncDateTimeText = (connectorSyncDateTime && connectorSyncDateTime.dateTime)
+			this.syncDateTime = (connectorSyncDateTime && connectorSyncDateTime.dateTime)
+				? new Date(connectorSyncDateTime.dateTime) : null;
+			this.humanSyncDateTime = (connectorSyncDateTime && connectorSyncDateTime.dateTime)
 				? "Synced " + moment(connectorSyncDateTime.dateTime).fromNow() + "." : "Never synced.";
 		});
 	}
@@ -94,7 +98,7 @@ export class ConnectorsComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((confirm: boolean) => {
 			if (confirm) {
-				this.electronService.openExternalUrl(url);
+				this.openResourceResolver.openWebLink(url);
 			}
 		});
 
