@@ -17,7 +17,7 @@
 		"clean:dist": "node ../node_modules/del-cli/cli.js ./dist/",
 		"clean:package": "node ../node_modules/del-cli/cli.js ./package/",
 		"clean:metadata": "node ../node_modules/del-cli/cli.js ./build_metadata.json",
-		"launch:electron": "npm run assert-app-exists && run-electron ./dist/desktop.bundle.js",
+		"launch:app": "npm run assert-app-exists && run-electron ./dist/desktop.bundle.js",
 		"package:windows": "npm run build:prod && electron-builder build --windows --x64 --publish onTagOrDraft",
 		"package:linux": "npm run build:prod && electron-builder build --linux --x64 --publish onTagOrDraft",
 		"package:mac": "npm run build:prod && electron-builder build --mac --x64",

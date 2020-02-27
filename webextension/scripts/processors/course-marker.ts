@@ -205,10 +205,6 @@ export class CourseMaker {
 			activityStream.distance = activityStream.distance.slice(bounds.start, bounds.end);
 		}
 
-		if (!_.isEmpty(activityStream.altitude_smooth)) {
-			activityStream.altitude_smooth = activityStream.altitude_smooth.slice(bounds.start, bounds.end);
-		}
-
 		if (!_.isEmpty(activityStream.grade_adjusted_speed)) {
 			activityStream.grade_adjusted_speed = activityStream.grade_adjusted_speed.slice(bounds.start, bounds.end);
 		}

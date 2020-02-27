@@ -14,6 +14,8 @@ import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm
 import { SyncService } from "../shared/services/sync/sync.service";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
+import { UserSettings } from "@elevate/shared/models";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 export const REFRESH_STATS_BAR_COMPONENT = new InjectionToken<RefreshStatsBarComponent>("REFRESH_STATS_BAR_COMPONENT");
 
@@ -161,7 +163,7 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
 		super.onFixActivities();
 		this.hideRefreshStatsBar = true; // It will showed back by the recalculation
 		this.hideWarning = true;
-		this.userSettingsService.fetch().then(userSettingsModel => {
+		this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
 			const desktopActivityService = <DesktopActivityService> this.activityService;
 			desktopActivityService.nonConsistentActivitiesWithAthleteSettings().then((activitiesIds: number[]) => {
 				desktopActivityService.bulkRefreshStatsFromIds(activitiesIds, userSettingsModel);

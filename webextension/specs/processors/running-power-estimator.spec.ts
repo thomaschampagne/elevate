@@ -268,7 +268,7 @@ describe("RunningPowerEstimator", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-			isOwner, hasPowerMeter, activitySourceData, stream, bounds, returnZones);
+			isOwner, hasPowerMeter, stream, bounds, returnZones, activitySourceData);
 
 		const result: AnalysisDataModel = activityComputer.compute();
 

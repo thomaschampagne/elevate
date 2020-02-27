@@ -40,6 +40,7 @@ export class GlobalSettingsService {
 		}],
 	}, {
 		title: "Debug",
+		envTarget: EnvTarget.DESKTOP,
 		options: [{
 			key: "debugMode",
 			type: "checkbox",

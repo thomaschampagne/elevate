@@ -36,10 +36,10 @@ export class ActivityComputer {
 				athleteSnapshot: AthleteSnapshotModel,
 				isOwner: boolean,
 				hasPowerMeter: boolean,
-				activitySourceData: ActivitySourceDataModel,
 				activityStream: ActivityStreamsModel,
 				bounds: number[],
-				returnZones: boolean) {
+				returnZones: boolean,
+				activitySourceData: ActivitySourceDataModel) {
 
 		// Store activityType, isTrainer, input activity params and userSettingsData
 		this.activityType = activityType;
@@ -49,10 +49,10 @@ export class ActivityComputer {
 		this.athleteSnapshot = athleteSnapshot;
 		this.isOwner = isOwner;
 		this.hasPowerMeter = hasPowerMeter;
-		this.activitySourceData = activitySourceData;
 		this.activityStream = activityStream;
 		this.bounds = bounds;
 		this.returnZones = returnZones;
+		this.activitySourceData = activitySourceData;
 	}
 
 	public static readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = 0.85;
@@ -71,7 +71,6 @@ export class ActivityComputer {
 	protected activityType: ElevateSport;
 	protected isTrainer: boolean;
 	protected userSettings: UserSettings.UserSettingsModel;
-	protected movementData: MoveDataModel;
 	protected isOwner: boolean;
 	protected hasPowerMeter: boolean;
 	protected activitySourceData: ActivitySourceDataModel;
@@ -80,14 +79,10 @@ export class ActivityComputer {
 	protected returnZones: boolean;
 
 	public static calculate(bareActivityModel: BareActivityModel, athleteSnapshotModel: AthleteSnapshotModel, userSettingsModel: UserSettingsModel,
-							streams: ActivityStreamsModel, returnZones: boolean = false, bounds: number[] = null, isOwner: boolean = true): AnalysisDataModel {
-		const activitySourceData: ActivitySourceDataModel = {
-			distance: bareActivityModel.distance_raw,
-			elevation: bareActivityModel.elevation_gain_raw,
-			movingTime: bareActivityModel.moving_time_raw,
-		};
+							streams: ActivityStreamsModel, returnZones: boolean = false, bounds: number[] = null, isOwner: boolean = true,
+							activitySourceData: ActivitySourceDataModel = null): AnalysisDataModel {
 		return new ActivityComputer(bareActivityModel.type, bareActivityModel.trainer, userSettingsModel, athleteSnapshotModel, isOwner,
-			bareActivityModel.hasPowerMeter, activitySourceData, streams, bounds, returnZones).compute();
+			bareActivityModel.hasPowerMeter, streams, bounds, returnZones, activitySourceData).compute();
 	}
 
 
@@ -354,33 +349,60 @@ export class ActivityComputer {
 	protected computeAnalysisData(athleteSnapshot: AthleteSnapshotModel, hasPowerMeter: boolean, activitySourceData: ActivitySourceDataModel,
 								  activityStream: ActivityStreamsModel): AnalysisDataModel {
 
+		let elapsedTime: number = null;
+		let movingTime: number = null;
+		let pauseTime: number = null;
+		let moveRatio: number = null;
+
 		// Include speed and pace
 		const hasActivityStream = !_.isEmpty(activityStream);
-		if (hasActivityStream && activityStream.velocity_smooth) {
-			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_adjusted_speed);
-		} else if (!hasActivityStream && this.activityType === ElevateSport.Run) {
+
+		if (hasActivityStream && activityStream.time && activityStream.time.length > 0) {
+			elapsedTime = _.last(activityStream.time);
+		}
+
+		// Prepare move data model along stream or activitySourceData
+		let moveDataModel = null;
+
+		if (hasActivityStream && activityStream.time && activityStream.velocity_smooth && activityStream.velocity_smooth.length > 0) {
+			moveDataModel = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_adjusted_speed);
+		}
+
+		if (!hasActivityStream && activitySourceData && this.activityType === ElevateSport.Run) {
 			// Allow to estimate running move data if no stream available (goal is to get RSS computation for manual activities)
-			this.movementData = this.moveDataEstimate(this.activitySourceData.movingTime, this.activitySourceData.distance);
-		} else {
-			return null;
+			moveDataModel = this.moveDataEstimate(this.activitySourceData.movingTime, this.activitySourceData.distance);
+		}
+
+		// Assign moving time
+		if (moveDataModel && moveDataModel.movingTime > 0) {
+			movingTime = moveDataModel.movingTime;
+		}
+
+		// Final time setup
+		if (elapsedTime > 0 && !movingTime) {
+			movingTime = elapsedTime;
+		}
+
+		if (!elapsedTime && movingTime > 0) {
+			elapsedTime = movingTime;
+		}
+
+		if (elapsedTime > 0 && movingTime > 0) {
+			pauseTime = elapsedTime - movingTime;
+			moveRatio = movingTime / elapsedTime;
 		}
 
 		// Q1 Speed
 		// Median Speed
 		// Q3 Speed
 		// Standard deviation Speed
-		const speedData: SpeedDataModel = (_.isEmpty(this.movementData)) ? null : this.movementData.speed;
+		const speedData: SpeedDataModel = (moveDataModel && moveDataModel.speed) ? moveDataModel.speed : null;
 
 		// Q1 Pace
 		// Median Pace
 		// Q3 Pace
 		// Standard deviation Pace
-		const paceData: PaceDataModel = (_.isEmpty(this.movementData)) ? null : this.movementData.pace;
-
-		const movingTime: number = (_.isEmpty(this.movementData)) ? null : this.movementData.movingTime;
-		const elapsedTime: number = (this.activityStream && !_.isEmpty(this.activityStream.time)) ? _.last(this.activityStream.time) : movingTime;
-		const pauseTime: number = (elapsedTime && movingTime) ? (elapsedTime - movingTime) : null;
-		const moveRatio: number = (_.isEmpty(this.movementData)) ? null : this.moveRatio(movingTime, elapsedTime);
+		const paceData: PaceDataModel = (moveDataModel && moveDataModel.pace) ? moveDataModel.pace : null;
 
 		// Estimated Normalized power
 		// Estimated Variability index
@@ -393,9 +415,11 @@ export class ActivityComputer {
 			&& !this.hasPowerMeter
 			&& this.isOwner) {
 			powerData = this.estimatedRunningPower(activityStream, athleteSnapshot.athleteSettings.weight, hasPowerMeter, athleteSnapshot.athleteSettings.cyclingFtp);
-		} else {
+		} else if (hasActivityStream) {
 			powerData = this.powerData(athleteSnapshot.athleteSettings.weight, hasPowerMeter, athleteSnapshot.athleteSettings.cyclingFtp,
 				activityStream.watts, activityStream.velocity_smooth, activityStream.time);
+		} else {
+			powerData = null;
 		}
 
 		// TRaining IMPulse
@@ -428,8 +452,19 @@ export class ActivityComputer {
 
 		// Calculating running index (https://github.com/thomaschampagne/elevate/issues/704)
 		const isRunningActivity = this.activityType.match(/Run|VirtualRun/g) !== null;
-		const runningPerformanceIndex: number = (isRunningActivity && !_.isEmpty(elevationData) && !_.isEmpty(heartRateData))
-			? this.runningPerformanceIndex(athleteSnapshot, this.activitySourceData, elevationData, heartRateData) : null;
+
+		// Find total distance
+		let distance;
+		if (hasActivityStream && activityStream.distance && activityStream.distance.length > 0) {
+			distance = _.last(activityStream.distance);
+		} else if (this.activitySourceData && this.activitySourceData.distance > 0) {
+			distance = this.activitySourceData.distance;
+		} else {
+			distance = null;
+		}
+
+		const runningPerformanceIndex: number = (isRunningActivity && distance && movingTime && !_.isEmpty(elevationData) && !_.isEmpty(heartRateData))
+			? this.runningPerformanceIndex(athleteSnapshot, distance, movingTime, elevationData, heartRateData) : null;
 
 		// Return an array with all that shit...
 		return {
@@ -470,27 +505,12 @@ export class ActivityComputer {
 			activityStream.time, isEstimatedRunningPower);
 	}
 
-	protected moveRatio(movingTime: number, elapsedTime: number): number {
-
-		if (_.isNull(movingTime) || _.isNull(elapsedTime)) {
-			return null;
-		}
-
-		const ratio: number = movingTime / elapsedTime;
-
-		if (_.isNaN(ratio)) {
-			return null;
-		}
-
-		return ratio;
-	}
-
-	protected runningPerformanceIndex(athleteSnapshot: AthleteSnapshotModel, activitySourceData: ActivitySourceDataModel, elevationData: ElevationDataModel, heartRateData: HeartRateDataModel): number {
+	protected runningPerformanceIndex(athleteSnapshot: AthleteSnapshotModel, distance: number, movingTime: number, elevationData: ElevationDataModel, heartRateData: HeartRateDataModel): number {
 		const averageHeartRate: number = heartRateData.averageHeartRate;
 		const userMaxHr: number = athleteSnapshot.athleteSettings.maxHr;
 		const runIntensity: number = Math.round((averageHeartRate / userMaxHr * 1.45 - 0.3) * 100) / 100; // Calculate the run intensity; this is rounded to 2 decimal points
-		const gradeAdjustedDistance = activitySourceData.distance + (elevationData.accumulatedElevationAscent * 6) - (elevationData.accumulatedElevationDescent * 4);
-		const distanceRate: number = (213.9 / (activitySourceData.movingTime / 60) * ((gradeAdjustedDistance / 1000) ** 1.06)) + 3.5;
+		const gradeAdjustedDistance = distance + (elevationData.accumulatedElevationAscent * 6) - (elevationData.accumulatedElevationDescent * 4);
+		const distanceRate: number = (213.9 / (movingTime / 60) * ((gradeAdjustedDistance / 1000) ** 1.06)) + 3.5;
 		return distanceRate / runIntensity;
 	}
 
@@ -729,7 +749,7 @@ export class ActivityComputer {
 
 		const speedData: SpeedDataModel = {
 			genuineAvgSpeed: genuineAvgSpeed,
-			totalAvgSpeed: genuineAvgSpeed * this.moveRatio(genuineAvgSpeedSecondsSum, elapsedSeconds),
+			totalAvgSpeed: genuineAvgSpeed * genuineAvgSpeedSecondsSum / elapsedSeconds,
 			best20min: best20min,
 			avgPace: Math.floor(ActivityComputer.convertSpeedToPace(genuineAvgSpeed)), // send in seconds
 			lowerQuartileSpeed: percentiles[0],

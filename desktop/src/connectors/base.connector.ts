@@ -23,6 +23,23 @@ import { Partial } from "rollup-plugin-typescript2/dist/partial";
 import { CyclingPower } from "../estimators/cycling-power-estimator/cycling-power-estimator";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
+/**
+ * Primitive data provided by the input source plugged on connector (e.g. Strava, activity files)
+ */
+export class PrimitiveSourceData {
+	public elapsedTimeRaw: number;
+	public movingTimeRaw: number;
+	public distanceRaw: number;
+	public elevationGainRaw: number;
+
+	constructor(elapsedTimeRaw: number, movingTimeRaw: number, distanceRaw: number, elevationGainRaw: number) {
+		this.elapsedTimeRaw = elapsedTimeRaw;
+		this.movingTimeRaw = movingTimeRaw;
+		this.distanceRaw = distanceRaw;
+		this.elevationGainRaw = elevationGainRaw;
+	}
+}
+
 export abstract class BaseConnector {
 
 	public type: ConnectorType;
@@ -97,6 +114,63 @@ export abstract class BaseConnector {
 	public findSyncedActivityModels(activityStartDate: string, activityDurationSeconds: number): Promise<SyncedActivityModel[]> {
 		const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.FIND_ACTIVITY, activityStartDate, activityDurationSeconds);
 		return Service.instance().ipcMainMessages.send<SyncedActivityModel[]>(flaggedIpcMessage);
+	}
+
+	/**
+	 *
+	 * @param syncedActivityModel
+	 * @param activityStreamsModel
+	 * @param primitiveSourceData
+	 */
+	public updatePrimitiveStatsFromComputation(syncedActivityModel: SyncedActivityModel,
+											   activityStreamsModel: ActivityStreamsModel,
+											   primitiveSourceData: PrimitiveSourceData): SyncedActivityModel {
+
+		if (syncedActivityModel.extendedStats) {
+			// Time
+			syncedActivityModel.elapsed_time_raw = (_.isNumber(syncedActivityModel.extendedStats.elapsedTime)) ? syncedActivityModel.extendedStats.elapsedTime : null;
+			syncedActivityModel.moving_time_raw = (_.isNumber(syncedActivityModel.extendedStats.movingTime)) ? syncedActivityModel.extendedStats.movingTime : null;
+
+			// Distance
+			if (activityStreamsModel.distance && activityStreamsModel.distance.length > 0) {
+				syncedActivityModel.distance_raw = _.last(activityStreamsModel.distance);
+			} else {
+				syncedActivityModel.distance_raw = null;
+			}
+
+			// Elevation
+			if (syncedActivityModel.extendedStats.elevationData && _.isNumber(syncedActivityModel.extendedStats.elevationData.accumulatedElevationAscent)) {
+				syncedActivityModel.elevation_gain_raw = Math.round(syncedActivityModel.extendedStats.elevationData.accumulatedElevationAscent);
+			} else {
+				syncedActivityModel.elevation_gain_raw = null;
+			}
+		} else {
+			syncedActivityModel.elapsed_time_raw = null;
+			syncedActivityModel.moving_time_raw = null;
+			syncedActivityModel.distance_raw = null;
+			syncedActivityModel.elevation_gain_raw = null;
+		}
+
+		if (primitiveSourceData) {
+
+			if (_.isNull(syncedActivityModel.elapsed_time_raw) && _.isNumber(primitiveSourceData.elapsedTimeRaw)) {
+				syncedActivityModel.elapsed_time_raw = primitiveSourceData.elapsedTimeRaw;
+			}
+
+			if (_.isNull(syncedActivityModel.moving_time_raw) && _.isNumber(primitiveSourceData.movingTimeRaw)) {
+				syncedActivityModel.moving_time_raw = primitiveSourceData.movingTimeRaw;
+			}
+
+			if (_.isNull(syncedActivityModel.distance_raw) && _.isNumber(primitiveSourceData.distanceRaw)) {
+				syncedActivityModel.distance_raw = primitiveSourceData.distanceRaw;
+			}
+
+			if (_.isNull(syncedActivityModel.elevation_gain_raw) && _.isNumber(primitiveSourceData.elevationGainRaw)) {
+				syncedActivityModel.elevation_gain_raw = primitiveSourceData.elevationGainRaw;
+			}
+		}
+		return syncedActivityModel;
+
 	}
 
 	public estimateCyclingPowerStream(type: ElevateSport, velocityStream: number[], gradeStream: number[], riderWeight: number): number[] {

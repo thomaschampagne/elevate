@@ -27,7 +27,7 @@ describe("ActivityComputer", () => {
 
 		const isOwner = true;
 		const activityComputer: ActivityComputer = new ActivityComputer(ElevateSport.Ride, powerMeter, userSettingsMock, athleteSnapshot,
-			isOwner, powerMeter, activitySourceData, stream, null, true);
+			isOwner, powerMeter, stream, null, true, activitySourceData);
 
 		const result: AnalysisDataModel = activityComputer.compute();
 

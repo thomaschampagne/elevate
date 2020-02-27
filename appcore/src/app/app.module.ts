@@ -35,7 +35,7 @@ import {
 	RefreshStatsBarComponent
 } from "./refresh-stats-bar/refresh-stats-bar.component";
 import { RefreshStatsBarDirective } from "./refresh-stats-bar/refresh-stats-bar.directive";
-import { DesktopErrorsSyncDetailsDialog } from "./sync-bar/desktop-errors-sync-details-dialog.component";
+import { DesktopErrorsSyncDetailsDialogComponent } from "./sync-bar/desktop-errors-sync-details-dialog.component";
 
 @NgModule({
 	imports: [
@@ -49,7 +49,7 @@ import { DesktopErrorsSyncDetailsDialog } from "./sync-bar/desktop-errors-sync-d
 	declarations: [
 		DesktopSyncMenuComponent,
 		DesktopSyncBarComponent,
-		DesktopErrorsSyncDetailsDialog,
+		DesktopErrorsSyncDetailsDialogComponent,
 		DesktopRefreshStatsBarComponent,
 		DesktopTopBarComponent,
 		DesktopPreRunGuardDialogComponent,

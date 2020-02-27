@@ -1,4 +1,4 @@
-import { BaseConnector } from "../base.connector";
+import { BaseConnector, PrimitiveSourceData } from "../base.connector";
 import { ReplaySubject, Subject } from "rxjs";
 import {
 	ActivitySyncEvent,
@@ -224,7 +224,7 @@ export class StravaConnector extends BaseConnector {
 							// Fetch stream of the activity
 							return this.getStravaActivityStreams(<number> bareActivity.id).then((activityStreamsModel: ActivityStreamsModel) => {
 
-								const syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
+								let syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
 								syncedActivityModel.start_timestamp = new Date(bareActivity.start_time).getTime() / 1000;
 
 								// Assign reference to strava activity
@@ -251,6 +251,11 @@ export class StravaConnector extends BaseConnector {
 
 									return Promise.resolve(); // Continue to next activity
 								}
+
+								// Try to use primitive data from computation. Else use primitive data from source (strava) if exists
+								const primitiveSourceData = new PrimitiveSourceData(bareActivity.elapsed_time_raw, bareActivity.moving_time_raw,
+									bareActivity.distance_raw, bareActivity.elevation_gain_raw);
+								syncedActivityModel = this.updatePrimitiveStatsFromComputation(<SyncedActivityModel> syncedActivityModel, activityStreamsModel, primitiveSourceData);
 
 								// Track connector type
 								syncedActivityModel.sourceConnectorType = ConnectorType.STRAVA;

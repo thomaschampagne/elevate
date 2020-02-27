@@ -10,6 +10,8 @@ import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/conf
 import { ElectronService } from "../../shared/services/electron/electron.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
+import { UserSettings } from "@elevate/shared/models";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 @Component({
 	selector: "app-advanced-menu",
@@ -127,7 +129,7 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 
 		dialogRef.afterClosed().subscribe((confirm: boolean) => {
 			if (confirm) {
-				this.userSettingsService.fetch().then(userSettingsModel => {
+				this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
 					(<DesktopActivityService> this.activityService).bulkRefreshStatsAll(userSettingsModel);
 				});
 			}

@@ -1,6 +1,7 @@
 import { ActivityFile, ActivityFileType, FileSystemConnector } from "./file-system.connector";
 import {
 	ActivityStreamsModel,
+	AnalysisDataModel,
 	AthleteModel,
 	AthleteSettingsModel,
 	BareActivityModel,
@@ -26,7 +27,7 @@ import { filter } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { SportsLib } from "sports-lib";
 import { ElevateSport } from "@elevate/shared/enums";
-import { BaseConnector } from "../base.connector";
+import { BaseConnector, PrimitiveSourceData } from "../base.connector";
 import { Activity } from "sports-lib/lib/activities/activity";
 import { Creator } from "sports-lib/lib/creators/creator";
 import { ActivityTypes } from "sports-lib/lib/activities/activity.types";
@@ -601,6 +602,7 @@ describe("FileSystemConnector", () => {
 				.and.returnValue(Promise.resolve(null));
 			const extractActivityStreamsSpy = spyOn(fileSystemConnector, "extractActivityStreams").and.callThrough();
 			const appendAdditionalStreamsSpy = spyOn(fileSystemConnector, "appendAdditionalStreams").and.callThrough();
+			const updatePrimitiveStatsFromComputationSpy = spyOn(fileSystemConnector, "updatePrimitiveStatsFromComputation").and.callThrough();
 			const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
 
 			const expectedName = "Afternoon Ride";
@@ -627,6 +629,7 @@ describe("FileSystemConnector", () => {
 
 				expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(15);
 				expect(appendAdditionalStreamsSpy).toHaveBeenCalledTimes(15);
+				expect(updatePrimitiveStatsFromComputationSpy).toHaveBeenCalledTimes(15);
 
 				const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(1)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
 				expect(activitySyncEvent).not.toBeNull();
@@ -1011,6 +1014,141 @@ describe("FileSystemConnector", () => {
 			expect(elevateSport).toEqual(expectedElevateSport);
 
 			done();
+		});
+
+		describe("Update primitive data from computation or input source", () => {
+
+			let syncedActivityModel: SyncedActivityModel = null;
+			let activityStreamsModel: ActivityStreamsModel = null;
+			const defaultMovingTime = 900;
+			const defaultElapsedTime = 1000;
+			const defaultDistance = 1000;
+			const defaultElevationGain = 0;
+
+			beforeEach((done: Function) => {
+				syncedActivityModel = new SyncedActivityModel();
+				syncedActivityModel.extendedStats = <AnalysisDataModel> {
+					movingTime: defaultMovingTime,
+					elapsedTime: defaultElapsedTime,
+					elevationData: {
+						accumulatedElevationAscent: defaultElevationGain
+					}
+				};
+
+				activityStreamsModel = new ActivityStreamsModel();
+				activityStreamsModel.distance = [1, 10, 100, defaultDistance];
+
+				done();
+			});
+
+			it("should update primitive data using computed stats if available", (done: Function) => {
+
+				// Given
+				const primitiveSourceData: PrimitiveSourceData = {
+					distanceRaw: 111,
+					elapsedTimeRaw: 333,
+					movingTimeRaw: 222,
+					elevationGainRaw: 444
+				};
+
+				// When
+				const result = fileSystemConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, activityStreamsModel, primitiveSourceData);
+
+				// Then
+				expect(result.elapsed_time_raw).toEqual(defaultElapsedTime);
+				expect(result.moving_time_raw).toEqual(defaultMovingTime);
+				expect(result.distance_raw).toEqual(defaultDistance);
+				expect(result.elevation_gain_raw).toEqual(defaultElevationGain);
+
+				done();
+			});
+
+			it("should update primitive data using data provided by source (computation stats not available) (1)", (done: Function) => {
+
+				// Given
+				const primitiveSourceData: PrimitiveSourceData = {
+					distanceRaw: 111,
+					elapsedTimeRaw: 333,
+					movingTimeRaw: 222,
+					elevationGainRaw: 444
+				};
+
+				syncedActivityModel.extendedStats = null;
+				activityStreamsModel.distance = [];
+
+				// When
+				const result = fileSystemConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, activityStreamsModel, primitiveSourceData);
+
+				// Then
+				expect(result.elapsed_time_raw).toEqual(primitiveSourceData.elapsedTimeRaw);
+				expect(result.moving_time_raw).toEqual(primitiveSourceData.movingTimeRaw);
+				expect(result.distance_raw).toEqual(primitiveSourceData.distanceRaw);
+				expect(result.elevation_gain_raw).toEqual(primitiveSourceData.elevationGainRaw);
+				done();
+			});
+
+			it("should update primitive data using data provided by source (computation stats not available) (2)", (done: Function) => {
+
+				// Given
+				const primitiveSourceData: PrimitiveSourceData = {
+					distanceRaw: 111,
+					elapsedTimeRaw: 333,
+					movingTimeRaw: 222,
+					elevationGainRaw: 444
+				};
+
+				syncedActivityModel.extendedStats = <AnalysisDataModel> {
+					movingTime: null,
+					elapsedTime: null,
+					pauseTime: null,
+					elevationData: {
+						accumulatedElevationAscent: null,
+					}
+				};
+				activityStreamsModel.distance = [];
+
+				// When
+				const result = fileSystemConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, activityStreamsModel, primitiveSourceData);
+
+				// Then
+				expect(result.elapsed_time_raw).toEqual(primitiveSourceData.elapsedTimeRaw);
+				expect(result.moving_time_raw).toEqual(primitiveSourceData.movingTimeRaw);
+				expect(result.distance_raw).toEqual(primitiveSourceData.distanceRaw);
+				expect(result.elevation_gain_raw).toEqual(primitiveSourceData.elevationGainRaw);
+				done();
+			});
+
+			it("should update primitive data with null values (computation stats & source not available)", (done: Function) => {
+
+				// Given
+				const primitiveSourceData: PrimitiveSourceData = {
+					distanceRaw: undefined,
+					elapsedTimeRaw: undefined,
+					movingTimeRaw: undefined,
+					elevationGainRaw: undefined
+				};
+
+				syncedActivityModel.extendedStats = <AnalysisDataModel> {
+					movingTime: null,
+					elapsedTime: null,
+					pauseTime: null,
+					elevationData: {
+						accumulatedElevationAscent: null,
+					}
+				};
+
+				activityStreamsModel.distance = [];
+
+				// When
+				const result = fileSystemConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, activityStreamsModel, primitiveSourceData);
+
+				// Then
+				expect(result.elapsed_time_raw).toBeNull();
+				expect(result.moving_time_raw).toBeNull();
+				expect(result.distance_raw).toBeNull();
+				expect(result.elevation_gain_raw).toBeNull();
+				done();
+			});
 		});
 
 	});

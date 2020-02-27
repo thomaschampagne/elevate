@@ -21,9 +21,9 @@ import { LoggerService } from "../shared/services/logging/logger.service";
 							{{errorEvent.description}}
 						</mat-panel-description>
 					</mat-expansion-panel-header>
-					<pre class="mat-caption">
-						{{errorEvent | json}}
-					</pre>
+					<mat-form-field fxFill>
+						<textarea matInput class="mat-caption" rows="40" disabled>{{errorEvent | json}}</textarea>
+					</mat-form-field>
 				</mat-expansion-panel>
 			</mat-accordion>
 		</mat-dialog-content>
@@ -34,7 +34,7 @@ import { LoggerService } from "../shared/services/logging/logger.service";
 	`,
 	styles: [``]
 })
-export class DesktopErrorsSyncDetailsDialog implements OnInit {
+export class DesktopErrorsSyncDetailsDialogComponent implements OnInit {
 
 	public static readonly MAX_WIDTH: string = "90%";
 	public static readonly MIN_WIDTH: string = "80%";

@@ -1,4 +1,4 @@
-import { BaseConnector } from "../base.connector";
+import { BaseConnector, PrimitiveSourceData } from "../base.connector";
 import {
 	ActivitySyncEvent,
 	ConnectorType,
@@ -42,6 +42,7 @@ import { GradeCalculator } from "../../estimators/grade-calculator/grade-calcula
 import { Partial } from "rollup-plugin-typescript2/dist/partial";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { EventLibError } from "sports-lib/src/errors/event-lib.error";
+import { DataAscent } from "sports-lib/lib/data/data.ascent";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export enum ActivityFileType {
@@ -346,7 +347,7 @@ export class FileSystemConnector extends BaseConnector {
 												// Create bare activity from "sports-lib" activity
 												const bareActivity = this.createBareActivity(sportsLibActivity);
 
-												const syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
+												let syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
 												syncedActivityModel.start_timestamp = new Date(bareActivity.start_time).getTime() / 1000;
 
 												// Assign reference to strava activity
@@ -364,27 +365,10 @@ export class FileSystemConnector extends BaseConnector {
 												syncedActivityModel.extendedStats = this.computeExtendedStats(syncedActivityModel,
 													syncedActivityModel.athleteSnapshot, this.userSettingsModel, activityStreamsModel);
 
-												// Update missing fields using computation data
-												if (syncedActivityModel.extendedStats) {
-
-													// Moving time
-													syncedActivityModel.moving_time_raw = _.isNumber(syncedActivityModel.extendedStats.movingTime) ? syncedActivityModel.extendedStats.movingTime : null;
-													syncedActivityModel.elapsed_time_raw = _.isNumber(syncedActivityModel.extendedStats.elapsedTime) ? syncedActivityModel.extendedStats.elapsedTime : null;
-
-													// Distance
-													if (activityStreamsModel.distance && activityStreamsModel.distance.length > 0) {
-														syncedActivityModel.distance_raw = _.last(activityStreamsModel.distance);
-													} else {
-														syncedActivityModel.distance_raw = null;
-													}
-
-													// Elevation
-													if (syncedActivityModel.extendedStats.elevationData && syncedActivityModel.extendedStats.elevationData.accumulatedElevationAscent >= 0) {
-														syncedActivityModel.elevation_gain_raw = Math.round(syncedActivityModel.extendedStats.elevationData.accumulatedElevationAscent);
-													} else {
-														syncedActivityModel.elevation_gain_raw = null;
-													}
-												}
+												// Try to use primitive data from computation. Else use primitive data from source (activity files) if exists
+												const primitiveSourceData = this.extractPrimitiveSourceData(sportsLibActivity);
+												syncedActivityModel = this.updatePrimitiveStatsFromComputation(<SyncedActivityModel> syncedActivityModel,
+													activityStreamsModel, primitiveSourceData);
 
 												// Track connector type
 												syncedActivityModel.sourceConnectorType = ConnectorType.FILE_SYSTEM;
@@ -484,6 +468,30 @@ export class FileSystemConnector extends BaseConnector {
 	public convertToElevateSport(sportsLibType: string): ElevateSport {
 		const entryFound = _.find(FileSystemConnector.SPORTS_LIB_TYPES_MAP, {from: sportsLibType});
 		return entryFound ? entryFound.to : ElevateSport.Other;
+	}
+
+	/**
+	 * Get primitive data from files parsed by the sports-lib
+	 * @param sportsLibActivity
+	 */
+	public extractPrimitiveSourceData(sportsLibActivity: ActivityInterface): PrimitiveSourceData {
+
+		const elapsedTimeRaw = (sportsLibActivity.getDuration() && _.isNumber(sportsLibActivity.getDuration().getValue())) ? sportsLibActivity.getDuration().getValue() : null;
+		const pauseTime = (sportsLibActivity.getPause() && _.isNumber(sportsLibActivity.getPause().getValue())) ? sportsLibActivity.getPause().getValue() : null;
+
+		let movingTimeRaw;
+		if (_.isNumber(elapsedTimeRaw) && _.isNumber(pauseTime)) {
+			movingTimeRaw = elapsedTimeRaw - pauseTime;
+		} else if (_.isNumber(elapsedTimeRaw) && !_.isNumber(pauseTime)) {
+			movingTimeRaw = elapsedTimeRaw;
+		} else {
+			movingTimeRaw = null;
+		}
+
+		const distanceRaw = (sportsLibActivity.getDistance() && _.isNumber(sportsLibActivity.getDistance().getValue())) ? sportsLibActivity.getDistance().getValue() : null;
+		const elevationGainRaw = (sportsLibActivity.getStats().get(DataAscent.type) && _.isNumber(sportsLibActivity.getStats().get(DataAscent.type).getValue()))
+			? <number> sportsLibActivity.getStats().get(DataAscent.type).getValue() : null;
+		return new PrimitiveSourceData(elapsedTimeRaw, movingTimeRaw, distanceRaw, elevationGainRaw);
 	}
 
 	/**

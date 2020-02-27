@@ -4,7 +4,7 @@ import { ActivitySyncEvent, ErrorSyncEvent, SyncEvent, SyncEventType } from "@el
 import { SyncException } from "@elevate/shared/exceptions";
 import * as moment from "moment";
 import { MatDialog } from "@angular/material/dialog";
-import { DesktopErrorsSyncDetailsDialog } from "./desktop-errors-sync-details-dialog.component";
+import { DesktopErrorsSyncDetailsDialogComponent } from "./desktop-errors-sync-details-dialog.component";
 
 export const SYNC_BAR_COMPONENT = new InjectionToken<SyncBarComponent>("SYNC_BAR_COMPONENT");
 
@@ -106,9 +106,9 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 		// Stop sync before showing errors
 		const stopSync = (this.isSyncing) ? this.onActionStop() : Promise.resolve();
 		stopSync.finally(() => {
-			this.dialog.open(DesktopErrorsSyncDetailsDialog, {
-				minWidth: DesktopErrorsSyncDetailsDialog.MIN_WIDTH,
-				maxWidth: DesktopErrorsSyncDetailsDialog.MAX_WIDTH,
+			this.dialog.open(DesktopErrorsSyncDetailsDialogComponent, {
+				minWidth: DesktopErrorsSyncDetailsDialogComponent.MIN_WIDTH,
+				maxWidth: DesktopErrorsSyncDetailsDialogComponent.MAX_WIDTH,
 				data: this.eventErrors
 			});
 		});

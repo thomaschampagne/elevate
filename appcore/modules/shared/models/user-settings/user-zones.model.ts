@@ -28,7 +28,6 @@ export class UserZonesModel {
 	public static readonly TYPE_GRADE: string = "grade";
 	public static readonly TYPE_ELEVATION: string = "elevation";
 	public static readonly TYPE_ASCENT: string = "ascent";
-	public static readonly DEFAULT_DEBUG_MODE: boolean = false;
 
 	public static asInstance(userZonesModel: UserZonesModel): UserZonesModel {
 		return new UserZonesModel(
