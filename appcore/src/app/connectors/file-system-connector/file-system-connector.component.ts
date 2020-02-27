@@ -25,12 +25,14 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
 				public snackBar: MatSnackBar,
 				public dialog: MatDialog) {
 		super(desktopSyncService, electronService, router, dialog);
+		this.connectorType = ConnectorType.FILE_SYSTEM;
 		this.showConfigure = false;
 		this.fileSystemConnectorInfo = null;
 	}
 
 	public ngOnInit(): void {
 		this.fileSystemConnectorInfo = this.fileSystemConnectorInfoService.fetch();
+		this.updateSyncDateTimeText();
 	}
 
 	public onUserDirectorySelection(): void {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { StravaConnectorInfo } from "@elevate/shared/sync";
+import { ConnectorType, StravaConnectorInfo } from "@elevate/shared/sync";
 import { ConnectorsComponent } from "../connectors.component";
 import { StravaConnectorService } from "../services/strava-connector.service";
 import * as moment from "moment";
@@ -43,6 +43,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 				public logger: LoggerService,
 				public dialog: MatDialog) {
 		super(desktopSyncService, electronService, router, dialog);
+		this.connectorType = ConnectorType.STRAVA;
 		this.isSynced = false;
 		this.generatedStravaApiApplication = null;
 		this.showConfigure = false;
@@ -55,6 +56,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 			this.isSynced = syncState === SyncState.SYNCED;
 			return this.stravaConnectorService.fetch();
 		}).then((stravaConnectorInfo: StravaConnectorInfo) => {
+			this.updateSyncDateTimeText();
 			this.handleCredentialsChanges(stravaConnectorInfo);
 		});
 

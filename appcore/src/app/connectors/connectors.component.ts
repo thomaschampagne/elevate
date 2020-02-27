@@ -7,6 +7,9 @@ import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.se
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { AppRoutesModel } from "../shared/models/app-routes.model";
 import { Router } from "@angular/router";
+import { ConnectorSyncDateTime } from "@elevate/shared/models/sync/index";
+import { ConnectorType } from "@elevate/shared/sync";
+import moment from "moment";
 
 @Component({
 	selector: "app-connectors",
@@ -17,13 +20,25 @@ export class ConnectorsComponent implements OnInit {
 
 	public static readonly ATHLETE_CHECKING_FIRST_SYNC_MESSAGE: string = "ATHLETE_CHECKING_FIRST_SYNC";
 
+	public connectorType: ConnectorType;
+	public connectorSyncDateTimeText: string;
+
 	constructor(public desktopSyncService: DesktopSyncService,
 				public electronService: ElectronService,
 				public router: Router,
 				public dialog: MatDialog) {
+		this.connectorType = null;
+		this.connectorSyncDateTimeText = null;
 	}
 
 	public ngOnInit(): void {
+	}
+
+	public updateSyncDateTimeText(): void {
+		this.getSyncDateTime().then(connectorSyncDateTime => {
+			this.connectorSyncDateTimeText = (connectorSyncDateTime && connectorSyncDateTime.dateTime)
+				? "Synced " + moment(connectorSyncDateTime.dateTime).fromNow() + "." : "Never synced.";
+		});
 	}
 
 	public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
@@ -83,5 +98,9 @@ export class ConnectorsComponent implements OnInit {
 			}
 		});
 
+	}
+
+	public getSyncDateTime(): Promise<ConnectorSyncDateTime> {
+		return this.desktopSyncService.getSyncDateTimeByConnectorType(this.connectorType);
 	}
 }

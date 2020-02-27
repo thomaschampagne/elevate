@@ -3,8 +3,9 @@
 		File system
 	</mat-card-title>
 	<mat-card-subtitle *ngIf="fileSystemConnectorInfo">
-		<span *ngIf="!fileSystemConnectorInfo.sourceDirectory">No folder to scan configured</span>
-		<span *ngIf="fileSystemConnectorInfo.sourceDirectory">Configured</span>
+		<span *ngIf="!fileSystemConnectorInfo.sourceDirectory">Not configured. </span>
+		<span *ngIf="fileSystemConnectorInfo.sourceDirectory">Configured. </span>
+		<span *ngIf="connectorSyncDateTimeText">{{connectorSyncDateTimeText}}</span>
 		<br/>
 		<span class="note">Formats supported: gpx, tcx & fit</span>
 	</mat-card-subtitle>

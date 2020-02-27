@@ -35,17 +35,13 @@ import { FileSystemConnectorInfoService } from "../../file-system-connector-info
 import { IpcMessagesSender } from "../../../../desktop/ipc-messages/ipc-messages-sender.service";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
-// TODO Handle sync complete
 // TODO Add sync gen session id as string baseConnector. Goal: more easy to debug sync session with start/stop actions?
 // TODO Handle errors cases (continue or not the sync...)
-// TODO Provide a sync view with all sync events tracked (tmp saved?!) & displayed => to sum up a sync log view.
 // TODO Sync ribbon displayed on startup? Allow user to see the sync log view
 /* TODO Handle connector priority?! Consider not syncing all connector
     but allow user to mark a connector as "Primary" which will be synced when starting the app.
 	Also allow user to sync connector he wants manually on connectors page
  */
-
-// TODO Handle updateSyncedActivitiesNameAndType of strava over filesystem connector
 
 // TODO Forward toolbar sync button to Connectors
 // TODO Test in a current sync is running on Service.currentConnector(setter)
@@ -436,6 +432,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 			const connectorSyncDateTime = _.last(_.sortBy(connectorSyncDateTimes, "dateTime"));
 			return Promise.resolve(connectorSyncDateTime);
 		});
+	}
+
+	public getSyncDateTimeByConnectorType(connectorType: ConnectorType): Promise<ConnectorSyncDateTime> {
+		return <Promise<ConnectorSyncDateTime>> this.connectorSyncDateTimeDao.getById(connectorType);
 	}
 
 	public getConnectorSyncDateTime(): Promise<ConnectorSyncDateTime[]> {
