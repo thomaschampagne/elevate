@@ -13,15 +13,7 @@ import {
 	SyncEvent,
 	SyncEventType
 } from "@elevate/shared/sync";
-import {
-	ActivityStreamsModel,
-	AthleteModel,
-	BareActivityModel,
-	ConnectorSyncDateTime,
-	Gender,
-	SyncedActivityModel,
-	UserSettings
-} from "@elevate/shared/models";
+import { ActivityStreamsModel, AthleteModel, BareActivityModel, ConnectorSyncDateTime, Gender, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import logger from "electron-log";
 import { Service } from "../../service";
 import * as _ from "lodash";
@@ -223,23 +215,35 @@ export class StravaConnector extends BaseConnector {
 
 							// Fetch stream of the activity
 							return this.getStravaActivityStreams(<number> bareActivity.id).then((activityStreamsModel: ActivityStreamsModel) => {
-
-								let syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
-								syncedActivityModel.start_timestamp = new Date(bareActivity.start_time).getTime() / 1000;
-
-								// Assign reference to strava activity
-								syncedActivityModel.extras = {strava_activity_id: <number> syncedActivityModel.id}; // Keep tracking  of activity id
-								syncedActivityModel.id = syncedActivityModel.id + "-" + BaseConnector.hashData(syncedActivityModel.start_time, 8);
-
-								// Resolve athlete snapshot for current activity date
-								syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(syncedActivityModel.start_time);
-
-								// Compute activity
 								try {
+									let syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
+									syncedActivityModel.start_timestamp = new Date(bareActivity.start_time).getTime() / 1000;
 
+									// Assign reference to strava activity
+									syncedActivityModel.extras = {strava_activity_id: <number> syncedActivityModel.id}; // Keep tracking  of activity id
+									syncedActivityModel.id = syncedActivityModel.id + "-" + BaseConnector.hashData(syncedActivityModel.start_time, 8);
+
+									// Resolve athlete snapshot for current activity date
+									syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(syncedActivityModel.start_time);
+
+									// Compute activity
 									activityStreamsModel = this.appendPowerStream(bareActivity, activityStreamsModel, syncedActivityModel.athleteSnapshot.athleteSettings.weight);
 									syncedActivityModel.extendedStats = this.computeExtendedStats(syncedActivityModel,
 										syncedActivityModel.athleteSnapshot, this.userSettingsModel, activityStreamsModel);
+
+									// Try to use primitive data from computation. Else use primitive data from source (strava) if exists
+									const primitiveSourceData = new PrimitiveSourceData(bareActivity.elapsed_time_raw, bareActivity.moving_time_raw,
+										bareActivity.distance_raw, bareActivity.elevation_gain_raw);
+									syncedActivityModel = this.updatePrimitiveStatsFromComputation(<SyncedActivityModel> syncedActivityModel, activityStreamsModel, primitiveSourceData);
+
+									// Track connector type
+									syncedActivityModel.sourceConnectorType = ConnectorType.STRAVA;
+
+									// Gunzip stream as base64
+									const compressedStream = (activityStreamsModel) ? ActivityStreamsModel.inflate(activityStreamsModel) : null;
+
+									// Notify the new SyncedActivityModel
+									syncEvents$.next(new ActivitySyncEvent(ConnectorType.STRAVA, null, <SyncedActivityModel> syncedActivityModel, true, compressedStream));
 
 								} catch (error) {
 
@@ -248,25 +252,9 @@ export class StravaConnector extends BaseConnector {
 										: ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.STRAVA, error.toString(), bareActivity);
 
 									syncEvents$.next(errorSyncEvent); // Notify error
-
-									return Promise.resolve(); // Continue to next activity
 								}
 
-								// Try to use primitive data from computation. Else use primitive data from source (strava) if exists
-								const primitiveSourceData = new PrimitiveSourceData(bareActivity.elapsed_time_raw, bareActivity.moving_time_raw,
-									bareActivity.distance_raw, bareActivity.elevation_gain_raw);
-								syncedActivityModel = this.updatePrimitiveStatsFromComputation(<SyncedActivityModel> syncedActivityModel, activityStreamsModel, primitiveSourceData);
-
-								// Track connector type
-								syncedActivityModel.sourceConnectorType = ConnectorType.STRAVA;
-
-								// Gunzip stream as base64
-								const compressedStream = (activityStreamsModel) ? ActivityStreamsModel.inflate(activityStreamsModel) : null;
-
-								// Notify the new SyncedActivityModel
-								syncEvents$.next(new ActivitySyncEvent(ConnectorType.STRAVA, null, <SyncedActivityModel> syncedActivityModel, true, compressedStream));
-
-								return Promise.resolve();
+								return Promise.resolve(); // Continue to next activity
 
 							}, (errorSyncEvent: ErrorSyncEvent) => {
 								return Promise.reject(errorSyncEvent); // Every error here will stop the sync

@@ -132,7 +132,7 @@ export abstract class BaseConnector {
 			syncedActivityModel.moving_time_raw = (_.isNumber(syncedActivityModel.extendedStats.movingTime)) ? syncedActivityModel.extendedStats.movingTime : null;
 
 			// Distance
-			if (activityStreamsModel.distance && activityStreamsModel.distance.length > 0) {
+			if (activityStreamsModel && activityStreamsModel.distance && activityStreamsModel.distance.length > 0) {
 				syncedActivityModel.distance_raw = _.last(activityStreamsModel.distance);
 			} else {
 				syncedActivityModel.distance_raw = null;
