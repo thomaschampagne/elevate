@@ -14,15 +14,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
 import * as xmldom from "xmldom";
-import {
-	ActivitySyncEvent,
-	ConnectorType,
-	ErrorSyncEvent,
-	StartedSyncEvent,
-	StoppedSyncEvent,
-	SyncEvent,
-	SyncEventType
-} from "@elevate/shared/sync";
+import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { filter } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { SportsLib } from "sports-lib";
@@ -631,7 +623,7 @@ describe("FileSystemConnector", () => {
 				expect(appendAdditionalStreamsSpy).toHaveBeenCalledTimes(15);
 				expect(updatePrimitiveStatsFromComputationSpy).toHaveBeenCalledTimes(15);
 
-				const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(1)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
+				const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(2)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
 				expect(activitySyncEvent).not.toBeNull();
 				expect(activitySyncEvent.fromConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
 				expect(activitySyncEvent.compressedStream).toBeDefined();
@@ -714,7 +706,7 @@ describe("FileSystemConnector", () => {
 				expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(0);
 				expect(appendAdditionalStreamsSpy).toHaveBeenCalledTimes(0);
 
-				expect(syncEventNextSpy).toHaveBeenCalledTimes(15);
+				expect(syncEventNextSpy).toHaveBeenCalledTimes(16);
 				expect(syncEventNextSpy).toHaveBeenCalledWith(expectedActivitySyncEvent);
 
 				done();
@@ -777,9 +769,9 @@ describe("FileSystemConnector", () => {
 				expect(createBareActivitySpy).toHaveBeenCalledTimes(4);
 				expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(4);
 				expect(appendAdditionalStreamsSpy).toHaveBeenCalledTimes(4);
-				expect(syncEventNextSpy).toHaveBeenCalledTimes(4);
+				expect(syncEventNextSpy).toHaveBeenCalledTimes(5);
 
-				const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(1)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
+				const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(2)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
 				expect(activitySyncEvent).not.toBeNull();
 				expect(activitySyncEvent.fromConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
 				expect(activitySyncEvent.compressedStream).toBeDefined();
@@ -848,7 +840,7 @@ describe("FileSystemConnector", () => {
 				expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(0);
 				expect(appendAdditionalStreamsSpy).toHaveBeenCalledTimes(0);
 
-				expect(syncEventNextSpy).toHaveBeenCalledTimes(15);
+				expect(syncEventNextSpy).toHaveBeenCalledTimes(16);
 
 				syncEventNextSpy.calls.argsFor(1).forEach((errorSyncEvent: ErrorSyncEvent) => {
 					expect(errorSyncEvent.code).toEqual(ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.code);
@@ -901,7 +893,7 @@ describe("FileSystemConnector", () => {
 			promise.then(() => {
 				throw new Error("Should not be here");
 			}, errorSyncEvent => {
-				expect(syncEventNextSpy).toHaveBeenCalledTimes(0);
+				expect(syncEventNextSpy).toHaveBeenCalledTimes(1);
 				expect(errorSyncEvent).toBeDefined();
 				expect(errorSyncEvent.code).toEqual(ErrorSyncEvent.SYNC_ERROR_COMPUTE.code);
 				expect(errorSyncEvent.fromConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
@@ -944,7 +936,7 @@ describe("FileSystemConnector", () => {
 				throw new Error("Should not be here");
 
 			}, errorSyncEvent => {
-				expect(syncEventNextSpy).toHaveBeenCalledTimes(0);
+				expect(syncEventNextSpy).toHaveBeenCalledTimes(1);
 				expect(errorSyncEvent).toBeDefined();
 				expect(errorSyncEvent.code).toEqual(ErrorSyncEvent.SYNC_ERROR_COMPUTE.code);
 				expect(errorSyncEvent.fromConnectorType).toEqual(ConnectorType.FILE_SYSTEM);

@@ -8,8 +8,8 @@ import { LoggerService } from "../shared/services/logging/logger.service";
 @Component({
 	selector: "app-desktop-errors-sync-details-dialog",
 	template: `
-		<h2 mat-dialog-title>{{eventErrors.length}} sync error{{(eventErrors.length > 1) ? 's' : ''}} occurred</h2>
-		<h3 class="mat-subheading-1">Errors are also displayed in developer console (CTRL+F12)</h3>
+		<h2 mat-dialog-title>{{eventErrors.length}} sync warning{{(eventErrors.length > 1) ? 's' : ''}} occurred</h2>
+		<h3 class="mat-subheading-1">Warning are also displayed in developer console (CTRL+F12)</h3>
 		<mat-dialog-content class="mat-body-1">
 			<mat-accordion>
 				<mat-expansion-panel *ngFor="let errorEvent of eventErrors">
@@ -44,12 +44,12 @@ export class DesktopErrorsSyncDetailsDialogComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
-		this.logger.error("SYNC ERRORS", this.eventErrors);
+		this.logger.warn("SYNC WARNS", this.eventErrors);
 	}
 
 	public exportToFile(): void {
 		const blob = new Blob([JSON.stringify(this.eventErrors, null, 2)], {type: "application/json; charset=utf-8"});
-		const filename = "desktop_sync_errors_" + moment().format("Y.M.D-H.mm.ss") + ".json";
+		const filename = "desktop_sync_warnings_" + moment().format("Y.M.D-H.mm.ss") + ".json";
 		saveAs(blob, filename);
 	}
 }

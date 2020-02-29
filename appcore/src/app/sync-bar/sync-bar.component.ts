@@ -33,7 +33,7 @@ export class SyncBarComponent {
 				</div>
 				<div fxLayout="row" fxLayoutAlign="space-between center">
 					<button *ngIf="eventErrors && eventErrors.length > 0" mat-flat-button color="warn" (click)="onActionShowErrors()">
-						{{eventErrors.length}} error{{ (eventErrors.length > 1) ? 's' : ''}}
+						{{eventErrors.length}} warning{{ (eventErrors.length > 1) ? 's' : ''}}
 					</button>
 					<button *ngIf="isSyncing" mat-flat-button color="accent" (click)="onActionStop()">
 						Stop

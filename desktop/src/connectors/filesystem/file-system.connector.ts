@@ -1,24 +1,7 @@
 import { BaseConnector, PrimitiveSourceData } from "../base.connector";
-import {
-	ActivitySyncEvent,
-	ConnectorType,
-	ErrorSyncEvent,
-	GenericSyncEvent,
-	StartedSyncEvent,
-	StoppedSyncEvent,
-	SyncEvent,
-	SyncEventType
-} from "@elevate/shared/sync";
+import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, GenericSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { ReplaySubject, Subject } from "rxjs";
-import {
-	ActivityStreamsModel,
-	AthleteModel,
-	AthleteSettingsModel,
-	BareActivityModel,
-	ConnectorSyncDateTime,
-	SyncedActivityModel,
-	UserSettings
-} from "@elevate/shared/models";
+import { ActivityStreamsModel, AthleteModel, AthleteSettingsModel, BareActivityModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
@@ -284,13 +267,15 @@ export class FileSystemConnector extends BaseConnector {
 			const deflateNotifier = new Subject<string>();
 			deflateNotifier.subscribe(extractedArchivePath => {
 				const extractedArchiveFileName = path.basename(extractedArchivePath);
-				syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE_SYSTEM, `Activities in "${extractedArchiveFileName}" file have been extracted.`));
+				const evtDesc = `Activities in "${extractedArchiveFileName}" file have been extracted.`;
+				syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE_SYSTEM, evtDesc));
+				logger.info(evtDesc);
 			});
 			prepareScanDirectory = this.scanDeflateActivitiesFromArchives(this.inputDirectory, this.deleteArchivesAfterExtract, deflateNotifier, this.scanSubDirectories);
 		}
 
 		return prepareScanDirectory.then(() => {
-
+			syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE_SYSTEM, "Scanning for activities..."));
 			const activityFiles: ActivityFile[] = this.scanForActivities(this.inputDirectory, afterDate, this.scanSubDirectories);
 			return Promise.resolve(activityFiles);
 
@@ -381,6 +366,7 @@ export class FileSystemConnector extends BaseConnector {
 													null, <SyncedActivityModel> syncedActivityModel, true, compressedStream));
 
 											} catch (error) {
+												logger.error(error);
 												const errorMessage = "Unable to compute activity started '"
 													+ sportsLibActivity.startDate.toISOString() + "' cause: " + ((error.message) ? error.message : error.toString());
 												const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE_SYSTEM, errorMessage, (error.stack) ? error.stack : null);
