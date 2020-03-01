@@ -185,7 +185,7 @@ describe("FileSystemConnector", () => {
 			const archiveFileName = "samples.zip";
 			const archiveFilePath = compressedActivitiesPath + archiveFileName;
 			const expectedErrorMessage = "Whoops an extraction error";
-			spyOn(FileSystemConnector.UNPACKER, "unpack").and.callFake((filePath, options, callback) => {
+			spyOn(FileSystemConnector.getAllUnPacker(), "unpack").and.callFake((filePath, options, callback) => {
 				callback(expectedErrorMessage);
 			});
 			const deleteArchive = false;

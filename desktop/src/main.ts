@@ -28,7 +28,7 @@ class Main {
 
 	constructor(electronApp: Electron.App) {
 		this.app = electronApp;
-		this.isPackaged = app.isPackaged;
+		Service.instance().isPackaged = this.app.isPackaged;
 	}
 
 	private static readonly WINDOW_SIZE_RATIO: number = 0.8;
@@ -36,7 +36,6 @@ class Main {
 	public ipcMainMessagesService: IpcMainMessagesService;
 
 	private readonly app: Electron.App;
-	private readonly isPackaged: boolean;
 	private appWindow: BrowserWindow;
 
 	public onElectronReady(): void {
@@ -127,7 +126,7 @@ class Main {
 			Service.instance().ipcMainMessages = this.ipcMainMessagesService;
 		});
 
-		if (!this.isPackaged) {
+		if (!Service.instance().isPackaged) {
 			this.appWindow.webContents.openDevTools();
 		}
 
@@ -158,7 +157,7 @@ class Main {
 
 	public run(): void {
 
-		if (this.isPackaged) {
+		if (Service.instance().isPackaged) {
 			logger.log("Running in production");
 		} else {
 			logger.log("Running in development");

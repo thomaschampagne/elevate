@@ -5,6 +5,8 @@ import * as os from "os";
 import { machineIdSync } from "node-machine-id";
 import { RuntimeInfo } from "@elevate/shared/electron";
 import * as crypto from "crypto";
+import { app } from "electron";
+import * as path from "path";
 
 export class Service {
 
@@ -40,6 +42,14 @@ export class Service {
 		this._currentConnector = value; // TODO Test if currentConnector is in syncing before set anything!!
 	}
 
+	get isPackaged(): boolean {
+		return this._isPackaged;
+	}
+
+	set isPackaged(value: boolean) {
+		this._isPackaged = value;
+	}
+
 	private static _instance: Service = null;
 
 	public static readonly PLATFORM = {
@@ -54,12 +64,17 @@ export class Service {
 	private _currentConnector: BaseConnector;
 	private _machineId: string;
 	private _runtimeInfo: RuntimeInfo;
+	private _isPackaged: boolean;
 
 	public static instance(): Service {
 		if (!Service._instance) {
 			Service._instance = new Service();
 		}
 		return Service._instance;
+	}
+
+	public getResourceFolder(): string {
+		return path.dirname(app.getAppPath());
 	}
 
 	public isWindows(): boolean {

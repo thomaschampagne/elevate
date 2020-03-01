@@ -207,7 +207,7 @@ export class FileSystemConnector extends BaseConnector {
 		{from: ActivityTypes.YogaPilates, to: ElevateSport.Yoga},
 	];
 
-	public static readonly UNPACKER = require("all-unpacker");
+	private static _allUnPackerInstance: { unpack: Function };
 
 	public inputDirectory: string;
 	public scanSubDirectories: boolean;
@@ -216,6 +216,12 @@ export class FileSystemConnector extends BaseConnector {
 	public deleteArchivesAfterExtract: boolean;
 	public athleteMachineId: string;
 
+	public static getAllUnPacker(): { unpack: Function } {
+		if (!this._allUnPackerInstance) {
+			this._allUnPackerInstance = require("all-unpacker");
+		}
+		return this._allUnPackerInstance;
+	}
 
 	public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel,
 						 connectorSyncDateTime: ConnectorSyncDateTime, inputDirectory: string, scanSubDirectories: boolean = false,
@@ -688,11 +694,18 @@ export class FileSystemConnector extends BaseConnector {
 			}
 			fs.mkdirSync(extractDir);
 
-			FileSystemConnector.UNPACKER.unpack(archiveFilePath, {
+			const options: any = {
 				targetDir: extractDir,
 				noDirectory: true,
-				quiet: true,
-			}, (err) => {
+				quiet: true
+			};
+
+			// Append resources path to unar exec (unarchiver) if app is packaged
+			if (Service.instance().isPackaged) {
+				options.unar = Service.instance().getResourceFolder() + "/app.asar.unpacked/node_modules/all-unpacker/unar";
+			}
+
+			FileSystemConnector.getAllUnPacker().unpack(archiveFilePath, options, (err) => {
 				if (err) {
 					fs.rmdirSync(extractDir, {recursive: true});
 					reject(err);
