@@ -116,7 +116,8 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
 				public activityService: ActivityService,
 				public userSettingsService: UserSettingsService,
 				public appEventsService: AppEventsService,
-				public dialog: MatDialog) {
+				public dialog: MatDialog,
+				public logger: LoggerService) {
 		super(router, activityService, dialog);
 		this.hideRecalculation = true;
 	}
@@ -129,6 +130,7 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
 		desktopActivityService.refreshStats$.subscribe((notification: BulkRefreshStatsNotification) => {
 
 				if (notification.error) {
+					this.logger.error(notification);
 					this.dialog.open(GotItDialogComponent, {
 						data: <GotItDialogDataModel> {content: notification.error.message}
 					});
@@ -154,6 +156,7 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
 				this.toBeProcessed = notification.toProcessCount;
 			},
 			err => {
+				this.logger.error(err);
 				throw err;
 			});
 

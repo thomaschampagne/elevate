@@ -69,10 +69,6 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 				padding-top: 10px;
 				padding-bottom: 10px;
 			}
-
-			.spacer {
-				padding-bottom: 25px;
-			}
 		`
 	]
 })

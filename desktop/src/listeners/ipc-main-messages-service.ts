@@ -14,14 +14,7 @@ import {
 	SyncEventType
 } from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
-import {
-	ActivityStreamsModel,
-	AthleteModel,
-	AthleteSnapshotModel,
-	ConnectorSyncDateTime,
-	SyncedActivityModel,
-	UserSettings
-} from "@elevate/shared/models";
+import { ActivityStreamsModel, AthleteModel, AthleteSnapshotModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { Service } from "../service";
 import * as _ from "lodash";
 import { FileSystemConnector } from "../connectors/filesystem/file-system.connector";
@@ -287,6 +280,7 @@ export class IpcMainMessagesService {
 				success: null,
 				error: error
 			});
+			logger.error(error);
 		}
 
 	}

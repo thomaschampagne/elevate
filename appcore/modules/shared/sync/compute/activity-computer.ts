@@ -764,8 +764,8 @@ export class ActivityComputer {
 
 		const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed && genuineGradeAdjustedAvgSpeed > 0) ? Math.floor(ActivityComputer.convertSpeedToPace(genuineGradeAdjustedAvgSpeed)) : null;
 
-		const runningStressScore = ((this.activityType === ElevateSport.Run || this.activityType === "VirtualRun") && genuineGradeAdjustedAvgPace && this.athleteSnapshot.athleteSettings.runningFtp)
-			? ActivityComputer.computeRunningStressScore(this.activitySourceData.movingTime, genuineGradeAdjustedAvgPace, this.athleteSnapshot.athleteSettings.runningFtp) : null;
+		const runningStressScore = ((this.activityType === ElevateSport.Run || this.activityType === ElevateSport.VirtualRun) && genuineGradeAdjustedAvgPace && this.athleteSnapshot.athleteSettings.runningFtp)
+			? ActivityComputer.computeRunningStressScore(genuineAvgSpeedSecondsSum, genuineGradeAdjustedAvgPace, this.athleteSnapshot.athleteSettings.runningFtp) : null;
 
 		const paceData: PaceDataModel = {
 			avgPace: Math.floor(ActivityComputer.convertSpeedToPace(genuineAvgSpeed)), // send in seconds
