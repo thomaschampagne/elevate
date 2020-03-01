@@ -1,12 +1,4 @@
-import {
-	ActivitySourceDataModel,
-	ActivityStreamsModel,
-	AnalysisDataModel,
-	AthleteSettingsModel,
-	AthleteSnapshotModel,
-	Gender,
-	UserSettings,
-} from "@elevate/shared/models";
+import { ActivitySourceDataModel, ActivityStreamsModel, AnalysisDataModel, AthleteSettingsModel, AthleteSnapshotModel, Gender, UserSettings, } from "@elevate/shared/models";
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import { ElevateSport } from "@elevate/shared/enums";
 import UserSettingsModel = UserSettings.UserSettingsModel;
@@ -27,7 +19,7 @@ describe("ActivityComputer", () => {
 
 		const isOwner = true;
 		const activityComputer: ActivityComputer = new ActivityComputer(ElevateSport.Ride, powerMeter, userSettingsMock, athleteSnapshot,
-			isOwner, powerMeter, stream, null, true, activitySourceData);
+			isOwner, powerMeter, stream, null, true, true, activitySourceData);
 
 		const result: AnalysisDataModel = activityComputer.compute();
 

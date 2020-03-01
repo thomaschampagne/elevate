@@ -1,12 +1,4 @@
-import {
-	ActivitySourceDataModel,
-	ActivityStreamsModel,
-	AnalysisDataModel,
-	AthleteSettingsModel,
-	AthleteSnapshotModel,
-	Gender,
-	UserSettings,
-} from "@elevate/shared/models";
+import { ActivitySourceDataModel, ActivityStreamsModel, AnalysisDataModel, AthleteSettingsModel, AthleteSnapshotModel, Gender, UserSettings, } from "@elevate/shared/models";
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import * as _ from "lodash";
 import { Helper } from "../../../scripts/helper";
@@ -34,6 +26,7 @@ describe("ActivityComputer Paces", () => {
 	const hasPowerMeter = false;
 	const bounds: number[] = null;
 	const returnZones = false;
+	const returnPowerCurve = true;
 	const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../../fixtures/user-settings/2470979.json")); // Thomas C user settings
 	const athleteSnapshot = new AthleteSnapshotModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
 	const activitySourceData: ActivitySourceDataModel = {
@@ -51,7 +44,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-			isOwner, hasPowerMeter, stream, bounds, returnZones, activitySourceData);
+			isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -69,7 +62,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-			isOwner, hasPowerMeter, stream, bounds, returnZones, activitySourceData);
+			isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -87,7 +80,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-			isOwner, hasPowerMeter, stream, bounds, returnZones, activitySourceData);
+			isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -105,7 +98,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-			isOwner, hasPowerMeter, stream, bounds, returnZones, activitySourceData);
+			isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -123,7 +116,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-			isOwner, hasPowerMeter, stream, bounds, returnZones, activitySourceData);
+			isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -141,7 +134,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-			isOwner, hasPowerMeter, stream, bounds, returnZones, activitySourceData);
+			isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -159,7 +152,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-			isOwner, hasPowerMeter, stream, bounds, returnZones, activitySourceData);
+			isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -177,7 +170,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-			isOwner, hasPowerMeter, stream, bounds, returnZones, activitySourceData);
+			isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -195,7 +188,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-			isOwner, hasPowerMeter, stream, bounds, returnZones, activitySourceData);
+			isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -213,7 +206,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-			isOwner, hasPowerMeter, stream, bounds, returnZones, activitySourceData);
+			isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then
@@ -231,7 +224,7 @@ describe("ActivityComputer Paces", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-			isOwner, hasPowerMeter, stream, bounds, returnZones, activitySourceData);
+			isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
 		const result: AnalysisDataModel = activityComputer.compute();
 
 		// Then

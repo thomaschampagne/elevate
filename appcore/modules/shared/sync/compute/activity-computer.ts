@@ -39,6 +39,7 @@ export class ActivityComputer {
 				activityStream: ActivityStreamsModel,
 				bounds: number[],
 				returnZones: boolean,
+				returnPowerCurve: boolean,
 				activitySourceData: ActivitySourceDataModel) {
 
 		// Store activityType, isTrainer, input activity params and userSettingsData
@@ -52,6 +53,7 @@ export class ActivityComputer {
 		this.activityStream = activityStream;
 		this.bounds = bounds;
 		this.returnZones = returnZones;
+		this.returnPowerCurve = returnPowerCurve;
 		this.activitySourceData = activitySourceData;
 	}
 
@@ -77,12 +79,13 @@ export class ActivityComputer {
 	protected activityStream: ActivityStreamsModel;
 	protected bounds: number[];
 	protected returnZones: boolean;
+	protected returnPowerCurve: boolean;
 
 	public static calculate(bareActivityModel: BareActivityModel, athleteSnapshotModel: AthleteSnapshotModel, userSettingsModel: UserSettingsModel,
-							streams: ActivityStreamsModel, returnZones: boolean = false, bounds: number[] = null, isOwner: boolean = true,
+							streams: ActivityStreamsModel, returnZones: boolean = false, returnPowerCurve: boolean = false, bounds: number[] = null, isOwner: boolean = true,
 							activitySourceData: ActivitySourceDataModel = null): AnalysisDataModel {
 		return new ActivityComputer(bareActivityModel.type, bareActivityModel.trainer, userSettingsModel, athleteSnapshotModel, isOwner,
-			bareActivityModel.hasPowerMeter, streams, bounds, returnZones, activitySourceData).compute();
+			bareActivityModel.hasPowerMeter, streams, bounds, returnZones, returnPowerCurve, activitySourceData).compute();
 	}
 
 
@@ -175,7 +178,7 @@ export class ActivityComputer {
 		return (movingTime * weightedPower * intensity) / (cyclingFtp * 3600) * 100;
 	}
 
-	public static computeBestPowerSplits(timeArray: number[], powerArray: number[]) {
+	public static computeBestPowerSplits(timeArray: number[], powerArray: number[], returnPowerCurve: boolean) {
 		// Find Best 20min, best 80% and an entire power curve of time power splits
 		let best20min = null;
 		let bestEightyPercent = null;
@@ -197,27 +200,30 @@ export class ActivityComputer {
 				console.warn("No best 20min power available for this range");
 			}
 
-			try {
-				// Set up some abitrary times here that we will use for the power curve
-				const defaultPowerCurveTimes = [
-					..._.range(1, 30, 1), // 1s to 30s in 1s
-					..._.range(30, 60, 5), // to 60s in 5s
-					..._.range(60, 5 * 60, 10), // to 5m in 10s
-					..._.range(5 * 60 + 30, 20 * 60, 30), // to 20 min in 30s
-					..._.range(20 * 60, 60 * 60, 60), // to 60 min in minutes
-					..._.range(60 * 60, 5 * 60 * 60, 5 * 60), // to 5 hour in 5 min
-					..._.range(5 * 60 * 60, 24 * 60 * 60, 60 * 60) // to 24 hour in 1 hour
-				];
+			if (returnPowerCurve) {
+				try {
+					// Set up some abitrary times here that we will use for the power curve
+					const defaultPowerCurveTimes = [
+						..._.range(1, 30, 1), // 1s to 30s in 1s
+						..._.range(30, 60, 5), // to 60s in 5s
+						..._.range(60, 5 * 60, 10), // to 5m in 10s
+						..._.range(5 * 60 + 30, 20 * 60, 30), // to 20 min in 30s
+						..._.range(20 * 60, 60 * 60, 60), // to 60 min in minutes
+						..._.range(60 * 60, 5 * 60 * 60, 5 * 60), // to 5 hour in 5 min
+						..._.range(5 * 60 * 60, 24 * 60 * 60, 60 * 60) // to 24 hour in 1 hour
+					];
 
-				// Ensure the final value is the maximum time
-				const maxTime = _.max(timeArray);
-				const timesToUse = [...defaultPowerCurveTimes.filter(t => t < maxTime), maxTime];
-				powerCurve = splitCalculator.getBestSplitRanges(timesToUse)
-					.map(r => ({watts: r.result, time: r.range}));
+					// Ensure the final value is the maximum time
+					const maxTime = _.max(timeArray);
+					const timesToUse = [...defaultPowerCurveTimes.filter(t => t < maxTime), maxTime];
+					powerCurve = splitCalculator.getBestSplitRanges(timesToUse)
+						.map(r => ({watts: r.result, time: r.range}));
 
-			} catch (err) {
-				console.warn("Power curve could not be calculated");
+				} catch (err) {
+					console.warn("Power curve could not be calculated");
+				}
 			}
+
 
 		} catch (err) {
 			console.warn(err);
@@ -894,7 +900,7 @@ export class ActivityComputer {
 		powerZonesAlongActivityType = this.finalizeDistributionComputationZones(powerZonesAlongActivityType);
 
 		// Find default set of best powers
-		const {best20min, bestEightyPercent, powerCurve} = ActivityComputer.computeBestPowerSplits(timeArray, powerArray);
+		const {best20min, bestEightyPercent, powerCurve} = ActivityComputer.computeBestPowerSplits(timeArray, powerArray, this.returnPowerCurve);
 
 		const powerStressScore = ActivityComputer.computePowerStressScore(totalMovingInSeconds, weightedPower, cyclingFtp);
 		const powerStressScorePerHour: number = powerStressScore / totalMovingInSeconds * 60 * 60;

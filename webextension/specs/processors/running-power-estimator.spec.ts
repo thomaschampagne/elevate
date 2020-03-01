@@ -1,14 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "../../scripts/helper";
-import {
-	ActivitySourceDataModel,
-	ActivityStreamsModel,
-	AnalysisDataModel,
-	AthleteSettingsModel,
-	AthleteSnapshotModel,
-	Gender,
-	UserSettings
-} from "@elevate/shared/models";
+import { ActivitySourceDataModel, ActivityStreamsModel, AnalysisDataModel, AthleteSettingsModel, AthleteSnapshotModel, Gender, UserSettings } from "@elevate/shared/models";
 import { RunningPowerEstimator } from "@elevate/shared/sync/compute/running-power-estimator";
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import { ElevateSport } from "@elevate/shared/enums";
@@ -256,6 +248,7 @@ describe("RunningPowerEstimator", () => {
 		const hasPowerMeter = false;
 		const bounds: number[] = null;
 		const returnZones = true;
+		const returnPowerCurve = true;
 		const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../fixtures/user-settings/2470979.json")); // Thomas C user settings
 		const stream: ActivityStreamsModel = _.cloneDeep(require("../fixtures/activities/887284960/stream.json"));
 		const activitySourceData: ActivitySourceDataModel = {
@@ -268,7 +261,7 @@ describe("RunningPowerEstimator", () => {
 
 		// When
 		const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-			isOwner, hasPowerMeter, stream, bounds, returnZones, activitySourceData);
+			isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
 
 		const result: AnalysisDataModel = activityComputer.compute();
 

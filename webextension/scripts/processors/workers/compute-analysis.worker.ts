@@ -16,6 +16,7 @@ onmessage = (mainThreadEvent: MessageEvent) => {
 		threadMessage.activityStream,
 		threadMessage.bounds,
 		threadMessage.returnZones,
+		threadMessage.returnPowerCurve,
 		threadMessage.activitySourceData);
 
 	const result: AnalysisDataModel = analysisComputer.compute();

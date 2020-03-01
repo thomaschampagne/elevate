@@ -145,7 +145,8 @@ export class MultipleActivityProcessor {
 			activitySourceData: activitySourceData,
 			activityStream: activityWithStream.stream,
 			bounds: null,
-			returnZones: false
+			returnZones: false,
+			returnPowerCurve: false
 		};
 
 		computeAnalysisThread.postMessage(threadMessage);
