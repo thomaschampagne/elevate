@@ -724,7 +724,7 @@ export class FileSystemConnector extends BaseConnector {
 			};
 
 			// Append resources path to unar exec (unarchiver) if app is packaged
-			if (Service.instance().isPackaged) {
+			if (Service.instance().isPackaged && !Service.instance().isLinux()) {
 				options.unar = Service.instance().getResourceFolder() + "/app.asar.unpacked/node_modules/all-unpacker/unar";
 			}
 
