@@ -133,7 +133,7 @@ export abstract class BaseConnector {
 
 			// Distance
 			if (activityStreamsModel && activityStreamsModel.distance && activityStreamsModel.distance.length > 0) {
-				syncedActivityModel.distance_raw = _.last(activityStreamsModel.distance);
+				syncedActivityModel.distance_raw = _.last(activityStreamsModel.distance) - _.first(activityStreamsModel.distance);
 			} else {
 				syncedActivityModel.distance_raw = null;
 			}

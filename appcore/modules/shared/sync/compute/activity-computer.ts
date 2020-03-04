@@ -363,7 +363,7 @@ export class ActivityComputer {
 		const hasActivityStream = !_.isEmpty(this.activityStream);
 
 		if (hasActivityStream && this.activityStream.time && this.activityStream.time.length > 0) {
-			elapsedTime = _.last(this.activityStream.time);
+			elapsedTime = _.last(this.activityStream.time) - _.first(this.activityStream.time);
 		}
 
 		// Prepare move data model along stream or activitySourceData

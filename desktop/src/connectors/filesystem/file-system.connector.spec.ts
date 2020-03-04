@@ -14,7 +14,15 @@ import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
 import * as xmldom from "xmldom";
-import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+	ActivitySyncEvent,
+	ConnectorType,
+	ErrorSyncEvent,
+	StartedSyncEvent,
+	StoppedSyncEvent,
+	SyncEvent,
+	SyncEventType
+} from "@elevate/shared/sync";
 import { filter } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { SportsLib } from "sports-lib";
@@ -419,11 +427,6 @@ describe("FileSystemConnector", () => {
 					startedSyncEventToBeCaught = syncEvent;
 				}
 
-				/*			else {// TODO !?
-								expect(syncEvent.type).toEqual(SyncEventType.ACTIVITY);
-								expect((<ActivitySyncEvent> syncEvent).activity).toBeDefined();
-							}*/
-
 				expect(fileSystemConnector.isSyncing).toBeTruthy();
 
 			}, error => {
@@ -479,9 +482,6 @@ describe("FileSystemConnector", () => {
 			});
 
 		});
-
-
-		// TODO it("should not stop sync and notify errors when multiple errors are provided by syncPages()", (done: Function) => {
 
 		it("should reject sync if connector is already syncing", (done: Function) => {
 
@@ -1014,7 +1014,9 @@ describe("FileSystemConnector", () => {
 			let activityStreamsModel: ActivityStreamsModel = null;
 			const defaultMovingTime = 900;
 			const defaultElapsedTime = 1000;
-			const defaultDistance = 1000;
+			const startDistance = 5;
+			const endDistance = 1000;
+			const defaultDistance = endDistance - startDistance;
 			const defaultElevationGain = 0;
 
 			beforeEach((done: Function) => {
@@ -1028,7 +1030,7 @@ describe("FileSystemConnector", () => {
 				};
 
 				activityStreamsModel = new ActivityStreamsModel();
-				activityStreamsModel.distance = [1, 10, 100, defaultDistance];
+				activityStreamsModel.distance = [startDistance, 10, 100, endDistance];
 
 				done();
 			});
