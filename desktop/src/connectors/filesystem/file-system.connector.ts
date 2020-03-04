@@ -1,7 +1,24 @@
 import { BaseConnector, PrimitiveSourceData } from "../base.connector";
-import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, GenericSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+	ActivitySyncEvent,
+	ConnectorType,
+	ErrorSyncEvent,
+	GenericSyncEvent,
+	StartedSyncEvent,
+	StoppedSyncEvent,
+	SyncEvent,
+	SyncEventType
+} from "@elevate/shared/sync";
 import { ReplaySubject, Subject } from "rxjs";
-import { ActivityStreamsModel, AthleteModel, AthleteSettingsModel, BareActivityModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import {
+	ActivityStreamsModel,
+	AthleteModel,
+	AthleteSettingsModel,
+	BareActivityModel,
+	ConnectorSyncDateTime,
+	SyncedActivityModel,
+	UserSettings
+} from "@elevate/shared/models";
 import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
@@ -375,11 +392,12 @@ export class FileSystemConnector extends BaseConnector {
 												logger.error(error);
 												const errorMessage = "Unable to compute activity started '"
 													+ sportsLibActivity.startDate.toISOString() + "' cause: " + ((error.message) ? error.message : error.toString());
-												const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE_SYSTEM, errorMessage, (error.stack) ? error.stack : null);
-												errorSyncEvent.activity = new SyncedActivityModel();
-												errorSyncEvent.activity.type = <any> sportsLibActivity.type;
-												errorSyncEvent.activity.start_time = sportsLibActivity.startDate.toISOString();
-												(<SyncedActivityModel> errorSyncEvent.activity).extras = {fs_activity_location: activityFile.location}; // Keep tracking  of activity id
+
+												const activityInError = new SyncedActivityModel();
+												activityInError.type = <any> sportsLibActivity.type;
+												activityInError.start_time = sportsLibActivity.startDate.toISOString();
+												(<SyncedActivityModel> activityInError).extras = {fs_activity_location: activityFile.location}; // Keep tracking  of activity id
+												const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE_SYSTEM, errorMessage, activityInError, (error.stack) ? error.stack : null);
 
 												return Promise.reject(errorSyncEvent);
 											}
