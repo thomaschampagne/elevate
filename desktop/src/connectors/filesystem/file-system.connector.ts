@@ -347,6 +347,11 @@ export class FileSystemConnector extends BaseConnector {
 
 							return previousActivityProcessed.then(() => {
 
+								// Is an transition activity (e.g. from swim to cycling for triathlon), then skip it
+								if (sportsLibActivity && sportsLibActivity.type === ActivityTypes.Transition) {
+									return Promise.resolve();
+								}
+
 								return this.findSyncedActivityModels(sportsLibActivity.startDate.toISOString(), sportsLibActivity.getDuration().getValue())
 									.then((syncedActivityModels: SyncedActivityModel[]) => {
 										if (_.isEmpty(syncedActivityModels)) {
