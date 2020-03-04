@@ -372,6 +372,14 @@ export namespace ActivityColumns {
 			return _.isNumber(activity.moving_time_raw) ? moment.utc(activity.moving_time_raw * 1000).format("HH:mm:ss") : Print.NO_DATA;
 		}
 
+		/**
+		 *
+		 * @param activity
+		 */
+		public static elapsedTime(activity: SyncedActivityModel): string {
+			return _.isNumber(activity.elapsed_time_raw) ? moment.utc(activity.elapsed_time_raw * 1000).format("HH:mm:ss") : Print.NO_DATA;
+		}
+
 	}
 
 	/**
@@ -395,7 +403,7 @@ export namespace ActivityColumns {
 			new ActivityLinkColumn(Category.COMMON, "name").setWidth("230px").setDefault(true),
 			new TextColumn(Category.COMMON, "type").setDefault(true),
 			new TextColumn(Category.COMMON, "moving_time_raw", Print.movingTime, "Moving Time").setDefault(true),
-			new TextColumn(Category.COMMON, "elapsed_time_raw", Print.movingTime, "Total Time"),
+			new TextColumn(Category.COMMON, "elapsed_time_raw", Print.elapsedTime, "Total Time"),
 			new NumberColumn(Category.COMMON, "distance_raw", Definition.LONG_DISTANCE_SYSTEM_UNITS, "Distance", Print.number, 1, 0.001, Constant.KM_TO_MILE_FACTOR).setDefault(true),
 			new NumberColumn(Category.COMMON, "elevation_gain_raw", Definition.ELEVATION_SYSTEM_UNITS, "Elevation Gain", Print.number, 1, 1, Constant.METER_TO_FEET_FACTOR).setDefault(true),
 			new NumberColumn(Category.COMMON, "extendedStats.speedData.genuineAvgSpeed", Definition.SPEED_SYSTEM_UNITS, "Avg Moving Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR).setDefault(true),
