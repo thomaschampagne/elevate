@@ -12,6 +12,7 @@
 		Date: {{syncedActivityModel.start_time}}
 	</mat-card-subtitle>
 	<mat-card-content>
+		<div id="chartdiv" style="width: 100%; height: 500px"></div>
 		<mat-form-field fxFill>
 			<textarea matInput class="mat-caption" rows="32" disabled>{{syncedActivityModel | json}}</textarea>
 		</mat-form-field>
