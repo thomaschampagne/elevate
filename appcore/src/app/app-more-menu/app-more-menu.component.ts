@@ -46,7 +46,7 @@ export class AppMoreMenuComponent implements OnInit {
 	}
 
 	public onOpenLink(url: string) {
-		this.openResourceResolver.openWebLink(url);
+		this.openResourceResolver.openLink(url);
 	}
 }
 

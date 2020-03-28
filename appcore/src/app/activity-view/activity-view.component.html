@@ -7,6 +7,9 @@
 			<mat-icon>arrow_back</mat-icon>
 		</button>
 		{{syncedActivityModel.name}}
+		<button mat-stroked-button color="primary" (click)="openSourceActivity(syncedActivityModel.id)">
+			Open source activity
+		</button>
 	</mat-card-title>
 	<mat-card-subtitle>
 		Date: {{syncedActivityModel.start_time}}

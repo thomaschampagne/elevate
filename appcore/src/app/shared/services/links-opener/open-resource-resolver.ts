@@ -8,9 +8,11 @@ export abstract class OpenResourceResolver {
 	protected constructor(public snackBar: MatSnackBar) {
 	}
 
-	public abstract openWebLink(url: string): void;
+	public abstract openLink(url: string): void;
 
 	public abstract openActivity(id: number | string): void;
+
+	public abstract openSourceActivity(id: number | string): void;
 
 	public openActivities(ids: (number | string)[]): void {
 		if (ids.length > 0) {

@@ -98,7 +98,7 @@ export class ConnectorsComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((confirm: boolean) => {
 			if (confirm) {
-				this.openResourceResolver.openWebLink(url);
+				this.openResourceResolver.openLink(url);
 			}
 		});
 

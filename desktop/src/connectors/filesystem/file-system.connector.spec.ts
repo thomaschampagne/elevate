@@ -14,15 +14,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
 import * as xmldom from "xmldom";
-import {
-	ActivitySyncEvent,
-	ConnectorType,
-	ErrorSyncEvent,
-	StartedSyncEvent,
-	StoppedSyncEvent,
-	SyncEvent,
-	SyncEventType
-} from "@elevate/shared/sync";
+import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { filter } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { SportsLib } from "sports-lib";
@@ -593,7 +585,7 @@ describe("FileSystemConnector", () => {
 			const findSyncedActivityModelsSpy = spyOn(fileSystemConnector, "findSyncedActivityModels")
 				.and.returnValue(Promise.resolve(null));
 			const extractActivityStreamsSpy = spyOn(fileSystemConnector, "extractActivityStreams").and.callThrough();
-			const appendAdditionalStreamsSpy = spyOn(fileSystemConnector, "appendAdditionalStreams").and.callThrough();
+			const computeAdditionalStreamsSpy = spyOn(fileSystemConnector, "computeAdditionalStreams").and.callThrough();
 			const updatePrimitiveStatsFromComputationSpy = spyOn(fileSystemConnector, "updatePrimitiveStatsFromComputation").and.callThrough();
 			const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
 
@@ -620,7 +612,7 @@ describe("FileSystemConnector", () => {
 				expect(findSyncedActivityModelsSpy).toHaveBeenNthCalledWith(1, "2019-08-11T12:52:20.000Z", 7263.962);
 
 				expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(15);
-				expect(appendAdditionalStreamsSpy).toHaveBeenCalledTimes(15);
+				expect(computeAdditionalStreamsSpy).toHaveBeenCalledTimes(15);
 				expect(updatePrimitiveStatsFromComputationSpy).toHaveBeenCalledTimes(15);
 
 				const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(2)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
@@ -637,10 +629,10 @@ describe("FileSystemConnector", () => {
 				expect(activitySyncEvent.activity.type).toEqual(ElevateSport.Ride);
 				expect(activitySyncEvent.activity.hasPowerMeter).toBeFalsy();
 				expect(activitySyncEvent.activity.trainer).toBeFalsy();
-				expect(Math.floor(activitySyncEvent.activity.distance_raw)).toEqual(59853);
+				expect(Math.floor(activitySyncEvent.activity.distance_raw)).toEqual(59849);
 				expect(activitySyncEvent.activity.moving_time_raw).toEqual(9958);
 				expect(activitySyncEvent.activity.elapsed_time_raw).toEqual(10514);
-				expect(activitySyncEvent.activity.elevation_gain_raw).toEqual(693);
+				expect(activitySyncEvent.activity.elevation_gain_raw).toEqual(685);
 				expect(activitySyncEvent.activity.sourceConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
 				expect(activitySyncEvent.activity.extras.fs_activity_location.onMachineId).toBeDefined();
 				expect(activitySyncEvent.activity.extras.fs_activity_location.path).toContain(expectedActivityFilePathMatch);
@@ -687,7 +679,7 @@ describe("FileSystemConnector", () => {
 				});
 			const createBareActivitySpy = spyOn(fileSystemConnector, "createBareActivity").and.callThrough();
 			const extractActivityStreamsSpy = spyOn(fileSystemConnector, "extractActivityStreams").and.callThrough();
-			const appendAdditionalStreamsSpy = spyOn(fileSystemConnector, "appendAdditionalStreams").and.callThrough();
+			const computeAdditionalStreamsSpy = spyOn(fileSystemConnector, "computeAdditionalStreams").and.callThrough();
 			const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
 
 			// When
@@ -704,7 +696,7 @@ describe("FileSystemConnector", () => {
 				expect(findSyncedActivityModelsSpy).toHaveBeenCalledTimes(15);
 				expect(createBareActivitySpy).toHaveBeenCalledTimes(0);
 				expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(0);
-				expect(appendAdditionalStreamsSpy).toHaveBeenCalledTimes(0);
+				expect(computeAdditionalStreamsSpy).toHaveBeenCalledTimes(0);
 
 				expect(syncEventNextSpy).toHaveBeenCalledTimes(16);
 				expect(syncEventNextSpy).toHaveBeenCalledWith(expectedActivitySyncEvent);
@@ -751,7 +743,7 @@ describe("FileSystemConnector", () => {
 				.and.returnValue(Promise.resolve(null));
 			const createBareActivitySpy = spyOn(fileSystemConnector, "createBareActivity").and.callThrough();
 			const extractActivityStreamsSpy = spyOn(fileSystemConnector, "extractActivityStreams").and.callThrough();
-			const appendAdditionalStreamsSpy = spyOn(fileSystemConnector, "appendAdditionalStreams").and.callThrough();
+			const computeAdditionalStreamsSpy = spyOn(fileSystemConnector, "computeAdditionalStreams").and.callThrough();
 			const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
 
 			// When
@@ -768,7 +760,7 @@ describe("FileSystemConnector", () => {
 				expect(findSyncedActivityModelsSpy).toHaveBeenCalledTimes(4);
 				expect(createBareActivitySpy).toHaveBeenCalledTimes(4);
 				expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(4);
-				expect(appendAdditionalStreamsSpy).toHaveBeenCalledTimes(4);
+				expect(computeAdditionalStreamsSpy).toHaveBeenCalledTimes(4);
 				expect(syncEventNextSpy).toHaveBeenCalledTimes(5);
 
 				const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(2)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
@@ -820,7 +812,7 @@ describe("FileSystemConnector", () => {
 
 			const createBareActivitySpy = spyOn(fileSystemConnector, "createBareActivity").and.callThrough();
 			const extractActivityStreamsSpy = spyOn(fileSystemConnector, "extractActivityStreams").and.callThrough();
-			const appendAdditionalStreamsSpy = spyOn(fileSystemConnector, "appendAdditionalStreams").and.callThrough();
+			const computeAdditionalStreamsSpy = spyOn(fileSystemConnector, "computeAdditionalStreams").and.callThrough();
 			const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
 			const expectedActivitiesFound = expectedExistingSyncedActivity.name + " (" + new Date(expectedExistingSyncedActivity.start_time).toString() + ")";
 
@@ -838,7 +830,7 @@ describe("FileSystemConnector", () => {
 				expect(findSyncedActivityModelsSpy).toHaveBeenCalledTimes(15);
 				expect(createBareActivitySpy).toHaveBeenCalledTimes(0);
 				expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(0);
-				expect(appendAdditionalStreamsSpy).toHaveBeenCalledTimes(0);
+				expect(computeAdditionalStreamsSpy).toHaveBeenCalledTimes(0);
 
 				expect(syncEventNextSpy).toHaveBeenCalledTimes(16);
 
@@ -1149,99 +1141,6 @@ describe("FileSystemConnector", () => {
 
 	describe("Activity streams", () => {
 
-		describe("Grade streams calculation", () => {
-
-			it("should add estimated grade stream to activity having distance and altitude stream data", (done: Function) => {
-
-				// Given
-				const filePath = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
-				const expectedSamplesLength = 3179;
-				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")).then(event => {
-					return Promise.resolve(fileSystemConnector.extractActivityStreams(event.getFirstActivity()));
-				});
-
-				// When
-				promise.then((activityStreamsModel: ActivityStreamsModel) => {
-					const gradeStream = fileSystemConnector.calculateGradeStream(activityStreamsModel.distance, activityStreamsModel.altitude);
-
-					// Then
-					expect(gradeStream.length).toEqual(expectedSamplesLength);
-					done();
-				});
-
-			});
-
-			it("should throw error when calculating estimated grade stream without distance or altitude stream data", (done: Function) => {
-
-				// Given, When
-				const noAltitudeCall = () => fileSystemConnector.calculateGradeStream([1, 2, 3, 5], []);
-				const noDistanceCall = () => fileSystemConnector.calculateGradeStream([], [1, 2, 3, 5]);
-
-				// Then
-				expect(noAltitudeCall).toThrowError();
-				expect(noDistanceCall).toThrowError();
-
-				done();
-			});
-
-		});
-
-		describe("Grade adjusted speed stream calculation", () => {
-
-			it("should calculate grade adjusted speed", (done: Function) => {
-
-				// Given
-				const filePath = __dirname + "/fixtures/activities-02/runs/strava_export/20160911_run_708752345.tcx";
-				const expectedSamplesLength = 1495;
-				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")).then(event => {
-					return Promise.resolve(fileSystemConnector.extractActivityStreams(event.getFirstActivity()));
-				}).then((activityStreamsModel: ActivityStreamsModel) => {
-					activityStreamsModel.grade_smooth = fileSystemConnector.calculateGradeStream(activityStreamsModel.distance, activityStreamsModel.altitude);
-					return Promise.resolve(activityStreamsModel);
-				});
-
-				// When
-				promise.then((activityStreamsModel: ActivityStreamsModel) => {
-
-					const gradeAdjustedSpeed = fileSystemConnector.calculateGradeAdjustedSpeed(ElevateSport.Run, activityStreamsModel.velocity_smooth, activityStreamsModel.grade_smooth);
-
-					// Then
-					expect(gradeAdjustedSpeed.length).toEqual(expectedSamplesLength);
-					done();
-				});
-
-			});
-
-			it("should throw error when sport type is different of Run & VirtualRun", (done: Function) => {
-
-				// Given, When
-				const rideCall = () => fileSystemConnector.calculateGradeAdjustedSpeed(ElevateSport.Ride, [1, 2, 3, 5], [1, 2, 3, 5]);
-				const alpineSkiCall = () => fileSystemConnector.calculateGradeAdjustedSpeed(ElevateSport.AlpineSki, [1, 2, 3, 5], [1, 2, 3, 5]);
-
-				// Then
-				expect(rideCall).toThrowError();
-				expect(alpineSkiCall).toThrowError();
-
-				done();
-			});
-
-			it("should throw error when no velocity or grade stream", (done: Function) => {
-
-				// Given, When
-				const noVelocityCall = () => fileSystemConnector.calculateGradeAdjustedSpeed(ElevateSport.Run, [], [1, 2, 3, 5]);
-				const noGradeCall = () => fileSystemConnector.calculateGradeAdjustedSpeed(ElevateSport.VirtualRun, [1, 2, 3, 5], []);
-
-				// Then
-				expect(noVelocityCall).toThrowError();
-				expect(noGradeCall).toThrowError();
-
-				done();
-
-			});
-
-
-		});
-
 		describe("Estimated power streams calculation", () => {
 
 			it("should add estimated power data stream to a cycling activities having speed and grade stream data & performed without power meter", (done: Function) => {
@@ -1252,15 +1151,13 @@ describe("FileSystemConnector", () => {
 				const expectedSamplesLength = 3179;
 				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")).then(event => {
 					return Promise.resolve(fileSystemConnector.extractActivityStreams(event.getFirstActivity()));
-				}).then((activityStreamsModel: ActivityStreamsModel) => {
-					activityStreamsModel.grade_smooth = fileSystemConnector.calculateGradeStream(activityStreamsModel.distance, activityStreamsModel.altitude);
-					return Promise.resolve(activityStreamsModel);
 				});
 
 				// When
 				promise.then((activityStreamsModel: ActivityStreamsModel) => {
 
-					const powerEstimatedStream = fileSystemConnector.estimateCyclingPowerStream(ElevateSport.Ride, activityStreamsModel.velocity_smooth, activityStreamsModel.grade_smooth, riderWeight);
+					const powerEstimatedStream = fileSystemConnector.estimateCyclingPowerStream(ElevateSport.Ride, activityStreamsModel.velocity_smooth,
+						activityStreamsModel.grade_smooth, riderWeight);
 
 					// Then
 					expect(powerEstimatedStream.length).toEqual(expectedSamplesLength);
@@ -1309,8 +1206,8 @@ describe("FileSystemConnector", () => {
 				// Given
 				const sportsLibActivity = new Activity(new Date(), new Date(), ActivityTypes.Running, new Creator("John Doo"));
 
-				spyOn(sportsLibActivity, "getStream").and.returnValue({
-					getDurationOfData: () => [-1]
+				spyOn(sportsLibActivity, "generateTimeStream").and.returnValue({
+					getData: () => [-1]
 				});
 				spyOn(sportsLibActivity, "getSquashedStreamData").and.callFake((streamType: string) => {
 					if (streamType === DataHeartRate.type || streamType === DataCadence.type || streamType === DataPower.type) {
@@ -1328,6 +1225,8 @@ describe("FileSystemConnector", () => {
 				expect(activityStreamsModel.distance[0]).toBeDefined();
 				expect(activityStreamsModel.velocity_smooth[0]).toBeDefined();
 				expect(activityStreamsModel.altitude[0]).toBeDefined();
+				expect(activityStreamsModel.grade_smooth[0]).toBeDefined();
+				expect(activityStreamsModel.grade_adjusted_speed[0]).toBeDefined();
 				expect(activityStreamsModel.heartrate).toEqual([]);
 				expect(activityStreamsModel.cadence).toEqual([]);
 				expect(activityStreamsModel.watts).toEqual([]);
@@ -1352,11 +1251,13 @@ describe("FileSystemConnector", () => {
 					expect(activityStreamsModel.latlng.length).toEqual(expectedSamplesLength);
 					expect(activityStreamsModel.latlng[0]).toEqual([45.21027219, 5.78329785]);
 					expect(activityStreamsModel.distance.length).toEqual(expectedSamplesLength);
-					expect(activityStreamsModel.velocity_smooth.length).toEqual(expectedSamplesLength);
-					expect(activityStreamsModel.heartrate.length).toEqual(expectedSamplesLength);
 					expect(activityStreamsModel.altitude.length).toEqual(expectedSamplesLength);
+					expect(activityStreamsModel.velocity_smooth.length).toEqual(expectedSamplesLength);
+					expect(activityStreamsModel.grade_smooth.length).toEqual(expectedSamplesLength);
+					expect(activityStreamsModel.heartrate.length).toEqual(expectedSamplesLength);
 					expect(activityStreamsModel.cadence.length).toEqual(expectedSamplesLength);
-					expect(activityStreamsModel.watts).toEqual([]);
+					expect(activityStreamsModel.watts).toEqual([]); // calculated in computeAdditionalStreams
+					expect(activityStreamsModel.grade_adjusted_speed).toEqual([]);
 
 					done();
 				});
@@ -1365,7 +1266,7 @@ describe("FileSystemConnector", () => {
 
 		describe("Calculate additional streams", () => {
 
-			it("should calculate grade & estimated power streams on cycling activity without power meter", (done: Function) => {
+			it("should estimated power streams on cycling activity without power meter", (done: Function) => {
 
 				// Given
 				let bareActivityModel: BareActivityModel;
@@ -1377,101 +1278,39 @@ describe("FileSystemConnector", () => {
 					return Promise.resolve(fileSystemConnector.extractActivityStreams(sportsLibActivity));
 				});
 				const athleteSettingsModel = AthleteSettingsModel.DEFAULT_MODEL;
-
-				const calculateGradeStreamSpy = spyOn(fileSystemConnector, "calculateGradeStream").and.callThrough();
 				const estimateCyclingPowerStreamSpy = spyOn(fileSystemConnector, "estimateCyclingPowerStream").and.callThrough();
-				const calculateGradeAdjustedSpeedSpy = spyOn(fileSystemConnector, "calculateGradeAdjustedSpeed").and.callThrough();
 
 				// When
 				promise.then((activityStreamsModel: ActivityStreamsModel) => {
 
-					const activityStreamsFullModel: ActivityStreamsModel = fileSystemConnector.appendAdditionalStreams(bareActivityModel, activityStreamsModel, athleteSettingsModel);
+					const activityStreamsFullModel: ActivityStreamsModel = fileSystemConnector.computeAdditionalStreams(bareActivityModel, activityStreamsModel, athleteSettingsModel);
 
 					// Then
 					expect(activityStreamsFullModel.grade_smooth.length).toEqual(expectedSamplesLength);
 					expect(activityStreamsFullModel.watts.length).toEqual(expectedSamplesLength);
 					expect(activityStreamsFullModel.watts_calc).toBeUndefined();
-					expect(calculateGradeStreamSpy).toHaveBeenCalledTimes(1);
 					expect(estimateCyclingPowerStreamSpy).toHaveBeenCalledTimes(1);
-					expect(calculateGradeAdjustedSpeedSpy).not.toHaveBeenCalled();
 					done();
 				});
 			});
 
-			it("should calculate grade & grade adjusted speed streams on running activity", (done: Function) => {
-
-				// Given
-				let bareActivityModel: BareActivityModel;
-				const filePath = __dirname + "/fixtures/activities-02/runs/strava_export/20160911_run_708752345.tcx";
-				const expectedSamplesLength = 1495;
-				const promise = SportsLib.importFromTCX(new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")).then(event => {
-					const sportsLibActivity = event.getFirstActivity();
-					bareActivityModel = fileSystemConnector.createBareActivity(sportsLibActivity);
-					return Promise.resolve(fileSystemConnector.extractActivityStreams(sportsLibActivity));
-				});
-				const athleteSettingsModel = AthleteSettingsModel.DEFAULT_MODEL;
-
-				const calculateGradeStreamSpy = spyOn(fileSystemConnector, "calculateGradeStream").and.callThrough();
-				const estimateCyclingPowerStreamSpy = spyOn(fileSystemConnector, "estimateCyclingPowerStream").and.callThrough();
-				const calculateGradeAdjustedSpeedSpy = spyOn(fileSystemConnector, "calculateGradeAdjustedSpeed").and.callThrough();
-
-				// When
-				promise.then((activityStreamsModel: ActivityStreamsModel) => {
-
-					const activityStreamsFullModel: ActivityStreamsModel = fileSystemConnector.appendAdditionalStreams(bareActivityModel, activityStreamsModel, athleteSettingsModel);
-
-					// Then
-					expect(activityStreamsFullModel.grade_smooth.length).toEqual(expectedSamplesLength);
-					expect(activityStreamsFullModel.grade_adjusted_speed.length).toEqual(expectedSamplesLength);
-					expect(calculateGradeStreamSpy).toHaveBeenCalledTimes(1);
-					expect(calculateGradeAdjustedSpeedSpy).toHaveBeenCalledTimes(1);
-					expect(estimateCyclingPowerStreamSpy).not.toHaveBeenCalled();
-					done();
-				});
-			});
-
-			it("should not calculate estimated power streams on cycling activity without distance or altitude", (done: Function) => {
+			it("should not calculate estimated power streams on cycling activity without grade stream", (done: Function) => {
 
 				// Given
 				const athleteSettingsModel = AthleteSettingsModel.DEFAULT_MODEL;
 				const bareActivityModel: BareActivityModel = new BareActivityModel();
 				bareActivityModel.type = ElevateSport.VirtualRide;
 				const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
-				activityStreamsModel.distance = [];
-				activityStreamsModel.altitude = [];
-				const calculateGradeStreamSpy = spyOn(fileSystemConnector, "calculateGradeStream").and.callThrough();
+				activityStreamsModel.grade_smooth = [];
 				const estimateCyclingPowerStreamSpy = spyOn(fileSystemConnector, "estimateCyclingPowerStream").and.callThrough();
 
 				// When
-				fileSystemConnector.appendAdditionalStreams(bareActivityModel, activityStreamsModel, athleteSettingsModel);
+				fileSystemConnector.computeAdditionalStreams(bareActivityModel, activityStreamsModel, athleteSettingsModel);
 
 				// Then
-				expect(calculateGradeStreamSpy).not.toHaveBeenCalled();
 				expect(estimateCyclingPowerStreamSpy).not.toHaveBeenCalled();
 				done();
 			});
-
-			it("should not calculate grade adjusted speed streams on running activity without distance or altitude", (done: Function) => {
-
-				// Given
-				const athleteSettingsModel = AthleteSettingsModel.DEFAULT_MODEL;
-				const bareActivityModel: BareActivityModel = new BareActivityModel();
-				bareActivityModel.type = ElevateSport.VirtualRun;
-				const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
-				activityStreamsModel.distance = [];
-				activityStreamsModel.altitude = [];
-				const calculateGradeStreamSpy = spyOn(fileSystemConnector, "calculateGradeStream").and.callThrough();
-				const calculateGradeAdjustedSpeedSpy = spyOn(fileSystemConnector, "calculateGradeAdjustedSpeed").and.callThrough();
-
-				// When
-				fileSystemConnector.appendAdditionalStreams(bareActivityModel, activityStreamsModel, athleteSettingsModel);
-
-				// Then
-				expect(calculateGradeStreamSpy).not.toHaveBeenCalled();
-				expect(calculateGradeAdjustedSpeedSpy).not.toHaveBeenCalled();
-				done();
-			});
-
 		});
 	});
 });

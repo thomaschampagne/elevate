@@ -10,10 +10,14 @@ export class ExtensionOpenResourceResolver extends OpenResourceResolver {
 	}
 
 	public openActivity(id: number | string): void {
-		this.openWebLink("https://www.strava.com/activities/" + id);
+		this.openLink("https://www.strava.com/activities/" + id);
 	}
 
-	public openWebLink(url: string): void {
+	public openSourceActivity(id: number | string): void {
+		this.openActivity(id);
+	}
+
+	public openLink(url: string): void {
 		window.open(url, "_blank");
 	}
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone, OnDestroy, OnInit } from "@angular/core";
+import { AfterViewInit, Component, Inject, NgZone, OnDestroy, OnInit } from "@angular/core";
 import { Location } from "@angular/common";
 import { ActivatedRoute } from "@angular/router";
 import { ActivityService } from "../shared/services/activity/activity.service";
@@ -8,6 +8,8 @@ import { LoggerService } from "../shared/services/logging/logger.service";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import { Helper } from "../../../../webextension/scripts/helper";
+import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 
 am4core.useTheme(am4themes_animated);
 
@@ -23,12 +25,13 @@ export class ActivityViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	public chart: am4charts.XYChart;
 
-	constructor(private zone: NgZone,
-				public activityService: ActivityService,
-				public streamsService: StreamsService,
-				public route: ActivatedRoute,
-				public location: Location,
-				public logger: LoggerService) {
+	constructor(@Inject(OPEN_RESOURCE_RESOLVER) private openResourceResolver: OpenResourceResolver,
+				private zone: NgZone,
+				private activityService: ActivityService,
+				private streamsService: StreamsService,
+				private route: ActivatedRoute,
+				private location: Location,
+				private logger: LoggerService) {
 		this.syncedActivityModel = null;
 		this.activityStreamsModel = null;
 	}
@@ -61,11 +64,15 @@ export class ActivityViewComponent implements OnInit, AfterViewInit, OnDestroy {
 			const chart = am4core.create("chartdiv", am4charts.XYChart);
 
 			const data = this.activityStreamsModel.time.map((time, index) => {
+				const speed = this.activityStreamsModel.velocity_smooth[index] * 3.6;
 				return {
-					speed: this.activityStreamsModel.velocity_smooth[index] * 3.6,
-					// heartrate: this.activityStreamsModel.heartrate[index],
-					gradeAdjustedSpeed: this.activityStreamsModel.grade_adjusted_speed[index] * 3.6,
+					speed: speed,
+					pace: Math.floor(Helper.convertSpeedToPace(speed)),
+					gap: Math.floor(Helper.convertSpeedToPace(this.activityStreamsModel.grade_adjusted_speed[index] * 3.6)),
 					altitude: this.activityStreamsModel.altitude[index],
+					grade: this.activityStreamsModel.grade_smooth[index],
+					heartrate: this.activityStreamsModel.heartrate[index],
+					watts: this.activityStreamsModel.watts[index],
 					date: new Date(this.activityStreamsModel.time[index] * 1000)
 				};
 			});
@@ -79,14 +86,18 @@ export class ActivityViewComponent implements OnInit, AfterViewInit, OnDestroy {
 			durationAxis.groupData = true;
 			durationAxis.groupCount = 800;
 
-			const speedSeries = this.createSeriesWithAxe(chart, "speed", "kph", "#0051be");
-			this.createSeriesWithAxe(chart, "gradeAdjustedSpeed", "kph", "#bf6900");
-			// this.createSeriesWithAxe(chart, "heartrate", "bpm", "#be0038");
-			this.createSeriesWithAxe(chart, "altitude", "m", "#2fbe53");
+			// const speedSeries =
+			this.createSeriesWithAxe(chart, "speed", "kph", "#0051be");
+			// this.createSeriesWithAxe(chart, "pace", "s/km", "#0c45bf");
+			// this.createSeriesWithAxe(chart, "gap", "s/km", "#9945bf");
+			// this.createSeriesWithAxe(chart, "grade", "%", "#bf8d00", 2);
+			this.createSeriesWithAxe(chart, "heartrate", "bpm", "#be0038");
+			const altitudeSerie = this.createSeriesWithAxe(chart, "altitude", "m", "#2fbe53", 2);
+			this.createSeriesWithAxe(chart, "watts", "w", "#686868");
 
 			const scrollbarX = new am4charts.XYChartScrollbar();
 			// scrollbarX.series.push(hrSeries);
-			scrollbarX.series.push(speedSeries);
+			scrollbarX.series.push(altitudeSerie);
 			chart.scrollbarX = scrollbarX;
 
 			chart.cursor = new am4charts.XYCursor();
@@ -95,7 +106,7 @@ export class ActivityViewComponent implements OnInit, AfterViewInit, OnDestroy {
 		});
 	}
 
-	private createSeriesWithAxe(chart: am4charts.XYChart, name: string, units: string, color: string) {
+	private createSeriesWithAxe(chart: am4charts.XYChart, name: string, units: string, color: string, strokeWidth: number = 1) {
 		const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 		valueAxis.title.text = name;
 		valueAxis.renderer.opposite = true;
@@ -103,7 +114,7 @@ export class ActivityViewComponent implements OnInit, AfterViewInit, OnDestroy {
 		const series = chart.series.push(new am4charts.LineSeries());
 		series.name = name;
 		series.stroke = am4core.color(color);
-		series.strokeWidth = 1;
+		series.strokeWidth = strokeWidth;
 		series.dataFields.valueY = name;
 		series.dataFields.dateX = "date";
 		series.tooltipText = name + ": {valueY.value} " + units;
@@ -121,9 +132,11 @@ export class ActivityViewComponent implements OnInit, AfterViewInit, OnDestroy {
 		});
 	}
 
-
 	public onBack(): void {
 		this.location.back();
 	}
 
+	public openSourceActivity(id: number | string): void {
+		this.openResourceResolver.openSourceActivity(id);
+	}
 }
