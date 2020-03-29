@@ -1,27 +1,11 @@
 import { IpcMainMessagesService } from "./ipc-main-messages-service";
 import { FlaggedIpcMessage, MessageFlag, RuntimeInfo } from "@elevate/shared/electron";
-import {
-	ActivityComputer,
-	CompleteSyncEvent,
-	ConnectorType,
-	ErrorSyncEvent,
-	FileSystemConnectorInfo,
-	GenericSyncEvent,
-	SyncEvent
-} from "@elevate/shared/sync";
+import { ActivityComputer, CompleteSyncEvent, ConnectorType, ErrorSyncEvent, FileSystemConnectorInfo, GenericSyncEvent, SyncEvent } from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
 import { Subject } from "rxjs";
 import { FileSystemConnector } from "../connectors/filesystem/file-system.connector";
 import { Service } from "../service";
-import {
-	ActivityStreamsModel,
-	AnalysisDataModel,
-	AthleteSettingsModel,
-	AthleteSnapshotModel,
-	Gender,
-	SyncedActivityModel,
-	UserSettings
-} from "@elevate/shared/models";
+import { ActivityStreamsModel, AnalysisDataModel, AthleteSettingsModel, AthleteSnapshotModel, Gender, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
@@ -237,7 +221,7 @@ describe("IpcMainMessagesService", () => {
 		it("should not start a sync already running", (done: Function) => {
 
 			// Given
-			ipcMainMessagesService.service.currentConnector = FileSystemConnector.create(null, null, null, null, null, null);
+			ipcMainMessagesService.service.currentConnector = FileSystemConnector.create(null, null, null, null);
 			ipcMainMessagesService.service.currentConnector.isSyncing = true;
 			const syncSpy = spyOn(ipcMainMessagesService.service.currentConnector, "sync").and.stub();
 
@@ -472,7 +456,7 @@ describe("IpcMainMessagesService", () => {
 				}
 			};
 
-			const connector = FileSystemConnector.create(null, null, null, null, null, null);
+			const connector = FileSystemConnector.create(null, null, null, null);
 			jest.spyOn(ipcMainMessagesService.service, "currentConnector", "get").mockReturnValue(connector);
 			const stopConnectorSyncSpy = spyOn(connector, "stop").and.stub();
 			const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();

@@ -24,8 +24,11 @@ import logger from "electron-log";
 import { Partial } from "rollup-plugin-typescript2/dist/partial";
 import { EventLibError } from "sports-lib/src/errors/event-lib.error";
 import { DataAscent } from "sports-lib/lib/data/data.ascent";
+import { DataSpeedMax } from "sports-lib/lib/data/data.speed-max";
+import { DataDuration } from "sports-lib/lib/data/data.duration";
 import { DataGrade } from "sports-lib/lib/data/data.grade";
 import { DataGradeAdjustedSpeed } from "sports-lib/lib/data/data.grade-adjusted-speed";
+import { DataSpeedAvg } from "sports-lib/lib/data/data.speed-avg";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export enum ActivityFileType {
@@ -62,13 +65,14 @@ export class FileSystemConnector extends BaseConnector {
 
 	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel,
 				connectorSyncDateTime: ConnectorSyncDateTime, inputDirectory: string, scanSubDirectories: boolean,
-				deleteActivityFilesAfterSync: boolean, extractArchiveFiles: boolean, deleteArchivesAfterExtract: boolean) {
+				deleteActivityFilesAfterSync: boolean, extractArchiveFiles: boolean, deleteArchivesAfterExtract: boolean, detectSportTypeWhenUnknown: boolean) {
 		super(ConnectorType.FILE_SYSTEM, athleteModel, userSettingsModel, connectorSyncDateTime, priority, FileSystemConnector.ENABLED);
 		this.inputDirectory = inputDirectory;
 		this.scanSubDirectories = scanSubDirectories;
 		this.deleteActivityFilesAfterSync = deleteActivityFilesAfterSync;
 		this.extractArchiveFiles = extractArchiveFiles;
 		this.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
+		this.detectSportTypeWhenUnknown = detectSportTypeWhenUnknown;
 		this.athleteMachineId = Service.instance().getRuntimeInfo().athleteMachineId;
 	}
 
@@ -191,7 +195,6 @@ export class FileSystemConnector extends BaseConnector {
 		{from: ActivityTypes.Treadmill, to: ElevateSport.Run},
 		{from: ActivityTypes.Trekking, to: ElevateSport.Hike},
 		{from: ActivityTypes.Triathlon, to: ElevateSport.Triathlon},
-		{from: ActivityTypes.UnknownSport, to: ElevateSport.Other},
 		{from: ActivityTypes.Velomobile, to: ElevateSport.Velomobile},
 		{from: ActivityTypes.VirtualCycling, to: ElevateSport.VirtualRide},
 		{from: ActivityTypes.VirtualRunning, to: ElevateSport.VirtualRun},
@@ -214,6 +217,7 @@ export class FileSystemConnector extends BaseConnector {
 	public deleteActivityFilesAfterSync: boolean;
 	public extractArchiveFiles: boolean;
 	public deleteArchivesAfterExtract: boolean;
+	public detectSportTypeWhenUnknown: boolean;
 	public athleteMachineId: string;
 
 	public static getAllUnPacker(): { unpack: Function } {
@@ -223,11 +227,11 @@ export class FileSystemConnector extends BaseConnector {
 		return this._allUnPackerInstance;
 	}
 
-	public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel,
-						 connectorSyncDateTime: ConnectorSyncDateTime, inputDirectory: string, scanSubDirectories: boolean = false,
-						 deleteActivityFilesAfterSync: boolean = false, extractArchiveFiles: boolean = false, deleteArchivesAfterExtract: boolean = false) {
-		return new FileSystemConnector(null, athleteModel, userSettingsModel, connectorSyncDateTime, inputDirectory, scanSubDirectories,
-			deleteActivityFilesAfterSync, extractArchiveFiles, deleteArchivesAfterExtract);
+	public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime, inputDirectory: string,
+						 scanSubDirectories: boolean = false, deleteActivityFilesAfterSync: boolean = false, extractArchiveFiles: boolean = false,
+						 deleteArchivesAfterExtract: boolean = false, detectSportTypeWhenUnknown: boolean = false) {
+		return new FileSystemConnector(null, athleteModel, userSettingsModel, connectorSyncDateTime, inputDirectory, scanSubDirectories, deleteActivityFilesAfterSync,
+			extractArchiveFiles, deleteArchivesAfterExtract, detectSportTypeWhenUnknown);
 	}
 
 	public sync(): Subject<SyncEvent> {
@@ -404,8 +408,8 @@ export class FileSystemConnector extends BaseConnector {
 												_.forEach(syncedActivityModels, (activityModel: SyncedActivityModel) => {
 													activitiesFound.push(activityModel.name + " (" + new Date(activityModel.start_time).toString() + ")");
 												});
-
-												const activityName = `${FileSystemConnector.HumanizedDayMoment.resolve(sportsLibActivity.startDate)} ${this.convertToElevateSport(sportsLibActivity.type)}`;
+												const elevateSportResult = this.convertToElevateSport(sportsLibActivity);
+												const activityName = `${FileSystemConnector.HumanizedDayMoment.resolve(sportsLibActivity.startDate)} ${elevateSportResult.type}`;
 
 												const errorSyncEvent = new ErrorSyncEvent(ConnectorType.FILE_SYSTEM,
 													ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.create(ConnectorType.FILE_SYSTEM, activityName,
@@ -447,9 +451,15 @@ export class FileSystemConnector extends BaseConnector {
 	public createBareActivity(sportsLibActivity: ActivityInterface): BareActivityModel {
 		const bareActivityModel: BareActivityModel = <BareActivityModel> new SyncedActivityModel();
 		bareActivityModel.id = BaseConnector.hashData(sportsLibActivity.startDate.toISOString());
-		bareActivityModel.type = this.convertToElevateSport(sportsLibActivity.type);
+		const elevateSportResult = this.convertToElevateSport(sportsLibActivity);
+		bareActivityModel.type = elevateSportResult.type;
 		bareActivityModel.display_type = bareActivityModel.type;
 		bareActivityModel.name = FileSystemConnector.HumanizedDayMoment.resolve(sportsLibActivity.startDate) + " " + bareActivityModel.type;
+
+		if (elevateSportResult.autoDetected) {
+			bareActivityModel.name += " #detected";
+		}
+
 		bareActivityModel.start_time = sportsLibActivity.startDate.toISOString();
 		bareActivityModel.end_time = sportsLibActivity.endDate.toISOString();
 		bareActivityModel.hasPowerMeter = sportsLibActivity.hasPowerMeter();
@@ -458,14 +468,98 @@ export class FileSystemConnector extends BaseConnector {
 		return bareActivityModel;
 	}
 
-
 	/**
 	 *
-	 * @param sportsLibType
+	 * @param sportsLibActivity
 	 */
-	public convertToElevateSport(sportsLibType: string): ElevateSport {
-		const entryFound = _.find(FileSystemConnector.SPORTS_LIB_TYPES_MAP, {from: sportsLibType});
-		return entryFound ? entryFound.to : ElevateSport.Other;
+	public convertToElevateSport(sportsLibActivity: ActivityInterface): { type: ElevateSport, autoDetected: boolean } {
+		const entryFound = _.find(FileSystemConnector.SPORTS_LIB_TYPES_MAP, {from: sportsLibActivity.type});
+		if (entryFound) {
+			return {type: entryFound.to, autoDetected: false};
+		} else {
+			if (this.detectSportTypeWhenUnknown) {
+				const stats = sportsLibActivity.getStats();
+				const elevateSport = this.attemptDetectCommonSport(<number> stats.get(DataDistance.type).getValue(), <number> stats.get(DataDuration.type).getValue(),
+					<number> stats.get(DataAscent.type).getValue(), <number> stats.get(DataSpeedAvg.type).getValue(), <number> stats.get(DataSpeedMax.type).getValue());
+				return {type: elevateSport, autoDetected: (elevateSport !== ElevateSport.Other)};
+			} else {
+				return {type: ElevateSport.Other, autoDetected: false};
+			}
+		}
+	}
+
+	public attemptDetectCommonSport(distance: number, duration: number, ascent: number, avgSpeed: number, maxSpeed: number): ElevateSport {
+
+		const MAX_CYCLING_SPEED_THRESHOLD = 100 / 3.6; // 100kph
+		const MAX_RUNNING_SPEED_THRESHOLD = 40 / 3.6; // 40kph
+
+		/**
+		 * Modelize the max possible running average speed to perform the given distance
+		 *
+		 * Data:
+		 * meters, avg kph
+		 * -----------
+		 * 0.4, 33.4
+		 * 1, 27
+		 * 5, 23.7
+		 * 10, 22.7
+		 * 21, 21.7
+		 * 42, 20.71
+		 * @param meters running distance
+		 * @return max running average speed in m/s
+		 */
+		const maxAvgRunningSpeedForDistance = (meters: number): number => {
+			const perfRatio = 0.80; // Percentage of performance reachable by a well trained athlete (1 => world record);
+			const y0 = 21.485097981749487;
+			const a = 7.086180143945561;
+			const x0 = -0.19902800428936693;
+			return (y0 + a / ((meters / 1000) - x0)) / 3.6 * perfRatio;
+		};
+
+		/**
+		 * Detect if entry param could have been performed with or without climb assitance
+		 * @param pMaxSpeed
+		 * @param pDistance
+		 * @param pDuration
+		 * @param pAscent
+		 */
+		const isAssisted = (pMaxSpeed: number, pDistance: number, pDuration: number, pAscent: number): boolean => {
+			const criteria = (Math.pow(pAscent, 2) / ((pDistance / 1000) * (pDuration / 60))) / 1000;
+			return criteria >= 1;
+		};
+
+		if (maxSpeed > 0) {
+			if (maxSpeed >= MAX_CYCLING_SPEED_THRESHOLD || maxSpeed >= MAX_RUNNING_SPEED_THRESHOLD) {
+				return isAssisted(maxSpeed, distance, duration, ascent) ? ElevateSport.Other : ElevateSport.Ride;
+			}
+		}
+
+		if (avgSpeed > 0 && distance > 0 && maxSpeed > 0) {
+			const maxAvgRunningSpeed = maxAvgRunningSpeedForDistance(distance);
+
+			const grade = ascent / distance * 1000;
+			const gradeSpeed = avgSpeed + avgSpeed * (grade / 100) * 1.5;
+
+			if (gradeSpeed > maxAvgRunningSpeed) {
+				return isAssisted(maxSpeed, distance, duration, ascent) ? ElevateSport.Other : ElevateSport.Ride;
+			} else {
+
+				const highlightRideActivity = ((Math.pow(maxSpeed - avgSpeed, 3) * Math.pow(maxSpeed, 4)) / Math.pow(10, 4) * 2) / 5;
+				const decisionSecureTolerance = 0.2;
+
+				const isRide = highlightRideActivity > (1 + decisionSecureTolerance);
+				if (isRide) {
+					return ElevateSport.Ride;
+				}
+
+				const isRun = highlightRideActivity < (1 - decisionSecureTolerance);
+				if (isRun) {
+					return ElevateSport.Run;
+				}
+			}
+		}
+
+		return ElevateSport.Other;
 	}
 
 	/**
