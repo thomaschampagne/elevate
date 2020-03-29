@@ -19,7 +19,7 @@ export class FileSystemConnectorInfoService {
 			const connectorInfo: FileSystemConnectorInfo = storedConnectorInfo ? JSON.parse(storedConnectorInfo) : null;
 			if (connectorInfo) {
 				return new FileSystemConnectorInfo(connectorInfo.sourceDirectory, connectorInfo.scanSubDirectories, connectorInfo.deleteActivityFilesAfterSync,
-					connectorInfo.extractArchiveFiles, connectorInfo.deleteArchivesAfterExtract);
+					connectorInfo.extractArchiveFiles, connectorInfo.deleteArchivesAfterExtract, connectorInfo.detectSportTypeWhenUnknown);
 			} else {
 				return FileSystemConnectorInfoService.FileSystemConnectorInfoDao.DEFAULT_STORAGE_VALUE;
 			}

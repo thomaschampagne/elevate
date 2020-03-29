@@ -108,7 +108,7 @@ export class IpcMainMessagesService {
 
 			this.service.currentConnector = FileSystemConnector.create(athleteModel, userSettingsModel, fsConnectorSyncDateTime,
 				fileSystemConnectorInfo.sourceDirectory, fileSystemConnectorInfo.scanSubDirectories, fileSystemConnectorInfo.deleteActivityFilesAfterSync,
-				fileSystemConnectorInfo.extractArchiveFiles, fileSystemConnectorInfo.deleteArchivesAfterExtract);
+				fileSystemConnectorInfo.extractArchiveFiles, fileSystemConnectorInfo.deleteArchivesAfterExtract, fileSystemConnectorInfo.detectSportTypeWhenUnknown);
 
 		} else {
 

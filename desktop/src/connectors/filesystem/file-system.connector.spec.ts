@@ -972,32 +972,132 @@ describe("FileSystemConnector", () => {
 			});
 		});
 
-		it("should convert known 'sports-lib' type to ElevateSport", (done: Function) => {
-			// Given
-			const sportsLibType = "Cycling";
-			const expectedElevateSport = ElevateSport.Ride;
+		describe("Find elevate sport type", () => {
 
-			// When
-			const elevateSport: ElevateSport = fileSystemConnector.convertToElevateSport(sportsLibType);
+			it("should convert known 'sports-lib' type to ElevateSport", (done: Function) => {
+				// Given
+				const sportsLibActivity: ActivityInterface = <ActivityInterface> {type: "Cycling"};
+				const expectedElevateSport = ElevateSport.Ride;
 
-			// Then
-			expect(elevateSport).toEqual(expectedElevateSport);
+				// When
+				const elevateSportResult: { type: ElevateSport, autoDetected: boolean } = fileSystemConnector.convertToElevateSport(sportsLibActivity);
 
-			done();
-		});
+				// Then
+				expect(elevateSportResult.type).toEqual(expectedElevateSport);
 
-		it("should convert unknown 'sports-lib' type to ElevateSport other type", (done: Function) => {
-			// Given
-			const sportsLibType = "FakeSport";
-			const expectedElevateSport = ElevateSport.Other;
+				done();
+			});
 
-			// When
-			const elevateSport: ElevateSport = fileSystemConnector.convertToElevateSport(sportsLibType);
+			it("should convert unknown 'sports-lib' type to ElevateSport other type", (done: Function) => {
+				// Given
+				fileSystemConnector.detectSportTypeWhenUnknown = true;
+				const sportsLibActivity: ActivityInterface = <any> {
+					type: <ActivityTypes> "FakeSport", getStats: () => {
+					}
+				};
 
-			// Then
-			expect(elevateSport).toEqual(expectedElevateSport);
+				spyOn(sportsLibActivity, "getStats").and.returnValue({
+					get: () => {
+						return {
+							getValue: () => {
+								return {};
+							}
+						};
+					}
+				});
+				const attemptDetectCommonSportSpy = spyOn(fileSystemConnector, "attemptDetectCommonSport").and.returnValue(ElevateSport.Other);
 
-			done();
+				// When
+				fileSystemConnector.convertToElevateSport(sportsLibActivity);
+
+				// Then
+				expect(attemptDetectCommonSportSpy).toHaveBeenCalledTimes(1);
+
+				done();
+			});
+
+			it("should attempt to find Elevate Sport when type is unknown", (done: Function) => {
+
+				interface TestData {
+					distance: number;
+					duration: number;
+					ascent: number;
+					avgSpeed: number;
+					maxSpeed: number;
+					expectedSport: ElevateSport;
+				}
+
+				const prepareTestData = (data: TestData) => {
+					data.distance = data.distance * 1000; // km to meters
+					data.duration = data.duration * 60; // min to seconds
+					data.avgSpeed = data.avgSpeed / 3.6; // kph to m/s
+					data.maxSpeed = data.maxSpeed / 3.6; // kph to m/s
+					return data;
+				};
+
+				// Given
+				const activitiesTestData: Partial<TestData>[] = [
+
+					// Rides
+					{distance: 162, duration: 268, ascent: 3562.2, avgSpeed: 36.3, maxSpeed: 81.7, expectedSport: ElevateSport.Ride},
+					{distance: 66, duration: 213, ascent: 1578, avgSpeed: 20.9, maxSpeed: 70.9, expectedSport: ElevateSport.Ride},
+					{distance: 30, duration: 60, ascent: 15, avgSpeed: 30, maxSpeed: 55, expectedSport: ElevateSport.Ride},
+					{distance: 17, duration: 41, ascent: 33, avgSpeed: 26, maxSpeed: 37.4, expectedSport: ElevateSport.Ride},
+					{distance: 168, duration: 506, ascent: 274, avgSpeed: 28, maxSpeed: 45.3, expectedSport: ElevateSport.Ride},
+					{distance: 32, duration: 70, ascent: 721, avgSpeed: 27.5, maxSpeed: 91.8, expectedSport: ElevateSport.Ride},
+					{distance: 49, duration: 135, ascent: 1054.56, avgSpeed: 22.2, maxSpeed: 77, expectedSport: ElevateSport.Ride},
+					{distance: 141, duration: 394, ascent: 4043.44, avgSpeed: 21.9, maxSpeed: 70.5, expectedSport: ElevateSport.Ride},
+					{distance: 31, duration: 94, ascent: 525, avgSpeed: 20, maxSpeed: 56.5, expectedSport: ElevateSport.Ride},
+					{distance: 44, duration: 122, ascent: 554, avgSpeed: 22.1, maxSpeed: 61.2, expectedSport: ElevateSport.Ride},
+					{distance: 82, duration: 217, ascent: 1098, avgSpeed: 25.4, maxSpeed: 61.9, expectedSport: ElevateSport.Ride},
+					{distance: 53, duration: 90, ascent: null, avgSpeed: 35.3, maxSpeed: 39.9, expectedSport: ElevateSport.Ride},
+					{distance: 32, duration: 90, ascent: null, avgSpeed: 21.9, maxSpeed: 28.4, expectedSport: ElevateSport.Ride},
+					{distance: 12, duration: 23, ascent: 20, avgSpeed: 30.8, maxSpeed: 38.1, expectedSport: ElevateSport.Ride},
+					{distance: 20, duration: 79, ascent: 99, avgSpeed: 22.4, maxSpeed: 38.8, expectedSport: ElevateSport.Ride},
+
+					// Runs
+					{distance: 12, duration: 57, ascent: 226, avgSpeed: 12.8, maxSpeed: 17, expectedSport: ElevateSport.Run},
+					{distance: 3, duration: 37, ascent: 16.2052, avgSpeed: 6.6, maxSpeed: 18.3, expectedSport: ElevateSport.Other}, // It's "Run" but too much doubt, then type: Other
+					{distance: 6, duration: 56, ascent: 343, avgSpeed: 6.7, maxSpeed: 12, expectedSport: ElevateSport.Run},
+					{distance: 6.17, duration: 34, ascent: 316, avgSpeed: 10, maxSpeed: 16.4, expectedSport: ElevateSport.Run},
+					{distance: 8, duration: 38, ascent: 44.5919, avgSpeed: 13.3, maxSpeed: 21.9, expectedSport: ElevateSport.Run},
+					{distance: 5, duration: 28, ascent: 10.1495, avgSpeed: 10.9, maxSpeed: 18.3, expectedSport: ElevateSport.Run},
+					{distance: 4, duration: 33, ascent: 6, avgSpeed: 10.4, maxSpeed: 15.8, expectedSport: ElevateSport.Run},
+					{distance: 2, duration: 28, ascent: 37, avgSpeed: 6.3, maxSpeed: 11.5, expectedSport: ElevateSport.Run},
+					{distance: 12, duration: 77, ascent: 42, avgSpeed: 9.8, maxSpeed: 13.6, expectedSport: ElevateSport.Run},
+					{distance: 1, duration: 25, ascent: 17.145, avgSpeed: 4.6, maxSpeed: 7.9, expectedSport: ElevateSport.Run},
+					{distance: 15, duration: 62, ascent: 205.137, avgSpeed: 14.5, maxSpeed: 20.8, expectedSport: ElevateSport.Run},
+					{distance: 1, duration: 14, ascent: null, avgSpeed: 6.3, maxSpeed: 12.9, expectedSport: ElevateSport.Run},
+					{distance: 6, duration: 109, ascent: 594.8, avgSpeed: 4.8, maxSpeed: 10.4, expectedSport: ElevateSport.Run},
+					{distance: 2, duration: 41, ascent: 12.4471, avgSpeed: 4.7, maxSpeed: 12.2, expectedSport: ElevateSport.Run},
+
+					// Low pace Rides
+					{distance: 1, duration: 6, ascent: 2, avgSpeed: 21.3, maxSpeed: 33.4, expectedSport: ElevateSport.Ride},
+					{distance: 1, duration: 6, ascent: null, avgSpeed: 19.4, maxSpeed: 29.5, expectedSport: ElevateSport.Ride},
+					{distance: 7, duration: 88, ascent: 55, avgSpeed: 8.4, maxSpeed: 19.8, expectedSport: ElevateSport.Other}, // It's "Ride" but too much doubt, then type: Other
+					{distance: 11, duration: 111, ascent: 103.688, avgSpeed: 12.2, maxSpeed: 34.2, expectedSport: ElevateSport.Ride},
+					{distance: 2, duration: 7, ascent: 14, avgSpeed: 19.9, maxSpeed: 28.8, expectedSport: ElevateSport.Ride},
+
+					// Skiing
+					{distance: 129, duration: 477, ascent: 14283, avgSpeed: 18.3, maxSpeed: 108.7, expectedSport: ElevateSport.Other},
+					{distance: 100, duration: 398, ascent: 10511, avgSpeed: 17.6, maxSpeed: 144.3, expectedSport: ElevateSport.Other},
+					{distance: 42, duration: 224, ascent: 3405, avgSpeed: 13.2, maxSpeed: 85.3, expectedSport: ElevateSport.Other},
+					{distance: 40, duration: 297, ascent: 4477, avgSpeed: 13.2, maxSpeed: 81.3, expectedSport: ElevateSport.Other},
+
+					// Unexpected with strange values
+					{distance: 10, duration: 60, ascent: 10, avgSpeed: null, maxSpeed: null, expectedSport: ElevateSport.Other},
+					{distance: null, duration: 60, ascent: 10, avgSpeed: 10, maxSpeed: 15, expectedSport: ElevateSport.Other},
+
+				].map(testData => prepareTestData(testData));
+
+				// When, Then
+				activitiesTestData.forEach((testData, index) => {
+					const elevateSport = fileSystemConnector.attemptDetectCommonSport(testData.distance, testData.duration, testData.ascent, testData.avgSpeed, testData.maxSpeed);
+					expect(elevateSport).toEqual(testData.expectedSport);
+				});
+
+				done();
+			});
 		});
 
 		describe("Update primitive data from computation or input source", () => {
