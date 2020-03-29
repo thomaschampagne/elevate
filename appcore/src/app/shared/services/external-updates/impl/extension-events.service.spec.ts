@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { ExtensionEventsService } from "./extension-events.service";
-import { CoreMessages, SyncResultModel } from "../../../../../../modules/shared/models";
+import { CoreMessages, SyncResultModel } from "@elevate/shared/models";
 
 describe("ExtensionEventsService", () => {
 
@@ -10,7 +10,8 @@ describe("ExtensionEventsService", () => {
 	beforeEach((done: Function) => {
 
 		spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
-			addListener: () => {
+			// @ts-ignore
+			addListener: (message: any, sender: any, sendResponse: any) => {
 			}
 		});
 

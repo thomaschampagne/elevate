@@ -415,7 +415,7 @@ describe("ActivityService", () => {
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
-				.and.returnValue(Promise.resolve([]));
+				.and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
 
 			// When
 			const promise = activityService.isAthleteSettingsConsistent();

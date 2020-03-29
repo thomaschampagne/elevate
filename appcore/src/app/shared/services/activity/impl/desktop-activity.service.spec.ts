@@ -105,7 +105,7 @@ describe("DesktopActivityService", () => {
 
 			const athleteSnapshotUpdateSpy = spyOn(desktopActivityService.athleteSnapshotResolverService, "update").and.returnValue(Promise.resolve());
 			const athleteSnapshotResolveSpy = spyOn(desktopActivityService.athleteSnapshotResolverService, "resolve").and.returnValue(athleteSnapshotModel);
-			const streamGetByIdSpy = spyOn(desktopActivityService.streamsService, "getById").and.returnValue(compressedStreamModel);
+			const streamGetByIdSpy = spyOn(desktopActivityService.streamsService, "getById").and.returnValue(Promise.resolve(compressedStreamModel));
 			const deflateCompressedStreamSpy = spyOn(ActivityStreamsModel, "deflate").and.returnValue(streams);
 			const selfComputeSpy = spyOn(desktopActivityService, "compute").and.callThrough();
 			const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(Promise.resolve(expectedSyncedActivityModel));

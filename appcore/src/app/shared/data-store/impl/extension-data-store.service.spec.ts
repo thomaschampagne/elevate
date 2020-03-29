@@ -105,7 +105,7 @@ describe("ExtensionDataStore", () => {
 		extensionDataStore = TestBed.inject(ExtensionDataStore);
 
 		// Mock EXTENSION_STORAGE_STUB
-		browserStorageLocalSpy = spyOn(extensionDataStore, "chromeLocalStorageArea").and.callFake(extensionStorageBehaviour);
+		browserStorageLocalSpy = spyOn(extensionDataStore, "chromeLocalStorageArea").and.callFake(<any> extensionStorageBehaviour);
 		EXTENSION_STORAGE_STUB = {}; // Erase storage
 		DEFAULT_FOO = {
 			id: "0001",

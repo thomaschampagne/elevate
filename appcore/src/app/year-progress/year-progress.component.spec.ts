@@ -39,7 +39,8 @@ describe("YearProgressComponent", () => {
 	beforeEach((done: Function) => {
 
 		spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
-			addListener: (request: any, sender: chrome.runtime.MessageSender) => {
+			// @ts-ignore
+			addListener: (message: any, sender: any, sendResponse: any) => {
 			}
 		});
 

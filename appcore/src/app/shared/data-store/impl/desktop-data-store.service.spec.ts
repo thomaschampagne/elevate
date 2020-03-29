@@ -1228,9 +1228,9 @@ describe("DesktopDataStore", () => {
 			const activitiesDestroySpy = spyOn(DesktopDataStore.DATABASES.activities, "destroy").and.returnValue(Promise.resolve());
 			const streamsDestroySpy = spyOn(DesktopDataStore.DATABASES.streams, "destroy").and.returnValue(Promise.resolve());
 
-			const defaultAllDocsSpy = spyOn(DesktopDataStore.DATABASES.main, "bulkDocs").and.returnValue(Promise.resolve());
-			const activitiesAllDocsSpy = spyOn(DesktopDataStore.DATABASES.activities, "bulkDocs").and.returnValue(Promise.resolve());
-			const streamsAllDocsSpy = spyOn(DesktopDataStore.DATABASES.streams, "bulkDocs").and.returnValue(Promise.resolve());
+			const defaultAllDocsSpy = spyOn(DesktopDataStore.DATABASES.main, "bulkDocs").and.returnValue(Promise.resolve([]));
+			const activitiesAllDocsSpy = spyOn(DesktopDataStore.DATABASES.activities, "bulkDocs").and.returnValue(Promise.resolve([]));
+			const streamsAllDocsSpy = spyOn(DesktopDataStore.DATABASES.streams, "bulkDocs").and.returnValue(Promise.resolve([]));
 
 			const setupDbSpy = spyOn(desktopDataStore, "setup").and.stub();
 

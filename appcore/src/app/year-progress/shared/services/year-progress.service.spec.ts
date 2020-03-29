@@ -1380,7 +1380,7 @@ describe("YearProgressService", () => {
 				.and.returnValue(Promise.resolve(progressPresetModels));
 
 			const saveDaoSpy = spyOn(service.yearProgressPresetDao, "save")
-				.and.returnValue(Promise.resolve());
+				.and.returnValue(Promise.resolve([]));
 
 			const deleteId = model_1.id;
 
