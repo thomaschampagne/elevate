@@ -25,7 +25,7 @@ import {
 import { RunningPowerEstimator } from "./running-power-estimator";
 import { SplitCalculator } from "./split-calculator";
 import { ElevateSport } from "../../enums";
-import { LowPassFilter } from "../../tools";
+import { KalmanFilter, LowPassFilter } from "../../tools";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export class ActivityComputer {
@@ -348,6 +348,8 @@ export class ActivityComputer {
 	}
 
 	protected smoothAltitudeStream(altitudeStream: number[]): number[] {
+		const kalman = new KalmanFilter();
+		altitudeStream = altitudeStream.map(elevation => kalman.filter(elevation));
 		const lowPassFilter = new LowPassFilter(0.2);
 		return lowPassFilter.smoothArray(altitudeStream);
 	}

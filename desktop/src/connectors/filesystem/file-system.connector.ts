@@ -1,24 +1,7 @@
 import { BaseConnector, PrimitiveSourceData } from "../base.connector";
-import {
-	ActivitySyncEvent,
-	ConnectorType,
-	ErrorSyncEvent,
-	GenericSyncEvent,
-	StartedSyncEvent,
-	StoppedSyncEvent,
-	SyncEvent,
-	SyncEventType
-} from "@elevate/shared/sync";
+import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, GenericSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { ReplaySubject, Subject } from "rxjs";
-import {
-	ActivityStreamsModel,
-	AthleteModel,
-	AthleteSettingsModel,
-	BareActivityModel,
-	ConnectorSyncDateTime,
-	SyncedActivityModel,
-	UserSettings
-} from "@elevate/shared/models";
+import { ActivityStreamsModel, AthleteModel, AthleteSettingsModel, BareActivityModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
@@ -28,7 +11,7 @@ import { EventInterface } from "sports-lib/lib/events/event.interface";
 import { ActivityInterface } from "sports-lib/lib/activities/activity.interface";
 import { ElevateSport } from "@elevate/shared/enums";
 import { SportsLib } from "sports-lib";
-import { ActivityTypes } from "sports-lib/lib/activities/activity.types";
+import { ActivityTypeGroups, ActivityTypes, ActivityTypesHelper } from "sports-lib/lib/activities/activity.types";
 import { DataSpeed } from "sports-lib/lib/data/data.speed";
 import { DataLongitudeDegrees } from "sports-lib/lib/data/data.longitude-degrees";
 import { DataLatitudeDegrees } from "sports-lib/lib/data/data.latitude-degrees";
@@ -38,11 +21,11 @@ import { DataCadence } from "sports-lib/lib/data/data.cadence";
 import { DataHeartRate } from "sports-lib/lib/data/data.heart-rate";
 import { DataPower } from "sports-lib/lib/data/data.power";
 import logger from "electron-log";
-import { GradeCalculator } from "../../estimators/grade-calculator/grade-calculator";
 import { Partial } from "rollup-plugin-typescript2/dist/partial";
-import { ElevateException } from "@elevate/shared/exceptions";
 import { EventLibError } from "sports-lib/src/errors/event-lib.error";
 import { DataAscent } from "sports-lib/lib/data/data.ascent";
+import { DataGrade } from "sports-lib/lib/data/data.grade";
+import { DataGradeAdjustedSpeed } from "sports-lib/lib/data/data.grade-adjusted-speed";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export enum ActivityFileType {
@@ -371,7 +354,7 @@ export class FileSystemConnector extends BaseConnector {
 												syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(syncedActivityModel.start_time);
 
 												// Prepare streams
-												const activityStreamsModel = this.appendAdditionalStreams(bareActivity,
+												const activityStreamsModel = this.computeAdditionalStreams(bareActivity,
 													this.extractActivityStreams(sportsLibActivity), syncedActivityModel.athleteSnapshot.athleteSettings);
 
 												// Compute activity
@@ -519,7 +502,7 @@ export class FileSystemConnector extends BaseConnector {
 
 		// Time via distance stream
 		try {
-			activityStreamsModel.time = sportsLibActivity.getStream(DataDistance.type).getDurationOfData(true, true);
+			activityStreamsModel.time = sportsLibActivity.generateTimeStream([DataDistance.type]).getData(true, true);
 		} catch (err) {
 			logger.info("No distance stream found for activity starting at " + sportsLibActivity.startDate);
 		}
@@ -577,21 +560,28 @@ export class FileSystemConnector extends BaseConnector {
 			logger.info("No power stream found for activity starting at " + sportsLibActivity.startDate);
 		}
 
+		// Grade
+		try {
+			activityStreamsModel.grade_smooth = sportsLibActivity.getSquashedStreamData(DataGrade.type);
+		} catch (err) {
+			logger.info("No grade stream found for activity starting at " + sportsLibActivity.startDate);
+		}
+
+		// Grade adjusted speed
+		try {
+			if (ActivityTypesHelper.getActivityGroupForActivityType(sportsLibActivity.type) === ActivityTypeGroups.Running) {
+				activityStreamsModel.grade_adjusted_speed = sportsLibActivity.getSquashedStreamData(DataGradeAdjustedSpeed.type);
+			}
+		} catch (err) {
+			logger.info("No grade adjusted speed stream found for activity starting at " + sportsLibActivity.startDate);
+		}
+
+
 		return activityStreamsModel;
 	}
 
-	public appendAdditionalStreams(bareActivityModel: BareActivityModel, activityStreamsModel: ActivityStreamsModel,
-								   athleteSettingsModel: AthleteSettingsModel): ActivityStreamsModel {
-
-		// Grade
-		try {
-			if (!_.isEmpty(activityStreamsModel.distance) && !_.isEmpty(activityStreamsModel.altitude)) {
-				activityStreamsModel.grade_smooth = this.calculateGradeStream(activityStreamsModel.distance, activityStreamsModel.altitude);
-			}
-
-		} catch (err) {
-			logger.info(err.message, err);
-		}
+	public computeAdditionalStreams(bareActivityModel: BareActivityModel, activityStreamsModel: ActivityStreamsModel,
+									athleteSettingsModel: AthleteSettingsModel): ActivityStreamsModel {
 
 		if (!_.isEmpty(activityStreamsModel.grade_smooth)) {
 
@@ -607,57 +597,9 @@ export class FileSystemConnector extends BaseConnector {
 				logger.info(err.message, err);
 				delete activityStreamsModel.watts_calc;
 			}
-
-			// Grade adjusted speed
-			try {
-				if (bareActivityModel.type === ElevateSport.Run || bareActivityModel.type === ElevateSport.VirtualRun) {
-					activityStreamsModel.grade_adjusted_speed = this.calculateGradeAdjustedSpeed(bareActivityModel.type,
-						activityStreamsModel.velocity_smooth, activityStreamsModel.grade_smooth);
-				}
-			} catch (err) {
-				logger.info(err.message, err);
-			}
 		}
 
 		return activityStreamsModel;
-	}
-
-	public calculateGradeStream(distanceStream: number[], altitudeStream: number[]): number[] {
-
-		if (_.isEmpty(distanceStream)) {
-			throw new ElevateException("Distance stream cannot be empty to calculate grade stream");
-		}
-
-		if (_.isEmpty(altitudeStream)) {
-			throw new ElevateException("Altitude stream cannot be empty to calculate grade stream");
-		}
-
-		return GradeCalculator.computeGradeStream(distanceStream, altitudeStream);
-	}
-
-	public calculateGradeAdjustedSpeed(type: ElevateSport, velocityStream: number[], gradeStream: number[]): number[] {
-
-		if (_.isEmpty(velocityStream)) {
-			throw new ElevateException("Velocity stream cannot be empty to calculate grade adjusted speed stream");
-		}
-
-		if (_.isEmpty(gradeStream)) {
-			throw new ElevateException("Grade stream cannot be empty to calculate grade adjusted speed stream");
-		}
-
-		if (type !== ElevateSport.Run && type !== ElevateSport.VirtualRun) {
-			throw new ElevateException(`Cannot compute grade adjusted speed data on activity type: ${type}. Must be running like.`);
-		}
-
-		const gradeAdjustedSpeedStream = [];
-
-		for (let i = 0; i < velocityStream.length; i++) {
-			const mps = velocityStream[i];
-			const adjustedSpeed = GradeCalculator.estimateAdjustedSpeed(mps, gradeStream[i]);
-			gradeAdjustedSpeedStream.push(adjustedSpeed);
-		}
-
-		return gradeAdjustedSpeedStream;
 	}
 
 	public scanForActivities(directory: string, afterDate: Date = null, recursive: boolean = false, pathsList = []): ActivityFile[] {
