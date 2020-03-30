@@ -42,29 +42,6 @@ export class PrimitiveSourceData {
 
 export abstract class BaseConnector {
 
-	public type: ConnectorType;
-	public athleteModel: AthleteModel;
-	public userSettingsModel: UserSettingsModel;
-	public athleteSnapshotResolver: AthleteSnapshotResolver;
-	public priority: number;
-	public enabled: boolean;
-	public isSyncing: boolean;
-	public stopRequested: boolean;
-	public syncDateTime: number;
-	public syncEvents$: ReplaySubject<SyncEvent>;
-
-	public abstract sync(): Subject<SyncEvent>;
-
-	/**
-	 * Hash data
-	 * @param data
-	 * @param divide
-	 */
-	public static hashData(data: BinaryLike, divide: number = null): string {
-		const sha1 = crypto.createHash("sha1").update(data).digest("hex");
-		return sha1.slice(0, divide ? sha1.length / divide : sha1.length);
-	}
-
 	protected constructor(type: ConnectorType, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime, priority: number, enabled: boolean) {
 		this.type = type;
 		this.athleteModel = athleteModel;
@@ -78,42 +55,25 @@ export abstract class BaseConnector {
 		this.stopRequested = false;
 	}
 
-	public stop(): Promise<void> {
-
-		this.stopRequested = true;
-
-		return new Promise((resolve, reject) => {
-
-			if (this.isSyncing) {
-				const stopSubscription = this.syncEvents$.pipe(
-					filter(syncEvent => syncEvent.type === SyncEventType.STOPPED)
-				).subscribe(() => {
-					stopSubscription.unsubscribe();
-					this.stopRequested = false;
-					resolve();
-				});
-			} else {
-				setTimeout(() => {
-					this.stopRequested = false;
-					reject(this.type + " connector is not syncing currently.");
-				});
-			}
-		});
-	}
-
-	public computeExtendedStats(syncedActivityModel: Partial<SyncedActivityModel>, athleteSnapshotModel: AthleteSnapshotModel,
-								userSettingsModel: UserSettingsModel, streams: ActivityStreamsModel): AnalysisDataModel {
-		return ActivityComputer.calculate(<BareActivityModel> syncedActivityModel, athleteSnapshotModel, userSettingsModel, streams);
-	}
+	public type: ConnectorType;
+	public athleteModel: AthleteModel;
+	public userSettingsModel: UserSettingsModel;
+	public athleteSnapshotResolver: AthleteSnapshotResolver;
+	public priority: number;
+	public enabled: boolean;
+	public isSyncing: boolean;
+	public stopRequested: boolean;
+	public syncDateTime: number;
+	public syncEvents$: ReplaySubject<SyncEvent>;
 
 	/**
-	 *
-	 * @param activityStartDate
-	 * @param activityDurationSeconds
+	 * Hash data
+	 * @param data
+	 * @param divide
 	 */
-	public findSyncedActivityModels(activityStartDate: string, activityDurationSeconds: number): Promise<SyncedActivityModel[]> {
-		const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.FIND_ACTIVITY, activityStartDate, activityDurationSeconds);
-		return Service.instance().ipcMainMessages.send<SyncedActivityModel[]>(flaggedIpcMessage);
+	public static hashData(data: BinaryLike, divide: number = null): string {
+		const sha1 = crypto.createHash("sha1").update(data).digest("hex");
+		return sha1.slice(0, divide ? sha1.length / divide : sha1.length);
 	}
 
 	/**
@@ -122,9 +82,8 @@ export abstract class BaseConnector {
 	 * @param activityStreamsModel
 	 * @param primitiveSourceData
 	 */
-	public updatePrimitiveStatsFromComputation(syncedActivityModel: SyncedActivityModel,
-											   activityStreamsModel: ActivityStreamsModel,
-											   primitiveSourceData: PrimitiveSourceData): SyncedActivityModel {
+	public static updatePrimitiveStatsFromComputation(syncedActivityModel: SyncedActivityModel, activityStreamsModel: ActivityStreamsModel,
+													  primitiveSourceData: PrimitiveSourceData = null): SyncedActivityModel {
 
 		if (syncedActivityModel.extendedStats) {
 			// Time
@@ -171,6 +130,46 @@ export abstract class BaseConnector {
 		}
 		return syncedActivityModel;
 
+	}
+
+	public abstract sync(): Subject<SyncEvent>;
+
+	public stop(): Promise<void> {
+
+		this.stopRequested = true;
+
+		return new Promise((resolve, reject) => {
+
+			if (this.isSyncing) {
+				const stopSubscription = this.syncEvents$.pipe(
+					filter(syncEvent => syncEvent.type === SyncEventType.STOPPED)
+				).subscribe(() => {
+					stopSubscription.unsubscribe();
+					this.stopRequested = false;
+					resolve();
+				});
+			} else {
+				setTimeout(() => {
+					this.stopRequested = false;
+					reject(this.type + " connector is not syncing currently.");
+				});
+			}
+		});
+	}
+
+	public computeExtendedStats(syncedActivityModel: Partial<SyncedActivityModel>, athleteSnapshotModel: AthleteSnapshotModel,
+								userSettingsModel: UserSettingsModel, streams: ActivityStreamsModel): AnalysisDataModel {
+		return ActivityComputer.calculate(<BareActivityModel> syncedActivityModel, athleteSnapshotModel, userSettingsModel, streams);
+	}
+
+	/**
+	 *
+	 * @param activityStartDate
+	 * @param activityDurationSeconds
+	 */
+	public findSyncedActivityModels(activityStartDate: string, activityDurationSeconds: number): Promise<SyncedActivityModel[]> {
+		const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.FIND_ACTIVITY, activityStartDate, activityDurationSeconds);
+		return Service.instance().ipcMainMessages.send<SyncedActivityModel[]>(flaggedIpcMessage);
 	}
 
 	public estimateCyclingPowerStream(type: ElevateSport, velocityStream: number[], gradeStream: number[], riderWeight: number): number[] {

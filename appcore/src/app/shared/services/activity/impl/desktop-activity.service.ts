@@ -13,6 +13,22 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 export class BulkRefreshStatsNotification {
 
+	private constructor(syncedActivityModel: SyncedActivityModel, currentlyProcessed: number, toProcessCount: number, isFirst: boolean, isLast: boolean, error: any = null) {
+		this.syncedActivityModel = syncedActivityModel;
+		this.currentlyProcessed = currentlyProcessed;
+		this.toProcessCount = toProcessCount;
+		this.isFirst = isFirst;
+		this.isLast = isLast;
+		this.error = error;
+	}
+
+	public syncedActivityModel: SyncedActivityModel;
+	public currentlyProcessed: number;
+	public toProcessCount: number;
+	public isFirst: boolean;
+	public isLast: boolean;
+	public error: any;
+
 	public static create(syncedActivityModel: SyncedActivityModel, currentlyProcessed: number, toProcessCount: number, isFirst: boolean, isLast: boolean): BulkRefreshStatsNotification {
 		const bulkRefreshStatsNotification = new BulkRefreshStatsNotification(syncedActivityModel, currentlyProcessed, toProcessCount, isFirst, isLast);
 		delete bulkRefreshStatsNotification.error;
@@ -23,22 +39,6 @@ export class BulkRefreshStatsNotification {
 		return <BulkRefreshStatsNotification> {
 			error: error
 		};
-	}
-
-	public syncedActivityModel: SyncedActivityModel;
-	public currentlyProcessed: number;
-	public toProcessCount: number;
-	public isFirst: boolean;
-	public isLast: boolean;
-	public error: any;
-
-	private constructor(syncedActivityModel: SyncedActivityModel, currentlyProcessed: number, toProcessCount: number, isFirst: boolean, isLast: boolean, error: any = null) {
-		this.syncedActivityModel = syncedActivityModel;
-		this.currentlyProcessed = currentlyProcessed;
-		this.toProcessCount = toProcessCount;
-		this.isFirst = isFirst;
-		this.isLast = isLast;
-		this.error = error;
 	}
 }
 

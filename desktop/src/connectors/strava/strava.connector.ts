@@ -234,7 +234,7 @@ export class StravaConnector extends BaseConnector {
 									// Try to use primitive data from computation. Else use primitive data from source (strava) if exists
 									const primitiveSourceData = new PrimitiveSourceData(bareActivity.elapsed_time_raw, bareActivity.moving_time_raw,
 										bareActivity.distance_raw, bareActivity.elevation_gain_raw);
-									syncedActivityModel = this.updatePrimitiveStatsFromComputation(<SyncedActivityModel> syncedActivityModel, activityStreamsModel, primitiveSourceData);
+									syncedActivityModel = BaseConnector.updatePrimitiveStatsFromComputation(<SyncedActivityModel> syncedActivityModel, activityStreamsModel, primitiveSourceData);
 
 									// Track connector type
 									syncedActivityModel.sourceConnectorType = ConnectorType.STRAVA;

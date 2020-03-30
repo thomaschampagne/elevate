@@ -10,7 +10,8 @@
 		"test:no-source-map": "npm run test -- --source-map=false",
 		"test:ui-browser": "npm run test -- --browsers Chrome",
 		"lint": "ng lint app --fix",
-		"e2e": "ng e2e"
+		"e2e": "ng e2e",
+		"ts:validate": "tsc --noEmit --project tsconfig.app.json && tsc --noEmit --project tsconfig.spec.json"
 	},
 	"config": {
 		"unsafe-perm": true

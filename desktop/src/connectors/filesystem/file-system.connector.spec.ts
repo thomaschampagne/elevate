@@ -586,7 +586,7 @@ describe("FileSystemConnector", () => {
 				.and.returnValue(Promise.resolve(null));
 			const extractActivityStreamsSpy = spyOn(fileSystemConnector, "extractActivityStreams").and.callThrough();
 			const computeAdditionalStreamsSpy = spyOn(fileSystemConnector, "computeAdditionalStreams").and.callThrough();
-			const updatePrimitiveStatsFromComputationSpy = spyOn(fileSystemConnector, "updatePrimitiveStatsFromComputation").and.callThrough();
+			const updatePrimitiveStatsFromComputationSpy = spyOn(BaseConnector, "updatePrimitiveStatsFromComputation").and.callThrough();
 			const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
 
 			const expectedName = "Afternoon Ride";
@@ -1138,7 +1138,7 @@ describe("FileSystemConnector", () => {
 				};
 
 				// When
-				const result = fileSystemConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, activityStreamsModel, primitiveSourceData);
+				const result = BaseConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, activityStreamsModel, primitiveSourceData);
 
 				// Then
 				expect(result.elapsed_time_raw).toEqual(defaultElapsedTime);
@@ -1163,7 +1163,7 @@ describe("FileSystemConnector", () => {
 				activityStreamsModel.distance = [];
 
 				// When
-				const result = fileSystemConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, activityStreamsModel, primitiveSourceData);
+				const result = BaseConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, activityStreamsModel, primitiveSourceData);
 
 				// Then
 				expect(result.elapsed_time_raw).toEqual(primitiveSourceData.elapsedTimeRaw);
@@ -1194,7 +1194,7 @@ describe("FileSystemConnector", () => {
 				activityStreamsModel.distance = [];
 
 				// When
-				const result = fileSystemConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, activityStreamsModel, primitiveSourceData);
+				const result = BaseConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, activityStreamsModel, primitiveSourceData);
 
 				// Then
 				expect(result.elapsed_time_raw).toEqual(primitiveSourceData.elapsedTimeRaw);
@@ -1226,7 +1226,7 @@ describe("FileSystemConnector", () => {
 				activityStreamsModel.distance = [];
 
 				// When
-				const result = fileSystemConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, activityStreamsModel, primitiveSourceData);
+				const result = BaseConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, activityStreamsModel, primitiveSourceData);
 
 				// Then
 				expect(result.elapsed_time_raw).toBeNull();

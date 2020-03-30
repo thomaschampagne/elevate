@@ -367,7 +367,7 @@ export class FileSystemConnector extends BaseConnector {
 
 												// Try to use primitive data from computation. Else use primitive data from source (activity files) if exists
 												const primitiveSourceData = this.extractPrimitiveSourceData(sportsLibActivity);
-												syncedActivityModel = this.updatePrimitiveStatsFromComputation(<SyncedActivityModel> syncedActivityModel,
+												syncedActivityModel = BaseConnector.updatePrimitiveStatsFromComputation(<SyncedActivityModel> syncedActivityModel,
 													activityStreamsModel, primitiveSourceData);
 
 												// Track connector type

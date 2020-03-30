@@ -18,6 +18,7 @@ import { ActivityStreamsModel, AthleteModel, AthleteSnapshotModel, ConnectorSync
 import { Service } from "../service";
 import * as _ from "lodash";
 import { FileSystemConnector } from "../connectors/filesystem/file-system.connector";
+import { BaseConnector } from "../connectors/base.connector";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
@@ -258,7 +259,7 @@ export class IpcMainMessagesService {
 
 	public handleComputeActivitySpy(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
 
-		const syncedActivityModel = <SyncedActivityModel> message.payload[0];
+		let syncedActivityModel = <SyncedActivityModel> message.payload[0];
 		const athleteSnapshotModel = <AthleteSnapshotModel> message.payload[1];
 		const userSettingsModel = <DesktopUserSettingsModel> message.payload[2];
 		const streams = <ActivityStreamsModel> ((message.payload[3]) ? message.payload[3] : null);
@@ -269,6 +270,7 @@ export class IpcMainMessagesService {
 			// Update synced activity with new AthleteSnapshotModel & stats results
 			syncedActivityModel.athleteSnapshot = athleteSnapshotModel;
 			syncedActivityModel.extendedStats = analysisDataModel;
+			syncedActivityModel = BaseConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, streams);
 
 			replyWith({
 				success: syncedActivityModel,
