@@ -21,6 +21,7 @@ import * as _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { Partial } from "rollup-plugin-typescript2/dist/partial";
 import { CyclingPower } from "../estimators/cycling-power-estimator/cycling-power-estimator";
+import { CaloriesEstimator } from "../estimators/calories-estimator/calories-estimator";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 /**
@@ -128,6 +129,10 @@ export abstract class BaseConnector {
 				syncedActivityModel.elevation_gain_raw = primitiveSourceData.elevationGainRaw;
 			}
 		}
+
+		syncedActivityModel.calories = CaloriesEstimator.calc(syncedActivityModel.type, syncedActivityModel.moving_time_raw,
+			syncedActivityModel.athleteSnapshot.athleteSettings.weight);
+
 		return syncedActivityModel;
 
 	}

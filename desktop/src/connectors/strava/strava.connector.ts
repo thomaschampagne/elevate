@@ -297,8 +297,6 @@ export class StravaConnector extends BaseConnector {
 	public prepareBareActivity(bareActivity: BareActivityModel): BareActivityModel {
 
 		// Fields re-mapping
-		// TODO Strava dont give "calories" from "getStravaBareActivityModels" bare activities. Only "kilojoules"! We have to get calories...
-
 		bareActivity.elapsed_time_raw = (<any> bareActivity).elapsed_time;
 		bareActivity.moving_time_raw = (<any> bareActivity).moving_time;
 		bareActivity.distance_raw = (<any> bareActivity).distance;
