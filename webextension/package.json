@@ -31,7 +31,7 @@
 		"test": "node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
 		"test:ui-browser": "npm run test -- --browsers Chrome",
 		"tslint": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./**/*.ts --fix",
-		"ts:validate": "tsc --noEmit --project tsconfig.json && tsc --noEmit --project tsconfig.spec.json",
+		"type:check": "tsc --noEmit --project tsconfig.json && tsc --noEmit --project tsconfig.spec.json",
 		"watch": "npm run clean && npm-run-all extension-res-copy:* && npm-run-all --print-label --parallel watch:appcore watch:extension",
 		"watch:appcore": "npm run build:appcore@dev -- --watch",
 		"watch:extension": "npm run build:extension@dev -- --watch",

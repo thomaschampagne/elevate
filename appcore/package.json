@@ -9,7 +9,7 @@
 		"test": "ng test --watch=false --code-coverage",
 		"test:no-source-map": "npm run test -- --source-map=false",
 		"test:ui-browser": "npm run test -- --browsers Chrome",
-		"ts:validate": "tsc --noEmit --project tsconfig.app.json && tsc --noEmit --project tsconfig.spec.json",
+		"type:check": "tsc --noEmit --project tsconfig.app.json && tsc --noEmit --project tsconfig.spec.json",
 		"lint": "ng lint app --fix",
 		"e2e": "ng e2e",
 		"upgrade:check": "npx ncu",

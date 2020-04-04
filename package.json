@@ -24,7 +24,7 @@
 		"package:desktop:osx": "echo to be done...",
 		"postinstall": "cd webextension/ && npm install && cd ../appcore/ && npm install && cd ../desktop/ && npm install",
 		"test": "cd ./appcore/ && npm test && cd ../desktop/ && npm test && cd ../webextension/ && npm test",
-		"ts:validate": "cd ./appcore/ && npm run ts:validate && cd ../desktop/ && npm run ts:validate && cd ../webextension/ && npm run ts:validate",
+		"type:check": "cd ./appcore/ && npm run type:check && cd ../desktop/ && npm run type:check && cd ../webextension/ && npm run type:check",
 		"wipe": "npm run clean && npm run wipe:package-locks && npm run wipe:node-modules",
 		"wipe:node-modules": "node ./node_modules/del-cli/cli.js ./node_modules/ ./appcore/node_modules/ ./desktop/node_modules/ ./webextension/node_modules/",
 		"wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json ./appcore/package-lock.json ./desktop/package-lock.json ./webextension/package-lock.json",
