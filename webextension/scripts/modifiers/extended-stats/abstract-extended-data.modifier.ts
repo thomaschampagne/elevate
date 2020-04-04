@@ -190,7 +190,7 @@ export abstract class AbstractExtendedDataModifier {
 
 	protected placeExtendedStatsButtonSegment(buttonAdded: () => void): void {
 
-		$("#" + this.segmentEffortButtonId).click(() => {
+		$("#" + this.segmentEffortButtonId).on("click", (evt) => {
 
 			this.getSegmentInfos((segmentInfosResponse: any) => {
 
@@ -219,7 +219,8 @@ export abstract class AbstractExtendedDataModifier {
 						this.showResultsAndRefreshGraphs();
 					});
 			});
-
+			evt.preventDefault();
+			evt.stopPropagation();
 		});
 
 		if (buttonAdded) {
