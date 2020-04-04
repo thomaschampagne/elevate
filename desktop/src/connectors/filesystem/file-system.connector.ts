@@ -269,6 +269,10 @@ export class FileSystemConnector extends BaseConnector {
 
 	public syncFiles(syncEvents$: Subject<SyncEvent>): Promise<void> {
 
+		if (!fs.existsSync(this.inputDirectory)) {
+			return Promise.reject(ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(this.inputDirectory));
+		}
+
 		const afterDate = this.syncDateTime ? new Date(this.syncDateTime * 1000) : null;
 
 		let prepareScanDirectory: Promise<void> = Promise.resolve();

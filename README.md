@@ -135,7 +135,7 @@ npm start
 To open the desktop app, open another terminal, then run: 
 
 ```bash
-npm run launch:app:dev
+npm run launch:dev:app
 ```
 
 * Run unit tests:

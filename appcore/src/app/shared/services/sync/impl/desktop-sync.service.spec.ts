@@ -1092,6 +1092,25 @@ describe("DesktopSyncService", () => {
 			done();
 		});
 
+		it("should handle FS_SOURCE_DIRECTORY_DONT_EXISTS events and stop sync", (done: Function) => {
+
+			// Given
+			const syncEvent$ = new Subject<SyncEvent>();
+			desktopSyncService.currentConnectorType = ConnectorType.FILE_SYSTEM;
+			const fakseSourceDirectory = "/fake/source/dir/path";
+			const errorSyncEvent = ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(fakseSourceDirectory, null);
+			const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
+			const stopSpy = spyOn(desktopSyncService, "stop").and.returnValue(Promise.resolve());
+
+			// When
+			desktopSyncService.handleErrorSyncEvents(syncEvent$, errorSyncEvent);
+
+			// Then
+			expect(syncEventNextSpy).toHaveBeenCalledTimes(1);
+			expect(stopSpy).toHaveBeenCalledTimes(1);
+			done();
+		});
+
 		it("should throw when error is not ErrorSyncEvent instance", (done: Function) => {
 
 			// Given

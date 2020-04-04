@@ -129,6 +129,17 @@ export class ErrorSyncEvent extends SyncEvent {
 		}
 	};
 
+	public static FS_SOURCE_DIRECTORY_DONT_EXISTS = {
+		code: "FS_SOURCE_DIRECTORY_DONT_EXISTS",
+		create: (sourceDirectory: string, stacktrace: string = null): ErrorSyncEvent => {
+			return new ErrorSyncEvent(ConnectorType.FILE_SYSTEM, {
+				code: ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.code,
+				description: "Source directory '" + sourceDirectory + "' do not exists",
+				stacktrace: stacktrace
+			});
+		},
+	};
+
 	public code: string;
 	public stacktrace: string;
 	public activity?: BareActivityModel;

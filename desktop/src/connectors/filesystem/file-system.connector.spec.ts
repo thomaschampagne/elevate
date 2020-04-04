@@ -940,6 +940,27 @@ describe("FileSystemConnector", () => {
 			});
 		});
 
+		it("should send sync error if source directory do not exists", (done: Function) => {
+
+			// Given
+			const syncDateTime = null; // Force sync on all scanned files
+			const syncEvents = new Subject<SyncEvent>();
+			const fakeSourceDir = "/fake/dir/path";
+			const expectedErrorSyncEvent = ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(fakeSourceDir);
+			fileSystemConnector = FileSystemConnector.create(AthleteModel.DEFAULT_MODEL, defaultsByEnvTarget,
+				new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime), fakeSourceDir);
+
+			// When
+			const promise = fileSystemConnector.syncFiles(syncEvents);
+
+			// Then
+			promise.then(() => {
+				throw new Error("Should not be here");
+			}, errorSyncEvent => {
+				expect(errorSyncEvent).toEqual(expectedErrorSyncEvent);
+				done();
+			});
+		});
 
 	});
 

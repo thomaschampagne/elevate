@@ -231,6 +231,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 			|| errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_FORBIDDEN.code
 			|| errorSyncEvent.code === ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.code
 			|| errorSyncEvent.code === ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED.code
+			|| errorSyncEvent.code === ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.code
 		) {
 
 			syncEvents$.next(errorSyncEvent); // Forward for upward UI use.
