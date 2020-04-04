@@ -35,6 +35,12 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
 	public ngOnInit(): void {
 		this.fileSystemConnectorInfo = this.fileSystemConnectorInfoService.fetch();
 		this.updateSyncDateTimeText();
+
+		// Test if source directory folder exists on app load
+		if (!this.isExistingFolder(this.fileSystemConnectorInfo.sourceDirectory)) {
+			this.fileSystemConnectorInfo.sourceDirectory = null;
+			this.saveChanges();
+		}
 	}
 
 	public onUserDirectorySelection(): void {
@@ -42,8 +48,8 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
 	}
 
 	public configureSourceDirectory(path: string): void {
-		const compliant = path && this.electronService.isDirectory(path);
-		if (compliant) {
+		const isExistingFolder = this.isExistingFolder(path);
+		if (isExistingFolder) {
 			this.fileSystemConnectorInfo.sourceDirectory = path;
 			this.saveChanges();
 		} else {
@@ -51,6 +57,10 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
 				this.snackBar.open(`Directory ${path} is invalid`);
 			}
 		}
+	}
+
+	private isExistingFolder(path: string) {
+		return path && this.electronService.isDirectory(path);
 	}
 
 	public saveChanges(): void {
