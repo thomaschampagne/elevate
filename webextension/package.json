@@ -31,9 +31,12 @@
 		"test": "node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
 		"test:ui-browser": "npm run test -- --browsers Chrome",
 		"tslint": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./**/*.ts --fix",
+		"ts:validate": "tsc --noEmit --project tsconfig.json && tsc --noEmit --project tsconfig.spec.json",
 		"watch": "npm run clean && npm-run-all extension-res-copy:* && npm-run-all --print-label --parallel watch:appcore watch:extension",
 		"watch:appcore": "npm run build:appcore@dev -- --watch",
-		"watch:extension": "npm run build:extension@dev -- --watch"
+		"watch:extension": "npm run build:extension@dev -- --watch",
+		"upgrade:check": "npx ncu",
+		"upgrade:apply": "npm run upgrade:check -- -u"
 	},
 	"config": {
 		"unsafe-perm": true
@@ -56,7 +59,7 @@
 		"semver": "^7.1.3"
 	},
 	"devDependencies": {
-		"@types/chart.js": "^2.9.16",
+		"@types/chart.js": "^2.9.18",
 		"@types/chrome": "0.0.103",
 		"@types/file-saver": "^2.0.1",
 		"@types/filesystem": "0.0.29",
@@ -91,7 +94,7 @@
 		"style-loader": "^1.1.3",
 		"traceur": "0.0.111",
 		"ts-loader": "^6.2.2",
-		"tslint": "^6.1.0",
+		"tslint": "^6.1.1",
 		"typescript": "^3.8.3",
 		"url-loader": "^4.0.0",
 		"webpack": "^4.42.1",

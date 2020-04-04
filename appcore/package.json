@@ -9,9 +9,11 @@
 		"test": "ng test --watch=false --code-coverage",
 		"test:no-source-map": "npm run test -- --source-map=false",
 		"test:ui-browser": "npm run test -- --browsers Chrome",
+		"ts:validate": "tsc --noEmit --project tsconfig.app.json && tsc --noEmit --project tsconfig.spec.json",
 		"lint": "ng lint app --fix",
 		"e2e": "ng e2e",
-		"ts:validate": "tsc --noEmit --project tsconfig.app.json && tsc --noEmit --project tsconfig.spec.json"
+		"upgrade:check": "npx ncu",
+		"upgrade:apply": "npm run upgrade:check -- -u"
 	},
 	"config": {
 		"unsafe-perm": true
