@@ -4,7 +4,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 @Component({
 	selector: "app-fitness-trend-welcome-dialog",
 	template: `
-		<h2 mat-dialog-title>New feature: "Rolling progression" mode </h2>
+		<h2 mat-dialog-title>Notice about "Rolling progression" mode </h2>
 		<mat-dialog-content class="mat-body-1">
 
 			<div>

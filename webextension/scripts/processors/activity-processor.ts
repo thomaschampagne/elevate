@@ -1,12 +1,4 @@
-import {
-	ActivityInfoModel,
-	ActivitySourceDataModel,
-	ActivityStreamsModel,
-	AnalysisDataModel,
-	AthleteSnapshotModel,
-	Gender,
-	UserSettings
-} from "@elevate/shared/models";
+import { ActivityInfoModel, ActivitySourceDataModel, ActivityStreamsModel, AnalysisDataModel, AthleteSnapshotModel, Gender, UserSettings } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
 import { VacuumProcessor } from "./vacuum-processor";
@@ -92,7 +84,8 @@ export class ActivityProcessor {
 			activitySourceData: activitySourceData,
 			activityStream: activityStream,
 			bounds: bounds,
-			returnZones: true
+			returnZones: true,
+			returnPowerCurve: true
 		};
 
 		this.computeAnalysisThread.postMessage(threadMessage);

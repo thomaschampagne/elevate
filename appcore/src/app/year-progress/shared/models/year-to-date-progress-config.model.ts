@@ -1,10 +1,11 @@
 import { ProgressMode } from "../enums/progress-mode.enum";
 import { ProgressConfig } from "../interfaces/progress-config";
+import { ElevateSport } from "@elevate/shared/enums";
 
 export class YearToDateProgressConfigModel implements ProgressConfig {
 
 	public readonly mode: ProgressMode = ProgressMode.YEAR_TO_DATE;
-	public activityTypes: string[];
+	public activityTypes: ElevateSport[];
 	public includeCommuteRide: boolean;
 	public includeIndoorRide: boolean;
 
@@ -17,7 +18,7 @@ export class YearToDateProgressConfigModel implements ProgressConfig {
 		return new YearToDateProgressConfigModel(progressConfig.activityTypes, progressConfig.includeCommuteRide, progressConfig.includeIndoorRide);
 	}
 
-	constructor(activityTypes: string[], includeCommuteRide: boolean, includeIndoorRide: boolean) {
+	constructor(activityTypes: ElevateSport[], includeCommuteRide: boolean, includeIndoorRide: boolean) {
 		this.activityTypes = activityTypes;
 		this.includeCommuteRide = includeCommuteRide;
 		this.includeIndoorRide = includeIndoorRide;

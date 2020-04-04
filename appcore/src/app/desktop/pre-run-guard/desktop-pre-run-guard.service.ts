@@ -2,7 +2,6 @@ import { Inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { IpcRendererMessagesService } from "../../shared/services/messages-listener/ipc-renderer-messages.service";
 import { FlaggedIpcMessage, MessageFlag, RuntimeInfo } from "@elevate/shared/electron";
 import { concatMap, delay, retryWhen } from "rxjs/operators";
 import { of, throwError } from "rxjs";
@@ -10,12 +9,13 @@ import { AthleteAccessChecker } from "./athlete-access-checker";
 import * as HttpCodes from "http-status-codes";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { environment } from "../../../environments/environment.desktop";
-import { StravaApiCredentialsService } from "../../shared/services/strava-api-credentials/strava-api-credentials.service";
+import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../../shared/services/versions/versions-provider.interface";
-import { StravaApiCredentials } from "@elevate/shared/sync";
+import { StravaConnectorInfo } from "@elevate/shared/sync";
 import { DesktopMigrationService } from "../migration/desktop-migration.service";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { DesktopPreRunGuardDialogComponent } from "./desktop-pre-run-guard-dialog.component";
+import { IpcMessagesSender } from "../ipc-messages/ipc-messages-sender.service";
 
 @Injectable()
 export class DesktopPreRunGuard implements CanActivate {
@@ -29,8 +29,8 @@ export class DesktopPreRunGuard implements CanActivate {
 	public isAccessAuthorized: boolean;
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
-				public ipcRendererMessagesService: IpcRendererMessagesService,
-				public stravaApiCredentialsService: StravaApiCredentialsService,
+				public ipcMessagesSender: IpcMessagesSender,
+				public stravaConnectorInfoService: StravaConnectorInfoService,
 				public desktopMigrationService: DesktopMigrationService,
 				public httpClient: HttpClient,
 				public router: Router,
@@ -79,18 +79,18 @@ export class DesktopPreRunGuard implements CanActivate {
 	}
 
 	public getRuntimeInfo(): Promise<RuntimeInfo> {
-		return this.ipcRendererMessagesService.send<RuntimeInfo>(new FlaggedIpcMessage(MessageFlag.GET_RUNTIME_INFO));
+		return this.ipcMessagesSender.send<RuntimeInfo>(new FlaggedIpcMessage(MessageFlag.GET_RUNTIME_INFO));
 	}
 
 	public checkAthleteAccess(runtimeInfo: RuntimeInfo, authRetry: boolean = false): Promise<boolean> {
 
 		return Promise.all([
 			this.versionsProvider.getPackageVersion(),
-			this.stravaApiCredentialsService.fetch()
+			this.stravaConnectorInfoService.fetch()
 		]).then(result => {
 
 			const installedVersion = result[0];
-			const stravaApiCredentials: StravaApiCredentials = result[1];
+			const stravaConnectorInfo: StravaConnectorInfo = result[1];
 
 			return new Promise<boolean>((resolve => {
 
@@ -103,7 +103,7 @@ export class DesktopPreRunGuard implements CanActivate {
 					osUsername: this.runtimeInfo.osUsername,
 					memorySizeGb: this.runtimeInfo.memorySizeGb,
 					cpu: `${this.runtimeInfo.cpu.name}; ${this.runtimeInfo.cpu.threads}`,
-					stravaAccount: (stravaApiCredentials.stravaAccount) ? stravaApiCredentials.stravaAccount : null
+					stravaAccount: (stravaConnectorInfo.stravaAccount) ? stravaConnectorInfo.stravaAccount : null
 				};
 
 				this.httpClient.post(DesktopPreRunGuard.ATHLETE_ACCESS_API_URL, athleteAccessBodyData, {responseType: "text"}).pipe(

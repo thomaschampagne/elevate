@@ -54,19 +54,19 @@
 									"maximumWarning": "3mb",
 									"maximumError": "5mb"
 								},
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "6kb"
+								}
 							]
 						},
 						"desktop": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
+							"budgets": [
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "6kb"
+								}
+							],
 							"fileReplacements": [
 								{
 									"replace": "src/environments/environment.ts",
@@ -75,12 +75,12 @@
 							]
 						},
 						"desktop-prod": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
+							"budgets": [
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "6kb"
+								}
+							],
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
@@ -162,5 +162,8 @@
 		"@schematics/angular:directive": {
 			"prefix": "app"
 		}
+	},
+	"cli": {
+		"analytics": false
 	}
 }

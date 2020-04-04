@@ -2,7 +2,14 @@ import * as _ from "lodash";
 import * as Q from "q";
 import * as $ from "jquery";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/specs-tools";
-import { ActivitiesChangesModel, AnalysisDataModel, AthleteModel, SyncedActivityModel, SyncResultModel, UserSettings, } from "@elevate/shared/models";
+import {
+	ActivitiesChangesModel,
+	AnalysisDataModel,
+	AthleteModel,
+	SyncedActivityModel,
+	SyncResultModel,
+	UserSettings,
+} from "@elevate/shared/models";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { ActivitiesSynchronize } from "../../scripts/processors/activities-synchronize";
 import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";
@@ -141,6 +148,9 @@ describe("ActivitiesSynchronize", () => {
 			console.log("Spy activitiesSynchronize.multipleActivityProcessor:compute called");
 			const activitiesComputed: Array<SyncedActivityModel> = [];
 			const fakeAnalysisData: AnalysisDataModel = {
+				elapsedTime: null,
+				movingTime: null,
+				pauseTime: null,
 				moveRatio: null,
 				runningPerformanceIndex: 25.0,
 				speedData: null,

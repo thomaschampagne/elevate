@@ -4,12 +4,12 @@ import { MatDialogRef } from "@angular/material/dialog";
 @Component({
 	selector: "app-fitness-trend-welcome-dialog",
 	template: `
-		<h2 mat-dialog-title>New feature important notice: "Estimated Fitness Trend" </h2>
+		<h2 mat-dialog-title>Notice about "Estimated Fitness Trend" </h2>
 		<mat-dialog-content class="mat-body-1">
 
 			<div>
-				From now, if you don't own (or sometimes forgot) your sensors, your fitness trend can be nevertheless estimated.
-				Extensively a "typical" iPhone or Android mobile user who runs the strava mobile app can now access the fitness
+				If you don't own or sometimes forgot your sensors, your fitness trend can be nevertheless estimated.
+				A "typical" iPhone or Android mobile user who runs the strava mobile app can access the fitness
 				trend feature without buying any external sensors 👍. Nevertheless sensors are highly recommended if you need a
 				more accurate trend.
 			</div>
@@ -28,8 +28,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 						<ul>
 							<li>Your <i>Cycling Functional Threshold Power (FTP)</i> must be set in <a
 								[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">dated athlete
-								settings</a>. A wrong ftp
-								can cause too big/low PSS scores on activities.
+								settings</a>. A wrong ftp can cause too big/low PSS scores on activities.
 							</li>
 							<li>The power meter data toggle
 								<mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>

@@ -25,10 +25,8 @@
 <mat-card *ngIf="(isSynced === true)" [fxHide]="!hasActivities">
 	<div fxLayout="row" fxLayoutAlign="center center" class="mat-subheading-2">
 		<mat-form-field fxFlex="50">
-			<span matPrefix>
-				<mat-icon>search</mat-icon><span>&nbsp;&nbsp;&nbsp;</span>
-			</span>
-			<input fxFill matInput [(ngModel)]="searchText" (keyup)="requestFilterFor($event.target.value)"
+			<input fxFill matInput type="search" [(ngModel)]="searchText"
+				   (keyup)="requestFilterFor($event.target.value)"
 				   placeholder="Filter by type or activities name">
 			<button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
 					(click)="searchText=''; requestFilterFor(searchText);">

@@ -1,7 +1,6 @@
-import { BaseConnector } from "../base.connector";
+import { BaseConnector, PrimitiveSourceData } from "../base.connector";
 import { ReplaySubject, Subject } from "rxjs";
 import {
-	ActivityComputer,
 	ActivitySyncEvent,
 	ConnectorType,
 	ErrorSyncEvent,
@@ -9,24 +8,22 @@ import {
 	StartedSyncEvent,
 	StoppedSyncEvent,
 	StravaAccount,
-	StravaApiCredentials,
+	StravaConnectorInfo,
 	StravaCredentialsUpdateSyncEvent,
 	SyncEvent,
 	SyncEventType
 } from "@elevate/shared/sync";
-import { ActivityStreamsModel, AnalysisDataModel, AthleteModel, BareActivityModel, ConnectorSyncDateTime, Gender, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
-import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
+import { ActivityStreamsModel, AthleteModel, BareActivityModel, ConnectorSyncDateTime, Gender, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import logger from "electron-log";
 import { Service } from "../../service";
 import * as _ from "lodash";
-import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
-import { Gzip, sleep } from "@elevate/shared/tools";
-import { filter } from "rxjs/operators";
+import { sleep } from "@elevate/shared/tools";
 import { StravaAuthenticator } from "./strava-authenticator";
 import { IHttpClientResponse } from "typed-rest-client/Interfaces";
 import { HttpCodes } from "typed-rest-client/HttpClient";
 import * as http from "http";
 import { IncomingHttpHeaders } from "http";
+import { ElevateSport } from "@elevate/shared/enums";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export interface StravaApiStreamType {
@@ -39,14 +36,10 @@ export interface StravaApiStreamType {
 
 export class StravaConnector extends BaseConnector {
 
-	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime,
-				stravaApiCredentials: StravaApiCredentials, updateSyncedActivitiesNameAndType: boolean) {
+	constructor(priority: number, athleteModel: AthleteModel, userSettingsModel: UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime, stravaConnectorInfo: StravaConnectorInfo) {
 		super(ConnectorType.STRAVA, athleteModel, userSettingsModel, connectorSyncDateTime, priority, StravaConnector.ENABLED);
-		this.stravaApiCredentials = stravaApiCredentials;
-		this.updateSyncedActivitiesNameAndType = updateSyncedActivitiesNameAndType;
-		this.athleteSnapshotResolver = new AthleteSnapshotResolver(this.athleteModel);
+		this.stravaConnectorInfo = stravaConnectorInfo;
 		this.stravaAuthenticator = new StravaAuthenticator();
-		this.stopRequested = false;
 		this.nextCallWaitTime = 0;
 	}
 
@@ -64,18 +57,13 @@ export class StravaConnector extends BaseConnector {
 	public static readonly QUARTER_HOUR_TIME_INTERVAL: number = 15 * 60;
 	public static readonly QUOTA_REACHED_RETRY_COUNT: number = 2;
 
-	public stravaApiCredentials: StravaApiCredentials;
-	public updateSyncedActivitiesNameAndType: boolean;
-	public athleteSnapshotResolver: AthleteSnapshotResolver;
+	public stravaConnectorInfo: StravaConnectorInfo;
 	public stravaAuthenticator: StravaAuthenticator;
-	public stopRequested: boolean;
 	public nextCallWaitTime: number;
 
-	public syncEvents$: ReplaySubject<SyncEvent>;
-
 	public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime,
-						 stravaApiCredentials: StravaApiCredentials, updateSyncedActivitiesNameAndType: boolean) {
-		return new StravaConnector(null, athleteModel, userSettingsModel, connectorSyncDateTime, stravaApiCredentials, updateSyncedActivitiesNameAndType);
+						 stravaConnectorInfo: StravaConnectorInfo) {
+		return new StravaConnector(null, athleteModel, userSettingsModel, connectorSyncDateTime, stravaConnectorInfo);
 	}
 
 	public static generateFetchStreamsEndpoint(activityId: number): string {
@@ -97,7 +85,10 @@ export class StravaConnector extends BaseConnector {
 		return ((2 * timeIntervalSeconds) / thresholdCount ** 2) * currentCallsCount;
 	}
 
-	public static parseRateLimits(headers: IncomingHttpHeaders): { instant: { usage: number; limit: number; }, daily: { usage: number; limit: number; } } {
+	public static parseRateLimits(headers: IncomingHttpHeaders): {
+		instant: { usage: number; limit: number; },
+		daily: { usage: number; limit: number; }
+	} {
 
 		const rateLimits = {
 			instant: {
@@ -138,9 +129,7 @@ export class StravaConnector extends BaseConnector {
 
 			// Start a new sync
 			this.syncEvents$ = new ReplaySubject<SyncEvent>();
-
 			this.syncEvents$.next(new StartedSyncEvent(ConnectorType.STRAVA));
-
 			this.isSyncing = true;
 
 			this.syncPages(this.syncEvents$).then(() => {
@@ -164,36 +153,14 @@ export class StravaConnector extends BaseConnector {
 		return this.syncEvents$;
 	}
 
-	public stop(): Promise<void> {
-
-		this.stopRequested = true;
-
-		return new Promise((resolve, reject) => {
-
-			if (this.isSyncing) {
-				const stopSubscription = this.syncEvents$.pipe(
-					filter(syncEvent => syncEvent.type === SyncEventType.STOPPED)
-				).subscribe(() => {
-					stopSubscription.unsubscribe();
-					this.stopRequested = false;
-					resolve();
-				});
-			} else {
-				setTimeout(() => {
-					this.stopRequested = false;
-					reject("Strava connector is not syncing currently.");
-				});
-			}
-		});
-	}
-
 	/**
 	 *
 	 * @param syncEvents$
 	 * @param stravaPageId
 	 * @param perPage
 	 */
-	public syncPages(syncEvents$: Subject<SyncEvent>, stravaPageId: number = 1, perPage: number = StravaConnector.ACTIVITIES_PER_PAGES): Promise<void> {
+	public syncPages(syncEvents$: Subject<SyncEvent>, stravaPageId: number = 1, perPage: number = StravaConnector.ACTIVITIES_PER_PAGES)
+		: Promise<void> {
 
 		// Check for stop request and stop sync
 		if (this.stopRequested) {
@@ -241,100 +208,95 @@ export class StravaConnector extends BaseConnector {
 				bareActivity = this.prepareBareActivity(bareActivity);
 
 				// Does bare activity has been already synced before?
-				return this.findSyncedActivityModels(bareActivity.start_time, bareActivity.elapsed_time_raw).then((syncedActivityModels: SyncedActivityModel[]) => {
+				return this.findSyncedActivityModels(bareActivity.start_time, bareActivity.elapsed_time_raw)
+					.then((syncedActivityModels: SyncedActivityModel[]) => {
 
-					if (_.isEmpty(syncedActivityModels)) {
+						if (_.isEmpty(syncedActivityModels)) {
 
-						// Fetch stream of the activity
-						return this.getStravaActivityStreams(<number> bareActivity.id).then((activityStreamsModel: ActivityStreamsModel) => {
+							// Fetch stream of the activity
+							return this.getStravaActivityStreams(<number> bareActivity.id).then((activityStreamsModel: ActivityStreamsModel) => {
+								try {
+									let syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
+									syncedActivityModel.start_timestamp = new Date(bareActivity.start_time).getTime() / 1000;
 
-							const syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
-							syncedActivityModel.start_timestamp = new Date(bareActivity.start_time).getTime() / 1000;
+									// Assign reference to strava activity
+									syncedActivityModel.extras = {strava_activity_id: <number> syncedActivityModel.id}; // Keep tracking  of activity id
+									syncedActivityModel.id = syncedActivityModel.id + "-" + BaseConnector.hashData(syncedActivityModel.start_time, 8);
 
-							// Assign reference to strava activity
-							syncedActivityModel.extras = {strava_activity_id: <number> syncedActivityModel.id}; // Keep tracking  of activity id
-							syncedActivityModel.id = syncedActivityModel.id + "-" + BaseConnector.hashData(syncedActivityModel.start_time, 8);
+									// Resolve athlete snapshot for current activity date
+									syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(syncedActivityModel.start_time);
 
-							// Resolve athlete snapshot for current activity date
-							syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(syncedActivityModel.start_time);
+									// Compute activity
+									activityStreamsModel = this.appendPowerStream(bareActivity, activityStreamsModel, syncedActivityModel.athleteSnapshot.athleteSettings.weight);
+									syncedActivityModel.extendedStats = this.computeExtendedStats(syncedActivityModel,
+										syncedActivityModel.athleteSnapshot, this.userSettingsModel, activityStreamsModel);
 
-							// Compute activity
-							try {
-								syncedActivityModel.extendedStats = this.computeExtendedStats(syncedActivityModel, activityStreamsModel);
-							} catch (error) {
+									// Try to use primitive data from computation. Else use primitive data from source (strava) if exists
+									const primitiveSourceData = new PrimitiveSourceData(bareActivity.elapsed_time_raw, bareActivity.moving_time_raw,
+										bareActivity.distance_raw, bareActivity.elevation_gain_raw);
+									syncedActivityModel = BaseConnector.updatePrimitiveStatsFromComputation(<SyncedActivityModel> syncedActivityModel, activityStreamsModel, primitiveSourceData);
 
-								const errorSyncEvent = (error instanceof Error) ? ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.STRAVA, error.message, error.stack)
-									: ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.STRAVA, error.toString());
+									// Track connector type
+									syncedActivityModel.sourceConnectorType = ConnectorType.STRAVA;
 
-								syncEvents$.next(errorSyncEvent); // Notify error
+									// Gunzip stream as base64
+									const compressedStream = (activityStreamsModel) ? ActivityStreamsModel.inflate(activityStreamsModel) : null;
+
+									// Notify the new SyncedActivityModel
+									syncEvents$.next(new ActivitySyncEvent(ConnectorType.STRAVA, null, <SyncedActivityModel> syncedActivityModel, true, compressedStream));
+
+								} catch (error) {
+
+									const errorSyncEvent = (error instanceof Error)
+										? ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.STRAVA, error.message, bareActivity, error.stack)
+										: ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.STRAVA, error.toString(), bareActivity);
+
+									syncEvents$.next(errorSyncEvent); // Notify error
+								}
 
 								return Promise.resolve(); // Continue to next activity
-							}
 
-							// Track connector type
-							syncedActivityModel.sourceConnectorType = ConnectorType.STRAVA;
-
-							// Gunzip stream as base64
-							const compressedStream = (activityStreamsModel) ? Gzip.pack64(activityStreamsModel) : null;
-
-							// Notify the new SyncedActivityModel
-							syncEvents$.next(new ActivitySyncEvent(ConnectorType.STRAVA, null, <SyncedActivityModel> syncedActivityModel, true, compressedStream));
-
-							return Promise.resolve();
-
-						}, (errorSyncEvent: ErrorSyncEvent) => {
-							return Promise.reject(errorSyncEvent); // Every error here will stop the sync
-						});
-
-					} else {  // Activities exists
-
-						if (_.isArray(syncedActivityModels) && syncedActivityModels.length === 1) { // One activity found
-							if (this.updateSyncedActivitiesNameAndType) {
-								const syncedActivityModel = syncedActivityModels[0];
-								syncedActivityModel.name = bareActivity.name;
-								syncedActivityModel.type = bareActivity.type;
-								syncEvents$.next(new ActivitySyncEvent(ConnectorType.STRAVA, null, syncedActivityModel, false));
-							}
-
-						} else { // More than 1 activity found, trigger ErrorSyncEvent...
-
-							const activitiesFound = [];
-							_.forEach(syncedActivityModels, (activityModel: SyncedActivityModel) => {
-								activitiesFound.push(activityModel.name + " (" + new Date(activityModel.start_time).toString() + ")");
+							}, (errorSyncEvent: ErrorSyncEvent) => {
+								return Promise.reject(errorSyncEvent); // Every error here will stop the sync
 							});
 
-							const errorSyncEvent = new ErrorSyncEvent(ConnectorType.STRAVA,
-								ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.create(ConnectorType.STRAVA, bareActivity.name,
-									new Date(bareActivity.start_time), activitiesFound));
+						} else {  // Activities exists
 
-							syncEvents$.next(errorSyncEvent);
+							if (_.isArray(syncedActivityModels) && syncedActivityModels.length === 1) { // One activity found
+								if (this.stravaConnectorInfo.updateSyncedActivitiesNameAndType) {
+									const syncedActivityModel = syncedActivityModels[0];
+									syncedActivityModel.name = bareActivity.name;
+									syncedActivityModel.type = bareActivity.type;
+									syncEvents$.next(new ActivitySyncEvent(ConnectorType.STRAVA, null, syncedActivityModel, false));
+								}
+
+							} else { // More than 1 activity found, trigger ErrorSyncEvent...
+
+								const activitiesFound = [];
+								_.forEach(syncedActivityModels, (activityModel: SyncedActivityModel) => {
+									activitiesFound.push(activityModel.name + " (" + new Date(activityModel.start_time).toString() + ")");
+								});
+
+								const errorSyncEvent = new ErrorSyncEvent(ConnectorType.STRAVA,
+									ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.create(ConnectorType.STRAVA, bareActivity.name,
+										new Date(bareActivity.start_time), activitiesFound));
+
+								syncEvents$.next(errorSyncEvent);
+							}
+
+							return Promise.resolve(); // Continue to next activity
 						}
 
-						return Promise.resolve(); // Continue to next activity
-					}
-
-				});
+					});
 
 			});
 
 		}, Promise.resolve());
 	}
 
-	public computeExtendedStats(syncedActivityModel: Partial<SyncedActivityModel>, streams: ActivityStreamsModel): AnalysisDataModel {
-		return (new ActivityComputer(syncedActivityModel.type, syncedActivityModel.trainer,
-			this.userSettingsModel, syncedActivityModel.athleteSnapshot, true, syncedActivityModel.hasPowerMeter,
-			{
-				distance: syncedActivityModel.distance_raw,
-				elevation: syncedActivityModel.elevation_gain_raw,
-				movingTime: syncedActivityModel.moving_time_raw,
-			}, streams, null, false)).compute();
-	}
-
 	public prepareBareActivity(bareActivity: BareActivityModel): BareActivityModel {
 
 		// Fields re-mapping
-		// TODO Strava dont give "calories" from "getStravaBareActivityModels" bare activities. Only "kilojoules"! We have to get calories...
-
 		bareActivity.elapsed_time_raw = (<any> bareActivity).elapsed_time;
 		bareActivity.moving_time_raw = (<any> bareActivity).moving_time;
 		bareActivity.distance_raw = (<any> bareActivity).distance;
@@ -351,6 +313,32 @@ export class StravaConnector extends BaseConnector {
 		return <BareActivityModel> _.omit(bareActivity, StravaConnector.STRAVA_OMIT_FIELDS);
 	}
 
+	public appendPowerStream(bareActivityModel: BareActivityModel, activityStreamsModel: ActivityStreamsModel, weight: number): ActivityStreamsModel {
+
+		if (!activityStreamsModel) {
+			return null;
+		}
+
+		if (!bareActivityModel.hasPowerMeter) {
+			if (!_.isEmpty(activityStreamsModel.watts_calc)) {
+				activityStreamsModel.watts = activityStreamsModel.watts_calc;
+			} else {
+				// No power at all. Trying to estimated it on elevate side
+				if (bareActivityModel.type === ElevateSport.Ride || bareActivityModel.type === ElevateSport.VirtualRide) {
+					try {
+						activityStreamsModel.watts = this.estimateCyclingPowerStream(bareActivityModel.type, activityStreamsModel.velocity_smooth, activityStreamsModel.grade_smooth, weight);
+					} catch (err) {
+						logger.error("Unable to estimated power on activity started at: " + bareActivityModel.start_time, err);
+						delete activityStreamsModel.watts;
+					}
+				}
+			}
+		}
+
+		delete activityStreamsModel.watts_calc;
+		return activityStreamsModel;
+	}
+
 	public getStravaBareActivityModels(page: number, perPage: number, after: number): Promise<BareActivityModel[]> {
 		return this.fetchRemoteStravaBareActivityModels(page, perPage, after);
 	}
@@ -364,18 +352,18 @@ export class StravaConnector extends BaseConnector {
 	 */
 	public stravaApiCall<T>(syncEvents$: Subject<SyncEvent>, url: string, tries: number = 1): Promise<T> {
 
-		if (!_.isNumber(this.stravaApiCredentials.clientId) || _.isEmpty(this.stravaApiCredentials.clientSecret)) {
+		if (!_.isNumber(this.stravaConnectorInfo.clientId) || _.isEmpty(this.stravaConnectorInfo.clientSecret)) {
 			return Promise.reject(ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create());
 		}
 
-		return this.stravaTokensUpdater(syncEvents$, this.stravaApiCredentials).then(() => {
+		return this.stravaTokensUpdater(syncEvents$, this.stravaConnectorInfo).then(() => {
 
 			logger.debug(`Waiting ${this.nextCallWaitTime} seconds before calling strava api`);
 
 			// Wait during next call wait time
 			return sleep(this.nextCallWaitTime).then(() => {
 				return Service.instance().httpClient.get(url, {
-					"Authorization": `Bearer ${this.stravaApiCredentials.accessToken}`,
+					"Authorization": `Bearer ${this.stravaConnectorInfo.accessToken}`,
 					"Content-Type": "application/json"
 				});
 			});
@@ -459,27 +447,29 @@ export class StravaConnector extends BaseConnector {
 	 * Ensure proper connection to Strava API:
 	 * - Authenticate to Strava API if no "access token" is stored
 	 * - Authenticate to Strava API if no "refresh token" is stored
-	 * - Notify new StravaApiCredentials updated with proper accessToken & refreshToken using StravaCredentialsUpdateSyncEvent
+	 * - Notify new StravaConnectorInfo updated with proper accessToken & refreshToken using StravaCredentialsUpdateSyncEvent
 	 * @param syncEvents$
-	 * @param stravaApiCredentials
+	 * @param stravaConnectorInfo
 	 */
-	public stravaTokensUpdater(syncEvents$: Subject<SyncEvent>, stravaApiCredentials: StravaApiCredentials): Promise<void> {
+	public stravaTokensUpdater(syncEvents$: Subject<SyncEvent>, stravaConnectorInfo: StravaConnectorInfo): Promise<void> {
 
 		let authPromise: Promise<{ accessToken: string, refreshToken: string, expiresAt: number }> = null;
 
-		const isAccessTokenValid = (stravaApiCredentials.accessToken && stravaApiCredentials.expiresAt > this.getCurrentTime());
+		const isAccessTokenValid = (stravaConnectorInfo.accessToken && stravaConnectorInfo.expiresAt > this.getCurrentTime());
 
-		if (!stravaApiCredentials.accessToken || !stravaApiCredentials.refreshToken) {
-			authPromise = this.stravaAuthenticator.authorize(stravaApiCredentials.clientId, stravaApiCredentials.clientSecret);
+		if (!stravaConnectorInfo.accessToken || !stravaConnectorInfo.refreshToken) {
+			authPromise = this.stravaAuthenticator.authorize(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret);
 			logger.info("No accessToken or refreshToken found. Now authenticating to strava");
-		} else if (!isAccessTokenValid && stravaApiCredentials.refreshToken) {
-			authPromise = this.stravaAuthenticator.refresh(stravaApiCredentials.clientId, stravaApiCredentials.clientSecret, stravaApiCredentials.refreshToken);
+		} else if (!isAccessTokenValid && stravaConnectorInfo.refreshToken) {
+			authPromise = this.stravaAuthenticator
+				.refresh(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret, stravaConnectorInfo.refreshToken);
 			logger.info("Access token is expired, Refreshing token");
 		} else if (isAccessTokenValid) {
 			logger.debug("Access token is still valid, we keep current access token, no authorize and no refresh token");
 			return Promise.resolve();
 		} else {
-			return Promise.reject("Case not supported in StravaConnector::stravaTokensUpdater(). stravaApiCredentials: " + JSON.stringify(stravaApiCredentials));
+			return Promise.reject("Case not supported in StravaConnector::stravaTokensUpdater(). stravaConnectorInfo: "
+				+ JSON.stringify(stravaConnectorInfo));
 		}
 
 		return authPromise.then((result: { accessToken: string, refreshToken: string, expiresAt: number, athlete: any }) => {
@@ -489,20 +479,20 @@ export class StravaConnector extends BaseConnector {
 			if (result.athlete) { // First or reset authentication, use stravaAccount given by strava
 				stravaAccount = new StravaAccount(result.athlete.id, result.athlete.username, result.athlete.firstname, result.athlete.lastname,
 					result.athlete.city, result.athlete.state, result.athlete.country, result.athlete.sex === "M" ? Gender.MEN : Gender.WOMEN);
-			} else if (stravaApiCredentials.stravaAccount) { // Case of refresh token, re-use stored stravaAccount
-				stravaAccount = stravaApiCredentials.stravaAccount;
+			} else if (stravaConnectorInfo.stravaAccount) { // Case of refresh token, re-use stored stravaAccount
+				stravaAccount = stravaConnectorInfo.stravaAccount;
 			} else {
 				stravaAccount = null;
 			}
 
 			// Update credentials
-			stravaApiCredentials.accessToken = result.accessToken;
-			stravaApiCredentials.refreshToken = result.refreshToken;
-			stravaApiCredentials.expiresAt = result.expiresAt;
-			stravaApiCredentials.stravaAccount = stravaAccount;
+			stravaConnectorInfo.accessToken = result.accessToken;
+			stravaConnectorInfo.refreshToken = result.refreshToken;
+			stravaConnectorInfo.expiresAt = result.expiresAt;
+			stravaConnectorInfo.stravaAccount = stravaAccount;
 
 			// Notify
-			syncEvents$.next(new StravaCredentialsUpdateSyncEvent(stravaApiCredentials));
+			syncEvents$.next(new StravaCredentialsUpdateSyncEvent(stravaConnectorInfo));
 
 			return Promise.resolve();
 		}, error => {
@@ -512,16 +502,6 @@ export class StravaConnector extends BaseConnector {
 
 	public getCurrentTime(): number {
 		return (new Date()).getTime();
-	}
-
-	/**
-	 *
-	 * @param activityStartDate
-	 * @param activityDurationSeconds
-	 */
-	public findSyncedActivityModels(activityStartDate: string, activityDurationSeconds: number): Promise<SyncedActivityModel[]> {
-		const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.FIND_ACTIVITY, activityStartDate, activityDurationSeconds);
-		return Service.instance().ipcMainMessages.send<SyncedActivityModel[]>(flaggedIpcMessage);
 	}
 
 	/**
@@ -560,7 +540,7 @@ export class StravaConnector extends BaseConnector {
 	 * @param activityId
 	 * @return Reject ErrorSyncEvent if error
 	 */
-	public fetchRemoteStravaActivityStreams(activityId: number): Promise<StravaApiStreamType[]> { // TODO inject syncEvents$ instead of this.syncEvents$ use
+	public fetchRemoteStravaActivityStreams(activityId: number): Promise<StravaApiStreamType[]> {
 		return this.stravaApiCall<StravaApiStreamType[]>(this.syncEvents$, StravaConnector.generateFetchStreamsEndpoint(activityId));
 	}
 
@@ -571,7 +551,8 @@ export class StravaConnector extends BaseConnector {
 	 * @return Reject ErrorSyncEvent if error
 	 */
 	public fetchRemoteStravaBareActivityModels(page: number, perPage: number, after: number): Promise<BareActivityModel[]> {
-		return this.stravaApiCall<BareActivityModel[]>(this.syncEvents$, StravaConnector.generateFetchBareActivitiesPageEndpoint(page, perPage, after));
+		return this.stravaApiCall<BareActivityModel[]>(this.syncEvents$, StravaConnector
+			.generateFetchBareActivitiesPageEndpoint(page, perPage, after));
 	}
 
 }

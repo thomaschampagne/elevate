@@ -3,8 +3,20 @@ import { CoreModule } from "../../../../core/core.module";
 import { SharedModule } from "../../../shared.module";
 import { DesktopModule } from "../../../modules/desktop/desktop.module";
 import { DesktopSyncService } from "./desktop-sync.service";
-import { ActivitySyncEvent, CompleteSyncEvent, ConnectorType, ErrorSyncEvent, GenericSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent } from "@elevate/shared/sync";
-import { AthleteModel, SyncedActivityModel } from "@elevate/shared/models";
+import {
+	ActivitySyncEvent,
+	CompleteSyncEvent,
+	ConnectorType,
+	ErrorSyncEvent,
+	FileSystemConnectorInfo,
+	GenericSyncEvent,
+	StartedSyncEvent,
+	StoppedSyncEvent,
+	StravaConnectorInfo,
+	StravaCredentialsUpdateSyncEvent,
+	SyncEvent
+} from "@elevate/shared/sync";
+import { AthleteModel, CompressedStreamModel, ConnectorSyncDateTime, SyncedActivityModel } from "@elevate/shared/models";
 import { ElectronService, ElectronWindow } from "../../electron/electron.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
@@ -14,9 +26,6 @@ import * as moment from "moment";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../../shared-fixtures/activities-2015.fixture";
 import { SyncState } from "../sync-state.enum";
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
-import { StravaCredentialsUpdateSyncEvent } from "../../../../../../modules/shared/sync/events";
-import { StravaApiCredentials } from "../../../../../../modules/shared/sync/strava";
-import { CompressedStreamModel, ConnectorSyncDateTime } from "../../../../../../modules/shared/models/sync";
 import Spy = jasmine.Spy;
 
 describe("DesktopSyncService", () => {
@@ -62,163 +71,220 @@ describe("DesktopSyncService", () => {
 
 	describe("Handle sync", () => {
 
-		it("should start a full strava sync", (done: Function) => {
+		describe("Strava connector", () => {
 
-			// Given
-			const connectorType = ConnectorType.STRAVA;
-			const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
-				new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-				new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
-			];
-			const listenSyncEventsSpy = spyOn(desktopSyncService.messageListenerService, "listen").and.stub();
-			const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch")
-				.and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
-			const fetchUserSettingsSpy = spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
-			const fetchConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
-				.and.returnValue(connectorSyncDateTimes);
+			it("should start a full strava sync", (done: Function) => {
 
-			const fetchStravaApiCredentialsSpy = spyOn(desktopSyncService.stravaApiCredentialsService, "fetch").and.returnValue(null);
-			const sendStartSyncSpy = spyOn(desktopSyncService.messageListenerService, "send").and.returnValue(Promise.resolve("Started"));
+				// Given
+				const connectorType = ConnectorType.STRAVA;
+				const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
+					new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
+					new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+				];
+				const listenSyncEventsSpy = spyOn(desktopSyncService.ipcMessagesReceiver, "listen").and.stub();
+				const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch")
+					.and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
+				const fetchUserSettingsSpy = spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
+				const fetchConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+					.and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
-			// When
-			const promiseStart = desktopSyncService.sync(false, false, connectorType);
+				const fetchStravaConnectorInfoSpy = spyOn(desktopSyncService.stravaConnectorInfoService, "fetch").and.returnValue(null);
+				const sendStartSyncSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(Promise.resolve("Started"));
 
-			// Then
-			promiseStart.then(() => {
-
-				expect(desktopSyncService.currentConnectorType).toEqual(connectorType);
-				expect(desktopSyncService.syncSubscription).toBeDefined();
-				expect(listenSyncEventsSpy).toHaveBeenCalledTimes(1);
-				expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
-				expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
-				expect(fetchConnectorSyncDateTimeSpy).not.toHaveBeenCalled();
-				expect(fetchStravaApiCredentialsSpy).toHaveBeenCalledTimes(1);
-				expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
-
-				const flaggedStartSyncIpcMessage: FlaggedIpcMessage = <FlaggedIpcMessage> sendStartSyncSpy.calls.mostRecent().args[0];
-				const currentConnectorSyncDateTime = <ConnectorSyncDateTime> flaggedStartSyncIpcMessage.payload[1];
-				expect(currentConnectorSyncDateTime).toBeNull();
-
-				done();
-
-			}, error => {
-
-				throw new Error("Should not be here!" + JSON.stringify(error));
-
-			});
-		});
-
-		it("should start a recent strava sync (from last sync date time)", (done: Function) => {
-
-			// Given
-			const connectorType = ConnectorType.STRAVA;
-			const expectedConnectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111);
-			const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
-				expectedConnectorSyncDateTime,
-				new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
-			];
-			const listenSyncEventsSpy = spyOn(desktopSyncService.messageListenerService, "listen").and.stub();
-			const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch")
-				.and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
-			const fetchUserSettingsSpy = spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
-			const fetchConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
-				.and.returnValue(connectorSyncDateTimes);
-
-			const fetchStravaApiCredentialsSpy = spyOn(desktopSyncService.stravaApiCredentialsService, "fetch").and.returnValue(null);
-			const sendStartSyncSpy = spyOn(desktopSyncService.messageListenerService, "send").and.returnValue(Promise.resolve("Started"));
-
-			// When
-			const promiseStart = desktopSyncService.sync(true, false, connectorType);
-
-			// Then
-			promiseStart.then(() => {
-
-				expect(desktopSyncService.currentConnectorType).toEqual(connectorType);
-				expect(desktopSyncService.syncSubscription).toBeDefined();
-				expect(listenSyncEventsSpy).toHaveBeenCalledTimes(1);
-				expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
-				expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
-				expect(fetchConnectorSyncDateTimeSpy).toHaveBeenCalledTimes(1);
-				expect(fetchStravaApiCredentialsSpy).toHaveBeenCalledTimes(1);
-				expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
-
-				const flaggedStartSyncIpcMessage: FlaggedIpcMessage = <FlaggedIpcMessage> sendStartSyncSpy.calls.mostRecent().args[0];
-				const currentConnectorSyncDateTime = <ConnectorSyncDateTime> flaggedStartSyncIpcMessage.payload[1];
-				expect(currentConnectorSyncDateTime).toBeDefined();
-				expect(currentConnectorSyncDateTime).toEqual(expectedConnectorSyncDateTime);
-
-				done();
-
-			}, error => {
-
-				throw new Error("Should not be here!" + JSON.stringify(error));
-
-			});
-		});
-
-		it("should start a sync and handle sync events", (done: Function) => {
-
-			// Given
-			const connectorType = ConnectorType.STRAVA;
-			spyOn(desktopSyncService.messageListenerService, "listen").and.stub();
-			spyOn(desktopSyncService.athleteService, "fetch").and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
-			spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
-			spyOn(desktopSyncService.stravaApiCredentialsService, "fetch").and.returnValue(null);
-			spyOn(desktopSyncService.messageListenerService, "send").and.returnValue(Promise.resolve("Started"));
-			const handleSyncEventsSpy = spyOn(desktopSyncService, "handleSyncEvents").and.stub();
-			const genericSyncEvent = new GenericSyncEvent(desktopSyncService.currentConnectorType);
-
-			// When sync started send a generic sync event
-			const promiseStart = desktopSyncService.sync(false, false, connectorType);
-			promiseStart.then(() => {
-
-				setTimeout(() => desktopSyncService.messageListenerService.syncEvents$.next(genericSyncEvent));
+				// When
+				const promiseStart = desktopSyncService.sync(false, false, connectorType);
 
 				// Then
-				desktopSyncService.messageListenerService.syncEvents$.subscribe(syncEvent => {
-					expect(syncEvent).toEqual(genericSyncEvent);
-					expect(handleSyncEventsSpy).toHaveBeenCalledWith(desktopSyncService.syncEvents$, genericSyncEvent);
+				promiseStart.then(() => {
+
+					expect(desktopSyncService.currentConnectorType).toEqual(connectorType);
+					expect(desktopSyncService.syncSubscription).toBeDefined();
+					expect(listenSyncEventsSpy).toHaveBeenCalledTimes(1);
+					expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
+					expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
+					expect(fetchConnectorSyncDateTimeSpy).not.toHaveBeenCalled();
+					expect(fetchStravaConnectorInfoSpy).toHaveBeenCalledTimes(1);
+					expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
+
+					const flaggedStartSyncIpcMessage: FlaggedIpcMessage = <FlaggedIpcMessage> sendStartSyncSpy.calls.mostRecent().args[0];
+					const currentConnectorSyncDateTime = <ConnectorSyncDateTime> flaggedStartSyncIpcMessage.payload[1];
+					expect(currentConnectorSyncDateTime).toBeNull();
+
 					done();
+
+				}, error => {
+
+					throw new Error("Should not be here!" + JSON.stringify(error));
+
+				});
+			});
+
+			it("should start a recent strava sync (from last sync date time)", (done: Function) => {
+
+				// Given
+				const connectorType = ConnectorType.STRAVA;
+				const expectedConnectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111);
+				const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
+					expectedConnectorSyncDateTime,
+					new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+				];
+				const listenSyncEventsSpy = spyOn(desktopSyncService.ipcMessagesReceiver, "listen").and.stub();
+				const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch")
+					.and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
+				const fetchUserSettingsSpy = spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
+				const fetchConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+					.and.returnValue(Promise.resolve(connectorSyncDateTimes));
+
+				const fetchStravaConnectorInfoSpy = spyOn(desktopSyncService.stravaConnectorInfoService, "fetch").and.returnValue(null);
+				const sendStartSyncSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(Promise.resolve("Started"));
+
+				// When
+				const promiseStart = desktopSyncService.sync(true, false, connectorType);
+
+				// Then
+				promiseStart.then(() => {
+
+					expect(desktopSyncService.currentConnectorType).toEqual(connectorType);
+					expect(desktopSyncService.syncSubscription).toBeDefined();
+					expect(listenSyncEventsSpy).toHaveBeenCalledTimes(1);
+					expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
+					expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
+					expect(fetchConnectorSyncDateTimeSpy).toHaveBeenCalledTimes(1);
+					expect(fetchStravaConnectorInfoSpy).toHaveBeenCalledTimes(1);
+					expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
+
+					const flaggedStartSyncIpcMessage: FlaggedIpcMessage = <FlaggedIpcMessage> sendStartSyncSpy.calls.mostRecent().args[0];
+					const currentConnectorSyncDateTime = <ConnectorSyncDateTime> flaggedStartSyncIpcMessage.payload[1];
+					expect(currentConnectorSyncDateTime).toBeDefined();
+					expect(currentConnectorSyncDateTime).toEqual(expectedConnectorSyncDateTime);
+
+					done();
+
+				}, error => {
+
+					throw new Error("Should not be here!" + JSON.stringify(error));
+
+				});
+			});
+
+			it("should start a sync and handle sync events", (done: Function) => {
+
+				// Given
+				const connectorType = ConnectorType.STRAVA;
+				spyOn(desktopSyncService.ipcMessagesReceiver, "listen").and.stub();
+				spyOn(desktopSyncService.athleteService, "fetch").and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
+				spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
+				spyOn(desktopSyncService.stravaConnectorInfoService, "fetch").and.returnValue(null);
+				spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(Promise.resolve("Started"));
+				const handleSyncEventsSpy = spyOn(desktopSyncService, "handleSyncEvents").and.stub();
+				const genericSyncEvent = new GenericSyncEvent(desktopSyncService.currentConnectorType);
+
+				// When sync started send a generic sync event
+				const promiseStart = desktopSyncService.sync(false, false, connectorType);
+				promiseStart.then(() => {
+
+					setTimeout(() => desktopSyncService.ipcMessagesReceiver.syncEvents$.next(genericSyncEvent));
+
+					// Then
+					desktopSyncService.ipcMessagesReceiver.syncEvents$.subscribe(syncEvent => {
+						expect(syncEvent).toEqual(genericSyncEvent);
+						expect(handleSyncEventsSpy).toHaveBeenCalledWith(desktopSyncService.syncEvents$, genericSyncEvent);
+						done();
+					}, error => {
+						throw new Error("Should not be here!" + JSON.stringify(error));
+					});
+
 				}, error => {
 					throw new Error("Should not be here!" + JSON.stringify(error));
 				});
-
-			}, error => {
-				throw new Error("Should not be here!" + JSON.stringify(error));
 			});
+
+			it("should not start a sync", (done: Function) => {
+
+				// Given
+				const errorMessage = "Failed to start";
+				const connectorType = ConnectorType.STRAVA;
+				const listenSyncEventsSpy = spyOn(desktopSyncService.ipcMessagesReceiver, "listen").and.stub();
+				const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch")
+					.and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
+				const fetchUserSettingsSpy = spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
+				const fetchStravaConnectorInfoSpy = spyOn(desktopSyncService.stravaConnectorInfoService, "fetch").and.returnValue(null);
+				const sendStartSyncSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(Promise.reject(errorMessage));
+
+				// When
+				const promiseStart = desktopSyncService.sync(false, false, connectorType);
+
+				// Then
+				promiseStart.then(() => {
+
+					throw new Error("Should not be here!");
+
+				}, error => {
+
+					expect(error).toEqual(errorMessage);
+					expect(desktopSyncService.currentConnectorType).toEqual(connectorType);
+					expect(desktopSyncService.syncSubscription).toBeDefined();
+					expect(listenSyncEventsSpy).toHaveBeenCalledTimes(1);
+					expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
+					expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
+					expect(fetchStravaConnectorInfoSpy).toHaveBeenCalledTimes(1);
+					expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
+					done();
+				});
+			});
+
 		});
 
-		it("should not start a sync", (done: Function) => {
+		describe("File system connector", () => {
 
-			// Given
-			const errorMessage = "Failed to start";
-			const connectorType = ConnectorType.STRAVA;
-			const listenSyncEventsSpy = spyOn(desktopSyncService.messageListenerService, "listen").and.stub();
-			const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch")
-				.and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
-			const fetchUserSettingsSpy = spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
-			const fetchStravaApiCredentialsSpy = spyOn(desktopSyncService.stravaApiCredentialsService, "fetch").and.returnValue(null);
-			const sendStartSyncSpy = spyOn(desktopSyncService.messageListenerService, "send").and.returnValue(Promise.reject(errorMessage));
+			it("should start a full file system sync", (done: Function) => {
 
-			// When
-			const promiseStart = desktopSyncService.sync(false, false, connectorType);
+				// Given
+				const connectorType = ConnectorType.FILE_SYSTEM;
+				const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
+					new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
+					new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+				];
+				const listenSyncEventsSpy = spyOn(desktopSyncService.ipcMessagesReceiver, "listen").and.stub();
+				const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch")
+					.and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
+				const fetchUserSettingsSpy = spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
+				const fetchConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+					.and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
-			// Then
-			promiseStart.then(() => {
+				const expectedFileSystemConnectorInfo = new FileSystemConnectorInfo("/path/to/dir/");
+				const fileSystemConnectorInfoServiceSpy = spyOn(desktopSyncService.fileSystemConnectorInfoService, "fetch").and.returnValue(expectedFileSystemConnectorInfo);
+				const sendStartSyncSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(Promise.resolve("Started"));
 
-				throw new Error("Should not be here!");
+				// When
+				const promiseStart = desktopSyncService.sync(false, false, connectorType);
 
-			}, error => {
+				// Then
+				promiseStart.then(() => {
 
-				expect(error).toEqual(errorMessage);
-				expect(desktopSyncService.currentConnectorType).toEqual(connectorType);
-				expect(desktopSyncService.syncSubscription).toBeDefined();
-				expect(listenSyncEventsSpy).toHaveBeenCalledTimes(1);
-				expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
-				expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
-				expect(fetchStravaApiCredentialsSpy).toHaveBeenCalledTimes(1);
-				expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
-				done();
+					expect(desktopSyncService.currentConnectorType).toEqual(connectorType);
+					expect(desktopSyncService.syncSubscription).toBeDefined();
+					expect(listenSyncEventsSpy).toHaveBeenCalledTimes(1);
+					expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
+					expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
+					expect(fileSystemConnectorInfoServiceSpy).toHaveBeenCalledTimes(1);
+					expect(fetchConnectorSyncDateTimeSpy).not.toHaveBeenCalled();
+					expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
+
+					const flaggedStartSyncIpcMessage: FlaggedIpcMessage = <FlaggedIpcMessage> sendStartSyncSpy.calls.mostRecent().args[0];
+					const currentConnectorSyncDateTime = <ConnectorSyncDateTime> flaggedStartSyncIpcMessage.payload[1];
+					expect(currentConnectorSyncDateTime).toBeNull();
+					const fileSystemConnectorInfo = <FileSystemConnectorInfo> flaggedStartSyncIpcMessage.payload[2];
+					expect(fileSystemConnectorInfo).toEqual(expectedFileSystemConnectorInfo);
+
+					done();
+
+				}, error => {
+
+					throw new Error("Should not be here!" + JSON.stringify(error));
+
+				});
+
 			});
 		});
 
@@ -360,10 +426,11 @@ describe("DesktopSyncService", () => {
 			const syncEvent$ = new Subject<SyncEvent>();
 			const connectorType = ConnectorType.STRAVA;
 			const completeSyncEvent = new CompleteSyncEvent(connectorType);
+			const connectorSyncDateTime = new ConnectorSyncDateTime(connectorType);
 			const getSyncStateSpy = spyOn(desktopSyncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.NOT_SYNCED));
 			const getConnectorSyncDateTimeByIdSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "getById")
 				.and.returnValue(Promise.resolve(null));
-			const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(Promise.resolve());
+			const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(Promise.resolve([connectorSyncDateTime]));
 			const syncEventDoneSpy = spyOn(desktopSyncService.appEventsService.onSyncDone, "next").and.stub();
 
 			// When
@@ -395,7 +462,7 @@ describe("DesktopSyncService", () => {
 			const getSyncStateSpy = spyOn(desktopSyncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
 			const getConnectorSyncDateTimeByIdSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "getById")
 				.and.returnValue(Promise.resolve(connectorSyncDateTime));
-			const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(Promise.resolve());
+			const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(Promise.resolve([connectorSyncDateTime]));
 			const syncEventDoneSpy = spyOn(desktopSyncService.appEventsService.onSyncDone, "next").and.stub();
 
 			// When
@@ -423,7 +490,7 @@ describe("DesktopSyncService", () => {
 		it("should trigger sync stop", (done: Function) => {
 
 			// Given
-			const sendSpy = spyOn(desktopSyncService.messageListenerService, "send")
+			const sendSpy = spyOn(desktopSyncService.ipcMessagesSender, "send")
 				.and.returnValue(Promise.resolve("Stopped from main"));
 			const connectorType = ConnectorType.FILE_SYSTEM;
 			desktopSyncService.currentConnectorType = connectorType;
@@ -446,7 +513,7 @@ describe("DesktopSyncService", () => {
 		it("should reject sync stop", (done: Function) => {
 
 			// Given
-			const sendSpy = spyOn(desktopSyncService.messageListenerService, "send")
+			const sendSpy = spyOn(desktopSyncService.ipcMessagesSender, "send")
 				.and.returnValue(Promise.reject("Unable to stop sync"));
 			const connectorType = ConnectorType.FILE_SYSTEM;
 			desktopSyncService.currentConnectorType = connectorType;
@@ -558,7 +625,7 @@ describe("DesktopSyncService", () => {
 			// Given
 			const syncEvent$ = new Subject<SyncEvent>();
 			desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
-			const stravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(new StravaApiCredentials(null, null));
+			const stravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(new StravaConnectorInfo(null, null));
 			const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
 			// When
@@ -579,15 +646,17 @@ describe("DesktopSyncService", () => {
 			// Given
 			const syncEvent$ = new Subject<SyncEvent>();
 			const expectedDetected = true;
+			const connectorType = ConnectorType.STRAVA;
 			desktopSyncService.activityUpsertDetected = true; // Emulate some activities have been upserted
-			desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
+			desktopSyncService.currentConnectorType = connectorType;
+			const connectorSyncDateTime = new ConnectorSyncDateTime(connectorType);
 			const completeSyncEvent = new CompleteSyncEvent(desktopSyncService.currentConnectorType);
 			const handleSyncCompleteEventsSpy = spyOn(desktopSyncService, "handleSyncCompleteEvents").and.callThrough();
 			spyOn(desktopSyncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
 			spyOn(desktopSyncService.connectorSyncDateTimeDao, "getById")
 				.and.returnValue(Promise.resolve(null));
 			spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes")
-				.and.returnValue(Promise.resolve());
+				.and.returnValue(Promise.resolve([connectorSyncDateTime]));
 			const onSyncDoneSpy = spyOn(desktopSyncService.appEventsService.onSyncDone, "next");
 			const resetTrackChangesSpy = spyOn(desktopSyncService, "resetActivityTrackingUpsert").and.callThrough();
 			const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
@@ -1023,6 +1092,25 @@ describe("DesktopSyncService", () => {
 			done();
 		});
 
+		it("should handle FS_SOURCE_DIRECTORY_DONT_EXISTS events and stop sync", (done: Function) => {
+
+			// Given
+			const syncEvent$ = new Subject<SyncEvent>();
+			desktopSyncService.currentConnectorType = ConnectorType.FILE_SYSTEM;
+			const fakseSourceDirectory = "/fake/source/dir/path";
+			const errorSyncEvent = ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(fakseSourceDirectory, null);
+			const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
+			const stopSpy = spyOn(desktopSyncService, "stop").and.returnValue(Promise.resolve());
+
+			// When
+			desktopSyncService.handleErrorSyncEvents(syncEvent$, errorSyncEvent);
+
+			// Then
+			expect(syncEventNextSpy).toHaveBeenCalledTimes(1);
+			expect(stopSpy).toHaveBeenCalledTimes(1);
+			done();
+		});
+
 		it("should throw when error is not ErrorSyncEvent instance", (done: Function) => {
 
 			// Given
@@ -1410,7 +1498,7 @@ describe("DesktopSyncService", () => {
 				.and.returnValue(Promise.resolve(connectorSyncDateTimesToSave));
 
 			const putSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "put")
-				.and.returnValue(Promise.resolve(connectorSyncDateTimesToSave));
+				.and.returnValues(Promise.resolve(connectorSyncDateTimesToSave[0]), Promise.resolve(connectorSyncDateTimesToSave[1]));
 
 			// When
 			const promise = desktopSyncService.upsertConnectorsSyncDateTimes(connectorSyncDateTimesToSave);

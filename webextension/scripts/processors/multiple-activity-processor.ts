@@ -6,6 +6,7 @@ import { ComputeActivityThreadMessageModel } from "../models/compute-activity-th
 import { StreamActivityModel } from "../models/sync/stream-activity.model";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
+import { ElevateSport } from "@elevate/shared/enums";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 const ComputeAnalysisWorker = require("worker-loader?inline!./workers/compute-analysis.worker");
@@ -133,7 +134,7 @@ export class MultipleActivityProcessor {
 		const activitySourceData: ActivitySourceDataModel = this.provideActivitySourceData(activityWithStream);
 
 		const threadMessage: ComputeActivityThreadMessageModel = {
-			activityType: activityWithStream.type,
+			activityType: <ElevateSport> activityWithStream.type,
 			supportsGap: (activityWithStream.type === "Run"),
 			isTrainer: activityWithStream.trainer,
 			appResources: this.appResources,
@@ -144,7 +145,8 @@ export class MultipleActivityProcessor {
 			activitySourceData: activitySourceData,
 			activityStream: activityWithStream.stream,
 			bounds: null,
-			returnZones: false
+			returnZones: false,
+			returnPowerCurve: false
 		};
 
 		computeAnalysisThread.postMessage(threadMessage);

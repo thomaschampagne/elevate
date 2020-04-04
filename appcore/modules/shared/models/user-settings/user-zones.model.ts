@@ -29,7 +29,6 @@ export class UserZonesModel {
 	public static readonly TYPE_ELEVATION: string = "elevation";
 	public static readonly TYPE_ASCENT: string = "ascent";
 
-
 	public static asInstance(userZonesModel: UserZonesModel): UserZonesModel {
 		return new UserZonesModel(
 			userZonesModel.speed,

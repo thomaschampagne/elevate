@@ -10,6 +10,14 @@ export class StreamsService {
 
 	/**
 	 *
+	 * @param id
+	 */
+	public getById(id: number | string): Promise<CompressedStreamModel> {
+		return this.streamsDao.getById(<string> id);
+	}
+
+	/**
+	 *
 	 * @param compressedStreamModel
 	 */
 	public put(compressedStreamModel: CompressedStreamModel): Promise<CompressedStreamModel> {

@@ -438,7 +438,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
 				return Promise.reject("Cannot save property of a value");
 			}
 
-			doc = _.set(doc as Object, path, value) as T; // Update property of doc
+			doc = _.set(doc, path, value) as T; // Update property of doc
 			return <Promise<T>> this.save(storageLocation, doc, defaultStorageValue);
 		});
 	}

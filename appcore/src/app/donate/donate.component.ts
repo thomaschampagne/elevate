@@ -24,6 +24,6 @@ export class DonateComponent implements OnInit {
 	}
 
 	public onDonateClicked() {
-		this.openResourceResolver.openWebLink(this.donateUrl);
+		this.openResourceResolver.openLink(this.donateUrl);
 	}
 }

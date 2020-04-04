@@ -822,12 +822,12 @@ describe("AthleteService", () => {
 			const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
 
 			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch")
-				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
+				.and.returnValue(Promise.resolve(_.cloneDeep(new AthleteModel(Gender.MEN, existingPeriodAthleteSettings))));
 
 			const validateSpy = spyOn(service, "validate").and.callThrough();
 
 			const saveDaoSpy = spyOn(service.athleteModelDao, "save")
-				.and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
+				.and.returnValue(Promise.resolve(new AthleteModel(Gender.MEN, expectedPeriodAthleteSettings)));
 
 			// When
 			const promise: Promise<DatedAthleteSettingsModel[]> = service.removeSettings(removeSinceIdentifier);
@@ -862,12 +862,12 @@ describe("AthleteService", () => {
 			const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
 
 			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch")
-				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
+				.and.returnValue(Promise.resolve(_.cloneDeep(new AthleteModel(Gender.MEN, existingPeriodAthleteSettings))));
 
 			const validateSpy = spyOn(service, "validate").and.callThrough();
 
 			const saveDaoSpy = spyOn(service.athleteModelDao, "save")
-				.and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
+				.and.returnValue(Promise.resolve(new AthleteModel(Gender.MEN, expectedPeriodAthleteSettings)));
 
 			// When
 			const promise: Promise<DatedAthleteSettingsModel[]> = service.removeSettings(removeSinceIdentifier);
@@ -905,10 +905,10 @@ describe("AthleteService", () => {
 			const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
 
 			const fetchDaoSpy = spyOn(service.athleteModelDao, "fetch")
-				.and.returnValue(Promise.resolve(_.cloneDeep(existingPeriodAthleteSettings)));
+				.and.returnValue(Promise.resolve(_.cloneDeep(new AthleteModel(Gender.MEN, existingPeriodAthleteSettings))));
 
 			const saveDaoSpy = spyOn(service.athleteModelDao, "save")
-				.and.returnValue(Promise.resolve(expectedPeriodAthleteSettings));
+				.and.returnValue(Promise.resolve(new AthleteModel(Gender.MEN, expectedPeriodAthleteSettings)));
 
 			// When
 			const promise: Promise<DatedAthleteSettingsModel[]> = service.removeSettings(removeSinceIdentifier);

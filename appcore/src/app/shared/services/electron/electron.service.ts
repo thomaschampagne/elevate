@@ -28,6 +28,17 @@ export class ElectronService {
 		});
 	}
 
+	public userDirectorySelection(): string {
+		const paths = this.electron.remote.dialog.showOpenDialogSync(this.getMainBrowserWindow(), {
+			properties: ["openDirectory", "showHiddenFiles"]
+		});
+		return paths && paths.length > 0 ? paths[0] : null;
+	}
+
+	public getMainBrowserWindow(): Electron.BrowserWindow {
+		return this.electron.remote.getCurrentWindow();
+	}
+
 	public openExternalUrl(url: string): void {
 		this.electron.shell.openExternal(url);
 	}
@@ -36,8 +47,8 @@ export class ElectronService {
 		this.electron.shell.openItem(path);
 	}
 
-	public openLogFile(): void {
-		const logPath = this.getAppDataPath() + "log.log";
+	public openLogsFolder(): void {
+		const logPath = this.getAppDataPath() + "/logs/";
 		this.openItem(logPath);
 	}
 

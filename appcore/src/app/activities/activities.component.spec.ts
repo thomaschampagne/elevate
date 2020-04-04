@@ -32,7 +32,8 @@ describe("ActivitiesComponent", () => {
 		}).compileComponents();
 
 		spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
-			addListener: () => {
+			// @ts-ignore
+			addListener: (message: any, sender: any, sendResponse: any) => {
 			}
 		});
 

@@ -1,13 +1,14 @@
 import { AthleteSnapshotModel, SyncedActivityModel } from "@elevate/shared/models";
 import * as moment from "moment";
 import * as _ from "lodash";
+import { ElevateSport } from "@elevate/shared/enums";
 
 export class FakeSyncedActivityHelper {
 
 	public static create(id: number,
 						 athleteSnapshot: AthleteSnapshotModel,
 						 name: string,
-						 type: string,
+						 type: ElevateSport,
 						 dateStr: string,
 						 avgHr: number,
 						 avgWatts: number,
@@ -27,6 +28,9 @@ export class FakeSyncedActivityHelper {
 		fakeActivity.elevation_gain_raw = 0;
 		fakeActivity.extendedStats = {
 			moveRatio: 1,
+			elapsedTime: 1,
+			movingTime: 1,
+			pauseTime: 1,
 			runningPerformanceIndex: 25.0,
 			cadenceData: null,
 			elevationData: null,

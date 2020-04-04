@@ -39,7 +39,7 @@ describe("DesktopVersionsProvider", () => {
 		// Given
 		const expectedVersion = "6.6.6";
 		const packageDefinition: Partial<PackageManifest> = {version: expectedVersion};
-		spyOn(service, "packageManifest").and.returnValue(packageDefinition);
+		spyOn(service, "packageManifest").and.returnValue(<PackageManifest> packageDefinition);
 
 		// When
 		const promise = service.getPackageVersion();

@@ -28,15 +28,15 @@ export class ShareComponent implements OnInit {
 	}
 
 	public onOpenTweet(): void {
-		this.openResourceResolver.openWebLink(ShareComponent.TWEET);
+		this.openResourceResolver.openLink(ShareComponent.TWEET);
 	}
 
 	public onOpenFacebook(): void {
-		this.openResourceResolver.openWebLink(ShareComponent.FACEBOOK_POST);
+		this.openResourceResolver.openLink(ShareComponent.FACEBOOK_POST);
 	}
 
 	public onOpenLandingPage(): void {
-		this.openResourceResolver.openWebLink(ShareComponent.LANDING_PAGE_URL);
+		this.openResourceResolver.openLink(ShareComponent.LANDING_PAGE_URL);
 	}
 
 

@@ -1,4 +1,11 @@
-<mat-toolbar>Officials</mat-toolbar>
+<mat-toolbar>Officials connectors</mat-toolbar>
 <app-file-system-connector></app-file-system-connector>
-<mat-toolbar>Third parties</mat-toolbar>
+<mat-toolbar>Third parties connectors</mat-toolbar>
 <app-strava-connector></app-strava-connector>
+
+<div class="new_connector_contact">
+	<button mat-stroked-button color="primary"
+			(click)="onOpenLink('https://twitter.com/champagnethomas')">
+		Plug your connector on this page as a fitness company or organization.
+	</button>
+</div>

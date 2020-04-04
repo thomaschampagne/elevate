@@ -13,6 +13,9 @@
 			"@elevate/shared/constants": [
 				"./modules/shared/constants/"
 			],
+			"@elevate/shared/enums": [
+				"./modules/shared/enums/"
+			],
 			"@elevate/shared/data": [
 				"./modules/shared/data/"
 			],

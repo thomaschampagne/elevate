@@ -5,6 +5,7 @@ import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.m
 import { ActivitiesSynchronize } from "../../scripts/processors/activities-synchronize";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { ActivitiesChangesModel, AthleteModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import { ElevateSport } from "@elevate/shared/enums";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 describe("ActivitiesSynchronize", () => {
@@ -112,7 +113,7 @@ describe("ActivitiesSynchronize", () => {
 		activitiesSynchronize.appendGlobalActivitiesChanges({
 			added: [4, 5],
 			deleted: [],
-			edited: [{id: 6, name: "rideName", type: "Ride", display_type: "Ride"}]
+			edited: [{id: 6, name: "rideName", type: ElevateSport.Ride, display_type: "Ride"}]
 		});
 		expect(activitiesSynchronize.activitiesChanges).not.toBeNull();
 		expect(activitiesSynchronize.activitiesChanges.added.length).toEqual(4);
@@ -123,10 +124,10 @@ describe("ActivitiesSynchronize", () => {
 		activitiesSynchronize.appendGlobalActivitiesChanges({
 			added: [5, 10, 11],
 			deleted: [15, 16],
-			edited: [{id: 6, name: "rideName", type: "Ride", display_type: "Ride"}, {
+			edited: [{id: 6, name: "rideName", type: ElevateSport.Ride, display_type: "Ride"}, {
 				id: 22,
 				name: "Run...",
-				type: "Run",
+				type: ElevateSport.Run,
 				display_type: "Run"
 			}]
 		});

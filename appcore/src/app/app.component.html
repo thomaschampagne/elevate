@@ -42,7 +42,7 @@
 
 			<ng-container appSyncMenu></ng-container>
 
-			<button mat-icon-button (click)="onThemeToggle()">
+			<button id="theme-toggle" mat-icon-button (click)="onThemeToggle()">
 				<mat-icon *ngIf="currentTheme === Theme.LIGHT"
 						  style="transform: rotate(-35deg) scaleX(-1);">
 					brightness_3 <!--Moon icon rotate by -35deg-->
@@ -55,7 +55,7 @@
 		</mat-toolbar>
 		<div>
 			<ng-container appSyncBar></ng-container>
-			<app-athlete-settings-consistency-ribbon></app-athlete-settings-consistency-ribbon>
+			<ng-container appRefreshStatsBar></ng-container>
 			<router-outlet></router-outlet>
 		</div>
 	</mat-sidenav-container>

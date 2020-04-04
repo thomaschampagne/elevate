@@ -21,7 +21,7 @@ export class ErrorSyncEvent extends SyncEvent {
 		create: (fromConnectorType: ConnectorType, activityName: string, onDate: Date, existingActivities: string[]): ErrorSyncEvent => {
 			return new ErrorSyncEvent(fromConnectorType, {
 				code: ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.code,
-				description: `Unable to save the new activity "${activityName}" on date "${onDate.toString()}" because multiple activities are already saved in database for same date: ${existingActivities.join("; ")}`,
+				description: `Unable to save the new activity "${activityName}" starting on date "${onDate.toISOString()}" because multiple activities are already saved in database for same date: ${existingActivities.join("; ")}`,
 				stacktrace: null
 			});
 		},
@@ -29,12 +29,12 @@ export class ErrorSyncEvent extends SyncEvent {
 
 	public static SYNC_ERROR_COMPUTE = {
 		code: "SYNC_ERROR_COMPUTE",
-		create: (fromConnectorType: ConnectorType, description: string, stacktrace: string = null): ErrorSyncEvent => {
+		create: (fromConnectorType: ConnectorType, description: string, activity: BareActivityModel = null, stacktrace: string = null): ErrorSyncEvent => {
 			return new ErrorSyncEvent(fromConnectorType, {
 				code: ErrorSyncEvent.SYNC_ERROR_COMPUTE.code,
 				description: description,
 				stacktrace: stacktrace
-			});
+			}, activity);
 		},
 	};
 
@@ -129,15 +129,26 @@ export class ErrorSyncEvent extends SyncEvent {
 		}
 	};
 
+	public static FS_SOURCE_DIRECTORY_DONT_EXISTS = {
+		code: "FS_SOURCE_DIRECTORY_DONT_EXISTS",
+		create: (sourceDirectory: string, stacktrace: string = null): ErrorSyncEvent => {
+			return new ErrorSyncEvent(ConnectorType.FILE_SYSTEM, {
+				code: ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.code,
+				description: "Source directory '" + sourceDirectory + "' do not exists",
+				stacktrace: stacktrace
+			});
+		},
+	};
+
 	public code: string;
 	public stacktrace: string;
 	public activity?: BareActivityModel;
 
 	constructor(fromConnectorType: ConnectorType, errorDetails: { code: string; description: string; stacktrace: string; },
-				activity?: BareActivityModel) {
+				activity: BareActivityModel = null) {
 		super(SyncEventType.ERROR, fromConnectorType, errorDetails.description);
 		this.code = (errorDetails.code) ? errorDetails.code : null;
 		this.stacktrace = (errorDetails.stacktrace) ? errorDetails.stacktrace : null;
-		this.activity = (activity) ? activity : null;
+		this.activity = activity;
 	}
 }

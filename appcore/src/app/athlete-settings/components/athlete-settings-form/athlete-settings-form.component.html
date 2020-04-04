@@ -19,7 +19,9 @@
 	</mat-card-title>
 	<mat-card-content>
 		<div class="howTo">
-			<a (click)="maxHrHint.style.display = 'block'">How to setup max heart rate</a>
+			<button mat-button color="accent" (click)="maxHrHint.style.display = 'block'; $event.target.hidden = true">
+				How to setup max heart rate
+			</button>
 		</div>
 		<div class="hint" #maxHrHint [style.display]="'none'">
 			Enter your max heart rate measured at full throttle. If you're not aware of your max heart rate you can
@@ -43,7 +45,9 @@
 	</mat-card-title>
 	<mat-card-content>
 		<div class="howTo">
-			<a (click)="restHrHint.style.display = 'block'">How to setup rest heart rate</a>
+			<button mat-button color="accent" (click)="restHrHint.style.display = 'block'; $event.target.hidden = true">
+				How to setup rest heart rate
+			</button>
 		</div>
 		<div class="hint" #restHrHint [style.display]="'none'">
 			Enter your rest heart rate. Lie down in your bed and measure the lower value with an hear rate monitor or <a
@@ -66,7 +70,9 @@
 	</mat-card-title>
 	<mat-card-content>
 		<div class="howTo">
-			<a (click)="lthrHint.style.display = 'block'">How to setup LTHR</a>
+			<button mat-button color="accent" (click)="lthrHint.style.display = 'block'; $event.target.hidden = true">
+				How to setup LTHR
+			</button>
 		</div>
 		<div class="hint" #lthrHint [style.display]="'none'">
 			The LTHR is the point, above which, increased blood acidification occurs in your body. Above this
@@ -84,9 +90,9 @@
 				<mat-placeholder>
 					Default LTHR in bpm
 					{{(!athleteSettingsModel.lthr.default) ? '(currently ' +
-                    (athleteSettingsModel.restHr + DEFAULT_LTHR_KARVONEN_HRR_FACTOR *
-                        (athleteSettingsModel.maxHr -
-                            athleteSettingsModel.restHr)).toFixed(0) + ' bpm)' : ''}}
+					(athleteSettingsModel.restHr + DEFAULT_LTHR_KARVONEN_HRR_FACTOR *
+						(athleteSettingsModel.maxHr -
+							athleteSettingsModel.restHr)).toFixed(0) + ' bpm)' : ''}}
 				</mat-placeholder>
 			</mat-form-field>
 			<span fxFlex="1"></span>
@@ -126,7 +132,10 @@
 	</mat-card-title>
 	<mat-card-content>
 		<div class="howTo">
-			<a (click)="cyclingFtpHint.style.display = 'block'">How to setup cycling FTP</a>
+			<button mat-button color="accent"
+					(click)="cyclingFtpHint.style.display = 'block'; $event.target.hidden = true">How to setup cycling
+				FTP
+			</button>
 		</div>
 		<div class="hint" #cyclingFtpHint [style.display]="'none'">
 			The FTP is the constant average power you are able to maintain during 1 hour. To measure it you must perform
@@ -156,7 +165,10 @@
 	</mat-card-title>
 	<mat-card-content>
 		<div class="howTo">
-			<a (click)="runningFtpHint.style.display = 'block'">How to setup running FTP</a>
+			<button mat-button color="accent"
+					(click)="runningFtpHint.style.display = 'block'; $event.target.hidden = true">How to setup running
+				FTP
+			</button>
 		</div>
 		<div class="hint" #runningFtpHint [style.display]="'none'">
 			The Running Functional Threshold Pace is the maximal running pace an athlete can hold during an effort of

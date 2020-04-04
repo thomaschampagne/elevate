@@ -57,7 +57,7 @@ import { ElevateException } from "@elevate/shared/exceptions";
 				<ng-container *ngIf="(syncState === SyncState.SYNCED)">
 					<button mat-menu-item (click)="onSync(true)">
 						<mat-icon>sync</mat-icon>
-						<span>Sync "{{mostRecentConnectorSyncedType | lowercase}}" recent activities</span>
+						<span>Sync "{{printMostRecentConnectorSynced()}}" recent activities</span>
 					</button>
 					<button mat-menu-item (click)="goToConnectors()">
 						<mat-icon>power</mat-icon>
@@ -149,6 +149,10 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
 
 	public onSync(fastSync: boolean = null, forceSync: boolean = null): void {
 		this.onSyncMostRecentConnectorSynced(fastSync);
+	}
+
+	public printMostRecentConnectorSynced(): string {
+		return this.mostRecentConnectorSyncedType ? DesktopSyncService.niceConnectorPrint(this.mostRecentConnectorSyncedType) : null;
 	}
 
 	public onSyncMostRecentConnectorSynced(fastSync: boolean = null): void {

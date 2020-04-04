@@ -4,7 +4,7 @@ import resolve from "@rollup/plugin-node-resolve";
 import {terser} from "rollup-plugin-terser";
 import json from '@rollup/plugin-json';
 
-const NODE_GLOBALS = [
+const EXTERNALS = [
 	"electron",
 	"fs",
 	"os",
@@ -45,6 +45,8 @@ const LODASH_METHODS_DECLARATION = [
 	"first",
 	"find",
 	"set",
+	"isDate",
+	"flatten",
 	"range"
 ];
 
@@ -63,7 +65,7 @@ module.exports = {
 	watch: {
 		chokidar: false
 	},
-	external: NODE_GLOBALS,
+	external: EXTERNALS,
 	plugins: [
 		typescript({
 			include: [

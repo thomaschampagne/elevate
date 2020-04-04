@@ -162,7 +162,7 @@ describe("ExtensionSyncService", () => {
 
 		athleteModel.datedAthleteSettings = expectedPeriodAthleteSettings;
 
-		spyOn(extensionSyncService.syncDateTimeDao, "fetch").and.returnValue(syncDateTime);
+		spyOn(extensionSyncService.syncDateTimeDao, "fetch").and.returnValue(Promise.resolve(syncDateTime));
 		spyOn(extensionSyncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 		spyOn(extensionSyncService.athleteService, "fetch").and.returnValue(Promise.resolve(athleteModel));
 
@@ -190,9 +190,9 @@ describe("ExtensionSyncService", () => {
 		// Given
 		const syncDateTime = 99;
 
-		spyOn(extensionSyncService.syncDateTimeDao, "fetch").and.returnValue(syncDateTime);
+		spyOn(extensionSyncService.syncDateTimeDao, "fetch").and.returnValue(Promise.resolve(syncDateTime));
 		spyOn(extensionSyncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
-		spyOn(extensionSyncService.athleteService, "fetch").and.returnValue(Promise.resolve([]));
+		spyOn(extensionSyncService.athleteService, "fetch").and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
 
 		const prepareForExportSpy = spyOn(extensionSyncService, "prepareForExport").and.callThrough();
 		const saveAsSpy = spyOn(extensionSyncService, "saveAs").and.stub();
@@ -219,7 +219,7 @@ describe("ExtensionSyncService", () => {
 		// Given
 		spyOn(extensionSyncService.syncDateTimeDao, "fetch").and.returnValue(null);
 		spyOn(extensionSyncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
-		spyOn(extensionSyncService.athleteService, "fetch").and.returnValue(Promise.resolve([]));
+		spyOn(extensionSyncService.athleteService, "fetch").and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
 
 
 		const prepareForExportSpy = spyOn(extensionSyncService, "prepareForExport").and.callThrough();

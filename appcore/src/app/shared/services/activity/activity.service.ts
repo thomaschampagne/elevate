@@ -1,13 +1,12 @@
-import { Injectable } from "@angular/core";
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { AthleteSnapshotResolverService } from "../athlete-snapshot-resolver/athlete-snapshot-resolver.service";
 import { Subject } from "rxjs";
 import { LoggerService } from "../logging/logger.service";
+import FindRequest = PouchDB.Find.FindRequest;
 
-@Injectable()
-export class ActivityService {
+export abstract class ActivityService {
 
 	public athleteSettingsConsistency: Subject<boolean>;
 
@@ -64,6 +63,50 @@ export class ActivityService {
 
 	public clear(): Promise<void> {
 		return this.activityDao.clear();
+	}
+
+	/**
+	 *
+	 * @param startTime
+	 * @param activityDurationSeconds
+	 */
+	public findByDatedSession(startTime: string, activityDurationSeconds: number): Promise<SyncedActivityModel[]> {
+
+		const activityStartTime = new Date(startTime).toISOString();
+		const endDate = new Date(activityStartTime);
+		endDate.setSeconds(endDate.getSeconds() + activityDurationSeconds);
+		const activityEndTime = endDate.toISOString();
+
+		const query: FindRequest<SyncedActivityModel[]> = {
+			selector: {
+				$or: [
+					{
+						start_time: {
+							$gte: activityStartTime,
+						},
+						end_time: {
+							$lte: activityEndTime,
+						}
+					},
+					{
+						start_time: {
+							$gte: activityStartTime,
+							$lte: activityEndTime,
+						}
+					},
+					{
+						end_time: {
+							$gte: activityStartTime,
+							$lte: activityEndTime,
+						}
+					}
+
+				]
+
+			}
+		};
+
+		return this.find(query);
 	}
 
 	/**

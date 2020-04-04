@@ -3,19 +3,24 @@ import logger from "electron-log";
 import { StravaAuthenticator } from "../connectors/strava/strava-authenticator";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import {
+	ActivityComputer,
 	ActivitySyncEvent,
 	CompleteSyncEvent,
 	ConnectorType,
 	ErrorSyncEvent,
-	StravaApiCredentials,
+	FileSystemConnectorInfo,
+	StravaConnectorInfo,
 	SyncEvent,
 	SyncEventType
 } from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
-import { AthleteModel, ConnectorSyncDateTime, UserSettings } from "@elevate/shared/models";
+import { ActivityStreamsModel, AthleteModel, AthleteSnapshotModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { Service } from "../service";
 import * as _ from "lodash";
+import { FileSystemConnector } from "../connectors/filesystem/file-system.connector";
+import { BaseConnector } from "../connectors/base.connector";
 import UserSettingsModel = UserSettings.UserSettingsModel;
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 export class IpcMainMessagesService {
 
@@ -63,6 +68,10 @@ export class IpcMainMessagesService {
 				this.handleGetRuntimeInfo(message, replyWith);
 				break;
 
+			case MessageFlag.COMPUTE_ACTIVITY:
+				this.handleComputeActivitySpy(message, replyWith);
+				break;
+
 			default:
 				this.handleUnknownMessage(message, replyWith);
 				break;
@@ -85,17 +94,22 @@ export class IpcMainMessagesService {
 		if (connectorType === ConnectorType.STRAVA) {
 
 			const stravaConnectorSyncDateTime: ConnectorSyncDateTime = <ConnectorSyncDateTime> message.payload[1];
-			const stravaApiCredentials: StravaApiCredentials = <StravaApiCredentials> message.payload[2];
+			const stravaConnectorInfo: StravaConnectorInfo = <StravaConnectorInfo> message.payload[2];
 			const athleteModel: AthleteModel = <AthleteModel> message.payload[3];
-			const updateSyncedActivitiesNameAndType: boolean = <boolean> message.payload[4];
-			const userSettingsModel: UserSettingsModel = <UserSettingsModel> message.payload[5];
+			const userSettingsModel: UserSettingsModel = <UserSettingsModel> message.payload[4];
 
-			this.service.currentConnector = StravaConnector.create(athleteModel, userSettingsModel, stravaConnectorSyncDateTime,
-				stravaApiCredentials, updateSyncedActivitiesNameAndType);
+			this.service.currentConnector = StravaConnector.create(athleteModel, userSettingsModel, stravaConnectorSyncDateTime, stravaConnectorInfo);
 
 		} else if (connectorType === ConnectorType.FILE_SYSTEM) {
 
-			throw new Error("To be done");
+			const fsConnectorSyncDateTime: ConnectorSyncDateTime = <ConnectorSyncDateTime> message.payload[1];
+			const fileSystemConnectorInfo: FileSystemConnectorInfo = <FileSystemConnectorInfo> message.payload[2];
+			const athleteModel: AthleteModel = <AthleteModel> message.payload[3];
+			const userSettingsModel: UserSettingsModel = <UserSettingsModel> message.payload[4];
+
+			this.service.currentConnector = FileSystemConnector.create(athleteModel, userSettingsModel, fsConnectorSyncDateTime,
+				fileSystemConnectorInfo.sourceDirectory, fileSystemConnectorInfo.scanSubDirectories, fileSystemConnectorInfo.deleteActivityFilesAfterSync,
+				fileSystemConnectorInfo.extractArchiveFiles, fileSystemConnectorInfo.deleteArchivesAfterExtract, fileSystemConnectorInfo.detectSportTypeWhenUnknown);
 
 		} else {
 
@@ -117,6 +131,8 @@ export class IpcMainMessagesService {
 			if (syncEvent.type === SyncEventType.ACTIVITY) {
 				const activitySyncEvent = <ActivitySyncEvent> syncEvent;
 				logger.info("[Connector (" + connectorType + ")]", `Notify to insert or update activity name: "${activitySyncEvent.activity.name}", started on "${activitySyncEvent.activity.start_time}", isNew: "${activitySyncEvent.isNew}"`);
+			} else if (syncEvent.type === SyncEventType.ERROR) {
+				logger.error("[Connector (" + connectorType + ")]", syncEvent);
 			} else {
 				logger.debug("[Connector (" + connectorType + ")]", syncEvent);
 			}
@@ -139,7 +155,7 @@ export class IpcMainMessagesService {
 			this.service.currentConnector = null;
 
 			const completeSyncEventMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT,
-				new CompleteSyncEvent(ConnectorType.STRAVA, "Sync done"));
+				new CompleteSyncEvent(connectorType, "Sync done"));
 			this.send(completeSyncEventMessage).then((renderedResponse: string) => {
 				logger.debug(renderedResponse);
 			});
@@ -238,6 +254,36 @@ export class IpcMainMessagesService {
 			});
 			logger.error(error);
 		});
+
+	}
+
+	public handleComputeActivitySpy(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
+
+		let syncedActivityModel = <SyncedActivityModel> message.payload[0];
+		const athleteSnapshotModel = <AthleteSnapshotModel> message.payload[1];
+		const userSettingsModel = <DesktopUserSettingsModel> message.payload[2];
+		const streams = <ActivityStreamsModel> ((message.payload[3]) ? message.payload[3] : null);
+
+		try {
+			const analysisDataModel = ActivityComputer.calculate(syncedActivityModel, athleteSnapshotModel, userSettingsModel, streams);
+
+			// Update synced activity with new AthleteSnapshotModel & stats results
+			syncedActivityModel.athleteSnapshot = athleteSnapshotModel;
+			syncedActivityModel.extendedStats = analysisDataModel;
+			syncedActivityModel = BaseConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, streams);
+
+			replyWith({
+				success: syncedActivityModel,
+				error: null
+			});
+
+		} catch (error) {
+			replyWith({
+				success: null,
+				error: error
+			});
+			logger.error(error);
+		}
 
 	}
 

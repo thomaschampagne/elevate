@@ -22,6 +22,7 @@ import { RollingProgressConfigModel } from "../models/rolling-progress-config.mo
 import { RollingProgressPresetModel } from "../models/rolling-progress-preset.model";
 import { YearToDateProgressConfigModel } from "../models/year-to-date-progress-config.model";
 import { Identifier } from "@elevate/shared/tools";
+import { ElevateSport } from "@elevate/shared/enums";
 import Spy = jasmine.Spy;
 
 describe("YearProgressService", () => {
@@ -73,9 +74,9 @@ describe("YearProgressService", () => {
 
 		// Given
 		const expectedResult: ActivityCountByTypeModel[] = [
-			{type: "Ride", count: 352},
-			{type: "Run", count: 178},
-			{type: "VirtualRide", count: 177}
+			{type: ElevateSport.Ride, count: 352},
+			{type: ElevateSport.Run, count: 178},
+			{type: ElevateSport.VirtualRide, count: 177}
 		];
 
 		// When
@@ -86,9 +87,9 @@ describe("YearProgressService", () => {
 		expect(result).toEqual(expectedResult);
 
 		// Check order
-		expect(_.first(result).type).toEqual("Ride");
-		expect(result[1].type).toEqual("Run");
-		expect(_.last(result).type).toEqual("VirtualRide");
+		expect(_.first(result).type).toEqual(ElevateSport.Ride);
+		expect(result[1].type).toEqual(ElevateSport.Run);
+		expect(_.last(result).type).toEqual(ElevateSport.VirtualRide);
 
 		done();
 
@@ -135,7 +136,7 @@ describe("YearProgressService", () => {
 			// Given
 			const expectedLength = 4;
 
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
+			const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
 
 			// When
 			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
@@ -163,7 +164,7 @@ describe("YearProgressService", () => {
 		it("should compute progression by tagging future days of current year", (done: Function) => {
 
 			// Given
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
+			const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
 
 			// When
 			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
@@ -185,12 +186,12 @@ describe("YearProgressService", () => {
 
 			// Given
 			const expectedLength = 4;
-			const progressConfig = new YearToDateProgressConfigModel(["Walk"], true, true);
+			const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Walk], true, true);
 
 			const fakeWalkActivity = new SyncedActivityModel();
 			fakeWalkActivity.id = 99;
 			fakeWalkActivity.name = "Walking";
-			fakeWalkActivity.type = "Walk";
+			fakeWalkActivity.type = ElevateSport.Walk;
 			fakeWalkActivity.display_type = "Walk";
 			fakeWalkActivity.start_time = moment("2016-06-06", "YYYY-MM-DD").toISOString();
 			fakeWalkActivity.distance_raw = 3000;
@@ -229,7 +230,7 @@ describe("YearProgressService", () => {
 		it("should compute progression with proper totals metrics", (done: Function) => {
 
 			// Given
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
+			const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
 
 			const expectedFirstDay2015 = new ProgressModel(2015,
 				1,
@@ -307,7 +308,7 @@ describe("YearProgressService", () => {
 		it("should compute progression without commute rides and with proper totals metrics", (done: Function) => {
 
 			// Given
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], false, true);
+			const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], false, true);
 
 			const expectedLastDay2015 = new ProgressModel(2015,
 				365,
@@ -355,7 +356,7 @@ describe("YearProgressService", () => {
 
 			// Given
 			const isMetric = false;
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
+			const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
 
 			const expectedLastDay2015 = new ProgressModel(2015,
 				365,
@@ -405,7 +406,7 @@ describe("YearProgressService", () => {
 			// Given
 			const syncedActivityModels = [];
 
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
+			const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
 
 			const progressionMethodCall = () => service.progressions(progressConfig, isMetric, syncedActivityModels);
 
@@ -434,7 +435,7 @@ describe("YearProgressService", () => {
 		it("should not compute progression with not existing type", (done: Function) => {
 
 			// Given
-			const progressConfig = new YearToDateProgressConfigModel(["FakeType"], true, true);
+			const progressConfig = new YearToDateProgressConfigModel([<ElevateSport> "FakeType"], true, true);
 
 			const progressionMethodCall = () => service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 
@@ -449,7 +450,7 @@ describe("YearProgressService", () => {
 
 			// Given
 			const expectedLength = 4;
-			const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
+			const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
 
 			const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 
@@ -506,7 +507,7 @@ describe("YearProgressService", () => {
 
 		let syncedActivityModels: Partial<SyncedActivityModel>[] = [];
 
-		const createActivity = (date: string, type: string, distance_raw: number, moving_time_raw: number, elevation_gain_raw: number) => {
+		const createActivity = (date: string, type: ElevateSport, distance_raw: number, moving_time_raw: number, elevation_gain_raw: number) => {
 			return {
 				distance_raw: distance_raw,
 				moving_time_raw: moving_time_raw,
@@ -528,19 +529,19 @@ describe("YearProgressService", () => {
 			const expectedYear = 2019;
 			const expectedDaysInYear = 365;
 			const rollingDays = moment.duration(1, "week").asDays();
-			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, rollingDays);
+			const progressConfig = new RollingProgressConfigModel([ElevateSport.Ride], true, true, rollingDays);
 
 			const todayTime = "2019-02-15 20:00";
 			getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
 
 			/* History definition */
-			syncedActivityModels.push(createActivity("2019-02-01", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-02", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-03", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-04", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-05", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-06", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-07", "Ride", 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-01", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-02", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-03", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-04", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-05", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-06", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-07", ElevateSport.Ride, 10000, 3600, 100));
 			/* (Rest) 2019-02-08 */
 			/* (Rest) 2019-02-09 */
 			/* (Rest) 2019-02-10 */
@@ -598,29 +599,29 @@ describe("YearProgressService", () => {
 			const expectedYearsLength = 2;
 			const expectedDaysInYear = 365;
 			const rollingDays = moment.duration(1, "week").asDays();
-			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, rollingDays);
+			const progressConfig = new RollingProgressConfigModel([ElevateSport.Ride], true, true, rollingDays);
 
 			const todayTime = "2019-02-15 20:00";
 			getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
 
 			/* History definition */
 			/* 2018 ending */
-			syncedActivityModels.push(createActivity("2018-12-25", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2018-12-26", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2018-12-27", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2018-12-28", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2018-12-29", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2018-12-30", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2018-12-31", "Ride", 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2018-12-25", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2018-12-26", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2018-12-27", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2018-12-28", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2018-12-29", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2018-12-30", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2018-12-31", ElevateSport.Ride, 10000, 3600, 100));
 
 			/* 2019 beginning */
-			syncedActivityModels.push(createActivity("2019-01-01", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-01-02", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-01-03", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-01-04", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-01-05", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-01-06", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-01-07", "Ride", 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-01-01", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-01-02", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-01-03", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-01-04", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-01-05", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-01-06", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-01-07", ElevateSport.Ride, 10000, 3600, 100));
 			/* (Rest) 2019-01-08 */
 			/* (Rest) 2019-01-09 */
 			/* (Rest) 2019-01-10 */
@@ -699,20 +700,20 @@ describe("YearProgressService", () => {
 			const expectedYear = 2019;
 			const expectedDaysInYear = 365;
 			const rollingDays = moment.duration(1, "week").asDays();
-			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, rollingDays);
+			const progressConfig = new RollingProgressConfigModel([ElevateSport.Ride], true, true, rollingDays);
 
 			const todayTime = "2019-02-15 20:00";
 			getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
 
 			/* History definition */
-			syncedActivityModels.push(createActivity("2019-02-01", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-02", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-03", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-04", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-05", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-06", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-07", "Ride", 10000, 3600, 100)); // Double Ride on "2019-02-07"
-			syncedActivityModels.push(createActivity("2019-02-07", "Ride", 10000, 3600, 100)); // Double Ride on "2019-02-07"
+			syncedActivityModels.push(createActivity("2019-02-01", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-02", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-03", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-04", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-05", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-06", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-07", ElevateSport.Ride, 10000, 3600, 100)); // Double Ride on "2019-02-07"
+			syncedActivityModels.push(createActivity("2019-02-07", ElevateSport.Ride, 10000, 3600, 100)); // Double Ride on "2019-02-07"
 			/* (Rest) 2019-02-08 */
 			/* (Rest) 2019-02-09 */
 			/* (Rest) 2019-02-10 */
@@ -825,22 +826,22 @@ describe("YearProgressService", () => {
 			const expectedYear = 2019;
 			const expectedDaysInYear = 365;
 			const rollingDays = 1;
-			const progressConfig = new RollingProgressConfigModel(["Ride"], true, true, rollingDays);
+			const progressConfig = new RollingProgressConfigModel([ElevateSport.Ride], true, true, rollingDays);
 
 			const todayTime = "2019-02-15 20:00";
 			getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
 
 			/* History definition */
-			syncedActivityModels.push(createActivity("2019-02-01", "Ride", 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-01", ElevateSport.Ride, 10000, 3600, 100));
 
-			syncedActivityModels.push(createActivity("2019-02-02", "Ride", 10000, 3600, 100)); // 1st activity on 2019-02-02 => 10km
-			syncedActivityModels.push(createActivity("2019-02-02", "Ride", 15000, 3600, 100)); // 2nd activity on 2019-02-02 => 15km
+			syncedActivityModels.push(createActivity("2019-02-02", ElevateSport.Ride, 10000, 3600, 100)); // 1st activity on 2019-02-02 => 10km
+			syncedActivityModels.push(createActivity("2019-02-02", ElevateSport.Ride, 15000, 3600, 100)); // 2nd activity on 2019-02-02 => 15km
 
-			syncedActivityModels.push(createActivity("2019-02-03", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-04", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-05", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-06", "Ride", 10000, 3600, 100));
-			syncedActivityModels.push(createActivity("2019-02-07", "Ride", 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-03", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-04", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-05", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-06", ElevateSport.Ride, 10000, 3600, 100));
+			syncedActivityModels.push(createActivity("2019-02-07", ElevateSport.Ride, 10000, 3600, 100));
 			/* (Rest) 2019-02-08 */
 			/* (Rest) 2019-02-09 */
 			/* (Rest) 2019-02-10 */
@@ -1147,8 +1148,8 @@ describe("YearProgressService", () => {
 
 			// Given
 			const expected: YearToDateProgressPresetModel[] = [
-				new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false),
-				new YearToDateProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false)
+				new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
+				new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false)
 			];
 
 			const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "fetch")
@@ -1175,13 +1176,13 @@ describe("YearProgressService", () => {
 		it("should add a year to date preset", (done: Function) => {
 
 			// Given
-			const modelToBeAdded = new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Ride", "VirtualRide"], true, true, 5000);
+			const modelToBeAdded = new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Ride, ElevateSport.VirtualRide], true, true, 5000);
 
 			const progressPresetModels: YearToDateProgressPresetModel[] = [
-				new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Ride", "VirtualRide"], true, true),
-				new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false),
-				new YearToDateProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000),
-				new YearToDateProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
+				new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Ride, ElevateSport.VirtualRide], true, true),
+				new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
+				new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000),
+				new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
 			];
 
 			const expected = _.union(progressPresetModels, [modelToBeAdded]);
@@ -1213,12 +1214,12 @@ describe("YearProgressService", () => {
 		it("should add a rolling progress preset", (done: Function) => {
 
 			// Given
-			const modelToBeAdded = new RollingProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000, "Months", 2);
+			const modelToBeAdded = new RollingProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000, "Months", 2);
 			const progressPresetModels: YearToDateProgressPresetModel[] = [
-				new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false),
-				new YearToDateProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000),
-				new YearToDateProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
-				new RollingProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000, "Months", 1)
+				new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
+				new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000),
+				new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
+				new RollingProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000, "Months", 1)
 			];
 
 			const expected = _.union(progressPresetModels, [modelToBeAdded]);
@@ -1249,11 +1250,11 @@ describe("YearProgressService", () => {
 		it("should reject adding a year to date preset already existing (with target)", (done: Function) => {
 
 			// Given
-			const modelToBeAdded = new YearToDateProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000);
+			const modelToBeAdded = new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000);
 			const progressPresetModels: YearToDateProgressPresetModel[] = [
-				new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false),
+				new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
 				modelToBeAdded,
-				new YearToDateProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
+				new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
 			];
 
 			const expectedErrorMessage = "You already saved this preset.";
@@ -1287,12 +1288,12 @@ describe("YearProgressService", () => {
 		it("should reject adding a year to date preset already existing (without target)", (done: Function) => {
 
 			// Given
-			const modelToBeAdded = new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Ride", "VirtualRide"], true, true);
+			const modelToBeAdded = new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Ride, ElevateSport.VirtualRide], true, true);
 			const progressPresetModels: YearToDateProgressPresetModel[] = [
 				modelToBeAdded,
-				new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false),
-				new YearToDateProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000),
-				new YearToDateProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
+				new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
+				new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000),
+				new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
 			];
 
 			const expectedErrorMessage = "You already saved this preset.";
@@ -1326,13 +1327,13 @@ describe("YearProgressService", () => {
 		it("should reject adding a rolling preset already existing", (done: Function) => {
 
 			// Given
-			const modelToBeAdded = new RollingProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000, "Months", 2);
+			const modelToBeAdded = new RollingProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000, "Months", 2);
 			const progressPresetModels: YearToDateProgressPresetModel[] = [
 				modelToBeAdded,
-				new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false),
-				new YearToDateProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000),
-				new YearToDateProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false),
-				new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Ride", "VirtualRide"], true, true)
+				new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
+				new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000),
+				new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
+				new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Ride, ElevateSport.VirtualRide], true, true)
 			];
 
 			const expectedErrorMessage = "You already saved this preset.";
@@ -1366,9 +1367,9 @@ describe("YearProgressService", () => {
 		it("should delete preset", (done: Function) => {
 
 			// Given
-			const model_0 = new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false);
-			const model_1 = new YearToDateProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000);
-			const model_2 = new YearToDateProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false);
+			const model_0 = new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false);
+			const model_1 = new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000);
+			const model_2 = new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false);
 			const progressPresetModels: YearToDateProgressPresetModel[] = [
 				model_0,
 				model_1,
@@ -1379,7 +1380,7 @@ describe("YearProgressService", () => {
 				.and.returnValue(Promise.resolve(progressPresetModels));
 
 			const saveDaoSpy = spyOn(service.yearProgressPresetDao, "save")
-				.and.returnValue(Promise.resolve());
+				.and.returnValue(Promise.resolve([]));
 
 			const deleteId = model_1.id;
 
@@ -1402,9 +1403,9 @@ describe("YearProgressService", () => {
 		it("should reject delete preset", (done: Function) => {
 
 			// Given
-			const model_0 = new YearToDateProgressPresetModel(ProgressType.DISTANCE, ["Run"], false, false);
-			const model_1 = new YearToDateProgressPresetModel(ProgressType.ELEVATION, ["Ride"], true, true, 5000);
-			const model_2 = new YearToDateProgressPresetModel(ProgressType.COUNT, ["VirtualRide"], false, false);
+			const model_0 = new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false);
+			const model_1 = new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000);
+			const model_2 = new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false);
 			const progressPresetModels: YearToDateProgressPresetModel[] = [
 				model_0,
 				model_1,

@@ -15,6 +15,7 @@ import { DeltaType } from "./models/delta-type.enum";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { YearProgressModule } from "../year-progress.module";
 import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-progress-config.model";
+import { ElevateSport } from "@elevate/shared/enums";
 
 describe("YearProgressTableComponent", () => {
 
@@ -48,10 +49,10 @@ describe("YearProgressTableComponent", () => {
 
 		component.currentYear = 2018;
 		component.momentWatched = moment().year(component.currentYear);
-		component.progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
+		component.progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
 
 		// Inject fake progression
-		const progressConfig = new YearToDateProgressConfigModel(["Ride", "VirtualRide", "Run"], true, true);
+		const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
 
 		component.yearProgressions = yearProgressService.progressions(progressConfig, isMetric, syncedActivityModels);
 

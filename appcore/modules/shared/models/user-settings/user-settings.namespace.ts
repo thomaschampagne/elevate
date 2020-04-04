@@ -35,7 +35,6 @@ export namespace UserSettings {
 		};
 
 		public envTarget: EnvTarget = EnvTarget.DESKTOP;
-
 	}
 
 	export class ExtensionUserSettingsModel extends UserSettingsModel {

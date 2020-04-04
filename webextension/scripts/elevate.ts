@@ -40,6 +40,7 @@ import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { releaseNotesData } from "@elevate/shared/data";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
 import { GenericExtendedDataModifier } from "./modifiers/extended-stats/generic-extended-data.modifier";
+import { ElevateSport } from "@elevate/shared/enums";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class Elevate {
@@ -529,7 +530,7 @@ export class Elevate {
 		};
 
 		// Skip manual activities
-		if (activityInfo.type === "Manual") {
+		if (activityInfo.type === ElevateSport.Manual) {
 			return;
 		}
 
@@ -595,7 +596,7 @@ export class Elevate {
 		};
 
 		// Skip manual activities
-		if (activityInfo.type === "Manual") {
+		if (activityInfo.type === ElevateSport.Manual) {
 			return;
 		}
 

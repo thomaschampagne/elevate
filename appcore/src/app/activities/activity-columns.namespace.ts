@@ -2,6 +2,7 @@ import { SyncedActivityModel } from "@elevate/shared/models";
 import * as _ from "lodash";
 import * as moment from "moment";
 import { Constant } from "@elevate/shared/constants";
+import { ElevateSport } from "@elevate/shared/enums";
 
 export namespace ActivityColumns {
 
@@ -247,9 +248,9 @@ export namespace ActivityColumns {
 
 			if (units && units instanceof CadenceUnits) {
 
-				if (activity.type === "Run") {
+				if (activity.type === ElevateSport.Run) {
 					units = units.running;
-				} else if (activity.type === "Ride" || activity.type === "VirtualRide" || activity.type === "EBikeRide") {
+				} else if (activity.type === ElevateSport.Ride || activity.type === ElevateSport.VirtualRide || activity.type === ElevateSport.EBikeRide) {
 					units = units.cycling;
 				}
 			}
@@ -368,7 +369,15 @@ export namespace ActivityColumns {
 		 * @param activity
 		 */
 		public static movingTime(activity: SyncedActivityModel): string {
-			return moment.utc(activity.moving_time_raw * 1000).format("HH:mm:ss");
+			return _.isNumber(activity.moving_time_raw) ? moment.utc(activity.moving_time_raw * 1000).format("HH:mm:ss") : Print.NO_DATA;
+		}
+
+		/**
+		 *
+		 * @param activity
+		 */
+		public static elapsedTime(activity: SyncedActivityModel): string {
+			return _.isNumber(activity.elapsed_time_raw) ? moment.utc(activity.elapsed_time_raw * 1000).format("HH:mm:ss") : Print.NO_DATA;
 		}
 
 	}
@@ -394,6 +403,7 @@ export namespace ActivityColumns {
 			new ActivityLinkColumn(Category.COMMON, "name").setWidth("230px").setDefault(true),
 			new TextColumn(Category.COMMON, "type").setDefault(true),
 			new TextColumn(Category.COMMON, "moving_time_raw", Print.movingTime, "Moving Time").setDefault(true),
+			new TextColumn(Category.COMMON, "elapsed_time_raw", Print.elapsedTime, "Total Time"),
 			new NumberColumn(Category.COMMON, "distance_raw", Definition.LONG_DISTANCE_SYSTEM_UNITS, "Distance", Print.number, 1, 0.001, Constant.KM_TO_MILE_FACTOR).setDefault(true),
 			new NumberColumn(Category.COMMON, "elevation_gain_raw", Definition.ELEVATION_SYSTEM_UNITS, "Elevation Gain", Print.number, 1, 1, Constant.METER_TO_FEET_FACTOR).setDefault(true),
 			new NumberColumn(Category.COMMON, "extendedStats.speedData.genuineAvgSpeed", Definition.SPEED_SYSTEM_UNITS, "Avg Moving Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR).setDefault(true),

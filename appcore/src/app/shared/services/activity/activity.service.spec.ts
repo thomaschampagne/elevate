@@ -6,6 +6,8 @@ import { AthleteModel, AthleteSettingsModel, AthleteSnapshotModel, DatedAthleteS
 import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/fake-synced-activity.helper";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
+import { ElevateSport } from "@elevate/shared/enums";
+import FindRequest = PouchDB.Find.FindRequest;
 
 describe("ActivityService", () => {
 
@@ -172,7 +174,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				athleteSnapshot,
 				"SuperHeartRateRide 01",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-01",
 				150,
 				null,
@@ -181,7 +183,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				athleteSnapshot,
 				"SuperHeartRateRide 02",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-15",
 				180,
 				null,
@@ -190,7 +192,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				athleteSnapshot,
 				"SuperHeartRateRide 03",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-30",
 				135,
 				null,
@@ -245,7 +247,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				athleteSnapshot01,
 				"SuperHeartRateRide 01",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-01",
 				150,
 				null,
@@ -254,7 +256,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				athleteSnapshot02,
 				"SuperHeartRateRide 02",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-15",
 				180,
 				null,
@@ -263,7 +265,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				athleteSnapshot02,
 				"SuperHeartRateRide 03",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-30",
 				135,
 				null,
@@ -318,7 +320,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				athleteModel01,
 				"SuperHeartRateRide 01",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-01",
 				150,
 				null,
@@ -327,7 +329,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				athleteModel01,
 				"SuperHeartRateRide 02",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-15",
 				180,
 				null,
@@ -336,7 +338,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				athleteModel01,
 				"SuperHeartRateRide 03",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-30",
 				135,
 				null,
@@ -383,7 +385,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(1,
 				athleteSnapshot,
 				"SuperHeartRateRide 01",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-01",
 				150,
 				null,
@@ -394,7 +396,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
 				variousAthleteSnapshotModel,
 				"SuperHeartRateRide 02",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-15",
 				180,
 				null,
@@ -403,7 +405,7 @@ describe("ActivityService", () => {
 			syncedActivityModels.push(FakeSyncedActivityHelper.create(3,
 				athleteSnapshot,
 				"SuperHeartRateRide 03",
-				"Ride",
+				ElevateSport.Ride,
 				"2018-01-30",
 				135,
 				null,
@@ -413,7 +415,7 @@ describe("ActivityService", () => {
 				.and.returnValue(Promise.resolve(syncedActivityModels));
 
 			spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
-				.and.returnValue(Promise.resolve([]));
+				.and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
 
 			// When
 			const promise = activityService.isAthleteSettingsConsistent();
@@ -434,5 +436,60 @@ describe("ActivityService", () => {
 		});
 
 	});
+
+	it("should find activity by start time and duration", (done: Function) => {
+
+		// Given
+		const date = "2019-03-01T10:00:00.000Z";
+		const activityDuration = 3600;
+
+		const query: FindRequest<SyncedActivityModel[]> = {
+			selector: {
+				$or: [
+					{
+						start_time: {
+							$gte: "2019-03-01T10:00:00.000Z",
+						},
+						end_time: {
+							$lte: "2019-03-01T11:00:00.000Z",
+						}
+					},
+					{
+						start_time: {
+							$gte: "2019-03-01T10:00:00.000Z",
+							$lte: "2019-03-01T11:00:00.000Z",
+						}
+					},
+					{
+						end_time: {
+							$gte: "2019-03-01T10:00:00.000Z",
+							$lte: "2019-03-01T11:00:00.000Z",
+						}
+					}
+
+				]
+
+			}
+		};
+
+		const findActivitySpy = spyOn(activityService, "find").and.returnValue(Promise.resolve([]));
+
+		// When
+		const promise = activityService.findByDatedSession(date, activityDuration);
+
+		// Then
+		promise.then(() => {
+
+			expect(findActivitySpy).toHaveBeenCalledTimes(1);
+			expect(findActivitySpy).toHaveBeenCalledWith(query);
+
+			done();
+
+		}, error => {
+			expect(error).toBeNull();
+			done();
+		});
+	});
+
 
 });
