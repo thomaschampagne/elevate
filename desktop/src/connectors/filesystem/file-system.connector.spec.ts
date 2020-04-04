@@ -4,9 +4,11 @@ import {
 	AnalysisDataModel,
 	AthleteModel,
 	AthleteSettingsModel,
+	AthleteSnapshotModel,
 	BareActivityModel,
 	ConnectorSyncDateTime,
 	EnvTarget,
+	Gender,
 	SyncedActivityModel,
 	UserSettings
 } from "@elevate/shared/models";
@@ -17,16 +19,16 @@ import * as xmldom from "xmldom";
 import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { filter } from "rxjs/operators";
 import { Subject } from "rxjs";
-import { SportsLib } from "sports-lib";
 import { ElevateSport } from "@elevate/shared/enums";
 import { BaseConnector, PrimitiveSourceData } from "../base.connector";
-import { Activity } from "sports-lib/lib/activities/activity";
-import { Creator } from "sports-lib/lib/creators/creator";
-import { ActivityTypes } from "sports-lib/lib/activities/activity.types";
-import { DataHeartRate } from "sports-lib/lib/data/data.heart-rate";
-import { DataCadence } from "sports-lib/lib/data/data.cadence";
-import { DataPower } from "sports-lib/lib/data/data.power";
-import { ActivityInterface } from "sports-lib/lib/activities/activity.interface";
+import { SportsLib } from "@sports-alliance/sports-lib";
+import { ActivityInterface } from "@sports-alliance/sports-lib/lib/activities/activity.interface";
+import { DataCadence } from "@sports-alliance/sports-lib/lib/data/data.cadence";
+import { Activity } from "@sports-alliance/sports-lib/lib/activities/activity";
+import { DataHeartRate } from "@sports-alliance/sports-lib/lib/data/data.heart-rate";
+import { Creator } from "@sports-alliance/sports-lib/lib/creators/creator";
+import { ActivityTypes } from "@sports-alliance/sports-lib/lib/activities/activity.types";
+import { DataPower } from "@sports-alliance/sports-lib/lib/data/data.power";
 
 /**
  * Test activities in "fixtures/activities-02" sorted by date ascent.
@@ -1120,6 +1122,7 @@ describe("FileSystemConnector", () => {
 						accumulatedElevationAscent: defaultElevationGain
 					}
 				};
+				syncedActivityModel.athleteSnapshot = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
 
 				activityStreamsModel = new ActivityStreamsModel();
 				activityStreamsModel.distance = [startDistance, 10, 100, endDistance];

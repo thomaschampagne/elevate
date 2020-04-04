@@ -148,11 +148,6 @@ export class FitnessService {
 
 	/**
 	 * Return day by day the athlete stress. Active & rest days included
-	 * @param {FitnessTrendConfigModel} fitnessTrendConfigModel
-	 * @param {boolean} powerMeterEnable
-	 * @param {boolean} swimEnable
-	 * @param {string[]} skipActivityTypes
-	 * @returns {Promise<DayStressModel[]>}
 	 */
 	public generateDailyStress(fitnessTrendConfigModel: FitnessTrendConfigModel,
 							   powerMeterEnable: boolean,

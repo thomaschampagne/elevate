@@ -5,16 +5,7 @@ import { AthleteService } from "../../athlete/athlete.service";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { LoggerService } from "../../logging/logger.service";
 import { Subject, Subscription } from "rxjs";
-import {
-	ActivitySyncEvent,
-	CompleteSyncEvent,
-	ConnectorType,
-	ErrorSyncEvent,
-	FileSystemConnectorInfo,
-	StravaConnectorInfo,
-	SyncEvent,
-	SyncEventType
-} from "@elevate/shared/sync";
+import { ActivitySyncEvent, CompleteSyncEvent, ConnectorType, ErrorSyncEvent, FileSystemConnectorInfo, StravaConnectorInfo, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { IpcMessagesReceiver } from "../../../../desktop/ipc-messages/ipc-messages-receiver.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { StravaConnectorInfoService } from "../../strava-connector-info/strava-connector-info.service";
@@ -45,16 +36,14 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 
 // TODO Forward toolbar sync button to Connectors
 // TODO Test in a current sync is running on Service.currentConnector(setter)
-// tslint:disable-next-line:max-line-length
 // TODO Add unit add with try/catch on StravaConnector.prepareBareActivity() call ?! => 'bareActivity = this.prepareBareActivity(bareActivity);'
-// TODO Strava dont give "calories" from "getStravaBareActivityModels" bare activities. Only "kilojoules"! We have to get calories...
 
 @Injectable()
 export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> implements OnDestroy {
 	/**
 	 * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
 	 */
-	public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "7.0.0-alpha.3";
+	public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "7.0.0-alpha.4";
 
 	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
 				public activityService: ActivityService,

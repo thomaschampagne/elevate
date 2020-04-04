@@ -501,7 +501,7 @@ describe("IpcMainMessagesService", () => {
 
 			// Then
 			expect(calculateSpy).toBeCalledTimes(1);
-			expect(replyWithSpy).toBeCalledWith({success: expectedSyncedActivityModel, error: null});
+			expect(replyWithSpy).toBeCalledWith({success: jasmine.any(SyncedActivityModel), error: null});
 			done();
 		});
 
@@ -518,7 +518,7 @@ describe("IpcMainMessagesService", () => {
 			const expectedSyncedActivityModel = _.cloneDeep(syncedActivityModel);
 			expectedSyncedActivityModel.extendedStats = analysisDataModel;
 			expectedSyncedActivityModel.athleteSnapshot = athleteSnapshotModel;
-			const expectedErrorMessage = `Ùnable to calculate activity ${syncedActivityModel.name} started at ${syncedActivityModel.start_timestamp}: Whoops.`;
+			const expectedErrorMessage = `unable to calculate activity ${syncedActivityModel.name} started at ${syncedActivityModel.start_timestamp}: Whoops.`;
 			const expectedElevateException = new ElevateException(expectedErrorMessage);
 			const replyWrapper = {
 				replyWith: () => {
