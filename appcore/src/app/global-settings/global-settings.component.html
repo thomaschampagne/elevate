@@ -1,10 +1,7 @@
 <!--Search for options-->
 <div class="search-options" fxLayout="row" fxLayoutAlign="center center">
 	<mat-form-field fxFlex="50">
-		<span matPrefix>
-			<mat-icon>search</mat-icon><span>&nbsp;&nbsp;&nbsp;</span>
-		</span>
-		<input matInput [(ngModel)]="searchText" type="text" placeholder="Search">
+		<input matInput [(ngModel)]="searchText" type="search" placeholder="Search">
 		<button mat-button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
 				(click)="searchText=''">
 			<mat-icon>close</mat-icon>
