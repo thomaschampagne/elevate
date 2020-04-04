@@ -6,27 +6,27 @@ import { DataStore } from "../../data-store/data-store";
 
 describe("AthleteDao", () => {
 
-	let athleteDao: AthleteDao;
+    let athleteDao: AthleteDao;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		const mockedDataStore: MockedDataStore<SyncedActivityModel> = new MockedDataStore([]);
+        const mockedDataStore: MockedDataStore<SyncedActivityModel> = new MockedDataStore([]);
 
-		TestBed.configureTestingModule({
-			providers: [
-				AthleteDao,
-				{provide: DataStore, useValue: mockedDataStore}
-			]
-		});
+        TestBed.configureTestingModule({
+            providers: [
+                AthleteDao,
+                {provide: DataStore, useValue: mockedDataStore}
+            ]
+        });
 
-		// Retrieve injected service
-		athleteDao = TestBed.inject(AthleteDao);
-		done();
-	});
+        // Retrieve injected service
+        athleteDao = TestBed.inject(AthleteDao);
+        done();
+    });
 
-	it("should be created", (done: Function) => {
-		expect(athleteDao).toBeTruthy();
-		done();
-	});
+    it("should be created", done => {
+        expect(athleteDao).toBeTruthy();
+        done();
+    });
 
 });

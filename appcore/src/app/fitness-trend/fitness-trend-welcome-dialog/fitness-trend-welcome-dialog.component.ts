@@ -2,8 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
-	selector: "app-fitness-trend-welcome-dialog",
-	template: `
+    selector: "app-fitness-trend-welcome-dialog",
+    template: `
 		<h2 mat-dialog-title>Notice about "Estimated Fitness Trend" </h2>
 		<mat-dialog-content class="mat-body-1">
 
@@ -75,7 +75,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 			</div>
 		</mat-dialog-actions>
 	`,
-	styles: [`
+    styles: [`
 		div {
 			padding-top: 10px;
 			padding-bottom: 10px;
@@ -92,23 +92,23 @@ import { MatDialogRef } from "@angular/material/dialog";
 })
 export class FitnessTrendWelcomeDialogComponent implements OnInit {
 
-	public static readonly LS_HIDE_FITNESS_WELCOME_DIALOG: string = "fitnessTrend_hideWelcomeInfoDialog"; // TODO To be removed in future
+    public static readonly LS_HIDE_FITNESS_WELCOME_DIALOG: string = "fitnessTrend_hideWelcomeInfoDialog"; // TODO To be removed in future
 
-	public static readonly MAX_WIDTH: string = "40%";
-	public static readonly MIN_WIDTH: string = "60%";
+    public static readonly MAX_WIDTH: string = "40%";
+    public static readonly MIN_WIDTH: string = "60%";
 
-	public hideMessage: boolean;
+    public hideMessage: boolean;
 
-	constructor(public dialogRef: MatDialogRef<FitnessTrendWelcomeDialogComponent>) {
-	}
+    constructor(public dialogRef: MatDialogRef<FitnessTrendWelcomeDialogComponent>) {
+    }
 
-	public ngOnInit(): void {
-	}
+    public ngOnInit(): void {
+    }
 
-	public onGotIt(): void {
-		if (this.hideMessage) {
-			localStorage.setItem(FitnessTrendWelcomeDialogComponent.LS_HIDE_FITNESS_WELCOME_DIALOG, "true");
-		}
-		this.dialogRef.close();
-	}
+    public onGotIt(): void {
+        if (this.hideMessage) {
+            localStorage.setItem(FitnessTrendWelcomeDialogComponent.LS_HIDE_FITNESS_WELCOME_DIALOG, "true");
+        }
+        this.dialogRef.close();
+    }
 }

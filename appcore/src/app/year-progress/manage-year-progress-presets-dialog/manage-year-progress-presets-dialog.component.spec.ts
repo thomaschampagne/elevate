@@ -13,49 +13,49 @@ import { ElevateSport } from "@elevate/shared/enums";
 
 describe("ManageYearProgressPresetsDialogComponent", () => {
 
-	const yearProgressPresetModels = [
-		new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false, 750),
-		new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
-		new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], false, false, 30000),
-	];
+    const yearProgressPresetModels = [
+        new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false, 750),
+        new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
+        new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], false, false, 30000),
+    ];
 
-	let component: ManageYearProgressPresetsDialogComponent;
-	let fixture: ComponentFixture<ManageYearProgressPresetsDialogComponent>;
+    let component: ManageYearProgressPresetsDialogComponent;
+    let fixture: ComponentFixture<ManageYearProgressPresetsDialogComponent>;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		const isMetric = true;
-		const yearProgressTypeModels: YearProgressTypeModel[] = YearProgressService.provideProgressTypes(isMetric);
+        const isMetric = true;
+        const yearProgressTypeModels: YearProgressTypeModel[] = YearProgressService.provideProgressTypes(isMetric);
 
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-				YearProgressModule
-			],
-			providers: [
-				{
-					provide: MAT_DIALOG_DATA, useValue: yearProgressTypeModels,
-				},
-				{
-					provide: MatDialogRef, useValue: {},
-				},
-			]
-		}).compileComponents();
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+                YearProgressModule
+            ],
+            providers: [
+                {
+                    provide: MAT_DIALOG_DATA, useValue: yearProgressTypeModels,
+                },
+                {
+                    provide: MatDialogRef, useValue: {},
+                },
+            ]
+        }).compileComponents();
 
-		done();
-	});
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(ManageYearProgressPresetsDialogComponent);
-		component = fixture.componentInstance;
-		spyOn(component.yearProgressService, "fetchPresets").and.returnValue(Promise.resolve(yearProgressPresetModels));
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(ManageYearProgressPresetsDialogComponent);
+        component = fixture.componentInstance;
+        spyOn(component.yearProgressService, "fetchPresets").and.returnValue(Promise.resolve(yearProgressPresetModels));
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 });

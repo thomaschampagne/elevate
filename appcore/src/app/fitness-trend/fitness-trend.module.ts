@@ -14,25 +14,25 @@ import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dial
 import { FitnessTrendActivitiesLinksDialogComponent } from "./fitness-trend-activities-links-dialog/fitness-trend-activities-links-dialog.component";
 
 @NgModule({
-	imports: [
-		CoreModule,
-		FitnessTrendRoutingModule
-	],
-	declarations: [
-		FitnessTrendComponent,
-		FitnessTrendInputsComponent,
-		FitnessTrendLegendComponent,
-		FitnessTrendGraphComponent,
-		FitnessTrendTableComponent,
-		FitnessInfoDialogComponent,
-		FitnessTrendConfigDialogComponent,
-		FitnessTrendWelcomeDialogComponent,
-		FitnessTrendActivitiesLinksDialogComponent
-	],
-	providers: [
-		FitnessService,
-		ViewedDayService
-	]
+    imports: [
+        CoreModule,
+        FitnessTrendRoutingModule
+    ],
+    declarations: [
+        FitnessTrendComponent,
+        FitnessTrendInputsComponent,
+        FitnessTrendLegendComponent,
+        FitnessTrendGraphComponent,
+        FitnessTrendTableComponent,
+        FitnessInfoDialogComponent,
+        FitnessTrendConfigDialogComponent,
+        FitnessTrendWelcomeDialogComponent,
+        FitnessTrendActivitiesLinksDialogComponent
+    ],
+    providers: [
+        FitnessService,
+        ViewedDayService
+    ]
 })
 export class FitnessTrendModule {
 }

@@ -1,5 +1,5 @@
 export enum StorageType {
-	OBJECT,
-	COLLECTION,
-	SINGLE_VALUE
+    OBJECT,
+    COLLECTION,
+    SINGLE_VALUE
 }

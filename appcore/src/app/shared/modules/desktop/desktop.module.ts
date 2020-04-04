@@ -29,38 +29,38 @@ import { IpcMessagesSender } from "../../../desktop/ipc-messages/ipc-messages-se
 import { PROMISE_TRON } from "../../../desktop/ipc-messages/promise-tron.interface";
 
 @NgModule({
-	imports: [
-		CoreModule,
-		ConnectorsModule,
-		DesktopRoutingModule
-	],
-	exports: [
-		ConnectorsModule,
-		DesktopRoutingModule
-	],
-	declarations: [
-		DesktopAdvancedMenuComponent,
-		DesktopImportBackupDialogComponent
-	],
-	providers: [
-		ElectronService,
-		IpcMessagesReceiver,
-		IpcMessagesSender,
-		DesktopMigrationService,
-		{provide: PROMISE_TRON, useClass: PromiseTronService},
-		{provide: ActivityService, useClass: DesktopActivityService},
-		{provide: DataStore, useClass: DesktopDataStore},
-		{provide: AppEventsService, useClass: DesktopEventsService},
-		{provide: VERSIONS_PROVIDER, useClass: DesktopVersionsProvider},
-		{provide: OPEN_RESOURCE_RESOLVER, useClass: DesktopOpenResourceResolver},
-		{provide: SyncService, useClass: DesktopSyncService},
-		DesktopSyncService,
-		ConnectorSyncDateTimeDao,
-		StravaConnectorInfoService,
-		StravaConnectorInfoDao,
-		StravaConnectorService,
-		FileSystemConnectorInfoService,
-	]
+    imports: [
+        CoreModule,
+        ConnectorsModule,
+        DesktopRoutingModule
+    ],
+    exports: [
+        ConnectorsModule,
+        DesktopRoutingModule
+    ],
+    declarations: [
+        DesktopAdvancedMenuComponent,
+        DesktopImportBackupDialogComponent
+    ],
+    providers: [
+        ElectronService,
+        IpcMessagesReceiver,
+        IpcMessagesSender,
+        DesktopMigrationService,
+        {provide: PROMISE_TRON, useClass: PromiseTronService},
+        {provide: ActivityService, useClass: DesktopActivityService},
+        {provide: DataStore, useClass: DesktopDataStore},
+        {provide: AppEventsService, useClass: DesktopEventsService},
+        {provide: VERSIONS_PROVIDER, useClass: DesktopVersionsProvider},
+        {provide: OPEN_RESOURCE_RESOLVER, useClass: DesktopOpenResourceResolver},
+        {provide: SyncService, useClass: DesktopSyncService},
+        DesktopSyncService,
+        ConnectorSyncDateTimeDao,
+        StravaConnectorInfoService,
+        StravaConnectorInfoDao,
+        StravaConnectorService,
+        FileSystemConnectorInfoService,
+    ]
 })
 export class DesktopModule {
 }

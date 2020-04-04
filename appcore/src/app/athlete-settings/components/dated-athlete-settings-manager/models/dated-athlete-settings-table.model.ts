@@ -3,21 +3,21 @@ import * as moment from "moment";
 
 export class DatedAthleteSettingsTableModel extends DatedAthleteSettingsModel {
 
-	public sinceAsDate: Date;
-	public untilAsDate: Date;
+    public sinceAsDate: Date;
+    public untilAsDate: Date;
 
-	constructor(datedAthleteSettingsModel: DatedAthleteSettingsModel, previousDatedAthleteSettingsModel: DatedAthleteSettingsModel) {
-		super(
-			datedAthleteSettingsModel.since,
-			datedAthleteSettingsModel
-		);
+    constructor(datedAthleteSettingsModel: DatedAthleteSettingsModel, previousDatedAthleteSettingsModel: DatedAthleteSettingsModel) {
+        super(
+            datedAthleteSettingsModel.since,
+            datedAthleteSettingsModel
+        );
 
-		this.sinceAsDate = (this.since) ? new Date(this.since) : null;
-		this.untilAsDate = (previousDatedAthleteSettingsModel && previousDatedAthleteSettingsModel.since) ?
-			moment(previousDatedAthleteSettingsModel.since, DatedAthleteSettingsModel.SINCE_DATE_FORMAT).subtract(1, "days").toDate() : null;
-	}
+        this.sinceAsDate = (this.since) ? new Date(this.since) : null;
+        this.untilAsDate = (previousDatedAthleteSettingsModel && previousDatedAthleteSettingsModel.since) ?
+            moment(previousDatedAthleteSettingsModel.since, DatedAthleteSettingsModel.SINCE_DATE_FORMAT).subtract(1, "days").toDate() : null;
+    }
 
-	public isNow(): boolean {
-		return (this.untilAsDate === null);
-	}
+    public isNow(): boolean {
+        return (this.untilAsDate === null);
+    }
 }

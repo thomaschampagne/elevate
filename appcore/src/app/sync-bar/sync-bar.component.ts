@@ -9,9 +9,9 @@ import { DesktopErrorsSyncDetailsDialogComponent } from "./desktop-errors-sync-d
 export const SYNC_BAR_COMPONENT = new InjectionToken<SyncBarComponent>("SYNC_BAR_COMPONENT");
 
 class CurrentActivitySynced {
-	public date: string;
-	public name: string;
-	public isNew: boolean;
+    public date: string;
+    public name: string;
+    public isNew: boolean;
 }
 
 @Component({template: ""})
@@ -19,8 +19,8 @@ export class SyncBarComponent {
 }
 
 @Component({
-	selector: "app-desktop-sync-bar",
-	template: `
+    selector: "app-desktop-sync-bar",
+    template: `
 		<div class="app-sync-bar">
 			<div fxLayout="row" fxLayoutAlign="space-between center">
 				<div fxLayout="column" fxLayoutAlign="center start">
@@ -45,7 +45,7 @@ export class SyncBarComponent {
 			</div>
 		</div>
 	`,
-	styles: [`
+    styles: [`
 		.app-sync-bar {
 			padding: 10px 20px;
 		}
@@ -57,159 +57,159 @@ export class SyncBarComponent {
 })
 export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit {
 
-	@HostBinding("hidden")
-	public hideSyncBar: boolean;
+    @HostBinding("hidden")
+    public hideSyncBar: boolean;
 
-	public hideCloseButton: boolean;
-	public isSyncing: boolean;
-	public syncStatusText: string;
-	public currentActivitySynced: CurrentActivitySynced;
-	public counter: number;
-	public eventErrors: ErrorSyncEvent[];
+    public hideCloseButton: boolean;
+    public isSyncing: boolean;
+    public syncStatusText: string;
+    public currentActivitySynced: CurrentActivitySynced;
+    public counter: number;
+    public eventErrors: ErrorSyncEvent[];
 
-	constructor(public desktopSyncService: DesktopSyncService,
-				public dialog: MatDialog,
-				public changeDetectorRef: ChangeDetectorRef) {
-		super();
-		this.hideSyncBar = true;
-		this.hideCloseButton = true;
-		this.isSyncing = false;
-		this.syncStatusText = null;
-		this.currentActivitySynced = null;
-		this.counter = 0;
-		this.eventErrors = [];
-	}
+    constructor(public desktopSyncService: DesktopSyncService,
+                public dialog: MatDialog,
+                public changeDetectorRef: ChangeDetectorRef) {
+        super();
+        this.hideSyncBar = true;
+        this.hideCloseButton = true;
+        this.isSyncing = false;
+        this.syncStatusText = null;
+        this.currentActivitySynced = null;
+        this.counter = 0;
+        this.eventErrors = [];
+    }
 
-	public ngOnInit(): void {
+    public ngOnInit(): void {
 
-		this.hideSyncBar = true;
+        this.hideSyncBar = true;
 
-		this.desktopSyncService.syncEvents$.subscribe((syncEvent: SyncEvent) => {
-			this.handleSyncEventDisplay(syncEvent);
-		});
+        this.desktopSyncService.syncEvents$.subscribe((syncEvent: SyncEvent) => {
+            this.handleSyncEventDisplay(syncEvent);
+        });
 
-		this.changeDetectorRef.detach();
-	}
+        this.changeDetectorRef.detach();
+    }
 
-	public onActionStop(): Promise<void> {
-		return this.desktopSyncService.stop().catch(error => {
-			throw new SyncException(error); // Should be caught by Error Handler
-		});
-	}
+    public onActionStop(): Promise<void> {
+        return this.desktopSyncService.stop().catch(error => {
+            throw new SyncException(error); // Should be caught by Error Handler
+        });
+    }
 
-	public onActionClose(): void {
-		this.hideSyncBar = true;
-	}
+    public onActionClose(): void {
+        this.hideSyncBar = true;
+    }
 
-	public onActionShowErrors(): void {
+    public onActionShowErrors(): void {
 
-		// Stop sync before showing errors
-		const stopSync = (this.isSyncing) ? this.onActionStop() : Promise.resolve();
-		stopSync.finally(() => {
-			this.dialog.open(DesktopErrorsSyncDetailsDialogComponent, {
-				minWidth: DesktopErrorsSyncDetailsDialogComponent.MIN_WIDTH,
-				maxWidth: DesktopErrorsSyncDetailsDialogComponent.MAX_WIDTH,
-				data: this.eventErrors
-			});
-		});
-	}
+        // Stop sync before showing errors
+        const stopSync = (this.isSyncing) ? this.onActionStop() : Promise.resolve();
+        stopSync.finally(() => {
+            this.dialog.open(DesktopErrorsSyncDetailsDialogComponent, {
+                minWidth: DesktopErrorsSyncDetailsDialogComponent.MIN_WIDTH,
+                maxWidth: DesktopErrorsSyncDetailsDialogComponent.MAX_WIDTH,
+                data: this.eventErrors
+            });
+        });
+    }
 
-	private onStartedSyncEvent(syncEvent: SyncEvent): void {
-		this.eventErrors = [];
-		this.hideSyncBar = false;
-		this.isSyncing = true;
-		this.hideCloseButton = true;
-		this.counter = 0;
-		this.syncStatusText = "Sync started on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
-	}
+    public handleSyncEventDisplay(syncEvent: SyncEvent) {
 
-	private onActivitySyncEvent(syncEvent: SyncEvent): void {
-		this.counter++;
-		const activitySyncEvent = <ActivitySyncEvent> syncEvent;
-		this.currentActivitySynced = {
-			date: moment(activitySyncEvent.activity.start_time).format("ll"),
-			name: activitySyncEvent.activity.name,
-			isNew: activitySyncEvent.isNew,
-		};
-	}
+        this.changeDetectorRef.markForCheck();
 
-	private onGenericSyncEvent(syncEvent: SyncEvent): void {
-		this.syncStatusText = syncEvent.description;
-	}
+        if (syncEvent.type === SyncEventType.STARTED) {
+            this.onStartedSyncEvent(syncEvent);
+        }
 
-	private onErrorSyncEvent(errorSyncEvent: ErrorSyncEvent): void {
-		this.eventErrors.push(errorSyncEvent);
-	}
+        if (syncEvent.type === SyncEventType.ACTIVITY) {
+            this.onActivitySyncEvent(syncEvent);
+        } else {
+            this.currentActivitySynced = null;
+        }
 
-	private onStoppedSyncEvent(syncEvent: SyncEvent): void {
+        if (syncEvent.type === SyncEventType.GENERIC) {
+            this.onGenericSyncEvent(syncEvent);
+        }
 
-		this.isSyncing = false;
+        if (syncEvent.type === SyncEventType.ERROR) {
+            this.onErrorSyncEvent(<ErrorSyncEvent> syncEvent);
+        }
 
-		this.syncStatusText = "Sync stopped on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
+        if (syncEvent.type === SyncEventType.STOPPED) {
+            this.onStoppedSyncEvent(syncEvent);
+        }
 
-		if (this.eventErrors.length > 0) {
-			this.hideCloseButton = false;
-		} else {
-			this.hideSyncBar = true;
-		}
-	}
+        if (syncEvent.type === SyncEventType.COMPLETE) {
+            this.onCompleteSyncEvent(syncEvent);
+        }
 
-	private onCompleteSyncEvent(syncEvent: SyncEvent): void {
-		this.syncStatusText = "Sync completed on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
-		if (this.eventErrors.length > 0) {
-			this.hideCloseButton = false;
-			this.isSyncing = false;
-		} else {
-			this.hideSyncBar = true;
-		}
-	}
+        this.changeDetectorRef.detectChanges();
+    }
 
-	public handleSyncEventDisplay(syncEvent: SyncEvent) {
+    private onStartedSyncEvent(syncEvent: SyncEvent): void {
+        this.eventErrors = [];
+        this.hideSyncBar = false;
+        this.isSyncing = true;
+        this.hideCloseButton = true;
+        this.counter = 0;
+        this.syncStatusText = "Sync started on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
+    }
 
-		this.changeDetectorRef.markForCheck();
+    private onActivitySyncEvent(syncEvent: SyncEvent): void {
+        this.counter++;
+        const activitySyncEvent = <ActivitySyncEvent> syncEvent;
+        this.currentActivitySynced = {
+            date: moment(activitySyncEvent.activity.start_time).format("ll"),
+            name: activitySyncEvent.activity.name,
+            isNew: activitySyncEvent.isNew,
+        };
+    }
 
-		if (syncEvent.type === SyncEventType.STARTED) {
-			this.onStartedSyncEvent(syncEvent);
-		}
+    private onGenericSyncEvent(syncEvent: SyncEvent): void {
+        this.syncStatusText = syncEvent.description;
+    }
 
-		if (syncEvent.type === SyncEventType.ACTIVITY) {
-			this.onActivitySyncEvent(syncEvent);
-		} else {
-			this.currentActivitySynced = null;
-		}
+    private onErrorSyncEvent(errorSyncEvent: ErrorSyncEvent): void {
+        this.eventErrors.push(errorSyncEvent);
+    }
 
-		if (syncEvent.type === SyncEventType.GENERIC) {
-			this.onGenericSyncEvent(syncEvent);
-		}
+    private onStoppedSyncEvent(syncEvent: SyncEvent): void {
 
-		if (syncEvent.type === SyncEventType.ERROR) {
-			this.onErrorSyncEvent(<ErrorSyncEvent> syncEvent);
-		}
+        this.isSyncing = false;
 
-		if (syncEvent.type === SyncEventType.STOPPED) {
-			this.onStoppedSyncEvent(syncEvent);
-		}
+        this.syncStatusText = "Sync stopped on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
 
-		if (syncEvent.type === SyncEventType.COMPLETE) {
-			this.onCompleteSyncEvent(syncEvent);
-		}
+        if (this.eventErrors.length > 0) {
+            this.hideCloseButton = false;
+        } else {
+            this.hideSyncBar = true;
+        }
+    }
 
-		this.changeDetectorRef.detectChanges();
-	}
+    private onCompleteSyncEvent(syncEvent: SyncEvent): void {
+        this.syncStatusText = "Sync completed on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
+        if (this.eventErrors.length > 0) {
+            this.hideCloseButton = false;
+            this.isSyncing = false;
+        } else {
+            this.hideSyncBar = true;
+        }
+    }
 
 }
 
 @Component({
-	selector: "app-extension-sync-bar",
-	template: ``,
-	styles: [``]
+    selector: "app-extension-sync-bar",
+    template: ``,
+    styles: [``]
 })
 export class ExtensionSyncBarComponent extends SyncBarComponent implements OnInit {
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	public ngOnInit(): void {
-	}
+    public ngOnInit(): void {
+    }
 }

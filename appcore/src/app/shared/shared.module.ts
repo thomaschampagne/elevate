@@ -39,55 +39,55 @@ import { StreamsService } from "./services/streams/streams.service";
 import { ActivityViewComponent } from "../activity-view/activity-view.component";
 
 @NgModule({
-	imports: [
-		CoreModule,
-		BrowserModule,
-		BrowserAnimationsModule,
-		(environment.target === EnvTarget.DESKTOP) ? DesktopModule : ExtensionModule
-	],
-	exports: [
-		CoreModule,
-		BrowserModule,
-		BrowserAnimationsModule
-	],
-	declarations: [
-		// Components
-		ActivitiesComponent,
-		ActivityViewComponent,
-		GlobalSettingsComponent,
-		ZonesSettingsComponent,
-		ZoneComponent,
-		DonateComponent,
-		ShareComponent,
-		ReportComponent,
-		FaqComponent,
+    imports: [
+        CoreModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        (environment.target === EnvTarget.DESKTOP) ? DesktopModule : ExtensionModule
+    ],
+    exports: [
+        CoreModule,
+        BrowserModule,
+        BrowserAnimationsModule
+    ],
+    declarations: [
+        // Components
+        ActivitiesComponent,
+        ActivityViewComponent,
+        GlobalSettingsComponent,
+        ZonesSettingsComponent,
+        ZoneComponent,
+        DonateComponent,
+        ShareComponent,
+        ReportComponent,
+        FaqComponent,
 
-		// Dialogs
-		ZoneToolBarComponent,
-		GotItDialogComponent,
-		ConfirmDialogComponent,
-		OptionHelperDialogComponent,
-		ZonesImportExportDialogComponent,
-		AboutDialogComponent,
-		ImportBackupDialogComponent,
-		ImportExportProgressDialogComponent
-	],
-	providers: [
-		UserSettingsService,
-		UserSettingsDao,
-		AthleteService,
-		AthleteDao,
-		AthleteSnapshotResolverService,
-		ActivityDao,
-		StreamsService,
-		StreamsDao,
-		GlobalSettingsService,
-		OptionHelperReaderService,
-		ZonesService,
-		SideNavService,
-		WindowService,
-		{provide: LoggerService, useClass: ConsoleLoggerService}
-	]
+        // Dialogs
+        ZoneToolBarComponent,
+        GotItDialogComponent,
+        ConfirmDialogComponent,
+        OptionHelperDialogComponent,
+        ZonesImportExportDialogComponent,
+        AboutDialogComponent,
+        ImportBackupDialogComponent,
+        ImportExportProgressDialogComponent
+    ],
+    providers: [
+        UserSettingsService,
+        UserSettingsDao,
+        AthleteService,
+        AthleteDao,
+        AthleteSnapshotResolverService,
+        ActivityDao,
+        StreamsService,
+        StreamsDao,
+        GlobalSettingsService,
+        OptionHelperReaderService,
+        ZonesService,
+        SideNavService,
+        WindowService,
+        {provide: LoggerService, useClass: ConsoleLoggerService}
+    ]
 })
 export class SharedModule {
 }

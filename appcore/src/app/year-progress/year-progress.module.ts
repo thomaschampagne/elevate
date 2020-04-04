@@ -13,24 +13,24 @@ import { ManageYearProgressPresetsDialogComponent } from "./manage-year-progress
 import { YearProgressWelcomeDialogComponent } from "./year-progress-welcome-dialog/year-progress-welcome-dialog.component";
 
 @NgModule({
-	imports: [
-		CoreModule,
-		YearProgressRoutingModule
-	],
-	declarations: [
-		YearProgressComponent,
-		YearProgressGraphComponent,
-		YearProgressTableComponent,
-		YearProgressOverviewDialogComponent,
-		YearProgressHelperDialogComponent,
-		AddYearProgressPresetDialogComponent,
-		ManageYearProgressPresetsDialogComponent,
-		YearProgressWelcomeDialogComponent
-	],
-	providers: [
-		YearProgressService,
-		YearProgressPresetDao
-	]
+    imports: [
+        CoreModule,
+        YearProgressRoutingModule
+    ],
+    declarations: [
+        YearProgressComponent,
+        YearProgressGraphComponent,
+        YearProgressTableComponent,
+        YearProgressOverviewDialogComponent,
+        YearProgressHelperDialogComponent,
+        AddYearProgressPresetDialogComponent,
+        ManageYearProgressPresetsDialogComponent,
+        YearProgressWelcomeDialogComponent
+    ],
+    providers: [
+        YearProgressService,
+        YearProgressPresetDao
+    ]
 })
 export class YearProgressModule {
 }

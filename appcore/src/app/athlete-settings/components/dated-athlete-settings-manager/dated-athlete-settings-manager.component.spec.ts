@@ -8,43 +8,43 @@ import { AthleteService } from "../../../shared/services/athlete/athlete.service
 import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel, Gender } from "@elevate/shared/models";
 
 describe("DatedAthleteSettingsManagerComponent", () => {
-	let component: DatedAthleteSettingsManagerComponent;
-	let fixture: ComponentFixture<DatedAthleteSettingsManagerComponent>;
+    let component: DatedAthleteSettingsManagerComponent;
+    let fixture: ComponentFixture<DatedAthleteSettingsManagerComponent>;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-				AthleteSettingsModule
-			]
-		}).compileComponents();
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+                AthleteSettingsModule
+            ]
+        }).compileComponents();
 
-		const athleteService = TestBed.inject(AthleteService);
+        const athleteService = TestBed.inject(AthleteService);
 
-		const datedAthleteSettings: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, null, 190, null, null, 75)),
-			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, null, null, 150, null, null, 76)),
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
-			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78))
-		];
+        const datedAthleteSettings: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, null, 190, null, null, 75)),
+            new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, null, null, 150, null, null, 76)),
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
+            new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78))
+        ];
 
-		const athleteModel = new AthleteModel(Gender.MEN, datedAthleteSettings);
+        const athleteModel = new AthleteModel(Gender.MEN, datedAthleteSettings);
 
-		spyOn(athleteService, "fetch").and.returnValue(Promise.resolve(athleteModel));
+        spyOn(athleteService, "fetch").and.returnValue(Promise.resolve(athleteModel));
 
-		done();
-	});
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(DatedAthleteSettingsManagerComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(DatedAthleteSettingsManagerComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 });

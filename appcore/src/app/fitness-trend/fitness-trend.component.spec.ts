@@ -17,102 +17,102 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("FitnessTrendComponent", () => {
 
-	let activityService: ActivityService;
-	let userSettingsService: UserSettingsService;
-	let syncService: SyncService<any>;
-	let component: FitnessTrendComponent;
-	let fixture: ComponentFixture<FitnessTrendComponent>;
+    let activityService: ActivityService;
+    let userSettingsService: UserSettingsService;
+    let syncService: SyncService<any>;
+    let component: FitnessTrendComponent;
+    let fixture: ComponentFixture<FitnessTrendComponent>;
 
-	@Injectable()
-	class MockEventsService extends AppEventsService {
-	}
+    @Injectable()
+    class MockEventsService extends AppEventsService {
+    }
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-				FitnessTrendModule
-			],
-			providers: [
-				{provide: AppEventsService, useClass: MockEventsService},
-			]
-		}).compileComponents();
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+                FitnessTrendModule
+            ],
+            providers: [
+                {provide: AppEventsService, useClass: MockEventsService},
+            ]
+        }).compileComponents();
 
-		// Retrieve injected service
-		activityService = TestBed.inject(ActivityService);
-		userSettingsService = TestBed.inject(UserSettingsService);
-		syncService = TestBed.inject(SyncService);
+        // Retrieve injected service
+        activityService = TestBed.inject(ActivityService);
+        userSettingsService = TestBed.inject(UserSettingsService);
+        syncService = TestBed.inject(SyncService);
 
-		// Mocking
-		spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
+        // Mocking
+        spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
+        spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
-		spyOn(syncService, "getSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
-		spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
+        spyOn(syncService, "getSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
+        spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
 
-		fixture = TestBed.createComponent(FitnessTrendComponent);
-		component = fixture.componentInstance;
+        fixture = TestBed.createComponent(FitnessTrendComponent);
+        component = fixture.componentInstance;
 
-		component.fitnessTrendConfigModel = FitnessTrendComponent.DEFAULT_CONFIG;
+        component.fitnessTrendConfigModel = FitnessTrendComponent.DEFAULT_CONFIG;
 
-		fixture.detectChanges();
+        fixture.detectChanges();
 
-		done();
-	});
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 
-	it("should keep enabled: PSS impulses, SwimSS impulses & Training Zones on toggles verification with HRSS=ON", (done: Function) => {
+    it("should keep enabled: PSS impulses, SwimSS impulses & Training Zones on toggles verification with HRSS=ON", done => {
 
-		// Given
-		component.fitnessTrendConfigModel.heartRateImpulseMode = HeartRateImpulseMode.HRSS;
-		component.isTrainingZonesEnabled = true;
-		component.isPowerMeterEnabled = true;
-		component.isSwimEnabled = true;
-		component.isEBikeRidesEnabled = true;
-		const localStorageGetItemSpy = spyOn(localStorage, "getItem")
-			.and.returnValue("true"); // Indicate that toggles are enabled from user saved prefs (local storage)
+        // Given
+        component.fitnessTrendConfigModel.heartRateImpulseMode = HeartRateImpulseMode.HRSS;
+        component.isTrainingZonesEnabled = true;
+        component.isPowerMeterEnabled = true;
+        component.isSwimEnabled = true;
+        component.isEBikeRidesEnabled = true;
+        const localStorageGetItemSpy = spyOn(localStorage, "getItem")
+            .and.returnValue("true"); // Indicate that toggles are enabled from user saved prefs (local storage)
 
-		// When
-		component.updateTogglesStatesAlongHrMode();
+        // When
+        component.updateTogglesStatesAlongHrMode();
 
-		// Then
-		expect(component.isTrainingZonesEnabled).toEqual(true);
-		expect(component.isPowerMeterEnabled).toEqual(true);
-		expect(component.isSwimEnabled).toEqual(true);
-		expect(component.isEBikeRidesEnabled).toEqual(true);
-		expect(localStorageGetItemSpy).toHaveBeenCalledTimes(3);
+        // Then
+        expect(component.isTrainingZonesEnabled).toEqual(true);
+        expect(component.isPowerMeterEnabled).toEqual(true);
+        expect(component.isSwimEnabled).toEqual(true);
+        expect(component.isEBikeRidesEnabled).toEqual(true);
+        expect(localStorageGetItemSpy).toHaveBeenCalledTimes(3);
 
-		done();
-	});
+        done();
+    });
 
-	it("should disable: PSS impulses, SwimSS impulses & Training Zones on toggles verification with TRIMP=ON", (done: Function) => {
+    it("should disable: PSS impulses, SwimSS impulses & Training Zones on toggles verification with TRIMP=ON", done => {
 
-		// Given
-		component.fitnessTrendConfigModel.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
-		component.isTrainingZonesEnabled = true;
-		component.isPowerMeterEnabled = true;
-		component.isSwimEnabled = true;
-		component.isEBikeRidesEnabled = true;
-		const localStorageGetItemSpy = spyOn(localStorage, "getItem")
-			.and.returnValue(undefined); // Indicate that toggles are NOT enabled from user saved prefs (local storage)
+        // Given
+        component.fitnessTrendConfigModel.heartRateImpulseMode = HeartRateImpulseMode.TRIMP;
+        component.isTrainingZonesEnabled = true;
+        component.isPowerMeterEnabled = true;
+        component.isSwimEnabled = true;
+        component.isEBikeRidesEnabled = true;
+        const localStorageGetItemSpy = spyOn(localStorage, "getItem")
+            .and.returnValue(undefined); // Indicate that toggles are NOT enabled from user saved prefs (local storage)
 
-		// When
-		component.updateTogglesStatesAlongHrMode();
+        // When
+        component.updateTogglesStatesAlongHrMode();
 
-		// Then
-		expect(component.isTrainingZonesEnabled).toEqual(false);
-		expect(component.isPowerMeterEnabled).toEqual(false);
-		expect(component.isSwimEnabled).toEqual(false);
-		expect(component.isEBikeRidesEnabled).toEqual(true);
-		expect(localStorageGetItemSpy).toHaveBeenCalledTimes(0);
+        // Then
+        expect(component.isTrainingZonesEnabled).toEqual(false);
+        expect(component.isPowerMeterEnabled).toEqual(false);
+        expect(component.isSwimEnabled).toEqual(false);
+        expect(component.isEBikeRidesEnabled).toEqual(true);
+        expect(localStorageGetItemSpy).toHaveBeenCalledTimes(0);
 
-		done();
-	});
+        done();
+    });
 
 });

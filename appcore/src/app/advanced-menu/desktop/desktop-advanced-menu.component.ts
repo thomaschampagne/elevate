@@ -14,8 +14,8 @@ import { UserSettings } from "@elevate/shared/models";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 @Component({
-	selector: "app-advanced-menu",
-	template: `
+    selector: "app-advanced-menu",
+    template: `
 		<mat-card>
 			<mat-card-content>
 				<div class="mat-h3">
@@ -59,8 +59,8 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 			</mat-card-content>
 		</mat-card>
 	`,
-	styles: [
-			`
+    styles: [
+        `
 			button {
 				width: 300px;
 			}
@@ -70,101 +70,101 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 				padding-bottom: 10px;
 			}
 		`
-	]
+    ]
 })
 export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 
-	constructor(public userSettingsService: UserSettingsService,
-				public activityService: ActivityService,
-				public athleteService: AthleteService,
-				public syncService: SyncService<any>,
-				public electronService: ElectronService,
-				public dialog: MatDialog,
-				public snackBar: MatSnackBar) {
-		super(userSettingsService, athleteService, syncService, dialog, snackBar);
-	}
+    constructor(public userSettingsService: UserSettingsService,
+                public activityService: ActivityService,
+                public athleteService: AthleteService,
+                public syncService: SyncService<any>,
+                public electronService: ElectronService,
+                public dialog: MatDialog,
+                public snackBar: MatSnackBar) {
+        super(userSettingsService, athleteService, syncService, dialog, snackBar);
+    }
 
-	public onUserSettingsReset(): void {
+    public onUserSettingsReset(): void {
 
-		const data: ConfirmDialogDataModel = {
-			title: "Reset settings",
-			content: "This will reset your settings to defaults including: dated athlete settings and global settings. Are you sure to perform this action?"
-		};
+        const data: ConfirmDialogDataModel = {
+            title: "Reset settings",
+            content: "This will reset your settings to defaults including: dated athlete settings and global settings. Are you sure to perform this action?"
+        };
 
-		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-			minWidth: ConfirmDialogComponent.MIN_WIDTH,
-			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-			data: data
-		});
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            minWidth: ConfirmDialogComponent.MIN_WIDTH,
+            maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+            data: data
+        });
 
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
-			if (confirm) {
-				Promise.all([
-					this.userSettingsService.reset(),
-					this.athleteService.resetSettings()
-				]).then(() => {
-					this.snackBar.open("Settings have been reset", "Close");
-					afterClosedSubscription.unsubscribe();
-				});
-			}
-		});
-	}
+        const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+            if (confirm) {
+                Promise.all([
+                    this.userSettingsService.reset(),
+                    this.athleteService.resetSettings()
+                ]).then(() => {
+                    this.snackBar.open("Settings have been reset", "Close");
+                    afterClosedSubscription.unsubscribe();
+                });
+            }
+        });
+    }
 
-	public onRecalculateActivities(): void {
+    public onRecalculateActivities(): void {
 
-		const data: ConfirmDialogDataModel = {
-			title: "Recalculate stats of all activities",
-			content: "This will recompute stats on all your activities based on your current dated athlete settings and sensors' streams of each activity."
-		};
+        const data: ConfirmDialogDataModel = {
+            title: "Recalculate stats of all activities",
+            content: "This will recompute stats on all your activities based on your current dated athlete settings and sensors' streams of each activity."
+        };
 
-		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-			minWidth: ConfirmDialogComponent.MIN_WIDTH,
-			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-			data: data
-		});
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            minWidth: ConfirmDialogComponent.MIN_WIDTH,
+            maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+            data: data
+        });
 
-		dialogRef.afterClosed().subscribe((confirm: boolean) => {
-			if (confirm) {
-				this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
-					(<DesktopActivityService> this.activityService).bulkRefreshStatsAll(userSettingsModel);
-				});
-			}
-		});
-	}
+        dialogRef.afterClosed().subscribe((confirm: boolean) => {
+            if (confirm) {
+                this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
+                    (<DesktopActivityService> this.activityService).bulkRefreshStatsAll(userSettingsModel);
+                });
+            }
+        });
+    }
 
-	public onFullAppReset(): void {
+    public onFullAppReset(): void {
 
-		const data: ConfirmDialogDataModel = {
-			title: "App reset",
-			content: "This will completely delete all the data generated by the application to reach a \"fresh install\" state. Are you sure to perform this action?"
-		};
+        const data: ConfirmDialogDataModel = {
+            title: "App reset",
+            content: "This will completely delete all the data generated by the application to reach a \"fresh install\" state. Are you sure to perform this action?"
+        };
 
-		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-			minWidth: ConfirmDialogComponent.MIN_WIDTH,
-			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-			data: data
-		});
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            minWidth: ConfirmDialogComponent.MIN_WIDTH,
+            maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+            data: data
+        });
 
-		dialogRef.afterClosed().subscribe((confirm: boolean) => {
-			if (confirm) {
-				this.electronService.clearAppDataAndRestart();
-			}
-		});
-	}
+        dialogRef.afterClosed().subscribe((confirm: boolean) => {
+            if (confirm) {
+                this.electronService.clearAppDataAndRestart();
+            }
+        });
+    }
 
-	public openLogsFolder(): void {
-		this.electronService.openLogsFolder();
-	}
+    public openLogsFolder(): void {
+        this.electronService.openLogsFolder();
+    }
 
-	public openAppDataFolder(): void {
-		this.electronService.openAppDataFolder();
-	}
+    public openAppDataFolder(): void {
+        this.electronService.openAppDataFolder();
+    }
 
-	public openAppExecFolder(): void {
-		this.electronService.openAppExecFolder();
-	}
+    public openAppExecFolder(): void {
+        this.electronService.openAppExecFolder();
+    }
 
-	public onZoneSettingsReset(): void {
-		throw new Error("Method onZoneSettingsReset not implemented.");
-	}
+    public onZoneSettingsReset(): void {
+        throw new Error("Method onZoneSettingsReset not implemented.");
+    }
 }

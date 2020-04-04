@@ -1,4 +1,4 @@
 export class TargetProgressModel {
-	public dayOfYear: number;
-	public value: number;
+    public dayOfYear: number;
+    public value: number;
 }

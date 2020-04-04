@@ -12,72 +12,72 @@ import { IpcMessagesSender } from "../../desktop/ipc-messages/ipc-messages-sende
 @Injectable()
 export class StravaConnectorService {
 
-	public stravaConnectorInfo: StravaConnectorInfo;
-	public stravaConnectorInfo$: Subject<StravaConnectorInfo>;
+    public stravaConnectorInfo: StravaConnectorInfo;
+    public stravaConnectorInfo$: Subject<StravaConnectorInfo>;
 
-	constructor(public stravaConnectorInfoService: StravaConnectorInfoService,
-				public ipcMessagesSender: IpcMessagesSender,
-				public syncService: DesktopSyncService,
-				public logger: LoggerService) {
+    constructor(public stravaConnectorInfoService: StravaConnectorInfoService,
+                public ipcMessagesSender: IpcMessagesSender,
+                public syncService: DesktopSyncService,
+                public logger: LoggerService) {
 
-		this.stravaConnectorInfo$ = new Subject<StravaConnectorInfo>();
-	}
+        this.stravaConnectorInfo$ = new Subject<StravaConnectorInfo>();
+    }
 
-	public fetch(): Promise<StravaConnectorInfo> {
-		return this.stravaConnectorInfoService.fetch();
-	}
+    public fetch(): Promise<StravaConnectorInfo> {
+        return this.stravaConnectorInfoService.fetch();
+    }
 
-	/**
-	 * Promise updated StravaConnectorInfo with proper access & refresh token
-	 */
-	public authenticate(): Promise<StravaConnectorInfo> {
+    /**
+     * Promise updated StravaConnectorInfo with proper access & refresh token
+     */
+    public authenticate(): Promise<StravaConnectorInfo> {
 
-		return this.fetch().then((stravaConnectorInfo: StravaConnectorInfo) => {
+        return this.fetch().then((stravaConnectorInfo: StravaConnectorInfo) => {
 
-			this.stravaConnectorInfo = stravaConnectorInfo;
+            this.stravaConnectorInfo = stravaConnectorInfo;
 
-			const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.LINK_STRAVA_CONNECTOR, this.stravaConnectorInfo.clientId,
-				this.stravaConnectorInfo.clientSecret, this.stravaConnectorInfo.refreshToken);
+            const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.LINK_STRAVA_CONNECTOR, this.stravaConnectorInfo.clientId,
+                this.stravaConnectorInfo.clientSecret, this.stravaConnectorInfo.refreshToken);
 
-			return this.ipcMessagesSender
-				.send<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: any }>(flaggedIpcMessage);
+            return this.ipcMessagesSender
+                .send<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: any }>(flaggedIpcMessage);
 
-		}).then(result => {
-			this.stravaConnectorInfo.accessToken = result.accessToken;
-			this.stravaConnectorInfo.refreshToken = result.refreshToken;
-			this.stravaConnectorInfo.expiresAt = result.expiresAt;
-			this.stravaConnectorInfo.stravaAccount = new StravaAccount(result.athlete.id, result.athlete.username, result.athlete.firstname,
-				result.athlete.lastname, result.athlete.city, result.athlete.state, result.athlete.country,
-				result.athlete.sex === "M" ? Gender.MEN : Gender.WOMEN);
-			return this.stravaConnectorInfoService.save(this.stravaConnectorInfo);
+        }).then(result => {
+            this.stravaConnectorInfo.accessToken = result.accessToken;
+            this.stravaConnectorInfo.refreshToken = result.refreshToken;
+            this.stravaConnectorInfo.expiresAt = result.expiresAt;
+            this.stravaConnectorInfo.stravaAccount = new StravaAccount(result.athlete.id, result.athlete.username, result.athlete.firstname,
+                result.athlete.lastname, result.athlete.city, result.athlete.state, result.athlete.country,
+                result.athlete.sex === "M" ? Gender.MEN : Gender.WOMEN);
+            return this.stravaConnectorInfoService.save(this.stravaConnectorInfo);
 
-		}).then((stravaConnectorInfo: StravaConnectorInfo) => {
+        }).then((stravaConnectorInfo: StravaConnectorInfo) => {
 
-			return Promise.resolve(stravaConnectorInfo);
+            return Promise.resolve(stravaConnectorInfo);
 
-		}).catch(error => {
-			return Promise.reject(error);
-		});
-	}
+        }).catch(error => {
+            return Promise.reject(error);
+        });
+    }
 
-	/**
-	 *
-	 */
-	public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
+    /**
+     *
+     */
+    public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
 
-		const desktopSyncService = <DesktopSyncService> this.syncService;
+        const desktopSyncService = <DesktopSyncService> this.syncService;
 
-		// Subscribe to listen for StravaCredentialsUpdate (case where refresh token is performed)
-		desktopSyncService.syncEvents$.pipe(
-			filter(syncEvent => (syncEvent.type === SyncEventType.STRAVA_CREDENTIALS_UPDATE))
-		).subscribe((stravaCredentialsUpdateSyncEvent: StravaCredentialsUpdateSyncEvent) => {
-			this.stravaConnectorInfoService.save(stravaCredentialsUpdateSyncEvent.stravaConnectorInfo)
-				.then((stravaConnectorInfo: StravaConnectorInfo) => {
-					this.stravaConnectorInfo$.next(stravaConnectorInfo);
-				});
-		});
+        // Subscribe to listen for StravaCredentialsUpdate (case where refresh token is performed)
+        desktopSyncService.syncEvents$.pipe(
+            filter(syncEvent => (syncEvent.type === SyncEventType.STRAVA_CREDENTIALS_UPDATE))
+        ).subscribe((stravaCredentialsUpdateSyncEvent: StravaCredentialsUpdateSyncEvent) => {
+            this.stravaConnectorInfoService.save(stravaCredentialsUpdateSyncEvent.stravaConnectorInfo)
+                .then((stravaConnectorInfo: StravaConnectorInfo) => {
+                    this.stravaConnectorInfo$.next(stravaConnectorInfo);
+                });
+        });
 
-		return desktopSyncService.sync(fastSync, forceSync, ConnectorType.STRAVA);
-	}
+        return desktopSyncService.sync(fastSync, forceSync, ConnectorType.STRAVA);
+    }
 
 }

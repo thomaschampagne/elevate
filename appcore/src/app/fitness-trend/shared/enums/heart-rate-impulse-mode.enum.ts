@@ -1,4 +1,4 @@
 export enum HeartRateImpulseMode {
-	HRSS,
-	TRIMP
+    HRSS,
+    TRIMP
 }

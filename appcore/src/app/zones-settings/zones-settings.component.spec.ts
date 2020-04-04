@@ -9,33 +9,33 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZonesSettingsComponent", () => {
 
-	let component: ZonesSettingsComponent;
-	let fixture: ComponentFixture<ZonesSettingsComponent>;
+    let component: ZonesSettingsComponent;
+    let fixture: ComponentFixture<ZonesSettingsComponent>;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-			]
-		}).compileComponents();
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+            ]
+        }).compileComponents();
 
-		done();
-	});
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(ZonesSettingsComponent);
-		component = fixture.componentInstance;
+    beforeEach(done => {
+        fixture = TestBed.createComponent(ZonesSettingsComponent);
+        component = fixture.componentInstance;
 
-		spyOn(component.userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
+        spyOn(component.userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
-		fixture.detectChanges();
-		done();
-	});
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 
 });

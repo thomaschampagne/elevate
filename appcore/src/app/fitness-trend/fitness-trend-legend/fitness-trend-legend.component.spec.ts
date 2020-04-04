@@ -7,29 +7,29 @@ import { FitnessTrendModule } from "../fitness-trend.module";
 
 describe("FitnessTrendLegendComponent", () => {
 
-	let component: FitnessTrendLegendComponent;
-	let fixture: ComponentFixture<FitnessTrendLegendComponent>;
+    let component: FitnessTrendLegendComponent;
+    let fixture: ComponentFixture<FitnessTrendLegendComponent>;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-				FitnessTrendModule
-			]
-		}).compileComponents();
-		done();
-	});
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+                FitnessTrendModule
+            ]
+        }).compileComponents();
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(FitnessTrendLegendComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(FitnessTrendLegendComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 });

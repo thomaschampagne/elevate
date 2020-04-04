@@ -8,38 +8,38 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 
 describe("OptionHelperDialogComponent", () => {
-	let component: OptionHelperDialogComponent;
-	let fixture: ComponentFixture<OptionHelperDialogComponent>;
+    let component: OptionHelperDialogComponent;
+    let fixture: ComponentFixture<OptionHelperDialogComponent>;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-			],
-			declarations: [],
-			providers: [
-				{
-					provide: MAT_DIALOG_DATA, useValue: new OptionHelperDataModel("title", "data"),
-				},
-				{
-					provide: MatDialogRef, useValue: {},
-				},
-			]
-		}).compileComponents();
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+            ],
+            declarations: [],
+            providers: [
+                {
+                    provide: MAT_DIALOG_DATA, useValue: new OptionHelperDataModel("title", "data"),
+                },
+                {
+                    provide: MatDialogRef, useValue: {},
+                },
+            ]
+        }).compileComponents();
 
-		done();
-	});
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(OptionHelperDialogComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(OptionHelperDialogComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 });

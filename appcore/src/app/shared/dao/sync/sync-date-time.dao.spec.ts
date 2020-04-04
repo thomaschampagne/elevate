@@ -7,28 +7,28 @@ import { DataStore } from "../../data-store/data-store";
 
 describe("SyncDateTimeDao", () => {
 
-	let syncDateTimeDao: SyncDateTimeDao = null;
+    let syncDateTimeDao: SyncDateTimeDao = null;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		const lastSyncTime = Date.now();
-		const mockedDataStore: MockedDataStore<number> = new MockedDataStore(lastSyncTime);
+        const lastSyncTime = Date.now();
+        const mockedDataStore: MockedDataStore<number> = new MockedDataStore(lastSyncTime);
 
-		TestBed.configureTestingModule({
-			providers: [
-				SyncDateTimeDao,
-				{provide: DataStore, useValue: mockedDataStore}
-			]
-		});
+        TestBed.configureTestingModule({
+            providers: [
+                SyncDateTimeDao,
+                {provide: DataStore, useValue: mockedDataStore}
+            ]
+        });
 
-		// Retrieve injected service
-		syncDateTimeDao = TestBed.inject(SyncDateTimeDao);
-		done();
-	});
+        // Retrieve injected service
+        syncDateTimeDao = TestBed.inject(SyncDateTimeDao);
+        done();
+    });
 
-	it("should be created", (done: Function) => {
-		expect(syncDateTimeDao).toBeTruthy();
-		done();
-	});
+    it("should be created", done => {
+        expect(syncDateTimeDao).toBeTruthy();
+        done();
+    });
 
 });

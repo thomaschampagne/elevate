@@ -11,39 +11,39 @@ import { MockSyncService } from "./impl/mock/mock-sync.service";
 
 describe("SyncService", () => {
 
-	let athleteModel: AthleteModel;
-	let syncService: SyncService<any>;
-	let syncDateTimeDao: SyncDateTimeDao;
+    let athleteModel: AthleteModel;
+    let syncService: SyncService<any>;
+    let syncDateTimeDao: SyncDateTimeDao;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		const mockedVersionsProvider: MockedVersionsProvider = new MockedVersionsProvider();
+        const mockedVersionsProvider: MockedVersionsProvider = new MockedVersionsProvider();
 
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-			],
-			providers: [
-				{provide: SyncService, useClass: MockSyncService},
-				{provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider}
-			]
-		});
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+            ],
+            providers: [
+                {provide: SyncService, useClass: MockSyncService},
+                {provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider}
+            ]
+        });
 
-		athleteModel = _.cloneDeep(AthleteModel.DEFAULT_MODEL);
+        athleteModel = _.cloneDeep(AthleteModel.DEFAULT_MODEL);
 
-		syncService = TestBed.inject(SyncService);
-		syncDateTimeDao = TestBed.inject(SyncDateTimeDao);
+        syncService = TestBed.inject(SyncService);
+        syncDateTimeDao = TestBed.inject(SyncDateTimeDao);
 
-		spyOn(window, "open").and.stub(); // Avoid opening window in tests
+        spyOn(window, "open").and.stub(); // Avoid opening window in tests
 
-		done();
+        done();
 
-	});
+    });
 
-	it("should be created", (done: Function) => {
-		expect(syncService).toBeTruthy();
-		done();
-	});
+    it("should be created", done => {
+        expect(syncService).toBeTruthy();
+        done();
+    });
 
 });

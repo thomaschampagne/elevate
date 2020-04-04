@@ -2,22 +2,22 @@ import { AfterViewInit, Component, ElementRef, Input, ViewChild } from "@angular
 import * as katex from "katex";
 
 @Component({
-	selector: "katex",
-	template: `<span #element></span>`,
-	styleUrls: ["./katex-expression.component.scss"]
+    selector: "katex",
+    template: `<span #element></span>`,
+    styleUrls: ["./katex-expression.component.scss"]
 })
 export class KatexExpressionComponent implements AfterViewInit {
 
-	@Input("expression")
-	public expression: string;
+    @Input("expression")
+    public expression: string;
 
-	@ViewChild("element", {static: true})
-	public element: ElementRef;
+    @ViewChild("element", {static: true})
+    public element: ElementRef;
 
-	constructor() {
-	}
+    constructor() {
+    }
 
-	public ngAfterViewInit(): void {
-		katex.render(this.expression, this.element.nativeElement);
-	}
+    public ngAfterViewInit(): void {
+        katex.render(this.expression, this.element.nativeElement);
+    }
 }

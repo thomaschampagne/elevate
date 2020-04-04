@@ -2,13 +2,13 @@
 
 @mixin app-refresh-stats-bar-theming($theme) {
 
-	$primary: map-get($theme, primary);
-	$background: map-get($theme, background);
-	$text-color: mat-color($background, background);
+    $primary: map-get($theme, primary);
+    $background: map-get($theme, background);
+    $text-color: mat-color($background, background);
 
-	.app-refresh-stats-bar {
-		color: $text-color;
-		background: mat-color($primary);
-	}
+    .app-refresh-stats-bar {
+        color: $text-color;
+        background: mat-color($primary);
+    }
 
 }

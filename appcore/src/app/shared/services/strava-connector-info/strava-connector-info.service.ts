@@ -5,14 +5,14 @@ import { StravaConnectorInfo } from "@elevate/shared/sync";
 @Injectable()
 export class StravaConnectorInfoService {
 
-	constructor(public stravaConnectorInfoDao: StravaConnectorInfoDao) {
-	}
+    constructor(public stravaConnectorInfoDao: StravaConnectorInfoDao) {
+    }
 
-	public fetch(): Promise<StravaConnectorInfo> {
-		return <Promise<StravaConnectorInfo>> this.stravaConnectorInfoDao.fetch();
-	}
+    public fetch(): Promise<StravaConnectorInfo> {
+        return <Promise<StravaConnectorInfo>> this.stravaConnectorInfoDao.fetch();
+    }
 
-	public save(stravaConnectorInfo: StravaConnectorInfo): Promise<StravaConnectorInfo> {
-		return <Promise<StravaConnectorInfo>> this.stravaConnectorInfoDao.save(stravaConnectorInfo);
-	}
+    public save(stravaConnectorInfo: StravaConnectorInfo): Promise<StravaConnectorInfo> {
+        return <Promise<StravaConnectorInfo>> this.stravaConnectorInfoDao.save(stravaConnectorInfo);
+    }
 }

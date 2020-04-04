@@ -29,427 +29,422 @@ import NumberColumn = ActivityColumns.NumberColumn;
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Component({
-	selector: "app-activities",
-	templateUrl: "./activities.component.html",
-	styleUrls: ["./activities.component.scss"]
+    selector: "app-activities",
+    templateUrl: "./activities.component.html",
+    styleUrls: ["./activities.component.scss"]
 })
 export class ActivitiesComponent implements OnInit {
 
-	constructor(public syncService: SyncService<any>,
-				public activityService: ActivityService,
-				public streamsService: StreamsService,
-				public userSettingsService: UserSettingsService,
-				public appEventsService: AppEventsService,
-				@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
-				public snackBar: MatSnackBar,
-				public dialog: MatDialog,
-				public logger: LoggerService) {
-		this.hasActivities = null; // Can be null: don't know yet true/false status
-		this.initialized = false;
-		this.searchText$ = new Subject();
-	}
+    public static readonly LS_SELECTED_COLUMNS: string = "activities_selectedColumns";
+    public static readonly LS_PAGE_SIZE_PREFERENCE: string = "activities_pageSize";
+    public readonly ColumnType = ActivityColumns.ColumnType;
+    @ViewChild(MatPaginator)
+    public matPaginator: MatPaginator;
+    @ViewChild(MatSort)
+    public matSort: MatSort;
+    public dataSource: MatTableDataSource<SyncedActivityModel>;
+    public columns: ActivityColumns.Column<SyncedActivityModel>[];
+    public selectedColumns: ActivityColumns.Column<SyncedActivityModel>[];
+    public columnsCategories: ActivityColumns.Category[];
+    public displayedColumns: string[];
+    public isImperial: boolean;
+    public searchText: string;
+    public searchText$: Subject<string>;
+    public hasActivities: boolean;
+    public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
+    public initialized: boolean;
+
+    constructor(public syncService: SyncService<any>,
+                public activityService: ActivityService,
+                public streamsService: StreamsService,
+                public userSettingsService: UserSettingsService,
+                public appEventsService: AppEventsService,
+                @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
+                public snackBar: MatSnackBar,
+                public dialog: MatDialog,
+                public logger: LoggerService) {
+        this.hasActivities = null; // Can be null: don't know yet true/false status
+        this.initialized = false;
+        this.searchText$ = new Subject();
+    }
+
+    public static printAthleteSettings(activity: SyncedActivityModel, isImperial: boolean): string {
+
+        if (!activity.athleteSnapshot) {
+            return null;
+        }
+
+        let inlineSettings = "";
 
-	public static readonly LS_SELECTED_COLUMNS: string = "activities_selectedColumns";
-	public static readonly LS_PAGE_SIZE_PREFERENCE: string = "activities_pageSize";
+        if (activity.extendedStats && activity.extendedStats.heartRateData && (_.isNumber(activity.extendedStats.heartRateData.HRSS)
+            || _.isNumber(activity.extendedStats.heartRateData.TRIMP))) {
 
-	public readonly ColumnType = ActivityColumns.ColumnType;
+            inlineSettings += "MaxHr " + activity.athleteSnapshot.athleteSettings.maxHr + "bpm. ";
+            inlineSettings += "RestHr " + activity.athleteSnapshot.athleteSettings.restHr + "bpm. ";
 
-	@ViewChild(MatPaginator)
-	public matPaginator: MatPaginator;
+            if (activity.athleteSnapshot.athleteSettings.lthr.default
+                || activity.athleteSnapshot.athleteSettings.lthr.cycling
+                || activity.athleteSnapshot.athleteSettings.lthr.running) {
 
-	@ViewChild(MatSort)
-	public matSort: MatSort;
+                let lthrStr = "Lthr ";
 
-	public dataSource: MatTableDataSource<SyncedActivityModel>;
-	public columns: ActivityColumns.Column<SyncedActivityModel>[];
-	public selectedColumns: ActivityColumns.Column<SyncedActivityModel>[];
-	public columnsCategories: ActivityColumns.Category[];
-	public displayedColumns: string[];
-	public isImperial: boolean;
-	public searchText: string;
-	public searchText$: Subject<string>;
+                lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.default) ? "D:" +
+                    activity.athleteSnapshot.athleteSettings.lthr.default + "bpm, " : "";
+                lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.cycling) ? "C:" +
+                    activity.athleteSnapshot.athleteSettings.lthr.cycling + "bpm, " : "";
+                lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.running) ? "R:" +
+                    activity.athleteSnapshot.athleteSettings.lthr.running + "bpm, " : "";
+                lthrStr = lthrStr.slice(0, -2);
 
-	public hasActivities: boolean;
-	public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
-	public initialized: boolean;
+                inlineSettings += lthrStr + ". ";
+            }
 
-	public static printAthleteSettings(activity: SyncedActivityModel, isImperial: boolean): string {
+        }
 
-		if (!activity.athleteSnapshot) {
-			return null;
-		}
+        if (activity.extendedStats && activity.extendedStats.powerData && (_.isNumber(activity.extendedStats.powerData.powerStressScore)
+            && activity.athleteSnapshot.athleteSettings.cyclingFtp)) {
+            inlineSettings += "Cycling Ftp " + activity.athleteSnapshot.athleteSettings.cyclingFtp + "w. ";
+        }
 
-		let inlineSettings = "";
+        if (activity.extendedStats && activity.extendedStats.paceData && (_.isNumber(activity.extendedStats.paceData.runningStressScore)
+            && activity.athleteSnapshot.athleteSettings.runningFtp)) {
+            inlineSettings += "Run Ftp " + activity.athleteSnapshot.athleteSettings.runningFtp + "s/" + ((isImperial) ? "mi" : "km") + ".";
+        }
 
-		if (activity.extendedStats && activity.extendedStats.heartRateData && (_.isNumber(activity.extendedStats.heartRateData.HRSS)
-			|| _.isNumber(activity.extendedStats.heartRateData.TRIMP))) {
+        if (activity.type === "Swim" && activity.athleteSnapshot.athleteSettings.swimFtp) {
+            inlineSettings += "Swim Ftp " + activity.athleteSnapshot.athleteSettings.swimFtp + "m/min. ";
+        }
 
-			inlineSettings += "MaxHr " + activity.athleteSnapshot.athleteSettings.maxHr + "bpm. ";
-			inlineSettings += "RestHr " + activity.athleteSnapshot.athleteSettings.restHr + "bpm. ";
+        inlineSettings += "Weight " + activity.athleteSnapshot.athleteSettings.weight + "kg.";
 
-			if (activity.athleteSnapshot.athleteSettings.lthr.default
-				|| activity.athleteSnapshot.athleteSettings.lthr.cycling
-				|| activity.athleteSnapshot.athleteSettings.lthr.running) {
+        return inlineSettings;
 
-				let lthrStr = "Lthr ";
+    }
 
-				lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.default) ? "D:" +
-					activity.athleteSnapshot.athleteSettings.lthr.default + "bpm, " : "";
-				lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.cycling) ? "C:" +
-					activity.athleteSnapshot.athleteSettings.lthr.cycling + "bpm, " : "";
-				lthrStr += (activity.athleteSnapshot.athleteSettings.lthr.running) ? "R:" +
-					activity.athleteSnapshot.athleteSettings.lthr.running + "bpm, " : "";
-				lthrStr = lthrStr.slice(0, -2);
+    public ngOnInit(): void {
 
-				inlineSettings += lthrStr + ". ";
-			}
+        this.syncService.getSyncState().then((syncState: SyncState) => {
 
-		}
+            this.isSynced = syncState === SyncState.SYNCED;
 
-		if (activity.extendedStats && activity.extendedStats.powerData && (_.isNumber(activity.extendedStats.powerData.powerStressScore)
-			&& activity.athleteSnapshot.athleteSettings.cyclingFtp)) {
-			inlineSettings += "Cycling Ftp " + activity.athleteSnapshot.athleteSettings.cyclingFtp + "w. ";
-		}
+            if (!this.isSynced) {
+                this.initialized = true;
+            }
 
-		if (activity.extendedStats && activity.extendedStats.paceData && (_.isNumber(activity.extendedStats.paceData.runningStressScore)
-			&& activity.athleteSnapshot.athleteSettings.runningFtp)) {
-			inlineSettings += "Run Ftp " + activity.athleteSnapshot.athleteSettings.runningFtp + "s/" + ((isImperial) ? "mi" : "km") + ".";
-		}
+            return (this.isSynced) ? this.userSettingsService.fetch() : Promise.reject(new AppError(AppError.SYNC_NOT_SYNCED,
+                "Not synced. SyncState is: " + SyncState[syncState].toString()));
 
-		if (activity.type === "Swim" && activity.athleteSnapshot.athleteSettings.swimFtp) {
-			inlineSettings += "Swim Ftp " + activity.athleteSnapshot.athleteSettings.swimFtp + "m/min. ";
-		}
+        }).then((userSettings: UserSettingsModel) => {
 
-		inlineSettings += "Weight " + activity.athleteSnapshot.athleteSettings.weight + "kg.";
+            this.isImperial = (userSettings.systemUnit === UserSettings.SYSTEM_UNIT_IMPERIAL_KEY);
 
-		return inlineSettings;
+        }).then(() => {
 
-	}
+            // Filter displayed columns
+            this.columnsSetup();
 
-	public ngOnInit(): void {
+            // Data source setup
+            this.dataSourceSetup();
 
-		this.syncService.getSyncState().then((syncState: SyncState) => {
+            // Get and apply data
+            this.fetchApplyData();
 
-			this.isSynced = syncState === SyncState.SYNCED;
+        }).catch(error => {
+            if (error instanceof AppError && error.code === AppError.SYNC_NOT_SYNCED) {
+                // Do nothing
+            } else {
+                throw error;
+            }
+        });
 
-			if (!this.isSynced) {
-				this.initialized = true;
-			}
+        // Listen for syncFinished update then table if necessary.
+        this.appEventsService.onSyncDone.subscribe((changes: boolean) => {
+            if (changes) {
+                this.initialized = false;
+                this.fetchApplyData();
+            }
+        });
+    }
 
-			return (this.isSynced) ? this.userSettingsService.fetch() : Promise.reject(new AppError(AppError.SYNC_NOT_SYNCED,
-				"Not synced. SyncState is: " + SyncState[syncState].toString()));
+    public columnsSetup(): void {
 
-		}).then((userSettings: UserSettingsModel) => {
+        const existingSelectedColumns = this.getSelectedColumns();
 
-			this.isImperial = (userSettings.systemUnit === UserSettings.SYSTEM_UNIT_IMPERIAL_KEY);
+        this.selectedColumns = (existingSelectedColumns) ? existingSelectedColumns : this.getDefaultsColumns();
 
-		}).then(() => {
+        // Filter column along selection
+        this.filterDisplayedColumns();
 
-			// Filter displayed columns
-			this.columnsSetup();
+        // Creates category of columns
+        this.columnsCategories = this.createColumnsCategories(ActivityColumns.Definition.ALL);
 
-			// Data source setup
-			this.dataSourceSetup();
+    }
 
-			// Get and apply data
-			this.fetchApplyData();
+    public dataSourceSetup(): void {
 
-		}).catch(error => {
-			if (error instanceof AppError && error.code === AppError.SYNC_NOT_SYNCED) {
-				// Do nothing
-			} else {
-				throw error;
-			}
-		});
+        this.dataSource = new MatTableDataSource<SyncedActivityModel>();
+        this.dataSource.paginator = this.matPaginator;
 
-		// Listen for syncFinished update then table if necessary.
-		this.appEventsService.onSyncDone.subscribe((changes: boolean) => {
-			if (changes) {
-				this.initialized = false;
-				this.fetchApplyData();
-			}
-		});
-	}
+        const pageSizePreference = parseInt(localStorage.getItem(ActivitiesComponent.LS_PAGE_SIZE_PREFERENCE), 10);
+        if (!_.isNaN(pageSizePreference)) {
+            this.dataSource.paginator.pageSize = pageSizePreference;
+        }
 
-	public columnsSetup(): void {
+        this.dataSource.sort = this.matSort;
 
-		const existingSelectedColumns = this.getSelectedColumns();
+        this.dataSource.sortingDataAccessor = (activity: SyncedActivityModel, sortHeaderId: string) => {
 
-		this.selectedColumns = (existingSelectedColumns) ? existingSelectedColumns : this.getDefaultsColumns();
+            const column = _.find(ActivityColumns.Definition.ALL, {id: sortHeaderId});
 
-		// Filter column along selection
-		this.filterDisplayedColumns();
+            if (column && column.id) {
 
-		// Creates category of columns
-		this.columnsCategories = this.createColumnsCategories(ActivityColumns.Definition.ALL);
+                const valueAtPath = _.at(activity as any, column.id)[0];
+                return (valueAtPath) ? valueAtPath : 0;
 
-	}
+            } else {
+                this.logger.warn("Column path missing", JSON.stringify(column));
+                return 0;
+            }
+        };
 
-	public dataSourceSetup(): void {
+    }
 
-		this.dataSource = new MatTableDataSource<SyncedActivityModel>();
-		this.dataSource.paginator = this.matPaginator;
+    public fetchApplyData(): void {
 
-		const pageSizePreference = parseInt(localStorage.getItem(ActivitiesComponent.LS_PAGE_SIZE_PREFERENCE), 10);
-		if (!_.isNaN(pageSizePreference)) {
-			this.dataSource.paginator.pageSize = pageSizePreference;
-		}
+        this.activityService.fetch().then((syncedActivityModels: SyncedActivityModel[]) => {
 
-		this.dataSource.sort = this.matSort;
+            this.hasActivities = syncedActivityModels.length > 0;
 
-		this.dataSource.sortingDataAccessor = (activity: SyncedActivityModel, sortHeaderId: string) => {
+            if (environment.target === EnvTarget.DESKTOP) {
+                this.dataSource.data = _.sortBy(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
+                    return syncedActivityModel.start_timestamp * -1;
+                });
+            } else if (environment.target === EnvTarget.EXTENSION) {
+                this.dataSource.data = _.sortBy(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
+                    return (<number> syncedActivityModel.id) * -1;
+                });
+            }
 
-			const column = _.find(ActivityColumns.Definition.ALL, {id: sortHeaderId});
+            this.searchText$.pipe(
+                debounce(() => timer(350))
+            ).subscribe(filterValue => {
+                filterValue = filterValue.trim(); // Remove whitespace
+                filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+                this.dataSource.filter = filterValue;
+            });
+
+        }).catch(error => {
+            const message = error.toString() + ". Press (F12) to see a more detailed error message in browser console.";
+            this.snackBar.open(message, "Close");
+            this.logger.error(message);
+
+        }).finally(() => {
+            this.initialized = true;
+        });
+    }
+
+    public filterDisplayedColumns(): void {
+        this.columns = _.filter(ActivityColumns.Definition.ALL, (column: ActivityColumns.Column<SyncedActivityModel>) => {
+            return !_.isEmpty(_.find(this.selectedColumns, {id: column.id}));
+        });
+
+        this.displayedColumns = this.columns.map(column => column.id);
+    }
+
+    public onSelectedColumns(): void {
+        this.filterDisplayedColumns();
+        this.saveSelectedColumns();
+    }
+
+    public getSelectedColumns(): ActivityColumns.Column<SyncedActivityModel>[] {
+
+        const savedColumns: string[] = JSON.parse(localStorage.getItem(ActivitiesComponent.LS_SELECTED_COLUMNS));
+
+        let selectedColumns: ActivityColumns.Column<SyncedActivityModel>[] = null;
+
+        if (savedColumns) {
+            selectedColumns = _.filter(ActivityColumns.Definition.ALL, (column: ActivityColumns.Column<SyncedActivityModel>) => {
+                return (_.indexOf(savedColumns, column.id) !== -1);
+            });
+        }
 
-			if (column && column.id) {
+        return selectedColumns;
+    }
 
-				const valueAtPath = _.at(activity as any, column.id)[0];
-				return (valueAtPath) ? valueAtPath : 0;
+    public getDefaultsColumns(): ActivityColumns.Column<SyncedActivityModel>[] {
+        return _.filter(ActivityColumns.Definition.ALL, (column: ActivityColumns.Column<SyncedActivityModel>) => {
+            return column.isDefault;
+        });
+    }
 
-			} else {
-				this.logger.warn("Column path missing", JSON.stringify(column));
-				return 0;
-			}
-		};
+    public saveSelectedColumns(): void {
+        const columnsToBeSaved: string[] = _.map(this.selectedColumns, (column: ActivityColumns.Column<SyncedActivityModel>) => {
+            return column.id;
+        });
+        localStorage.setItem(ActivitiesComponent.LS_SELECTED_COLUMNS, JSON.stringify(columnsToBeSaved));
+    }
 
-	}
+    public createColumnsCategories(columns: ActivityColumns.Column<SyncedActivityModel>[]): ActivityColumns.Category[] {
+        return _.map(_.groupBy(columns, "category"),
+            (columnsGroup: ActivityColumns.Column<SyncedActivityModel>[], categoryLabel: string) => {
+                return new ActivityColumns.Category(categoryLabel, columnsGroup);
+            });
+    }
 
-	public fetchApplyData(): void {
+    public requestFilterFor(filterValue: string): void {
+        if (filterValue && filterValue.length <= 2) {
+            return;
+        }
+        this.searchText$.next(filterValue);
+    }
 
-		this.activityService.fetch().then((syncedActivityModels: SyncedActivityModel[]) => {
+    public openActivity(id: number | string) {
+        this.openResourceResolver.openActivity(id);
+    }
 
-			this.hasActivities = syncedActivityModels.length > 0;
+    public onViewAthleteSettings(activity: SyncedActivityModel): void {
+        this.dialog.open(GotItDialogComponent, {
+            minWidth: GotItDialogComponent.MIN_WIDTH,
+            maxWidth: GotItDialogComponent.MAX_WIDTH,
+            data: new GotItDialogDataModel("Calculated with athlete settings", ActivitiesComponent.printAthleteSettings(activity, this.isImperial))
+        });
+    }
 
-			if (environment.target === EnvTarget.DESKTOP) {
-				this.dataSource.data = _.sortBy(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
-					return syncedActivityModel.start_timestamp * -1;
-				});
-			} else if (environment.target === EnvTarget.EXTENSION) {
-				this.dataSource.data = _.sortBy(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
-					return (<number> syncedActivityModel.id) * -1;
-				});
-			}
+    public onDeleteActivity(activity: SyncedActivityModel): void {
 
-			this.searchText$.pipe(
-				debounce(() => timer(350))
-			).subscribe(filterValue => {
-				filterValue = filterValue.trim(); // Remove whitespace
-				filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-				this.dataSource.filter = filterValue;
-			});
+        const data: ConfirmDialogDataModel = {
+            title: "Deleting activity \"" + activity.name + "\"",
+            content: "Are you sure to perform this action? You will be able to fetch back this activity with a \"Sync all activities\".",
+            confirmText: "Delete"
+        };
 
-		}).catch(error => {
-			const message = error.toString() + ". Press (F12) to see a more detailed error message in browser console.";
-			this.snackBar.open(message, "Close");
-			this.logger.error(message);
-
-		}).finally(() => {
-			this.initialized = true;
-		});
-	}
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            minWidth: ConfirmDialogComponent.MIN_WIDTH,
+            maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+            data: data
+        });
 
-	public filterDisplayedColumns(): void {
-		this.columns = _.filter(ActivityColumns.Definition.ALL, (column: ActivityColumns.Column<SyncedActivityModel>) => {
-			return !_.isEmpty(_.find(this.selectedColumns, {id: column.id}));
-		});
-
-		this.displayedColumns = this.columns.map(column => column.id);
-	}
+        const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
 
-	public onSelectedColumns(): void {
-		this.filterDisplayedColumns();
-		this.saveSelectedColumns();
-	}
-
-	public getSelectedColumns(): ActivityColumns.Column<SyncedActivityModel>[] {
-
-		const savedColumns: string[] = JSON.parse(localStorage.getItem(ActivitiesComponent.LS_SELECTED_COLUMNS));
-
-		let selectedColumns: ActivityColumns.Column<SyncedActivityModel>[] = null;
-
-		if (savedColumns) {
-			selectedColumns = _.filter(ActivityColumns.Definition.ALL, (column: ActivityColumns.Column<SyncedActivityModel>) => {
-				return (_.indexOf(savedColumns, column.id) !== -1);
-			});
-		}
+            if (confirm) {
+                this.activityService.removeByIds([activity.id]).then(() => {
+                    return this.streamsService.removeByIds([activity.id]);
+                }).then(() => {
+                    this.fetchApplyData();
+                }, error => {
+                    this.snackBar.open(error, "Close");
+                });
+            }
+            afterClosedSubscription.unsubscribe();
+        });
 
-		return selectedColumns;
-	}
+    }
 
-	public getDefaultsColumns(): ActivityColumns.Column<SyncedActivityModel>[] {
-		return _.filter(ActivityColumns.Definition.ALL, (column: ActivityColumns.Column<SyncedActivityModel>) => {
-			return column.isDefault;
-		});
-	}
+    public tickAll(): void {
+        this.selectedColumns = _.clone(ActivityColumns.Definition.ALL);
+        this.onSelectedColumns();
+    }
 
-	public saveSelectedColumns(): void {
-		const columnsToBeSaved: string[] = _.map(this.selectedColumns, (column: ActivityColumns.Column<SyncedActivityModel>) => {
-			return column.id;
-		});
-		localStorage.setItem(ActivitiesComponent.LS_SELECTED_COLUMNS, JSON.stringify(columnsToBeSaved));
-	}
+    public reset(): void {
+        this.selectedColumns = this.getDefaultsColumns();
+        this.onSelectedColumns();
+    }
 
-	public createColumnsCategories(columns: ActivityColumns.Column<SyncedActivityModel>[]): ActivityColumns.Category[] {
-		return _.map(_.groupBy(columns, "category"),
-			(columnsGroup: ActivityColumns.Column<SyncedActivityModel>[], categoryLabel: string) => {
-				return new ActivityColumns.Category(categoryLabel, columnsGroup);
-			});
-	}
+    public unTickAll(): void {
+        this.selectedColumns = [
+            _.find(ActivityColumns.Definition.ALL, {id: "start_time"}),
+            _.find(ActivityColumns.Definition.ALL, {id: "name"}),
+        ];
 
-	public requestFilterFor(filterValue: string): void {
-		if (filterValue && filterValue.length <= 2) {
-			return;
-		}
-		this.searchText$.next(filterValue);
-	}
+        this.onSelectedColumns();
+    }
 
-	public openActivity(id: number | string) {
-		this.openResourceResolver.openActivity(id);
-	}
+    public onPageSizeChanged(): void {
+        localStorage.setItem(ActivitiesComponent.LS_PAGE_SIZE_PREFERENCE, this.dataSource.paginator.pageSize.toString());
+    }
 
-	public onViewAthleteSettings(activity: SyncedActivityModel): void {
-		this.dialog.open(GotItDialogComponent, {
-			minWidth: GotItDialogComponent.MIN_WIDTH,
-			maxWidth: GotItDialogComponent.MAX_WIDTH,
-			data: new GotItDialogDataModel("Calculated with athlete settings", ActivitiesComponent.printAthleteSettings(activity, this.isImperial))
-		});
-	}
+    public onSpreadSheetExport(): void {
 
-	public onDeleteActivity(activity: SyncedActivityModel): void {
+        try {
 
-		const data: ConfirmDialogDataModel = {
-			title: "Deleting activity \"" + activity.name + "\"",
-			content: "Are you sure to perform this action? You will be able to fetch back this activity with a \"Sync all activities\".",
-			confirmText: "Delete"
-		};
+            const fields = _.map(this.selectedColumns, (column: ActivityColumns.Column<SyncedActivityModel>) => {
 
-		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-			minWidth: ConfirmDialogComponent.MIN_WIDTH,
-			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-			data: data
-		});
+                let columnLabel = column.header;
 
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+                if (ActivityColumns.ColumnType.NUMBER) {
 
-			if (confirm) {
-				this.activityService.removeByIds([activity.id]).then(() => {
-					return this.streamsService.removeByIds([activity.id]);
-				}).then(() => {
-					this.fetchApplyData();
-				}, error => {
-					this.snackBar.open(error, "Close");
-				});
-			}
-			afterClosedSubscription.unsubscribe();
-		});
+                    const numberColumn = (column as NumberColumn<SyncedActivityModel>);
 
-	}
+                    if (numberColumn.units) {
 
-	public tickAll(): void {
-		this.selectedColumns = _.clone(ActivityColumns.Definition.ALL);
-		this.onSelectedColumns();
-	}
+                        let unitsColumn = numberColumn.units;
 
-	public reset(): void {
-		this.selectedColumns = this.getDefaultsColumns();
-		this.onSelectedColumns();
-	}
+                        if (unitsColumn instanceof ActivityColumns.SystemUnits) {
+                            unitsColumn = this.isImperial ? unitsColumn.imperial : unitsColumn.metric;
+                        }
 
-	public unTickAll(): void {
-		this.selectedColumns = [
-			_.find(ActivityColumns.Definition.ALL, {id: "start_time"}),
-			_.find(ActivityColumns.Definition.ALL, {id: "name"}),
-		];
+                        if (unitsColumn instanceof ActivityColumns.CadenceUnits) {
+                            unitsColumn = unitsColumn.cycling + " or " + unitsColumn.running;
+                        }
 
-		this.onSelectedColumns();
-	}
+                        columnLabel += (unitsColumn) ? " (" + unitsColumn + ")" : "";
+                    }
 
-	public onPageSizeChanged(): void {
-		localStorage.setItem(ActivitiesComponent.LS_PAGE_SIZE_PREFERENCE, this.dataSource.paginator.pageSize.toString());
-	}
+                }
 
-	public onSpreadSheetExport(): void {
+                return {
+                    label: columnLabel,
+                    default: "",
+                    value: (activity: SyncedActivityModel) => {
 
-		try {
+                        let cellValue;
 
-			const fields = _.map(this.selectedColumns, (column: ActivityColumns.Column<SyncedActivityModel>) => {
+                        switch (column.type) {
 
-				let columnLabel = column.header;
+                            case ActivityColumns.ColumnType.DATE:
+                                cellValue = moment(activity.start_time).format();
+                                break;
 
-				if (ActivityColumns.ColumnType.NUMBER) {
+                            case ActivityColumns.ColumnType.TEXT:
+                                cellValue = column.print(activity, column.id);
+                                break;
 
-					const numberColumn = (column as NumberColumn<SyncedActivityModel>);
+                            case ActivityColumns.ColumnType.ACTIVITY_LINK:
+                                cellValue = column.print(activity, column.id);
+                                break;
 
-					if (numberColumn.units) {
+                            case ActivityColumns.ColumnType.NUMBER:
+                                const numberColumn = (column as NumberColumn<SyncedActivityModel>);
+                                cellValue = numberColumn.print(activity, null, numberColumn.precision, numberColumn.factor,
+                                    this.isImperial, numberColumn.imperialFactor, numberColumn.id);
+                                break;
 
-						let unitsColumn = numberColumn.units;
+                            case ActivityColumns.ColumnType.ATHLETE_SETTINGS:
+                                cellValue = ActivitiesComponent.printAthleteSettings(activity, this.isImperial);
+                                break;
 
-						if (unitsColumn instanceof ActivityColumns.SystemUnits) {
-							unitsColumn = this.isImperial ? unitsColumn.imperial : unitsColumn.metric;
-						}
+                            default:
+                                cellValue = "";
+                                break;
+                        }
 
-						if (unitsColumn instanceof ActivityColumns.CadenceUnits) {
-							unitsColumn = unitsColumn.cycling + " or " + unitsColumn.running;
-						}
+                        return cellValue;
 
-						columnLabel += (unitsColumn) ? " (" + unitsColumn + ")" : "";
-					}
+                    }
+                };
 
-				}
+            });
 
-				return {
-					label: columnLabel,
-					default: "",
-					value: (activity: SyncedActivityModel) => {
+            const parser = new Json2CsvParser({fields: fields});
+            const csvData = parser.parse(this.dataSource.filteredData);
+            const blob = new Blob([csvData], {type: "application/csv; charset=utf-16"});
+            const filename = "elevate_activities_export." + moment().format("Y.M.D-H.mm.ss") + ".csv";
+            saveAs(blob, filename);
 
-						let cellValue;
+        } catch (err) {
+            this.logger.error(err);
+        }
 
-						switch (column.type) {
-
-							case ActivityColumns.ColumnType.DATE:
-								cellValue = moment(activity.start_time).format();
-								break;
-
-							case ActivityColumns.ColumnType.TEXT:
-								cellValue = column.print(activity, column.id);
-								break;
-
-							case ActivityColumns.ColumnType.ACTIVITY_LINK:
-								cellValue = column.print(activity, column.id);
-								break;
-
-							case ActivityColumns.ColumnType.NUMBER:
-								const numberColumn = (column as NumberColumn<SyncedActivityModel>);
-								cellValue = numberColumn.print(activity, null, numberColumn.precision, numberColumn.factor,
-									this.isImperial, numberColumn.imperialFactor, numberColumn.id);
-								break;
-
-							case ActivityColumns.ColumnType.ATHLETE_SETTINGS:
-								cellValue = ActivitiesComponent.printAthleteSettings(activity, this.isImperial);
-								break;
-
-							default:
-								cellValue = "";
-								break;
-						}
-
-						return cellValue;
-
-					}
-				};
-
-			});
-
-			const parser = new Json2CsvParser({fields: fields});
-			const csvData = parser.parse(this.dataSource.filteredData);
-			const blob = new Blob([csvData], {type: "application/csv; charset=utf-16"});
-			const filename = "elevate_activities_export." + moment().format("Y.M.D-H.mm.ss") + ".csv";
-			saveAs(blob, filename);
-
-		} catch (err) {
-			this.logger.error(err);
-		}
-
-	}
+    }
 
 }

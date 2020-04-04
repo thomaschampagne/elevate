@@ -1,4 +1,4 @@
 export class MarkerModel {
-	public date: Date;
-	public label: string;
+    public date: Date;
+    public label: string;
 }

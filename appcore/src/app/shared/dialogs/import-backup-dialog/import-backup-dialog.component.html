@@ -1,24 +1,24 @@
 <h2 mat-dialog-title>Import activities</h2>
 <mat-dialog-content class="mat-body-1">
-	<div *ngIf="!file">
-		<button mat-stroked-button color="primary" (click)="fileInput.click()">
-			Choose backup file
-			<input #fileInput type="file" (change)="onFileSelected($event.target.files[0])" [hidden]="true"/>
-		</button>
-	</div>
+    <div *ngIf="!file">
+        <button (click)="fileInput.click()" color="primary" mat-stroked-button>
+            Choose backup file
+            <input #fileInput (change)="onFileSelected($event.target.files[0])" [hidden]="true" type="file"/>
+        </button>
+    </div>
 
-	<div *ngIf="file">
-		<div>
-			Filename: <i>{{displayName}} </i>
-		</div>
-		<div>
-			Size: <i>{{displaySize}} </i>
-		</div>
-	</div>
+    <div *ngIf="file">
+        <div>
+            Filename: <i>{{displayName}} </i>
+        </div>
+        <div>
+            Size: <i>{{displaySize}} </i>
+        </div>
+    </div>
 
 </mat-dialog-content>
 <mat-dialog-actions>
-	<button mat-stroked-button mat-dialog-close color="primary" (click)="onCancel()">Cancel</button>
-	<span fxFlex="1"></span>
-	<button *ngIf="file" mat-stroked-button color="primary" (click)="onRestore()">Restore</button>
+    <button (click)="onCancel()" color="primary" mat-dialog-close mat-stroked-button>Cancel</button>
+    <span fxFlex="1"></span>
+    <button (click)="onRestore()" *ngIf="file" color="primary" mat-stroked-button>Restore</button>
 </mat-dialog-actions>

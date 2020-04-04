@@ -9,130 +9,130 @@ import { FitnessTrendConfigDialogData } from "../shared/models/fitness-trend-con
 import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog.component";
 
 describe("FitnessTrendConfigDialogComponent", () => {
-	let component: FitnessTrendConfigDialogComponent;
-	let fixture: ComponentFixture<FitnessTrendConfigDialogComponent>;
-	let fitnessTrendConfigDialogData: FitnessTrendConfigDialogData;
+    let component: FitnessTrendConfigDialogComponent;
+    let fixture: ComponentFixture<FitnessTrendConfigDialogComponent>;
+    let fitnessTrendConfigDialogData: FitnessTrendConfigDialogData;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		fitnessTrendConfigDialogData = {
-			fitnessTrendConfigModel: FitnessTrendComponent.DEFAULT_CONFIG,
-			lastFitnessActiveDate: new Date(),
-			isPowerMeterEnabled: true
-		};
+        fitnessTrendConfigDialogData = {
+            fitnessTrendConfigModel: FitnessTrendComponent.DEFAULT_CONFIG,
+            lastFitnessActiveDate: new Date(),
+            isPowerMeterEnabled: true
+        };
 
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-				FitnessTrendModule
-			],
-			providers: [
-				{
-					provide: MAT_DIALOG_DATA, useValue: fitnessTrendConfigDialogData,
-				},
-				{
-					provide: MatDialogRef, useValue: {},
-				},
-			]
-		}).compileComponents();
-		done();
-	});
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+                FitnessTrendModule
+            ],
+            providers: [
+                {
+                    provide: MAT_DIALOG_DATA, useValue: fitnessTrendConfigDialogData,
+                },
+                {
+                    provide: MatDialogRef, useValue: {},
+                },
+            ]
+        }).compileComponents();
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(FitnessTrendConfigDialogComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(FitnessTrendConfigDialogComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", () => {
-		expect(component).toBeTruthy();
-	});
+    it("should create", () => {
+        expect(component).toBeTruthy();
+    });
 
-	it("should handle ignore patterns formatting for storage", (done: Function) => {
+    it("should handle ignore patterns formatting for storage", done => {
 
-		// Given
-		const userInputPatterns: string = "#tag_1\n" +
-			"#tag_2\n" +
-			"#tag_3 \n" + // Added space
-			"#tag_4\n" +
-			"#tag_5\r\n" + // combined carriage returns
-			"#tag_6\n" +
-			"#tag_6\n" + // Duplicate of previous
-			"\n"; // Fake return
+        // Given
+        const userInputPatterns: string = "#tag_1\n" +
+            "#tag_2\n" +
+            "#tag_3 \n" + // Added space
+            "#tag_4\n" +
+            "#tag_5\r\n" + // combined carriage returns
+            "#tag_6\n" +
+            "#tag_6\n" + // Duplicate of previous
+            "\n"; // Fake return
 
 
-		// When
-		const result: string[] = component.formatPatternsForStorage(userInputPatterns);
+        // When
+        const result: string[] = component.formatPatternsForStorage(userInputPatterns);
 
-		// Then
-		expect(result).not.toBeNull();
-		expect(result.length).toEqual(6);
-		expect(_.first(result)).toEqual("#tag_1");
-		expect(_.last(result)).toEqual("#tag_6");
-		expect(result[2]).toEqual("#tag_3");
+        // Then
+        expect(result).not.toBeNull();
+        expect(result.length).toEqual(6);
+        expect(_.first(result)).toEqual("#tag_1");
+        expect(_.last(result)).toEqual("#tag_6");
+        expect(result[2]).toEqual("#tag_3");
 
-		done();
+        done();
 
-	});
+    });
 
-	it("should handle ignore patterns empty (1)", (done: Function) => {
+    it("should handle ignore patterns empty (1)", done => {
 
-		// Given
-		const userInputPatterns = " ";
+        // Given
+        const userInputPatterns = " ";
 
-		// When
-		const result: string[] = component.formatPatternsForStorage(userInputPatterns);
+        // When
+        const result: string[] = component.formatPatternsForStorage(userInputPatterns);
 
-		// Then
-		expect(result).toBeNull();
-		done();
+        // Then
+        expect(result).toBeNull();
+        done();
 
-	});
+    });
 
-	it("should handle ignore patterns empty (2)", (done: Function) => {
+    it("should handle ignore patterns empty (2)", done => {
 
-		// Given
-		const userInputPatterns = "\n";
+        // Given
+        const userInputPatterns = "\n";
 
-		// When
-		const result: string[] = component.formatPatternsForStorage(userInputPatterns);
+        // When
+        const result: string[] = component.formatPatternsForStorage(userInputPatterns);
 
-		// Then
-		expect(result).toBeNull();
-		done();
+        // Then
+        expect(result).toBeNull();
+        done();
 
-	});
+    });
 
-	it("should handle ignore patterns empty (3)", (done: Function) => {
+    it("should handle ignore patterns empty (3)", done => {
 
-		// Given
-		const userInputPatterns = "";
+        // Given
+        const userInputPatterns = "";
 
-		// When
-		const result: string[] = component.formatPatternsForStorage(userInputPatterns);
+        // When
+        const result: string[] = component.formatPatternsForStorage(userInputPatterns);
 
-		// Then
-		expect(result).toBeNull();
-		done();
+        // Then
+        expect(result).toBeNull();
+        done();
 
-	});
+    });
 
-	it("should handle ignore patterns formatting for display", (done: Function) => {
+    it("should handle ignore patterns formatting for display", done => {
 
-		// Given
-		const patterns: string[] = ["#tag_1", "#tag_2"];
-		const expectedResult = "#tag_1\n#tag_2";
+        // Given
+        const patterns: string[] = ["#tag_1", "#tag_2"];
+        const expectedResult = "#tag_1\n#tag_2";
 
-		// When
-		const result: string = component.formatPatternsForDisplay(patterns);
+        // When
+        const result: string = component.formatPatternsForDisplay(patterns);
 
-		// Then
-		expect(result).not.toBeNull();
-		expect(result).toEqual(expectedResult);
-		done();
+        // Then
+        expect(result).not.toBeNull();
+        expect(result).toEqual(expectedResult);
+        done();
 
-	});
+    });
 
 });

@@ -12,99 +12,99 @@ import moment from "moment";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 
 @Component({
-	selector: "app-connectors",
-	templateUrl: "./connectors.component.html",
-	styleUrls: ["./connectors.component.scss"]
+    selector: "app-connectors",
+    templateUrl: "./connectors.component.html",
+    styleUrls: ["./connectors.component.scss"]
 })
 export class ConnectorsComponent implements OnInit {
 
-	public static readonly ATHLETE_CHECKING_FIRST_SYNC_MESSAGE: string = "ATHLETE_CHECKING_FIRST_SYNC";
+    public static readonly ATHLETE_CHECKING_FIRST_SYNC_MESSAGE: string = "ATHLETE_CHECKING_FIRST_SYNC";
 
-	public connectorType: ConnectorType;
-	public syncDateTime: Date;
-	public humanSyncDateTime: string;
+    public connectorType: ConnectorType;
+    public syncDateTime: Date;
+    public humanSyncDateTime: string;
 
-	constructor(public desktopSyncService: DesktopSyncService,
-				@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
-				public router: Router,
-				public dialog: MatDialog) {
-		this.connectorType = null;
-		this.syncDateTime = null;
-		this.humanSyncDateTime = null;
-	}
+    constructor(public desktopSyncService: DesktopSyncService,
+                @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
+                public router: Router,
+                public dialog: MatDialog) {
+        this.connectorType = null;
+        this.syncDateTime = null;
+        this.humanSyncDateTime = null;
+    }
 
-	public ngOnInit(): void {
-	}
+    public ngOnInit(): void {
+    }
 
-	public updateSyncDateTimeText(): void {
-		this.getSyncDateTime().then(connectorSyncDateTime => {
-			this.syncDateTime = (connectorSyncDateTime && connectorSyncDateTime.dateTime)
-				? new Date(connectorSyncDateTime.dateTime) : null;
-			this.humanSyncDateTime = (connectorSyncDateTime && connectorSyncDateTime.dateTime)
-				? "Synced " + moment(connectorSyncDateTime.dateTime).fromNow() + "." : "Never synced.";
-		});
-	}
+    public updateSyncDateTimeText(): void {
+        this.getSyncDateTime().then(connectorSyncDateTime => {
+            this.syncDateTime = (connectorSyncDateTime && connectorSyncDateTime.dateTime)
+                ? new Date(connectorSyncDateTime.dateTime) : null;
+            this.humanSyncDateTime = (connectorSyncDateTime && connectorSyncDateTime.dateTime)
+                ? "Synced " + moment(connectorSyncDateTime.dateTime).fromNow() + "." : "Never synced.";
+        });
+    }
 
-	public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
+    public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
 
-		return this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
+        return this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
 
-			if (syncState === SyncState.NOT_SYNCED) {
+            if (syncState === SyncState.NOT_SYNCED) {
 
-				const data: ConfirmDialogDataModel = {
-					title: "Important: check your athlete settings before",
-					content: "No activities were synced before. Please make sure you have properly configured your dated athlete settings (cycling FTP, running FTP, swim FTP, heart rate, weight, ...) before starting a synchronization. " +
-						"A lack of athlete settings configuration can cause empty stats and empty charts.",
-					confirmText: "I configured my athlete settings, start sync",
-					cancelText: "Configure athlete settings"
-				};
+                const data: ConfirmDialogDataModel = {
+                    title: "Important: check your athlete settings before",
+                    content: "No activities were synced before. Please make sure you have properly configured your dated athlete settings (cycling FTP, running FTP, swim FTP, heart rate, weight, ...) before starting a synchronization. " +
+                        "A lack of athlete settings configuration can cause empty stats and empty charts.",
+                    confirmText: "I configured my athlete settings, start sync",
+                    cancelText: "Configure athlete settings"
+                };
 
-				const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-					minWidth: ConfirmDialogComponent.MIN_WIDTH,
-					maxWidth: "50%",
-					data: data
-				});
+                const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+                    minWidth: ConfirmDialogComponent.MIN_WIDTH,
+                    maxWidth: "50%",
+                    data: data
+                });
 
-				return dialogRef.afterClosed().toPromise().then((confirm: boolean) => {
-					const checkAthleteSettings = !confirm;
-					if (checkAthleteSettings) {
-						this.router.navigate([AppRoutesModel.athleteSettings]);
-						return Promise.reject(ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE);
-					} else {
-						return Promise.resolve();
-					}
-				});
+                return dialogRef.afterClosed().toPromise().then((confirm: boolean) => {
+                    const checkAthleteSettings = !confirm;
+                    if (checkAthleteSettings) {
+                        this.router.navigate([AppRoutesModel.athleteSettings]);
+                        return Promise.reject(ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE);
+                    } else {
+                        return Promise.resolve();
+                    }
+                });
 
-			} else {
-				return Promise.resolve();
-			}
-		});
+            } else {
+                return Promise.resolve();
+            }
+        });
 
-	}
+    }
 
-	public onOpenLink(url: string): void {
+    public onOpenLink(url: string): void {
 
-		const data: ConfirmDialogDataModel = {
-			title: "Plug your connector on this page as a fitness company or organization",
-			content: "Please contact me on twitter to get your fitness company or organization connector in Elevate.",
-			confirmText: "Contact me"
-		};
+        const data: ConfirmDialogDataModel = {
+            title: "Plug your connector on this page as a fitness company or organization",
+            content: "Please contact me on twitter to get your fitness company or organization connector in Elevate.",
+            confirmText: "Contact me"
+        };
 
-		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-			minWidth: ConfirmDialogComponent.MIN_WIDTH,
-			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-			data: data
-		});
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            minWidth: ConfirmDialogComponent.MIN_WIDTH,
+            maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+            data: data
+        });
 
-		dialogRef.afterClosed().subscribe((confirm: boolean) => {
-			if (confirm) {
-				this.openResourceResolver.openLink(url);
-			}
-		});
+        dialogRef.afterClosed().subscribe((confirm: boolean) => {
+            if (confirm) {
+                this.openResourceResolver.openLink(url);
+            }
+        });
 
-	}
+    }
 
-	public getSyncDateTime(): Promise<ConnectorSyncDateTime> {
-		return this.desktopSyncService.getSyncDateTimeByConnectorType(this.connectorType);
-	}
+    public getSyncDateTime(): Promise<ConnectorSyncDateTime> {
+        return this.desktopSyncService.getSyncDateTimeByConnectorType(this.connectorType);
+    }
 }

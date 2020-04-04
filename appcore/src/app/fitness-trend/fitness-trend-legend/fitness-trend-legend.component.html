@@ -1,28 +1,31 @@
 <div *ngIf="viewedDay" fxFlex fxLayout="column" fxLayoutAlign="space-between end">
 
-	<div fxFill fxLayout="row" fxLayoutAlign="end start">
-		{{viewedDay.printDate()}}
-	</div>
+    <div fxFill fxLayout="row" fxLayoutAlign="end start">
+        {{viewedDay.printDate()}}
+    </div>
 
-	<div fxFill fxLayout="row" fxLayoutAlign="end start" [ngSwitch]="viewedDay.hasActivities()"
-		 class="legend-active-day">
+    <div [ngSwitch]="viewedDay.hasActivities()" class="legend-active-day" fxFill fxLayout="row"
+         fxLayoutAlign="end start">
 			<span *ngSwitchCase="true">
 				<span *ngFor="let activity of viewedDay.activitiesName; let activityIndex = index;">
 					<span *ngIf="(activityIndex < MAX_ACTIVITIES_LEGEND_SHOWN)">
 						<span class="tag">{{viewedDay.types[activityIndex]}}</span>
-						<span class="name"> {{activity | shorten: ((viewedDay.activitiesName.length > 1) ? MAX_MULTIPLE_ACTIVITIES_CHAR_COUNT_DISPLAYED : MAX_SINGLE_ACTIVITY_CHAR_COUNT_DISPLAYED) : "..."}}</span>
+						<span
+                            class="name"> {{activity | shorten: ((viewedDay.activitiesName.length > 1) ? MAX_MULTIPLE_ACTIVITIES_CHAR_COUNT_DISPLAYED : MAX_SINGLE_ACTIVITY_CHAR_COUNT_DISPLAYED) : "..."}}</span>
 						<span *ngIf="(viewedDay.activitiesName.length !== (activityIndex + 1))">;&nbsp;&nbsp;</span>
 					</span>
 				</span>
-				<span *ngIf="(viewedDay.activitiesName.length > MAX_ACTIVITIES_LEGEND_SHOWN)">+{{viewedDay.activitiesName.length - MAX_ACTIVITIES_LEGEND_SHOWN}} more</span>
+				<span
+                    *ngIf="(viewedDay.activitiesName.length > MAX_ACTIVITIES_LEGEND_SHOWN)">+{{viewedDay.activitiesName.length - MAX_ACTIVITIES_LEGEND_SHOWN}}
+                    more</span>
 			</span>
 
-		<span *ngSwitchCase="false">
+        <span *ngSwitchCase="false">
 			<i>Rest day</i>
 		</span>
-	</div>
+    </div>
 
-	<div fxFill fxFlexAlign="end" fxLayout="row" fxLayoutAlign="end start">
+    <div fxFill fxFlexAlign="end" fxLayout="row" fxLayoutAlign="end start">
 		<span fxFlexAlign="end">
 			<span *ngIf="!viewedDay.finalStressScore"><i>No stress score</i></span>
 			<span *ngIf="viewedDay.finalStressScore">
@@ -32,80 +35,81 @@
 					{{viewedDay.printHeartRateStressScore()}} <i>HRSS</i>
 				</span>
 
-				<!-- Trimp -->
+                <!-- Trimp -->
 				<span *ngIf="viewedDay.trainingImpulseScore">
 					{{viewedDay.printTrainingImpulseScore()}} <i>Trimp</i>
 				</span>
 
-				<!--PSS-->
+                <!--PSS-->
 				<span *ngIf="viewedDay.powerStressScore">
 					<span *ngIf="viewedDay.trainingImpulseScore || viewedDay.heartRateStressScore">
 						&nbsp;&&nbsp;
 					</span>
-					{{viewedDay.printPowerStressScore()}} <i>PowerSS</i>
+                    {{viewedDay.printPowerStressScore()}} <i>PowerSS</i>
 				</span>
 
-				<!--RSS-->
+                <!--RSS-->
 				<span *ngIf="viewedDay.runningStressScore">
 					<span
-						*ngIf="viewedDay.trainingImpulseScore || viewedDay.heartRateStressScore || viewedDay.powerStressScore">
+                        *ngIf="viewedDay.trainingImpulseScore || viewedDay.heartRateStressScore || viewedDay.powerStressScore">
 						&nbsp;&&nbsp;
 					</span>
-					{{viewedDay.printRunningStressScore()}} <i>RSS</i>
+                    {{viewedDay.printRunningStressScore()}} <i>RSS</i>
 				</span>
 
-				<!--SwimSS-->
+                <!--SwimSS-->
 				<span *ngIf="viewedDay.swimStressScore">
 					<span
-						*ngIf="viewedDay.trainingImpulseScore || viewedDay.heartRateStressScore || viewedDay.powerStressScore">
+                        *ngIf="viewedDay.trainingImpulseScore || viewedDay.heartRateStressScore || viewedDay.powerStressScore">
 						&nbsp;&&nbsp;
 					</span>
-					{{viewedDay.printSwimStressScore()}} <i>SwimSS</i>
+                    {{viewedDay.printSwimStressScore()}} <i>SwimSS</i>
 				</span>
 
-				<!--Final-->
+                <!--Final-->
 				<span>
 					&nbsp;&nbsp;➔&nbsp;&nbsp;<strong>{{viewedDay.printFinalStressScore()}}</strong>&nbsp;<i>Stress score</i>
 				</span>
 			</span>
 		</span>
-	</div>
+    </div>
 
-	<div fxFill fxFlexAlign="end" fxLayout="row" fxLayoutAlign="end start">
-		<span fxFlexAlign="end" class="mat-caption athlete-settings">
-			<span *ngIf="viewedDay.printAthleteSettings()">Calculated with&nbsp;&nbsp;➔&nbsp;&nbsp;{{viewedDay.printAthleteSettings()}}</span>
+    <div fxFill fxFlexAlign="end" fxLayout="row" fxLayoutAlign="end start">
+		<span class="mat-caption athlete-settings" fxFlexAlign="end">
+			<span
+                *ngIf="viewedDay.printAthleteSettings()">Calculated with&nbsp;&nbsp;➔&nbsp;&nbsp;{{viewedDay.printAthleteSettings()}}</span>
 		</span>
-	</div>
+    </div>
 
-	<!--Fitness, Fatigue, Form values-->
-	<div fxFill fxLayout="row" fxLayoutAlign="end start" class="mat-headline">
+    <!--Fitness, Fatigue, Form values-->
+    <div class="mat-headline" fxFill fxLayout="row" fxLayoutAlign="end start">
 
-		<div fxFlex fxLayout="row" fxLayoutAlign="end start">
-			<div fxFlex="150px" class="ctl-value">
-				Fitness {{viewedDay.printFitness()}}
-			</div>
+        <div fxFlex fxLayout="row" fxLayoutAlign="end start">
+            <div class="ctl-value" fxFlex="150px">
+                Fitness {{viewedDay.printFitness()}}
+            </div>
 
-			<span fxFlex="1"></span>
+            <span fxFlex="1"></span>
 
-			<div fxFlex="150px" class="atl-value">
-				Fatigue {{viewedDay.printFatigue()}}
-			</div>
+            <div class="atl-value" fxFlex="150px">
+                Fatigue {{viewedDay.printFatigue()}}
+            </div>
 
-			<span fxFlex="1"></span>
+            <span fxFlex="1"></span>
 
-			<div fxFlex="130px" class="tsb-value">
-				<span *ngIf="isTrainingZonesEnabled">Form {{viewedDay.printForm()}}</span>
-				<div *ngIf="!isTrainingZonesEnabled" fxLayoutAlign="end">
-					Form {{viewedDay.printForm()}}
-				</div>
-			</div>
+            <div class="tsb-value" fxFlex="130px">
+                <span *ngIf="isTrainingZonesEnabled">Form {{viewedDay.printForm()}}</span>
+                <div *ngIf="!isTrainingZonesEnabled" fxLayoutAlign="end">
+                    Form {{viewedDay.printForm()}}
+                </div>
+            </div>
 
-			<div *ngIf="isTrainingZonesEnabled"
-				 fxFlex="120px" fxFlexAlign="end" class="tsb-value mat-body-1">
-				<div fxLayoutAlign="end">
-					➔&nbsp;&nbsp;{{this.viewedDay.printTrainingZone()}} zone
-				</div>
-			</div>
-		</div>
-	</div>
+            <div *ngIf="isTrainingZonesEnabled"
+                 class="tsb-value mat-body-1" fxFlex="120px" fxFlexAlign="end">
+                <div fxLayoutAlign="end">
+                    ➔&nbsp;&nbsp;{{this.viewedDay.printTrainingZone()}} zone
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

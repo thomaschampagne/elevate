@@ -5,10 +5,10 @@ import { StravaConnectorInfo } from "../strava";
 
 export class StravaCredentialsUpdateSyncEvent extends SyncEvent {
 
-	public stravaConnectorInfo: StravaConnectorInfo;
+    public stravaConnectorInfo: StravaConnectorInfo;
 
-	constructor(stravaConnectorInfo: StravaConnectorInfo, description: string = null) {
-		super(SyncEventType.STRAVA_CREDENTIALS_UPDATE, ConnectorType.STRAVA, description);
-		this.stravaConnectorInfo = stravaConnectorInfo;
-	}
+    constructor(stravaConnectorInfo: StravaConnectorInfo, description: string = null) {
+        super(SyncEventType.STRAVA_CREDENTIALS_UPDATE, ConnectorType.STRAVA, description);
+        this.stravaConnectorInfo = stravaConnectorInfo;
+    }
 }

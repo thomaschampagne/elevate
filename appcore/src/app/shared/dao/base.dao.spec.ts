@@ -8,223 +8,223 @@ import { BaseDao } from "./base.dao";
 
 describe("BaseDao", () => {
 
-	class Foo extends Object {
-		bar: string;
-	}
+    class Foo extends Object {
+        bar: string;
+    }
 
-	@Injectable()
-	class TestBaseDao extends BaseDao<Foo> {
+    @Injectable()
+    class TestBaseDao extends BaseDao<Foo> {
 
-		public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("foo");
-		public static readonly DEFAULT_STORAGE_VALUE: Foo[] = [];
+        public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("foo");
+        public static readonly DEFAULT_STORAGE_VALUE: Foo[] = [];
 
-		public getStorageLocation(): StorageLocationModel {
-			return TestBaseDao.STORAGE_LOCATION;
-		}
+        public getStorageLocation(): StorageLocationModel {
+            return TestBaseDao.STORAGE_LOCATION;
+        }
 
-		public getDefaultStorageValue(): Foo[] | Foo {
-			return TestBaseDao.DEFAULT_STORAGE_VALUE;
-		}
-	}
+        public getDefaultStorageValue(): Foo[] | Foo {
+            return TestBaseDao.DEFAULT_STORAGE_VALUE;
+        }
+    }
 
-	let baseDao: BaseDao<Foo>;
-	let dataStore: DataStore<Foo>;
+    let baseDao: BaseDao<Foo>;
+    let dataStore: DataStore<Foo>;
 
-	let checkStorageLocationSpy: jasmine.Spy;
-	let dataStoreFetchSpy: jasmine.Spy;
-	let dataStoreSaveSpy: jasmine.Spy;
-	let dataStoreUpsertPropertySpy: jasmine.Spy;
-	let dataStoreClearSpy: jasmine.Spy;
-	let removeByIdsSpy: jasmine.Spy;
-	let mockedDataStore: MockedDataStore<Foo>;
+    let checkStorageLocationSpy: jasmine.Spy;
+    let dataStoreFetchSpy: jasmine.Spy;
+    let dataStoreSaveSpy: jasmine.Spy;
+    let dataStoreUpsertPropertySpy: jasmine.Spy;
+    let dataStoreClearSpy: jasmine.Spy;
+    let removeByIdsSpy: jasmine.Spy;
+    let mockedDataStore: MockedDataStore<Foo>;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		mockedDataStore = new MockedDataStore();
+        mockedDataStore = new MockedDataStore();
 
-		TestBed.configureTestingModule({
-			providers: [
-				{provide: BaseDao, useClass: TestBaseDao},
-				{provide: DataStore, useValue: mockedDataStore}
-			]
-		});
+        TestBed.configureTestingModule({
+            providers: [
+                {provide: BaseDao, useClass: TestBaseDao},
+                {provide: DataStore, useValue: mockedDataStore}
+            ]
+        });
 
-		baseDao = TestBed.inject(BaseDao);
-		dataStore = TestBed.inject(DataStore);
+        baseDao = TestBed.inject(BaseDao);
+        dataStore = TestBed.inject(DataStore);
 
-		checkStorageLocationSpy = spyOn(baseDao, "checkCompliantDao").and.callThrough();
-		dataStoreFetchSpy = spyOn(dataStore, "fetch").and.callThrough();
-		dataStoreSaveSpy = spyOn(dataStore, "save").and.callThrough();
-		dataStoreUpsertPropertySpy = spyOn(dataStore, "upsertProperty").and.callThrough();
-		dataStoreClearSpy = spyOn(dataStore, "clear").and.callThrough();
-		removeByIdsSpy = spyOn(dataStore, "removeByIds").and.callThrough();
+        checkStorageLocationSpy = spyOn(baseDao, "checkCompliantDao").and.callThrough();
+        dataStoreFetchSpy = spyOn(dataStore, "fetch").and.callThrough();
+        dataStoreSaveSpy = spyOn(dataStore, "save").and.callThrough();
+        dataStoreUpsertPropertySpy = spyOn(dataStore, "upsertProperty").and.callThrough();
+        dataStoreClearSpy = spyOn(dataStore, "clear").and.callThrough();
+        removeByIdsSpy = spyOn(dataStore, "removeByIds").and.callThrough();
 
-		done();
-	});
+        done();
+    });
 
-	it("should be initialized", (done: Function) => {
+    it("should be initialized", done => {
 
-		// Given & When BaseDao is instantiated, Then...
-		expect(baseDao.storageLocation).toEqual(TestBaseDao.STORAGE_LOCATION);
-		expect(baseDao.defaultStorage).toEqual(TestBaseDao.DEFAULT_STORAGE_VALUE);
-		done();
-	});
+        // Given & When BaseDao is instantiated, Then...
+        expect(baseDao.storageLocation).toEqual(TestBaseDao.STORAGE_LOCATION);
+        expect(baseDao.defaultStorage).toEqual(TestBaseDao.DEFAULT_STORAGE_VALUE);
+        done();
+    });
 
-	it("should resolve StorageLocationModel provided", (done: Function) => {
+    it("should resolve StorageLocationModel provided", done => {
 
-		// Given, When
-		const promise: Promise<void> = baseDao.checkCompliantDao();
+        // Given, When
+        const promise: Promise<void> = baseDao.checkCompliantDao();
 
-		// Then
-		promise.then(() => {
-			done();
+        // Then
+        promise.then(() => {
+            done();
 
-		}, error => {
-			expect(error).toBeNull();
-			done();
-		});
-	});
+        }, error => {
+            expect(error).toBeNull();
+            done();
+        });
+    });
 
-	it("should reject StorageLocationModel not provided", (done: Function) => {
+    it("should reject StorageLocationModel not provided", done => {
 
-		// Given
-		baseDao.storageLocation = null; // Remove storage location
+        // Given
+        baseDao.storageLocation = null; // Remove storage location
 
-		// When
-		const promise: Promise<void> = baseDao.checkCompliantDao();
+        // When
+        const promise: Promise<void> = baseDao.checkCompliantDao();
 
-		// Then
-		promise.then(() => {
-			expect(false).toBeTruthy("Whoops! I should not be here!");
-			done();
+        // Then
+        promise.then(() => {
+            expect(false).toBeTruthy("Whoops! I should not be here!");
+            done();
 
-		}, error => {
-			expect(error).toEqual("StorageLocationModel not set in 'TestBaseDao'. Please override init method to assign a StorageLocationModel.");
-			expect(dataStoreFetchSpy).not.toHaveBeenCalled();
-			done();
-		});
-	});
+        }, error => {
+            expect(error).toEqual("StorageLocationModel not set in 'TestBaseDao'. Please override init method to assign a StorageLocationModel.");
+            expect(dataStoreFetchSpy).not.toHaveBeenCalled();
+            done();
+        });
+    });
 
-	it("should fetch data as vector", (done: Function) => {
+    it("should fetch data as vector", done => {
 
-		// Given,  When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> baseDao.fetch();
+        // Given,  When
+        const promise: Promise<Foo[]> = <Promise<Foo[]>> baseDao.fetch();
 
-		// Then
-		promise.then(() => {
+        // Then
+        promise.then(() => {
 
-			expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
-			expect(dataStoreFetchSpy).toHaveBeenCalledTimes(1);
-			done();
-		}, error => {
-			expect(error).toBeNull();
-			done();
-		});
-	});
+            expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
+            expect(dataStoreFetchSpy).toHaveBeenCalledTimes(1);
+            done();
+        }, error => {
+            expect(error).toBeNull();
+            done();
+        });
+    });
 
-	it("should fetch data as object", (done: Function) => {
+    it("should fetch data as object", done => {
 
-		// Given
-		mockedDataStore.initWithObject({
-			bar: "john doe"
-		});
+        // Given
+        mockedDataStore.initWithObject({
+            bar: "john doe"
+        });
 
-		// When
-		const promise: Promise<Foo> = <Promise<Foo>> baseDao.fetch();
+        // When
+        const promise: Promise<Foo> = <Promise<Foo>> baseDao.fetch();
 
-		// Then
-		promise.then(() => {
-			expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
-			expect(dataStoreFetchSpy).toHaveBeenCalledTimes(1);
-			done();
-		}, error => {
-			expect(error).toBeNull();
-			done();
-		});
-	});
+        // Then
+        promise.then(() => {
+            expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
+            expect(dataStoreFetchSpy).toHaveBeenCalledTimes(1);
+            done();
+        }, error => {
+            expect(error).toBeNull();
+            done();
+        });
+    });
 
-	it("should save data", (done: Function) => {
+    it("should save data", done => {
 
-		// Given
-		const foo: Foo[] = [{
-			bar: "john doe"
-		}];
+        // Given
+        const foo: Foo[] = [{
+            bar: "john doe"
+        }];
 
-		// When
-		const promise: Promise<Foo[]> = <Promise<Foo[]>> baseDao.save(foo);
+        // When
+        const promise: Promise<Foo[]> = <Promise<Foo[]>> baseDao.save(foo);
 
-		// Then
-		promise.then(() => {
+        // Then
+        promise.then(() => {
 
-			expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
-			expect(dataStoreSaveSpy).toHaveBeenCalledTimes(1);
-			done();
-		}, error => {
-			expect(error).toBeNull();
-			done();
-		});
-	});
+            expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
+            expect(dataStoreSaveSpy).toHaveBeenCalledTimes(1);
+            done();
+        }, error => {
+            expect(error).toBeNull();
+            done();
+        });
+    });
 
-	it("should save property data", (done: Function) => {
+    it("should save property data", done => {
 
-		// Given
-		mockedDataStore.initWithObject({
-			bar: "john doe"
-		});
+        // Given
+        mockedDataStore.initWithObject({
+            bar: "john doe"
+        });
 
-		const path = "bar";
-		const newValue = "jack";
+        const path = "bar";
+        const newValue = "jack";
 
-		// When
-		const promise: Promise<Foo> = baseDao.upsertProperty<string>(path, newValue);
+        // When
+        const promise: Promise<Foo> = baseDao.upsertProperty<string>(path, newValue);
 
-		// Then
-		promise.then(() => {
+        // Then
+        promise.then(() => {
 
-			expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
-			expect(dataStoreUpsertPropertySpy).toHaveBeenCalledTimes(1);
-			done();
-		}, error => {
-			expect(error).toBeNull();
-			done();
-		});
-	});
+            expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
+            expect(dataStoreUpsertPropertySpy).toHaveBeenCalledTimes(1);
+            done();
+        }, error => {
+            expect(error).toBeNull();
+            done();
+        });
+    });
 
-	it("should remove by ids", (done: Function) => {
+    it("should remove by ids", done => {
 
-		// Given
-		const ids = [1, 2];
+        // Given
+        const ids = [1, 2];
 
-		// When
-		const promise: Promise<Foo[]> = baseDao.removeByIds(ids);
+        // When
+        const promise: Promise<Foo[]> = baseDao.removeByIds(ids);
 
-		// Then
-		promise.then(() => {
+        // Then
+        promise.then(() => {
 
-			expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
-			expect(removeByIdsSpy).toHaveBeenCalledTimes(1);
-			done();
-		}, error => {
-			expect(error).toBeNull();
-			done();
-		});
-	});
+            expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
+            expect(removeByIdsSpy).toHaveBeenCalledTimes(1);
+            done();
+        }, error => {
+            expect(error).toBeNull();
+            done();
+        });
+    });
 
-	it("should clear data", (done: Function) => {
+    it("should clear data", done => {
 
-		// Given,  When
-		const promise: Promise<void> = baseDao.clear();
+        // Given,  When
+        const promise: Promise<void> = baseDao.clear();
 
-		// Then
-		promise.then(() => {
+        // Then
+        promise.then(() => {
 
-			expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
-			expect(dataStoreClearSpy).toHaveBeenCalledTimes(1);
-			done();
-		}, error => {
-			expect(error).toBeNull();
-			done();
-		});
-	});
+            expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
+            expect(dataStoreClearSpy).toHaveBeenCalledTimes(1);
+            done();
+        }, error => {
+            expect(error).toBeNull();
+            done();
+        });
+    });
 
 });

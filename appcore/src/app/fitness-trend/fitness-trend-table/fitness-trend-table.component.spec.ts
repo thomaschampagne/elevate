@@ -13,40 +13,40 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("FitnessTrendTableComponent", () => {
 
-	let activityService: ActivityService = null;
-	let userSettingsService: UserSettingsService = null;
+    let activityService: ActivityService = null;
+    let userSettingsService: UserSettingsService = null;
 
-	let component: FitnessTrendTableComponent;
-	let fixture: ComponentFixture<FitnessTrendTableComponent>;
+    let component: FitnessTrendTableComponent;
+    let fixture: ComponentFixture<FitnessTrendTableComponent>;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-				FitnessTrendModule
-			],
-		}).compileComponents();
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+                FitnessTrendModule
+            ],
+        }).compileComponents();
 
-		activityService = TestBed.inject(ActivityService);
-		userSettingsService = TestBed.inject(UserSettingsService);
+        activityService = TestBed.inject(ActivityService);
+        userSettingsService = TestBed.inject(UserSettingsService);
 
-		// Mocking
-		spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
+        // Mocking
+        spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
+        spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
-		done();
-	});
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(FitnessTrendTableComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(FitnessTrendTableComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 });

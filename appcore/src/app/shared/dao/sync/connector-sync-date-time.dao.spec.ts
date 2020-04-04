@@ -9,33 +9,33 @@ import { ConnectorSyncDateTime } from "../../../../../modules/shared/models/sync
 
 describe("ConnectorSyncDateTimeDao", () => {
 
-	let connectorSyncDateTimeDao: ConnectorSyncDateTimeDao = null;
+    let connectorSyncDateTimeDao: ConnectorSyncDateTimeDao = null;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		// const lastSyncTime = Date.now();
-		const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
-			new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-			new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
-		];
+        // const lastSyncTime = Date.now();
+        const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
+            new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
+            new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+        ];
 
-		const mockedDataStore: MockedDataStore<ConnectorSyncDateTime> = new MockedDataStore(connectorSyncDateTimes);
+        const mockedDataStore: MockedDataStore<ConnectorSyncDateTime> = new MockedDataStore(connectorSyncDateTimes);
 
-		TestBed.configureTestingModule({
-			providers: [
-				ConnectorSyncDateTimeDao,
-				{provide: DataStore, useValue: mockedDataStore}
-			]
-		});
+        TestBed.configureTestingModule({
+            providers: [
+                ConnectorSyncDateTimeDao,
+                {provide: DataStore, useValue: mockedDataStore}
+            ]
+        });
 
-		// Retrieve injected service
-		connectorSyncDateTimeDao = TestBed.inject(ConnectorSyncDateTimeDao);
-		done();
-	});
+        // Retrieve injected service
+        connectorSyncDateTimeDao = TestBed.inject(ConnectorSyncDateTimeDao);
+        done();
+    });
 
-	it("should be created", (done: Function) => {
-		expect(connectorSyncDateTimeDao).toBeTruthy();
-		done();
-	});
+    it("should be created", done => {
+        expect(connectorSyncDateTimeDao).toBeTruthy();
+        done();
+    });
 
 });

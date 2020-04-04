@@ -1,7 +1,7 @@
 import { ElevateSport } from "../../enums";
 
 export class ActivitiesChangesModel {
-	public added: number[];
-	public deleted: number[];
-	public edited: Array<{ id: number, name: string, type: ElevateSport, display_type: string }>;
+    public added: number[];
+    public deleted: number[];
+    public edited: Array<{ id: number, name: string, type: ElevateSport, display_type: string }>;
 }

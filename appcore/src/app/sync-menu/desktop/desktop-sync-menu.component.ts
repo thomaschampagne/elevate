@@ -4,9 +4,9 @@ import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import {
-	DesktopImportBackupDialogComponent,
-	ImportBackupDialogComponent,
-	ImportExportProgressDialogComponent
+    DesktopImportBackupDialogComponent,
+    ImportBackupDialogComponent,
+    ImportExportProgressDialogComponent
 } from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { DesktopDumpModel } from "../../shared/models/dumps/desktop-dump.model";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
@@ -20,8 +20,8 @@ import { ConnectorType } from "@elevate/shared/sync";
 import { ElevateException } from "@elevate/shared/exceptions";
 
 @Component({
-	selector: "app-desktop-sync-menu",
-	template: `
+    selector: "app-desktop-sync-menu",
+    template: `
 		<div *ngIf="(syncState !== null)">
 			<button mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
 				<mat-icon *ngIf="(syncState === SyncState.NOT_SYNCED)">
@@ -75,96 +75,96 @@ import { ElevateException } from "@elevate/shared/exceptions";
 			</mat-menu>
 		</div>
 	`,
-	styleUrls: ["./desktop-sync-menu.component.scss"]
+    styleUrls: ["./desktop-sync-menu.component.scss"]
 })
 export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnInit {
 
-	public mostRecentConnectorSyncedType: ConnectorType;
+    public mostRecentConnectorSyncedType: ConnectorType;
 
-	constructor(public router: Router,
-				public desktopSyncService: DesktopSyncService,
-				public appEventsService: AppEventsService,
-				public dialog: MatDialog,
-				public snackBar: MatSnackBar) {
-		super(router, desktopSyncService, appEventsService, dialog, snackBar);
-		this.mostRecentConnectorSyncedType = null;
-	}
+    constructor(public router: Router,
+                public desktopSyncService: DesktopSyncService,
+                public appEventsService: AppEventsService,
+                public dialog: MatDialog,
+                public snackBar: MatSnackBar) {
+        super(router, desktopSyncService, appEventsService, dialog, snackBar);
+        this.mostRecentConnectorSyncedType = null;
+    }
 
-	public ngOnInit() {
-		super.ngOnInit();
-	}
+    public ngOnInit() {
+        super.ngOnInit();
+    }
 
-	public updateSyncDateStatus(): void {
+    public updateSyncDateStatus(): void {
 
-		this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
-			this.syncState = syncState;
-			if (this.syncState === SyncState.SYNCED) {
-				this.desktopSyncService.getMostRecentSyncedConnector().then((connectorSyncDateTime: ConnectorSyncDateTime) => {
-					if (connectorSyncDateTime) {
-						this.mostRecentConnectorSyncedType = connectorSyncDateTime.connectorType;
-						if (_.isNumber(connectorSyncDateTime.dateTime)) {
-							this.syncDateMessage = "Synced " + moment(connectorSyncDateTime.dateTime).fromNow();
-						}
-					}
-				});
-			}
-		});
-	}
+        this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
+            this.syncState = syncState;
+            if (this.syncState === SyncState.SYNCED) {
+                this.desktopSyncService.getMostRecentSyncedConnector().then((connectorSyncDateTime: ConnectorSyncDateTime) => {
+                    if (connectorSyncDateTime) {
+                        this.mostRecentConnectorSyncedType = connectorSyncDateTime.connectorType;
+                        if (_.isNumber(connectorSyncDateTime.dateTime)) {
+                            this.syncDateMessage = "Synced " + moment(connectorSyncDateTime.dateTime).fromNow();
+                        }
+                    }
+                });
+            }
+        });
+    }
 
-	public onSyncedBackupImport(): void {
+    public onSyncedBackupImport(): void {
 
-		const dialogRef = this.dialog.open(DesktopImportBackupDialogComponent, {
-			minWidth: ImportBackupDialogComponent.MIN_WIDTH,
-			maxWidth: ImportBackupDialogComponent.MAX_WIDTH,
-		});
+        const dialogRef = this.dialog.open(DesktopImportBackupDialogComponent, {
+            minWidth: ImportBackupDialogComponent.MIN_WIDTH,
+            maxWidth: ImportBackupDialogComponent.MAX_WIDTH,
+        });
 
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((file: File) => {
+        const afterClosedSubscription = dialogRef.afterClosed().subscribe((file: File) => {
 
-			if (file) {
-				const importingDialog = this.dialog.open(ImportExportProgressDialogComponent, {
-					disableClose: true,
-					data: ImportExportProgressDialogComponent.MODE_IMPORT
-				});
+            if (file) {
+                const importingDialog = this.dialog.open(ImportExportProgressDialogComponent, {
+                    disableClose: true,
+                    data: ImportExportProgressDialogComponent.MODE_IMPORT
+                });
 
-				const reader = new FileReader(); // Reading file, when load, import it
-				reader.readAsText(file);
-				reader.onload = (event: Event) => {
-					const serializedDumpModel = (event.target as IDBRequest).result;
-					if (serializedDumpModel) {
-						const desktopDumpModel: DesktopDumpModel = DesktopDumpModel.deserialize(serializedDumpModel);
-						this.desktopSyncService.import(desktopDumpModel).then(() => {
-							importingDialog.close();
-							location.reload();
-						}, error => {
-							importingDialog.close();
-							this.snackBar.open(error, "Close");
-						});
-					}
-				};
-			}
+                const reader = new FileReader(); // Reading file, when load, import it
+                reader.readAsText(file);
+                reader.onload = (event: Event) => {
+                    const serializedDumpModel = (event.target as IDBRequest).result;
+                    if (serializedDumpModel) {
+                        const desktopDumpModel: DesktopDumpModel = DesktopDumpModel.deserialize(serializedDumpModel);
+                        this.desktopSyncService.import(desktopDumpModel).then(() => {
+                            importingDialog.close();
+                            location.reload();
+                        }, error => {
+                            importingDialog.close();
+                            this.snackBar.open(error, "Close");
+                        });
+                    }
+                };
+            }
 
-			afterClosedSubscription.unsubscribe();
-		});
-	}
+            afterClosedSubscription.unsubscribe();
+        });
+    }
 
-	public onSync(fastSync: boolean = null, forceSync: boolean = null): void {
-		this.onSyncMostRecentConnectorSynced(fastSync);
-	}
+    public onSync(fastSync: boolean = null, forceSync: boolean = null): void {
+        this.onSyncMostRecentConnectorSynced(fastSync);
+    }
 
-	public printMostRecentConnectorSynced(): string {
-		return this.mostRecentConnectorSyncedType ? DesktopSyncService.niceConnectorPrint(this.mostRecentConnectorSyncedType) : null;
-	}
+    public printMostRecentConnectorSynced(): string {
+        return this.mostRecentConnectorSyncedType ? DesktopSyncService.niceConnectorPrint(this.mostRecentConnectorSyncedType) : null;
+    }
 
-	public onSyncMostRecentConnectorSynced(fastSync: boolean = null): void {
+    public onSyncMostRecentConnectorSynced(fastSync: boolean = null): void {
 
-		if (this.mostRecentConnectorSyncedType) {
-			this.desktopSyncService.sync(fastSync, null, this.mostRecentConnectorSyncedType);
-		} else {
-			throw new ElevateException("No recent connector synced found. Please sync a connector completely.");
-		}
-	}
+        if (this.mostRecentConnectorSyncedType) {
+            this.desktopSyncService.sync(fastSync, null, this.mostRecentConnectorSyncedType);
+        } else {
+            throw new ElevateException("No recent connector synced found. Please sync a connector completely.");
+        }
+    }
 
-	public goToConnectors(): void {
-		this.router.navigate([AppRoutesModel.connectors]);
-	}
+    public goToConnectors(): void {
+        this.router.navigate([AppRoutesModel.connectors]);
+    }
 }

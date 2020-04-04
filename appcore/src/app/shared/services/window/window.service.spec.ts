@@ -5,34 +5,34 @@ import { MediaObserver } from "@angular/flex-layout";
 
 describe("WindowService", () => {
 
-	let service: WindowService;
+    let service: WindowService;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		TestBed.configureTestingModule({
-			providers: [WindowService, MediaObserver]
-		});
+        TestBed.configureTestingModule({
+            providers: [WindowService, MediaObserver]
+        });
 
-		service = TestBed.inject(WindowService);
+        service = TestBed.inject(WindowService);
 
-		done();
-	});
+        done();
+    });
 
-	it("should be created", inject([WindowService], (service: WindowService) => {
-		expect(service).toBeTruthy();
-	}));
+    it("should be created", inject([WindowService], (service: WindowService) => {
+        expect(service).toBeTruthy();
+    }));
 
-	it("should notify subscribers when windows is resized", (done: Function) => {
+    it("should notify subscribers when windows is resized", done => {
 
-		// Given
-		const expectedCallCount = 1;
-		const spy = spyOn(service.resizing, "next");
+        // Given
+        const expectedCallCount = 1;
+        const spy = spyOn(service.resizing, "next");
 
-		// When
-		service.onResize();
+        // When
+        service.onResize();
 
-		// Then
-		expect(spy).toHaveBeenCalledTimes(expectedCallCount);
-		done();
-	});
+        // Then
+        expect(spy).toHaveBeenCalledTimes(expectedCallCount);
+        done();
+    });
 });

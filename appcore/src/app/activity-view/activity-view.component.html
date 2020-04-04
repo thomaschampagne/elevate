@@ -1,23 +1,23 @@
 <mat-toolbar color="warn">
-	<span class="mat-body-1">This is a raw debug view. Activity streams are in console (CTRL + F12)</span>
+    <span class="mat-body-1">This is a raw debug view. Activity streams are in console (CTRL + F12)</span>
 </mat-toolbar>
 <mat-card *ngIf="syncedActivityModel">
-	<mat-card-title>
-		<button mat-icon-button color="primary" (click)="onBack()">
-			<mat-icon>arrow_back</mat-icon>
-		</button>
-		{{syncedActivityModel.name}}
-		<button mat-stroked-button color="primary" (click)="openSourceActivity(syncedActivityModel.id)">
-			Open source activity
-		</button>
-	</mat-card-title>
-	<mat-card-subtitle>
-		Date: {{syncedActivityModel.start_time}}
-	</mat-card-subtitle>
-	<mat-card-content>
-		<div id="chartdiv" style="width: 100%; height: 500px"></div>
-		<mat-form-field fxFill>
-			<textarea matInput class="mat-caption" rows="32" disabled>{{syncedActivityModel | json}}</textarea>
-		</mat-form-field>
-	</mat-card-content>
+    <mat-card-title>
+        <button (click)="onBack()" color="primary" mat-icon-button>
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        {{syncedActivityModel.name}}
+        <button (click)="openSourceActivity(syncedActivityModel.id)" color="primary" mat-stroked-button>
+            Open source activity
+        </button>
+    </mat-card-title>
+    <mat-card-subtitle>
+        Date: {{syncedActivityModel.start_time}}
+    </mat-card-subtitle>
+    <mat-card-content>
+        <div id="chartdiv" style="width: 100%; height: 500px"></div>
+        <mat-form-field fxFill>
+            <textarea class="mat-caption" disabled matInput rows="32">{{syncedActivityModel | json}}</textarea>
+        </mat-form-field>
+    </mat-card-content>
 </mat-card>

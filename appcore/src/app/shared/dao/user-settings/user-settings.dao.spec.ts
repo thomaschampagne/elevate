@@ -7,28 +7,28 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 
 describe("UserSettingsDao", () => {
 
-	let userSettingsDao: UserSettingsDao;
+    let userSettingsDao: UserSettingsDao;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		const mockedDataStore: MockedDataStore<UserSettingsModel> = new MockedDataStore();
+        const mockedDataStore: MockedDataStore<UserSettingsModel> = new MockedDataStore();
 
-		TestBed.configureTestingModule({
-			providers: [
-				UserSettingsDao,
-				{provide: DataStore, useValue: mockedDataStore}
-			]
-		});
+        TestBed.configureTestingModule({
+            providers: [
+                UserSettingsDao,
+                {provide: DataStore, useValue: mockedDataStore}
+            ]
+        });
 
-		// Retrieve injected service
-		userSettingsDao = TestBed.inject(UserSettingsDao);
+        // Retrieve injected service
+        userSettingsDao = TestBed.inject(UserSettingsDao);
 
-		done();
-	});
+        done();
+    });
 
-	it("should be created", (done: Function) => {
-		expect(userSettingsDao).toBeTruthy();
-		done();
-	});
+    it("should be created", done => {
+        expect(userSettingsDao).toBeTruthy();
+        done();
+    });
 
 });

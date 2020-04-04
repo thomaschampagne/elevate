@@ -7,83 +7,83 @@ import { ExtensionDumpModel } from "../../models/dumps/extension-dump.model";
 @Component({template: ""})
 export class ImportBackupDialogComponent implements OnInit {
 
-	public static readonly MAX_WIDTH: string = "80%";
-	public static readonly MIN_WIDTH: string = "40%";
+    public static readonly MAX_WIDTH: string = "80%";
+    public static readonly MIN_WIDTH: string = "40%";
 
-	public file: File;
-	public displayName: string;
-	public displaySize: string;
+    public file: File;
+    public displayName: string;
+    public displaySize: string;
 
-	constructor(public dialogRef: MatDialogRef<ImportBackupDialogComponent>) {
-	}
+    constructor(public dialogRef: MatDialogRef<ImportBackupDialogComponent>) {
+    }
 
-	public ngOnInit(): void {
-		this.file = null;
-	}
+    public ngOnInit(): void {
+        this.file = null;
+    }
 
-	public onRestore(): void {
-		throw new ElevateException("onRestore method must be overridden and used by a child component of ImportBackupDialogComponent.");
-	}
+    public onRestore(): void {
+        throw new ElevateException("onRestore method must be overridden and used by a child component of ImportBackupDialogComponent.");
+    }
 
-	public onCancel(): void {
-		this.dialogRef.close(null);
-	}
+    public onCancel(): void {
+        this.dialogRef.close(null);
+    }
 
-	public onFileSelected(file: File): void {
-		this.file = file;
-		this.displayName = this.file.name;
-		this.displaySize = _.floor(this.file.size / (1024 * 1024), 2) + " MB";
-	}
+    public onFileSelected(file: File): void {
+        this.file = file;
+        this.displayName = this.file.name;
+        this.displaySize = _.floor(this.file.size / (1024 * 1024), 2) + " MB";
+    }
 }
 
 @Component({
-	selector: "app-import-backup-dialog",
-	templateUrl: "./import-backup-dialog.component.html",
-	styleUrls: ["./import-backup-dialog.component.scss"]
+    selector: "app-import-backup-dialog",
+    templateUrl: "./import-backup-dialog.component.html",
+    styleUrls: ["./import-backup-dialog.component.scss"]
 })
 export class DesktopImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
 
-	constructor(public dialogRef: MatDialogRef<DesktopImportBackupDialogComponent>) {
-		super(dialogRef);
-	}
+    constructor(public dialogRef: MatDialogRef<DesktopImportBackupDialogComponent>) {
+        super(dialogRef);
+    }
 
-	public onRestore(): void {
-		if (this.file) {
-			this.dialogRef.close(this.file);
-		}
-	}
+    public onRestore(): void {
+        if (this.file) {
+            this.dialogRef.close(this.file);
+        }
+    }
 }
 
 @Component({
-	selector: "app-import-backup-dialog",
-	templateUrl: "./import-backup-dialog.component.html",
-	styleUrls: ["./import-backup-dialog.component.scss"]
+    selector: "app-import-backup-dialog",
+    templateUrl: "./import-backup-dialog.component.html",
+    styleUrls: ["./import-backup-dialog.component.scss"]
 })
 export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
 
-	constructor(public dialogRef: MatDialogRef<ExtensionImportBackupDialogComponent>) {
-		super(dialogRef);
-	}
+    constructor(public dialogRef: MatDialogRef<ExtensionImportBackupDialogComponent>) {
+        super(dialogRef);
+    }
 
-	public onRestore(): void {
+    public onRestore(): void {
 
-		if (this.file) {
+        if (this.file) {
 
-			// Reading file, when load, import it
-			const reader = new FileReader();
-			reader.readAsText(this.file);
-			reader.onload = (event: Event) => {
-				const extensionDumpModel: ExtensionDumpModel = JSON.parse((event.target as IDBRequest).result) as ExtensionDumpModel;
-				this.dialogRef.close(extensionDumpModel);
-			};
-		}
-	}
+            // Reading file, when load, import it
+            const reader = new FileReader();
+            reader.readAsText(this.file);
+            reader.onload = (event: Event) => {
+                const extensionDumpModel: ExtensionDumpModel = JSON.parse((event.target as IDBRequest).result) as ExtensionDumpModel;
+                this.dialogRef.close(extensionDumpModel);
+            };
+        }
+    }
 
 }
 
 @Component({
-	selector: "app-desktop-import-export-progress-backup-dialog",
-	template: `
+    selector: "app-desktop-import-export-progress-backup-dialog",
+    template: `
         <mat-dialog-content class="mat-body-1">
             <div class="progress" fxLayout="column" fxLayoutAlign="center center">
                 <div fxFlex="10"></div>
@@ -105,7 +105,7 @@ export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComp
             </div>
         </mat-dialog-content>
 	`,
-	styles: [`
+    styles: [`
         .progress {
             height: 100px;
             width: 450px;
@@ -114,17 +114,17 @@ export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComp
 })
 export class ImportExportProgressDialogComponent implements OnInit {
 
-	public static readonly MODE_IMPORT: string = "MODE_IMPORT";
-	public static readonly MODE_EXPORT: string = "MODE_EXPORT";
+    public static readonly MODE_IMPORT: string = "MODE_IMPORT";
+    public static readonly MODE_EXPORT: string = "MODE_EXPORT";
 
-	public isImportMode: boolean;
-	public isExportMode: boolean;
+    public isImportMode: boolean;
+    public isExportMode: boolean;
 
-	constructor(@Inject(MAT_DIALOG_DATA) public mode: string) {
-		this.isImportMode = (mode === ImportExportProgressDialogComponent.MODE_IMPORT);
-		this.isExportMode = !this.isImportMode;
-	}
+    constructor(@Inject(MAT_DIALOG_DATA) public mode: string) {
+        this.isImportMode = (mode === ImportExportProgressDialogComponent.MODE_IMPORT);
+        this.isExportMode = !this.isImportMode;
+    }
 
-	public ngOnInit(): void {
-	}
+    public ngOnInit(): void {
+    }
 }

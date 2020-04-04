@@ -7,23 +7,23 @@ import { CompressedStreamModel } from "@elevate/shared/models";
 
 describe("StreamsDaoService", () => {
 
-	let streamsDao: StreamsDao;
+    let streamsDao: StreamsDao;
 
-	beforeEach(() => {
-		const mockedDataStore: MockedDataStore<CompressedStreamModel> = new MockedDataStore();
+    beforeEach(() => {
+        const mockedDataStore: MockedDataStore<CompressedStreamModel> = new MockedDataStore();
 
-		TestBed.configureTestingModule({
-			providers: [
-				StreamsDao,
-				{provide: DataStore, useValue: mockedDataStore}
-			]
-		});
+        TestBed.configureTestingModule({
+            providers: [
+                StreamsDao,
+                {provide: DataStore, useValue: mockedDataStore}
+            ]
+        });
 
-		streamsDao = TestBed.inject(StreamsDao);
-	});
+        streamsDao = TestBed.inject(StreamsDao);
+    });
 
-	it("should be created", (done: Function) => {
-		expect(streamsDao).toBeTruthy();
-		done();
-	});
+    it("should be created", done => {
+        expect(streamsDao).toBeTruthy();
+        done();
+    });
 });

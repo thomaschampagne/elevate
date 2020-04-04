@@ -18,27 +18,27 @@ import { ActivityService } from "../../services/activity/activity.service";
 import { ExtensionActivityService } from "../../services/activity/impl/extension-activity.service";
 
 @NgModule({
-	imports: [
-		CoreModule,
-		ExtensionRoutingModule
-	],
-	exports: [
-		ExtensionRoutingModule
-	],
-	declarations: [
-		ExtensionAdvancedMenuComponent,
-		ExtensionImportBackupDialogComponent,
-	],
-	providers: [
-		SyncDateTimeDao,
-		{provide: ActivityService, useClass: ExtensionActivityService},
-		{provide: DataStore, useClass: ExtensionDataStore},
-		{provide: AppEventsService, useClass: ExtensionEventsService},
-		{provide: VERSIONS_PROVIDER, useClass: ExtensionVersionsProvider},
-		{provide: OPEN_RESOURCE_RESOLVER, useClass: ExtensionOpenResourceResolver},
-		{provide: SyncService, useClass: ExtensionSyncService},
-		ExtensionSyncService,
-	]
+    imports: [
+        CoreModule,
+        ExtensionRoutingModule
+    ],
+    exports: [
+        ExtensionRoutingModule
+    ],
+    declarations: [
+        ExtensionAdvancedMenuComponent,
+        ExtensionImportBackupDialogComponent,
+    ],
+    providers: [
+        SyncDateTimeDao,
+        {provide: ActivityService, useClass: ExtensionActivityService},
+        {provide: DataStore, useClass: ExtensionDataStore},
+        {provide: AppEventsService, useClass: ExtensionEventsService},
+        {provide: VERSIONS_PROVIDER, useClass: ExtensionVersionsProvider},
+        {provide: OPEN_RESOURCE_RESOLVER, useClass: ExtensionOpenResourceResolver},
+        {provide: SyncService, useClass: ExtensionSyncService},
+        ExtensionSyncService,
+    ]
 })
 export class ExtensionModule {
 }

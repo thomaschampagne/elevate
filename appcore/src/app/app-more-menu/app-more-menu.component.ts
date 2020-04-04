@@ -10,49 +10,49 @@ export const APP_MORE_MENU_COMPONENT = new InjectionToken<AppMoreMenuComponent>(
 @Component({template: ""})
 export class AppMoreMenuComponent implements OnInit {
 
-	constructor(public router: Router,
-				public dialog: MatDialog,
-				@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver) {
-	}
+    constructor(public router: Router,
+                public dialog: MatDialog,
+                @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver) {
+    }
 
-	public ngOnInit(): void {
-	}
+    public ngOnInit(): void {
+    }
 
-	public onShowReleaseNotes(): void {
-		this.router.navigate([AppRoutesModel.releasesNotes]);
-	}
+    public onShowReleaseNotes(): void {
+        this.router.navigate([AppRoutesModel.releasesNotes]);
+    }
 
-	public onShowShare(): void {
-		this.router.navigate([AppRoutesModel.share]);
-	}
+    public onShowShare(): void {
+        this.router.navigate([AppRoutesModel.share]);
+    }
 
-	public onShowReport(): void {
-		this.router.navigate([AppRoutesModel.report]);
-	}
+    public onShowReport(): void {
+        this.router.navigate([AppRoutesModel.report]);
+    }
 
-	public onShowFaq(): void {
-		this.router.navigate([AppRoutesModel.frequentlyAskedQuestions]);
-	}
+    public onShowFaq(): void {
+        this.router.navigate([AppRoutesModel.frequentlyAskedQuestions]);
+    }
 
-	public onShowAbout(): void {
-		this.dialog.open(AboutDialogComponent, {
-			minWidth: AboutDialogComponent.MIN_WIDTH,
-			maxWidth: AboutDialogComponent.MAX_WIDTH,
-		});
-	}
+    public onShowAbout(): void {
+        this.dialog.open(AboutDialogComponent, {
+            minWidth: AboutDialogComponent.MIN_WIDTH,
+            maxWidth: AboutDialogComponent.MAX_WIDTH,
+        });
+    }
 
-	public onAdvanceMenu(): void {
-		this.router.navigate([AppRoutesModel.advancedMenu]);
-	}
+    public onAdvanceMenu(): void {
+        this.router.navigate([AppRoutesModel.advancedMenu]);
+    }
 
-	public onOpenLink(url: string) {
-		this.openResourceResolver.openLink(url);
-	}
+    public onOpenLink(url: string) {
+        this.openResourceResolver.openLink(url);
+    }
 }
 
 @Component({
-	selector: "app-desktop-app-more-menu",
-	template: `
+    selector: "app-desktop-app-more-menu",
+    template: `
 		<button mat-icon-button [matMenuTriggerFor]="moreMenu">
 			<mat-icon>more_vert</mat-icon>
 		</button>
@@ -108,8 +108,8 @@ export class DesktopAppMoreMenuComponent extends AppMoreMenuComponent {
 }
 
 @Component({
-	selector: "app-extension-app-more-menu",
-	template: `
+    selector: "app-extension-app-more-menu",
+    template: `
 		<button mat-icon-button [matMenuTriggerFor]="moreMenu">
 			<mat-icon>more_vert</mat-icon>
 		</button>

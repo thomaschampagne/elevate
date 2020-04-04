@@ -3,16 +3,16 @@ import { NotImplementedException } from "@elevate/shared/exceptions";
 
 describe("Proxy", () => { // TODO Proxy test
 
-	xit("should perform a test", (done: Function) => {
+    xit("should perform a test", done => {
 
-		// Given
+        // Given
 
-		// When
-		Proxy.resolve(null);
+        // When
+        Proxy.resolve(null);
 
-		// Then
-		throw new NotImplementedException("TBD");
+        // Then
+        throw new NotImplementedException("TBD");
 
-		done();
-	});
+        done();
+    });
 });

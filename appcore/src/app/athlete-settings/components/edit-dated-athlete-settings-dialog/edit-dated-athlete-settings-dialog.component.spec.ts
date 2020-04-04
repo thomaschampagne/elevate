@@ -14,46 +14,46 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("EditDatedAthleteSettingsDialogComponent", () => {
 
-	let component: EditDatedAthleteSettingsDialogComponent;
-	let fixture: ComponentFixture<EditDatedAthleteSettingsDialogComponent>;
-	let userSettingsService: UserSettingsService;
+    let component: EditDatedAthleteSettingsDialogComponent;
+    let fixture: ComponentFixture<EditDatedAthleteSettingsDialogComponent>;
+    let userSettingsService: UserSettingsService;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
-			action: DatedAthleteSettingsAction.ACTION_ADD,
-			datedAthleteSettingsModel: DatedAthleteSettingsModel.DEFAULT_MODEL
-		};
+        const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
+            action: DatedAthleteSettingsAction.ACTION_ADD,
+            datedAthleteSettingsModel: DatedAthleteSettingsModel.DEFAULT_MODEL
+        };
 
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-				AthleteSettingsModule
-			],
-			providers: [
-				{
-					provide: MAT_DIALOG_DATA, useValue: datedAthleteSettingsDialogData,
-				},
-				{
-					provide: MatDialogRef, useValue: {},
-				}
-			]
-		}).compileComponents();
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+                AthleteSettingsModule
+            ],
+            providers: [
+                {
+                    provide: MAT_DIALOG_DATA, useValue: datedAthleteSettingsDialogData,
+                },
+                {
+                    provide: MatDialogRef, useValue: {},
+                }
+            ]
+        }).compileComponents();
 
-		userSettingsService = TestBed.inject(UserSettingsService);
+        userSettingsService = TestBed.inject(UserSettingsService);
 
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
+        spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
-		fixture = TestBed.createComponent(EditDatedAthleteSettingsDialogComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
+        fixture = TestBed.createComponent(EditDatedAthleteSettingsDialogComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
 
-		done();
-	});
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 });

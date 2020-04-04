@@ -8,30 +8,30 @@ import { MockedDataStore } from "../../data-store/impl/mock/mocked-data-store.se
 
 describe("ActivityDao", () => {
 
-	let activityDao: ActivityDao;
+    let activityDao: ActivityDao;
 
-	let _TEST_SYNCED_ACTIVITIES_: SyncedActivityModel[] = null;
+    let _TEST_SYNCED_ACTIVITIES_: SyncedActivityModel[] = null;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		_TEST_SYNCED_ACTIVITIES_ = _.cloneDeep(TEST_SYNCED_ACTIVITIES);
+        _TEST_SYNCED_ACTIVITIES_ = _.cloneDeep(TEST_SYNCED_ACTIVITIES);
 
-		const mockedDataStore: MockedDataStore<SyncedActivityModel> = new MockedDataStore(_TEST_SYNCED_ACTIVITIES_);
+        const mockedDataStore: MockedDataStore<SyncedActivityModel> = new MockedDataStore(_TEST_SYNCED_ACTIVITIES_);
 
-		TestBed.configureTestingModule({
-			providers: [
-				ActivityDao,
-				{provide: DataStore, useValue: mockedDataStore}
-			]
-		});
+        TestBed.configureTestingModule({
+            providers: [
+                ActivityDao,
+                {provide: DataStore, useValue: mockedDataStore}
+            ]
+        });
 
-		// Retrieve injected service
-		activityDao = TestBed.inject(ActivityDao);
-		done();
-	});
+        // Retrieve injected service
+        activityDao = TestBed.inject(ActivityDao);
+        done();
+    });
 
-	it("should be created", (done: Function) => {
-		expect(activityDao).toBeTruthy();
-		done();
-	});
+    it("should be created", done => {
+        expect(activityDao).toBeTruthy();
+        done();
+    });
 });

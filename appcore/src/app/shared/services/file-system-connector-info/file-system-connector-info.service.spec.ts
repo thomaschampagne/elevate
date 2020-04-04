@@ -7,16 +7,16 @@ import { DesktopModule } from "../../modules/desktop/desktop.module";
 
 describe("FileSystemConnectorInfoService", () => {
 
-	beforeEach(() => TestBed.configureTestingModule({
-		imports: [
-			CoreModule,
-			SharedModule,
-			DesktopModule
-		]
-	}));
+    beforeEach(() => TestBed.configureTestingModule({
+        imports: [
+            CoreModule,
+            SharedModule,
+            DesktopModule
+        ]
+    }));
 
-	it("should be created", () => {
-		const service: FileSystemConnectorInfoService = TestBed.inject(FileSystemConnectorInfoService);
-		expect(service).toBeTruthy();
-	});
+    it("should be created", () => {
+        const service: FileSystemConnectorInfoService = TestBed.inject(FileSystemConnectorInfoService);
+        expect(service).toBeTruthy();
+    });
 });

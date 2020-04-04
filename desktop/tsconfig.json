@@ -1,37 +1,37 @@
 {
-	"compilerOptions": {
-		"baseUrl": ".",
-		"target": "es5",
-		"resolveJsonModule": true,
-		"allowJs": true,
-		"paths": {
-			"@elevate/shared/constants": [
-				"../appcore/modules/shared/constants/"
-			],
-			"@elevate/shared/enums": [
-				"../appcore/modules/shared/enums/"
-			],
-			"@elevate/shared/data": [
-				"../appcore/modules/shared/data/"
-			],
-			"@elevate/shared/electron": [
-				"../appcore/modules/shared/electron/"
-			],
-			"@elevate/shared/sync": [
-				"../appcore/modules/shared/sync/"
-			],
-			"@elevate/shared/models": [
-				"../appcore/modules/shared/models/"
-			],
-			"@elevate/shared/resolvers": [
-				"../appcore/modules/shared/resolvers/"
-			],
-			"@elevate/shared/exceptions": [
-				"../appcore/modules/shared/exceptions/"
-			],
-			"@elevate/shared/tools": [
-				"../appcore/modules/shared/tools/"
-			]
-		}
-	}
+    "compilerOptions": {
+        "baseUrl": ".",
+        "target": "es5",
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "paths": {
+            "@elevate/shared/constants": [
+                "../appcore/modules/shared/constants/"
+            ],
+            "@elevate/shared/enums": [
+                "../appcore/modules/shared/enums/"
+            ],
+            "@elevate/shared/data": [
+                "../appcore/modules/shared/data/"
+            ],
+            "@elevate/shared/electron": [
+                "../appcore/modules/shared/electron/"
+            ],
+            "@elevate/shared/sync": [
+                "../appcore/modules/shared/sync/"
+            ],
+            "@elevate/shared/models": [
+                "../appcore/modules/shared/models/"
+            ],
+            "@elevate/shared/resolvers": [
+                "../appcore/modules/shared/resolvers/"
+            ],
+            "@elevate/shared/exceptions": [
+                "../appcore/modules/shared/exceptions/"
+            ],
+            "@elevate/shared/tools": [
+                "../appcore/modules/shared/tools/"
+            ]
+        }
+    }
 }

@@ -3,213 +3,213 @@ import { ActivityStreamsModel } from "@elevate/shared/models";
 import { Constant } from "@elevate/shared/constants";
 
 export interface ICourseBounds {
-	start: number;
-	end: number;
+    start: number;
+    end: number;
 }
 
 export enum ExportTypes {
-	GPX,
-	TCX,
+    GPX,
+    TCX,
 }
 
 export class CourseMaker {
 
-	public create(exportType: ExportTypes, courseName: string, activityStream: ActivityStreamsModel, bounds?: ICourseBounds): string {
+    public create(exportType: ExportTypes, courseName: string, activityStream: ActivityStreamsModel, bounds?: ICourseBounds): string {
 
-		let courseData: string = null;
+        let courseData: string = null;
 
-		switch (exportType) {
+        switch (exportType) {
 
-			case ExportTypes.GPX:
-				courseData = this.createGpx(courseName, activityStream, bounds);
-				break;
+            case ExportTypes.GPX:
+                courseData = this.createGpx(courseName, activityStream, bounds);
+                break;
 
-			case ExportTypes.TCX:
-				courseData = this.createTcx(courseName, activityStream, bounds);
-				break;
+            case ExportTypes.TCX:
+                courseData = this.createTcx(courseName, activityStream, bounds);
+                break;
 
-			default:
-				throw new Error("Export type do not exist");
-		}
+            default:
+                throw new Error("Export type do not exist");
+        }
 
-		return courseData;
-	}
+        return courseData;
+    }
 
-	private createGpx(courseName: string, activityStream: ActivityStreamsModel, bounds?: ICourseBounds): string {
+    protected cutStreamsAlongBounds(activityStream: ActivityStreamsModel, bounds: ICourseBounds): ActivityStreamsModel {
 
-		if (bounds) {
-			activityStream = this.cutStreamsAlongBounds(activityStream, bounds);
-		}
+        if (!_.isEmpty(activityStream.velocity_smooth)) {
+            activityStream.velocity_smooth = activityStream.velocity_smooth.slice(bounds.start, bounds.end);
+        }
 
-		let gpxString: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-			"<gpx creator=\"Elevate\" version=\"1.1\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd\" xmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\" xmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\">\n" +
-			"<metadata>\n" +
-			"<author>\n" +
-			"<name>Elevate</name>\n" +
-			"<link href=\"" + Constant.LANDING_PAGE_URL + "\"/>\n" +
-			"</author>\n" +
-			"</metadata>\n" +
-			"<trk>\n" +
-			"<name>" + courseName + "</name>\n" +
-			"<trkseg>\n";
+        if (!_.isEmpty(activityStream.time)) {
+            activityStream.time = activityStream.time.slice(bounds.start, bounds.end);
+        }
 
-		for (let i = 0; i < activityStream.latlng.length; i++) {
+        if (!_.isEmpty(activityStream.latlng)) {
+            activityStream.latlng = activityStream.latlng.slice(bounds.start, bounds.end);
+        }
 
-			// Position
-			gpxString += "<trkpt lat=\"" + activityStream.latlng[i][0] + "\" lon=\"" + activityStream.latlng[i][1] + "\">\n";
+        if (!_.isEmpty(activityStream.heartrate)) {
+            activityStream.heartrate = activityStream.heartrate.slice(bounds.start, bounds.end);
+        }
 
-			// Altitude
-			if (activityStream.altitude && _.isNumber(activityStream.altitude[i])) {
-				gpxString += "<ele>" + activityStream.altitude[i] + "</ele>\n";
-			}
+        if (!_.isEmpty(activityStream.watts)) {
+            activityStream.watts = activityStream.watts.slice(bounds.start, bounds.end);
+        }
 
-			// Time
-			gpxString += "<time>" + (new Date(activityStream.time[i] * 1000)).toISOString() + "</time>\n";
+        if (!_.isEmpty(activityStream.watts_calc)) {
+            activityStream.watts_calc = activityStream.watts_calc.slice(bounds.start, bounds.end);
+        }
 
-			if (activityStream.heartrate || activityStream.cadence) {
+        if (!_.isEmpty(activityStream.cadence)) {
+            activityStream.cadence = activityStream.cadence.slice(bounds.start, bounds.end);
+        }
 
-				gpxString += "<extensions>\n";
+        if (!_.isEmpty(activityStream.grade_smooth)) {
+            activityStream.grade_smooth = activityStream.grade_smooth.slice(bounds.start, bounds.end);
+        }
 
-				if (activityStream.watts && _.isNumber(activityStream.watts[i])) {
-					gpxString += "<power>" + activityStream.watts[i] + "</power>\n";
-				}
+        if (!_.isEmpty(activityStream.altitude)) {
+            activityStream.altitude = activityStream.altitude.slice(bounds.start, bounds.end);
+        }
 
-				gpxString += "<gpxtpx:TrackPointExtension>\n";
+        if (!_.isEmpty(activityStream.distance)) {
+            activityStream.distance = activityStream.distance.slice(bounds.start, bounds.end);
+        }
 
-				if (activityStream.heartrate && _.isNumber(activityStream.heartrate[i])) {
-					gpxString += "<gpxtpx:hr>" + activityStream.heartrate[i] + "</gpxtpx:hr>\n";
-				}
-				if (activityStream.cadence && _.isNumber(activityStream.cadence[i])) {
-					gpxString += "<gpxtpx:cad>" + activityStream.cadence[i] + "</gpxtpx:cad>\n";
-				}
+        if (!_.isEmpty(activityStream.grade_adjusted_speed)) {
+            activityStream.grade_adjusted_speed = activityStream.grade_adjusted_speed.slice(bounds.start, bounds.end);
+        }
 
-				gpxString += "</gpxtpx:TrackPointExtension>\n";
-				gpxString += "</extensions>\n";
-			}
+        return activityStream;
+    }
 
-			gpxString += "</trkpt>\n";
-		}
+    private createGpx(courseName: string, activityStream: ActivityStreamsModel, bounds?: ICourseBounds): string {
 
-		gpxString += "</trkseg>\n";
-		gpxString += "</trk>\n";
-		gpxString += "</gpx>";
+        if (bounds) {
+            activityStream = this.cutStreamsAlongBounds(activityStream, bounds);
+        }
 
-		return gpxString;
-	}
+        let gpxString: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<gpx creator=\"Elevate\" version=\"1.1\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd\" xmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\" xmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\">\n" +
+            "<metadata>\n" +
+            "<author>\n" +
+            "<name>Elevate</name>\n" +
+            "<link href=\"" + Constant.LANDING_PAGE_URL + "\"/>\n" +
+            "</author>\n" +
+            "</metadata>\n" +
+            "<trk>\n" +
+            "<name>" + courseName + "</name>\n" +
+            "<trkseg>\n";
 
-	private createTcx(courseName: string, activityStream: ActivityStreamsModel, bounds?: ICourseBounds): string {
+        for (let i = 0; i < activityStream.latlng.length; i++) {
 
-		if (bounds) {
-			activityStream = this.cutStreamsAlongBounds(activityStream, bounds);
-		}
+            // Position
+            gpxString += "<trkpt lat=\"" + activityStream.latlng[i][0] + "\" lon=\"" + activityStream.latlng[i][1] + "\">\n";
 
-		const startTime: number = activityStream.time[0];
-		const startDistance: number = activityStream.distance[0];
+            // Altitude
+            if (activityStream.altitude && _.isNumber(activityStream.altitude[i])) {
+                gpxString += "<ele>" + activityStream.altitude[i] + "</ele>\n";
+            }
 
-		let TotalTimeSeconds = 0;
-		let DistanceMeters = 0;
-		if (activityStream.latlng.length > 0) {
-			TotalTimeSeconds += activityStream.time[activityStream.latlng.length - 1] - startTime;
-			DistanceMeters += activityStream.distance[activityStream.latlng.length - 1] - startDistance;
-		}
+            // Time
+            gpxString += "<time>" + (new Date(activityStream.time[i] * 1000)).toISOString() + "</time>\n";
 
-		// Keep Name field to 15 characters or fewer
-		if (courseName.length > 15) {
-			courseName = courseName.slice(0, 15);
-		}
+            if (activityStream.heartrate || activityStream.cadence) {
 
-		let tcxString: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-			"<TrainingCenterDatabase xsi:schemaLocation=\"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd\" xmlns:ns5=\"http://www.garmin.com/xmlschemas/ActivityGoals/v1\" xmlns:ns3=\"http://www.garmin.com/xmlschemas/ActivityExtension/v2\" xmlns:ns2=\"http://www.garmin.com/xmlschemas/UserProfile/v2\" xmlns=\"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
-			"<Courses>\n" +
-			"<Course>\n" +
-			"<Name>" + courseName + "</Name>\n" +
-			"<Lap>\n" +
-			"<TotalTimeSeconds>" + TotalTimeSeconds + "</TotalTimeSeconds>\n" +
-			"<DistanceMeters>" + DistanceMeters + "</DistanceMeters>\n" +
-			"<Intensity>Active</Intensity>\n";
+                gpxString += "<extensions>\n";
 
-		tcxString += "</Lap>\n";
-		tcxString += "<Track>\n";
+                if (activityStream.watts && _.isNumber(activityStream.watts[i])) {
+                    gpxString += "<power>" + activityStream.watts[i] + "</power>\n";
+                }
 
-		for (let i = 0; i < activityStream.latlng.length; i++) {
+                gpxString += "<gpxtpx:TrackPointExtension>\n";
 
-			tcxString += "<Trackpoint>\n";
-			tcxString += "<Time>" + (new Date((activityStream.time[i] - startTime) * 1000)).toISOString() + "</Time>\n";
-			tcxString += "<Position>\n";
-			tcxString += "<LatitudeDegrees>" + activityStream.latlng[i][0] + "</LatitudeDegrees>\n";
-			tcxString += "<LongitudeDegrees>" + activityStream.latlng[i][1] + "</LongitudeDegrees>\n";
-			tcxString += "</Position>\n";
-			if (activityStream.altitude && _.isNumber(activityStream.altitude[i])) {
-				tcxString += "<AltitudeMeters>" + activityStream.altitude[i] + "</AltitudeMeters>\n";
-			}
-			tcxString += "<DistanceMeters>" + (activityStream.distance[i] - startDistance) + "</DistanceMeters>\n";
+                if (activityStream.heartrate && _.isNumber(activityStream.heartrate[i])) {
+                    gpxString += "<gpxtpx:hr>" + activityStream.heartrate[i] + "</gpxtpx:hr>\n";
+                }
+                if (activityStream.cadence && _.isNumber(activityStream.cadence[i])) {
+                    gpxString += "<gpxtpx:cad>" + activityStream.cadence[i] + "</gpxtpx:cad>\n";
+                }
 
-			if (activityStream.heartrate && _.isNumber(activityStream.heartrate[i])) {
-				tcxString += "<HeartRateBpm><Value>" + activityStream.heartrate[i] + "</Value></HeartRateBpm>\n";
-			}
+                gpxString += "</gpxtpx:TrackPointExtension>\n";
+                gpxString += "</extensions>\n";
+            }
 
-			if (activityStream.cadence && _.isNumber(activityStream.cadence[i])) {
-				tcxString += "<Cadence>" + activityStream.cadence[i] + "</Cadence>\n";
-			}
+            gpxString += "</trkpt>\n";
+        }
 
-			tcxString += "</Trackpoint>\n";
-		}
+        gpxString += "</trkseg>\n";
+        gpxString += "</trk>\n";
+        gpxString += "</gpx>";
 
-		tcxString += "</Track>\n";
-		tcxString += "</Course>\n";
-		tcxString += "</Courses>\n";
-		tcxString += "</TrainingCenterDatabase>";
+        return gpxString;
+    }
 
-		return tcxString;
-	}
+    private createTcx(courseName: string, activityStream: ActivityStreamsModel, bounds?: ICourseBounds): string {
 
-	protected cutStreamsAlongBounds(activityStream: ActivityStreamsModel, bounds: ICourseBounds): ActivityStreamsModel {
+        if (bounds) {
+            activityStream = this.cutStreamsAlongBounds(activityStream, bounds);
+        }
 
-		if (!_.isEmpty(activityStream.velocity_smooth)) {
-			activityStream.velocity_smooth = activityStream.velocity_smooth.slice(bounds.start, bounds.end);
-		}
+        const startTime: number = activityStream.time[0];
+        const startDistance: number = activityStream.distance[0];
 
-		if (!_.isEmpty(activityStream.time)) {
-			activityStream.time = activityStream.time.slice(bounds.start, bounds.end);
-		}
+        let TotalTimeSeconds = 0;
+        let DistanceMeters = 0;
+        if (activityStream.latlng.length > 0) {
+            TotalTimeSeconds += activityStream.time[activityStream.latlng.length - 1] - startTime;
+            DistanceMeters += activityStream.distance[activityStream.latlng.length - 1] - startDistance;
+        }
 
-		if (!_.isEmpty(activityStream.latlng)) {
-			activityStream.latlng = activityStream.latlng.slice(bounds.start, bounds.end);
-		}
+        // Keep Name field to 15 characters or fewer
+        if (courseName.length > 15) {
+            courseName = courseName.slice(0, 15);
+        }
 
-		if (!_.isEmpty(activityStream.heartrate)) {
-			activityStream.heartrate = activityStream.heartrate.slice(bounds.start, bounds.end);
-		}
+        let tcxString: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<TrainingCenterDatabase xsi:schemaLocation=\"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd\" xmlns:ns5=\"http://www.garmin.com/xmlschemas/ActivityGoals/v1\" xmlns:ns3=\"http://www.garmin.com/xmlschemas/ActivityExtension/v2\" xmlns:ns2=\"http://www.garmin.com/xmlschemas/UserProfile/v2\" xmlns=\"http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
+            "<Courses>\n" +
+            "<Course>\n" +
+            "<Name>" + courseName + "</Name>\n" +
+            "<Lap>\n" +
+            "<TotalTimeSeconds>" + TotalTimeSeconds + "</TotalTimeSeconds>\n" +
+            "<DistanceMeters>" + DistanceMeters + "</DistanceMeters>\n" +
+            "<Intensity>Active</Intensity>\n";
 
-		if (!_.isEmpty(activityStream.watts)) {
-			activityStream.watts = activityStream.watts.slice(bounds.start, bounds.end);
-		}
+        tcxString += "</Lap>\n";
+        tcxString += "<Track>\n";
 
-		if (!_.isEmpty(activityStream.watts_calc)) {
-			activityStream.watts_calc = activityStream.watts_calc.slice(bounds.start, bounds.end);
-		}
+        for (let i = 0; i < activityStream.latlng.length; i++) {
 
-		if (!_.isEmpty(activityStream.cadence)) {
-			activityStream.cadence = activityStream.cadence.slice(bounds.start, bounds.end);
-		}
+            tcxString += "<Trackpoint>\n";
+            tcxString += "<Time>" + (new Date((activityStream.time[i] - startTime) * 1000)).toISOString() + "</Time>\n";
+            tcxString += "<Position>\n";
+            tcxString += "<LatitudeDegrees>" + activityStream.latlng[i][0] + "</LatitudeDegrees>\n";
+            tcxString += "<LongitudeDegrees>" + activityStream.latlng[i][1] + "</LongitudeDegrees>\n";
+            tcxString += "</Position>\n";
+            if (activityStream.altitude && _.isNumber(activityStream.altitude[i])) {
+                tcxString += "<AltitudeMeters>" + activityStream.altitude[i] + "</AltitudeMeters>\n";
+            }
+            tcxString += "<DistanceMeters>" + (activityStream.distance[i] - startDistance) + "</DistanceMeters>\n";
 
-		if (!_.isEmpty(activityStream.grade_smooth)) {
-			activityStream.grade_smooth = activityStream.grade_smooth.slice(bounds.start, bounds.end);
-		}
+            if (activityStream.heartrate && _.isNumber(activityStream.heartrate[i])) {
+                tcxString += "<HeartRateBpm><Value>" + activityStream.heartrate[i] + "</Value></HeartRateBpm>\n";
+            }
 
-		if (!_.isEmpty(activityStream.altitude)) {
-			activityStream.altitude = activityStream.altitude.slice(bounds.start, bounds.end);
-		}
+            if (activityStream.cadence && _.isNumber(activityStream.cadence[i])) {
+                tcxString += "<Cadence>" + activityStream.cadence[i] + "</Cadence>\n";
+            }
 
-		if (!_.isEmpty(activityStream.distance)) {
-			activityStream.distance = activityStream.distance.slice(bounds.start, bounds.end);
-		}
+            tcxString += "</Trackpoint>\n";
+        }
 
-		if (!_.isEmpty(activityStream.grade_adjusted_speed)) {
-			activityStream.grade_adjusted_speed = activityStream.grade_adjusted_speed.slice(bounds.start, bounds.end);
-		}
+        tcxString += "</Track>\n";
+        tcxString += "</Course>\n";
+        tcxString += "</Courses>\n";
+        tcxString += "</TrainingCenterDatabase>";
 
-		return activityStream;
-	}
+        return tcxString;
+    }
 
 }

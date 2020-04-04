@@ -6,8 +6,8 @@ import { saveAs } from "file-saver";
 import { LoggerService } from "../shared/services/logging/logger.service";
 
 @Component({
-	selector: "app-desktop-errors-sync-details-dialog",
-	template: `
+    selector: "app-desktop-errors-sync-details-dialog",
+    template: `
 		<h2 mat-dialog-title>{{eventErrors.length}} sync warning{{(eventErrors.length > 1) ? 's' : ''}} occurred</h2>
 		<h3 class="mat-subheading-1">Warning are also displayed in developer console (CTRL+F12)</h3>
 		<mat-dialog-content class="mat-body-1">
@@ -32,24 +32,24 @@ import { LoggerService } from "../shared/services/logging/logger.service";
 			<button mat-stroked-button mat-dialog-close color="primary">Ok</button>
 		</mat-dialog-actions>
 	`,
-	styles: [``]
+    styles: [``]
 })
 export class DesktopErrorsSyncDetailsDialogComponent implements OnInit {
 
-	public static readonly MAX_WIDTH: string = "90%";
-	public static readonly MIN_WIDTH: string = "80%";
+    public static readonly MAX_WIDTH: string = "90%";
+    public static readonly MIN_WIDTH: string = "80%";
 
-	constructor(@Inject(MAT_DIALOG_DATA) public eventErrors: ErrorSyncEvent[],
-				public logger: LoggerService) {
-	}
+    constructor(@Inject(MAT_DIALOG_DATA) public eventErrors: ErrorSyncEvent[],
+                public logger: LoggerService) {
+    }
 
-	public ngOnInit(): void {
-		this.logger.warn("SYNC WARNS", this.eventErrors);
-	}
+    public ngOnInit(): void {
+        this.logger.warn("SYNC WARNS", this.eventErrors);
+    }
 
-	public exportToFile(): void {
-		const blob = new Blob([JSON.stringify(this.eventErrors, null, 2)], {type: "application/json; charset=utf-8"});
-		const filename = "desktop_sync_warnings_" + moment().format("Y.M.D-H.mm.ss") + ".json";
-		saveAs(blob, filename);
-	}
+    public exportToFile(): void {
+        const blob = new Blob([JSON.stringify(this.eventErrors, null, 2)], {type: "application/json; charset=utf-8"});
+        const filename = "desktop_sync_warnings_" + moment().format("Y.M.D-H.mm.ss") + ".json";
+        saveAs(blob, filename);
+    }
 }

@@ -2,15 +2,15 @@
 
 @mixin app-theming($theme) {
 
-	$primary: map-get($theme, primary);
+    $primary: map-get($theme, primary);
 
-	#logo {
-		position: absolute;
-		bottom: 10px;
-		width: 100%;
-		height: 100px;
-		background-color: mat-color($primary);
-		-webkit-mask: url("assets/icons/elevate.svg") no-repeat center;
-		mask: url("assets/icons/elevate.svg") no-repeat center;
-	}
+    #logo {
+        position: absolute;
+        bottom: 10px;
+        width: 100%;
+        height: 100px;
+        background-color: mat-color($primary);
+        -webkit-mask: url("assets/icons/elevate.svg") no-repeat center;
+        mask: url("assets/icons/elevate.svg") no-repeat center;
+    }
 }

@@ -13,81 +13,81 @@ import { StreamsService } from "../streams/streams.service";
 
 export abstract class SyncService<T> {
 
-	constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
-				public activityService: ActivityService,
-				public streamsService: StreamsService,
-				public athleteService: AthleteService,
-				public userSettingsService: UserSettingsService,
-				public logger: LoggerService) {
-	}
+    constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
+                public activityService: ActivityService,
+                public streamsService: StreamsService,
+                public athleteService: AthleteService,
+                public userSettingsService: UserSettingsService,
+                public logger: LoggerService) {
+    }
 
-	/**
-	 * Promise of sync start
-	 * @param fastSync
-	 * @param forceSync
-	 */
-	public abstract sync(fastSync: boolean, forceSync: boolean): Promise<void>;
+    /**
+     * Promise of sync start
+     * @param fastSync
+     * @param forceSync
+     */
+    public abstract sync(fastSync: boolean, forceSync: boolean): Promise<void>;
 
-	public abstract stop(): Promise<void>;
+    public abstract stop(): Promise<void>;
 
-	public abstract getSyncDateTime(): Promise<T>;
+    public abstract getSyncDateTime(): Promise<T>;
 
-	public abstract saveSyncDateTime(value: T): Promise<T>;
+    public abstract saveSyncDateTime(value: T): Promise<T>;
 
-	public abstract clearSyncTime(): Promise<void>;
+    public abstract clearSyncTime(): Promise<void>;
 
-	public abstract getSyncState(): Promise<SyncState>;
+    public abstract getSyncState(): Promise<SyncState>;
 
-	public abstract export(): Promise<{ filename: string, size: number }>;
+    public abstract export(): Promise<{ filename: string, size: number }>;
 
-	public abstract import(dumpModel: DumpModel): Promise<void>;
+    public abstract import(dumpModel: DumpModel): Promise<void>;
 
-	public abstract getCompatibleBackupVersionThreshold(): string;
+    public abstract getCompatibleBackupVersionThreshold(): string;
 
-	/**
-	 *
-	 * @returns {Promise<void>}
-	 */
-	public clearSyncedData(): Promise<void> {
+    /**
+     *
+     * @returns {Promise<void>}
+     */
+    public clearSyncedData(): Promise<void> {
 
-		return Promise.all([
-			this.clearSyncTime(),
-			this.activityService.clear(),
-			this.streamsService.clear()
-		]).then(() => {
-			return Promise.resolve();
-		}).catch(error => {
-			this.logger.error(error);
-			return Promise.reject("Athlete synced data has not been cleared totally. " +
-				"Some properties cannot be deleted. You may need to uninstall/install the software.");
-		});
-	}
+        return Promise.all([
+            this.clearSyncTime(),
+            this.activityService.clear(),
+            this.streamsService.clear()
+        ]).then(() => {
+            return Promise.resolve();
+        }).catch(error => {
+            this.logger.error(error);
+            return Promise.reject("Athlete synced data has not been cleared totally. " +
+                "Some properties cannot be deleted. You may need to uninstall/install the software.");
+        });
+    }
 
-	/**
-	 *
-	 * @param {Blob} blob
-	 * @param {string} filename
-	 */
-	public saveAs(blob: Blob, filename: string): void {
-		saveAs(blob, filename);
-	}
+    /**
+     *
+     * @param {Blob} blob
+     * @param {string} filename
+     */
+    public saveAs(blob: Blob, filename: string): void {
+        saveAs(blob, filename);
+    }
 
-	public isDumpCompatible(dumpVersion, compatibleDumpVersionThreshold): Promise<void> {
+    public isDumpCompatible(dumpVersion, compatibleDumpVersionThreshold): Promise<void> {
 
-		if (environment.skipRestoreSyncedBackupCheck) {
-			return Promise.resolve();
-		}
+        if (environment.skipRestoreSyncedBackupCheck) {
+            return Promise.resolve();
+        }
 
-		return this.versionsProvider.getPackageVersion().then(appVersion => {
+        return this.versionsProvider.getPackageVersion().then(appVersion => {
 
-			// Check if imported backup is compatible with current code
-			if (semver.lt(dumpVersion, compatibleDumpVersionThreshold)) {
-				return Promise.reject("Imported backup version " + dumpVersion
-					+ " is not compatible with current installed version " + appVersion + ".");
-			} else {
-				return Promise.resolve();
-			}
-		});
+            // Check if imported backup is compatible with current code
+            if (semver.lt(dumpVersion, compatibleDumpVersionThreshold)) {
+                return Promise.reject("Imported backup version " + dumpVersion
+                    + " is not compatible with current installed version " + appVersion + ".");
+            } else {
+                return Promise.resolve();
+            }
+        });
 
-	}
+    }
 }

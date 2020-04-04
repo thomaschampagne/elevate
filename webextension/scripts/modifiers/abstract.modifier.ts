@@ -1,3 +1,3 @@
 export abstract class AbstractModifier {
-	abstract modify(): void;
+    abstract modify(): void;
 }

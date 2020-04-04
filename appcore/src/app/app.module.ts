@@ -17,107 +17,102 @@ import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
 import { MENU_ITEMS_PROVIDER } from "./shared/services/menu-items/menu-items-provider.interface";
 import { DesktopMenuItemsProvider } from "./shared/services/menu-items/impl/desktop-menu-items-provider.service";
 import { ExtensionMenuItemsProvider } from "./shared/services/menu-items/impl/extension-menu-items-provider.service";
-import {
-	APP_MORE_MENU_COMPONENT,
-	AppMoreMenuComponent,
-	DesktopAppMoreMenuComponent,
-	ExtensionAppMoreMenuComponent
-} from "./app-more-menu/app-more-menu.component";
+import { APP_MORE_MENU_COMPONENT, AppMoreMenuComponent, DesktopAppMoreMenuComponent, ExtensionAppMoreMenuComponent } from "./app-more-menu/app-more-menu.component";
 import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
 import { DesktopRoutingModule } from "./shared/modules/desktop/desktop-routing.module";
 import { ExtensionRoutingModule } from "./shared/modules/extension/extension-routing.module";
 import { DesktopPreRunGuard } from "./desktop/pre-run-guard/desktop-pre-run-guard.service";
 import { DesktopPreRunGuardDialogComponent } from "./desktop/pre-run-guard/desktop-pre-run-guard-dialog.component";
 import {
-	DesktopRefreshStatsBarComponent,
-	ExtensionRefreshStatsBarComponent,
-	REFRESH_STATS_BAR_COMPONENT,
-	RefreshStatsBarComponent
+    DesktopRefreshStatsBarComponent,
+    ExtensionRefreshStatsBarComponent,
+    REFRESH_STATS_BAR_COMPONENT,
+    RefreshStatsBarComponent
 } from "./refresh-stats-bar/refresh-stats-bar.component";
 import { RefreshStatsBarDirective } from "./refresh-stats-bar/refresh-stats-bar.directive";
 import { DesktopErrorsSyncDetailsDialogComponent } from "./sync-bar/desktop-errors-sync-details-dialog.component";
 
 @NgModule({
-	imports: [
-		CoreModule,
-		DesktopRoutingModule
-	],
-	exports: [
-		CoreModule,
-		DesktopRoutingModule
-	],
-	declarations: [
-		DesktopSyncMenuComponent,
-		DesktopSyncBarComponent,
-		DesktopErrorsSyncDetailsDialogComponent,
-		DesktopRefreshStatsBarComponent,
-		DesktopTopBarComponent,
-		DesktopPreRunGuardDialogComponent,
-		DesktopAppMoreMenuComponent
-	],
-	providers: [
-		{provide: MENU_ITEMS_PROVIDER, useClass: DesktopMenuItemsProvider},
-		{provide: TOP_BAR_COMPONENT, useValue: DesktopTopBarComponent},
-		{provide: SYNC_BAR_COMPONENT, useValue: DesktopSyncBarComponent},
-		{provide: REFRESH_STATS_BAR_COMPONENT, useValue: DesktopRefreshStatsBarComponent},
-		{provide: SYNC_MENU_COMPONENT, useValue: DesktopSyncMenuComponent},
-		{provide: APP_MORE_MENU_COMPONENT, useValue: DesktopAppMoreMenuComponent},
-		DesktopPreRunGuard
-	]
+    imports: [
+        CoreModule,
+        DesktopRoutingModule
+    ],
+    exports: [
+        CoreModule,
+        DesktopRoutingModule
+    ],
+    declarations: [
+        DesktopSyncMenuComponent,
+        DesktopSyncBarComponent,
+        DesktopErrorsSyncDetailsDialogComponent,
+        DesktopRefreshStatsBarComponent,
+        DesktopTopBarComponent,
+        DesktopPreRunGuardDialogComponent,
+        DesktopAppMoreMenuComponent
+    ],
+    providers: [
+        {provide: MENU_ITEMS_PROVIDER, useClass: DesktopMenuItemsProvider},
+        {provide: TOP_BAR_COMPONENT, useValue: DesktopTopBarComponent},
+        {provide: SYNC_BAR_COMPONENT, useValue: DesktopSyncBarComponent},
+        {provide: REFRESH_STATS_BAR_COMPONENT, useValue: DesktopRefreshStatsBarComponent},
+        {provide: SYNC_MENU_COMPONENT, useValue: DesktopSyncMenuComponent},
+        {provide: APP_MORE_MENU_COMPONENT, useValue: DesktopAppMoreMenuComponent},
+        DesktopPreRunGuard
+    ]
 })
 export class DesktopBootModule {
 }
 
 @NgModule({
-	imports: [
-		CoreModule,
-		ExtensionRoutingModule
-	],
-	exports: [
-		CoreModule,
-		ExtensionRoutingModule
-	],
-	declarations: [
-		ExtensionTopBarComponent,
-		ExtensionSyncBarComponent,
-		ExtensionRefreshStatsBarComponent,
-		ExtensionSyncMenuComponent,
-		ExtensionAppMoreMenuComponent
-	],
-	providers: [
-		{provide: MENU_ITEMS_PROVIDER, useClass: ExtensionMenuItemsProvider},
-		{provide: TOP_BAR_COMPONENT, useValue: ExtensionTopBarComponent},
-		{provide: SYNC_BAR_COMPONENT, useValue: ExtensionSyncBarComponent},
-		{provide: REFRESH_STATS_BAR_COMPONENT, useValue: ExtensionRefreshStatsBarComponent},
-		{provide: SYNC_MENU_COMPONENT, useValue: ExtensionSyncMenuComponent},
-		{provide: APP_MORE_MENU_COMPONENT, useValue: ExtensionAppMoreMenuComponent}
-	]
+    imports: [
+        CoreModule,
+        ExtensionRoutingModule
+    ],
+    exports: [
+        CoreModule,
+        ExtensionRoutingModule
+    ],
+    declarations: [
+        ExtensionTopBarComponent,
+        ExtensionSyncBarComponent,
+        ExtensionRefreshStatsBarComponent,
+        ExtensionSyncMenuComponent,
+        ExtensionAppMoreMenuComponent
+    ],
+    providers: [
+        {provide: MENU_ITEMS_PROVIDER, useClass: ExtensionMenuItemsProvider},
+        {provide: TOP_BAR_COMPONENT, useValue: ExtensionTopBarComponent},
+        {provide: SYNC_BAR_COMPONENT, useValue: ExtensionSyncBarComponent},
+        {provide: REFRESH_STATS_BAR_COMPONENT, useValue: ExtensionRefreshStatsBarComponent},
+        {provide: SYNC_MENU_COMPONENT, useValue: ExtensionSyncMenuComponent},
+        {provide: APP_MORE_MENU_COMPONENT, useValue: ExtensionAppMoreMenuComponent}
+    ]
 })
 export class ExtensionBootModule {
 }
 
 @NgModule({
-	declarations: [
-		AppComponent,
-		TopBarDirective,
-		TopBarComponent,
-		SyncBarDirective,
-		SyncBarComponent,
-		RefreshStatsBarDirective,
-		RefreshStatsBarComponent,
-		SyncMenuDirective,
-		AppMoreMenuDirective,
-		SyncMenuComponent,
-		AppMoreMenuComponent
-	],
-	imports: [
-		(environment.target === EnvTarget.DESKTOP) ? DesktopBootModule : ExtensionBootModule,
-		SharedModule,
-	],
-	providers: [{provide: ErrorHandler, useClass: ElevateErrorHandler}],
-	bootstrap: [
-		AppComponent
-	]
+    declarations: [
+        AppComponent,
+        TopBarDirective,
+        TopBarComponent,
+        SyncBarDirective,
+        SyncBarComponent,
+        RefreshStatsBarDirective,
+        RefreshStatsBarComponent,
+        SyncMenuDirective,
+        AppMoreMenuDirective,
+        SyncMenuComponent,
+        AppMoreMenuComponent
+    ],
+    imports: [
+        (environment.target === EnvTarget.DESKTOP) ? DesktopBootModule : ExtensionBootModule,
+        SharedModule,
+    ],
+    providers: [{provide: ErrorHandler, useClass: ElevateErrorHandler}],
+    bootstrap: [
+        AppComponent
+    ]
 })
 export class AppModule {
 }

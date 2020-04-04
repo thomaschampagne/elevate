@@ -8,18 +8,18 @@ import { StartCoreDataModel } from "./models/start-core-data.model";
 
 class Boot {
 
-	public static main(): void {
+    public static main(): void {
 
-		fancyboxBoot($);
+        fancyboxBoot($);
 
-		addEventListener(CoreMessages.ON_START_CORE_EVENT, (event: any) => {
+        addEventListener(CoreMessages.ON_START_CORE_EVENT, (event: any) => {
 
-			const initData: StartCoreDataModel = event.detail as StartCoreDataModel;
-			const elevate = new Elevate(initData.userSettings, initData.appResources);
-			elevate.run();
+            const initData: StartCoreDataModel = event.detail as StartCoreDataModel;
+            const elevate = new Elevate(initData.userSettings, initData.appResources);
+            elevate.run();
 
-		});
-	}
+        });
+    }
 
 }
 

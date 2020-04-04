@@ -8,62 +8,62 @@ import { ConfirmDialogDataModel } from "./confirm-dialog-data.model";
 
 describe("ConfirmDialogComponent", () => {
 
-	const dialogTitle = "Hello World";
-	const dialogContent = "Oh my god !";
+    const dialogTitle = "Hello World";
+    const dialogContent = "Oh my god !";
 
-	let component: ConfirmDialogComponent;
-	let fixture: ComponentFixture<ConfirmDialogComponent>;
-	let confirmDialogDataModel;
+    let component: ConfirmDialogComponent;
+    let fixture: ComponentFixture<ConfirmDialogComponent>;
+    let confirmDialogDataModel;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		confirmDialogDataModel = new ConfirmDialogDataModel(dialogTitle, dialogContent);
+        confirmDialogDataModel = new ConfirmDialogDataModel(dialogTitle, dialogContent);
 
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-			],
-			declarations: [],
-			providers: [
-				{
-					provide: MAT_DIALOG_DATA, useValue: confirmDialogDataModel,
-				},
-				{
-					provide: MatDialogRef, useValue: {},
-				},
-			]
-		}).compileComponents();
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+            ],
+            declarations: [],
+            providers: [
+                {
+                    provide: MAT_DIALOG_DATA, useValue: confirmDialogDataModel,
+                },
+                {
+                    provide: MatDialogRef, useValue: {},
+                },
+            ]
+        }).compileComponents();
 
-		done();
-	});
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(ConfirmDialogComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(ConfirmDialogComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 
-	it("should render the confirm dialog", (done: Function) => {
+    it("should render the confirm dialog", done => {
 
-		// Given
-		const fixture = TestBed.createComponent(ConfirmDialogComponent);
-		const compiled = fixture.debugElement.nativeElement;
+        // Given
+        const fixture = TestBed.createComponent(ConfirmDialogComponent);
+        const compiled = fixture.debugElement.nativeElement;
 
-		// When
-		fixture.detectChanges();
+        // When
+        fixture.detectChanges();
 
-		// Then
-		expect(component.dialogData.title).toEqual(confirmDialogDataModel.title);
-		expect(component.dialogData.content).toEqual(confirmDialogDataModel.content);
-		expect(compiled.querySelector("h2").textContent).toContain(dialogTitle);
-		expect(compiled.querySelector("mat-dialog-content").textContent).toContain(dialogContent);
-		done();
-	});
+        // Then
+        expect(component.dialogData.title).toEqual(confirmDialogDataModel.title);
+        expect(component.dialogData.content).toEqual(confirmDialogDataModel.content);
+        expect(compiled.querySelector("h2").textContent).toContain(dialogTitle);
+        expect(compiled.querySelector("mat-dialog-content").textContent).toContain(dialogContent);
+        done();
+    });
 });
