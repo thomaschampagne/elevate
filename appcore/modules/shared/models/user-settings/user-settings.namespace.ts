@@ -29,8 +29,6 @@ export namespace UserSettings {
 
 		public static readonly DEFAULT_DEBUG_MODE: boolean = false;
 
-		public debugMode: boolean;
-
 		public static readonly DEFAULT_MODEL: DesktopUserSettingsModel = {
 			envTarget: EnvTarget.DESKTOP,
 			systemUnit: UserSettings.SYSTEM_UNIT_METRIC_KEY,
@@ -38,6 +36,8 @@ export namespace UserSettings {
 			temperatureUnit: UserSettings.DEFAULT_TEMP_KEY,
 			debugMode: DesktopUserSettingsModel.DEFAULT_DEBUG_MODE
 		};
+
+		public debugMode: boolean;
 
 		public envTarget: EnvTarget = EnvTarget.DESKTOP;
 	}

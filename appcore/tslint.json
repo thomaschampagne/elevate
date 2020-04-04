@@ -9,6 +9,8 @@
 		},
 		"array-type": false,
 		"arrow-return-shorthand": true,
+		"object-literal-shorthand": false,
+		"no-angle-bracket-type-assertion": false,
 		"curly": true,
 		"deprecation": {
 			"severity": "warning"
