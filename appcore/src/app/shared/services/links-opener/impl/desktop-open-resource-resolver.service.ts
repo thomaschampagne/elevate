@@ -3,9 +3,9 @@ import { OpenResourceResolver } from "../open-resource-resolver";
 import { ElectronService } from "../../electron/electron.service";
 import { ActivityService } from "../../activity/activity.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { ConnectorType } from "@elevate/shared/sync";
 import { Router } from "@angular/router";
 import { AppRoutesModel } from "../../../models/app-routes.model";
+import { ConnectorType } from "@elevate/shared/sync";
 import { ElevateException } from "@elevate/shared/exceptions";
 
 @Injectable()
@@ -18,8 +18,15 @@ export class DesktopOpenResourceResolver extends OpenResourceResolver {
 		super(snackBar);
 	}
 
-	public openLink(url: string): void {
-		this.electronService.openExternalUrl(url);
+	public openLink(path: string): void {
+
+		// Check if not a web url and verify file exists on file system
+		if (!path.startsWith("http") && !this.electronService.existsSync(path)) {
+			this.snackBar.open(`Path to file "${path}" do not exists`, "Close");
+			return;
+		}
+
+		this.electronService.openExternalUrl(path);
 	}
 
 	public openActivity(id: number | string): void {
