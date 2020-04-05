@@ -34,9 +34,10 @@ export class Updater {
     }
 
     public arePreReleasesAllowed(): boolean {
-        const execFolder = path.basename(app.getAppPath()); // Should return .../elevate-training/resources/ folder
-        const configFilePath = execFolder + "/config.ini";
-        if (fs.existsSync(configFilePath)) {
+        const configFilePath = app.getPath("userData") + "/config.ini";
+        const configFileFound = fs.existsSync(configFilePath);
+        logger.info(`Config file "${configFilePath}" found: ${configFileFound}`);
+        if (configFileFound) {
             const config = ini.parse(fs.readFileSync(configFilePath, "utf-8"));
             return (config && config.allowPrerelease === true);
         }
