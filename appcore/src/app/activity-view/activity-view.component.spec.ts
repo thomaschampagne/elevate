@@ -6,7 +6,7 @@ import { SharedModule } from "../shared/shared.module";
 import { DesktopModule } from "../shared/modules/desktop/desktop.module";
 import { ElectronService, ElectronWindow } from "../shared/services/electron/electron.service";
 
-describe("ActivityViewComponent", () => {
+xdescribe("ActivityViewComponent", () => {
     let component: ActivityViewComponent;
     let fixture: ComponentFixture<ActivityViewComponent>;
 
