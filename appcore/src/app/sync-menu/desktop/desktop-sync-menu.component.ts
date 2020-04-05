@@ -22,16 +22,16 @@ import { ElevateException } from "@elevate/shared/exceptions";
 @Component({
     selector: "app-desktop-sync-menu",
     template: `
-		<div *ngIf="(syncState !== null)">
-			<button mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
-				<mat-icon *ngIf="(syncState === SyncState.NOT_SYNCED)">
-					sync_disabled
-				</mat-icon>
-				<mat-icon *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
-					sync_problem
-				</mat-icon>
-				<mat-icon *ngIf="(syncState === SyncState.SYNCED)">
-					sync
+        <div *ngIf="(syncState !== null)">
+            <button mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
+                <mat-icon *ngIf="(syncState === SyncState.NOT_SYNCED)">
+                    sync_disabled
+                </mat-icon>
+                <mat-icon *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
+                    sync_problem
+                </mat-icon>
+                <mat-icon *ngIf="(syncState === SyncState.SYNCED)">
+                    sync
 				</mat-icon>
 				<span *ngIf="(syncState === SyncState.NOT_SYNCED)">
 					Activities not synced
@@ -47,34 +47,34 @@ import { ElevateException } from "@elevate/shared/exceptions";
 				<button mat-menu-item *ngIf="(syncState === SyncState.NOT_SYNCED)"
 						(click)="goToConnectors()">
 					<mat-icon>sync</mat-icon>
-					<span>Sync via connectors</span>
-				</button>
-				<button mat-menu-item *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)"
-						(click)="goToConnectors()">
-					<mat-icon>sync</mat-icon>
-					<span>Continue sync via connectors</span>
-				</button>
-				<ng-container *ngIf="(syncState === SyncState.SYNCED)">
-					<button mat-menu-item (click)="onSync(true)">
-						<mat-icon>sync</mat-icon>
-						<span>Sync "{{printMostRecentConnectorSynced()}}" recent activities</span>
-					</button>
-					<button mat-menu-item (click)="goToConnectors()">
-						<mat-icon>power</mat-icon>
-						<span>Go to connectors</span>
-					</button>
-				</ng-container>
-				<button mat-menu-item (click)="onSyncedBackupExport()" *ngIf="(syncState === SyncState.SYNCED)">
-					<mat-icon>file_download</mat-icon>
-					<span>Backup profile</span>
-				</button>
+                    <span>Sync via connectors</span>
+                </button>
+                <button mat-menu-item *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)"
+                        (click)="goToConnectors()">
+                    <mat-icon>sync</mat-icon>
+                    <span>Continue sync via connectors</span>
+                </button>
+                <ng-container *ngIf="(syncState === SyncState.SYNCED)">
+                    <button mat-menu-item (click)="onSync(true)">
+                        <mat-icon>sync</mat-icon>
+                        <span>Sync "{{printMostRecentConnectorSynced()}}" recent activities</span>
+                    </button>
+                    <button mat-menu-item (click)="goToConnectors()">
+                        <mat-icon>power</mat-icon>
+                        <span>Go to connectors</span>
+                    </button>
+                </ng-container>
+                <button mat-menu-item (click)="onSyncedBackupExport()" *ngIf="(syncState === SyncState.SYNCED)">
+                    <mat-icon>file_download</mat-icon>
+                    <span>Backup profile</span>
+                </button>
 				<button mat-menu-item (click)="onSyncedBackupImport()">
 					<mat-icon>file_upload</mat-icon>
 					<span>Restore a profile</span>
-				</button>
-			</mat-menu>
-		</div>
-	`,
+                </button>
+            </mat-menu>
+        </div>
+    `,
     styleUrls: ["./desktop-sync-menu.component.scss"]
 })
 export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnInit {

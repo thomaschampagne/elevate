@@ -21,39 +21,39 @@ export class SyncBarComponent {
 @Component({
     selector: "app-desktop-sync-bar",
     template: `
-		<div class="app-sync-bar">
-			<div fxLayout="row" fxLayoutAlign="space-between center">
-				<div fxLayout="column" fxLayoutAlign="center start">
+        <div class="app-sync-bar">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <div fxLayout="column" fxLayoutAlign="center start">
 					<span fxFlex class="mat-body-1">
 						<span *ngIf="currentActivitySynced">{{currentActivitySynced.date}}: {{currentActivitySynced.name}} <span
-							class="activity-existence-tag">{{currentActivitySynced.isNew ? 'new' : 'already exists'}}</span></span>
+                            class="activity-existence-tag">{{currentActivitySynced.isNew ? 'new' : 'already exists'}}</span></span>
 						<span *ngIf="!currentActivitySynced && syncStatusText">{{this.syncStatusText}}</span>
 					</span>
-					<span fxFlex class="mat-caption" *ngIf="counter > 0">{{counter}} activities processed</span>
-				</div>
-				<div fxLayout="row" fxLayoutAlign="space-between center">
-					<button *ngIf="eventErrors && eventErrors.length > 0" mat-flat-button color="warn" (click)="onActionShowErrors()">
-						{{eventErrors.length}} warning{{ (eventErrors.length > 1) ? 's' : ''}}
-					</button>
-					<button *ngIf="isSyncing" mat-flat-button color="accent" (click)="onActionStop()">
-						Stop
-					</button>
-					<button *ngIf="!hideCloseButton" mat-flat-button color="accent" (click)="onActionClose()">
-						Close
-					</button>
-				</div>
-			</div>
-		</div>
-	`,
+                    <span fxFlex class="mat-caption" *ngIf="counter > 0">{{counter}} activities processed</span>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <button *ngIf="eventErrors && eventErrors.length > 0" mat-flat-button color="warn" (click)="onActionShowErrors()">
+                        {{eventErrors.length}} warning{{ (eventErrors.length > 1) ? 's' : ''}}
+                    </button>
+                    <button *ngIf="isSyncing" mat-flat-button color="accent" (click)="onActionStop()">
+                        Stop
+                    </button>
+                    <button *ngIf="!hideCloseButton" mat-flat-button color="accent" (click)="onActionClose()">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    `,
     styles: [`
-		.app-sync-bar {
-			padding: 10px 20px;
-		}
+        .app-sync-bar {
+            padding: 10px 20px;
+        }
 
-		button {
-			margin-left: 10px;
-		}
-	`]
+        button {
+            margin-left: 10px;
+        }
+    `]
 })
 export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit {
 

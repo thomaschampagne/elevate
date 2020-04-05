@@ -4,17 +4,17 @@ import { MatDialogRef } from "@angular/material/dialog";
 @Component({
     selector: "app-fitness-trend-welcome-dialog",
     template: `
-		<h2 mat-dialog-title>Notice about "Rolling progression" mode </h2>
-		<mat-dialog-content class="mat-body-1">
+        <h2 mat-dialog-title>Notice about "Rolling progression" mode </h2>
+        <mat-dialog-content class="mat-body-1">
 
-			<div>
-				The <strong>rolling progression</strong> mode helps you to analyze your training volume/intensity variations over a <i>"customise-able
-				fixed rolling time window"</i> which slides every day.
-			</div>
+            <div>
+                The <strong>rolling progression</strong> mode helps you to analyze your training volume/intensity variations over a <i>"customise-able
+                fixed rolling time window"</i> which slides every day.
+            </div>
 
-			<div>
-				This is the total <i>"distance"</i>, <i>"time"</i>, <i>"elevation"</i> OR <i>"activity count"</i> you were able to maintain
-				during this window. And this day after day. In long endurance sports, volume and intensity are the keys for success.
+            <div>
+                This is the total <i>"distance"</i>, <i>"time"</i>, <i>"elevation"</i> OR <i>"activity count"</i> you were able to maintain
+                during this window. And this day after day. In long endurance sports, volume and intensity are the keys for success.
 				Leaving apart intensity which can be obtained with Stress Scores (HRSS, PSS, ...), the rolling progression provides the
 				simplest part of the equation which is hard to get right: <strong>the volume</strong>.
 			</div>
@@ -47,7 +47,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 				</div>
 			</div>
 		</mat-dialog-actions>
-	`,
+    `,
     styles: [`
 		div {
 			padding-top: 10px;

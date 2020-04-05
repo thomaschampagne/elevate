@@ -2,7 +2,9 @@ import { LoggerService } from "./logger.service";
 import { Injectable } from "@angular/core";
 import { environment } from "../../../../environments/environment";
 
-@Injectable()
+@Injectable({
+    providedIn: "root"
+})
 export class ConsoleLoggerService implements LoggerService {
 
     get debug() {

@@ -73,7 +73,7 @@ import { AppRoutesModel } from "../../shared/models/app-routes.model";
                 </button>
             </mat-menu>
         </div>
-	`,
+    `,
     styleUrls: ["./extension-sync-menu.component.scss"]
 })
 export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnInit {

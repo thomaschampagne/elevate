@@ -731,7 +731,7 @@ describe("DesktopSyncService", () => {
 
                 // Then
                 expect(syncException).toBeDefined();
-                expect(syncException.name === SyncException.name).toBeTruthy();
+                expect(syncException instanceof SyncException).toBeTruthy();
                 expect(syncException.message).toEqual(message);
                 expect(syncException.stack).toEqual(sourceError.stack);
                 expect(syncException.message).toEqual(sourceError.message);
@@ -756,7 +756,7 @@ describe("DesktopSyncService", () => {
                 // Then
                 expect(syncException).toBeDefined();
                 expect(syncException.message).toEqual(message);
-                expect(syncException.name === SyncException.name).toBeTruthy();
+                expect(syncException instanceof SyncException).toBeTruthy();
                 expect((<SyncException> syncException).errorSyncEvent).toEqual(errorSyncEvent);
 
                 done();
@@ -777,7 +777,7 @@ describe("DesktopSyncService", () => {
                 // Then
                 expect(syncException).toBeDefined();
                 expect(syncException.message).toEqual(message);
-                expect(syncException.name === SyncException.name).toBeTruthy();
+                expect(syncException instanceof SyncException).toBeTruthy();
                 expect(syncException.errorSyncEvent).toBeNull();
 
                 done();
@@ -799,7 +799,7 @@ describe("DesktopSyncService", () => {
                 // Then
                 expect(syncException).toBeDefined();
                 expect(syncException.message).toEqual(expectedMessage);
-                expect(syncException.name === SyncException.name).toBeTruthy();
+                expect(syncException instanceof SyncException).toBeTruthy();
                 expect(syncException.errorSyncEvent).toBeNull();
 
                 done();
@@ -826,8 +826,8 @@ describe("DesktopSyncService", () => {
                 expect(syncExceptions.length).toEqual(2);
                 expect(syncExceptions[0].message).toEqual(message01);
                 expect(syncExceptions[1].message).toEqual(message02);
-                expect(syncExceptions[0].name === SyncException.name).toBeTruthy();
-                expect(syncExceptions[1].name === SyncException.name).toBeTruthy();
+                expect(syncExceptions[0] instanceof SyncException).toBeTruthy();
+                expect(syncExceptions[1] instanceof SyncException).toBeTruthy();
 
                 done();
             }
@@ -854,8 +854,8 @@ describe("DesktopSyncService", () => {
                 expect(syncExceptions.length).toEqual(2);
                 expect(syncExceptions[0].message).toEqual(message01);
                 expect(syncExceptions[1].message).toEqual(message02);
-                expect(syncExceptions[0].name === SyncException.name).toBeTruthy();
-                expect(syncExceptions[1].name === SyncException.name).toBeTruthy();
+                expect(syncExceptions[0] instanceof SyncException).toBeTruthy();
+                expect(syncExceptions[1] instanceof SyncException).toBeTruthy();
                 expect(syncExceptions[1].errorSyncEvent).toEqual(errorSyncEvent);
 
                 done();
@@ -878,8 +878,8 @@ describe("DesktopSyncService", () => {
                 expect(syncExceptions.length).toEqual(2);
                 expect(syncExceptions[0].message).toEqual(message01);
                 expect(syncExceptions[1].message).toEqual(message02);
-                expect(syncExceptions[0].name === SyncException.name).toBeTruthy();
-                expect(syncExceptions[1].name === SyncException.name).toBeTruthy();
+                expect(syncExceptions[0] instanceof SyncException).toBeTruthy();
+                expect(syncExceptions[1] instanceof SyncException).toBeTruthy();
                 expect(syncExceptions[0].errorSyncEvent).toBeNull();
                 expect(syncExceptions[1].errorSyncEvent).toBeNull();
 

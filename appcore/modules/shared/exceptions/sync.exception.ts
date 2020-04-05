@@ -7,7 +7,6 @@ export class SyncException extends ElevateException {
 
     constructor(message: string, errorSyncEvent: ErrorSyncEvent = null) {
         super(message);
-        this.name = SyncException.name;
         this.errorSyncEvent = errorSyncEvent;
     }
 

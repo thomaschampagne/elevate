@@ -104,13 +104,13 @@ export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComp
                 <div fxFlex="10"></div>
             </div>
         </mat-dialog-content>
-	`,
+    `,
     styles: [`
         .progress {
             height: 100px;
             width: 450px;
         }
-	`]
+    `]
 })
 export class ImportExportProgressDialogComponent implements OnInit {
 

@@ -34,9 +34,9 @@ import { AdvancedMenuComponent } from "../advanced-menu.component";
                 </div>
             </mat-card-content>
         </mat-card>
-	`,
+    `,
     styles: [
-        `
+            `
             button {
                 width: 300px;
             }
@@ -45,7 +45,7 @@ import { AdvancedMenuComponent } from "../advanced-menu.component";
                 padding-top: 10px;
                 padding-bottom: 10px;
             }
-		`
+        `
     ]
 })
 export class ExtensionAdvancedMenuComponent extends AdvancedMenuComponent {

@@ -10,14 +10,14 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
-        "target": "es5",
+        "target": "es2015",
         "importHelpers": true,
         "typeRoots": [
             "node_modules/@types",
             "../desktop/node_modules/"
         ],
         "lib": [
-            "es2018",
+            "es2017",
             "dom"
         ]
     },

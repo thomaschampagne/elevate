@@ -4,41 +4,41 @@ import { MatDialogRef } from "@angular/material/dialog";
 @Component({
     selector: "app-fitness-trend-welcome-dialog",
     template: `
-		<h2 mat-dialog-title>Notice about "Estimated Fitness Trend" </h2>
-		<mat-dialog-content class="mat-body-1">
+        <h2 mat-dialog-title>Notice about "Estimated Fitness Trend" </h2>
+        <mat-dialog-content class="mat-body-1">
 
-			<div>
-				If you don't own or sometimes forgot your sensors, your fitness trend can be nevertheless estimated.
-				A "typical" iPhone or Android mobile user who runs the strava mobile app can access the fitness
-				trend feature without buying any external sensors 👍. Nevertheless sensors are highly recommended if you need a
-				more accurate trend.
-			</div>
+            <div>
+                If you don't own or sometimes forgot your sensors, your fitness trend can be nevertheless estimated.
+                A "typical" iPhone or Android mobile user who runs the strava mobile app can access the fitness
+                trend feature without buying any external sensors 👍. Nevertheless sensors are highly recommended if you need a
+                more accurate trend.
+            </div>
 
-			<div>
-				Since the fitness trend is calculated on activities' stress scores, this implies that stress scores of your
-				activities without sensors have to be estimated too. Currently only cycling, running and swimming activities can
-				have their stress scores estimated.
-			</div>
+            <div>
+                Since the fitness trend is calculated on activities' stress scores, this implies that stress scores of your
+                activities without sensors have to be estimated too. Currently only cycling, running and swimming activities can
+                have their stress scores estimated.
+            </div>
 
-			<div>
-				Estimating stress scores on cycling and running implies the below prerequisites:
-				<ul>
-					<li>
-						Estimated <i>Cycling Power Stress Score (PSS)</i>:
-						<ul>
-							<li>Your <i>Cycling Functional Threshold Power (FTP)</i> must be set in <a
-								[routerLink]="'/athleteSettings'" (click)="dialogRef.close()">dated athlete
-								settings</a>. A wrong ftp can cause too big/low PSS scores on activities.
-							</li>
-							<li>The power meter data toggle
-								<mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
-								must be switched <strong>ON</strong> (on screen behind).
-							</li>
-							<li>
-								Your weight must be set in your <a href="https://www.strava.com/settings/profile"
-																   target="_blank">strava.com profile</a> allowing strava to
-								estimate power data on your next cycling activities
-								(required to compute <i>PSS</i>).
+            <div>
+                Estimating stress scores on cycling and running implies the below prerequisites:
+                <ul>
+                    <li>
+                        Estimated <i>Cycling Power Stress Score (PSS)</i>:
+                        <ul>
+                            <li>Your <i>Cycling Functional Threshold Power (FTP)</i> must be set in <a
+                                [routerLink]="'/athleteSettings'" (click)="dialogRef.close()">dated athlete
+                                settings</a>. A wrong ftp can cause too big/low PSS scores on activities.
+                            </li>
+                            <li>The power meter data toggle
+                                <mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
+                                must be switched <strong>ON</strong> (on screen behind).
+                            </li>
+                            <li>
+                                Your weight must be set in your <a href="https://www.strava.com/settings/profile"
+                                                                   target="_blank">strava.com profile</a> allowing strava to
+                                estimate power data on your next cycling activities
+                                (required to compute <i>PSS</i>).
 							</li>
 							<li>
 								Your cycling activities must have correct elevation data. Read Strava elevation <a

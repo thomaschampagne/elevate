@@ -8,30 +8,30 @@ import { LoggerService } from "../shared/services/logging/logger.service";
 @Component({
     selector: "app-desktop-errors-sync-details-dialog",
     template: `
-		<h2 mat-dialog-title>{{eventErrors.length}} sync warning{{(eventErrors.length > 1) ? 's' : ''}} occurred</h2>
-		<h3 class="mat-subheading-1">Warning are also displayed in developer console (CTRL+F12)</h3>
-		<mat-dialog-content class="mat-body-1">
-			<mat-accordion>
-				<mat-expansion-panel *ngFor="let errorEvent of eventErrors">
-					<mat-expansion-panel-header>
-						<mat-panel-title>
-							{{errorEvent.code}}
-						</mat-panel-title>
-						<mat-panel-description *ngIf="errorEvent.description">
-							{{errorEvent.description}}
-						</mat-panel-description>
-					</mat-expansion-panel-header>
-					<mat-form-field fxFill>
-						<textarea matInput class="mat-caption" rows="40" disabled>{{errorEvent | json}}</textarea>
-					</mat-form-field>
-				</mat-expansion-panel>
-			</mat-accordion>
-		</mat-dialog-content>
-		<mat-dialog-actions>
-			<button mat-flat-button color="primary" (click)="exportToFile()">Export to file</button>
-			<button mat-stroked-button mat-dialog-close color="primary">Ok</button>
-		</mat-dialog-actions>
-	`,
+        <h2 mat-dialog-title>{{eventErrors.length}} sync warning{{(eventErrors.length > 1) ? 's' : ''}} occurred</h2>
+        <h3 class="mat-subheading-1">Warning are also displayed in developer console (CTRL+F12)</h3>
+        <mat-dialog-content class="mat-body-1">
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let errorEvent of eventErrors">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{errorEvent.code}}
+                        </mat-panel-title>
+                        <mat-panel-description *ngIf="errorEvent.description">
+                            {{errorEvent.description}}
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <mat-form-field fxFill>
+                        <textarea matInput class="mat-caption" rows="40" disabled>{{errorEvent | json}}</textarea>
+                    </mat-form-field>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </mat-dialog-content>
+        <mat-dialog-actions>
+            <button mat-flat-button color="primary" (click)="exportToFile()">Export to file</button>
+            <button mat-stroked-button mat-dialog-close color="primary">Ok</button>
+        </mat-dialog-actions>
+    `,
     styles: [``]
 })
 export class DesktopErrorsSyncDetailsDialogComponent implements OnInit {

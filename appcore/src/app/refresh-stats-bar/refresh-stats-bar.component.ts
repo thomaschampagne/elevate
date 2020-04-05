@@ -68,41 +68,41 @@ export class RefreshStatsBarComponent implements OnInit {
 @Component({
     selector: "app-desktop-refresh-stats-bar",
     template: `
-		<div class="app-refresh-stats-bar">
+        <div class="app-refresh-stats-bar">
 
-			<!--Non consistent warning message-->
-			<div *ngIf="!hideWarning" fxLayout="row" fxLayoutAlign="space-between center">
-				<div fxLayout="column" fxLayoutAlign="center start">
-					Some of your activities need to be recalculated according to athlete settings changes.
-				</div>
-				<div fxLayout="row" fxLayoutAlign="space-between center">
-					<button mat-flat-button color="warn" (click)="onFixActivities()">
-						Recalculate
-					</button>
-					<button mat-flat-button color="warn" (click)="onEditAthleteSettings()">
-						Go to Athlete Settings
-					</button>
-				</div>
-			</div>
+            <!--Non consistent warning message-->
+            <div *ngIf="!hideWarning" fxLayout="row" fxLayoutAlign="space-between center">
+                <div fxLayout="column" fxLayoutAlign="center start">
+                    Some of your activities need to be recalculated according to athlete settings changes.
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <button mat-flat-button color="warn" (click)="onFixActivities()">
+                        Recalculate
+                    </button>
+                    <button mat-flat-button color="warn" (click)="onEditAthleteSettings()">
+                        Go to Athlete Settings
+                    </button>
+                </div>
+            </div>
 
-			<!--Recalculate activities section-->
-			<div *ngIf="!hideRecalculation" fxLayout="row" fxLayoutAlign="space-between center">
-				<div fxLayout="column" fxLayoutAlign="center start">
-					<span fxFlex class="mat-body-1" *ngIf="statusText">{{statusText}}</span>
-					<span fxFlex class="mat-caption">{{processed}}/{{toBeProcessed}} activities recalculated.</span>
-				</div>
-			</div>
-		</div>
-	`,
+            <!--Recalculate activities section-->
+            <div *ngIf="!hideRecalculation" fxLayout="row" fxLayoutAlign="space-between center">
+                <div fxLayout="column" fxLayoutAlign="center start">
+                    <span fxFlex class="mat-body-1" *ngIf="statusText">{{statusText}}</span>
+                    <span fxFlex class="mat-caption">{{processed}}/{{toBeProcessed}} activities recalculated.</span>
+                </div>
+            </div>
+        </div>
+    `,
     styles: [`
-		.app-refresh-stats-bar {
-			padding: 10px 20px;
-		}
+        .app-refresh-stats-bar {
+            padding: 10px 20px;
+        }
 
-		button {
-			margin-left: 10px;
-		}
-	`]
+        button {
+            margin-left: 10px;
+        }
+    `]
 })
 export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent implements OnInit {
 
@@ -178,32 +178,32 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
 @Component({
     selector: "app-extension-refresh-stats-bar",
     template: `
-		<div class="app-refresh-stats-bar">
-			<!--Non consistent warning message-->
-			<div *ngIf="!hideWarning" fxLayout="row" fxLayoutAlign="space-between center">
-				<div fxLayout="column" fxLayoutAlign="center start">
-					Some of your activities need to be recalculated according to athlete settings changes.
-				</div>
-				<div fxLayout="row" fxLayoutAlign="space-between center">
-					<button mat-flat-button color="warn" (click)="onFixActivities()">
-						Recalculate
-					</button>
-					<button mat-flat-button color="warn" (click)="onEditAthleteSettings()">
-						Go to Athlete Settings
-					</button>
-				</div>
-			</div>
-		</div>
-	`,
+        <div class="app-refresh-stats-bar">
+            <!--Non consistent warning message-->
+            <div *ngIf="!hideWarning" fxLayout="row" fxLayoutAlign="space-between center">
+                <div fxLayout="column" fxLayoutAlign="center start">
+                    Some of your activities need to be recalculated according to athlete settings changes.
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <button mat-flat-button color="warn" (click)="onFixActivities()">
+                        Recalculate
+                    </button>
+                    <button mat-flat-button color="warn" (click)="onEditAthleteSettings()">
+                        Go to Athlete Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    `,
     styles: [`
-		.app-refresh-stats-bar {
-			padding: 10px 20px;
-		}
+        .app-refresh-stats-bar {
+            padding: 10px 20px;
+        }
 
-		button {
-			margin-left: 10px;
-		}
-	`]
+        button {
+            margin-left: 10px;
+        }
+    `]
 })
 export class ExtensionRefreshStatsBarComponent extends RefreshStatsBarComponent implements OnInit {
 

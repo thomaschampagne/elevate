@@ -2,7 +2,9 @@ import { MediaObserver } from "@angular/flex-layout";
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 
-@Injectable()
+@Injectable({
+    providedIn: "root"
+})
 export class WindowService {
 
     public static readonly SCREEN_MD: string = "md";
