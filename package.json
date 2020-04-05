@@ -11,11 +11,11 @@
     ],
     "keywords": [
         "strava",
-		"cycling",
-		"running",
-		"tracking"
-	],
-	"scripts": {
+        "cycling",
+        "running",
+        "tracking"
+    ],
+    "scripts": {
         "audit:fix": "npm audit fix && cd ./appcore/ && npm audit fix && cd ../desktop/ && npm audit fix && cd ../webextension/ && npm audit fix",
         "clean": "node ./node_modules/del-cli/cli.js ./dist/ ./package/ && cd ./desktop/ && npm run clean && cd ../webextension/ && npm run clean",
         "package:webextension": "npm run clean && cd ./webextension/ && npm run package && node ../node_modules/cpy-cli/cli.js ./package/* ../package",
@@ -31,23 +31,23 @@
         "upgrade:check:all": "npx ncu && cd ./appcore/ && npx ncu && cd ../desktop/ && npx ncu && cd ../webextension/ && npx ncu",
         "upgrade:apply:all": "npx ncu -u && cd ./appcore/ && npx ncu -u && cd ../desktop/ && npx ncu -u && cd ../webextension/ && npx ncu -u"
     },
-	"config": {
-		"unsafe-perm": true
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/thomaschampagne/elevate"
-	},
-	"author": {
-		"name": "Thomas Champagne",
-		"email": "th.champagne@gmail.com",
-		"web": "https://thomaschampagne.github.io"
-	},
-	"license": "MIT",
-	"readme": "README.md",
-	"devDependencies": {
-		"cpy-cli": "^3.1.0",
-		"del-cli": "^3.0.0",
-		"run-sequence": "^2.2.1"
-	}
+    "config": {
+        "unsafe-perm": true
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/thomaschampagne/elevate"
+    },
+    "author": {
+        "name": "Thomas Champagne",
+        "email": "th.champagne@gmail.com",
+        "web": "https://thomaschampagne.github.io"
+    },
+    "license": "MIT",
+    "readme": "README.md",
+    "devDependencies": {
+        "cpy-cli": "^3.1.0",
+        "del-cli": "^3.0.0",
+        "run-sequence": "^2.2.1"
+    }
 }

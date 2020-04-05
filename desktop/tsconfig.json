@@ -1,7 +1,11 @@
 {
     "compilerOptions": {
         "baseUrl": ".",
-        "target": "es5",
+        "target": "es2015",
+        "lib": [
+            "es2017",
+            "dom"
+        ],
         "resolveJsonModule": true,
         "allowJs": true,
         "paths": {

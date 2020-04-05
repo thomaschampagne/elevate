@@ -71,7 +71,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
     public static transformErrorToSyncException(error: Error | Error[] | string | string[]): SyncException {
 
-        if ((<any> error).name === SyncException.name) {
+        if (error instanceof SyncException) {
             return <SyncException> error;
         } else if ((<any> error).name === Error.name) {
             return SyncException.fromError(<Error> error);
@@ -86,13 +86,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         return _.startCase(_.replace(fromConnectorType.toString().toLowerCase(), "_", " "));
     }
 
-    /**
-     *
-     * @param fastSync
-     * @param forceSync
-     * @param connectorType
-     * @return Subject<SyncEvent>
-     */
     public sync(fastSync: boolean = null, forceSync: boolean = null, connectorType: ConnectorType = null): Promise<void> {
 
         if (!connectorType) {
@@ -394,7 +387,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
             this.getSyncDateTime(),
             this.activityService.fetch()
 
-        ]).then((result: Object[]) => {
+        ]).then((result: any[]) => {
 
             const connectorSyncDateTimes: ConnectorSyncDateTime[] = result[0] as ConnectorSyncDateTime[];
             const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
@@ -418,7 +411,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
     public getMostRecentSyncedConnector(): Promise<ConnectorSyncDateTime> {
         return this.getConnectorSyncDateTime().then((connectorSyncDateTimes: ConnectorSyncDateTime[]) => {
-            const connectorSyncDateTime = _.last(_.sortBy(connectorSyncDateTimes, "dateTime"));
+            const connectorSyncDateTime: ConnectorSyncDateTime = _.last(_.sortBy(connectorSyncDateTimes, "dateTime"));
             return Promise.resolve(connectorSyncDateTime);
         });
     }

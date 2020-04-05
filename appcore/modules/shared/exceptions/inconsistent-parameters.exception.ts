@@ -1,12 +1,7 @@
 import { ElevateException } from "./elevate.exception";
 
 export class InconsistentParametersException extends ElevateException {
-
-    public static readonly DEFAULT_MESSAGE: string = "InconsistentParametersException";
-
-    constructor(message?: string) {
-        message = !message ? InconsistentParametersException.DEFAULT_MESSAGE : InconsistentParametersException.DEFAULT_MESSAGE + ": " + message;
+    constructor(message: string = null) {
         super(message);
-        this.name = InconsistentParametersException.name;
     }
 }

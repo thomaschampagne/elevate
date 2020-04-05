@@ -8,11 +8,12 @@ import { ConfirmDialogComponent } from "./shared/dialogs/confirm-dialog/confirm-
 import { ConfirmDialogDataModel } from "./shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { VERSIONS_PROVIDER, VersionsProvider } from "./shared/services/versions/versions-provider.interface";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ElevateException, SyncException } from "@elevate/shared/exceptions";
 
-@Injectable()
+@Injectable({
+    providedIn: "root"
+})
 export class ElevateErrorHandler implements ErrorHandler {
-
-    private static readonly SENTRY_DATA_SOURCE_NAME: string = "https://884e69ce1f2c4891abbaca363d8474ce@sentry.io/1839710";
 
     constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
                 public dialog: MatDialog,
@@ -31,42 +32,67 @@ export class ElevateErrorHandler implements ErrorHandler {
 
     }
 
+    private static readonly SENTRY_DATA_SOURCE_NAME: string = "https://884e69ce1f2c4891abbaca363d8474ce@sentry.io/1839710";
+
+    private static provideErrorIfPromiseRejection(error: PromiseRejectionEvent | any): Error {
+        if (error.promise && error.promise) {
+            error = error.rejection;
+        }
+        return error;
+    }
+
+    private static captureSentryEventId(error: any) {
+        return Sentry.captureException(error.originalError || error);
+    }
+
     public handleError(error: Error): void {
 
-        // TODO Tmp fix Promise rejection wrapped by zone.js
-        // TODO @see https://stackoverflow.com/questions/51951471/angular-custom-error-handler-not-getting-error-type-from-promise
-        if ((<any> error).promise && (<any> error).rejection) {
-            error = (<any> error).rejection;
-        }
+        error = ElevateErrorHandler.provideErrorIfPromiseRejection(error);
 
         this.loggerService.error(error);
 
-        if (error.name) {
+        if (error) {
 
-            const message = "Whoops: " + error.message;
+            let errorMessage: string;
+
+            if (error instanceof ElevateException) {
+
+                if (error instanceof SyncException) {
+                    errorMessage = "Sync error";
+                } else {
+                    errorMessage = "Elevate error";
+                }
+
+                errorMessage += ": " + error.message;
+
+            } else {
+                errorMessage = error.message;
+            }
 
             if (environment.target === EnvTarget.DESKTOP) {
 
                 // Sentry error tracking
-                const sentryEventId = Sentry.captureException((<any> error).originalError || error);
+                const sentryEventId = ElevateErrorHandler.captureSentryEventId(error);
 
-                this.snackBar.open(message, "Report error").onAction().subscribe(() => {
+                this.snackBar.open(errorMessage, "Report").onAction().subscribe(() => {
                     Sentry.showReportDialog({
                         eventId: sentryEventId,
-                        title: "Please tell what happened steps by steps below.",
-                        subtitle: "To view error in app console press 'CTRL+F12'.",
+                        title: "Submitting this crash report is important!",
+                        subtitle: "Please paste any files shared links in description which might help to fix the error.",
                         subtitle2: "",
+                        labelEmail: "Your email (it will not be shared)",
+                        labelComments: "Please give all steps to reproduce the error + files shared links (like Google Drive, Dropbox, OneDrive, Mediafire, Mega, ...) if you can. Thanks for your help!!",
                     });
                 });
 
             } else if (environment.target === EnvTarget.EXTENSION) {
 
-                this.snackBar.open(message, "Show").onAction().subscribe(() => {
+                this.snackBar.open(errorMessage, "Show").onAction().subscribe(() => {
                     const content = "<pre>" + error.stack.toString() + "</pre>";
                     this.dialog.open(ConfirmDialogComponent, {
                         minWidth: ConfirmDialogComponent.MAX_WIDTH,
                         maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-                        data: new ConfirmDialogDataModel(message, content, "Report what happened", "Close")
+                        data: new ConfirmDialogDataModel(errorMessage, content, "Report what happened", "Close")
                     });
                 });
 
