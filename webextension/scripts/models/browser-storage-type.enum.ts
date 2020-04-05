@@ -1,4 +1,4 @@
 export enum BrowserStorageType {
-	SYNC = "sync",
-	LOCAL = "local"
+    SYNC = "sync",
+    LOCAL = "local"
 }

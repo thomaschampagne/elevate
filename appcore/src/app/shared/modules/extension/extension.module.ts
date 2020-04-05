@@ -14,28 +14,31 @@ import { ExtensionRoutingModule } from "./extension-routing.module";
 import { ExtensionAdvancedMenuComponent } from "../../../advanced-menu/extension/extension-advanced-menu.component";
 import { OPEN_RESOURCE_RESOLVER } from "../../services/links-opener/open-resource-resolver";
 import { ExtensionOpenResourceResolver } from "../../services/links-opener/impl/extension-open-resource-resolver.service";
+import { ActivityService } from "../../services/activity/activity.service";
+import { ExtensionActivityService } from "../../services/activity/impl/extension-activity.service";
 
 @NgModule({
-	imports: [
-		CoreModule,
-		ExtensionRoutingModule
-	],
-	exports: [
-		ExtensionRoutingModule
-	],
-	declarations: [
-		ExtensionAdvancedMenuComponent,
-		ExtensionImportBackupDialogComponent,
-	],
-	providers: [
-		SyncDateTimeDao,
-		{provide: DataStore, useClass: ExtensionDataStore},
-		{provide: AppEventsService, useClass: ExtensionEventsService},
-		{provide: VERSIONS_PROVIDER, useClass: ExtensionVersionsProvider},
-		{provide: OPEN_RESOURCE_RESOLVER, useClass: ExtensionOpenResourceResolver},
-		{provide: SyncService, useClass: ExtensionSyncService},
-		ExtensionSyncService,
-	]
+    imports: [
+        CoreModule,
+        ExtensionRoutingModule
+    ],
+    exports: [
+        ExtensionRoutingModule
+    ],
+    declarations: [
+        ExtensionAdvancedMenuComponent,
+        ExtensionImportBackupDialogComponent,
+    ],
+    providers: [
+        SyncDateTimeDao,
+        {provide: ActivityService, useClass: ExtensionActivityService},
+        {provide: DataStore, useClass: ExtensionDataStore},
+        {provide: AppEventsService, useClass: ExtensionEventsService},
+        {provide: VERSIONS_PROVIDER, useClass: ExtensionVersionsProvider},
+        {provide: OPEN_RESOURCE_RESOLVER, useClass: ExtensionOpenResourceResolver},
+        {provide: SyncService, useClass: ExtensionSyncService},
+        ExtensionSyncService,
+    ]
 })
 export class ExtensionModule {
 }

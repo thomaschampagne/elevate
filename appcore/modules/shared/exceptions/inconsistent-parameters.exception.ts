@@ -2,11 +2,11 @@ import { ElevateException } from "./elevate.exception";
 
 export class InconsistentParametersException extends ElevateException {
 
-	public static readonly DEFAULT_MESSAGE: string = "InconsistentParametersException";
+    public static readonly DEFAULT_MESSAGE: string = "InconsistentParametersException";
 
-	constructor(message?: string) {
-		message = !message ? InconsistentParametersException.DEFAULT_MESSAGE : InconsistentParametersException.DEFAULT_MESSAGE + ": " + message;
-		super(message);
-		this.name = InconsistentParametersException.name;
-	}
+    constructor(message?: string) {
+        message = !message ? InconsistentParametersException.DEFAULT_MESSAGE : InconsistentParametersException.DEFAULT_MESSAGE + ": " + message;
+        super(message);
+        this.name = InconsistentParametersException.name;
+    }
 }

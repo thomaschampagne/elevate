@@ -6,26 +6,26 @@ import { DataStore } from "../../../shared/data-store/data-store";
 
 describe("YearProgressPresetDao", () => {
 
-	let yearProgressPresetDao: YearProgressPresetDao;
+    let yearProgressPresetDao: YearProgressPresetDao;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		const mockedDataStore: MockedDataStore<YearToDateProgressPresetModel> = new MockedDataStore();
+        const mockedDataStore: MockedDataStore<YearToDateProgressPresetModel> = new MockedDataStore();
 
-		TestBed.configureTestingModule({
-			providers: [
-				YearProgressPresetDao,
-				{provide: DataStore, useValue: mockedDataStore}
-			]
-		});
+        TestBed.configureTestingModule({
+            providers: [
+                YearProgressPresetDao,
+                {provide: DataStore, useValue: mockedDataStore}
+            ]
+        });
 
-		yearProgressPresetDao = TestBed.inject(YearProgressPresetDao);
-		done();
-	});
+        yearProgressPresetDao = TestBed.inject(YearProgressPresetDao);
+        done();
+    });
 
-	it("should be created", (done: Function) => {
-		expect(yearProgressPresetDao).toBeTruthy();
-		done();
-	});
+    it("should be created", done => {
+        expect(yearProgressPresetDao).toBeTruthy();
+        done();
+    });
 
 });

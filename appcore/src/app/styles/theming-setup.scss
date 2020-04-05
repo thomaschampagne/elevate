@@ -6,23 +6,23 @@
 @import "native-elements.theme";
 @import "../app.component.theme";
 @import "../fitness-trend/fitness-trend.component.theme";
-@import "../athlete-settings-consistency-ribbon/athlete-settings-consistency-ribbon.component.theme";
 @import "../sync-bar/sync-bar.component.theme";
+@import "../refresh-stats-bar/refresh-stats-bar.component.theme";
 
 @mixin elevate-custom-theme($theme) {
-	@include native-web-elements($theme);
-	@include app-theming($theme);
-	@include athlete-settings-consistency-ribbon-theming($theme);
-	@include app-sync-bar-theming($theme);
-	@include fitness-trend-theming($theme);
+    @include native-web-elements($theme);
+    @include app-theming($theme);
+    @include app-sync-bar-theming($theme);
+    @include app-refresh-stats-bar-theming($theme);
+    @include fitness-trend-theming($theme);
 }
 
 .light {
-	@include angular-material-theme($light-theme);
-	@include elevate-custom-theme($light-theme);
+    @include angular-material-theme($light-theme);
+    @include elevate-custom-theme($light-theme);
 }
 
 .dark {
-	@include angular-material-theme($dark-theme);
-	@include elevate-custom-theme($dark-theme);
+    @include angular-material-theme($dark-theme);
+    @include elevate-custom-theme($dark-theme);
 }

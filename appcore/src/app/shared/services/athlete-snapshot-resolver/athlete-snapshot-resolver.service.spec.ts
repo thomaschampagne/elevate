@@ -8,529 +8,529 @@ import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 
 describe("AthleteSnapshotResolverService", () => {
 
-	const lthr = {default: 172, cycling: null, running: null};
+    const lthr = {default: 172, cycling: null, running: null};
 
-	let athleteSnapshotResolverService: AthleteSnapshotResolverService;
+    let athleteSnapshotResolverService: AthleteSnapshotResolverService;
 
-	let defaultAthleteModel: AthleteModel;
+    let defaultAthleteModel: AthleteModel;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule
-			]
-		});
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule
+            ]
+        });
 
-		athleteSnapshotResolverService = TestBed.inject(AthleteSnapshotResolverService);
+        athleteSnapshotResolverService = TestBed.inject(AthleteSnapshotResolverService);
 
-		defaultAthleteModel = _.cloneDeep(AthleteModel.DEFAULT_MODEL);
+        defaultAthleteModel = _.cloneDeep(AthleteModel.DEFAULT_MODEL);
 
-		done();
-	});
+        done();
+    });
 
-	it("should be created", (done: Function) => {
-		expect(athleteSnapshotResolverService).toBeTruthy();
-		done();
-	});
+    it("should be created", done => {
+        expect(athleteSnapshotResolverService).toBeTruthy();
+        done();
+    });
 
-	it("should update the service", (done: Function) => {
+    it("should update the service", done => {
 
-		// Given
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
-		];
+        // Given
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
+        ];
 
-		defaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        defaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
 
-		spyOn(athleteSnapshotResolverService.athleteService, "fetch").and.returnValue(Promise.resolve(defaultAthleteModel));
+        spyOn(athleteSnapshotResolverService.athleteService, "fetch").and.returnValue(Promise.resolve(defaultAthleteModel));
 
-		// When
-		const promise = athleteSnapshotResolverService.update();
+        // When
+        const promise = athleteSnapshotResolverService.update();
 
-		// Then
-		promise.then(() => {
+        // Then
+        promise.then(() => {
 
-			expect(_.isEmpty(athleteSnapshotResolverService.athleteSnapshotResolver)).toBeFalsy();
-			expect(athleteSnapshotResolverService.athleteSnapshotResolver.athleteModel.datedAthleteSettings).toEqual(datedAthleteSettingsModels);
-			done();
+            expect(_.isEmpty(athleteSnapshotResolverService.athleteSnapshotResolver)).toBeFalsy();
+            expect(athleteSnapshotResolverService.athleteSnapshotResolver.athleteModel.datedAthleteSettings).toEqual(datedAthleteSettingsModels);
+            done();
 
-		}, error => {
+        }, error => {
 
-			expect(error).toBeNull();
-			expect(false).toBeTruthy("Whoops! I should not be here!");
-			done();
-		});
+            expect(error).toBeNull();
+            expect(false).toBeTruthy("Whoops! I should not be here!");
+            done();
+        });
 
-	});
+    });
 
-	it("should reject update the service", (done: Function) => {
+    it("should reject update the service", done => {
 
-		// Given
-		const errorMessage = "We have an error !";
-		spyOn(athleteSnapshotResolverService.athleteService, "fetch").and.returnValue(Promise.reject(errorMessage));
+        // Given
+        const errorMessage = "We have an error !";
+        spyOn(athleteSnapshotResolverService.athleteService, "fetch").and.returnValue(Promise.reject(errorMessage));
 
-		// When
-		const promise = athleteSnapshotResolverService.update();
+        // When
+        const promise = athleteSnapshotResolverService.update();
 
-		// Then
-		promise.then(() => {
+        // Then
+        promise.then(() => {
 
-			expect(_.isEmpty(athleteSnapshotResolverService.athleteSnapshotResolver)).toBeTruthy();
-			expect(false).toBeTruthy("Whoops! I should not be here!");
+            expect(_.isEmpty(athleteSnapshotResolverService.athleteSnapshotResolver)).toBeTruthy();
+            expect(false).toBeTruthy("Whoops! I should not be here!");
 
-			done();
+            done();
 
-		}, error => {
+        }, error => {
 
-			expect(error).not.toBeNull();
-			expect(error).toEqual(errorMessage);
-			done();
-		});
+            expect(error).not.toBeNull();
+            expect(error).toEqual(errorMessage);
+            done();
+        });
 
-	});
+    });
 
-	it("should resolve AthleteSnapshotModel at given date (as Date object)", (done: Function) => {
+    it("should resolve AthleteSnapshotModel at given date (as Date object)", done => {
 
-		// Given
-		const onDate = new Date("2018-04-29");
+        // Given
+        const onDate = new Date("2018-04-29");
 
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76));
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
-			expectedDatedAthleteSettingsModel,
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
-		];
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76));
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+            expectedDatedAthleteSettingsModel,
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve AthleteSnapshotModel at given date (as string) (1)", (done: Function) => {
+    it("should resolve AthleteSnapshotModel at given date (as string) (1)", done => {
 
-		// Given
-		const onDate = "2018-04-29";
+        // Given
+        const onDate = "2018-04-29";
 
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76));
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
-			expectedDatedAthleteSettingsModel,
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
-		];
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76));
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+            expectedDatedAthleteSettingsModel,
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve AthleteSnapshotModel at given date (as string) (2)", (done: Function) => {
+    it("should resolve AthleteSnapshotModel at given date (as string) (2)", done => {
 
-		// Given
-		const onDate = "2018-04-15";
+        // Given
+        const onDate = "2018-04-15";
 
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76));
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
-			expectedDatedAthleteSettingsModel,
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
-		];
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76));
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+            expectedDatedAthleteSettingsModel,
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve AthleteSnapshotModel at given date (as string) (3)", (done: Function) => {
+    it("should resolve AthleteSnapshotModel at given date (as string) (3)", done => {
 
-		// Given
-		const onDate = "2018-01-15";
+        // Given
+        const onDate = "2018-01-15";
 
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
-			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			expectedDatedAthleteSettingsModel
-		];
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+            new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            expectedDatedAthleteSettingsModel
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve AthleteSnapshotModel at given date (as string) (4)", (done: Function) => {
+    it("should resolve AthleteSnapshotModel at given date (as string) (4)", done => {
 
-		// Given
-		const onDate = "2018-01-15";
+        // Given
+        const onDate = "2018-01-15";
 
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			expectedDatedAthleteSettingsModel
-		];
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            expectedDatedAthleteSettingsModel
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve AthleteSnapshotModel at given date (as string)", (done: Function) => {
+    it("should resolve AthleteSnapshotModel at given date (as string)", done => {
 
-		// Given
-		const onDate = "2018-01-15";
+        // Given
+        const onDate = "2018-01-15";
 
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
-			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			expectedDatedAthleteSettingsModel
-		];
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+            new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            expectedDatedAthleteSettingsModel
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve current and latest AthleteSnapshotModel", (done: Function) => {
+    it("should resolve current and latest AthleteSnapshotModel", done => {
 
-		// Given
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75));
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			expectedDatedAthleteSettingsModel,
-			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
-		];
+        // Given
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75));
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            expectedDatedAthleteSettingsModel,
+            new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.getCurrent();
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.getCurrent();
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve AthleteSnapshotModel with not sorted dated athlete settings", (done: Function) => {
+    it("should resolve AthleteSnapshotModel with not sorted dated athlete settings", done => {
 
-		// Given
-		const onDate = "2018-04-15";
+        // Given
+        const onDate = "2018-04-15";
 
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76));
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76));
 
-		// Below dated athlete settings are not sorted along since attribute
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
-			new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			expectedDatedAthleteSettingsModel,
-		];
+        // Below dated athlete settings are not sorted along since attribute
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+            new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            expectedDatedAthleteSettingsModel,
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve a default AthleteModel when no DatedAthleteSettings found", (done: Function) => {
+    it("should resolve a default AthleteModel when no DatedAthleteSettings found", done => {
 
-		// Given
-		const onDate = new Date("2018-04-29");
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [];
+        // Given
+        const onDate = new Date("2018-04-29");
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, AthleteSettingsModel.DEFAULT_MODEL);
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, AthleteSettingsModel.DEFAULT_MODEL);
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).not.toBeNull();
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).not.toBeNull();
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve forever AthleteSnapshotModel when an invalid date is given (new Date(undefined))", (done: Function) => {
+    it("should resolve forever AthleteSnapshotModel when an invalid date is given (new Date(undefined))", done => {
 
-		// Given
-		const onDate = new Date(undefined);
+        // Given
+        const onDate = new Date(undefined);
 
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
-			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			expectedDatedAthleteSettingsModel
-		];
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+            new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            expectedDatedAthleteSettingsModel
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve forever AthleteSnapshotModel when an invalid date is given (13 months)", (done: Function) => {
+    it("should resolve forever AthleteSnapshotModel when an invalid date is given (13 months)", done => {
 
-		// Given
-		const onDate = "2018-13-15"; // Invalid date: 13 months
+        // Given
+        const onDate = "2018-13-15"; // Invalid date: 13 months
 
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
-			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			expectedDatedAthleteSettingsModel
-		];
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+            new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            expectedDatedAthleteSettingsModel
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve forever AthleteSnapshotModel when an undefined date is given (undefined)", (done: Function) => {
+    it("should resolve forever AthleteSnapshotModel when an undefined date is given (undefined)", done => {
 
-		// Given
-		const onDate = undefined;
+        // Given
+        const onDate = undefined;
 
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
-			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			expectedDatedAthleteSettingsModel
-		];
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+            new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            expectedDatedAthleteSettingsModel
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve forever AthleteSnapshotModel when an undefined date is given (wrong pattern)", (done: Function) => {
+    it("should resolve forever AthleteSnapshotModel when an undefined date is given (wrong pattern)", done => {
 
-		// Given
-		const onDate = "2018-13.15"; // Wrong pattern
+        // Given
+        const onDate = "2018-13.15"; // Wrong pattern
 
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
-			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			expectedDatedAthleteSettingsModel
-		];
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+            new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            expectedDatedAthleteSettingsModel
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve forever AthleteSnapshotModel when a wrong date (Type Date) is given", (done: Function) => {
+    it("should resolve forever AthleteSnapshotModel when a wrong date (Type Date) is given", done => {
 
-		// Given
-		const onDate = new Date(undefined);
+        // Given
+        const onDate = new Date(undefined);
 
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
-			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			expectedDatedAthleteSettingsModel
-		];
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+            new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            expectedDatedAthleteSettingsModel
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve forever AthleteSnapshotModel when a wrong date (undefined) is given", (done: Function) => {
+    it("should resolve forever AthleteSnapshotModel when a wrong date (undefined) is given", done => {
 
-		// Given
-		const onDate = undefined;
+        // Given
+        const onDate = undefined;
 
-		const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
-		const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
-			new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
-			new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
-			new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-			expectedDatedAthleteSettingsModel
-		];
+        const expectedDatedAthleteSettingsModel = new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78));
+        const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
+            new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
+            new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
+            new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+            expectedDatedAthleteSettingsModel
+        ];
 
-		const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
-		const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
-		clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-		athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
+        const expectedAthleteSnapshotModel = new AthleteSnapshotModel(defaultAthleteModel.gender, expectedDatedAthleteSettingsModel.toAthleteSettingsModel());
+        const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
+        clonedDefaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+        athleteSnapshotResolverService.athleteSnapshotResolver = new AthleteSnapshotResolver(clonedDefaultAthleteModel);
 
-		// When
-		const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+        // When
+        const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-		// Then
-		expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
+        // Then
+        expect(athleteSnapshot).toEqual(expectedAthleteSnapshotModel);
 
-		done();
-	});
+        done();
+    });
 
-	it("should resolve AthleteSnapshotModel when no AthleteModel exists (in storage)", (done: Function) => {
+    it("should resolve AthleteSnapshotModel when no AthleteModel exists (in storage)", done => {
 
-		// Given
-		const onDate = "2018-05-10";
-		const expectedAthleteModel = AthleteModel.DEFAULT_MODEL;
-		const expectedAthleteSettings = AthleteSettingsModel.DEFAULT_MODEL;
+        // Given
+        const onDate = "2018-05-10";
+        const expectedAthleteModel = AthleteModel.DEFAULT_MODEL;
+        const expectedAthleteSettings = AthleteSettingsModel.DEFAULT_MODEL;
 
-		spyOn(athleteSnapshotResolverService.athleteService, "fetch").and.returnValue(Promise.resolve(null));
+        spyOn(athleteSnapshotResolverService.athleteService, "fetch").and.returnValue(Promise.resolve(null));
 
-		athleteSnapshotResolverService.update().then(() => {
+        athleteSnapshotResolverService.update().then(() => {
 
-			// When
-			const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
+            // When
+            const athleteSnapshot = athleteSnapshotResolverService.resolve(onDate);
 
-			// Then
-			expect(athleteSnapshot.gender).toEqual(expectedAthleteModel.gender);
-			expect(athleteSnapshot.athleteSettings).toEqual(expectedAthleteSettings);
+            // Then
+            expect(athleteSnapshot.gender).toEqual(expectedAthleteModel.gender);
+            expect(athleteSnapshot.athleteSettings).toEqual(expectedAthleteSettings);
 
-			done();
+            done();
 
-		}, error => {
-			expect(error).toBeNull();
-			expect(false).toBeTruthy("Whoops! I should not be here!");
-			done();
-		});
-	});
+        }, error => {
+            expect(error).toBeNull();
+            expect(false).toBeTruthy("Whoops! I should not be here!");
+            done();
+        });
+    });
 
-	it("should not resolve AthleteModel when athleteSnapshotResolver not ready.", (done: Function) => {
+    it("should not resolve AthleteModel when athleteSnapshotResolver not ready.", done => {
 
-		// Given
-		const onDate = "2018-01-15";
-		const expectedError = new Error("AthleteSnapshotResolver do not exists. Please update service at first with AthleteSnapshotResolverService#update()");
+        // Given
+        const onDate = "2018-01-15";
+        const expectedError = new Error("AthleteSnapshotResolver do not exists. Please update service at first with AthleteSnapshotResolverService#update()");
 
-		// When
-		const call = () => {
-			athleteSnapshotResolverService.resolve(onDate);
-		};
+        // When
+        const call = () => {
+            athleteSnapshotResolverService.resolve(onDate);
+        };
 
-		// Then
-		expect(call).toThrow(expectedError);
+        // Then
+        expect(call).toThrow(expectedError);
 
-		done();
-	});
+        done();
+    });
 
 });

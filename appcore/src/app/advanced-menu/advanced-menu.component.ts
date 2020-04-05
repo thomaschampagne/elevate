@@ -9,45 +9,45 @@ import { SyncService } from "../shared/services/sync/sync.service";
 
 export abstract class AdvancedMenuComponent implements OnInit {
 
-	constructor(public userSettingsService: UserSettingsService,
-				public athleteService: AthleteService,
-				public syncService: SyncService<any>,
-				public dialog: MatDialog,
-				public snackBar: MatSnackBar) {
-	}
+    constructor(public userSettingsService: UserSettingsService,
+                public athleteService: AthleteService,
+                public syncService: SyncService<any>,
+                public dialog: MatDialog,
+                public snackBar: MatSnackBar) {
+    }
 
-	public ngOnInit(): void {
-	}
+    public ngOnInit(): void {
+    }
 
-	public abstract onZoneSettingsReset(): void;
+    public abstract onZoneSettingsReset(): void;
 
-	public onSyncedBackupClear(): void {
+    public onSyncedBackupClear(): void {
 
-		const data: ConfirmDialogDataModel = {
-			title: "Clear your athlete synced data",
-			content: "Are you sure to perform this action? You will be able to re-import synced data through backup file " +
-				"or a new re-synchronization."
-		};
+        const data: ConfirmDialogDataModel = {
+            title: "Clear your athlete synced data",
+            content: "Are you sure to perform this action? You will be able to re-import synced data through backup file " +
+                "or a new re-synchronization."
+        };
 
-		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-			minWidth: ConfirmDialogComponent.MIN_WIDTH,
-			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-			data: data
-		});
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            minWidth: ConfirmDialogComponent.MIN_WIDTH,
+            maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+            data: data
+        });
 
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+        const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
 
-			if (confirm) {
-				this.syncService.clearSyncedData().then(() => {
-					afterClosedSubscription.unsubscribe();
-					location.reload();
-				}, error => {
-					this.snackBar.open(error, "Close");
-				});
-			}
-		});
+            if (confirm) {
+                this.syncService.clearSyncedData().then(() => {
+                    afterClosedSubscription.unsubscribe();
+                    location.reload();
+                }, error => {
+                    this.snackBar.open(error, "Close");
+                });
+            }
+        });
 
-	}
+    }
 }
 
 

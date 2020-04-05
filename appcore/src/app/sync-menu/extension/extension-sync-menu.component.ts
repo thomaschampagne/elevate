@@ -6,10 +6,7 @@ import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
-import {
-	ExtensionImportBackupDialogComponent,
-	ImportBackupDialogComponent
-} from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
+import { ExtensionImportBackupDialogComponent, ImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { ExtensionSyncService } from "../../shared/services/sync/impl/extension-sync.service";
 import { ExtensionDumpModel } from "../../shared/models/dumps/extension-dump.model";
@@ -18,8 +15,8 @@ import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/conf
 import { AppRoutesModel } from "../../shared/models/app-routes.model";
 
 @Component({
-	selector: "app-extension-sync-menu",
-	template: `
+    selector: "app-extension-sync-menu",
+    template: `
         <div *ngIf="(syncState !== null)">
             <button mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
                 <mat-icon *ngIf="(syncState === SyncState.NOT_SYNCED)">
@@ -76,88 +73,88 @@ import { AppRoutesModel } from "../../shared/models/app-routes.model";
                 </button>
             </mat-menu>
         </div>
-	`,
-	styleUrls: ["./extension-sync-menu.component.scss"]
+    `,
+    styleUrls: ["./extension-sync-menu.component.scss"]
 })
 export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnInit {
 
-	constructor(public router: Router,
-				public extensionSyncService: ExtensionSyncService,
-				public appEventsService: AppEventsService,
-				public dialog: MatDialog,
-				public snackBar: MatSnackBar) {
-		super(router, extensionSyncService, appEventsService, dialog, snackBar);
-	}
+    constructor(public router: Router,
+                public extensionSyncService: ExtensionSyncService,
+                public appEventsService: AppEventsService,
+                public dialog: MatDialog,
+                public snackBar: MatSnackBar) {
+        super(router, extensionSyncService, appEventsService, dialog, snackBar);
+    }
 
-	public ngOnInit() {
-		super.ngOnInit();
-	}
+    public ngOnInit() {
+        super.ngOnInit();
+    }
 
-	public updateSyncDateStatus(): void {
+    public updateSyncDateStatus(): void {
 
-		this.extensionSyncService.getSyncState().then((syncState: SyncState) => {
-			this.syncState = syncState;
-			this.extensionSyncService.getSyncDateTime().then((syncDateTime: number) => {
-				if (_.isNumber(syncDateTime)) {
-					this.syncDateMessage = moment(syncDateTime).fromNow();
-				}
-			});
-		});
-	}
+        this.extensionSyncService.getSyncState().then((syncState: SyncState) => {
+            this.syncState = syncState;
+            this.extensionSyncService.getSyncDateTime().then((syncDateTime: number) => {
+                if (_.isNumber(syncDateTime)) {
+                    this.syncDateMessage = moment(syncDateTime).fromNow();
+                }
+            });
+        });
+    }
 
-	public onSyncedBackupImport(): void {
+    public onSyncedBackupImport(): void {
 
-		const dialogRef = this.dialog.open(ExtensionImportBackupDialogComponent, {
-			minWidth: ImportBackupDialogComponent.MIN_WIDTH,
-			maxWidth: ImportBackupDialogComponent.MAX_WIDTH,
-		});
+        const dialogRef = this.dialog.open(ExtensionImportBackupDialogComponent, {
+            minWidth: ImportBackupDialogComponent.MIN_WIDTH,
+            maxWidth: ImportBackupDialogComponent.MAX_WIDTH,
+        });
 
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((dumpModel: ExtensionDumpModel) => {
+        const afterClosedSubscription = dialogRef.afterClosed().subscribe((dumpModel: ExtensionDumpModel) => {
 
-			if (dumpModel) {
-				this.extensionSyncService.import(dumpModel).then(() => {
-					location.reload();
-				}, error => {
-					this.snackBar.open(error, "Close");
-				});
-			}
+            if (dumpModel) {
+                this.extensionSyncService.import(dumpModel).then(() => {
+                    location.reload();
+                }, error => {
+                    this.snackBar.open(error, "Close");
+                });
+            }
 
-			afterClosedSubscription.unsubscribe();
-		});
-	}
+            afterClosedSubscription.unsubscribe();
+        });
+    }
 
-	public onSync(fastSync: boolean, forceSync: boolean): void {
+    public onSync(fastSync: boolean, forceSync: boolean): void {
 
-		if (this.syncState === SyncState.NOT_SYNCED) {
+        if (this.syncState === SyncState.NOT_SYNCED) {
 
-			const data: ConfirmDialogDataModel = {
-				title: "⚠️ First synchronisation",
-				content: "Your first synchronisation can take a long time and can be done in several times " +
-					"if you have more than 400 activities. Make sure you properly setup your " +
-					"athlete settings before (Cycling FTP, Running FTP, Swim FTP, Heart rate, ...) or may have missing results in " +
-					"Elevate features. This is to avoid a redo of the first synchronisation.",
-				confirmText: "Start sync",
-				cancelText: "Check my athlete settings"
-			};
+            const data: ConfirmDialogDataModel = {
+                title: "⚠️ First synchronisation",
+                content: "Your first synchronisation can take a long time and can be done in several times " +
+                    "if you have more than 400 activities. Make sure you properly setup your " +
+                    "athlete settings before (Cycling FTP, Running FTP, Swim FTP, Heart rate, ...) or may have missing results in " +
+                    "Elevate features. This is to avoid a redo of the first synchronisation.",
+                confirmText: "Start sync",
+                cancelText: "Check my athlete settings"
+            };
 
-			const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-				minWidth: ConfirmDialogComponent.MIN_WIDTH,
-				maxWidth: "50%",
-				data: data
-			});
+            const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+                minWidth: ConfirmDialogComponent.MIN_WIDTH,
+                maxWidth: "50%",
+                data: data
+            });
 
-			const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+            const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
 
-				if (confirm) {
-					this.syncService.sync(fastSync, forceSync);
-				} else {
-					this.router.navigate([AppRoutesModel.athleteSettings]);
-				}
-				afterClosedSubscription.unsubscribe();
-			});
+                if (confirm) {
+                    this.syncService.sync(fastSync, forceSync);
+                } else {
+                    this.router.navigate([AppRoutesModel.athleteSettings]);
+                }
+                afterClosedSubscription.unsubscribe();
+            });
 
-		} else {
-			this.syncService.sync(fastSync, forceSync);
-		}
-	}
+        } else {
+            this.syncService.sync(fastSync, forceSync);
+        }
+    }
 }

@@ -5,29 +5,29 @@ import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
 
 describe("DonateComponent", () => {
-	let component: DonateComponent;
-	let fixture: ComponentFixture<DonateComponent>;
+    let component: DonateComponent;
+    let fixture: ComponentFixture<DonateComponent>;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule
-			]
-		}).compileComponents();
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule
+            ]
+        }).compileComponents();
 
-		done();
-	});
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(DonateComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(DonateComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 });

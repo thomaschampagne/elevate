@@ -7,25 +7,25 @@ import { StravaConnectorService } from "./services/strava-connector.service";
 import { FileSystemConnectorComponent } from "./file-system-connector/file-system-connector.component";
 
 const routes: Routes = [
-	{
-		path: "",
-		component: ConnectorsComponent
-	}
+    {
+        path: "",
+        component: ConnectorsComponent
+    }
 ];
 
 @NgModule({
-	imports: [
-		CoreModule,
-		RouterModule.forChild(routes)
-	],
-	declarations: [
-		ConnectorsComponent,
-		StravaConnectorComponent,
-		FileSystemConnectorComponent
-	],
-	providers: [
-		StravaConnectorService
-	]
+    imports: [
+        CoreModule,
+        RouterModule.forChild(routes)
+    ],
+    declarations: [
+        ConnectorsComponent,
+        StravaConnectorComponent,
+        FileSystemConnectorComponent
+    ],
+    providers: [
+        StravaConnectorService
+    ]
 })
 export class ConnectorsModule {
 }

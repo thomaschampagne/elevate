@@ -1,48 +1,48 @@
 <mat-dialog-content>
 
-	<div class="actions" fxLayoutAlign="center center">
-		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_ADD)" mat-stroked-button
-				color="primary" (click)="onConfirm()">Add
-		</button>
-		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_EDIT)" mat-stroked-button
-				color="primary" (click)="onConfirm()">Confirm changes
-		</button>
-		<span fxFlex="1"></span>
-		<button fxFlex="50" mat-stroked-button color="primary" (click)="onCancel()">Cancel
-		</button>
-	</div>
+    <div class="actions" fxLayoutAlign="center center">
+        <button (click)="onConfirm()" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_ADD)" color="primary"
+                fxFlex="50" mat-stroked-button>Add
+        </button>
+        <button (click)="onConfirm()" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_EDIT)" color="primary"
+                fxFlex="50" mat-stroked-button>Confirm changes
+        </button>
+        <span fxFlex="1"></span>
+        <button (click)="onCancel()" color="primary" fxFlex="50" mat-stroked-button>Cancel
+        </button>
+    </div>
 
-	<mat-card>
-		<mat-card-content>
-			<mat-form-field fxFill>
-				<input matInput
-					   [disabled]="(datedAthleteSettingsModel.isForever())"
-					   [(ngModel)]="sinceDate"
-					   [matDatepicker]="datePickerSince"
-					   (dateChange)="onDateChange()"
-					   placeholder="{{(datedAthleteSettingsModel.isForever()) ?  'Athlete settings since forever' : 'Athlete settings since'}}">
-				<mat-datepicker-toggle matSuffix [for]="datePickerSince"></mat-datepicker-toggle>
-				<mat-datepicker #datePickerSince></mat-datepicker>
-			</mat-form-field>
-		</mat-card-content>
+    <mat-card>
+        <mat-card-content>
+            <mat-form-field fxFill>
+                <input (dateChange)="onDateChange()"
+                       [(ngModel)]="sinceDate"
+                       [disabled]="(datedAthleteSettingsModel.isForever())"
+                       [matDatepicker]="datePickerSince"
+                       matInput
+                       placeholder="{{(datedAthleteSettingsModel.isForever()) ?  'Athlete settings since forever' : 'Athlete settings since'}}">
+                <mat-datepicker-toggle [for]="datePickerSince" matSuffix></mat-datepicker-toggle>
+                <mat-datepicker #datePickerSince></mat-datepicker>
+            </mat-form-field>
+        </mat-card-content>
 
-	</mat-card>
+    </mat-card>
 
-	<app-athlete-settings-form *ngIf="datedAthleteSettingsModel"
-							   [athleteSettingsModel]="datedAthleteSettingsModel"
-							   (athleteSettingsModelChange)="onAthleteSettingsModelChanged($event)"></app-athlete-settings-form>
+    <app-athlete-settings-form (athleteSettingsModelChange)="onAthleteSettingsModelChanged($event)"
+                               *ngIf="datedAthleteSettingsModel"
+                               [athleteSettingsModel]="datedAthleteSettingsModel"></app-athlete-settings-form>
 
-	<div class="actions" fxLayoutAlign="center center">
-		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_ADD)" mat-stroked-button
-				color="primary" (click)="onConfirm()">Add
-		</button>
-		<button fxFlex="50" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_EDIT)" mat-stroked-button
-				color="primary" (click)="onConfirm()">Confirm changes
-		</button>
-		<span fxFlex="1"></span>
-		<button fxFlex="50" mat-stroked-button color="primary" (click)="onCancel()">Cancel
-		</button>
-	</div>
+    <div class="actions" fxLayoutAlign="center center">
+        <button (click)="onConfirm()" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_ADD)" color="primary"
+                fxFlex="50" mat-stroked-button>Add
+        </button>
+        <button (click)="onConfirm()" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_EDIT)" color="primary"
+                fxFlex="50" mat-stroked-button>Confirm changes
+        </button>
+        <span fxFlex="1"></span>
+        <button (click)="onCancel()" color="primary" fxFlex="50" mat-stroked-button>Cancel
+        </button>
+    </div>
 
 </mat-dialog-content>
 

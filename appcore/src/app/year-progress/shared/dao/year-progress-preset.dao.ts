@@ -7,14 +7,14 @@ import { StorageType } from "../../../shared/data-store/storage-type.enum";
 @Injectable()
 export class YearProgressPresetDao extends BaseDao<YearToDateProgressPresetModel> {
 
-	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("yearProgressPresets", StorageType.COLLECTION, YearToDateProgressPresetModel.ID_FIELD);
-	public static readonly DEFAULT_STORAGE_VALUE: YearToDateProgressPresetModel[] = [];
+    public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("yearProgressPresets", StorageType.COLLECTION, YearToDateProgressPresetModel.ID_FIELD);
+    public static readonly DEFAULT_STORAGE_VALUE: YearToDateProgressPresetModel[] = [];
 
-	public getStorageLocation(): StorageLocationModel {
-		return YearProgressPresetDao.STORAGE_LOCATION;
-	}
+    public getStorageLocation(): StorageLocationModel {
+        return YearProgressPresetDao.STORAGE_LOCATION;
+    }
 
-	public getDefaultStorageValue(): YearToDateProgressPresetModel[] | YearToDateProgressPresetModel {
-		return YearProgressPresetDao.DEFAULT_STORAGE_VALUE;
-	}
+    public getDefaultStorageValue(): YearToDateProgressPresetModel[] | YearToDateProgressPresetModel {
+        return YearProgressPresetDao.DEFAULT_STORAGE_VALUE;
+    }
 }

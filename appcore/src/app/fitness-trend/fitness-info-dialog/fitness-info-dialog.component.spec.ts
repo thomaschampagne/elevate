@@ -7,48 +7,48 @@ import { SharedModule } from "../../shared/shared.module";
 import { FitnessTrendModule } from "../fitness-trend.module";
 
 describe("FitnessInfoDialogComponent", () => {
-	let component: FitnessInfoDialogComponent;
-	let fixture: ComponentFixture<FitnessInfoDialogComponent>;
+    let component: FitnessInfoDialogComponent;
+    let fixture: ComponentFixture<FitnessInfoDialogComponent>;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-				FitnessTrendModule
-			],
-			declarations: [],
-			providers: [
-				{
-					provide: MAT_DIALOG_DATA, useValue: {},
-				},
-				{
-					provide: MatDialogRef, useValue: {},
-				},
-			]
-		}).compileComponents();
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+                FitnessTrendModule
+            ],
+            declarations: [],
+            providers: [
+                {
+                    provide: MAT_DIALOG_DATA, useValue: {},
+                },
+                {
+                    provide: MatDialogRef, useValue: {},
+                },
+            ]
+        }).compileComponents();
 
-		done();
-	});
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(FitnessInfoDialogComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(FitnessInfoDialogComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
+    it("should create", done => {
 
-		// Given, When
-		const compiled = fixture.debugElement.nativeElement;
-		const htmlContent = compiled.querySelector("mat-dialog-content").textContent;
+        // Given, When
+        const compiled = fixture.debugElement.nativeElement;
+        const htmlContent = compiled.querySelector("mat-dialog-content").textContent;
 
-		// Then
-		expect(component).toBeTruthy();
-		expect(htmlContent).not.toBeNull();
-		done();
-	});
+        // Then
+        expect(component).toBeTruthy();
+        expect(htmlContent).not.toBeNull();
+        done();
+    });
 
 
 });

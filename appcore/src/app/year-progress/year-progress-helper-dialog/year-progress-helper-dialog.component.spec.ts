@@ -7,36 +7,36 @@ import { SharedModule } from "../../shared/shared.module";
 import { YearProgressModule } from "../year-progress.module";
 
 describe("YearProgressHelperDialogComponent", () => {
-	let component: YearProgressHelperDialogComponent;
-	let fixture: ComponentFixture<YearProgressHelperDialogComponent>;
+    let component: YearProgressHelperDialogComponent;
+    let fixture: ComponentFixture<YearProgressHelperDialogComponent>;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-				YearProgressModule
-			],
-			declarations: [],
-			providers: [
-				{
-					provide: MatDialogRef, useValue: {},
-				}
-			]
-		}).compileComponents();
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+                YearProgressModule
+            ],
+            declarations: [],
+            providers: [
+                {
+                    provide: MatDialogRef, useValue: {},
+                }
+            ]
+        }).compileComponents();
 
-		done();
-	});
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(YearProgressHelperDialogComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(YearProgressHelperDialogComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 });

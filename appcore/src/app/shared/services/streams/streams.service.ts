@@ -5,27 +5,35 @@ import { CompressedStreamModel, SyncedActivityModel } from "@elevate/shared/mode
 @Injectable()
 export class StreamsService {
 
-	constructor(public streamsDao: StreamsDao) {
-	}
+    constructor(public streamsDao: StreamsDao) {
+    }
 
-	/**
-	 *
-	 * @param compressedStreamModel
-	 */
-	public put(compressedStreamModel: CompressedStreamModel): Promise<CompressedStreamModel> {
-		return (<Promise<CompressedStreamModel>> this.streamsDao.put(compressedStreamModel));
-	}
+    /**
+     *
+     * @param id
+     */
+    public getById(id: number | string): Promise<CompressedStreamModel> {
+        return this.streamsDao.getById(<string> id);
+    }
 
-	/**
-	 *
-	 * @param {number[]} activitiesToDelete
-	 * @returns {Promise<SyncedActivityModel[]>}
-	 */
-	public removeByIds(activitiesToDelete: (string | number)[]): Promise<CompressedStreamModel[]> {
-		return this.streamsDao.removeByIds(activitiesToDelete);
-	}
+    /**
+     *
+     * @param compressedStreamModel
+     */
+    public put(compressedStreamModel: CompressedStreamModel): Promise<CompressedStreamModel> {
+        return (<Promise<CompressedStreamModel>> this.streamsDao.put(compressedStreamModel));
+    }
 
-	public clear(): Promise<void> {
-		return this.streamsDao.clear();
-	}
+    /**
+     *
+     * @param {number[]} activitiesToDelete
+     * @returns {Promise<SyncedActivityModel[]>}
+     */
+    public removeByIds(activitiesToDelete: (string | number)[]): Promise<CompressedStreamModel[]> {
+        return this.streamsDao.removeByIds(activitiesToDelete);
+    }
+
+    public clear(): Promise<void> {
+        return this.streamsDao.clear();
+    }
 }

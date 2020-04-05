@@ -1,4 +1,4 @@
 export enum ProgressMode {
-	YEAR_TO_DATE,
-	ROLLING
+    YEAR_TO_DATE,
+    ROLLING
 }

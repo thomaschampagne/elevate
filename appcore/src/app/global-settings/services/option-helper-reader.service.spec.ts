@@ -6,43 +6,43 @@ import { of } from "rxjs";
 
 describe("OptionHelperReaderService", () => {
 
-	let http: HttpClient;
-	let optionHelperReaderService: OptionHelperReaderService;
+    let http: HttpClient;
+    let optionHelperReaderService: OptionHelperReaderService;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			imports: [HttpClientModule],
-			providers: [OptionHelperReaderService, HttpClient]
-		});
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            imports: [HttpClientModule],
+            providers: [OptionHelperReaderService, HttpClient]
+        });
 
-		http = TestBed.inject(HttpClient);
-		optionHelperReaderService = TestBed.inject(OptionHelperReaderService);
-		done();
-	});
+        http = TestBed.inject(HttpClient);
+        optionHelperReaderService = TestBed.inject(OptionHelperReaderService);
+        done();
+    });
 
-	it("should be created", (done: Function) => {
-		expect(optionHelperReaderService).not.toBeNull();
-		expect(http).not.toBeNull();
-		done();
-	});
+    it("should be created", done => {
+        expect(optionHelperReaderService).not.toBeNull();
+        expect(http).not.toBeNull();
+        done();
+    });
 
-	it("should return markdown data", (done: Function) => {
+    it("should return markdown data", done => {
 
-		// Given
-		const markDownData = "## **This Title has bold style**";
+        // Given
+        const markDownData = "## **This Title has bold style**";
 
-		spyOn(http, "get").and.returnValue(of(markDownData));
+        spyOn(http, "get").and.returnValue(of(markDownData));
 
-		// When
-		const promise = optionHelperReaderService.get("test.md");
+        // When
+        const promise = optionHelperReaderService.get("test.md");
 
-		// Then
-		promise.then((markDownResultData: string) => {
-			expect(markDownResultData).not.toBeNull();
-			expect(markDownResultData).toBe(markDownData);
-			done();
-		});
+        // Then
+        promise.then((markDownResultData: string) => {
+            expect(markDownResultData).not.toBeNull();
+            expect(markDownResultData).toBe(markDownData);
+            done();
+        });
 
-	});
+    });
 });
 

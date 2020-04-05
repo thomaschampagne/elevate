@@ -10,64 +10,64 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("GlobalSettingsComponent", () => {
 
-	let component: GlobalSettingsComponent;
-	let fixture: ComponentFixture<GlobalSettingsComponent>;
-	let userSettingsService: UserSettingsService;
+    let component: GlobalSettingsComponent;
+    let fixture: ComponentFixture<GlobalSettingsComponent>;
+    let userSettingsService: UserSettingsService;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-			],
-			declarations: [],
-			providers: []
-		}).compileComponents();
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+            ],
+            declarations: [],
+            providers: []
+        }).compileComponents();
 
-		userSettingsService = TestBed.inject(UserSettingsService);
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
+        userSettingsService = TestBed.inject(UserSettingsService);
+        spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
-		done();
-	});
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(GlobalSettingsComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(GlobalSettingsComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 
-	it("should get option helper dir", (done: Function) => {
+    it("should get option helper dir", done => {
 
-		// Given
-		const pathname = "/app/index.html";
-		const expected = "/app/assets/option-helpers/";
+        // Given
+        const pathname = "/app/index.html";
+        const expected = "/app/assets/option-helpers/";
 
-		// When
-		const actual = GlobalSettingsComponent.getOptionHelperDir(pathname);
+        // When
+        const actual = GlobalSettingsComponent.getOptionHelperDir(pathname);
 
-		// Then
-		expect(actual).toEqual(expected);
-		done();
+        // Then
+        expect(actual).toEqual(expected);
+        done();
 
-	});
+    });
 
-	it("should get option helper dir", (done: Function) => {
+    it("should get option helper dir", done => {
 
-		// Given
-		const pathname = null;
+        // Given
+        const pathname = null;
 
-		// When
-		const actual = GlobalSettingsComponent.getOptionHelperDir(pathname);
+        // When
+        const actual = GlobalSettingsComponent.getOptionHelperDir(pathname);
 
-		// Then
-		expect(actual).toBeNull();
-		done();
+        // Then
+        expect(actual).toBeNull();
+        done();
 
-	});
+    });
 });

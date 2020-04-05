@@ -7,43 +7,43 @@ import { DatedAthleteSettingsAction } from "./dated-athlete-settings-action.enum
 import * as _ from "lodash";
 
 @Component({
-	selector: "app-edit-dated-athlete-settings-dialog",
-	templateUrl: "./edit-dated-athlete-settings-dialog.component.html",
-	styleUrls: ["./edit-dated-athlete-settings-dialog.component.scss"]
+    selector: "app-edit-dated-athlete-settings-dialog",
+    templateUrl: "./edit-dated-athlete-settings-dialog.component.html",
+    styleUrls: ["./edit-dated-athlete-settings-dialog.component.scss"]
 })
 export class EditDatedAthleteSettingsDialogComponent implements OnInit {
 
-	public static readonly WIDTH: string = "60%";
+    public static readonly WIDTH: string = "60%";
 
-	public sinceDate: Date;
+    public sinceDate: Date;
 
-	public datedAthleteSettingsModel: DatedAthleteSettingsModel;
+    public datedAthleteSettingsModel: DatedAthleteSettingsModel;
 
-	public DatedAthleteSettingsAction = DatedAthleteSettingsAction;
+    public DatedAthleteSettingsAction = DatedAthleteSettingsAction;
 
-	constructor(public dialogRef: MatDialogRef<EditDatedAthleteSettingsDialogComponent>,
-				@Inject(MAT_DIALOG_DATA) public data: DatedAthleteSettingsDialogData) {
-	}
+    constructor(public dialogRef: MatDialogRef<EditDatedAthleteSettingsDialogComponent>,
+                @Inject(MAT_DIALOG_DATA) public data: DatedAthleteSettingsDialogData) {
+    }
 
-	public ngOnInit(): void {
-		this.datedAthleteSettingsModel = DatedAthleteSettingsModel.asInstance(_.cloneDeep(this.data.datedAthleteSettingsModel));
-		this.sinceDate = moment(this.datedAthleteSettingsModel.since).toDate();
-	}
+    public ngOnInit(): void {
+        this.datedAthleteSettingsModel = DatedAthleteSettingsModel.asInstance(_.cloneDeep(this.data.datedAthleteSettingsModel));
+        this.sinceDate = moment(this.datedAthleteSettingsModel.since).toDate();
+    }
 
-	public onAthleteSettingsModelChanged(datedAthleteSettingsModel: DatedAthleteSettingsModel): void {
-		this.datedAthleteSettingsModel = datedAthleteSettingsModel;
-	}
+    public onAthleteSettingsModelChanged(datedAthleteSettingsModel: DatedAthleteSettingsModel): void {
+        this.datedAthleteSettingsModel = datedAthleteSettingsModel;
+    }
 
-	public onDateChange(): void {
-		this.datedAthleteSettingsModel.since = moment(this.sinceDate).format(DatedAthleteSettingsModel.SINCE_DATE_FORMAT);
-	}
+    public onDateChange(): void {
+        this.datedAthleteSettingsModel.since = moment(this.sinceDate).format(DatedAthleteSettingsModel.SINCE_DATE_FORMAT);
+    }
 
-	public onConfirm(): void {
-		this.dialogRef.close(this.datedAthleteSettingsModel);
-	}
+    public onConfirm(): void {
+        this.dialogRef.close(this.datedAthleteSettingsModel);
+    }
 
-	public onCancel(): void {
-		this.dialogRef.close();
-	}
+    public onCancel(): void {
+        this.dialogRef.close();
+    }
 
 }

@@ -4,16 +4,16 @@ import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 
 export class ExtensionDumpModel extends DumpModel {
 
-	public syncDateTime: number;
-	public syncedActivities: SyncedActivityModel[];
-	public pluginVersion: string;
-	public athleteModel: AthleteModel;
+    public syncDateTime: number;
+    public syncedActivities: SyncedActivityModel[];
+    public pluginVersion: string;
+    public athleteModel: AthleteModel;
 
-	constructor(syncDateTime: number, syncedActivities: SyncedActivityModel[], pluginVersion: string, athleteModel: AthleteModel) {
-		super();
-		this.syncDateTime = syncDateTime;
-		this.syncedActivities = syncedActivities;
-		this.pluginVersion = pluginVersion;
-		this.athleteModel = athleteModel;
-	}
+    constructor(syncDateTime: number, syncedActivities: SyncedActivityModel[], pluginVersion: string, athleteModel: AthleteModel) {
+        super();
+        this.syncDateTime = syncDateTime;
+        this.syncedActivities = syncedActivities;
+        this.pluginVersion = pluginVersion;
+        this.athleteModel = athleteModel;
+    }
 }

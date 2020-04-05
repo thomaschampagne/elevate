@@ -8,48 +8,49 @@ import { YearProgressTypeModel } from "../shared/models/year-progress-type.model
 import { ProgressType } from "../shared/enums/progress-type.enum";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
+import { ElevateSport } from "@elevate/shared/enums";
 
 describe("AddYearProgressPresetDialogComponent", () => {
-	let component: AddYearProgressPresetDialogComponent;
-	let fixture: ComponentFixture<AddYearProgressPresetDialogComponent>;
+    let component: AddYearProgressPresetDialogComponent;
+    let fixture: ComponentFixture<AddYearProgressPresetDialogComponent>;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		const addYearProgressPresetsDialogData: AddYearToDateProgressPresetDialogData =
-			new AddYearToDateProgressPresetDialogData(new YearProgressTypeModel(ProgressType.DISTANCE, "Distance"),
-				["Ride", "VirtualRide"],
-				true,
-				true,
-				5000);
+        const addYearProgressPresetsDialogData: AddYearToDateProgressPresetDialogData =
+            new AddYearToDateProgressPresetDialogData(new YearProgressTypeModel(ProgressType.DISTANCE, "Distance"),
+                [ElevateSport.Ride, ElevateSport.VirtualRide],
+                true,
+                true,
+                5000);
 
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-				YearProgressModule
-			],
-			providers: [
-				{
-					provide: MAT_DIALOG_DATA, useValue: addYearProgressPresetsDialogData,
-				},
-				{
-					provide: MatDialogRef, useValue: {},
-				},
-			]
-		}).compileComponents();
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+                YearProgressModule
+            ],
+            providers: [
+                {
+                    provide: MAT_DIALOG_DATA, useValue: addYearProgressPresetsDialogData,
+                },
+                {
+                    provide: MatDialogRef, useValue: {},
+                },
+            ]
+        }).compileComponents();
 
-		done();
-	});
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(AddYearProgressPresetDialogComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(AddYearProgressPresetDialogComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 });

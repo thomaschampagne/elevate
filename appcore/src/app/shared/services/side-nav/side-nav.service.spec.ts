@@ -5,48 +5,48 @@ import { SideNavStatus } from "./side-nav-status.enum";
 
 describe("SideNavService", () => {
 
-	let service: SideNavService;
+    let service: SideNavService;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			providers: [SideNavService]
-		});
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            providers: [SideNavService]
+        });
 
-		service = TestBed.inject(SideNavService);
-		done();
-	});
+        service = TestBed.inject(SideNavService);
+        done();
+    });
 
-	it("should be created", inject([SideNavService], (service: SideNavService) => {
-		expect(service).toBeTruthy();
-	}));
+    it("should be created", inject([SideNavService], (service: SideNavService) => {
+        expect(service).toBeTruthy();
+    }));
 
-	it("should notify subscribers when side nav is closed", (done: Function) => {
+    it("should notify subscribers when side nav is closed", done => {
 
-		// Given
-		const expectedCallCount = 1;
-		const spy = spyOn(service.changes, "next");
+        // Given
+        const expectedCallCount = 1;
+        const spy = spyOn(service.changes, "next");
 
-		// When
-		service.onChange(SideNavStatus.CLOSED);
+        // When
+        service.onChange(SideNavStatus.CLOSED);
 
-		// Then
-		expect(spy).toHaveBeenCalledTimes(expectedCallCount);
-		expect(spy).toHaveBeenCalledWith(SideNavStatus.CLOSED);
-		done();
-	});
+        // Then
+        expect(spy).toHaveBeenCalledTimes(expectedCallCount);
+        expect(spy).toHaveBeenCalledWith(SideNavStatus.CLOSED);
+        done();
+    });
 
-	it("should notify subscribers when side nav is opened", (done: Function) => {
+    it("should notify subscribers when side nav is opened", done => {
 
-		// Given
-		const expectedCallCount = 1;
-		const spy = spyOn(service.changes, "next");
+        // Given
+        const expectedCallCount = 1;
+        const spy = spyOn(service.changes, "next");
 
-		// When
-		service.onChange(SideNavStatus.OPENED);
+        // When
+        service.onChange(SideNavStatus.OPENED);
 
-		// Then
-		expect(spy).toHaveBeenCalledTimes(expectedCallCount);
-		expect(spy).toHaveBeenCalledWith(SideNavStatus.OPENED);
-		done();
-	});
+        // Then
+        expect(spy).toHaveBeenCalledTimes(expectedCallCount);
+        expect(spy).toHaveBeenCalledWith(SideNavStatus.OPENED);
+        done();
+    });
 });

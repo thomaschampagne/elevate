@@ -15,212 +15,212 @@ import { AppError } from "../../../shared/models/app-error.model";
 import { LoggerService } from "../../../shared/services/logging/logger.service";
 
 @Component({
-	selector: "app-dated-athlete-settings-manager",
-	templateUrl: "./dated-athlete-settings-manager.component.html",
-	styleUrls: ["./dated-athlete-settings-manager.component.scss"]
+    selector: "app-dated-athlete-settings-manager",
+    templateUrl: "./dated-athlete-settings-manager.component.html",
+    styleUrls: ["./dated-athlete-settings-manager.component.scss"]
 })
 export class DatedAthleteSettingsManagerComponent implements OnInit {
 
-	public static readonly COLUMN_SINCE: string = "since";
-	public static readonly COLUMN_UNTIL: string = "until";
-	public static readonly COLUMN_WEIGHT: string = "weight";
-	public static readonly COLUMN_MAX_HR: string = "maxHr";
-	public static readonly COLUMN_REST_HR: string = "restHr";
-	public static readonly COLUMN_LTHR_DEFAULT: string = "lthr.default";
-	public static readonly COLUMN_LTHR_CYCLING: string = "lthr.cycling";
-	public static readonly COLUMN_LTHR_RUNNING: string = "lthr.running";
-	public static readonly COLUMN_CYCLING_FTP: string = "cyclingFtp";
-	public static readonly COLUMN_RUNNING_FTP: string = "runningFtp";
-	public static readonly COLUMN_SWIM_FTP: string = "swimFtp";
-	public static readonly COLUMN_ACTION_EDIT: string = "edit";
-	public static readonly COLUMN_ACTION_DELETE: string = "delete";
+    public static readonly COLUMN_SINCE: string = "since";
+    public static readonly COLUMN_UNTIL: string = "until";
+    public static readonly COLUMN_WEIGHT: string = "weight";
+    public static readonly COLUMN_MAX_HR: string = "maxHr";
+    public static readonly COLUMN_REST_HR: string = "restHr";
+    public static readonly COLUMN_LTHR_DEFAULT: string = "lthr.default";
+    public static readonly COLUMN_LTHR_CYCLING: string = "lthr.cycling";
+    public static readonly COLUMN_LTHR_RUNNING: string = "lthr.running";
+    public static readonly COLUMN_CYCLING_FTP: string = "cyclingFtp";
+    public static readonly COLUMN_RUNNING_FTP: string = "runningFtp";
+    public static readonly COLUMN_SWIM_FTP: string = "swimFtp";
+    public static readonly COLUMN_ACTION_EDIT: string = "edit";
+    public static readonly COLUMN_ACTION_DELETE: string = "delete";
 
-	public readonly displayedColumns: string[] = [
-		DatedAthleteSettingsManagerComponent.COLUMN_SINCE,
-		DatedAthleteSettingsManagerComponent.COLUMN_UNTIL,
-		DatedAthleteSettingsManagerComponent.COLUMN_WEIGHT,
-		DatedAthleteSettingsManagerComponent.COLUMN_MAX_HR,
-		DatedAthleteSettingsManagerComponent.COLUMN_REST_HR,
-		DatedAthleteSettingsManagerComponent.COLUMN_LTHR_DEFAULT,
-		DatedAthleteSettingsManagerComponent.COLUMN_LTHR_CYCLING,
-		DatedAthleteSettingsManagerComponent.COLUMN_LTHR_RUNNING,
-		DatedAthleteSettingsManagerComponent.COLUMN_CYCLING_FTP,
-		DatedAthleteSettingsManagerComponent.COLUMN_RUNNING_FTP,
-		DatedAthleteSettingsManagerComponent.COLUMN_SWIM_FTP,
-		DatedAthleteSettingsManagerComponent.COLUMN_ACTION_EDIT,
-		DatedAthleteSettingsManagerComponent.COLUMN_ACTION_DELETE
-	];
+    public readonly displayedColumns: string[] = [
+        DatedAthleteSettingsManagerComponent.COLUMN_SINCE,
+        DatedAthleteSettingsManagerComponent.COLUMN_UNTIL,
+        DatedAthleteSettingsManagerComponent.COLUMN_WEIGHT,
+        DatedAthleteSettingsManagerComponent.COLUMN_MAX_HR,
+        DatedAthleteSettingsManagerComponent.COLUMN_REST_HR,
+        DatedAthleteSettingsManagerComponent.COLUMN_LTHR_DEFAULT,
+        DatedAthleteSettingsManagerComponent.COLUMN_LTHR_CYCLING,
+        DatedAthleteSettingsManagerComponent.COLUMN_LTHR_RUNNING,
+        DatedAthleteSettingsManagerComponent.COLUMN_CYCLING_FTP,
+        DatedAthleteSettingsManagerComponent.COLUMN_RUNNING_FTP,
+        DatedAthleteSettingsManagerComponent.COLUMN_SWIM_FTP,
+        DatedAthleteSettingsManagerComponent.COLUMN_ACTION_EDIT,
+        DatedAthleteSettingsManagerComponent.COLUMN_ACTION_DELETE
+    ];
 
-	public datedAthleteSettingsModels: DatedAthleteSettingsModel[];
+    public datedAthleteSettingsModels: DatedAthleteSettingsModel[];
 
-	public dataSource: MatTableDataSource<DatedAthleteSettingsTableModel>;
+    public dataSource: MatTableDataSource<DatedAthleteSettingsTableModel>;
 
-	@Output("datedAthleteSettingsModelsChange")
-	public datedAthleteSettingsModelsChange: EventEmitter<void> = new EventEmitter<void>();
+    @Output("datedAthleteSettingsModelsChange")
+    public datedAthleteSettingsModelsChange: EventEmitter<void> = new EventEmitter<void>();
 
-	constructor(public athleteService: AthleteService,
-				public dialog: MatDialog,
-				public snackBar: MatSnackBar,
-				public logger: LoggerService) {
-	}
+    constructor(public athleteService: AthleteService,
+                public dialog: MatDialog,
+                public snackBar: MatSnackBar,
+                public logger: LoggerService) {
+    }
 
-	public ngOnInit(): void {
-		this.dataSource = new MatTableDataSource<DatedAthleteSettingsTableModel>();
-		this.loadData();
-	}
+    public ngOnInit(): void {
+        this.dataSource = new MatTableDataSource<DatedAthleteSettingsTableModel>();
+        this.loadData();
+    }
 
-	private loadData(): void {
+    public onAdd(): void {
 
-		this.athleteService.fetch().then((athleteModel: AthleteModel) => {
+        const datedAthleteSettingsModelBase = _.cloneDeep(_.first(this.datedAthleteSettingsModels));
 
-			this.datedAthleteSettingsModels = athleteModel.datedAthleteSettings;
+        datedAthleteSettingsModelBase.since = DatedAthleteSettingsModel.DEFAULT_SINCE;
 
-			// Auto creates a dated athlete settings if no one exists
-			if (this.datedAthleteSettingsModels.length === 0) {
-				this.athleteService.resetSettings().then(() => {
-					this.datedAthleteSettingsModelsChange.emit();
-					this.loadData();
-				}, error => {
-					this.handleErrors(error);
-				});
+        const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
+            action: DatedAthleteSettingsAction.ACTION_ADD,
+            datedAthleteSettingsModel: datedAthleteSettingsModelBase
+        };
 
-			} else {
-				this.dataSource.data = this.generateTableData(this.datedAthleteSettingsModels);
-			}
+        const dialogRef = this.dialog.open(EditDatedAthleteSettingsDialogComponent, {
+            width: EditDatedAthleteSettingsDialogComponent.WIDTH,
+            data: datedAthleteSettingsDialogData
+        });
 
-		});
-	}
+        const afterClosedSubscription = dialogRef.afterClosed().subscribe((datedAthleteSettingsModel: DatedAthleteSettingsModel) => {
 
-	private generateTableData(datedAthleteSettingsModels: DatedAthleteSettingsModel[]): DatedAthleteSettingsTableModel[] {
+            if (datedAthleteSettingsModel) {
+                this.athleteService.addSettings(datedAthleteSettingsModel).then(() => {
+                    this.datedAthleteSettingsModelsChange.emit();
+                    this.loadData();
+                }, error => {
+                    this.handleErrors(error);
+                });
+            }
 
-		const datedAthleteSettingsTableModels: DatedAthleteSettingsTableModel[] = [];
-		_.forEach(datedAthleteSettingsModels, (datedAthleteSettingsModel: DatedAthleteSettingsModel, index: number) => {
-			const previousDatedAthleteSettingsModel = datedAthleteSettingsModels[index - 1];
-			datedAthleteSettingsTableModels.push(new DatedAthleteSettingsTableModel(datedAthleteSettingsModel, previousDatedAthleteSettingsModel));
-		});
-		return datedAthleteSettingsTableModels;
-	}
+            afterClosedSubscription.unsubscribe();
+        });
+    }
 
-	public onAdd(): void {
+    public onEdit(sinceIdentifier: string): void {
 
-		const datedAthleteSettingsModelBase = _.cloneDeep(_.first(this.datedAthleteSettingsModels));
+        const datedAthleteSettingsModelToEdit = _.find(this.datedAthleteSettingsModels, {since: sinceIdentifier});
 
-		datedAthleteSettingsModelBase.since = DatedAthleteSettingsModel.DEFAULT_SINCE;
+        const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
+            action: DatedAthleteSettingsAction.ACTION_EDIT,
+            datedAthleteSettingsModel: datedAthleteSettingsModelToEdit
+        };
 
-		const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
-			action: DatedAthleteSettingsAction.ACTION_ADD,
-			datedAthleteSettingsModel: datedAthleteSettingsModelBase
-		};
+        const dialogRef = this.dialog.open(EditDatedAthleteSettingsDialogComponent, {
+            width: EditDatedAthleteSettingsDialogComponent.WIDTH,
+            data: datedAthleteSettingsDialogData
+        });
 
-		const dialogRef = this.dialog.open(EditDatedAthleteSettingsDialogComponent, {
-			width: EditDatedAthleteSettingsDialogComponent.WIDTH,
-			data: datedAthleteSettingsDialogData
-		});
+        const afterClosedSubscription = dialogRef.afterClosed().subscribe((datedAthleteSettingsModel: DatedAthleteSettingsModel) => {
 
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((datedAthleteSettingsModel: DatedAthleteSettingsModel) => {
+            if (datedAthleteSettingsModel) {
+                this.athleteService.editSettings(sinceIdentifier, datedAthleteSettingsModel).then(() => {
+                    this.datedAthleteSettingsModelsChange.emit();
+                    this.loadData();
+                }, error => {
+                    this.handleErrors(error);
+                });
+            }
 
-			if (datedAthleteSettingsModel) {
-				this.athleteService.addSettings(datedAthleteSettingsModel).then(() => {
-					this.datedAthleteSettingsModelsChange.emit();
-					this.loadData();
-				}, error => {
-					this.handleErrors(error);
-				});
-			}
+            afterClosedSubscription.unsubscribe();
+        });
 
-			afterClosedSubscription.unsubscribe();
-		});
-	}
+    }
 
-	public onEdit(sinceIdentifier: string): void {
+    public onRemove(sinceIdentifier: string): void {
 
-		const datedAthleteSettingsModelToEdit = _.find(this.datedAthleteSettingsModels, {since: sinceIdentifier});
+        const confirmDialogDataModel = new ConfirmDialogDataModel(null, "Are you sure to remove this dated athlete settings?");
 
-		const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
-			action: DatedAthleteSettingsAction.ACTION_EDIT,
-			datedAthleteSettingsModel: datedAthleteSettingsModelToEdit
-		};
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            data: confirmDialogDataModel
+        });
 
-		const dialogRef = this.dialog.open(EditDatedAthleteSettingsDialogComponent, {
-			width: EditDatedAthleteSettingsDialogComponent.WIDTH,
-			data: datedAthleteSettingsDialogData
-		});
+        const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+            if (confirmed) {
+                this.athleteService.removeSettings(sinceIdentifier).then(() => {
+                    this.datedAthleteSettingsModelsChange.emit();
+                    this.loadData();
+                }, error => {
+                    this.handleErrors(error);
+                });
 
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((datedAthleteSettingsModel: DatedAthleteSettingsModel) => {
+            }
+            afterClosedSubscription.unsubscribe();
+        });
+    }
 
-			if (datedAthleteSettingsModel) {
-				this.athleteService.editSettings(sinceIdentifier, datedAthleteSettingsModel).then(() => {
-					this.datedAthleteSettingsModelsChange.emit();
-					this.loadData();
-				}, error => {
-					this.handleErrors(error);
-				});
-			}
+    public onReset(): void {
 
-			afterClosedSubscription.unsubscribe();
-		});
+        const data: ConfirmDialogDataModel = {
+            title: "Reset your dated athlete settings",
+            content: "Are you sure to perform this action? Current settings will be lost."
+        };
 
-	}
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            minWidth: ConfirmDialogComponent.MIN_WIDTH,
+            maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+            data: data
+        });
 
-	public onRemove(sinceIdentifier: string): void {
+        const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
 
-		const confirmDialogDataModel = new ConfirmDialogDataModel(null, "Are you sure to remove this dated athlete settings?");
+            if (confirm) {
 
-		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-			data: confirmDialogDataModel
-		});
+                this.athleteService.resetSettings().then(() => {
+                    this.datedAthleteSettingsModelsChange.emit();
+                    this.loadData();
+                }, error => {
+                    this.handleErrors(error);
+                });
+            }
 
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-			if (confirmed) {
-				this.athleteService.removeSettings(sinceIdentifier).then(() => {
-					this.datedAthleteSettingsModelsChange.emit();
-					this.loadData();
-				}, error => {
-					this.handleErrors(error);
-				});
+            afterClosedSubscription.unsubscribe();
+        });
+    }
 
-			}
-			afterClosedSubscription.unsubscribe();
-		});
-	}
+    private loadData(): void {
 
-	public onReset(): void {
+        this.athleteService.fetch().then((athleteModel: AthleteModel) => {
 
-		const data: ConfirmDialogDataModel = {
-			title: "Reset your dated athlete settings",
-			content: "Are you sure to perform this action? Current settings will be lost."
-		};
+            this.datedAthleteSettingsModels = athleteModel.datedAthleteSettings;
 
-		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-			minWidth: ConfirmDialogComponent.MIN_WIDTH,
-			maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-			data: data
-		});
+            // Auto creates a dated athlete settings if no one exists
+            if (this.datedAthleteSettingsModels.length === 0) {
+                this.athleteService.resetSettings().then(() => {
+                    this.datedAthleteSettingsModelsChange.emit();
+                    this.loadData();
+                }, error => {
+                    this.handleErrors(error);
+                });
 
-		const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+            } else {
+                this.dataSource.data = this.generateTableData(this.datedAthleteSettingsModels);
+            }
 
-			if (confirm) {
+        });
+    }
 
-				this.athleteService.resetSettings().then(() => {
-					this.datedAthleteSettingsModelsChange.emit();
-					this.loadData();
-				}, error => {
-					this.handleErrors(error);
-				});
-			}
+    private generateTableData(datedAthleteSettingsModels: DatedAthleteSettingsModel[]): DatedAthleteSettingsTableModel[] {
 
-			afterClosedSubscription.unsubscribe();
-		});
-	}
+        const datedAthleteSettingsTableModels: DatedAthleteSettingsTableModel[] = [];
+        _.forEach(datedAthleteSettingsModels, (datedAthleteSettingsModel: DatedAthleteSettingsModel, index: number) => {
+            const previousDatedAthleteSettingsModel = datedAthleteSettingsModels[index - 1];
+            datedAthleteSettingsTableModels.push(new DatedAthleteSettingsTableModel(datedAthleteSettingsModel, previousDatedAthleteSettingsModel));
+        });
+        return datedAthleteSettingsTableModels;
+    }
 
-	private handleErrors(error: any) {
+    private handleErrors(error: any) {
 
-		this.logger.error(error);
+        this.logger.error(error);
 
-		if (error instanceof AppError) {
-			const message = (<AppError> error).message;
-			this.snackBar.open(message, "Close");
-		}
+        if (error instanceof AppError) {
+            const message = (<AppError> error).message;
+            this.snackBar.open(message, "Close");
+        }
 
-	}
+    }
 }

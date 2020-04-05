@@ -1,172 +1,188 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { StravaApiCredentials } from "@elevate/shared/sync";
+import { ConnectorType, StravaConnectorInfo } from "@elevate/shared/sync";
 import { ConnectorsComponent } from "../connectors.component";
 import { StravaConnectorService } from "../services/strava-connector.service";
 import * as moment from "moment";
 import * as HttpCodes from "http-status-codes";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
-import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { ElectronService } from "../../shared/services/electron/electron.service";
 import { adjectives, animals, colors, names, uniqueNamesGenerator } from "unique-names-generator";
 import _ from "lodash";
 import jdenticon from "jdenticon";
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
+import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../../shared/services/links-opener/open-resource-resolver";
 
 class GeneratedStravaApiApplication {
-	public appName: string;
-	public webSite: string;
-	public imageFileName: string;
+    public appName: string;
+    public webSite: string;
+    public imageFileName: string;
 }
 
 @Component({
-	selector: "app-strava-connector",
-	templateUrl: "./strava-connector.component.html",
-	styleUrls: ["./strava-connector.component.scss"]
+    selector: "app-strava-connector",
+    templateUrl: "./strava-connector.component.html",
+    styleUrls: ["./strava-connector.component.scss"]
 })
 export class StravaConnectorComponent extends ConnectorsComponent implements OnInit {
 
-	public stravaApiCredentials: StravaApiCredentials;
-	public expiresAt: string;
-	public isSynced: boolean;
-	public generatedStravaApiApplication: GeneratedStravaApiApplication;
-	public showConfigure: boolean;
-	public showHowTo: boolean;
+    public stravaConnectorInfo: StravaConnectorInfo;
+    public expiresAt: string;
 
-	constructor(public stravaConnectorService: StravaConnectorService,
-				public desktopSyncService: DesktopSyncService,
-				public electronService: ElectronService,
-				public snackBar: MatSnackBar,
-				public logger: LoggerService) {
-		super();
-		this.isSynced = false;
-		this.generatedStravaApiApplication = null;
-		this.showConfigure = false;
-		this.showHowTo = false;
-	}
+    public generatedStravaApiApplication: GeneratedStravaApiApplication;
+    public showConfigure: boolean;
+    public showHowTo: boolean;
 
-	public ngOnInit(): void {
+    constructor(public stravaConnectorService: StravaConnectorService,
+                public desktopSyncService: DesktopSyncService,
+                @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
+                public electronService: ElectronService,
+                public router: Router,
+                public snackBar: MatSnackBar,
+                public logger: LoggerService,
+                public dialog: MatDialog) {
+        super(desktopSyncService, openResourceResolver, router, dialog);
+        this.connectorType = ConnectorType.STRAVA;
+        this.generatedStravaApiApplication = null;
+        this.showConfigure = false;
+        this.showHowTo = false;
+    }
 
-		this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
-			this.isSynced = syncState === SyncState.SYNCED;
-			return this.stravaConnectorService.fetchCredentials();
-		}).then((stravaApiCredentials: StravaApiCredentials) => {
-			this.handleCredentialsChanges(stravaApiCredentials);
-		});
+    public ngOnInit(): void {
 
-		this.stravaConnectorService.stravaApiCredentials$.subscribe((stravaApiCredentials: StravaApiCredentials) => {
-			this.handleCredentialsChanges(stravaApiCredentials);
-		});
-	}
+        this.stravaConnectorService.fetch().then((stravaConnectorInfo: StravaConnectorInfo) => {
+            this.updateSyncDateTimeText();
+            this.handleCredentialsChanges(stravaConnectorInfo);
+        });
 
-	public refreshRandomStravaApiApplication(): void {
-		this.randomStravaApiApplication().then((generatedStravaApiApplication: GeneratedStravaApiApplication) => {
-			this.generatedStravaApiApplication = generatedStravaApiApplication;
-			setTimeout(() => jdenticon.update("#appIcon", this.generatedStravaApiApplication.appName));
-		}).catch(err => {
-			throw err;
-		});
-	}
+        this.stravaConnectorService.stravaConnectorInfo$.subscribe((stravaConnectorInfo: StravaConnectorInfo) => {
+            this.handleCredentialsChanges(stravaConnectorInfo);
+        });
+    }
 
-	public handleCredentialsChanges(stravaApiCredentials: StravaApiCredentials): void {
-		setTimeout(() => {
-			this.stravaApiCredentials = stravaApiCredentials;
-			this.expiresAt = (this.stravaApiCredentials.expiresAt > 0) ? moment(this.stravaApiCredentials.expiresAt).format("LLLL") : null;
-		});
-	}
+    public refreshRandomStravaApiApplication(): void {
+        this.randomStravaApiApplication().then((generatedStravaApiApplication: GeneratedStravaApiApplication) => {
+            this.generatedStravaApiApplication = generatedStravaApiApplication;
+            setTimeout(() => jdenticon.update("#appIcon", this.generatedStravaApiApplication.appName));
+        }).catch(err => {
+            throw err;
+        });
+    }
 
-	public onClientIdChange(): void {
-		this.resetTokens();
-	}
+    public handleCredentialsChanges(stravaConnectorInfo: StravaConnectorInfo): void {
+        setTimeout(() => {
+            this.stravaConnectorInfo = stravaConnectorInfo;
+            this.expiresAt = (this.stravaConnectorInfo.expiresAt > 0) ? moment(this.stravaConnectorInfo.expiresAt).format("LLLL") : null;
+        });
+    }
 
-	public onClientSecretChange(): void {
-		this.resetTokens();
-	}
+    public onClientIdChange(): void {
+        this.resetTokens();
+    }
 
-	public resetTokens(): void {
-		this.stravaConnectorService.fetchCredentials().then((stravaApiCredentials: StravaApiCredentials) => {
-			stravaApiCredentials.clientId = this.stravaApiCredentials.clientId;
-			stravaApiCredentials.clientSecret = (this.stravaApiCredentials.clientSecret) ? this.stravaApiCredentials.clientSecret.trim() : null;
-			stravaApiCredentials.accessToken = null;
-			stravaApiCredentials.refreshToken = null;
-			stravaApiCredentials.expiresAt = null;
-			return this.stravaConnectorService.stravaApiCredentialsService.save(stravaApiCredentials);
-		}).then((stravaApiCredentials: StravaApiCredentials) => {
-			this.stravaApiCredentials = stravaApiCredentials;
-			// Force clear cookie to allow connection with another strava account
-			this.electronService.electron.remote.getCurrentWindow().webContents.session.clearStorageData({storages: ["cookies"]});
-		});
-	}
+    public onClientSecretChange(): void {
+        this.resetTokens();
+    }
 
-	public stravaAuthentication(): void {
-		this.stravaConnectorService.authenticate().then((stravaApiCredentials: StravaApiCredentials) => {
-			this.stravaApiCredentials = stravaApiCredentials;
-			this.showConfigure = false;
-			this.showHowTo = false;
-		}).catch(error => {
+    public resetTokens(): void {
+        this.stravaConnectorService.fetch().then((stravaConnectorInfo: StravaConnectorInfo) => {
+            stravaConnectorInfo.clientId = this.stravaConnectorInfo.clientId;
+            stravaConnectorInfo.clientSecret = (this.stravaConnectorInfo.clientSecret) ? this.stravaConnectorInfo.clientSecret.trim() : null;
+            stravaConnectorInfo.accessToken = null;
+            stravaConnectorInfo.refreshToken = null;
+            stravaConnectorInfo.expiresAt = null;
+            return this.stravaConnectorService.stravaConnectorInfoService.save(stravaConnectorInfo);
+        }).then((stravaConnectorInfo: StravaConnectorInfo) => {
+            this.stravaConnectorInfo = stravaConnectorInfo;
+            // Force clear cookie to allow connection with another strava account
+            this.electronService.electron.remote.getCurrentWindow().webContents.session.clearStorageData({storages: ["cookies"]});
+        });
+    }
 
-			let errorMessage = null;
+    public onUpdateActivitiesNameAndTypeChanged(): void {
+        this.stravaConnectorService.stravaConnectorInfoService.save(this.stravaConnectorInfo).then((stravaConnectorInfo: StravaConnectorInfo) => {
+            this.stravaConnectorInfo = stravaConnectorInfo;
+        });
+    }
 
-			if (error.statusCode === HttpCodes.UNAUTHORIZED) {
-				errorMessage = "Unauthorized access to strava. Check your client id and client secret.";
-			} else if (error.statusCode === HttpCodes.FORBIDDEN) {
-				errorMessage = "Forbidden access to strava. Please check your client id and client secret.";
-			} else if (error.code === "EADDRINUSE") {
-				errorMessage = "A Strava login window is already opened. Please use it.";
-			} else {
-				throw error;
-			}
+    public stravaAuthentication(): void {
+        this.stravaConnectorService.authenticate().then((stravaConnectorInfo: StravaConnectorInfo) => {
+            this.stravaConnectorInfo = stravaConnectorInfo;
+            this.showConfigure = false;
+            this.showHowTo = false;
+        }).catch(error => {
 
-			this.snackBar.open(errorMessage, "Ok");
-		});
-	}
+            let errorMessage = null;
 
-	public sync(fastSync: boolean = null): void {
-		this.stravaConnectorService.sync(fastSync);
-	}
+            if (error.statusCode === HttpCodes.UNAUTHORIZED) {
+                errorMessage = "Unauthorized access to strava. Check your client id and client secret.";
+            } else if (error.statusCode === HttpCodes.FORBIDDEN) {
+                errorMessage = "Forbidden access to strava. Please check your client id and client secret.";
+            } else if (error.code === "EADDRINUSE") {
+                errorMessage = "A Strava login window is already opened. Please use it.";
+            } else {
+                throw error;
+            }
 
-	public disconnect(): void {
-		this.resetTokens();
-	}
+            this.snackBar.open(errorMessage, "Ok");
+        });
+    }
 
-	public randomStravaApiApplication(): Promise<GeneratedStravaApiApplication> {
+    public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
+        return super.sync().then(() => {
+            return this.stravaConnectorService.sync(fastSync, forceSync);
+        }).catch(err => {
+            if (err !== ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE) {
+                return Promise.reject(err);
+            }
+            return Promise.resolve();
+        });
+    }
 
-		return new Promise(resolve => {
+    public disconnect(): void {
+        this.resetTokens();
+    }
 
-			this.logger.info("Generating a random strava api application");
+    public randomStravaApiApplication(): Promise<GeneratedStravaApiApplication> {
 
-			const appNameDictionaries = Math.floor(Math.random() * 10) % 2 === 0 ? [colors, adjectives, animals] : [adjectives, colors, names];
+        return new Promise(resolve => {
 
-			const appName = uniqueNamesGenerator({
-				dictionaries: appNameDictionaries,
-				style: "lowerCase",
-				separator: " "
-			});
+            this.logger.info("Generating a random strava api application");
 
-			const webSite = "https://" + uniqueNamesGenerator({
-				dictionaries: [adjectives, names],
-				style: "lowerCase",
-				separator: ".",
-				length: 2
-			}) + "." + ["com", "org", "io"][Math.floor(Math.random() * 10) % 3];
+            const appNameDictionaries = Math.floor(Math.random() * 10) % 2 === 0 ? [colors, adjectives, animals] : [adjectives, colors, names];
 
-			const imageFileName = Math.floor(Math.random() * 10000000).toString(16) + ".png";
+            const appName = uniqueNamesGenerator({
+                dictionaries: appNameDictionaries,
+                style: "lowerCase",
+                separator: " "
+            });
 
-			resolve({
-				appName: _.upperFirst(appName),
-				imageFileName: imageFileName,
-				webSite: webSite
-			});
+            const webSite = "https://" + uniqueNamesGenerator({
+                dictionaries: [adjectives, names],
+                style: "lowerCase",
+                separator: ".",
+                length: 2
+            }) + "." + ["com", "org", "io"][Math.floor(Math.random() * 10) % 3];
 
-		});
-	}
+            const imageFileName = Math.floor(Math.random() * 10000000).toString(16) + ".png";
 
-	public onConfigure(): void {
-		this.showConfigure = true;
-	}
+            resolve({
+                appName: _.upperFirst(appName),
+                imageFileName: imageFileName,
+                webSite: webSite
+            });
 
-	public onHowToClicked(): void {
-		this.showHowTo = true;
-		this.refreshRandomStravaApiApplication();
-	}
+        });
+    }
+
+    public onConfigure(): void {
+        this.showConfigure = true;
+    }
+
+    public onHowToClicked(): void {
+        this.showHowTo = true;
+        this.refreshRandomStravaApiApplication();
+    }
 }

@@ -15,53 +15,54 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ActivitiesComponent", () => {
 
-	const pluginId = "c061d18abea0";
-	let activityService: ActivityService = null;
-	let userSettingsService: UserSettingsService = null;
-	let syncService: SyncService<any>;
+    const pluginId = "c061d18abea0";
+    let activityService: ActivityService = null;
+    let userSettingsService: UserSettingsService = null;
+    let syncService: SyncService<any>;
 
-	let component: ActivitiesComponent;
-	let fixture: ComponentFixture<ActivitiesComponent>;
+    let component: ActivitiesComponent;
+    let fixture: ComponentFixture<ActivitiesComponent>;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-			]
-		}).compileComponents();
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+            ]
+        }).compileComponents();
 
-		spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
-			addListener: () => {
-			}
-		});
+        spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
+            // @ts-ignore
+            addListener: (message: any, sender: any, sendResponse: any) => {
+            }
+        });
 
-		spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
+        spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
-		activityService = TestBed.inject(ActivityService);
-		userSettingsService = TestBed.inject(UserSettingsService);
-		syncService = TestBed.inject(SyncService);
+        activityService = TestBed.inject(ActivityService);
+        userSettingsService = TestBed.inject(UserSettingsService);
+        syncService = TestBed.inject(SyncService);
 
-		// Mocking
-		spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
-		spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
+        // Mocking
+        spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
+        spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
-		spyOn(syncService, "getSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
-		spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
+        spyOn(syncService, "getSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
+        spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
 
-		done();
+        done();
 
-	});
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(ActivitiesComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(ActivitiesComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 });

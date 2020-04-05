@@ -1,12 +1,13 @@
 #yearProgressGraph {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 #changeMomentWatched {
-	min-height: 35px;
-	width: 100%;
-	text-align: center;
-	button {
-		width: 30%;
-	}
+    min-height: 35px;
+    width: 100%;
+    text-align: center;
+
+    button {
+        width: 30%;
+    }
 }

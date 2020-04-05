@@ -1,117 +1,117 @@
 <div fxFill fxLayout="row" fxLayoutAlign="space-between center">
 
-	<mat-form-field fxFlex="25" fxFlex.lt-lg="47">
-		<mat-select
-			[(ngModel)]="lastPeriodViewed"
-			(selectionChange)="onLastPeriodSelected()"
-			placeholder="Last">
-			<mat-option
-				*ngFor="let lastPeriod of lastPeriods;"
-				[value]="lastPeriod">
-				{{lastPeriod.label}}
-			</mat-option>
-		</mat-select>
-	</mat-form-field>
+    <mat-form-field fxFlex="25" fxFlex.lt-lg="47">
+        <mat-select
+            (selectionChange)="onLastPeriodSelected()"
+            [(ngModel)]="lastPeriodViewed"
+            placeholder="Last">
+            <mat-option
+                *ngFor="let lastPeriod of lastPeriods;"
+                [value]="lastPeriod">
+                {{lastPeriod.label}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
 
-	<span fxFlex="1"></span>
+    <span fxFlex="1"></span>
 
-	<mat-form-field fxFlex="29" fxFlex.lt-lg="25.5">
-		<input matInput
-			   [(ngModel)]="periodViewed.from"
-			   [min]="dateMin"
-			   [max]="periodViewed.to"
-			   [matDatepicker]="datePickerFrom"
-			   (dateChange)="onDateToDateChange()"
-			   placeholder="From">
-		<mat-datepicker-toggle matSuffix [for]="datePickerFrom"></mat-datepicker-toggle>
-		<mat-datepicker #datePickerFrom></mat-datepicker>
-	</mat-form-field>
+    <mat-form-field fxFlex="29" fxFlex.lt-lg="25.5">
+        <input (dateChange)="onDateToDateChange()"
+               [(ngModel)]="periodViewed.from"
+               [matDatepicker]="datePickerFrom"
+               [max]="periodViewed.to"
+               [min]="dateMin"
+               matInput
+               placeholder="From">
+        <mat-datepicker-toggle [for]="datePickerFrom" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #datePickerFrom></mat-datepicker>
+    </mat-form-field>
 
-	<span fxFlex="1"></span>
+    <span fxFlex="1"></span>
 
-	<mat-form-field fxFlex="29" fxFlex.lt-lg="25.5">
-		<input matInput
-			   [(ngModel)]="periodViewed.to"
-			   [min]="periodViewed.from"
-			   [max]="dateMax"
-			   [matDatepicker]="datePickerTo"
-			   (dateChange)="onDateToDateChange()"
-			   placeholder="To">
-		<mat-datepicker-toggle matSuffix [for]="datePickerTo"></mat-datepicker-toggle>
-		<mat-datepicker #datePickerTo></mat-datepicker>
-	</mat-form-field>
+    <mat-form-field fxFlex="29" fxFlex.lt-lg="25.5">
+        <input (dateChange)="onDateToDateChange()"
+               [(ngModel)]="periodViewed.to"
+               [matDatepicker]="datePickerTo"
+               [max]="dateMax"
+               [min]="periodViewed.from"
+               matInput
+               placeholder="To">
+        <mat-datepicker-toggle [for]="datePickerTo" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #datePickerTo></mat-datepicker>
+    </mat-form-field>
 
-	<span fxFlex="3"></span>
+    <span fxFlex="3"></span>
 
-	<button mat-icon-button color="primary" (click)="onConfigClicked()"
-			matTooltip="Configure Fitness Trend">
-		<mat-icon>settings</mat-icon>
-	</button>
+    <button (click)="onConfigClicked()" color="primary" mat-icon-button
+            matTooltip="Configure Fitness Trend">
+        <mat-icon>settings</mat-icon>
+    </button>
 
-	<span fxFlex="3"></span>
+    <span fxFlex="3"></span>
 
-	<button mat-icon-button color="primary" (click)="onShowInfo()"
-			matTooltip="Fitness Trend User Guide">
-		<mat-icon>help_outline</mat-icon>
-	</button>
+    <button (click)="onShowInfo()" color="primary" mat-icon-button
+            matTooltip="Fitness Trend User Guide">
+        <mat-icon>help_outline</mat-icon>
+    </button>
 
 </div>
 
-<div fxFill fxLayout="row" fxLayoutAlign="space-between center" class="fromToPeriod">
+<div class="fromToPeriod" fxFill fxLayout="row" fxLayoutAlign="space-between center">
 
-	<mat-slide-toggle [(ngModel)]="isTrainingZonesEnabled"
-					  [disabled]="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
-					  (change)="onTrainingZonesToggle()"
-					  matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+    <mat-slide-toggle (change)="onTrainingZonesToggle()"
+                      [(ngModel)]="isTrainingZonesEnabled"
+                      [disabled]="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
+                      matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
 					  'Training Zones are disabled when heart rate stress calculation method is set to TRIMP (Training Impulse). Because TRIMP scores are not optimized to be use with Training Zones. You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. The feature helper explains why... (click <?> icon to open it). You can switch to HRSS method in feature settings (click <cog> icon).' :
 					  'Enable training zones'}}">
-		<mat-icon>power_input</mat-icon>
-	</mat-slide-toggle>
+        <mat-icon>power_input</mat-icon>
+    </mat-slide-toggle>
 
-	<mat-slide-toggle [(ngModel)]="isPowerMeterEnabled"
-					  [disabled]="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
-					  (change)="onPowerMeterToggle()"
-					  matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+    <mat-slide-toggle (change)="onPowerMeterToggle()"
+                      [(ngModel)]="isPowerMeterEnabled"
+                      [disabled]="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
+                      matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
 					  'Use of cycling power data is disabled when heart rate stress calculation method is set to TRIMP (Training Impulse). Indeed TRIMP scores aren\'t comparable with PSS (Power Stress Score). You should switch to the HRSS (Heart Rate Stress Score) method instead (click on <cog> icon to switch to HRSS method).' :
 					  'Enable use of cycling power data if available on your rides. When enabled, the fitness trend will use & display rides\' PSS (Power Stress Scores). These scores are calculated from activities\' power data. Note that PSS can be calculated only if you properly set your cycling FTP in dated athlete settings.'}}">
-		<mat-icon>flash_on</mat-icon>
-	</mat-slide-toggle>
+        <mat-icon>flash_on</mat-icon>
+    </mat-slide-toggle>
 
-	<mat-slide-toggle [(ngModel)]="isSwimEnabled"
-					  [disabled]="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
-					  (change)="onSwimToggle()"
-					  matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+    <mat-slide-toggle (change)="onSwimToggle()"
+                      [(ngModel)]="isSwimEnabled"
+                      [disabled]="(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)"
+                      matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
 					  'Swimming Stress Scores (SSS) are not used in fitness trend calculation when heart rate stress calculation method is set to TRIMP (Training Impulse). Because TRIMP scores compared to SSS scores is not fully reliable. You should switch to the HRSS (Heart Rate Stress Score) method instead which is recommended. The feature helper explains why... (click <?> icon to open it). You can switch to HRSS method in feature settings (click <cog> icon).' :
 					  'Enable SSS (Swimming Stress Score) on swimming activities. Note that SSS can be calculated only if you properly set your swim FTP in dated athlete settings'}}">
-		<mat-icon>pool</mat-icon>
-	</mat-slide-toggle>
+        <mat-icon>pool</mat-icon>
+    </mat-slide-toggle>
 
-	<mat-slide-toggle [(ngModel)]="isEBikeRidesEnabled"
-					  (change)="onEBikeRidesEnabledToggle()"
-					  matTooltip="Include electrical assisted rides">
-		<mat-icon>battery_charging_full</mat-icon>
-	</mat-slide-toggle>
+    <mat-slide-toggle (change)="onEBikeRidesEnabledToggle()"
+                      [(ngModel)]="isEBikeRidesEnabled"
+                      matTooltip="Include electrical assisted rides">
+        <mat-icon>battery_charging_full</mat-icon>
+    </mat-slide-toggle>
 
-	<mat-slide-toggle
-		[(ngModel)]="isEstimatedPowerStressScoreEnabled"
-		(change)="onEstimatedPowerStressScoreToggle()"
-		[disabled]="!isPowerMeterEnabled || fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP"
-		matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+    <mat-slide-toggle
+        (change)="onEstimatedPowerStressScoreToggle()"
+        [(ngModel)]="isEstimatedPowerStressScoreEnabled"
+        [disabled]="!isPowerMeterEnabled || fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP"
+        matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
 					  'Use of estimated cycling power data is disabled when heart rate stress calculation method is set to TRIMP (Training Impulse). Indeed TRIMP scores aren\'t comparable with estimated PSS (Power Stress Score). You should switch to the HRSS (Heart Rate Stress Score) method instead (click on <cog> icon to switch to HRSS method).' :
 					  ((isPowerMeterEnabled) ? 'Enable use of estimated cycling power data if available on your rides. When enabled, the fitness trend will use & display rides\' estimated PSS (Power Stress Scores). These scores are calculated from activities\' estimated power data. Note that PSS can be calculated only if you properly set your cycling FTP in dated athlete settings and your weight is set in your strava.com profile (required to allow strava to estimate the power data on next rides).': 'Please enable use of cycling power data to enable the estimated.')}}">
-		<mat-icon [inline]="true">graphic_eq</mat-icon>
-		<mat-icon [inline]="true">flash_on</mat-icon>
-	</mat-slide-toggle>
+        <mat-icon [inline]="true">graphic_eq</mat-icon>
+        <mat-icon [inline]="true">flash_on</mat-icon>
+    </mat-slide-toggle>
 
-	<mat-slide-toggle
-		[(ngModel)]="isEstimatedRunningStressScoreEnabled"
-		(change)="onEstimatedRunningStressScoreToggle()"
-		[disabled]="fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP"
-		matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
+    <mat-slide-toggle
+        (change)="onEstimatedRunningStressScoreToggle()"
+        [(ngModel)]="isEstimatedRunningStressScoreEnabled"
+        [disabled]="fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP"
+        matTooltip="{{(fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ?
 					  'Use of estimated RSS (Running Stress Score) is disabled when heart rate stress calculation method is set to TRIMP (Training Impulse). Indeed TRIMP scores aren\'t comparable with estimated RSS. You should switch to the HRSS (Heart Rate Stress Score) method instead (click on <cog> icon to switch to HRSS method).' :
 					  'Enable estimated RSS (Running Stress Score). When enabled, the fitness trend will use & display runs\' estimated RSS. These scores are calculated from activities\' pace & time data. Note that RSS can be calculated only if you properly set your running FTP in dated athlete settings.'}}">
-		<mat-icon [inline]="true">graphic_eq</mat-icon>
-		<mat-icon [inline]="true">directions_run</mat-icon>
-	</mat-slide-toggle>
+        <mat-icon [inline]="true">graphic_eq</mat-icon>
+        <mat-icon [inline]="true">directions_run</mat-icon>
+    </mat-slide-toggle>
 
 </div>

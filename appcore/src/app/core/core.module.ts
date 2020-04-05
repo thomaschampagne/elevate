@@ -9,28 +9,28 @@ import { KatexExpressionComponent } from "../shared/components/katex-expression/
 import { ClipboardModule } from "ngx-clipboard";
 
 @NgModule({
-	imports: [
-		CommonModule,
-		FormsModule,
-		MaterialModule,
-		HttpClientModule,
-		FlexLayoutModule,
-		NgPipesModule,
-		ClipboardModule
-	],
-	exports: [
-		CommonModule,
-		FormsModule,
-		MaterialModule,
-		HttpClientModule,
-		FlexLayoutModule,
-		NgPipesModule,
-		ClipboardModule,
-		KatexExpressionComponent,
-	],
-	declarations: [
-		KatexExpressionComponent
-	]
+    imports: [
+        CommonModule,
+        FormsModule,
+        MaterialModule,
+        HttpClientModule,
+        FlexLayoutModule,
+        NgPipesModule,
+        ClipboardModule
+    ],
+    exports: [
+        CommonModule,
+        FormsModule,
+        MaterialModule,
+        HttpClientModule,
+        FlexLayoutModule,
+        NgPipesModule,
+        ClipboardModule,
+        KatexExpressionComponent,
+    ],
+    declarations: [
+        KatexExpressionComponent
+    ]
 })
 export class CoreModule {
 }

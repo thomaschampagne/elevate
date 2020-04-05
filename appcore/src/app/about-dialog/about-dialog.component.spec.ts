@@ -10,39 +10,39 @@ import { VERSIONS_PROVIDER } from "../shared/services/versions/versions-provider
 import { MockedVersionsProvider } from "../shared/services/versions/impl/mock/mocked-versions-provider";
 
 describe("AboutDialogComponent", () => {
-	let component: AboutDialogComponent;
-	let fixture: ComponentFixture<AboutDialogComponent>;
+    let component: AboutDialogComponent;
+    let fixture: ComponentFixture<AboutDialogComponent>;
 
-	beforeEach((done: Function) => {
+    beforeEach(done => {
 
-		const mockedDataStore: MockedDataStore<void> = new MockedDataStore();
-		const mockedVersionsProvider: MockedVersionsProvider = new MockedVersionsProvider();
+        const mockedDataStore: MockedDataStore<void> = new MockedDataStore();
+        const mockedVersionsProvider: MockedVersionsProvider = new MockedVersionsProvider();
 
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-			],
-			providers: [
-				{
-					provide: MatDialogRef, useValue: {},
-				},
-				{provide: DataStore, useValue: mockedDataStore},
-				{provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider}
-			]
-		}).compileComponents();
-		done();
-	});
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+            ],
+            providers: [
+                {
+                    provide: MatDialogRef, useValue: {},
+                },
+                {provide: DataStore, useValue: mockedDataStore},
+                {provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider}
+            ]
+        }).compileComponents();
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(AboutDialogComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(AboutDialogComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 });

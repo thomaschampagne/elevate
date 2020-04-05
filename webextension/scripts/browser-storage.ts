@@ -4,268 +4,266 @@ import { BrowserStorageType } from "./models/browser-storage-type.enum";
 
 export class BrowserStorage {
 
-	constructor(extensionId?: string) {
-		this.extensionId = (extensionId) ? extensionId : null;
-	}
+    public static readonly ON_GET_MESSAGE: string = "ON_GET_MESSAGE";
+    public static readonly ON_SET_MESSAGE: string = "ON_SET_MESSAGE";
+    public static readonly ON_RM_MESSAGE: string = "ON_RM_MESSAGE";
+    public static readonly ON_CLEAR_MESSAGE: string = "ON_CLEAR_MESSAGE";
+    public static readonly ON_USAGE_MESSAGE: string = "ON_USAGE_MESSAGE";
+    private static instance: BrowserStorage = null;
+    private extensionId: string = null;
 
-	public static readonly ON_GET_MESSAGE: string = "ON_GET_MESSAGE";
-	public static readonly ON_SET_MESSAGE: string = "ON_SET_MESSAGE";
-	public static readonly ON_RM_MESSAGE: string = "ON_RM_MESSAGE";
-	public static readonly ON_CLEAR_MESSAGE: string = "ON_CLEAR_MESSAGE";
-	public static readonly ON_USAGE_MESSAGE: string = "ON_USAGE_MESSAGE";
+    constructor(extensionId?: string) {
+        this.extensionId = (extensionId) ? extensionId : null;
+    }
 
-	private static instance: BrowserStorage = null;
+    public static getInstance(): BrowserStorage {
+        if (!this.instance) {
+            this.instance = new BrowserStorage((chrome && chrome.runtime && chrome.runtime.id) ? chrome.runtime.id : null);
+        }
+        return this.instance;
+    }
 
-	private extensionId: string = null;
+    public setExtensionId(extensionId: string): void {
+        this.extensionId = (extensionId) ? extensionId : null;
+    }
 
-	public static getInstance(): BrowserStorage {
-		if (!this.instance) {
-			this.instance = new BrowserStorage((chrome && chrome.runtime && chrome.runtime.id) ? chrome.runtime.id : null);
-		}
-		return this.instance;
-	}
+    public hasExtensionId(): boolean {
+        return (this.extensionId !== null);
+    }
 
-	public setExtensionId(extensionId: string): void {
-		this.extensionId = (extensionId) ? extensionId : null;
-	}
+    /**
+     *
+     * @param storageType
+     * @param key
+     */
+    public get<T>(storageType: BrowserStorageType, key?: string): Promise<T> {
 
-	public hasExtensionId(): boolean {
-		return (this.extensionId !== null);
-	}
+        this.verifyExtensionId();
 
-	/**
-	 *
-	 * @param storageType
-	 * @param key
-	 */
-	public get<T>(storageType: BrowserStorageType, key?: string): Promise<T> {
+        key = (!key) ? null : key;
 
-		this.verifyExtensionId();
+        return new Promise<T>((resolve: Function, reject: Function) => {
 
-		key = (!key) ? null : key;
+            if (this.hasStorageAccess()) {
 
-		return new Promise<T>((resolve: Function, reject: Function) => {
+                chrome.storage[storageType].get(key, (result: T) => {
+                    const error = chrome.runtime.lastError;
+                    if (error) {
+                        reject(error.message);
+                    } else {
 
-			if (this.hasStorageAccess()) {
+                        if (!key) {
+                            resolve(result);
+                        } else {
+                            resolve(result[key]);
+                        }
+                    }
+                });
 
-				chrome.storage[storageType].get(key, (result: T) => {
-					const error = chrome.runtime.lastError;
-					if (error) {
-						reject(error.message);
-					} else {
+            } else {
 
-						if (!key) {
-							resolve(result);
-						} else {
-							resolve(result[key]);
-						}
-					}
-				});
+                this.backgroundStorageQuery<T>(BrowserStorage.ON_GET_MESSAGE, storageType, key).then((result: T) => {
+                    resolve(result);
+                });
+            }
+        });
+    }
 
-			} else {
+    /**
+     *
+     * @param storageType
+     * @param key
+     * @param value
+     */
+    public set<T>(storageType: BrowserStorageType, key: string, value: T): Promise<void> {
 
-				this.backgroundStorageQuery<T>(BrowserStorage.ON_GET_MESSAGE, storageType, key).then((result: T) => {
-					resolve(result);
-				});
-			}
-		});
-	}
+        this.verifyExtensionId();
 
-	/**
-	 *
-	 * @param storageType
-	 * @param key
-	 * @param value
-	 */
-	public set<T>(storageType: BrowserStorageType, key: string, value: T): Promise<void> {
+        return new Promise<void>((resolve: Function, reject: Function) => {
 
-		this.verifyExtensionId();
+            if (this.hasStorageAccess()) {
 
-		return new Promise<void>((resolve: Function, reject: Function) => {
+                let object = {};
+                if (key) {
+                    object[key] = value;
+                } else {
+                    object = value;
+                }
 
-			if (this.hasStorageAccess()) {
+                chrome.storage[storageType].set(object, () => {
+                    const error = chrome.runtime.lastError;
+                    if (error) {
+                        reject(error.message);
+                    } else {
+                        resolve();
+                    }
+                });
 
-				let object = {};
-				if (key) {
-					object[key] = value;
-				} else {
-					object = value;
-				}
+            } else {
 
-				chrome.storage[storageType].set(object, () => {
-					const error = chrome.runtime.lastError;
-					if (error) {
-						reject(error.message);
-					} else {
-						resolve();
-					}
-				});
+                this.backgroundStorageQuery<T>(BrowserStorage.ON_SET_MESSAGE, storageType, key, value).then(() => {
+                    resolve();
+                });
+            }
+        });
+    }
 
-			} else {
+    /**
+     *
+     * @param storageType
+     * @param path
+     * @param value
+     */
+    public upsertProperty<T, V>(storageType: BrowserStorageType, path: string[], value: V): Promise<void> {
+        const key = path.shift();
+        return this.get<T>(storageType, key).then((result: T) => {
+            result = (path.length > 0) ? (_.set(result as Object, path, value) as T) : (value as any);
+            return this.set<T>(storageType, key, result);
+        });
+    }
 
-				this.backgroundStorageQuery<T>(BrowserStorage.ON_SET_MESSAGE, storageType, key, value).then(() => {
-					resolve();
-				});
-			}
-		});
-	}
+    /**
+     *
+     * @param storageType
+     * @param key
+     */
+    public rm<T>(storageType: BrowserStorageType, key: string | string[]): Promise<void> {
 
-	/**
-	 *
-	 * @param storageType
-	 * @param path
-	 * @param value
-	 */
-	public upsertProperty<T, V>(storageType: BrowserStorageType, path: string[], value: V): Promise<void> {
-		const key = path.shift();
-		return this.get<T>(storageType, key).then((result: T) => {
-			result = (path.length > 0) ? (_.set(result as Object, path, value) as T) : (value as any);
-			return this.set<T>(storageType, key, result);
-		});
-	}
+        this.verifyExtensionId();
 
-	/**
-	 *
-	 * @param storageType
-	 * @param key
-	 */
-	public rm<T>(storageType: BrowserStorageType, key: string | string[]): Promise<void> {
+        return new Promise<void>((resolve: Function, reject: Function) => {
 
-		this.verifyExtensionId();
+            if (this.hasStorageAccess()) {
 
-		return new Promise<void>((resolve: Function, reject: Function) => {
+                chrome.storage[storageType].remove(<any> key, () => {
+                    const error = chrome.runtime.lastError;
+                    if (error) {
+                        reject(error.message);
+                    } else {
+                        resolve();
+                    }
+                });
 
-			if (this.hasStorageAccess()) {
+            } else {
 
-				chrome.storage[storageType].remove(<any> key, () => {
-					const error = chrome.runtime.lastError;
-					if (error) {
-						reject(error.message);
-					} else {
-						resolve();
-					}
-				});
+                this.backgroundStorageQuery<T>(BrowserStorage.ON_RM_MESSAGE, storageType, key).then(() => {
+                    resolve();
+                });
+            }
+        });
+    }
 
-			} else {
+    /**
+     *
+     * @param storageType
+     */
+    public clear<T>(storageType: BrowserStorageType): Promise<void> {
 
-				this.backgroundStorageQuery<T>(BrowserStorage.ON_RM_MESSAGE, storageType, key).then(() => {
-					resolve();
-				});
-			}
-		});
-	}
+        this.verifyExtensionId();
 
-	/**
-	 *
-	 * @param storageType
-	 */
-	public clear<T>(storageType: BrowserStorageType): Promise<void> {
+        return new Promise<void>((resolve: Function, reject: Function) => {
 
-		this.verifyExtensionId();
+            if (this.hasStorageAccess()) {
 
-		return new Promise<void>((resolve: Function, reject: Function) => {
+                chrome.storage[storageType].clear(() => {
+                    const error = chrome.runtime.lastError;
+                    if (error) {
+                        reject(error.message);
+                    } else {
+                        resolve();
+                    }
+                });
 
-			if (this.hasStorageAccess()) {
+            } else {
 
-				chrome.storage[storageType].clear(() => {
-					const error = chrome.runtime.lastError;
-					if (error) {
-						reject(error.message);
-					} else {
-						resolve();
-					}
-				});
+                this.backgroundStorageQuery<T>(BrowserStorage.ON_CLEAR_MESSAGE, storageType).then(() => {
+                    resolve();
+                });
+            }
+        });
+    }
 
-			} else {
+    /**
+     *
+     * @param storageType
+     */
+    public usage(storageType: BrowserStorageType): Promise<AppStorageUsage> {
 
-				this.backgroundStorageQuery<T>(BrowserStorage.ON_CLEAR_MESSAGE, storageType).then(() => {
-					resolve();
-				});
-			}
-		});
-	}
+        this.verifyExtensionId();
 
-	/**
-	 *
-	 * @param storageType
-	 */
-	public usage(storageType: BrowserStorageType): Promise<AppStorageUsage> {
+        return new Promise<AppStorageUsage>((resolve: Function, reject: Function) => {
 
-		this.verifyExtensionId();
+            if (this.hasStorageAccess()) {
 
-		return new Promise<AppStorageUsage>((resolve: Function, reject: Function) => {
+                chrome.storage[storageType].getBytesInUse((bytesInUse: number) => {
 
-			if (this.hasStorageAccess()) {
+                    const error = chrome.runtime.lastError;
+                    if (error) {
+                        reject(error.message);
+                    } else {
+                        const storageUsage = {
+                            bytesInUse: bytesInUse,
+                            quotaBytes: chrome.storage[storageType].QUOTA_BYTES,
+                            percentUsage: bytesInUse / chrome.storage[storageType].QUOTA_BYTES * 100,
+                        };
+                        resolve(storageUsage);
+                    }
+                });
 
-				chrome.storage[storageType].getBytesInUse((bytesInUse: number) => {
+            } else {
+                this.backgroundStorageQuery(BrowserStorage.ON_USAGE_MESSAGE, storageType).then((result: AppStorageUsage) => {
+                    resolve(result);
+                });
+            }
+        });
+    }
 
-					const error = chrome.runtime.lastError;
-					if (error) {
-						reject(error.message);
-					} else {
-						const storageUsage = {
-							bytesInUse: bytesInUse,
-							quotaBytes: chrome.storage[storageType].QUOTA_BYTES,
-							percentUsage: bytesInUse / chrome.storage[storageType].QUOTA_BYTES * 100,
-						};
-						resolve(storageUsage);
-					}
-				});
+    /**
+     * Check extension id exists
+     */
+    private verifyExtensionId(): void {
+        if (!this.extensionId) {
+            throw new Error("Missing 'extensionId' property, please set it manually.");
+        }
+    }
 
-			} else {
-				this.backgroundStorageQuery(BrowserStorage.ON_USAGE_MESSAGE, storageType).then((result: AppStorageUsage) => {
-					resolve(result);
-				});
-			}
-		});
-	}
+    /**
+     *
+     */
+    private hasStorageAccess(): boolean {
+        return (chrome && chrome.storage !== undefined);
+    }
 
-	/**
-	 * Check extension id exists
-	 */
-	private verifyExtensionId(): void {
-		if (!this.extensionId) {
-			throw new Error("Missing 'extensionId' property, please set it manually.");
-		}
-	}
+    /**
+     *
+     * @param method
+     * @param storageType
+     * @param key
+     * @param value
+     */
+    private backgroundStorageQuery<T>(method: string, storageType: BrowserStorageType, key?: string | string[], value?: T): Promise<T> {
 
-	/**
-	 *
-	 */
-	private hasStorageAccess(): boolean {
-		return (chrome && chrome.storage !== undefined);
-	}
+        return new Promise<T>((resolve: Function, reject: Function) => {
 
-	/**
-	 *
-	 * @param method
-	 * @param storageType
-	 * @param key
-	 * @param value
-	 */
-	private backgroundStorageQuery<T>(method: string, storageType: BrowserStorageType, key?: string | string[], value?: T): Promise<T> {
+            const params: any = {
+                storage: storageType,
+            };
 
-		return new Promise<T>((resolve: Function, reject: Function) => {
+            if (key !== undefined) {
+                params.key = key;
+            }
 
-			const params: any = {
-				storage: storageType,
-			};
+            if (value !== undefined) {
+                params.value = value;
+            }
 
-			if (key !== undefined) {
-				params.key = key;
-			}
-
-			if (value !== undefined) {
-				params.value = value;
-			}
-
-			chrome.runtime.sendMessage(this.extensionId, {
-				method: method,
-				params: params
-			}, (result: { data: T }) => {
-				resolve(result.data);
-			});
-		});
-	}
+            chrome.runtime.sendMessage(this.extensionId, {
+                method: method,
+                params: params
+            }, (result: { data: T }) => {
+                resolve(result.data);
+            });
+        });
+    }
 
 }

@@ -5,29 +5,29 @@ import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
 
 describe("ShareComponent", () => {
-	let component: ShareComponent;
-	let fixture: ComponentFixture<ShareComponent>;
+    let component: ShareComponent;
+    let fixture: ComponentFixture<ShareComponent>;
 
-	beforeEach((done: Function) => {
-		TestBed.configureTestingModule({
-			imports: [
-				CoreModule,
-				SharedModule,
-			]
-		}).compileComponents();
+    beforeEach(done => {
+        TestBed.configureTestingModule({
+            imports: [
+                CoreModule,
+                SharedModule,
+            ]
+        }).compileComponents();
 
-		done();
-	});
+        done();
+    });
 
-	beforeEach((done: Function) => {
-		fixture = TestBed.createComponent(ShareComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		done();
-	});
+    beforeEach(done => {
+        fixture = TestBed.createComponent(ShareComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        done();
+    });
 
-	it("should create", (done: Function) => {
-		expect(component).toBeTruthy();
-		done();
-	});
+    it("should create", done => {
+        expect(component).toBeTruthy();
+        done();
+    });
 });

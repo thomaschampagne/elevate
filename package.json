@@ -1,33 +1,36 @@
 {
-	"name": "elevate",
-	"version": "6.14.0",
-	"description": "Wrap the needed tools required to cook Elevate desktop and web extension",
-	"maintainers": [
-		{
-			"name": "Thomas Champagne",
-			"email": "th.champagne@gmail.com",
-			"web": "https://thomaschampagne.github.io"
-		}
-	],
-	"keywords": [
-		"strava",
+    "name": "elevate",
+    "version": "7.0.0-alpha.4",
+    "description": "Wrap the needed tools required to cook Elevate desktop and web extension",
+    "maintainers": [
+        {
+            "name": "Thomas Champagne",
+            "email": "th.champagne@gmail.com",
+            "web": "https://thomaschampagne.github.io"
+        }
+    ],
+    "keywords": [
+        "strava",
 		"cycling",
 		"running",
 		"tracking"
 	],
 	"scripts": {
-		"audit:fix": "npm audit fix && cd ./appcore/ && npm audit fix && cd ../desktop/ && npm audit fix && cd ../webextension/ && npm audit fix",
-		"clean": "node ./node_modules/del-cli/cli.js ./dist/ ./package/ && cd ./desktop/ && npm run clean && cd ../webextension/ && npm run clean",
-		"package:webextension": "npm run clean && cd ./webextension/ && npm run package && node ../node_modules/cpy-cli/cli.js ./package/* ../package",
-		"package:desktop:windows": "npm run clean && cd ./desktop/ && npm run package:windows && node ../node_modules/cpy-cli/cli.js ./package/elevate-* ../package",
-		"package:desktop:linux": "npm run clean && cd ./desktop/ && npm run package:linux && node ../node_modules/cpy-cli/cli.js ./package/elevate-* ../package",
-		"package:desktop:osx": "echo to be done...",
-		"postinstall": "cd webextension/ && npm install && cd ../appcore/ && npm install && cd ../desktop/ && npm install",
-		"test": "cd ./appcore/ && npm test && cd ../desktop/ && npm test && cd ../webextension/ && npm test",
-		"wipe": "npm run clean && npm run wipe:package-locks && npm run wipe:node-modules",
-		"wipe:node-modules": "node ./node_modules/del-cli/cli.js ./node_modules/ ./appcore/node_modules/ ./desktop/node_modules/ ./webextension/node_modules/",
-		"wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json ./appcore/package-lock.json ./desktop/package-lock.json ./webextension/package-lock.json"
-	},
+        "audit:fix": "npm audit fix && cd ./appcore/ && npm audit fix && cd ../desktop/ && npm audit fix && cd ../webextension/ && npm audit fix",
+        "clean": "node ./node_modules/del-cli/cli.js ./dist/ ./package/ && cd ./desktop/ && npm run clean && cd ../webextension/ && npm run clean",
+        "package:webextension": "npm run clean && cd ./webextension/ && npm run package && node ../node_modules/cpy-cli/cli.js ./package/* ../package",
+        "package:desktop:windows": "npm run clean && cd ./desktop/ && npm run package:windows && node ../node_modules/cpy-cli/cli.js ./package/elevate-* ../package",
+        "package:desktop:linux": "npm run clean && cd ./desktop/ && npm run package:linux && node ../node_modules/cpy-cli/cli.js ./package/elevate-* ../package",
+        "package:desktop:osx": "echo to be done...",
+        "postinstall": "cd webextension/ && npm install && cd ../appcore/ && npm install && cd ../desktop/ && npm install",
+        "test": "cd ./appcore/ && npm test && cd ../desktop/ && npm test && cd ../webextension/ && npm test",
+        "type:check": "cd ./appcore/ && npm run type:check && cd ../desktop/ && npm run type:check && cd ../webextension/ && npm run type:check",
+        "wipe": "npm run clean && npm run wipe:package-locks && npm run wipe:node-modules",
+        "wipe:node-modules": "node ./node_modules/del-cli/cli.js ./node_modules/ ./appcore/node_modules/ ./desktop/node_modules/ ./webextension/node_modules/",
+        "wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json ./appcore/package-lock.json ./desktop/package-lock.json ./webextension/package-lock.json",
+        "upgrade:check:all": "npx ncu && cd ./appcore/ && npx ncu && cd ../desktop/ && npx ncu && cd ../webextension/ && npx ncu",
+        "upgrade:apply:all": "npx ncu -u && cd ./appcore/ && npx ncu -u && cd ../desktop/ && npx ncu -u && cd ../webextension/ && npx ncu -u"
+    },
 	"config": {
 		"unsafe-perm": true
 	},

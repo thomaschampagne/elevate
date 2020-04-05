@@ -1,26 +1,26 @@
 <h2 mat-dialog-title>
-	{{((data.mode == Mode.IMPORT) ? "Import" : "Export")}} <{{data.zoneDefinition.name}}> zones
+    {{((data.mode == Mode.IMPORT) ? "Import" : "Export")}} <{{data.zoneDefinition.name}}> zones
 </h2>
 <mat-dialog-content class="mat-body-1">
 
-	<span *ngIf="(data.mode == Mode.IMPORT)">Paste exported zones in input field.</span>
-	<span *ngIf="(data.mode == Mode.EXPORT)">Copy below content where you want to save it!</span>
-	<br/><br/>
-	<mat-form-field fxFill>
-		<input
-			matInput
-			[readonly]="(data.mode == Mode.EXPORT)"
-			[(ngModel)]="zonesJsonData"
-			placeholder="{{placeholder}}"
-			autofocus/>
-	</mat-form-field>
+    <span *ngIf="(data.mode == Mode.IMPORT)">Paste exported zones in input field.</span>
+    <span *ngIf="(data.mode == Mode.EXPORT)">Copy below content where you want to save it!</span>
+    <br/><br/>
+    <mat-form-field fxFill>
+        <input
+            [(ngModel)]="zonesJsonData"
+            [readonly]="(data.mode == Mode.EXPORT)"
+            autofocus
+            matInput
+            placeholder="{{placeholder}}"/>
+    </mat-form-field>
 
 </mat-dialog-content>
 
 <mat-dialog-actions>
-	<button mat-stroked-button mat-dialog-close color="primary">Close</button>
-	<span fxFlex="1"></span>
-	<button mat-stroked-button mat-dialog-close color="primary" *ngIf="(data.mode == Mode.IMPORT)" (click)="OnImport()">
-		Import
-	</button>
+    <button color="primary" mat-dialog-close mat-stroked-button>Close</button>
+    <span fxFlex="1"></span>
+    <button (click)="OnImport()" *ngIf="(data.mode == Mode.IMPORT)" color="primary" mat-dialog-close mat-stroked-button>
+        Import
+    </button>
 </mat-dialog-actions>

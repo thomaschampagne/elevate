@@ -9,14 +9,14 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 @Injectable()
 export class UserSettingsDao extends BaseDao<UserSettingsModel> {
 
-	public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("userSettings", StorageType.OBJECT);
-	public static readonly DEFAULT_STORAGE_VALUE: UserSettingsModel = UserSettings.getDefaultsByEnvTarget(environment.target);
+    public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("userSettings", StorageType.OBJECT);
+    public static readonly DEFAULT_STORAGE_VALUE: UserSettingsModel = UserSettings.getDefaultsByEnvTarget(environment.target);
 
-	public getStorageLocation(): StorageLocationModel {
-		return UserSettingsDao.STORAGE_LOCATION;
-	}
+    public getStorageLocation(): StorageLocationModel {
+        return UserSettingsDao.STORAGE_LOCATION;
+    }
 
-	public getDefaultStorageValue(): UserSettingsModel[] | UserSettingsModel {
-		return UserSettingsDao.DEFAULT_STORAGE_VALUE;
-	}
+    public getDefaultStorageValue(): UserSettingsModel[] | UserSettingsModel {
+        return UserSettingsDao.DEFAULT_STORAGE_VALUE;
+    }
 }

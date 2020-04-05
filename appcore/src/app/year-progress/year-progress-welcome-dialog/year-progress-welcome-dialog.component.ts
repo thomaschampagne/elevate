@@ -2,19 +2,19 @@ import { Component, OnInit } from "@angular/core";
 import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
-	selector: "app-fitness-trend-welcome-dialog",
-	template: `
-		<h2 mat-dialog-title>New feature: "Rolling progression" mode </h2>
-		<mat-dialog-content class="mat-body-1">
+    selector: "app-fitness-trend-welcome-dialog",
+    template: `
+        <h2 mat-dialog-title>Notice about "Rolling progression" mode </h2>
+        <mat-dialog-content class="mat-body-1">
 
-			<div>
-				The <strong>rolling progression</strong> mode helps you to analyze your training volume/intensity variations over a <i>"customise-able
-				fixed rolling time window"</i> which slides every day.
-			</div>
+            <div>
+                The <strong>rolling progression</strong> mode helps you to analyze your training volume/intensity variations over a <i>"customise-able
+                fixed rolling time window"</i> which slides every day.
+            </div>
 
-			<div>
-				This is the total <i>"distance"</i>, <i>"time"</i>, <i>"elevation"</i> OR <i>"activity count"</i> you were able to maintain
-				during this window. And this day after day. In long endurance sports, volume and intensity are the keys for success.
+            <div>
+                This is the total <i>"distance"</i>, <i>"time"</i>, <i>"elevation"</i> OR <i>"activity count"</i> you were able to maintain
+                during this window. And this day after day. In long endurance sports, volume and intensity are the keys for success.
 				Leaving apart intensity which can be obtained with Stress Scores (HRSS, PSS, ...), the rolling progression provides the
 				simplest part of the equation which is hard to get right: <strong>the volume</strong>.
 			</div>
@@ -47,8 +47,8 @@ import { MatDialogRef } from "@angular/material/dialog";
 				</div>
 			</div>
 		</mat-dialog-actions>
-	`,
-	styles: [`
+    `,
+    styles: [`
 		div {
 			padding-top: 10px;
 			padding-bottom: 10px;
@@ -57,23 +57,23 @@ import { MatDialogRef } from "@angular/material/dialog";
 })
 export class YearProgressWelcomeDialogComponent implements OnInit {
 
-	public static readonly LS_HIDE_YEAR_PROGRESS_WELCOME_DIALOG: string = "yearProgress_hideWelcomeInfoDialog"; // TODO To be removed in future
+    public static readonly LS_HIDE_YEAR_PROGRESS_WELCOME_DIALOG: string = "yearProgress_hideWelcomeInfoDialog"; // TODO To be removed in future
 
-	public static readonly MAX_WIDTH: string = "40%";
-	public static readonly MIN_WIDTH: string = "60%";
+    public static readonly MAX_WIDTH: string = "40%";
+    public static readonly MIN_WIDTH: string = "60%";
 
-	public hideMessage: boolean;
+    public hideMessage: boolean;
 
-	constructor(public dialogRef: MatDialogRef<YearProgressWelcomeDialogComponent>) {
-	}
+    constructor(public dialogRef: MatDialogRef<YearProgressWelcomeDialogComponent>) {
+    }
 
-	public ngOnInit(): void {
-	}
+    public ngOnInit(): void {
+    }
 
-	public onGotIt(): void {
-		if (this.hideMessage) {
-			localStorage.setItem(YearProgressWelcomeDialogComponent.LS_HIDE_YEAR_PROGRESS_WELCOME_DIALOG, "true");
-		}
-		this.dialogRef.close();
-	}
+    public onGotIt(): void {
+        if (this.hideMessage) {
+            localStorage.setItem(YearProgressWelcomeDialogComponent.LS_HIDE_YEAR_PROGRESS_WELCOME_DIALOG, "true");
+        }
+        this.dialogRef.close();
+    }
 }

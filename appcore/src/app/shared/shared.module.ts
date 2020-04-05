@@ -9,7 +9,6 @@ import { ConfirmDialogComponent } from "./dialogs/confirm-dialog/confirm-dialog.
 import { OptionHelperDialogComponent } from "../global-settings/option-helper-dialog/option-helper-dialog.component";
 import { UserSettingsService } from "./services/user-settings/user-settings.service";
 import { GlobalSettingsService } from "../global-settings/services/global-settings.service";
-import { ActivityService } from "./services/activity/activity.service";
 import { UserSettingsDao } from "./dao/user-settings/user-settings.dao";
 import { OptionHelperReaderService } from "../global-settings/services/option-helper-reader.service";
 import { ZonesService } from "../zones-settings/shared/zones.service";
@@ -37,57 +36,58 @@ import { ExtensionModule } from "./modules/extension/extension.module";
 import { DesktopModule } from "./modules/desktop/desktop.module";
 import { StreamsDao } from "./dao/streams/streams.dao";
 import { StreamsService } from "./services/streams/streams.service";
+import { ActivityViewComponent } from "../activity-view/activity-view.component";
 
 @NgModule({
-	imports: [
-		CoreModule,
-		BrowserModule,
-		BrowserAnimationsModule,
-		(environment.target === EnvTarget.DESKTOP) ? DesktopModule : ExtensionModule
-	],
-	exports: [
-		CoreModule,
-		BrowserModule,
-		BrowserAnimationsModule
-	],
-	declarations: [
-		// Components
-		ActivitiesComponent,
-		GlobalSettingsComponent,
-		ZonesSettingsComponent,
-		ZoneComponent,
-		DonateComponent,
-		ShareComponent,
-		ReportComponent,
-		FaqComponent,
+    imports: [
+        CoreModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        (environment.target === EnvTarget.DESKTOP) ? DesktopModule : ExtensionModule
+    ],
+    exports: [
+        CoreModule,
+        BrowserModule,
+        BrowserAnimationsModule
+    ],
+    declarations: [
+        // Components
+        ActivitiesComponent,
+        ActivityViewComponent,
+        GlobalSettingsComponent,
+        ZonesSettingsComponent,
+        ZoneComponent,
+        DonateComponent,
+        ShareComponent,
+        ReportComponent,
+        FaqComponent,
 
-		// Dialogs
-		ZoneToolBarComponent,
-		GotItDialogComponent,
-		ConfirmDialogComponent,
-		OptionHelperDialogComponent,
-		ZonesImportExportDialogComponent,
-		AboutDialogComponent,
-		ImportBackupDialogComponent,
-		ImportExportProgressDialogComponent
-	],
-	providers: [
-		UserSettingsService,
-		UserSettingsDao,
-		AthleteService,
-		AthleteDao,
-		AthleteSnapshotResolverService,
-		ActivityService,
-		ActivityDao,
-		StreamsService,
-		StreamsDao,
-		GlobalSettingsService,
-		OptionHelperReaderService,
-		ZonesService,
-		SideNavService,
-		WindowService,
-		{provide: LoggerService, useClass: ConsoleLoggerService}
-	]
+        // Dialogs
+        ZoneToolBarComponent,
+        GotItDialogComponent,
+        ConfirmDialogComponent,
+        OptionHelperDialogComponent,
+        ZonesImportExportDialogComponent,
+        AboutDialogComponent,
+        ImportBackupDialogComponent,
+        ImportExportProgressDialogComponent
+    ],
+    providers: [
+        UserSettingsService,
+        UserSettingsDao,
+        AthleteService,
+        AthleteDao,
+        AthleteSnapshotResolverService,
+        ActivityDao,
+        StreamsService,
+        StreamsDao,
+        GlobalSettingsService,
+        OptionHelperReaderService,
+        ZonesService,
+        SideNavService,
+        WindowService,
+        {provide: LoggerService, useClass: ConsoleLoggerService}
+    ]
 })
 export class SharedModule {
 }

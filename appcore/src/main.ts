@@ -6,7 +6,7 @@ import { environment } from "./environments/environment";
 import { Theme } from "./app/shared/enums/theme.enum";
 
 if (environment.production) {
-	enableProdMode();
+    enableProdMode();
 }
 
 (<any> window).performance_start_app = window.performance.now();

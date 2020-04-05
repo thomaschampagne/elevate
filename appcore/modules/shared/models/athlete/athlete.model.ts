@@ -4,34 +4,33 @@ import { AbstractAthleteModel } from "./abstract-athlete.model";
 
 export class AthleteModel extends AbstractAthleteModel {
 
-	/**
-	 *
-	 * @param {Gender} gender
-	 * @param {AthleteSettingsModel} datedAthleteSettings
-	 */
-	constructor(gender: Gender, datedAthleteSettings: DatedAthleteSettingsModel[]) {
-		super();
-		this.gender = gender;
-		this.datedAthleteSettings = (!datedAthleteSettings || datedAthleteSettings.length === 0)
-			? [DatedAthleteSettingsModel.DEFAULT_MODEL] : datedAthleteSettings;
-	}
+    public static readonly DEFAULT_MODEL: AthleteModel = new AthleteModel(Gender.MEN, AthleteModel.getDefaultDatedAthleteSettings());
+    public gender: Gender;
+    public datedAthleteSettings: DatedAthleteSettingsModel[];
 
-	public static readonly DEFAULT_MODEL: AthleteModel = new AthleteModel(Gender.MEN, AthleteModel.getDefaultDatedAthleteSettings());
+    /**
+     *
+     * @param {Gender} gender
+     * @param {AthleteSettingsModel} datedAthleteSettings
+     */
+    constructor(gender: Gender, datedAthleteSettings: DatedAthleteSettingsModel[]) {
+        super();
+        this.gender = gender;
+        this.datedAthleteSettings = (!datedAthleteSettings || datedAthleteSettings.length === 0)
+            ? [DatedAthleteSettingsModel.DEFAULT_MODEL] : datedAthleteSettings;
+    }
 
-	public gender: Gender;
-	public datedAthleteSettings: DatedAthleteSettingsModel[];
+    public static getDefaultDatedAthleteSettings(): DatedAthleteSettingsModel[] {
+        const foreverSettings = Object.assign({}, DatedAthleteSettingsModel.DEFAULT_MODEL);
+        foreverSettings.since = null;
+        return [DatedAthleteSettingsModel.DEFAULT_MODEL, foreverSettings];
+    }
 
-	public static getDefaultDatedAthleteSettings(): DatedAthleteSettingsModel[] {
-		const foreverSettings = Object.assign({}, DatedAthleteSettingsModel.DEFAULT_MODEL);
-		foreverSettings.since = null;
-		return [DatedAthleteSettingsModel.DEFAULT_MODEL, foreverSettings];
-	}
-
-	/**
-	 *
-	 */
-	public getCurrentSettings(): AthleteSettingsModel {
-		const lastDatedAthleteSettingsModel = this.datedAthleteSettings[this.datedAthleteSettings.length - 1];
-		return (lastDatedAthleteSettingsModel) ? lastDatedAthleteSettingsModel.toAthleteSettingsModel() : null;
-	}
+    /**
+     *
+     */
+    public getCurrentSettings(): AthleteSettingsModel {
+        const lastDatedAthleteSettingsModel = this.datedAthleteSettings[this.datedAthleteSettings.length - 1];
+        return (lastDatedAthleteSettingsModel) ? lastDatedAthleteSettingsModel.toAthleteSettingsModel() : null;
+    }
 }
