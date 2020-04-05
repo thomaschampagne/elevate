@@ -32,46 +32,46 @@ export class TopBarComponent {
 		</div>
 	`,
     styles: [`
-		.alpha-tag {
-			background-color: #FF004C;
-			color: white;
-			padding: 1px 5px 1px 5px;
-			font-weight: bold;
-			border-radius: 3px;
-		}
+        .alpha-tag {
+            background-color: #FF004C;
+            color: white;
+            padding: 1px 5px 1px 5px;
+            font-weight: bold;
+            border-radius: 3px;
+        }
 
-		.top-bar {
-			background-color: black;
-			display: flex;
-			align-items: center;
-			color: white;
-		}
+        .top-bar {
+            background-color: #303030;
+            display: flex;
+            align-items: center;
+            color: white;
+        }
 
-		.draggable {
-			-webkit-app-region: drag;
-			position: absolute;
-			left: 3px;
-			right: 3px;
-			top: 3px;
-			height: 35px;
-		}
+        .draggable {
+            -webkit-app-region: drag;
+            position: absolute;
+            left: 3px;
+            right: 3px;
+            top: 3px;
+            height: 35px;
+        }
 
-		.top-bar-title {
-			margin: 0 0 0 16px;
-		}
+        .top-bar-title {
+            margin: 0 0 0 16px;
+        }
 
-		.toolbar-spacer {
-			flex: 1 1 auto;
-		}
+        .toolbar-spacer {
+            flex: 1 1 auto;
+        }
 
-		button {
-			-webkit-app-region: no-drag;
-		}
+        button {
+            -webkit-app-region: no-drag;
+        }
 
-		button:last-child:hover { /* Set close icon red */
-			color: #ff4643;
-		}
-	`]
+        button:last-child:hover { /* Set close icon red */
+            color: #ff4643;
+        }
+    `]
 })
 export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
 
