@@ -21,7 +21,8 @@
                 {{column.printText(dayFitnessTrend)}}
             </ng-container>
             <ng-container *ngIf="column.type === FitnessTrendColumnType.ATHLETE_SETTINGS">
-                <button (click)="onViewAthleteSettings(dayFitnessTrend)" *ngIf="dayFitnessTrend.ids.length" color="primary"
+                <button (click)="onViewAthleteSettings(dayFitnessTrend)" *ngIf="dayFitnessTrend.ids.length"
+                        color="primary"
                         mat-icon-button>
                     <mat-icon>accessibility</mat-icon>
                 </button>

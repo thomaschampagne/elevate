@@ -85,12 +85,14 @@
                                         {{type}}
                                     </mat-option>
                                 </mat-select>
-                                <button (click)="$event.stopPropagation(); onTickAllActivityTypes()" color="primary" mat-button mat-icon-button
+                                <button (click)="$event.stopPropagation(); onTickAllActivityTypes()" color="primary"
+                                        mat-button mat-icon-button
                                         matSuffix
                                         matTooltip="Tick all activity types">
                                     <mat-icon>done_all</mat-icon>
                                 </button>
-                                <button (click)="$event.stopPropagation(); onUnTickAllActivityTypes()" color="primary" mat-button mat-icon-button
+                                <button (click)="$event.stopPropagation(); onUnTickAllActivityTypes()" color="primary"
+                                        mat-button mat-icon-button
                                         matSuffix
                                         matTooltip="Untick all activity types (most performed excluded)">
                                     <mat-icon>clear</mat-icon>
@@ -145,11 +147,13 @@
                                 {{year}}
                             </mat-option>
                         </mat-select>
-                        <button (click)="$event.stopPropagation(); onTickAllYears()" color="primary" mat-button mat-icon-button matSuffix
+                        <button (click)="$event.stopPropagation(); onTickAllYears()" color="primary" mat-button
+                                mat-icon-button matSuffix
                                 matTooltip="Tick all years">
                             <mat-icon>done_all</mat-icon>
                         </button>
-                        <button (click)="$event.stopPropagation(); onUnTickAllYears()" color="primary" mat-button mat-icon-button
+                        <button (click)="$event.stopPropagation(); onUnTickAllYears()" color="primary" mat-button
+                                mat-icon-button
                                 matSuffix
                                 matTooltip="Untick all years (current year excluded)">
                             <mat-icon>clear</mat-icon>

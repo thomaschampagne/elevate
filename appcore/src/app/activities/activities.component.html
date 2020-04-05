@@ -28,7 +28,8 @@
             <input (keyup)="requestFilterFor($event.target.value)" [(ngModel)]="searchText" fxFill matInput
                    placeholder="Filter by type or activities name"
                    type="search">
-            <button (click)="searchText=''; requestFilterFor(searchText);" *ngIf="searchText" aria-label="Clear" mat-icon-button
+            <button (click)="searchText=''; requestFilterFor(searchText);" *ngIf="searchText" aria-label="Clear"
+                    mat-icon-button
                     matSuffix>
                 <mat-icon>close</mat-icon>
             </button>

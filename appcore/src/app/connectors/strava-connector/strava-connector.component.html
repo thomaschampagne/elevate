@@ -182,7 +182,8 @@
                 </div>
                 <div *ngIf="stravaConnectorInfo.accessToken">
                     <mat-form-field fxFlex="50">
-                        <input [(ngModel)]="stravaConnectorInfo.accessToken" [type]="showToken.checked ? 'text' : 'password'" disabled
+                        <input [(ngModel)]="stravaConnectorInfo.accessToken"
+                               [type]="showToken.checked ? 'text' : 'password'" disabled
                                matInput
                                placeholder="Access Token">
                         <button (click)="showToken.checked = !showToken.checked" mat-icon-button
@@ -194,7 +195,8 @@
                 </div>
                 <div *ngIf="stravaConnectorInfo.refreshToken">
                     <mat-form-field fxFlex="50">
-                        <input [(ngModel)]="stravaConnectorInfo.refreshToken" [type]="showToken.checked ? 'text' : 'password'" disabled
+                        <input [(ngModel)]="stravaConnectorInfo.refreshToken"
+                               [type]="showToken.checked ? 'text' : 'password'" disabled
                                matInput
                                placeholder="Refresh Token">
                         <button (click)="showToken.checked = !showToken.checked" mat-icon-button

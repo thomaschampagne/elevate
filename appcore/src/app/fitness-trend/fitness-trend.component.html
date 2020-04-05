@@ -128,7 +128,10 @@
 <mat-card *ngIf="(areSyncedActivitiesCompliant === true)">
     <mat-card-content>
         <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
-            <app-fitness-trend-inputs (eBikeRidesToggleChange)="onEBikeRidesToggleChange($event)" (estimatedPowerStressScoreToggleChange)="onEstimatedPowerStressScoreToggleChange($event)" (estimatedRunningStressScoreToggleChange)="onEstimatedRunningStressScoreChange($event)" (openFitnessTrendConfigRequest)="onOpenFitnessTrendConfig()"
+            <app-fitness-trend-inputs (eBikeRidesToggleChange)="onEBikeRidesToggleChange($event)"
+                                      (estimatedPowerStressScoreToggleChange)="onEstimatedPowerStressScoreToggleChange($event)"
+                                      (estimatedRunningStressScoreToggleChange)="onEstimatedRunningStressScoreChange($event)"
+                                      (openFitnessTrendConfigRequest)="onOpenFitnessTrendConfig()"
                                       (periodViewedChange)="onPeriodViewedChange($event)"
                                       (powerMeterToggleChange)="onPowerMeterToggleChange($event)"
                                       (swimToggleChange)="onSwimToggleChange($event)"
@@ -150,7 +153,8 @@
                                       fxLayoutAlign="start start">
             </app-fitness-trend-inputs>
 
-            <app-fitness-trend-legend [isTrainingZonesEnabled]="isTrainingZonesEnabled" class="mat-subheading-2" fxFill fxFlex="55" fxLayout="row"
+            <app-fitness-trend-legend [isTrainingZonesEnabled]="isTrainingZonesEnabled" class="mat-subheading-2" fxFill
+                                      fxFlex="55" fxLayout="row"
                                       fxLayoutAlign="end end"></app-fitness-trend-legend>
 
         </div>

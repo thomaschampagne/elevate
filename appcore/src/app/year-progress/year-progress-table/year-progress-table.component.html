@@ -13,7 +13,8 @@
         <mat-header-cell *matHeaderCellDef>
 			<span [matTooltip]="(progressConfig.mode === ProgressMode.ROLLING) ?
 			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' you were able to maintain during the last ' + progressConfig['rollingDays'] + ' rolling days.' :
-			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' accomplished since beginning of the year.'" class="headerTooltip">
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' accomplished since beginning of the year.'"
+                  class="headerTooltip">
 				{{selectedProgressType.label}}
 			</span>
         </mat-header-cell>
@@ -35,7 +36,8 @@
         <mat-header-cell *matHeaderCellDef>
 			<span [matTooltip]="(progressConfig.mode === ProgressMode.ROLLING) ?
 			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta you were able to maintain during the last ' + progressConfig['rollingDays'] + ' rolling days & compared to last year.' :
-			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta accomplished compared to last year.'" class="headerTooltip">
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta accomplished compared to last year.'"
+                  class="headerTooltip">
 				&Delta; Prev. Year
 			</span>
         </mat-header-cell>
@@ -75,7 +77,8 @@
         <mat-header-cell *matHeaderCellDef>
 			<span [matTooltip]="(progressConfig.mode === ProgressMode.ROLLING) ?
 			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta you were able to maintain during the last ' + progressConfig['rollingDays'] + ' rolling days & compared to the current year.' :
-			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta accomplished compared to this year.'" class="headerTooltip">
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta accomplished compared to this year.'"
+                  class="headerTooltip">
 				&Delta; With {{currentYear}}
 			</span>
         </mat-header-cell>
@@ -116,7 +119,8 @@
         <mat-header-cell *matHeaderCellDef>
 			<span [matTooltip]="(progressConfig.mode === ProgressMode.ROLLING) ?
 			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta you were able to maintain during the last ' + progressConfig['rollingDays'] + ' rolling days & compared to target.' :
-			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta accomplished compared to target.'" class="headerTooltip">
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta accomplished compared to target.'"
+                  class="headerTooltip">
 				&Delta; With target
 			</span>
         </mat-header-cell>
