@@ -89,7 +89,7 @@
     },
     "build": {
         "appId": "com.elevate.app",
-        "productName": "elevate",
+        "productName": "Elevate",
         "directories": {
             "output": "./package/"
         },
