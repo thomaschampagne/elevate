@@ -120,6 +120,7 @@ class Main {
         const height = Math.floor(workAreaSize.height * Main.WINDOW_SIZE_RATIO);
 
         const windowOptions: Electron.BrowserWindowConstructorOptions = {
+            title: "App",
             width: width,
             height: height,
             center: true,
@@ -172,19 +173,18 @@ class Main {
         });
 
         // Shortcuts
-        globalShortcut.register("CommandOrControl+R", () => {
+        globalShortcut.register(<Electron.Accelerator> "CommandOrControl+R", () => {
             logger.debug("CommandOrControl+R is pressed, reload app");
-            this.appWindow.reload();
+            if (this.appWindow.isFocused()) {
+                this.appWindow.reload();
+            }
         });
 
-        globalShortcut.register("f5", () => {
-            logger.debug("f5 is pressed, reload app");
-            this.appWindow.reload();
-        });
-
-        globalShortcut.register("CommandOrControl+F12", () => {
+        globalShortcut.register(<Electron.Accelerator> "CommandOrControl+F12", () => {
             logger.debug("CommandOrControl+F12 is pressed, toggle dev tools");
-            this.appWindow.webContents.toggleDevTools();
+            if (this.appWindow.isFocused()) {
+                this.appWindow.webContents.toggleDevTools();
+            }
         });
     }
 }
