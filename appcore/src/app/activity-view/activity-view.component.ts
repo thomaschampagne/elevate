@@ -63,18 +63,41 @@ export class ActivityViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
             const chart = am4core.create("chartdiv", am4charts.XYChart);
 
+            const hasSpeed = this.activityStreamsModel.velocity_smooth && this.activityStreamsModel.velocity_smooth.length > 0;
+            const hasAltitude = this.activityStreamsModel.altitude && this.activityStreamsModel.altitude.length > 0;
+            const hasGrade = this.activityStreamsModel.grade_smooth && this.activityStreamsModel.grade_smooth.length > 0;
+            const hasHeartrate = this.activityStreamsModel.heartrate && this.activityStreamsModel.heartrate.length > 0;
+            const hasWatts = this.activityStreamsModel.watts && this.activityStreamsModel.watts.length > 0;
+
             const data = this.activityStreamsModel.time.map((time, index) => {
-                const speed = this.activityStreamsModel.velocity_smooth[index] * 3.6;
-                return {
-                    speed: speed,
-                    pace: Math.floor(Helper.convertSpeedToPace(speed)),
-                    gap: Math.floor(Helper.convertSpeedToPace(this.activityStreamsModel.grade_adjusted_speed[index] * 3.6)),
-                    altitude: this.activityStreamsModel.altitude[index],
-                    grade: this.activityStreamsModel.grade_smooth[index],
-                    heartrate: this.activityStreamsModel.heartrate[index],
-                    watts: this.activityStreamsModel.watts[index],
+
+                const sample: any = {
                     date: new Date(this.activityStreamsModel.time[index] * 1000)
                 };
+
+                if (hasSpeed) {
+                    const speed = this.activityStreamsModel.velocity_smooth[index] * 3.6;
+                    sample.speed = speed;
+                    sample.pace = Math.floor(Helper.convertSpeedToPace(speed));
+                    sample.gap = Math.floor(Helper.convertSpeedToPace(this.activityStreamsModel.grade_adjusted_speed[index] * 3.6));
+                }
+
+                if (hasAltitude) {
+                    sample.altitude = this.activityStreamsModel.altitude[index];
+                }
+
+                if (hasGrade) {
+                    sample.grade = this.activityStreamsModel.grade_smooth[index];
+                }
+
+                if (hasHeartrate) {
+                    sample.heartrate = this.activityStreamsModel.heartrate[index];
+                }
+                if (hasWatts) {
+                    sample.watts = this.activityStreamsModel.watts[index];
+                }
+
+                return sample;
             });
 
             chart.leftAxesContainer.layout = "vertical";
