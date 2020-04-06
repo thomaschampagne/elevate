@@ -47,6 +47,7 @@ export class Updater {
     public createUpdateWindow(): Promise<BrowserWindow> {
 
         const windowOptions: Electron.BrowserWindowConstructorOptions = {
+            title: "Updater",
             width: 400,
             height: 200,
             center: true,
@@ -129,7 +130,7 @@ export class Updater {
     }
 
     public close(): void {
-        this.updateWindow.close();
+        this.updateWindow.destroy();
     }
 
     private notifyUpdateStatus(message: string): void {
