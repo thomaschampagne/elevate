@@ -11,5 +11,5 @@ export const environment = {
     production: false,
     logLevel: LoggerService.LEVEL_DEBUG,
     skipRestoreSyncedBackupCheck: false,
-    bypassAthleteAccessCheck: false
+    bypassAthleteAccessCheck: true
 };

@@ -11,8 +11,7 @@ import * as pkg from "../package.json";
 import { Updater } from "./updater/updater";
 import { UpdateInfo } from "electron-updater";
 
-const IS_ELECTRON_DEV = (process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "dev");
-
+const IS_ELECTRON_DEV = !app.isPackaged;
 logger.transports.file.level = (IS_ELECTRON_DEV) ? "debug" : "info";
 logger.transports.console.level = (IS_ELECTRON_DEV) ? "debug" : "info";
 logger.transports.file.maxSize = 1048576 * 2; // 2MB
@@ -57,7 +56,7 @@ class Main {
                 }
             });
 
-            if (Service.instance().isLinux()) {
+            if (Service.instance().isLinux() || !Service.instance().isPackaged) {
                 this.startElevate();
                 return;
             }
