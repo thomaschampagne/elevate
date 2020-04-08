@@ -13,7 +13,6 @@ import { StravaConnectorInfoService } from "../../shared/services/strava-connect
 import { VERSIONS_PROVIDER, VersionsProvider } from "../../shared/services/versions/versions-provider.interface";
 import { StravaConnectorInfo } from "@elevate/shared/sync";
 import { DesktopMigrationService } from "../migration/desktop-migration.service";
-import { ElevateException } from "@elevate/shared/exceptions";
 import { DesktopPreRunGuardDialogComponent } from "./desktop-pre-run-guard-dialog.component";
 import { IpcMessagesSender } from "../ipc-messages/ipc-messages-sender.service";
 
@@ -74,7 +73,7 @@ export class DesktopPreRunGuard implements CanActivate {
             return Promise.resolve(accessAuthorized);
         }).catch(error => {
             this.logger.error(error);
-            throw new ElevateException(error);
+            return Promise.reject(error);
         });
     }
 
