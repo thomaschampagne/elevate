@@ -49,19 +49,26 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     public canZoomOutPeriodViewed: boolean;
     public sideNavChangesSubscription: Subscription;
     public windowResizingSubscription: Subscription;
-    @Input("dateMin")
+
+    @Input()
     public dateMin: Date;
-    @Input("dateMax")
+
+    @Input()
     public dateMax: Date;
-    @Input("periodViewed")
+
+    @Input()
     public periodViewed: PeriodModel;
-    @Input("isTrainingZonesEnabled")
+
+    @Input()
     public isTrainingZonesEnabled;
-    @Input("fitnessTrend")
+
+    @Input()
     public fitnessTrend: DayFitnessTrendModel[];
+
     @ViewChild("viewedDayTooltip", {static: true})
     public viewedDayTooltipElement: ElementRef;
     public viewedDayTooltipBounds: ClientRect = null;
+
     @ViewChild("fitnessTrendGraph", {static: true})
     public fitnessTrendGraphElement: ElementRef;
     public fitnessTrendGraphBounds: ClientRect = null;

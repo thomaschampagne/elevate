@@ -15,62 +15,62 @@ export class FitnessTrendInputsComponent implements OnInit, OnChanges {
 
     public readonly HeartRateImpulseMode = HeartRateImpulseMode;
 
-    @Input("dateMin")
+    @Input()
     public dateMin: Date;
 
-    @Input("dateMax")
+    @Input()
     public dateMax: Date;
 
-    @Input("lastPeriodViewed")
+    @Input()
     public lastPeriodViewed: LastPeriodModel;
 
-    @Input("lastPeriods")
+    @Input()
     public lastPeriods: LastPeriodModel[];
 
-    @Input("periodViewed")
+    @Input()
     public periodViewed: PeriodModel;
 
-    @Input("lastFitnessActiveDate")
+    @Input()
     public lastFitnessActiveDate: Date;
 
-    @Input("fitnessTrendConfigModel")
+    @Input()
     public fitnessTrendConfigModel: FitnessTrendConfigModel;
 
-    @Input("isTrainingZonesEnabled")
+    @Input()
     public isTrainingZonesEnabled: boolean;
 
-    @Input("isPowerMeterEnabled")
+    @Input()
     public isPowerMeterEnabled: boolean;
 
-    @Input("isSwimEnabled")
+    @Input()
     public isSwimEnabled: boolean;
 
-    @Input("isEBikeRidesEnabled")
+    @Input()
     public isEBikeRidesEnabled: boolean;
 
-    @Output("periodViewedChange")
+    @Output()
     public periodViewedChange: EventEmitter<PeriodModel> = new EventEmitter<PeriodModel>();
 
-    @Output("openFitnessTrendConfigRequest")
+    @Output()
     public openFitnessTrendConfigRequest: EventEmitter<void> = new EventEmitter<void>();
 
-    @Output("trainingZonesToggleChange")
+    @Output()
     public trainingZonesToggleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    @Output("powerMeterToggleChange")
+    @Output()
     public powerMeterToggleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    @Output("swimToggleChange")
+    @Output()
     public swimToggleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    @Output("eBikeRidesToggleChange")
+    @Output()
     public eBikeRidesToggleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    @Output("estimatedPowerStressScoreToggleChange")
-    public estimatedPowerStressScoreToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output()
+    public estimatedPowerStressScoreToggleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    @Output("estimatedRunningStressScoreToggleChange")
-    public estimatedRunningStressScoreToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output()
+    public estimatedRunningStressScoreToggleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     public isEstimatedPowerStressScoreEnabled: boolean;
 
@@ -129,11 +129,11 @@ export class FitnessTrendInputsComponent implements OnInit, OnChanges {
     }
 
     public onEstimatedPowerStressScoreToggle(): void {
-        this.estimatedPowerStressScoreToggle.emit(this.isEstimatedPowerStressScoreEnabled);
+        this.estimatedPowerStressScoreToggleChange.emit(this.isEstimatedPowerStressScoreEnabled);
     }
 
     public onEstimatedRunningStressScoreToggle(): void {
-        this.estimatedRunningStressScoreToggle.emit(this.isEstimatedRunningStressScoreEnabled);
+        this.estimatedRunningStressScoreToggleChange.emit(this.isEstimatedRunningStressScoreEnabled);
     }
 
     public onConfigClicked(): void {
