@@ -66,8 +66,8 @@
                     <mat-checkbox (change)="saveChanges()"
                                   [(ngModel)]="fileSystemConnectorInfo.detectSportTypeWhenUnknown"
                                   matTooltip="This case often occurs on GPX files. Note that this may introduce errors (e.g.: Inline skating gpx activity without sport type could be detected as 'Ride')">
-                        <strong>Experimental:</strong> Try to set activity type to <i>Ride or Run</i> when sport type is
-                        unknown <i>(adds a "#detected" tag in activities names)</i>
+                        <strong>Experimental:</strong> Try to set when possible the activity type to <i>Ride or Run</i>
+                        if sport type is unknown <i>(adds a "#detected" in activities names)</i>
                     </mat-checkbox>
                 </div>
                 <div>
