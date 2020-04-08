@@ -46,14 +46,6 @@ export class ActivityFile {
     public location: { onMachineId: string, path: string };
     public lastModificationDate: string;
 
-    /**
-     *
-     * @param type
-     * @param absolutePath
-     * @param machineId
-     * @param lastModificationDate
-     * @param hash as sha01
-     */
     constructor(type: ActivityFileType, absolutePath: string, machineId: string, lastModificationDate: Date, hash: string) {
         this.type = type;
         this.location = {onMachineId: machineId, path: absolutePath};
@@ -194,7 +186,7 @@ export class FileSystemConnector extends BaseConnector {
         {from: ActivityTypes.Yoga, to: ElevateSport.Yoga},
         {from: ActivityTypes.YogaPilates, to: ElevateSport.Yoga},
     ];
-    private static _allUnPackerInstance: { unpack: Function };
+    private static unPackerInstance: { unpack: (path: string, options: any, callback: (err: any) => void) => void };
     public inputDirectory: string;
     public scanSubDirectories: boolean;
     public deleteActivityFilesAfterSync: boolean;
@@ -216,11 +208,11 @@ export class FileSystemConnector extends BaseConnector {
         this.athleteMachineId = Service.instance().getRuntimeInfo().athleteMachineId;
     }
 
-    public static getAllUnPacker(): { unpack: Function } {
-        if (!this._allUnPackerInstance) {
-            this._allUnPackerInstance = require("all-unpacker");
+    public static getAllUnPacker(): { unpack: (path: string, options: any, callback: (err: any) => void) => void } {
+        if (!this.unPackerInstance) {
+            this.unPackerInstance = require("all-unpacker");
         }
-        return this._allUnPackerInstance;
+        return this.unPackerInstance;
     }
 
     public static create(athleteModel: AthleteModel, userSettingsModel: UserSettings.UserSettingsModel, connectorSyncDateTime: ConnectorSyncDateTime, inputDirectory: string,
@@ -352,7 +344,8 @@ export class FileSystemConnector extends BaseConnector {
 
                                                 // Assign reference to strava activity
                                                 syncedActivityModel.extras = {fs_activity_location: activityFile.location}; // Keep tracking  of activity id
-                                                syncedActivityModel.id = BaseConnector.hashData(syncedActivityModel.start_time, 6) + "-" + BaseConnector.hashData(syncedActivityModel.end_time, 6);
+                                                syncedActivityModel.id = BaseConnector.hashData(syncedActivityModel.start_time, 6)
+                                                    + "-" + BaseConnector.hashData(syncedActivityModel.end_time, 6);
 
                                                 // Resolve athlete snapshot for current activity date
                                                 syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(syncedActivityModel.start_time);
@@ -389,7 +382,8 @@ export class FileSystemConnector extends BaseConnector {
                                                 activityInError.type = <any> sportsLibActivity.type;
                                                 activityInError.start_time = sportsLibActivity.startDate.toISOString();
                                                 (<SyncedActivityModel> activityInError).extras = {fs_activity_location: activityFile.location}; // Keep tracking  of activity id
-                                                const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE_SYSTEM, errorMessage, activityInError, (error.stack) ? error.stack : null);
+                                                const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE_SYSTEM, errorMessage, activityInError,
+                                                    (error.stack) ? error.stack : null);
 
                                                 return Promise.reject(errorSyncEvent);
                                             }
@@ -468,10 +462,6 @@ export class FileSystemConnector extends BaseConnector {
         return bareActivityModel;
     }
 
-    /**
-     *
-     * @param sportsLibActivity
-     */
     public convertToElevateSport(sportsLibActivity: ActivityInterface): { type: ElevateSport, autoDetected: boolean } {
         const entryFound = _.find(FileSystemConnector.SPORTS_LIB_TYPES_MAP, {from: sportsLibActivity.type});
         if (entryFound) {
@@ -479,9 +469,16 @@ export class FileSystemConnector extends BaseConnector {
         } else {
             if (this.detectSportTypeWhenUnknown) {
                 const stats = sportsLibActivity.getStats();
-                const elevateSport = this.attemptDetectCommonSport(<number> stats.get(DataDistance.type).getValue(), <number> stats.get(DataDuration.type).getValue(),
-                    <number> stats.get(DataAscent.type).getValue(), <number> stats.get(DataSpeedAvg.type).getValue(), <number> stats.get(DataSpeedMax.type).getValue());
+
+                const distance = <number> stats.get(DataDistance.type)?.getValue();
+                const duration = <number> stats.get(DataDuration.type)?.getValue();
+                const ascent = <number> stats.get(DataAscent.type)?.getValue();
+                const avgSpeed = <number> stats.get(DataSpeedAvg.type)?.getValue();
+                const maxSpeed = <number> stats.get(DataSpeedMax.type)?.getValue();
+
+                const elevateSport = this.attemptDetectCommonSport(distance, duration, ascent, avgSpeed, maxSpeed);
                 return {type: elevateSport, autoDetected: (elevateSport !== ElevateSport.Other)};
+
             } else {
                 return {type: ElevateSport.Other, autoDetected: false};
             }
@@ -518,10 +515,6 @@ export class FileSystemConnector extends BaseConnector {
 
         /**
          * Detect if entry param could have been performed with or without climb assitance
-         * @param pMaxSpeed
-         * @param pDistance
-         * @param pDuration
-         * @param pAscent
          */
         const isAssisted = (pMaxSpeed: number, pDistance: number, pDuration: number, pAscent: number): boolean => {
             const criteria = (Math.pow(pAscent, 2) / ((pDistance / 1000) * (pDuration / 60))) / 1000;
@@ -564,7 +557,6 @@ export class FileSystemConnector extends BaseConnector {
 
     /**
      * Get primitive data from files parsed by the sports-lib
-     * @param sportsLibActivity
      */
     public extractPrimitiveSourceData(sportsLibActivity: ActivityInterface): PrimitiveSourceData {
 
@@ -586,10 +578,6 @@ export class FileSystemConnector extends BaseConnector {
         return new PrimitiveSourceData(elapsedTimeRaw, movingTimeRaw, distanceRaw, elevationGainRaw);
     }
 
-    /**
-     *
-     * @param sportsLibActivity
-     */
     public extractActivityStreams(sportsLibActivity: ActivityInterface): ActivityStreamsModel {
 
         const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
@@ -764,7 +752,7 @@ export class FileSystemConnector extends BaseConnector {
                 options.unar = Service.instance().getResourceFolder() + "/app.asar.unpacked/node_modules/all-unpacker/unar";
             }
 
-            FileSystemConnector.getAllUnPacker().unpack(archiveFilePath, options, (err) => {
+            FileSystemConnector.getAllUnPacker().unpack(archiveFilePath, options, err => {
                 if (err) {
                     fs.rmdirSync(extractDir, {recursive: true});
                     reject(err);
@@ -805,12 +793,9 @@ export class FileSystemConnector extends BaseConnector {
     /**
      *
      * @return Observable of archive paths being deflated.
-     * @param sourceDir
-     * @param deleteArchives
-     * @param deflateNotifier
-     * @param recursive
      */
-    public scanDeflateActivitiesFromArchives(sourceDir: string, deleteArchives: boolean, deflateNotifier: Subject<string> = new Subject<string>(), recursive: boolean = false): Promise<void> {
+    public scanDeflateActivitiesFromArchives(sourceDir: string, deleteArchives: boolean, deflateNotifier: Subject<string> = new Subject<string>(),
+                                             recursive: boolean = false): Promise<void> {
 
         const files = fs.readdirSync(sourceDir);
 
