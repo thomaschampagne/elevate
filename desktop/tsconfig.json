@@ -6,6 +6,7 @@
             "es2017",
             "dom"
         ],
+        "moduleResolution": "Node",
         "resolveJsonModule": true,
         "allowJs": true,
         "paths": {
