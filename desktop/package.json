@@ -22,7 +22,7 @@
         "package:linux": "npm run build:prod && electron-builder build --linux --x64 --publish onTagOrDraft",
         "package:mac": "npm run build:prod && electron-builder build --mac --x64",
         "start": "npm run watch",
-        "test": "jest --coverage",
+        "test": "npm run build:metadata && jest --coverage",
         "type:check": "tsc --noEmit --project tsconfig.json",
         "tslint": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./src/**/*.ts --fix",
         "watch": "npm run clean && node ../node_modules/cpy-cli/cli.js ./dev-app-update.yml ./dist && npm-run-all --print-label --race --parallel watch:electron watch:appcore",
