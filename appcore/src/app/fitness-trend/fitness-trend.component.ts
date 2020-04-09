@@ -29,11 +29,17 @@ export class FitnessTrendComponent implements OnInit {
     public static readonly DEFAULT_CONFIG: FitnessTrendConfigModel = {
         heartRateImpulseMode: HeartRateImpulseMode.HRSS,
         initializedFitnessTrendModel: {ctl: null, atl: null},
-        allowEstimatedPowerStressScore: false,
-        allowEstimatedRunningStressScore: false,
+        allowEstimatedPowerStressScore: true,
+        allowEstimatedRunningStressScore: true,
         ignoreBeforeDate: null,
         ignoreActivityNamePatterns: null
     };
+
+    public static readonly TRAINING_ZONES_DEFAULT_ENABLED: boolean = true;
+    public static readonly POWER_METER_DEFAULT_ENABLED: boolean = true;
+    public static readonly SWIM_DEFAULT_ENABLED: boolean = true;
+    public static readonly ELECTRICAL_BIKE_RIDES_ENABLED: boolean = false;
+
     public static readonly DEFAULT_LAST_PERIOD_KEY: string = "3_months";
     public static readonly ELECTRICAL_BIKE_ACTIVITY_TYPE: string = "EBikeRide";
     public static readonly LS_LAST_PERIOD_VIEWED_KEY: string = "fitnessTrend_lastPeriodViewed";
@@ -42,8 +48,10 @@ export class FitnessTrendComponent implements OnInit {
     public static readonly LS_POWER_METER_ENABLED_KEY: string = "fitnessTrend_powerMeterEnabled";
     public static readonly LS_SWIM_ENABLED_KEY: string = "fitnessTrend_swimEnabled";
     public static readonly LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY: string = "fitnessTrend_EBikeRidesEnabled";
+
     @ViewChild(FitnessTrendInputsComponent)
     public fitnessTrendInputsComponent: FitnessTrendInputsComponent;
+
     public fitnessTrend: DayFitnessTrendModel[];
     public lastPeriods: LastPeriodModel[];
     public periodViewed: PeriodModel;
@@ -177,14 +185,15 @@ export class FitnessTrendComponent implements OnInit {
 
             const savedFitnessTrendConfig = localStorage.getItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY);
             if (!_.isEmpty(savedFitnessTrendConfig)) {
-                this.fitnessTrendConfigModel = JSON.parse(savedFitnessTrendConfig) as FitnessTrendConfigModel;
+                this.fitnessTrendConfigModel = <FitnessTrendConfigModel> JSON.parse(savedFitnessTrendConfig);
             }
 
             // Change toggle state along HRSS/TRIMP heart rate mode
             this.updateTogglesStatesAlongHrMode();
 
             // Check for activity types to skip (e.g. EBikeRide)
-            this.isEBikeRidesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY));
+            const isEBikeRidesEnabledUserPref = localStorage.getItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY);
+            this.isEBikeRidesEnabled = (isEBikeRidesEnabledUserPref) ? isEBikeRidesEnabledUserPref === "true" : FitnessTrendComponent.ELECTRICAL_BIKE_RIDES_ENABLED;
             this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
 
             // Then compute fitness trend
@@ -243,48 +252,24 @@ export class FitnessTrendComponent implements OnInit {
     }
 
     public onTrainingZonesToggleChange(enabled: boolean): void {
-
-        if (enabled) {
-            localStorage.setItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY, "true");
-        } else {
-            localStorage.removeItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY);
-        }
-
+        localStorage.setItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY, `${enabled}`);
         this.isTrainingZonesEnabled = enabled;
     }
 
     public onPowerMeterToggleChange(enabled: boolean): void {
-
-        if (enabled) {
-            localStorage.setItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY, "true");
-        } else {
-            localStorage.removeItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY);
-        }
-
+        localStorage.setItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY, `${enabled}`);
         this.isPowerMeterEnabled = enabled;
         this.reloadFitnessTrend();
     }
 
     public onSwimToggleChange(enabled: boolean): void {
-
-        if (enabled) {
-            localStorage.setItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY, "true");
-        } else {
-            localStorage.removeItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY);
-        }
-
+        localStorage.setItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY, `${enabled}`);
         this.isSwimEnabled = enabled;
         this.reloadFitnessTrend();
     }
 
     public onEBikeRidesToggleChange(enabled: boolean): void {
-
-        if (enabled) {
-            localStorage.setItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY, "true");
-        } else {
-            localStorage.removeItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY);
-        }
-
+        localStorage.setItem(FitnessTrendComponent.LS_ELECTRICAL_BIKE_RIDES_ENABLED_KEY, `${enabled}`);
         this.isEBikeRidesEnabled = enabled;
         this.updateSkipActivityTypes(this.isEBikeRidesEnabled);
         this.reloadFitnessTrend();
@@ -349,9 +334,15 @@ export class FitnessTrendComponent implements OnInit {
             this.isPowerMeterEnabled = false;
             this.isSwimEnabled = false;
         } else { // HeartRateImpulseMode.HRSS
-            this.isTrainingZonesEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY));
-            this.isPowerMeterEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY));
-            this.isSwimEnabled = !_.isEmpty(localStorage.getItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY));
+
+            const isTrainingZonesEnabledUserPref = localStorage.getItem(FitnessTrendComponent.LS_TRAINING_ZONES_ENABLED_KEY);
+            this.isTrainingZonesEnabled = (isTrainingZonesEnabledUserPref) ? isTrainingZonesEnabledUserPref === "true" : FitnessTrendComponent.TRAINING_ZONES_DEFAULT_ENABLED;
+
+            const isPowerMeterEnabledUserPref = localStorage.getItem(FitnessTrendComponent.LS_POWER_METER_ENABLED_KEY);
+            this.isPowerMeterEnabled = (isPowerMeterEnabledUserPref) ? isPowerMeterEnabledUserPref === "true" : FitnessTrendComponent.POWER_METER_DEFAULT_ENABLED;
+
+            const isSwimEnabledUserPref = localStorage.getItem(FitnessTrendComponent.LS_SWIM_ENABLED_KEY);
+            this.isSwimEnabled = (isSwimEnabledUserPref) ? isSwimEnabledUserPref === "true" : FitnessTrendComponent.SWIM_DEFAULT_ENABLED;
         }
     }
 
