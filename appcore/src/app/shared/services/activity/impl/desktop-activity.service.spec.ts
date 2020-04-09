@@ -94,13 +94,15 @@ describe("DesktopActivityService", () => {
             syncedActivityModel.id = activityId;
             syncedActivityModel.start_time = new Date().toISOString();
 
+            const athleteSnapshotModel: AthleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
             const expectedSyncedActivityModel = _.cloneDeep(syncedActivityModel);
             expectedSyncedActivityModel.extendedStats = new AnalysisDataModel();
+            expectedSyncedActivityModel.athleteSnapshot = athleteSnapshotModel;
 
             const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
-            const athleteSnapshotModel: AthleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
             const streams: ActivityStreamsModel = new ActivityStreamsModel([0, 1], [0, 1], [0, 1]);
-            const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.COMPUTE_ACTIVITY, syncedActivityModel, athleteSnapshotModel, userSettingsModel, streams);
+            const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.COMPUTE_ACTIVITY, syncedActivityModel, athleteSnapshotModel,
+                userSettingsModel, streams);
             const compressedStreamModel = new CompressedStreamModel(activityId, "streamData");
 
             const athleteSnapshotUpdateSpy = spyOn(desktopActivityService.athleteSnapshotResolverService, "update").and.returnValue(Promise.resolve());
@@ -136,23 +138,32 @@ describe("DesktopActivityService", () => {
             });
         });
 
-        it("should not refresh stats of a synced activity if NO stream given", done => {
+        it("should refresh stats of a synced activity which has NO stream (AthleteSnapshotModel has to be updated)", done => {
 
             // Given
             const activityId = "1111";
             const syncedActivityModel: SyncedActivityModel = new SyncedActivityModel();
             syncedActivityModel.id = activityId;
             syncedActivityModel.start_time = new Date().toISOString();
-            const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
+
             const athleteSnapshotModel: AthleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
+            const expectedSyncedActivityModel = _.cloneDeep(syncedActivityModel);
+            expectedSyncedActivityModel.extendedStats = new AnalysisDataModel();
+            expectedSyncedActivityModel.athleteSnapshot = athleteSnapshotModel;
+
+            const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
+            const streams: ActivityStreamsModel = null;
+            const compressedStreamModel = null;
+            const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.COMPUTE_ACTIVITY, syncedActivityModel, athleteSnapshotModel,
+                userSettingsModel, streams);
 
             const athleteSnapshotUpdateSpy = spyOn(desktopActivityService.athleteSnapshotResolverService, "update").and.returnValue(Promise.resolve());
             const athleteSnapshotResolveSpy = spyOn(desktopActivityService.athleteSnapshotResolverService, "resolve").and.returnValue(athleteSnapshotModel);
-            const streamGetByIdSpy = spyOn(desktopActivityService.streamsService, "getById").and.returnValue(Promise.resolve(null));
-            const deflateCompressedStreamSpy = spyOn(ActivityStreamsModel, "deflate").and.stub();
+            const streamGetByIdSpy = spyOn(desktopActivityService.streamsService, "getById").and.returnValue(Promise.resolve(compressedStreamModel));
+            const deflateCompressedStreamSpy = spyOn(ActivityStreamsModel, "deflate").and.returnValue(streams);
             const selfComputeSpy = spyOn(desktopActivityService, "compute").and.callThrough();
-            const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.stub();
-            const updateDbSpy = spyOn(desktopActivityService.activityDao, "put").and.stub();
+            const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(Promise.resolve(expectedSyncedActivityModel));
+            const updateDbSpy = spyOn(desktopActivityService.activityDao, "put").and.returnValue(Promise.resolve(expectedSyncedActivityModel));
 
             // When
             const promise: Promise<SyncedActivityModel> = desktopActivityService.refreshStats(syncedActivityModel, userSettingsModel);
@@ -161,15 +172,16 @@ describe("DesktopActivityService", () => {
             promise.then(result => {
                 expect(athleteSnapshotUpdateSpy).toHaveBeenCalledTimes(1);
                 expect(athleteSnapshotResolveSpy).toHaveBeenCalledTimes(1);
-                expect(athleteSnapshotResolveSpy).toHaveBeenCalledWith(new Date(syncedActivityModel.start_time));
+                expect(athleteSnapshotResolveSpy).toHaveBeenCalledWith(new Date(expectedSyncedActivityModel.start_time));
                 expect(streamGetByIdSpy).toHaveBeenCalledTimes(1);
-                expect(streamGetByIdSpy).toHaveBeenCalledWith(syncedActivityModel.id);
+                expect(streamGetByIdSpy).toHaveBeenCalledWith(expectedSyncedActivityModel.id);
                 expect(deflateCompressedStreamSpy).not.toHaveBeenCalled();
-                expect(sendMessageSpy).not.toHaveBeenCalled();
-                expect(selfComputeSpy).not.toHaveBeenCalled();
-                expect(sendMessageSpy).not.toHaveBeenCalled();
-                expect(updateDbSpy).not.toHaveBeenCalled();
-                expect(result).toEqual(syncedActivityModel);
+                expect(selfComputeSpy).toHaveBeenCalledTimes(1);
+                expect(sendMessageSpy).toHaveBeenCalledTimes(1);
+                expect(sendMessageSpy).toHaveBeenCalledWith(expectedFlaggedIpcMessage);
+                expect(updateDbSpy).toHaveBeenCalledTimes(1);
+                expect(result).toEqual(expectedSyncedActivityModel);
+
                 done();
             }, err => {
                 throw new Error(err);

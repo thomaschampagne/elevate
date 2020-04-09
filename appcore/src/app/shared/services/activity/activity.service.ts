@@ -109,18 +109,12 @@ export abstract class ActivityService {
         return this.find(query);
     }
 
-    /**
-     *
-     * @param {number[]} activitiesToDelete
-     * @returns {Promise<SyncedActivityModel[]>}
-     */
     public removeByIds(activitiesToDelete: (string | number)[]): Promise<SyncedActivityModel[]> {
         return this.activityDao.removeByIds(activitiesToDelete);
     }
 
     /**
      * Tells if local synced activities is compliant with current athlete settings
-     * @returns {Promise<boolean>}
      */
     public isAthleteSettingsConsistent(): Promise<boolean> {
 

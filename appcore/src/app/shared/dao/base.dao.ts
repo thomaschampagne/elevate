@@ -52,7 +52,6 @@ export abstract class BaseDao<T> {
 
     /**
      * Save and replace all data
-     * @param value
      */
     public save(value: T[] | T): Promise<T[] | T> {
         return this.checkCompliantDao().then(() => {
@@ -60,20 +59,12 @@ export abstract class BaseDao<T> {
         });
     }
 
-    /**
-     * Add or replace
-     * @param value
-     */
     public put(value: T): Promise<T> {
         return this.checkCompliantDao().then(() => {
             return this.dataStore.put(this.storageLocation, value);
         });
     }
 
-    /**
-     *
-     * @param id
-     */
     public getById(id: string): Promise<T> {
         return this.checkCompliantDao().then(() => {
             return this.dataStore.getById(this.storageLocation, id);
@@ -83,7 +74,7 @@ export abstract class BaseDao<T> {
     /**
      * Update or insert a specific property of data handled at given path (create path if needed)
      * @param path key or array of keys to describe the nested path
-     * @param value
+     * @param value to upsert
      */
     public upsertProperty<V>(path: string | string[], value: V): Promise<T> {
         return this.checkCompliantDao().then(() => {

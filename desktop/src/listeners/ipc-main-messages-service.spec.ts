@@ -485,9 +485,6 @@ describe("IpcMainMessagesService", () => {
             const streams = new ActivityStreamsModel();
             const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.COMPUTE_ACTIVITY, syncedActivityModel, athleteSnapshotModel, streams);
             const analysisDataModel = new AnalysisDataModel();
-            const expectedSyncedActivityModel = _.cloneDeep(syncedActivityModel);
-            expectedSyncedActivityModel.extendedStats = analysisDataModel;
-            expectedSyncedActivityModel.athleteSnapshot = athleteSnapshotModel;
             const replyWrapper = {
                 replyWith: () => {
                 }
@@ -502,6 +499,36 @@ describe("IpcMainMessagesService", () => {
             // Then
             expect(calculateSpy).toBeCalledTimes(1);
             expect(replyWithSpy).toBeCalledWith({success: jasmine.any(SyncedActivityModel), error: null});
+            const syncedActivityModelArg = replyWithSpy.calls.mostRecent().args[0].success;
+            expect(syncedActivityModelArg.athleteSnapshot).toEqual(athleteSnapshotModel);
+            done();
+        });
+
+        it("should compute activity without streams", done => {
+
+            // Given
+            const syncedActivityModel = new SyncedActivityModel();
+            syncedActivityModel.name = "My activity";
+            syncedActivityModel.start_time = new Date().toISOString();
+            const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
+            const streams = null;
+            const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.COMPUTE_ACTIVITY, syncedActivityModel, athleteSnapshotModel, streams);
+            const analysisDataModel = new AnalysisDataModel();
+            const replyWrapper = {
+                replyWith: () => {
+                }
+            };
+
+            const calculateSpy = spyOn(ActivityComputer, "calculate").and.returnValue(analysisDataModel);
+            const replyWithSpy = spyOn(replyWrapper, "replyWith");
+
+            // When
+            ipcMainMessagesService.handleComputeActivitySpy(flaggedIpcMessage, replyWrapper.replyWith);
+
+            // Then
+            expect(calculateSpy).toBeCalledTimes(1);
+            const syncedActivityModelArg = replyWithSpy.calls.mostRecent().args[0].success;
+            expect(syncedActivityModelArg.athleteSnapshot).toEqual(athleteSnapshotModel);
             done();
         });
 

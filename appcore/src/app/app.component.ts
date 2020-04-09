@@ -47,18 +47,25 @@ export class AppComponent implements OnInit, OnDestroy {
     public isAppInitialized;
     public toolBarTitle: string;
     public routerEventsSubscription: Subscription;
+
     @ViewChild("appContainer", {static: true})
     public appContainer: ElementRef;
+
     @ViewChild(TopBarDirective, {static: true})
     public topBarDirective: TopBarDirective;
+
     @ViewChild(SyncBarDirective, {static: true})
     public syncBarDirective: SyncBarDirective;
+
     @ViewChild(RefreshStatsBarDirective, {static: true})
     public refreshStatsBarDirective: RefreshStatsBarDirective;
+
     @ViewChild(SyncMenuDirective, {static: true})
     public syncMenuDirective: SyncMenuDirective;
+
     @ViewChild(AppMoreMenuDirective, {static: true})
     public appMoreMenuDirective: AppMoreMenuDirective;
+
     @ViewChild(MatSidenav, {static: true})
     public sideNav: MatSidenav;
 

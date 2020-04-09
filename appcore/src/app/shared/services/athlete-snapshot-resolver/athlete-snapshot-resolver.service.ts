@@ -28,7 +28,6 @@ export class AthleteSnapshotResolverService {
     /**
      * Resolve the proper AthleteSnapshotModel along activity date
      * @param onDate Date format YYYY-MM-DD or Date object
-     * @returns {AthleteSnapshotModel}
      */
     public resolve(onDate: string | Date): AthleteSnapshotModel {
 
@@ -41,7 +40,6 @@ export class AthleteSnapshotResolverService {
 
     /**
      * Resolve current being used AthleteSnapshotModel
-     * @returns {AthleteSnapshotModel}
      */
     public getCurrent(): AthleteSnapshotModel {
         return this.athleteSnapshotResolver.resolve(new Date());
