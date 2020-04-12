@@ -38,7 +38,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
         html += "    <div id=\"syncContainer\">";
         html += "       <div id=\"syncMessage\">";
         html += "           <span style=\"font-size: 28px;\">Syncing activities to extension storage.</span> <br/><br/>" +
-            "The <strong>first</strong> sync is long due to technical purpose: <strong>~6 minutes / 100 activities</strong>. <strong>Upcoming syncs are short and silent.</strong> " +
+            "The <strong>first</strong> sync is long due to technical limitations on Strava side: <strong>~6 minutes / 100 activities</strong>. <strong>Upcoming syncs are short and silent.</strong> " +
             "Keep this window in background, it will close itself when synchronization is done.<br/><br/>" +
             "Synced activities are locally saved in the storage allocated by the extension." +
             "<br/><br/>On a daily use, your recent activities will be automatically pushed to the Elevate app when strava website is loaded." +

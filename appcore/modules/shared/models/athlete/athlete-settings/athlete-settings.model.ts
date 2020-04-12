@@ -27,16 +27,6 @@ export class AthleteSettingsModel {
     public swimFtp: number;
     public weight: number;
 
-    /**
-     *
-     * @param {number} maxHr
-     * @param {number} restHr
-     * @param {UserLactateThresholdModel} lthr
-     * @param {number} cyclingFtp
-     * @param {number} runningFtp
-     * @param {number} swimFtp
-     * @param {number} weight
-     */
     constructor(maxHr: number, restHr: number, lthr: UserLactateThresholdModel, cyclingFtp: number, runningFtp: number, swimFtp: number, weight: number) {
         this.maxHr = maxHr;
         this.restHr = restHr;

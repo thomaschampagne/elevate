@@ -55,7 +55,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
     public dataSource: MatTableDataSource<DatedAthleteSettingsTableModel>;
 
-    @Output("datedAthleteSettingsModelsChange")
+    @Output()
     public datedAthleteSettingsModelsChange: EventEmitter<void> = new EventEmitter<void>();
 
     constructor(public athleteService: AthleteService,
@@ -71,7 +71,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
     public onAdd(): void {
 
-        const datedAthleteSettingsModelBase = _.cloneDeep(_.first(this.datedAthleteSettingsModels));
+        const datedAthleteSettingsModelBase: DatedAthleteSettingsModel = _.cloneDeep(_.first(this.datedAthleteSettingsModels));
 
         datedAthleteSettingsModelBase.since = DatedAthleteSettingsModel.DEFAULT_SINCE;
 
@@ -102,7 +102,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
     public onEdit(sinceIdentifier: string): void {
 
-        const datedAthleteSettingsModelToEdit = _.find(this.datedAthleteSettingsModels, {since: sinceIdentifier});
+        const datedAthleteSettingsModelToEdit: DatedAthleteSettingsModel = _.find<DatedAthleteSettingsModel>(this.datedAthleteSettingsModels, {since: sinceIdentifier});
 
         const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
             action: DatedAthleteSettingsAction.ACTION_EDIT,

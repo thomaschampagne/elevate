@@ -34,7 +34,8 @@ const getActivitiesFixture = (page: number, perPage: number, activities: Array<B
 
 describe("StravaConnector", () => {
 
-    const createSuccessResponse = (dataResponse: object, statusCode: number = HttpCodes.OK, statusMessage: string = null, headers: IncomingHttpHeaders = {}): IHttpClientResponse => {
+    const createSuccessResponse = (dataResponse: object, statusCode: number = HttpCodes.OK,
+                                   statusMessage: string = null, headers: IncomingHttpHeaders = {}): IHttpClientResponse => {
 
         headers[StravaConnector.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
         headers[StravaConnector.STRAVA_RATELIMIT_USAGE_HEADER] = "0,0";

@@ -53,9 +53,9 @@ export class ConnectorsComponent implements OnInit {
 
                 const data: ConfirmDialogDataModel = {
                     title: "Important: check your athlete settings before",
-                    content: "No activities were synced before. Please make sure you have properly configured your dated athlete settings (cycling FTP, running FTP, swim FTP, heart rate, weight, ...) before starting a synchronization. " +
-                        "A lack of athlete settings configuration can cause empty stats and empty charts.",
-                    confirmText: "I configured my athlete settings, start sync",
+                    content: "No activities were synced before. First make sure you have properly configured your dated athlete settings including functional thresholds before. " +
+                        "A lack of athlete settings configuration can result in empty stats/charts (e.g. flat fitness trend).",
+                    confirmText: "Sync",
                     cancelText: "Configure athlete settings"
                 };
 

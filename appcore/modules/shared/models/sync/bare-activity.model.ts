@@ -1,3 +1,4 @@
+// tslint:disable:variable-name
 import { ElevateSport } from "../../enums";
 
 export class BareActivityModel {

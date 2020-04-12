@@ -7,6 +7,8 @@ import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import { ElevateSport } from "@elevate/shared/enums";
+import { DesktopModule } from "../../modules/desktop/desktop.module";
+import { ElectronService, ElectronWindow } from "../electron/electron.service";
 import FindRequest = PouchDB.Find.FindRequest;
 
 describe("ActivityService", () => {
@@ -20,9 +22,23 @@ describe("ActivityService", () => {
         TestBed.configureTestingModule({
             imports: [
                 CoreModule,
-                SharedModule
+                SharedModule,
+                DesktopModule
             ]
         });
+
+        const electronService: ElectronService = TestBed.inject(ElectronService);
+        electronService.instance = <Electron.RendererInterface> {
+            ipcRenderer: {}
+        };
+
+        const electronWindow = (window as ElectronWindow);
+        const electronRequire = (module: string) => {
+            console.log("Loading module: " + module);
+            return {} as Electron.RendererInterface;
+        };
+        electronWindow.require = electronRequire;
+        spyOn(electronWindow, "require").and.callFake(electronRequire);
 
         _TEST_SYNCED_ACTIVITIES_ = _.cloneDeep(TEST_SYNCED_ACTIVITIES);
 
@@ -433,6 +449,126 @@ describe("ActivityService", () => {
                 done();
             });
 
+        });
+
+    });
+
+    describe("Activity lacking of athlete settings (= missing stress scores)", () => {
+
+        it("should detect any activities lacking of athlete settings", done => {
+
+            // Given
+            const syncedActivities: Partial<SyncedActivityModel>[] = [
+                {id: "111", name: "111", settingsLack: false},
+                {id: "222", name: "222", settingsLack: true},
+                {id: "333", name: "333", settingsLack: false},
+                {id: "444", name: "444", settingsLack: true},
+                {id: "555", name: "555", settingsLack: false},
+                {id: "666", name: "666"},
+            ];
+
+            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(<SyncedActivityModel[]> syncedActivities));
+
+            // When
+            const promise = activityService.hasActivitiesWithSettingsLacks();
+
+            // Then
+            promise.then(result => {
+                expect(result).toBeTruthy();
+                done();
+
+            }, error => {
+                expect(error).toBeNull();
+                done();
+            });
+        });
+
+        it("should NOT detect any activities lacking of athlete settings", done => {
+
+            // Given
+            const syncedActivities: Partial<SyncedActivityModel>[] = [
+                {id: "111", name: "111", settingsLack: false},
+                {id: "222", name: "222", settingsLack: false},
+                {id: "333", name: "333", settingsLack: false},
+                {id: "444", name: "444", settingsLack: false},
+                {id: "555", name: "555", settingsLack: false},
+                {id: "666", name: "666"},
+            ];
+
+            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(<SyncedActivityModel[]> syncedActivities));
+
+            // When
+            const promise = activityService.hasActivitiesWithSettingsLacks();
+
+            // Then
+            promise.then(result => {
+                expect(result).toBeFalsy();
+                done();
+
+            }, error => {
+                expect(error).toBeNull();
+                done();
+            });
+        });
+
+        it("should find activities lacking of athlete settings", done => {
+
+            // Given
+            const expectedSize = 2;
+            const syncedActivities: Partial<SyncedActivityModel>[] = [
+                {id: "111", name: "111", settingsLack: false},
+                {id: "222", name: "222", settingsLack: true},
+                {id: "333", name: "333", settingsLack: false},
+                {id: "444", name: "444", settingsLack: true},
+                {id: "555", name: "555", settingsLack: false},
+                {id: "666", name: "666"},
+            ];
+
+            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(<SyncedActivityModel[]> syncedActivities));
+
+            // When
+            const promise = activityService.findActivitiesWithSettingsLacks();
+
+            // Then
+            promise.then(activities => {
+                expect(activities.length).toEqual(expectedSize);
+                expect(activities[0]).toEqual(<SyncedActivityModel> syncedActivities[1]);
+                expect(activities[1]).toEqual(<SyncedActivityModel> syncedActivities[3]);
+                done();
+
+            }, error => {
+                expect(error).toBeNull();
+                done();
+            });
+        });
+
+        it("should NOT find activities lacking of athlete settings", done => {
+
+            // Given
+            const expectedSize = 0;
+            const syncedActivities: Partial<SyncedActivityModel>[] = [
+                {id: "111", name: "111", settingsLack: false},
+                {id: "222", name: "222", settingsLack: false},
+                {id: "333", name: "333", settingsLack: false},
+                {id: "444", name: "444", settingsLack: false},
+                {id: "555", name: "555", settingsLack: false},
+                {id: "666", name: "666"},
+            ];
+
+            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(<SyncedActivityModel[]> syncedActivities));
+
+            // When
+            const promise = activityService.findActivitiesWithSettingsLacks();
+
+            // Then
+            promise.then(activities => {
+                expect(activities.length).toEqual(expectedSize);
+                done();
+
+            }, error => {
+                expect(error).toBeNull();
+                done();
+            });
         });
 
     });

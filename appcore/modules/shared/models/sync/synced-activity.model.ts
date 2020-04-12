@@ -1,3 +1,4 @@
+// tslint:disable:variable-name
 import { AnalysisDataModel } from "../activity-data";
 import { AthleteSnapshotModel } from "../athlete";
 import { BareActivityModel } from "./bare-activity.model";
@@ -16,6 +17,7 @@ export class SyncedActivityModel extends BareActivityModel {
     public extendedStats: AnalysisDataModel;
     public athleteSnapshot: AthleteSnapshotModel;
     public sourceConnectorType: ConnectorType;
+    public settingsLack?: boolean;
     public extras?: Extras = {};
 
 }

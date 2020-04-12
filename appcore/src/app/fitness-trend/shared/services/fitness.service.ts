@@ -23,11 +23,6 @@ export class FitnessService {
 
     /**
      * Prepare activities by assigning stress scores on each of them
-     * @param {FitnessTrendConfigModel} fitnessTrendConfigModel
-     * @param {boolean} powerMeterEnable
-     * @param {boolean} swimEnable
-     * @param {string[]} skipActivityTypes
-     * @returns {Promise<FitnessPreparedActivityModel[]>}
      */
     public prepare(fitnessTrendConfigModel: FitnessTrendConfigModel,
                    powerMeterEnable: boolean,
@@ -197,27 +192,14 @@ export class FitnessService {
         });
     }
 
-    /**
-     *
-     * @param {number} distance
-     * @param {number} movingTime
-     * @param {number} elaspedTime
-     * @param {number} swimFtp
-     * @returns {number}
-     */
-    public computeSwimStressScore(distance: number, movingTime: number, elaspedTime: number, swimFtp: number) {
+    public computeSwimStressScore(distance: number, movingTime: number, elapsedTime: number, swimFtp: number) {
         const normalizedSwimSpeed = distance / (movingTime / 60); // Normalized_Swim_Speed (m/min) = distance(m) / timeInMinutesNoRest
         const swimIntensity = normalizedSwimSpeed / swimFtp; // Intensity = Normalized_Swim_Speed / Swim FTP
-        return Math.pow(swimIntensity, 3) * (elaspedTime / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
+        return Math.pow(swimIntensity, 3) * (elapsedTime / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
     }
 
     /**
      * ComputeTrend the fitness trend
-     * @param {FitnessTrendConfigModel} fitnessTrendConfigModel
-     * @param {boolean} isPowerMeterEnabled
-     * @param {boolean} isSwimEnabled
-     * @param {string[]} skipActivityTypes
-     * @returns {Promise<DayFitnessTrendModel[]>}
      */
     public computeTrend(fitnessTrendConfigModel: FitnessTrendConfigModel,
                         isPowerMeterEnabled: boolean,
@@ -301,11 +283,6 @@ export class FitnessService {
         });
     }
 
-    /**
-     *
-     * @param {moment.Moment} startFrom
-     * @param {DayStressModel[]} dailyActivity
-     */
     public appendPreviewDaysToDailyActivity(startFrom: moment.Moment, dailyActivity: DayStressModel[]) {
 
         for (let i = 0; i < FitnessService.FUTURE_DAYS_PREVIEW; i++) {
@@ -318,12 +295,6 @@ export class FitnessService {
         }
     }
 
-    /**
-     *
-     * @param {moment.Moment} currentDay
-     * @param {FitnessPreparedActivityModel[]} fitnessPreparedActivities
-     * @returns {DayStressModel}
-     */
 
     public dayStressOnDate(currentDay: moment.Moment, fitnessPreparedActivities: FitnessPreparedActivityModel[]): DayStressModel {
 
@@ -417,13 +388,6 @@ export class FitnessService {
         return dayActivity;
     }
 
-    /**
-     *
-     * @param {SyncedActivityModel[]} activities
-     * @param {string} ignoreBeforeDate
-     * @param {string[]} ignoreActivityNamePatterns
-     * @returns {SyncedActivityModel[]}
-     */
     public filterActivities(activities: SyncedActivityModel[], ignoreBeforeDate: string, ignoreActivityNamePatterns: string[]): SyncedActivityModel[] {
 
         const hasIgnoreBeforeDate = !_.isEmpty(ignoreBeforeDate);

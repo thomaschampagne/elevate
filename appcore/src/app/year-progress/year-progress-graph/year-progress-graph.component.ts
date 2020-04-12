@@ -228,7 +228,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
             if (YearProgressGraphComponent.getGraphHtmlElement()) {
                 MG.data_graphic(this.graphConfig);
             } else {
-                throw new ElevateException("Year progress graph crashed. You may reload the app.");
+                throw new ElevateException("Year progress graph crashed. You may restart the app.");
             }
         });
     }

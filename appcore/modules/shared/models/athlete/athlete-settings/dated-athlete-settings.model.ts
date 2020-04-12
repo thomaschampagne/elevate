@@ -16,9 +16,8 @@ export class DatedAthleteSettingsModel extends AthleteSettingsModel {
     public since: string = null;
 
     /**
-     *
-     * @param {string} since Date format YYYY-MM-DD
-     * @param {AthleteSettingsModel} athleteSettingsModel
+     * @param since Date format YYYY-MM-DD
+     * @param athleteSettingsModel AthleteSettingsModel
      */
     constructor(since: string, athleteSettingsModel: AthleteSettingsModel) {
         super(athleteSettingsModel.maxHr, athleteSettingsModel.restHr, athleteSettingsModel.lthr,

@@ -108,7 +108,7 @@ describe("IpcMainMessagesService", () => {
             const replyWith = () => {
             };
 
-            const handleComputeActivitySpy = spyOn(ipcMainMessagesService, "handleComputeActivitySpy").and.stub();
+            const handleComputeActivitySpy = spyOn(ipcMainMessagesService, "handleComputeActivity").and.stub();
 
             // When
             ipcMainMessagesService.forwardReceivedMessagesFromIpcRenderer(flaggedIpcMessage, replyWith);
@@ -494,7 +494,7 @@ describe("IpcMainMessagesService", () => {
             const replyWithSpy = spyOn(replyWrapper, "replyWith");
 
             // When
-            ipcMainMessagesService.handleComputeActivitySpy(flaggedIpcMessage, replyWrapper.replyWith);
+            ipcMainMessagesService.handleComputeActivity(flaggedIpcMessage, replyWrapper.replyWith);
 
             // Then
             expect(calculateSpy).toBeCalledTimes(1);
@@ -523,7 +523,7 @@ describe("IpcMainMessagesService", () => {
             const replyWithSpy = spyOn(replyWrapper, "replyWith");
 
             // When
-            ipcMainMessagesService.handleComputeActivitySpy(flaggedIpcMessage, replyWrapper.replyWith);
+            ipcMainMessagesService.handleComputeActivity(flaggedIpcMessage, replyWrapper.replyWith);
 
             // Then
             expect(calculateSpy).toBeCalledTimes(1);
@@ -558,7 +558,7 @@ describe("IpcMainMessagesService", () => {
             const replyWithSpy = spyOn(replyWrapper, "replyWith");
 
             // When
-            ipcMainMessagesService.handleComputeActivitySpy(flaggedIpcMessage, replyWrapper.replyWith);
+            ipcMainMessagesService.handleComputeActivity(flaggedIpcMessage, replyWrapper.replyWith);
 
             // Then
             expect(calculateSpy).toBeCalledTimes(1);

@@ -59,6 +59,10 @@ export class ActivityViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public setupGraphs(): void {
 
+        if (!this.activityStreamsModel) {
+            return;
+        }
+
         this.zone.runOutsideAngular(() => {
 
             const chart = am4core.create("chartdiv", am4charts.XYChart);

@@ -1,5 +1,15 @@
 import { BaseConnector, PrimitiveSourceData } from "../base.connector";
-import { ActivitySyncEvent, ConnectorType, ErrorSyncEvent, GenericSyncEvent, StartedSyncEvent, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+    ActivityComputer,
+    ActivitySyncEvent,
+    ConnectorType,
+    ErrorSyncEvent,
+    GenericSyncEvent,
+    StartedSyncEvent,
+    StoppedSyncEvent,
+    SyncEvent,
+    SyncEventType
+} from "@elevate/shared/sync";
 import { ReplaySubject, Subject } from "rxjs";
 import { ActivityStreamsModel, AthleteModel, AthleteSettingsModel, BareActivityModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import * as fs from "fs";
@@ -365,6 +375,11 @@ export class FileSystemConnector extends BaseConnector {
 
                                                 // Track connector type
                                                 syncedActivityModel.sourceConnectorType = ConnectorType.FILE_SYSTEM;
+
+                                                // Check if user missed some athlete settings. Goal: avoid missing stress scores because of missing settings.
+                                                syncedActivityModel.settingsLack = ActivityComputer.hasAthleteSettingsLacks(syncedActivityModel.distance_raw,
+                                                    syncedActivityModel.moving_time_raw, syncedActivityModel.elapsed_time_raw, syncedActivityModel.type,
+                                                    syncedActivityModel.extendedStats, syncedActivityModel.athleteSnapshot.athleteSettings, activityStreamsModel);
 
                                                 // Gunzip stream as base64
                                                 const compressedStream = (activityStreamsModel) ? ActivityStreamsModel.inflate(activityStreamsModel) : null;

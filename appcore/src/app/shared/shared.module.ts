@@ -37,6 +37,8 @@ import { DesktopModule } from "./modules/desktop/desktop.module";
 import { StreamsDao } from "./dao/streams/streams.dao";
 import { StreamsService } from "./services/streams/streams.service";
 import { ActivityViewComponent } from "../activity-view/activity-view.component";
+import { ActivitiesSettingsLacksDialogComponent } from "../refresh-stats-bar/activities-settings-lacks-dialog.component";
+import { LoadingDialogComponent } from "./dialogs/loading-dialog/loading-dialog.component";
 
 @NgModule({
     imports: [
@@ -63,6 +65,7 @@ import { ActivityViewComponent } from "../activity-view/activity-view.component"
         FaqComponent,
 
         // Dialogs
+        LoadingDialogComponent,
         ZoneToolBarComponent,
         GotItDialogComponent,
         ConfirmDialogComponent,
@@ -70,7 +73,8 @@ import { ActivityViewComponent } from "../activity-view/activity-view.component"
         ZonesImportExportDialogComponent,
         AboutDialogComponent,
         ImportBackupDialogComponent,
-        ImportExportProgressDialogComponent
+        ImportExportProgressDialogComponent,
+        ActivitiesSettingsLacksDialogComponent,
     ],
     providers: [
         UserSettingsService,

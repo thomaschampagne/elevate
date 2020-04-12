@@ -7,6 +7,7 @@ import { StreamActivityModel } from "../models/sync/stream-activity.model";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { ElevateSport } from "@elevate/shared/enums";
+import { ActivityComputer } from "@elevate/shared/sync";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 const ComputeAnalysisWorker = require("worker-loader?inline!./workers/compute-analysis.worker");
@@ -68,7 +69,8 @@ export class MultipleActivityProcessor {
 
             if (activitiesComputedResults.length !== activitiesWithStream.length) {
 
-                const errMessage: string = "activitiesComputedResults length mismatch with activitiesWithStream length: " + activitiesComputedResults.length + " != " + activitiesWithStream.length + ")";
+                const errMessage: string = "activitiesComputedResults length mismatch with activitiesWithStream length: "
+                    + activitiesComputedResults.length + " != " + activitiesWithStream.length + ")";
                 deferred.reject(errMessage);
 
             } else {
@@ -77,9 +79,13 @@ export class MultipleActivityProcessor {
 
                 _.forEach(activitiesComputedResults, (computedResult: AnalysisDataModel, index: number) => {
 
-                    const activityComputed: SyncedActivityModel = _.pick(activitiesWithStream[index], MultipleActivityProcessor.outputFields) as SyncedActivityModel;
+                    const streamActivityModel = activitiesWithStream[index];
+                    const activityComputed: SyncedActivityModel = _.pick(streamActivityModel, MultipleActivityProcessor.outputFields) as SyncedActivityModel;
                     activityComputed.extendedStats = computedResult;
                     activityComputed.athleteSnapshot = activitiesWithStream[index].athleteSnapshot;
+                    activityComputed.settingsLack = ActivityComputer.hasAthleteSettingsLacks(activityComputed.distance_raw, activityComputed.moving_time_raw,
+                        activityComputed.elapsed_time_raw, activityComputed.type, activityComputed.extendedStats, activityComputed.athleteSnapshot.athleteSettings,
+                        streamActivityModel.stream);
                     activitiesComputed.push(activityComputed);
 
                 });

@@ -173,15 +173,15 @@ class Main {
 
         // Shortcuts
         globalShortcut.register(<Electron.Accelerator> "CommandOrControl+R", () => {
-            logger.debug("CommandOrControl+R is pressed, reload app");
-            if (this.appWindow.isFocused()) {
+            if (this.appWindow.isFocused() && IS_ELECTRON_DEV) {
+                logger.debug("CommandOrControl+R is pressed, reload app");
                 this.appWindow.reload();
             }
         });
 
         globalShortcut.register(<Electron.Accelerator> "CommandOrControl+F12", () => {
-            logger.debug("CommandOrControl+F12 is pressed, toggle dev tools");
             if (this.appWindow.isFocused()) {
+                logger.debug("CommandOrControl+F12 is pressed, toggle dev tools");
                 this.appWindow.webContents.toggleDevTools();
             }
         });
@@ -191,8 +191,8 @@ class Main {
 try {
 
     if (IS_ELECTRON_DEV) {
-        require("electron-reloader")(module);
-        logger.debug("electron-reloader is ENABLED");
+        logger.debug("Electron is in DEV mode");
+        // require("electron-reloader")(module);
     }
 
     logger.info("Version: " + pkg.version);

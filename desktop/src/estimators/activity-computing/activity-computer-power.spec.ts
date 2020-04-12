@@ -1,8 +1,17 @@
 import { ActivitySourceDataModel, ActivityStreamsModel, AnalysisDataModel, AthleteSettingsModel, AthleteSnapshotModel, Gender, UserSettings, } from "@elevate/shared/models";
-import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import * as _ from "lodash";
 import { ElevateSport } from "@elevate/shared/enums";
+import { ActivityComputer } from "@elevate/shared/sync";
+import * as streamJson_1109968202 from "../fixtures/1109968202/stream.json";
+import * as streamJson_1302129959 from "../fixtures/1302129959/stream.json";
+import * as streamJson_343080886 from "../fixtures/343080886/stream.json";
+import * as streamJson_600329531 from "../fixtures/600329531/stream.json";
+import * as streamJson_597999523 from "../fixtures/597999523/stream.json";
+import * as streamJson_1610385844 from "../fixtures/1610385844/stream.json";
+import * as streamJson_1811220111 from "../fixtures/1811220111/stream.json";
+import * as streamJson_1817318910 from "../fixtures/1817318910/stream.json";
 import UserSettingsModel = UserSettings.UserSettingsModel;
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 const expectBetween = (expectValue: number, toEqual: number, tolerance: number) => {
 
@@ -10,8 +19,11 @@ const expectBetween = (expectValue: number, toEqual: number, tolerance: number) 
     const higherOk: number = toEqual + tolerance;
     const isBetween = (lowerOk <= expectValue && expectValue <= higherOk);
 
-    expect(isBetween).toBeTruthy("Expected '" + expectValue + "' to equals '" + toEqual + "' is not between min: '"
-        + (lowerOk) + "' and max: '" + (higherOk) + "'.\r\n=> Lower: " + lowerOk + " <= expected: " + expectValue + " <= higher: " + higherOk);
+    if (!isBetween) {
+        console.error("Expected '" + expectValue + "' to equals '" + toEqual + "' is not between min: '"
+            + (lowerOk) + "' and max: '" + (higherOk) + "'.\r\n=> Lower: " + lowerOk + " <= expected: " + expectValue + " <= higher: " + higherOk);
+    }
+    expect(isBetween).toBeTruthy();
 
 };
 
@@ -23,7 +35,7 @@ describe("ActivityComputer Cycling Power", () => {
     const bounds: number[] = null;
     const returnZones = false;
     const returnPowerCurve = true;
-    const userSettingsMock: UserSettingsModel = _.cloneDeep(require("../../fixtures/user-settings/2470979.json")); // Thomas C user settings
+    const userSettingsMock: UserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
     const athleteSnapshot = new AthleteSnapshotModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
     const activitySourceData: ActivitySourceDataModel = {
         movingTime: -1,
@@ -43,7 +55,7 @@ describe("ActivityComputer Cycling Power", () => {
 
         // Given
         const hasPowerMeter = true;
-        const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1109968202/stream.json"));
+        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1109968202);
         athleteSnapshot.athleteSettings.cyclingFtp = 288; // ~FTP in July 2017 (Christophe B)
 
         // When
@@ -63,7 +75,7 @@ describe("ActivityComputer Cycling Power", () => {
 
         // Given
         const hasPowerMeter = true;
-        const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1302129959/stream.json"));
+        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1302129959);
         athleteSnapshot.athleteSettings.cyclingFtp = 380; // ~FTP in December 2017 (Jasper Verkuijl)
 
         // When
@@ -84,7 +96,7 @@ describe("ActivityComputer Cycling Power", () => {
 
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/343080886/stream.json"));
+        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_343080886);
         stream.watts = stream.watts_calc; // because powerMeter is false
         athleteSnapshot.athleteSettings.cyclingFtp = 260; // ~FTP in July 2015 (Thomas Champagne)
         athleteSnapshot.athleteSettings.maxHr = 205; // in July 2015 (Thomas Champagne)
@@ -106,7 +118,7 @@ describe("ActivityComputer Cycling Power", () => {
 
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/600329531/stream.json"));
+        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_600329531);
         stream.watts = stream.watts_calc; // because powerMeter is false
         athleteSnapshot.athleteSettings.cyclingFtp = 239; // ~FTP in July 2016 (Thomas Champagne)
 
@@ -127,7 +139,7 @@ describe("ActivityComputer Cycling Power", () => {
 
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/597999523/stream.json"));
+        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_597999523);
         stream.watts = stream.watts_calc; // because powerMeter is false
 
         // When
@@ -148,7 +160,7 @@ describe("ActivityComputer Cycling Power", () => {
 
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1610385844/stream.json"));
+        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1610385844);
         stream.watts = stream.watts_calc; // because powerMeter is false
         athleteSnapshot.athleteSettings.cyclingFtp = 130; // ~FTP in May 2018 (Thomas Champagne)
 
@@ -169,7 +181,7 @@ describe("ActivityComputer Cycling Power", () => {
 
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1811220111/stream.json"));
+        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1811220111);
         stream.watts = stream.watts_calc; // because powerMeter is false
 
         // When
@@ -190,7 +202,7 @@ describe("ActivityComputer Cycling Power", () => {
 
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = _.cloneDeep(require("../../fixtures/activities/1817318910/stream.json"));
+        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1817318910);
         stream.watts = stream.watts_calc; // because powerMeter is false
 
         // When

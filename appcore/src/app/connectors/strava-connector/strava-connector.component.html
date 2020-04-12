@@ -40,6 +40,7 @@
                             <td><strong>Application Name:</strong></td>
                             <td>Enter
                                 <button [cbContent]="generatedStravaApiApplication.appName" color="primary" mat-button
+                                        (cbOnSuccess)="onClipBoardSaved($event)"
                                         matTooltip="Click to copy to clipboard"
                                         matTooltipPosition="above"
                                         ngxClipboard>{{generatedStravaApiApplication.appName}}</button>
@@ -68,6 +69,7 @@
                             <td>
                                 Enter
                                 <button [cbContent]="generatedStravaApiApplication.webSite" color="primary" mat-button
+                                        (cbOnSuccess)="onClipBoardSaved($event)"
                                         matTooltip="Click to copy to clipboard"
                                         matTooltipPosition="above"
                                         ngxClipboard>{{generatedStravaApiApplication.webSite}}</button>
@@ -82,6 +84,7 @@
                             <td><strong>Authorization Callback Domain:</strong></td>
                             <td>
                                 <button cbContent="localhost" color="primary" mat-button
+                                        (cbOnSuccess)="onClipBoardSaved($event)"
                                         matTooltip="Click to copy to clipboard"
                                         matTooltipPosition="above"
                                         ngxClipboard>localhost

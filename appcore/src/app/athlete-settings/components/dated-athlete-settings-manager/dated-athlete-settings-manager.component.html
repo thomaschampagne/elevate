@@ -5,14 +5,33 @@
 
     <mat-card-content>
         <div>
-            <strong>Why Dated Athlete Settings?</strong> Currently <a
-            href="https://support.strava.com/hc/en-us/community/posts/203479564-Changing-FTP-changes-all-previous-training-score-data"
-            target="_blank">Strava does not support</a> evolution of your physiological attributes over time (heart
-            rate, weight, power, pace, ...). They have to be supported because activities' stats including stress
+            <strong>Why Dated Athlete Settings?</strong> The evolution of your physiological attributes over time (heart
+            rate, weight, power, pace, ...) has to be supported because activities' stats including stress
             scores are functions of these attributes. After configuration by yourself, this feature will provide
             matching athlete's attributes for a given activity date to calculate stats with actual day's attributes.
             When enabled, Dated Athlete Settings will be used by all Elevate features which might need it (e.g.
             fitness trend).
+        </div>
+
+        <div>
+            <mat-icon [style.vertical-align]="'top'" color="primary">warning</mat-icon>&nbsp;&nbsp;<span class="mat-h3"><strong>Functional Thresholds</strong>! Please read carefully!</span>
+        </div>
+        <div>
+            If you don't provide your <strong>Cycling, Running, Swim Functional Thresholds (FTPs)</strong> in the below
+            settings, you will
+            get <strong>EMPTY STRESS SCORES</strong> for activities performed without a heart rate monitor or a real
+            power meter. This will result in a <strong>FLAT FITNESS TREND</strong>. To see how-to configure your various
+            FTPs, just add or edit dated athlete settings.
+        </div>
+
+        <div>
+            If you are not aware of your past physiological attributes on the first configuration/sync, simply enter
+            some dated athlete settings with rough values and sync! This will allow you to grab the required "static"
+            stats on some "revealing" synced activities! In activities section and for every 4-6 weeks: find activities
+            where you hit your thresholds. Check <i>Max hr</i>,<i>Cycling best 20min power (= ~Cycling FTP)</i>, <i>Running
+            best 20min pace (= ~Running FTP)</i>, <i>Swim best 20min pace (= ~Swim FTP)</i>, ... and create/update dated
+            athlete settings with corresponding values! You will be prompted to recalculate your activities. Do it! All
+            your stats, stress scores, graphs will be updated. Repeat this history analysis & recalculation if needed.
         </div>
 
     </mat-card-content>

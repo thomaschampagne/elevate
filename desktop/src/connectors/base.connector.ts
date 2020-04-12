@@ -160,11 +160,6 @@ export abstract class BaseConnector {
         return ActivityComputer.calculate(<BareActivityModel> syncedActivityModel, athleteSnapshotModel, userSettingsModel, streams);
     }
 
-    /**
-     *
-     * @param activityStartDate
-     * @param activityDurationSeconds
-     */
     public findSyncedActivityModels(activityStartDate: string, activityDurationSeconds: number): Promise<SyncedActivityModel[]> {
         const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.FIND_ACTIVITY, activityStartDate, activityDurationSeconds);
         return Service.instance().ipcMainMessages.send<SyncedActivityModel[]>(flaggedIpcMessage);

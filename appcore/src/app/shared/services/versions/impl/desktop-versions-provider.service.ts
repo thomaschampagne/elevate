@@ -48,7 +48,7 @@ export class DesktopVersionsProvider implements VersionsProvider {
 
     public getBuildMetadata(): Promise<{ commit: string, date: string }> {
         const buildMetadata = require("../../../../../../../desktop/build_metadata.json");
-        return Promise.resolve(buildMetadata);
+        return Promise.resolve(<{ commit: string, date: string }> buildMetadata);
     }
 
     public getWrapperVersion(): string {
@@ -56,7 +56,7 @@ export class DesktopVersionsProvider implements VersionsProvider {
     }
 
     public packageManifest(): PackageManifest {
-        return require("../../../../../../../desktop/package.json");
+        return <PackageManifest> require("../../../../../../../desktop/package.json");
     }
 }
 

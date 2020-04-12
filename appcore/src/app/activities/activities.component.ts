@@ -38,10 +38,13 @@ export class ActivitiesComponent implements OnInit {
     public static readonly LS_SELECTED_COLUMNS: string = "activities_selectedColumns";
     public static readonly LS_PAGE_SIZE_PREFERENCE: string = "activities_pageSize";
     public readonly ColumnType = ActivityColumns.ColumnType;
+
     @ViewChild(MatPaginator)
     public matPaginator: MatPaginator;
+
     @ViewChild(MatSort)
     public matSort: MatSort;
+
     public dataSource: MatTableDataSource<SyncedActivityModel>;
     public columns: ActivityColumns.Column<SyncedActivityModel>[];
     public selectedColumns: ActivityColumns.Column<SyncedActivityModel>[];
@@ -196,15 +199,17 @@ export class ActivitiesComponent implements OnInit {
 
             const column = _.find(ActivityColumns.Definition.ALL, {id: sortHeaderId});
 
+            let value;
+
             if (column && column.id) {
-
                 const valueAtPath = _.at(activity as any, column.id)[0];
-                return (valueAtPath) ? valueAtPath : 0;
-
+                value = (valueAtPath) ? valueAtPath : 0;
             } else {
                 this.logger.warn("Column path missing", JSON.stringify(column));
-                return 0;
+                value = 0;
             }
+
+            return value;
         };
 
     }

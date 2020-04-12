@@ -14,6 +14,7 @@ import jdenticon from "jdenticon";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../../shared/services/links-opener/open-resource-resolver";
+import { IClipboardResponse } from "ngx-clipboard";
 
 class GeneratedStravaApiApplication {
     public appName: string;
@@ -184,5 +185,11 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
     public onHowToClicked(): void {
         this.showHowTo = true;
         this.refreshRandomStravaApiApplication();
+    }
+
+    public onClipBoardSaved($event: IClipboardResponse): void {
+        if ($event.isSuccess) {
+            this.snackBar.open(`"${$event.content}" copied to clipboard.`, null, {duration: 1000});
+        }
     }
 }

@@ -68,7 +68,7 @@ export class IpcMainMessagesService {
                 break;
 
             case MessageFlag.COMPUTE_ACTIVITY:
-                this.handleComputeActivitySpy(message, replyWith);
+                this.handleComputeActivity(message, replyWith);
                 break;
 
             default:
@@ -256,7 +256,7 @@ export class IpcMainMessagesService {
 
     }
 
-    public handleComputeActivitySpy(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
+    public handleComputeActivity(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
 
         let syncedActivityModel = <SyncedActivityModel> message.payload[0];
         const athleteSnapshotModel = <AthleteSnapshotModel> message.payload[1];
@@ -270,6 +270,11 @@ export class IpcMainMessagesService {
             syncedActivityModel.athleteSnapshot = athleteSnapshotModel;
             syncedActivityModel.extendedStats = analysisDataModel;
             syncedActivityModel = BaseConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, streams);
+
+            // Check if user missed some athlete settings. Goal: avoid missing stress scores because of missing settings.
+            syncedActivityModel.settingsLack = ActivityComputer.hasAthleteSettingsLacks(syncedActivityModel.distance_raw, syncedActivityModel.moving_time_raw,
+                syncedActivityModel.elapsed_time_raw, syncedActivityModel.type, syncedActivityModel.extendedStats,
+                syncedActivityModel.athleteSnapshot.athleteSettings, streams);
 
             replyWith({
                 success: syncedActivityModel,

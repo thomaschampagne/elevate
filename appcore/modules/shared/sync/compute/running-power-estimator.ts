@@ -4,11 +4,7 @@ import { InconsistentParametersException } from "../../exceptions";
 export class RunningPowerEstimator {
     /**
      * Create Running Power stream estimation
-     * @param athleteWeight Mass of athlete in KG
-     * @param distanceArray
-     * @param timeArray
-     * @param altitudeArray
-     * @returns {Array<number>} Array of power
+     * @returns Array of power
      */
     public static createRunningPowerEstimationStream(athleteWeight: number, distanceArray: Array<number>,
                                                      timeArray: Array<number>, altitudeArray: Array<number>): Array<number> {
@@ -42,11 +38,7 @@ export class RunningPowerEstimator {
     /**
      * Return run power estimation from athlete weight and speed (m/s) into the equivalent bike watts
      * From https://alancouzens.com/blog/Run_Power.html
-     * @param {number} weightKg
-     * @param {number} meters
-     * @param {number} seconds
-     * @param elevationGain
-     * @returns {number} power watts
+     * @returns power watts
      */
     public static estimateRunningPower(weightKg: number, meters: number, seconds: number, elevationGain: number): number {
 
