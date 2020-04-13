@@ -8,7 +8,7 @@ import { of, throwError } from "rxjs";
 import { AthleteAccessChecker } from "./athlete-access-checker";
 import * as HttpCodes from "http-status-codes";
 import { LoggerService } from "../../shared/services/logging/logger.service";
-import { environment } from "../../../environments/environment.desktop";
+import { environment } from "../../../environments/environment";
 import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../../shared/services/versions/versions-provider.interface";
 import { StravaConnectorInfo } from "@elevate/shared/sync";

@@ -32,18 +32,25 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
     public static readonly GRAPH_TARGET_LINE_COLOR: string = "grey";
 
     public readonly ProgressType = ProgressType;
-    @Input("isGraphExpanded")
+
+    @Input()
     public isGraphExpanded: boolean;
-    @Input("selectedYears")
+
+    @Input()
     public selectedYears: number[];
-    @Input("selectedProgressType")
+
+    @Input()
     public selectedProgressType: YearProgressTypeModel;
-    @Input("yearProgressions")
+
+    @Input()
     public yearProgressions: YearProgressModel[];
-    @Input("targetProgressModels")
+
+    @Input()
     public targetProgressModels: TargetProgressModel[];
-    @Input("yearProgressStyleModel")
+
+    @Input()
     public yearProgressStyleModel: YearProgressStyleModel;
+
     public viewableYearProgressDataModel: ViewableYearProgressDataModel;
     public graphConfig: any;
     public isMomentWatchedToday: boolean;

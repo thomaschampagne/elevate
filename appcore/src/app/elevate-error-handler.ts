@@ -9,6 +9,8 @@ import { ConfirmDialogDataModel } from "./shared/dialogs/confirm-dialog/confirm-
 import { VERSIONS_PROVIDER, VersionsProvider } from "./shared/services/versions/versions-provider.interface";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ElevateException, SyncException } from "@elevate/shared/exceptions";
+import { GotItDialogComponent } from "./shared/dialogs/got-it-dialog/got-it-dialog.component";
+import { GotItDialogDataModel } from "./shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 
 @Injectable({
     providedIn: "root"
@@ -71,19 +73,30 @@ export class ElevateErrorHandler implements ErrorHandler {
 
             if (environment.target === EnvTarget.DESKTOP) {
 
-                // Sentry error tracking
-                const sentryEventId = ElevateErrorHandler.captureSentryEventId(error);
-
-                this.snackBar.open(errorMessage, "Report").onAction().subscribe(() => {
-                    Sentry.showReportDialog({
-                        eventId: sentryEventId,
-                        title: "Submitting this crash report is important!",
-                        subtitle: "Please paste any files shared links in description which might help to fix the error.",
-                        subtitle2: "",
-                        labelEmail: "Your email (it will not be shared)",
-                        labelComments: "Please give all steps to reproduce the error + files shared links (like Google Drive, Dropbox, OneDrive, Mediafire, Mega, ...) if you can. Thanks for your help!!",
+                if (environment.production) {
+                    // Sentry error tracking
+                    const sentryEventId = ElevateErrorHandler.captureSentryEventId(error);
+                    this.snackBar.open(errorMessage, "Report").onAction().subscribe(() => {
+                        Sentry.showReportDialog({
+                            eventId: sentryEventId,
+                            title: "Submitting this crash report is important!",
+                            subtitle: "Please paste any files shared links in description which might help to fix the error.",
+                            subtitle2: "",
+                            labelEmail: "Your email (it will not be shared)",
+                            labelComments: "Please give all steps to reproduce the error + files shared links (like Google Drive, Dropbox, OneDrive, Mediafire, Mega, ...) if you can. Thanks for your help!!",
+                        });
                     });
-                });
+
+                } else {
+                    this.snackBar.open(errorMessage, "View").onAction().subscribe(() => {
+                        this.dialog.open(GotItDialogComponent, {
+                            data: <GotItDialogDataModel> {
+                                title: `${errorMessage}. Press CTRL+F12 for details`,
+                                content: `<pre>${error.stack}</pre>`
+                            }
+                        });
+                    });
+                }
 
             } else if (environment.target === EnvTarget.EXTENSION) {
 
