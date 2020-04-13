@@ -114,6 +114,9 @@
                     "arch": [
                         "x64"
                     ]
+                },
+                {
+                    "target": "nsis-web"
                 }
             ]
         },
@@ -131,6 +134,10 @@
         "nsis": {
             "deleteAppDataOnUninstall": true,
             "artifactName": "elevate_installer.${ext}"
+        },
+        "nsisWeb": {
+            "deleteAppDataOnUninstall": true,
+            "artifactName": "elevate_web_installer.${ext}"
         },
         "deb": {
             "maintainer": "Thomas Champagne",
