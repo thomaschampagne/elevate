@@ -20,7 +20,7 @@ import { ElevateSport } from "@elevate/shared/enums";
                 </ng-container>
 
                 <!-- Type Column -->
-                <ng-container matColumnDef="type" width="100px">
+                <ng-container matColumnDef="type" width="130px">
                     <th mat-header-cell *matHeaderCellDef> Type</th>
                     <td mat-cell *matCellDef="let activity"> {{activity.type}} </td>
                 </ng-container>
