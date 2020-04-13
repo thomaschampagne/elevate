@@ -25,7 +25,7 @@ const {autoUpdater} = require("electron-updater"); // Import should remains w/ "
 
 class Main {
 
-    private static readonly WINDOW_SIZE_RATIO: number = 0.8;
+    private static readonly WINDOW_SIZE_RATIO: number = 0.95;
     public ipcMainMessagesService: IpcMainMessagesService;
     private readonly app: Electron.App;
     private appWindow: BrowserWindow;
