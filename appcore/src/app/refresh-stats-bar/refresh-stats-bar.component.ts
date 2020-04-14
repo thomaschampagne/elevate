@@ -154,7 +154,7 @@ export class RefreshStatsBarComponent implements OnInit {
             <!--Missing stress scores detected on some activities-->
             <div *ngIf="!hideSettingsLacksWarning" fxLayout="row" fxLayoutAlign="space-between center">
                 <div fxLayout="column" fxLayoutAlign="center start">
-                    Missing stress scores detected on some activities. You probably forgot functional thresholds on dated athlete settings.
+                    Missing stress scores detected on some activities. You probably forgot some functional thresholds in dated athlete settings.
                 </div>
                 <div fxLayout="row" fxLayoutAlign="space-between center">
                     <button mat-flat-button color="accent" (click)="onShowActivitiesWithSettingsLacks()">
@@ -288,7 +288,7 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
             <!--Missing stress scores detected on some activities-->
             <div *ngIf="!hideSettingsLacksWarning" fxLayout="row" fxLayoutAlign="space-between center">
                 <div fxLayout="column" fxLayoutAlign="center start">
-                    Missing stress scores detected on some activities. You probably forgot functional thresholds on dated athlete settings.
+                    Missing stress scores detected on some activities. You probably forgot some functional thresholds in dated athlete settings.
                 </div>
                 <div fxLayout="row" fxLayoutAlign="space-between center">
                     <button mat-flat-button color="accent" (click)="onShowActivitiesWithSettingsLacks()">
