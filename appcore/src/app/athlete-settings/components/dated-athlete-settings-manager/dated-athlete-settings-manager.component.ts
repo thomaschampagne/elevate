@@ -13,6 +13,7 @@ import { ConfirmDialogComponent } from "../../../shared/dialogs/confirm-dialog/c
 import { ConfirmDialogDataModel } from "../../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { AppError } from "../../../shared/models/app-error.model";
 import { LoggerService } from "../../../shared/services/logging/logger.service";
+import { ClipboardService, IClipboardResponse } from "ngx-clipboard";
 
 @Component({
     selector: "app-dated-athlete-settings-manager",
@@ -55,17 +56,24 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
     public dataSource: MatTableDataSource<DatedAthleteSettingsTableModel>;
 
+    public showExport: boolean;
+    public showImport: boolean;
+    public exportedSettings: string;
+
     @Output()
     public datedAthleteSettingsModelsChange: EventEmitter<void> = new EventEmitter<void>();
 
-    constructor(public athleteService: AthleteService,
-                public dialog: MatDialog,
-                public snackBar: MatSnackBar,
-                public logger: LoggerService) {
+
+    constructor(private athleteService: AthleteService,
+                private clipboardService: ClipboardService,
+                private dialog: MatDialog,
+                private snackBar: MatSnackBar,
+                private logger: LoggerService) {
     }
 
     public ngOnInit(): void {
         this.dataSource = new MatTableDataSource<DatedAthleteSettingsTableModel>();
+        this.hideExportImportForm();
         this.loadData();
     }
 
@@ -183,6 +191,8 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
     private loadData(): void {
 
+        this.hideExportImportForm();
+
         this.athleteService.fetch().then((athleteModel: AthleteModel) => {
 
             this.datedAthleteSettingsModels = athleteModel.datedAthleteSettings;
@@ -222,5 +232,133 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
             this.snackBar.open(message, "Close");
         }
 
+    }
+
+    public onShowExport(): void {
+        this.showExport = true;
+        this.showImport = !this.showExport;
+        this.exportedSettings = btoa(JSON.stringify(this.datedAthleteSettingsModels));
+    }
+
+    public onShowImport(): void {
+        this.showImport = true;
+        this.showExport = !this.showImport;
+    }
+
+    public onImport(inlineSettings: string = null): void {
+
+        const promiseSettings = inlineSettings ? Promise.resolve(inlineSettings) : navigator.clipboard.readText();
+
+        promiseSettings.then(settings => {
+            try {
+
+                let datedAthleteSettingsModels: DatedAthleteSettingsModel[];
+                try {
+                    const decodedSettings = atob(settings);
+                    datedAthleteSettingsModels = JSON.parse(decodedSettings);
+                } catch (e) {
+                    throw new Error("Data provided is corrupted");
+                }
+
+                // Check import consistency
+                this.assertSettingsValid(datedAthleteSettingsModels);
+
+                // Persist new settings
+                this.athleteService.fetch().then((athleteModel: AthleteModel) => {
+
+                    athleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+                    return this.athleteService.save(athleteModel);
+
+                }).then(() => {
+
+                    this.snackBar.open("New settings imported", null, {duration: 2000});
+
+                    // Hide import input
+                    this.showImport = false;
+
+                    this.datedAthleteSettingsModelsChange.emit();
+                    this.loadData();
+
+                }).catch(err => {
+                    this.snackBar.open(err, "Close", {duration: 4000});
+                });
+
+            } catch (err) {
+                this.snackBar.open(err, "Close", {duration: 4000});
+                this.logger.error(err);
+            }
+
+        });
+
+    }
+
+    public assertSettingsValid(datedAthleteSettingsModels: DatedAthleteSettingsModel[]): void {
+
+        if (!_.isArray(datedAthleteSettingsModels)) {
+            this.logger.error("Dated athlete settings model provided should be an array");
+            throw new Error("Invalid dated athlete settings set.");
+        }
+
+        datedAthleteSettingsModels.forEach((datedAthleteSettingsModel: DatedAthleteSettingsModel, index: number) => {
+
+            if (datedAthleteSettingsModel.since !== null && !_.isString(datedAthleteSettingsModel.since)) {
+                throw new Error("Invalid since date detected");
+            }
+
+            if (!datedAthleteSettingsModel.weight) {
+                throw new Error("Invalid weight detected");
+            }
+
+            if (!datedAthleteSettingsModel.maxHr) {
+                throw new Error("Invalid maxHr detected");
+            }
+
+            if (!datedAthleteSettingsModel.restHr) {
+                throw new Error("Invalid restHr detected");
+            }
+
+            if (!datedAthleteSettingsModel.lthr) {
+
+                throw new Error("Missing LTHR property detected");
+
+            } else {
+
+                if (datedAthleteSettingsModel.lthr.default !== null && !_.isNumber(datedAthleteSettingsModel.lthr.default)) {
+                    throw new Error("Missing LTHR default detected");
+                }
+
+                if (datedAthleteSettingsModel.lthr.cycling !== null && !_.isNumber(datedAthleteSettingsModel.lthr.cycling)) {
+                    throw new Error("Missing LTHR cycling detected");
+                }
+
+                if (datedAthleteSettingsModel.lthr.running !== null && !_.isNumber(datedAthleteSettingsModel.lthr.running)) {
+                    throw new Error("Missing LTHR running detected");
+                }
+            }
+
+            if (datedAthleteSettingsModel.cyclingFtp !== null && !_.isNumber(datedAthleteSettingsModel.cyclingFtp)) {
+                throw new Error("Missing cycling FTP detected");
+            }
+
+            if (datedAthleteSettingsModel.runningFtp !== null && !_.isNumber(datedAthleteSettingsModel.runningFtp)) {
+                throw new Error("Missing running FTP detected");
+            }
+
+            if (datedAthleteSettingsModel.swimFtp !== null && !_.isNumber(datedAthleteSettingsModel.swimFtp)) {
+                throw new Error("Missing swim FTP detected");
+            }
+        });
+    }
+
+    public onSettingsClipBoardSaved($event: IClipboardResponse): void {
+        if ($event.isSuccess) {
+            this.snackBar.open(`Settings copied to clipboard.`, null, {duration: 1000});
+        }
+    }
+
+    private hideExportImportForm(): void {
+        this.showExport = false;
+        this.showImport = false;
+        this.exportedSettings = null;
     }
 }

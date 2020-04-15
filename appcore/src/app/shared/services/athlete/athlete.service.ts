@@ -15,7 +15,6 @@ export class AthleteService {
 
     /**
      * Provides athlete model with dated settings sorted by descending periods
-     * @returns {Promise<AthleteModel>}
      */
     public fetch(): Promise<AthleteModel> {
         return this.athleteModelDao.fetch()
@@ -32,8 +31,6 @@ export class AthleteService {
 
     /**
      * Add a athlete dated settings.
-     * @param {DatedAthleteSettingsModel} datedAthleteSettings
-     * @returns {Promise<DatedAthleteSettingsModel[]>}
      */
     public addSettings(datedAthleteSettings: DatedAthleteSettingsModel): Promise<DatedAthleteSettingsModel[]> {
 
@@ -71,8 +68,6 @@ export class AthleteService {
 
     /**
      * Save (replace existing) athlete model.
-     * @param athleteModel
-     * @returns {Promise<AthleteModel>}
      */
     public save(athleteModel: AthleteModel): Promise<AthleteModel> {
         return this.validate(athleteModel.datedAthleteSettings).then(() => {
@@ -80,18 +75,12 @@ export class AthleteService {
         });
     }
 
-    /**
-     *
-     * @param path
-     * @param value
-     */
     public saveProperty<V>(path: string | string[], value: V): Promise<AthleteModel> {
         return this.athleteModelDao.upsertProperty<V>(path, value);
     }
 
     /**
      * Reset (replace existing) athlete DatedAthleteSettings with default AthleteSettings
-     * @returns {Promise<DatedAthleteSettingsModel[]>}
      */
     public resetSettings(): Promise<DatedAthleteSettingsModel[]> {
 
@@ -105,9 +94,6 @@ export class AthleteService {
 
     /**
      * Edit a dated athlete settings
-     * @param {string} sinceIdentifier
-     * @param {DatedAthleteSettingsModel} datedAthleteSettings
-     * @returns {Promise<DatedAthleteSettingsModel[]>}
      */
     public editSettings(sinceIdentifier: string, datedAthleteSettings: DatedAthleteSettingsModel): Promise<DatedAthleteSettingsModel[]> {
 
@@ -145,8 +131,6 @@ export class AthleteService {
 
     /**
      * Remove a dated athlete settings
-     * @param {string} sinceIdentifier
-     * @returns {Promise<DatedAthleteSettingsModel[]>}
      */
     public removeSettings(sinceIdentifier: string): Promise<DatedAthleteSettingsModel[]> {
 
@@ -174,10 +158,6 @@ export class AthleteService {
         });
     }
 
-    /**
-     *
-     * @param datedAthleteSettings
-     */
     public validate(datedAthleteSettings: DatedAthleteSettingsModel[]): Promise<void> {
 
         let hasForeverSettings = false;
@@ -208,10 +188,6 @@ export class AthleteService {
         return Promise.resolve();
     }
 
-    /**
-     *
-     * @param datedAthleteSettingsModel
-     */
     public validateSingle(datedAthleteSettingsModel: DatedAthleteSettingsModel): Promise<void> {
 
         let promise = Promise.resolve();

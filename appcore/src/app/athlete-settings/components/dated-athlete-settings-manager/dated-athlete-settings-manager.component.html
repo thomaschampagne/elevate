@@ -41,16 +41,44 @@
         <div fxFill fxLayoutAlign="end center">
             <button (click)="onAdd()" color="primary" mat-stroked-button>
                 <mat-icon>add</mat-icon>
-                Add new dated athlete settings
+                Add
             </button>
-
             <button (click)="onReset()" color="primary" mat-stroked-button>
                 <mat-icon>settings_backup_restore</mat-icon>
                 Reset
             </button>
+            <button matTooltip="Save dated athlete settings" (click)="onShowExport()" color="primary"
+                    mat-stroked-button>
+                <mat-icon>get_app</mat-icon>
+            </button>
+            <button matTooltip="Upload dated athlete settings" (click)="onShowImport()" color="primary"
+                    mat-stroked-button>
+                <mat-icon>publish_app</mat-icon>
+            </button>
         </div>
+        <mat-form-field appearance="outline" fxFill *ngIf="showExport">
+            <mat-label>
+                <span>Exported dated athlete settings to copy</span>
+            </mat-label>
+            <input matInput readonly [ngModel]="exportedSettings" #exportInput (click)="exportInput.select()">
+            <button mat-icon-button matTooltip="Copy to clipboard"
+                    matSuffix ngxClipboard [cbContent]="exportedSettings"
+                    (cbOnSuccess)="onSettingsClipBoardSaved($event)">
+                <mat-icon color="primary">file_copy</mat-icon>
+            </button>
+        </mat-form-field>
 
-        <mat-table #table [dataSource]="dataSource" matSort>
+        <mat-form-field appearance="outline" fxFill *ngIf="showImport">
+            <mat-label>
+                <span>Paste previously copied dated athlete settings here</span>
+            </mat-label>
+            <input #importInput matInput (paste)="onImport()">
+            <button mat-icon-button matSuffix (click)="onImport(importInput.value);">
+                <mat-icon *ngIf="importInput.value" color="primary">publish_app</mat-icon>
+            </button>
+        </mat-form-field>
+
+        <mat-table [dataSource]="dataSource" matSort>
 
             <ng-container matColumnDef="since">
                 <mat-header-cell *matHeaderCellDef>Since</mat-header-cell>
@@ -118,7 +146,7 @@
                 <mat-cell *matCellDef="let datedSettings" [ngClass]="'editColumn'">
                     <button (click)="onEdit(datedSettings.since)" mat-icon-button
                             matTooltip="Edit dated settings">
-                        <mat-icon>edit</mat-icon>
+                        <mat-icon color="primary">edit</mat-icon>
                     </button>
                 </mat-cell>
             </ng-container>
@@ -129,7 +157,7 @@
                     <button (click)="onRemove(datedSettings.since)" *ngIf="!datedSettings.isForever()"
                             mat-icon-button
                             matTooltip="Delete dated settings">
-                        <mat-icon>delete</mat-icon>
+                        <mat-icon color="primary">delete</mat-icon>
                     </button>
                 </mat-cell>
             </ng-container>

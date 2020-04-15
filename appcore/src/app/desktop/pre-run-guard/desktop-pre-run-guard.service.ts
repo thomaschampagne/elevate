@@ -41,7 +41,7 @@ export class DesktopPreRunGuard implements CanActivate {
 
     public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 
-        if (this.isAccessAuthorized || environment.bypassAthleteAccessCheck) {
+        if (this.isAccessAuthorized || (<any> environment).bypassAthleteAccessCheck) {
             return Promise.resolve(true);
         }
 
