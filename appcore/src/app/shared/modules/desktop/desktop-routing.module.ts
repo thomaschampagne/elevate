@@ -84,7 +84,7 @@ export class DesktopRoutingModule {
             component: FaqComponent
         },
         {
-            path: "", redirectTo: AppRoutesModel.activities, pathMatch: "full"
+            path: "", redirectTo: AppRoutesModel.fitnessTrend, pathMatch: "full"
         },
     ];
 
