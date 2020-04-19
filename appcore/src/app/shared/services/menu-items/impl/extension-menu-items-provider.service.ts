@@ -31,7 +31,7 @@ export class ExtensionMenuItemsProvider implements MenuItemsProvider {
             routerLink: AppRoutesModel.zonesSettings,
             routerLinkActive: true
         }, {
-            icon: "favorite",
+            icon: "favorite_border",
             routerLink: AppRoutesModel.donate,
             routerLinkActive: true
         }

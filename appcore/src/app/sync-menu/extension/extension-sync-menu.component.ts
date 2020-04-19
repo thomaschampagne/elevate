@@ -43,7 +43,7 @@ import { AppRoutesModel } from "../../shared/models/app-routes.model";
                 <button mat-menu-item (click)="onSync(true, false)"
                         *ngIf="(syncState === SyncState.SYNCED)">
                     <mat-icon fontSet="material-icons-outlined">update</mat-icon>
-                    <span>Sync recent activities</span>
+                    Sync recent activities
                 </button>
                 <button mat-menu-item
                         (click)="onSync(false, syncState === SyncState.NOT_SYNCED)">
@@ -55,21 +55,21 @@ import { AppRoutesModel } from "../../shared/models/app-routes.model";
                 <button mat-menu-item (click)="onSync(false, true)"
                         *ngIf="(syncState !== SyncState.NOT_SYNCED)">
                     <mat-icon fontSet="material-icons-outlined">redo</mat-icon>
-                    <span>Clear and re-sync activities</span>
+                    Clear and re-sync activities
                 </button>
                 <button mat-menu-item (click)="onClearSyncedData()"
                         *ngIf="(syncState !== SyncState.NOT_SYNCED)">
                     <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
-                    <span>Clear synced activities</span>
+                    Clear synced activities
                 </button>
                 <button mat-menu-item (click)="onSyncedBackupExport()"
                         *ngIf="(syncState === SyncState.SYNCED)">
-                    <mat-icon fontSet="material-icons-outlined">file_download</mat-icon>
-                    <span>Backup activities</span>
+                    <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
+                    Backup activities
                 </button>
                 <button mat-menu-item (click)="onSyncedBackupImport()">
-                    <mat-icon fontSet="material-icons-outlined">file_upload</mat-icon>
-                    <span>Restore activities</span>
+                    <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
+                    Restore activities
                 </button>
             </mat-menu>
         </div>

@@ -49,12 +49,12 @@ import { ElevateException } from "@elevate/shared/exceptions";
                     <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
                     Sync via connectors
                 </button>
-                <button mat-menu-item
+                <button mat-menu-item *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)"
                         (click)="goToConnectors()">
                     <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
                     Continue sync via connectors
                 </button>
-                <ng-container>
+                <ng-container *ngIf="(syncState === SyncState.SYNCED)">
                     <button mat-menu-item (click)="onSync(true)">
                         <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
                         Sync "{{printMostRecentConnectorSynced()}}" recent activities
@@ -64,7 +64,7 @@ import { ElevateException } from "@elevate/shared/exceptions";
                         Go to connectors
                     </button>
                 </ng-container>
-                <button mat-menu-item (click)="onSyncedBackupExport()">
+                <button mat-menu-item (click)="onSyncedBackupExport()" *ngIf="(syncState === SyncState.SYNCED)">
                     <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
                     Backup profile
                 </button>
