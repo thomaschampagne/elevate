@@ -271,7 +271,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
                 }).then(() => {
 
-                    this.snackBar.open("New settings imported", null, {duration: 2000});
+                    this.snackBar.open("New settings imported", "Close", {duration: 3000});
 
                     // Hide import input
                     this.showImport = false;
@@ -352,8 +352,16 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
     public onSettingsClipBoardSaved($event: IClipboardResponse): void {
         if ($event.isSuccess) {
-            this.snackBar.open(`Settings copied to clipboard.`, null, {duration: 1000});
+            this.snackBar.open(`Settings copied to clipboard.`, "Close", {duration: 3000});
         }
+    }
+
+    public getOsCopyShortCut(): string {
+        return (navigator.platform.match(/^mac/gi) ? "Command" : "Ctrl") + " + C";
+    }
+
+    public getOsPasteShortCut(): string {
+        return (navigator.platform.match(/^mac/gi) ? "Command" : "Ctrl") + " + V";
     }
 
     private hideExportImportForm(): void {
