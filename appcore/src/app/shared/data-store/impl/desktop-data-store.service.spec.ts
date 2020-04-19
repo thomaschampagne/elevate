@@ -108,7 +108,7 @@ describe("DesktopDataStore", () => {
     let provideDatabaseSpy;
 
     const resetTestDatabase = () => {
-        testDatabase = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_test", {auto_compaction: true});
+        testDatabase = new PouchDB(DesktopDataStore.POUCH_DB_PREFIX + "test", {auto_compaction: true});
         provideDatabaseSpy.and.returnValue(testDatabase);
     };
 
@@ -1180,12 +1180,33 @@ describe("DesktopDataStore", () => {
 
     describe("Handle create & load PouchDB dumps", () => {
 
+        const mockPouchDatabase = (name: string): any => {
+            return {
+                name: name,
+                allDocs: () => {
+                    return Promise.resolve({rows: []});
+                },
+                bulkDocs: () => {
+                    return Promise.resolve();
+                },
+                destroy: () => {
+                    return Promise.resolve();
+                }
+            };
+        };
+
         it("should create a PouchDB dump", done => {
 
             // Given
-            const defaultAllDocsSpy = spyOn(DesktopDataStore.DATABASES.main, "allDocs").and.callThrough();
-            const activitiesAllDocsSpy = spyOn(DesktopDataStore.DATABASES.activities, "allDocs").and.callThrough();
-            const streamsAllDocsSpy = spyOn(DesktopDataStore.DATABASES.streams, "allDocs").and.callThrough();
+            const fakeDb1Key = "fakeDb1";
+            const fakeDb2Key = "fakeDb2";
+            const pouchDB1 = mockPouchDatabase(fakeDb1Key);
+            const pouchDB2 = mockPouchDatabase(fakeDb2Key);
+            DesktopDataStore.STORAGE_DB_MAP.push({storageKey: fakeDb1Key, database: pouchDB1});
+            DesktopDataStore.STORAGE_DB_MAP.push({storageKey: fakeDb2Key, database: pouchDB2});
+
+            const pouchDB1AllDocsSpy = spyOn(pouchDB1, "allDocs").and.callThrough();
+            const pouchDB2AllDocsSpy = spyOn(pouchDB2, "allDocs").and.callThrough();
             const stringifySpy = spyOn(JSON, "stringify").and.callThrough();
 
             // When
@@ -1195,9 +1216,8 @@ describe("DesktopDataStore", () => {
             promise.then((blobResult: Blob) => {
 
                 expect(blobResult).not.toBeNull();
-                expect(defaultAllDocsSpy).toHaveBeenCalledTimes(1);
-                expect(activitiesAllDocsSpy).toHaveBeenCalledTimes(1);
-                expect(streamsAllDocsSpy).toHaveBeenCalledTimes(1);
+                expect(pouchDB1AllDocsSpy).toHaveBeenCalledTimes(1);
+                expect(pouchDB2AllDocsSpy).toHaveBeenCalledTimes(1);
                 expect(stringifySpy).toHaveBeenCalledTimes(1);
 
                 done();
@@ -1212,27 +1232,25 @@ describe("DesktopDataStore", () => {
         it("should load an elevate dump", done => {
 
             // Given
-            const expectedVersion = "2.0.0";
-
             const docs = [
                 {_id: "foo", data: "foo"},
                 {_id: "bar", data: "bar"},
             ];
             const gzippedDatabases = {
-                main: docs,
-                activities: docs,
-                streams: docs,
+                fakeDb1: docs,
+                fakeDb2: docs,
             };
 
-            const defaultDestroySpy = spyOn(DesktopDataStore.DATABASES.main, "destroy").and.returnValue(Promise.resolve());
-            const activitiesDestroySpy = spyOn(DesktopDataStore.DATABASES.activities, "destroy").and.returnValue(Promise.resolve());
-            const streamsDestroySpy = spyOn(DesktopDataStore.DATABASES.streams, "destroy").and.returnValue(Promise.resolve());
+            const fakeDb1Key = "fakeDb1";
+            const fakeDb2Key = "fakeDb2";
+            const pouchDB1 = mockPouchDatabase(fakeDb1Key);
+            const pouchDB2 = mockPouchDatabase(fakeDb2Key);
 
-            const defaultAllDocsSpy = spyOn(DesktopDataStore.DATABASES.main, "bulkDocs").and.returnValue(Promise.resolve([]));
-            const activitiesAllDocsSpy = spyOn(DesktopDataStore.DATABASES.activities, "bulkDocs").and.returnValue(Promise.resolve([]));
-            const streamsAllDocsSpy = spyOn(DesktopDataStore.DATABASES.streams, "bulkDocs").and.returnValue(Promise.resolve([]));
+            const flushIndexedDatabasesSpy = spyOn(desktopDataStore, "flushIndexedDatabases").and.returnValue(Promise.resolve());
+            const pouchDB1BulkDocsSpy = spyOn(pouchDB1, "bulkDocs").and.callThrough();
+            const pouchDB2BulkDocsSpy = spyOn(pouchDB2, "bulkDocs").and.callThrough();
 
-            const setupDbSpy = spyOn(desktopDataStore, "setup").and.stub();
+            provideDatabaseSpy.and.returnValues(pouchDB1, pouchDB2);
 
             const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel("1.0.0", Gzip.pack(JSON.stringify(gzippedDatabases)));
 
@@ -1242,14 +1260,9 @@ describe("DesktopDataStore", () => {
             // Then
             promise.then(() => {
 
-                expect(defaultDestroySpy).toHaveBeenCalledTimes(1);
-                expect(activitiesDestroySpy).toHaveBeenCalledTimes(1);
-                expect(streamsDestroySpy).toHaveBeenCalledTimes(1);
-                expect(setupDbSpy).toHaveBeenCalledTimes(1);
-                expect(defaultAllDocsSpy).toHaveBeenCalledTimes(1);
-                expect(activitiesAllDocsSpy).toHaveBeenCalledTimes(1);
-                expect(streamsAllDocsSpy).toHaveBeenCalledTimes(1);
-
+                expect(flushIndexedDatabasesSpy).toHaveBeenCalledTimes(1);
+                expect(pouchDB1BulkDocsSpy).toHaveBeenCalledTimes(1);
+                expect(pouchDB2BulkDocsSpy).toHaveBeenCalledTimes(1);
                 done();
 
             }, error => {
@@ -1263,7 +1276,7 @@ describe("DesktopDataStore", () => {
 
             // Given
             const expectedVersion = "2.0.0";
-            const bulkDocsSpy = spyOn(testDatabase, "bulkDocs").and.stub();
+            const flushIndexedDatabasesSpy = spyOn(desktopDataStore, "flushIndexedDatabases").and.returnValue(Promise.resolve());
 
             const expectedRows = [
                 {id: 1, data: "foo"},
@@ -1292,7 +1305,7 @@ describe("DesktopDataStore", () => {
                 done();
 
             }, error => {
-                expect(bulkDocsSpy).not.toHaveBeenCalled();
+                expect(flushIndexedDatabasesSpy).not.toHaveBeenCalled();
                 expect(error).not.toBeNull();
                 done();
             });

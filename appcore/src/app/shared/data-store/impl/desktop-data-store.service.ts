@@ -11,15 +11,27 @@ import { StorageType } from "../storage-type.enum";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../../services/versions/versions-provider.interface";
 import { DesktopDumpModel } from "../../models/dumps/desktop-dump.model";
 import { AppUsage } from "../../models/app-usage.model";
-import { ActivityDao } from "../../dao/activity/activity.dao";
 import { Gzip } from "@elevate/shared/tools";
-import { StreamsDao } from "../../dao/streams/streams.dao";
 import FindRequest = PouchDB.Find.FindRequest;
 
-@Injectable()
+// Declare databases() method of interface IDBFactory missing in lib.dom.d.ts (try to delete this in future)
+declare global {
+    interface IDBFactory {
+        databases: () => Promise<{ name: string, version: number }[]>;
+    }
+
+    interface Window {
+        databases: object;
+    }
+}
+
+@Injectable({
+    providedIn: "root"
+})
 export class DesktopDataStore<T> extends DataStore<T> {
 
-    public static readonly POUCH_DB_NAME: string = "elevate";
+    public static readonly POUCH_DB_DEFAULT_OPTIONS = {auto_compaction: true, adapter: "idb"};
+    public static readonly POUCH_DB_PREFIX: string = "elevate_";
     public static readonly POUCH_DB_DEBUG: string = null; // values: "*", "pouchdb:find", "pouchdb:http" ...
     public static readonly POUCH_DB_ID_FIELD: string = "_id";
     public static readonly POUCH_DB_ID_LIST_SEPARATOR: string = ":";
@@ -27,19 +39,12 @@ export class DesktopDataStore<T> extends DataStore<T> {
     public static readonly POUCH_DB_SINGLE_VALUE_FIELD: string = "$value";
     public static readonly POUCH_DB_DELETED_FIELD: string = "_deleted";
     public static readonly POUCH_DB_REV_FIELD: string = "_rev";
-    public static readonly DATABASES: { main: PouchDB.Database, activities: PouchDB.Database, streams: PouchDB.Database } = {
-        main: null,
-        activities: null,
-        streams: null,
-    };
-    public static readonly STORAGE_TO_DB_MAP: { storageKey: string, dbKey: string, database?: PouchDB.Database }[] = [
-        {storageKey: ActivityDao.STORAGE_LOCATION.key, dbKey: "activities"},
-        {storageKey: StreamsDao.STORAGE_LOCATION.key, dbKey: "streams"}
-    ];
+    public static STORAGE_DB_MAP: { storageKey: string, database: PouchDB.Database }[] = [];
 
     constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
                 public logger: LoggerService) {
         super();
+        window.databases = {};
         this.setup();
     }
 
@@ -53,27 +58,63 @@ export class DesktopDataStore<T> extends DataStore<T> {
     public setup(): void {
 
         PouchDB.plugin(PouchDBFind); // Register find plugin
-        const options = {auto_compaction: true, adapter: "idb"};
-        DesktopDataStore.DATABASES.main = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_main", options);
-        DesktopDataStore.DATABASES.activities = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_activities", options);
-        DesktopDataStore.DATABASES.streams = new PouchDB(DesktopDataStore.POUCH_DB_NAME + "_streams", options);
-
-        // Update STORAGE_TO_DB_MAP with the proper associated database
-        DesktopDataStore.STORAGE_TO_DB_MAP.forEach(entry => {
-            entry.database = DesktopDataStore.DATABASES[entry.dbKey];
-        });
-
-        (<any> window).elevateDatabases = DesktopDataStore.DATABASES;
-
         if (DesktopDataStore.POUCH_DB_DEBUG) {
             PouchDB.plugin(PouchDBDebug); // Register debug plugin
             PouchDB.debug.enable(DesktopDataStore.POUCH_DB_DEBUG);
         }
+
+        // Load existing indexed databases
+        this.listNativeIndexedDatabases().then(nativeIdbNames => {
+            nativeIdbNames.forEach(nativeIdbName => {
+                const existingStorageKey = nativeIdbName.match(new RegExp(DesktopDataStore.POUCH_DB_PREFIX + "([a-z]*)", "i"))[1];
+                const registeredDatabase = this.findRegisteredDatabase(existingStorageKey);
+                if (!registeredDatabase) {
+                    this.createDatabase(existingStorageKey);
+                }
+            });
+        });
     }
 
+    /**
+     * Create and register PouchDB database for a given storage key.
+     */
+    private createDatabase(storageKey: string): PouchDB.Database<T[] | T> {
+
+        // Create the database for the storage key
+        const database: PouchDB.Database<T[] | T> = new PouchDB(DesktopDataStore.POUCH_DB_PREFIX + storageKey, DesktopDataStore.POUCH_DB_DEFAULT_OPTIONS);
+
+        // Register the database for later use
+        DesktopDataStore.STORAGE_DB_MAP.push({storageKey: storageKey, database: database});
+
+        // Allow database access from console
+        window.databases[storageKey] = database;
+
+        return database;
+    }
+
+    /**
+     * Find for a registered database
+     * @param storageKey storage key
+     * @return PouchDB instance or null
+     */
+    public findRegisteredDatabase(storageKey: string): PouchDB.Database<T[] | T> {
+        const foundDatabase = _.find(DesktopDataStore.STORAGE_DB_MAP, {storageKey: storageKey});
+        return foundDatabase ? <PouchDB.Database<T[] | T>> foundDatabase.database : null;
+    }
+
+    /**
+     * Provide a PouchDB existing database as  or create it if missing
+     */
     public provideDatabase(storageKey: string): PouchDB.Database<T[] | T> {
-        const foundEntry = _.find(DesktopDataStore.STORAGE_TO_DB_MAP, {storageKey: storageKey});
-        return <PouchDB.Database<T[] | T>> ((foundEntry) ? foundEntry.database : DesktopDataStore.DATABASES.main);
+
+        const registeredDatabase = this.findRegisteredDatabase(storageKey);
+
+        if (registeredDatabase) {
+            return registeredDatabase;
+        }
+
+        // Create and register the database for the storage key
+        return this.createDatabase(storageKey);
     }
 
     public clear(storageLocation: StorageLocationModel): Promise<void> {
@@ -163,7 +204,6 @@ export class DesktopDataStore<T> extends DataStore<T> {
     }
 
     public createDump(): Promise<Blob> {
-
         const prepare = docs => {
             return docs.rows.map(wrappedDoc => {
                 delete wrappedDoc.doc[DesktopDataStore.POUCH_DB_REV_FIELD];
@@ -173,16 +213,17 @@ export class DesktopDataStore<T> extends DataStore<T> {
 
         const options = {include_docs: true, attachments: true};
 
-        const databases: any = {};
+        const databases = {};
 
-        return DesktopDataStore.DATABASES.main.allDocs(options).then(mainDocs => {
-            databases.main = prepare(mainDocs);
-            return DesktopDataStore.DATABASES.activities.allDocs(options);
-        }).then(activitiesDocs => {
-            databases.activities = prepare(activitiesDocs);
-            return DesktopDataStore.DATABASES.streams.allDocs(options);
-        }).then(streamsDocs => {
-            databases.streams = prepare(streamsDocs);
+        return DesktopDataStore.STORAGE_DB_MAP.reduce((previousProcessed: Promise<void>, entry: { storageKey: string, database: PouchDB.Database }) => {
+
+            return previousProcessed.then(() => {
+                return entry.database.allDocs(options).then(docs => {
+                    databases[entry.storageKey] = prepare(docs);
+                });
+            });
+
+        }, Promise.resolve()).then(() => {
 
             const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel();
 
@@ -197,37 +238,70 @@ export class DesktopDataStore<T> extends DataStore<T> {
         });
     }
 
-
     public loadDump(dump: DesktopDumpModel): Promise<void> {
+
         return new Promise((resolve, reject) => {
             try {
                 const inflatedDatabases = Gzip.unpack(dump.gzippedDatabases);
-                const databases = JSON.parse(inflatedDatabases);
+                const databasesDump = JSON.parse(inflatedDatabases);
 
-                const cleanDatabasesPromise = DesktopDataStore.DATABASES.main.destroy().then(() => {
-                    return DesktopDataStore.DATABASES.activities.destroy();
-                }).then(() => {
-                    return DesktopDataStore.DATABASES.streams.destroy();
-                }).then(() => {
-                    this.setup(); // Recreate databases
-                    return Promise.resolve();
-                });
+                // Flush all indexed DBs and create new database for each storage keys and import data into them
+                this.flushIndexedDatabases().then(() => {
 
-                cleanDatabasesPromise.then(() => {
-                    return DesktopDataStore.DATABASES.main.bulkDocs(databases.main);
+                    this.logger.info("All indexed db cleaned");
+
+                    // Reset storage map
+                    DesktopDataStore.STORAGE_DB_MAP = [];
+
+                    const dumpStorageKeys = _.keys(databasesDump);
+                    return dumpStorageKeys.reduce((previousProcessed: Promise<void>, storageKey: string) => {
+                        return previousProcessed.then(() => {
+                            return this.provideDatabase(storageKey).bulkDocs(databasesDump[storageKey]).then(() => Promise.resolve());
+                        });
+                    }, Promise.resolve());
                 }).then(() => {
-                    return DesktopDataStore.DATABASES.activities.bulkDocs(databases.activities);
-                }).then(() => {
-                    return DesktopDataStore.DATABASES.streams.bulkDocs(databases.streams);
-                }).then(() => {
+                    this.logger.info("Import done");
                     resolve();
                 }).catch(error => {
                     reject(error.message);
                 });
-
             } catch (err) {
                 reject(err);
             }
+        });
+    }
+
+    /**
+     * List all native indexed databases
+     */
+    public listNativeIndexedDatabases(): Promise<string[]> {
+        return indexedDB.databases().then((entries: { name: string, version: number }[]) => {
+            const dbNames = entries.map(entry => entry.name);
+            return Promise.resolve(dbNames);
+        });
+    }
+
+    /**
+     * Clear all native indexed databases
+     */
+    public flushIndexedDatabases(): Promise<void> {
+
+        return this.listNativeIndexedDatabases().then(nativeIndexedDatabases => {
+            return nativeIndexedDatabases.reduce((previousProcessed: Promise<void>, dbName: string) => {
+                return previousProcessed.then(() => {
+                    return <Promise<void>> new Promise((resolveDelete, rejectDelete) => {
+                        const idbOpenDBRequest = indexedDB.deleteDatabase(dbName);
+                        idbOpenDBRequest.onsuccess = () => {
+                            this.logger.info(`Database "${dbName}" destroyed`);
+                            resolveDelete();
+                        };
+                        idbOpenDBRequest.onerror = (event: Event) => {
+                            this.logger.error(`Unable to destroy "${dbName}"`, event);
+                            rejectDelete();
+                        };
+                    });
+                });
+            }, Promise.resolve());
         });
     }
 
