@@ -24,53 +24,53 @@ import { ElevateException } from "@elevate/shared/exceptions";
     template: `
         <div *ngIf="(syncState !== null)">
             <button mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
-                <mat-icon *ngIf="(syncState === SyncState.NOT_SYNCED)">
+                <mat-icon fontSet="material-icons-outlined" *ngIf="(syncState === SyncState.NOT_SYNCED)">
                     sync_disabled
                 </mat-icon>
-                <mat-icon *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
+                <mat-icon fontSet="material-icons-outlined" *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
                     sync_problem
                 </mat-icon>
-                <mat-icon *ngIf="(syncState === SyncState.SYNCED)">
+                <mat-icon fontSet="material-icons-outlined" *ngIf="(syncState === SyncState.SYNCED)">
                     sync
-				</mat-icon>
-				<span *ngIf="(syncState === SyncState.NOT_SYNCED)">
+                </mat-icon>
+                <span *ngIf="(syncState === SyncState.NOT_SYNCED)">
 					Activities not synced
 				</span>
-				<span *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
+                <span *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
 					Activities partially synced
 				</span>
-				<span *ngIf="(syncState === SyncState.SYNCED && syncDateMessage)">
+                <span *ngIf="(syncState === SyncState.SYNCED && syncDateMessage)">
 					{{syncDateMessage}}
 				</span>
-			</button>
-			<mat-menu #syncMenu="matMenu">
-				<button mat-menu-item *ngIf="(syncState === SyncState.NOT_SYNCED)"
-						(click)="goToConnectors()">
-					<mat-icon>sync</mat-icon>
-                    <span>Sync via connectors</span>
-                </button>
-                <button mat-menu-item *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)"
+            </button>
+            <mat-menu #syncMenu="matMenu">
+                <button mat-menu-item *ngIf="(syncState === SyncState.NOT_SYNCED)"
                         (click)="goToConnectors()">
-                    <mat-icon>sync</mat-icon>
-                    <span>Continue sync via connectors</span>
+                    <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+                    Sync via connectors
                 </button>
-                <ng-container *ngIf="(syncState === SyncState.SYNCED)">
+                <button mat-menu-item
+                        (click)="goToConnectors()">
+                    <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+                    Continue sync via connectors
+                </button>
+                <ng-container>
                     <button mat-menu-item (click)="onSync(true)">
-                        <mat-icon>sync</mat-icon>
-                        <span>Sync "{{printMostRecentConnectorSynced()}}" recent activities</span>
+                        <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+                        Sync "{{printMostRecentConnectorSynced()}}" recent activities
                     </button>
                     <button mat-menu-item (click)="goToConnectors()">
-                        <mat-icon>power</mat-icon>
-                        <span>Go to connectors</span>
+                        <mat-icon fontSet="material-icons-outlined">power</mat-icon>
+                        Go to connectors
                     </button>
                 </ng-container>
-                <button mat-menu-item (click)="onSyncedBackupExport()" *ngIf="(syncState === SyncState.SYNCED)">
-                    <mat-icon>file_download</mat-icon>
-                    <span>Backup profile</span>
+                <button mat-menu-item (click)="onSyncedBackupExport()">
+                    <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
+                    Backup profile
                 </button>
-				<button mat-menu-item (click)="onSyncedBackupImport()">
-					<mat-icon>file_upload</mat-icon>
-					<span>Restore a profile</span>
+                <button mat-menu-item (click)="onSyncedBackupImport()">
+                    <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
+                    Restore a profile
                 </button>
             </mat-menu>
         </div>

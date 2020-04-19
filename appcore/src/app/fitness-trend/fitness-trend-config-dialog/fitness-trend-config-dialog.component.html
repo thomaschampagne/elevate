@@ -24,7 +24,9 @@
 
                     <div *ngIf="!isEstimatedPowerStressScoreToggleEnabled" class="hint">
 
-                        <mat-icon [style.vertical-align]="'bottom'" color="warn">warning</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'" color="warn">
+                            warning
+                        </mat-icon>
                         PSS Estimation is currently disabled. To enable it, make sure that:
                         <ul>
                             <li>You set one or several <strong>Cycling Functional Threshold Power</strong> in <a
@@ -32,7 +34,8 @@
                                 athlete settings</a>. A wrong ftp can cause too big/low PSS scores on activities.
                             </li>
                             <li>You switch <strong>ON</strong> the power meter data toggle identified by the icon
-                                <mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
+                                <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'">flash_on
+                                </mat-icon>
                                 (on screen behind).
                             </li>
                             <li>You set the "Heart Rate Stress Score" calculation mode to <strong>HRSS</strong> (below
@@ -64,7 +67,9 @@
                     </mat-slide-toggle>
 
                     <div *ngIf="!isEstimatedRunningStressScoreToggleEnabled" class="hint">
-                        <mat-icon [style.vertical-align]="'bottom'" color="warn">warning</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'" color="warn">
+                            warning
+                        </mat-icon>
                         RSS Estimation is currently disabled. To enable it, make sure that:
                         <ul>
                             <li>You set your one or several <strong>Running Functional Threshold Pace</strong> in <a
@@ -202,7 +207,8 @@
             <div
                 *ngIf="(fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)">
 				<span>
-					<mat-icon [style.vertical-align]="'bottom'" color="warn">warning</mat-icon>
+					<mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'"
+                              color="warn">warning</mat-icon>
 					When heart rate stress score calculation method is set to TRIMP (Training Impulse):
 					<ul>
 						<li>

@@ -15,7 +15,7 @@
 
         <div>
             You can synchronize by clicking on
-            <mat-icon color="primary">sync_disabled</mat-icon>
+            <mat-icon fontSet="material-icons-outlined" color="primary">sync_disabled</mat-icon>
             icon in the upper toolbar. The activities will be locally saved in the storage allocated by the extension.
         </div>
 
@@ -89,13 +89,13 @@
                                         mat-button mat-icon-button
                                         matSuffix
                                         matTooltip="Tick all activity types">
-                                    <mat-icon>done_all</mat-icon>
+                                    <mat-icon fontSet="material-icons-outlined">done_all</mat-icon>
                                 </button>
                                 <button (click)="$event.stopPropagation(); onUnTickAllActivityTypes()" color="primary"
                                         mat-button mat-icon-button
                                         matSuffix
                                         matTooltip="Untick all activity types (most performed excluded)">
-                                    <mat-icon>clear</mat-icon>
+                                    <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
                                 </button>
                             </mat-form-field>
                             <span fxFlex="0.5"></span>
@@ -104,7 +104,7 @@
                                 [(ngModel)]="this.progressConfig.includeCommuteRide"
                                 fxFlexAlign="center"
                                 matTooltip="Include commute activities in your progression.">
-                                <mat-icon>work</mat-icon>
+                                <mat-icon fontSet="material-icons-outlined">work</mat-icon>
                             </mat-slide-toggle>
                             <span fxFlex="0.5"></span>
                             <mat-slide-toggle
@@ -112,7 +112,7 @@
                                 [(ngModel)]="this.progressConfig.includeIndoorRide"
                                 fxFlexAlign="center"
                                 matTooltip="Include indoor activities in your progression.">
-                                <mat-icon>home</mat-icon>
+                                <mat-icon fontSet="material-icons-outlined">home</mat-icon>
                             </mat-slide-toggle>
                         </div>
                     </div>
@@ -150,18 +150,18 @@
                         <button (click)="$event.stopPropagation(); onTickAllYears()" color="primary" mat-button
                                 mat-icon-button matSuffix
                                 matTooltip="Tick all years">
-                            <mat-icon>done_all</mat-icon>
+                            <mat-icon fontSet="material-icons-outlined">done_all</mat-icon>
                         </button>
                         <button (click)="$event.stopPropagation(); onUnTickAllYears()" color="primary" mat-button
                                 mat-icon-button
                                 matSuffix
                                 matTooltip="Untick all years (current year excluded)">
-                            <mat-icon>clear</mat-icon>
+                            <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
                         </button>
                     </mat-form-field>
                     <span fxFlex="2"></span>
                     <button (click)="onHelperClick()" color="primary" fxFlexAlign="center" mat-icon-button>
-                        <mat-icon>help_outline</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined">help_outline</mat-icon>
                     </button>
                 </div>
             </div>
@@ -187,10 +187,12 @@
                                   class="mat-body-1">&nbsp;➔&nbsp;Target {{targetValue}}{{(selectedProgressType.shortUnit) ? ' ' + selectedProgressType.shortUnit : ''}}</span>
                         </div>
                         <button (click)="onExpandGraphClicked()" class="expanded-button" fxHide.lt-lg mat-icon-button>
-                            <mat-icon *ngIf="!isGraphExpanded" color="primary" matTooltip="Expand graph">
+                            <mat-icon fontSet="material-icons-outlined" *ngIf="!isGraphExpanded" color="primary"
+                                      matTooltip="Expand graph">
                                 fullscreen
                             </mat-icon>
-                            <mat-icon *ngIf="isGraphExpanded" color="primary" matTooltip="Shrink graph">
+                            <mat-icon fontSet="material-icons-outlined" *ngIf="isGraphExpanded" color="primary"
+                                      matTooltip="Shrink graph">
                                 fullscreen_exit
                             </mat-icon>
                         </button>
@@ -214,12 +216,14 @@
 						<span fxFlex="100">
 							<span *ngIf="progressConfig.mode === ProgressMode.ROLLING">
 								{{momentWatched.clone().subtract(progressConfig['rollingDays'], "days").format("MMMM Do")}}
-                                <mat-icon [style.vertical-align]="'middle'" inline="true">arrow_forward</mat-icon>
+                                <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'middle'"
+                                          inline="true">arrow_forward</mat-icon>
                                 {{momentWatched.format("MMMM Do")}}
 							</span>
 							<span *ngIf="progressConfig.mode === ProgressMode.YEAR_TO_DATE">
 								January 1st
-								<mat-icon [style.vertical-align]="'middle'" inline="true">arrow_forward</mat-icon>
+								<mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'middle'"
+                                          inline="true">arrow_forward</mat-icon>
                                 {{momentWatched.format("MMMM Do")}}
 							</span>
 						</span>

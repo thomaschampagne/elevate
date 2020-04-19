@@ -15,7 +15,7 @@
 
         <div>
             You can synchronize by clicking on
-            <mat-icon>sync_disabled</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">sync_disabled</mat-icon>
             icon in the upper toolbar. The activities will be locally saved in the storage allocated by the extension.
         </div>
 
@@ -75,11 +75,12 @@
         </div>
 
         <div>
-            <mat-icon [style.vertical-align]="'middle'" color="warn">warning</mat-icon>
+            <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'middle'" color="warn">warning
+            </mat-icon>
             Your fitness trend configuration may also have exclusion patterns and date that are probably too
             restrictive &nbsp;&nbsp;➔
             <button (click)="onOpenFitnessTrendConfig()" color="primary" mat-stroked-button>
-                <mat-icon>settings</mat-icon>
+                <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
                 Verify your fitness trend configuration
             </button>
         </div>
@@ -100,10 +101,12 @@
             <ul>
                 <li>
                     Perform a backup of your currently synced activities for security before. Just click
-                    <mat-icon [style.vertical-align]="'bottom'" color="primary">sync</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'" color="primary">sync
+                    </mat-icon>
                     icon then
                     <i>
-                        <mat-icon [style.vertical-align]="'bottom'">file_download</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'">file_download
+                        </mat-icon>
                         Backup activities</i>
                 </li>
                 <li>
@@ -114,10 +117,11 @@
                 </li>
                 <li>
                     Clear and synchronize again your activities. Click
-                    <mat-icon [style.vertical-align]="'bottom'" color="primary">sync</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'" color="primary">sync
+                    </mat-icon>
                     icon then
                     <i>
-                        <mat-icon [style.vertical-align]="'bottom'">redo</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'">redo</mat-icon>
                         Clear and re-sync activities</i>
                 </li>
             </ul>

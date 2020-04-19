@@ -20,27 +20,27 @@ import { MatDialogRef } from "@angular/material/dialog";
 			</div>
 
 			<div>
-				By combining rolling progression with "targets", you will be able to track and ensure a defined training volume
-				pace overtime (use the presets feature to define targets).
-			</div>
+                By combining rolling progression with "targets", you will be able to track and ensure a defined training volume
+                pace overtime (use the presets feature to define targets).
+            </div>
 
-			<div>
-				To enable the <strong>rolling progression</strong>, just select "Rolling" in the mode field.
-			</div>
+            <div>
+                To enable the <strong>rolling progression</strong>, just select "Rolling" in the mode field.
+            </div>
 
-			<div>
-				To get help about the <strong>rolling and year to date progressions</strong>, click
-				<mat-icon color="primary" inline>help_outline</mat-icon>
-				icon.
-			</div>
+            <div>
+                To get help about the <strong>rolling and year to date progressions</strong>, click
+                <mat-icon fontSet="material-icons-outlined" color="primary" inline>help_outline</mat-icon>
+                icon.
+            </div>
 
-		</mat-dialog-content>
-		<mat-dialog-actions>
-			<div fxLayout="column" fxLayoutAlign="start start">
-				<div fxFlex>
-					<mat-checkbox [(ngModel)]="hideMessage">
-						Don't show this message again
-					</mat-checkbox>
+        </mat-dialog-content>
+        <mat-dialog-actions>
+            <div fxLayout="column" fxLayoutAlign="start start">
+                <div fxFlex>
+                    <mat-checkbox [(ngModel)]="hideMessage">
+                        Don't show this message again
+                    </mat-checkbox>
 				</div>
 				<div fxFlex>
 					<button mat-stroked-button mat-dialog-close color="primary" (click)="onGotIt()">Got it</button>

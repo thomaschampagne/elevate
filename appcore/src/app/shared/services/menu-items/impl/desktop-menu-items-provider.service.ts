@@ -23,7 +23,7 @@ export class DesktopMenuItemsProvider implements MenuItemsProvider {
             routerLink: AppRoutesModel.globalSettings,
             routerLinkActive: true
         }, {
-            icon: "accessibility",
+            icon: "portrait",
             routerLink: AppRoutesModel.athleteSettings,
             routerLinkActive: true
         }, {
@@ -31,7 +31,7 @@ export class DesktopMenuItemsProvider implements MenuItemsProvider {
             routerLink: AppRoutesModel.connectors,
             routerLinkActive: true
         }, {
-            icon: "favorite",
+            icon: "favorite_border",
             routerLink: AppRoutesModel.donate,
             routerLinkActive: true
         }

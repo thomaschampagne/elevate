@@ -14,7 +14,9 @@
         </div>
 
         <div>
-            <mat-icon [style.vertical-align]="'top'" color="primary">warning</mat-icon>&nbsp;&nbsp;<span class="mat-h3"><strong>Functional Thresholds</strong>! Please read carefully!</span>
+            <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'top'" color="primary">warning
+            </mat-icon>&nbsp;&nbsp;<span
+            class="mat-h3"><strong>Functional Thresholds</strong>! Please read carefully!</span>
         </div>
         <div>
             If you don't provide your <strong>Cycling, Running, Swim Functional Thresholds (FTPs)</strong> in the below
@@ -40,20 +42,20 @@
 
         <div fxFill fxLayoutAlign="end center">
             <button (click)="onAdd()" color="primary" mat-stroked-button>
-                <mat-icon>add</mat-icon>
+                <mat-icon fontSet="material-icons-outlined">add</mat-icon>
                 Add
             </button>
             <button (click)="onReset()" color="primary" mat-stroked-button>
-                <mat-icon>settings_backup_restore</mat-icon>
+                <mat-icon fontSet="material-icons-outlined">settings_backup_restore</mat-icon>
                 Reset
             </button>
             <button matTooltip="Save dated athlete settings" (click)="onShowExport()" color="primary"
                     mat-stroked-button>
-                <mat-icon>get_app</mat-icon>
+                <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
             </button>
             <button matTooltip="Upload dated athlete settings" (click)="onShowImport()" color="primary"
                     mat-stroked-button>
-                <mat-icon>publish_app</mat-icon>
+                <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
             </button>
         </div>
         <mat-form-field appearance="outline" fxFill *ngIf="showExport">
@@ -64,7 +66,7 @@
             <button mat-icon-button matTooltip="Click to copy content to clipboard"
                     matSuffix ngxClipboard [cbContent]="exportedSettings"
                     (cbOnSuccess)="onSettingsClipBoardSaved($event)">
-                <mat-icon color="primary">file_copy</mat-icon>
+                <mat-icon fontSet="material-icons-outlined" color="primary">file_copy</mat-icon>
             </button>
         </mat-form-field>
 
@@ -75,7 +77,7 @@
             <input #importInput matInput (paste)="onImport()">
             <button mat-icon-button matTooltip="Click to paste clipboard content here"
                     matSuffix (click)="onImport(importInput.value);">
-                <mat-icon color="primary">file_copy</mat-icon>
+                <mat-icon fontSet="material-icons-outlined" color="primary">file_copy</mat-icon>
             </button>
         </mat-form-field>
 
@@ -147,7 +149,7 @@
                 <mat-cell *matCellDef="let datedSettings" [ngClass]="'editColumn'">
                     <button (click)="onEdit(datedSettings.since)" mat-icon-button
                             matTooltip="Edit dated settings">
-                        <mat-icon color="primary">edit</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined" color="primary">edit</mat-icon>
                     </button>
                 </mat-cell>
             </ng-container>
@@ -158,7 +160,7 @@
                     <button (click)="onRemove(datedSettings.since)" *ngIf="!datedSettings.isForever()"
                             mat-icon-button
                             matTooltip="Delete dated settings">
-                        <mat-icon color="primary">delete</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined" color="primary">delete</mat-icon>
                     </button>
                 </mat-cell>
             </ng-container>

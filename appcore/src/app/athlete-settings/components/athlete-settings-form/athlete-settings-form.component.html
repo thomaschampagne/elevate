@@ -118,7 +118,8 @@
         </div>
         <div *ngIf="!athleteSettingsModel.lthr.default">
 			<span>
-				<mat-icon [style.vertical-align]="'bottom'" color="warn">warning</mat-icon>
+				<mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'"
+                          color="warn">warning</mat-icon>
 				Since no default lactate threshold heart rate is currently defined. The value being used by default
 				is <strong>{{(athleteSettingsModel.restHr + DEFAULT_LTHR_KARVONEN_HRR_FACTOR * (athleteSettingsModel.maxHr - athleteSettingsModel.restHr)).toFixed(0)}}
                 bpm</strong> or 85% of your <i>Heart Rate Reserve</i> using the Karvonen method.

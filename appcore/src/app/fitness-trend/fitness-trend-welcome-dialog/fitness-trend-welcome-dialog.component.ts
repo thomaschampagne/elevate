@@ -31,7 +31,7 @@ import { MatDialogRef } from "@angular/material/dialog";
                                 settings</a>. A wrong ftp can cause too big/low PSS scores on activities.
                             </li>
                             <li>The power meter data toggle
-                                <mat-icon [style.vertical-align]="'bottom'">flash_on</mat-icon>
+                                <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'">flash_on</mat-icon>
                                 must be switched <strong>ON</strong> (on screen behind).
                             </li>
                             <li>
@@ -39,9 +39,9 @@ import { MatDialogRef } from "@angular/material/dialog";
                                                                    target="_blank">strava.com profile</a> allowing strava to
                                 estimate power data on your next cycling activities
                                 (required to compute <i>PSS</i>).
-							</li>
-							<li>
-								Your cycling activities must have correct elevation data. Read Strava elevation <a
+                            </li>
+                            <li>
+                                Your cycling activities must have correct elevation data. Read Strava elevation <a
 								href="https://support.strava.com/hc/en-us/articles/115001294564-Elevation-on-Strava-FAQs"
 								target="_blank">FAQ</a> and <a
 								href="https://support.strava.com/hc/en-us/articles/216919447-Elevation-for-Your-Activity"

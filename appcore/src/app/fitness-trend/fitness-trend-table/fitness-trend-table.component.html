@@ -1,13 +1,13 @@
 <div class="mat-subheading-2" fxLayout="row" fxLayoutAlign="center center">
     <mat-form-field fxFlex="50">
 			<span matPrefix>
-				<mat-icon>search</mat-icon><span>&nbsp;&nbsp;&nbsp;</span>
+				<mat-icon fontSet="material-icons-outlined">search</mat-icon><span>&nbsp;&nbsp;&nbsp;</span>
 			</span>
         <input (keyup)="applyFilter($event.target.value)" [(ngModel)]="searchText" fxFill matInput
                placeholder="Filter by type or activities name">
         <button (click)="searchText=''; applyFilter(searchText);" *ngIf="searchText" aria-label="Clear" mat-icon-button
                 matSuffix>
-            <mat-icon>close</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">close</mat-icon>
         </button>
     </mat-form-field>
 </div>
@@ -24,13 +24,13 @@
                 <button (click)="onViewAthleteSettings(dayFitnessTrend)" *ngIf="dayFitnessTrend.ids.length"
                         color="primary"
                         mat-icon-button>
-                    <mat-icon>accessibility</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined">portrait</mat-icon>
                 </button>
             </ng-container>
             <ng-container *ngIf="column.type === FitnessTrendColumnType.STRAVA_LINK">
                 <button (click)="onLinkClicked(dayFitnessTrend)" *ngIf="dayFitnessTrend.ids.length" color="primary"
                         mat-icon-button>
-                    <mat-icon>link</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined">link</mat-icon>
                 </button>
             </ng-container>
         </mat-cell>

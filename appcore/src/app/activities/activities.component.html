@@ -15,7 +15,7 @@
 
         <div>
             You can synchronize by clicking on
-            <mat-icon color="primary">sync_disabled</mat-icon>
+            <mat-icon fontSet="material-icons-outlined" color="primary">sync_disabled</mat-icon>
             icon in the upper toolbar. The activities will be locally saved in the storage allocated by the extension.
         </div>
 
@@ -31,7 +31,7 @@
             <button (click)="searchText=''; requestFilterFor(searchText);" *ngIf="searchText" aria-label="Clear"
                     mat-icon-button
                     matSuffix>
-                <mat-icon>close</mat-icon>
+                <mat-icon fontSet="material-icons-outlined">close</mat-icon>
             </button>
         </mat-form-field>
     </div>
@@ -54,19 +54,19 @@
                 mat-icon-button
                 matSuffix
                 matTooltip="Tick all">
-            <mat-icon>done_all</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">done_all</mat-icon>
         </button>
         <button (click)="unTickAll(); $event.stopPropagation();" color="primary"
                 mat-icon-button
                 matSuffix
                 matTooltip="Untick all">
-            <mat-icon>clear</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
         </button>
         <button (click)="reset(); $event.stopPropagation();" color="primary"
                 mat-icon-button
                 matSuffix
                 matTooltip="Reset to default">
-            <mat-icon>settings_backup_restore</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">settings_backup_restore</mat-icon>
         </button>
     </mat-form-field>
     <div class="table-container">
@@ -95,13 +95,13 @@
                     <ng-container *ngIf="column.type === ColumnType.ATHLETE_SETTINGS">
                         <button (click)="onViewAthleteSettings(activity)" *ngIf="activity.id" color="primary"
                                 mat-icon-button>
-                            <mat-icon>accessibility</mat-icon>
+                            <mat-icon fontSet="material-icons-outlined">portrait</mat-icon>
                         </button>
                     </ng-container>
                     <ng-container *ngIf="column.type === ColumnType.ACTIVITY_DELETE">
                         <button (click)="onDeleteActivity(activity)" *ngIf="activity.id" color="primary"
                                 mat-icon-button>
-                            <mat-icon>delete</mat-icon>
+                            <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
                         </button>
                     </ng-container>
                 </mat-cell>

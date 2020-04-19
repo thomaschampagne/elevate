@@ -19,13 +19,13 @@ import { AppRoutesModel } from "../../shared/models/app-routes.model";
     template: `
         <div *ngIf="(syncState !== null)">
             <button mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
-                <mat-icon *ngIf="(syncState === SyncState.NOT_SYNCED)">
+                <mat-icon fontSet="material-icons-outlined" *ngIf="(syncState === SyncState.NOT_SYNCED)">
                     sync_disabled
                 </mat-icon>
-                <mat-icon *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
+                <mat-icon fontSet="material-icons-outlined" *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">
                     sync_problem
                 </mat-icon>
-                <mat-icon *ngIf="(syncState === SyncState.SYNCED)">
+                <mat-icon fontSet="material-icons-outlined" *ngIf="(syncState === SyncState.SYNCED)">
                     sync
                 </mat-icon>
                 <span *ngIf="(syncState === SyncState.NOT_SYNCED)">
@@ -42,33 +42,33 @@ import { AppRoutesModel } from "../../shared/models/app-routes.model";
                 <!--Force full re-sync even of not first synced (to clean up any old history still stored)-->
                 <button mat-menu-item (click)="onSync(true, false)"
                         *ngIf="(syncState === SyncState.SYNCED)">
-                    <mat-icon>update</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined">update</mat-icon>
                     <span>Sync recent activities</span>
                 </button>
                 <button mat-menu-item
                         (click)="onSync(false, syncState === SyncState.NOT_SYNCED)">
-                    <mat-icon>sync</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
                     <span *ngIf="(syncState === SyncState.NOT_SYNCED)">Sync</span>
                     <span *ngIf="(syncState === SyncState.SYNCED)">Sync all activities</span>
                     <span *ngIf="(syncState === SyncState.PARTIALLY_SYNCED)">Continue sync</span>
                 </button>
                 <button mat-menu-item (click)="onSync(false, true)"
                         *ngIf="(syncState !== SyncState.NOT_SYNCED)">
-                    <mat-icon>redo</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined">redo</mat-icon>
                     <span>Clear and re-sync activities</span>
                 </button>
                 <button mat-menu-item (click)="onClearSyncedData()"
                         *ngIf="(syncState !== SyncState.NOT_SYNCED)">
-                    <mat-icon>clear</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
                     <span>Clear synced activities</span>
                 </button>
                 <button mat-menu-item (click)="onSyncedBackupExport()"
                         *ngIf="(syncState === SyncState.SYNCED)">
-                    <mat-icon>file_download</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined">file_download</mat-icon>
                     <span>Backup activities</span>
                 </button>
                 <button mat-menu-item (click)="onSyncedBackupImport()">
-                    <mat-icon>file_upload</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined">file_upload</mat-icon>
                     <span>Restore activities</span>
                 </button>
             </mat-menu>

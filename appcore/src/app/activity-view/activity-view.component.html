@@ -4,7 +4,7 @@
 <mat-card *ngIf="syncedActivityModel">
     <mat-card-title>
         <button (click)="onBack()" color="primary" mat-icon-button>
-            <mat-icon>arrow_back</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">arrow_back</mat-icon>
         </button>
         {{syncedActivityModel.name}}
         <button (click)="openSourceActivity(syncedActivityModel.id)" color="primary" mat-stroked-button>

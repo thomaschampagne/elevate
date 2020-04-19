@@ -164,7 +164,7 @@ export class RefreshStatsBarComponent implements OnInit {
                         Fix settings
                     </button>
                     <button mat-icon-button (click)="onCloseSettingsLacksWarning()">
-                        <mat-icon>close</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined">close</mat-icon>
                     </button>
                 </div>
             </div>
@@ -179,7 +179,7 @@ export class RefreshStatsBarComponent implements OnInit {
                         Recalculate
                     </button>
                     <button mat-icon-button (click)="onCloseSettingsConsistencyWarning()">
-                        <mat-icon>close</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined">close</mat-icon>
                     </button>
                 </div>
             </div>
@@ -298,7 +298,7 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
                         Fix settings
                     </button>
                     <button mat-icon-button (click)="onCloseSettingsLacksWarning()">
-                        <mat-icon>close</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined">close</mat-icon>
                     </button>
                 </div>
             </div>
@@ -313,7 +313,7 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
                         Recalculate
                     </button>
                     <button mat-icon-button (click)="onCloseSettingsConsistencyWarning()">
-                        <mat-icon>close</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined">close</mat-icon>
                     </button>
                 </div>
             </div>

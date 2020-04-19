@@ -4,7 +4,7 @@
         <input [(ngModel)]="searchText" matInput placeholder="Search" type="search">
         <button (click)="searchText=''" *ngIf="searchText" aria-label="Clear" mat-button mat-icon-button
                 matSuffix>
-            <mat-icon>close</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">close</mat-icon>
         </button>
     </mat-form-field>
 </div>
@@ -22,7 +22,7 @@
                         {{option.title}}
                         <sup>
                             <button (click)="showOptionHelperDialog(option.key)" mat-icon-button>
-                                <mat-icon class="info">info</mat-icon>
+                                <mat-icon fontSet="material-icons-outlined">info</mat-icon>
                             </button>
                         </sup>
                     </p>

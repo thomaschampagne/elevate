@@ -133,7 +133,7 @@
                 color="primary"
                 mat-stroked-button
                 matTooltip="Activities performed after date '{{syncDateTime | date:'medium'}}' will be synced">
-                <mat-icon>sync</mat-icon>
+                <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
                 Sync recent activities
             </button>
 
@@ -143,12 +143,12 @@
                 color="primary"
                 mat-stroked-button
                 matTooltip="All Strava activities will be synced">
-                <mat-icon>sync</mat-icon>
+                <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
                 Sync all activities
             </button>
 
             <button (click)="onConfigure()" *ngIf="!showConfigure" color="primary" mat-stroked-button>
-                <mat-icon>build</mat-icon>
+                <mat-icon fontSet="material-icons-outlined">build</mat-icon>
                 Configure
             </button>
             <button
@@ -156,7 +156,7 @@
                 *ngIf="(stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
                 color="primary"
                 mat-stroked-button>
-                <mat-icon>power_off</mat-icon>
+                <mat-icon fontSet="material-icons-outlined">power_off</mat-icon>
                 Disconnect
             </button>
 
@@ -178,7 +178,8 @@
                                matInput placeholder="Client secret">
                         <button (click)="showSecret.checked = !showSecret.checked" mat-icon-button
                                 matSuffix>
-                            <mat-icon>{{showSecret.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            <mat-icon
+                                fontSet="material-icons-outlined">{{showSecret.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
                         <mat-checkbox #showSecret fxHide></mat-checkbox>
                     </mat-form-field>
@@ -191,7 +192,8 @@
                                placeholder="Access Token">
                         <button (click)="showToken.checked = !showToken.checked" mat-icon-button
                                 matSuffix>
-                            <mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            <mat-icon
+                                fontSet="material-icons-outlined">{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
                         <mat-checkbox #showToken fxHide></mat-checkbox>
                     </mat-form-field>
@@ -204,7 +206,8 @@
                                placeholder="Refresh Token">
                         <button (click)="showToken.checked = !showToken.checked" mat-icon-button
                                 matSuffix>
-                            <mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            <mat-icon
+                                fontSet="material-icons-outlined">{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
                         <mat-checkbox #showToken fxHide></mat-checkbox>
                     </mat-form-field>
@@ -215,7 +218,8 @@
                                matInput placeholder="Session valid until">
                         <button (click)="showToken.checked = !showToken.checked" mat-icon-button
                                 matSuffix>
-                            <mat-icon>{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            <mat-icon
+                                fontSet="material-icons-outlined">{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
                         <mat-checkbox #showToken fxHide></mat-checkbox>
                     </mat-form-field>
@@ -230,13 +234,14 @@
                     <button (click)="onHowToClicked()" *ngIf="!showHowTo"
                             color="primary"
                             mat-stroked-button>
-                        <mat-icon>help</mat-icon>&nbsp;How to get your client id & secret
+                        <mat-icon fontSet="material-icons-outlined">help_outline</mat-icon>&nbsp;How to get your client
+                        id & secret
                     </button>
                     <button (click)="stravaAuthentication()" *ngIf="!stravaConnectorInfo.accessToken"
                             [disabled]="(!stravaConnectorInfo.clientId || !stravaConnectorInfo.clientSecret)"
                             color="primary"
                             mat-stroked-button>
-                        <mat-icon>power</mat-icon>
+                        <mat-icon fontSet="material-icons-outlined">power</mat-icon>
                         <span>Connect to Strava</span>
                     </button>
                 </div>

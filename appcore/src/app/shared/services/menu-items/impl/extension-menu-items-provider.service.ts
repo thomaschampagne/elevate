@@ -23,7 +23,7 @@ export class ExtensionMenuItemsProvider implements MenuItemsProvider {
             routerLink: AppRoutesModel.globalSettings,
             routerLinkActive: true
         }, {
-            icon: "accessibility",
+            icon: "portrait",
             routerLink: AppRoutesModel.athleteSettings,
             routerLinkActive: true
         }, {

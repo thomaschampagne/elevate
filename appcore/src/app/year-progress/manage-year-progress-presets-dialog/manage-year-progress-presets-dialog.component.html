@@ -75,7 +75,7 @@
             <mat-cell *matCellDef="let yearProgressPresetModel;" [ngClass]="'loadColumn'">
                 <button (click)="onLoad(yearProgressPresetModel.id)" mat-icon-button
                         matTooltip="Load preset">
-                    <mat-icon>file_upload</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined">file_upload</mat-icon>
                 </button>
             </mat-cell>
         </ng-container>
@@ -86,7 +86,7 @@
                 <button (click)="onDelete(yearProgressPresetModel.id)"
                         mat-icon-button
                         matTooltip="Delete preset">
-                    <mat-icon>delete</mat-icon>
+                    <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
                 </button>
             </mat-cell>
         </ng-container>
