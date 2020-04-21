@@ -43,7 +43,7 @@
         <mat-form-field fxFill>
             <input (change)="onTargetValueChanged()"
                    [(ngModel)]="progressPresetModel.targetValue"
-                   [placeholder]="(this.dialogData.mode === ProgressMode.YEAR_TO_DATE) ? 'Enter target value to reach by the end of the year ' + ((dialogData.yearProgressTypeModel.unit) ? 'in ' + dialogData.yearProgressTypeModel.unit : '') + 'or leave empty' :
+                   [placeholder]="(this.dialogData.mode === ProgressMode.YEAR_TO_DATE) ? 'Enter target value to reach by the end of the year' + ((dialogData.yearProgressTypeModel.unit) ? ' in ' + dialogData.yearProgressTypeModel.unit : '') + ' or leave empty' :
 				   'Enter the target value to be maintained on ' + (((dialogData.periodMultiplier === 1) ? 'last rolling ' + dialogData.rollingPeriod.toLocaleLowerCase().slice(0, -1) : (dialogData.periodMultiplier + ' last rolling ' + dialogData.rollingPeriod.toLocaleLowerCase()))) + ((dialogData.yearProgressTypeModel.unit) ? ' in ' + dialogData.yearProgressTypeModel.unit : '') + ' or leave empty'"
                    matInput
                    min="1"
