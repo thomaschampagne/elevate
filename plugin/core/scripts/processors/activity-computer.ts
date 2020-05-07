@@ -331,7 +331,8 @@ export class ActivityComputer {
 		const hasActivityStream = !_.isEmpty(activityStream);
 		if (hasActivityStream && activityStream.velocity_smooth) {
 			this.movementData = this.moveData(activityStream.velocity_smooth, activityStream.time, activityStream.grade_adjusted_speed);
-		} else if (!hasActivityStream && this.activityType === "Run") { // Allow to estimate running move data if no stream available (goal is to get RSS computation for manual activities)
+		} else if (_.isEmpty(activityStream.velocity_smooth) && this.activityType === "Run") { //For a manual activity, activityStream will still be passed but will be empty
+			// Allow to estimate running move data if no stream available (goal is to get RSS computation for manual activities)
 			this.movementData = this.moveDataEstimate(this.activitySourceData.movingTime, this.activitySourceData.distance);
 		} else {
 			return null;
@@ -412,7 +413,7 @@ export class ActivityComputer {
 
 	protected estimatedRunningPower(activityStream: ActivityStreamsModel, athleteWeight: number, hasPowerMeter: boolean, userFTP: number) {
 
-		if (_.isEmpty(activityStream)) {
+		if (_.isEmpty(activityStream.distance)) { //return null if activityStream is basically empty (i.e. a manual run activity)
 			return null;
 		}
 
