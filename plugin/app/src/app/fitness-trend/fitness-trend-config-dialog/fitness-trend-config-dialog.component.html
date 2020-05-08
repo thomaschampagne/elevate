@@ -58,6 +58,14 @@
 				<div fxFlex="10px"></div>
 				<div fxFlex>
 					<mat-slide-toggle
+						[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.preferEstimatedPowerStressScore"
+						[disabled]="!isEstimatedPowerStressScoreToggleEnabled">
+						Prefer Estimated Power Stress Score over HRSS
+					</mat-slide-toggle>
+				</div>					
+				<div fxFlex="10px"></div>
+				<div fxFlex>
+					<mat-slide-toggle
 						[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedRunningStressScore"
 						[disabled]="!isEstimatedRunningStressScoreToggleEnabled">
 						Enable running estimated RSS (Running Stress Score)
@@ -75,7 +83,15 @@
 						</ul>
 					</div>
 				</div>
-			</div>
+				<div fxFlex="10px"></div>
+				<div fxFlex>
+					<mat-slide-toggle
+						[(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.preferEstimatedRunningStressScore"
+						[disabled]="!isEstimatedRunningStressScoreToggleEnabled">
+						Prefer Estimated Running Stress Score over HRSS
+					</mat-slide-toggle>
+				</div>					
+		</div>
 		</mat-expansion-panel>
 
 		<mat-expansion-panel>

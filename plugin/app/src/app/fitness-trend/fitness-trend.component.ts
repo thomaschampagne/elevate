@@ -39,6 +39,8 @@ export class FitnessTrendComponent implements OnInit {
 		initializedFitnessTrendModel: {ctl: null, atl: null},
 		allowEstimatedPowerStressScore: false,
 		allowEstimatedRunningStressScore: false,
+		preferEstimatedPowerStressScore: false,
+		preferEstimatedRunningStressScore: false,
 		ignoreBeforeDate: null,
 		ignoreActivityNamePatterns: null
 	};
@@ -354,6 +356,8 @@ export class FitnessTrendComponent implements OnInit {
 				|| (this.fitnessTrendConfigModel.initializedFitnessTrendModel.atl !== fitnessTrendConfigModel.initializedFitnessTrendModel.atl)
 				|| (this.fitnessTrendConfigModel.allowEstimatedPowerStressScore !== fitnessTrendConfigModel.allowEstimatedPowerStressScore)
 				|| (this.fitnessTrendConfigModel.allowEstimatedRunningStressScore !== fitnessTrendConfigModel.allowEstimatedRunningStressScore)
+				|| (this.fitnessTrendConfigModel.preferEstimatedPowerStressScore !== fitnessTrendConfigModel.preferEstimatedPowerStressScore)
+				|| (this.fitnessTrendConfigModel.preferEstimatedRunningStressScore !== fitnessTrendConfigModel.preferEstimatedRunningStressScore)
 				|| (this.fitnessTrendConfigModel.ignoreBeforeDate !== fitnessTrendConfigModel.ignoreBeforeDate)
 				|| (this.fitnessTrendConfigModel.ignoreActivityNamePatterns !== fitnessTrendConfigModel.ignoreActivityNamePatterns);
 

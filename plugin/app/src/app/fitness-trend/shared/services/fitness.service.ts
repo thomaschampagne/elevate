@@ -109,6 +109,8 @@ export class FitnessService {
 						year: momentStartTime.year(),
 						type: activity.type,
 						hasPowerMeter: (activity.extendedStats && activity.extendedStats.powerData && activity.extendedStats.powerData.hasPowerMeter),
+						preferEstimatedPowerStressScore: fitnessTrendConfigModel.preferEstimatedPowerStressScore,
+						preferEstimatedRunningStressScore: fitnessTrendConfigModel.preferEstimatedRunningStressScore,
 						name: activity.name,
 						athleteSnapshot: activity.athleteSnapshot
 					};
@@ -395,14 +397,17 @@ export class FitnessService {
 
 				// Apply final stress score for that day
 				// Stress scores priorities for final score:
-				// - PSS w/ Power meter
+				// - PSS w/ Power meter or Prefer Estimated Power Stress Score over HRSS
+				// - RSS w/ Prefer Estimated Running Stress Score over HRSS
 				// - HRSS
 				// - TRIMP
 				// - PSS without Power meter
 				// - RSS
 				// - SSS
-				if (activity.powerStressScore && activity.hasPowerMeter) {
+				if (activity.powerStressScore && (activity.hasPowerMeter || activity.preferEstimatedPowerStressScore)) {
 					dayActivity.finalStressScore += activity.powerStressScore;
+				} else if (activity.runningStressScore && activity.preferEstimatedRunningStressScore) {
+					dayActivity.finalStressScore += activity.runningStressScore;
 				} else if (activity.heartRateStressScore) {
 					dayActivity.finalStressScore += activity.heartRateStressScore;
 				} else if (activity.trainingImpulseScore) {

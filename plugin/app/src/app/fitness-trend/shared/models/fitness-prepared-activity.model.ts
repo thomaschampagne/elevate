@@ -9,6 +9,8 @@ export class FitnessPreparedActivityModel {
 	public type: string;
 	public name: string;
 	public hasPowerMeter: boolean;
+	public preferEstimatedPowerStressScore: boolean;
+	public preferEstimatedRunningStressScore: boolean;
 	public athleteSnapshot: AthleteSnapshotModel;
 	public heartRateStressScore?: number;
 	public trainingImpulseScore?: number;

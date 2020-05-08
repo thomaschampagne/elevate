@@ -59,6 +59,8 @@ describe("FitnessService", () => {
 			},
 			allowEstimatedPowerStressScore: false,
 			allowEstimatedRunningStressScore: false,
+			preferEstimatedPowerStressScore: false,
+			preferEstimatedRunningStressScore: false,
 			ignoreBeforeDate: null,
 			ignoreActivityNamePatterns: null
 		};

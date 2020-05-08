@@ -6,6 +6,8 @@ export class FitnessTrendConfigModel {
 	public initializedFitnessTrendModel: InitializedFitnessTrendModel;
 	public allowEstimatedPowerStressScore: boolean;
 	public allowEstimatedRunningStressScore: boolean;
+	public preferEstimatedPowerStressScore: boolean;
+	public preferEstimatedRunningStressScore: boolean;
 	public ignoreBeforeDate: string;
 	public ignoreActivityNamePatterns: string[];
 }
