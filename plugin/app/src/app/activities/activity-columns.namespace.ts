@@ -431,8 +431,8 @@ export namespace ActivityColumns {
 			 */
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.averageHeartRate", "bpm", "Avg HR").setDefault(true),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.maxHeartRate", "bpm", "Max HR"),
-			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.activityHeartRateReserve", "bpm", "Avg HRR").setDescription("Average Heart Rate Reserve"),
-			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.activityHeartRateReserveMax", "bpm", "Max HRR").setDescription("Max Heart Rate Reserve"),
+			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.activityHeartRateReserve", "%", "Avg HRR").setDescription("Average Heart Rate Reserve"),
+			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.activityHeartRateReserveMax", "%", "Max HRR").setDescription("Max Heart Rate Reserve"),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.HRSS").setDescription("Heart Rate Stress Score").setDefault(true),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.HRSSPerHour").setHeader("HRSS / h").setDescription("Heart Rate Stress Score / Hour").setDefault(true),
 			new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.TRIMP").setDescription("Training Impulse Score"),
