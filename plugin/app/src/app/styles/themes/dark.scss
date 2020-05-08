@@ -2,4 +2,5 @@
 
 $dark-primary: mat-palette($mat-yellow);
 $dark-accent: mat-palette($mat-purple, 200);
-$dark-theme: mat-dark-theme($dark-primary, $dark-accent);
+$dark-warn: mat-palette($mat-green, 300);
+$dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);

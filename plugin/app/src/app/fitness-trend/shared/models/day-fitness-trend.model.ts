@@ -31,6 +31,10 @@ export class DayFitnessTrendModel extends DayStressModel {
 		this.prevAtl = (prevAtl) ? prevAtl : null;
 		this.prevTsb = (prevTsb) ? prevTsb : null;
 
+		//initialize all ramp rates to null b/c they will be set when needed
+		this.rr7d = this.rr28d = this.rr90d = this.rr365d = null;
+		this.prevRR7d = this.prevRR28d = this.prevRR90d = this.prevRR365d = null;
+		
 		this.trainingZone = this.findTrainingZone(this.tsb);
 	}
 
@@ -43,6 +47,16 @@ export class DayFitnessTrendModel extends DayStressModel {
 	public prevCtl: number;
 	public prevAtl: number;
 	public prevTsb: number;
+
+	public rr7d: number;
+	public rr28d: number;
+	public rr90d: number;
+	public rr365d: number;
+
+	public prevRR7d: number;
+	public prevRR28d: number;
+	public prevRR90d: number;
+	public prevRR365d: number;
 
 	public trainingZone: TrainingZone;
 	public trainingZoneAsString: string;
@@ -82,6 +96,39 @@ export class DayFitnessTrendModel extends DayStressModel {
 		const delta = _.floor(this.tsb, 1) - _.floor(this.prevTsb, 1);
 		return ((delta >= 0) ? "+" : "") + _.round(delta, 1);
 	}
+
+	public printRR7d(): number {
+		if (!this.rr7d)
+			return null;
+		return _.floor(this.rr7d, 1);
+	}
+
+	public printRR28d(): number {
+		if (!this.rr28d)
+			return null;
+		return _.floor(this.rr28d, 1);
+	}
+
+	public printRR90d(): number {
+		if (!this.rr90d)
+			return null;
+		return _.floor(this.rr90d, 1);
+	}
+
+	public printRR365d(): number {
+		if (!this.rr365d)
+			return null;
+		return _.floor(this.rr365d, 1);
+	}
+
+	public printDeltaRampRate(): string {
+		if (!this.prevRR7d) {
+			return null;
+		}
+		const delta = _.floor(this.rr7d, 1) - _.floor(this.prevRR7d, 1);
+		return ((delta >= 0) ? "+" : "") + _.round(delta, 1);
+	}
+
 
 	public printDate(): string {
 

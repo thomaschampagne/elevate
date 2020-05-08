@@ -137,9 +137,11 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 		const fatigueLine: GraphPointModel[] = [];
 		const fitnessLine: GraphPointModel[] = [];
 		const formLine: GraphPointModel[] = [];
+		const rampRateLine: GraphPointModel[] = [];
 		const previewFatigueLine: GraphPointModel[] = [];
 		const previewFitnessLine: GraphPointModel[] = [];
 		const previewFormLine: GraphPointModel[] = [];
+		const previewRampRateLine: GraphPointModel[] = [];
 		const activeLine: GraphPointModel[] = [];
 
 		_.forEach(this.fitnessTrend, (dayFitnessTrend: DayFitnessTrendModel) => {
@@ -163,6 +165,20 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 				hidden: dayFitnessTrend.previewDay
 			});
 
+			if (!dayFitnessTrend.rr7d) {
+				rampRateLine.push({
+					date: dayFitnessTrend.dateString,
+					value: 0,
+					hidden: dayFitnessTrend.previewDay
+				});
+			} else {
+				rampRateLine.push({
+					date: dayFitnessTrend.dateString,
+					value: dayFitnessTrend.rr7d,
+					hidden: dayFitnessTrend.previewDay
+				});
+			}
+
 			// Preview future fitness day
 			const isHiddenGraphPoint = (!dayFitnessTrend.previewDay && dayFitnessTrend.dateString !== today);
 			previewFatigueLine.push({
@@ -180,6 +196,12 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 			previewFormLine.push({
 				date: dayFitnessTrend.dateString,
 				value: dayFitnessTrend.tsb,
+				hidden: isHiddenGraphPoint
+			});
+
+			previewRampRateLine.push({
+				date: dayFitnessTrend.dateString,
+				value: dayFitnessTrend.rr7d,
 				hidden: isHiddenGraphPoint
 			});
 
@@ -205,9 +227,11 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 			fatigueLine,
 			fitnessLine,
 			formLine,
+			rampRateLine,
 			previewFatigueLine,
 			previewFitnessLine,
 			previewFormLine,
+			previewRampRateLine,
 			activeLine
 		);
 	}

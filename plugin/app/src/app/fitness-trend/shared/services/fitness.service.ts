@@ -235,6 +235,7 @@ export class FitnessService {
 				.then((dailyActivity: DayStressModel[]) => {
 
 					let ctl, atl, tsb;
+					let rr7d, rr28d, rr90d, rr365d = null;
 
 					const fitnessTrend: DayFitnessTrendModel[] = [];
 
@@ -291,6 +292,24 @@ export class FitnessService {
 
 						if (_.isNumber(dayStress.finalStressScore) && dayStress.finalStressScore > 0) {
 							dayFitnessTrend.finalStressScore = dayStress.finalStressScore;
+						}
+
+						//Calculate the ramp rates
+						if (index >= 7 ) { //only calculate weekly RR if we have a week of data
+							dayFitnessTrend.rr7d = _.floor(ctl, 1) - _.floor(fitnessTrend[index - 7].ctl, 1);
+							dayFitnessTrend.prevRR7d = previousDayFitnessTrend.rr7d;
+						}
+						if (index >= 28 ) { //only calculate monthly RR if we have a month of data
+							dayFitnessTrend.rr28d = _.floor(ctl, 1) - _.floor(fitnessTrend[index - 28].ctl, 1);
+							dayFitnessTrend.prevRR28d = previousDayFitnessTrend.rr28d;
+						}
+						if (index >= 90 ) { //only calculate 3mo RR if we have 3mo of data
+							dayFitnessTrend.rr90d = _.floor(ctl, 1) - _.floor(fitnessTrend[index - 90].ctl, 1);
+							dayFitnessTrend.prevRR90d = previousDayFitnessTrend.rr90d;
+						}
+						if (index >= 365 ) { //only calculate yearly RR if we have a year of data
+							dayFitnessTrend.rr365d = _.floor(ctl, 1) - _.floor(fitnessTrend[index - 365].ctl, 1);
+							dayFitnessTrend.prevRR365d = previousDayFitnessTrend.rr365d;
 						}
 
 						previousDayFitnessTrend = dayFitnessTrend;

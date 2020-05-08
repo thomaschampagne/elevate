@@ -17,21 +17,25 @@ export class ViewableFitnessDataModel {
 	public fatigueLine: GraphPointModel[] = [];
 	public fitnessLine: GraphPointModel[] = [];
 	public formLine: GraphPointModel[] = [];
+	public rampRateLine: GraphPointModel[];
 	public fitnessTrendLines: GraphPointModel[][] = [];
 	public markers: MarkerModel[] = [];
 
 	public previewFatigueLine: GraphPointModel[] = [];
 	public previewFitnessLine: GraphPointModel[] = [];
 	public previewFormLine: GraphPointModel[] = [];
+	public previewRampRateLine: GraphPointModel[];
 	public activeLine: GraphPointModel[] = [];
 
 	constructor(markers: MarkerModel[],
 				fatigueLine: GraphPointModel[],
 				fitnessLine: GraphPointModel[],
 				formLine: GraphPointModel[],
+				rampRateLine: GraphPointModel[],
 				previewFatigueLine: GraphPointModel[],
 				previewFitnessLine: GraphPointModel[],
 				previewFormLine: GraphPointModel[],
+				previewRampRateLine: GraphPointModel[],
 				activeLine: GraphPointModel[]) {
 
 		this.markers = markers;
@@ -39,17 +43,21 @@ export class ViewableFitnessDataModel {
 		this.fatigueLine = fatigueLine;
 		this.fitnessLine = fitnessLine;
 		this.formLine = formLine;
+		this.rampRateLine = rampRateLine;
 		this.previewFatigueLine = previewFatigueLine;
 		this.previewFitnessLine = previewFitnessLine;
 		this.previewFormLine = previewFormLine;
+		this.previewRampRateLine = previewRampRateLine;
 		this.activeLine = activeLine;
 
 		this.fitnessTrendLines.push(MG.convert.date(this.fatigueLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.fitnessLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.formLine, "date"));
+		this.fitnessTrendLines.push(MG.convert.date(this.rampRateLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.previewFatigueLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.previewFitnessLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.previewFormLine, "date"));
+		this.fitnessTrendLines.push(MG.convert.date(this.previewRampRateLine, "date"));
 		this.fitnessTrendLines.push(MG.convert.date(this.activeLine, "date"));
 	}
 

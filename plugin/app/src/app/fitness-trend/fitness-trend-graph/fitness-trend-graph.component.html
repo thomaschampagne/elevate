@@ -80,6 +80,12 @@
 						<td>{{viewedDay.printForm()}}<span *ngIf="viewedDay.prevTsb" class="mat-caption"> ({{viewedDay.printDeltaForm()}})</span>
 						</td>
 					</tr>
+					<tr class="ramp-value">
+						<td>Ramp Rate</td>
+						<td><span *ngIf="viewedDay.rr7d">{{viewedDay.printRR7d()}}</span><span *ngIf="!viewedDay.rr7d">-</span><!--
+							--><span *ngIf="viewedDay.prevRR7d" class="mat-caption"> ({{viewedDay.printDeltaRampRate()}})</span>
+						</td>
+					</tr>
 
 				</table>
 

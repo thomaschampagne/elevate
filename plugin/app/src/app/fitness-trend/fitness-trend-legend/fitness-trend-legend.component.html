@@ -78,7 +78,7 @@
 	</div>
 
 	<!--Fitness, Fatigue, Form values-->
-	<div fxFill fxLayout="row" fxLayoutAlign="end start" class="mat-headline">
+	<div fxFill fxLayout="row" fxLayoutAlign="end start" class="mat-headline fix-margin-none">
 
 		<div fxFlex fxLayout="row" fxLayoutAlign="end start">
 			<div fxFlex="150px" class="ctl-value">
@@ -107,5 +107,19 @@
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<!-- Ramp Rate Display -->
+	<div fxFill fxFlexAlign="end" fxLayout="row" fxLayoutAlign="end start" class="fix-margin-add">
+		<span fxFlexAlign="end">
+			<span *ngIf="!viewedDay.rr7d"><i>No fitness ramp rates</i></span>
+			<span *ngIf="viewedDay.rr7d">
+				<span>Fitness Ramp Rates: 7d&nbsp;<span class="ramp-value">{{viewedDay.printRR7d()}}</span></span><!--
+				--><span *ngIf="viewedDay.rr28d">,&nbsp;28d&nbsp;<span class="ramp-value">{{viewedDay.printRR28d()}}</span></span><!--
+				--><span *ngIf="viewedDay.rr90d">,&nbsp;90d&nbsp;<span class="ramp-value">{{viewedDay.printRR90d()}}</span></span><!--
+				--><span *ngIf="viewedDay.rr365d">,&nbsp;365d&nbsp;<span class="ramp-value">{{viewedDay.printRR365d()}}</span>
+				</span>.
+			</span>
+		</span>
 	</div>
 </div>

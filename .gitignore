@@ -18,3 +18,4 @@ browsers.karma.conf.js
 
 # local workspace folders
 .vscode/
+.DS_Store

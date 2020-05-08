@@ -13,6 +13,7 @@ $config: mat-typography-config();
 	// Extract whichever individual palettes you need from the theme.
 	$primary: map-get($theme, primary);
 	$accent: map-get($theme, accent);
+	$warn: map-get($theme, warn);
 
 	$accent-color: mat-color($accent);
 	$primary-color: mat-color($primary);
@@ -21,6 +22,7 @@ $config: mat-typography-config();
 	$ctl-color: $accent-color;
 	$atl-color: $primary-color;
 	$tsb-color: mat-color($primary, 900);
+	$ramp-color: mat-color($warn, default);
 
 	$caption-font-size: mat-font-size($config, caption);
 	$body-1-font-size: mat-font-size($config, body-1);
@@ -50,12 +52,15 @@ $config: mat-typography-config();
 	.tsb-value {
 		color: $tsb-color;
 	}
+	.ramp-value {
+		color: $ramp-color;
+	}
 
 	#fitnessTrendGraph {
 
 		// Lines
 
-		// 1
+		// 1 - Fatigue
 		.mg-area1-color {
 			fill: $atl-color;
 			fill-opacity: 0.35;
@@ -65,7 +70,7 @@ $config: mat-typography-config();
 			stroke: $atl-color;
 		}
 
-		// 2
+		// 2 - Fitness
 		.mg-area2-color {
 			fill: $ctl-color;
 			fill-opacity: 0.35;
@@ -75,7 +80,7 @@ $config: mat-typography-config();
 			stroke: $ctl-color;
 		}
 
-		// 3
+		// 3 - Form
 		.mg-area3-color {
 			fill: $tsb-color;
 			fill-opacity: 0.35;
@@ -85,45 +90,66 @@ $config: mat-typography-config();
 			stroke: $tsb-color;
 		}
 
-		// 4
+		// 4 - Ramp Rate
+		.mg-area4-color {
+			fill: $ramp-color;
+			fill-opacity: 0.35;
+		}
+
 		.mg-line4-color {
+			stroke: $ramp-color;
+		}
+
+		// 5 - Preview Fatigue
+		.mg-line5-color {
 			stroke: $atl-color;
 			stroke-dasharray: 5, 5;
 		}
 
-		.mg-area4-color {
+		.mg-area5-color {
 			fill: $atl-color;
 			fill-opacity: 0.10;
 		}
 
-		// 5
-		.mg-area5-color {
+		// 6 - Preview Fitness
+		.mg-area6-color {
 			fill: $ctl-color;
 			fill-opacity: 0.10;
 		}
 
-		.mg-line5-color {
+		.mg-line6-color {
 			stroke: $ctl-color;
 			stroke-dasharray: 5, 5;
 		}
 
-		// 6
-		.mg-area6-color {
+		// 7 - Preview Form
+		.mg-area7-color {
 			fill: $tsb-color;
 			fill-opacity: 0.10;
 		}
 
-		.mg-line6-color {
+		.mg-line7-color {
 			stroke: $tsb-color;
 			stroke-dasharray: 5, 5;
 		}
 
-		// 7 (active line)
-		.mg-area7-color {
+		// 8 - Preview Ramp Rate
+		.mg-area8-color {
+			fill: $ramp-color;
+			fill-opacity: 0.10;
+		}
+
+		.mg-line8-color {
+			stroke: $ramp-color;
+			stroke-dasharray: 5, 5;
+		}
+
+		// 9 (active line)
+		.mg-area9-color {
 			fill: $text-color;
 		}
 
-		.mg-line7-color {
+		.mg-line9-color {
 			fill: $text-color;
 			fill-opacity: 0.35;
 			stroke: $text-color;
@@ -144,7 +170,7 @@ $config: mat-typography-config();
 		display: none;
 
 		width: 220px;
-		height: 145px;
+		height: 167px;
 		border-radius: 3px;
 
 		border: 1px solid mat-color($foreground, text, 0.25); // Use from text color
