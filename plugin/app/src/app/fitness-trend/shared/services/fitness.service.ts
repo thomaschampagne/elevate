@@ -235,7 +235,6 @@ export class FitnessService {
 				.then((dailyActivity: DayStressModel[]) => {
 
 					let ctl, atl, tsb;
-					let rr7d, rr28d, rr90d, rr365d = null;
 
 					const fitnessTrend: DayFitnessTrendModel[] = [];
 
