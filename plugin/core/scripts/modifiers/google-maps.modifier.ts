@@ -146,7 +146,7 @@ export class GoogleMapsModifier extends AbstractModifier {
 					this.pathArray = pathArray;
 
 					// Check if effort id is given
-					const effortId: number = this.getEffortId();
+					const effortId: string = this.getEffortId();
 
 					if (effortId) {
 						this.fetchSegmentInfoAndDisplayWithGoogleMap(this.pathArray, effortId);
@@ -212,7 +212,7 @@ export class GoogleMapsModifier extends AbstractModifier {
 						that.pathArray = pathArray;
 
 						// Check if effort id is given
-						const effortId: number = that.getEffortId();
+						const effortId: string = that.getEffortId();
 
 						if (effortId) {
 							that.fetchSegmentInfoAndDisplayWithGoogleMap(that.pathArray, effortId);
@@ -227,8 +227,8 @@ export class GoogleMapsModifier extends AbstractModifier {
 		};
 	}
 
-	public getEffortId(): number {
-		return parseInt(window.location.pathname.split("/")[4] || window.location.hash.replace("#", "")) || null;
+	public getEffortId(): string {
+		return (window.location.pathname.split("/")[4] || window.location.hash.replace("#", "")) || null;
 	}
 
 	public isAnalysisSection(): boolean {
@@ -245,7 +245,7 @@ export class GoogleMapsModifier extends AbstractModifier {
 		});
 	}
 
-	protected fetchSegmentInfoFromEffortId(effortId: number, callback: (segmentInfoResponse: any) => void): void {
+	protected fetchSegmentInfoFromEffortId(effortId: string, callback: (segmentInfoResponse: any) => void): void {
 
 		let segmentInfoResponse: any;
 
@@ -272,7 +272,7 @@ export class GoogleMapsModifier extends AbstractModifier {
 		});
 	}
 
-	protected fetchSegmentInfoAndDisplayWithGoogleMap(pathArray: number[][], effortId: number): void {
+	protected fetchSegmentInfoAndDisplayWithGoogleMap(pathArray: number[][], effortId: string): void {
 
 		// Display GoogleMap With Path And Segment Effort highlighted
 		this.fetchSegmentInfoFromEffortId(effortId, (segmentInfoResponse: any) => {

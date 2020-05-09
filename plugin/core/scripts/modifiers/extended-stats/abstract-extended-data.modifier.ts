@@ -229,7 +229,7 @@ export abstract class AbstractExtendedDataModifier {
 
 	protected getSegmentInfos(callback: (segmentInfosResponse: any) => any): void {
 
-		const effortId: number = parseInt(window.location.pathname.split("/")[4] || window.location.hash.replace("#", "")) || null;
+		const effortId: string = (window.location.pathname.split("/")[4] || window.location.hash.replace("#", "")) || null;
 
 		if (!effortId) {
 			console.error("No effort id found");

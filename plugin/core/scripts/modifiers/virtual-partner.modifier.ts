@@ -58,7 +58,7 @@ export class VirtualPartnerModifier extends AbstractModifier {
 	}
 
 	// TODO Refactor from AbstractExtendedDataModifier?
-	protected getSegmentInfos(effortId: number, callback: (segmentInfosResponse: any) => any): void {
+	protected getSegmentInfos(effortId: string, callback: (segmentInfosResponse: any) => any): void {
 
 		if (!effortId) {
 			console.error("No effort id found");
@@ -89,7 +89,7 @@ export class VirtualPartnerModifier extends AbstractModifier {
 
 	protected displayDownloadPopup() {
 
-		const effortId: number = parseInt(window.location.pathname.split("/")[4] || window.location.hash.replace("#", ""));
+		const effortId: string = (window.location.pathname.split("/")[4] || window.location.hash.replace("#", ""));
 
 		const exportsType = [
 			ExportTypes.GPX,
@@ -112,7 +112,7 @@ export class VirtualPartnerModifier extends AbstractModifier {
 		});
 	}
 
-	protected download(effortId: number, exportType: ExportTypes) {
+	protected download(effortId: string, exportType: ExportTypes) {
 
 		this.getSegmentInfos(effortId, (segmentData: any) => {
 

@@ -7,7 +7,7 @@ import { AbstractModifier } from "./abstract.modifier";
 
 export interface EffortInfo {
 	// values obtained from the HTTP request
-	id: number; // segment effort id
+	id: string; // segment effort id
 	activity_id: number;
 	segment_id: number;
 
@@ -122,7 +122,7 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
 
 				let $row = $(event.currentTarget),
 					$timeCell = $row.find("td.time-col"),
-					segmentEffortId: number = $row.data("segment-effort-id"),
+					segmentEffortId: string = $row.data("segment-effort-id"),
 					segmentEffortInfoUrl: string = "/segment_efforts/" + segmentEffortId,
 					positionCell: JQuery,
 					deltaKomCell: JQuery,
@@ -241,7 +241,7 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
 		this.deltaYearPRLabel = "&Delta;yPR";
 	}
 
-	protected findCurrentSegmentEffortDate(segmentId: number, segmentEffortId: number, page?: number, deferred?: JQueryDeferred<any>, fetchedLeaderboardData?: EffortInfo[]): JQueryPromise<any> {
+	protected findCurrentSegmentEffortDate(segmentId: number, segmentEffortId: string, page?: number, deferred?: JQueryDeferred<any>, fetchedLeaderboardData?: EffortInfo[]): JQueryPromise<any> {
 
 		if (!page) {
 			page = 1;
@@ -286,7 +286,7 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
 		return deferred.promise();
 	}
 
-	protected handleTimeDifferenceAlongUserLeaderBoard(leaderBoardData: EffortInfo[], currentSegmentEffortDateTime: Date, elapsedTime: number, segmentEffortId: number, deltaPRCell: JQuery, deltaYearPRCell: JQuery): void {
+	protected handleTimeDifferenceAlongUserLeaderBoard(leaderBoardData: EffortInfo[], currentSegmentEffortDateTime: Date, elapsedTime: number, segmentEffortId: string, deltaPRCell: JQuery, deltaYearPRCell: JQuery): void {
 
 		let previousPersonalSeconds: number,
 			previousPersonalDate: Date,
