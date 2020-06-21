@@ -472,7 +472,7 @@ export namespace ActivityColumns {
 			new NumberColumn(Category.POWER, "extendedStats.powerData.best20min", "w", "Best 20min Power").setDefault(true),
 			// new NumberColumn(Category.POWER, "extendedStats.powerData.bestEightyPercent", "w", "bestEightyPercent"),
 			new NumberColumn(Category.POWER, "extendedStats.powerData.variabilityIndex", null, "Variability Index", Print.number, 2),
-			// new NumberColumn(Category.POWER, "extendedStats.powerData.punchFactor", "w", "punchFactor"),
+			new NumberColumn(Category.POWER, "extendedStats.powerData.punchFactor", null, "Intensity", Print.number, 2),
 			new NumberColumn(Category.POWER, "extendedStats.powerData.powerStressScore", null, "Power Stress Score").setDefault(true),
 			new NumberColumn(Category.POWER, "extendedStats.powerData.powerStressScorePerHour", null, "Power Stress Score / h").setDefault(true),
 			new NumberColumn(Category.POWER, "extendedStats.powerData.lowerQuartileWatts", "w", "25% Watts").setDescription("Lower Quartile Watts"),
