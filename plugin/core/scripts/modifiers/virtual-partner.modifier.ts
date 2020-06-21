@@ -89,7 +89,7 @@ export class VirtualPartnerModifier extends AbstractModifier {
 
 	protected displayDownloadPopup() {
 
-		const effortId: number = parseInt(window.location.pathname.split("/")[4] || window.location.hash.replace("#", ""));
+		const effortId: number = parseInt(_.last(window.location.href.match(/(\d+)$/g)));
 
 		const exportsType = [
 			ExportTypes.GPX,
