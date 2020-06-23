@@ -2,6 +2,23 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.16.2",
+		date: "2020-06-23",
+		message: "At a glance: Fixed GPS virtual partner export & extended stats panel not working on activities segments efforts. Update also includes other fixes and improvements.",
+		hotFixes: [],
+		features: [],
+		isPatch: true,
+		fixes: [
+			"Turned-off segments time comparison in activity pages to avoid the 'Too Many Requests' error raised by Strava. Options can be enabled back Global Settings.",
+			"Fixed running estimated stress scores not being calculated on manual activities (impacted activities have to be re-synced)",
+			"Fixed extended statistics not displayed when \"Show extended statistics of effort\" button is clicked",
+			"Fixed export of GPS segment efforts: GPX/TCX files could not be downloaded",
+			"Fixed rounding of stress scores different between Elevate activities list and fitness trend",
+			"Fixed \"Intensity Factor\" column not selectable in Elevate activities List",
+			"[Technical] Upgraded libraries used within the app."
+		]
+	},
+	{
 		version: "6.16.1",
 		date: "2020-02-26",
 		message: "👨‍⚕️💉 UI issues bugfixes. Note: v6.16.x introduces Cycling Power Curve on your ride activities and \"Elevate Extended Stats\" on ALL activities types (nordic ski, rowing, ...).",
