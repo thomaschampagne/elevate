@@ -681,6 +681,28 @@ class Installer {
 		return promise;
 	}
 
+	protected migrate_to_6_16_2(): Promise<void> {
+
+		let promise: Promise<void> = Promise.resolve();
+		if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.16.2")) {
+
+			console.log("Migrate to 6.16.2");
+
+			promise = BrowserStorage.getInstance().get<UserSettingsModel>(BrowserStorageType.LOCAL, "userSettings").then((userSettingsModel: UserSettingsModel) => {
+				userSettingsModel.displaySegmentTimeComparisonToKOM = false;
+				userSettingsModel.displaySegmentTimeComparisonToPR = false;
+				userSettingsModel.displaySegmentTimeComparisonToCurrentYearPR = false;
+				userSettingsModel.displaySegmentTimeComparisonPosition = false;
+				return BrowserStorage.getInstance().set<UserSettingsModel>(BrowserStorageType.LOCAL, "userSettings", userSettingsModel);
+			});
+
+		} else {
+			console.log("Skip migrate to 6.16.2");
+		}
+
+		return promise;
+	}
+
 
 	protected handleUpdate(): Promise<void> {
 
@@ -715,6 +737,8 @@ class Installer {
 			return this.migrate_to_6_15_0();
 		}).then(() => {
 			return this.migrate_to_6_15_1();
+		}).then(() => {
+			return this.migrate_to_6_16_2();
 		}).catch(error => console.error(error));
 
 	}
