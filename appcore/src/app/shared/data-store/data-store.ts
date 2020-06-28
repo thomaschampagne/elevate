@@ -6,57 +6,40 @@ export abstract class DataStore<T> {
 
     /**
      * Fetch all data
-     * @param storageLocation {StorageLocationModel} location
+     * @param storageLocation StorageLocationModel location
      * @param defaultStorageValue default value returned if no data found
-     * @param findRequest
+     * @param findRequest mango query
      */
     // TODO Rename "fetchAll" or "getAll"
     abstract fetch(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T, findRequest?: FindRequest<T[] | T>): Promise<T[] | T>;
 
     /**
      * Save and replace all data
-     * @param storageLocation
-     * @param value
-     * @param defaultStorageValue
      */
     // TODO Rename "saveAll" or "eraseWith" or "replaceAll"
     abstract save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T>;
 
-    /**
-     *
-     * @param storageLocation
-     * @param value
-     */
     abstract put(storageLocation: StorageLocationModel, value: T): Promise<T>;
 
-    /**
-     *
-     * @param storageLocation
-     * @param id
-     */
     abstract getById(storageLocation: StorageLocationModel, id: string): Promise<T>;
 
     /**
      * Update or insert a specific property at given path. Path is created if unknown.
-     * @param storageLocation {StorageLocationModel} location
-     * @param path
-     * @param value
-     * @param defaultStorageValue
      */
-    abstract upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T>;
+    abstract putAt<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T>;
 
     /**
-     *
-     * @param storageLocation
-     * @param ids
-     * @param defaultStorageValue
      * @return new existing data
      */
     abstract removeByIds(storageLocation: StorageLocationModel, ids: (string | number)[], defaultStorageValue: T[] | T): Promise<T[] | T>;
 
     /**
+     * Count
+     */
+    abstract count(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T): Promise<number>;
+
+    /**
      * Clear all data
-     * @param storageLocation
      */
     abstract clear(storageLocation: StorageLocationModel): Promise<void>;
 

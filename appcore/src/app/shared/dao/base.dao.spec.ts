@@ -33,7 +33,7 @@ describe("BaseDao", () => {
     let checkStorageLocationSpy: jasmine.Spy;
     let dataStoreFetchSpy: jasmine.Spy;
     let dataStoreSaveSpy: jasmine.Spy;
-    let dataStoreUpsertPropertySpy: jasmine.Spy;
+    let dataStorePutAtSpy: jasmine.Spy;
     let dataStoreClearSpy: jasmine.Spy;
     let removeByIdsSpy: jasmine.Spy;
     let mockedDataStore: MockedDataStore<Foo>;
@@ -55,7 +55,7 @@ describe("BaseDao", () => {
         checkStorageLocationSpy = spyOn(baseDao, "checkCompliantDao").and.callThrough();
         dataStoreFetchSpy = spyOn(dataStore, "fetch").and.callThrough();
         dataStoreSaveSpy = spyOn(dataStore, "save").and.callThrough();
-        dataStoreUpsertPropertySpy = spyOn(dataStore, "upsertProperty").and.callThrough();
+        dataStorePutAtSpy = spyOn(dataStore, "putAt").and.callThrough();
         dataStoreClearSpy = spyOn(dataStore, "clear").and.callThrough();
         removeByIdsSpy = spyOn(dataStore, "removeByIds").and.callThrough();
 
@@ -176,13 +176,13 @@ describe("BaseDao", () => {
         const newValue = "jack";
 
         // When
-        const promise: Promise<Foo> = baseDao.upsertProperty<string>(path, newValue);
+        const promise: Promise<Foo> = baseDao.putAt<string>(path, newValue);
 
         // Then
         promise.then(() => {
 
             expect(checkStorageLocationSpy).toHaveBeenCalledTimes(1);
-            expect(dataStoreUpsertPropertySpy).toHaveBeenCalledTimes(1);
+            expect(dataStorePutAtSpy).toHaveBeenCalledTimes(1);
             done();
         }, error => {
             expect(error).toBeNull();

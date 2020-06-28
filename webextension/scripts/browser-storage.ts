@@ -114,7 +114,7 @@ export class BrowserStorage {
      * @param path
      * @param value
      */
-    public upsertProperty<T, V>(storageType: BrowserStorageType, path: string[], value: V): Promise<void> {
+    public putAt<T, V>(storageType: BrowserStorageType, path: string[], value: V): Promise<void> {
         const key = path.shift();
         return this.get<T>(storageType, key).then((result: T) => {
             result = (path.length > 0) ? (_.set(result as Object, path, value) as T) : (value as any);

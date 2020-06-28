@@ -363,7 +363,7 @@ describe("ExtensionDataStore", () => {
         expectedChromeStorageStubState.foo.bar = newValue;
 
         // When
-        const promise: Promise<Foo> = extensionDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
+        const promise: Promise<Foo> = extensionDataStore.putAt<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
         // Then
         promise.then((result: Foo) => {
@@ -397,7 +397,7 @@ describe("ExtensionDataStore", () => {
         expectedChromeStorageStubState.foo.bar = newValue;
 
         // When
-        const promise: Promise<Foo> = extensionDataStore.upsertProperty<boolean>(storageLocation, relativePath, newValue, DEFAULT_FOO);
+        const promise: Promise<Foo> = extensionDataStore.putAt<boolean>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
         // Then
         promise.then((result: Foo) => {
@@ -437,7 +437,7 @@ describe("ExtensionDataStore", () => {
         expectedChromeStorageStubState.foo.nested.dream0.dream1.dream2 = newValue;
 
         // When
-        const promise: Promise<Foo> = extensionDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
+        const promise: Promise<Foo> = extensionDataStore.putAt<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
         // Then
         promise.then((result: Foo) => {
@@ -480,7 +480,7 @@ describe("ExtensionDataStore", () => {
         expectedChromeStorageStubState.nested.dream0.dream1.dream2 = newValue;
 
         // When
-        const promise: Promise<Foo> = extensionDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
+        const promise: Promise<Foo> = extensionDataStore.putAt<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
         // Then
         promise.then((result: Foo) => {
@@ -518,7 +518,7 @@ describe("ExtensionDataStore", () => {
         const newValue = "Bazinga!";
 
         // When
-        const promise: Promise<Foo> = extensionDataStore.upsertProperty<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
+        const promise: Promise<Foo> = extensionDataStore.putAt<string>(storageLocation, relativePath, newValue, DEFAULT_FOO);
 
         // Then
         promise.then((result: Foo) => {
@@ -658,6 +658,47 @@ describe("ExtensionDataStore", () => {
 
             expect(result).not.toBeNull();
             expect(result).toEqual(expectedResult);
+            expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
+
+            done();
+
+        }, error => {
+            expect(error).toBeNull();
+            done();
+        });
+    });
+
+    it("should count a Foo collection", done => {
+
+        // Given
+        const expectedData: Foo[] = [{
+            id: "0001",
+            bar: "john doe"
+        }, {
+            id: "0002",
+            bar: "jean kevin"
+        }, {
+            id: "0003",
+            bar: "colette sterolle"
+        }];
+
+        storageLocation = {
+            key: "foo",
+            storageType: null,
+            collectionFieldId: "id"
+        };
+
+        const expectedResult = 3;
+
+        EXTENSION_STORAGE_STUB[storageLocation.key] = expectedData;
+
+        // When
+        const promise: Promise<number> = extensionDataStore.count(storageLocation, []);
+
+        // Then
+        promise.then((count: number) => {
+
+            expect(count).toEqual(expectedResult);
             expect(browserStorageLocalSpy).toHaveBeenCalledTimes(1);
 
             done();

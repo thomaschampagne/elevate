@@ -3,6 +3,7 @@ import { StorageLocationModel } from "../../storage-location.model";
 import * as _ from "lodash";
 import { AppUsage } from "../../../models/app-usage.model";
 import { AppUsageDetails } from "../../../models/app-usage-details.model";
+import { NotImplementedException } from "@elevate/shared/exceptions";
 
 export class MockedDataStore<T> extends DataStore<T> {
 
@@ -43,7 +44,7 @@ export class MockedDataStore<T> extends DataStore<T> {
         return undefined;
     }
 
-    public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
+    public putAt<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
 
         return this.fetch(storageLocation, defaultStorageValue).then((dataStore: T[] | T) => {
 
@@ -51,7 +52,7 @@ export class MockedDataStore<T> extends DataStore<T> {
                 return Promise.reject("Cannot save property to a storage type 'vector'");
             }
 
-            dataStore = _.set(dataStore as Object, path, value) as T;
+            dataStore = _.set(dataStore as any, path, value) as T;
 
             return this.save(storageLocation, dataStore, defaultStorageValue).then((dataStoreSaved: T[] | T) => {
                 return Promise.resolve(<T> dataStoreSaved);
@@ -85,6 +86,10 @@ export class MockedDataStore<T> extends DataStore<T> {
 
         return Promise.resolve(new AppUsageDetails(appUsage, CHROME_BYTES_IN_USE / (1024 * 1024),
             CHROME_BYTES_IN_USE / CHROME_QUOTA_BYTES * 100));
+    }
+
+    public count(storageLocation: StorageLocationModel): Promise<number> {
+        throw new NotImplementedException();
     }
 
     public initWithVector(vector?: T[]) {

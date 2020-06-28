@@ -1260,8 +1260,8 @@ describe("DesktopSyncService", () => {
             const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
                 .and.returnValue(Promise.resolve([]));
 
-            const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
-                .and.returnValue(Promise.resolve([]));
+            const activityServiceSpy = spyOn(desktopSyncService.activityService, "count")
+                .and.returnValue(Promise.resolve(0));
 
             // When
             const promise = desktopSyncService.getSyncState();
@@ -1291,8 +1291,8 @@ describe("DesktopSyncService", () => {
             const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
                 .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
-            const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
-                .and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+            const activityServiceSpy = spyOn(desktopSyncService.activityService, "count")
+                .and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES.length));
 
             // When
             const promise = desktopSyncService.getSyncState();
@@ -1321,8 +1321,8 @@ describe("DesktopSyncService", () => {
             const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
                 .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
-            const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
-                .and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+            const activityServiceSpy = spyOn(desktopSyncService.activityService, "count")
+                .and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES.length));
 
             // When
             const promise = desktopSyncService.getSyncState();
@@ -1352,8 +1352,8 @@ describe("DesktopSyncService", () => {
             const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
                 .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
-            const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
-                .and.returnValue(Promise.resolve([]));
+            const activityServiceSpy = spyOn(desktopSyncService.activityService, "count")
+                .and.returnValue(Promise.resolve(0));
 
             // When
             const promise = desktopSyncService.getSyncState();
@@ -1382,8 +1382,8 @@ describe("DesktopSyncService", () => {
             const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
                 .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
-            const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
-                .and.returnValue(Promise.resolve([]));
+            const activityServiceSpy = spyOn(desktopSyncService.activityService, "count")
+                .and.returnValue(Promise.resolve(0));
 
             // When
             const promise = desktopSyncService.getSyncState();
@@ -1401,7 +1401,6 @@ describe("DesktopSyncService", () => {
 
         });
 
-
         it("should provide PARTIALLY_SYNCED state (0/2 connector synced and some activities stored)", done => {
 
             // Given
@@ -1411,8 +1410,8 @@ describe("DesktopSyncService", () => {
             const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
                 .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
-            const activityServiceSpy = spyOn(desktopSyncService.activityService, "fetch")
-                .and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+            const activityServiceSpy = spyOn(desktopSyncService.activityService, "count")
+                .and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES.length));
 
             // When
             const promise = desktopSyncService.getSyncState();

@@ -613,7 +613,7 @@ describe("ExtensionSyncService", () => {
         // Given
         const expectedState = SyncState.NOT_SYNCED;
         spyOn(extensionSyncService.syncDateTimeDao, "fetch").and.returnValue(Promise.resolve(null));
-        spyOn(extensionSyncService.activityService, "fetch").and.returnValue(Promise.resolve(null));
+        spyOn(extensionSyncService.activityService, "count").and.returnValue(Promise.resolve(null));
 
         // When
         const promise: Promise<SyncState> = extensionSyncService.getSyncState();
@@ -630,7 +630,7 @@ describe("ExtensionSyncService", () => {
         // Given
         const expectedState = SyncState.PARTIALLY_SYNCED;
         spyOn(extensionSyncService.syncDateTimeDao, "fetch").and.returnValue(Promise.resolve(null));
-        spyOn(extensionSyncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+        spyOn(extensionSyncService.activityService, "count").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES.length));
 
         // When
         const promise: Promise<SyncState> = extensionSyncService.getSyncState();
@@ -648,7 +648,7 @@ describe("ExtensionSyncService", () => {
         const expectedState = SyncState.SYNCED;
         const syncDateTime = 9999;
         spyOn(extensionSyncService.syncDateTimeDao, "fetch").and.returnValue(Promise.resolve(syncDateTime));
-        spyOn(extensionSyncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+        spyOn(extensionSyncService.activityService, "count").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES.length));
 
         // When
         const promise: Promise<SyncState> = extensionSyncService.getSyncState();
@@ -666,7 +666,7 @@ describe("ExtensionSyncService", () => {
         const expectedState = SyncState.SYNCED;
         const syncDateTime = 9999;
         spyOn(extensionSyncService.syncDateTimeDao, "fetch").and.returnValue(Promise.resolve(syncDateTime));
-        spyOn(extensionSyncService.activityService, "fetch").and.returnValue(Promise.resolve(null));
+        spyOn(extensionSyncService.activityService, "count").and.returnValue(Promise.resolve(0));
 
         // When
         const promise: Promise<SyncState> = extensionSyncService.getSyncState();

@@ -46,6 +46,10 @@ export abstract class ActivityService {
         return this.activityDao.clear();
     }
 
+    public count(): Promise<number> {
+        return this.activityDao.count();
+    }
+
     public findByDatedSession(startTime: string, activityDurationSeconds: number): Promise<SyncedActivityModel[]> {
 
         const activityStartTime = new Date(startTime).toISOString();

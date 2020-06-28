@@ -69,15 +69,15 @@ export class ExtensionSyncService extends SyncService<number> {
         return Promise.all([
 
             this.getSyncDateTime(),
-            this.activityService.fetch()
+            this.activityService.count()
 
-        ]).then((result: Object[]) => {
+        ]).then((result: any[]) => {
 
             const syncDateTime: number = result[0] as number;
-            const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
+            const syncedActivitiesCount: number = result[1] as number;
 
             const hasSyncDateTime: boolean = _.isNumber(syncDateTime);
-            const hasSyncedActivityModels: boolean = !_.isEmpty(syncedActivityModels);
+            const hasSyncedActivityModels: boolean = syncedActivitiesCount > 0;
 
             let syncState: SyncState;
             if (!hasSyncDateTime && !hasSyncedActivityModels) {
@@ -128,7 +128,7 @@ export class ExtensionSyncService extends SyncService<number> {
             this.athleteService.fetch(),
             this.versionsProvider.getPackageVersion()
 
-        ]).then((result: Object[]) => {
+        ]).then((result: any[]) => {
 
             const syncDateTime: number = result[0] as number;
             const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];

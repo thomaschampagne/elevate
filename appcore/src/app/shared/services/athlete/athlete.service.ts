@@ -76,7 +76,7 @@ export class AthleteService {
     }
 
     public saveProperty<V>(path: string | string[], value: V): Promise<AthleteModel> {
-        return this.athleteModelDao.upsertProperty<V>(path, value);
+        return this.athleteModelDao.putAt<V>(path, value);
     }
 
     /**

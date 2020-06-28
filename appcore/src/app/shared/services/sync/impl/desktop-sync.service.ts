@@ -385,17 +385,17 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         return Promise.all([
 
             this.getSyncDateTime(),
-            this.activityService.fetch()
+            this.activityService.count()
 
         ]).then((result: any[]) => {
 
             const connectorSyncDateTimes: ConnectorSyncDateTime[] = result[0] as ConnectorSyncDateTime[];
-            const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
+            const syncedActivitiesCount: number = result[1] as number;
 
             const hasASyncDateTime: boolean = (connectorSyncDateTimes.length > 0);
-            const hasSyncedActivityModels: boolean = !_.isEmpty(syncedActivityModels);
+            const hasSyncedActivityModels: boolean = syncedActivitiesCount > 0;
 
-            let syncState: SyncState = null;
+            let syncState: SyncState;
             if (!hasASyncDateTime && !hasSyncedActivityModels) {
                 syncState = SyncState.NOT_SYNCED;
             } else if (!hasASyncDateTime && hasSyncedActivityModels) {

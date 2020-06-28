@@ -13,7 +13,7 @@ export class ExtensionDataStore<T> extends DataStore<T> {
      */
     public fetch(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T): Promise<T[] | T> {
 
-        return new Promise<T[] | T>((resolve: Function, reject: Function) => {
+        return new Promise<T[] | T>((resolve, reject) => {
 
             const fetchKey = (storageLocation.key) ? storageLocation.key : null; // If no key, 'null' fetchKey will ask for all the storage
 
@@ -40,7 +40,7 @@ export class ExtensionDataStore<T> extends DataStore<T> {
      * @return {Promise<T[] | T>}
      */
     public save(storageLocation: StorageLocationModel, value: T[] | T, defaultStorageValue: T[] | T): Promise<T[] | T> {
-        return new Promise<T[] | T>((resolve: Function, reject: Function) => {
+        return new Promise<T[] | T>((resolve, reject) => {
 
             let saveQuery;
             if (storageLocation.key) {
@@ -122,7 +122,7 @@ export class ExtensionDataStore<T> extends DataStore<T> {
      * @param value
      * @param defaultStorageValue
      */
-    public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
+    public putAt<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
 
         return this.fetch(storageLocation, defaultStorageValue).then((dataStore: T[] | T) => {
 
@@ -130,7 +130,7 @@ export class ExtensionDataStore<T> extends DataStore<T> {
                 return Promise.reject("Cannot save property to a storage type 'vector'");
             }
 
-            dataStore = _.set(dataStore as Object, path, value) as T;
+            dataStore = _.set(dataStore as any, path, value) as T;
 
             return this.save(storageLocation, dataStore, defaultStorageValue).then((dataStoreSaved: T[] | T) => {
                 return Promise.resolve(<T> dataStoreSaved);
@@ -160,7 +160,7 @@ export class ExtensionDataStore<T> extends DataStore<T> {
      * @param storageLocation
      */
     public clear(storageLocation: StorageLocationModel): Promise<void> {
-        return new Promise<void>((resolve: Function, reject: Function) => {
+        return new Promise<void>((resolve, reject) => {
             if (storageLocation.key) {
                 this.chromeLocalStorageArea().remove(storageLocation.key, () => {
                     const error = this.getLastError();
@@ -193,10 +193,12 @@ export class ExtensionDataStore<T> extends DataStore<T> {
         });
     }
 
-    /**
-     *
-     * @returns {chrome.storage.LocalStorageArea}
-     */
+    public count(storageLocation: StorageLocationModel, defaultStorageValue: T[] | T): Promise<number> {
+        return this.fetch(storageLocation, defaultStorageValue).then((dataStore: T[] | T) => {
+            return Promise.resolve(_.isArray(dataStore) ? dataStore.length : 1);
+        });
+    }
+
     public chromeLocalStorageArea(): chrome.storage.LocalStorageArea {
         return chrome.storage.local;
     }

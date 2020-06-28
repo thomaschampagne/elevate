@@ -93,7 +93,7 @@ export class Elevate {
 
             if (this.userSettings.localStorageMustBeCleared) {
                 localStorage.clear();
-                BrowserStorage.getInstance().upsertProperty<ExtensionUserSettingsModel, boolean>(BrowserStorageType.LOCAL, ["userSettings", "localStorageMustBeCleared"], false);
+                BrowserStorage.getInstance().putAt<ExtensionUserSettingsModel, boolean>(BrowserStorageType.LOCAL, ["userSettings", "localStorageMustBeCleared"], false);
             }
 
             // Init "elevate bridge"

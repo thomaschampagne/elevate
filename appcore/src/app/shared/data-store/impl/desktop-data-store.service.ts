@@ -203,6 +203,12 @@ export class DesktopDataStore<T> extends DataStore<T> {
         });
     }
 
+    public count(storageLocation: StorageLocationModel): Promise<number> {
+        return this.findDocs(storageLocation).then(result => {
+            return Promise.resolve(result.docs.length);
+        });
+    }
+
     public createDump(): Promise<Blob> {
         const prepare = docs => {
             return docs.rows.map(wrappedDoc => {
@@ -501,7 +507,7 @@ export class DesktopDataStore<T> extends DataStore<T> {
         });
     }
 
-    public upsertProperty<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
+    public putAt<V>(storageLocation: StorageLocationModel, path: string | string[], value: V, defaultStorageValue: T[] | T): Promise<T> {
 
         return this.fetch(storageLocation, defaultStorageValue).then((doc: T) => {
 

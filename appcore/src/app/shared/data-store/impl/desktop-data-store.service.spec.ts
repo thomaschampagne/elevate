@@ -394,7 +394,7 @@ describe("DesktopDataStore", () => {
             expectedFakeAthlete.fakeSettings[1].weight = newValue;
 
             // When
-            const promise: Promise<FakeAthlete> = <Promise<FakeAthlete>> desktopDataStore.upsertProperty(FAKE_ATHLETE_STORAGE_LOCATION,
+            const promise: Promise<FakeAthlete> = <Promise<FakeAthlete>> desktopDataStore.putAt(FAKE_ATHLETE_STORAGE_LOCATION,
                 updatePath, newValue, null);
 
             // Then
@@ -475,6 +475,27 @@ describe("DesktopDataStore", () => {
                 expect(fakeActivities[2].type).toEqual(expectedFakeActivities[2].type);
                 expect(fakeActivities[2].$doctype).toEqual(expectedDocType);
 
+                done();
+
+            }, error => {
+                expect(error).toBeNull();
+                expect(false).toBeTruthy("Whoops! I should not be here!");
+                done();
+            });
+        });
+
+        it("should count FakeActivities in collection", done => {
+
+            // Given
+            const expectedCount = 3;
+
+            // When
+            const promise: Promise<number> = desktopDataStore.count(FAKE_ACTIVITIES_STORAGE_LOCATION);
+
+            // Then
+            promise.then((count: number) => {
+
+                expect(count).toEqual(expectedCount);
                 done();
 
             }, error => {
@@ -857,7 +878,7 @@ describe("DesktopDataStore", () => {
             const updatePath = ["none"];
 
             // When
-            const promise = desktopDataStore.upsertProperty(FAKE_ACTIVITIES_STORAGE_LOCATION, updatePath, newValue, []);
+            const promise = desktopDataStore.putAt(FAKE_ACTIVITIES_STORAGE_LOCATION, updatePath, newValue, []);
 
             // Then
             promise.then(() => {
@@ -1116,7 +1137,7 @@ describe("DesktopDataStore", () => {
             const updatePath = ["none"];
 
             // When
-            const promise = desktopDataStore.upsertProperty(FAKE_DATE_TIME_STORAGE_LOCATION, updatePath, newValue, null);
+            const promise = desktopDataStore.putAt(FAKE_DATE_TIME_STORAGE_LOCATION, updatePath, newValue, null);
 
             // Then
             promise.then(() => {

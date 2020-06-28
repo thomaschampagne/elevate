@@ -59,6 +59,9 @@ export abstract class BaseDao<T> {
         });
     }
 
+    /**
+     * Add or update
+     */
     public put(value: T): Promise<T> {
         return this.checkCompliantDao().then(() => {
             return this.dataStore.put(this.storageLocation, value);
@@ -76,15 +79,24 @@ export abstract class BaseDao<T> {
      * @param path key or array of keys to describe the nested path
      * @param value to upsert
      */
-    public upsertProperty<V>(path: string | string[], value: V): Promise<T> {
+    public putAt<V>(path: string | string[], value: V): Promise<T> {
         return this.checkCompliantDao().then(() => {
-            return this.dataStore.upsertProperty<V>(this.storageLocation, path, value, this.defaultStorage);
+            return this.dataStore.putAt<V>(this.storageLocation, path, value, this.defaultStorage);
         });
     }
 
     public removeByIds(ids: (string | number)[]): Promise<T[]> {
         return this.checkCompliantDao().then(() => {
             return <Promise<T[]>> this.dataStore.removeByIds(this.storageLocation, ids, this.defaultStorage);
+        });
+    }
+
+    /**
+     * Count elements in datastore
+     */
+    public count(): Promise<number> {
+        return this.checkCompliantDao().then(() => {
+            return this.dataStore.count(this.storageLocation, this.defaultStorage);
         });
     }
 
