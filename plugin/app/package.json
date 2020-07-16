@@ -33,7 +33,7 @@
 		"github-markdown-css": "^3.0.1",
 		"hammerjs": "^2.0.8",
 		"json2csv": "^4.5.3",
-		"lodash": "^4.17.15",
+		"lodash": "^4.17.19",
 		"markdown-it": "^10.0.0",
 		"metrics-graphics": "^2.15.6",
 		"moment": "^2.24.0",
