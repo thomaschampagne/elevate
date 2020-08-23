@@ -100,7 +100,7 @@ export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComp
                     </div>
                 </div>
                 <div fxFlex="5"></div>
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                <mat-progress-bar mode="buffer"></mat-progress-bar>
                 <div fxFlex="10"></div>
             </div>
         </mat-dialog-content>
