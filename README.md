@@ -351,3 +351,30 @@ npm run package:mac
 * Open [https://github.com/your_owner/your_repo/releases/edit/your_version](https://github.com/your_owner/your_repo/releases/edit/your_version): Some files should have been uploaded on the github draft release.
 
 * You can update the uploaded files draft with a new packaging process. Once ready, click `Publish release`: users will receive the update.
+
+## Use custom browser for unit-testing
+
+Create a `browsers.karma.conf.js` file at project root.
+
+To run unit test in a headless **chromium** instead of **chrome**, inject below javascript code:
+
+```javascript
+module.exports = {
+    browsers: [
+        "HeadlessChrome"
+    ],
+    customLaunchers: {
+        HeadlessChrome: {
+            base: "Chromium",
+            flags: [
+                "--no-sandbox",
+                // See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
+                "--headless",
+                "--disable-gpu",
+                // Without a remote debugging port, Google Chrome exits immediately.
+                " --remote-debugging-port=9222"
+            ]
+        }
+    }
+};
+```
