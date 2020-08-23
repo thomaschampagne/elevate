@@ -5,7 +5,7 @@ import { Component } from "@angular/core";
     template: `
         <div class="mat-body-1">
             <i>Please wait...</i>
-            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            <mat-progress-bar mode="buffer"></mat-progress-bar>
         </div>
     `,
     styles: [`
