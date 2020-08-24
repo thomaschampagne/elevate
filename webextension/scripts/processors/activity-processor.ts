@@ -9,7 +9,6 @@ const ComputeAnalysisWorker = require("worker-loader?inline!./workers/compute-an
 
 export class ActivityProcessor {
 
-    public static cachePrefix = "elevate_activity_";
     protected appResources: AppResourcesModel;
     protected vacuumProcessor: VacuumProcessor;
     protected athleteModelResolver: AthleteSnapshotResolver;

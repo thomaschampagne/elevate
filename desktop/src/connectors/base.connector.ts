@@ -19,7 +19,6 @@ import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { ElevateSport } from "@elevate/shared/enums";
 import * as _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
-import { Partial } from "rollup-plugin-typescript2/dist/partial";
 import { CyclingPower } from "../estimators/cycling-power-estimator/cycling-power-estimator";
 import { CaloriesEstimator } from "../estimators/calories-estimator/calories-estimator";
 import UserSettingsModel = UserSettings.UserSettingsModel;

@@ -38,5 +38,10 @@
                 "../appcore/modules/shared/tools/"
             ]
         }
-    }
+    },
+    "include": [
+        "./src/**/*.ts",
+        "!./src/**/*.spec.ts",
+        "./../appcore/modules/**/*.ts"
+    ]
 }

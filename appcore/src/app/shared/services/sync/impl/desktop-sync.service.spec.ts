@@ -179,13 +179,10 @@ describe("DesktopSyncService", () => {
                 const handleSyncEventsSpy = spyOn(desktopSyncService, "handleSyncEvents").and.stub();
                 const genericSyncEvent = new GenericSyncEvent(desktopSyncService.currentConnectorType);
 
-                // When sync started send a generic sync event
                 const promiseStart = desktopSyncService.sync(false, false, connectorType);
                 promiseStart.then(() => {
 
-                    setTimeout(() => desktopSyncService.ipcMessagesReceiver.syncEvents$.next(genericSyncEvent));
-
-                    // Then
+                    // Then...
                     desktopSyncService.ipcMessagesReceiver.syncEvents$.subscribe(syncEvent => {
                         expect(syncEvent).toEqual(genericSyncEvent);
                         expect(handleSyncEventsSpy).toHaveBeenCalledWith(desktopSyncService.syncEvents$, genericSyncEvent);
@@ -193,6 +190,9 @@ describe("DesktopSyncService", () => {
                     }, error => {
                         throw new Error("Should not be here!" + JSON.stringify(error));
                     });
+
+                    // ...When sync started send a generic sync event
+                    desktopSyncService.ipcMessagesReceiver.syncEvents$.next(genericSyncEvent);
 
                 }, error => {
                     throw new Error("Should not be here!" + JSON.stringify(error));
@@ -314,7 +314,7 @@ describe("DesktopSyncService", () => {
             const stopSpy = spyOn(desktopSyncService, "stop").and.returnValue(Promise.resolve());
 
             // When
-            setTimeout(() => desktopSyncService.handleActivityUpsert(syncEvent$, activitySyncEvent));
+            desktopSyncService.handleActivityUpsert(syncEvent$, activitySyncEvent);
 
             // Then
             syncEvent$.subscribe(() => {
@@ -345,7 +345,7 @@ describe("DesktopSyncService", () => {
             const throwSyncErrorSpy = spyOn(desktopSyncService, "throwSyncError").and.stub();
 
             // When
-            setTimeout(() => desktopSyncService.handleActivityUpsert(syncEvent$, activitySyncEvent));
+            desktopSyncService.handleActivityUpsert(syncEvent$, activitySyncEvent);
 
             // Then
             syncEvent$.subscribe((syncEvent: ErrorSyncEvent) => {
@@ -387,7 +387,7 @@ describe("DesktopSyncService", () => {
             const throwSyncErrorSpy = spyOn(desktopSyncService, "throwSyncError").and.stub();
 
             // When
-            setTimeout(() => desktopSyncService.handleActivityUpsert(syncEvent$, activitySyncEvent));
+            desktopSyncService.handleActivityUpsert(syncEvent$, activitySyncEvent);
 
             // Then
             syncEvent$.subscribe((syncEvent: ErrorSyncEvent) => {
@@ -434,7 +434,7 @@ describe("DesktopSyncService", () => {
             const syncEventDoneSpy = spyOn(desktopSyncService.appEventsService.onSyncDone, "next").and.stub();
 
             // When
-            setTimeout(() => desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent));
+            desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent);
 
             // Then
             syncEvent$.subscribe(() => {
@@ -466,7 +466,7 @@ describe("DesktopSyncService", () => {
             const syncEventDoneSpy = spyOn(desktopSyncService.appEventsService.onSyncDone, "next").and.stub();
 
             // When
-            setTimeout(() => desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent));
+            desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent);
 
             // Then
             syncEvent$.subscribe(() => {
@@ -548,9 +548,6 @@ describe("DesktopSyncService", () => {
             const resetTrackChangesSpy = spyOn(desktopSyncService, "resetActivityTrackingUpsert").and.callThrough();
             const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
-            // When
-            setTimeout(() => desktopSyncService.handleSyncEvents(syncEvent$, startedSyncEvent));
-
             // Then
             syncEvent$.subscribe(() => {
                 expect(syncEventNextSpy).toHaveBeenCalledWith(startedSyncEvent);
@@ -561,6 +558,10 @@ describe("DesktopSyncService", () => {
             }, error => {
                 throw new Error("Should not be here!" + JSON.stringify(error));
             });
+
+            // When
+            desktopSyncService.handleSyncEvents(syncEvent$, startedSyncEvent);
+
         });
 
         it("should handle activity sync events", done => {
@@ -579,7 +580,7 @@ describe("DesktopSyncService", () => {
             const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
             // When
-            setTimeout(() => desktopSyncService.handleSyncEvents(syncEvent$, activitySyncEvent));
+            desktopSyncService.handleSyncEvents(syncEvent$, activitySyncEvent);
 
             // Then
             syncEvent$.subscribe(() => {
@@ -605,9 +606,6 @@ describe("DesktopSyncService", () => {
             const resetTrackChangesSpy = spyOn(desktopSyncService, "resetActivityTrackingUpsert").and.callThrough();
             const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
-            // When
-            setTimeout(() => desktopSyncService.handleSyncEvents(syncEvent$, stoppedSyncEvent));
-
             // Then
             syncEvent$.subscribe(() => {
                 expect(syncEventNextSpy).toHaveBeenCalledWith(stoppedSyncEvent);
@@ -618,6 +616,10 @@ describe("DesktopSyncService", () => {
             }, error => {
                 throw new Error("Should not be here!" + JSON.stringify(error));
             });
+
+            // When
+            desktopSyncService.handleSyncEvents(syncEvent$, stoppedSyncEvent);
+
         });
 
         it("should handle strava credentials updates sync events", done => {
@@ -628,9 +630,6 @@ describe("DesktopSyncService", () => {
             const stravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(new StravaConnectorInfo(null, null));
             const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
-            // When
-            setTimeout(() => desktopSyncService.handleSyncEvents(syncEvent$, stravaCredentialsUpdateSyncEvent));
-
             // Then
             syncEvent$.subscribe(() => {
                 expect(syncEventNextSpy).toHaveBeenCalledWith(stravaCredentialsUpdateSyncEvent);
@@ -639,6 +638,9 @@ describe("DesktopSyncService", () => {
             }, error => {
                 throw new Error("Should not be here!" + JSON.stringify(error));
             });
+
+            // When
+            desktopSyncService.handleSyncEvents(syncEvent$, stravaCredentialsUpdateSyncEvent);
         });
 
         it("should handle complete sync events", done => {
@@ -662,7 +664,7 @@ describe("DesktopSyncService", () => {
             const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
             // When
-            setTimeout(() => desktopSyncService.handleSyncEvents(syncEvent$, completeSyncEvent));
+            desktopSyncService.handleSyncEvents(syncEvent$, completeSyncEvent);
 
             // Then
             syncEvent$.subscribe(() => {
@@ -1164,9 +1166,6 @@ describe("DesktopSyncService", () => {
             const stopSpy = spyOn(desktopSyncService, "stop").and.returnValue(Promise.reject(expectedStopError));
             const throwSyncErrorSpy = spyOn(desktopSyncService, "throwSyncError").and.stub();
 
-            // When
-            setTimeout(() => desktopSyncService.handleErrorSyncEvents(syncEvent$, errorSyncEvent));
-
             // Then
             syncEvent$.subscribe(() => {
 
@@ -1181,6 +1180,9 @@ describe("DesktopSyncService", () => {
             }, error => {
                 throw new Error("Should not be here!" + JSON.stringify(error));
             });
+
+            // When
+            desktopSyncService.handleErrorSyncEvents(syncEvent$, errorSyncEvent);
 
         });
 

@@ -55,7 +55,7 @@ export class ElectronService {
     }
 
     public openItem(path: string): void {
-        this.electron.shell.openItem(path);
+        this.electron.shell.openPath(path);
     }
 
     public openLogsFolder(): void {

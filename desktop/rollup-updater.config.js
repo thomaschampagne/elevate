@@ -1,4 +1,4 @@
-import typescript from "rollup-plugin-typescript2";
+import typescript from "@rollup/plugin-typescript";
 import commonjs from "@rollup/plugin-commonjs";
 import resolve from "@rollup/plugin-node-resolve";
 import {terser} from "rollup-plugin-terser";
@@ -21,9 +21,7 @@ module.exports = {
             include: [
                 "./src/updater/updater.ts",
             ],
-            compilerOptions: {
-                removeComments: true
-            }
+            removeComments: true
         }),
         resolve(),
         commonjs({sourceMap: false}),

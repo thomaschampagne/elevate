@@ -10,11 +10,11 @@ import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync
 import { ElectronService } from "../../shared/services/electron/electron.service";
 import { adjectives, animals, colors, names, uniqueNamesGenerator } from "unique-names-generator";
 import _ from "lodash";
-import jdenticon from "jdenticon";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../../shared/services/links-opener/open-resource-resolver";
 import { IClipboardResponse } from "ngx-clipboard";
+import jdenticon from "jdenticon/standalone";
 
 class GeneratedStravaApiApplication {
     public appName: string;

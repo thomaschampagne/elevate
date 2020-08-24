@@ -19,7 +19,6 @@ import { Service } from "../../service";
 import * as xmldom from "xmldom";
 import { ElevateSport } from "@elevate/shared/enums";
 import logger from "electron-log";
-import { Partial } from "rollup-plugin-typescript2/dist/partial";
 import { ActivityTypeGroups, ActivityTypes, ActivityTypesHelper } from "@sports-alliance/sports-lib/lib/activities/activity.types";
 import { SportsLib } from "@sports-alliance/sports-lib";
 import { DataSpeed } from "@sports-alliance/sports-lib/lib/data/data.speed";
@@ -56,7 +55,7 @@ export class ActivityFile {
     public location: { onMachineId: string, path: string };
     public lastModificationDate: string;
 
-    constructor(type: ActivityFileType, absolutePath: string, machineId: string, lastModificationDate: Date, hash: string) {
+    constructor(type: ActivityFileType, absolutePath: string, machineId: string, lastModificationDate: Date) {
         this.type = type;
         this.location = {onMachineId: machineId, path: absolutePath};
         this.lastModificationDate = _.isDate(lastModificationDate) ? lastModificationDate.toISOString() : null;
@@ -704,9 +703,7 @@ export class FileSystemConnector extends BaseConnector {
         const files = fs.readdirSync(directory);
 
         const trackFile = (absolutePath: string, type: ActivityFileType, lastModificationDate: Date): void => {
-            const fileData = fs.readFileSync(absolutePath);
-            const sha1 = BaseConnector.hashData(fileData);
-            pathsList.push(new ActivityFile(type, absolutePath, this.athleteMachineId, lastModificationDate, sha1));
+            pathsList.push(new ActivityFile(type, absolutePath, this.athleteMachineId, lastModificationDate));
         };
 
         files.forEach(file => {

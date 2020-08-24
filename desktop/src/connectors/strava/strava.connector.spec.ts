@@ -18,7 +18,6 @@ import * as _ from "lodash";
 import { Subject } from "rxjs";
 import { filter } from "rxjs/operators";
 import { IHttpClientResponse } from "typed-rest-client/Interfaces";
-import { Partial } from "rollup-plugin-typescript2/dist/partial";
 import * as http from "http";
 import { IncomingHttpHeaders } from "http";
 import { HttpClient, HttpCodes } from "typed-rest-client/HttpClient";

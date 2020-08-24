@@ -1,4 +1,4 @@
-import { OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AthleteService } from "../shared/services/athlete/athlete.service";
@@ -7,13 +7,14 @@ import { UserSettingsService } from "../shared/services/user-settings/user-setti
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { SyncService } from "../shared/services/sync/sync.service";
 
+@Component({template: ""})
 export abstract class AdvancedMenuComponent implements OnInit {
 
-    constructor(public userSettingsService: UserSettingsService,
-                public athleteService: AthleteService,
-                public syncService: SyncService<any>,
-                public dialog: MatDialog,
-                public snackBar: MatSnackBar) {
+    protected constructor(public userSettingsService: UserSettingsService,
+                          public athleteService: AthleteService,
+                          public syncService: SyncService<any>,
+                          public dialog: MatDialog,
+                          public snackBar: MatSnackBar) {
     }
 
     public ngOnInit(): void {

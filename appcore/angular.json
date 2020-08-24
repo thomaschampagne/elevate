@@ -30,6 +30,16 @@
                         "scripts": [
                             "node_modules/d3/dist/d3.js",
                             "node_modules/metrics-graphics/dist/metricsgraphics.js"
+                        ],
+                        "allowedCommonJsDependencies": [
+                            "metrics-graphics",
+                            "lodash",
+                            "markdown-it",
+                            "@iktakahiro/markdown-it-katex",
+                            "pako",
+                            "semver",
+                            "file-saver",
+                            "jdenticon"
                         ]
                     },
                     "configurations": {
