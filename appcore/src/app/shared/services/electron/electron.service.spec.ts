@@ -1,11 +1,9 @@
 import { TestBed } from "@angular/core/testing";
 
 import { ElectronService, ElectronWindow } from "./electron.service";
-import * as Electron from "electron";
 import { noop } from "rxjs";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
-import RendererInterface = Electron.RendererInterface;
 
 describe("ElectronService", () => {
 
@@ -38,7 +36,7 @@ describe("ElectronService", () => {
 
         const electronRequire = (module: string) => {
             console.log("Loading module: " + module);
-            return {} as RendererInterface;
+            return {};
         };
 
         electronWindow.require = electronRequire;
@@ -58,13 +56,13 @@ describe("ElectronService", () => {
     it("should provide electron instance when existing", done => {
 
         // Given
-        service.instance = {} as RendererInterface;
+        service.instance = {};
 
         const electronWindow = (window as ElectronWindow);
 
         const electronRequire = (module: string) => {
             console.log("Loading module: " + module);
-            return {} as RendererInterface;
+            return {};
         };
 
         electronWindow.require = electronRequire;
@@ -469,7 +467,7 @@ describe("ElectronService", () => {
                     platform: platform
                 }
             }
-        } as RendererInterface;
+        } as any;
 
         // When
         const result = service.isWindows();
@@ -489,7 +487,7 @@ describe("ElectronService", () => {
                     platform: platform
                 }
             }
-        } as RendererInterface;
+        } as any;
 
         // When
         const result = service.isWindows();
@@ -502,7 +500,7 @@ describe("ElectronService", () => {
     it("should provide electron remote", done => {
 
         // Given
-        service.instance = {remote: {}} as RendererInterface;
+        service.instance = {remote: {}} as any;
 
         // When
         const result = service.remote;
@@ -529,7 +527,7 @@ describe("ElectronService", () => {
                     return myNodeModule;
                 }
             }
-        } as RendererInterface;
+        } as any;
 
         const requireSpy = spyOn(service.remote, "require").and.callThrough();
 

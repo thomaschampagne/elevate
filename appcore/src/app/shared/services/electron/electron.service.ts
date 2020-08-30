@@ -1,4 +1,3 @@
-import * as Electron from "electron";
 import { Injectable } from "@angular/core";
 import * as _ from "lodash";
 import { ChildProcess } from "child_process";
@@ -7,19 +6,19 @@ import { LoggerService } from "../logging/logger.service";
 declare let window: ElectronWindow;
 
 export interface ElectronWindow extends Window {
-    require(module: string): Electron.RendererInterface;
+    require(module: string): any;
 }
 
 @Injectable()
 export class ElectronService {
 
-    public instance: Electron.RendererInterface;
+    public instance: any;
 
     constructor(public logger: LoggerService) {
         this.forwardHtmlLinkClicksToDefaultBrowser();
     }
 
-    public get electron(): Electron.RendererInterface {
+    public get electron(): any {
         if (!this.instance) {
             this.instance = window.require("electron");
         }

@@ -17,14 +17,14 @@ describe("StravaConnectorService", () => {
         }).compileComponents();
 
         const electronService: ElectronService = TestBed.inject(ElectronService);
-        electronService.instance = <Electron.RendererInterface> {
+        electronService.instance = {
             ipcRenderer: {}
         };
 
         const electronWindow = (window as ElectronWindow);
         const electronRequire = (module: string) => {
             console.log("Loading module: " + module);
-            return {} as Electron.RendererInterface;
+            return {};
         };
         electronWindow.require = electronRequire;
         spyOn(electronWindow, "require").and.callFake(electronRequire);

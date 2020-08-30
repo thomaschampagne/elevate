@@ -127,7 +127,8 @@ class Main {
             show: false,
             autoHideMenuBar: true,
             webPreferences: {
-                nodeIntegration: true
+                nodeIntegration: true,
+                enableRemoteModule: true
             }
         };
 
