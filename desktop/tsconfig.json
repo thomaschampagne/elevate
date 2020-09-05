@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
         "baseUrl": ".",
-        "target": "es2015",
+        "target": "esnext",
         "lib": [
-            "es2017",
+            "esnext",
             "dom"
         ],
         "moduleResolution": "Node",
