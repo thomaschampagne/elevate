@@ -1,6 +1,6 @@
 <!--Loading-->
 <div *ngIf="!initialized">
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <mat-progress-bar mode="buffer"></mat-progress-bar>
 </div>
 
 <mat-card *ngIf="(isSynced === false || hasActivities === false)" class="no-data">
@@ -100,7 +100,7 @@
     </div>
     <mat-paginator (page)="onPageSizeChanged()"
                    [pageSizeOptions]="[5, 10, 15]"
-                   [pageSize]="5">
+                   [pageSize]="5" showFirstLastButtons>
     </mat-paginator>
     <button (click)="onSpreadSheetExport()" color="primary" mat-stroked-button>Export to spreadsheet</button>
 </mat-card>

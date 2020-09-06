@@ -1,3 +1,4 @@
+// tslint:disable:no-empty-interface
 import { SyncedActivityModel } from "@elevate/shared/models";
 import * as _ from "lodash";
 import * as moment from "moment";
@@ -328,14 +329,14 @@ export namespace ActivityColumns {
             new NumberColumn(Category.COMMON, "extendedStats.speedData.genuineAvgSpeed", Definition.SPEED_SYSTEM_UNITS, "Avg Moving Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR).setDefault(true),
             new NumberColumn(Category.COMMON, "extendedStats.paceData.avgPace", Definition.LONG_PACE_SYSTEM_UNITS, "Avg Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)).setDefault(true),
             new NumberColumn(Category.COMMON, "extendedStats.runningPerformanceIndex", null, "Run Perf. Index", Print.number, 2),
-            new NumberColumn(Category.COMMON, "calories", null, "Calories", Print.number).setDefault(true),
+            new NumberColumn(Category.COMMON, "calories", null, "Calories", Print.number),
             new NumberColumn(Category.COMMON, "extendedStats.moveRatio", null, "Move Ratio", Print.number, 2),
 
             /**
              * Speed
              */
             new NumberColumn(Category.SPEED, "extendedStats.speedData.totalAvgSpeed", Definition.SPEED_SYSTEM_UNITS, "Avg Total Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
-            new NumberColumn(Category.SPEED, "extendedStats.speedData.best20min", Definition.SPEED_SYSTEM_UNITS, "Best 20min Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR).setDefault(true),
+            new NumberColumn(Category.SPEED, "extendedStats.speedData.best20min", Definition.SPEED_SYSTEM_UNITS, "Best 20min Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
             // new NumberColumn(Category.SPEED, "extendedStats.speedData.avgPace", Definition.LONG_PACE_SYSTEM_UNITS, "", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
             new NumberColumn(Category.SPEED, "extendedStats.speedData.lowerQuartileSpeed", Definition.SPEED_SYSTEM_UNITS, "25% Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
             new NumberColumn(Category.SPEED, "extendedStats.speedData.medianSpeed", Definition.SPEED_SYSTEM_UNITS, "50% Speed", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
@@ -348,7 +349,7 @@ export namespace ActivityColumns {
              * Pace
              */
             new NumberColumn(Category.PACE, "extendedStats.paceData.genuineGradeAdjustedAvgPace", Definition.LONG_PACE_SYSTEM_UNITS, "Grade Adj. Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)).setDescription("Grade Adjusted Pace"),
-            new NumberColumn(Category.PACE, "extendedStats.paceData.best20min", Definition.LONG_PACE_SYSTEM_UNITS, "Best 20min Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)).setDefault(true),
+            new NumberColumn(Category.PACE, "extendedStats.paceData.best20min", Definition.LONG_PACE_SYSTEM_UNITS, "Best 20min Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
             new NumberColumn(Category.PACE, "extendedStats.paceData.lowerQuartilePace", Definition.LONG_PACE_SYSTEM_UNITS, "25% Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
             new NumberColumn(Category.PACE, "extendedStats.paceData.medianPace", Definition.LONG_PACE_SYSTEM_UNITS, "50% Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
             new NumberColumn(Category.PACE, "extendedStats.paceData.upperQuartilePace", Definition.LONG_PACE_SYSTEM_UNITS, "75% Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
@@ -366,7 +367,7 @@ export namespace ActivityColumns {
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.HRSSPerHour").setHeader("HRSS / h").setDescription("Heart Rate Stress Score / h"),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.TRIMP").setDescription("Training Impulse Score"),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.TRIMPPerHour").setHeader("TRIMP / h").setDescription("Training Impulse Score / h"),
-            new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.best20min", "bpm", "Best 20min HR").setDefault(true),
+            new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.best20min", "bpm", "Best 20min HR"),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.best60min", "bpm", "Best 60min HR"),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.lowerQuartileHeartRate", "bpm", "25% HR").setDescription("Lower Quartile Bpm"),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.medianHeartRate", "bpm", "50% HR").setDescription("Median Bpm"),
@@ -395,10 +396,10 @@ export namespace ActivityColumns {
              */
             new TextColumn(Category.POWER, "extendedStats.powerData.hasPowerMeter", Print.boolean, "Power Meter"),
             new NumberColumn(Category.POWER, "extendedStats.powerData.avgWatts", "w", "Avg Watts").setDefault(true),
-            new NumberColumn(Category.POWER, "extendedStats.powerData.avgWattsPerKg", "w/kg", "Avg Watts / Kilograms", Print.number, 2).setDefault(true),
+            new NumberColumn(Category.POWER, "extendedStats.powerData.avgWattsPerKg", "w/kg", "Avg Watts / Kilograms", Print.number, 2),
             new NumberColumn(Category.POWER, "extendedStats.powerData.weightedPower", "w", "Weighted Power"),
             new NumberColumn(Category.POWER, "extendedStats.powerData.weightedWattsPerKg", "w/kg", "Weighted Power / Kilograms", Print.number, 2),
-            new NumberColumn(Category.POWER, "extendedStats.powerData.best20min", "w", "Best 20min Power").setDefault(true),
+            new NumberColumn(Category.POWER, "extendedStats.powerData.best20min", "w", "Best 20min Power"),
             // new NumberColumn(Category.POWER, "extendedStats.powerData.bestEightyPercent", "w", "bestEightyPercent"),
             new NumberColumn(Category.POWER, "extendedStats.powerData.variabilityIndex", null, "Variability Index", Print.number, 2),
             // new NumberColumn(Category.POWER, "extendedStats.powerData.punchFactor", "w", "punchFactor"),
