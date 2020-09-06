@@ -58,7 +58,7 @@
 
     <div class="table-container">
         <table [dataSource]="dataSource" mat-table matSort [matSortActive]="'start_time'" [matSortDirection]="'desc'">
-            <ng-container *ngFor="let column of columns" [matColumnDef]="column.id" [sticky]="column.sticky">
+            <ng-container *ngFor="let column of columns" [matColumnDef]="column.id">
                 <mat-header-cell *matHeaderCellDef [fxFlex]="column.width" mat-sort-header
                                  matTooltip="{{column.description}}">
                     {{column.header}}
@@ -67,17 +67,17 @@
                           matTooltip="[{{activity.start_time | date}}] {{activity.name | shorten: 42: '...'}}"
                           matTooltipPosition="left">
                     <ng-container *ngIf="column.type === ColumnType.DATE">
-                        {{column.print(activity, column.id)}}
+                        {{column.print(activity, column.path)}}
                     </ng-container>
                     <ng-container *ngIf="column.type === ColumnType.TEXT">
-                        {{column.print(activity, column.id)}}
+                        {{column.print(activity, column.path)}}
                     </ng-container>
                     <ng-container *ngIf="column.type === ColumnType.ACTIVITY_LINK">
-                        <button (click)="openActivity(activity.id)" color="primary"
-                                mat-button>{{column.print(activity, column.id)}}</button>
+                        <button (click)="openActivity(activity.path)" color="primary"
+                                mat-button>{{column.print(activity, column.path)}}</button>
                     </ng-container>
                     <ng-container *ngIf="column.type === ColumnType.NUMBER">
-                        {{column.print(activity, column['units'], column['precision'], column['factor'], isImperial, column['imperialFactor'], column.id)}}
+                        {{column.print(activity, column['units'], column['precision'], column['factor'], isImperial, column['imperialFactor'], column.path)}}
                     </ng-container>
                     <ng-container *ngIf="column.type === ColumnType.ATHLETE_SETTINGS">
                         <button (click)="onViewAthleteSettings(activity)" *ngIf="activity.id" color="primary"

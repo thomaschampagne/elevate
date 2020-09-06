@@ -1,3 +1,4 @@
+// tslint:disable:max-line-length
 // tslint:disable:no-empty-interface
 import { SyncedActivityModel } from "@elevate/shared/models";
 import * as _ from "lodash";
@@ -50,9 +51,9 @@ export namespace ActivityColumns {
         public header: string;
         public category: string;
         public description: string;
+        public path: string[];
 
         public width = "115px"; // Default column width
-        public sticky = false; // Column is not stick by default
         public isDefault = false; // Column is not default
 
         public abstract type: ColumnType;
@@ -61,7 +62,8 @@ export namespace ActivityColumns {
         protected constructor(category: string, id: string, header?: string, description?: string) {
             this.category = category;
             this.id = id;
-            this.header = (header) ? header : _.upperFirst(_.last(this.id.split(".")));
+            this.path = this.id.split(".");
+            this.header = (header) ? header : _.upperFirst(_.last(this.path));
             this.description = description;
         }
 
@@ -77,11 +79,6 @@ export namespace ActivityColumns {
 
         public setWidth(width: string): Column<T> {
             this.width = width;
-            return this;
-        }
-
-        public setSticky(): Column<T> {
-            this.sticky = true;
             return this;
         }
 
@@ -272,13 +269,13 @@ export namespace ActivityColumns {
             return _.isNumber(activity.elapsed_time_raw) ? moment.utc(activity.elapsed_time_raw * 1000).format("HH:mm:ss") : Print.NO_DATA;
         }
 
-        private static getConvertValueAtPath(path: string, activity: SyncedActivityModel, precision: number, factor?: number,
+        private static getConvertValueAtPath(path: string | string[], activity: SyncedActivityModel, precision: number, factor?: number,
                                              isImperial?: boolean, imperialFactor?: number): number {
 
             let value = null;
 
             if (path) {
-                value = _.at(activity as any, path)[0];
+                value = _.get(activity, path);
             }
 
             if (_.isNumber(value)) {
