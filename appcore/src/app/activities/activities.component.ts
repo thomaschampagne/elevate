@@ -5,7 +5,7 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import { EnvTarget, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import { SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { ActivityColumns } from "./activity-columns.namespace";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
@@ -16,17 +16,19 @@ import * as moment from "moment";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { SyncService } from "../shared/services/sync/sync.service";
-import { SyncState } from "../shared/services/sync/sync-state.enum";
-import { AppError } from "../shared/models/app-error.model";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { Subject, timer } from "rxjs";
 import { debounce } from "rxjs/operators";
 import { StreamsService } from "../shared/services/streams/streams.service";
-import { environment } from "../../environments/environment";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
+import { SyncState } from "../shared/services/sync/sync-state.enum";
+import { AppError } from "../shared/models/app-error.model";
 import NumberColumn = ActivityColumns.NumberColumn;
 import UserSettingsModel = UserSettings.UserSettingsModel;
+
+// TODO Sticky view ath settings + delete
+// TODO Perf Sort desc activities from query to save time from query
 
 @Component({
     selector: "app-activities",
@@ -125,6 +127,7 @@ export class ActivitiesComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        console.time("Print activities time: ");
 
         this.syncService.getSyncState().then((syncState: SyncState) => {
 
@@ -220,23 +223,16 @@ export class ActivitiesComponent implements OnInit {
 
             this.hasActivities = syncedActivityModels.length > 0;
 
-            if (environment.target === EnvTarget.DESKTOP) {
-                this.dataSource.data = _.sortBy(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
-                    return syncedActivityModel.start_timestamp * -1;
-                });
-            } else if (environment.target === EnvTarget.EXTENSION) {
-                this.dataSource.data = _.sortBy(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
-                    return (<number> syncedActivityModel.id) * -1;
-                });
-            }
+            this.dataSource.data = syncedActivityModels;
 
-            this.searchText$.pipe(
-                debounce(() => timer(350))
+            this.searchText$.pipe(debounce(() => timer(750))
             ).subscribe(filterValue => {
                 filterValue = filterValue.trim(); // Remove whitespace
                 filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
                 this.dataSource.filter = filterValue;
             });
+
+            console.timeEnd("Print activities time: ");
 
         }).catch(error => {
             const message = error.toString() + ". Press (F12) to see a more detailed error message in browser console.";
@@ -297,9 +293,6 @@ export class ActivitiesComponent implements OnInit {
     }
 
     public requestFilterFor(filterValue: string): void {
-        if (filterValue && filterValue.length <= 2) {
-            return;
-        }
         this.searchText$.next(filterValue);
     }
 
@@ -345,22 +338,8 @@ export class ActivitiesComponent implements OnInit {
 
     }
 
-    public tickAll(): void {
-        this.selectedColumns = _.clone(ActivityColumns.Definition.ALL);
-        this.onSelectedColumns();
-    }
-
     public reset(): void {
         this.selectedColumns = this.getDefaultsColumns();
-        this.onSelectedColumns();
-    }
-
-    public unTickAll(): void {
-        this.selectedColumns = [
-            _.find(ActivityColumns.Definition.ALL, {id: "start_time"}),
-            _.find(ActivityColumns.Definition.ALL, {id: "name"}),
-        ];
-
         this.onSelectedColumns();
     }
 

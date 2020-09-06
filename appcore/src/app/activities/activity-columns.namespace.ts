@@ -313,7 +313,7 @@ export namespace ActivityColumns {
         public static readonly SPEED_SYSTEM_UNITS: SystemUnits = new SystemUnits("kph", "mph");
         public static readonly CADENCE_UNITS: CadenceUnits = new CadenceUnits("rpm", "spm");
 
-        public static readonly ALL: Column<SyncedActivityModel>[] = [
+        public static readonly ALL: (ActivityColumns.Column<any>)[] = [
 
             /**
              * Common
@@ -353,7 +353,7 @@ export namespace ActivityColumns {
             new NumberColumn(Category.PACE, "extendedStats.paceData.medianPace", Definition.LONG_PACE_SYSTEM_UNITS, "50% Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
             new NumberColumn(Category.PACE, "extendedStats.paceData.upperQuartilePace", Definition.LONG_PACE_SYSTEM_UNITS, "75% Pace", Print.pace, null, null, (1 / Constant.KM_TO_MILE_FACTOR)),
             new NumberColumn(Category.PACE, "extendedStats.paceData.runningStressScore").setHeader("Running Stress Score").setDefault(true),
-            new NumberColumn(Category.PACE, "extendedStats.paceData.runningStressScorePerHour").setHeader("Running Stress Score / h").setDefault(true),
+            new NumberColumn(Category.PACE, "extendedStats.paceData.runningStressScorePerHour").setHeader("Running Stress Score / h"),
 
             /**
              * Heart rate
@@ -363,9 +363,9 @@ export namespace ActivityColumns {
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.activityHeartRateReserve", "bpm", "Avg HRR").setDescription("Average Heart Rate Reserve"),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.activityHeartRateReserveMax", "bpm", "Max HRR").setDescription("Max Heart Rate Reserve"),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.HRSS").setDescription("Heart Rate Stress Score").setDefault(true),
-            new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.HRSSPerHour").setHeader("HRSS / h").setDescription("Heart Rate Stress Score / Hour").setDefault(true),
+            new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.HRSSPerHour").setHeader("HRSS / h").setDescription("Heart Rate Stress Score / h"),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.TRIMP").setDescription("Training Impulse Score"),
-            new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.TRIMPPerHour").setHeader("TRIMP / h").setDescription("Training Impulse Score / Hour"),
+            new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.TRIMPPerHour").setHeader("TRIMP / h").setDescription("Training Impulse Score / h"),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.best20min", "bpm", "Best 20min HR").setDefault(true),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.best60min", "bpm", "Best 60min HR"),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.lowerQuartileHeartRate", "bpm", "25% HR").setDescription("Lower Quartile Bpm"),
@@ -403,7 +403,7 @@ export namespace ActivityColumns {
             new NumberColumn(Category.POWER, "extendedStats.powerData.variabilityIndex", null, "Variability Index", Print.number, 2),
             // new NumberColumn(Category.POWER, "extendedStats.powerData.punchFactor", "w", "punchFactor"),
             new NumberColumn(Category.POWER, "extendedStats.powerData.powerStressScore", null, "Power Stress Score").setDefault(true),
-            new NumberColumn(Category.POWER, "extendedStats.powerData.powerStressScorePerHour", null, "Power Stress Score / h").setDefault(true),
+            new NumberColumn(Category.POWER, "extendedStats.powerData.powerStressScorePerHour", null, "Power Stress Score / h"),
             new NumberColumn(Category.POWER, "extendedStats.powerData.lowerQuartileWatts", "w", "25% Watts").setDescription("Lower Quartile Watts"),
             new NumberColumn(Category.POWER, "extendedStats.powerData.medianWatts", "w", "50% Watts").setDescription("Median Watts"),
             new NumberColumn(Category.POWER, "extendedStats.powerData.upperQuartileWatts", "w", "75% Watts").setDescription("Upper Quartile Watts"),
@@ -412,7 +412,7 @@ export namespace ActivityColumns {
              * Elevation
              */
             new NumberColumn(Category.ELEVATION, "extendedStats.elevationData.avgElevation", Definition.ELEVATION_SYSTEM_UNITS, "Avg Elevation", Print.number, 0, 1, Constant.METER_TO_FEET_FACTOR),
-            new NumberColumn(Category.ELEVATION, "extendedStats.elevationData.accumulatedElevationDescent", Definition.ELEVATION_SYSTEM_UNITS, "ElevationDescent", Print.number, 0, 1, Constant.METER_TO_FEET_FACTOR),
+            new NumberColumn(Category.ELEVATION, "extendedStats.elevationData.accumulatedElevationDescent", Definition.ELEVATION_SYSTEM_UNITS, "Elevation Descent", Print.number, 0, 1, Constant.METER_TO_FEET_FACTOR),
             new NumberColumn(Category.ELEVATION, "extendedStats.elevationData.lowerQuartileElevation", Definition.ELEVATION_SYSTEM_UNITS, "25% Elevation", Print.number, 0, 1, Constant.METER_TO_FEET_FACTOR, "Lower Quartile Elevation"),
             new NumberColumn(Category.ELEVATION, "extendedStats.elevationData.medianElevation", Definition.ELEVATION_SYSTEM_UNITS, "50% Elevation", Print.number, 0, 1, Constant.METER_TO_FEET_FACTOR, "Median Elevation"),
             new NumberColumn(Category.ELEVATION, "extendedStats.elevationData.upperQuartileElevation", Definition.ELEVATION_SYSTEM_UNITS, "75% Elevation", Print.number, 0, 1, Constant.METER_TO_FEET_FACTOR, "Upper Quartile Elevation"),

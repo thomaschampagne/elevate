@@ -1,6 +1,6 @@
 <!--Loading-->
-<div *ngIf="(!initialized)">
-    <mat-progress-bar mode="buffer"></mat-progress-bar>
+<div *ngIf="!initialized">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>
 
 <mat-card *ngIf="(isSynced === false || hasActivities === false)" class="no-data">
@@ -22,15 +22,14 @@
     </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="(isSynced === true)" [fxHide]="!hasActivities">
+<mat-card *ngIf="isSynced === true" [fxHide]="!hasActivities">
     <div class="mat-subheading-2" fxLayout="row" fxLayoutAlign="center center">
         <mat-form-field fxFlex="50">
             <input (keyup)="requestFilterFor($event.target.value)" [(ngModel)]="searchText" fxFill matInput
                    placeholder="Filter by type or activities name"
                    type="search">
             <button (click)="searchText=''; requestFilterFor(searchText);" *ngIf="searchText" aria-label="Clear"
-                    mat-icon-button
-                    matSuffix>
+                    mat-icon-button matSuffix>
                 <mat-icon fontSet="material-icons-outlined">close</mat-icon>
             </button>
         </mat-form-field>
@@ -38,8 +37,7 @@
     <mat-form-field fxFill>
         <mat-select (selectionChange)="onSelectedColumns()"
                     [(ngModel)]="selectedColumns"
-                    multiple
-                    placeholder="Columns displayed selection">
+                    multiple placeholder="Columns displayed selection">
             <mat-optgroup *ngFor="let columnCategory of columnsCategories;"
                           [label]="columnCategory.label">
                 <mat-option *ngFor="let column of columnCategory.columns"
@@ -50,18 +48,6 @@
                 </mat-option>
             </mat-optgroup>
         </mat-select>
-        <button (click)="tickAll(); $event.stopPropagation();" color="primary"
-                mat-icon-button
-                matSuffix
-                matTooltip="Tick all">
-            <mat-icon fontSet="material-icons-outlined">done_all</mat-icon>
-        </button>
-        <button (click)="unTickAll(); $event.stopPropagation();" color="primary"
-                mat-icon-button
-                matSuffix
-                matTooltip="Untick all">
-            <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
-        </button>
         <button (click)="reset(); $event.stopPropagation();" color="primary"
                 mat-icon-button
                 matSuffix
@@ -69,8 +55,9 @@
             <mat-icon fontSet="material-icons-outlined">settings_backup_restore</mat-icon>
         </button>
     </mat-form-field>
+
     <div class="table-container">
-        <table [dataSource]="dataSource" mat-table matSort>
+        <table [dataSource]="dataSource" mat-table matSort [matSortActive]="'start_time'" [matSortDirection]="'desc'">
             <ng-container *ngFor="let column of columns" [matColumnDef]="column.id" [sticky]="column.sticky">
                 <mat-header-cell *matHeaderCellDef [fxFlex]="column.width" mat-sort-header
                                  matTooltip="{{column.description}}">
@@ -111,10 +98,9 @@
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
         </table>
     </div>
-    <mat-paginator #paginator
-                   (page)="onPageSizeChanged()"
-                   [pageSizeOptions]="[5, 10, 15, 25, 50, 100]"
-                   [pageSize]="10">
+    <mat-paginator (page)="onPageSizeChanged()"
+                   [pageSizeOptions]="[5, 10, 15]"
+                   [pageSize]="5">
     </mat-paginator>
     <button (click)="onSpreadSheetExport()" color="primary" mat-stroked-button>Export to spreadsheet</button>
 </mat-card>
