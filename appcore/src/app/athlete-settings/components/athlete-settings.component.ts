@@ -1,5 +1,4 @@
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
-import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { AthleteModel, Gender, PracticeLevel } from "@elevate/shared/models";
 import { GenderModel } from "../models/gender.model";
 import { ActivityService } from "../../shared/services/activity/activity.service";
@@ -20,7 +19,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
   styleUrls: ["./athlete-settings.component.scss"]
 })
 export class AthleteSettingsComponent implements OnInit {
-  private static readonly COMMON_ATHLETE_SPORTS_CATEGORY: ElevateSport[] = [
+  private static readonly USUAL_SPORTS_CATEGORY: ElevateSport[] = [
     ElevateSport.Ride,
     ElevateSport.Run,
     ElevateSport.Swim,
@@ -30,7 +29,7 @@ export class AthleteSettingsComponent implements OnInit {
     ElevateSport.Rowing
   ];
 
-  private static readonly HIDDEN_ATHLETE_SPORTS: ElevateSport[] = [
+  private static readonly HIDDEN_SPORTS_CATEGORY: ElevateSport[] = [
     ElevateSport.Cardio,
     ElevateSport.Manual,
     ElevateSport.Mountaineering,
@@ -71,7 +70,6 @@ export class AthleteSettingsComponent implements OnInit {
 
   constructor(
     @Inject(AppService) public readonly appService: AppService,
-    @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
     @Inject(AthleteService) private readonly athleteService: AthleteService,
     @Inject(ActivityService) private readonly activityService: ActivityService,
     @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
@@ -89,7 +87,6 @@ export class AthleteSettingsComponent implements OnInit {
 
   public onAthleteSettingsChanged(): void {
     this.verifyConsistencyWithAthleteSettings();
-    this.clearLocalStorageOnNextLoad();
   }
 
   public onAthleteChanged(): void {
@@ -101,10 +98,6 @@ export class AthleteSettingsComponent implements OnInit {
 
   public onDatedAthleteSettingsModelsChanged(): void {
     this.onAthleteSettingsChanged();
-  }
-
-  public clearLocalStorageOnNextLoad(): void {
-    this.userSettingsService.clearLocalStorageOnNextLoad().catch(error => this.logger.error(error));
   }
 
   private verifyConsistencyWithAthleteSettings() {
@@ -129,15 +122,15 @@ export class AthleteSettingsComponent implements OnInit {
   private setupSportsCategories(): void {
     this.elevateSportCategories = [
       {
-        label: "Common Sports",
-        sportKeys: AthleteSettingsComponent.COMMON_ATHLETE_SPORTS_CATEGORY
+        label: "Usual Sports",
+        sportKeys: AthleteSettingsComponent.USUAL_SPORTS_CATEGORY
       },
       {
         label: "Others Sports",
         sportKeys: _.difference(
           _.keys(ElevateSport) as ElevateSport[],
-          AthleteSettingsComponent.COMMON_ATHLETE_SPORTS_CATEGORY,
-          AthleteSettingsComponent.HIDDEN_ATHLETE_SPORTS
+          AthleteSettingsComponent.USUAL_SPORTS_CATEGORY,
+          AthleteSettingsComponent.HIDDEN_SPORTS_CATEGORY
         )
       }
     ];

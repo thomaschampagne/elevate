@@ -7,47 +7,53 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AthleteService } from "../../shared/services/athlete/athlete.service";
 import { AdvancedMenuComponent } from "../advanced-menu.component";
+import { ExtensionUserSettingsService } from "../../shared/services/user-settings/extension/extension-user-settings.service";
 
 @Component({
   selector: "app-advanced-menu",
   template: `
-    <mat-card>
-      <mat-card-content>
-        <div>In case of problem with the plugin this section might help you.</div>
-        <div>
-          <button mat-stroked-button color="primary" (click)="onSyncedBackupClear()">Clear athlete's activities</button>
-        </div>
-        <div>
-          <button mat-stroked-button color="primary" (click)="onPluginCacheClear()">Clear plugin cache</button>
-        </div>
-        <div>
-          <button mat-stroked-button color="primary" (click)="onZoneSettingsReset()">Reset zone settings</button>
-        </div>
-        <div>
-          <button mat-stroked-button color="primary" (click)="onUserSettingsReset()">
-            Reset athlete & global settings
-          </button>
-        </div>
-        <div>If problem still persist, consider uninstall/install the plugin back or report a bug.</div>
-      </mat-card-content>
-    </mat-card>
+    <div class="narrow-centered-section">
+      <mat-card>
+        <mat-card-title>Web extension tools</mat-card-title>
+        <mat-card-content>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Clear web extension cache</div>
+            <div>
+              <button mat-stroked-button color="primary" (click)="onPluginCacheClear()">Clear cache</button>
+            </div>
+          </div>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Wipe synced activities</div>
+            <div>
+              <button mat-stroked-button color="warn" (click)="onSyncedBackupClear()">Wipe activities</button>
+            </div>
+          </div>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Reset global, athlete and zones settings</div>
+            <div>
+              <button mat-stroked-button color="warn" (click)="onUserSettingsReset()">Reset settings</button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
   `,
   styles: [
     `
-      button {
-        width: 300px;
+      .entry {
+        padding-top: 5px;
+        padding-bottom: 5px;
       }
 
-      div {
-        padding-top: 10px;
-        padding-bottom: 10px;
+      button {
+        width: 175px;
       }
     `
   ]
 })
 export class ExtensionAdvancedMenuComponent extends AdvancedMenuComponent {
   constructor(
-    @Inject(UserSettingsService) protected readonly userSettingsService: UserSettingsService,
+    @Inject(UserSettingsService) protected readonly extensionUserSettingsService: ExtensionUserSettingsService,
     @Inject(AthleteService) protected readonly athleteService: AthleteService,
     @Inject(SyncService) protected readonly syncService: SyncService<any>,
     @Inject(MatDialog) protected readonly dialog: MatDialog,
@@ -58,9 +64,8 @@ export class ExtensionAdvancedMenuComponent extends AdvancedMenuComponent {
 
   public onPluginCacheClear(): void {
     const data: ConfirmDialogDataModel = {
-      title: "Clear the plugin cache",
-      content:
-        "This will remove caches of the plugin including display preferences (e.g. app theme chosen). You will not loose your synced data, athlete settings, zones settings or global settings."
+      title: "Clear web extension cache",
+      content: "This will clear cache of the web extension. You will keep your data and settings."
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -72,9 +77,9 @@ export class ExtensionAdvancedMenuComponent extends AdvancedMenuComponent {
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
         localStorage.clear();
-        this.userSettingsService.clearLocalStorageOnNextLoad().then(() => {
+        this.extensionUserSettingsService.clearLocalStorageOnNextLoad().then(() => {
           this.snackBar
-            .open("Plugin cache has been cleared", "Reload App")
+            .open("Cache has been cleared", "Reload App")
             .afterDismissed()
             .toPromise()
             .then(() => {
@@ -88,9 +93,8 @@ export class ExtensionAdvancedMenuComponent extends AdvancedMenuComponent {
 
   public onUserSettingsReset(): void {
     const data: ConfirmDialogDataModel = {
-      title: "Reset settings",
-      content:
-        "This will reset your settings to defaults including: dated athlete settings, zones settings and global settings. Are you sure to perform this action?"
+      title: "Reset all settings",
+      content: "This will reset global, athlete and zones settings. Are you sure to perform this action?"
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -102,9 +106,9 @@ export class ExtensionAdvancedMenuComponent extends AdvancedMenuComponent {
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
         Promise.all([
-          this.userSettingsService.reset(),
+          this.extensionUserSettingsService.reset(),
           this.athleteService.resetSettings(),
-          this.userSettingsService.clearLocalStorageOnNextLoad()
+          this.extensionUserSettingsService.clearLocalStorageOnNextLoad()
         ]).then(() => {
           this.snackBar.open("Settings have been reset", "Close");
           afterClosedSubscription.unsubscribe();
@@ -127,12 +131,13 @@ export class ExtensionAdvancedMenuComponent extends AdvancedMenuComponent {
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
-        Promise.all([this.userSettingsService.reset(), this.userSettingsService.clearLocalStorageOnNextLoad()]).then(
-          () => {
-            this.snackBar.open("Zones settings have been reset", "Close");
-            afterClosedSubscription.unsubscribe();
-          }
-        );
+        Promise.all([
+          this.extensionUserSettingsService.reset(),
+          this.extensionUserSettingsService.clearLocalStorageOnNextLoad()
+        ]).then(() => {
+          this.snackBar.open("Zones settings have been reset", "Close");
+          afterClosedSubscription.unsubscribe();
+        });
       }
     });
   }

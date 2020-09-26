@@ -15,6 +15,7 @@ import { environment } from "../../environments/environment";
 import { UserSettings } from "@elevate/shared/models";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { DomSanitizer } from "@angular/platform-browser";
+import { dirname } from "@elevate/shared/tools";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Component({
@@ -38,14 +39,8 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
-  public static getOptionHelperDir(pathname: string): string {
-    if (_.isEmpty(pathname)) {
-      return null;
-    }
-
-    const pathNames = pathname.split("/");
-    pathNames.pop();
-    return pathNames.join("/") + "/assets/option-helpers/";
+  private static getSettingsMarkdownPath(settingKey: string): string {
+    return `${dirname(location.pathname)}/assets/option-helpers/${settingKey}.md`;
   }
 
   public ngOnInit(): void {
@@ -76,7 +71,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
           option.active = _.propertyOf(userSettings)(option.key);
 
           if (option.enableSubOption) {
-            _.forEach(option.enableSubOption, (subKey: string) => {
+            _.forEach(option.enableSubOption, (subKey: UserSettings.Props) => {
               this.displaySubOption(subKey, _.propertyOf(userSettings)(option.key));
             });
           }
@@ -104,7 +99,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
       // Enable/disable sub option if needed
       if (option.enableSubOption) {
         // Replace this to find option object from option.enableSubOption
-        _.forEach(option.enableSubOption, (subKey: string) => {
+        _.forEach(option.enableSubOption, (subKey: UserSettings.Props) => {
           this.displaySubOption(subKey, option.active);
         });
       }
@@ -138,7 +133,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     option.value = resetValue;
   }
 
-  public displaySubOption(subOptionKey: string, show: boolean): void {
+  public displaySubOption(subOptionKey: UserSettings.Props, show: boolean): void {
     _.forEach(this.sections, (section: SectionModel) => {
       const foundOption: OptionModel = _.find(section.options, {
         key: subOptionKey
@@ -150,7 +145,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     });
   }
 
-  public showOptionHelperDialog(optionKeyParam: string): void {
+  public showOptionHelperDialog(optionKeyParam: UserSettings.Props): void {
     let option: OptionModel = null;
 
     _.forEach(this.sections, (section: SectionModel) => {
@@ -165,7 +160,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 
     if (option) {
       // Construct markdown template URI from asset option helper dir & option key
-      const markdownTemplateUri = GlobalSettingsComponent.getOptionHelperDir(location.pathname) + option.key + ".md";
+      const markdownTemplateUri = GlobalSettingsComponent.getSettingsMarkdownPath(option.key);
 
       this.optionHelperReaderService.get(markdownTemplateUri).then(markdownData => {
         const optionHelperData: OptionHelperDataModel = {

@@ -11,12 +11,13 @@ import { UserSettings, UserZonesModel } from "@elevate/shared/models";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../../shared/modules/target/desktop-target.module";
+import { ZoneType } from "@elevate/shared/enums";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZonesImportExportDialogComponent", () => {
   const zoneSpeedDefinition: ZoneDefinitionModel = {
     name: "Cycling Speed",
-    value: "speed",
+    value: ZoneType.SPEED,
     units: "KPH",
     step: 0.1,
     min: 0,

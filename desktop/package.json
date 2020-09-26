@@ -1,7 +1,7 @@
 {
   "name": "elevate-training",
   "description": "Elevate your training experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...",
-  "version": "7.0.0-3.alpha",
+  "version": "7.0.0-4.alpha",
   "scripts": {
     "assert-app-exists": "node -e \"if ((require('fs').existsSync('./dist/app/')) === false) {console.log('Please run & wait for \\'npm start\\' task before.\\n\\n\\n\\n');process.exit(1);}\";",
     "build:metadata": "node -e \"require('fs').writeFileSync('build_metadata.json', JSON.stringify({commit: require('child_process').execSync('git rev-parse HEAD').toString().trim(), date: new Date().toISOString()}));\"",
@@ -52,7 +52,7 @@
   "engineStrict": true,
   "dependencies": {
     "@rollup/plugin-json": "^4.1.0",
-    "@sports-alliance/sports-lib": "file:../../sports-lib/",
+    "@sports-alliance/sports-lib": "^5.4.13",
     "7zip-bin": "^5.0.3",
     "electron-log": "^4.2.4",
     "electron-updater": "^4.3.5",

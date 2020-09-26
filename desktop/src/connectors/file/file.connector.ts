@@ -101,117 +101,119 @@ export class FileConnector extends BaseConnector {
     }
   };
   private static readonly ENABLED: boolean = true;
-  private static readonly SPORTS_LIB_TYPES_MAP: { from: string; to: ElevateSport }[] = [
-    { from: ActivityTypes.Aerobics, to: ElevateSport.Cardio },
-    { from: ActivityTypes.AlpineSkiing, to: ElevateSport.AlpineSki },
-    { from: ActivityTypes.AmericanFootball, to: ElevateSport.AmericanFootball },
-    { from: ActivityTypes.Aquathlon, to: ElevateSport.Aquathlon },
-    { from: ActivityTypes.BackcountrySkiing, to: ElevateSport.BackcountrySki },
-    { from: ActivityTypes.Badminton, to: ElevateSport.Badminton },
-    { from: ActivityTypes.Baseball, to: ElevateSport.Baseball },
-    { from: ActivityTypes.Basketball, to: ElevateSport.Basketball },
-    { from: ActivityTypes.Boxing, to: ElevateSport.Boxe },
-    { from: ActivityTypes.Canoeing, to: ElevateSport.Canoeing },
-    { from: ActivityTypes.CardioTraining, to: ElevateSport.Cardio },
-    { from: ActivityTypes.Climbing, to: ElevateSport.Climbing },
-    { from: ActivityTypes.Combat, to: ElevateSport.Combat },
-    { from: ActivityTypes.Cricket, to: ElevateSport.Cricket },
-    { from: ActivityTypes.Crossfit, to: ElevateSport.Crossfit },
-    { from: ActivityTypes.CrosscountrySkiing, to: ElevateSport.NordicSki },
-    { from: ActivityTypes.Crosstrainer, to: ElevateSport.Elliptical },
-    { from: ActivityTypes.Cycling, to: ElevateSport.Ride },
-    { from: ActivityTypes.Dancing, to: ElevateSport.Dance },
-    { from: ActivityTypes.Diving, to: ElevateSport.Diving },
-    { from: ActivityTypes.DownhillSkiing, to: ElevateSport.AlpineSki },
-    { from: ActivityTypes.Driving, to: ElevateSport.Drive },
-    { from: ActivityTypes.Duathlon, to: ElevateSport.Duathlon },
-    { from: ActivityTypes.EBiking, to: ElevateSport.EBikeRide },
-    { from: ActivityTypes.EllipticalTrainer, to: ElevateSport.Elliptical },
-    { from: ActivityTypes.Fishing, to: ElevateSport.Fishing },
-    { from: ActivityTypes.FitnessEquipment, to: ElevateSport.Workout },
-    { from: ActivityTypes.FlexibilityTraining, to: ElevateSport.Workout },
-    { from: ActivityTypes.FloorClimbing, to: ElevateSport.Workout },
-    { from: ActivityTypes.Floorball, to: ElevateSport.Workout },
-    { from: ActivityTypes.Flying, to: ElevateSport.Flying },
-    { from: ActivityTypes.Football, to: ElevateSport.Football },
-    { from: ActivityTypes.FreeDiving, to: ElevateSport.Diving },
-    { from: ActivityTypes.Frisbee, to: ElevateSport.Frisbee },
-    { from: ActivityTypes.Generic, to: ElevateSport.Workout },
-    { from: ActivityTypes.Golf, to: ElevateSport.Golf },
-    { from: ActivityTypes.Gymnastics, to: ElevateSport.Gymnastics },
-    { from: ActivityTypes.Handcycle, to: ElevateSport.Handcycle },
-    { from: ActivityTypes.Handball, to: ElevateSport.Handball },
-    { from: ActivityTypes.HangGliding, to: ElevateSport.HangGliding },
-    { from: ActivityTypes.Hiking, to: ElevateSport.Hike },
-    { from: ActivityTypes.HorsebackRiding, to: ElevateSport.HorsebackRiding },
-    { from: ActivityTypes.IceHockey, to: ElevateSport.IceHockey },
-    { from: ActivityTypes.IceSkating, to: ElevateSport.IceSkate },
-    { from: ActivityTypes.IndoorCycling, to: ElevateSport.Ride },
-    { from: ActivityTypes.IndoorRowing, to: ElevateSport.Rowing },
-    { from: ActivityTypes.IndoorRunning, to: ElevateSport.Run },
-    { from: ActivityTypes.IndoorTraining, to: ElevateSport.Workout },
-    { from: ActivityTypes.InlineSkating, to: ElevateSport.InlineSkate },
-    { from: ActivityTypes.Kayaking, to: ElevateSport.Kayaking },
-    { from: ActivityTypes.Kettlebell, to: ElevateSport.WeightTraining },
-    { from: ActivityTypes.Kitesurfing, to: ElevateSport.Kitesurf },
-    { from: ActivityTypes.Motorcycling, to: ElevateSport.MotorSports },
-    { from: ActivityTypes.Motorsports, to: ElevateSport.MotorSports },
-    { from: ActivityTypes.MountainBiking, to: ElevateSport.Ride },
-    { from: ActivityTypes.Mountaineering, to: ElevateSport.Mountaineering },
-    { from: ActivityTypes.NordicWalking, to: ElevateSport.Walk },
-    { from: ActivityTypes.OpenWaterSwimming, to: ElevateSport.Swim },
-    { from: ActivityTypes.Orienteering, to: ElevateSport.Orienteering },
-    { from: ActivityTypes.Paddling, to: ElevateSport.Canoeing },
-    { from: ActivityTypes.Paragliding, to: ElevateSport.Paragliding },
-    { from: ActivityTypes.Rafting, to: ElevateSport.Canoeing },
-    { from: ActivityTypes.RockClimbing, to: ElevateSport.RockClimbing },
-    { from: ActivityTypes.RollerSki, to: ElevateSport.RollerSki },
-    { from: ActivityTypes.Rowing, to: ElevateSport.Rowing },
-    { from: ActivityTypes.Rugby, to: ElevateSport.Rugby },
-    { from: ActivityTypes.Running, to: ElevateSport.Run },
-    { from: ActivityTypes.Sailing, to: ElevateSport.Sailing },
-    { from: ActivityTypes.ScubaDiving, to: ElevateSport.Diving },
-    { from: ActivityTypes.Skating, to: ElevateSport.Skating },
-    { from: ActivityTypes.SkiTouring, to: ElevateSport.SkiTouring },
-    { from: ActivityTypes.SkyDiving, to: ElevateSport.SkyDiving },
-    { from: ActivityTypes.Snorkeling, to: ElevateSport.Snorkeling },
-    { from: ActivityTypes.Snowboarding, to: ElevateSport.Snowboard },
-    { from: ActivityTypes.Snowmobiling, to: ElevateSport.Snowmobiling },
-    { from: ActivityTypes.Snowshoeing, to: ElevateSport.Snowshoe },
-    { from: ActivityTypes.Soccer, to: ElevateSport.Football },
-    { from: ActivityTypes.Softball, to: ElevateSport.Softball },
-    { from: ActivityTypes.Squash, to: ElevateSport.Squash },
-    { from: ActivityTypes.StairStepper, to: ElevateSport.StairStepper },
-    { from: ActivityTypes.StandUpPaddling, to: ElevateSport.StandUpPaddling },
-    { from: ActivityTypes.StrengthTraining, to: ElevateSport.WeightTraining },
-    { from: ActivityTypes.Stretching, to: ElevateSport.Stretching },
-    { from: ActivityTypes.Surfing, to: ElevateSport.Surfing },
-    { from: ActivityTypes.Swimming, to: ElevateSport.Swim },
-    { from: ActivityTypes.Swimrun, to: ElevateSport.Workout },
-    { from: ActivityTypes.TableTennis, to: ElevateSport.TableTennis },
-    { from: ActivityTypes.Tactical, to: ElevateSport.Tactical },
-    { from: ActivityTypes.TelemarkSkiing, to: ElevateSport.TelemarkSki },
-    { from: ActivityTypes.Tennis, to: ElevateSport.Tennis },
-    { from: ActivityTypes.TrackAndField, to: ElevateSport.TrackAndField },
-    { from: ActivityTypes.TrailRunning, to: ElevateSport.Run },
-    { from: ActivityTypes.Training, to: ElevateSport.Workout },
-    { from: ActivityTypes.Treadmill, to: ElevateSport.Run },
-    { from: ActivityTypes.Trekking, to: ElevateSport.Hike },
-    { from: ActivityTypes.Triathlon, to: ElevateSport.Triathlon },
-    { from: ActivityTypes.Velomobile, to: ElevateSport.Velomobile },
-    { from: ActivityTypes.VirtualCycling, to: ElevateSport.VirtualRide },
-    { from: ActivityTypes.VirtualRunning, to: ElevateSport.VirtualRun },
-    { from: ActivityTypes.Volleyball, to: ElevateSport.Volleyball },
-    { from: ActivityTypes.Wakeboarding, to: ElevateSport.Wakeboarding },
-    { from: ActivityTypes.Walking, to: ElevateSport.Walk },
-    { from: ActivityTypes.WaterSkiing, to: ElevateSport.WaterSkiing },
-    { from: ActivityTypes.WeightTraining, to: ElevateSport.WeightTraining },
-    { from: ActivityTypes.Wheelchair, to: ElevateSport.Wheelchair },
-    { from: ActivityTypes.Windsurfing, to: ElevateSport.Windsurf },
-    { from: ActivityTypes.Workout, to: ElevateSport.Workout },
-    { from: ActivityTypes.Yoga, to: ElevateSport.Yoga },
-    { from: ActivityTypes.YogaPilates, to: ElevateSport.Yoga }
-  ];
+  private static readonly SPORTS_LIB_TO_ELEVATE_SPORTS_MAP: Map<ActivityTypes, ElevateSport> = new Map<
+    ActivityTypes,
+    ElevateSport
+  >([
+    [ActivityTypes.Aerobics, ElevateSport.Cardio],
+    [ActivityTypes.AlpineSkiing, ElevateSport.AlpineSki],
+    [ActivityTypes.AmericanFootball, ElevateSport.AmericanFootball],
+    [ActivityTypes.Aquathlon, ElevateSport.Aquathlon],
+    [ActivityTypes.BackcountrySkiing, ElevateSport.BackcountrySki],
+    [ActivityTypes.Badminton, ElevateSport.Badminton],
+    [ActivityTypes.Baseball, ElevateSport.Baseball],
+    [ActivityTypes.Basketball, ElevateSport.Basketball],
+    [ActivityTypes.Boxing, ElevateSport.Boxing],
+    [ActivityTypes.Canoeing, ElevateSport.Canoeing],
+    [ActivityTypes.CardioTraining, ElevateSport.Cardio],
+    [ActivityTypes.Climbing, ElevateSport.Climbing],
+    [ActivityTypes.Combat, ElevateSport.Combat],
+    [ActivityTypes.Cricket, ElevateSport.Cricket],
+    [ActivityTypes.Crossfit, ElevateSport.Crossfit],
+    [ActivityTypes.CrosscountrySkiing, ElevateSport.NordicSki],
+    [ActivityTypes.Crosstrainer, ElevateSport.Elliptical],
+    [ActivityTypes.Cycling, ElevateSport.Ride],
+    [ActivityTypes.Dancing, ElevateSport.Dance],
+    [ActivityTypes.Diving, ElevateSport.Diving],
+    [ActivityTypes.DownhillSkiing, ElevateSport.AlpineSki],
+    [ActivityTypes.Driving, ElevateSport.Drive],
+    [ActivityTypes.Duathlon, ElevateSport.Duathlon],
+    [ActivityTypes.EBiking, ElevateSport.EBikeRide],
+    [ActivityTypes.EllipticalTrainer, ElevateSport.Elliptical],
+    [ActivityTypes.Fishing, ElevateSport.Fishing],
+    [ActivityTypes.FitnessEquipment, ElevateSport.Workout],
+    [ActivityTypes.FlexibilityTraining, ElevateSport.Workout],
+    [ActivityTypes.FloorClimbing, ElevateSport.Workout],
+    [ActivityTypes.Floorball, ElevateSport.Workout],
+    [ActivityTypes.Flying, ElevateSport.Flying],
+    [ActivityTypes.Football, ElevateSport.Football],
+    [ActivityTypes.FreeDiving, ElevateSport.Diving],
+    [ActivityTypes.Frisbee, ElevateSport.Frisbee],
+    [ActivityTypes.Generic, ElevateSport.Workout],
+    [ActivityTypes.Golf, ElevateSport.Golf],
+    [ActivityTypes.Gymnastics, ElevateSport.Gymnastics],
+    [ActivityTypes.Handcycle, ElevateSport.Handcycle],
+    [ActivityTypes.Handball, ElevateSport.Handball],
+    [ActivityTypes.HangGliding, ElevateSport.HangGliding],
+    [ActivityTypes.Hiking, ElevateSport.Hike],
+    [ActivityTypes.HorsebackRiding, ElevateSport.HorsebackRiding],
+    [ActivityTypes.IceHockey, ElevateSport.IceHockey],
+    [ActivityTypes.IceSkating, ElevateSport.IceSkate],
+    [ActivityTypes.IndoorCycling, ElevateSport.Ride],
+    [ActivityTypes.IndoorRowing, ElevateSport.Rowing],
+    [ActivityTypes.IndoorRunning, ElevateSport.Run],
+    [ActivityTypes.IndoorTraining, ElevateSport.Workout],
+    [ActivityTypes.InlineSkating, ElevateSport.InlineSkate],
+    [ActivityTypes.Kayaking, ElevateSport.Kayaking],
+    [ActivityTypes.Kettlebell, ElevateSport.WeightTraining],
+    [ActivityTypes.Kitesurfing, ElevateSport.Kitesurf],
+    [ActivityTypes.Motorcycling, ElevateSport.MotorSports],
+    [ActivityTypes.Motorsports, ElevateSport.MotorSports],
+    [ActivityTypes.MountainBiking, ElevateSport.Ride],
+    [ActivityTypes.Mountaineering, ElevateSport.Mountaineering],
+    [ActivityTypes.NordicWalking, ElevateSport.Walk],
+    [ActivityTypes.OpenWaterSwimming, ElevateSport.Swim],
+    [ActivityTypes.Orienteering, ElevateSport.Orienteering],
+    [ActivityTypes.Paddling, ElevateSport.Canoeing],
+    [ActivityTypes.Paragliding, ElevateSport.Paragliding],
+    [ActivityTypes.Rafting, ElevateSport.Canoeing],
+    [ActivityTypes.RockClimbing, ElevateSport.RockClimbing],
+    [ActivityTypes.RollerSki, ElevateSport.RollerSki],
+    [ActivityTypes.Rowing, ElevateSport.Rowing],
+    [ActivityTypes.Rugby, ElevateSport.Rugby],
+    [ActivityTypes.Running, ElevateSport.Run],
+    [ActivityTypes.Sailing, ElevateSport.Sailing],
+    [ActivityTypes.ScubaDiving, ElevateSport.Diving],
+    [ActivityTypes.SkiTouring, ElevateSport.SkiTouring],
+    [ActivityTypes.SkyDiving, ElevateSport.SkyDiving],
+    [ActivityTypes.Snorkeling, ElevateSport.Snorkeling],
+    [ActivityTypes.Snowboarding, ElevateSport.Snowboard],
+    [ActivityTypes.Snowmobiling, ElevateSport.Snowmobiling],
+    [ActivityTypes.Snowshoeing, ElevateSport.Snowshoe],
+    [ActivityTypes.Soccer, ElevateSport.Football],
+    [ActivityTypes.Softball, ElevateSport.Softball],
+    [ActivityTypes.Squash, ElevateSport.Squash],
+    [ActivityTypes.StairStepper, ElevateSport.StairStepper],
+    [ActivityTypes.StandUpPaddling, ElevateSport.StandUpPaddling],
+    [ActivityTypes.StrengthTraining, ElevateSport.WeightTraining],
+    [ActivityTypes.Stretching, ElevateSport.Stretching],
+    [ActivityTypes.Surfing, ElevateSport.Surfing],
+    [ActivityTypes.Swimming, ElevateSport.Swim],
+    [ActivityTypes.Swimrun, ElevateSport.Workout],
+    [ActivityTypes.TableTennis, ElevateSport.TableTennis],
+    [ActivityTypes.Tactical, ElevateSport.Tactical],
+    [ActivityTypes.TelemarkSkiing, ElevateSport.TelemarkSki],
+    [ActivityTypes.Tennis, ElevateSport.Tennis],
+    [ActivityTypes.TrackAndField, ElevateSport.TrackAndField],
+    [ActivityTypes.TrailRunning, ElevateSport.Run],
+    [ActivityTypes.Training, ElevateSport.Workout],
+    [ActivityTypes.Treadmill, ElevateSport.Run],
+    [ActivityTypes.Trekking, ElevateSport.Hike],
+    [ActivityTypes.Triathlon, ElevateSport.Triathlon],
+    [ActivityTypes.Velomobile, ElevateSport.Velomobile],
+    [ActivityTypes.VirtualCycling, ElevateSport.VirtualRide],
+    [ActivityTypes.VirtualRunning, ElevateSport.VirtualRun],
+    [ActivityTypes.Volleyball, ElevateSport.Volleyball],
+    [ActivityTypes.Wakeboarding, ElevateSport.Wakeboarding],
+    [ActivityTypes.Walking, ElevateSport.Walk],
+    [ActivityTypes.WaterSkiing, ElevateSport.WaterSkiing],
+    [ActivityTypes.WeightTraining, ElevateSport.WeightTraining],
+    [ActivityTypes.Wheelchair, ElevateSport.Wheelchair],
+    [ActivityTypes.Windsurfing, ElevateSport.Windsurf],
+    [ActivityTypes.Workout, ElevateSport.Workout],
+    [ActivityTypes.Yoga, ElevateSport.Yoga],
+    [ActivityTypes.YogaPilates, ElevateSport.Yoga]
+  ]);
 
   private fileConnectorConfig: FileConnectorConfig;
 
@@ -279,7 +281,7 @@ export class FileConnector extends BaseConnector {
         const extractedArchiveFileName = path.basename(extractedArchivePath);
         const evtDesc = `Activities in "${extractedArchiveFileName}" file have been extracted.`;
         syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE, evtDesc));
-        logger.info(evtDesc);
+        logger.debug(evtDesc);
       });
       prepareScanDirectory = this.scanInflateActivitiesFromArchives(
         this.fileConnectorConfig.info.sourceDirectory,
@@ -312,7 +314,7 @@ export class FileConnector extends BaseConnector {
 
             let parseSportsLibActivity: Promise<EventInterface> = null;
 
-            logger.info("Parsing activity file: " + activityFile.location.path);
+            logger.debug("Parsing activity file: " + activityFile.location.path);
 
             switch (activityFile.type) {
               case ActivityFileType.GPX:
@@ -386,8 +388,7 @@ export class FileConnector extends BaseConnector {
                               syncedActivityModel,
                               syncedActivityModel.athleteSnapshot,
                               this.fileConnectorConfig.userSettingsModel,
-                              activityStreamsModel,
-                              true
+                              activityStreamsModel
                             );
 
                             // Compute bary center from lat/lng stream
@@ -536,8 +537,9 @@ export class FileConnector extends BaseConnector {
     bareActivityModel.id = Hash.apply(sportsLibActivity.startDate.toISOString());
     const elevateSportResult = this.convertToElevateSport(sportsLibActivity);
     bareActivityModel.type = elevateSportResult.type;
-    bareActivityModel.name =
-      FileConnector.HumanizedDayMoment.resolve(sportsLibActivity.startDate) + " " + bareActivityModel.type;
+    bareActivityModel.name = sportsLibActivity.name
+      ? sportsLibActivity.name
+      : FileConnector.HumanizedDayMoment.resolve(sportsLibActivity.startDate) + " " + bareActivityModel.type;
 
     if (elevateSportResult.autoDetected) {
       bareActivityModel.name += " #detected";
@@ -552,9 +554,9 @@ export class FileConnector extends BaseConnector {
   }
 
   public convertToElevateSport(sportsLibActivity: ActivityInterface): { type: ElevateSport; autoDetected: boolean } {
-    const entryFound = _.find(FileConnector.SPORTS_LIB_TYPES_MAP, { from: sportsLibActivity.type });
-    if (entryFound) {
-      return { type: entryFound.to, autoDetected: false };
+    let elevateSport = FileConnector.SPORTS_LIB_TO_ELEVATE_SPORTS_MAP.get(sportsLibActivity.type);
+    if (elevateSport) {
+      return { type: elevateSport, autoDetected: false };
     } else {
       if (this.fileConnectorConfig.info.detectSportTypeWhenUnknown) {
         const stats = sportsLibActivity.getStats();
@@ -565,7 +567,7 @@ export class FileConnector extends BaseConnector {
         const avgSpeed = stats.get(DataSpeedAvg.type)?.getValue() as number;
         const maxSpeed = stats.get(DataSpeedMax.type)?.getValue() as number;
 
-        const elevateSport = this.attemptDetectCommonSport(distance, duration, ascent, avgSpeed, maxSpeed);
+        elevateSport = this.attemptDetectCommonSport(distance, duration, ascent, avgSpeed, maxSpeed);
         return { type: elevateSport, autoDetected: elevateSport !== ElevateSport.Other };
       } else {
         return { type: ElevateSport.Other, autoDetected: false };
@@ -774,10 +776,7 @@ export class FileConnector extends BaseConnector {
     if (!_.isEmpty(activityStreamsModel.grade_smooth)) {
       // Estimated power
       try {
-        if (
-          !bareActivityModel.hasPowerMeter &&
-          (bareActivityModel.type === ElevateSport.Ride || bareActivityModel.type === ElevateSport.VirtualRide)
-        ) {
+        if (!bareActivityModel.hasPowerMeter && SyncedActivityModel.isRide(bareActivityModel.type)) {
           activityStreamsModel.watts = this.estimateCyclingPowerStream(
             bareActivityModel.type,
             activityStreamsModel.velocity_smooth,
@@ -788,7 +787,7 @@ export class FileConnector extends BaseConnector {
         }
         delete activityStreamsModel.watts_calc;
       } catch (err) {
-        logger.info(err.message, err);
+        logger.warn(err.message, err);
         delete activityStreamsModel.watts_calc;
       }
     }

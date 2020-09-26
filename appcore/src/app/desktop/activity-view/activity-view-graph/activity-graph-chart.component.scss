@@ -1,0 +1,9 @@
+// Change cursor horizontal zooming
+::ng-deep .graph-chart .cursor-ew-resize {
+  cursor: col-resize !important;
+}
+
+.wrapper {
+  margin-top: 15px;
+  margin-bottom: 15px
+}

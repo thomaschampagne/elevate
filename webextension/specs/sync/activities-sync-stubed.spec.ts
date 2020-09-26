@@ -31,10 +31,6 @@ describe("ActivitiesSynchronize", () => {
     syncDateTime?: number;
   };
 
-  /**
-   *
-   * @param id
-   */
   const addStravaActivity = (activityId: number) => {
     if (_.find(CHROME_STORAGE_STUB.syncedActivities, { id: activityId })) {
       CHROME_STORAGE_STUB.syncedActivities = removeActivityFromArray(activityId, CHROME_STORAGE_STUB.syncedActivities);
@@ -44,14 +40,6 @@ describe("ActivitiesSynchronize", () => {
     }
   };
 
-  /**
-   *
-   * @param activityId
-   * @param rawPageOfActivities
-   * @param newName
-   * @param newType
-   * @returns {boolean}
-   */
   const editStravaActivity = (activityId: number, rawPageOfActivities: any, newName: string, newType: string) => {
     const found = _.find(rawPageOfActivities.models, { id: activityId });
     if (found) {
@@ -62,11 +50,6 @@ describe("ActivitiesSynchronize", () => {
     }
   };
 
-  /**
-   *
-   * @param id
-   * @param atPage
-   */
   const removeStravaActivity = (activityId: number, rawPageOfActivities: any) => {
     const found = _.find(rawPageOfActivities.models, { id: activityId });
     if (found) {
@@ -152,14 +135,16 @@ describe("ActivitiesSynchronize", () => {
           movingTime: null,
           pauseTime: null,
           moveRatio: null,
-          runningPerformanceIndex: 25.0,
+          calories: null,
+          caloriesPerHour: null,
           speedData: null,
           paceData: null,
           powerData: null,
           heartRateData: null,
           cadenceData: null,
           gradeData: null,
-          elevationData: null
+          elevationData: null,
+          runningPerformanceIndex: 25.0
         };
         _.forEach(activitiesWithStream, (awStream: StreamActivityModel) => {
           const activityComputed: SyncedActivityModel = _.pick(

@@ -34,8 +34,9 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
   styleUrls: ["./activities.component.scss"]
 })
 export class ActivitiesComponent implements OnInit, OnDestroy {
-  public static readonly LS_SELECTED_COLUMNS: string = "activities_selectedColumns";
-  public static readonly LS_PAGE_SIZE_PREFERENCE: string = "activities_pageSize";
+  private static readonly LS_SELECTED_COLUMNS: string = "activities_selectedColumns";
+  private static readonly LS_PAGE_SIZE_PREFERENCE: string = "activities_pageSize";
+  private static readonly DEGRADED_PERFORMANCE_COLUMNS_COUNT: number = 21;
   public readonly ColumnType = ActivityColumns.ColumnType;
 
   @ViewChild(MatPaginator, { static: true })
@@ -55,6 +56,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   public hasActivities: boolean;
   public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
   public initialized: boolean;
+  public isPerformanceDegraded: boolean;
   public historyChangesSub: Subscription;
 
   constructor(
@@ -69,6 +71,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   ) {
     this.hasActivities = null; // Can be null: don't know yet true/false status
     this.initialized = false;
+    this.isPerformanceDegraded = false;
     this.searchText$ = new Subject();
   }
 
@@ -190,6 +193,9 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     // Filter column along selection
     this.filterDisplayedColumns();
 
+    // Check if user selected too much columns. Display warning if so
+    this.verifyTablePerformance();
+
     // Creates category of columns
     this.columnsCategories = this.createColumnsCategories(ActivityColumns.Definition.ALL);
   }
@@ -254,7 +260,12 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     this.displayedColumns = this.columns.map(column => column.id);
   }
 
+  public verifyTablePerformance(): void {
+    this.isPerformanceDegraded = this.selectedColumns.length >= ActivitiesComponent.DEGRADED_PERFORMANCE_COLUMNS_COUNT;
+  }
+
   public onSelectedColumns(): void {
+    this.verifyTablePerformance();
     this.filterDisplayedColumns();
     this.saveSelectedColumns();
   }
@@ -305,8 +316,8 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     this.searchText$.next(filterValue);
   }
 
-  public openSourceActivity(id: number | string) {
-    this.openResourceResolver.openSourceActivity(id);
+  public openActivity(id: number | string) {
+    this.openResourceResolver.openActivity(id);
   }
 
   public onViewAthleteSettings(activity: SyncedActivityModel): void {
@@ -323,8 +334,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   public onDeleteActivity(activity: SyncedActivityModel): void {
     const data: ConfirmDialogDataModel = {
       title: 'Deleting activity "' + activity.name + '"',
-      content:
-        'Are you sure to perform this action? You will be able to fetch back this activity with a "Sync all activities".',
+      content: `Are you sure? You can fetch back this activity through a "Sync all activities"`,
       confirmText: "Delete"
     };
 
@@ -351,6 +361,39 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
 
   public reset(): void {
     this.selectedColumns = this.getDefaultsColumns();
+    this.onSelectedColumns();
+  }
+
+  public tickAll(): void {
+    const data: ConfirmDialogDataModel = {
+      title: "Feature performance warning",
+      content:
+        "<div>Ticking all the columns will strongly impact the performance and user experience.</div><br/><div><i>Note: You can reset columns to default values afterward.</i></div><br/>",
+      confirmText: "Continue"
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      minWidth: ConfirmDialogComponent.MIN_WIDTH,
+      maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+      data: data
+    });
+
+    const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+      if (confirm) {
+        this.selectedColumns = _.clone(ActivityColumns.Definition.ALL);
+        this.onSelectedColumns();
+      }
+      afterClosedSubscription.unsubscribe();
+    });
+  }
+
+  public unTickAll(): void {
+    this.selectedColumns = [
+      _.find(ActivityColumns.Definition.ALL, { id: "start_time" }),
+      _.find(ActivityColumns.Definition.ALL, { id: "name" }),
+      _.find(ActivityColumns.Definition.ALL, { id: "type" })
+    ];
+
     this.onSelectedColumns();
   }
 

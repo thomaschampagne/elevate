@@ -1,17 +1,17 @@
 import { ZoneModel } from "../zone.model";
+import { PeakModel } from "../peak.model";
+import { PeaksData } from "./peaks-data";
 
-export class SpeedDataModel {
+export class SpeedDataModel implements PeaksData {
   public genuineAvgSpeed: number;
   public totalAvgSpeed: number;
   public maxSpeed: number;
-  public minSpeed: number;
   public best20min: number;
   public avgPace: number;
   public lowerQuartileSpeed: number;
   public medianSpeed: number;
   public upperQuartileSpeed: number;
-  public varianceSpeed: number;
   public standardDeviationSpeed: number;
   public speedZones: ZoneModel[];
-  public genuineGradeAdjustedAvgSpeed: number;
+  public peaks: PeakModel[];
 }

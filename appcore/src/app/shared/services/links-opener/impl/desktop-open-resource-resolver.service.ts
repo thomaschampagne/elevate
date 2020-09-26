@@ -4,8 +4,8 @@ import { ElectronService } from "../../../../desktop/electron/electron.service";
 import { ActivityService } from "../../activity/activity.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
+import { AppRoutes } from "../../../models/app-routes";
 import { ConnectorType } from "@elevate/shared/sync";
-import { ElevateException } from "@elevate/shared/exceptions";
 
 @Injectable()
 export class DesktopOpenResourceResolver extends OpenResourceResolver {
@@ -29,31 +29,31 @@ export class DesktopOpenResourceResolver extends OpenResourceResolver {
   }
 
   public openActivity(id: number | string): void {
+    this.router.navigate([`${AppRoutes.activity}/${id}`]);
+  }
+
+  public openSourceActivity(id: number | string, sourceType: ConnectorType): void {
     this.activityService.getById(id).then(activity => {
       if (activity) {
-        // Implements activity opening here
+        if (sourceType === ConnectorType.STRAVA && activity.extras?.strava_activity_id > 0) {
+          this.openStravaActivity(activity.extras.strava_activity_id);
+        } else if (sourceType === ConnectorType.FILE && activity.extras?.fs_activity_location?.path) {
+          const itemPath = activity.extras.fs_activity_location.path;
+          try {
+            this.showItemInFolder(itemPath);
+          } catch (err) {
+            this.snackBar.open(`Activity file "${itemPath}" don't exists.`, "Close");
+          }
+        } else {
+          this.snackBar.open(`Unable to open activity.`, "Close");
+        }
       } else {
         this.snackBar.open(`Activity with id ${id} not found`, "Close");
       }
     });
   }
 
-  public openSourceActivity(id: number | string): void {
-    this.activityService.getById(id).then(activity => {
-      if (activity) {
-        switch (activity.sourceConnectorType) {
-          case ConnectorType.STRAVA:
-            this.openLink("https://www.strava.com/activities/" + activity.extras.strava_activity_id);
-            break;
-          case ConnectorType.FILE:
-            this.openLink(activity.extras.fs_activity_location.path);
-            break;
-          default:
-            throw new ElevateException(`Source connector type ${activity.sourceConnectorType} unknown.`);
-        }
-      } else {
-        this.snackBar.open(`Activity with id ${id} not found`, "Close");
-      }
-    });
+  public showItemInFolder(itemPath: string): void {
+    this.electronService.showItemInFolder(itemPath);
   }
 }

@@ -9,6 +9,7 @@ import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models"
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
 import { Subscription } from "rxjs";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ZoneType } from "@elevate/shared/enums";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Component({
@@ -42,7 +43,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
       // Load user zones config
       this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
         // Load user zones data
-        this.userZonesModel = UserZonesModel.asInstance(userSettings.zones);
+        this.userZonesModel = userSettings.zones;
 
         let zoneDefinition: ZoneDefinitionModel = null;
 
@@ -90,7 +91,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
     this.zonesUpdatesSubscription.unsubscribe();
   }
 
-  private getZoneDefinitionFromZoneValue(zoneValue: string): ZoneDefinitionModel {
+  private getZoneDefinitionFromZoneValue(zoneValue: ZoneType): ZoneDefinitionModel {
     return _.find(this.zoneDefinitions, { value: zoneValue });
   }
 
@@ -100,7 +101,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
    */
   private loadZonesFromDefinition(zoneDefinition: ZoneDefinitionModel) {
     // Load current zone from zone definition provided
-    this.currentZones = this.userZonesModel.get(zoneDefinition.value);
+    this.currentZones = UserZonesModel.fromZoneType(this.userZonesModel, zoneDefinition.value);
 
     // Update current zones & zone definition managed by the zones service
     this.zonesService.currentZones = this.currentZones;

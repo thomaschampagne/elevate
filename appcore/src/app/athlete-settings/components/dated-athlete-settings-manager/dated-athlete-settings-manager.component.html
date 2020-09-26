@@ -85,17 +85,17 @@
     <mat-table [dataSource]="dataSource" matSort>
 
       <ng-container matColumnDef="since">
-        <mat-header-cell *matHeaderCellDef>Since</mat-header-cell>
-        <mat-cell *matCellDef="let datedSettings">
-          <span *ngIf="!datedSettings.isForever()">{{datedSettings.sinceAsDate | date}}</span>
+        <mat-header-cell fxFlex="12" *matHeaderCellDef>Since</mat-header-cell>
+        <mat-cell fxFlex="12" *matCellDef="let datedSettings">
+          <span *ngIf="!datedSettings.isForever()">{{datedSettings.sinceAsDate | date:'yyyy/MM/dd'}}</span>
           <span *ngIf="datedSettings.isForever()">Forever</span>
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="until">
-        <mat-header-cell *matHeaderCellDef>Until</mat-header-cell>
-        <mat-cell *matCellDef="let datedSettings">
-          <span *ngIf="!datedSettings.isNow()">{{datedSettings.untilAsDate | date}}</span>
+        <mat-header-cell fxFlex="12" *matHeaderCellDef>Until</mat-header-cell>
+        <mat-cell fxFlex="12" *matCellDef="let datedSettings">
+          <span *ngIf="!datedSettings.isNow()">{{datedSettings.untilAsDate | date:'yyyy/MM/dd'}}</span>
           <span *ngIf="datedSettings.isNow()">Today</span>
         </mat-cell>
       </ng-container>
@@ -146,8 +146,8 @@
       </ng-container>
 
       <ng-container matColumnDef="edit">
-        <mat-header-cell *matHeaderCellDef [ngClass]="'editColumn'"></mat-header-cell>
-        <mat-cell *matCellDef="let datedSettings" [ngClass]="'editColumn'">
+        <mat-header-cell fxFlex="6" *matHeaderCellDef [ngClass]="'editColumn'"></mat-header-cell>
+        <mat-cell fxFlex="6" *matCellDef="let datedSettings" [ngClass]="'editColumn'">
           <button [disabled]="appService.isSyncing" color="primary" (click)="onEdit(datedSettings.since)"
                   mat-icon-button
                   matTooltip="Edit dated settings">
@@ -157,8 +157,8 @@
       </ng-container>
 
       <ng-container matColumnDef="delete">
-        <mat-header-cell *matHeaderCellDef [ngClass]="'deleteColumn'"></mat-header-cell>
-        <mat-cell *matCellDef="let datedSettings" [ngClass]="'deleteColumn'">
+        <mat-header-cell fxFlex="6" *matHeaderCellDef [ngClass]="'deleteColumn'"></mat-header-cell>
+        <mat-cell fxFlex="6" *matCellDef="let datedSettings" [ngClass]="'deleteColumn'">
           <button [disabled]="appService.isSyncing" color="primary" (click)="onRemove(datedSettings.since)"
                   *ngIf="!datedSettings.isForever()"
                   mat-icon-button matTooltip="Delete dated settings">

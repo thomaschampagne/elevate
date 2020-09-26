@@ -8,12 +8,8 @@ export class ExtensionOpenResourceResolver extends OpenResourceResolver {
     super(snackBar);
   }
 
-  public openActivity(id: number | string): void {
-    this.openLink("https://www.strava.com/activities/" + id);
-  }
-
-  public openSourceActivity(id: number | string): void {
-    this.openActivity(id);
+  public openActivity(id: number): void {
+    this.openStravaActivity(id);
   }
 
   public openLink(url: string): void {

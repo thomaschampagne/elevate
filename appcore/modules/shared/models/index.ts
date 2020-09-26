@@ -5,4 +5,4 @@ export * from "./user-settings";
 export * from "./properties.model";
 export * from "./core-messages";
 export * from "./zone.model";
-export * from "./power-best-split.model";
+export * from "./peak.model";

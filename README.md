@@ -9,30 +9,21 @@
 
 ## Desktop App
 
-### From installer
+### Download installer (Windows, MacOS, Linux)
 
 _TBD_
 
-### From continuous integration
+<!-- TODO ### From continuous integration -->
 
-_TBD_
-
-### From the sources
+### Build from sources
 
 Go to chapter [Environment setup](#environments-setup).
 
-## Chrome based browser extension
+## Web extension
 
-### From a Chrome based browser
+### Download for _Chrome, Chromium, Edge (from 2020), Brave, Opera, Vivaldi, Yandex, ..._
 
 Go to [https://thomaschampagne.github.io/elevate/](https://thomaschampagne.github.io/elevate/)
-
-You should be able to install it in all Chrome based browser such as Chrome, Chrome Canary, Chromium, Opera, Vivaldi, Yandex, and more ...
-
-### From continuous integration
-Using latest `develop` branch builds: https://thomaschampagne.github.io/elevate/#/builds
-
-Install steps with a standalone build: https://github.com/thomaschampagne/elevate/wiki/How-to-install-elevate-build-archive
 
 ### From the sources
 
@@ -55,12 +46,9 @@ The `Appcore` main technology stack is:
 * [Typescript](https://www.typescriptlang.org/) as programming language.
 * [Angular](https://angular.io/) as frontend (build with [@angular/cli](https://cli.angular.io/)). 
 * [Angular Material](https://material.angular.io/) for material designed components.
-* [Metrics Graphics](https://www.metricsgraphicsjs.org/) and [d3js](https://d3js.org/) for charting.
+* [Metrics Graphics](https://www.metricsgraphicsjs.org/), [Plotly](https://plotly.com/javascript/) & [D3](https://d3js.org/) for charting.
+* [LokiJS](https://https://github.com/techfort/LokiJS) as in-memory NoSQL database persisted in IndexedDB.
 * [Jest](https://jestjs.io/) as Javascript test runner (instead of "stock" karma one).
-
-If build target is desktop, it also includes:
-
-* [LokiJS](https://https://github.com/techfort/LokiJS) as in-memory NoSQL database persisted in IndexedDB. 
 
 ### Desktop project
 
@@ -174,7 +162,7 @@ npm run clean
 
 ### Web extension development environment
 
-_To develop the web extension, you need a Chrome based browser (Chrome, Chromium, Chrome Canary, Opera,...), of course..._
+_To develop the web extension, you need a Chrome based browser such as Chrome, Chromium, Edge (from 2020), Brave, Opera, Vivaldi, Yandex, ..._
 
 All commands displayed in this section will be executed in `./webextension/` folder. So:
 
@@ -241,6 +229,26 @@ docker run --rm --name elevate-chrome-build -v /path/to/your/directory/:/package
 ```
 
 # Appendix
+## Add a new desktop migration for a next release
+
+Register your new migration in below file 
+
+```bash
+./appcore/src/app/desktop/migration/desktop-registered-migrations.ts
+```
+
+**Tip:** to emulate a version upgrade, you may downgrade the current version by running below code in developer console:
+
+```javascript
+function downgradeTo(version) {
+  const properties = db.getCollection("properties").findOne();
+  properties.existingVersion = version;
+  db.getCollection("properties").update(properties);
+  db.save();
+}
+downgradeTo("YOUR_DOWNGRADE_TARGET_VERSION"); // e.g. "7.0.0"
+```
+
 ## Sign application
 ### Self-sign with OpenSSL for windows build
 

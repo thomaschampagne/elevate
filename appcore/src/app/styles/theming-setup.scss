@@ -5,10 +5,10 @@
 // Import Mixins
 @import "app-classes.theme";
 @import "native-elements.theme";
-@import "../app.component.theme";
-@import "../fitness-trend/fitness-trend.component.theme";
-@import "../sync-bar/sync-bar.component.theme";
-@import "../recalculate-activities-bar/recalculate-activities-bar.component.theme";
+@import "~src/app/app.component.theme";
+@import "~src/app/fitness-trend/fitness-trend.component.theme";
+@import "~src/app/sync-bar/sync-bar.component.theme";
+@import "~src/app/recalculate-activities-bar/recalculate-activities-bar.component.theme";
 
 @mixin elevate-custom-theme($theme) {
   @include app-classes($theme);

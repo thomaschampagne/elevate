@@ -1,6 +1,7 @@
 import { Helper } from "../../../helper";
 import { AbstractGradeDataView } from "./abstract-grade-data.view";
 import { GradeDataModel } from "@elevate/shared/models";
+import { Time } from "@elevate/shared/tools";
 
 export class RunningGradeDataView extends AbstractGradeDataView {
   constructor(gradeData: GradeDataModel, units: string) {
@@ -18,7 +19,7 @@ export class RunningGradeDataView extends AbstractGradeDataView {
       0,
       4,
       this.gradeData.upFlatDownMoveData.up / this.speedUnitsData.speedUnitFactor !== 0
-        ? Helper.secondsToHHMMSS(this.gradeData.upFlatDownMoveData.up / this.speedUnitsData.speedUnitFactor, true)
+        ? Time.secToMilitary(this.gradeData.upFlatDownMoveData.up / this.speedUnitsData.speedUnitFactor)
         : "-",
       "Avg climbing pace",
       "/" + this.speedUnitsData.units,
@@ -28,7 +29,7 @@ export class RunningGradeDataView extends AbstractGradeDataView {
       1,
       4,
       this.gradeData.upFlatDownMoveData.flat / this.speedUnitsData.speedUnitFactor !== 0
-        ? Helper.secondsToHHMMSS(this.gradeData.upFlatDownMoveData.flat / this.speedUnitsData.speedUnitFactor, true)
+        ? Time.secToMilitary(this.gradeData.upFlatDownMoveData.flat / this.speedUnitsData.speedUnitFactor)
         : "-",
       "Avg flat pace",
       "/" + this.speedUnitsData.units,
@@ -38,7 +39,7 @@ export class RunningGradeDataView extends AbstractGradeDataView {
       2,
       4,
       this.gradeData.upFlatDownMoveData.down / this.speedUnitsData.speedUnitFactor !== 0
-        ? Helper.secondsToHHMMSS(this.gradeData.upFlatDownMoveData.down / this.speedUnitsData.speedUnitFactor, true)
+        ? Time.secToMilitary(this.gradeData.upFlatDownMoveData.down / this.speedUnitsData.speedUnitFactor)
         : "-",
       "Avg downhill pace",
       "/" + this.speedUnitsData.units,

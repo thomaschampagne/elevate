@@ -1,18 +1,6 @@
 import { Helper } from "../../scripts/helper";
 
 describe("Helper", () => {
-  it("should give seconds from HH:MM:SS pattern", done => {
-    expect(Helper.HHMMSStoSeconds("00:05:00")).toEqual(300);
-    expect(Helper.HHMMSStoSeconds("05:00")).toEqual(300);
-    done();
-  });
-
-  it("should give HH:MM:SS pattern from seconds", done => {
-    expect(Helper.secondsToHHMMSS(300)).toEqual("00:05:00");
-    expect(Helper.secondsToHHMMSS(300, true)).toEqual("5:00");
-    done();
-  });
-
   it("should give heart rate from heart rate reserve", done => {
     const maxHr = 200;
     const restHr = 50;

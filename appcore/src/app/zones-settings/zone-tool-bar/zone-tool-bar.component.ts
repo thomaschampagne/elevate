@@ -50,7 +50,7 @@ export class ZoneToolBarComponent implements OnInit {
     this.zonesService.addLastZone().then(
       message => this.popSnack(message),
       error => {
-        this.logger.error(error);
+        this.logger.warn(error);
         this.popSnack(error);
       }
     );
@@ -60,7 +60,7 @@ export class ZoneToolBarComponent implements OnInit {
     this.zonesService.removeLastZone().then(
       message => this.popSnack(message),
       error => {
-        this.logger.error(error);
+        this.logger.warn(error);
         this.popSnack(error);
       }
     );
@@ -92,16 +92,6 @@ export class ZoneToolBarComponent implements OnInit {
       }
       afterClosedSubscription.unsubscribe();
     });
-  }
-
-  public onSaveZones(): void {
-    this.zonesService.updateZones().then(
-      () => this.popSnack(this.zonesService.zoneDefinition.name + " zones have been saved"),
-      error => {
-        this.logger.error(error);
-        this.popSnack(error);
-      }
-    );
   }
 
   public onImportZones() {

@@ -1,5 +1,6 @@
 export class AppRoutes {
   public static readonly activities: string = "activities";
+  public static readonly activity: string = "activity";
   public static readonly fitnessTrend: string = "fitnessTrend";
   public static readonly yearProgressions: string = "yearProgressions";
   public static readonly globalSettings: string = "globalSettings";

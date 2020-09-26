@@ -5,20 +5,19 @@ import { ActivityComputer } from "@elevate/shared/sync";
 onmessage = (mainThreadEvent: MessageEvent) => {
   const threadMessage: ComputeActivityThreadMessageModel = mainThreadEvent.data;
 
-  const analysisComputer: ActivityComputer = new ActivityComputer(
-    threadMessage.activityType,
-    threadMessage.isTrainer,
-    threadMessage.userSettings,
+  const result: AnalysisDataModel = ActivityComputer.calculate(
+    {
+      type: threadMessage.activityType,
+      trainer: threadMessage.isTrainer,
+      hasPowerMeter: threadMessage.hasPowerMeter
+    },
     threadMessage.athleteSnapshot,
-    threadMessage.isOwner,
-    threadMessage.hasPowerMeter,
+    threadMessage.userSettings,
     threadMessage.activityStream,
-    threadMessage.bounds,
     threadMessage.returnZones,
-    threadMessage.returnPowerCurve,
+    threadMessage.bounds,
+    threadMessage.isOwner,
     threadMessage.activitySourceData
   );
-
-  const result: AnalysisDataModel = analysisComputer.compute(true);
   postMessage(result);
 };

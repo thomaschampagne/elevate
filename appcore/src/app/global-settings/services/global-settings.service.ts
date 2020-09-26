@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
-import { BuildTarget, MeasureSystem, Temperature } from "@elevate/shared/enums";
+import { BuildTarget, LeafletMapType, MeasureSystem, Temperature } from "@elevate/shared/enums";
 import { ListItemModel } from "../models/list-item.model";
 import _ from "lodash";
 
@@ -16,6 +16,7 @@ export class GlobalSettingsService {
       options: [
         {
           key: "systemUnit",
+          disableHelper: true,
           type: "list",
           labels: ["All"],
           list: [
@@ -32,6 +33,7 @@ export class GlobalSettingsService {
         },
         {
           key: "temperatureUnit",
+          disableHelper: true,
           type: "list",
           labels: ["All"],
           list: [
@@ -45,6 +47,22 @@ export class GlobalSettingsService {
             }
           ] as ListItemModel[],
           title: "Temperature"
+        }
+      ]
+    },
+    {
+      title: "Activity View",
+      buildTarget: BuildTarget.DESKTOP,
+      options: [
+        {
+          key: "defaultMapType",
+          disableHelper: true,
+          title: "Default map type",
+          type: "list",
+          labels: ["All"],
+          list: _.keys(LeafletMapType).map(mapTypeKey => {
+            return { name: _.startCase(mapTypeKey.toLowerCase()), key: LeafletMapType[mapTypeKey] };
+          })
         }
       ]
     },
@@ -82,14 +100,7 @@ export class GlobalSettingsService {
           key: "displayAdvancedPowerData",
           type: "checkbox",
           title: "Power stats",
-          enableSubOption: ["displayRunningPowerEstimation"],
           labels: ["Cycling", "Running"]
-        },
-        {
-          key: "displayRunningPowerEstimation",
-          type: "checkbox",
-          title: "Running power estimation (your activities only)",
-          labels: ["Running"]
         },
         {
           key: "displayAdvancedHrData",

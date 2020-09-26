@@ -18,7 +18,7 @@ import { DesktopUnauthorizedMachineIdDialogComponent } from "../app-load/desktop
 import { CoreModule } from "../core/core.module";
 import { DesktopRoutingModule } from "../shared/modules/routing/desktop-routing.module";
 import { AppService } from "../shared/services/app-service/app.service";
-import { DesktopAppService } from "../shared/services/app-service/impl/desktop-app.service";
+import { DesktopAppService } from "../shared/services/app-service/desktop/desktop-app.service";
 
 @NgModule({
   imports: [CoreModule, DesktopRoutingModule],

@@ -38,7 +38,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 202.969212372,
     commute: null,
     distance_raw: 2388.7,
     elapsed_time_raw: 1195,
@@ -65,11 +64,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: 0,
         medianGrade: 0,
         upFlatDownCadencePaceData: null,
-        upFlatDownDistanceData: {
-          down: 0.023300000000000088,
-          flat: 2.3316000000000003,
-          up: 0.030799999999999956
-        },
+        upFlatDownDistanceData: { down: 0.023300000000000088, flat: 2.3316000000000003, up: 0.030799999999999956 },
         upFlatDownInSeconds: { down: 16, flat: 1070, total: 1099, up: 13 },
         upFlatDownMoveData: { down: 5.24250000000002, flat: 7.844635514018693, up: 8.529230769230757 },
         upperQuartileGrade: 0
@@ -94,7 +89,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 462,
         best20min: null,
         genuineGradeAdjustedAvgPace: 458,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 666.6666666666666,
         medianPace: 454.54545454545445,
         paceZones: null,
@@ -109,7 +103,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         best20min: null,
         bestEightyPercent: 152.96124560669438,
         hasPowerMeter: false,
-        isEstimatedRunningPower: true,
         lowerQuartileWatts: 82,
         medianWatts: 141,
         powerStressScore: 25.377280371234807,
@@ -139,7 +132,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 237250976,
     moving_time_raw: 1058,
     name: "Reprise course à pied",
-
     start_time: "2015-01-05T14:30:44+0000",
     trainer: false,
     type: "Run"
@@ -157,31 +149,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 94.58323115,
     commute: false,
     distance_raw: 4524.1,
     elapsed_time_raw: 701,
     elevation_gain_raw: 63,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 67.23985890652557,
+        averageActiveCadence: 67.23985890652557,
         averageDistancePerOccurrence: 6.029258332792973,
-        cadencePercentageMoving: 80.6970509383378,
-        cadenceTimeMoving: 567,
+        cadenceActivePercentage: 80.6970509383378,
+        cadenceActiveTime: 567,
         cadenceZones: null,
         lowerQuartileCadence: 57,
-        lowerQuartileDistancePerOccurrence: 4.823529411765134,
         medianCadence: 70,
-        medianDistancePerOccurrence: 6.529411764705963,
         standardDeviationCadence: 26.1,
         totalOccurrences: 656.9916666666668,
-        upFlatDownCadencePaceData: {
-          down: 77.28846153846153,
-          flat: 67.11940298507463,
-          up: 71.03478260869565
-        },
-        upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.719008264462787
+        upFlatDownCadencePaceData: { down: 77.28846153846153, flat: 67.11940298507463, up: 71.03478260869565 },
+        upperQuartileCadence: 79
       },
       elevationData: {
         accumulatedElevationAscent: 63.07594181742829,
@@ -202,11 +186,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.9,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 77.28846153846153,
-          flat: 67.11940298507463,
-          up: 71.03478260869565
-        },
+        upFlatDownCadencePaceData: { down: 77.28846153846153, flat: 67.11940298507463, up: 71.03478260869565 },
         upFlatDownDistanceData: { down: 0.8325000000000002, flat: 2.793700000000001, up: 0.8932999999999989 },
         upFlatDownInSeconds: { down: 105, flat: 438, total: 700, up: 157 },
         upFlatDownMoveData: { down: 28.54285714285715, flat: 22.961917808219187, up: 20.4833121019108 },
@@ -232,7 +212,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 154,
         best20min: null,
         genuineGradeAdjustedAvgPace: 143,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 178.57142857142856,
         medianPace: 151.51515151515153,
         paceZones: null,
@@ -276,7 +255,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 239185425,
     moving_time_raw: 701,
     name: "10/01/2015 Meylan, RA, France",
-
     start_time: "2015-01-10T11:57:15+0000",
     trainer: false,
     type: "Ride"
@@ -294,27 +272,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 922.0196344849999,
     commute: false,
     distance_raw: 39127.2,
     elapsed_time_raw: 6567,
     elevation_gain_raw: 604,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 69.88344396720031,
+        averageActiveCadence: 69.88344396720031,
         averageDistancePerOccurrence: 4.982665462852314,
-        cadencePercentageMoving: 79.49359174742106,
-        cadenceTimeMoving: 5122,
+        cadenceActivePercentage: 79.49359174742106,
+        cadenceActiveTime: 5122,
         cadenceZones: null,
         lowerQuartileCadence: 61,
-        lowerQuartileDistancePerOccurrence: 2.9076923076919723,
         medianCadence: 71,
-        medianDistancePerOccurrence: 6.123456790123388,
         standardDeviationCadence: 6.4,
         totalOccurrences: 6232.416666666658,
         upFlatDownCadencePaceData: { down: 80.4408945686901, flat: 75.1304347826087, up: 63.18005354752343 },
-        upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.56953642384183
+        upperQuartileCadence: 80
       },
       elevationData: {
         accumulatedElevationAscent: 597.4210066083363,
@@ -361,7 +335,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 155,
         best20min: 116,
         genuineGradeAdjustedAvgPace: 155,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 303.03030303030306,
         medianPace: 161.29032258064515,
         paceZones: null,
@@ -405,7 +378,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 239185861,
     moving_time_raw: 6101,
     name: "Murianette low perfs :(",
-
     start_time: "2015-01-10T13:26:41+0000",
     trainer: false,
     type: "Ride"
@@ -423,31 +395,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 335.68067082399995,
     commute: false,
     distance_raw: 19183.9,
     elapsed_time_raw: 4022,
     elevation_gain_raw: 98,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 68.2213567839196,
+        averageActiveCadence: 68.2213567839196,
         averageDistancePerOccurrence: 6.330176482642569,
-        cadencePercentageMoving: 57.30103806228374,
-        cadenceTimeMoving: 1990,
+        cadenceActivePercentage: 57.30103806228374,
+        cadenceActiveTime: 1990,
         cadenceZones: null,
         lowerQuartileCadence: 62,
-        lowerQuartileDistancePerOccurrence: 6.135338345864826,
         medianCadence: 72,
-        medianDistancePerOccurrence: 6.531645569619148,
         standardDeviationCadence: 24.5,
         totalOccurrences: 2485.3749999999977,
-        upFlatDownCadencePaceData: {
-          down: 76.60416666666667,
-          flat: 71.63352826510722,
-          up: 63.80701754385965
-        },
-        upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.986842105263176
+        upFlatDownCadencePaceData: { down: 76.60416666666667, flat: 71.63352826510722, up: 63.80701754385965 },
+        upperQuartileCadence: 80
       },
       elevationData: {
         accumulatedElevationAscent: 97.49778324979522,
@@ -468,11 +432,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: 0,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 76.60416666666667,
-          flat: 71.63352826510722,
-          up: 63.80701754385965
-        },
+        upFlatDownCadencePaceData: { down: 76.60416666666667, flat: 71.63352826510722, up: 63.80701754385965 },
         upFlatDownDistanceData: { down: 1.9911999999999999, flat: 15.481499999999999, up: 1.702400000000002 },
         upFlatDownInSeconds: { down: 312, flat: 3123, total: 3768, up: 333 },
         upFlatDownMoveData: { down: 22.975384615384613, flat: 17.846109510086453, up: 18.404324324324346 },
@@ -498,7 +458,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 196,
         best20min: 148,
         genuineGradeAdjustedAvgPace: 181,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 588.2352941176471,
         medianPace: 185.18518518518516,
         paceZones: null,
@@ -542,7 +501,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 239727858,
     moving_time_raw: 3704,
     name: "Sortie Républicaine",
-
     start_time: "2015-01-11T14:32:39+0000",
     trainer: false,
     type: "Ride"
@@ -560,7 +518,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: null,
     commute: null,
     distance_raw: 54052.4,
     elapsed_time_raw: 25712,
@@ -598,7 +555,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 325,
         best20min: 173,
         genuineGradeAdjustedAvgPace: 120,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 9999.999999999998,
         medianPace: 666.6666666666666,
         paceZones: null,
@@ -626,7 +582,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 245459929,
     moving_time_raw: 11574,
     name: '"Professeur" de ski à Chamrousse',
-
     start_time: "2015-01-24T08:50:56+0000",
     trainer: false,
     type: "AlpineSki"
@@ -644,7 +599,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: null,
     commute: null,
     distance_raw: 55809.7,
     elapsed_time_raw: 23211,
@@ -671,11 +625,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: -16.1,
         medianGrade: -8.6,
         upFlatDownCadencePaceData: null,
-        upFlatDownDistanceData: {
-          down: 31.872399999999992,
-          flat: 0.5897000000000041,
-          up: 23.219600000000007
-        },
+        upFlatDownDistanceData: { down: 31.872399999999992, flat: 0.5897000000000041, up: 23.219600000000007 },
         upFlatDownInSeconds: { down: 5627, flat: 382, total: 11889, up: 5880 },
         upFlatDownMoveData: { down: 20.39108583614714, flat: 5.557382198952919, up: 14.216081632653065 },
         upperQuartileGrade: 18.6
@@ -686,7 +636,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 218,
         best20min: null,
         genuineGradeAdjustedAvgPace: 113,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 416.66666666666663,
         medianPace: 250.00000000000003,
         paceZones: null,
@@ -714,7 +663,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 248932866,
     moving_time_raw: 11365,
     name: '"Professeur" de ski à Chamrousse. Ep2',
-
     start_time: "2015-01-31T08:40:23+0000",
     trainer: false,
     type: "AlpineSki"
@@ -732,7 +680,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: null,
     commute: null,
     distance_raw: 120438,
     elapsed_time_raw: 24956,
@@ -770,7 +717,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 185,
         best20min: 125,
         genuineGradeAdjustedAvgPace: 90,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 2000.0000000000002,
         medianPace: 232.5581395348837,
         paceZones: null,
@@ -798,7 +744,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 251641603,
     moving_time_raw: 17827,
     name: "Val Thorens avec Pierre et Vik",
-
     start_time: "2015-02-07T08:03:06+0000",
     trainer: false,
     type: "AlpineSki"
@@ -816,7 +761,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 612.849856896,
     commute: null,
     distance_raw: 7184.5,
     elapsed_time_raw: 3004,
@@ -868,7 +812,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 412,
         best20min: 402,
         genuineGradeAdjustedAvgPace: 408,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 476.19047619047615,
         medianPace: 384.6153846153845,
         paceZones: null,
@@ -883,7 +826,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         best20min: 176.27623408333318,
         bestEightyPercent: 161.66065549084828,
         hasPowerMeter: false,
-        isEstimatedRunningPower: true,
         lowerQuartileWatts: 123,
         medianWatts: 165,
         powerStressScore: 83.97259685371888,
@@ -913,7 +855,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 260637750,
     moving_time_raw: 2901,
     name: "New ankle test (re-up by strava)",
-
     start_time: "2015-02-26T17:09:31+0000",
     trainer: false,
     type: "Run"
@@ -931,7 +872,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 189.180177915,
     commute: false,
     distance_raw: 12610.9,
     elapsed_time_raw: 3697,
@@ -958,11 +898,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: 0,
         medianGrade: 0,
         upFlatDownCadencePaceData: null,
-        upFlatDownDistanceData: {
-          down: 0.5424000000000008,
-          flat: 11.633599999999996,
-          up: 0.4064000000000019
-        },
+        upFlatDownDistanceData: { down: 0.5424000000000008, flat: 11.633599999999996, up: 0.4064000000000019 },
         upFlatDownInSeconds: { down: 72, flat: 1822, total: 2024, up: 130 },
         upFlatDownMoveData: { down: 27.12000000000004, flat: 22.98625686059275, up: 11.2541538461539 },
         upperQuartileGrade: 0
@@ -973,7 +909,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 161,
         best20min: 142,
         genuineGradeAdjustedAvgPace: 161,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 188.67924528301887,
         medianPace: 151.51515151515153,
         paceZones: null,
@@ -1017,7 +952,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 262615809,
     moving_time_raw: 2010,
     name: "Supeerr Markettt !!",
-
     start_time: "2015-03-03T17:22:33+0000",
     trainer: false,
     type: "Ride"
@@ -1035,31 +969,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1337.33663075,
     commute: false,
     distance_raw: 64561.5,
     elapsed_time_raw: 10346,
     elevation_gain_raw: 703,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 68.2588461077126,
+        averageActiveCadence: 68.2588461077126,
         averageDistancePerOccurrence: 5.0964873998986215,
-        cadencePercentageMoving: 76.82000893255918,
-        cadenceTimeMoving: 8337,
+        cadenceActivePercentage: 76.82000893255918,
+        cadenceActiveTime: 8337,
         cadenceZones: null,
         lowerQuartileCadence: 58,
-        lowerQuartileDistancePerOccurrence: 3.402985074626214,
         medianCadence: 72,
-        medianDistancePerOccurrence: 6.20134228187978,
         standardDeviationCadence: 0,
         totalOccurrences: 9827.458333333328,
-        upFlatDownCadencePaceData: {
-          down: 79.57967032967034,
-          flat: 73.69412607449857,
-          up: 57.21547619047619
-        },
-        upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.572916666666515
+        upFlatDownCadencePaceData: { down: 79.57967032967034, flat: 73.69412607449857, up: 57.21547619047619 },
+        upperQuartileCadence: 79
       },
       elevationData: {
         accumulatedElevationAscent: 699.7295627500218,
@@ -1080,11 +1006,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: 0,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 79.57967032967034,
-          flat: 73.69412607449857,
-          up: 57.21547619047619
-        },
+        upFlatDownCadencePaceData: { down: 79.57967032967034, flat: 73.69412607449857, up: 57.21547619047619 },
         upFlatDownDistanceData: { down: 10.496700000000004, flat: 44.352299999999985, up: 9.70030000000001 },
         upFlatDownInSeconds: { down: 1084, flat: 6103, total: 10047, up: 2860 },
         upFlatDownMoveData: { down: 34.85988929889301, flat: 26.162261183024736, up: 12.210167832167844 },
@@ -1110,7 +1032,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 155,
         best20min: 114,
         genuineGradeAdjustedAvgPace: 160,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 285.7142857142857,
         medianPace: 136.98630136986299,
         paceZones: null,
@@ -1154,7 +1075,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 264280115,
     moving_time_raw: 10018,
     name: "Reprise",
-
     start_time: "2015-03-07T12:18:17+0000",
     trainer: false,
     type: "Ride"
@@ -1172,7 +1092,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: null,
     commute: null,
     distance_raw: 81220.2,
     elapsed_time_raw: 20907,
@@ -1199,11 +1118,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: -19.6,
         medianGrade: -9.9,
         upFlatDownCadencePaceData: null,
-        upFlatDownDistanceData: {
-          down: 51.668000000000035,
-          flat: 1.8795999999999904,
-          up: 27.608199999999993
-        },
+        upFlatDownDistanceData: { down: 51.668000000000035, flat: 1.8795999999999904, up: 27.608199999999993 },
         upFlatDownInSeconds: { down: 6985, flat: 2014, total: 17143, up: 8144 },
         upFlatDownMoveData: { down: 26.629176807444544, flat: 3.3597616683217306, up: 12.204017681728876 },
         upperQuartileGrade: 23.1
@@ -1214,7 +1129,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 214,
         best20min: 129,
         genuineGradeAdjustedAvgPace: 102,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 1111.111111111111,
         medianPace: 277.77777777777777,
         paceZones: null,
@@ -1242,7 +1156,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 264947554,
     moving_time_raw: 14551,
     name: "Les 7 Laux avec Vik, 130 kph :)",
-
     start_time: "2015-03-08T07:47:10+0000",
     trainer: false,
     type: "AlpineSki"
@@ -1260,27 +1173,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 495.069616875,
     commute: false,
     distance_raw: 22476.4,
     elapsed_time_raw: 2544,
     elevation_gain_raw: 86,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 79.43247721623861,
+        averageActiveCadence: 79.43247721623861,
         averageDistancePerOccurrence: 6.807287034604829,
-        cadencePercentageMoving: 91.12299465240642,
-        cadenceTimeMoving: 2414,
+        cadenceActivePercentage: 91.12299465240642,
+        cadenceActiveTime: 2414,
         cadenceZones: null,
         lowerQuartileCadence: 75,
-        lowerQuartileDistancePerOccurrence: 6.576923076921817,
         medianCadence: 82,
-        medianDistancePerOccurrence: 6.978947368421168,
         standardDeviationCadence: 12,
         totalOccurrences: 3242.8249999999975,
         upFlatDownCadencePaceData: { down: 80.3265306122449, flat: 80.20725388601036, up: 73.86507936507937 },
-        upperQuartileCadence: 87,
-        upperQuartileDistancePerOccurrence: 7.0695652173914
+        upperQuartileCadence: 87
       },
       elevationData: {
         accumulatedElevationAscent: 84.73228628197774,
@@ -1327,7 +1236,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 113,
         best20min: 107,
         genuineGradeAdjustedAvgPace: 114,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 120.48192771084338,
         medianPace: 108.69565217391305,
         paceZones: null,
@@ -1371,7 +1279,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 270802574,
     moving_time_raw: 2525,
     name: "Mini Turbo",
-
     start_time: "2015-03-19T17:35:22+0000",
     trainer: false,
     type: "Ride"
@@ -1389,31 +1296,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1509.906791925,
     commute: false,
     distance_raw: 62729.5,
     elapsed_time_raw: 14770,
     elevation_gain_raw: 1030,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 66.39622204195156,
+        averageActiveCadence: 66.39622204195156,
         averageDistancePerOccurrence: 5.237711635616835,
-        cadencePercentageMoving: 80.59299191374663,
-        cadenceTimeMoving: 8629,
+        cadenceActivePercentage: 80.59299191374663,
+        cadenceActiveTime: 8629,
         cadenceZones: null,
         lowerQuartileCadence: 58,
-        lowerQuartileDistancePerOccurrence: 2.8905109489044722,
         medianCadence: 67,
-        medianDistancePerOccurrence: 4.734246575341748,
         standardDeviationCadence: 12.7,
         totalOccurrences: 10217.324999999957,
-        upFlatDownCadencePaceData: {
-          down: 74.62724014336918,
-          flat: 73.27117031398667,
-          up: 61.18703919285991
-        },
-        upperQuartileCadence: 77,
-        upperQuartileDistancePerOccurrence: 6.580301685891865
+        upFlatDownCadencePaceData: { down: 74.62724014336918, flat: 73.27117031398667, up: 61.18703919285991 },
+        upperQuartileCadence: 77
       },
       elevationData: {
         accumulatedElevationAscent: 810.203799195876,
@@ -1434,16 +1333,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -1.7,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 74.62724014336918,
-          flat: 73.27117031398667,
-          up: 61.18703919285991
-        },
-        upFlatDownDistanceData: {
-          down: 15.724499999999981,
-          flat: 31.291700000000077,
-          up: 15.661299999999938
-        },
+        upFlatDownCadencePaceData: { down: 74.62724014336918, flat: 73.27117031398667, up: 61.18703919285991 },
+        upFlatDownDistanceData: { down: 15.724499999999981, flat: 31.291700000000077, up: 15.661299999999938 },
         upFlatDownInSeconds: { down: 1401, flat: 4163, total: 10016, up: 4452 },
         upFlatDownMoveData: { down: 40.40556745182008, flat: 27.059841460485295, up: 12.66412398921828 },
         upperQuartileGrade: 1.6
@@ -1468,7 +1359,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 159,
         best20min: null,
         genuineGradeAdjustedAvgPace: 155,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 322.5806451612903,
         medianPace: 161.29032258064515,
         paceZones: null,
@@ -1512,7 +1402,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 271244292,
     moving_time_raw: 10045,
     name: "Reprise ep2",
-
     start_time: "2015-03-20T12:41:37+0000",
     trainer: false,
     type: "Ride"
@@ -1530,31 +1419,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 621.0536976800001,
     commute: false,
     distance_raw: 30715.8,
     elapsed_time_raw: 4019,
     elevation_gain_raw: 130,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 77.16856457896314,
+        averageActiveCadence: 77.16856457896314,
         averageDistancePerOccurrence: 6.431523758136379,
-        cadencePercentageMoving: 80.3595206391478,
-        cadenceTimeMoving: 3337,
+        cadenceActivePercentage: 80.3595206391478,
+        cadenceActiveTime: 3337,
         cadenceZones: null,
         lowerQuartileCadence: 72,
-        lowerQuartileDistancePerOccurrence: 6.168674698795268,
         medianCadence: 81,
-        medianDistancePerOccurrence: 6.514285714286026,
         standardDeviationCadence: 14.3,
         totalOccurrences: 4449.39166666668,
-        upFlatDownCadencePaceData: {
-          down: 81.67403314917127,
-          flat: 78.02224824355972,
-          up: 68.11046511627907
-        },
-        upperQuartileCadence: 87,
-        upperQuartileDistancePerOccurrence: 6.67669172932298
+        upFlatDownCadencePaceData: { down: 81.67403314917127, flat: 78.02224824355972, up: 68.11046511627907 },
+        upperQuartileCadence: 87
       },
       elevationData: {
         accumulatedElevationAscent: 129.05736284586584,
@@ -1575,11 +1456,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: 0,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 81.67403314917127,
-          flat: 78.02224824355972,
-          up: 68.11046511627907
-        },
+        upFlatDownCadencePaceData: { down: 81.67403314917127, flat: 78.02224824355972, up: 68.11046511627907 },
         upFlatDownDistanceData: { down: 2.103799999999993, flat: 26.518199999999986, up: 2.0885000000000185 },
         upFlatDownInSeconds: { down: 253, flat: 3334, total: 3946, up: 359 },
         upFlatDownMoveData: { down: 29.93549407114614, flat: 28.633929214157156, up: 20.943175487465368 },
@@ -1605,7 +1482,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 128,
         best20min: 113,
         genuineGradeAdjustedAvgPace: 132,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 142.85714285714286,
         medianPace: 120.48192771084338,
         paceZones: null,
@@ -1649,7 +1525,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 273477702,
     moving_time_raw: 3952,
     name: "Train",
-
     start_time: "2015-03-24T17:35:03+0000",
     trainer: false,
     type: "Ride"
@@ -1667,31 +1542,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 887.2320213900001,
     commute: false,
     distance_raw: 51939.9,
     elapsed_time_raw: 7637,
     elevation_gain_raw: 216,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 72.3490977443609,
+        averageActiveCadence: 72.3490977443609,
         averageDistancePerOccurrence: 5.951873033363258,
-        cadencePercentageMoving: 84.77366255144034,
-        cadenceTimeMoving: 6650,
+        cadenceActivePercentage: 84.77366255144034,
+        cadenceActiveTime: 6650,
         cadenceZones: null,
         lowerQuartileCadence: 69,
-        lowerQuartileDistancePerOccurrence: 5.532163742689548,
         medianCadence: 75,
-        medianDistancePerOccurrence: 6.131578947369187,
         standardDeviationCadence: 14.3,
         totalOccurrences: 8326.199999999986,
-        upFlatDownCadencePaceData: {
-          down: 77.78703703703704,
-          flat: 73.37010904425914,
-          up: 66.66057441253264
-        },
-        upperQuartileCadence: 81,
-        upperQuartileDistancePerOccurrence: 6.222222222222222
+        upFlatDownCadencePaceData: { down: 77.78703703703704, flat: 73.37010904425914, up: 66.66057441253264 },
+        upperQuartileCadence: 81
       },
       elevationData: {
         accumulatedElevationAscent: 213.84765328247812,
@@ -1712,11 +1579,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: 0,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 77.78703703703704,
-          flat: 73.37010904425914,
-          up: 66.66057441253264
-        },
+        upFlatDownCadencePaceData: { down: 77.78703703703704, flat: 73.37010904425914, up: 66.66057441253264 },
         upFlatDownDistanceData: { down: 3.6774000000000044, flat: 44.776900000000026, up: 3.482099999999971 },
         upFlatDownInSeconds: { down: 487, flat: 6398, total: 7539, up: 654 },
         upFlatDownMoveData: { down: 27.184065708418927, flat: 25.194879649890606, up: 19.167522935779658 },
@@ -1742,7 +1605,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 145,
         best20min: 125,
         genuineGradeAdjustedAvgPace: 147,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 158.73015873015873,
         medianPace: 138.88888888888889,
         paceZones: null,
@@ -1786,7 +1648,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 274883979,
     moving_time_raw: 7566,
     name: "Relax ep 01",
-
     start_time: "2015-03-27T15:04:14+0000",
     trainer: false,
     type: "Ride"
@@ -1804,27 +1665,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 679.476534425,
     commute: false,
     distance_raw: 36507.8,
     elapsed_time_raw: 4927,
     elevation_gain_raw: 145,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 72.33978220574606,
+        averageActiveCadence: 72.33978220574606,
         averageDistancePerOccurrence: 6.383921630370356,
-        cadencePercentageMoving: 84.50704225352112,
-        cadenceTimeMoving: 4316,
+        cadenceActivePercentage: 84.50704225352112,
+        cadenceActiveTime: 4316,
         cadenceZones: null,
         lowerQuartileCadence: 68,
-        lowerQuartileDistancePerOccurrence: 6.1474067333939155,
         medianCadence: 74,
-        medianDistancePerOccurrence: 6.490730643402447,
         standardDeviationCadence: 16.5,
         totalOccurrences: 5341.791666666662,
         upFlatDownCadencePaceData: { down: 80.33333333333333, flat: 74.17077986179665, up: 65.1 },
-        upperQuartileCadence: 81,
-        upperQuartileDistancePerOccurrence: 6.599999999998545
+        upperQuartileCadence: 81
       },
       elevationData: {
         accumulatedElevationAscent: 143.6786960009709,
@@ -1871,7 +1728,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 135,
         best20min: 115,
         genuineGradeAdjustedAvgPace: 135,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 151.51515151515153,
         medianPace: 131.57894736842104,
         paceZones: null,
@@ -1915,7 +1771,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 275456782,
     moving_time_raw: 4927,
     name: "Relax ep 02",
-
     start_time: "2015-03-28T14:32:01+0000",
     trainer: false,
     type: "Ride"
@@ -1933,31 +1788,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 559.1831713304999,
     commute: false,
     distance_raw: 40451.4,
     elapsed_time_raw: 17667,
     elevation_gain_raw: 234,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 50.75324543610547,
+        averageActiveCadence: 50.75324543610547,
         averageDistancePerOccurrence: 6.276458737800621,
-        cadencePercentageMoving: 56.2050947093403,
-        cadenceTimeMoving: 4930,
+        cadenceActivePercentage: 56.2050947093403,
+        cadenceActiveTime: 4930,
         cadenceZones: null,
         lowerQuartileCadence: 45,
-        lowerQuartileDistancePerOccurrence: 5.025641025642519,
         medianCadence: 51,
-        medianDistancePerOccurrence: 6.410958904108991,
         standardDeviationCadence: 27.6,
         totalOccurrences: 5577.399999999996,
-        upFlatDownCadencePaceData: {
-          down: 70.71818181818182,
-          flat: 53.90523465703971,
-          up: 53.040712468193384
-        },
-        upperQuartileCadence: 61,
-        upperQuartileDistancePerOccurrence: 7.066666666667313
+        upFlatDownCadencePaceData: { down: 70.71818181818182, flat: 53.90523465703971, up: 53.040712468193384 },
+        upperQuartileCadence: 61
       },
       elevationData: {
         accumulatedElevationAscent: 225.16270843896066,
@@ -1978,16 +1825,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: 0,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 70.71818181818182,
-          flat: 53.90523465703971,
-          up: 53.040712468193384
-        },
-        upFlatDownDistanceData: {
-          down: 3.9040000000000106,
-          flat: 33.093900000000005,
-          up: 3.3764999999999925
-        },
+        upFlatDownCadencePaceData: { down: 70.71818181818182, flat: 53.90523465703971, up: 53.040712468193384 },
+        upFlatDownDistanceData: { down: 3.9040000000000106, flat: 33.093900000000005, up: 3.3764999999999925 },
         upFlatDownInSeconds: { down: 565, flat: 7048, total: 8641, up: 1028 },
         upFlatDownMoveData: { down: 24.875044247787677, flat: 16.903808172531214, up: 11.824319066147835 },
         upperQuartileGrade: 0
@@ -2012,7 +1851,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 214,
         best20min: null,
         genuineGradeAdjustedAvgPace: 203,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 294.11764705882354,
         medianPace: 227.27272727272722,
         paceZones: null,
@@ -2056,7 +1894,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 282212953,
     moving_time_raw: 8647,
     name: "Picnic",
-
     start_time: "2015-04-06T09:02:44+0000",
     trainer: false,
     type: "Ride"
@@ -2074,31 +1911,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 461.88127281,
     commute: false,
     distance_raw: 25904.3,
     elapsed_time_raw: 3709,
     elevation_gain_raw: 102,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 71.79096937164509,
+        averageActiveCadence: 71.79096937164509,
         averageDistancePerOccurrence: 6.252471882151118,
-        cadencePercentageMoving: 85.48262548262548,
-        cadenceTimeMoving: 3167,
+        cadenceActivePercentage: 85.48262548262548,
+        cadenceActiveTime: 3167,
         cadenceZones: null,
         lowerQuartileCadence: 68,
-        lowerQuartileDistancePerOccurrence: 6.131249999999965,
         medianCadence: 74,
-        medianDistancePerOccurrence: 6.23673469387767,
         standardDeviationCadence: 13.5,
         totalOccurrences: 3883.0749999999975,
-        upFlatDownCadencePaceData: {
-          down: 75.12738853503184,
-          flat: 72.81841763942931,
-          up: 66.89944134078212
-        },
-        upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.588039867109489
+        upFlatDownCadencePaceData: { down: 75.12738853503184, flat: 72.81841763942931, up: 66.89944134078212 },
+        upperQuartileCadence: 79
       },
       elevationData: {
         accumulatedElevationAscent: 99.72811643260611,
@@ -2119,16 +1948,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: 0,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 75.12738853503184,
-          flat: 72.81841763942931,
-          up: 66.89944134078212
-        },
-        upFlatDownDistanceData: {
-          down: 1.8282999999999985,
-          flat: 22.318500000000004,
-          up: 1.7536999999999958
-        },
+        upFlatDownCadencePaceData: { down: 75.12738853503184, flat: 72.81841763942931, up: 66.89944134078212 },
+        upFlatDownDistanceData: { down: 1.8282999999999985, flat: 22.318500000000004, up: 1.7536999999999958 },
         upFlatDownInSeconds: { down: 231, flat: 3059, total: 3624, up: 334 },
         upFlatDownMoveData: { down: 28.492987012986994, flat: 26.265642366786533, up: 18.90215568862271 },
         upperQuartileGrade: 0
@@ -2153,7 +1974,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 140,
         best20min: 124,
         genuineGradeAdjustedAvgPace: 141,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 156.24999999999997,
         medianPace: 133.33333333333334,
         paceZones: null,
@@ -2197,7 +2017,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 282212940,
     moving_time_raw: 3634,
     name: "Ride",
-
     start_time: "2015-04-07T16:15:57+0000",
     trainer: false,
     type: "Ride"
@@ -2215,27 +2034,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 67.7253917955,
     commute: false,
     distance_raw: 3619.9,
     elapsed_time_raw: 1316,
     elevation_gain_raw: 111,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 74.22457627118644,
+        averageActiveCadence: 74.22457627118644,
         averageDistancePerOccurrence: 6.3478474649496155,
-        cadencePercentageMoving: 48.632218844984806,
-        cadenceTimeMoving: 354,
+        cadenceActivePercentage: 48.632218844984806,
+        cadenceActiveTime: 354,
         cadenceZones: null,
         lowerQuartileCadence: 70,
-        lowerQuartileDistancePerOccurrence: 4.766666666666727,
         medianCadence: 78,
-        medianDistancePerOccurrence: 6.942857142857143,
         standardDeviationCadence: 22,
         totalOccurrences: 462.47499999999997,
         upFlatDownCadencePaceData: { down: 85.61111111111111, flat: 75.8586956521739, up: 67.21875 },
-        upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 7.034482758620668
+        upperQuartileCadence: 85
       },
       elevationData: {
         accumulatedElevationAscent: 60.410156106896466,
@@ -2282,7 +2097,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 254,
         best20min: 321,
         genuineGradeAdjustedAvgPace: 202,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 1000.0000000000001,
         medianPace: 909.0909090909089,
         paceZones: null,
@@ -2326,7 +2140,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 282212296,
     moving_time_raw: 849,
     name: "Puncture !",
-
     start_time: "2015-04-08T16:26:20+0000",
     trainer: false,
     type: "Ride"
@@ -2344,31 +2157,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 481.84372214,
     commute: false,
     distance_raw: 27730.9,
     elapsed_time_raw: 3899,
     elevation_gain_raw: 91,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 69.33850746268656,
+        averageActiveCadence: 69.33850746268656,
         averageDistancePerOccurrence: 6.549478439951702,
-        cadencePercentageMoving: 83.57664233576642,
-        cadenceTimeMoving: 3350,
+        cadenceActivePercentage: 83.57664233576642,
+        cadenceActiveTime: 3350,
         cadenceZones: null,
         lowerQuartileCadence: 64,
-        lowerQuartileDistancePerOccurrence: 6.1875,
         medianCadence: 72,
-        medianDistancePerOccurrence: 6.540117416829618,
         standardDeviationCadence: 13.5,
         totalOccurrences: 4005.975000000004,
-        upFlatDownCadencePaceData: {
-          down: 74.43478260869566,
-          flat: 70.47660098522168,
-          up: 59.43604651162791
-        },
-        upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.640776699029973
+        upFlatDownCadencePaceData: { down: 74.43478260869566, flat: 70.47660098522168, up: 59.43604651162791 },
+        upperQuartileCadence: 79
       },
       elevationData: {
         accumulatedElevationAscent: 90.33168460204153,
@@ -2389,11 +2194,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: 0,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 74.43478260869566,
-          flat: 70.47660098522168,
-          up: 59.43604651162791
-        },
+        upFlatDownCadencePaceData: { down: 74.43478260869566, flat: 70.47660098522168, up: 59.43604651162791 },
         upFlatDownDistanceData: { down: 1.862999999999987, flat: 24.187400000000004, up: 1.680500000000008 },
         upFlatDownInSeconds: { down: 244, flat: 3368, total: 3899, up: 287 },
         upFlatDownMoveData: { down: 27.48688524590145, flat: 25.853515439429934, up: 21.079442508710905 },
@@ -2419,7 +2220,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 140,
         best20min: 126,
         genuineGradeAdjustedAvgPace: 142,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 166.66666666666666,
         medianPace: 135.13513513513513,
         paceZones: null,
@@ -2463,7 +2263,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 282212375,
     moving_time_raw: 3883,
     name: "Ride",
-
     start_time: "2015-04-09T16:45:52+0000",
     trainer: false,
     type: "Ride"
@@ -2481,31 +2280,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 818.072004475,
     commute: false,
     distance_raw: 31469,
     elapsed_time_raw: 5610,
     elevation_gain_raw: 567,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 71.99688697318008,
+        averageActiveCadence: 71.99688697318008,
         averageDistancePerOccurrence: 4.581563683307916,
-        cadencePercentageMoving: 79.95562130177515,
-        cadenceTimeMoving: 4176,
+        cadenceActivePercentage: 79.95562130177515,
+        cadenceActiveTime: 4176,
         cadenceZones: null,
         lowerQuartileCadence: 66,
-        lowerQuartileDistancePerOccurrence: 2.9090909090899166,
         medianCadence: 72,
-        medianDistancePerOccurrence: 4.455172413793003,
         standardDeviationCadence: 10.1,
         totalOccurrences: 5470.874999999998,
-        upFlatDownCadencePaceData: {
-          down: 79.93449781659389,
-          flat: 75.81001727115716,
-          up: 68.40989660265879
-        },
-        upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.644067796609984
+        upFlatDownCadencePaceData: { down: 79.93449781659389, flat: 75.81001727115716, up: 68.40989660265879 },
+        upperQuartileCadence: 80
       },
       elevationData: {
         accumulatedElevationAscent: 565.0877071653083,
@@ -2526,11 +2317,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -1.8,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 79.93449781659389,
-          flat: 75.81001727115716,
-          up: 68.40989660265879
-        },
+        upFlatDownCadencePaceData: { down: 79.93449781659389, flat: 75.81001727115716, up: 68.40989660265879 },
         upFlatDownDistanceData: { down: 8.00290000000001, flat: 15.347899999999976, up: 8.111500000000019 },
         upFlatDownInSeconds: { down: 731, flat: 2048, total: 4891, up: 2112 },
         upFlatDownMoveData: { down: 39.41236662106708, flat: 26.97873046874996, up: 13.826420454545486 },
@@ -2556,7 +2343,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 155,
         best20min: 104,
         genuineGradeAdjustedAvgPace: 147,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 285.7142857142857,
         medianPace: 175.43859649122808,
         paceZones: null,
@@ -2600,7 +2386,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 284737783,
     moving_time_raw: 4895,
     name: "Pérérrée",
-
     start_time: "2015-04-13T15:59:16+0000",
     trainer: false,
     type: "Ride"
@@ -2618,31 +2403,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 907.3793154200001,
     commute: false,
     distance_raw: 35194.2,
     elapsed_time_raw: 7803,
     elevation_gain_raw: 672,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 68.76873875674595,
+        averageActiveCadence: 68.76873875674595,
         averageDistancePerOccurrence: 4.692495117256285,
-        cadencePercentageMoving: 79.86698911729141,
-        cadenceTimeMoving: 5003,
+        cadenceActivePercentage: 79.86698911729141,
+        cadenceActiveTime: 5003,
         cadenceZones: null,
         lowerQuartileCadence: 62,
-        lowerQuartileDistancePerOccurrence: 2.8679245283040835,
         medianCadence: 70,
-        medianDistancePerOccurrence: 3.807407407407515,
         standardDeviationCadence: 14.1,
         totalOccurrences: 5876.391666666677,
-        upFlatDownCadencePaceData: {
-          down: 75.57961783439491,
-          flat: 75.38935108153078,
-          up: 65.22524609148813
-        },
-        upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.516201117318424
+        upFlatDownCadencePaceData: { down: 75.57961783439491, flat: 75.38935108153078, up: 65.22524609148813 },
+        upperQuartileCadence: 79
       },
       elevationData: {
         accumulatedElevationAscent: 669.4002518594066,
@@ -2663,11 +2440,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.3,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 75.57961783439491,
-          flat: 75.38935108153078,
-          up: 65.22524609148813
-        },
+        upFlatDownCadencePaceData: { down: 75.57961783439491, flat: 75.38935108153078, up: 65.22524609148813 },
         upFlatDownDistanceData: { down: 9.622500000000002, flat: 15.847899999999997, up: 9.707799999999997 },
         upFlatDownInSeconds: { down: 907, flat: 2285, total: 5913, up: 2721 },
         upFlatDownMoveData: { down: 38.19294377067256, flat: 24.968245076586427, up: 12.8438368246968 },
@@ -2693,7 +2466,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 167,
         best20min: 111,
         genuineGradeAdjustedAvgPace: 155,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 312.49999999999994,
         medianPace: 192.30769230769226,
         paceZones: null,
@@ -2737,7 +2509,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 285393369,
     moving_time_raw: 5839,
     name: "Pérérrée",
-
     start_time: "2015-04-14T16:14:52+0000",
     trainer: false,
     type: "Ride"
@@ -2755,27 +2526,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 672.3802652200001,
     commute: false,
     distance_raw: 31451.8,
     elapsed_time_raw: 4481,
     elevation_gain_raw: 235,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 72.93457432247467,
+        averageActiveCadence: 72.93457432247467,
         averageDistancePerOccurrence: 6.043326326173418,
-        cadencePercentageMoving: 80.53475935828877,
-        cadenceTimeMoving: 3653,
+        cadenceActivePercentage: 80.53475935828877,
+        cadenceActiveTime: 3653,
         cadenceZones: null,
         lowerQuartileCadence: 69,
-        lowerQuartileDistancePerOccurrence: 6.268852459016418,
         medianCadence: 76,
-        medianDistancePerOccurrence: 6.566666666666758,
         standardDeviationCadence: 14.6,
         totalOccurrences: 4580.074999999997,
         upFlatDownCadencePaceData: { down: 79.79802955665025, flat: 74.48567870485678, up: 67.49 },
-        upperQuartileCadence: 82,
-        upperQuartileDistancePerOccurrence: 6.92941176470584
+        upperQuartileCadence: 82
       },
       elevationData: {
         accumulatedElevationAscent: 233.60224932681913,
@@ -2822,7 +2589,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 136,
         best20min: 111,
         genuineGradeAdjustedAvgPace: 138,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 175.43859649122808,
         medianPace: 125.00000000000001,
         paceZones: null,
@@ -2866,7 +2632,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 286667453,
     moving_time_raw: 4286,
     name: "Train",
-
     start_time: "2015-04-16T16:29:13+0000",
     trainer: false,
     type: "Ride"
@@ -2884,27 +2649,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1039.91747215,
     commute: false,
     distance_raw: 49583.7,
     elapsed_time_raw: 9866,
     elevation_gain_raw: 305,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 75.12729869666131,
+        averageActiveCadence: 75.12729869666131,
         averageDistancePerOccurrence: 6.484914007433351,
-        cadencePercentageMoving: 84.68703427719821,
-        cadenceTimeMoving: 5601,
+        cadenceActivePercentage: 84.68703427719821,
+        cadenceActiveTime: 5601,
         cadenceZones: null,
         lowerQuartileCadence: 70,
-        lowerQuartileDistancePerOccurrence: 6.171428571428476,
         medianCadence: 78,
-        medianDistancePerOccurrence: 6.476821192054136,
         standardDeviationCadence: 13.7,
         totalOccurrences: 7232.374999999996,
         upFlatDownCadencePaceData: { down: 80.7531914893617, flat: 76.52231793265466, up: 66.61787072243347 },
-        upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 6.857142857143345
+        upperQuartileCadence: 85
       },
       elevationData: {
         accumulatedElevationAscent: 294.20599305664297,
@@ -2951,7 +2712,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 129,
         best20min: 111,
         genuineGradeAdjustedAvgPace: 129,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 147.05882352941177,
         medianPace: 123.45679012345678,
         paceZones: null,
@@ -2995,7 +2755,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 287794642,
     moving_time_raw: 6410,
     name: "Train",
-
     start_time: "2015-04-18T12:47:34+0000",
     trainer: false,
     type: "Ride"
@@ -3013,27 +2772,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1165.9384193150001,
     commute: false,
     distance_raw: 48077.6,
     elapsed_time_raw: 6844,
     elevation_gain_raw: 621,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 75.38994143988977,
+        averageActiveCadence: 75.38994143988977,
         averageDistancePerOccurrence: 5.264842398534658,
-        cadencePercentageMoving: 82.25440090857468,
-        cadenceTimeMoving: 5806,
+        cadenceActivePercentage: 82.25440090857468,
+        cadenceActiveTime: 5806,
         cadenceZones: null,
         lowerQuartileCadence: 70,
-        lowerQuartileDistancePerOccurrence: 3.3290322580646574,
         medianCadence: 78,
-        medianDistancePerOccurrence: 6.1711229946520945,
         standardDeviationCadence: 13.5,
         totalOccurrences: 7471.291666666666,
         upFlatDownCadencePaceData: { down: 80.6103896103896, flat: 78.73548387096774, up: 71.8072880168185 },
-        upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 6.574468085106209
+        upperQuartileCadence: 85
       },
       elevationData: {
         accumulatedElevationAscent: 618.0708752273171,
@@ -3080,7 +2835,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 139,
         best20min: 101,
         genuineGradeAdjustedAvgPace: 138,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 227.27272727272722,
         medianPace: 129.87012987012986,
         paceZones: null,
@@ -3124,7 +2878,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 289256521,
     moving_time_raw: 6689,
     name: "Pérérrée",
-
     start_time: "2015-04-20T16:11:00+0000",
     trainer: false,
     type: "Ride"
@@ -3142,31 +2895,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 998.1949437300001,
     commute: false,
     distance_raw: 39291.5,
     elapsed_time_raw: 5688,
     elevation_gain_raw: 672,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 76.42428362267309,
+        averageActiveCadence: 76.42428362267309,
         averageDistancePerOccurrence: 5.152416869344726,
-        cadencePercentageMoving: 82.24158653846155,
-        cadenceTimeMoving: 4781,
+        cadenceActivePercentage: 82.24158653846155,
+        cadenceActiveTime: 4781,
         cadenceZones: null,
         lowerQuartileCadence: 72,
-        lowerQuartileDistancePerOccurrence: 2.9638554216870094,
         medianCadence: 78,
-        medianDistancePerOccurrence: 4.96969696969697,
         standardDeviationCadence: 17.1,
         totalOccurrences: 6191.091666666676,
-        upFlatDownCadencePaceData: {
-          down: 84.05566600397614,
-          flat: 78.42583732057416,
-          up: 74.88176726820161
-        },
-        upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 6.702702702699557
+        upFlatDownCadencePaceData: { down: 84.05566600397614, flat: 78.42583732057416, up: 74.88176726820161 },
+        upperQuartileCadence: 85
       },
       elevationData: {
         accumulatedElevationAscent: 670.1429593433115,
@@ -3187,11 +2932,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.6,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 84.05566600397614,
-          flat: 78.42583732057416,
-          up: 74.88176726820161
-        },
+        upFlatDownCadencePaceData: { down: 84.05566600397614, flat: 78.42583732057416, up: 74.88176726820161 },
         upFlatDownDistanceData: { down: 11.842500000000003, flat: 17.723100000000006, up: 9.722499999999997 },
         upFlatDownInSeconds: { down: 1041, flat: 2251, total: 5608, up: 2316 },
         upFlatDownMoveData: { down: 40.953890489913555, flat: 28.344362505553097, up: 15.11269430051813 },
@@ -3217,7 +2958,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 142,
         best20min: 88,
         genuineGradeAdjustedAvgPace: 138,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 250.00000000000003,
         medianPace: 151.51515151515153,
         paceZones: null,
@@ -3261,7 +3001,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 289885825,
     moving_time_raw: 5591,
     name: "Murianette - Pinet // Burned !",
-
     start_time: "2015-04-21T16:21:12+0000",
     trainer: false,
     type: "Ride"
@@ -3279,31 +3018,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1147.4593403400002,
     commute: false,
     distance_raw: 44186.2,
     elapsed_time_raw: 7815,
     elevation_gain_raw: 830,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 67.51126690035052,
+        averageActiveCadence: 67.51126690035052,
         averageDistancePerOccurrence: 4.650257098963327,
-        cadencePercentageMoving: 78.22778595974472,
-        cadenceTimeMoving: 5991,
+        cadenceActivePercentage: 78.22778595974472,
+        cadenceActiveTime: 5991,
         cadenceZones: null,
         lowerQuartileCadence: 56,
-        lowerQuartileDistancePerOccurrence: 2.887218045113438,
         medianCadence: 69,
-        medianDistancePerOccurrence: 4.346456692913384,
         standardDeviationCadence: 5.9,
         totalOccurrences: 7245.574999999979,
-        upFlatDownCadencePaceData: {
-          down: 82.57396449704142,
-          flat: 76.59299191374663,
-          up: 59.799240626483154
-        },
-        upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.508108108108186
+        upFlatDownCadencePaceData: { down: 82.57396449704142, flat: 76.59299191374663, up: 59.799240626483154 },
+        upperQuartileCadence: 79
       },
       elevationData: {
         accumulatedElevationAscent: 829.0001974398504,
@@ -3324,16 +3055,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.5,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 82.57396449704142,
-          flat: 76.59299191374663,
-          up: 59.799240626483154
-        },
-        upFlatDownDistanceData: {
-          down: 12.167900000000017,
-          flat: 20.784599999999962,
-          up: 11.223400000000018
-        },
+        upFlatDownCadencePaceData: { down: 82.57396449704142, flat: 76.59299191374663, up: 59.799240626483154 },
+        upFlatDownDistanceData: { down: 12.167900000000017, flat: 20.784599999999962, up: 11.223400000000018 },
         upFlatDownInSeconds: { down: 1151, flat: 2961, total: 7426, up: 3314 },
         upFlatDownMoveData: { down: 38.057723718505706, flat: 25.270030395136732, up: 12.191985515992778 },
         upperQuartileGrade: 1.8
@@ -3358,7 +3081,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 164,
         best20min: 110,
         genuineGradeAdjustedAvgPace: 160,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 357.1428571428571,
         medianPace: 175.43859649122808,
         paceZones: null,
@@ -3402,7 +3124,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 290654204,
     moving_time_raw: 7156,
     name: "Saint-Jean-le-Vieux - Revel",
-
     start_time: "2015-04-22T16:11:38+0000",
     trainer: false,
     type: "Ride"
@@ -3420,31 +3141,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 834.8754882100001,
     commute: false,
     distance_raw: 40534.2,
     elapsed_time_raw: 5423,
     elevation_gain_raw: 203,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 72.03725184028552,
+        averageActiveCadence: 72.03725184028552,
         averageDistancePerOccurrence: 6.7503001375729115,
-        cadencePercentageMoving: 79.92202729044834,
-        cadenceTimeMoving: 4483,
+        cadenceActivePercentage: 79.92202729044834,
+        cadenceActiveTime: 4483,
         cadenceZones: null,
         lowerQuartileCadence: 70,
-        lowerQuartileDistancePerOccurrence: 6.187866927592826,
         medianCadence: 76,
-        medianDistancePerOccurrence: 6.5740740740740735,
         standardDeviationCadence: 17.6,
         totalOccurrences: 5594.408333333328,
-        upFlatDownCadencePaceData: {
-          down: 77.11619718309859,
-          flat: 74.00869565217391,
-          up: 66.01869158878505
-        },
-        upperQuartileCadence: 82,
-        upperQuartileDistancePerOccurrence: 7.032258064516129
+        upFlatDownCadencePaceData: { down: 77.11619718309859, flat: 74.00869565217391, up: 66.01869158878505 },
+        upperQuartileCadence: 82
       },
       elevationData: {
         accumulatedElevationAscent: 201.4487503028844,
@@ -3465,11 +3178,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: 0,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 77.11619718309859,
-          flat: 74.00869565217391,
-          up: 66.01869158878505
-        },
+        upFlatDownCadencePaceData: { down: 77.11619718309859, flat: 74.00869565217391, up: 66.01869158878505 },
         upFlatDownDistanceData: { down: 3.503600000000004, flat: 33.73229999999999, up: 3.2885000000000044 },
         upFlatDownInSeconds: { down: 428, flat: 4406, total: 5395, up: 561 },
         upFlatDownMoveData: { down: 29.469532710280404, flat: 27.561570585565132, up: 21.102673796791475 },
@@ -3495,7 +3204,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 132,
         best20min: 106,
         genuineGradeAdjustedAvgPace: 134,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 153.84615384615384,
         medianPace: 125.00000000000001,
         paceZones: null,
@@ -3539,7 +3247,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 291227883,
     moving_time_raw: 5267,
     name: "Train",
-
     start_time: "2015-04-23T16:26:44+0000",
     trainer: false,
     type: "Ride"
@@ -3557,31 +3264,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 270.64587672,
     commute: false,
     distance_raw: 16061.7,
     elapsed_time_raw: 2384,
     elevation_gain_raw: 64,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 62.71908396946565,
+        averageActiveCadence: 62.71908396946565,
         averageDistancePerOccurrence: 6.883713715017952,
-        cadencePercentageMoving: 78.82882882882883,
-        cadenceTimeMoving: 1965,
+        cadenceActivePercentage: 78.82882882882883,
+        cadenceActiveTime: 1965,
         cadenceZones: null,
         lowerQuartileCadence: 57,
-        lowerQuartileDistancePerOccurrence: 6.551020408163264,
         medianCadence: 64,
-        medianDistancePerOccurrence: 6.875,
         standardDeviationCadence: 15.1,
         totalOccurrences: 2160.633333333335,
-        upFlatDownCadencePaceData: {
-          down: 69.01030927835052,
-          flat: 64.63967611336032,
-          up: 50.669724770642205
-        },
-        upperQuartileCadence: 74,
-        upperQuartileDistancePerOccurrence: 7.094890510948826
+        upFlatDownCadencePaceData: { down: 69.01030927835052, flat: 64.63967611336032, up: 50.669724770642205 },
+        upperQuartileCadence: 74
       },
       elevationData: {
         accumulatedElevationAscent: 63.80119812017017,
@@ -3602,11 +3301,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: 0,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 69.01030927835052,
-          flat: 64.63967611336032,
-          up: 50.669724770642205
-        },
+        upFlatDownCadencePaceData: { down: 69.01030927835052, flat: 64.63967611336032, up: 50.669724770642205 },
         upFlatDownDistanceData: { down: 1.2461999999999993, flat: 13.7667, up: 1.0448000000000006 },
         upFlatDownInSeconds: { down: 165, flat: 1973, total: 2377, up: 239 },
         upFlatDownMoveData: { down: 27.18981818181817, flat: 25.119168778509884, up: 15.737573221757332 },
@@ -3632,7 +3327,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 147,
         best20min: 135,
         genuineGradeAdjustedAvgPace: 150,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 178.57142857142856,
         medianPace: 140.84507042253523,
         paceZones: null,
@@ -3676,7 +3370,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 294194932,
     moving_time_raw: 2384,
     name: "24/04/2015 Meylan, RA, France",
-
     start_time: "2015-04-24T16:39:30+0000",
     trainer: false,
     type: "Ride"
@@ -3694,7 +3387,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: null,
     commute: false,
     distance_raw: 0,
     elapsed_time_raw: 2100,
@@ -3704,7 +3396,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 350019578,
     moving_time_raw: 2100,
     name: "Swimming, breaststroke, general - MyFitnessPal",
-
     start_time: "2015-04-29T10:00:00+0000",
     trainer: false,
     type: "Swim"
@@ -3722,27 +3413,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 835.55686248,
     commute: false,
     distance_raw: 30797.7,
     elapsed_time_raw: 6083,
     elevation_gain_raw: 611,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 70.64291139240507,
+        averageActiveCadence: 70.64291139240507,
         averageDistancePerOccurrence: 4.713894302674,
-        cadencePercentageMoving: 77.6173285198556,
-        cadenceTimeMoving: 3950,
+        cadenceActivePercentage: 77.6173285198556,
+        cadenceActiveTime: 3950,
         cadenceZones: null,
         lowerQuartileCadence: 62,
-        lowerQuartileDistancePerOccurrence: 2.906976744186047,
         medianCadence: 72,
-        medianDistancePerOccurrence: 4.9655172413793105,
         standardDeviationCadence: 12.5,
         totalOccurrences: 4954.416666666675,
         upFlatDownCadencePaceData: { down: 82.3529411764706, flat: 75.65241635687732, up: 65.7979870596693 },
-        upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.62937062937185
+        upperQuartileCadence: 80
       },
       elevationData: {
         accumulatedElevationAscent: 611.014987928814,
@@ -3789,7 +3476,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 161,
         best20min: 121,
         genuineGradeAdjustedAvgPace: 154,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 294.11764705882354,
         medianPace: 181.8181818181818,
         paceZones: null,
@@ -3833,7 +3519,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 294909522,
     moving_time_raw: 4946,
     name: "Pérrérée et Pschitt",
-
     start_time: "2015-04-29T16:16:43+0000",
     trainer: false,
     type: "Ride"
@@ -3851,31 +3536,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 956.57403864,
     commute: false,
     distance_raw: 40002.6,
     elapsed_time_raw: 6874,
     elevation_gain_raw: 588,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 69.44788650839607,
+        averageActiveCadence: 69.44788650839607,
         averageDistancePerOccurrence: 4.984048225848513,
-        cadencePercentageMoving: 77.73083886541944,
-        cadenceTimeMoving: 5181,
+        cadenceActivePercentage: 77.73083886541944,
+        cadenceActiveTime: 5181,
         cadenceZones: null,
         lowerQuartileCadence: 60,
-        lowerQuartileDistancePerOccurrence: 2.9032258064516134,
         medianCadence: 70,
-        medianDistancePerOccurrence: 6.134328358207652,
         standardDeviationCadence: 11.5,
         totalOccurrences: 6132.20000000001,
-        upFlatDownCadencePaceData: {
-          down: 80.70212765957447,
-          flat: 74.48379351740697,
-          up: 63.261464750171115
-        },
-        upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.588235294117539
+        upFlatDownCadencePaceData: { down: 80.70212765957447, flat: 74.48379351740697, up: 63.261464750171115 },
+        upperQuartileCadence: 80
       },
       elevationData: {
         accumulatedElevationAscent: 587.8403402062123,
@@ -3896,11 +3573,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.9,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 80.70212765957447,
-          flat: 74.48379351740697,
-          up: 63.261464750171115
-        },
+        upFlatDownCadencePaceData: { down: 80.70212765957447, flat: 74.48379351740697, up: 63.261464750171115 },
         upFlatDownDistanceData: { down: 8.790800000000011, flat: 22.505099999999985, up: 8.698000000000008 },
         upFlatDownInSeconds: { down: 823, flat: 3050, total: 6233, up: 2360 },
         upFlatDownMoveData: { down: 38.453074119076604, flat: 26.563396721311456, up: 13.26813559322035 },
@@ -3926,7 +3599,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 155,
         best20min: 101,
         genuineGradeAdjustedAvgPace: 148,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 303.03030303030306,
         medianPace: 151.51515151515153,
         paceZones: null,
@@ -3970,7 +3642,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 295523202,
     moving_time_raw: 6204,
     name: "Pérrérée et pas Pschitt",
-
     start_time: "2015-04-30T16:20:03+0000",
     trainer: false,
     type: "Ride"
@@ -3988,27 +3659,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 2153.039182175,
     commute: false,
     distance_raw: 101824,
     elapsed_time_raw: 15509,
     elevation_gain_raw: 814,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 71.66230594802023,
+        averageActiveCadence: 71.66230594802023,
         averageDistancePerOccurrence: 6.588935580126946,
-        cadencePercentageMoving: 83.52844187963726,
-        cadenceTimeMoving: 11466,
+        cadenceActivePercentage: 83.52844187963726,
+        cadenceActiveTime: 11466,
         cadenceZones: null,
         lowerQuartileCadence: 65,
-        lowerQuartileDistancePerOccurrence: 6.097902097901894,
         medianCadence: 75,
-        medianDistancePerOccurrence: 6.575342465753425,
         standardDeviationCadence: 20.2,
         totalOccurrences: 14818.400000000023,
         upFlatDownCadencePaceData: { down: 84.31501831501832, flat: 73.43111313868613, up: 65.3030303030303 },
-        upperQuartileCadence: 82,
-        upperQuartileDistancePerOccurrence: 7.06206896551684
+        upperQuartileCadence: 82
       },
       elevationData: {
         accumulatedElevationAscent: 810.3341428759627,
@@ -4055,7 +3722,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 132,
         best20min: 107,
         genuineGradeAdjustedAvgPace: 129,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 172.41379310344828,
         medianPace: 129.87012987012986,
         paceZones: null,
@@ -4099,7 +3765,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 296692980,
     moving_time_raw: 13405,
     name: "Fondo 100",
-
     start_time: "2015-05-02T11:18:26+0000",
     trainer: false,
     type: "Ride"
@@ -4117,27 +3782,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 951.2261373800002,
     commute: false,
     distance_raw: 39237.2,
     elapsed_time_raw: 6646,
     elevation_gain_raw: 676,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 70.30935102633215,
+        averageActiveCadence: 70.30935102633215,
         averageDistancePerOccurrence: 5.054623920214326,
-        cadencePercentageMoving: 76.2081784386617,
-        cadenceTimeMoving: 4823,
+        cadenceActivePercentage: 76.2081784386617,
+        cadenceActiveTime: 4823,
         cadenceZones: null,
         lowerQuartileCadence: 65,
-        lowerQuartileDistancePerOccurrence: 3.083333333332424,
         medianCadence: 72,
-        medianDistancePerOccurrence: 4.98684210526311,
         standardDeviationCadence: 17.3,
         totalOccurrences: 5823.4583333333285,
         upFlatDownCadencePaceData: { down: 78.9752808988764, flat: 69.62135922330097, up: 70.25967540574283 },
-        upperQuartileCadence: 78,
-        upperQuartileDistancePerOccurrence: 7.032167832167924
+        upperQuartileCadence: 78
       },
       elevationData: {
         accumulatedElevationAscent: 674.8646293685206,
@@ -4184,7 +3845,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 155,
         best20min: 115,
         genuineGradeAdjustedAvgPace: 148,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 263.1578947368421,
         medianPace: 181.8181818181818,
         paceZones: null,
@@ -4228,7 +3888,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 299340910,
     moving_time_raw: 6089,
     name: "Pérrérée",
-
     start_time: "2015-05-06T15:59:48+0000",
     trainer: false,
     type: "Ride"
@@ -4246,27 +3905,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 2069.902777405,
     commute: false,
     distance_raw: 105867,
     elapsed_time_raw: 13366,
     elevation_gain_raw: 283,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 79.63053078188588,
+        averageActiveCadence: 79.63053078188588,
         averageDistancePerOccurrence: 6.544140490560158,
-        cadencePercentageMoving: 86.32181049490177,
-        cadenceTimeMoving: 11549,
+        cadenceActivePercentage: 86.32181049490177,
+        cadenceActiveTime: 11549,
         cadenceZones: null,
         lowerQuartileCadence: 78,
-        lowerQuartileDistancePerOccurrence: 6.181512605042309,
         medianCadence: 83,
-        medianDistancePerOccurrence: 6.498338870431965,
         standardDeviationCadence: 5.9,
         totalOccurrences: 15741.658333333338,
         upFlatDownCadencePaceData: { down: 81.74305555555556, flat: 80.2084752175558, up: 68.0530303030303 },
-        upperQuartileCadence: 86,
-        upperQuartileDistancePerOccurrence: 6.57959183673465
+        upperQuartileCadence: 86
       },
       elevationData: {
         accumulatedElevationAscent: 278.24218251597813,
@@ -4313,7 +3968,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 120,
         best20min: 108,
         genuineGradeAdjustedAvgPace: 124,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 123.45679012345678,
         medianPace: 114.9425287356322,
         paceZones: null,
@@ -4357,7 +4011,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 301786155,
     moving_time_raw: 12773,
     name: "100k @ 30kph",
-
     start_time: "2015-05-10T10:26:22+0000",
     trainer: false,
     type: "Ride"
@@ -4375,27 +4028,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1894.1709824399998,
     commute: false,
     distance_raw: 69259.1,
     elapsed_time_raw: 12575,
     elevation_gain_raw: 1701,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 75.19801874733703,
+        averageActiveCadence: 75.19801874733703,
         averageDistancePerOccurrence: 4.310286657366865,
-        cadencePercentageMoving: 80.41282389108476,
-        cadenceTimeMoving: 9388,
+        cadenceActivePercentage: 80.41282389108476,
+        cadenceActiveTime: 9388,
         cadenceZones: null,
         lowerQuartileCadence: 70,
-        lowerQuartileDistancePerOccurrence: 2.8695652173875086,
         medianCadence: 77,
-        medianDistancePerOccurrence: 3.10619469026568,
         standardDeviationCadence: 17.9,
         totalOccurrences: 12026.41666666673,
         upFlatDownCadencePaceData: { down: 87.28851540616246, flat: 75.85278514588859, up: 74.3383850931677 },
-        upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 6.150993377483271
+        upperQuartileCadence: 83
       },
       elevationData: {
         accumulatedElevationAscent: 1610.0891160063074,
@@ -4442,7 +4091,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 160,
         best20min: 70,
         genuineGradeAdjustedAvgPace: 148,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 277.77777777777777,
         medianPace: 232.5581395348837,
         paceZones: null,
@@ -4486,7 +4134,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 302537043,
     moving_time_raw: 11066,
     name: "Chamrousse 1750",
-
     start_time: "2015-05-11T14:29:34+0000",
     trainer: false,
     type: "Ride"
@@ -4504,31 +4151,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1477.6289546300002,
     commute: false,
     distance_raw: 60100.7,
     elapsed_time_raw: 11205,
     elevation_gain_raw: 1172,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 67.11181957728185,
+        averageActiveCadence: 67.11181957728185,
         averageDistancePerOccurrence: 4.372351236723547,
-        cadencePercentageMoving: 75.50457132999827,
-        cadenceTimeMoving: 8469,
+        cadenceActivePercentage: 75.50457132999827,
+        cadenceActiveTime: 8469,
         cadenceZones: null,
         lowerQuartileCadence: 57,
-        lowerQuartileDistancePerOccurrence: 2.8800000000000003,
         medianCadence: 68,
-        medianDistancePerOccurrence: 3.75,
         standardDeviationCadence: 7.4,
         totalOccurrences: 9733.000000000007,
-        upFlatDownCadencePaceData: {
-          down: 77.79550561797753,
-          flat: 74.93815513626835,
-          up: 61.55607790463398
-        },
-        upperQuartileCadence: 78,
-        upperQuartileDistancePerOccurrence: 6.176470588235294
+        upFlatDownCadencePaceData: { down: 77.79550561797753, flat: 74.93815513626835, up: 61.55607790463398 },
+        upperQuartileCadence: 78
       },
       elevationData: {
         accumulatedElevationAscent: 950.7505763100371,
@@ -4549,11 +4188,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.8,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 77.79550561797753,
-          flat: 74.93815513626835,
-          up: 61.55607790463398
-        },
+        upFlatDownCadencePaceData: { down: 77.79550561797753, flat: 74.93815513626835, up: 61.55607790463398 },
         upFlatDownDistanceData: { down: 17.136500000000023, flat: 26.38199999999997, up: 16.56770000000001 },
         upFlatDownInSeconds: { down: 1771, flat: 3794, total: 10417, up: 4852 },
         upFlatDownMoveData: { down: 34.834217955957136, flat: 25.032999472851845, up: 12.292605111294318 },
@@ -4579,7 +4214,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 173,
         best20min: 109,
         genuineGradeAdjustedAvgPace: 168,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 322.5806451612903,
         medianPace: 199.99999999999997,
         paceZones: null,
@@ -4623,7 +4257,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 303080029,
     moving_time_raw: 10399,
     name: "Col de Clémencière + Pérérrée",
-
     start_time: "2015-05-12T13:07:05+0000",
     trainer: false,
     type: "Ride"
@@ -4641,31 +4274,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 819.2678364,
     commute: false,
     distance_raw: 31605,
     elapsed_time_raw: 4694,
     elevation_gain_raw: 559,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 69.28950103950103,
+        averageActiveCadence: 69.28950103950103,
         averageDistancePerOccurrence: 5.171691992444361,
-        cadencePercentageMoving: 79.78203682826005,
-        cadenceTimeMoving: 3848,
+        cadenceActivePercentage: 79.78203682826005,
+        cadenceActiveTime: 3848,
         cadenceZones: null,
         lowerQuartileCadence: 58,
-        lowerQuartileDistancePerOccurrence: 3.423529411764321,
         medianCadence: 72,
-        medianDistancePerOccurrence: 6.051282051283544,
         standardDeviationCadence: 12.3,
         totalOccurrences: 4571.974999999997,
-        upFlatDownCadencePaceData: {
-          down: 77.99586776859505,
-          flat: 74.14519056261344,
-          up: 65.08496240601504
-        },
-        upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 7.016759776536639
+        upFlatDownCadencePaceData: { down: 77.99586776859505, flat: 74.14519056261344, up: 65.08496240601504 },
+        upperQuartileCadence: 80
       },
       elevationData: {
         accumulatedElevationAscent: 559.0949862924344,
@@ -4686,11 +4311,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -1.8,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 77.99586776859505,
-          flat: 74.14519056261344,
-          up: 65.08496240601504
-        },
+        upFlatDownCadencePaceData: { down: 77.99586776859505, flat: 74.14519056261344, up: 65.08496240601504 },
         upFlatDownDistanceData: { down: 8.0771, flat: 15.483299999999995, up: 8.043200000000006 },
         upFlatDownInSeconds: { down: 698, flat: 1944, total: 4575, up: 1933 },
         upFlatDownMoveData: { down: 41.658395415472775, flat: 28.672777777777767, up: 14.97957578892914 },
@@ -4716,7 +4337,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 145,
         best20min: 100,
         genuineGradeAdjustedAvgPace: 137,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 250.00000000000003,
         medianPace: 156.24999999999997,
         paceZones: null,
@@ -4760,7 +4380,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 304491323,
     moving_time_raw: 4584,
     name: "Pérérrée",
-
     start_time: "2015-05-14T15:20:54+0000",
     trainer: false,
     type: "Ride"
@@ -4778,31 +4397,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 596.337656585,
     commute: false,
     distance_raw: 37078.1,
     elapsed_time_raw: 5232,
     elevation_gain_raw: 53,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 68.50064571674558,
+        averageActiveCadence: 68.50064571674558,
         averageDistancePerOccurrence: 6.49199126762694,
-        cadencePercentageMoving: 86.71513549239921,
-        cadenceTimeMoving: 4646,
+        cadenceActivePercentage: 86.71513549239921,
+        cadenceActiveTime: 4646,
         cadenceZones: null,
         lowerQuartileCadence: 64,
-        lowerQuartileDistancePerOccurrence: 6.191082802547771,
         medianCadence: 72,
-        medianDistancePerOccurrence: 6.567567567568354,
         standardDeviationCadence: 14.8,
         totalOccurrences: 5458.258333333319,
-        upFlatDownCadencePaceData: {
-          down: 73.29113924050633,
-          flat: 69.47477477477477,
-          up: 62.54471544715447
-        },
-        upperQuartileCadence: 77,
-        upperQuartileDistancePerOccurrence: 6.983870967741818
+        upFlatDownCadencePaceData: { down: 73.29113924050633, flat: 69.47477477477477, up: 62.54471544715447 },
+        upperQuartileCadence: 77
       },
       elevationData: {
         accumulatedElevationAscent: 52.33722772653624,
@@ -4823,11 +4434,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: 0,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 73.29113924050633,
-          flat: 69.47477477477477,
-          up: 62.54471544715447
-        },
+        upFlatDownCadencePaceData: { down: 73.29113924050633, flat: 69.47477477477477, up: 62.54471544715447 },
         upFlatDownDistanceData: { down: 1.013600000000007, flat: 35.1042, up: 0.9602999999999967 },
         upFlatDownInSeconds: { down: 121, flat: 4871, total: 5199, up: 207 },
         upFlatDownMoveData: { down: 30.156694214876236, flat: 25.944389242455347, up: 16.700869565217335 },
@@ -4853,7 +4460,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 140,
         best20min: 122,
         genuineGradeAdjustedAvgPace: 142,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 161.29032258064515,
         medianPace: 131.57894736842104,
         paceZones: null,
@@ -4897,7 +4503,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 313660900,
     moving_time_raw: 5203,
     name: "F**k CalcaneoNavicular EP 01",
-
     start_time: "2015-05-28T16:23:16+0000",
     trainer: false,
     type: "Ride"
@@ -4915,27 +4520,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 618.2974618339999,
     commute: false,
     distance_raw: 39682.7,
     elapsed_time_raw: 6108,
     elevation_gain_raw: 71,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 69.04056774713106,
+        averageActiveCadence: 69.04056774713106,
         averageDistancePerOccurrence: 6.282317344060136,
-        cadencePercentageMoving: 82.92181069958848,
-        cadenceTimeMoving: 4967,
+        cadenceActivePercentage: 82.92181069958848,
+        cadenceActiveTime: 4967,
         cadenceZones: null,
         lowerQuartileCadence: 65,
-        lowerQuartileDistancePerOccurrence: 6.146341463415107,
         medianCadence: 71,
-        medianDistancePerOccurrence: 6.218181818181289,
         standardDeviationCadence: 16.7,
         totalOccurrences: 5959.633333333328,
         upFlatDownCadencePaceData: { down: 72.74789915966386, flat: 70.1210332103321, up: 65.04347826086956 },
-        upperQuartileCadence: 77,
-        upperQuartileDistancePerOccurrence: 6.58333333333303
+        upperQuartileCadence: 77
       },
       elevationData: {
         accumulatedElevationAscent: 69.8069041325862,
@@ -4982,7 +4583,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 146,
         best20min: 125,
         genuineGradeAdjustedAvgPace: 148,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 172.41379310344828,
         medianPace: 140.84507042253523,
         paceZones: null,
@@ -5026,7 +4626,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 316281840,
     moving_time_raw: 5801,
     name: "30/05/2015 Meylan, RA, France",
-
     start_time: "2015-05-30T13:12:19+0000",
     trainer: false,
     type: "Ride"
@@ -5044,31 +4643,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 527.08110966,
     commute: false,
     distance_raw: 23501.3,
     elapsed_time_raw: 4585,
     elevation_gain_raw: 311,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 70.52399232245682,
+        averageActiveCadence: 70.52399232245682,
         averageDistancePerOccurrence: 4.661079552319847,
-        cadencePercentageMoving: 70.91959557053443,
-        cadenceTimeMoving: 3126,
+        cadenceActivePercentage: 70.91959557053443,
+        cadenceActiveTime: 3126,
         cadenceZones: null,
         lowerQuartileCadence: 62,
-        lowerQuartileDistancePerOccurrence: 2.892857142856948,
         medianCadence: 72,
-        medianDistancePerOccurrence: 5.563342318059142,
         standardDeviationCadence: 16.2,
         totalOccurrences: 3784.0750000000025,
-        upFlatDownCadencePaceData: {
-          down: 75.33333333333333,
-          flat: 74.99019607843137,
-          up: 66.46508563899869
-        },
-        upperQuartileCadence: 81,
-        upperQuartileDistancePerOccurrence: 6.545454545454546
+        upFlatDownCadencePaceData: { down: 75.33333333333333, flat: 74.99019607843137, up: 66.46508563899869 },
+        upperQuartileCadence: 81
       },
       elevationData: {
         accumulatedElevationAscent: 310.82017419771853,
@@ -5089,11 +4680,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.6,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 75.33333333333333,
-          flat: 74.99019607843137,
-          up: 66.46508563899869
-        },
+        upFlatDownCadencePaceData: { down: 75.33333333333333, flat: 74.99019607843137, up: 66.46508563899869 },
         upFlatDownDistanceData: { down: 4.2907999999999875, flat: 14.63440000000002, up: 4.5566999999999895 },
         upFlatDownInSeconds: { down: 720, flat: 2162, total: 4156, up: 1274 },
         upFlatDownMoveData: { down: 21.45399999999994, flat: 24.36810360777062, up: 12.876075353218182 },
@@ -5119,7 +4706,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 177,
         best20min: 137,
         genuineGradeAdjustedAvgPace: 183,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 294.11764705882354,
         medianPace: 196.07843137254903,
         paceZones: null,
@@ -5163,7 +4749,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 316282392,
     moving_time_raw: 4116,
     name: "Plouf !",
-
     start_time: "2015-06-01T16:22:00+0000",
     trainer: false,
     type: "Ride"
@@ -5181,31 +4766,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 421.42695988500003,
     commute: false,
     distance_raw: 24769.8,
     elapsed_time_raw: 3804,
     elevation_gain_raw: 97,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 67.46450973918785,
+        averageActiveCadence: 67.46450973918785,
         averageDistancePerOccurrence: 6.42359605677585,
-        cadencePercentageMoving: 79.98678996036989,
-        cadenceTimeMoving: 3029,
+        cadenceActivePercentage: 79.98678996036989,
+        cadenceActiveTime: 3029,
         cadenceZones: null,
         lowerQuartileCadence: 61,
-        lowerQuartileDistancePerOccurrence: 6.151898734177204,
         medianCadence: 70,
-        medianDistancePerOccurrence: 6.566233766233747,
         standardDeviationCadence: 15.6,
         totalOccurrences: 3609.2000000000057,
-        upFlatDownCadencePaceData: {
-          down: 71.98203592814372,
-          flat: 69.11842105263158,
-          up: 59.27403846153846
-        },
-        upperQuartileCadence: 77,
-        upperQuartileDistancePerOccurrence: 6.963855421686659
+        upFlatDownCadencePaceData: { down: 71.98203592814372, flat: 69.11842105263158, up: 59.27403846153846 },
+        upperQuartileCadence: 77
       },
       elevationData: {
         accumulatedElevationAscent: 96.81752955216717,
@@ -5226,16 +4803,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: 0,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 71.98203592814372,
-          flat: 69.11842105263158,
-          up: 59.27403846153846
-        },
-        upFlatDownDistanceData: {
-          down: 1.8692999999999969,
-          flat: 21.276700000000005,
-          up: 1.6201999999999994
-        },
+        upFlatDownCadencePaceData: { down: 71.98203592814372, flat: 69.11842105263158, up: 59.27403846153846 },
+        upFlatDownDistanceData: { down: 1.8692999999999969, flat: 21.276700000000005, up: 1.6201999999999994 },
         upFlatDownInSeconds: { down: 253, flat: 3071, total: 3677, up: 353 },
         upFlatDownMoveData: { down: 26.598735177865567, flat: 24.94175187235429, up: 16.523286118980163 },
         upperQuartileGrade: 0
@@ -5260,7 +4829,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 148,
         best20min: 123,
         genuineGradeAdjustedAvgPace: 151,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 196.07843137254903,
         medianPace: 142.85714285714286,
         paceZones: null,
@@ -5304,7 +4872,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 319062713,
     moving_time_raw: 3681,
     name: "Corenc Cyclisme",
-
     start_time: "2015-06-02T16:17:26+0000",
     trainer: false,
     type: "Ride"
@@ -5322,31 +4889,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 364.37182941599997,
     commute: false,
     distance_raw: 22786.4,
     elapsed_time_raw: 3590,
     elevation_gain_raw: 39,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 67.83388765705838,
+        averageActiveCadence: 67.83388765705838,
         averageDistancePerOccurrence: 6.379274851190423,
-        cadencePercentageMoving: 74.80136208853575,
-        cadenceTimeMoving: 2706,
+        cadenceActivePercentage: 74.80136208853575,
+        cadenceActiveTime: 2706,
         cadenceZones: null,
         lowerQuartileCadence: 65,
-        lowerQuartileDistancePerOccurrence: 5.813664596273292,
         medianCadence: 72,
-        medianDistancePerOccurrence: 6.4179104477611935,
         standardDeviationCadence: 22.1,
         totalOccurrences: 3260.024999999998,
-        upFlatDownCadencePaceData: {
-          down: 65.62162162162163,
-          flat: 71.82986767485822,
-          up: 63.956989247311824
-        },
-        upperQuartileCadence: 78,
-        upperQuartileDistancePerOccurrence: 6.535135135135092
+        upFlatDownCadencePaceData: { down: 65.62162162162163, flat: 71.82986767485822, up: 63.956989247311824 },
+        upperQuartileCadence: 78
       },
       elevationData: {
         accumulatedElevationAscent: 39.081931831311664,
@@ -5367,11 +4926,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.3,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 65.62162162162163,
-          flat: 71.82986767485822,
-          up: 63.956989247311824
-        },
+        upFlatDownCadencePaceData: { down: 65.62162162162163, flat: 71.82986767485822, up: 63.956989247311824 },
         upFlatDownDistanceData: { down: 1.442899999999999, flat: 19.7504, up: 1.5928000000000029 },
         upFlatDownInSeconds: { down: 293, flat: 2918, total: 3575, up: 364 },
         upFlatDownMoveData: { down: 17.728464163822512, flat: 24.36649760109664, up: 15.752967032967064 },
@@ -5383,7 +4938,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 156,
         best20min: 137,
         genuineGradeAdjustedAvgPace: 155,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 204.0816326530612,
         medianPace: 144.92753623188403,
         paceZones: null,
@@ -5426,7 +4980,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     hasPowerMeter: false,
     id: 322731272,
     moving_time_raw: 3528,
-
     start_time: "2015-06-10T17:00:39+0000",
     trainer: false,
     type: "Ride"
@@ -5444,27 +4997,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 518.443524665,
     commute: false,
     distance_raw: 27238.5,
     elapsed_time_raw: 4769,
     elevation_gain_raw: 56,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 70.18715536814791,
+        averageActiveCadence: 70.18715536814791,
         averageDistancePerOccurrence: 6.280591760710642,
-        cadencePercentageMoving: 72.4177505738332,
-        cadenceTimeMoving: 3083,
+        cadenceActivePercentage: 72.4177505738332,
+        cadenceActiveTime: 3083,
         cadenceZones: null,
         lowerQuartileCadence: 64,
-        lowerQuartileDistancePerOccurrence: 5.732484076433121,
         medianCadence: 72,
-        medianDistancePerOccurrence: 6.4090909090919,
         standardDeviationCadence: 18.6,
         totalOccurrences: 3701.9916666666695,
         upFlatDownCadencePaceData: { down: 72.32413793103449, flat: 72.2021563342318, up: 67.33333333333333 },
-        upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.692307692308952
+        upperQuartileCadence: 79
       },
       elevationData: {
         accumulatedElevationAscent: 55.884661064423256,
@@ -5511,7 +5060,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 155,
         best20min: 122,
         genuineGradeAdjustedAvgPace: 155,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 212.7659574468085,
         medianPace: 153.84615384615384,
         paceZones: null,
@@ -5555,7 +5103,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 323354228,
     moving_time_raw: 4219,
     name: "Papy fait de la résistance aux bléssures",
-
     start_time: "2015-06-11T16:34:52+0000",
     trainer: false,
     type: "Ride"
@@ -5573,27 +5120,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 720.18775896,
     commute: false,
     distance_raw: 34939,
     elapsed_time_raw: 5282,
     elevation_gain_raw: 165,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 70.72252891692955,
+        averageActiveCadence: 70.72252891692955,
         averageDistancePerOccurrence: 6.531106075552507,
-        cadencePercentageMoving: 71.82151589242054,
-        cadenceTimeMoving: 3804,
+        cadenceActivePercentage: 71.82151589242054,
+        cadenceActiveTime: 3804,
         cadenceZones: null,
         lowerQuartileCadence: 65,
-        lowerQuartileDistancePerOccurrence: 6.0194805194805365,
         medianCadence: 74,
-        medianDistancePerOccurrence: 6.479999999999978,
         standardDeviationCadence: 20.2,
         totalOccurrences: 4667.941666666664,
         upFlatDownCadencePaceData: { down: 70.5979381443299, flat: 74.9866504854369, up: 63.87007874015748 },
-        upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 7.285714285714285
+        upperQuartileCadence: 83
       },
       elevationData: {
         accumulatedElevationAscent: 164.69746564833443,
@@ -5640,7 +5183,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 145,
         best20min: 118,
         genuineGradeAdjustedAvgPace: 147,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 204.0816326530612,
         medianPace: 136.98630136986299,
         paceZones: null,
@@ -5684,7 +5226,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 324511047,
     moving_time_raw: 5052,
     name: "13/06/2015 Meylan, RA, France",
-
     start_time: "2015-06-13T13:08:56+0000",
     trainer: false,
     type: "Ride"
@@ -5702,31 +5243,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 230.37576558599997,
     commute: false,
     distance_raw: 14358.2,
     elapsed_time_raw: 2186,
     elevation_gain_raw: 32,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 67.88478535353535,
+        averageActiveCadence: 67.88478535353535,
         averageDistancePerOccurrence: 6.3779067870721695,
-        cadencePercentageMoving: 71.0172744721689,
-        cadenceTimeMoving: 1584,
+        cadenceActivePercentage: 71.0172744721689,
+        cadenceActiveTime: 1584,
         cadenceZones: null,
         lowerQuartileCadence: 65,
-        lowerQuartileDistancePerOccurrence: 5.793459552495735,
         medianCadence: 73,
-        medianDistancePerOccurrence: 6.419580419580496,
         standardDeviationCadence: 22.5,
         totalOccurrences: 1902.7250000000013,
-        upFlatDownCadencePaceData: {
-          down: 78.58333333333333,
-          flat: 73.44680851063829,
-          up: 57.723684210526315
-        },
-        upperQuartileCadence: 81,
-        upperQuartileDistancePerOccurrence: 6.521212121212032
+        upFlatDownCadencePaceData: { down: 78.58333333333333, flat: 73.44680851063829, up: 57.723684210526315 },
+        upperQuartileCadence: 81
       },
       elevationData: {
         accumulatedElevationAscent: 32.02788059838454,
@@ -5747,16 +5280,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.2,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 78.58333333333333,
-          flat: 73.44680851063829,
-          up: 57.723684210526315
-        },
-        upFlatDownDistanceData: {
-          down: 0.8060999999999994,
-          flat: 12.455399999999997,
-          up: 1.0967000000000011
-        },
+        upFlatDownCadencePaceData: { down: 78.58333333333333, flat: 73.44680851063829, up: 57.723684210526315 },
+        upFlatDownDistanceData: { down: 0.8060999999999994, flat: 12.455399999999997, up: 1.0967000000000011 },
         upFlatDownInSeconds: { down: 131, flat: 1781, total: 2186, up: 274 },
         upFlatDownMoveData: { down: 22.152366412213723, flat: 25.17655249859629, up: 14.409197080291985 },
         upperQuartileGrade: 0.3
@@ -5767,7 +5292,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 152,
         best20min: 141,
         genuineGradeAdjustedAvgPace: 153,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 204.0816326530612,
         medianPace: 140.84507042253523,
         paceZones: null,
@@ -5811,7 +5335,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 327425583,
     moving_time_raw: 2186,
     name: "14/06/2015 Meylan, RA, France",
-
     start_time: "2015-06-14T13:34:53+0000",
     trainer: false,
     type: "Ride"
@@ -5829,27 +5352,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 243.49256493,
     commute: false,
     distance_raw: 14351.2,
     elapsed_time_raw: 2154,
     elevation_gain_raw: 31,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 69.20825574177529,
+        averageActiveCadence: 69.20825574177529,
         averageDistancePerOccurrence: 6.4701225700427045,
-        cadencePercentageMoving: 71.06299212598425,
-        cadenceTimeMoving: 1611,
+        cadenceActivePercentage: 71.06299212598425,
+        cadenceActiveTime: 1611,
         cadenceZones: null,
         lowerQuartileCadence: 66,
-        lowerQuartileDistancePerOccurrence: 6.07194244604327,
         medianCadence: 72,
-        medianDistancePerOccurrence: 6.440816326530656,
         standardDeviationCadence: 25.3,
         totalOccurrences: 1952.0916666666672,
         upFlatDownCadencePaceData: { down: 73.5, flat: 74.24752475247524, up: 64.1923076923077 },
-        upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.827067669172969
+        upperQuartileCadence: 80
       },
       elevationData: {
         accumulatedElevationAscent: 30.92210623376863,
@@ -5871,11 +5390,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: -0.2,
         medianGrade: 0,
         upFlatDownCadencePaceData: { down: 73.5, flat: 74.24752475247524, up: 64.1923076923077 },
-        upFlatDownDistanceData: {
-          down: 0.8108000000000015,
-          flat: 12.497900000000001,
-          up: 1.0424999999999969
-        },
+        upFlatDownDistanceData: { down: 0.8108000000000015, flat: 12.497900000000001, up: 1.0424999999999969 },
         upFlatDownInSeconds: { down: 148, flat: 1736, total: 2154, up: 270 },
         upFlatDownMoveData: { down: 19.722162162162203, flat: 25.91730414746544, up: 13.899999999999958 },
         upperQuartileGrade: 0.2
@@ -5886,7 +5401,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 150,
         best20min: 127,
         genuineGradeAdjustedAvgPace: 150,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 212.7659574468085,
         medianPace: 140.84507042253523,
         paceZones: null,
@@ -5930,7 +5444,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 327425606,
     moving_time_raw: 2154,
     name: "15/06/2015 Meylan, RA, France",
-
     start_time: "2015-06-15T16:03:13+0000",
     trainer: false,
     type: "Ride"
@@ -5948,27 +5461,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 678.8782131600001,
     commute: false,
     distance_raw: 37323.6,
     elapsed_time_raw: 5068,
     elevation_gain_raw: 49,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 71.04236232245204,
+        averageActiveCadence: 71.04236232245204,
         averageDistancePerOccurrence: 6.826002506268898,
-        cadencePercentageMoving: 75.47974413646055,
-        cadenceTimeMoving: 4013,
+        cadenceActivePercentage: 75.47974413646055,
+        cadenceActiveTime: 4013,
         cadenceZones: null,
         lowerQuartileCadence: 66,
-        lowerQuartileDistancePerOccurrence: 6.390756302520641,
         medianCadence: 74,
-        medianDistancePerOccurrence: 6.48387096774264,
         standardDeviationCadence: 19.7,
         totalOccurrences: 4934.1333333333305,
         upFlatDownCadencePaceData: { down: 71.4375, flat: 74.21302428256071, up: 60.101851851851855 },
-        upperQuartileCadence: 82,
-        upperQuartileDistancePerOccurrence: 7.2631578947369375
+        upperQuartileCadence: 82
       },
       elevationData: {
         accumulatedElevationAscent: 48.962109148008295,
@@ -6015,7 +5524,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 135,
         best20min: 116,
         genuineGradeAdjustedAvgPace: 138,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 163.9344262295082,
         medianPace: 131.57894736842104,
         paceZones: null,
@@ -6059,7 +5567,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 327425584,
     moving_time_raw: 5068,
     name: "17/06/2015 Meylan, RA, France",
-
     start_time: "2015-06-17T15:59:21+0000",
     trainer: false,
     type: "Ride"
@@ -6077,31 +5584,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 181.63908168999998,
     commute: false,
     distance_raw: 8947.9,
     elapsed_time_raw: 1073,
     elevation_gain_raw: 17,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 79.29709364908504,
+        averageActiveCadence: 79.29709364908504,
         averageDistancePerOccurrence: 6.659173099010952,
-        cadencePercentageMoving: 83.70607028753993,
-        cadenceTimeMoving: 929,
+        cadenceActivePercentage: 83.70607028753993,
+        cadenceActiveTime: 929,
         cadenceZones: null,
         lowerQuartileCadence: 76,
-        lowerQuartileDistancePerOccurrence: 6.314285714285732,
         medianCadence: 82,
-        medianDistancePerOccurrence: 6.435000000000013,
         standardDeviationCadence: 22.9,
         totalOccurrences: 1273.0916666666667,
-        upFlatDownCadencePaceData: {
-          down: 79.82352941176471,
-          flat: 82.95045045045045,
-          up: 71.65217391304348
-        },
-        upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.844444444444485
+        upFlatDownCadencePaceData: { down: 79.82352941176471, flat: 82.95045045045045, up: 71.65217391304348 },
+        upperQuartileCadence: 89
       },
       elevationData: {
         accumulatedElevationAscent: 17.00429461394745,
@@ -6122,16 +5621,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.4,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 79.82352941176471,
-          flat: 82.95045045045045,
-          up: 71.65217391304348
-        },
-        upFlatDownDistanceData: {
-          down: 0.44289999999999885,
-          flat: 8.154900000000003,
-          up: 0.3500999999999986
-        },
+        upFlatDownCadencePaceData: { down: 79.82352941176471, flat: 82.95045045045045, up: 71.65217391304348 },
+        upFlatDownDistanceData: { down: 0.44289999999999885, flat: 8.154900000000003, up: 0.3500999999999986 },
         upFlatDownInSeconds: { down: 54, flat: 958, total: 1073, up: 61 },
         upFlatDownMoveData: { down: 29.526666666666586, flat: 30.644718162839258, up: 20.661639344262216 },
         upperQuartileGrade: 0.3
@@ -6156,7 +5647,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 120,
         best20min: null,
         genuineGradeAdjustedAvgPace: 121,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 135.13513513513513,
         medianPace: 116.27906976744185,
         paceZones: null,
@@ -6200,7 +5690,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 328043275,
     moving_time_raw: 1073,
     name: "Oups 1/2",
-
     start_time: "2015-06-18T15:59:10+0000",
     trainer: false,
     type: "Ride"
@@ -6218,31 +5707,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 690.38845405,
     commute: false,
     distance_raw: 29319.4,
     elapsed_time_raw: 5222,
     elevation_gain_raw: 487,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 68.10143995885832,
+        averageActiveCadence: 68.10143995885832,
         averageDistancePerOccurrence: 4.455324113839494,
-        cadencePercentageMoving: 65.30069185737094,
-        cadenceTimeMoving: 3889,
+        cadenceActivePercentage: 65.30069185737094,
+        cadenceActiveTime: 3889,
         cadenceZones: null,
         lowerQuartileCadence: 60,
-        lowerQuartileDistancePerOccurrence: 2.697247706422319,
         medianCadence: 70,
-        medianDistancePerOccurrence: 3.398843930635901,
         standardDeviationCadence: 17.9,
         totalOccurrences: 4547.958333333339,
-        upFlatDownCadencePaceData: {
-          down: 75.36206896551724,
-          flat: 76.53968253968254,
-          up: 65.45638432364096
-        },
-        upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 5.868613138686769
+        upFlatDownCadencePaceData: { down: 75.36206896551724, flat: 76.53968253968254, up: 65.45638432364096 },
+        upperQuartileCadence: 80
       },
       elevationData: {
         accumulatedElevationAscent: 486.8159647066351,
@@ -6263,11 +5744,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -1.9,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 75.36206896551724,
-          flat: 76.53968253968254,
-          up: 65.45638432364096
-        },
+        upFlatDownCadencePaceData: { down: 75.36206896551724, flat: 76.53968253968254, up: 65.45638432364096 },
         upFlatDownDistanceData: { down: 7.796900000000007, flat: 12.87359999999999, up: 8.640700000000002 },
         upFlatDownInSeconds: { down: 819, flat: 1858, total: 5216, up: 2539 },
         upFlatDownMoveData: { down: 34.27208791208795, flat: 24.943466092572642, up: 12.251484836549826 },
@@ -6293,7 +5770,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 177,
         best20min: 110,
         genuineGradeAdjustedAvgPace: 156,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 333.3333333333333,
         medianPace: 196.07843137254903,
         paceZones: null,
@@ -6337,7 +5813,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 328196791,
     moving_time_raw: 5186,
     name: "Oups 2/2",
-
     start_time: "2015-06-18T16:17:42+0000",
     trainer: false,
     type: "Ride"
@@ -6355,27 +5830,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 953.55583176,
     commute: false,
     distance_raw: 39845.9,
     elapsed_time_raw: 6458,
     elevation_gain_raw: 609,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 72.64798671647986,
+        averageActiveCadence: 72.64798671647986,
         averageDistancePerOccurrence: 4.915765955261443,
-        cadencePercentageMoving: 68.0603448275862,
-        cadenceTimeMoving: 4818,
+        cadenceActivePercentage: 68.0603448275862,
+        cadenceActiveTime: 4818,
         cadenceZones: null,
         lowerQuartileCadence: 66,
-        lowerQuartileDistancePerOccurrence: 2.7103448275862823,
         medianCadence: 75,
-        medianDistancePerOccurrence: 3.87804878048816,
         standardDeviationCadence: 21.6,
         totalOccurrences: 6007.716666666663,
         upFlatDownCadencePaceData: { down: 88.6116504854369, flat: 77.18055555555556, up: 70.52709883103081 },
-        upperQuartileCadence: 84,
-        upperQuartileDistancePerOccurrence: 6.461538461536019
+        upperQuartileCadence: 84
       },
       elevationData: {
         accumulatedElevationAscent: 608.8997926010315,
@@ -6422,7 +5893,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 160,
         best20min: 94,
         genuineGradeAdjustedAvgPace: 151,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 294.11764705882354,
         medianPace: 185.18518518518516,
         paceZones: null,
@@ -6466,7 +5936,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 328739521,
     moving_time_raw: 6384,
     name: "Test Aeroad CF SLX",
-
     start_time: "2015-06-19T16:03:36+0000",
     trainer: false,
     type: "Ride"
@@ -6484,31 +5953,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 412.80061186000006,
     commute: false,
     distance_raw: 19958.7,
     elapsed_time_raw: 3329,
     elevation_gain_raw: 201,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 73.14101423487544,
+        averageActiveCadence: 73.14101423487544,
         averageDistancePerOccurrence: 5.72441226868631,
-        cadencePercentageMoving: 66.23970722781335,
-        cadenceTimeMoving: 2248,
+        cadenceActivePercentage: 66.23970722781335,
+        cadenceActiveTime: 2248,
         cadenceZones: null,
         lowerQuartileCadence: 68,
-        lowerQuartileDistancePerOccurrence: 3.9341317365265533,
         medianCadence: 78,
-        medianDistancePerOccurrence: 5.846153846153776,
         standardDeviationCadence: 19.4,
         totalOccurrences: 2840.7833333333315,
-        upFlatDownCadencePaceData: {
-          down: 79.97402597402598,
-          flat: 77.78834355828221,
-          up: 69.94392523364486
-        },
-        upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 6.467532467532468
+        upFlatDownCadencePaceData: { down: 79.97402597402598, flat: 77.78834355828221, up: 69.94392523364486 },
+        upperQuartileCadence: 83
       },
       elevationData: {
         accumulatedElevationAscent: 201.05917534092222,
@@ -6529,11 +5990,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -1.3,
         medianGrade: 0.1,
-        upFlatDownCadencePaceData: {
-          down: 79.97402597402598,
-          flat: 77.78834355828221,
-          up: 69.94392523364486
-        },
+        upFlatDownCadencePaceData: { down: 79.97402597402598, flat: 77.78834355828221, up: 69.94392523364486 },
         upFlatDownDistanceData: { down: 4.305199999999992, flat: 10.738200000000004, up: 4.910400000000004 },
         upFlatDownInSeconds: { down: 581, flat: 1448, total: 3104, up: 1075 },
         upFlatDownMoveData: { down: 26.675938037865706, flat: 26.697182320442, up: 16.44413023255815 },
@@ -6559,7 +6016,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 155,
         best20min: 143,
         genuineGradeAdjustedAvgPace: 152,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 232.5581395348837,
         medianPace: 156.24999999999997,
         paceZones: null,
@@ -6603,7 +6059,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 329236603,
     moving_time_raw: 3068,
     name: "20/06/2015 Meylan, RA, France",
-
     start_time: "2015-06-20T09:14:40+0000",
     trainer: false,
     type: "Ride"
@@ -6621,31 +6076,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 577.25843555,
     commute: false,
     distance_raw: 30618.5,
     elapsed_time_raw: 5028,
     elevation_gain_raw: 82,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 71.94411860540893,
+        averageActiveCadence: 71.94411860540893,
         averageDistancePerOccurrence: 6.574976947636419,
-        cadencePercentageMoving: 64.12053258584443,
-        cadenceTimeMoving: 3069,
+        cadenceActivePercentage: 64.12053258584443,
+        cadenceActiveTime: 3069,
         cadenceZones: null,
         lowerQuartileCadence: 69,
-        lowerQuartileDistancePerOccurrence: 5.832727272727061,
         medianCadence: 75,
-        medianDistancePerOccurrence: 6.447058823528042,
         standardDeviationCadence: 27.2,
         totalOccurrences: 3887.091666666662,
-        upFlatDownCadencePaceData: {
-          down: 74.53448275862068,
-          flat: 77.65126050420169,
-          up: 67.13986013986013
-        },
-        upperQuartileCadence: 82,
-        upperQuartileDistancePerOccurrence: 7.035175879396984
+        upFlatDownCadencePaceData: { down: 74.53448275862068, flat: 77.65126050420169, up: 67.13986013986013 },
+        upperQuartileCadence: 82
       },
       elevationData: {
         accumulatedElevationAscent: 82.21014057910708,
@@ -6666,11 +6113,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.5,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 74.53448275862068,
-          flat: 77.65126050420169,
-          up: 67.13986013986013
-        },
+        upFlatDownCadencePaceData: { down: 74.53448275862068, flat: 77.65126050420169, up: 67.13986013986013 },
         upFlatDownDistanceData: { down: 2.9335000000000107, flat: 24.90959999999999, up: 2.7740999999999967 },
         upFlatDownInSeconds: { down: 471, flat: 3353, total: 4455, up: 631 },
         upFlatDownMoveData: { down: 22.421656050955495, flat: 26.744575007456, up: 15.826877971473833 },
@@ -6696,7 +6139,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 145,
         best20min: 116,
         genuineGradeAdjustedAvgPace: 146,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 196.07843137254903,
         medianPace: 138.88888888888889,
         paceZones: null,
@@ -6740,7 +6182,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 329236648,
     moving_time_raw: 4439,
     name: "Reeduc",
-
     start_time: "2015-06-20T12:09:43+0000",
     trainer: false,
     type: "Ride"
@@ -6758,27 +6199,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 342.20952032,
     commute: false,
     distance_raw: 18217.2,
     elapsed_time_raw: 2575,
     elevation_gain_raw: 38,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 71.44331872946331,
+        averageActiveCadence: 71.44331872946331,
         averageDistancePerOccurrence: 6.863976336002989,
-        cadencePercentageMoving: 66.96315120711563,
-        cadenceTimeMoving: 1826,
+        cadenceActivePercentage: 66.96315120711563,
+        cadenceActiveTime: 1826,
         cadenceZones: null,
         lowerQuartileCadence: 68,
-        lowerQuartileDistancePerOccurrence: 6.374522292993742,
         medianCadence: 75,
-        medianDistancePerOccurrence: 6.468085106383288,
         standardDeviationCadence: 21.7,
         totalOccurrences: 2269.1,
         upFlatDownCadencePaceData: { down: 71.33333333333333, flat: 75.5871121718377, up: 64.64197530864197 },
-        upperQuartileCadence: 82,
-        upperQuartileDistancePerOccurrence: 7.202380952380952
+        upperQuartileCadence: 82
       },
       elevationData: {
         accumulatedElevationAscent: 38.04901468927187,
@@ -6825,7 +6262,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 139,
         best20min: 118,
         genuineGradeAdjustedAvgPace: 142,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 175.43859649122808,
         medianPace: 129.87012987012986,
         paceZones: null,
@@ -6869,7 +6305,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 329349712,
     moving_time_raw: 2528,
     name: ".",
-
     start_time: "2015-06-20T14:39:07+0000",
     trainer: false,
     type: "Ride"
@@ -6887,27 +6322,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1289.355777925,
     commute: false,
     distance_raw: 51897.3,
     elapsed_time_raw: 8704,
     elevation_gain_raw: 873,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 73.15392994804759,
+        averageActiveCadence: 73.15392994804759,
         averageDistancePerOccurrence: 4.59964649770488,
-        cadencePercentageMoving: 62.51168588345279,
-        cadenceTimeMoving: 5967,
+        cadenceActivePercentage: 62.51168588345279,
+        cadenceActiveTime: 5967,
         cadenceZones: null,
         lowerQuartileCadence: 68,
-        lowerQuartileDistancePerOccurrence: 2.7243243243240096,
         medianCadence: 75,
-        medianDistancePerOccurrence: 3.98076923077007,
         standardDeviationCadence: 17.6,
         totalOccurrences: 7410.575000000043,
         upFlatDownCadencePaceData: { down: 78.68595041322314, flat: 77.62047244094488, up: 72.144 },
-        upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 6.409638554216954
+        upperQuartileCadence: 83
       },
       elevationData: {
         accumulatedElevationAscent: 873.0732525287331,
@@ -6954,7 +6385,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 160,
         best20min: 103,
         genuineGradeAdjustedAvgPace: 150,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 277.77777777777777,
         medianPace: 178.57142857142856,
         paceZones: null,
@@ -6998,7 +6428,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 330098749,
     moving_time_raw: 8335,
     name: "Pinet - St Jean le vieux",
-
     start_time: "2015-06-21T13:43:51+0000",
     trainer: false,
     type: "Ride"
@@ -7016,31 +6445,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 987.94664423,
     commute: false,
     distance_raw: 38201.1,
     elapsed_time_raw: 5759,
     elevation_gain_raw: 552,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 77.12787810383747,
+        averageActiveCadence: 77.12787810383747,
         averageDistancePerOccurrence: 4.995364481823507,
-        cadencePercentageMoving: 69.28909952606635,
-        cadenceTimeMoving: 4430,
+        cadenceActivePercentage: 69.28909952606635,
+        cadenceActiveTime: 4430,
         cadenceZones: null,
         lowerQuartileCadence: 69,
-        lowerQuartileDistancePerOccurrence: 2.7204968944096666,
         medianCadence: 79,
-        medianDistancePerOccurrence: 5.170469798657484,
         standardDeviationCadence: 18.7,
         totalOccurrences: 5828.433333333333,
-        upFlatDownCadencePaceData: {
-          down: 84.01709401709402,
-          flat: 85.52158273381295,
-          up: 72.34727503168568
-        },
-        upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.4574468085111025
+        upFlatDownCadencePaceData: { down: 84.01709401709402, flat: 85.52158273381295, up: 72.34727503168568 },
+        upperQuartileCadence: 89
       },
       elevationData: {
         accumulatedElevationAscent: 551.5688126564567,
@@ -7061,11 +6482,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -1.2,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 84.01709401709402,
-          flat: 85.52158273381295,
-          up: 72.34727503168568
-        },
+        upFlatDownCadencePaceData: { down: 84.01709401709402, flat: 85.52158273381295, up: 72.34727503168568 },
         upFlatDownDistanceData: { down: 8.991699999999986, flat: 19.6506, up: 9.55490000000001 },
         upFlatDownInSeconds: { down: 979, flat: 2340, total: 5704, up: 2385 },
         upFlatDownMoveData: { down: 33.06447395301323, flat: 30.23169230769231, up: 14.422490566037752 },
@@ -7091,7 +6508,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 149,
         best20min: 100,
         genuineGradeAdjustedAvgPace: 133,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 294.11764705882354,
         medianPace: 158.73015873015873,
         paceZones: null,
@@ -7135,7 +6551,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 330753578,
     moving_time_raw: 5558,
     name: "22/06/2015 Meylan, Rhone-Alpes, France",
-
     start_time: "2015-06-22T16:08:30+0000",
     trainer: false,
     type: "Ride"
@@ -7153,27 +6568,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1113.2518361,
     commute: false,
     distance_raw: 46969,
     elapsed_time_raw: 7528,
     elevation_gain_raw: 567,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 73.88532196969697,
+        averageActiveCadence: 73.88532196969697,
         averageDistancePerOccurrence: 5.229144236912925,
-        cadencePercentageMoving: 64.95049504950495,
-        cadenceTimeMoving: 5280,
+        cadenceActivePercentage: 64.95049504950495,
+        cadenceActiveTime: 5280,
         cadenceZones: null,
         lowerQuartileCadence: 66,
-        lowerQuartileDistancePerOccurrence: 3.026785714286007,
         medianCadence: 77,
-        medianDistancePerOccurrence: 5.7193548387095365,
         standardDeviationCadence: 21.7,
         totalOccurrences: 6747.183333333336,
         upFlatDownCadencePaceData: { down: 79.3359375, flat: 81.92737430167598, up: 69.47738693467336 },
-        upperQuartileCadence: 86,
-        upperQuartileDistancePerOccurrence: 6.468965517241581
+        upperQuartileCadence: 86
       },
       elevationData: {
         accumulatedElevationAscent: 566.9369998195085,
@@ -7220,7 +6631,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 158,
         best20min: 108,
         genuineGradeAdjustedAvgPace: 147,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 285.7142857142857,
         medianPace: 172.41379310344828,
         paceZones: null,
@@ -7264,7 +6674,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 332833796,
     moving_time_raw: 7220,
     name: "Mal au derrière !",
-
     start_time: "2015-06-25T16:02:43+0000",
     trainer: false,
     type: "Ride"
@@ -7282,31 +6691,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1494.60247475,
     commute: false,
     distance_raw: 60850.6,
     elapsed_time_raw: 10124,
     elevation_gain_raw: 939,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 74.28662083553675,
+        averageActiveCadence: 74.28662083553675,
         averageDistancePerOccurrence: 4.802262284325021,
-        cadencePercentageMoving: 69.32237028636234,
-        cadenceTimeMoving: 7564,
+        cadenceActivePercentage: 69.32237028636234,
+        cadenceActiveTime: 7564,
         cadenceZones: null,
         lowerQuartileCadence: 67,
-        lowerQuartileDistancePerOccurrence: 2.75555555555534,
         medianCadence: 78,
-        medianDistancePerOccurrence: 4.023529411765219,
         standardDeviationCadence: 18.3,
         totalOccurrences: 9586.350000000011,
-        upFlatDownCadencePaceData: {
-          down: 83.95833333333333,
-          flat: 80.88992974238876,
-          up: 70.66547533952823
-        },
-        upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 6.389937106918376
+        upFlatDownCadencePaceData: { down: 83.95833333333333, flat: 80.88992974238876, up: 70.66547533952823 },
+        upperQuartileCadence: 85
       },
       elevationData: {
         accumulatedElevationAscent: 938.3625369277086,
@@ -7327,11 +6728,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -1.7,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 83.95833333333333,
-          flat: 80.88992974238876,
-          up: 70.66547533952823
-        },
+        upFlatDownCadencePaceData: { down: 83.95833333333333, flat: 80.88992974238876, up: 70.66547533952823 },
         upFlatDownDistanceData: { down: 15.262699999999992, flat: 29.09180000000004, up: 16.483099999999972 },
         upFlatDownInSeconds: { down: 1664, flat: 3949, total: 9879, up: 4266 },
         upFlatDownMoveData: { down: 33.02026442307691, flat: 26.520759685996488, up: 13.909789029535842 },
@@ -7357,7 +6754,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 161,
         best20min: 107,
         genuineGradeAdjustedAvgPace: 149,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 294.11764705882354,
         medianPace: 188.67924528301887,
         paceZones: null,
@@ -7401,7 +6797,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 333536909,
     moving_time_raw: 9647,
     name: "Balcon de Belledone",
-
     start_time: "2015-06-26T15:49:37+0000",
     trainer: false,
     type: "Ride"
@@ -7419,31 +6814,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 2579.5925608350003,
     commute: false,
     distance_raw: 104155,
     elapsed_time_raw: 17364,
     elevation_gain_raw: 1528,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 72.7558311880802,
+        averageActiveCadence: 72.7558311880802,
         averageDistancePerOccurrence: 4.378437614770011,
-        cadencePercentageMoving: 76.1055081458495,
-        cadenceTimeMoving: 12819,
+        cadenceActivePercentage: 76.1055081458495,
+        cadenceActiveTime: 12819,
         cadenceZones: null,
         lowerQuartileCadence: 66,
-        lowerQuartileDistancePerOccurrence: 2.7187500000013642,
         medianCadence: 75,
-        medianDistancePerOccurrence: 4.714285714285856,
         standardDeviationCadence: 10.4,
         totalOccurrences: 15921.816666666708,
-        upFlatDownCadencePaceData: {
-          down: 80.91911764705883,
-          flat: 80.75182038834951,
-          up: 68.09712793733681
-        },
-        upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 6.431137724551094
+        upFlatDownCadencePaceData: { down: 80.91911764705883, flat: 80.75182038834951, up: 68.09712793733681 },
+        upperQuartileCadence: 83
       },
       elevationData: {
         accumulatedElevationAscent: 1289.5784027030725,
@@ -7464,11 +6851,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -1.7,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 80.91911764705883,
-          flat: 80.75182038834951,
-          up: 68.09712793733681
-        },
+        upFlatDownCadencePaceData: { down: 80.91911764705883, flat: 80.75182038834951, up: 68.09712793733681 },
         upFlatDownDistanceData: { down: 26.29149999999997, flat: 51.61390000000004, up: 26.222500000000004 },
         upFlatDownInSeconds: { down: 2892, flat: 6663, total: 16694, up: 7139 },
         upFlatDownMoveData: { down: 32.72800829875515, flat: 27.88684376407026, up: 13.223280571508617 },
@@ -7494,7 +6877,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 159,
         best20min: 101,
         genuineGradeAdjustedAvgPace: 157,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 312.49999999999994,
         medianPace: 172.41379310344828,
         paceZones: null,
@@ -7538,7 +6920,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 334111753,
     moving_time_raw: 16311,
     name: "Pallaquit - Porte - Placette",
-
     start_time: "2015-06-27T11:20:30+0000",
     trainer: false,
     type: "Ride"
@@ -7556,31 +6937,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1180.9330285149997,
     commute: false,
     distance_raw: 54779.7,
     elapsed_time_raw: 8933,
     elevation_gain_raw: 580,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 67.98689924724957,
+        averageActiveCadence: 67.98689924724957,
         averageDistancePerOccurrence: 5.3967582332952535,
-        cadencePercentageMoving: 69.92888587876736,
-        cadenceTimeMoving: 6908,
+        cadenceActivePercentage: 69.92888587876736,
+        cadenceActiveTime: 6908,
         cadenceZones: null,
         lowerQuartileCadence: 62,
-        lowerQuartileDistancePerOccurrence: 3.0566037735836704,
         medianCadence: 70,
-        medianDistancePerOccurrence: 6.34050880626223,
         standardDeviationCadence: 17.3,
         totalOccurrences: 8063.858333333325,
-        upFlatDownCadencePaceData: {
-          down: 74.07096774193549,
-          flat: 73.10089020771514,
-          up: 63.765294771968854
-        },
-        upperQuartileCadence: 77,
-        upperQuartileDistancePerOccurrence: 6.457142857142857
+        upFlatDownCadencePaceData: { down: 74.07096774193549, flat: 73.10089020771514, up: 63.765294771968854 },
+        upperQuartileCadence: 77
       },
       elevationData: {
         accumulatedElevationAscent: 580.3701292554481,
@@ -7601,11 +6974,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.7,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 74.07096774193549,
-          flat: 73.10089020771514,
-          up: 63.765294771968854
-        },
+        upFlatDownCadencePaceData: { down: 74.07096774193549, flat: 73.10089020771514, up: 63.765294771968854 },
         upFlatDownDistanceData: { down: 9.935699999999986, flat: 34.115100000000005, up: 10.726600000000007 },
         upFlatDownInSeconds: { down: 1267, flat: 4761, total: 8932, up: 2904 },
         upFlatDownMoveData: { down: 28.230876085240688, flat: 25.795916824196603, up: 13.297438016528933 },
@@ -7631,7 +7000,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 162,
         best20min: 120,
         genuineGradeAdjustedAvgPace: 148,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 303.03030303030306,
         medianPace: 149.25373134328356,
         paceZones: null,
@@ -7675,7 +7043,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 335068858,
     moving_time_raw: 8639,
     name: "Recup",
-
     start_time: "2015-06-28T13:07:57+0000",
     trainer: false,
     type: "Ride"
@@ -7693,31 +7060,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 871.78388148,
     commute: false,
     distance_raw: 33952.9,
     elapsed_time_raw: 4968,
     elevation_gain_raw: 529,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 76.84448462929475,
+        averageActiveCadence: 76.84448462929475,
         averageDistancePerOccurrence: 5.09935754699568,
-        cadencePercentageMoving: 70.45940170940172,
-        cadenceTimeMoving: 3871,
+        cadenceActivePercentage: 70.45940170940172,
+        cadenceActiveTime: 3871,
         cadenceZones: null,
         lowerQuartileCadence: 72,
-        lowerQuartileDistancePerOccurrence: 2.9942857142853825,
         medianCadence: 81,
-        medianDistancePerOccurrence: 5.587786259541762,
         standardDeviationCadence: 19.6,
         totalOccurrences: 5057.7416666666695,
-        upFlatDownCadencePaceData: {
-          down: 80.23134328358209,
-          flat: 80.36607142857143,
-          up: 76.79918588873812
-        },
-        upperQuartileCadence: 86,
-        upperQuartileDistancePerOccurrence: 6.971428571428597
+        upFlatDownCadencePaceData: { down: 80.23134328358209, flat: 80.36607142857143, up: 76.79918588873812 },
+        upperQuartileCadence: 86
       },
       elevationData: {
         accumulatedElevationAscent: 529.0279701243451,
@@ -7738,11 +7097,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.1,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 80.23134328358209,
-          flat: 80.36607142857143,
-          up: 76.79918588873812
-        },
+        upFlatDownCadencePaceData: { down: 80.23134328358209, flat: 80.36607142857143, up: 76.79918588873812 },
         upFlatDownDistanceData: { down: 9.08410000000001, flat: 15.368699999999986, up: 9.497800000000007 },
         upFlatDownInSeconds: { down: 897, flat: 1837, total: 4967, up: 2233 },
         upFlatDownMoveData: { down: 36.45792642140472, flat: 30.118301578660837, up: 15.31217196596508 },
@@ -7768,7 +7123,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 145,
         best20min: 108,
         genuineGradeAdjustedAvgPace: 135,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 256.4102564102564,
         medianPace: 156.24999999999997,
         paceZones: null,
@@ -7812,7 +7166,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 335573787,
     moving_time_raw: 4868,
     name: "20:31",
-
     start_time: "2015-06-29T16:29:35+0000",
     trainer: false,
     type: "Ride"
@@ -7830,31 +7183,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1090.84674735,
     commute: false,
     distance_raw: 47288.3,
     elapsed_time_raw: 5417,
     elevation_gain_raw: 117,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 82.27388815499779,
+        averageActiveCadence: 82.27388815499779,
         averageDistancePerOccurrence: 7.125809123563216,
-        cadencePercentageMoving: 80.43478260869566,
-        cadenceTimeMoving: 4542,
+        cadenceActivePercentage: 80.43478260869566,
+        cadenceActiveTime: 4542,
         cadenceZones: null,
         lowerQuartileCadence: 79,
-        lowerQuartileDistancePerOccurrence: 6.423529411764706,
         medianCadence: 85,
-        medianDistancePerOccurrence: 6.846560846560923,
         standardDeviationCadence: 16.3,
         totalOccurrences: 6361.141666666659,
-        upFlatDownCadencePaceData: {
-          down: 77.65873015873017,
-          flat: 84.73621323529412,
-          up: 68.45679012345678
-        },
-        upperQuartileCadence: 90,
-        upperQuartileDistancePerOccurrence: 7.327272727272595
+        upFlatDownCadencePaceData: { down: 77.65873015873017, flat: 84.73621323529412, up: 68.45679012345678 },
+        upperQuartileCadence: 90
       },
       elevationData: {
         accumulatedElevationAscent: 116.6257397970816,
@@ -7875,11 +7220,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.4,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 77.65873015873017,
-          flat: 84.73621323529412,
-          up: 68.45679012345678
-        },
+        upFlatDownCadencePaceData: { down: 77.65873015873017, flat: 84.73621323529412, up: 68.45679012345678 },
         upFlatDownDistanceData: { down: 2.853999999999984, flat: 41.9606, up: 2.4737000000000124 },
         upFlatDownInSeconds: { down: 493, flat: 4546, total: 5417, up: 378 },
         upFlatDownMoveData: { down: 20.840567951318345, flat: 33.22880774307083, up: 23.55904761904774 },
@@ -7905,7 +7246,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 114,
         best20min: 102,
         genuineGradeAdjustedAvgPace: 115,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 123.45679012345678,
         medianPace: 106.38297872340425,
         paceZones: null,
@@ -7949,7 +7289,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 336354220,
     moving_time_raw: 5290,
     name: "32.2 kph",
-
     start_time: "2015-06-30T17:38:55+0000",
     trainer: false,
     type: "Ride"
@@ -7967,31 +7306,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1423.0161185999998,
     commute: false,
     distance_raw: 52222.9,
     elapsed_time_raw: 8905,
     elevation_gain_raw: 1008,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 69.9775804995486,
+        averageActiveCadence: 69.9775804995486,
         averageDistancePerOccurrence: 4.639619903949727,
-        cadencePercentageMoving: 68.3080808080808,
-        cadenceTimeMoving: 6646,
+        cadenceActivePercentage: 68.3080808080808,
+        cadenceActiveTime: 6646,
         cadenceZones: null,
         lowerQuartileCadence: 62,
-        lowerQuartileDistancePerOccurrence: 2.6999999999995143,
         medianCadence: 72,
-        medianDistancePerOccurrence: 3.0260869565218345,
         standardDeviationCadence: 17.1,
         totalOccurrences: 7952.158333333315,
-        upFlatDownCadencePaceData: {
-          down: 80.47852760736197,
-          flat: 77.86184210526316,
-          up: 66.97200287150037
-        },
-        upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.549019607843155
+        upFlatDownCadencePaceData: { down: 80.47852760736197, flat: 77.86184210526316, up: 66.97200287150037 },
+        upperQuartileCadence: 80
       },
       elevationData: {
         accumulatedElevationAscent: 894.6517100050983,
@@ -8012,11 +7343,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -3.3,
         medianGrade: -0.1,
-        upFlatDownCadencePaceData: {
-          down: 80.47852760736197,
-          flat: 77.86184210526316,
-          up: 66.97200287150037
-        },
+        upFlatDownCadencePaceData: { down: 80.47852760736197, flat: 77.86184210526316, up: 66.97200287150037 },
         upFlatDownDistanceData: { down: 15.806199999999972, flat: 22.185500000000037, up: 14.16869999999999 },
         upFlatDownInSeconds: { down: 1699, flat: 2671, total: 8697, up: 4327 },
         upFlatDownMoveData: { down: 33.49165391406704, flat: 29.901834518906828, up: 11.788148832909629 },
@@ -8042,7 +7369,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 165,
         best20min: 92,
         genuineGradeAdjustedAvgPace: 149,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 344.82758620689657,
         medianPace: 222.22222222222223,
         paceZones: null,
@@ -8086,7 +7412,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 337740078,
     moving_time_raw: 8403,
     name: "Col de Palaquit mon kiki !",
-
     start_time: "2015-07-02T16:18:52+0000",
     trainer: false,
     type: "Ride"
@@ -8104,31 +7429,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1265.7555195599998,
     commute: false,
     distance_raw: 58179.5,
     elapsed_time_raw: 7030,
     elevation_gain_raw: 136,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 76.12000349101065,
+        averageActiveCadence: 76.12000349101065,
         averageDistancePerOccurrence: 7.283424270140313,
-        cadencePercentageMoving: 78.17283950617283,
-        cadenceTimeMoving: 5729,
+        cadenceActivePercentage: 78.17283950617283,
+        cadenceActiveTime: 5729,
         cadenceZones: null,
         lowerQuartileCadence: 73,
-        lowerQuartileDistancePerOccurrence: 6.583783783784138,
         medianCadence: 79,
-        medianDistancePerOccurrence: 7.266846361186141,
         standardDeviationCadence: 17.1,
         totalOccurrences: 7448.058333333325,
-        upFlatDownCadencePaceData: {
-          down: 72.48818897637796,
-          flat: 78.59398496240601,
-          up: 67.43650793650794
-        },
-        upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 7.361445783132354
+        upFlatDownCadencePaceData: { down: 72.48818897637796, flat: 78.59398496240601, up: 67.43650793650794 },
+        upperQuartileCadence: 85
       },
       elevationData: {
         accumulatedElevationAscent: 135.9840098603672,
@@ -8149,11 +7466,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.4,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 72.48818897637796,
-          flat: 78.59398496240601,
-          up: 67.43650793650794
-        },
+        upFlatDownCadencePaceData: { down: 72.48818897637796, flat: 78.59398496240601, up: 67.43650793650794 },
         upFlatDownDistanceData: { down: 3.3355000000000037, flat: 51.51810000000002, up: 3.3258999999999794 },
         upFlatDownInSeconds: { down: 522, flat: 5936, total: 7030, up: 572 },
         upFlatDownMoveData: { down: 23.003448275862095, flat: 31.244130727762816, up: 20.932237762237634 },
@@ -8179,7 +7492,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 120,
         best20min: 103,
         genuineGradeAdjustedAvgPace: 122,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 135.13513513513513,
         medianPace: 111.11111111111111,
         paceZones: null,
@@ -8223,7 +7535,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 340466401,
     moving_time_raw: 6934,
     name: "__________",
-
     start_time: "2015-07-06T16:37:17+0000",
     trainer: false,
     type: "Ride"
@@ -8241,31 +7552,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 723.377179665,
     commute: false,
     distance_raw: 29302.2,
     elapsed_time_raw: 4760,
     elevation_gain_raw: 491,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 70.10217842323651,
+        averageActiveCadence: 70.10217842323651,
         averageDistancePerOccurrence: 4.84668930345107,
-        cadencePercentageMoving: 71.44495412844036,
-        cadenceTimeMoving: 3856,
+        cadenceActivePercentage: 71.44495412844036,
+        cadenceActiveTime: 3856,
         cadenceZones: null,
         lowerQuartileCadence: 64,
-        lowerQuartileDistancePerOccurrence: 2.781456953642384,
         medianCadence: 72,
-        medianDistancePerOccurrence: 4.0655737704916834,
         standardDeviationCadence: 16.4,
         totalOccurrences: 4568.816666666674,
-        upFlatDownCadencePaceData: {
-          down: 75.86666666666666,
-          flat: 75.16706443914082,
-          up: 68.10854816824965
-        },
-        upperQuartileCadence: 78,
-        upperQuartileDistancePerOccurrence: 6.425806451612926
+        upFlatDownCadencePaceData: { down: 75.86666666666666, flat: 75.16706443914082, up: 68.10854816824965 },
+        upperQuartileCadence: 78
       },
       elevationData: {
         accumulatedElevationAscent: 491.26532007029084,
@@ -8286,11 +7589,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.2,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 75.86666666666666,
-          flat: 75.16706443914082,
-          up: 68.10854816824965
-        },
+        upFlatDownCadencePaceData: { down: 75.86666666666666, flat: 75.16706443914082, up: 68.10854816824965 },
         upFlatDownDistanceData: { down: 7.807500000000002, flat: 13.146099999999988, up: 8.33620000000001 },
         upFlatDownInSeconds: { down: 753, flat: 1727, total: 4758, up: 2278 },
         upFlatDownMoveData: { down: 37.326693227091646, flat: 27.403566878980868, up: 13.173977172958752 },
@@ -8316,7 +7615,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 162,
         best20min: 112,
         genuineGradeAdjustedAvgPace: 141,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 303.03030303030306,
         medianPace: 163.9344262295082,
         paceZones: null,
@@ -8360,7 +7658,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 341057035,
     moving_time_raw: 4683,
     name: "__/\\__",
-
     start_time: "2015-07-07T16:15:08+0000",
     trainer: false,
     type: "Ride"
@@ -8378,27 +7675,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 303.20390125,
     commute: false,
     distance_raw: 15048.5,
     elapsed_time_raw: 12197,
     elevation_gain_raw: 99,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 73.09547888161808,
+        averageActiveCadence: 73.09547888161808,
         averageDistancePerOccurrence: 6.5403780637104045,
-        cadencePercentageMoving: 77.38264580369844,
-        cadenceTimeMoving: 1681,
+        cadenceActivePercentage: 77.38264580369844,
+        cadenceActiveTime: 1681,
         cadenceZones: null,
         lowerQuartileCadence: 66,
-        lowerQuartileDistancePerOccurrence: 5.781512605042032,
         medianCadence: 77,
-        medianDistancePerOccurrence: 6.407079646017506,
         standardDeviationCadence: 19.1,
         totalOccurrences: 3053.4583333333335,
         upFlatDownCadencePaceData: { down: 79.1025641025641, flat: 75.49632352941177, up: 68.71612903225807 },
-        upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 6.738461538460867
+        upperQuartileCadence: 83
       },
       elevationData: {
         accumulatedElevationAscent: 99.29358000177925,
@@ -8431,7 +7724,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 158,
         best20min: 144,
         genuineGradeAdjustedAvgPace: 143,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 833.3333333333333,
         medianPace: 166.66666666666666,
         paceZones: null,
@@ -8475,7 +7767,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 342901792,
     moving_time_raw: 2182,
     name: "08/07/2015 Meylan, RA, France",
-
     start_time: "2015-07-08T16:23:02+0000",
     trainer: false,
     type: "Ride"
@@ -8493,31 +7784,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 3846.37527972,
     commute: false,
     distance_raw: 141925,
     elapsed_time_raw: 22033,
     elevation_gain_raw: 2052,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 78.24111585972719,
+        averageActiveCadence: 78.24111585972719,
         averageDistancePerOccurrence: 5.269165642484575,
-        cadencePercentageMoving: 85.2106227106227,
-        cadenceTimeMoving: 17081,
+        cadenceActivePercentage: 85.2106227106227,
+        cadenceActiveTime: 17081,
         cadenceZones: null,
         lowerQuartileCadence: 69,
-        lowerQuartileDistancePerOccurrence: 2.7999999999956344,
         medianCadence: 81,
-        medianDistancePerOccurrence: 5.643243243241355,
         standardDeviationCadence: 15.9,
         totalOccurrences: 22470.74166666663,
-        upFlatDownCadencePaceData: {
-          down: 88.01719901719902,
-          flat: 84.98692287163064,
-          up: 72.17060956656881
-        },
-        upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.502994011972911
+        upFlatDownCadencePaceData: { down: 88.01719901719902, flat: 84.98692287163064, up: 72.17060956656881 },
+        upperQuartileCadence: 89
       },
       elevationData: {
         accumulatedElevationAscent: 1855.333327969558,
@@ -8538,11 +7821,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.2,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 88.01719901719902,
-          flat: 84.98692287163064,
-          up: 72.17060956656881
-        },
+        upFlatDownCadencePaceData: { down: 88.01719901719902, flat: 84.98692287163064, up: 72.17060956656881 },
         upFlatDownDistanceData: { down: 40.96589999999991, flat: 58.9553000000001, up: 41.9524 },
         upFlatDownInSeconds: { down: 3895, flat: 6761, total: 19926, up: 9270 },
         upFlatDownMoveData: { down: 37.863219512195045, flat: 31.391669871320865, up: 16.29219417475728 },
@@ -8568,7 +7847,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 140,
         best20min: 86,
         genuineGradeAdjustedAvgPace: 135,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 285.7142857142857,
         medianPace: 142.85714285714286,
         paceZones: null,
@@ -8612,7 +7890,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 343080886,
     moving_time_raw: 19671,
     name: "Alpe d'Huez",
-
     start_time: "2015-07-10T08:58:32+0000",
     trainer: false,
     type: "Ride"
@@ -8630,31 +7907,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 797.6640056049998,
     commute: false,
     distance_raw: 40452.4,
     elapsed_time_raw: 5970,
     elevation_gain_raw: 140,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 72.5420848540146,
+        averageActiveCadence: 72.5420848540146,
         averageDistancePerOccurrence: 6.611772449275772,
-        cadencePercentageMoving: 72.58064516129032,
-        cadenceTimeMoving: 4384,
+        cadenceActivePercentage: 72.58064516129032,
+        cadenceActiveTime: 4384,
         cadenceZones: null,
         lowerQuartileCadence: 69,
-        lowerQuartileDistancePerOccurrence: 6.3552631578941625,
         medianCadence: 75,
-        medianDistancePerOccurrence: 6.468750000000038,
         standardDeviationCadence: 17.5,
         totalOccurrences: 5442.466666666674,
-        upFlatDownCadencePaceData: {
-          down: 75.51685393258427,
-          flat: 75.81885593220339,
-          up: 61.96153846153846
-        },
-        upperQuartileCadence: 81,
-        upperQuartileDistancePerOccurrence: 7.228389444950034
+        upFlatDownCadencePaceData: { down: 75.51685393258427, flat: 75.81885593220339, up: 61.96153846153846 },
+        upperQuartileCadence: 81
       },
       elevationData: {
         accumulatedElevationAscent: 139.90727778999124,
@@ -8675,11 +7944,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.4,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 75.51685393258427,
-          flat: 75.81885593220339,
-          up: 61.96153846153846
-        },
+        upFlatDownCadencePaceData: { down: 75.51685393258427, flat: 75.81885593220339, up: 61.96153846153846 },
         upFlatDownDistanceData: { down: 3.0220000000000042, flat: 34.54830000000001, up: 2.8728999999999916 },
         upFlatDownInSeconds: { down: 664, flat: 4481, total: 5965, up: 820 },
         upFlatDownMoveData: { down: 16.384337349397615, flat: 27.755831287659014, up: 12.612731707317037 },
@@ -8705,7 +7970,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 145,
         best20min: 117,
         genuineGradeAdjustedAvgPace: 140,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 185.18518518518516,
         medianPace: 131.57894736842104,
         paceZones: null,
@@ -8749,7 +8013,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 344445749,
     moving_time_raw: 5549,
     name: "11/07/2015 Meylan, Rhone-Alpes, France",
-
     start_time: "2015-07-11T15:36:20+0000",
     trainer: false,
     type: "Ride"
@@ -8767,7 +8030,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 811.238814837,
     commute: false,
     distance_raw: 33423.8,
     elapsed_time_raw: 12207,
@@ -8805,7 +8067,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 289,
         best20min: 176,
         genuineGradeAdjustedAvgPace: 249,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 624.9999999999999,
         medianPace: 370.3703703703703,
         paceZones: null,
@@ -8849,7 +8110,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 344445817,
     moving_time_raw: 9218,
     name: "MTB",
-
     start_time: "2015-07-12T09:17:59+0000",
     trainer: false,
     type: "Ride"
@@ -8867,7 +8127,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 462.91715241,
     commute: false,
     distance_raw: 26312.3,
     elapsed_time_raw: 11935,
@@ -8905,7 +8164,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 154,
         best20min: null,
         genuineGradeAdjustedAvgPace: 153,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 199.99999999999997,
         medianPace: 149.25373134328356,
         paceZones: null,
@@ -8949,7 +8207,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 345256833,
     moving_time_raw: 4029,
     name: ".",
-
     start_time: "2015-07-12T14:08:29+0000",
     trainer: false,
     type: "Ride"
@@ -8967,7 +8224,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 544.447407262,
     commute: false,
     distance_raw: 13069.3,
     elapsed_time_raw: 15655,
@@ -9019,7 +8275,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 678,
         best20min: 458,
         genuineGradeAdjustedAvgPace: 435,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 2499.9999999999995,
         medianPace: 1111.111111111111,
         paceZones: null,
@@ -9063,7 +8318,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 345256865,
     moving_time_raw: 7522,
     name: "MTB Biathlon en chartreuse et en douleur",
-
     start_time: "2015-07-13T09:21:49+0000",
     trainer: false,
     type: "Ride"
@@ -9081,7 +8335,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 503.73786726899993,
     commute: false,
     distance_raw: 30728.6,
     elapsed_time_raw: 14608,
@@ -9119,7 +8372,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 200,
         best20min: null,
         genuineGradeAdjustedAvgPace: 176,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 357.1428571428571,
         medianPace: 199.99999999999997,
         paceZones: null,
@@ -9163,7 +8415,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 346420018,
     moving_time_raw: 5382,
     name: ".",
-
     start_time: "2015-07-14T10:45:08+0000",
     trainer: false,
     type: "Ride"
@@ -9181,27 +8432,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 818.932846915,
     commute: false,
     distance_raw: 37835.1,
     elapsed_time_raw: 5168,
     elevation_gain_raw: 144,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 77.03375032577534,
+        averageActiveCadence: 77.03375032577534,
         averageDistancePerOccurrence: 6.926740770190131,
-        cadencePercentageMoving: 78.07211184694629,
-        cadenceTimeMoving: 3837,
+        cadenceActivePercentage: 78.07211184694629,
+        cadenceActiveTime: 3837,
         cadenceZones: null,
         lowerQuartileCadence: 73,
-        lowerQuartileDistancePerOccurrence: 6.36144578313253,
         medianCadence: 79,
-        medianDistancePerOccurrence: 6.462427745664487,
         standardDeviationCadence: 18.2,
         totalOccurrences: 5077.983333333337,
         upFlatDownCadencePaceData: { down: 74.5625, flat: 79.48982035928144, up: 72.02631578947368 },
-        upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 7.179220779221006
+        upperQuartileCadence: 85
       },
       elevationData: {
         accumulatedElevationAscent: 144.65841185028575,
@@ -9234,7 +8481,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 128,
         best20min: 106,
         genuineGradeAdjustedAvgPace: 127,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 142.85714285714286,
         medianPace: 123.45679012345678,
         paceZones: null,
@@ -9278,7 +8524,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 346420035,
     moving_time_raw: 4769,
     name: ".",
-
     start_time: "2015-07-14T15:31:11+0000",
     trainer: false,
     type: "Ride"
@@ -9296,31 +8541,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 2909.6918420399998,
     commute: false,
     distance_raw: 123791,
     elapsed_time_raw: 16362,
     elevation_gain_raw: 739,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 81.97129204605312,
+        averageActiveCadence: 81.97129204605312,
         averageDistancePerOccurrence: 6.1850359652175255,
-        cadencePercentageMoving: 86.08374384236454,
-        cadenceTimeMoving: 13289,
+        cadenceActivePercentage: 86.08374384236454,
+        cadenceActiveTime: 13289,
         cadenceZones: null,
         lowerQuartileCadence: 78,
-        lowerQuartileDistancePerOccurrence: 5.642857142856883,
         medianCadence: 84,
-        medianDistancePerOccurrence: 6.39215686274624,
         standardDeviationCadence: 15.6,
         totalOccurrences: 18387.541666666668,
-        upFlatDownCadencePaceData: {
-          down: 87.22222222222223,
-          flat: 83.22787996127784,
-          up: 79.36862003780719
-        },
-        upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.508474576272667
+        upFlatDownCadencePaceData: { down: 87.22222222222223, flat: 83.22787996127784, up: 79.36862003780719 },
+        upperQuartileCadence: 89
       },
       elevationData: {
         accumulatedElevationAscent: 739.5922022998657,
@@ -9341,11 +8578,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.9,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 87.22222222222223,
-          flat: 83.22787996127784,
-          up: 79.36862003780719
-        },
+        upFlatDownCadencePaceData: { down: 87.22222222222223, flat: 83.22787996127784, up: 79.36862003780719 },
         upFlatDownDistanceData: { down: 20.99029999999998, flat: 81.09100000000011, up: 21.687399999999915 },
         upFlatDownInSeconds: { down: 2153, flat: 9728, total: 15522, up: 3641 },
         upFlatDownMoveData: { down: 35.097575476079854, flat: 30.009004934210566, up: 21.443185937929055 },
@@ -9371,7 +8604,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 125,
         best20min: 92,
         genuineGradeAdjustedAvgPace: 123,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 153.84615384615384,
         medianPace: 119.04761904761904,
         paceZones: null,
@@ -9415,7 +8647,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 346535547,
     moving_time_raw: 15336,
     name: "Lac de Paladru @ 29 kph",
-
     start_time: "2015-07-15T08:27:00+0000",
     trainer: false,
     type: "Ride"
@@ -9433,27 +8664,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1941.264781405,
     commute: false,
     distance_raw: 73266.2,
     elapsed_time_raw: 14399,
     elevation_gain_raw: 1437,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 67.23485384848792,
+        averageActiveCadence: 67.23485384848792,
         averageDistancePerOccurrence: 4.378554870550886,
-        cadencePercentageMoving: 66.25647668393782,
-        cadenceTimeMoving: 9887,
+        cadenceActivePercentage: 66.25647668393782,
+        cadenceActiveTime: 9887,
         cadenceZones: null,
         lowerQuartileCadence: 58,
-        lowerQuartileDistancePerOccurrence: 2.694915254238768,
         medianCadence: 68,
-        medianDistancePerOccurrence: 2.803738317757009,
         standardDeviationCadence: 16.8,
         totalOccurrences: 11485.45,
         upFlatDownCadencePaceData: { down: 78.92207792207792, flat: 78.2621359223301, up: 63.48512045347189 },
-        upperQuartileCadence: 78,
-        upperQuartileDistancePerOccurrence: 6.399999999998873
+        upperQuartileCadence: 78
       },
       elevationData: {
         accumulatedElevationAscent: 1238.5568779406383,
@@ -9500,7 +8727,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 184,
         best20min: 110,
         genuineGradeAdjustedAvgPace: 159,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 384.6153846153845,
         medianPace: 277.77777777777777,
         paceZones: null,
@@ -9544,7 +8770,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 348186050,
     moving_time_raw: 12797,
     name: "Monteymont - Les Adrets",
-
     start_time: "2015-07-17T12:35:01+0000",
     trainer: false,
     type: "Ride"
@@ -9562,31 +8787,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1124.0665779,
     commute: false,
     distance_raw: 47324.7,
     elapsed_time_raw: 10001,
     elevation_gain_raw: 496,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 68.40069905000897,
+        averageActiveCadence: 68.40069905000897,
         averageDistancePerOccurrence: 5.543694757701891,
-        cadencePercentageMoving: 66.4936990363232,
-        cadenceTimeMoving: 5579,
+        cadenceActivePercentage: 66.4936990363232,
+        cadenceActiveTime: 5579,
         cadenceZones: null,
         lowerQuartileCadence: 56,
-        lowerQuartileDistancePerOccurrence: 2.733333333333172,
         medianCadence: 71,
-        medianDistancePerOccurrence: 6.235714285714365,
         standardDeviationCadence: 22.1,
         totalOccurrences: 6604.733333333331,
-        upFlatDownCadencePaceData: {
-          down: 78.26271186440678,
-          flat: 78.21627647714604,
-          up: 60.246469833119384
-        },
-        upperQuartileCadence: 81,
-        upperQuartileDistancePerOccurrence: 6.525547445255447
+        upFlatDownCadencePaceData: { down: 78.26271186440678, flat: 78.21627647714604, up: 60.246469833119384 },
+        upperQuartileCadence: 81
       },
       elevationData: {
         accumulatedElevationAscent: 496.41691354589767,
@@ -9607,11 +8824,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.9,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 78.26271186440678,
-          flat: 78.21627647714604,
-          up: 60.246469833119384
-        },
+        upFlatDownCadencePaceData: { down: 78.26271186440678, flat: 78.21627647714604, up: 60.246469833119384 },
         upFlatDownDistanceData: { down: 8.788000000000004, flat: 29.006099999999975, up: 9.483500000000015 },
         upFlatDownInSeconds: { down: 1382, flat: 3893, total: 8193, up: 2918 },
         upFlatDownMoveData: { down: 22.892040520984093, flat: 26.823005394297436, up: 11.700000000000017 },
@@ -9637,7 +8850,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 170,
         best20min: 112,
         genuineGradeAdjustedAvgPace: 146,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 399.99999999999994,
         medianPace: 169.4915254237288,
         paceZones: null,
@@ -9681,7 +8893,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 348840376,
     moving_time_raw: 7530,
     name: "Vive le vent avec vik",
-
     start_time: "2015-07-18T15:08:52+0000",
     trainer: false,
     type: "Ride"
@@ -9699,7 +8910,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 166.24429676,
     commute: false,
     distance_raw: 10164.7,
     elapsed_time_raw: 8020,
@@ -9737,7 +8947,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 190,
         best20min: null,
         genuineGradeAdjustedAvgPace: 188,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 250.00000000000003,
         medianPace: 185.18518518518516,
         paceZones: null,
@@ -9781,7 +8990,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 349674579,
     moving_time_raw: 1928,
     name: ".",
-
     start_time: "2015-07-19T14:00:16+0000",
     trainer: false,
     type: "Ride"
@@ -9799,7 +9007,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 174.616828638,
     commute: false,
     distance_raw: 10902.8,
     elapsed_time_raw: 1869,
@@ -9837,7 +9044,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 163,
         best20min: 162,
         genuineGradeAdjustedAvgPace: 151,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 199.99999999999997,
         medianPace: 144.92753623188403,
         paceZones: null,
@@ -9881,7 +9087,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 349674619,
     moving_time_raw: 1604,
     name: "Test Columbus",
-
     start_time: "2015-07-19T18:04:41+0000",
     trainer: false,
     type: "Ride"
@@ -9899,7 +9104,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 44.857425290500004,
     commute: true,
     distance_raw: 3075,
     elapsed_time_raw: 479,
@@ -9926,11 +9130,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: -1.1,
         medianGrade: -0.3,
         upFlatDownCadencePaceData: null,
-        upFlatDownDistanceData: {
-          down: 0.4232999999999996,
-          flat: 2.3123000000000005,
-          up: 0.3393999999999996
-        },
+        upFlatDownDistanceData: { down: 0.4232999999999996, flat: 2.3123000000000005, up: 0.3393999999999996 },
         upFlatDownInSeconds: { down: 60, flat: 342, total: 479, up: 77 },
         upFlatDownMoveData: { down: 25.39799999999998, flat: 24.340000000000007, up: 15.86805194805193 },
         upperQuartileGrade: 0.5
@@ -9941,7 +9141,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 156,
         best20min: null,
         genuineGradeAdjustedAvgPace: 154,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 188.67924528301887,
         medianPace: 144.92753623188403,
         paceZones: null,
@@ -9985,7 +9184,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 350952822,
     moving_time_raw: 479,
     name: "20/07/2015 Meylan, RA, France",
-
     start_time: "2015-07-20T06:55:11+0000",
     trainer: false,
     type: "Ride"
@@ -10003,7 +9201,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 60.49898012500001,
     commute: true,
     distance_raw: 2340.8,
     elapsed_time_raw: 395,
@@ -10030,11 +9227,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: -0.5,
         medianGrade: 0.2,
         upFlatDownCadencePaceData: null,
-        upFlatDownDistanceData: {
-          down: 0.17250000000000018,
-          flat: 1.5662000000000003,
-          up: 0.6020999999999996
-        },
+        upFlatDownDistanceData: { down: 0.17250000000000018, flat: 1.5662000000000003, up: 0.6020999999999996 },
         upFlatDownInSeconds: { down: 29, flat: 215, total: 395, up: 151 },
         upFlatDownMoveData: { down: 21.4137931034483, flat: 26.224744186046518, up: 14.354701986754959 },
         upperQuartileGrade: 1.7
@@ -10045,7 +9238,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 169,
         best20min: null,
         genuineGradeAdjustedAvgPace: 161,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 277.77777777777777,
         medianPace: 166.66666666666666,
         paceZones: null,
@@ -10089,7 +9281,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 350952833,
     moving_time_raw: 395,
     name: "20/07/2015 Montbonnot-Saint-Martin, Rhône-Alpes, France",
-
     start_time: "2015-07-20T10:12:17+0000",
     trainer: false,
     type: "Ride"
@@ -10107,7 +9298,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 30.317346621,
     commute: true,
     distance_raw: 2276.6,
     elapsed_time_raw: 379,
@@ -10145,7 +9335,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 164,
         best20min: null,
         genuineGradeAdjustedAvgPace: 167,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 181.8181818181818,
         medianPace: 158.73015873015873,
         paceZones: null,
@@ -10189,7 +9378,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 350952841,
     moving_time_raw: 379,
     name: "20/07/2015 Montbonnot-Saint-Martin, Rhône-Alpes, France",
-
     start_time: "2015-07-20T11:35:58+0000",
     trainer: false,
     type: "Ride"
@@ -10207,7 +9395,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 58.97811901000001,
     commute: true,
     distance_raw: 3199,
     elapsed_time_raw: 523,
@@ -10234,11 +9421,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: -0.3,
         medianGrade: 0.4,
         upFlatDownCadencePaceData: null,
-        upFlatDownDistanceData: {
-          down: 0.3664999999999992,
-          flat: 2.2736000000000014,
-          up: 0.5545999999999996
-        },
+        upFlatDownDistanceData: { down: 0.3664999999999992, flat: 2.2736000000000014, up: 0.5545999999999996 },
         upFlatDownInSeconds: { down: 78, flat: 345, total: 522, up: 99 },
         upFlatDownMoveData: { down: 16.91538461538458, flat: 23.72452173913045, up: 20.167272727272717 },
         upperQuartileGrade: 1.1
@@ -10249,7 +9432,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 163,
         best20min: null,
         genuineGradeAdjustedAvgPace: 164,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 232.5581395348837,
         medianPace: 151.51515151515153,
         paceZones: null,
@@ -10293,7 +9475,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 350952856,
     moving_time_raw: 523,
     name: "20/07/2015 Montbonnot-Saint-Martin, Rhône-Alpes, France",
-
     start_time: "2015-07-20T16:01:23+0000",
     trainer: false,
     type: "Ride"
@@ -10311,27 +9492,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 329.64839527500004,
     commute: false,
     distance_raw: 15111.7,
     elapsed_time_raw: 1955,
     elevation_gain_raw: 50,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 77.00732728541522,
+        averageActiveCadence: 77.00732728541522,
         averageDistancePerOccurrence: 6.991341367943592,
-        cadencePercentageMoving: 71.45299145299145,
-        cadenceTimeMoving: 1433,
+        cadenceActivePercentage: 71.45299145299145,
+        cadenceActiveTime: 1433,
         cadenceZones: null,
         lowerQuartileCadence: 74,
-        lowerQuartileDistancePerOccurrence: 6.3363471971067495,
         medianCadence: 81,
-        medianDistancePerOccurrence: 6.479999999999928,
         standardDeviationCadence: 25.8,
         totalOccurrences: 1946.5000000000018,
         upFlatDownCadencePaceData: { down: 73.625, flat: 81.95268138801262, up: 74.60655737704919 },
-        upperQuartileCadence: 86,
-        upperQuartileDistancePerOccurrence: 7.285714285714263
+        upperQuartileCadence: 86
       },
       elevationData: {
         accumulatedElevationAscent: 50.07475166570805,
@@ -10364,7 +9541,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 129,
         best20min: 115,
         genuineGradeAdjustedAvgPace: 128,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 158.73015873015873,
         medianPace: 125.00000000000001,
         paceZones: null,
@@ -10408,7 +9584,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 350265303,
     moving_time_raw: 1955,
     name: "À César ce qui est à César ^^",
-
     start_time: "2015-07-20T17:03:16+0000",
     trainer: false,
     type: "Ride"
@@ -10426,27 +9601,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 445.11193818,
     commute: false,
     distance_raw: 19739.8,
     elapsed_time_raw: 2653,
     elevation_gain_raw: 80,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 82.26748251748252,
+        averageActiveCadence: 82.26748251748252,
         averageDistancePerOccurrence: 6.474491645495092,
-        cadencePercentageMoving: 79.44250871080139,
-        cadenceTimeMoving: 2002,
+        cadenceActivePercentage: 79.44250871080139,
+        cadenceActiveTime: 2002,
         cadenceZones: null,
         lowerQuartileCadence: 79,
-        lowerQuartileDistancePerOccurrence: 5.748148148148309,
         medianCadence: 85,
-        medianDistancePerOccurrence: 6.3269230769230065,
         standardDeviationCadence: 23.9,
         totalOccurrences: 2837.266666666671,
         upFlatDownCadencePaceData: { down: 85.79787234042553, flat: 85.702, up: 78.65555555555555 },
-        upperQuartileCadence: 91,
-        upperQuartileDistancePerOccurrence: 6.596026490065647
+        upperQuartileCadence: 91
       },
       elevationData: {
         accumulatedElevationAscent: 79.75784702840858,
@@ -10468,11 +9639,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: -0.9,
         medianGrade: -0.1,
         upFlatDownCadencePaceData: { down: 85.79787234042553, flat: 85.702, up: 78.65555555555555 },
-        upFlatDownDistanceData: {
-          down: 2.4088999999999907,
-          flat: 15.388400000000011,
-          up: 1.9422999999999968
-        },
+        upFlatDownDistanceData: { down: 2.4088999999999907, flat: 15.388400000000011, up: 1.9422999999999968 },
         upFlatDownInSeconds: { down: 568, flat: 1799, total: 2650, up: 283 },
         upFlatDownMoveData: { down: 15.267676056337969, flat: 30.79390772651475, up: 24.707703180211972 },
         upperQuartileGrade: 0.6
@@ -10497,7 +9664,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 133,
         best20min: 111,
         genuineGradeAdjustedAvgPace: 122,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 151.51515151515153,
         medianPace: 123.45679012345678,
         paceZones: null,
@@ -10541,7 +9707,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 350952876,
     moving_time_raw: 2421,
     name: "Aie ! Des glaçons sur la tête",
-
     start_time: "2015-07-21T16:25:34+0000",
     trainer: false,
     type: "Ride"
@@ -10559,31 +9724,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 838.6583442500001,
     commute: false,
     distance_raw: 31057.2,
     elapsed_time_raw: 5200,
     elevation_gain_raw: 512,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 76.04299142936135,
+        averageActiveCadence: 76.04299142936135,
         averageDistancePerOccurrence: 5.168536398329267,
-        cadencePercentageMoving: 68.51134477033757,
-        cadenceTimeMoving: 3617,
+        cadenceActivePercentage: 68.51134477033757,
+        cadenceActiveTime: 3617,
         cadenceZones: null,
         lowerQuartileCadence: 72,
-        lowerQuartileDistancePerOccurrence: 2.6923076923076925,
         medianCadence: 79,
-        medianDistancePerOccurrence: 3.311392405063457,
         standardDeviationCadence: 27.4,
         totalOccurrences: 4720.299999999997,
-        upFlatDownCadencePaceData: {
-          down: 90.35211267605634,
-          flat: 78.56346749226006,
-          up: 76.98433048433048
-        },
-        upperQuartileCadence: 86,
-        upperQuartileDistancePerOccurrence: 6.466666666666545
+        upFlatDownCadencePaceData: { down: 90.35211267605634, flat: 78.56346749226006, up: 76.98433048433048 },
+        upperQuartileCadence: 86
       },
       elevationData: {
         accumulatedElevationAscent: 511.86375277572824,
@@ -10604,11 +9761,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.7,
         medianGrade: -0.2,
-        upFlatDownCadencePaceData: {
-          down: 90.35211267605634,
-          flat: 78.56346749226006,
-          up: 76.98433048433048
-        },
+        upFlatDownCadencePaceData: { down: 90.35211267605634, flat: 78.56346749226006, up: 76.98433048433048 },
         upFlatDownDistanceData: { down: 10.784899999999991, flat: 11.927100000000008, up: 8.335799999999999 },
         upFlatDownInSeconds: { down: 1040, flat: 1870, total: 5043, up: 2133 },
         upFlatDownMoveData: { down: 37.33234615384613, flat: 22.96126203208558, up: 14.06886075949367 },
@@ -10634,7 +9787,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 160,
         best20min: 97,
         genuineGradeAdjustedAvgPace: 142,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 285.7142857142857,
         medianPace: 199.99999999999997,
         paceZones: null,
@@ -10678,7 +9830,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 352513047,
     moving_time_raw: 4759,
     name: "Venon",
-
     start_time: "2015-07-23T16:46:31+0000",
     trainer: false,
     type: "Ride"
@@ -10696,7 +9847,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 190.76622415999998,
     commute: true,
     distance_raw: 11906.8,
     elapsed_time_raw: 35360,
@@ -10734,7 +9884,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 188,
         best20min: null,
         genuineGradeAdjustedAvgPace: 171,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 263.1578947368421,
         medianPace: 204.0816326530612,
         paceZones: null,
@@ -10778,7 +9927,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 353113683,
     moving_time_raw: 2120,
     name: "KOMMut3",
-
     start_time: "2015-07-24T06:54:18+0000",
     trainer: false,
     type: "Ride"
@@ -10796,27 +9944,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1784.573044215,
     commute: false,
     distance_raw: 67928.5,
     elapsed_time_raw: 10666,
     elevation_gain_raw: 1013,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 79.25149389451806,
+        averageActiveCadence: 79.25149389451806,
         averageDistancePerOccurrence: 5.10994090769692,
-        cadencePercentageMoving: 69.77603826918896,
-        cadenceTimeMoving: 7698,
+        cadenceActivePercentage: 69.77603826918896,
+        cadenceActiveTime: 7698,
         cadenceZones: null,
         lowerQuartileCadence: 71,
-        lowerQuartileDistancePerOccurrence: 2.716167664670868,
         medianCadence: 83,
-        medianDistancePerOccurrence: 5.672727272724098,
         standardDeviationCadence: 22.1,
         totalOccurrences: 10363.21666666666,
         upFlatDownCadencePaceData: { down: 81.2511013215859, flat: 85.1292471685543, up: 77.18028359216746 },
-        upperQuartileCadence: 90,
-        upperQuartileDistancePerOccurrence: 6.385964912279681
+        upperQuartileCadence: 90
       },
       elevationData: {
         accumulatedElevationAscent: 762.4867564115773,
@@ -10863,7 +10007,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 150,
         best20min: 102,
         genuineGradeAdjustedAvgPace: 133,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 263.1578947368421,
         medianPace: 153.84615384615384,
         paceZones: null,
@@ -10907,7 +10050,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 353633586,
     moving_time_raw: 10061,
     name: "Venon PR 01",
-
     start_time: "2015-07-25T10:01:08+0000",
     trainer: false,
     type: "Ride"
@@ -10925,27 +10067,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 726.97380283,
     commute: false,
     distance_raw: 25646.8,
     elapsed_time_raw: 4068,
     elevation_gain_raw: 473,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 76.86304128902316,
+        averageActiveCadence: 76.86304128902316,
         averageDistancePerOccurrence: 4.884016603138375,
-        cadencePercentageMoving: 68.46553966189856,
-        cadenceTimeMoving: 2979,
+        cadenceActivePercentage: 68.46553966189856,
+        cadenceActiveTime: 2979,
         cadenceZones: null,
         lowerQuartileCadence: 67,
-        lowerQuartileDistancePerOccurrence: 2.7153284671533378,
         medianCadence: 77,
-        medianDistancePerOccurrence: 3.571428571428571,
         standardDeviationCadence: 19.8,
         totalOccurrences: 3875.808333333334,
         upFlatDownCadencePaceData: { down: 83.12295081967213, flat: 87.0374149659864, up: 72.89481946624804 },
-        upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.469387755102189
+        upperQuartileCadence: 89
       },
       elevationData: {
         accumulatedElevationAscent: 473.139797700789,
@@ -10992,7 +10130,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 149,
         best20min: 103,
         genuineGradeAdjustedAvgPace: 139,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 294.11764705882354,
         medianPace: 181.8181818181818,
         paceZones: null,
@@ -11036,7 +10173,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 353805002,
     moving_time_raw: 3806,
     name: "Revel & KOM",
-
     start_time: "2015-07-25T15:37:56+0000",
     trainer: false,
     type: "Ride"
@@ -11054,7 +10190,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1078.6001783040003,
     commute: false,
     distance_raw: 12909.6,
     elapsed_time_raw: 23093,
@@ -11092,7 +10227,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 972,
         best20min: null,
         genuineGradeAdjustedAvgPace: 781,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 1428.5714285714284,
         medianPace: 909.0909090909089,
         paceZones: null,
@@ -11120,7 +10254,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 355886705,
     moving_time_raw: 10530,
     name: "Rando et plouf à l'île de Porquerolles",
-
     start_time: "2015-07-28T07:56:39+0000",
     trainer: false,
     type: "Walk"
@@ -11138,7 +10271,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 312.8579294995,
     commute: false,
     distance_raw: 11759.9,
     elapsed_time_raw: 6750,
@@ -11176,7 +10308,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 442,
         best20min: 262,
         genuineGradeAdjustedAvgPace: 295,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 1428.5714285714284,
         medianPace: 416.66666666666663,
         paceZones: null,
@@ -11220,7 +10351,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 356460422,
     moving_time_raw: 4627,
     name: "Sortie à vélo matinale",
-
     start_time: "2015-07-29T08:00:32+0000",
     trainer: false,
     type: "Ride"
@@ -11238,31 +10368,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 876.971551665,
     commute: false,
     distance_raw: 50019.7,
     elapsed_time_raw: 7354,
     elevation_gain_raw: 111,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 72.28912085807316,
+        averageActiveCadence: 72.28912085807316,
         averageDistancePerOccurrence: 6.718602616115807,
-        cadencePercentageMoving: 67.11753731343283,
-        cadenceTimeMoving: 5221,
+        cadenceActivePercentage: 67.11753731343283,
+        cadenceActiveTime: 5221,
         cadenceZones: null,
         lowerQuartileCadence: 69,
-        lowerQuartileDistancePerOccurrence: 6.3544303797468125,
         medianCadence: 75,
-        medianDistancePerOccurrence: 6.43312101910828,
         standardDeviationCadence: 17.6,
         totalOccurrences: 6525.024999999993,
-        upFlatDownCadencePaceData: {
-          down: 70.98275862068965,
-          flat: 74.90353143841516,
-          up: 64.11111111111111
-        },
-        upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.524590163934306
+        upFlatDownCadencePaceData: { down: 70.98275862068965, flat: 74.90353143841516, up: 64.11111111111111 },
+        upperQuartileCadence: 80
       },
       elevationData: {
         accumulatedElevationAscent: 111.15340045416474,
@@ -11283,11 +10405,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.3,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 70.98275862068965,
-          flat: 74.90353143841516,
-          up: 64.11111111111111
-        },
+        upFlatDownCadencePaceData: { down: 70.98275862068965, flat: 74.90353143841516, up: 64.11111111111111 },
         upFlatDownDistanceData: { down: 3.3320999999999867, flat: 43.453400000000016, up: 3.234199999999997 },
         upFlatDownInSeconds: { down: 661, flat: 6036, total: 7354, up: 657 },
         upFlatDownMoveData: { down: 18.147594553706433, flat: 25.916540755467206, up: 17.72164383561642 },
@@ -11313,7 +10431,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 146,
         best20min: 120,
         genuineGradeAdjustedAvgPace: 148,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 181.8181818181818,
         medianPace: 133.33333333333334,
         paceZones: null,
@@ -11357,7 +10474,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 360360173,
     moving_time_raw: 7121,
     name: "02/08/2015 Meylan, Rhone-Alpes, France",
-
     start_time: "2015-08-02T15:22:39+0000",
     trainer: false,
     type: "Ride"
@@ -11375,27 +10491,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 818.5759030800001,
     commute: false,
     distance_raw: 32280.3,
     elapsed_time_raw: 5002,
     elevation_gain_raw: 518,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 74.5886309680823,
+        averageActiveCadence: 74.5886309680823,
         averageDistancePerOccurrence: 5.074784022364005,
-        cadencePercentageMoving: 70.27777777777777,
-        cadenceTimeMoving: 3791,
+        cadenceActivePercentage: 70.27777777777777,
+        cadenceActiveTime: 3791,
         cadenceZones: null,
         lowerQuartileCadence: 68,
-        lowerQuartileDistancePerOccurrence: 2.7111111111108688,
         medianCadence: 77,
-        medianDistancePerOccurrence: 3.9766081871345027,
         standardDeviationCadence: 21,
         totalOccurrences: 4819.7500000000055,
         upFlatDownCadencePaceData: { down: 85.92964824120602, flat: 78.77126099706744, up: 72.5296551724138 },
-        upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 6.460714285714207
+        upperQuartileCadence: 85
       },
       elevationData: {
         accumulatedElevationAscent: 517.8669081049441,
@@ -11428,7 +10540,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 154,
         best20min: 97,
         genuineGradeAdjustedAvgPace: 138,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 294.11764705882354,
         medianPace: 178.57142857142856,
         paceZones: null,
@@ -11472,7 +10583,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 360424486,
     moving_time_raw: 4933,
     name: "Venon",
-
     start_time: "2015-08-03T16:14:32+0000",
     trainer: false,
     type: "Ride"
@@ -11490,31 +10600,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 672.94784928,
     commute: false,
     distance_raw: 24249.4,
     elapsed_time_raw: 3662,
     elevation_gain_raw: 441,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 79.96731672083784,
+        averageActiveCadence: 79.96731672083784,
         averageDistancePerOccurrence: 4.768934701036617,
-        cadencePercentageMoving: 69.06116642958749,
-        cadenceTimeMoving: 2769,
+        cadenceActivePercentage: 69.06116642958749,
+        cadenceActiveTime: 2769,
         cadenceZones: null,
         lowerQuartileCadence: 73,
-        lowerQuartileDistancePerOccurrence: 2.7019867549668874,
         medianCadence: 81,
-        medianDistancePerOccurrence: 3.638554216867119,
         standardDeviationCadence: 13.1,
         totalOccurrences: 3750.7416666666704,
-        upFlatDownCadencePaceData: {
-          down: 75.63414634146342,
-          flat: 84.41237113402062,
-          up: 78.74581939799332
-        },
-        upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.462279293739915
+        upFlatDownCadencePaceData: { down: 75.63414634146342, flat: 84.41237113402062, up: 78.74581939799332 },
+        upperQuartileCadence: 89
       },
       elevationData: {
         accumulatedElevationAscent: 440.97445186478006,
@@ -11535,11 +10637,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.7,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 75.63414634146342,
-          flat: 84.41237113402062,
-          up: 78.74581939799332
-        },
+        upFlatDownCadencePaceData: { down: 75.63414634146342, flat: 84.41237113402062, up: 78.74581939799332 },
         upFlatDownDistanceData: { down: 6.912499999999998, flat: 10.296200000000002, up: 7.040400000000001 },
         upFlatDownInSeconds: { down: 805, flat: 1158, total: 3660, up: 1697 },
         upFlatDownMoveData: { down: 30.913043478260864, flat: 32.00891191709845, up: 14.93543901001768 },
@@ -11565,7 +10663,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 150,
         best20min: 101,
         genuineGradeAdjustedAvgPace: 136,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 277.77777777777777,
         medianPace: 169.4915254237288,
         paceZones: null,
@@ -11609,7 +10706,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 361131285,
     moving_time_raw: 3507,
     name: "Giro Climbing Challenge Finished",
-
     start_time: "2015-08-04T16:14:55+0000",
     trainer: false,
     type: "Ride"
@@ -11627,7 +10723,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 183.92834059499998,
     commute: false,
     distance_raw: 8654.6,
     elapsed_time_raw: 42665,
@@ -11665,7 +10760,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 288,
         best20min: null,
         genuineGradeAdjustedAvgPace: 172,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 9999.999999999998,
         medianPace: 500.00000000000006,
         paceZones: null,
@@ -11709,7 +10803,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 362748671,
     moving_time_raw: 1698,
     name: "Work",
-
     start_time: "2015-08-06T07:09:25+0000",
     trainer: false,
     type: "Ride"
@@ -11727,31 +10820,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 600.460531875,
     commute: false,
     distance_raw: 29137.5,
     elapsed_time_raw: 3925,
     elevation_gain_raw: 137,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 75.45283620140216,
+        averageActiveCadence: 75.45283620140216,
         averageDistancePerOccurrence: 6.2553222855003385,
-        cadencePercentageMoving: 73.72742200328408,
-        cadenceTimeMoving: 3138,
+        cadenceActivePercentage: 73.72742200328408,
+        cadenceActiveTime: 3138,
         cadenceZones: null,
         lowerQuartileCadence: 69,
-        lowerQuartileDistancePerOccurrence: 6.0576923076923075,
         medianCadence: 79,
-        medianDistancePerOccurrence: 6.419452887537906,
         standardDeviationCadence: 18,
         totalOccurrences: 4064.1499999999933,
-        upFlatDownCadencePaceData: {
-          down: 76.34328358208955,
-          flat: 79.86882716049382,
-          up: 65.04918032786885
-        },
-        upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 6.576819407008086
+        upFlatDownCadencePaceData: { down: 76.34328358208955, flat: 79.86882716049382, up: 65.04918032786885 },
+        upperQuartileCadence: 85
       },
       elevationData: {
         accumulatedElevationAscent: 137.18288046577237,
@@ -11772,11 +10857,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.4,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 76.34328358208955,
-          flat: 79.86882716049382,
-          up: 65.04918032786885
-        },
+        upFlatDownCadencePaceData: { down: 76.34328358208955, flat: 79.86882716049382, up: 65.04918032786885 },
         upFlatDownDistanceData: { down: 2.846199999999995, flat: 23.55070000000001, up: 2.7405999999999966 },
         upFlatDownInSeconds: { down: 409, flat: 2894, total: 3925, up: 622 },
         upFlatDownMoveData: { down: 25.052127139364263, flat: 29.29596406357983, up: 15.861993569131815 },
@@ -11802,7 +10883,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 134,
         best20min: 119,
         genuineGradeAdjustedAvgPace: 135,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 166.66666666666666,
         medianPace: 126.58227848101265,
         paceZones: null,
@@ -11846,7 +10926,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 364024554,
     moving_time_raw: 3925,
     name: "zzzZZzzZZzz",
-
     start_time: "2015-08-08T10:19:49+0000",
     trainer: false,
     type: "Ride"
@@ -11864,7 +10943,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 172.21375468799997,
     commute: false,
     distance_raw: 2061.2,
     elapsed_time_raw: 5083,
@@ -11891,11 +10969,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: -21.1,
         medianGrade: -3,
         upFlatDownCadencePaceData: null,
-        upFlatDownDistanceData: {
-          down: 1.0599000000000005,
-          flat: 0.08509999999999968,
-          up: 0.8824999999999995
-        },
+        upFlatDownDistanceData: { down: 1.0599000000000005, flat: 0.08509999999999968, up: 0.8824999999999995 },
         upFlatDownInSeconds: { down: 2243, flat: 201, total: 4263, up: 1819 },
         upFlatDownMoveData: { down: 1.7011324119482845, flat: 1.5241791044776063, up: 1.7465640461792185 },
         upperQuartileGrade: 18.8
@@ -11906,7 +10980,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 1820,
         best20min: 1777,
         genuineGradeAdjustedAvgPace: 767,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 4999.999999999999,
         medianPace: 3333.333333333333,
         paceZones: null,
@@ -11934,7 +11007,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 366535437,
     moving_time_raw: 2184,
     name: "Sea of Ice - Chamonix-Mont-Blanc",
-
     start_time: "2015-08-11T14:01:22+0000",
     trainer: false,
     type: "Hike"
@@ -11952,31 +11024,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 956.592687015,
     commute: false,
     distance_raw: 34118.5,
     elapsed_time_raw: 5795,
     elevation_gain_raw: 688,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 76.12866762866763,
+        averageActiveCadence: 76.12866762866763,
         averageDistancePerOccurrence: 4.491812337447143,
-        cadencePercentageMoving: 65.28105810108644,
-        cadenceTimeMoving: 4158,
+        cadenceActivePercentage: 65.28105810108644,
+        cadenceActiveTime: 4158,
         cadenceZones: null,
         lowerQuartileCadence: 66,
-        lowerQuartileDistancePerOccurrence: 2.692307692307692,
         medianCadence: 78,
-        medianDistancePerOccurrence: 2.852459016393681,
         standardDeviationCadence: 21.6,
         totalOccurrences: 5387.816666666665,
-        upFlatDownCadencePaceData: {
-          down: 85.65546218487395,
-          flat: 85.68249258160238,
-          up: 74.05183585313175
-        },
-        upperQuartileCadence: 87,
-        upperQuartileDistancePerOccurrence: 6.381909547738693
+        upFlatDownCadencePaceData: { down: 85.65546218487395, flat: 85.68249258160238, up: 74.05183585313175 },
+        upperQuartileCadence: 87
       },
       elevationData: {
         accumulatedElevationAscent: 687.8461387569505,
@@ -11997,11 +11061,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -3.4,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 85.65546218487395,
-          flat: 85.68249258160238,
-          up: 74.05183585313175
-        },
+        upFlatDownCadencePaceData: { down: 85.65546218487395, flat: 85.68249258160238, up: 74.05183585313175 },
         upFlatDownDistanceData: { down: 10.497200000000015, flat: 12.77599999999999, up: 10.83439999999999 },
         upFlatDownInSeconds: { down: 988, flat: 1646, total: 5540, up: 2906 },
         upFlatDownMoveData: { down: 38.24890688259115, flat: 27.942648845686488, up: 13.421830695113547 },
@@ -12027,7 +11087,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 161,
         best20min: 105,
         genuineGradeAdjustedAvgPace: 142,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 303.03030303030306,
         medianPace: 232.5581395348837,
         paceZones: null,
@@ -12071,7 +11130,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 367463594,
     moving_time_raw: 5419,
     name: "Venon",
-
     start_time: "2015-08-12T16:39:14+0000",
     trainer: false,
     type: "Ride"
@@ -12089,7 +11147,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: null,
     commute: false,
     distance_raw: 0,
     elapsed_time_raw: 1900,
@@ -12099,7 +11156,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 368210547,
     moving_time_raw: 1900,
     name: "Natation",
-
     start_time: "2015-08-13T16:20:00+0000",
     trainer: false,
     type: "Swim"
@@ -12117,27 +11173,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 997.8805605600002,
     commute: false,
     distance_raw: 40729.6,
     elapsed_time_raw: 4462,
     elevation_gain_raw: 107,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 84.8538258575198,
+        averageActiveCadence: 84.8538258575198,
         averageDistancePerOccurrence: 7.08908317234338,
-        cadencePercentageMoving: 82.96296296296296,
-        cadenceTimeMoving: 3790,
+        cadenceActivePercentage: 82.96296296296296,
+        cadenceActiveTime: 3790,
         cadenceZones: null,
         lowerQuartileCadence: 82,
-        lowerQuartileDistancePerOccurrence: 6.424083769633736,
         medianCadence: 88,
-        medianDistancePerOccurrence: 6.554621848739496,
         standardDeviationCadence: 21,
         totalOccurrences: 5517.716666666673,
         upFlatDownCadencePaceData: { down: 86.13861386138613, flat: 87.8298800436205, up: 74.96078431372548 },
-        upperQuartileCadence: 95,
-        upperQuartileDistancePerOccurrence: 7.323529411764733
+        upperQuartileCadence: 95
       },
       elevationData: {
         accumulatedElevationAscent: 107.27958650769648,
@@ -12184,7 +11236,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 107,
         best20min: 94,
         genuineGradeAdjustedAvgPace: 109,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 114.9425287356322,
         medianPace: 103.09278350515463,
         paceZones: null,
@@ -12228,7 +11279,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 371317512,
     moving_time_raw: 4366,
     name: "Fast Fast Fast & Pschitt",
-
     start_time: "2015-08-17T16:24:18+0000",
     trainer: false,
     type: "Ride"
@@ -12246,7 +11296,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 282.40540485,
     commute: false,
     distance_raw: 18248.3,
     elapsed_time_raw: 4547,
@@ -12284,7 +11333,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 242,
         best20min: 192,
         genuineGradeAdjustedAvgPace: 240,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 370.3703703703703,
         medianPace: 250.00000000000003,
         paceZones: null,
@@ -12328,7 +11376,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 372761597,
     moving_time_raw: 4317,
     name: "Rodage plaquettes",
-
     start_time: "2015-08-19T17:09:02+0000",
     trainer: false,
     type: "Ride"
@@ -12346,7 +11393,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 431.79680508900003,
     commute: false,
     distance_raw: 29460.4,
     elapsed_time_raw: 6399,
@@ -12384,7 +11430,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 205,
         best20min: 152,
         genuineGradeAdjustedAvgPace: 207,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 312.49999999999994,
         medianPace: 185.18518518518516,
         paceZones: null,
@@ -12428,7 +11473,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 375518573,
     moving_time_raw: 5941,
     name: "Evening Ride",
-
     start_time: "2015-08-20T17:09:13+0000",
     trainer: false,
     type: "Ride"
@@ -12446,7 +11490,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 2435.9427656800003,
     commute: false,
     distance_raw: 43347.6,
     elapsed_time_raw: 14172,
@@ -12484,7 +11527,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 229,
         best20min: 184,
         genuineGradeAdjustedAvgPace: 138,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 344.82758620689657,
         medianPace: 294.11764705882354,
         paceZones: null,
@@ -12528,7 +11570,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 375518033,
     moving_time_raw: 9202,
     name: "MTB Chamrousse - GoPro @ http://youtu.be/C05qJKfJjmQ #MTBDH",
-
     start_time: "2015-08-22T09:19:07+0000",
     trainer: false,
     type: "Ride"
@@ -12546,31 +11587,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 829.9940472,
     commute: false,
     distance_raw: 30404,
     elapsed_time_raw: 4671,
     elevation_gain_raw: 523,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 80.84410069760388,
+        averageActiveCadence: 80.84410069760388,
         averageDistancePerOccurrence: 4.8999013741851645,
-        cadencePercentageMoving: 67.42761692650335,
-        cadenceTimeMoving: 3297,
+        cadenceActivePercentage: 67.42761692650335,
+        cadenceActiveTime: 3297,
         cadenceZones: null,
         lowerQuartileCadence: 74,
-        lowerQuartileDistancePerOccurrence: 2.754098360655618,
         medianCadence: 85,
-        medianDistancePerOccurrence: 4.40462427745669,
         standardDeviationCadence: 20.3,
         totalOccurrences: 4549.225000000005,
-        upFlatDownCadencePaceData: {
-          down: 81.90217391304348,
-          flat: 84.82456140350877,
-          up: 81.14583333333333
-        },
-        upperQuartileCadence: 91,
-        upperQuartileDistancePerOccurrence: 6.685314685314583
+        upFlatDownCadencePaceData: { down: 81.90217391304348, flat: 84.82456140350877, up: 81.14583333333333 },
+        upperQuartileCadence: 91
       },
       elevationData: {
         accumulatedElevationAscent: 522.7865542289031,
@@ -12591,11 +11624,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.2,
         medianGrade: 0.1,
-        upFlatDownCadencePaceData: {
-          down: 81.90217391304348,
-          flat: 84.82456140350877,
-          up: 81.14583333333333
-        },
+        upFlatDownCadencePaceData: { down: 81.90217391304348, flat: 84.82456140350877, up: 81.14583333333333 },
         upFlatDownDistanceData: { down: 8.207999999999993, flat: 13.267899999999996, up: 8.893400000000012 },
         upFlatDownInSeconds: { down: 793, flat: 1667, total: 4493, up: 2033 },
         upFlatDownMoveData: { down: 37.2620428751576, flat: 28.65293341331733, up: 15.748273487456983 },
@@ -12621,7 +11650,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 146,
         best20min: 101,
         genuineGradeAdjustedAvgPace: 133,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 256.4102564102564,
         medianPace: 158.73015873015873,
         paceZones: null,
@@ -12665,7 +11693,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 377239233,
     moving_time_raw: 4315,
     name: "Cramé !!",
-
     start_time: "2015-08-25T16:30:19+0000",
     trainer: false,
     type: "Ride"
@@ -12683,27 +11710,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 499.04194151999997,
     commute: false,
     distance_raw: 21275,
     elapsed_time_raw: 2474,
     elevation_gain_raw: 51,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 83.65486500254713,
+        averageActiveCadence: 83.65486500254713,
         averageDistancePerOccurrence: 6.954897305953821,
-        cadencePercentageMoving: 78.27868852459017,
-        cadenceTimeMoving: 1963,
+        cadenceActivePercentage: 78.27868852459017,
+        cadenceActiveTime: 1963,
         cadenceZones: null,
         lowerQuartileCadence: 81,
-        lowerQuartileDistancePerOccurrence: 6.396734693877479,
         medianCadence: 87,
-        medianDistancePerOccurrence: 6.502923976608017,
         standardDeviationCadence: 22.8,
         totalOccurrences: 2834.425000000001,
         upFlatDownCadencePaceData: { down: 83.95, flat: 87.54564315352697, up: 70.27450980392157 },
-        upperQuartileCadence: 94,
-        upperQuartileDistancePerOccurrence: 7.284916201117299
+        upperQuartileCadence: 94
       },
       elevationData: {
         accumulatedElevationAscent: 50.94816646681909,
@@ -12750,7 +11773,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 115,
         best20min: 106,
         genuineGradeAdjustedAvgPace: 114,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 128.2051282051282,
         medianPace: 107.5268817204301,
         paceZones: null,
@@ -12794,7 +11816,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 377946066,
     moving_time_raw: 2416,
     name: "Evening Ride",
-
     start_time: "2015-08-26T16:23:42+0000",
     trainer: false,
     type: "Ride"
@@ -12812,31 +11833,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 826.09327545,
     commute: false,
     distance_raw: 31335.7,
     elapsed_time_raw: 5046,
     elevation_gain_raw: 534,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 74.86615959434214,
+        averageActiveCadence: 74.86615959434214,
         averageDistancePerOccurrence: 5.174441641922544,
-        cadencePercentageMoving: 70.01656543346218,
-        cadenceTimeMoving: 3747,
+        cadenceActivePercentage: 70.01656543346218,
+        cadenceActiveTime: 3747,
         cadenceZones: null,
         lowerQuartileCadence: 68,
-        lowerQuartileDistancePerOccurrence: 2.7619047619052814,
         medianCadence: 77,
-        medianDistancePerOccurrence: 5.0412698412699335,
         standardDeviationCadence: 20.5,
         totalOccurrences: 4783.008333333338,
-        upFlatDownCadencePaceData: {
-          down: 77.76760563380282,
-          flat: 80.53731343283582,
-          up: 74.08563535911603
-        },
-        upperQuartileCadence: 84,
-        upperQuartileDistancePerOccurrence: 7.216216216216216
+        upFlatDownCadencePaceData: { down: 77.76760563380282, flat: 80.53731343283582, up: 74.08563535911603 },
+        upperQuartileCadence: 84
       },
       elevationData: {
         accumulatedElevationAscent: 533.9445542508763,
@@ -12857,11 +11870,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.2,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 77.76760563380282,
-          flat: 80.53731343283582,
-          up: 74.08563535911603
-        },
+        upFlatDownCadencePaceData: { down: 77.76760563380282, flat: 80.53731343283582, up: 74.08563535911603 },
         upFlatDownDistanceData: { down: 8.675799999999999, flat: 13.408599999999995, up: 9.245500000000007 },
         upFlatDownInSeconds: { down: 1101, flat: 1699, total: 4959, up: 2159 },
         upFlatDownMoveData: { down: 28.367738419618526, flat: 28.411394938198928, up: 15.416303844372408 },
@@ -12887,7 +11896,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 156,
         best20min: 106,
         genuineGradeAdjustedAvgPace: 135,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 285.7142857142857,
         medianPace: 178.57142857142856,
         paceZones: null,
@@ -12931,7 +11939,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 384884871,
     moving_time_raw: 4670,
     name: "Test Cam | http://youtu.be/i2hHnrgTj_s + http://youtu.be/5D6ZcfpzO74",
-
     start_time: "2015-09-04T15:57:50+0000",
     trainer: false,
     type: "Ride"
@@ -12949,27 +11956,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1278.17165112,
     commute: false,
     distance_raw: 70064.2,
     elapsed_time_raw: 8996,
     elevation_gain_raw: 153,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 79.10667188928059,
+        averageActiveCadence: 79.10667188928059,
         averageDistancePerOccurrence: 6.301614186784973,
-        cadencePercentageMoving: 81.33577310155535,
-        cadenceTimeMoving: 7659,
+        cadenceActivePercentage: 81.33577310155535,
+        cadenceActiveTime: 7659,
         cadenceZones: null,
         lowerQuartileCadence: 77,
-        lowerQuartileDistancePerOccurrence: 5.735064935065389,
         medianCadence: 83,
-        medianDistancePerOccurrence: 6.040816326530593,
         standardDeviationCadence: 18,
         totalOccurrences: 10423.508333333335,
         upFlatDownCadencePaceData: { down: 80.20388349514563, flat: 81.9066487575554, up: 69.43010752688173 },
-        upperQuartileCadence: 87,
-        upperQuartileDistancePerOccurrence: 6.4406779661016955
+        upperQuartileCadence: 87
       },
       elevationData: {
         accumulatedElevationAscent: 153.43356140350875,
@@ -13002,7 +12005,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 128,
         best20min: 109,
         genuineGradeAdjustedAvgPace: 130,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 135.13513513513513,
         medianPace: 123.45679012345678,
         paceZones: null,
@@ -13046,7 +12048,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 385490294,
     moving_time_raw: 8996,
     name: "Afternoon Ride",
-
     start_time: "2015-09-05T13:29:59+0000",
     trainer: false,
     type: "Ride"
@@ -13064,31 +12065,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 209.11589958,
     commute: false,
     distance_raw: 10000.1,
     elapsed_time_raw: 4729,
     elevation_gain_raw: 73,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 73.68204868154159,
+        averageActiveCadence: 73.68204868154159,
         averageDistancePerOccurrence: 6.192905992438899,
-        cadencePercentageMoving: 62.637362637362635,
-        cadenceTimeMoving: 986,
+        cadenceActivePercentage: 62.637362637362635,
+        cadenceActiveTime: 986,
         cadenceZones: null,
         lowerQuartileCadence: 69,
-        lowerQuartileDistancePerOccurrence: 5.6581196581196815,
         medianCadence: 76,
-        medianDistancePerOccurrence: 6.257668711656441,
         standardDeviationCadence: 22.4,
         totalOccurrences: 1263.3833333333323,
-        upFlatDownCadencePaceData: {
-          down: 84.57142857142857,
-          flat: 77.41714285714286,
-          up: 68.27927927927928
-        },
-        upperQuartileCadence: 84,
-        upperQuartileDistancePerOccurrence: 6.569343065693431
+        upFlatDownCadencePaceData: { down: 84.57142857142857, flat: 77.41714285714286, up: 68.27927927927928 },
+        upperQuartileCadence: 84
       },
       elevationData: {
         accumulatedElevationAscent: 73.03261312939009,
@@ -13109,11 +12102,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -1.2,
         medianGrade: 0.3,
-        upFlatDownCadencePaceData: {
-          down: 84.57142857142857,
-          flat: 77.41714285714286,
-          up: 68.27927927927928
-        },
+        upFlatDownCadencePaceData: { down: 84.57142857142857, flat: 77.41714285714286, up: 68.27927927927928 },
         upFlatDownDistanceData: { down: 2.064100000000003, flat: 5.947899999999995, up: 1.9725000000000021 },
         upFlatDownInSeconds: { down: 316, flat: 835, total: 1512, up: 361 },
         upFlatDownMoveData: { down: 23.515063291139278, flat: 25.643640718562853, up: 19.670360110803347 },
@@ -13125,7 +12114,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 151,
         best20min: 188,
         genuineGradeAdjustedAvgPace: 149,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 204.0816326530612,
         medianPace: 151.51515151515153,
         paceZones: null,
@@ -13169,7 +12157,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 386268058,
     moving_time_raw: 1519,
     name: "Empty",
-
     start_time: "2015-09-06T14:04:53+0000",
     trainer: false,
     type: "Ride"
@@ -13187,27 +12174,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 709.0235271,
     commute: false,
     distance_raw: 28933.4,
     elapsed_time_raw: 3332,
     elevation_gain_raw: 146,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 81.95845864661653,
+        averageActiveCadence: 81.95845864661653,
         averageDistancePerOccurrence: 6.960425522316363,
-        cadencePercentageMoving: 76.4373232799246,
-        cadenceTimeMoving: 2660,
+        cadenceActivePercentage: 76.4373232799246,
+        cadenceActiveTime: 2660,
         cadenceZones: null,
         lowerQuartileCadence: 76,
-        lowerQuartileDistancePerOccurrence: 6.381443298969034,
         medianCadence: 88,
-        medianDistancePerOccurrence: 6.546448087431654,
         standardDeviationCadence: 25.3,
         totalOccurrences: 3788.9249999999956,
         upFlatDownCadencePaceData: { down: 85.5904761904762, flat: 87.79411764705883, up: 72.94444444444444 },
-        upperQuartileCadence: 96,
-        upperQuartileDistancePerOccurrence: 7.283582089551949
+        upperQuartileCadence: 96
       },
       elevationData: {
         accumulatedElevationAscent: 145.60370441357753,
@@ -13240,7 +12223,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 115,
         best20min: 109,
         genuineGradeAdjustedAvgPace: 116,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 144.92753623188403,
         medianPace: 109.8901098901099,
         paceZones: null,
@@ -13284,7 +12266,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 387059955,
     moving_time_raw: 3332,
     name: "Evening Ride",
-
     start_time: "2015-09-07T16:07:00+0000",
     trainer: false,
     type: "Ride"
@@ -13302,31 +12283,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 837.6778021,
     commute: false,
     distance_raw: 31477.5,
     elapsed_time_raw: 4764,
     elevation_gain_raw: 542,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 77.27267861921327,
+        averageActiveCadence: 77.27267861921327,
         averageDistancePerOccurrence: 5.131789222600448,
-        cadencePercentageMoving: 71.6304347826087,
-        cadenceTimeMoving: 3737,
+        cadenceActivePercentage: 71.6304347826087,
+        cadenceActiveTime: 3737,
         cadenceZones: null,
         lowerQuartileCadence: 70,
-        lowerQuartileDistancePerOccurrence: 2.7289156626503397,
         medianCadence: 81,
-        medianDistancePerOccurrence: 4.195804195804196,
         standardDeviationCadence: 20.2,
         totalOccurrences: 4937.0000000000055,
-        upFlatDownCadencePaceData: {
-          down: 81.07643312101911,
-          flat: 81.79240506329114,
-          up: 76.73368146214099
-        },
-        upperQuartileCadence: 88,
-        upperQuartileDistancePerOccurrence: 6.489795918367291
+        upFlatDownCadencePaceData: { down: 81.07643312101911, flat: 81.79240506329114, up: 76.73368146214099 },
+        upperQuartileCadence: 88
       },
       elevationData: {
         accumulatedElevationAscent: 542.2234285139633,
@@ -13347,11 +12320,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.1,
         medianGrade: 0.1,
-        upFlatDownCadencePaceData: {
-          down: 81.07643312101911,
-          flat: 81.79240506329114,
-          up: 76.73368146214099
-        },
+        upFlatDownCadencePaceData: { down: 81.07643312101911, flat: 81.79240506329114, up: 76.73368146214099 },
         upFlatDownDistanceData: { down: 8.462099999999994, flat: 13.608600000000008, up: 9.406799999999997 },
         upFlatDownInSeconds: { down: 911, flat: 1672, total: 4764, up: 2181 },
         upFlatDownMoveData: { down: 33.439692645444545, flat: 29.300813397129204, up: 15.527042640990368 },
@@ -13377,7 +12346,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 150,
         best20min: 102,
         genuineGradeAdjustedAvgPace: 138,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 270.27027027027026,
         medianPace: 175.43859649122808,
         paceZones: null,
@@ -13421,7 +12389,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 387847432,
     moving_time_raw: 4660,
     name: "Ptite Pérérrée",
-
     start_time: "2015-09-08T16:17:57+0000",
     trainer: false,
     type: "Ride"
@@ -13439,7 +12406,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 311.450229648,
     commute: false,
     distance_raw: 3727.7,
     elapsed_time_raw: 5202,
@@ -13466,11 +12432,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: -11.5,
         medianGrade: -0.9,
         upFlatDownCadencePaceData: null,
-        upFlatDownDistanceData: {
-          down: 1.7524000000000017,
-          flat: 0.3870999999999993,
-          up: 1.5558999999999987
-        },
+        upFlatDownDistanceData: { down: 1.7524000000000017, flat: 0.3870999999999993, up: 1.5558999999999987 },
         upFlatDownInSeconds: { down: 1813, flat: 598, total: 4455, up: 2044 },
         upFlatDownMoveData: { down: 3.4796690568119173, flat: 2.3303678929765845, up: 2.7403326810176103 },
         upperQuartileGrade: 12.1
@@ -13481,7 +12443,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 1129,
         best20min: 840,
         genuineGradeAdjustedAvgPace: 642,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 3333.333333333333,
         medianPace: 1428.5714285714284,
         paceZones: null,
@@ -13509,7 +12470,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 392354127,
     moving_time_raw: 3187,
     name: "Val Jalbert walk, QC, Canada",
-
     start_time: "2015-09-14T18:04:39+0000",
     trainer: false,
     type: "Hike"
@@ -13527,7 +12487,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 476.27322839999994,
     commute: false,
     distance_raw: 5218.7,
     elapsed_time_raw: 2586,
@@ -13565,7 +12524,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 490,
         best20min: 448,
         genuineGradeAdjustedAvgPace: 413,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 769.230769230769,
         medianPace: 454.54545454545445,
         paceZones: null,
@@ -13580,7 +12538,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         best20min: 173.57874458333322,
         bestEightyPercent: 144.62450768858778,
         hasPowerMeter: false,
-        isEstimatedRunningPower: true,
         lowerQuartileWatts: 68,
         medianWatts: 128,
         powerStressScore: 62.345430221154075,
@@ -13610,7 +12567,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 393116784,
     moving_time_raw: 2198,
     name: "Chicoutimi Run, QC, Canada",
-
     start_time: "2015-09-15T22:25:25+0000",
     trainer: false,
     type: "Run"
@@ -13628,7 +12584,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 255.15407793600005,
     commute: false,
     distance_raw: 3053.9,
     elapsed_time_raw: 5745,
@@ -13655,11 +12610,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: -5.2,
         medianGrade: 0.8,
         upFlatDownCadencePaceData: null,
-        upFlatDownDistanceData: {
-          down: 1.1242999999999996,
-          flat: 0.5253999999999995,
-          up: 1.3664000000000005
-        },
+        upFlatDownDistanceData: { down: 1.1242999999999996, flat: 0.5253999999999995, up: 1.3664000000000005 },
         upFlatDownInSeconds: { down: 1409, flat: 949, total: 4073, up: 1715 },
         upFlatDownMoveData: { down: 2.872590489709013, flat: 1.993087460484719, up: 2.868244897959185 },
         upperQuartileGrade: 6.2
@@ -13670,7 +12621,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 1265,
         best20min: 962,
         genuineGradeAdjustedAvgPace: 885,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 3333.333333333333,
         medianPace: 1249.9999999999998,
         paceZones: null,
@@ -13698,7 +12648,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 393874622,
     moving_time_raw: 3076,
     name: "Tadoussac walk, QC, Canada",
-
     start_time: "2015-09-16T21:28:01+0000",
     trainer: false,
     type: "Hike"
@@ -13716,27 +12665,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 850.8935213450001,
     commute: false,
     distance_raw: 31551,
     elapsed_time_raw: 4613,
     elevation_gain_raw: 544,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 80.3780487804878,
+        averageActiveCadence: 80.3780487804878,
         averageDistancePerOccurrence: 4.7576362822233715,
-        cadencePercentageMoving: 69.67706622879037,
-        cadenceTimeMoving: 3608,
+        cadenceActivePercentage: 69.67706622879037,
+        cadenceActiveTime: 3608,
         cadenceZones: null,
         lowerQuartileCadence: 72,
-        lowerQuartileDistancePerOccurrence: 2.7058823529417473,
         medianCadence: 83,
-        medianDistancePerOccurrence: 4.010526315789479,
         standardDeviationCadence: 17.7,
         totalOccurrences: 4942.241666666658,
         upFlatDownCadencePaceData: { down: 79.60714285714286, flat: 87.9946949602122, up: 78.11904761904762 },
-        upperQuartileCadence: 93,
-        upperQuartileDistancePerOccurrence: 6.407999999999956
+        upperQuartileCadence: 93
       },
       elevationData: {
         accumulatedElevationAscent: 543.6834825592626,
@@ -13783,7 +12728,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 146,
         best20min: 101,
         genuineGradeAdjustedAvgPace: 137,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 270.27027027027026,
         medianPace: 158.73015873015873,
         paceZones: null,
@@ -13827,7 +12771,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 397193741,
     moving_time_raw: 4613,
     name: "Canada diet week 01",
-
     start_time: "2015-09-21T16:01:46+0000",
     trainer: false,
     type: "Ride"
@@ -13845,27 +12788,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 827.3318955,
     commute: false,
     distance_raw: 31314.1,
     elapsed_time_raw: 4983,
     elevation_gain_raw: 534,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 78.14077798359354,
+        averageActiveCadence: 78.14077798359354,
         averageDistancePerOccurrence: 4.4402292785484905,
-        cadencePercentageMoving: 66.86170212765957,
-        cadenceTimeMoving: 3779,
+        cadenceActivePercentage: 66.86170212765957,
+        cadenceActiveTime: 3779,
         cadenceZones: null,
         lowerQuartileCadence: 70,
-        lowerQuartileDistancePerOccurrence: 2.7124260355030105,
         medianCadence: 81,
-        medianDistancePerOccurrence: 3.3571428571433772,
         standardDeviationCadence: 16.5,
         totalOccurrences: 5013.591666666667,
         upFlatDownCadencePaceData: { down: 78, flat: 86.23306233062331, up: 75.47738693467336 },
-        upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.346368715083312
+        upperQuartileCadence: 89
       },
       elevationData: {
         accumulatedElevationAscent: 533.6996512985016,
@@ -13912,7 +12851,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 158,
         best20min: 108,
         genuineGradeAdjustedAvgPace: 143,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 285.7142857142857,
         medianPace: 175.43859649122808,
         paceZones: null,
@@ -13956,7 +12894,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 403560013,
     moving_time_raw: 4884,
     name: "Afternoon Ride",
-
     start_time: "2015-09-22T15:47:48+0000",
     trainer: false,
     type: "Ride"
@@ -13974,27 +12911,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 873.9592777,
     commute: false,
     distance_raw: 31451.5,
     elapsed_time_raw: 4768,
     elevation_gain_raw: 538,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 76.45495618838993,
+        averageActiveCadence: 76.45495618838993,
         averageDistancePerOccurrence: 4.905533363286139,
-        cadencePercentageMoving: 67.3901247965274,
-        cadenceTimeMoving: 3652,
+        cadenceActivePercentage: 67.3901247965274,
+        cadenceActiveTime: 3652,
         cadenceZones: null,
         lowerQuartileCadence: 66,
-        lowerQuartileDistancePerOccurrence: 2.7341772151901496,
         medianCadence: 79,
-        medianDistancePerOccurrence: 4.39694656488483,
         standardDeviationCadence: 16.6,
         totalOccurrences: 4755.225000000006,
         upFlatDownCadencePaceData: { down: 81.1747572815534, flat: 83.77002583979328, up: 72.99069148936171 },
-        upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.424870466321243
+        upperQuartileCadence: 89
       },
       elevationData: {
         accumulatedElevationAscent: 537.609236264527,
@@ -14041,7 +12974,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 151,
         best20min: 103,
         genuineGradeAdjustedAvgPace: 142,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 277.77777777777777,
         medianPace: 166.66666666666666,
         paceZones: null,
@@ -14085,7 +13017,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 403560066,
     moving_time_raw: 4751,
     name: "Evening Ride",
-
     start_time: "2015-09-30T16:03:22+0000",
     trainer: false,
     type: "Ride"
@@ -14103,31 +13034,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1106.41489917,
     commute: false,
     distance_raw: 39737.4,
     elapsed_time_raw: 6072,
     elevation_gain_raw: 784.8,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 79.063046724984,
+        averageActiveCadence: 79.063046724984,
         averageDistancePerOccurrence: 4.839605017525427,
-        cadencePercentageMoving: 70.9083119108826,
-        cadenceTimeMoving: 4687,
+        cadenceActivePercentage: 70.9083119108826,
+        cadenceActiveTime: 4687,
         cadenceZones: null,
         lowerQuartileCadence: 70,
-        lowerQuartileDistancePerOccurrence: 2.7362637362634965,
         medianCadence: 82,
-        medianDistancePerOccurrence: 4.0103626943004045,
         standardDeviationCadence: 21.7,
         totalOccurrences: 6324.183333333333,
-        upFlatDownCadencePaceData: {
-          down: 89.38317757009345,
-          flat: 86.43932038834951,
-          up: 76.78717201166181
-        },
-        upperQuartileCadence: 90,
-        upperQuartileDistancePerOccurrence: 6.29461077844314
+        upFlatDownCadencePaceData: { down: 89.38317757009345, flat: 86.43932038834951, up: 76.78717201166181 },
+        upperQuartileCadence: 90
       },
       elevationData: {
         accumulatedElevationAscent: 785.1429273471445,
@@ -14148,11 +13071,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.7,
         medianGrade: 0.1,
-        upFlatDownCadencePaceData: {
-          down: 89.38317757009345,
-          flat: 86.43932038834951,
-          up: 76.78717201166181
-        },
+        upFlatDownCadencePaceData: { down: 89.38317757009345, flat: 86.43932038834951, up: 76.78717201166181 },
         upFlatDownDistanceData: { down: 11.984899999999989, flat: 14.75170000000001, up: 13.000800000000003 },
         upFlatDownInSeconds: { down: 1256, flat: 1816, total: 6072, up: 3000 },
         upFlatDownMoveData: { down: 34.35162420382162, flat: 29.243458149779755, up: 15.600960000000002 },
@@ -14178,7 +13097,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 152,
         best20min: 95,
         genuineGradeAdjustedAvgPace: 138,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 270.27027027027026,
         medianPace: 169.4915254237288,
         paceZones: null,
@@ -14222,7 +13140,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 406217194,
     moving_time_raw: 5901,
     name: "Afternoon Ride",
-
     start_time: "2015-10-04T13:18:03+0000",
     trainer: false,
     type: "Ride"
@@ -14240,7 +13157,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 499.0554129600001,
     commute: false,
     distance_raw: 5547.8,
     elapsed_time_raw: 2752,
@@ -14267,11 +13183,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: -0.9,
         medianGrade: 0,
         upFlatDownCadencePaceData: null,
-        upFlatDownDistanceData: {
-          down: 0.9471000000000009,
-          flat: 3.7879000000000005,
-          up: 0.8126999999999982
-        },
+        upFlatDownDistanceData: { down: 0.9471000000000009, flat: 3.7879000000000005, up: 0.8126999999999982 },
         upFlatDownInSeconds: { down: 432, flat: 1734, total: 2702, up: 536 },
         upFlatDownMoveData: { down: 7.892500000000008, flat: 7.864152249134949, up: 5.458432835820884 },
         upperQuartileGrade: 0.7
@@ -14282,7 +13194,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 480,
         best20min: 387,
         genuineGradeAdjustedAvgPace: 469,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 714.2857142857142,
         medianPace: 476.19047619047615,
         paceZones: null,
@@ -14297,7 +13208,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         best20min: 161.18939891666628,
         bestEightyPercent: 142.28730604270746,
         hasPowerMeter: false,
-        isEstimatedRunningPower: true,
         lowerQuartileWatts: 78,
         medianWatts: 132,
         powerStressScore: 54.6296040844325,
@@ -14327,7 +13237,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 406963466,
     moving_time_raw: 2302,
     name: "Evening Run",
-
     start_time: "2015-10-05T16:31:52+0000",
     trainer: false,
     type: "Run"
@@ -14345,7 +13254,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 102.91963569,
     commute: true,
     distance_raw: 6312.8,
     elapsed_time_raw: 962,
@@ -14383,7 +13291,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 149,
         best20min: null,
         genuineGradeAdjustedAvgPace: 143,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 192.30769230769226,
         medianPace: 135.13513513513513,
         paceZones: null,
@@ -14427,7 +13334,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 420019631,
     moving_time_raw: 894,
     name: "Morning Ride",
-
     start_time: "2015-10-17T08:45:47+0000",
     trainer: false,
     type: "Ride"
@@ -14445,7 +13351,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 256.733509935,
     commute: true,
     distance_raw: 12223.4,
     elapsed_time_raw: 1659,
@@ -14483,7 +13388,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 135,
         best20min: 124,
         genuineGradeAdjustedAvgPace: 137,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 153.84615384615384,
         medianPace: 126.58227848101265,
         paceZones: null,
@@ -14527,7 +13431,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 420019708,
     moving_time_raw: 1659,
     name: "Lunch Ride",
-
     start_time: "2015-10-17T09:58:56+0000",
     trainer: false,
     type: "Ride"
@@ -14545,7 +13448,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 76.197678375,
     commute: true,
     distance_raw: 4528.3,
     elapsed_time_raw: 651,
@@ -14572,11 +13474,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: -1.5,
         medianGrade: 0.3,
         upFlatDownCadencePaceData: null,
-        upFlatDownDistanceData: {
-          down: 1.0974999999999997,
-          flat: 2.9667000000000003,
-          up: 0.4640999999999998
-        },
+        upFlatDownDistanceData: { down: 1.0974999999999997, flat: 2.9667000000000003, up: 0.4640999999999998 },
         upFlatDownInSeconds: { down: 141, flat: 421, total: 651, up: 89 },
         upFlatDownMoveData: { down: 28.021276595744677, flat: 25.36845605700713, up: 18.772584269662914 },
         upperQuartileGrade: 1
@@ -14587,7 +13485,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 143,
         best20min: null,
         genuineGradeAdjustedAvgPace: 145,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 172.41379310344828,
         medianPace: 144.92753623188403,
         paceZones: null,
@@ -14631,7 +13528,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 420019810,
     moving_time_raw: 651,
     name: "Afternoon Ride",
-
     start_time: "2015-10-17T14:14:52+0000",
     trainer: false,
     type: "Ride"
@@ -14649,7 +13545,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 259.563098955,
     commute: true,
     distance_raw: 12052.5,
     elapsed_time_raw: 32401,
@@ -14687,7 +13582,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 213,
         best20min: null,
         genuineGradeAdjustedAvgPace: 156,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 1111.111111111111,
         medianPace: 188.67924528301887,
         paceZones: null,
@@ -14731,7 +13625,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 417483106,
     moving_time_raw: 2281,
     name: "Tafe",
-
     start_time: "2015-10-21T07:00:36+0000",
     trainer: false,
     type: "Ride"
@@ -14749,7 +13642,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 191.92554674800002,
     commute: true,
     distance_raw: 10642.1,
     elapsed_time_raw: 31457,
@@ -14787,7 +13679,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 177,
         best20min: null,
         genuineGradeAdjustedAvgPace: 165,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 222.22222222222223,
         medianPace: 163.9344262295082,
         paceZones: null,
@@ -14831,7 +13722,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 420019949,
     moving_time_raw: 1768,
     name: "Morning Ride",
-
     start_time: "2015-10-22T07:06:30+0000",
     trainer: false,
     type: "Ride"
@@ -14849,7 +13739,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 43.6032808725,
     commute: true,
     distance_raw: 3003.3,
     elapsed_time_raw: 465,
@@ -14876,11 +13765,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileGrade: -1.3,
         medianGrade: -0.3,
         upFlatDownCadencePaceData: null,
-        upFlatDownDistanceData: {
-          down: 0.5480000000000004,
-          flat: 2.1174999999999997,
-          up: 0.3378000000000002
-        },
+        upFlatDownDistanceData: { down: 0.5480000000000004, flat: 2.1174999999999997, up: 0.3378000000000002 },
         upFlatDownInSeconds: { down: 80, flat: 315, total: 454, up: 59 },
         upFlatDownMoveData: { down: 24.660000000000014, flat: 24.199999999999996, up: 20.61152542372883 },
         upperQuartileGrade: 0.8
@@ -14891,7 +13776,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 151,
         best20min: null,
         genuineGradeAdjustedAvgPace: 152,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 175.43859649122808,
         medianPace: 147.05882352941177,
         paceZones: null,
@@ -14935,7 +13819,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 420019984,
     moving_time_raw: 465,
     name: "Morning Ride",
-
     start_time: "2015-10-23T07:00:12+0000",
     trainer: false,
     type: "Ride"
@@ -14953,7 +13836,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 199.9254575565,
     commute: true,
     distance_raw: 10935.3,
     elapsed_time_raw: 20748,
@@ -14991,7 +13873,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 189,
         best20min: null,
         genuineGradeAdjustedAvgPace: 167,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 263.1578947368421,
         medianPace: 163.9344262295082,
         paceZones: null,
@@ -15035,7 +13916,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 420020088,
     moving_time_raw: 1833,
     name: "Lunch Ride",
-
     start_time: "2015-10-23T09:58:49+0000",
     trainer: false,
     type: "Ride"
@@ -15053,7 +13933,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 169.16904879999998,
     commute: true,
     distance_raw: 8807.2,
     elapsed_time_raw: 11992,
@@ -15091,7 +13970,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 153,
         best20min: null,
         genuineGradeAdjustedAvgPace: 151,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 192.30769230769226,
         medianPace: 149.25373134328356,
         paceZones: null,
@@ -15135,7 +14013,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 420018674,
     moving_time_raw: 1346,
     name: "Lunch Ride",
-
     start_time: "2015-10-24T10:47:07+0000",
     trainer: false,
     type: "Ride"
@@ -15153,7 +14030,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 193.535379065,
     commute: true,
     distance_raw: 10749.2,
     elapsed_time_raw: 30949,
@@ -15191,7 +14067,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 164,
         best20min: null,
         genuineGradeAdjustedAvgPace: 157,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 212.7659574468085,
         medianPace: 156.24999999999997,
         paceZones: null,
@@ -15235,7 +14110,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 420778529,
     moving_time_raw: 1669,
     name: "Morning Ride",
-
     start_time: "2015-10-26T08:07:54+0000",
     trainer: false,
     type: "Ride"
@@ -15253,31 +14127,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1831.93190544,
     commute: false,
     distance_raw: 66132.7,
     elapsed_time_raw: 14436,
     elevation_gain_raw: 1225,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 72.10133578995854,
+        averageActiveCadence: 72.10133578995854,
         averageDistancePerOccurrence: 4.529370977747653,
-        cadencePercentageMoving: 69.240317775571,
-        cadenceTimeMoving: 8684,
+        cadenceActivePercentage: 69.240317775571,
+        cadenceActiveTime: 8684,
         cadenceZones: null,
         lowerQuartileCadence: 62,
-        lowerQuartileDistancePerOccurrence: 2.7000000000016366,
         medianCadence: 74,
-        medianDistancePerOccurrence: 3.282162162162304,
         standardDeviationCadence: 19.3,
         totalOccurrences: 10675.791666666693,
-        upFlatDownCadencePaceData: {
-          down: 83.26754385964912,
-          flat: 81.98331346841478,
-          up: 67.71602787456446
-        },
-        upperQuartileCadence: 84,
-        upperQuartileDistancePerOccurrence: 6.362068965517492
+        upFlatDownCadencePaceData: { down: 83.26754385964912, flat: 81.98331346841478, up: 67.71602787456446 },
+        upperQuartileCadence: 84
       },
       elevationData: {
         accumulatedElevationAscent: 1028.8348128120247,
@@ -15298,11 +14164,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.3,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 83.26754385964912,
-          flat: 81.98331346841478,
-          up: 67.71602787456446
-        },
+        upFlatDownCadencePaceData: { down: 83.26754385964912, flat: 81.98331346841478, up: 67.71602787456446 },
         upFlatDownDistanceData: { down: 18.13439999999998, flat: 28.645500000000037, up: 19.286199999999976 },
         upFlatDownInSeconds: { down: 1863, flat: 3683, total: 11350, up: 5804 },
         upFlatDownMoveData: { down: 35.042318840579675, flat: 27.999945696443152, up: 11.962494831150915 },
@@ -15328,7 +14190,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 170,
         best20min: 107,
         genuineGradeAdjustedAvgPace: 151,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 333.3333333333333,
         medianPace: 217.3913043478261,
         paceZones: null,
@@ -15372,7 +14233,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 423706687,
     moving_time_raw: 10948,
     name: "Couleurs d'Automne",
-
     start_time: "2015-10-31T10:53:28+0000",
     trainer: false,
     type: "Ride"
@@ -15390,27 +14250,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1995.4309740800002,
     commute: false,
     distance_raw: 78345.7,
     elapsed_time_raw: 14427,
     elevation_gain_raw: 1321,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 70.8853151720024,
+        averageActiveCadence: 70.8853151720024,
         averageDistancePerOccurrence: 4.44590828186508,
-        cadencePercentageMoving: 66.92464358452138,
-        cadenceTimeMoving: 10058,
+        cadenceActivePercentage: 66.92464358452138,
+        cadenceActiveTime: 10058,
         cadenceZones: null,
         lowerQuartileCadence: 59,
-        lowerQuartileDistancePerOccurrence: 2.7272727272727275,
         medianCadence: 76,
-        medianDistancePerOccurrence: 3.689440993788458,
         standardDeviationCadence: 20.2,
         totalOccurrences: 12304.683333333318,
         upFlatDownCadencePaceData: { down: 84.77852348993288, flat: 83.41059602649007, up: 64.9971181556196 },
-        upperQuartileCadence: 86,
-        upperQuartileDistancePerOccurrence: 5.761904761904762
+        upperQuartileCadence: 86
       },
       elevationData: {
         accumulatedElevationAscent: 1040.299063434164,
@@ -15457,7 +14313,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 173,
         best20min: 94,
         genuineGradeAdjustedAvgPace: 159,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 333.3333333333333,
         medianPace: 196.07843137254903,
         paceZones: null,
@@ -15501,7 +14356,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 424565561,
     moving_time_raw: 13322,
     name: "Chartreuse Rousse et Herbe fluo !!",
-
     start_time: "2015-11-01T12:38:37+0000",
     trainer: false,
     type: "Ride"
@@ -15519,7 +14373,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 241.81931788,
     commute: false,
     distance_raw: 11051.3,
     elapsed_time_raw: 1813,
@@ -15571,7 +14424,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 163,
         best20min: 135,
         genuineGradeAdjustedAvgPace: 159,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 399.99999999999994,
         medianPace: 163.9344262295082,
         paceZones: null,
@@ -15615,7 +14467,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 427606185,
     moving_time_raw: 1813,
     name: "1st zwift ride",
-
     start_time: "2015-11-06T17:31:29+0000",
     trainer: false,
     type: "VirtualRide"
@@ -15633,27 +14484,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 850.272513175,
     commute: false,
     distance_raw: 34069.8,
     elapsed_time_raw: 5481,
     elevation_gain_raw: 545,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 74.52030148310236,
+        averageActiveCadence: 74.52030148310236,
         averageDistancePerOccurrence: 4.707383145553573,
-        cadencePercentageMoving: 66.3,
-        cadenceTimeMoving: 4113,
+        cadenceActivePercentage: 66.3,
+        cadenceActiveTime: 4113,
         cadenceZones: null,
         lowerQuartileCadence: 70,
-        lowerQuartileDistancePerOccurrence: 2.713286713286408,
         medianCadence: 77,
-        medianDistancePerOccurrence: 4.230215827337291,
         standardDeviationCadence: 14.4,
         totalOccurrences: 5230.666666666661,
         upFlatDownCadencePaceData: { down: 74.07920792079207, flat: 79.0953488372093, up: 73.06540880503145 },
-        upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 6.4107382550335865
+        upperQuartileCadence: 83
       },
       elevationData: {
         accumulatedElevationAscent: 544.6438944150252,
@@ -15700,7 +14547,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 160,
         best20min: 105,
         genuineGradeAdjustedAvgPace: 151,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 285.7142857142857,
         medianPace: 172.41379310344828,
         paceZones: null,
@@ -15744,7 +14590,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 428142857,
     moving_time_raw: 5407,
     name: "Afternoon Ride",
-
     start_time: "2015-11-07T13:54:46+0000",
     trainer: false,
     type: "Ride"
@@ -15762,27 +14607,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1711.59159003,
     commute: false,
     distance_raw: 86591.7,
     elapsed_time_raw: 11021,
     elevation_gain_raw: 172,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 78.89345387960631,
+        averageActiveCadence: 78.89345387960631,
         averageDistancePerOccurrence: 6.68860277620947,
-        cadencePercentageMoving: 76.26134301270417,
-        cadenceTimeMoving: 8738,
+        cadenceActivePercentage: 76.26134301270417,
+        cadenceActiveTime: 8738,
         cadenceZones: null,
         lowerQuartileCadence: 77,
-        lowerQuartileDistancePerOccurrence: 5.936746987952202,
         medianCadence: 83,
-        medianDistancePerOccurrence: 6.411230388109433,
         standardDeviationCadence: 20,
         totalOccurrences: 11977.24999999999,
         upFlatDownCadencePaceData: { down: 79.8125, flat: 81.91616105901821, up: 68.82291666666667 },
-        upperQuartileCadence: 88,
-        upperQuartileDistancePerOccurrence: 6.543673469387774
+        upperQuartileCadence: 88
       },
       elevationData: {
         accumulatedElevationAscent: 171.90949479400047,
@@ -15829,7 +14670,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 126,
         best20min: 98,
         genuineGradeAdjustedAvgPace: 127,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 138.88888888888889,
         medianPace: 120.48192771084338,
         paceZones: null,
@@ -15873,7 +14713,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 429009625,
     moving_time_raw: 10801,
     name: "86k",
-
     start_time: "2015-11-08T13:15:01+0000",
     trainer: false,
     type: "Ride"
@@ -15891,7 +14730,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 598.81470156,
     commute: false,
     distance_raw: 28998.8,
     elapsed_time_raw: 3669,
@@ -15917,11 +14755,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.7,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 80.29206349206349,
-          flat: 81.65154639175258,
-          up: 78.85747126436782
-        },
+        upFlatDownCadencePaceData: { down: 80.29206349206349, flat: 81.65154639175258, up: 78.85747126436782 },
         upFlatDownDistanceData: { down: 4.25160000000001, flat: 21.448899999999984, up: 3.298100000000007 },
         upFlatDownInSeconds: { down: 333, flat: 2435, total: 3664, up: 896 },
         upFlatDownMoveData: { down: 45.96324324324335, flat: 31.710899383983552, up: 13.25129464285717 },
@@ -15947,7 +14781,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 126,
         best20min: 104,
         genuineGradeAdjustedAvgPace: 125,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 153.84615384615384,
         medianPace: 117.64705882352942,
         paceZones: null,
@@ -15991,7 +14824,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 429628737,
     moving_time_raw: 3669,
     name: "Zwift - Richmond, VA 11/09/2015",
-
     start_time: "2015-11-09T17:24:39+0000",
     trainer: false,
     type: "VirtualRide"
@@ -16009,7 +14841,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 450.4447289600001,
     commute: false,
     distance_raw: 20933.4,
     elapsed_time_raw: 2732,
@@ -16035,11 +14866,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -0.7,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 78.67464114832536,
-          flat: 74.42354821523708,
-          up: 84.71986417657045
-        },
+        upFlatDownCadencePaceData: { down: 78.67464114832536, flat: 74.42354821523708, up: 84.71986417657045 },
         upFlatDownDistanceData: { down: 2.6796000000000046, flat: 15.647199999999996, up: 2.606599999999999 },
         upFlatDownInSeconds: { down: 214, flat: 1928, total: 2732, up: 590 },
         upFlatDownMoveData: { down: 45.07738317757017, flat: 29.21676348547717, up: 15.904677966101689 },
@@ -16065,7 +14892,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 130,
         best20min: 110,
         genuineGradeAdjustedAvgPace: 129,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 163.9344262295082,
         medianPace: 133.33333333333334,
         paceZones: null,
@@ -16109,7 +14935,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 430204077,
     moving_time_raw: 2732,
     name: "Zwift - Richmond, VA - FTP Test (shorter)",
-
     start_time: "2015-11-10T17:22:44+0000",
     trainer: false,
     type: "VirtualRide"
@@ -16127,31 +14952,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 864.2161869299999,
     commute: false,
     distance_raw: 31756.3,
     elapsed_time_raw: 5118,
     elevation_gain_raw: 549,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 75.61905384213277,
+        averageActiveCadence: 75.61905384213277,
         averageDistancePerOccurrence: 4.752528572392211,
-        cadencePercentageMoving: 67.84957627118644,
-        cadenceTimeMoving: 3826,
+        cadenceActivePercentage: 67.84957627118644,
+        cadenceActiveTime: 3826,
         cadenceZones: null,
         lowerQuartileCadence: 69,
-        lowerQuartileDistancePerOccurrence: 2.727272727272727,
         medianCadence: 79,
-        medianDistancePerOccurrence: 3.9452054794514564,
         standardDeviationCadence: 18.8,
         totalOccurrences: 4928.341666666659,
-        upFlatDownCadencePaceData: {
-          down: 78.76068376068376,
-          flat: 81.12596401028277,
-          up: 74.14838709677419
-        },
-        upperQuartileCadence: 87,
-        upperQuartileDistancePerOccurrence: 6.392857142857094
+        upFlatDownCadencePaceData: { down: 78.76068376068376, flat: 81.12596401028277, up: 74.14838709677419 },
+        upperQuartileCadence: 87
       },
       elevationData: {
         accumulatedElevationAscent: 548.7191992280908,
@@ -16172,11 +14989,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -2.3,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 78.76068376068376,
-          flat: 81.12596401028277,
-          up: 74.14838709677419
-        },
+        upFlatDownCadencePaceData: { down: 78.76068376068376, flat: 81.12596401028277, up: 74.14838709677419 },
         upFlatDownDistanceData: { down: 8.904799999999998, flat: 13.460299999999995, up: 9.391000000000007 },
         upFlatDownInSeconds: { down: 1037, flat: 1760, total: 5114, up: 2317 },
         upFlatDownMoveData: { down: 30.913481195756983, flat: 27.53243181818181, up: 14.591109192921893 },
@@ -16202,7 +15015,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 160,
         best20min: 107,
         genuineGradeAdjustedAvgPace: 147,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 277.77777777777777,
         medianPace: 188.67924528301887,
         paceZones: null,
@@ -16246,7 +15058,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 430765595,
     moving_time_raw: 4959,
     name: "Afternoon Ride",
-
     start_time: "2015-11-11T13:29:05+0000",
     trainer: false,
     type: "Ride"
@@ -16264,7 +15075,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 205.85531400000002,
     commute: false,
     distance_raw: 8989.7,
     elapsed_time_raw: 1243,
@@ -16316,7 +15126,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 117,
         best20min: 138,
         genuineGradeAdjustedAvgPace: 116,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 166.66666666666666,
         medianPace: 117.64705882352942,
         paceZones: null,
@@ -16360,7 +15169,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 431464624,
     moving_time_raw: 1050,
     name: "Zwift - Watopia 11/12/2015 // Cut // Crashed app",
-
     start_time: "2015-11-12T17:12:06+0000",
     trainer: false,
     type: "VirtualRide"
@@ -16378,7 +15186,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 378.89437616,
     commute: false,
     distance_raw: 19097.1,
     elapsed_time_raw: 2431,
@@ -16404,11 +15211,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -1.9,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 71.11529933481152,
-          flat: 73.77629063097514,
-          up: 74.63324175824175
-        },
+        upFlatDownCadencePaceData: { down: 71.11529933481152, flat: 73.77629063097514, up: 74.63324175824175 },
         upFlatDownDistanceData: { down: 5.273000000000002, flat: 9.87679999999999, up: 3.9419000000000084 },
         upFlatDownInSeconds: { down: 491, flat: 1096, total: 2335, up: 748 },
         upFlatDownMoveData: { down: 38.66150712830959, flat: 32.44204379562041, up: 18.971711229946564 },
@@ -16434,7 +15237,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 122,
         best20min: 108,
         genuineGradeAdjustedAvgPace: 121,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 178.57142857142856,
         medianPace: 117.64705882352942,
         paceZones: null,
@@ -16478,7 +15280,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 431449241,
     moving_time_raw: 2336,
     name: "Zwift - Watopia 11/12/2015",
-
     start_time: "2015-11-12T17:40:11+0000",
     trainer: false,
     type: "VirtualRide"
@@ -16496,7 +15297,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 640.62999798,
     commute: false,
     distance_raw: 28100.3,
     elapsed_time_raw: 3510,
@@ -16522,11 +15322,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -1.9,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 75.97314375987362,
-          flat: 72.90957803081045,
-          up: 76.74384236453201
-        },
+        upFlatDownCadencePaceData: { down: 75.97314375987362, flat: 72.90957803081045, up: 76.74384236453201 },
         upFlatDownDistanceData: { down: 7.6633999999999896, flat: 14.553100000000011, up: 5.881700000000001 },
         upFlatDownInSeconds: { down: 640, flat: 1606, total: 3293, up: 1047 },
         upFlatDownMoveData: { down: 43.106624999999944, flat: 32.622141967621445, up: 20.22361031518625 },
@@ -16552,7 +15348,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 117,
         best20min: 103,
         genuineGradeAdjustedAvgPace: 116,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 169.4915254237288,
         medianPace: 111.11111111111111,
         paceZones: null,
@@ -16596,7 +15391,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 432040117,
     moving_time_raw: 3292,
     name: "Zwift - Watopia 11/13/2015",
-
     start_time: "2015-11-13T17:39:09+0000",
     trainer: false,
     type: "VirtualRide"
@@ -16614,31 +15408,23 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
       },
       gender: "men"
     },
-    calories: 1540.28403144,
     commute: false,
     distance_raw: 61501.5,
     elapsed_time_raw: 9537,
     elevation_gain_raw: 908,
     extendedStats: {
       cadenceData: {
-        averageCadenceMoving: 74.63564251718667,
+        averageActiveCadence: 74.63564251718667,
         averageDistancePerOccurrence: 5.264220254786603,
-        cadencePercentageMoving: 74.99256616116563,
-        cadenceTimeMoving: 7564,
+        cadenceActivePercentage: 74.99256616116563,
+        cadenceActiveTime: 7564,
         cadenceZones: null,
         lowerQuartileCadence: 68,
-        lowerQuartileDistancePerOccurrence: 3.035294117647187,
         medianCadence: 78,
-        medianDistancePerOccurrence: 5.7306843267109455,
         standardDeviationCadence: 16,
         totalOccurrences: 9590.84166666665,
-        upFlatDownCadencePaceData: {
-          down: 82.28616352201257,
-          flat: 79.24856815578465,
-          up: 71.07588279489106
-        },
-        upperQuartileCadence: 84,
-        upperQuartileDistancePerOccurrence: 6.456140350877703
+        upFlatDownCadencePaceData: { down: 82.28616352201257, flat: 79.24856815578465, up: 71.07588279489106 },
+        upperQuartileCadence: 84
       },
       elevationData: {
         accumulatedElevationAscent: 908.6547236835765,
@@ -16659,11 +15445,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         gradeZones: null,
         lowerQuartileGrade: -1.7,
         medianGrade: 0,
-        upFlatDownCadencePaceData: {
-          down: 82.28616352201257,
-          flat: 79.24856815578465,
-          up: 71.07588279489106
-        },
+        upFlatDownCadencePaceData: { down: 82.28616352201257, flat: 79.24856815578465, up: 71.07588279489106 },
         upFlatDownDistanceData: { down: 15.378699999999997, flat: 29.213500000000003, up: 16.8983 },
         upFlatDownInSeconds: { down: 1632, flat: 3679, total: 9194, up: 3883 },
         upFlatDownMoveData: { down: 33.92360294117647, flat: 28.586191899972825, up: 15.666721607004892 },
@@ -16689,7 +15471,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         avgPace: 149,
         best20min: 95,
         genuineGradeAdjustedAvgPace: 142,
-        gradeAdjustedPaceZones: null,
         lowerQuartilePace: 263.1578947368421,
         medianPace: 147.05882352941177,
         paceZones: null,
@@ -16733,7 +15514,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     id: 432548748,
     moving_time_raw: 9156,
     name: "Petit Pinet malgré la crève :/",
-
     start_time: "2015-11-14T13:01:07+0000",
     trainer: false,
     type: "Ride"

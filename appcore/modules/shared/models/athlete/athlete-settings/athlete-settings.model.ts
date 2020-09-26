@@ -18,29 +18,13 @@ export class AthleteSettingsModel {
     AthleteSettingsModel.DEFAULT_WEIGHT
   );
 
-  public maxHr: number;
-  public restHr: number;
-  public lthr: UserLactateThresholdModel;
-  public cyclingFtp: number;
-  public runningFtp: number;
-  public swimFtp: number;
-  public weight: number;
-
   constructor(
-    maxHr: number,
-    restHr: number,
-    lthr: UserLactateThresholdModel,
-    cyclingFtp: number,
-    runningFtp: number,
-    swimFtp: number,
-    weight: number
-  ) {
-    this.maxHr = maxHr;
-    this.restHr = restHr;
-    this.lthr = lthr;
-    this.cyclingFtp = cyclingFtp;
-    this.runningFtp = runningFtp;
-    this.swimFtp = swimFtp;
-    this.weight = weight;
-  }
+    public maxHr: number,
+    public restHr: number,
+    public lthr: UserLactateThresholdModel,
+    public cyclingFtp: number,
+    public runningFtp: number,
+    public swimFtp: number,
+    public weight: number
+  ) {}
 }

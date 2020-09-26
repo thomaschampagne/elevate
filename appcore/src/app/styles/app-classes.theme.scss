@@ -20,17 +20,30 @@
     color: mat-color($warn);
   }
 
-  .primary {
+  .primary-bg {
     background-color: mat-color($primary);
     color: mat-color($primary, default-contrast);
   }
-  .accent {
+  .accent-bg {
     background-color: mat-color($accent);
     color: mat-color($accent, default-contrast);
   }
-  .warn {
+  .warn-bg {
     background-color: mat-color($warn);
     color: mat-color($warn, default-contrast);
+  }
+
+  .primary-border {
+    border: 1px solid mat-color($primary);
+    border-radius: 5px;
+  }
+  .accent-border {
+    border: 1px solid mat-color($accent);
+    border-radius: 5px;
+  }
+  .warn-border {
+    border: 1px solid mat-color($warn);
+    border-radius: 5px;
   }
 
   // Style of custom dual-split-button

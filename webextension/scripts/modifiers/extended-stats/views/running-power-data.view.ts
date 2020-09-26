@@ -37,7 +37,7 @@ export class RunningPowerDataView extends AbstractDataView {
   }
 
   protected insertDataIntoGrid(): void {
-    const isRealPower = !(this.powerData.isEstimatedRunningPower === true);
+    const isRealPower = this.powerData.hasPowerMeter;
     const printEstimatedWordWhenRealPower = isRealPower ? "" : "Estimated ";
     const printEstimatedTildWhenRealPower = isRealPower ? "" : "<span style='font-size: 14px;'>~</span>";
 
@@ -47,7 +47,7 @@ export class RunningPowerDataView extends AbstractDataView {
       printEstimatedTildWhenRealPower + this.printNumber(this.powerData.avgWatts, 0),
       printEstimatedWordWhenRealPower + "Average Power",
       "W",
-      isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation"
+      "displayAdvancedPowerData"
     );
 
     if (_.isNumber(this.powerData.best20min) && !this.isSegmentEffortView) {
@@ -58,7 +58,7 @@ export class RunningPowerDataView extends AbstractDataView {
         printEstimatedWordWhenRealPower +
           " Best 20min Power <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
         "W",
-        isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation"
+        "displayAdvancedPowerData"
       );
     }
 
@@ -87,7 +87,7 @@ export class RunningPowerDataView extends AbstractDataView {
       printEstimatedTildWhenRealPower + this.powerData.lowerQuartileWatts,
       printEstimatedWordWhenRealPower + "25% Quartile Watts",
       "W",
-      isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation"
+      "displayAdvancedPowerData"
     );
     this.insertContentAtGridPosition(
       1,
@@ -95,7 +95,7 @@ export class RunningPowerDataView extends AbstractDataView {
       printEstimatedTildWhenRealPower + this.powerData.medianWatts,
       printEstimatedWordWhenRealPower + "50% Quartile Watts",
       "W",
-      isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation"
+      "displayAdvancedPowerData"
     );
     this.insertContentAtGridPosition(
       2,
@@ -103,7 +103,7 @@ export class RunningPowerDataView extends AbstractDataView {
       printEstimatedTildWhenRealPower + this.powerData.upperQuartileWatts,
       printEstimatedWordWhenRealPower + "75% Quartile Watts",
       "W",
-      isRealPower ? "displayAdvancedPowerData" : "displayRunningPowerEstimation"
+      "displayAdvancedPowerData"
     );
   }
 }

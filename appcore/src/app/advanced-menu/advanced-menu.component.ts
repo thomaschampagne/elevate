@@ -19,10 +19,8 @@ export abstract class AdvancedMenuComponent implements OnInit {
 
   public onSyncedBackupClear(): void {
     const data: ConfirmDialogDataModel = {
-      title: "Clear your athlete synced data",
-      content:
-        "Are you sure to perform this action? You will be able to re-import synced data through backup file " +
-        "or a new re-synchronization."
+      title: "Wipe synced activities",
+      content: "It will remove all your synced activities. Are you sure to perform this action?"
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {

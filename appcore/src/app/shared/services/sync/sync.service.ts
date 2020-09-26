@@ -1,7 +1,6 @@
 import { saveAs } from "file-saver";
 import { DataStore } from "../../data-store/data-store";
 import { VersionsProvider } from "../versions/versions-provider";
-import { Inject } from "@angular/core";
 import { AthleteService } from "../athlete/athlete.service";
 import { SyncState } from "./sync-state.enum";
 import semver from "semver/preload";
@@ -17,13 +16,13 @@ export abstract class SyncService<T> {
   public isSyncing$: Subject<boolean>;
 
   constructor(
-    @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
-    @Inject(DataStore) public readonly dataStore: DataStore<object>,
-    @Inject(ActivityService) public readonly activityService: ActivityService,
-    @Inject(StreamsService) public readonly streamsService: StreamsService,
-    @Inject(AthleteService) public readonly athleteService: AthleteService,
-    @Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService,
-    @Inject(LoggerService) public readonly logger: LoggerService
+    public readonly versionsProvider: VersionsProvider,
+    public readonly dataStore: DataStore<object>,
+    public readonly activityService: ActivityService,
+    public readonly streamsService: StreamsService,
+    public readonly athleteService: AthleteService,
+    public readonly userSettingsService: UserSettingsService,
+    public readonly logger: LoggerService
   ) {
     this.isSyncing$ = new Subject<boolean>();
   }

@@ -14,5 +14,4 @@ export class BareActivityModel {
   public trainer: boolean;
   public commute: boolean;
   public elevation_gain_raw: number;
-  public calories: number;
 }

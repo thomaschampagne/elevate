@@ -2,7 +2,7 @@
   <mat-progress-bar mode="buffer"></mat-progress-bar>
 </div>
 
-<ng-container *ngIf="zoneDefinitionSelected && areZonesLoaded">
+<div class="narrow-centered-section" *ngIf="zoneDefinitionSelected && areZonesLoaded">
   <app-zone-tool-bar
     (zoneDefinitionSelectedChange)="onZoneDefinitionSelected($event)"
     [currentZonesLength]="currentZones.length"
@@ -29,6 +29,6 @@
     [zoneDefinitionSelected]="zoneDefinitionSelected"
     [zoneDefinitions]="zoneDefinitions">
   </app-zone-tool-bar>
-</ng-container>
+</div>
 
 

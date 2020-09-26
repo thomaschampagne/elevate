@@ -99,9 +99,10 @@ export class ConnectorsComponent implements OnInit {
 
   public onOpenLink(url: string): void {
     const data: ConfirmDialogDataModel = {
-      title: "Plug your connector on this page as a fitness company or organization",
-      content: "Please contact me on twitter to get your fitness company or organization connector in Elevate.",
-      confirmText: "Contact me"
+      title: null,
+      content:
+        "If you are a fitness company or organization please DM me on below twitter for the integration of your connector.",
+      confirmText: "@champagnethomas"
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {

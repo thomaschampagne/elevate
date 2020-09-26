@@ -7,6 +7,7 @@ import { DonateComponent } from "../../../donate/donate.component";
 import { ReportComponent } from "../../../report/report.component";
 import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/desktop-advanced-menu.component";
 import { HelpComponent } from "../../../help/help.component";
+import { ZonesSettingsComponent } from "../../../zones-settings/zones-settings.component";
 
 @NgModule({
   imports: [RouterModule.forRoot(DesktopRoutingModule.provideRoutes(), { enableTracing: false, useHash: true })],
@@ -17,6 +18,11 @@ export class DesktopRoutingModule {
     {
       path: AppRoutes.activities,
       component: ActivitiesComponent
+    },
+    {
+      path: AppRoutes.activity,
+      loadChildren: () =>
+        import("../../../desktop/activity-view/activity-view.module").then(module => module.ActivityViewModule)
     },
     {
       path: AppRoutes.fitnessTrend,
@@ -36,6 +42,14 @@ export class DesktopRoutingModule {
       path: AppRoutes.athleteSettings,
       loadChildren: () =>
         import("../../../athlete-settings/athlete-settings.module").then(module => module.AthleteSettingsModule)
+    },
+    {
+      path: AppRoutes.zonesSettings,
+      component: ZonesSettingsComponent
+    },
+    {
+      path: AppRoutes.zonesSettings + "/:zoneValue",
+      component: ZonesSettingsComponent
     },
     {
       path: AppRoutes.connectors,

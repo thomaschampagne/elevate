@@ -4,6 +4,6 @@ import { BuildTarget } from "@elevate/shared/enums";
 export const environment = {
   buildTarget: BuildTarget.EXTENSION,
   production: true,
-  logLevel: LoggerService.LEVEL_DEBUG,
+  logLevel: LoggerService.LEVEL_INFO,
   skipRestoreSyncedBackupCheck: false
 };

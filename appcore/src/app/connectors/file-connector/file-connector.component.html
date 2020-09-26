@@ -1,13 +1,11 @@
 <mat-card>
   <mat-card-title>
-    Files
+    Files <span class="mat-body-1">(Gpx, Tcx & Fit formats)</span>
   </mat-card-title>
   <mat-card-subtitle *ngIf="fileConnectorInfo">
     <span *ngIf="!fileConnectorInfo.sourceDirectory">Not configured. </span>
     <span *ngIf="fileConnectorInfo.sourceDirectory">Configured. </span>
     <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
-    <br />
-    <span class="note">Formats supported: gpx, tcx & fit</span>
   </mat-card-subtitle>
   <mat-card-content>
     <div>
@@ -37,6 +35,10 @@
           <input [(ngModel)]="fileConnectorInfo.sourceDirectory" [disabled]="true" matInput
                  placeholder="{{ (!fileConnectorInfo.sourceDirectory) ? 'Browse for a directory to scan...' : 'Scan directory' }}"
                  type="text">
+          <button *ngIf="fileConnectorInfo.sourceDirectory" (click)="onUserDirectoryOpen()" color="primary" mat-button
+                  matSuffix>
+            Open
+          </button>
           <button (click)="onUserDirectorySelection()" color="primary" mat-button
                   matSuffix>
             Browse

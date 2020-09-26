@@ -13,7 +13,7 @@ import { AppRoutes } from "../../shared/models/app-routes";
 import { ExtensionImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/extension-import-backup-dialog.component";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
-import { ExtensionAppService } from "../../shared/services/app-service/impl/extension-app.service";
+import { ExtensionAppService } from "../../shared/services/app-service/extension/extension-app.service";
 
 @Component({
   selector: "app-extension-sync-menu",

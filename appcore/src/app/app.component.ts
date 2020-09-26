@@ -35,6 +35,7 @@ import {
 import { RecalculateActivitiesBarDirective } from "./recalculate-activities-bar/recalculate-activities-bar.directive";
 import { VersionsProvider } from "./shared/services/versions/versions-provider";
 import { ComponentsFactoryService } from "./shared/services/components-factory.service";
+import { AppService } from "./shared/services/app-service/app.service";
 
 @Component({
   selector: "app-root",
@@ -44,12 +45,10 @@ import { ComponentsFactoryService } from "./shared/services/components-factory.s
 export class AppComponent implements OnInit, OnDestroy {
   private static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
   public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
-  public static readonly LS_USER_THEME_PREF: string = "theme";
   private readonly CUSTOM_ICONS: string[] = ["strava", "twitter", "github"];
   public readonly buildTarget: BuildTarget = environment.buildTarget;
   public BuildTarget = BuildTarget;
   public Theme = Theme;
-  public currentTheme: Theme;
   public mainMenuItems: MenuItemModel[];
   public toolBarTitle: string;
   public routerEventsSubscription: Subscription;
@@ -73,6 +72,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public sideNav: MatSidenav;
 
   constructor(
+    @Inject(AppService) public readonly appService: AppService,
     @Inject(Router) private readonly router: Router,
     @Inject(MatDialog) private readonly dialog: MatDialog,
     @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
@@ -150,7 +150,11 @@ export class AppComponent implements OnInit, OnDestroy {
       this.appMoreMenuDirective.viewContainerRef
     );
 
-    this.setupThemeOnLoad();
+    // Apply default theme
+    this.applyTheme(this.appService.currentTheme);
+
+    // Listen for theme changes
+    this.appService.themeChanges$.subscribe(theme => this.applyTheme(theme));
 
     // Update list of sections names displayed in sidebar
     this.mainMenuItems = this.menuItemsProvider.getMenuItems();
@@ -162,7 +166,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.versionsProvider.checkForUpdates();
 
-    this.logger.info("App initialized.");
+    this.logger.debug("App initialized.");
   }
 
   public sideNavSetup(): void {
@@ -174,21 +178,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  public setupThemeOnLoad(): void {
-    let themeToBeLoaded: Theme = Theme.DEFAULT;
-
-    const existingSavedTheme = localStorage.getItem(AppComponent.LS_USER_THEME_PREF) as Theme;
-
-    if (existingSavedTheme) {
-      themeToBeLoaded = existingSavedTheme;
-    }
-
-    this.setTheme(themeToBeLoaded);
-  }
-
-  public setTheme(theme: Theme): void {
-    this.currentTheme = theme;
-
+  public applyTheme(theme: Theme): void {
     // Remove previous theme if exists
     const previousTheme = this.overlayContainer.getContainerElement().classList[1] as Theme;
     if (previousTheme) {
@@ -196,10 +186,10 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     // Add theme/class to overlay list
-    this.overlayContainer.getContainerElement().classList.add(this.currentTheme);
+    this.overlayContainer.getContainerElement().classList.add(theme);
 
     // Change body theme class
-    this.renderer.setAttribute(document.body, "class", this.currentTheme);
+    this.renderer.setAttribute(document.body, "class", theme);
   }
 
   @HostListener("window:resize")
@@ -208,9 +198,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   public onThemeToggle(): void {
-    const targetTheme = this.currentTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT;
-    this.setTheme(targetTheme);
-    localStorage.setItem(AppComponent.LS_USER_THEME_PREF, targetTheme);
+    this.appService.toggleTheme();
   }
 
   public onSideNavClosed(): void {

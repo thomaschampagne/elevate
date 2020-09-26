@@ -9,13 +9,16 @@ assignees: ''
 
 **⚠ BEFORE ANYTHING: Are you in the right place?**
 
-Before creating a relevant issue you HAVE TO check if issue already exists:
+Before creating any issues, you HAVE TO check if issue already exists:
 
 * Check for answer in Frequently Asked Questions here: https://github.com/thomaschampagne/elevate/tree/faq/
 * Check for already existing issues matching with yours: https://github.com/thomaschampagne/elevate/issues
 
-Any unsuitable issues will not be handled at all! Since this project is performed on free time and has hundreds
-of thousands users now, there's no room for handling counterproductive issues... Be wise when opening an issue.
+Any unsuitable issues will not be handled. Since this project is performed on free time and has hundreds
+of thousands users now, there's no room to handle duplicate or irrelevant issues...
+
+Please be wise when opening an issue.
+
 Thank you for your understanding!
 
 If your issue is suitable, you can remove this warning before submitting it.

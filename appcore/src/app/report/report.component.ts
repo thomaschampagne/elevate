@@ -22,7 +22,7 @@ export class ReportComponent implements OnInit {
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver
   ) {}
 
-  private static readonly REPORT_COUNTDOWN_SECONDS: number = 15;
+  private static readonly REPORT_COUNTDOWN_SECONDS: number = 20;
 
   public allowReportCountdown$: Observable<number>;
 
@@ -52,11 +52,19 @@ export class ReportComponent implements OnInit {
     }
   }
 
+  public onGoToHelp(): void {
+    this.router.navigate([`${AppRoutes.help}`]);
+  }
+
   public onReport(): void {
-    this.openResourceResolver.openLink(this.getIssuesUrl());
+    this.onGoToGithubIssues();
   }
 
   public getIssuesUrl(): string {
     return `${repository.url}/issues`;
+  }
+
+  public onGoToGithubIssues(): void {
+    this.openResourceResolver.openLink(this.getIssuesUrl());
   }
 }

@@ -1,4 +1,3 @@
-import { Inject, Injectable } from "@angular/core";
 import { AthleteModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { AthleteDao } from "../../dao/athlete/athlete.dao";
 import _ from "lodash";
@@ -7,9 +6,8 @@ import { AppError } from "../../models/app-error.model";
 /**
  * The latest managed period must have "since" as "forever"
  */
-@Injectable()
-export class AthleteService {
-  constructor(@Inject(AthleteDao) public readonly athleteModelDao: AthleteDao) {}
+export abstract class AthleteService {
+  protected constructor(public readonly athleteModelDao: AthleteDao) {}
 
   /**
    * Provides athlete model with dated settings sorted by descending periods
@@ -95,7 +93,7 @@ export class AthleteService {
     return this.fetch()
       .then((athleteModel: AthleteModel) => {
         athleteModel.datedAthleteSettings = [];
-        return this.athleteModelDao.update(athleteModel);
+        return this.update(athleteModel);
       })
       .then(() => {
         return this.addSettings(DatedAthleteSettingsModel.DEFAULT_MODEL);

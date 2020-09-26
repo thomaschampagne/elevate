@@ -1,6 +1,7 @@
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
 import { GradeDataModel } from "@elevate/shared/models";
+import { Time } from "@elevate/shared/tools";
 
 export abstract class AbstractGradeDataView extends AbstractDataView {
   protected gradeData: GradeDataModel;
@@ -100,7 +101,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       3,
-      Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.up),
+      Time.secToMilitary(this.gradeData.upFlatDownInSeconds.up),
       "Climbing time",
       "",
       "displayAdvancedGradeData"
@@ -108,7 +109,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       3,
-      Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.flat),
+      Time.secToMilitary(this.gradeData.upFlatDownInSeconds.flat),
       "Flat time",
       "",
       "displayAdvancedGradeData"
@@ -116,7 +117,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       2,
       3,
-      Helper.secondsToHHMMSS(this.gradeData.upFlatDownInSeconds.down),
+      Time.secToMilitary(this.gradeData.upFlatDownInSeconds.down),
       "Downhill time",
       "",
       "displayAdvancedGradeData"

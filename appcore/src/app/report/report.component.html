@@ -1,27 +1,29 @@
-<mat-card>
+<mat-card class="narrow-centered-section">
   <mat-card-content>
     <div class="mat-title">
-      ⚠️ Before creating a relevant issue you HAVE TO check if issue already exists:
+      ⚠️ Before creating any issues, you <strong>have to</strong>:
     </div>
     <div>
       <ul>
         <li>
-          <strong>Deep check</strong> for your bug in the <a [routerLink]="'/help'">help</a> section.
+          <strong>Check</strong> if you can solve your issue in the <span class="accent-color pointer"
+                                                                          (click)="onGoToHelp();">help</span> section.
         </li>
         <li>
-          <strong>Deep check</strong> for your bug or request <a
-          href="{{getIssuesUrl()}}?q=is%3Aissue" target="_blank">in the existing issues
-          or requests</a> (use filter input).
+          <strong>Check</strong> if the issue or requests do not exists already <span class="accent-color pointer"
+                                                                                      (click)="onGoToGithubIssues();">in existing list</span>
+          ➔ <strong>Use the search input</strong>.
         </li>
       </ul>
-      <div class="unsuitable-issues-message accent">
-        Any unsuitable issues will not be handled. Since this project is performed on free time and has hundreds
-        of thousands users now, there's no room for handling irrelevant issues. Please be wise when opening an issue.
-        Thank you for your understanding!
+      <div class="unsuitable-issues-message accent-border">
+        Any unsuitable issues will not be handled! Since this project is developed on free time and has hundreds
+        of thousands users now, there's no room to handle duplicate or irrelevant issues...
       </div>
     </div>
     <div>
-
+      Please be wise when opening an issue. Thank you for your understanding!
+    </div>
+    <div>
       <button color="primary" mat-stroked-button (click)="onReport()" [disabled]="(allowReportCountdown$ | async) > 0">
         Report <span *ngIf="(allowReportCountdown$ | async) > 0">({{allowReportCountdown$ | async | number:'2.0'}}
         )</span>

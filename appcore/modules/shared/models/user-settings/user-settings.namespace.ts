@@ -1,11 +1,17 @@
 import { UserZonesModel } from "./user-zones.model";
-import { BuildTarget, MeasureSystem, Temperature } from "../../enums";
+import { BuildTarget, LeafletMapType, MeasureSystem, Temperature } from "../../enums";
 import _ from "lodash";
 
 export namespace UserSettings {
   export const DEFAULT_TEMPERATURE = Temperature.CELSIUS;
   export const DISABLE_MISSING_STRESS_SCORES_WARNING = false;
   export const DISABLE_ACTIVITIES_NEED_RECALCULATION_WARNING = false;
+  export const DEFAULT_MAP_TYPE = LeafletMapType.ATLAS;
+
+  export type Props =
+    | keyof UserSettings.UserSettingsModel
+    | keyof UserSettings.DesktopUserSettingsModel
+    | keyof UserSettings.ExtensionUserSettingsModel;
 
   export const getDefaultsByBuildTarget = (buildTarget: BuildTarget): UserSettingsModel => {
     if (buildTarget === BuildTarget.DESKTOP) {
@@ -19,8 +25,8 @@ export namespace UserSettings {
 
   export abstract class UserSettingsModel {
     public abstract readonly buildTarget: BuildTarget;
-    public systemUnit: string;
-    public temperatureUnit: string;
+    public systemUnit: MeasureSystem;
+    public temperatureUnit: Temperature;
     public disableMissingStressScoresWarning: boolean;
     public disableActivitiesNeedRecalculationWarning: boolean;
     public zones: UserZonesModel;
@@ -33,10 +39,13 @@ export namespace UserSettings {
       temperatureUnit: UserSettings.DEFAULT_TEMPERATURE,
       disableMissingStressScoresWarning: DISABLE_MISSING_STRESS_SCORES_WARNING,
       disableActivitiesNeedRecalculationWarning: DISABLE_ACTIVITIES_NEED_RECALCULATION_WARNING,
-      zones: UserZonesModel.DEFAULT_MODEL
+      zones: UserZonesModel.DEFAULT_MODEL,
+      defaultMapType: DEFAULT_MAP_TYPE
     };
 
     public buildTarget: BuildTarget = BuildTarget.DESKTOP;
+
+    public defaultMapType: LeafletMapType = DEFAULT_MAP_TYPE;
   }
 
   export class ExtensionUserSettingsModel extends UserSettingsModel {
@@ -80,7 +89,6 @@ export namespace UserSettings {
       displayRecentEffortsHRAdjustedPacePower: false,
       displayRunningPerformanceIndex: true,
       reviveGoogleMaps: true,
-      displayRunningPowerEstimation: true,
       reviveGoogleMapsLayerType: "terrain",
       displayActivityBestSplits: true,
       temperatureUnit: UserSettings.DEFAULT_TEMPERATURE,
@@ -124,7 +132,6 @@ export namespace UserSettings {
     public displayRunningPerformanceIndex: boolean;
     public reviveGoogleMaps: boolean;
     public displayRecentEffortsHRAdjustedPacePower: boolean;
-    public displayRunningPowerEstimation: boolean;
     public reviveGoogleMapsLayerType: string;
     public displayActivityBestSplits: boolean;
     public showHiddenBetaFeatures: boolean;

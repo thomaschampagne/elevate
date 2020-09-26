@@ -4,6 +4,7 @@ import { ChildProcess } from "child_process";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { Platform } from "@elevate/shared/enums";
 import { BrowserWindow, Remote, Session } from "electron";
+import { ElevateException } from "@elevate/shared/exceptions";
 
 @Injectable()
 export class ElectronService {
@@ -50,6 +51,13 @@ export class ElectronService {
 
   public openItem(path: string): void {
     this.electron.shell.openPath(path);
+  }
+
+  public showItemInFolder(itemPath: string): void {
+    if (!this.existsSync(itemPath)) {
+      throw new ElevateException("Item path do not exists");
+    }
+    this.electron.shell.showItemInFolder(itemPath);
   }
 
   public openLogsFolder(): void {
@@ -201,6 +209,10 @@ export class ElectronService {
     } catch (e) {
       return false;
     }
+  }
+
+  public openDevTools(): void {
+    this.electron.remote.getCurrentWindow().webContents.openDevTools();
   }
 
   public require(module: string): any {

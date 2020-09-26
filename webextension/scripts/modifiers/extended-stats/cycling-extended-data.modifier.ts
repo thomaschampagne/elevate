@@ -1,4 +1,3 @@
-import { Helper } from "../../helper";
 import { ActivityInfoModel, UserSettings } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/activity-processor";
@@ -12,6 +11,7 @@ import { SpeedDataView } from "./views/speed-data.view";
 import _ from "lodash";
 import { CyclingPowerCurveView } from "./views/cycling-power-curve.view";
 import $ from "jquery";
+import { Time } from "@elevate/shared/tools";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
@@ -95,8 +95,8 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
     let cadenceTimeMoving = "-";
     let cadencePercentageMoving = "-";
     if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {
-      cadenceTimeMoving = Helper.secondsToHHMMSS(this.analysisData.cadenceData.cadenceTimeMoving);
-      cadencePercentageMoving = this.printNumber(this.analysisData.cadenceData.cadencePercentageMoving);
+      cadenceTimeMoving = Time.secToMilitary(this.analysisData.cadenceData.cadenceActiveTime);
+      cadencePercentageMoving = this.printNumber(this.analysisData.cadenceData.cadenceActivePercentage);
     }
     this.insertContentAtGridPosition(
       1,

@@ -1,14 +1,62 @@
 import { ZoneModel } from "../zone.model";
 import _ from "lodash";
+import { ZoneType } from "../../enums";
 
 export class UserZonesModel {
   public static readonly DEFAULT_MODEL: UserZonesModel = {
-    speed: [0, 7, 9, 11, 13, 15, 18, 21, 24, 27, 30, 32, 34, 36, 38, 40, 42, 44, 47, 50, 60, 75, 100],
+    speed: [0, 10, 15, 20, 25, 27, 30, 32, 34, 36, 38, 40, 42, 44, 47, 50, 60, 75],
     pace: [60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 540, 570, 720, 900],
-    gradeAdjustedPace: [60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 540, 570, 720, 900],
     heartRate: [120, 140, 150, 160, 170, 180, 185, 190, 195, 210],
-    power: [0, 110, 150, 180, 210, 240, 280, 420, 1000],
-    runningPower: [25, 50, 100, 150, 200, 250, 300, 350, 400, 500, 600, 800, 1000],
+    power: [
+      0,
+      50,
+      75,
+      100,
+      125,
+      150,
+      175,
+      200,
+      225,
+      250,
+      275,
+      300,
+      325,
+      350,
+      375,
+      400,
+      425,
+      450,
+      475,
+      500,
+      525,
+      550,
+      1000
+    ],
+    runningPower: [
+      0,
+      50,
+      75,
+      100,
+      125,
+      150,
+      175,
+      200,
+      225,
+      250,
+      275,
+      300,
+      325,
+      350,
+      375,
+      400,
+      425,
+      450,
+      475,
+      500,
+      525,
+      550,
+      1000
+    ],
     cyclingCadence: [
       0,
       5,
@@ -98,32 +146,7 @@ export class UserZonesModel {
       20,
       25
     ],
-    elevation: [
-      0,
-      100,
-      200,
-      300,
-      400,
-      500,
-      600,
-      700,
-      800,
-      900,
-      1000,
-      1200,
-      1400,
-      1600,
-      1800,
-      2000,
-      2200,
-      2400,
-      2600,
-      2800,
-      3000,
-      3500,
-      4000,
-      5000
-    ],
+    elevation: [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000],
     ascent: [
       0,
       100,
@@ -160,48 +183,6 @@ export class UserZonesModel {
     ]
   };
 
-  public static readonly TYPE_SPEED: string = "speed";
-  public static readonly TYPE_PACE: string = "pace";
-  public static readonly TYPE_GRADE_ADJUSTED_PACE: string = "gradeAdjustedPace";
-  public static readonly TYPE_HEART_RATE: string = "heartRate";
-  public static readonly TYPE_POWER: string = "power";
-  public static readonly TYPE_RUNNING_POWER: string = "runningPower";
-  public static readonly TYPE_CYCLING_CADENCE: string = "cyclingCadence";
-  public static readonly TYPE_RUNNING_CADENCE: string = "runningCadence";
-  public static readonly TYPE_GRADE: string = "grade";
-  public static readonly TYPE_ELEVATION: string = "elevation";
-  public static readonly TYPE_ASCENT: string = "ascent";
-
-  constructor(
-    public speed: number[],
-    public pace: number[],
-    public gradeAdjustedPace: number[],
-    public heartRate: number[],
-    public power: number[],
-    public runningPower: number[],
-    public cyclingCadence: number[],
-    public runningCadence: number[],
-    public grade: number[],
-    public elevation: number[],
-    public ascent: number[]
-  ) {}
-
-  public static asInstance(userZonesModel: UserZonesModel): UserZonesModel {
-    return new UserZonesModel(
-      userZonesModel.speed,
-      userZonesModel.pace,
-      userZonesModel.gradeAdjustedPace,
-      userZonesModel.heartRate,
-      userZonesModel.power,
-      userZonesModel.runningPower,
-      userZonesModel.cyclingCadence,
-      userZonesModel.runningCadence,
-      userZonesModel.grade,
-      userZonesModel.elevation,
-      userZonesModel.ascent
-    );
-  }
-
   public static serialize(zoneModels: ZoneModel[]): number[] {
     const serialized: number[] = [];
 
@@ -231,7 +212,7 @@ export class UserZonesModel {
     _.forEach(zones, (zone: number, index: number) => {
       if (!_.isNumber(zone)) {
         throw new Error(
-          "Cannot deserialize zones because of corrupted zones. Try to reset your settings from advanced menu (Go to 'Elevate App' => 'Contextual menu in top right' => 'Advanced')"
+          "Cannot deserialize zones because of corrupted zones. Try to reset your settings from advanced menu."
         );
       }
 
@@ -246,11 +227,23 @@ export class UserZonesModel {
     return zoneModels;
   }
 
-  public get?(type: string): ZoneModel[] {
-    const zones = _.propertyOf(this)(type);
-    if (!zones) {
-      throw new Error("Cannot retrieve zones for type: " + type);
+  public static fromZoneType(userZones: UserZonesModel, zoneType: ZoneType): ZoneModel[] {
+    if (userZones[zoneType]) {
+      return UserZonesModel.deserialize(userZones[zoneType]);
     }
-    return UserZonesModel.deserialize(zones);
+    return null;
   }
+
+  constructor(
+    public speed: number[],
+    public pace: number[],
+    public heartRate: number[],
+    public power: number[],
+    public runningPower: number[],
+    public cyclingCadence: number[],
+    public runningCadence: number[],
+    public grade: number[],
+    public elevation: number[],
+    public ascent: number[]
+  ) {}
 }

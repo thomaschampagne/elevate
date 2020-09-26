@@ -1,7 +1,7 @@
-import { Helper } from "../../../helper";
 import { AbstractCadenceDataView } from "./abstract-cadence-data.view";
 import _ from "lodash";
 import { CadenceDataModel } from "@elevate/shared/models";
+import { Time } from "@elevate/shared/tools";
 
 export class CyclingCadenceDataView extends AbstractCadenceDataView {
   constructor(cadenceData: CadenceDataModel, units: string) {
@@ -24,24 +24,20 @@ export class CyclingCadenceDataView extends AbstractCadenceDataView {
   protected insertDataIntoGrid(): void {
     super.insertDataIntoGrid();
 
-    const hasHasPerCadenceOccurrence =
-      _.isNumber(this.cadenceData.averageDistancePerOccurrence) &&
-      !_.isNaN(this.cadenceData.averageDistancePerOccurrence);
-
     // Row 1
     this.insertContentAtGridPosition(
       0,
       0,
-      this.printNumber(this.cadenceData.cadencePercentageMoving, 2),
-      "Cadence % while moving",
+      this.printNumber(this.cadenceData.cadenceActivePercentage, 2),
+      "Active Cadence %",
       "%",
       "displayCadenceData"
     );
     this.insertContentAtGridPosition(
       1,
       0,
-      Helper.secondsToHHMMSS(this.cadenceData.cadenceTimeMoving),
-      "Cadence Time while moving",
+      Time.secToMilitary(this.cadenceData.cadenceActiveTime),
+      "Active Cadence Time",
       "",
       "displayCadenceData"
     );
@@ -111,38 +107,12 @@ export class CyclingCadenceDataView extends AbstractCadenceDataView {
       "displayCadenceData"
     );
 
-    if (hasHasPerCadenceOccurrence) {
+    if (_.isNumber(this.cadenceData.averageDistancePerOccurrence)) {
       this.insertContentAtGridPosition(
         1,
         3,
         this.printNumber(this.cadenceData.averageDistancePerOccurrence, 2),
         "Avg Dist. / Crank Rev.",
-        "M",
-        "displayCadenceData"
-      );
-
-      // Row 5
-      this.insertContentAtGridPosition(
-        0,
-        4,
-        this.printNumber(this.cadenceData.lowerQuartileDistancePerOccurrence, 2),
-        "25% Dist. / Crank Rev.",
-        "M",
-        "displayCadenceData"
-      );
-      this.insertContentAtGridPosition(
-        1,
-        4,
-        this.printNumber(this.cadenceData.medianDistancePerOccurrence, 2),
-        "50% Dist. / Crank Rev.",
-        "M",
-        "displayCadenceData"
-      );
-      this.insertContentAtGridPosition(
-        2,
-        4,
-        this.printNumber(this.cadenceData.upperQuartileDistancePerOccurrence, 2),
-        "75% Dist. / Crank Rev.",
         "M",
         "displayCadenceData"
       );

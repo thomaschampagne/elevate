@@ -10,7 +10,9 @@ export abstract class OpenResourceResolver {
 
   public abstract openActivity(id: number | string): void;
 
-  public abstract openSourceActivity(id: number | string): void;
+  public openStravaActivity(id: number): void {
+    this.openLink("https://www.strava.com/activities/" + id);
+  }
 
   public openActivities(ids: (number | string)[]): void {
     if (ids.length > 0) {

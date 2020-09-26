@@ -15,7 +15,6 @@ import { ElevateSport } from "@elevate/shared/enums";
 import _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { CyclingPower } from "../estimators/cycling-power-estimator/cycling-power-estimator";
-import { CaloriesEstimator } from "../estimators/calories-estimator/calories-estimator";
 import { ConnectorConfig } from "./connector-config.model";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { IpcMessagesSender } from "../messages/ipc-messages.sender";
@@ -73,8 +72,7 @@ export abstract class BaseConnector {
 
       // Distance
       if (activityStreamsModel && activityStreamsModel.distance && activityStreamsModel.distance.length > 0) {
-        syncedActivityModel.distance_raw =
-          _.last(activityStreamsModel.distance) - _.first(activityStreamsModel.distance);
+        syncedActivityModel.distance_raw = _.last(activityStreamsModel.distance);
       } else {
         syncedActivityModel.distance_raw = null;
       }
@@ -95,6 +93,18 @@ export abstract class BaseConnector {
       syncedActivityModel.moving_time_raw = null;
       syncedActivityModel.distance_raw = null;
       syncedActivityModel.elevation_gain_raw = null;
+
+      if (syncedActivityModel.start_time && syncedActivityModel.end_time) {
+        const startTime = new Date(syncedActivityModel.start_time).getTime();
+        const endTime = new Date(syncedActivityModel.end_time).getTime();
+
+        const deltaTime = (endTime - startTime) / 1000;
+
+        if (Number.isFinite(deltaTime) && deltaTime > 0) {
+          syncedActivityModel.elapsed_time_raw = deltaTime;
+          syncedActivityModel.moving_time_raw = deltaTime;
+        }
+      }
     }
 
     if (primitiveSourceData) {
@@ -114,12 +124,6 @@ export abstract class BaseConnector {
         syncedActivityModel.elevation_gain_raw = primitiveSourceData.elevationGainRaw;
       }
     }
-
-    syncedActivityModel.calories = CaloriesEstimator.calc(
-      syncedActivityModel.type,
-      syncedActivityModel.moving_time_raw,
-      syncedActivityModel.athleteSnapshot.athleteSettings.weight
-    );
 
     return syncedActivityModel;
   }
@@ -236,8 +240,7 @@ export abstract class BaseConnector {
     syncedActivityModel: Partial<SyncedActivityModel>,
     athleteSnapshotModel: AthleteSnapshotModel,
     userSettingsModel: UserSettingsModel,
-    streams: ActivityStreamsModel,
-    smoothAltitude: boolean
+    streams: ActivityStreamsModel
   ): AnalysisDataModel {
     return ActivityComputer.calculate(
       syncedActivityModel as BareActivityModel,
@@ -245,11 +248,9 @@ export abstract class BaseConnector {
       userSettingsModel,
       streams,
       false,
-      false,
       null,
       true,
-      null,
-      smoothAltitude
+      null
     );
   }
 

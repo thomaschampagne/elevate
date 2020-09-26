@@ -23,7 +23,7 @@ import { AppMoreMenuComponent } from "./app-more-menu.component";
       </button>
 
       <button mat-menu-item (click)="onAdvanceMenu()">
-        <mat-icon fontSet="material-icons-outlined">build</mat-icon>
+        <mat-icon fontSet="material-icons-outlined">architecture</mat-icon>
         Advanced
       </button>
 

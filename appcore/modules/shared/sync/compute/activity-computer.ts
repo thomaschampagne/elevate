@@ -1,96 +1,180 @@
 import _ from "lodash";
-import { AthleteSettingsModel, AthleteSnapshotModel, Gender } from "../../models/athlete";
 import {
   ActivitySourceDataModel,
   ActivityStreamsModel,
   AnalysisDataModel,
-  AscentSpeedDataModel,
+  AthleteSettingsModel,
+  AthleteSnapshotModel,
   BareActivityModel,
   CadenceDataModel,
   ElevationDataModel,
+  Gender,
   GradeDataModel,
   HeartRateDataModel,
   MoveDataModel,
   PaceDataModel,
-  PowerBestSplitModel,
+  PeakModel,
   PowerDataModel,
+  SlopeProfileCadences,
+  SlopeProfileDistances,
+  SlopeProfileDurations,
+  SlopeProfileSpeeds,
   SpeedDataModel,
+  SyncedActivityModel,
   UpFlatDownModel,
-  UpFlatDownSumCounterModel,
-  UpFlatDownSumTotalModel,
   UserSettings,
   UserZonesModel,
   ZoneModel
 } from "../../models";
 import { RunningPowerEstimator } from "./running-power-estimator";
 import { SplitCalculator } from "./split-calculator";
-import { ElevateSport } from "../../enums";
-import { KalmanFilter, LowPassFilter } from "../../tools";
+import { ElevateSport, GradeProfile, ZoneType } from "../../enums";
+import { Movement, percentile } from "../../tools";
+import { PeaksCalculator } from "./peaks-calculator";
+import { WarningException } from "../../exceptions";
+import { Constant } from "../../constants";
+import { CaloriesEstimator } from "./calories-estimator";
+import { StreamShaper } from "./stream-shaper";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export class ActivityComputer {
-  public static readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = 0.85;
-  public static readonly MOVING_THRESHOLD_KPH: number = 0.1; // Kph
-  public static readonly CADENCE_THRESHOLD_RPM: number = 35; // RPMs
-  public static readonly GRADE_CLIMBING_LIMIT: number = 1.6;
-  public static readonly GRADE_DOWNHILL_LIMIT: number = -1.6;
-  public static readonly GRADE_PROFILE_FLAT_PERCENTAGE_DETECTED: number = 60;
-  public static readonly GRADE_PROFILE_FLAT: string = "FLAT";
-  public static readonly GRADE_PROFILE_HILLY: string = "HILLY";
-  public static readonly ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
-  public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
-  public static readonly SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
-  protected athleteSnapshot: AthleteSnapshotModel;
-  protected activityType: ElevateSport;
-  protected isTrainer: boolean;
-  protected userSettings: UserSettings.UserSettingsModel;
-  protected isOwner: boolean;
-  protected hasPowerMeter: boolean;
-  protected activitySourceData: ActivitySourceDataModel;
-  protected activityStream: ActivityStreamsModel;
-  protected bounds: number[];
-  protected returnZones: boolean;
-  protected returnPowerCurve: boolean;
-
-  constructor(
-    activityType: ElevateSport,
-    isTrainer: boolean,
-    userSettings: UserSettings.UserSettingsModel,
-    athleteSnapshot: AthleteSnapshotModel,
-    isOwner: boolean,
-    hasPowerMeter: boolean,
-    activityStream: ActivityStreamsModel,
-    bounds: number[],
-    returnZones: boolean,
-    returnPowerCurve: boolean,
-    activitySourceData: ActivitySourceDataModel
+  private constructor(
+    private readonly activityType: ElevateSport,
+    private readonly isTrainer: boolean,
+    private readonly userSettings: UserSettings.UserSettingsModel,
+    private readonly athleteSnapshot: AthleteSnapshotModel,
+    private readonly isOwner: boolean,
+    private readonly hasPowerMeter: boolean,
+    private activityStream: ActivityStreamsModel,
+    private readonly bounds: number[],
+    private readonly returnZones: boolean,
+    private readonly activitySourceData: ActivitySourceDataModel
   ) {
-    // Store activityType, isTrainer, input activity params and userSettingsData
     this.activityType = activityType;
     this.isTrainer = isTrainer;
     this.userSettings = userSettings;
-    this.userSettings.zones = UserZonesModel.asInstance(this.userSettings.zones);
     this.athleteSnapshot = athleteSnapshot;
     this.isOwner = isOwner;
     this.hasPowerMeter = hasPowerMeter;
-    this.activityStream = activityStream;
+
+    // We work on a streams copy to avoid integrity changes from the given source
+    // Indeed some shaping will be applied (e.g. data smoothing)
+    this.activityStream = _.cloneDeep(activityStream);
     this.bounds = bounds;
     this.returnZones = returnZones;
-    this.returnPowerCurve = returnPowerCurve;
     this.activitySourceData = activitySourceData;
+    this.isMoving = ActivityComputer.getIsMovingFunction(this.activityType);
+    this.isActiveCadence = ActivityComputer.getIsActiveCadenceFunction(this.activityType);
+  }
+
+  public static readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = 0.85;
+
+  private static readonly IS_MOVING_SPORTS = new Map<ElevateSport, (...params) => boolean>([
+    [ElevateSport.Ride, ActivityComputer.isMovingCycling],
+    [ElevateSport.VirtualRide, ActivityComputer.isMovingCycling],
+    [ElevateSport.Run, ActivityComputer.isMovingRunning],
+    [ElevateSport.VirtualRun, ActivityComputer.isMovingRunning],
+    [ElevateSport.Swim, ActivityComputer.isMovingSwimming]
+  ]);
+
+  private static readonly IS_ACTIVE_CADENCE_SPORTS = new Map<ElevateSport, (...params) => boolean>([
+    [ElevateSport.Ride, ActivityComputer.isActiveCadenceCycling],
+    [ElevateSport.VirtualRide, ActivityComputer.isActiveCadenceCycling],
+    [ElevateSport.Run, ActivityComputer.isActiveCadenceRunning],
+    [ElevateSport.VirtualRun, ActivityComputer.isActiveCadenceRunning],
+    [ElevateSport.Swim, ActivityComputer.isActiveCadenceSwimming]
+  ]);
+
+  private static readonly DEFAULT_THRESHOLD_KPH: number = 2; // Kph
+  private static readonly CYCLING_THRESHOLD_KPH: number = 4; // Kph
+  private static readonly RUNNING_THRESHOLD_KPH: number = 2.75; // Kph
+  private static readonly SWIMMING_THRESHOLD_KPH: number = 1.75; // Kph
+  private static readonly MOVING_DETECTION_SAMPLES_BUFFER: number = 12;
+
+  private static readonly DEFAULT_CADENCE_THRESHOLD: number = 1;
+  private static readonly CYCLING_CADENCE_THRESHOLD: number = 45; // revolutions per min
+  private static readonly RUNNING_CADENCE_THRESHOLD: number = 50; // strides per min (1 leg)
+  private static readonly SWIMMING_CADENCE_THRESHOLD: number = 10; // strokes per min
+
+  private static readonly GRADE_CLIMBING_LIMIT: number = 1.5;
+  private static readonly GRADE_DOWNHILL_LIMIT: number = -1 * ActivityComputer.GRADE_CLIMBING_LIMIT;
+  private static readonly GRADE_FLAT_PROFILE_THRESHOLD: number = 60;
+  private static readonly WEIGHTED_WATTS_TIME_BUFFER: number = 30; // Seconds
+  private static readonly SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
+  private readonly isMoving: (speed: number) => boolean;
+  private readonly isActiveCadence: (cadence: number) => boolean;
+
+  private static getIsMovingFunction(sport: ElevateSport): (grade: number) => boolean {
+    const thresholdFunction = ActivityComputer.IS_MOVING_SPORTS.get(sport);
+    return thresholdFunction ? thresholdFunction : ActivityComputer.isMovingDefault;
+  }
+
+  private static isMovingDefault(speed: number): boolean {
+    return speed > ActivityComputer.DEFAULT_THRESHOLD_KPH;
+  }
+
+  private static isMovingRunning(speed: number): boolean {
+    return speed > ActivityComputer.RUNNING_THRESHOLD_KPH;
+  }
+
+  private static isMovingSwimming(speed: number): boolean {
+    return speed > ActivityComputer.SWIMMING_THRESHOLD_KPH;
+  }
+
+  private static isMovingCycling(speed: number): boolean {
+    return speed > ActivityComputer.CYCLING_THRESHOLD_KPH;
+  }
+
+  private static getIsActiveCadenceFunction(sport: ElevateSport): (grade: number) => boolean {
+    const thresholdFunction = ActivityComputer.IS_ACTIVE_CADENCE_SPORTS.get(sport);
+    return thresholdFunction ? thresholdFunction : ActivityComputer.isActiveCadenceDefault;
+  }
+
+  private static isActiveCadenceDefault(cadence: number): boolean {
+    return cadence > ActivityComputer.DEFAULT_CADENCE_THRESHOLD;
+  }
+
+  private static isActiveCadenceRunning(cadence: number): boolean {
+    return cadence > ActivityComputer.RUNNING_CADENCE_THRESHOLD;
+  }
+
+  private static isActiveCadenceCycling(cadence: number): boolean {
+    return cadence > ActivityComputer.CYCLING_CADENCE_THRESHOLD;
+  }
+
+  private static isActiveCadenceSwimming(cadence: number): boolean {
+    return cadence > ActivityComputer.SWIMMING_CADENCE_THRESHOLD;
+  }
+
+  /**
+   * Return grade adjusted speed factor (not pace) for a given grade value
+   */
+  private static runningGradeAdjustedSpeedFactor(grade: number): number {
+    const kA = 0.9944001227713231;
+    const kB = 0.029290920646623777;
+    const kC = 0.0018083953212790634;
+    const kD = 4.0662425671715924e-7;
+    const kE = -3.686186584867523e-7;
+    const kF = -2.6628107325930747e-9;
+    return (
+      kA +
+      kB * grade +
+      kC * Math.pow(grade, 2) +
+      kD * Math.pow(grade, 3) +
+      kE * Math.pow(grade, 4) +
+      kF * Math.pow(grade, 5)
+    );
   }
 
   public static calculate(
-    bareActivityModel: BareActivityModel,
+    bareActivityModel: Partial<BareActivityModel>,
     athleteSnapshotModel: AthleteSnapshotModel,
     userSettingsModel: UserSettingsModel,
     streams: ActivityStreamsModel,
     returnZones: boolean = false,
-    returnPowerCurve: boolean = false,
     bounds: number[] = null,
     isOwner: boolean = true,
-    activitySourceData: ActivitySourceDataModel = null,
-    smoothAltitude: boolean = true
+    activitySourceData: ActivitySourceDataModel = null
   ): AnalysisDataModel {
     return new ActivityComputer(
       bareActivityModel.type,
@@ -102,57 +186,17 @@ export class ActivityComputer {
       streams,
       bounds,
       returnZones,
-      returnPowerCurve,
       activitySourceData
-    ).compute(smoothAltitude);
+    ).compute();
   }
 
-  /**
-   * @param speed in kph
-   * @return pace in seconds/km, if NaN/Infinite then return -1
-   */
-  public static convertSpeedToPace(speed: number): number {
-    if (!_.isFinite(speed) || speed <= 0) {
-      return -1;
-    }
-    return (1 / speed) * 60 * 60;
+  private static trainingImpulse(seconds: number, hrr: number, gender: Gender): number {
+    const factor = gender === Gender.MEN ? 1.92 : 1.67;
+    return (seconds / 60) * hrr * 0.64 * Math.exp(factor * hrr);
   }
 
-  public static heartRateReserveFromHeartrate(hr: number, maxHr: number, restHr: number): number {
+  private static heartRateReserveFromHeartRate(hr: number, maxHr: number, restHr: number): number {
     return (hr - restHr) / (maxHr - restHr);
-  }
-
-  /**
-   * Inspired from https://en.wikipedia.org/wiki/Weighted_median
-   * and https://en.wikipedia.org/wiki/Percentile#Definition_of_the_Weighted_Percentile_method
-   */
-  public static weightedPercentiles(values: number[], weights: number[], percentiles: number[]): number[] {
-    const list: any[] = [];
-    let tot = 0;
-    for (let i = 0; i < values.length; i++) {
-      list.push({ value: values[i], weight: weights[i] });
-      tot += weights[i];
-    }
-    list.sort((a, b) => {
-      return a.value - b.value;
-    });
-    const result: number[] = [];
-    for (let i = 0; i < percentiles.length; i++) {
-      result.push(0);
-    }
-
-    let cur = 0;
-    for (let i = 0; i < list.length; i++) {
-      for (let j = 0; j < percentiles.length; j++) {
-        // found the sample matching the percentile
-        if (cur < percentiles[j] * tot && cur + list[i].weight > (percentiles[j] - 0.00001) * tot) {
-          result[j] = list[i].value;
-        }
-      }
-      cur += list[i].weight;
-    }
-
-    return result;
   }
 
   /**
@@ -172,65 +216,13 @@ export class ActivityComputer {
     return (activityTrainingImpulse / lactateThresholdTrainingImpulse) * 100;
   }
 
-  public static computePowerStressScore(movingTime: number, weightedPower: number, cyclingFtp: number): number {
-    if (!_.isNumber(cyclingFtp) || cyclingFtp <= 0) {
+  public static computePowerStressScore(movingTime: number, weightedPower: number, thresholdPower: number): number {
+    if (!_.isNumber(thresholdPower) || thresholdPower <= 0) {
       return null;
     }
 
-    const intensity = weightedPower / cyclingFtp;
-    return ((movingTime * weightedPower * intensity) / (cyclingFtp * 3600)) * 100;
-  }
-
-  public static computeBestPowerSplits(timeArray: number[], powerArray: number[], returnPowerCurve: boolean) {
-    // Find Best 20min, best 80% and an entire power curve of time power splits
-    let best20min = null;
-    let bestEightyPercent = null;
-    let powerCurve: PowerBestSplitModel[] = [];
-    try {
-      const splitCalculator: SplitCalculator = new SplitCalculator(
-        _.clone(timeArray),
-        _.clone(powerArray),
-        ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD
-      );
-
-      try {
-        bestEightyPercent = splitCalculator.getBestSplit(_.floor(_.last(timeArray) * 0.8));
-      } catch (err) {
-        console.warn("No best 80% power available for this range");
-      }
-
-      try {
-        best20min = splitCalculator.getBestSplit(60 * 20);
-      } catch (err) {
-        console.warn("No best 20min power available for this range");
-      }
-
-      if (returnPowerCurve) {
-        try {
-          // Set up some abitrary times here that we will use for the power curve
-          const defaultPowerCurveTimes = [
-            ..._.range(1, 30, 1), // 1s to 30s in 1s
-            ..._.range(30, 60, 5), // to 60s in 5s
-            ..._.range(60, 5 * 60, 10), // to 5m in 10s
-            ..._.range(5 * 60 + 30, 20 * 60, 30), // to 20 min in 30s
-            ..._.range(20 * 60, 60 * 60, 60), // to 60 min in minutes
-            ..._.range(60 * 60, 5 * 60 * 60, 5 * 60), // to 5 hour in 5 min
-            ..._.range(5 * 60 * 60, 24 * 60 * 60, 60 * 60) // to 24 hour in 1 hour
-          ];
-
-          // Ensure the final value is the maximum time
-          const maxTime = _.max(timeArray);
-          const timesToUse = [...defaultPowerCurveTimes.filter(t => t < maxTime), maxTime];
-          powerCurve = splitCalculator.getBestSplitRanges(timesToUse).map(r => ({ watts: r.result, time: r.range }));
-        } catch (err) {
-          console.warn("Power curve could not be calculated");
-        }
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-
-    return { best20min, bestEightyPercent, powerCurve };
+    const intensity = weightedPower / thresholdPower;
+    return ((movingTime * weightedPower * intensity) / (thresholdPower * Constant.SEC_HOUR_FACTOR)) * 100;
   }
 
   public static computeRunningStressScore(
@@ -242,7 +234,10 @@ export class ActivityComputer {
     const gradeAdjustedAvgSpeed = 1 / gradeAdjustedAvgPace;
     const runningThresholdSpeed = 1 / runningThresholdPace;
     const intensityFactor = gradeAdjustedAvgSpeed / runningThresholdSpeed;
-    return ((movingTime * gradeAdjustedAvgSpeed * intensityFactor) / (runningThresholdSpeed * 3600)) * 100;
+    return (
+      ((movingTime * gradeAdjustedAvgSpeed * intensityFactor) / (runningThresholdSpeed * Constant.SEC_HOUR_FACTOR)) *
+      100
+    );
   }
 
   public static computeSwimStressScore(
@@ -253,22 +248,18 @@ export class ActivityComputer {
   ): number {
     const normalizedSwimSpeed = distance / (movingTime / 60); // Normalized_Swim_Speed (m/min) = distance(m) / timeInMinutesNoRest
     const swimIntensity = normalizedSwimSpeed / swimFtp; // Intensity = Normalized_Swim_Speed / Swim FTP
-    return Math.pow(swimIntensity, 3) * (elapsedTime / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
+    return Math.pow(swimIntensity, 3) * (elapsedTime / Constant.SEC_HOUR_FACTOR) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
   }
 
   public static resolveLTHR(activityType: ElevateSport, athleteSettingsModel: AthleteSettingsModel): number {
     if (athleteSettingsModel.lthr) {
-      if (
-        activityType === ElevateSport.Ride ||
-        activityType === ElevateSport.VirtualRide ||
-        activityType === ElevateSport.EBikeRide
-      ) {
+      if (SyncedActivityModel.isRide(activityType, true)) {
         if (_.isNumber(athleteSettingsModel.lthr.cycling)) {
           return athleteSettingsModel.lthr.cycling;
         }
       }
 
-      if (activityType === ElevateSport.Run) {
+      if (SyncedActivityModel.isRun(activityType)) {
         if (_.isNumber(athleteSettingsModel.lthr.running)) {
           return athleteSettingsModel.lthr.running;
         }
@@ -285,6 +276,54 @@ export class ActivityComputer {
     );
   }
 
+  /**
+   * Andrew Coggan weighted power compute method
+   * 1) starting at the 30s mark, calculate a rolling 30 s average (of the preceeding time points, obviously).
+   * 2) raise all the values obtained in step #1 to the 4th power.
+   * 3) take the average of all of the values obtained in step #2.
+   * 4) take the 4th root of the value obtained in step #3.
+   * (And when you get tired of exporting every file to, e.g., Excel to perform such calculations, help develop a program
+   * like WKO+ to do the work for you <g>.)
+   */
+  private static computeWeightedPower(powerArray: number[], timeArray: number[]): number {
+    const poweredWeightedWatts = [];
+
+    let accumulatedTimeInBuffer = 0; // seconds
+    let wattsInBuffer = [];
+
+    for (const [index, current] of timeArray.entries()) {
+      if (index === 0) {
+        continue;
+      }
+
+      wattsInBuffer.push(powerArray[index]);
+
+      if (accumulatedTimeInBuffer >= ActivityComputer.WEIGHTED_WATTS_TIME_BUFFER) {
+        const meanWatts = _.mean(wattsInBuffer);
+
+        if (Number.isFinite(meanWatts)) {
+          poweredWeightedWatts.push(Math.pow(meanWatts, 4));
+        }
+
+        // Reset
+        accumulatedTimeInBuffer = 0;
+        wattsInBuffer = [];
+      }
+
+      accumulatedTimeInBuffer += current - timeArray[index - 1];
+    }
+
+    return Math.sqrt(Math.sqrt(_.mean(poweredWeightedWatts)));
+  }
+
+  public static computeSwimSwolf(secondsPer100m: number, avgStrokesPerMin: number, poolLength: number): number {
+    const minutesPer100m = secondsPer100m / 60;
+    const avgStrokePer100m = avgStrokesPerMin * minutesPer100m;
+    const strokesPerMeter = avgStrokePer100m / 100;
+    const secondsPerMeter = secondsPer100m / 100;
+    return _.round((secondsPerMeter + strokesPerMeter) * poolLength, 1);
+  }
+
   public static hasAthleteSettingsLacks(
     distance: number,
     movingTime: number,
@@ -294,9 +333,9 @@ export class ActivityComputer {
     athleteSettingsModel: AthleteSettingsModel,
     activityStreamsModel: ActivityStreamsModel
   ): boolean {
-    const isCycling = sportType === ElevateSport.Ride || sportType === ElevateSport.VirtualRide;
-    const isRunning = sportType === ElevateSport.Run || sportType === ElevateSport.VirtualRun;
-    const isSwimming = sportType === ElevateSport.Swim;
+    const isCycling = SyncedActivityModel.isRide(sportType);
+    const isRunning = SyncedActivityModel.isRun(sportType);
+    const isSwimming = SyncedActivityModel.isSwim(sportType);
 
     if (!isCycling && !isRunning && !isSwimming) {
       return false;
@@ -338,24 +377,37 @@ export class ActivityComputer {
     return false;
   }
 
-  public compute(smoothAltitude: boolean): AnalysisDataModel {
-    const hasActivityStream = !_.isEmpty(this.activityStream);
-
-    if (hasActivityStream) {
-      // Append altitude_smooth to fetched strava activity stream before compute analysis data
-      if (smoothAltitude && this.activityStream.altitude && this.activityStream.altitude.length > 0) {
-        this.activityStream.altitude = this.smoothAltitudeStream(this.activityStream.altitude);
-      }
+  private compute(): AnalysisDataModel {
+    if (!_.isEmpty(this.activityStream)) {
+      this.activityStream = StreamShaper.sculpt(
+        this.activityStream,
+        SyncedActivityModel.isPaced(this.activityType),
+        this.hasPowerMeter
+      );
 
       // Slices array stream if activity bounds are given.
       // It's mainly used for segment effort extended stats
       this.sliceStreamFromBounds(this.activityStream, this.bounds);
     }
 
-    return this.computeAnalysisData();
+    const analysisDataModel = this.computeAnalysisData();
+
+    if (
+      !analysisDataModel.speedData &&
+      !analysisDataModel.paceData &&
+      !analysisDataModel.powerData &&
+      !analysisDataModel.heartRateData &&
+      !analysisDataModel.cadenceData &&
+      !analysisDataModel.gradeData &&
+      !analysisDataModel.elevationData
+    ) {
+      return null;
+    }
+
+    return analysisDataModel;
   }
 
-  protected sliceStreamFromBounds(activityStream: ActivityStreamsModel, bounds: number[]): void {
+  private sliceStreamFromBounds(activityStream: ActivityStreamsModel, bounds: number[]): void {
     // Slices array if activity bounds given. It's mainly used for segment effort extended stats
     if (bounds && bounds[0] && bounds[1]) {
       if (!_.isEmpty(activityStream.velocity_smooth)) {
@@ -404,18 +456,15 @@ export class ActivityComputer {
     }
   }
 
-  protected smoothAltitudeStream(altitudeStream: number[]): number[] {
-    const kalman = new KalmanFilter();
-    altitudeStream = altitudeStream.map(elevation => kalman.filter(elevation));
-    const lowPassFilter = new LowPassFilter(0.2);
-    return lowPassFilter.smoothArray(altitudeStream);
-  }
-
-  protected computeAnalysisData(): AnalysisDataModel {
+  private computeAnalysisData(): AnalysisDataModel {
     let elapsedTime: number = null;
     let movingTime: number = null;
     let pauseTime: number = null;
     let moveRatio: number = null;
+
+    const isCycling = SyncedActivityModel.isRide(this.activityType);
+    const isRunning = SyncedActivityModel.isRun(this.activityType);
+    const isSwimming = SyncedActivityModel.isSwim(this.activityType);
 
     // Include speed and pace
     if (this.activityStream && this.activityStream.time && this.activityStream.time.length > 0) {
@@ -423,25 +472,19 @@ export class ActivityComputer {
     }
 
     // Prepare move data model along stream or activitySourceData
-    let moveDataModel = null;
+    let moveDataModel = this.activityStream
+      ? this.moveData(
+          this.activityStream.time,
+          this.activityStream.distance,
+          this.activityStream.velocity_smooth,
+          this.activityStream.altitude
+        )
+      : null;
 
-    if (
-      this.activityStream &&
-      this.activityStream.time &&
-      this.activityStream.velocity_smooth &&
-      this.activityStream.velocity_smooth.length > 0
-    ) {
-      moveDataModel = this.moveData(
-        this.activityStream.velocity_smooth,
-        this.activityStream.time,
-        this.activityStream.grade_adjusted_speed
-      );
-    }
+    const isMoveDataComputed = !!moveDataModel;
 
-    const missingVelocityStream = !this.activityStream || !this.activityStream.velocity_smooth;
-
-    // Try to estimate some move data if no streams or velocity stream available
-    if (missingVelocityStream && this.activitySourceData) {
+    // Try to estimate some move data if no move data have been computed
+    if (!isMoveDataComputed && this.activitySourceData) {
       moveDataModel = this.moveDataEstimate(this.activitySourceData.movingTime, this.activitySourceData.distance);
     }
 
@@ -466,8 +509,8 @@ export class ActivityComputer {
 
     // If no velocity stream available, try to estimate running stress score  (goal is to get RSS computation for manual activities)
     if (
-      missingVelocityStream &&
-      (this.activityType === ElevateSport.Run || this.activityType === ElevateSport.VirtualRun) &&
+      !isMoveDataComputed &&
+      isRunning &&
       movingTime &&
       moveDataModel?.pace?.genuineGradeAdjustedAvgPace &&
       this.athleteSnapshot.athleteSettings.runningFtp
@@ -480,42 +523,36 @@ export class ActivityComputer {
 
       moveDataModel.pace.runningStressScore = runningStressScore;
       moveDataModel.pace.runningStressScorePerHour = runningStressScore
-        ? (runningStressScore / movingTime) * 60 * 60
+        ? (runningStressScore / movingTime) * Constant.SEC_HOUR_FACTOR
         : null;
     }
 
-    // Q1 Speed
-    // Median Speed
-    // Q3 Speed
-    // Standard deviation Speed
+    // Speed
     const speedData: SpeedDataModel = moveDataModel && moveDataModel.speed ? moveDataModel.speed : null;
 
-    // Q1 Pace
-    // Median Pace
-    // Q3 Pace
-    // Standard deviation Pace
+    // Pace
     const paceData: PaceDataModel = moveDataModel && moveDataModel.pace ? moveDataModel.pace : null;
 
     // Find total distance
-    let distance;
-    if (this.activityStream && this.activityStream.distance && this.activityStream.distance.length > 0) {
-      distance = _.last(this.activityStream.distance);
+    let totalDistance;
+    if (this.activityStream && !_.isEmpty(this.activityStream.distance)) {
+      totalDistance = _.last(this.activityStream.distance);
     } else if (this.activitySourceData && this.activitySourceData.distance > 0) {
-      distance = this.activitySourceData.distance;
+      totalDistance = this.activitySourceData.distance;
     } else {
-      distance = null;
+      totalDistance = null;
     }
 
     // If real/manual swimming activity, compute swimming stress score
     if (
-      this.activityType === ElevateSport.Swim &&
-      distance &&
+      SyncedActivityModel.isSwim(this.activityType) &&
+      totalDistance &&
       movingTime &&
       this.athleteSnapshot.athleteSettings.swimFtp &&
       moveDataModel?.pace
     ) {
       const swimStressScore = ActivityComputer.computeSwimStressScore(
-        distance,
+        totalDistance,
         movingTime,
         elapsedTime,
         this.athleteSnapshot.athleteSettings.swimFtp
@@ -525,94 +562,120 @@ export class ActivityComputer {
       moveDataModel.pace.swimStressScorePerHour = swimStressScore ? (swimStressScore / movingTime) * 60 * 60 : null;
     }
 
-    // Estimated Normalized power
-    // Estimated Variability index
-    // Estimated Intensity factor
-    // Normalized Watt per Kg
-    let powerData: PowerDataModel;
-
-    // If Running activity with no power data, then try to estimate it for the author of activity...
-    if (this.activityType === ElevateSport.Run && !this.hasPowerMeter && this.isOwner) {
-      powerData = this.estimatedRunningPower(
-        this.activityStream,
-        this.athleteSnapshot.athleteSettings.weight,
-        this.hasPowerMeter,
-        this.athleteSnapshot.athleteSettings.cyclingFtp
-      );
-    } else if (this.activityStream) {
-      powerData = this.powerData(
-        this.athleteSnapshot.athleteSettings.weight,
-        this.hasPowerMeter,
-        this.athleteSnapshot.athleteSettings.cyclingFtp,
-        this.activityStream.watts,
-        this.activityStream.velocity_smooth,
-        this.activityStream.time
-      );
-    } else {
-      powerData = null;
+    // Power
+    let powerData: PowerDataModel = null;
+    if (this.activityStream) {
+      const hasWattsStream = !_.isEmpty(this.activityStream.watts);
+      if (isCycling) {
+        powerData = this.cyclingPowerData(
+          this.activityStream.time,
+          this.activityStream.watts,
+          movingTime,
+          this.hasPowerMeter,
+          this.athleteSnapshot.athleteSettings.weight,
+          this.athleteSnapshot.athleteSettings.cyclingFtp
+        );
+      } else if (isRunning && hasWattsStream) {
+        powerData = this.runningPowerData(
+          this.activityStream.time,
+          this.activityStream.watts,
+          movingTime,
+          this.hasPowerMeter,
+          this.athleteSnapshot.athleteSettings.weight,
+          null // No running power threshold yet
+        );
+      } else if (isRunning && !hasWattsStream && this.isOwner) {
+        powerData = this.estimatedRunningPower(
+          this.activityStream,
+          movingTime,
+          this.athleteSnapshot.athleteSettings.weight,
+          null // No running power threshold yet
+        );
+      } else {
+        powerData = this.powerData(
+          this.activityStream.time,
+          this.activityStream.watts,
+          movingTime,
+          this.hasPowerMeter,
+          this.athleteSnapshot.athleteSettings.weight,
+          null,
+          null
+        );
+      }
     }
 
-    // TRaining IMPulse
-    // %HRR Avg
-    // %HRR Zones
-    // Q1 HR
-    // Median HR
-    // Q3 HR
+    // Heart-rate
     const heartRateData: HeartRateDataModel = !_.isEmpty(this.activityStream)
-      ? this.heartRateData(
-          this.athleteSnapshot,
-          this.activityStream.heartrate,
-          this.activityStream.time,
-          this.activityStream.velocity_smooth
-        )
+      ? this.heartRateData(this.activityStream.time, this.activityStream.heartrate, this.athleteSnapshot)
       : null;
 
-    // Avg grade
-    // Q1/Q2/Q3 grade
+    // Grade
     const gradeData: GradeDataModel = !_.isEmpty(this.activityStream)
       ? this.gradeData(
-          this.activityStream.grade_smooth,
-          this.activityStream.velocity_smooth,
           this.activityStream.time,
           this.activityStream.distance,
+          this.activityStream.altitude,
+          this.activityStream.grade_smooth,
           this.activityStream.cadence
         )
       : null;
 
-    // Cadence percentage
-    // Time Cadence
-    // Crank revolution
-    const cadenceData: CadenceDataModel = !_.isEmpty(this.activityStream)
-      ? this.cadenceData(
-          this.activityStream.cadence,
-          this.activityStream.velocity_smooth,
+    // Cadence
+    let cadenceData: CadenceDataModel = null;
+    if (this.activityStream && !_.isEmpty(this.activityStream.cadence)) {
+      if (isCycling) {
+        cadenceData = this.cadenceData(
+          this.activityStream.time,
           this.activityStream.distance,
-          this.activityStream.time
-        )
-      : null;
+          this.activityStream.cadence,
+          movingTime,
+          ZoneType.CYCLING_CADENCE
+        );
+      } else if (isRunning) {
+        cadenceData = this.cadenceData(
+          this.activityStream.time,
+          this.activityStream.distance,
+          this.activityStream.cadence,
+          movingTime,
+          ZoneType.RUNNING_CADENCE
+        );
+      } else {
+        cadenceData = this.cadenceData(
+          this.activityStream.time,
+          this.activityStream.distance,
+          this.activityStream.cadence,
+          movingTime,
+          null
+        );
+      }
+    }
+
     // ... if exists cadenceData then append cadence pace (climbing, flat & downhill) if she has been previously provided by "gradeData"
     if (cadenceData && gradeData && gradeData.upFlatDownCadencePaceData) {
       cadenceData.upFlatDownCadencePaceData = gradeData.upFlatDownCadencePaceData;
     }
 
-    // Avg grade
-    // Q1/Q2/Q3 elevation
-    const elevationData: ElevationDataModel = this.elevationData(this.activityStream);
+    // Elevation
+    let elevationData: ElevationDataModel = null;
+    if (this.activityStream) {
+      elevationData = this.elevationData(
+        this.activityStream.time,
+        this.activityStream.distance,
+        this.activityStream.altitude
+      );
+    }
 
-    // Calculating running index (https://github.com/thomaschampagne/elevate/issues/704)
-    const isRunningActivity = this.activityType.toString().match(/Run|VirtualRun/g) !== null;
+    // Compute calories
+    const calories = CaloriesEstimator.calc(this.activityType, movingTime, this.athleteSnapshot.athleteSettings.weight);
+    const caloriesPerHour = calories !== null ? (calories / elapsedTime) * Constant.SEC_HOUR_FACTOR : null;
 
-    const runningPerformanceIndex: number =
-      isRunningActivity && distance && movingTime && !_.isEmpty(elevationData) && !_.isEmpty(heartRateData)
-        ? this.runningPerformanceIndex(this.athleteSnapshot, distance, movingTime, elevationData, heartRateData)
-        : null;
-
-    return {
+    const analysisResult: AnalysisDataModel = {
       moveRatio: moveRatio,
       elapsedTime: elapsedTime,
       movingTime: movingTime,
       pauseTime: pauseTime,
-      runningPerformanceIndex: runningPerformanceIndex,
+      calories: calories,
+      caloriesPerHour: caloriesPerHour,
       speedData: speedData,
       paceData: paceData,
       powerData: powerData,
@@ -621,21 +684,40 @@ export class ActivityComputer {
       gradeData: gradeData,
       elevationData: elevationData
     };
+
+    // Calculating running index if possible
+    if (isRunning && totalDistance && movingTime && !_.isEmpty(elevationData) && !_.isEmpty(heartRateData)) {
+      analysisResult.runningPerformanceIndex = this.runningPerformanceIndex(
+        this.athleteSnapshot,
+        totalDistance,
+        movingTime,
+        elevationData,
+        heartRateData
+      );
+    }
+
+    // Calculating swim swolf if possible
+    if (isSwimming && analysisResult?.speedData?.genuineAvgSpeed && analysisResult?.cadenceData?.averageActiveCadence) {
+      const secondsPer100m = Movement.speedToSwimPace(analysisResult.speedData.genuineAvgSpeed);
+      const avgStrokesPerMin = analysisResult.cadenceData.averageActiveCadence;
+      analysisResult.swimSwolf = ActivityComputer.computeSwimSwolf(secondsPer100m, avgStrokesPerMin, 25);
+    }
+
+    return analysisResult;
   }
 
-  protected estimatedRunningPower(
+  private estimatedRunningPower(
     activityStream: ActivityStreamsModel,
+    movingSeconds: number,
     athleteWeight: number,
-    hasPowerMeter: boolean,
-    userFTP: number
-  ) {
+    runningFtp: number
+  ): PowerDataModel {
     if (_.isEmpty(activityStream) || _.isEmpty(activityStream.distance)) {
       // return null if activityStream is basically empty (i.e. a manual run activity)
       return null;
     }
 
     try {
-      console.log("Trying to estimate wattage of this run...");
       activityStream.watts = RunningPowerEstimator.createRunningPowerEstimationStream(
         athleteWeight,
         activityStream.distance,
@@ -646,123 +728,68 @@ export class ActivityComputer {
       console.error(err);
     }
 
-    const isEstimatedRunningPower = true;
-
-    return this.powerData(
-      athleteWeight,
-      hasPowerMeter,
-      userFTP,
-      activityStream.watts,
-      activityStream.velocity_smooth,
+    return this.runningPowerData(
       activityStream.time,
-      isEstimatedRunningPower
+      activityStream.watts,
+      movingSeconds,
+      false, // Estimated !
+      athleteWeight,
+      runningFtp
     );
   }
 
-  protected runningPerformanceIndex(
+  /**
+   * Computes Polar running index (https://support.polar.com/en/support/tips/Running_Index_feature)
+   */
+  private runningPerformanceIndex(
     athleteSnapshot: AthleteSnapshotModel,
     distance: number,
-    movingTime: number,
+    movingSeconds: number,
     elevationData: ElevationDataModel,
     heartRateData: HeartRateDataModel
   ): number {
     const averageHeartRate: number = heartRateData.averageHeartRate;
-    const userMaxHr: number = athleteSnapshot.athleteSettings.maxHr;
-    const runIntensity: number = Math.round(((averageHeartRate / userMaxHr) * 1.45 - 0.3) * 100) / 100; // Calculate the run intensity; this is rounded to 2 decimal points
+    const runIntensity: number =
+      Math.round(((averageHeartRate / athleteSnapshot.athleteSettings.maxHr) * 1.45 - 0.3) * 100) / 100; // Calculate the run intensity; this is rounded to 2 decimal points
     const gradeAdjustedDistance =
       distance + elevationData.accumulatedElevationAscent * 6 - elevationData.accumulatedElevationDescent * 4;
-    const distanceRate: number = (213.9 / (movingTime / 60)) * (gradeAdjustedDistance / 1000) ** 1.06 + 3.5;
+    const distanceRate: number = (213.9 / (movingSeconds / 60)) * (gradeAdjustedDistance / 1000) ** 1.06 + 3.5;
     return distanceRate / runIntensity;
   }
 
-  protected getZoneId(zones: ZoneModel[], value: number): number {
-    for (let zoneId = 0; zoneId < zones.length; zoneId++) {
-      if (value <= zones[zoneId].to) {
-        return zoneId;
-      }
-    }
-  }
-
-  protected prepareZonesForDistributionComputation(sourceZones: ZoneModel[]): ZoneModel[] {
-    const preparedZones: ZoneModel[] = [];
-    _.forEach(sourceZones, (zone: ZoneModel) => {
-      zone.s = 0;
-      zone.percentDistrib = null;
-      preparedZones.push(zone);
-    });
-    return preparedZones;
-  }
-
-  protected finalizeDistributionComputationZones(zones: ZoneModel[]): ZoneModel[] {
-    let total = 0;
-    let zone: ZoneModel;
-
-    for (let i = 0; i < zones.length; i++) {
-      zone = zones[i];
-      if (zone.s) {
-        total += zone.s;
-      }
-      zone.percentDistrib = 0;
-    }
-
-    if (total > 0) {
-      for (let i = 0; i < zones.length; i++) {
-        zone = zones[i];
-        if (zone.s) {
-          zone.percentDistrib = (zone.s / total) * 100;
-        }
-      }
-    }
-    return zones;
-  }
-
-  /**
-   *
-   * @param current value
-   * @param previous value
-   * @param delta between current & previous values
-   * @returns the discrete value
-   */
-  protected discreteValueBetween(currentValue: number, previousValue: number, delta: number): number {
-    return currentValue * delta - ((currentValue - previousValue) * delta) / 2; // Discrete integral
-  }
-
-  protected moveDataEstimate(movingTime: number, distance: number): MoveDataModel {
-    if (!_.isNumber(movingTime) || movingTime === 0 || !_.isNumber(distance) || distance === 0) {
+  private moveDataEstimate(movingTime: number, distance: number): MoveDataModel {
+    if (!movingTime || !distance) {
       return null;
     }
 
-    const averageSpeed = (distance / movingTime) * 3.6;
-    const averagePace = ActivityComputer.convertSpeedToPace(averageSpeed);
+    const averageSpeed = (distance / movingTime) * Constant.MPS_KPH_FACTOR;
+    const averagePace = _.round(Movement.speedToPace(averageSpeed), 3);
 
     const speedData: SpeedDataModel = {
       genuineAvgSpeed: averageSpeed,
       totalAvgSpeed: averageSpeed,
       maxSpeed: null,
-      minSpeed: null,
       best20min: null,
       avgPace: averagePace, // send in seconds
       lowerQuartileSpeed: null,
       medianSpeed: null,
       upperQuartileSpeed: null,
-      varianceSpeed: 0,
-      genuineGradeAdjustedAvgSpeed: averageSpeed,
       standardDeviationSpeed: 0,
-      speedZones: null
+      speedZones: null,
+      peaks: null
     };
 
     const paceData: PaceDataModel = {
       avgPace: averagePace, // send in seconds
+      totalAvgPace: averagePace, // send in seconds
       best20min: null,
-      minPace: null,
       maxPace: null,
       lowerQuartilePace: null,
       medianPace: null,
       upperQuartilePace: null,
-      variancePace: 0,
+      standardDeviationPace: null,
       genuineGradeAdjustedAvgPace: averagePace,
       paceZones: null,
-      gradeAdjustedPaceZones: null,
       runningStressScore: null,
       runningStressScorePerHour: null,
       swimStressScore: null,
@@ -776,1012 +803,666 @@ export class ActivityComputer {
     };
   }
 
-  protected moveData(velocityArray: number[], timeArray: number[], gradeAdjustedSpeedArray?: number[]): MoveDataModel {
-    if (_.isEmpty(velocityArray) || _.isEmpty(timeArray) || _.mean(velocityArray) === 0) {
+  private moveData(
+    timeArray: number[],
+    distanceArray: number[],
+    velocityArray: number[],
+    altitudeArray: number[]
+  ): MoveDataModel {
+    if (_.isEmpty(timeArray) || _.isEmpty(distanceArray) || _.isEmpty(velocityArray)) {
       return null;
     }
 
-    // No grade adjusted speed if treadmill indoor run
-    if (this.isTrainer && this.activityType === ElevateSport.Run && _.mean(gradeAdjustedSpeedArray) === 0) {
-      gradeAdjustedSpeedArray = velocityArray;
+    if (_.isEmpty(altitudeArray)) {
+      altitudeArray = _.fill(Array(timeArray.length), 0);
     }
 
-    let genuineAvgSpeedSum = 0;
-    let genuineAvgSpeedSecondsSum = 0;
-    const speedsNonZero: number[] = [];
-    const speedsNonZeroDuration: number[] = [];
-    const gradeAdjustedSpeedsNonZero: number[] = [];
-    let speedVarianceSum = 0;
-    let currentSpeed: number;
+    const isRunning = SyncedActivityModel.isRun(this.activityType);
 
-    let speedZones: ZoneModel[] = this.prepareZonesForDistributionComputation(
-      this.userSettings.zones.get(UserZonesModel.TYPE_SPEED)
-    );
-    let paceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(
-      this.userSettings.zones.get(UserZonesModel.TYPE_PACE)
-    );
-    let gradeAdjustedPaceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(
-      this.userSettings.zones.get(UserZonesModel.TYPE_GRADE_ADJUSTED_PACE)
-    );
+    const movingSpeeds: number[] = [];
+    const movingDurations: number[] = [];
+    const runningGradeAdjSpeed: number[] = [];
 
-    let movingSeconds = 0;
-    let elapsedSeconds = 0;
+    const SAMPLES_TIME_BUFFER = ActivityComputer.MOVING_DETECTION_SAMPLES_BUFFER;
 
-    const hasGradeAdjustedSpeed: boolean = !_.isEmpty(gradeAdjustedSpeedArray);
-
-    let speedThreshold: number;
-    if (this.activityType === ElevateSport.Ride || this.activityType === ElevateSport.VirtualRide) {
-      speedThreshold = 1.8 * 3.6;
-    } else if (this.activityType === ElevateSport.Run || this.activityType === ElevateSport.VirtualRun) {
-      speedThreshold = 3.6;
-    } else {
-      speedThreshold = 0;
-    }
-
-    // End Preparing zone
-    for (let i = 0; i < velocityArray.length; i++) {
-      // Loop on samples
-
-      // Compute distribution for graph/table
-      if (i > 0) {
-        elapsedSeconds += timeArray[i] - timeArray[i - 1];
-
-        // Compute speed
-        currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph;
-
-        movingSeconds = timeArray[i] - timeArray[i - 1]; // Getting deltaTime in seconds (current sample and previous one)
-
-        if (currentSpeed > speedThreshold) {
-          // If moving...
-
-          speedsNonZero.push(currentSpeed);
-          speedsNonZeroDuration.push(movingSeconds);
-
-          // Compute variance speed
-          speedVarianceSum += Math.pow(currentSpeed, 2);
-
-          // distance
-          genuineAvgSpeedSum += this.discreteValueBetween(
-            velocityArray[i] * 3.6,
-            velocityArray[i - 1] * 3.6,
-            movingSeconds
-          );
-          // time
-          genuineAvgSpeedSecondsSum += movingSeconds;
-
-          // Find speed zone id
-          const speedZoneId: number = this.getZoneId(
-            this.userSettings.zones.get(UserZonesModel.TYPE_SPEED),
-            currentSpeed
-          );
-          if (!_.isUndefined(speedZoneId) && !_.isUndefined(speedZones[speedZoneId])) {
-            speedZones[speedZoneId].s += movingSeconds;
-          }
-
-          // Find pace zone
-          const pace: number = ActivityComputer.convertSpeedToPace(currentSpeed);
-
-          const paceZoneId: number = this.getZoneId(
-            this.userSettings.zones.get(UserZonesModel.TYPE_PACE),
-            pace === -1 ? 0 : pace
-          );
-          if (!_.isUndefined(paceZoneId) && !_.isUndefined(paceZones[paceZoneId])) {
-            paceZones[paceZoneId].s += movingSeconds;
-          }
-        }
-
-        if (hasGradeAdjustedSpeed) {
-          if (gradeAdjustedSpeedArray[i] > 0) {
-            const gradeAdjustedSpeed = gradeAdjustedSpeedArray[i] * 3.6;
-            gradeAdjustedSpeedsNonZero.push(gradeAdjustedSpeed);
-
-            const gradeAdjustedPace = ActivityComputer.convertSpeedToPace(gradeAdjustedSpeed);
-
-            const gradeAdjustedPaceZoneId: number = this.getZoneId(
-              this.userSettings.zones.get(UserZonesModel.TYPE_GRADE_ADJUSTED_PACE),
-              gradeAdjustedPace === -1 ? 0 : gradeAdjustedPace
-            );
-            if (
-              !_.isUndefined(gradeAdjustedPaceZoneId) &&
-              !_.isUndefined(gradeAdjustedPaceZones[gradeAdjustedPaceZoneId])
-            ) {
-              gradeAdjustedPaceZones[gradeAdjustedPaceZoneId].s += movingSeconds;
-            }
-          }
-        }
-      }
-    }
-
-    // Update zone distribution percentage
-    speedZones = this.finalizeDistributionComputationZones(speedZones);
-    paceZones = this.finalizeDistributionComputationZones(paceZones);
-    gradeAdjustedPaceZones = this.finalizeDistributionComputationZones(gradeAdjustedPaceZones);
-
-    // Finalize compute of Speed
-    const genuineAvgSpeed: number = genuineAvgSpeedSum / genuineAvgSpeedSecondsSum;
-    const varianceSpeed: number = speedVarianceSum / speedsNonZero.length - Math.pow(genuineAvgSpeed, 2);
-    const standardDeviationSpeed: number = varianceSpeed > 0 ? Math.sqrt(varianceSpeed) : 0;
-    const percentiles: number[] = ActivityComputer.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [
-      0.25,
-      0.5,
-      0.75
-    ]);
-
-    let best20min = null;
-    try {
-      const splitCalculator = new SplitCalculator(
-        _.clone(timeArray),
-        _.clone(velocityArray),
-        ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD
+    let index = SAMPLES_TIME_BUFFER;
+    do {
+      const { seconds, speed, grade } = this.getBufferAnalytics(
+        SAMPLES_TIME_BUFFER,
+        index,
+        timeArray,
+        distanceArray,
+        altitudeArray
       );
-      best20min = splitCalculator.getBestSplit(60 * 20) * 3.6;
-    } catch (err) {
-      console.warn("No best 20min speed/pace available for this range");
-    }
 
-    const genuineGradeAdjustedAvgSpeed =
-      gradeAdjustedSpeedsNonZero.length > 0 ? _.mean(gradeAdjustedSpeedsNonZero) : null;
+      if (this.isMoving(speed)) {
+        movingSpeeds.push(speed);
+        movingDurations.push(seconds);
 
+        if (isRunning) runningGradeAdjSpeed.push(speed * ActivityComputer.runningGradeAdjustedSpeedFactor(grade));
+      }
+
+      index = index + SAMPLES_TIME_BUFFER;
+    } while (index <= timeArray.length - 1);
+
+    // Distance and Times
+    const totalDistance = _.last(distanceArray);
+    const movingTime = _.sum(movingDurations);
+    const elapsedTime = _.last(timeArray);
+
+    // Calculate speed data
+    const movingAvgSpeed = _.mean(movingSpeeds);
+    const totalAvgSpeed = distanceArray.length > 0 ? (totalDistance / elapsedTime) * Constant.MPS_KPH_FACTOR : null;
+    const varianceSpeed = _.mean(movingSpeeds.map(speed => Math.pow(speed, 2))) - Math.pow(movingAvgSpeed, 2);
+    const standardDeviationSpeed = varianceSpeed > 0 ? Math.sqrt(varianceSpeed) : 0;
+    const [q25, q50, q75] = this.quartiles(movingSpeeds);
+    const speedPeaks = this.computePeaks(velocityArray, timeArray);
+    const best20min = this.computeSplit(velocityArray, timeArray, 60 * 20) * Constant.MPS_KPH_FACTOR || null;
+    const avgPace = Movement.speedToPace(movingAvgSpeed);
+    const velocityKphArray = velocityArray.map(v => v * Constant.MPS_KPH_FACTOR);
+
+    // Prepare SpeedDataModel
     const speedData: SpeedDataModel = {
-      genuineAvgSpeed: genuineAvgSpeed,
-      totalAvgSpeed: (genuineAvgSpeed * genuineAvgSpeedSecondsSum) / elapsedSeconds,
-      maxSpeed: _.max(velocityArray) * 3.6,
-      minSpeed: _.min(speedsNonZero) * 3.6,
+      genuineAvgSpeed: movingAvgSpeed,
+      totalAvgSpeed: totalAvgSpeed,
+      maxSpeed: _.max(velocityArray) * Constant.MPS_KPH_FACTOR,
       best20min: best20min,
-      avgPace: Math.floor(ActivityComputer.convertSpeedToPace(genuineAvgSpeed)), // send in seconds
-      lowerQuartileSpeed: percentiles[0],
-      medianSpeed: percentiles[1],
-      upperQuartileSpeed: percentiles[2],
-      varianceSpeed: varianceSpeed,
-      genuineGradeAdjustedAvgSpeed: genuineGradeAdjustedAvgSpeed,
+      avgPace: Math.floor(avgPace), // send in seconds
+      lowerQuartileSpeed: q25,
+      medianSpeed: q50,
+      upperQuartileSpeed: q75,
       standardDeviationSpeed: standardDeviationSpeed,
-      speedZones: this.returnZones ? speedZones : null
+      speedZones: this.returnZones
+        ? this.computeZones(velocityKphArray, timeArray, this.userSettings.zones, ZoneType.SPEED)
+        : null,
+      peaks: speedPeaks
     };
 
-    const genuineGradeAdjustedAvgPace =
-      hasGradeAdjustedSpeed && genuineGradeAdjustedAvgSpeed > 0
-        ? Math.floor(ActivityComputer.convertSpeedToPace(genuineGradeAdjustedAvgSpeed))
-        : null;
+    // Calculate pace data
+    const totalAvgPace = Movement.speedToPace(totalAvgSpeed);
+    const standardDeviationPace = Movement.speedToPace(standardDeviationSpeed);
+    const runningGradeAdjustedPace = isRunning ? Movement.speedToPace(_.mean(runningGradeAdjSpeed)) : null;
 
     const runningStressScore =
-      (this.activityType === ElevateSport.Run || this.activityType === ElevateSport.VirtualRun) &&
-      genuineGradeAdjustedAvgPace &&
-      this.athleteSnapshot.athleteSettings.runningFtp
+      runningGradeAdjustedPace && this.athleteSnapshot.athleteSettings.runningFtp
         ? ActivityComputer.computeRunningStressScore(
-            genuineAvgSpeedSecondsSum,
-            genuineGradeAdjustedAvgPace,
+            movingTime,
+            runningGradeAdjustedPace,
             this.athleteSnapshot.athleteSettings.runningFtp
           )
         : null;
 
     const paceData: PaceDataModel = {
-      avgPace: Math.floor(ActivityComputer.convertSpeedToPace(genuineAvgSpeed)), // send in seconds
-      best20min: best20min ? Math.floor(ActivityComputer.convertSpeedToPace(best20min)) : null,
-      minPace: Math.floor(ActivityComputer.convertSpeedToPace(speedData.minSpeed)),
-      maxPace: Math.floor(ActivityComputer.convertSpeedToPace(speedData.maxSpeed)),
-      lowerQuartilePace: ActivityComputer.convertSpeedToPace(percentiles[0]),
-      medianPace: ActivityComputer.convertSpeedToPace(percentiles[1]),
-      upperQuartilePace: ActivityComputer.convertSpeedToPace(percentiles[2]),
-      variancePace: ActivityComputer.convertSpeedToPace(varianceSpeed),
-      genuineGradeAdjustedAvgPace: genuineGradeAdjustedAvgPace,
-      paceZones: this.returnZones ? paceZones : null,
-      gradeAdjustedPaceZones: this.returnZones && hasGradeAdjustedSpeed ? gradeAdjustedPaceZones : null,
+      avgPace: Math.floor(avgPace), // send in seconds
+      totalAvgPace: totalAvgPace, // send in seconds
+      best20min: best20min ? Math.floor(Movement.speedToPace(best20min)) : null,
+      maxPace: Math.floor(Movement.speedToPace(speedData.maxSpeed)),
+      lowerQuartilePace: Movement.speedToPace(speedData.lowerQuartileSpeed),
+      medianPace: Movement.speedToPace(speedData.medianSpeed),
+      upperQuartilePace: Movement.speedToPace(speedData.upperQuartileSpeed),
+      standardDeviationPace: standardDeviationPace !== -1 ? standardDeviationPace : null,
+      genuineGradeAdjustedAvgPace: runningGradeAdjustedPace,
+      paceZones: this.returnZones
+        ? this.computeZones(
+            velocityKphArray.map(speed => Movement.speedToPace(speed)),
+            timeArray,
+            this.userSettings.zones,
+            ZoneType.PACE
+          )
+        : null,
       runningStressScore: runningStressScore,
-      runningStressScorePerHour: runningStressScore ? (runningStressScore / genuineAvgSpeedSecondsSum) * 60 * 60 : null,
+      runningStressScorePerHour: runningStressScore ? (runningStressScore / movingTime) * 60 * 60 : null,
       swimStressScore: null, // Will be set later if activity type is swimming
-      swimStressScorePerHour: null // Will be set later if activity type is swimming
+      swimStressScorePerHour: null // Will be set later if activity type is swimming,
     };
 
     return {
-      movingTime: genuineAvgSpeedSecondsSum,
+      movingTime: movingTime,
       speed: speedData,
       pace: paceData
     };
   }
 
-  /**
-   * Andrew Coggan weighted power compute method
-   * (source: http://forum.slowtwitch.com/Slowtwitch_Forums_C1/Triathlon_Forum_F1/Normalized_Power_Formula_or_Calculator..._P3097774/)
-   * 1) starting at the 30s mark, calculate a rolling 30 s average (of the preceeding time points, obviously).
-   * 2) raise all the values obtained in step #1 to the 4th power.
-   * 3) take the average of all of the values obtained in step #2.
-   * 4) take the 4th root of the value obtained in step #3.
-   * (And when you get tired of exporting every file to, e.g., Excel to perform such calculations, help develop a program
-   * like WKO+ to do the work for you <g>.)
-   */
-  protected powerData(
-    athleteWeight: number,
-    hasPowerMeter: boolean,
-    cyclingFtp: number,
-    powerArray: number[],
-    velocityArray: number[],
+  private powerData(
     timeArray: number[],
-    isEstimatedRunningPower?: boolean
+    powerArray: number[],
+    movingSeconds: number,
+    hasPowerMeter: boolean,
+    athleteWeight: number,
+    thresholdPower: number,
+    powerZoneType: ZoneType
   ): PowerDataModel {
     if (_.isEmpty(powerArray) || _.isEmpty(timeArray) || _.mean(powerArray) === 0) {
       return null;
     }
 
-    let powerZonesAlongActivityType: ZoneModel[];
-    if (this.activityType === ElevateSport.Ride) {
-      powerZonesAlongActivityType = this.userSettings.zones.get(UserZonesModel.TYPE_POWER);
-    } else if (this.activityType === ElevateSport.Run) {
-      powerZonesAlongActivityType = this.userSettings.zones.get(UserZonesModel.TYPE_RUNNING_POWER);
-    } else {
-      powerZonesAlongActivityType = null;
-    }
+    const totalTime = _.last(timeArray);
+    const maxWatts = _.max(powerArray);
+    const avgWatts = _.mean(powerArray);
+    const avgWattsPerKg = avgWatts / athleteWeight;
+    const weightedPower = ActivityComputer.computeWeightedPower(powerArray, timeArray);
+    const weightedWattsPerKg = weightedPower / athleteWeight;
+    const variabilityIndex = weightedPower / avgWatts;
+    const intensity = _.isNumber(thresholdPower) && thresholdPower > 0 ? weightedPower / thresholdPower : null;
+    const powerStressScore = ActivityComputer.computePowerStressScore(movingSeconds, weightedPower, thresholdPower);
+    const powerStressScorePerHour = powerStressScore
+      ? (powerStressScore / movingSeconds) * Constant.SEC_HOUR_FACTOR
+      : null;
 
-    powerZonesAlongActivityType = this.prepareZonesForDistributionComputation(powerZonesAlongActivityType);
+    const [q25, q50, q75]: number[] = this.quartiles(powerArray);
 
-    let accumulatedWattsOnMove = 0;
-    let wattSampleOnMoveCount = 0;
-    const wattsSamplesOnMove: number[] = [];
-    const wattsSamplesOnMoveDuration: number[] = [];
-
-    let durationInSeconds: number;
-    let totalMovingInSeconds = 0;
-
-    let rollingWindowSize = 0;
-    let rollingIndex = 0;
-    let sum4thPower = 0;
-
-    let rollingSum = powerArray.length > 0 ? powerArray[0] : 0;
-    let totalMovingSamples = 1;
-
-    const hasNoSpeedStream = _.isEmpty(velocityArray);
-
-    for (let i = 1; i < powerArray.length; i++) {
-      // Loop on samples
-
-      const isReadyForPowerStats = this.isTrainer || hasNoSpeedStream || _.isNumber(velocityArray[i]);
-      if (!isReadyForPowerStats) {
-        continue;
-      }
-
-      // Compute distribution for graph/table
-      durationInSeconds = timeArray[i] - timeArray[i - 1]; // Getting deltaTime in seconds (current sample and previous one)
-
-      rollingSum += powerArray[i];
-      rollingWindowSize += durationInSeconds;
-
-      sum4thPower += Math.pow(rollingSum / (i - rollingIndex + 1), 4);
-
-      // Reduce rolling window size if necessary. This is a bit
-      // complicated as we don't know a priori how many samples to
-      // remove from the beginning of the window as the delta time
-      // between samples varies.
-      while (rollingWindowSize >= ActivityComputer.AVG_POWER_TIME_WINDOW_SIZE) {
-        rollingSum -= powerArray[rollingIndex];
-        rollingWindowSize -= timeArray[rollingIndex + 1] - timeArray[rollingIndex];
-        rollingIndex++;
-      }
-
-      // When speed data is given, totalMovingInSeconds value increases only if athlete is moving
-      if (hasNoSpeedStream || velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH || this.isTrainer) {
-        totalMovingInSeconds += durationInSeconds;
-        totalMovingSamples++;
-      }
-
-      wattsSamplesOnMove.push(powerArray[i]);
-      wattsSamplesOnMoveDuration.push(durationInSeconds);
-
-      // average over time
-      accumulatedWattsOnMove += this.discreteValueBetween(powerArray[i], powerArray[i - 1], durationInSeconds);
-      wattSampleOnMoveCount += durationInSeconds;
-
-      const powerZoneId: number = this.getZoneId(powerZonesAlongActivityType, powerArray[i]);
-
-      if (!_.isUndefined(powerZoneId) && !_.isUndefined(powerZonesAlongActivityType[powerZoneId])) {
-        powerZonesAlongActivityType[powerZoneId].s += durationInSeconds;
-      }
-    }
-
-    // Finalize compute of Power
-    const avgWatts: number = _.mean(powerArray);
-
-    const weightedPower = Math.sqrt(Math.sqrt(sum4thPower / totalMovingSamples));
-
-    const variabilityIndex: number = weightedPower / avgWatts;
-    const intensity: number = _.isNumber(cyclingFtp) && cyclingFtp > 0 ? weightedPower / cyclingFtp : null;
-    const weightedWattsPerKg: number = weightedPower / athleteWeight;
-    const avgWattsPerKg: number = avgWatts / athleteWeight;
-
-    const percentiles: number[] = ActivityComputer.weightedPercentiles(wattsSamplesOnMove, wattsSamplesOnMoveDuration, [
-      0.25,
-      0.5,
-      0.75
-    ]);
-
-    // Update zone distribution percentage
-    powerZonesAlongActivityType = this.finalizeDistributionComputationZones(powerZonesAlongActivityType);
-
-    // Find default set of best powers
-    const { best20min, bestEightyPercent, powerCurve } = ActivityComputer.computeBestPowerSplits(
-      timeArray,
-      powerArray,
-      this.returnPowerCurve
-    );
-
-    const powerStressScore = ActivityComputer.computePowerStressScore(totalMovingInSeconds, weightedPower, cyclingFtp);
-    const powerStressScorePerHour: number = (powerStressScore / totalMovingInSeconds) * 60 * 60;
-
-    const powerData: PowerDataModel = {
+    return {
       hasPowerMeter: hasPowerMeter,
       avgWatts: avgWatts,
-      maxPower: _.max(powerArray),
-      minPower: _.minBy(powerArray, power => (power > 0 ? power : null)),
+      maxPower: maxWatts,
       avgWattsPerKg: avgWattsPerKg,
       weightedPower: weightedPower,
-      best20min: best20min,
-      bestEightyPercent: bestEightyPercent,
+      weightedWattsPerKg: weightedWattsPerKg,
+      best20min: this.computeSplit(powerArray, timeArray, 60 * 20),
+      bestEightyPercent: this.computeSplit(powerArray, timeArray, _.floor(totalTime * 0.8)),
       variabilityIndex: variabilityIndex,
       punchFactor: intensity,
       powerStressScore: powerStressScore,
       powerStressScorePerHour: powerStressScorePerHour,
-      weightedWattsPerKg: weightedWattsPerKg,
-      lowerQuartileWatts: percentiles[0],
-      medianWatts: percentiles[1],
-      upperQuartileWatts: percentiles[2],
-      powerZones: this.returnZones ? powerZonesAlongActivityType : null, // Only while moving
-      powerCurve: powerCurve || []
+      lowerQuartileWatts: q25,
+      medianWatts: q50,
+      upperQuartileWatts: q75,
+      powerZones:
+        this.returnZones && powerZoneType
+          ? this.computeZones(powerArray, timeArray, this.userSettings.zones, powerZoneType)
+          : null,
+      peaks: this.computePeaks(powerArray, timeArray)
     };
-
-    if (!_.isUndefined(isEstimatedRunningPower)) {
-      powerData.isEstimatedRunningPower = isEstimatedRunningPower;
-    }
-
-    return powerData;
   }
 
-  protected heartRateData(
-    athleteSnapshot: AthleteSnapshotModel,
-    heartRateArray: number[],
+  private cyclingPowerData(
     timeArray: number[],
-    velocityArray: number[]
+    powerArray: number[],
+    movingSeconds: number,
+    hasPowerMeter: boolean,
+    athleteWeight: number,
+    cyclingFtp: number
+  ): PowerDataModel {
+    return this.powerData(
+      timeArray,
+      powerArray,
+      movingSeconds,
+      hasPowerMeter,
+      athleteWeight,
+      cyclingFtp,
+      ZoneType.POWER
+    );
+  }
+
+  private runningPowerData(
+    timeArray: number[],
+    powerArray: number[],
+    movingSeconds: number,
+    hasPowerMeter: boolean,
+    athleteWeight: number,
+    runningFtp: number
+  ): PowerDataModel {
+    return this.powerData(
+      timeArray,
+      powerArray,
+      movingSeconds,
+      hasPowerMeter,
+      athleteWeight,
+      runningFtp,
+      ZoneType.RUNNING_POWER
+    );
+  }
+
+  private heartRateData(
+    timeArray: number[],
+    heartRateArray: number[],
+    athleteSnapshot: AthleteSnapshotModel
   ): HeartRateDataModel {
-    if (_.isEmpty(heartRateArray) || _.isEmpty(timeArray) || _.mean(heartRateArray) === 0) {
+    if (_.isEmpty(timeArray) || _.isEmpty(heartRateArray) || _.mean(heartRateArray) === 0) {
       return null;
     }
 
-    let heartRateZones: ZoneModel[] = this.prepareZonesForDistributionComputation(
-      this.userSettings.zones.get(UserZonesModel.TYPE_HEART_RATE)
+    const totalTime = _.last(timeArray);
+    const avgHeartRate = _.mean(heartRateArray);
+    const maxHeartRate = _.max(heartRateArray);
+
+    const activityHeartRateReserve = ActivityComputer.heartRateReserveFromHeartRate(
+      avgHeartRate,
+      athleteSnapshot.athleteSettings.maxHr,
+      athleteSnapshot.athleteSettings.restHr
     );
 
-    let trainingImpulse = 0;
-    const TRIMPGenderFactor: number = athleteSnapshot.gender === Gender.MEN ? 1.92 : 1.67;
-    let hrrSecondsCount = 0;
-    let hr: number, heartRateReserveAvg: number, durationInSeconds: number, durationInMinutes: number, zoneId: number;
-    let hrSum = 0;
-    const heartRateArrayMoving: any[] = [];
-    const heartRateArrayMovingDuration: any[] = [];
-
-    for (let i = 0; i < heartRateArray.length; i++) {
-      // Loop on samples
-
-      if (
-        i > 0 &&
-        (this.isTrainer || // can be cycling home trainer
-          !velocityArray || // OR Non movements activities
-          velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) // OR Movement over MOVING_THRESHOLD_KPH for any kind of activities having movements data
-      ) {
-        // Compute heartrate data while moving from now
-        durationInSeconds = timeArray[i] - timeArray[i - 1]; // Getting deltaTime in seconds (current sample and previous one)
-        // average over time
-        hrSum += this.discreteValueBetween(heartRateArray[i], heartRateArray[i - 1], durationInSeconds);
-        hrrSecondsCount += durationInSeconds;
-
-        heartRateArrayMoving.push(heartRateArray[i]);
-        heartRateArrayMovingDuration.push(durationInSeconds);
-
-        // Compute trainingImpulse
-        hr = (heartRateArray[i] + heartRateArray[i - 1]) / 2; // Getting HR avg between current sample and previous one.
-        heartRateReserveAvg = ActivityComputer.heartRateReserveFromHeartrate(
-          hr,
-          athleteSnapshot.athleteSettings.maxHr,
-          athleteSnapshot.athleteSettings.restHr
-        ); // (hr - userSettingsData.userRestHr) / (userSettingsData.userMaxHr - userSettingsData.userRestHr);
-        durationInMinutes = durationInSeconds / 60;
-
-        trainingImpulse +=
-          durationInMinutes * heartRateReserveAvg * 0.64 * Math.exp(TRIMPGenderFactor * heartRateReserveAvg);
-
-        // Count Heart Rate Reserve distribution
-        zoneId = this.getZoneId(heartRateZones, heartRateArray[i]);
-
-        if (!_.isUndefined(zoneId)) {
-          heartRateZones[zoneId].s += durationInSeconds;
-        }
-      }
-    }
-
-    // Update zone distribution percentage
-    heartRateZones = this.finalizeDistributionComputationZones(heartRateZones);
-
-    const TRIMPPerHour: number = (trainingImpulse / hrrSecondsCount) * 60 * 60;
-    const percentiles: number[] = ActivityComputer.weightedPercentiles(
-      heartRateArrayMoving,
-      heartRateArrayMovingDuration,
-      [0.25, 0.5, 0.75]
+    const activityHeartRateReserveMax = ActivityComputer.heartRateReserveFromHeartRate(
+      maxHeartRate,
+      athleteSnapshot.athleteSettings.maxHr,
+      athleteSnapshot.athleteSettings.restHr
     );
 
-    const userLthrAlongActivityType: number = ActivityComputer.resolveLTHR(
-      this.activityType,
-      athleteSnapshot.athleteSettings
+    const [q25, q50, q75]: number[] = this.quartiles(heartRateArray);
+
+    // Calculate training impulse
+    const trainingImpulse = ActivityComputer.trainingImpulse(
+      totalTime,
+      activityHeartRateReserve,
+      this.athleteSnapshot.gender
     );
 
+    const trainingImpulsePerHour = (trainingImpulse / totalTime) * Constant.SEC_HOUR_FACTOR;
+
+    // Calculate heart rate stress score
+    const lactateThreshold: number = ActivityComputer.resolveLTHR(this.activityType, athleteSnapshot.athleteSettings);
     const heartRateStressScore = ActivityComputer.computeHeartRateStressScore(
       athleteSnapshot.gender,
       athleteSnapshot.athleteSettings.maxHr,
       athleteSnapshot.athleteSettings.restHr,
-      userLthrAlongActivityType,
+      lactateThreshold,
       trainingImpulse
     );
-    const HRSSPerHour: number = (heartRateStressScore / hrrSecondsCount) * 60 * 60;
-
-    const averageHeartRate: number = hrSum / hrrSecondsCount;
-    const maxHeartRate: number = _.max(heartRateArray);
-
-    let best20min = null;
-    try {
-      const splitCalculator = new SplitCalculator(
-        _.clone(timeArray),
-        _.clone(heartRateArray),
-        ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD
-      );
-      best20min = splitCalculator.getBestSplit(60 * 20);
-    } catch (err) {
-      console.warn("No best 20min heart rate available for this range");
-    }
-
-    let best60min = null;
-    try {
-      const splitCalculator = new SplitCalculator(
-        _.clone(timeArray),
-        _.clone(heartRateArray),
-        ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD
-      );
-      best60min = splitCalculator.getBestSplit(60 * 60);
-    } catch (err) {
-      console.warn("No best 60min heart rate available for this range");
-    }
+    const heartRateStressScorePerHour = (heartRateStressScore / totalTime) * Constant.SEC_HOUR_FACTOR;
 
     return {
-      HRSS: heartRateStressScore,
-      HRSSPerHour: HRSSPerHour,
-      TRIMP: trainingImpulse,
-      TRIMPPerHour: TRIMPPerHour,
+      averageHeartRate: avgHeartRate,
       maxHeartRate: maxHeartRate,
-      minHeartRate: _.min(heartRateArray),
-      best20min: best20min,
-      best60min: best60min,
-      heartRateZones: this.returnZones ? heartRateZones : null,
-      lowerQuartileHeartRate: percentiles[0],
-      medianHeartRate: percentiles[1],
-      upperQuartileHeartRate: percentiles[2],
-      averageHeartRate: averageHeartRate,
-      activityHeartRateReserve:
-        ActivityComputer.heartRateReserveFromHeartrate(
-          averageHeartRate,
-          athleteSnapshot.athleteSettings.maxHr,
-          athleteSnapshot.athleteSettings.restHr
-        ) * 100,
-      activityHeartRateReserveMax:
-        ActivityComputer.heartRateReserveFromHeartrate(
-          maxHeartRate,
-          athleteSnapshot.athleteSettings.maxHr,
-          athleteSnapshot.athleteSettings.restHr
-        ) * 100
+      activityHeartRateReserve: activityHeartRateReserve * 100,
+      activityHeartRateReserveMax: activityHeartRateReserveMax * 100,
+      lowerQuartileHeartRate: q25,
+      medianHeartRate: q50,
+      upperQuartileHeartRate: q75,
+      best20min: this.computeSplit(heartRateArray, timeArray, 60 * 20),
+      best60min: this.computeSplit(heartRateArray, timeArray, 60 * 60),
+      TRIMP: trainingImpulse,
+      TRIMPPerHour: trainingImpulsePerHour,
+      HRSS: heartRateStressScore,
+      HRSSPerHour: heartRateStressScorePerHour,
+      peaks: this.computePeaks(heartRateArray, timeArray),
+      heartRateZones: this.returnZones
+        ? this.computeZones(heartRateArray, timeArray, this.userSettings.zones, ZoneType.HEART_RATE)
+        : null
     };
   }
 
-  protected cadenceData(
-    cadenceArray: number[],
-    velocityArray: number[],
+  private cadenceData(
+    timeArray: number[],
     distanceArray: number[],
-    timeArray: number[]
+    cadenceArray: number[],
+    movingSeconds: number,
+    cadenceZoneType: ZoneType
   ): CadenceDataModel {
     if (_.isEmpty(cadenceArray) || _.isEmpty(timeArray) || _.mean(cadenceArray) === 0) {
       return null;
     }
+    const activeCadences = [];
+    const activeCadenceDurations = [];
 
-    const hasDistanceData = !_.isEmpty(distanceArray);
+    for (const [index, cadence] of cadenceArray.entries()) {
+      if (index === 0) {
+        continue;
+      }
 
-    // recomputing crank revolutions using cadence data
-    let totalOccurrences = 0;
+      const seconds = timeArray[index] - timeArray[index - 1];
 
-    // On Moving
-    let cadenceSumOnMoving = 0;
-    let cadenceSumDurationOnMoving = 0;
-    let cadenceVarianceSumOnMoving = 0;
-    let cadenceOnMoveSampleCount = 0;
-    let movingSampleCount = 0;
-
-    let cadenceZoneTyped: ZoneModel[];
-    if (this.activityType === ElevateSport.Ride) {
-      cadenceZoneTyped = this.userSettings.zones.get(UserZonesModel.TYPE_CYCLING_CADENCE);
-    } else if (this.activityType === ElevateSport.Run) {
-      cadenceZoneTyped = this.userSettings.zones.get(UserZonesModel.TYPE_RUNNING_CADENCE);
-    } else {
-      return null;
-    }
-
-    let cadenceZones: ZoneModel[] = this.prepareZonesForDistributionComputation(cadenceZoneTyped);
-
-    let durationInSeconds = 0;
-    const cadencesOnMoving: number[] = [];
-    const cadencesDuration: number[] = [];
-
-    const distancesPerOccurrenceOnMoving: number[] = []; // Can be: Each time a foot touch the ground while running OR Each crank revolution for Cycling
-    const distancesPerOccurrenceDuration: number[] = [];
-
-    for (let i = 0; i < cadenceArray.length; i++) {
-      if (i > 0) {
-        durationInSeconds = timeArray[i] - timeArray[i - 1]; // Getting deltaTime in seconds (current sample and previous one)
-
-        // Recomputing crank revolutions using cadence data
-        const occurrencesOnPeriod = this.discreteValueBetween(
-          cadenceArray[i],
-          cadenceArray[i - 1],
-          durationInSeconds / 60 /* Minutes */
-        );
-
-        totalOccurrences += occurrencesOnPeriod;
-
-        if (
-          (this.isTrainer || !velocityArray || velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) &&
-          i > 0
-        ) {
-          movingSampleCount++;
-
-          // Rider is moving here..
-          if (cadenceArray[i] > ActivityComputer.CADENCE_THRESHOLD_RPM) {
-            // Rider is moving here while cadence
-            cadenceOnMoveSampleCount++;
-
-            // cadence averaging over time
-            cadenceSumOnMoving += this.discreteValueBetween(cadenceArray[i], cadenceArray[i - 1], durationInSeconds);
-            cadenceSumDurationOnMoving += durationInSeconds;
-            cadenceVarianceSumOnMoving += Math.pow(cadenceArray[i], 2);
-            cadencesOnMoving.push(cadenceArray[i]);
-            cadencesDuration.push(durationInSeconds);
-
-            // Compute distance traveled foreach "hit":
-            // - Running: Each time a foot touch the ground
-            // - Cycling: Each crank revolution for Cycling
-            if (
-              hasDistanceData &&
-              (this.activityType === ElevateSport.Ride || this.activityType === ElevateSport.Run)
-            ) {
-              const metersTravelled = distanceArray[i] - distanceArray[i - 1];
-
-              let occurrenceDistance: number = null;
-
-              if (this.activityType === ElevateSport.Ride) {
-                occurrenceDistance = metersTravelled / occurrencesOnPeriod; // Aka Crank revolutions on delta time
-              }
-
-              if (this.activityType === ElevateSport.Run) {
-                occurrenceDistance = metersTravelled / (occurrencesOnPeriod * 2); // Aka strides with 2 legs representation on delta time
-              }
-
-              if (!_.isNull(occurrenceDistance)) {
-                distancesPerOccurrenceOnMoving.push(occurrenceDistance);
-                distancesPerOccurrenceDuration.push(durationInSeconds);
-              }
-            }
-          }
-
-          const cadenceZoneId: number = this.getZoneId(cadenceZoneTyped, cadenceArray[i]);
-
-          if (!_.isUndefined(cadenceZoneId) && !_.isUndefined(cadenceZones[cadenceZoneId])) {
-            cadenceZones[cadenceZoneId].s += durationInSeconds;
-          }
-        }
+      // Is active cadence?
+      if (this.isActiveCadence(cadence)) {
+        activeCadences.push(cadence);
+        activeCadenceDurations.push(seconds);
       }
     }
 
-    const cadenceRatioOnMovingTime: number = cadenceOnMoveSampleCount / movingSampleCount;
-    const averageCadenceOnMovingTime: number = cadenceSumOnMoving / cadenceSumDurationOnMoving;
+    const totalTime = _.last(timeArray);
+    const maxCadence = _.max(cadenceArray);
+    const avgCadence = _.mean(cadenceArray);
+    const averageActiveCadence = _.mean(activeCadences);
+    const activeCadenceDuration = Math.min(_.sum(activeCadenceDurations), movingSeconds);
+    const activeCadenceRatio = activeCadenceDuration / movingSeconds;
+    const totalOccurrences = (avgCadence * totalTime) / 60;
 
-    const varianceCadence: number =
-      cadenceVarianceSumOnMoving / cadenceOnMoveSampleCount - Math.pow(averageCadenceOnMovingTime, 2);
-    const standardDeviationCadence: number = varianceCadence > 0 ? Math.sqrt(varianceCadence) : 0;
+    const varianceCadence = _.mean(activeCadences.map(cad => Math.pow(cad, 2))) - Math.pow(averageActiveCadence, 2);
+    const standardDeviationCadence = varianceCadence > 0 ? Math.sqrt(varianceCadence) : 0;
 
-    // Update zone distribution percentage
-    cadenceZones = this.finalizeDistributionComputationZones(cadenceZones);
+    const [q25, q50, q75] = this.quartiles(activeCadences);
 
-    const cadencesPercentiles: number[] = ActivityComputer.weightedPercentiles(cadencesOnMoving, cadencesDuration, [
-      0.25,
-      0.5,
-      0.75
-    ]);
+    const cadenceFactor = cadenceZoneType === ZoneType.RUNNING_CADENCE ? 2 : 1;
+    const averageDistancePerOccurrence = _.last(distanceArray) / totalOccurrences / cadenceFactor;
 
-    const distancesPerOccurrencePercentiles: number[] = ActivityComputer.weightedPercentiles(
-      distancesPerOccurrenceOnMoving,
-      distancesPerOccurrenceDuration,
-      [0.25, 0.5, 0.75]
-    );
-
-    const cadenceData: CadenceDataModel = {
-      cadencePercentageMoving: cadenceRatioOnMovingTime * 100,
-      cadenceTimeMoving: cadenceSumDurationOnMoving,
-      averageCadenceMoving: averageCadenceOnMovingTime,
-      standardDeviationCadence: parseFloat(standardDeviationCadence.toFixed(1)),
-      maxCadence: _.max(cadenceArray),
-      minCadence: _.minBy(cadenceArray, cadence => (cadence > 0 ? cadence : null)),
+    return {
+      maxCadence: maxCadence,
+      averageCadence: avgCadence,
+      averageActiveCadence: averageActiveCadence,
+      cadenceActiveTime: activeCadenceDuration,
+      cadenceActivePercentage: activeCadenceRatio * 100,
+      standardDeviationCadence: _.round(standardDeviationCadence, 2),
       totalOccurrences: totalOccurrences,
-      lowerQuartileCadence: cadencesPercentiles[0],
-      medianCadence: cadencesPercentiles[1],
-      upperQuartileCadence: cadencesPercentiles[2],
-      averageDistancePerOccurrence: _.mean(distancesPerOccurrenceOnMoving),
-      lowerQuartileDistancePerOccurrence: distancesPerOccurrencePercentiles[0],
-      medianDistancePerOccurrence: distancesPerOccurrencePercentiles[1],
-      upperQuartileDistancePerOccurrence: distancesPerOccurrencePercentiles[2],
-      cadenceZones: this.returnZones ? cadenceZones : null
+      lowerQuartileCadence: q25,
+      medianCadence: q50,
+      upperQuartileCadence: q75,
+      averageDistancePerOccurrence: averageDistancePerOccurrence,
+      peaks: this.computePeaks(cadenceArray, timeArray),
+      cadenceZones: this.returnZones
+        ? this.computeZones(cadenceArray, timeArray, this.userSettings.zones, cadenceZoneType)
+        : null
     };
-
-    return cadenceData;
   }
 
-  protected gradeData(
-    gradeArray: number[],
-    velocityArray: number[],
+  private gradeData(
     timeArray: number[],
     distanceArray: number[],
+    altitudeArray: number[],
+    gradeArray: number[],
     cadenceArray: number[]
   ): GradeDataModel {
-    if (_.isEmpty(gradeArray) || _.isEmpty(velocityArray) || _.isEmpty(timeArray) || _.mean(velocityArray) === 0) {
+    if (_.isEmpty(timeArray) || _.isEmpty(distanceArray) || _.isEmpty(altitudeArray)) {
       return null;
     }
 
-    if (this.isTrainer) {
-      return;
-    }
+    const hasGradeData = !_.isEmpty(gradeArray);
+    const hasCadenceData = !_.isEmpty(cadenceArray);
 
-    let gradeSum = 0;
-    let gradeCount = 0;
+    const slopeProfileDurations = new SlopeProfileDurations();
+    const slopeProfileDistances = new SlopeProfileDistances();
+    const slopeProfileSpeeds = new SlopeProfileSpeeds();
+    const slopeProfileCadences = new SlopeProfileCadences();
 
-    let gradeZones: ZoneModel[] = this.prepareZonesForDistributionComputation(
-      this.userSettings.zones.get(UserZonesModel.TYPE_GRADE)
-    );
-    const upFlatDownInSeconds: UpFlatDownSumTotalModel = {
-      up: 0,
-      flat: 0,
-      down: 0,
-      total: 0
-    };
+    const grades = [];
+    const SAMPLES_TIME_BUFFER = ActivityComputer.MOVING_DETECTION_SAMPLES_BUFFER;
 
-    // Currently deals with avg speed/pace
-    const upFlatDownMoveData: UpFlatDownModel = {
-      up: 0,
-      flat: 0,
-      down: 0
-    };
+    let index = SAMPLES_TIME_BUFFER;
+    do {
+      const { seconds, meters, speed, grade } = this.getBufferAnalytics(
+        SAMPLES_TIME_BUFFER,
+        index,
+        timeArray,
+        distanceArray,
+        altitudeArray
+      );
 
-    const upFlatDownDistanceData: UpFlatDownModel = {
-      up: 0,
-      flat: 0,
-      down: 0
-    };
+      grades.push(grade);
 
-    const upFlatDownCadenceData: UpFlatDownSumCounterModel = {
-      up: 0,
-      flat: 0,
-      down: 0,
-      countUp: 0,
-      countFlat: 0,
-      countDown: 0
-    };
+      const avgCadence = hasCadenceData
+        ? _.mean(cadenceArray.slice(index - SAMPLES_TIME_BUFFER, index).filter(cad => this.isActiveCadence(cad)))
+        : null;
 
-    let durationInSeconds: number;
-    let durationCount = 0;
-    let distance = 0;
-    let currentSpeed: number;
-    let avgMinGrade = 0;
-    let avgMaxGrade = 0;
+      const isActiveCadence = Number.isFinite(avgCadence) && this.isActiveCadence(avgCadence);
 
-    const gradeArrayMoving: any[] = [];
-    const gradeArrayDistance: any[] = [];
+      // Compute slope profile data
+      if (grade > ActivityComputer.GRADE_CLIMBING_LIMIT) {
+        // UPHILL
+        slopeProfileDurations.up.push(seconds);
 
-    const hasCadenceData: boolean = !_.isEmpty(cadenceArray);
+        if (Number.isFinite(meters)) {
+          slopeProfileDistances.up.push(meters);
+        }
 
-    for (let i = 0; i < gradeArray.length; i++) {
-      // Loop on samples
+        if (Number.isFinite(speed)) {
+          slopeProfileSpeeds.up.push(speed);
+        }
 
-      if (i > 0) {
-        currentSpeed = velocityArray[i] * 3.6; // Multiply by 3.6 to convert to kph;
-        // Compute distribution for graph/table
-        if (currentSpeed > 0) {
-          // If moving...
-          durationInSeconds = timeArray[i] - timeArray[i - 1]; // Getting deltaTime in seconds (current sample and previous one)
-          distance = distanceArray[i] - distanceArray[i - 1];
+        if (isActiveCadence) {
+          slopeProfileCadences.up.push(avgCadence);
+        }
+      } else if (grade < ActivityComputer.GRADE_DOWNHILL_LIMIT) {
+        // DOWNHILL
+        slopeProfileDurations.down.push(seconds);
 
-          // elevation gain
-          gradeSum += this.discreteValueBetween(gradeArray[i], gradeArray[i - 1], distance);
-          // distance
-          gradeCount += distance;
+        if (Number.isFinite(meters)) {
+          slopeProfileDistances.down.push(meters);
+        }
 
-          gradeArrayMoving.push(gradeArray[i]);
-          gradeArrayDistance.push(distance);
+        if (Number.isFinite(speed)) {
+          slopeProfileSpeeds.down.push(speed);
+        }
 
-          const gradeZoneId: number = this.getZoneId(
-            this.userSettings.zones.get(UserZonesModel.TYPE_GRADE),
-            gradeArray[i]
-          );
+        if (isActiveCadence) {
+          slopeProfileCadences.down.push(avgCadence);
+        }
+      } else {
+        // FLAT
+        slopeProfileDurations.flat.push(seconds);
 
-          if (!_.isUndefined(gradeZoneId) && !_.isUndefined(gradeZones[gradeZoneId])) {
-            gradeZones[gradeZoneId].s += durationInSeconds;
-          }
+        if (Number.isFinite(meters)) {
+          slopeProfileDistances.flat.push(meters);
+        }
 
-          durationCount += durationInSeconds;
+        if (Number.isFinite(speed)) {
+          slopeProfileSpeeds.flat.push(speed);
+        }
 
-          // Compute DOWN/FLAT/UP duration
-          if (gradeArray[i] > ActivityComputer.GRADE_CLIMBING_LIMIT) {
-            // UPHILL
-            // time
-            upFlatDownInSeconds.up += durationInSeconds;
-            // distance
-            upFlatDownDistanceData.up += distance;
-
-            // If cadence sensor exists, then try add up cadence data (not null) while climbing
-            if (hasCadenceData && cadenceArray[i] > ActivityComputer.CADENCE_THRESHOLD_RPM) {
-              upFlatDownCadenceData.up += cadenceArray[i];
-              upFlatDownCadenceData.countUp++; // Increment added cadence count
-            }
-          } else if (gradeArray[i] < ActivityComputer.GRADE_DOWNHILL_LIMIT) {
-            // DOWNHILL
-            // time
-            upFlatDownInSeconds.down += durationInSeconds;
-            // distance
-            upFlatDownDistanceData.down += distance;
-
-            // If cadence sensor exists, then try add up cadence data (not null) while downhill
-            if (hasCadenceData && cadenceArray[i] > ActivityComputer.CADENCE_THRESHOLD_RPM) {
-              upFlatDownCadenceData.down += cadenceArray[i];
-              upFlatDownCadenceData.countDown++; // Increment added cadence count
-            }
-          } else {
-            // FLAT
-
-            // time
-            upFlatDownInSeconds.flat += durationInSeconds;
-            // distance
-            upFlatDownDistanceData.flat += distance;
-
-            // If cadence sensor exists, then try add up cadence data (not null) while on flat
-            if (hasCadenceData && cadenceArray[i] > ActivityComputer.CADENCE_THRESHOLD_RPM) {
-              upFlatDownCadenceData.flat += cadenceArray[i];
-              upFlatDownCadenceData.countFlat++; // Increment added cadence count
-            }
-          }
+        if (isActiveCadence) {
+          slopeProfileCadences.flat.push(avgCadence);
         }
       }
-    }
+      index = index + SAMPLES_TIME_BUFFER;
+    } while (index <= timeArray.length - 1);
 
-    upFlatDownInSeconds.total = durationCount;
+    const totalTime = _.last(timeArray);
+    const avgMaxGrade = _.max(grades);
+    const avgMinGrade = _.min(grades);
+    const avgGrade = _.mean(grades);
 
-    // Compute grade profile
-    let gradeProfile: string;
-    if (
-      (upFlatDownInSeconds.flat / upFlatDownInSeconds.total) * 100 >=
-      ActivityComputer.GRADE_PROFILE_FLAT_PERCENTAGE_DETECTED
-    ) {
-      gradeProfile = ActivityComputer.GRADE_PROFILE_FLAT;
-    } else {
-      gradeProfile = ActivityComputer.GRADE_PROFILE_HILLY;
-    }
+    const [q25, q50, q75] = this.quartiles(grades);
 
-    // Compute speed while up, flat down
-    upFlatDownMoveData.up = (upFlatDownDistanceData.up / upFlatDownInSeconds.up) * 3.6;
-    upFlatDownMoveData.down = (upFlatDownDistanceData.down / upFlatDownInSeconds.down) * 3.6;
-    upFlatDownMoveData.flat = (upFlatDownDistanceData.flat / upFlatDownInSeconds.flat) * 3.6;
+    const upFlatDownSeconds: UpFlatDownModel = {
+      up: _.sum(slopeProfileDurations.up),
+      flat: _.sum(slopeProfileDurations.flat),
+      down: _.sum(slopeProfileDurations.down),
+      total: totalTime
+    };
 
-    // Convert distance to KM
-    upFlatDownDistanceData.up = upFlatDownDistanceData.up / 1000;
-    upFlatDownDistanceData.down = upFlatDownDistanceData.down / 1000;
-    upFlatDownDistanceData.flat = upFlatDownDistanceData.flat / 1000;
+    const upFlatDownDistance: UpFlatDownModel = {
+      up: !_.isEmpty(slopeProfileDistances.up) ? _.sum(slopeProfileDistances.up) / 1000 : null,
+      flat: !_.isEmpty(slopeProfileDistances.flat) ? _.sum(slopeProfileDistances.flat) / 1000 : null,
+      down: !_.isEmpty(slopeProfileDistances.down) ? _.sum(slopeProfileDistances.down) / 1000 : null
+    };
 
-    // Compute cadence pace up/down/flat
-    upFlatDownCadenceData.up = upFlatDownCadenceData.up / upFlatDownCadenceData.countUp;
-    upFlatDownCadenceData.down = upFlatDownCadenceData.down / upFlatDownCadenceData.countDown;
-    upFlatDownCadenceData.flat = upFlatDownCadenceData.flat / upFlatDownCadenceData.countFlat;
+    const upFlatDownMoveData: UpFlatDownModel = {
+      up: _.mean(slopeProfileSpeeds.up),
+      flat: _.mean(slopeProfileSpeeds.flat),
+      down: _.mean(slopeProfileSpeeds.down)
+    };
 
-    // Update zone distribution percentage
-    gradeZones = this.finalizeDistributionComputationZones(gradeZones);
-    const percentiles: number[] = ActivityComputer.weightedPercentiles(gradeArrayMoving, gradeArrayDistance, [
-      0.25,
-      0.5,
-      0.75
-    ]);
+    const upFlatDownCadence: UpFlatDownModel = {
+      up: !_.isEmpty(slopeProfileCadences.up) ? _.mean(slopeProfileCadences.up) : null,
+      flat: !_.isEmpty(slopeProfileCadences.flat) ? _.mean(slopeProfileCadences.flat) : null,
+      down: !_.isEmpty(slopeProfileCadences.down) ? _.mean(slopeProfileCadences.down) : null
+    };
 
-    const avgGrade: number = gradeSum / gradeCount;
-    // Find min and max grade
-    const sortedGradeArray = _.sortBy(gradeArray, (grade: number) => {
-      return grade;
-    });
-    const minMaxGradeSamplePercentage = 0.25; // %
-    const gradeSamplesReadCount = Math.floor((sortedGradeArray.length * minMaxGradeSamplePercentage) / 100);
-    avgMinGrade =
-      gradeSamplesReadCount >= 1
-        ? _.mean(_.slice(sortedGradeArray, 0, gradeSamplesReadCount))
-        : _.first(sortedGradeArray);
-    avgMaxGrade =
-      gradeSamplesReadCount >= 1
-        ? _.mean(_.slice(sortedGradeArray, -1 * gradeSamplesReadCount))
-        : _.last(sortedGradeArray);
+    const gradeProfile =
+      (upFlatDownSeconds.flat / totalTime) * 100 >= ActivityComputer.GRADE_FLAT_PROFILE_THRESHOLD
+        ? GradeProfile.FLAT
+        : GradeProfile.HILLY;
 
-    const gradeData: GradeDataModel = {
+    return {
       avgGrade: avgGrade,
       avgMaxGrade: avgMaxGrade,
       avgMinGrade: avgMinGrade,
-      lowerQuartileGrade: percentiles[0],
-      medianGrade: percentiles[1],
-      upperQuartileGrade: percentiles[2],
-      gradeZones: this.returnZones ? gradeZones : null,
-      upFlatDownInSeconds,
-      upFlatDownMoveData,
-      upFlatDownDistanceData,
-      upFlatDownCadencePaceData: hasCadenceData
-        ? {
-            up: upFlatDownCadenceData.up,
-            flat: upFlatDownCadenceData.flat,
-            down: upFlatDownCadenceData.down
-          }
-        : null,
-      gradeProfile
+      lowerQuartileGrade: _.round(q25, 2),
+      medianGrade: _.round(q50, 2),
+      upperQuartileGrade: _.round(q75, 2),
+      upFlatDownInSeconds: upFlatDownSeconds,
+      upFlatDownDistanceData: upFlatDownDistance,
+      upFlatDownMoveData: upFlatDownMoveData,
+      upFlatDownCadencePaceData: upFlatDownCadence,
+      gradeProfile: gradeProfile,
+      gradeZones:
+        this.returnZones && hasGradeData
+          ? this.computeZones(gradeArray, timeArray, this.userSettings.zones, ZoneType.GRADE)
+          : null
     };
-
-    return gradeData;
   }
 
-  protected elevationData(activityStream: ActivityStreamsModel): ElevationDataModel {
-    if (_.isEmpty(activityStream)) {
+  private elevationData(timeArray: number[], distanceArray: number[], altitudeArray: number[]): ElevationDataModel {
+    if (_.isEmpty(timeArray) || _.isEmpty(distanceArray) || _.isEmpty(altitudeArray)) {
       return null;
     }
 
-    const distanceArray: any = activityStream.distance;
-    const timeArray: any = activityStream.time;
-    const velocityArray: any = activityStream.velocity_smooth;
-    const altitudeArray: any = activityStream.altitude;
+    const ascentElevations = [];
+    const descentElevations = [];
+    const ascentData = { time: [], speeds: [] };
 
-    if (
-      _.isEmpty(distanceArray) ||
-      _.isEmpty(timeArray) ||
-      _.isEmpty(velocityArray) ||
-      _.isEmpty(altitudeArray) ||
-      _.mean(distanceArray) === 0 ||
-      _.mean(velocityArray) === 0
-    ) {
-      return null;
+    const SAMPLES_DISTANCE_BUFFER = 5;
+
+    let index = SAMPLES_DISTANCE_BUFFER;
+    do {
+      const { seconds, elevation } = this.getBufferAnalytics(
+        SAMPLES_DISTANCE_BUFFER,
+        index,
+        timeArray,
+        distanceArray,
+        altitudeArray
+      );
+
+      if (elevation > 0) {
+        ascentElevations.push(elevation);
+
+        // Compute vertical speeds (vert. meters / hour)
+        const verticalMetersPerHour = (elevation / seconds) * Constant.SEC_HOUR_FACTOR;
+
+        if (verticalMetersPerHour > 0) {
+          ascentData.time.push((_.last(ascentData.time) || 0) + seconds);
+          ascentData.speeds.push(verticalMetersPerHour);
+        }
+      } else if (elevation < 0) {
+        descentElevations.push(elevation);
+      }
+
+      index = index + SAMPLES_DISTANCE_BUFFER;
+    } while (index <= distanceArray.length - 1);
+
+    const avgElevation = _.mean(altitudeArray);
+    const minElevation = _.min(altitudeArray);
+    const maxElevation = _.max(altitudeArray);
+    const [q25, q50, q75] = this.quartiles(altitudeArray);
+
+    const avgAscentSpeed = _.mean(ascentData.speeds);
+    const [ascentSpeedQ25, ascentSpeedQ50, ascentSpeedQ75] = this.quartiles(ascentData.speeds);
+
+    return {
+      avgElevation: Math.round(avgElevation),
+      minElevation: minElevation,
+      maxElevation: maxElevation,
+      accumulatedElevationAscent: _.sum(ascentElevations),
+      accumulatedElevationDescent: Math.abs(_.sum(descentElevations)),
+      lowerQuartileElevation: q25,
+      medianElevation: q50,
+      upperQuartileElevation: q75,
+      elevationZones: this.returnZones
+        ? this.computeZones(altitudeArray, timeArray, this.userSettings.zones, ZoneType.ELEVATION)
+        : null,
+      ascentSpeedZones: this.returnZones
+        ? this.computeZones(ascentData.speeds, ascentData.time, this.userSettings.zones, ZoneType.ASCENT)
+        : null,
+      ascentSpeed: {
+        avg: Number.isFinite(avgAscentSpeed) ? Math.round(avgAscentSpeed) : null,
+        lowerQuartile: Number.isFinite(ascentSpeedQ25) ? Math.round(ascentSpeedQ25) : null,
+        median: Number.isFinite(ascentSpeedQ50) ? Math.round(ascentSpeedQ50) : null,
+        upperQuartile: Number.isFinite(ascentSpeedQ75) ? Math.round(ascentSpeedQ75) : null
+      }
+    };
+  }
+
+  private getBufferAnalytics(
+    buffer: number,
+    currentIndex: number,
+    timeArray: number[],
+    distanceArray: number[],
+    altitudeArray: number[] = null
+  ): { seconds: number; meters: number; elevation: number; speed: number; grade: number } {
+    const seconds = timeArray[currentIndex] - timeArray[currentIndex - buffer];
+    const meters = distanceArray[currentIndex] - distanceArray[currentIndex - buffer];
+    const elevation = altitudeArray ? altitudeArray[currentIndex] - altitudeArray[currentIndex - buffer] : null;
+    const speed = (meters / seconds) * Constant.MPS_KPH_FACTOR;
+    const grade = Number.isFinite(elevation) ? (elevation / meters) * 100 : null;
+    return { seconds: seconds, meters: meters, elevation: elevation, speed: speed, grade: grade };
+  }
+
+  private computePeaks(values: number[], timeScale: number[]): PeakModel[] {
+    let peaks: PeakModel[] = null;
+    try {
+      peaks = PeaksCalculator.compute(timeScale, values);
+    } catch (err) {
+      if (!(err instanceof WarningException)) {
+        throw err;
+      }
     }
+    return peaks;
+  }
 
-    const skipAscentSpeedCompute: boolean = !_.isEmpty(this.bounds);
+  private computeSplit(values: number[], timeScale: number[], rangeSeconds: number): number {
+    let bestSplitResult = null;
+    try {
+      const splitCalculator = new SplitCalculator(
+        timeScale,
+        values,
+        ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD
+      );
+      bestSplitResult = splitCalculator.getBestSplit(rangeSeconds);
+    } catch (err) {
+      if (!(err instanceof WarningException)) {
+        throw err;
+      }
+    }
+    return bestSplitResult;
+  }
 
-    let accumulatedElevation = 0;
-    let accumulatedElevationAscent = 0;
-    let accumulatedElevationDescent = 0;
-    let accumulatedDistance = 0;
+  private getZoneOfValue(zones: ZoneModel[], value: number): ZoneModel {
+    let matchingZone = null;
 
-    // specials arrays for ascent speeds
-    const ascentSpeedMeterPerHourSamples: number[] = [];
-    const ascentSpeedMeterPerHourDistance: number[] = [];
-    let ascentSpeedMeterPerHourSum = 0;
-
-    let elevationSampleCount = 0;
-    const elevationSamples: number[] = [];
-    const elevationSamplesDistance: number[] = [];
-    let elevationZones: any = this.prepareZonesForDistributionComputation(
-      this.userSettings.zones.get(UserZonesModel.TYPE_ELEVATION)
-    );
-    let ascentSpeedZones: any = this.prepareZonesForDistributionComputation(
-      this.userSettings.zones.get(UserZonesModel.TYPE_ASCENT)
-    );
-    let durationInSeconds = 0;
-    let distance = 0;
-    let ascentDurationInSeconds = 0;
-
-    for (let i = 0; i < altitudeArray.length; i++) {
-      // Loop on samples
-
-      // Compute distribution for graph/table
-      if (i > 0 && velocityArray[i] * 3.6 > ActivityComputer.MOVING_THRESHOLD_KPH) {
-        durationInSeconds = timeArray[i] - timeArray[i - 1]; // Getting deltaTime in seconds (current sample and previous one)
-        distance = distanceArray[i] - distanceArray[i - 1];
-
-        // Compute average and normalized
-
-        // average elevation over distance
-        accumulatedElevation += this.discreteValueBetween(altitudeArray[i], altitudeArray[i - 1], distance);
-        elevationSampleCount += distance;
-        elevationSamples.push(altitudeArray[i]);
-        elevationSamplesDistance.push(distance);
-
-        const elevationZoneId: number = this.getZoneId(
-          this.userSettings.zones.get(UserZonesModel.TYPE_ELEVATION),
-          altitudeArray[i]
-        );
-
-        if (!_.isUndefined(elevationZoneId) && !_.isUndefined(elevationZones[elevationZoneId])) {
-          elevationZones[elevationZoneId].s += durationInSeconds;
-        }
-
-        // Meters climbed between current and previous
-        const elevationDiff: number = altitudeArray[i] - altitudeArray[i - 1];
-
-        // If previous altitude lower than current then => climbing
-        if (elevationDiff > 0) {
-          accumulatedElevationAscent += elevationDiff;
-          ascentDurationInSeconds = timeArray[i] - timeArray[i - 1];
-
-          const ascentSpeedMeterPerHour: number = (elevationDiff / ascentDurationInSeconds) * 3600; // m climbed / seconds
-
-          // Only if grade is > "ascentSpeedGradeLimit"
-          if (distance > 0 && (elevationDiff / distance) * 100 > ActivityComputer.ASCENT_SPEED_GRADE_LIMIT) {
-            accumulatedDistance += distanceArray[i] - distanceArray[i - 1];
-            ascentSpeedMeterPerHourSamples.push(ascentSpeedMeterPerHour);
-            ascentSpeedMeterPerHourDistance.push(accumulatedDistance);
-            ascentSpeedMeterPerHourSum += ascentSpeedMeterPerHour;
-
-            const ascentSpeedZoneId: number = this.getZoneId(
-              this.userSettings.zones.get(UserZonesModel.TYPE_ASCENT),
-              ascentSpeedMeterPerHour
-            );
-            if (!_.isUndefined(ascentSpeedZoneId) && !_.isUndefined(ascentSpeedZones[ascentSpeedZoneId])) {
-              ascentSpeedZones[ascentSpeedZoneId].s += ascentDurationInSeconds;
-            }
-          }
-        } else {
-          accumulatedElevationDescent -= elevationDiff;
-        }
+    for (const zone of zones) {
+      if (value <= zone.to) {
+        matchingZone = zone;
+        break;
       }
     }
 
-    // Finalize compute of Elevation
-    const avgElevation: number = accumulatedElevation / elevationSampleCount;
+    return matchingZone;
+  }
 
-    const avgAscentSpeed: number = ascentSpeedMeterPerHourSum / ascentSpeedMeterPerHourSamples.length;
-
-    // Update zone distribution percentage
-    elevationZones = this.finalizeDistributionComputationZones(elevationZones);
-    ascentSpeedZones = this.finalizeDistributionComputationZones(ascentSpeedZones);
-
-    const percentilesElevation: number[] = ActivityComputer.weightedPercentiles(
-      elevationSamples,
-      elevationSamplesDistance,
-      [0.25, 0.5, 0.75]
-    );
-    const percentilesAscent: number[] = ActivityComputer.weightedPercentiles(
-      ascentSpeedMeterPerHourSamples,
-      ascentSpeedMeterPerHourDistance,
-      [0.25, 0.5, 0.75]
-    );
-
-    const ascentSpeedData: AscentSpeedDataModel = {
-      avg: _.isFinite(avgAscentSpeed) ? avgAscentSpeed : -1,
-      lowerQuartile: parseFloat(percentilesAscent[0].toFixed(0)),
-      median: parseFloat(percentilesAscent[1].toFixed(0)),
-      upperQuartile: parseFloat(percentilesAscent[2].toFixed(0))
-    };
-
-    let elevationData: ElevationDataModel = {
-      avgElevation: parseFloat(avgElevation.toFixed(0)),
-      accumulatedElevationAscent: accumulatedElevationAscent,
-      accumulatedElevationDescent: accumulatedElevationDescent,
-      maxElevation: _.max(altitudeArray),
-      minElevation: _.min(altitudeArray),
-      lowerQuartileElevation: parseFloat(percentilesElevation[0].toFixed(0)),
-      medianElevation: parseFloat(percentilesElevation[1].toFixed(0)),
-      upperQuartileElevation: parseFloat(percentilesElevation[2].toFixed(0)),
-      elevationZones: this.returnZones ? elevationZones : null, // Only while moving
-      ascentSpeedZones: this.returnZones ? ascentSpeedZones : null, // Only while moving
-      ascentSpeed: ascentSpeedData
-    };
-
-    if (skipAscentSpeedCompute) {
-      elevationData = _.omit(elevationData, "ascentSpeedZones") as ElevationDataModel;
-      elevationData = _.omit(elevationData, "ascentSpeed") as ElevationDataModel;
+  private computeZones(
+    values: number[],
+    timeArray: number[],
+    userZonesModel: UserZonesModel,
+    zoneType: ZoneType
+  ): ZoneModel[] {
+    if (values.length !== timeArray.length) {
+      throw new Error(`Values length ${values.length} must match time array length ${timeArray.length}`);
     }
 
-    return elevationData;
+    // Find out user zones on which we will loop and prepare for computation
+    let userZones = UserZonesModel.fromZoneType(userZonesModel, zoneType);
+    if (_.isEmpty(userZones)) {
+      return null;
+    }
+    userZones = userZones.map((zone: ZoneModel) => {
+      zone.s = 0;
+      return zone;
+    });
+
+    // Loop
+    for (const [index, current] of timeArray.entries()) {
+      if (index === 0) {
+        continue;
+      }
+
+      const duration = current - timeArray[index - 1];
+
+      const matchingZone = this.getZoneOfValue(userZones, values[index]);
+
+      if (matchingZone) {
+        matchingZone.s += duration;
+      }
+    }
+
+    // Get total duration for percentage
+    const totalSeconds = _.last(timeArray);
+
+    // Append percents
+    return userZones.map((zone: ZoneModel) => {
+      zone.percent = (zone.s / totalSeconds) * 100;
+      return zone;
+    });
+  }
+
+  private quartiles(data: number[]): number[] {
+    const sortedArrayAsc = _.cloneDeep(data).sort((a, b) => a - b);
+    return [percentile(sortedArrayAsc, 0.25), percentile(sortedArrayAsc, 0.5), percentile(sortedArrayAsc, 0.75)];
   }
 }

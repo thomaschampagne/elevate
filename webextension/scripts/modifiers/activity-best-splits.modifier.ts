@@ -9,6 +9,7 @@ import {
 } from "@elevate/shared/models";
 import { AbstractModifier } from "./abstract.modifier";
 import { VacuumProcessor } from "../processors/vacuum-processor";
+import { Time } from "@elevate/shared/tools";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 declare let L: any; // Injected by strava.com
@@ -938,7 +939,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
                 );
               },
               formatTime = (value: any) => {
-                return Helper.secondsToHHMMSS(value.timeOrDistance, true);
+                return Time.secToMilitary(value.timeOrDistance);
               },
               formatTooltip = split.unit === ActivityBestSplitsModifier.Units.Minutes ? formatTime : formatDistance,
               formatTooltipDropRise = (value: any) => {
@@ -958,7 +959,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
                 splitId + "-time",
                 value.time,
                 (value: any) => {
-                  return Helper.secondsToHHMMSS(value, true);
+                  return Time.secToMilitary(value);
                 },
                 "",
                 formatDistance

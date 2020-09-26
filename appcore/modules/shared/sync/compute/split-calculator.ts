@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { WarningException } from "../../exceptions";
 
 export class SplitCalculator {
   public scale: number[];
@@ -6,8 +7,8 @@ export class SplitCalculator {
   public maxScaleGapThreshold: number;
 
   constructor(scale: number[], data: number[], maxScaleGapThreshold?: number) {
-    this.scale = scale;
-    this.data = data;
+    this.scale = _.cloneDeep(scale);
+    this.data = _.cloneDeep(data);
     this.maxScaleGapThreshold = maxScaleGapThreshold;
     this.normalize();
   }
@@ -30,7 +31,7 @@ export class SplitCalculator {
         }
 
         if (_.isNumber(this.maxScaleGapThreshold) && nextScaleDiff > this.maxScaleGapThreshold) {
-          throw new Error("Scale has a too importants gap. Cannot normalize scale");
+          throw new WarningException("Scale has a too importants gap. Cannot normalize scale");
         }
 
         if (nextScaleDiff > 1) {
@@ -56,9 +57,9 @@ export class SplitCalculator {
     this.data = interpolatedData;
   }
 
-  public getBestSplit(scaleRange: number): number {
+  public getBestSplit(scaleRange: number, roundDecimals: number = 3): number {
     if (scaleRange > this.scale.length) {
-      throw new Error(
+      throw new WarningException(
         "Requested scaleRange of " + scaleRange + " is greater than scale range length of " + this.scale.length + "."
       );
     }
@@ -82,17 +83,24 @@ export class SplitCalculator {
       maxSumFound = _.max(this.data);
     }
 
-    return maxSumFound / scaleRange;
+    return _.round(maxSumFound / scaleRange, roundDecimals);
   }
 
   public getBestSplitRanges(ranges: number[]): { range: number; result: number }[] {
     const results: { range: number; result: number }[] = [];
 
     _.forEach(ranges, (range: number) => {
-      results.push({
-        range: range,
-        result: this.getBestSplit(range)
-      });
+      try {
+        results.push({
+          range: range,
+          result: this.getBestSplit(range)
+        });
+      } catch (err) {
+        const isWarnError = err instanceof WarningException;
+        if (!isWarnError) {
+          throw err;
+        }
+      }
     });
 
     return results;

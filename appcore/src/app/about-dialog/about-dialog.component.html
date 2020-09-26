@@ -1,27 +1,33 @@
-<div mat-dialog-title>About</div>
+<div class="mat-h2">About</div>
 <mat-dialog-content class="mat-body-1">
-  <div>
-    <div *ngIf="remoteVersion && remoteVersion === installedVersion" class="space-under">
+  <div *ngIf="remoteVersion">
+    <div *ngIf="!updateAvailable" class="space-under">
       Version <strong>{{installedVersion}}</strong>&nbsp;/&nbsp;<span
       class="mat-caption">Build {{buildMetadata.date + '.' + buildMetadata.commit.slice(0, 8)}}</span>
     </div>
-    <div class="warn-color" *ngIf="remoteVersion && remoteVersion !== installedVersion" class="space-under">
+    <div class="warn-color" *ngIf="updateAvailable" class="space-under">
       New version <strong>{{remoteVersion}}</strong>
-      available. {{(buildTarget === BuildTarget.DESKTOP) ? 'Restart app to trigger update.' : 'Restarting browser may trigger the update.'}}
+      available ➔ {{(buildTarget === BuildTarget.DESKTOP) ? 'Restarting app may trigger the update.' : 'Restarting browser may trigger the update.'}}
     </div>
-    <mat-divider></mat-divider>
   </div>
+  <div *ngIf="!remoteVersion">
+    <strong>Checking for an update...</strong>
+  </div>
+  <mat-divider></mat-divider>
   <div *ngIf="appUsageDetails">
     History size <strong>{{appUsageDetails.megaBytesInUse.toFixed(2)}} MB</strong>.
-    <mat-divider></mat-divider>
   </div>
-
+  <div *ngIf="!appUsageDetails">
+    <strong>Calculating your profile size...</strong>
+  </div>
+  <mat-divider></mat-divider>
   <ng-container *ngIf="(buildTarget === BuildTarget.EXTENSION)">
     <div class="space-under">
       Web extension made with ❤️ by <a href="https://twitter.com/champagnethomas" target="_blank">Thomas Champagne</a>.
     </div>
     <div class="space-under">
-      Elevate is a free and open-source project under GPLv3 license.
+      Elevate is an open-source project under <a href="https://github.com/mozilla/foundation.mozilla.org/blob/master/LICENSE"
+                                                         target="_blank">Mozilla Public License 2.0</a>.
     </div>
     <div class="space-under">
       This extension is adds some features that riders and runners would like to see in their Strava
@@ -37,7 +43,8 @@
       Application made with ❤️ by <a href="https://twitter.com/champagnethomas" target="_blank">Thomas Champagne</a>.
     </div>
     <div class="space-under">
-      Elevate is a free and open-source project under GPLv3 license.
+      Elevate is an open-source project under <a href="https://github.com/mozilla/foundation.mozilla.org/blob/master/LICENSE"
+                                                         target="_blank">Mozilla Public License 2.0</a>.
     </div>
     <mat-divider></mat-divider>
   </ng-container>
@@ -59,7 +66,8 @@
   <div fxLayout="row" fxLayoutAlign="space-evenly center">
     <span>
       <mat-icon fontSet="material-icons-outlined" [inline]="true">public</mat-icon>
-      <a class="mat-caption" href="https://thomaschampagne.github.io/elevate/" target="_blank" style="margin-left: 2px;vertical-align: text-bottom;">thomaschampagne.github.io/elevate</a>
+      <a class="mat-caption" href="https://thomaschampagne.github.io/elevate/" target="_blank"
+         style="margin-left: 2px;vertical-align: text-bottom;">thomaschampagne.github.io/elevate</a>
     </span>
   </div>
 </mat-dialog-content>

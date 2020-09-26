@@ -9,10 +9,14 @@ import { BuildTarget } from "@elevate/shared/enums";
 import _ from "lodash";
 import { Constant } from "@elevate/shared/constants";
 import { ActivatedRoute } from "@angular/router";
+import { OPEN_RESOURCE_RESOLVER } from "../shared/services/links-opener/open-resource-resolver";
+import { DesktopOpenResourceResolver } from "../shared/services/links-opener/impl/desktop-open-resource-resolver.service";
 
 interface FaqEntry {
   question: string | SafeHtml;
   answer: string | SafeHtml;
+  faqUrl: string;
+  anchor: string;
 }
 
 @Component({
@@ -34,16 +38,17 @@ export class HelpComponent implements OnInit {
     @Inject(HttpClient) private readonly httpClient: HttpClient,
     @Inject(DomSanitizer) private readonly domSanitizer: DomSanitizer,
     @Inject(ActivatedRoute) private readonly route: ActivatedRoute,
-    @Inject(LoggerService) private readonly logger: LoggerService
+    @Inject(LoggerService) private readonly logger: LoggerService,
+    @Inject(OPEN_RESOURCE_RESOLVER) public readonly openResourceResolver: DesktopOpenResourceResolver
   ) {
     this.markDownParser = new MarkDownIt();
     this.faqEntries = [];
   }
 
   public ngOnInit(): void {
-    this.getMarkdownFaqStreams().then(mdFaqs => {
-      mdFaqs.forEach(mdFaq => {
-        this.faqEntries = _.flatten([this.faqEntries, this.convertMarkdownToFaqEntries(mdFaq)]);
+    this.getMarkdownFaqStreams().then((faqMarkDowns: { faqUrl: string; md: string }[]) => {
+      faqMarkDowns.forEach(faqMarkDown => {
+        this.faqEntries = _.flatten([this.faqEntries, this.convertFaqMarkdownToFaqEntries(faqMarkDown)]);
       });
       this.isFaqLoaded = true;
     });
@@ -58,8 +63,8 @@ export class HelpComponent implements OnInit {
     sessionStorage.setItem(Constant.SESSION_HELPER_OPENED, "true");
   }
 
-  private convertMarkdownToFaqEntries(markdown: string): FaqEntry[] {
-    const lines = markdown.split(HelpComponent.MARKDOWN_CARRIAGE_RETURN);
+  private convertFaqMarkdownToFaqEntries(faqMarkDown: { faqUrl: string; md: string }): FaqEntry[] {
+    const lines = faqMarkDown.md.split(HelpComponent.MARKDOWN_CARRIAGE_RETURN);
 
     const faqEntries: FaqEntry[] = [];
 
@@ -69,7 +74,7 @@ export class HelpComponent implements OnInit {
     const registerEntry = (entry: FaqEntry) => {
       // Remove markdown title pattern (we will use mat-card-title directly)
       entry.question =
-        "**+** " +
+        "◼️ " +
         (entry.question as string).slice(
           HelpComponent.MARKDOWN_QUESTION_START_PATTERN.length,
           (entry.question as string).length
@@ -92,7 +97,15 @@ export class HelpComponent implements OnInit {
         }
 
         // Init new entry with question and empty answer
-        curFaqEntry = { question: curLine, answer: "" };
+        const anchor = curLine
+          .trim()
+          .toLowerCase()
+          .replace(/[^\w\-]+/g, " ")
+          .trim()
+          .replace(/\s+/g, "-")
+          .replace(/\-+$/, "");
+
+        curFaqEntry = { question: curLine, answer: "", faqUrl: faqMarkDown.faqUrl, anchor: anchor };
       } else {
         curFaqEntry.answer += `${curLine}${HelpComponent.MARKDOWN_CARRIAGE_RETURN}`;
       }
@@ -106,26 +119,30 @@ export class HelpComponent implements OnInit {
     return faqEntries;
   }
 
-  private getMarkdownFaqStreams(): Promise<string[]> {
-    const faqUrls = HelpComponent.FAQS_LIST.map(faq => {
-      return this.getFaqMarkdownUrl(faq);
-    });
-
-    const faqPromises = [];
-    faqUrls.forEach(url => {
-      faqPromises.push(this.fetchRemoteMarkdown(url));
-    });
-
-    return Promise.all(faqPromises);
+  private getMarkdownFaqStreams(): Promise<{ faqUrl: string; md: string }[]> {
+    const results: { faqUrl: string; md: string }[] = [];
+    return HelpComponent.FAQS_LIST.reduce((previousPromise: Promise<void>, faq: string) => {
+      return previousPromise.then(() => {
+        const rawFaqUrl = this.getRawFaqMarkdownUrl(faq);
+        return this.fetchRemoteMarkdown(rawFaqUrl).then(md => {
+          results.push({ faqUrl: this.getFaqUrl(faq), md: md });
+          return Promise.resolve();
+        });
+      });
+    }, Promise.resolve()).then(() => Promise.resolve(results));
   }
 
   private fetchRemoteMarkdown(url: string): Promise<string> {
     return this.httpClient.get(url, { responseType: "text" }).toPromise();
   }
 
-  private getFaqMarkdownUrl(target: string): string {
+  private getRawFaqMarkdownUrl(target: string): string {
     const shortRepoName = this.getRepositoryUrl().split("/").slice(3, 5).join("/"); // Find out the short repo name from repo url
     return `https://raw.githubusercontent.com/${shortRepoName}/faq/${target}.md`;
+  }
+
+  private getFaqUrl(target: string): string {
+    return `${this.getRepositoryUrl()}/blob/faq/${target}.md`;
   }
 
   public getRepositoryUrl(): string {

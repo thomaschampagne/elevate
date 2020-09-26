@@ -3,6 +3,7 @@ import { Helper } from "../helper";
 import { EffortInfo, LeaderBoardData } from "./activity-segment-time-comparison.modifier";
 import { AbstractModifier } from "./abstract.modifier";
 import { AthleteSnapshotModel } from "@elevate/shared/models";
+import { Time } from "@elevate/shared/tools";
 
 export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
   protected displayRecentEffortsHRAdjustedPacePower: boolean;
@@ -338,7 +339,7 @@ export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
                 ["y", (clampedY + 4).toString()],
                 ["class", "axis-tick-text"]
               );
-              title.textContent = showWatts ? hraValue.toFixed(0) : Helper.secondsToHHMMSS(hraValue, true);
+              title.textContent = showWatts ? hraValue.toFixed(0) : Time.secToMilitary(hraValue);
               return [mark, title];
             }
 

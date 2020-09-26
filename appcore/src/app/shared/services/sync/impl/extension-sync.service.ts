@@ -21,6 +21,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { filter } from "rxjs/operators";
 import { CoreMessages } from "@elevate/shared/models";
 import { ChromiumService } from "../../../../extension/chromium.service";
+import { ExtensionUserSettingsService } from "../../user-settings/extension/extension-user-settings.service";
 
 @Injectable()
 export class ExtensionSyncService extends SyncService<SyncDateTime> {
@@ -30,9 +31,6 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
   public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "7.0.0-0.alpha";
 
   public static readonly SYNC_URL_BASE: string = "https://www.strava.com/dashboard";
-  public static readonly SYNC_WINDOW_WIDTH: number = 690;
-  public static readonly SYNC_WINDOW_HEIGHT: number = 720;
-
   public trackedSyncTabId: number;
   public isSyncing: boolean;
 
@@ -42,7 +40,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
     @Inject(ActivityService) public readonly activityService: ActivityService,
     @Inject(StreamsService) public readonly streamsService: StreamsService,
     @Inject(AthleteService) public readonly athleteService: AthleteService,
-    @Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService,
+    @Inject(UserSettingsService) public readonly userSettingsService: ExtensionUserSettingsService,
     @Inject(LoggerService) public readonly logger: LoggerService,
     @Inject(SyncDateTimeDao) public readonly syncDateTimeDao: SyncDateTimeDao,
     @Inject(ChromiumService) public readonly chromiumService: ChromiumService,

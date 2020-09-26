@@ -1,11 +1,12 @@
 import moment from "moment";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
 import { Constant } from "@elevate/shared/constants";
+import { ZoneType } from "@elevate/shared/enums";
 
 export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
   {
     name: "Cycling Speed",
-    value: "speed",
+    value: ZoneType.SPEED,
     units: "KPH",
     step: 0.1,
     min: 0,
@@ -20,7 +21,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
   },
   {
     name: "Running Pace",
-    value: "pace",
+    value: ZoneType.PACE,
     units: "Seconds",
     step: 1,
     min: 0,
@@ -40,29 +41,8 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
     }
   },
   {
-    name: "Grade Adjusted Running Pace",
-    value: "gradeAdjustedPace",
-    units: "Seconds",
-    step: 1,
-    min: 0,
-    max: 3599,
-    customDisplay: {
-      name: "Pace format mm:ss/distance",
-      zoneValue: "gradeAdjustedPace",
-      output: (seconds: number) => {
-        const paceMetric = moment().startOf("day").seconds(seconds).format("mm:ss") + "/km";
-        const paceImperial =
-          moment()
-            .startOf("day")
-            .seconds(seconds / Constant.KM_TO_MILE_FACTOR)
-            .format("mm:ss") + "/mi";
-        return paceMetric + "  | " + paceImperial;
-      }
-    }
-  },
-  {
     name: "Heart Rate",
-    value: "heartRate",
+    value: ZoneType.HEART_RATE,
     units: "BPM",
     step: 1,
     min: 0,
@@ -71,7 +51,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
   },
   {
     name: "Cycling Power",
-    value: "power",
+    value: ZoneType.POWER,
     units: "Watts",
     step: 1,
     min: 0,
@@ -80,7 +60,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
   },
   {
     name: "Running Power",
-    value: "runningPower",
+    value: ZoneType.RUNNING_POWER,
     units: "Watts",
     step: 1,
     min: 0,
@@ -89,7 +69,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
   },
   {
     name: "Cycling Cadence",
-    value: "cyclingCadence",
+    value: ZoneType.CYCLING_CADENCE,
     units: "RPM",
     step: 1,
     min: 0,
@@ -98,7 +78,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
   },
   {
     name: "Running Cadence",
-    value: "runningCadence",
+    value: ZoneType.RUNNING_CADENCE,
     units: "SPM",
     step: 0.1,
     min: 0,
@@ -107,7 +87,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
   },
   {
     name: "Grade",
-    value: "grade",
+    value: ZoneType.GRADE,
     units: "%",
     step: 0.1,
     min: -9999,
@@ -116,7 +96,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
   },
   {
     name: "Elevation",
-    value: "elevation",
+    value: ZoneType.ELEVATION,
     units: "m",
     step: 5,
     min: 0,
@@ -125,7 +105,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
   },
   {
     name: "Ascent speed",
-    value: "ascent",
+    value: ZoneType.ASCENT,
     units: "Vm/h",
     step: 5,
     min: 0,

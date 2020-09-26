@@ -58,23 +58,22 @@ export class DesktopActivityService extends ActivityService {
     syncedActivityModel: SyncedActivityModel,
     userSettingsModel: DesktopUserSettingsModel,
     athleteSnapshotModel: AthleteSnapshotModel,
-    streams: ActivityStreamsModel,
-    smoothAltitude: boolean = false // By default we don't "re-smooth" altitude already smoothed when syncing through connectors
+    streams: ActivityStreamsModel
   ): Promise<SyncedActivityModel> {
     const computeActivityMessage = new FlaggedIpcMessage(
       MessageFlag.COMPUTE_ACTIVITY,
       syncedActivityModel,
       athleteSnapshotModel,
       userSettingsModel,
-      streams,
-      smoothAltitude
+      streams
     );
     return this.ipcMessagesSender.send<SyncedActivityModel>(computeActivityMessage);
   }
 
   public recalculateSingle(
     syncedActivityModel: SyncedActivityModel,
-    userSettingsModel: UserSettings.DesktopUserSettingsModel
+    userSettingsModel: UserSettings.DesktopUserSettingsModel,
+    persistImmediately: boolean = false
   ): Promise<SyncedActivityModel> {
     let athleteSnapshot: AthleteSnapshotModel = null;
 
@@ -90,7 +89,7 @@ export class DesktopActivityService extends ActivityService {
       .then(activityStreamsModel => {
         return this.compute(syncedActivityModel, userSettingsModel, athleteSnapshot, activityStreamsModel).then(
           newSyncedActivityModel => {
-            return this.put(newSyncedActivityModel);
+            return this.put(newSyncedActivityModel, persistImmediately);
           }
         );
       });

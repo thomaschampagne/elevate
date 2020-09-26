@@ -11,7 +11,8 @@ export class AnalysisDataModel {
   public elapsedTime: number;
   public movingTime: number;
   public pauseTime: number;
-  public runningPerformanceIndex: number;
+  public calories: number;
+  public caloriesPerHour: number;
   public speedData: SpeedDataModel;
   public paceData: PaceDataModel;
   public powerData: PowerDataModel;
@@ -19,4 +20,6 @@ export class AnalysisDataModel {
   public cadenceData: CadenceDataModel;
   public gradeData: GradeDataModel;
   public elevationData: ElevationDataModel;
+  public runningPerformanceIndex?: number;
+  public swimSwolf?: number;
 }

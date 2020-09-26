@@ -1,6 +1,8 @@
 import { ZoneModel } from "../zone.model";
+import { PeaksData } from "./peaks-data";
+import { PeakModel } from "../peak.model";
 
-export class HeartRateDataModel {
+export class HeartRateDataModel implements PeaksData {
   public HRSS: number;
   public HRSSPerHour: number;
   public TRIMP: number;
@@ -12,8 +14,8 @@ export class HeartRateDataModel {
   public upperQuartileHeartRate: number;
   public averageHeartRate: number;
   public maxHeartRate: number;
-  public minHeartRate: number;
   public activityHeartRateReserve: number;
   public activityHeartRateReserveMax: number;
   public heartRateZones: ZoneModel[];
+  public peaks: PeakModel[];
 }

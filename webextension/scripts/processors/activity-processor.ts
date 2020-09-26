@@ -113,8 +113,7 @@ export class ActivityProcessor {
       activitySourceData: activitySourceData,
       activityStream: activityStream,
       bounds: bounds,
-      returnZones: true,
-      returnPowerCurve: true
+      returnZones: true
     };
 
     this.computeAnalysisThread.postMessage(threadMessage);

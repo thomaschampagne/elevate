@@ -1,5 +1,5 @@
 export class ConfirmDialogDataModel {
-  public title: string;
+  public title: string | null;
   public content: string;
   public confirmText?: string | boolean;
   public cancelText?: string | boolean;

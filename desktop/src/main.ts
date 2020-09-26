@@ -12,6 +12,7 @@ import { container, inject, singleton } from "tsyringe";
 import { IpcMessagesReceiver } from "./messages/ipc-messages.receiver";
 import { HttpClient } from "./clients/http.client";
 import { IpcMessagesSender } from "./messages/ipc-messages.sender";
+import _ from "lodash";
 
 const IS_ELECTRON_DEV = !app.isPackaged;
 logger.transports.file.level = IS_ELECTRON_DEV ? "debug" : "info";
@@ -27,17 +28,32 @@ const { autoUpdater } = require("electron-updater"); // Import should remains w/
 
 @singleton()
 class Main {
-  private static readonly WINDOW_SIZE_RATIO: number = 0.95;
-
-  private app: Electron.App;
-  private appWindow: BrowserWindow;
-
   constructor(
     @inject(AppService) private readonly appService: AppService,
     @inject(IpcMessagesSender) private readonly ipcMessagesSender: IpcMessagesSender,
     @inject(IpcMessagesReceiver) private readonly messagesService: IpcMessagesReceiver,
     @inject(HttpClient) private readonly httpClient: HttpClient
   ) {}
+  private static readonly DEFAULT_SCREEN_RATIO: number = 0.95;
+  private static readonly LARGE_SCREEN_RATIO: number = 0.85;
+
+  private app: Electron.App;
+  private appWindow: BrowserWindow;
+
+  private static getWorkingAreaSize(screenSize: Electron.Size): Electron.Size {
+    let widthRatio = Main.DEFAULT_SCREEN_RATIO;
+    let heightRatio = Main.DEFAULT_SCREEN_RATIO;
+
+    if (screenSize.width > 1920 && screenSize.height > 1080) {
+      widthRatio = Main.LARGE_SCREEN_RATIO;
+      heightRatio = Main.LARGE_SCREEN_RATIO;
+    }
+
+    return {
+      width: screenSize.width * widthRatio,
+      height: screenSize.height * heightRatio
+    };
+  }
 
   public onElectronReady(): void {
     const gotTheLock = this.app.requestSingleInstanceLock();
@@ -123,14 +139,11 @@ class Main {
 
   private startElevate(onReady: () => void = null): void {
     // Create the browser window.
-    const workAreaSize: Electron.Size = Electron.screen.getPrimaryDisplay().workAreaSize;
-    const width = Math.floor(workAreaSize.width * Main.WINDOW_SIZE_RATIO);
-    const height = Math.floor(workAreaSize.height * Main.WINDOW_SIZE_RATIO);
-
+    const workAreaSize: Electron.Size = Main.getWorkingAreaSize(Electron.screen.getPrimaryDisplay().workAreaSize);
     const windowOptions: Electron.BrowserWindowConstructorOptions = {
       title: "App",
-      width: width,
-      height: height,
+      width: workAreaSize.width,
+      height: workAreaSize.height,
       center: true,
       frame: false,
       show: false,
@@ -165,10 +178,6 @@ class Main {
     // Detect a proxy on the system before listening for message from renderer
     this.httpClient.detectProxy(this.appWindow);
 
-    if (!this.appService.isPackaged) {
-      this.appWindow.webContents.openDevTools();
-    }
-
     // Emitted when the window is closed.
     this.appWindow.on("closed", () => {
       // Dereference the window object, usually you would store window
@@ -177,20 +186,20 @@ class Main {
       this.appWindow = null;
     });
 
-    // Shortcuts
-    globalShortcut.register("CommandOrControl+R" as Electron.Accelerator, () => {
-      if (this.appWindow.isFocused() && IS_ELECTRON_DEV) {
-        logger.debug("CommandOrControl+R is pressed, reload app");
-        this.appWindow.reload();
-      }
-    });
+    // Define "development" and "in prod" behavior
+    if (IS_ELECTRON_DEV) {
+      // Development...
+      // Open dev tool by default
+      this.appWindow.webContents.openDevTools();
+    } else {
+      // Production...
+      // Disable dev tool shortcut
+      globalShortcut.register("CommandOrControl+Shift+I" as Electron.Accelerator, _.noop);
 
-    globalShortcut.register("CommandOrControl+F12" as Electron.Accelerator, () => {
-      if (this.appWindow.isFocused()) {
-        logger.debug("CommandOrControl+F12 is pressed, toggle dev tools");
-        this.appWindow.webContents.toggleDevTools();
-      }
-    });
+      // Disable app window reload shortcuts
+      globalShortcut.register("CommandOrControl+R" as Electron.Accelerator, _.noop);
+      globalShortcut.register("CommandOrControl+Shift+R" as Electron.Accelerator, _.noop);
+    }
   }
 }
 

@@ -10,6 +10,7 @@ import { UserSettings } from "@elevate/shared/models";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../../shared/modules/target/desktop-target.module";
+import { ZoneType } from "@elevate/shared/enums";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZoneToolBarComponent", () => {
@@ -20,7 +21,7 @@ describe("ZoneToolBarComponent", () => {
   const zoneSpeedDefinition: ZoneDefinitionModel[] = [
     {
       name: "Cycling Speed",
-      value: "speed",
+      value: ZoneType.SPEED,
       units: "KPH",
       step: 0.1,
       min: 0,
@@ -29,7 +30,7 @@ describe("ZoneToolBarComponent", () => {
     },
     {
       name: "Heart Rate",
-      value: "heartRate",
+      value: ZoneType.HEART_RATE,
       units: "BPM",
       step: 1,
       min: 0,
@@ -88,19 +89,6 @@ describe("ZoneToolBarComponent", () => {
 
     // When
     compiled.querySelector("#removeLastZone").click();
-
-    // Then
-    expect(spy).toHaveBeenCalledTimes(1);
-    done();
-  });
-
-  it("should call zone service on SaveZones", done => {
-    // Given
-    const spy = spyOn(component.zonesService, "updateZones").and.returnValue(Promise.resolve(null));
-    const compiled = fixture.debugElement.nativeElement;
-
-    // When
-    compiled.querySelector("#saveZones").click();
 
     // Then
     expect(spy).toHaveBeenCalledTimes(1);

@@ -31,6 +31,18 @@
           </mat-option>
         </mat-optgroup>
       </mat-select>
+      <button matSuffix mat-icon-button
+              matTooltip="Tick all"
+              color="primary"
+              (click)="tickAll(); $event.stopPropagation();">
+        <mat-icon fontSet="material-icons-outlined">done_all</mat-icon>
+      </button>
+      <button matSuffix mat-icon-button
+              matTooltip="Un-tick all"
+              color="primary"
+              (click)="unTickAll(); $event.stopPropagation();">
+        <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
+      </button>
       <button (click)="reset(); $event.stopPropagation();" color="primary"
               mat-icon-button
               matSuffix
@@ -40,6 +52,10 @@
     </mat-form-field>
   </div>
 
+  <div *ngIf="isPerformanceDegraded" fxLayout="row" fxLayoutAlign="center center" class="mat-caption warn-color">
+    <mat-icon color="warn" fontSet="material-icons-outlined" inline="true">warning</mat-icon>
+    You may reduce the number of columns displayed to avoid degraded performance.
+  </div>
 
   <div class="table-container">
     <table [dataSource]="dataSource" mat-table matSort>
@@ -58,7 +74,7 @@
             {{column.print(activity, column.path)}}
           </ng-container>
           <ng-container *ngIf="column.type === ColumnType.ACTIVITY_LINK">
-            <button (click)="openSourceActivity(activity.id)" color="primary"
+            <button (click)="openActivity(activity.id)" color="primary"
                     mat-button>{{column.print(activity, column.path)}}</button>
           </ng-container>
           <ng-container *ngIf="column.type === ColumnType.NUMBER">
@@ -90,7 +106,7 @@
     </button>
     <mat-paginator (page)="onPageSizeChanged()"
                    [pageSizeOptions]="[5, 10, 15]"
-                   [pageSize]="5" showFirstLastButtons>
+                   [pageSize]="10" showFirstLastButtons>
     </mat-paginator>
   </div>
 </mat-card>

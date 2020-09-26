@@ -1,7 +1,6 @@
-import { CaloriesEstimator } from "./calories-estimator";
 import { ElevateSport } from "@elevate/shared/enums";
 import { ActivityStreamsModel, AnalysisDataModel, AthleteSettingsModel } from "@elevate/shared/models";
-import { ActivityComputer } from "@elevate/shared/sync";
+import { ActivityComputer, CaloriesEstimator } from "@elevate/shared/sync";
 
 describe("CaloriesEstimator", () => {
   it("should calculate calories of cycling activity", done => {
@@ -24,22 +23,7 @@ describe("CaloriesEstimator", () => {
     const sportType: ElevateSport = ElevateSport.Run;
     const movingTime = 3600;
     const weight = 75;
-    const expectedCalories = 771.7;
-
-    // When
-    const calories = CaloriesEstimator.calc(sportType, movingTime, weight);
-
-    // Then
-    expect(calories).toEqual(expectedCalories);
-    done();
-  });
-
-  it("should not calculate calories if sportType is not supported", done => {
-    // Given
-    const sportType: ElevateSport = ElevateSport.Cricket;
-    const movingTime = 3600;
-    const weight = 75;
-    const expectedCalories = null;
+    const expectedCalories = 771.8;
 
     // When
     const calories = CaloriesEstimator.calc(sportType, movingTime, weight);

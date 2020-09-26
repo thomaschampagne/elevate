@@ -1,3 +1,4 @@
+export * from "./peaks-data";
 export * from "./activity-info.model";
 export * from "./activity-source-data.model";
 export * from "./activity-streams.model";
@@ -12,6 +13,5 @@ export * from "./pace-data.model";
 export * from "./power-data.model";
 export * from "./speed-data.model";
 export * from "./speed-unit-data.model";
-export * from "./up-flat-down-sum-counter.model";
-export * from "./up-flat-down-sum-total.model";
+export * from "./slope-profile.model";
 export * from "./up-flat-down.model";

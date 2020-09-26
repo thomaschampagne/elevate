@@ -6,6 +6,7 @@ import _ from "lodash";
 import { Inject } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { NewInstalledVersionNoticeDialogComponent } from "./new-installed-version-notice-dialog.component";
+import { WarningException } from "@elevate/shared/exceptions";
 
 export abstract class VersionsProvider {
   private static readonly PLATFORM_FILE_EXT_MAP = new Map<Platform, string>([
@@ -105,13 +106,20 @@ export abstract class VersionsProvider {
   }
 
   public notifyInstalledVersion(hasBeenUpgradedToVersion: string): void {
-    this.getGithubReleaseByTag(hasBeenUpgradedToVersion).then(ghRelease => {
-      this.dialog.open(NewInstalledVersionNoticeDialogComponent, {
-        minWidth: NewInstalledVersionNoticeDialogComponent.MIN_WIDTH,
-        maxWidth: NewInstalledVersionNoticeDialogComponent.MAX_WIDTH,
-        data: { ghRelease: ghRelease, platform: this.getPlatform() }
+    this.getGithubReleaseByTag(hasBeenUpgradedToVersion)
+      .then(ghRelease => {
+        this.dialog.open(NewInstalledVersionNoticeDialogComponent, {
+          minWidth: NewInstalledVersionNoticeDialogComponent.MIN_WIDTH,
+          maxWidth: NewInstalledVersionNoticeDialogComponent.MAX_WIDTH,
+          data: { ghRelease: ghRelease, platform: this.getPlatform() }
+        });
+      })
+      .catch(err => {
+        if (err.status === 404) {
+          throw new WarningException(`Can't fetch release notes of ${hasBeenUpgradedToVersion} version from github`);
+        }
+        throw err;
       });
-    });
   }
 
   public getRepositoryUrl(): string {

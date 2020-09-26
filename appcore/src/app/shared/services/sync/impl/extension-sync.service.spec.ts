@@ -334,7 +334,7 @@ describe("ExtensionSyncService", () => {
         expect(syncDateTimeClearSpy).toHaveBeenCalledTimes(1);
         expect(activityServiceClearSpy).toHaveBeenCalledTimes(1);
         expect(streamServiceClearSpy).toHaveBeenCalledTimes(1);
-        expect(spyClearLocalStorage).toHaveBeenCalledTimes(1);
+        expect(spyClearLocalStorage).toHaveBeenCalled();
 
         done();
       },

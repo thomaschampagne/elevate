@@ -17,11 +17,11 @@ import { ElectronService } from "../../desktop/electron/electron.service";
 import { DesktopImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/desktop-import-backup-dialog.component";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
-import { DesktopAppService } from "../../shared/services/app-service/impl/desktop-app.service";
 import { ConnectorSyncDateTime } from "@elevate/shared/models";
 import { ConnectorService } from "../../connectors/connector.service";
 import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
+import { DesktopAppService } from "../../shared/services/app-service/desktop/desktop-app.service";
 
 @Component({
   selector: "app-desktop-sync-menu",

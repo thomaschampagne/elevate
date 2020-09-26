@@ -1,7 +1,6 @@
-.toolbar-spacer {
-  flex: 1 1 auto;
-}
+@import "~src/app/styles/constant";
 
-.step {
-  width: 55px;
+.zone-tool-bar {
+  margin-left: $default-margin;
+  margin-right: $default-margin;
 }

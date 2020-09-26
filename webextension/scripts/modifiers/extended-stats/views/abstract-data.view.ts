@@ -2,7 +2,8 @@ import Chart, { ChartPoint, LinearTickOptions } from "chart.js";
 import _ from "lodash";
 import { Helper } from "../../../helper";
 import { AppResourcesModel } from "../../../models/app-resources.model";
-import { PowerBestSplitModel, SpeedUnitDataModel, ZoneModel } from "@elevate/shared/models";
+import { PeakModel, SpeedUnitDataModel, ZoneModel } from "@elevate/shared/models";
+import { Time } from "@elevate/shared/tools";
 
 type GraphTypes = "histogram" | "scatter-line";
 
@@ -126,7 +127,7 @@ export abstract class AbstractDataView {
     for (zone in zones) {
       const label: string =
         "Z" +
-        (parseInt(zone) + 1) +
+        (parseInt(zone, 10) + 1) +
         " " +
         (zones[zone].from * ratio).toFixed(1).replace(".0", "") +
         " to " +
@@ -200,10 +201,10 @@ export abstract class AbstractDataView {
       })
     );
 
-    tooltip.body[0].lines[0] = "Zone held during " + Helper.secondsToHHMMSS(parseFloat(timeInMinutes) * 60);
+    tooltip.body[0].lines[0] = "Zone held during " + Time.secToMilitary(parseFloat(timeInMinutes) * 60);
   }
 
-  protected setupPointDataTable(pointDataModel: PowerBestSplitModel[]): void {
+  protected setupPointDataTable(pointDataModel: PeakModel[]): void {
     if (!this.units) {
       console.error("View must have units.");
       return;
@@ -226,10 +227,10 @@ export abstract class AbstractDataView {
         return (
           "<tr>" +
           "<td>" +
-          Helper.secondsToHHMMSS(p.time) +
+          Time.secToMilitary(p.range) +
           "</td>" + // Time
           "<td>" +
-          p.watts.toFixed(1) +
+          p.result.toFixed(1) +
           "</td>" + // Value
           "</tr>"
         );
@@ -273,8 +274,8 @@ export abstract class AbstractDataView {
       htmlTable += "<td>Z" + zoneId + "</td>"; // Zone
       htmlTable += "<td>" + (zones[zone].from * ratio).toFixed(1) + "</th>"; // %HRR
       htmlTable += "<td>" + (zones[zone].to * ratio).toFixed(1) + "</th>"; // %HRR
-      htmlTable += "<td>" + Helper.secondsToHHMMSS(zones[zone].s) + "</td>"; // Time%
-      htmlTable += "<td>" + zones[zone].percentDistrib.toFixed(1) + "%</td>"; // % in zone
+      htmlTable += "<td>" + Time.secToMilitary(zones[zone].s) + "</td>"; // Time%
+      htmlTable += "<td>" + zones[zone].percent.toFixed(1) + "%</td>"; // % in zone
       htmlTable += "</tr>";
       zoneId++;
     }
@@ -374,10 +375,7 @@ export abstract class AbstractDataView {
           mode: "nearest",
           callbacks: {
             label: item =>
-              Number(item.yLabel).toFixed(1) +
-              this.units +
-              " held during " +
-              Helper.secondsToHHMMSS(Number(item.xLabel), true)
+              Number(item.yLabel).toFixed(1) + this.units + " held during " + Time.secToMilitary(Number(item.xLabel))
           }
         },
         scales: {
@@ -390,7 +388,7 @@ export abstract class AbstractDataView {
                 callback: (tick: number) => {
                   const remain = tick / Math.pow(10, Math.floor(Math.log10(tick)));
                   if (remain === 1 || remain === 2 || remain === 5) {
-                    return Helper.secondsToHHMMSS(tick, true);
+                    return Time.secToMilitary(tick);
                   }
                   return "";
                 }

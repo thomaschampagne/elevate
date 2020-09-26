@@ -1,7 +1,8 @@
 import { ListItemModel } from "./list-item.model";
+import { UserSettings } from "@elevate/shared/models";
 
 export class OptionModel {
-  public key: string;
+  public key: UserSettings.Props;
   public type: string;
   public title: string;
   public labels: string[];

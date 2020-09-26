@@ -807,6 +807,64 @@ class Installer {
     return Promise.resolve();
   }
 
+  protected migrate_to_7_0_0_4(): Promise<void> {
+    if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "7.0.0-4")) {
+      console.log("Migrate to 7.0.0-4");
+      return new Promise<void>(resolve => {
+        chrome.storage.local.get(null, result => {
+          if (
+            result &&
+            result.syncedActivities &&
+            result.syncedActivities.data &&
+            result.syncedActivities.data.length > 0
+          ) {
+            for (const activity of result.syncedActivities.data) {
+              if (Number.isFinite(activity.extendedStats?.cadenceData?.cadencePercentageMoving)) {
+                activity.extendedStats.cadenceData.cadenceActivePercentage =
+                  activity.extendedStats.cadenceData.cadencePercentageMoving;
+                delete activity.extendedStats.cadenceData.cadencePercentageMoving;
+              }
+
+              if (Number.isFinite(activity.extendedStats?.cadenceData?.cadenceTimeMoving)) {
+                activity.extendedStats.cadenceData.cadenceActiveTime =
+                  activity.extendedStats.cadenceData.cadenceTimeMoving;
+                delete activity.extendedStats.cadenceData.cadenceTimeMoving;
+              }
+
+              if (Number.isFinite(activity.extendedStats?.cadenceData?.averageCadenceMoving)) {
+                activity.extendedStats.cadenceData.averageActiveCadence =
+                  activity.extendedStats.cadenceData.averageCadenceMoving;
+                delete activity.extendedStats.cadenceData.averageCadenceMoving;
+              }
+
+              if (
+                Number.isFinite(activity.calories) &&
+                activity.calories > 0 &&
+                Number.isFinite(activity.elapsed_time_raw) &&
+                activity.elapsed_time_raw > 0 &&
+                activity.extendedStats
+              ) {
+                activity.extendedStats.calories = activity.calories;
+                activity.extendedStats.caloriesPerHour =
+                  (activity.extendedStats.calories / activity.elapsed_time_raw) * 3600;
+                delete activity.calories;
+              }
+            }
+
+            // Update
+            chrome.storage.local.set(result, resolve);
+          } else {
+            resolve();
+          }
+        });
+      });
+    } else {
+      console.log("Skip migrate to 7.0.0-4");
+    }
+
+    return Promise.resolve();
+  }
+
   protected handleUpdate(): Promise<void> {
     console.log("Updated from " + this.previousVersion + " to " + this.currentVersion);
 
@@ -861,6 +919,9 @@ class Installer {
       })
       .then(() => {
         return this.migrate_to_7_0_0_3();
+      })
+      .then(() => {
+        return this.migrate_to_7_0_0_4();
       })
       .catch(error => console.error(error));
   }

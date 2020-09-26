@@ -202,7 +202,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       // Trigger sync start
       return this.ipcMessagesSender.send<string>(startSyncMessage).then(
         (response: string) => {
-          this.logger.info("Message received by ipcMain. Response:", response);
+          this.logger.debug("Message received by ipcMain. Response:", response);
           this.isSyncing$.next(true);
           return Promise.resolve();
         },
@@ -219,7 +219,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     switch (syncEvent.type) {
       case SyncEventType.STARTED:
         syncEvents$.next(syncEvent); // Forward for upward UI use.
-        this.logger.info(syncEvent);
+        this.logger.debug(syncEvent);
         break;
 
       case SyncEventType.ACTIVITY:
@@ -228,7 +228,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
       case SyncEventType.STOPPED:
         syncEvents$.next(syncEvent); // Forward for upward UI use.
-        this.logger.info(syncEvent);
+        this.logger.debug(syncEvent);
         break;
 
       case SyncEventType.GENERIC:
@@ -313,14 +313,14 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         return this.desktopDataStore.saveDataStore();
       })
       .then(() => {
-        this.logger.info(completeSyncEvent);
+        this.logger.debug(completeSyncEvent);
         this.isSyncing$.next(false);
         syncEvents$.next(completeSyncEvent); // Forward for upward UI use.
       });
   }
 
   public stop(): Promise<void> {
-    this.logger.info(`Stop sync requested on connector ${this.currentConnectorType}`);
+    this.logger.debug(`Stop sync requested on connector ${this.currentConnectorType}`);
 
     return new Promise((resolve, reject) => {
       if (this.currentConnectorType === null) {
@@ -332,7 +332,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
       this.ipcMessagesSender.send<string>(stopSyncMessage).then(
         (response: string) => {
-          this.logger.info("Sync stopped. Response from main:", response);
+          this.logger.debug("Sync stopped. Response from main:", response);
           resolve();
           this.isSyncing$.next(false);
         },
@@ -352,7 +352,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     const errors = [];
 
     // Insert new activity or update an existing one to database
-    this.logger.info(
+    this.logger.debug(
       `Trying to upsert activity ${activitySyncEvent.isNew ? "new" : "existing"} "${
         activitySyncEvent.activity.name
       }" started on "${activitySyncEvent.activity.start_time}".`
@@ -361,7 +361,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     this.activityService
       .put(activitySyncEvent.activity)
       .then((syncedActivityModel: SyncedActivityModel) => {
-        this.logger.info(`Activity "${syncedActivityModel.name}" saved`);
+        this.logger.debug(`Activity "${syncedActivityModel.name}" saved`);
 
         const promiseHandlePutStreams: Promise<void | CompressedStreamModel> = activitySyncEvent.compressedStream
           ? this.streamsService.put(

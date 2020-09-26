@@ -1,11 +1,17 @@
-<mat-toolbar>Officials connectors</mat-toolbar>
-<app-file-connector></app-file-connector>
-<mat-toolbar>Third parties connectors</mat-toolbar>
-<app-strava-connector></app-strava-connector>
+<div class="centered-section" fxLayout="column" fxLayoutAlign="space-between start">
+  <div class="connector-container" fxFill>
+    <div class="mat-headline">Officials</div>
+    <app-file-connector fxFill></app-file-connector>
+  </div>
+  <span fxFlex="55"></span>
+  <div class="connector-container" fxFill>
+    <div class="mat-headline">Third parties</div>
+    <app-strava-connector fxFill></app-strava-connector>
+  </div>
 
-<div class="new_connector_contact">
-  <button (click)="onOpenLink('https://twitter.com/champagnethomas')" color="primary"
-          mat-stroked-button>
-    Plug your connector on this page as a fitness company or organization.
-  </button>
+  <div fxFill class="connector-contact">
+    <button (click)="onOpenLink('https://twitter.com/champagnethomas')" color="primary"
+            mat-stroked-button>Add your connector
+    </button>
+  </div>
 </div>

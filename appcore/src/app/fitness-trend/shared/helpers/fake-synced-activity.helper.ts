@@ -30,6 +30,8 @@ export class FakeSyncedActivityHelper {
       elapsedTime: 1,
       movingTime: 1,
       pauseTime: 1,
+      calories: 1,
+      caloriesPerHour: 1,
       runningPerformanceIndex: 25.0,
       cadenceData: null,
       elevationData: null,
@@ -55,9 +57,9 @@ export class FakeSyncedActivityHelper {
         heartRateZones: null,
         lowerQuartileHeartRate: avgHr / 4,
         maxHeartRate: avgHr * 1.5,
-        minHeartRate: avgHr * 0.5,
         medianHeartRate: avgHr / 2,
-        upperQuartileHeartRate: (avgHr / 4) * 3
+        upperQuartileHeartRate: (avgHr / 4) * 3,
+        peaks: null
       };
     }
 
@@ -79,25 +81,23 @@ export class FakeSyncedActivityHelper {
         best20min: avgWatts * 1.5,
         bestEightyPercent: avgWatts,
         weightedWattsPerKg: (avgWatts * 1.25) / 70,
-        powerCurve: [],
         maxPower: avgWatts * 4,
-        minPower: avgWatts * 0.5
+        peaks: null
       };
     }
 
     if (_.isNumber(avgPace)) {
       fakeActivity.extendedStats.paceData = {
         avgPace: avgPace * 100,
+        totalAvgPace: avgPace * 100,
         maxPace: avgPace * 100,
-        minPace: avgPace / 2,
         best20min: avgPace * 150,
         lowerQuartilePace: null,
         medianPace: null,
         upperQuartilePace: null,
-        variancePace: null,
+        standardDeviationPace: null,
         genuineGradeAdjustedAvgPace: avgPace,
         paceZones: null,
-        gradeAdjustedPaceZones: null,
         runningStressScore: type === "Run" || type === "VirtualRun" ? avgPace : null,
         runningStressScorePerHour: type === "Run" || type === "VirtualRun" ? avgPace : null,
         swimStressScore: type === "Swim" ? avgPace : null,

@@ -1,7 +1,7 @@
 import _ from "lodash";
-import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
 import { ActivityInfoModel } from "@elevate/shared/models";
+import { Time } from "@elevate/shared/tools";
 
 export class HeaderView extends AbstractDataView {
   protected activityInfo: ActivityInfoModel;
@@ -19,7 +19,7 @@ export class HeaderView extends AbstractDataView {
         "SEGMENT EFFORT on <i>&lt;" +
         this.activityInfo.segmentEffort.name +
         "&gt;</i> // TIME " +
-        Helper.secondsToHHMMSS(this.activityInfo.segmentEffort.elapsedTimeSec);
+        Time.secToMilitary(this.activityInfo.segmentEffort.elapsedTimeSec);
     } else {
       // Complete activity
       detail = "ACTIVITY <i>&lt;" + this.activityInfo.name + "&gt;</i>";

@@ -7,8 +7,11 @@ import {
   AthleteSettingsModel,
   AthleteSnapshotModel,
   BareActivityModel,
+  CadenceDataModel,
   ConnectorSyncDateTime,
   Gender,
+  HeartRateDataModel,
+  SpeedDataModel,
   SyncedActivityModel,
   UserSettings
 } from "@elevate/shared/models";
@@ -17,7 +20,6 @@ import path from "path";
 import _ from "lodash";
 import xmldom from "xmldom";
 import {
-  ActivityComputer,
   ActivitySyncEvent,
   ConnectorType,
   ErrorSyncEvent,
@@ -42,11 +44,6 @@ import { DataPower } from "@sports-alliance/sports-lib/lib/data/data.power";
 import { FileConnectorConfig } from "../connector-config.model";
 import { container } from "tsyringe";
 import { Hash } from "../../tools/hash";
-import streamsRideJson from "../../estimators/fixtures/723224273/stream.json";
-import expectedRideResultJson from "../../estimators/fixtures/723224273/expected-results.json";
-import streamsRunJson from "../../estimators/fixtures/888821043/stream.json";
-import expectedRunResultJson from "../../estimators/fixtures/888821043/expected-results.json";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 /**
  * Test activities in "fixtures/activities-02" sorted by date ascent.
@@ -629,10 +626,10 @@ describe("FileConnector", () => {
           expect(activitySyncEvent.activity.type).toEqual(ElevateSport.Ride);
           expect(activitySyncEvent.activity.hasPowerMeter).toBeFalsy();
           expect(activitySyncEvent.activity.trainer).toBeFalsy();
-          expect(Math.floor(activitySyncEvent.activity.distance_raw)).toEqual(59849);
-          expect(activitySyncEvent.activity.moving_time_raw).toEqual(9958);
+          expect(Math.floor(activitySyncEvent.activity.distance_raw)).toEqual(59853);
+          expect(activitySyncEvent.activity.moving_time_raw).toEqual(10078);
           expect(activitySyncEvent.activity.elapsed_time_raw).toEqual(10514);
-          expect(activitySyncEvent.activity.elevation_gain_raw).toEqual(685);
+          expect(activitySyncEvent.activity.elevation_gain_raw).toEqual(700);
           expect(activitySyncEvent.activity.sourceConnectorType).toEqual(ConnectorType.FILE);
           expect(activitySyncEvent.activity.extras.fs_activity_location.path).toContain(expectedActivityFilePathMatch);
           expect(activitySyncEvent.activity.athleteSnapshot).toEqual(
@@ -1455,7 +1452,7 @@ describe("FileConnector", () => {
       const defaultElapsedTime = 1000;
       const startDistance = 5;
       const endDistance = 1000;
-      const defaultDistance = endDistance - startDistance;
+      const defaultDistance = endDistance;
       const defaultElevationGain = 0;
 
       beforeEach(done => {
@@ -1792,9 +1789,8 @@ describe("FileConnector", () => {
         trainer: false,
         commute: false,
         elevation_gain_raw: 780,
-        calories: 1456,
         start_timestamp: 11111111111,
-        extendedStats: { cadenceData: null } as any,
+        extendedStats: { cadenceData: null, calories: 1456 } as any,
         athleteSnapshot: new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL),
         sourceConnectorType: ConnectorType.FILE,
         latLngCenter: [111, 222]
@@ -1810,80 +1806,68 @@ describe("FileConnector", () => {
       done();
     });
 
-    it("should compute hash of REAL RIDE activity", done => {
+    it("should compute hash of RIDE activity", done => {
       // Given
-      const smoothAltitude = true;
-      const activityStreams = _.cloneDeep(streamsRideJson) as ActivityStreamsModel;
-      const expectedRideResult = _.cloneDeep(expectedRideResultJson) as SyncedActivityModel;
-      const userSettings = DesktopUserSettingsModel.DEFAULT_MODEL;
-
-      const activityComputer: ActivityComputer = new ActivityComputer(
-        expectedRideResult.type,
-        expectedRideResult.trainer,
-        userSettings,
-        expectedRideResult.athleteSnapshot,
-        true,
-        expectedRideResult.hasPowerMeter,
-        activityStreams,
-        null,
-        false,
-        false,
-        {
-          distance: expectedRideResult.distance_raw,
-          elevation: expectedRideResult.elevation_gain_raw,
-          movingTime: expectedRideResult.moving_time_raw
-        }
-      );
-
-      // Re-compute stats to ensure calculation do not affect hash
-      expectedRideResult.extendedStats = activityComputer.compute(smoothAltitude);
-
+      const expectedHash = "b2c158daf51c304e0729fde8";
+      const activity: Partial<SyncedActivityModel> = {
+        id: "fake",
+        type: ElevateSport.Ride,
+        start_time: "now",
+        end_time: "1 hour later",
+        distance_raw: 30000,
+        hasPowerMeter: true,
+        trainer: false,
+        elevation_gain_raw: 450,
+        latLngCenter: [33, 44],
+        extendedStats: {
+          speedData: {
+            maxSpeed: 45
+          } as SpeedDataModel,
+          heartRateData: {
+            maxHeartRate: 201
+          } as HeartRateDataModel,
+          cadenceData: {
+            maxCadence: 111
+          } as CadenceDataModel
+        } as AnalysisDataModel
+      };
       // When
-      const hash = BaseConnector.activityHash(expectedRideResult);
+      const hash = BaseConnector.activityHash(activity);
 
       // Then
       expect(hash).toBeDefined();
       expect(hash.length).toEqual(24);
-      expect(hash).toEqual(expectedRideResult.hash);
+      expect(hash).toEqual(expectedHash);
 
       done();
     });
 
-    it("should compute hash of REAL RUN activity", done => {
+    it("should compute hash of RUN activity", done => {
       // Given
-      const smoothAltitude = true;
-      const activityStreams = _.cloneDeep(streamsRunJson) as ActivityStreamsModel;
-      const expectedRunResult = _.cloneDeep(expectedRunResultJson) as SyncedActivityModel;
-      const userSettings = DesktopUserSettingsModel.DEFAULT_MODEL;
-
-      const activityComputer: ActivityComputer = new ActivityComputer(
-        expectedRunResult.type,
-        expectedRunResult.trainer,
-        userSettings,
-        expectedRunResult.athleteSnapshot,
-        true,
-        expectedRunResult.hasPowerMeter,
-        activityStreams,
-        null,
-        false,
-        false,
-        {
-          distance: expectedRunResult.distance_raw,
-          elevation: expectedRunResult.elevation_gain_raw,
-          movingTime: expectedRunResult.moving_time_raw
-        }
-      );
-
-      // Re-compute stats to ensure calculation do not affect hash
-      expectedRunResult.extendedStats = activityComputer.compute(smoothAltitude);
-
+      const expectedHash = "45f1950c179ac5810a411eb9";
+      const activity: Partial<SyncedActivityModel> = {
+        id: "fake",
+        type: ElevateSport.Run,
+        start_time: "now",
+        end_time: "1 hour later",
+        distance_raw: 10000,
+        hasPowerMeter: false,
+        trainer: false,
+        elevation_gain_raw: 122,
+        latLngCenter: [66, 33],
+        extendedStats: {
+          speedData: {
+            maxSpeed: 13.5
+          }
+        } as AnalysisDataModel
+      };
       // When
-      const hash = BaseConnector.activityHash(expectedRunResult);
+      const hash = BaseConnector.activityHash(activity);
 
       // Then
       expect(hash).toBeDefined();
       expect(hash.length).toEqual(24);
-      expect(hash).toEqual(expectedRunResult.hash);
+      expect(hash).toEqual(expectedHash);
 
       done();
     });
@@ -1903,9 +1887,8 @@ describe("FileConnector", () => {
         trainer: false,
         commute: false,
         elevation_gain_raw: 780,
-        calories: 1456,
         start_timestamp: 11111111111,
-        extendedStats: { cadenceData: null } as any,
+        extendedStats: { cadenceData: null, calories: 1456 } as any,
         athleteSnapshot: new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL),
         sourceConnectorType: ConnectorType.FILE,
         latLngCenter: [111, 222]
@@ -1925,7 +1908,6 @@ describe("FileConnector", () => {
         trainer: activity.trainer,
         id: activity.id,
         commute: activity.commute,
-        calories: activity.calories,
         start_timestamp: activity.start_timestamp,
         name: activity.name,
         extendedStats: activity.extendedStats,
@@ -1942,7 +1924,7 @@ describe("FileConnector", () => {
     });
   });
 
-  describe("Provide activity geo barycenter ", () => {
+  describe("Provide activity geo barycenter", () => {
     it("should find bary center of a geo stream", done => {
       // Given
       const streams: Partial<ActivityStreamsModel> = {

@@ -1,0 +1,22 @@
+<div *ngFor="let statsGroupDisplay of statsGroupDisplays;" class="stat-display-group" [style.border-left]="'3px solid ' + statsGroupDisplay.color">
+  <div class="mat-title" *ngIf="statsGroupDisplay.name">
+    {{statsGroupDisplay.name}}
+  </div>
+  <div>
+    <mat-grid-list [cols]="mediaObserver.isActive('lt-lg') ? MD_ROW_COUNT : LG_ROW_COUNT" [rowHeight]="ROW_HEIGHT">
+      <mat-grid-tile *ngFor="let statDisplay of statsGroupDisplay.statDisplays;" [class.help]="statDisplay.description">
+        <div fxFill fxLayout="column" fxLayoutAlign="center center" [matTooltip]="statDisplay.description">
+          <div>
+            <span class="mat-h1">{{statDisplay.value}}</span><span *ngIf="statDisplay.unit" class="mat-body-1"> {{statDisplay.unit}}</span>
+          </div>
+          <div class="mat-body-1">
+            {{statDisplay.name}}
+          </div>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</div>
+
+
+

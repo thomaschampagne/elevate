@@ -7,7 +7,7 @@ import { CoreModule } from "../../../core/core.module";
 import _ from "lodash";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
-import { BuildTarget } from "@elevate/shared/enums";
+import { BuildTarget, ZoneType } from "@elevate/shared/enums";
 import { TargetModule } from "../../modules/target/desktop-target.module";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
@@ -95,31 +95,6 @@ describe("UserSettingsService", () => {
     );
   });
 
-  it("should mark local storage to be clear", done => {
-    // Given
-    const expectedSettings = _.cloneDeep(ExtensionUserSettingsModel.DEFAULT_MODEL);
-    expectedSettings.localStorageMustBeCleared = true;
-
-    const updatePropertyDaoSpy = spyOn(userSettingsService.userSettingsDao, "update").and.returnValue(
-      Promise.resolve(expectedSettings)
-    );
-
-    // When
-    const promiseClearLS: Promise<void> = userSettingsService.clearLocalStorageOnNextLoad();
-
-    // Then
-    promiseClearLS.then(
-      () => {
-        expect(updatePropertyDaoSpy).toHaveBeenCalledTimes(1);
-        done();
-      },
-      error => {
-        expect(error).toBeNull();
-        done();
-      }
-    );
-  });
-
   it("should save user zone", done => {
     // Given
     const TO_BE_SAVED_ZONES = [
@@ -136,7 +111,7 @@ describe("UserSettingsService", () => {
 
     const zoneDefinition: ZoneDefinitionModel = {
       name: "Cycling Speed",
-      value: "speed",
+      value: ZoneType.SPEED,
       units: "KPH",
       step: 0.1,
       min: 0,

@@ -9,7 +9,6 @@ import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { AppError } from "../../../shared/models/app-error.model";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { FitnessTrendConfigModel } from "../models/fitness-trend-config.model";
-import { ElevateSport } from "@elevate/shared/enums";
 
 @Injectable()
 export class FitnessService {
@@ -79,9 +78,7 @@ export class FitnessService {
                   fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS));
 
             const hasPowerData: boolean =
-              (activity.type === ElevateSport.Ride ||
-                activity.type === ElevateSport.VirtualRide ||
-                activity.type === ElevateSport.EBikeRide) &&
+              SyncedActivityModel.isRide(activity.type, true) &&
               powerMeterEnable &&
               fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP &&
               _.isNumber(activity.athleteSnapshot.athleteSettings.cyclingFtp) &&
@@ -92,7 +89,7 @@ export class FitnessService {
               _.isNumber(activity.extendedStats.powerData.powerStressScore);
 
             const hasRunningData: boolean =
-              (activity.type === ElevateSport.Run || activity.type === ElevateSport.VirtualRun) &&
+              SyncedActivityModel.isRun(activity.type) &&
               fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP &&
               _.isNumber(activity.athleteSnapshot.athleteSettings.runningFtp) &&
               activity.extendedStats &&
@@ -102,7 +99,7 @@ export class FitnessService {
 
             const hasSwimmingData: boolean =
               swimEnable &&
-              activity.type === ElevateSport.Swim &&
+              SyncedActivityModel.isSwim(activity.type) &&
               fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP &&
               _.isNumber(activity.athleteSnapshot.athleteSettings.swimFtp) &&
               activity.athleteSnapshot.athleteSettings.swimFtp > 0 &&

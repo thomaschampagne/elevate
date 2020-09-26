@@ -10,11 +10,11 @@ export class CyclingPowerCurveView extends AbstractDataView {
     this.powerData = powerData;
     this.graphTitle = "Power best efforts vs. time";
     this.setupScatterLineGraph(
-      this.powerData.powerCurve.map(split => {
-        return { x: split.time, y: split.watts };
+      this.powerData.peaks.map(split => {
+        return { x: split.range, y: split.result };
       })
     );
-    this.setupPointDataTable(this.powerData.powerCurve);
+    this.setupPointDataTable(this.powerData.peaks);
   }
 
   public render(): void {

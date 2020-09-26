@@ -48,7 +48,7 @@ export class DesktopMigrationService {
               return Promise.resolve();
             });
         } else {
-          this.logger.info("No upgrade detected");
+          this.logger.debug("No upgrade detected");
         }
 
         return Promise.resolve();
@@ -141,7 +141,7 @@ export class DesktopMigrationService {
         if (upgradeRequiresRecalculationByVersion) {
           return this.activityService.count().then(count => {
             if (count > 0) {
-              this.flagRequiresRecalculationByVersion(upgradeRequiresRecalculationByVersion);
+              this.flagRequiresActivitiesRecalculationByVersion(upgradeRequiresRecalculationByVersion);
             }
             return Promise.resolve();
           });
@@ -162,7 +162,7 @@ export class DesktopMigrationService {
     return localStorage.removeItem(DesktopMigrationService.RECALCULATE_REQUIRED_LS_KEY);
   }
 
-  public flagRequiresRecalculationByVersion(version: string): void {
+  public flagRequiresActivitiesRecalculationByVersion(version: string): void {
     localStorage.setItem(DesktopMigrationService.RECALCULATE_REQUIRED_LS_KEY, version);
   }
 }

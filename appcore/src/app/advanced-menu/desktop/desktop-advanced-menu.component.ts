@@ -1,4 +1,4 @@
-import { Component, Inject } from "@angular/core";
+import { Component, HostListener, Inject } from "@angular/core";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -11,67 +11,97 @@ import { ElectronService } from "../../desktop/electron/electron.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
 import { UserSettings } from "@elevate/shared/models";
+import { devToolsPinCodeGenerator } from "./dev-tools-pin-code-genenator";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 @Component({
   selector: "app-advanced-menu",
   template: `
-    <mat-card>
-      <mat-card-content>
-        <div class="mat-h3">
-          In case of problem with the app this section might help you. If problem continues, consider uninstall/install
-          the app or report a bug.
-        </div>
-        <div class="mat-title">Activities tools</div>
-        <div>
-          <button mat-stroked-button color="primary" (click)="onRecalculateActivities()">
-            Recalculate stats on all activities
-          </button>
-        </div>
-        <div class="mat-title">Clean / Reset</div>
-        <div>
-          <button mat-stroked-button color="primary" (click)="onSyncedBackupClear()">
-            Delete athlete's activities
-          </button>
-        </div>
-        <div>
-          <button mat-stroked-button color="primary" (click)="onUserSettingsReset()">
-            Reset athlete & global settings
-          </button>
-        </div>
-        <div>
-          <button mat-stroked-button color="primary" (click)="onFullAppReset()">Full application reset</button>
-        </div>
-        <div class="mat-title">Debugging</div>
-        <div>
-          <button mat-stroked-button color="primary" (click)="openLogsFolder()">Open logs folder</button>
-        </div>
-        <div class="mat-title">Others</div>
-        <div>
-          <button mat-stroked-button color="primary" (click)="openAppDataFolder()">
-            Open user program data folder
-          </button>
-        </div>
-        <div>
-          <button mat-stroked-button color="primary" (click)="openAppExecFolder()">
-            Open executable program folder
-          </button>
-        </div>
-        <div>
-          <button mat-stroked-button color="primary" (click)="onRestart()">Restart app</button>
-        </div>
-      </mat-card-content>
-    </mat-card>
+    <div class="narrow-centered-section">
+      <mat-card>
+        <mat-card-title>Activities tools</mat-card-title>
+        <mat-card-content>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Recalculate all activities from current athlete settings</div>
+            <div>
+              <button mat-stroked-button color="primary" (click)="onRecalculateActivities()">
+                Recalculate activities
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Application</mat-card-title>
+        <mat-card-content>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Open logs folder of the application</div>
+            <div>
+              <button mat-stroked-button color="primary" (click)="openLogsFolder()">Open logs folder</button>
+            </div>
+          </div>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Open user application data folder</div>
+            <div>
+              <button mat-stroked-button color="primary" (click)="openAppDataFolder()">Open user data folder</button>
+            </div>
+          </div>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Open application install folder</div>
+            <div>
+              <button mat-stroked-button color="primary" (click)="openAppExecFolder()">Open install folder</button>
+            </div>
+          </div>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Restart the application</div>
+            <div>
+              <button mat-stroked-button color="primary" (click)="onRestart()">Restart now</button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-title>Danger zone</mat-card-title>
+        <mat-card-content>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Wipe synced activities</div>
+            <div>
+              <button mat-stroked-button color="warn" (click)="onSyncedBackupClear()">Wipe activities</button>
+            </div>
+          </div>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Reset global and zones settings to defaults</div>
+            <div>
+              <button mat-stroked-button color="warn" (click)="onGlobalAndZonesSettingsReset()">
+                Reset global settings
+              </button>
+            </div>
+          </div>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Reset athlete settings to defaults</div>
+            <div>
+              <button mat-stroked-button color="warn" (click)="onAthleteSettingsReset()">Reset athlete settings</button>
+            </div>
+          </div>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Complete reset of the application</div>
+            <div>
+              <button mat-stroked-button color="warn" (click)="onFullAppReset()">Reset everything</button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
   `,
   styles: [
     `
-      button {
-        width: 300px;
+      .entry {
+        padding-top: 5px;
+        padding-bottom: 5px;
       }
-
-      div {
-        padding-top: 10px;
-        padding-bottom: 10px;
+      button {
+        width: 175px;
       }
     `
   ]
@@ -87,25 +117,47 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
     @Inject(ElectronService) protected readonly electronService: ElectronService
   ) {
     super(syncService, dialog, snackBar);
+    this.expectedDevToolsPin = devToolsPinCodeGenerator();
+    this.userDevToolsPin = null;
   }
 
-  public onUserSettingsReset(): void {
-    const data: ConfirmDialogDataModel = {
-      title: "Reset settings",
-      content:
-        "This will reset your settings to defaults including: dated athlete settings and global settings. Are you sure to perform this action?"
-    };
+  public userDevToolsPin: string;
+  public expectedDevToolsPin: string;
 
+  public onGlobalAndZonesSettingsReset(): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       minWidth: ConfirmDialogComponent.MIN_WIDTH,
       maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-      data: data
+      data: {
+        title: "Reset global and zones settings",
+        content: "This will reset your global and zones settings to defaults. Are you sure to perform this action?"
+      } as ConfirmDialogDataModel
+    });
+
+    const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+      if (confirm) {
+        Promise.all([this.userSettingsService.reset()]).then(() => {
+          this.snackBar.open("Settings have been reset", "Close");
+          afterClosedSubscription.unsubscribe();
+        });
+      }
+    });
+  }
+
+  public onAthleteSettingsReset(): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      minWidth: ConfirmDialogComponent.MIN_WIDTH,
+      maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+      data: {
+        title: "Reset athlete settings",
+        content: "This will reset your athlete settings to defaults. Are you sure to perform this action?"
+      } as ConfirmDialogDataModel
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
         Promise.all([this.userSettingsService.reset(), this.athleteService.resetSettings()]).then(() => {
-          this.snackBar.open("Settings have been reset", "Close");
+          this.snackBar.open("Athlete settings have been reset", "Close");
           afterClosedSubscription.unsubscribe();
         });
       }
@@ -115,8 +167,7 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
   public onRecalculateActivities(): void {
     const data: ConfirmDialogDataModel = {
       title: "Recalculate stats on all activities",
-      content:
-        "This will recompute stats on all your activities based on your current dated athlete settings and sensors' streams of each activity."
+      content: "This will recalculate stats of every activities using your current dated athlete settings."
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -136,9 +187,8 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 
   public onFullAppReset(): void {
     const data: ConfirmDialogDataModel = {
-      title: "App reset",
-      content:
-        'This will completely delete all the data generated by the application to reach a "fresh install" state. Are you sure to perform this action?'
+      title: "Full application reset",
+      content: `This will erase everything to reach a "fresh install" state. Are you sure to perform this action?`
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -172,5 +222,29 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 
   public onRestart(): void {
     this.electronService.restartApp();
+  }
+
+  @HostListener("window:keyup", ["$event"])
+  public listenForValidDevToolsPin(event: KeyboardEvent): void {
+    if (!this.userDevToolsPin) {
+      this.userDevToolsPin = "";
+    }
+
+    if (!this.userDevToolsPin) {
+      this.userDevToolsPin = "";
+    }
+
+    this.userDevToolsPin += event.code.slice(-1);
+
+    if (!this.expectedDevToolsPin.startsWith(this.userDevToolsPin)) {
+      this.userDevToolsPin = null;
+      return;
+    }
+
+    if (this.userDevToolsPin === this.expectedDevToolsPin) {
+      this.userDevToolsPin = null;
+      this.electronService.openDevTools();
+      this.snackBar.open("Access granted to developer tools", "Close", { duration: 4000 });
+    }
   }
 }

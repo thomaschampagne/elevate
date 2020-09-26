@@ -2,6 +2,7 @@ import _ from "lodash";
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
 import { PaceDataModel, ZoneModel } from "@elevate/shared/models";
+import { Time } from "@elevate/shared/tools";
 
 export class PaceDataView extends AbstractDataView {
   protected paceData: PaceDataModel;
@@ -44,9 +45,8 @@ export class PaceDataView extends AbstractDataView {
 
   protected insertDataIntoGrid(): void {
     if (this.isSegmentEffortView) {
-      const paceTimePerDistance: string = Helper.secondsToHHMMSS(
-        this.paceData.avgPace / this.speedUnitsData.speedUnitFactor,
-        true
+      const paceTimePerDistance: string = Time.secToMilitary(
+        this.paceData.avgPace / this.speedUnitsData.speedUnitFactor
       );
       this.insertContentAtGridPosition(
         0,
@@ -61,7 +61,7 @@ export class PaceDataView extends AbstractDataView {
         this.insertContentAtGridPosition(
           0,
           0,
-          Helper.secondsToHHMMSS(this.paceData.best20min / this.speedUnitsData.speedUnitFactor, true),
+          Time.secToMilitary(this.paceData.best20min / this.speedUnitsData.speedUnitFactor),
           "Best 20min Pace <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
           this.units,
           "displayAdvancedSpeedData"
@@ -92,7 +92,7 @@ export class PaceDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       1,
-      Helper.secondsToHHMMSS(this.paceData.lowerQuartilePace / this.speedUnitsData.speedUnitFactor, true),
+      Time.secToMilitary(this.paceData.lowerQuartilePace / this.speedUnitsData.speedUnitFactor),
       "25% Quartile Pace",
       this.units,
       "displayAdvancedSpeedData"
@@ -100,7 +100,7 @@ export class PaceDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       1,
-      Helper.secondsToHHMMSS(this.paceData.medianPace / this.speedUnitsData.speedUnitFactor, true),
+      Time.secToMilitary(this.paceData.medianPace / this.speedUnitsData.speedUnitFactor),
       "50% Quartile Pace",
       this.units,
       "displayAdvancedSpeedData"
@@ -108,7 +108,7 @@ export class PaceDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       2,
       1,
-      Helper.secondsToHHMMSS(this.paceData.upperQuartilePace / this.speedUnitsData.speedUnitFactor, true),
+      Time.secToMilitary(this.paceData.upperQuartilePace / this.speedUnitsData.speedUnitFactor),
       "75% Quartile Pace",
       this.units,
       "displayAdvancedSpeedData"
@@ -140,13 +140,13 @@ export class PaceDataView extends AbstractDataView {
     htmlTable += "</tr>";
 
     _.forEach(zones, (zone: ZoneModel, index: number) => {
-      const from: string = zone.from === 0 ? "&infin;" : Helper.secondsToHHMMSS(zone.from * ratio);
+      const from: string = zone.from === 0 ? "&infin;" : Time.secToMilitary(zone.from * ratio);
       htmlTable += "<tr>"; // Zone
       htmlTable += "<td>Z" + (index + 1) + "</td>"; // Zone
       htmlTable += "<td>" + from + "</th>"; // %HRR
-      htmlTable += "<td>" + Helper.secondsToHHMMSS(zone.to * ratio) + "</th>"; // %HRR
-      htmlTable += "<td>" + Helper.secondsToHHMMSS(zone.s) + "</td>"; // Time%
-      htmlTable += "<td>" + zone.percentDistrib.toFixed(1) + "%</td>"; // % in zone
+      htmlTable += "<td>" + Time.secToMilitary(zone.to * ratio) + "</th>"; // %HRR
+      htmlTable += "<td>" + Time.secToMilitary(zone.s) + "</td>"; // Time%
+      htmlTable += "<td>" + zone.percent.toFixed(1) + "%</td>"; // % in zone
       htmlTable += "</tr>";
     });
 
@@ -165,9 +165,9 @@ export class PaceDataView extends AbstractDataView {
     const distributionArray: number[] = [];
 
     _.forEach(zones, (zone: ZoneModel, index: number) => {
-      const from: string = zone.from === 0 ? "Infinite" : Helper.secondsToHHMMSS(zone.from * ratio);
+      const from: string = zone.from === 0 ? "Infinite" : Time.secToMilitary(zone.from * ratio);
       const label: string =
-        "Z" + (index + 1) + ": " + from + " - " + Helper.secondsToHHMMSS(zone.to * ratio) + " " + this.units;
+        "Z" + (index + 1) + ": " + from + " - " + Time.secToMilitary(zone.to * ratio) + " " + this.units;
       labelsData.push(label);
 
       distributionArray.push(Number((zone.s / 60).toFixed(2)));

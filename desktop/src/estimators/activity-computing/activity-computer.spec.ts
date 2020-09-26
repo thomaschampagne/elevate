@@ -1,88 +1,16 @@
 import {
-  ActivitySourceDataModel,
   ActivityStreamsModel,
   AnalysisDataModel,
   AthleteSettingsModel,
   AthleteSnapshotModel,
-  Gender,
-  SyncedActivityModel,
-  UserSettings
+  Gender
 } from "@elevate/shared/models";
 import { ElevateSport } from "@elevate/shared/enums";
-import _ from "lodash";
 import { ActivityComputer } from "@elevate/shared/sync";
-import streamsRideJson from "../fixtures/723224273/stream.json";
-import expectedRideResultJson from "../fixtures/723224273/expected-results.json";
-import streamsRunJson from "../fixtures/888821043/stream.json";
-import expectedRunResultJson from "../fixtures/888821043/expected-results.json";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { Time } from "@elevate/shared/tools";
 
 describe("ActivityComputer", () => {
-  const smoothAltitude = true;
-
-  it("should compute RIDE activity https://www.strava.com/activities/723224273", done => {
-    const activityStreams = _.cloneDeep(streamsRideJson) as ActivityStreamsModel;
-    const expectedRideResult = _.cloneDeep(expectedRideResultJson) as SyncedActivityModel;
-    const userSettings = DesktopUserSettingsModel.DEFAULT_MODEL;
-    const isOwner = true;
-
-    const activitySourceData: ActivitySourceDataModel = {
-      distance: expectedRideResult.distance_raw,
-      elevation: expectedRideResult.elevation_gain_raw,
-      movingTime: expectedRideResult.moving_time_raw
-    };
-    const activityComputer: ActivityComputer = new ActivityComputer(
-      expectedRideResult.type,
-      expectedRideResult.trainer,
-      userSettings,
-      expectedRideResult.athleteSnapshot,
-      isOwner,
-      expectedRideResult.hasPowerMeter,
-      activityStreams,
-      null,
-      false,
-      false,
-      activitySourceData
-    );
-
-    const computedStatsResult: AnalysisDataModel = activityComputer.compute(smoothAltitude);
-    expect(computedStatsResult).toEqual(expectedRideResult.extendedStats);
-
-    done();
-  });
-
-  it("should compute RUN activity https://www.strava.com/activities/888821043", done => {
-    const activityStreams = _.cloneDeep(streamsRunJson) as ActivityStreamsModel;
-    const expectedRunResult = _.cloneDeep(expectedRunResultJson) as SyncedActivityModel;
-    const userSettings = DesktopUserSettingsModel.DEFAULT_MODEL;
-    const isOwner = true;
-
-    const activitySourceData: ActivitySourceDataModel = {
-      distance: expectedRunResult.distance_raw,
-      elevation: expectedRunResult.elevation_gain_raw,
-      movingTime: expectedRunResult.moving_time_raw
-    };
-    const activityComputer: ActivityComputer = new ActivityComputer(
-      expectedRunResult.type,
-      expectedRunResult.trainer,
-      userSettings,
-      expectedRunResult.athleteSnapshot,
-      isOwner,
-      expectedRunResult.hasPowerMeter,
-      activityStreams,
-      null,
-      false,
-      false,
-      activitySourceData
-    );
-
-    const computedStatsResult: AnalysisDataModel = activityComputer.compute(smoothAltitude);
-    expect(computedStatsResult).toEqual(expectedRunResult.extendedStats);
-
-    done();
-  });
-
-  describe("compute stress scores", () => {
+  describe("compute scores", () => {
     let _ATHLETE_MODEL_SNAP_: AthleteSnapshotModel;
 
     beforeEach(done => {
@@ -181,6 +109,22 @@ describe("ActivityComputer", () => {
 
       // Then
       expect(Math.floor(runningStressScore)).toBeGreaterThan(expectedStressScore);
+      done();
+    });
+
+    it("should compute swim SWOLF", done => {
+      // Given
+      const averageStrokePerMin = 26;
+      const poolLength = 20;
+      const swimPace = "02:58"; // mm:ss/100m
+      const expectedSwolf = 51;
+      const secondsPer100m = Time.militaryToSec(swimPace);
+
+      // When
+      const swolf = ActivityComputer.computeSwimSwolf(secondsPer100m, averageStrokePerMin, poolLength);
+
+      // Then
+      expect(swolf).toEqual(expectedSwolf);
       done();
     });
   });

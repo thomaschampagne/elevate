@@ -8,6 +8,7 @@ import { BuildTarget } from "@elevate/shared/enums";
 import { DataStore } from "../shared/data-store/data-store";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
+import semver from "semver/preload";
 
 @Component({
   selector: "app-about-dialog",
@@ -24,9 +25,10 @@ export class AboutDialogComponent implements OnInit {
   public angularCoreVersion: string;
   public angularMaterialVersion: string;
   public d3Version: string;
-  public installedVersion: string;
   public appUsageDetails: AppUsageDetails;
+  public installedVersion: string;
   public remoteVersion: string;
+  public updateAvailable: boolean;
   public buildMetadata: { commit: string; date: string };
   public wrapperVersion: string;
 
@@ -35,7 +37,9 @@ export class AboutDialogComponent implements OnInit {
     @Inject(DataStore) private readonly dataStore: DataStore<object>,
     @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
     @Inject(LoggerService) private readonly logger: LoggerService
-  ) {}
+  ) {
+    this.updateAvailable = false;
+  }
 
   public ngOnInit(): void {
     this.dataStore.getAppUsageDetails().then((appUsageDetails: AppUsageDetails) => {
@@ -48,6 +52,7 @@ export class AboutDialogComponent implements OnInit {
       .getLatestRemoteVersion()
       .then(version => {
         this.remoteVersion = version;
+        this.updateAvailable = semver.gt(this.remoteVersion, this.installedVersion);
       })
       .catch(err => {
         this.logger.warn(err);

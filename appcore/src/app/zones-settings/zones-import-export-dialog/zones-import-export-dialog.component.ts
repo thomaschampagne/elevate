@@ -37,6 +37,7 @@ export class ZonesImportExportDialogComponent implements OnInit {
       () => {
         // Import goes well
         this.dialogRef.close();
+        this.snackBar.open("Zones have been imported", "Close", { duration: 3500 });
       },
       (error: string) => {
         this.snackBar.open(error, "Close", { duration: 3500 });

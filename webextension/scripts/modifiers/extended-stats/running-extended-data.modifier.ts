@@ -8,9 +8,9 @@ import { PaceDataView } from "./views/pace-data.view";
 import { RunningCadenceDataView } from "./views/running-cadence.data.view";
 import { RunningGradeDataView } from "./views/running-grade-data.view";
 import { RunningPowerDataView } from "./views/running-power-data.view";
-import { GradeAdjustedPaceDataView } from "./views/grade-adjusted-pace-data.view";
 import $ from "jquery";
 import _ from "lodash";
+import { Time } from "@elevate/shared/tools";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
@@ -31,10 +31,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
     let q3Move = "-";
     let units = "";
     if (this.analysisData.paceData && this.userSettings.displayAdvancedSpeedData) {
-      q3Move = Helper.secondsToHHMMSS(
-        this.analysisData.paceData.upperQuartilePace / this.speedUnitsData.speedUnitFactor,
-        true
-      );
+      q3Move = Time.secToMilitary(this.analysisData.paceData.upperQuartilePace / this.speedUnitsData.speedUnitFactor);
       units = "/" + this.speedUnitsData.units;
     }
     this.insertContentAtGridPosition(1, 0, q3Move, "75% Quartile Pace", units, "displayAdvancedSpeedData");
@@ -48,7 +45,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
       if (avgClimbPace !== -1) {
         const seconds: number = avgClimbPace / this.speedUnitsData.speedUnitFactor;
         if (seconds) {
-          climbPaceDisplayed = Helper.secondsToHHMMSS(seconds, true);
+          climbPaceDisplayed = Time.secToMilitary(seconds);
         }
       }
 
@@ -65,21 +62,17 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
     if (this.userSettings.displayAdvancedPowerData) {
       let averageWatts = "-";
       let averageWattsTitle = "Average Power";
-      let userSettingKey = "displayAdvancedPowerData";
+      const userSettingKey = "displayAdvancedPowerData";
 
       if (this.analysisData.powerData && this.analysisData.powerData.avgWatts) {
         if (this.analysisData.powerData.hasPowerMeter) {
           // Real running power data
           averageWatts = this.printNumber(this.analysisData.powerData.avgWatts);
-          userSettingKey = "displayAdvancedPowerData";
         } else {
-          // Estimated running power data..
-          if (this.userSettings.displayRunningPowerEstimation) {
-            averageWattsTitle = "Estimated " + averageWattsTitle;
-            userSettingKey = "displayRunningPowerEstimation";
-            averageWatts =
-              "<span style='font-size: 14px;'>~</span>" + this.printNumber(this.analysisData.powerData.avgWatts);
-          }
+          // Estimated power data..
+          averageWattsTitle = "Estimated " + averageWattsTitle;
+          averageWatts =
+            "<span style='font-size: 14px;'>~</span>" + this.printNumber(this.analysisData.powerData.avgWatts);
         }
       }
 
@@ -169,33 +162,11 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
       this.dataViews.push(paceDataView);
     }
 
-    // Grade Adjusted Pace view
-    if (
-      this.analysisData.paceData &&
-      this.analysisData.paceData.gradeAdjustedPaceZones &&
-      this.userSettings.displayAdvancedSpeedData
-    ) {
-      const measurementPreference: string = window.currentAthlete.get("measurement_preference");
-      const units: string = measurementPreference === "meters" ? "/km" : "/mi";
-
-      const gradeAdjustedPaceDataView: GradeAdjustedPaceDataView = new GradeAdjustedPaceDataView(
-        this.analysisData.paceData,
-        units
-      );
-      gradeAdjustedPaceDataView.setAppResources(this.appResources);
-      gradeAdjustedPaceDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
-      gradeAdjustedPaceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
-      this.dataViews.push(gradeAdjustedPaceDataView);
-    }
-
     // Power data
     if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
       // Is feature enable?
 
-      // Is beta estimated running power activated?
-      const isEstimatedRunningPowerFeatureEnabled = this.userSettings.displayRunningPowerEstimation;
-
-      if (this.analysisData.powerData.hasPowerMeter || isEstimatedRunningPowerFeatureEnabled) {
+      if (this.analysisData.powerData.hasPowerMeter) {
         const powerDataView: RunningPowerDataView = new RunningPowerDataView(this.analysisData.powerData, "w");
         powerDataView.setAppResources(this.appResources);
         powerDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);

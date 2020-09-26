@@ -1,0 +1,114 @@
+<mat-card *ngIf="activity">
+  <div fxLayout="row" fxLayoutAlign="space-between start">
+    <div>
+      <mat-card-title>
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <div>
+            <button mat-icon-button color="primary" (click)="onBackToActivities()"
+                    matTooltip="Back to activities table">
+              <mat-icon fontSet="material-icons-outlined">arrow_back</mat-icon>
+            </button>
+          </div>
+          <div>
+            {{typeDisplay}} - {{activity.name}}<mat-icon *ngIf="activity.hasPowerMeter" fontSet="material-icons-outlined" [inline]="true" color="primary"
+                                                                    matTooltip="Power meter available">bolt
+          </mat-icon>
+          </div>
+        </div>
+      </mat-card-title>
+      <mat-card-subtitle>On {{startDateDisplay}} <strong
+        matTooltip="Athlete physical attributes during activity">@ {{athleteSnapshotDisplay}}</strong>
+        &nbsp;<span class="primary-color mat-caption pointer" (click)="onConfigureAthleteSettings();">[configure]</span>
+      </mat-card-subtitle>
+    </div>
+    <div>
+      <button mat-icon-button [matMenuTriggerFor]="moreMenu">
+        <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
+      </button>
+      <mat-menu #moreMenu="matMenu">
+        <button mat-menu-item *ngIf="hasStravaActivityId()" (click)="onOpenSourceActivity(ConnectorType.STRAVA)">
+          <mat-icon fontSet="material-icons-outlined" svgIcon="strava"></mat-icon>
+          Open in Strava
+        </button>
+        <button mat-menu-item *ngIf="hasActivityFilePath()" (click)="onOpenSourceActivity(ConnectorType.FILE)">
+          <mat-icon fontSet="material-icons-outlined">folder</mat-icon>
+          Open file location
+        </button>
+        <button mat-menu-item (click)="onEditActivity()">
+          <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+          Edit activity
+        </button>
+        <button mat-menu-item (click)="onRecalculateActivity()">
+          <mat-icon fontSet="material-icons-outlined">memory</mat-icon>
+          Recalculate activity
+        </button>
+        <button mat-menu-item (click)="onDeleteActivity()">
+          <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+          Delete activity
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+  <mat-card-content>
+
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <div *ngIf="hasMapData" fxFlex="67">
+        <app-activity-view-map [latLng]="shapedStreams.latlng">
+        </app-activity-view-map>
+      </div>
+      <div *ngIf="hasMapData" fxFlex="1"></div>
+      <div fxFlex="{{hasMapData ? 32 : 100}}">
+        <app-activity-view-summary-stats
+          [measureSystem]="userSettings.systemUnit"
+          [activity]="activity"
+          [hasMapData]="hasMapData"
+        ></app-activity-view-summary-stats>
+      </div>
+    </div>
+
+    <app-activity-graph-chart *ngIf="shapedStreams" [measureSystem]="userSettings.systemUnit"
+                              [activity]="activity"
+                              [shapedStreams]="shapedStreams">
+    </app-activity-graph-chart>
+
+    <mat-tab-group mat-stretch-tabs>
+
+      <mat-tab label="Stats">
+        <ng-template matTabContent>
+          <app-activity-view-stats [measureSystem]="userSettings.systemUnit"
+                                   [activity]="activity"></app-activity-view-stats>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Peaks" *ngIf="activity?.extendedStats">
+        <ng-template matTabContent>
+          <app-activity-view-peaks [measureSystem]="userSettings.systemUnit"
+                                   [activity]="activity"
+                                   [analysisData]="activity.extendedStats">
+          </app-activity-view-peaks>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Time in Zones" *ngIf="shapedStreams">
+        <ng-template matTabContent>
+          <app-activity-view-time-in-zones [measureSystem]="userSettings.systemUnit"
+                                           [activity]="activity"
+                                           [shapedStreams]="shapedStreams"></app-activity-view-time-in-zones>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Intervals" *ngIf="shapedStreams">
+        <ng-template matTabContent>
+          <app-activity-view-intervals></app-activity-view-intervals>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab label="Best Splits" *ngIf="shapedStreams">
+        <ng-template matTabContent>
+          <app-activity-view-best-splits></app-activity-view-best-splits>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+
+  </mat-card-content>
+</mat-card>

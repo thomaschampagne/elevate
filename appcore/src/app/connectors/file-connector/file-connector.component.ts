@@ -63,6 +63,10 @@ export class FileConnectorComponent extends ConnectorsComponent implements OnIni
     this.configureSourceDirectory(this.electronService.userDirectorySelection());
   }
 
+  public onUserDirectoryOpen(): void {
+    this.electronService.openItem(this.fileConnectorInfo.sourceDirectory);
+  }
+
   public configureSourceDirectory(path: string): void {
     const isExistingFolder = this.isExistingFolder(path);
     if (isExistingFolder) {

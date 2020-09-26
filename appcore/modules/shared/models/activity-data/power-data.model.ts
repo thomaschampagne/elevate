@@ -1,9 +1,9 @@
 import { ZoneModel } from "../zone.model";
-import { PowerBestSplitModel } from "../power-best-split.model";
+import { PeakModel } from "../peak.model";
+import { PeaksData } from "./peaks-data";
 
-export class PowerDataModel {
+export class PowerDataModel implements PeaksData {
   public maxPower: number;
-  public minPower: number;
   public hasPowerMeter: boolean;
   public avgWatts: number;
   public avgWattsPerKg: number;
@@ -19,6 +19,5 @@ export class PowerDataModel {
   public medianWatts: number;
   public upperQuartileWatts: number;
   public powerZones: ZoneModel[];
-  public powerCurve: PowerBestSplitModel[];
-  public isEstimatedRunningPower?: boolean;
+  public peaks: PeakModel[];
 }

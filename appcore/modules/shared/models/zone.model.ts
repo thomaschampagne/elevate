@@ -1,6 +1,6 @@
 export class ZoneModel {
-  public from: number;
-  public to: number;
-  public s?: number;
-  public percentDistrib?: number;
+  public from: number = null;
+  public to: number = null;
+  public s?: number = null;
+  public percent?: number = null;
 }

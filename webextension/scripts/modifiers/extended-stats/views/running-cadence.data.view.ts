@@ -12,7 +12,7 @@ export class RunningCadenceDataView extends AbstractCadenceDataView {
       const cadenceDataClone: CadenceDataModel = _.cloneDeep(cadenceData);
 
       // Then multiply cadence per 2
-      cadenceDataClone.averageCadenceMoving *= 2;
+      cadenceDataClone.averageActiveCadence *= 2;
       cadenceDataClone.lowerQuartileCadence *= 2;
       cadenceDataClone.medianCadence *= 2;
       cadenceDataClone.upperQuartileCadence *= 2;
@@ -64,8 +64,8 @@ export class RunningCadenceDataView extends AbstractCadenceDataView {
     this.insertContentAtGridPosition(
       0,
       0,
-      this.printNumber(this.cadenceData.averageCadenceMoving, 1),
-      "Avg Cadence",
+      this.printNumber(this.cadenceData.averageActiveCadence, 1),
+      "Active Avg Cadence",
       this.units,
       "displayCadenceData"
     );
@@ -143,29 +143,15 @@ export class RunningCadenceDataView extends AbstractCadenceDataView {
     );
 
     // Row 3
-    this.insertContentAtGridPosition(
-      0,
-      3,
-      this.printNumber(this.cadenceData.lowerQuartileDistancePerOccurrence, 2),
-      "25% Stride Length",
-      "M",
-      "displayCadenceData"
-    );
-    this.insertContentAtGridPosition(
-      1,
-      3,
-      this.printNumber(this.cadenceData.medianDistancePerOccurrence, 2),
-      "50% Stride Length",
-      "M",
-      "displayCadenceData"
-    );
-    this.insertContentAtGridPosition(
-      2,
-      3,
-      this.printNumber(this.cadenceData.upperQuartileDistancePerOccurrence, 2),
-      "75% Stride Length",
-      "M",
-      "displayCadenceData"
-    );
+    if (_.isNumber(this.cadenceData.averageDistancePerOccurrence)) {
+      this.insertContentAtGridPosition(
+        0,
+        3,
+        this.printNumber(this.cadenceData.averageDistancePerOccurrence, 2),
+        "Avg Stride Length",
+        "M",
+        "displayCadenceData"
+      );
+    }
   }
 }

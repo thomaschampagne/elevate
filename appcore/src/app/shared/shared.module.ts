@@ -7,7 +7,6 @@ import { ZoneToolBarComponent } from "../zones-settings/zone-tool-bar/zone-tool-
 import { GotItDialogComponent } from "./dialogs/got-it-dialog/got-it-dialog.component";
 import { ConfirmDialogComponent } from "./dialogs/confirm-dialog/confirm-dialog.component";
 import { OptionHelperDialogComponent } from "../global-settings/option-helper-dialog/option-helper-dialog.component";
-import { UserSettingsService } from "./services/user-settings/user-settings.service";
 import { GlobalSettingsService } from "../global-settings/services/global-settings.service";
 import { UserSettingsDao } from "./dao/user-settings/user-settings.dao";
 import { OptionHelperReaderService } from "../global-settings/services/option-helper-reader.service";
@@ -22,7 +21,6 @@ import { CoreModule } from "../core/core.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
 import { AthleteSnapshotResolverService } from "./services/athlete-snapshot-resolver/athlete-snapshot-resolver.service";
-import { AthleteService } from "./services/athlete/athlete.service";
 import { AthleteDao } from "./dao/athlete/athlete.dao";
 import { ActivityDao } from "./dao/activity/activity.dao";
 import { HelpComponent } from "../help/help.component";
@@ -67,9 +65,7 @@ import { ComponentsFactoryService } from "./services/components-factory.service"
   ],
   providers: [
     ComponentsFactoryService,
-    UserSettingsService,
     UserSettingsDao,
-    AthleteService,
     AthleteDao,
     AthleteSnapshotResolverService,
     ActivityDao,

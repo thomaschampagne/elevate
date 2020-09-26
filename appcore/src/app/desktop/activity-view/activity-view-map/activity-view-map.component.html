@@ -1,0 +1,10 @@
+<div leaflet
+     [style.width]="MAP_WIDTH_PERCENT + '%'"
+     [style.height]="MAP_HEIGHT_PX + 'px'"
+     [leafletOptions]="options"
+     [leafletLayers]="leafletLayers"
+     [leafletLayersControl]="layersControl"
+     (leafletMapReady)="onMapReady($event)"
+     (leafletLayersControlReady)="onLayersControlReady($event)"
+     (auxclick)="onAuxClick($event)">
+</div>

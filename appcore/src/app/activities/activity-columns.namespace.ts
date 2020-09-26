@@ -4,7 +4,6 @@ import { SyncedActivityModel } from "@elevate/shared/models";
 import _ from "lodash";
 import moment from "moment";
 import { Constant } from "@elevate/shared/constants";
-import { ElevateSport } from "@elevate/shared/enums";
 
 export namespace ActivityColumns {
   export interface SpecificUnits {}
@@ -20,13 +19,7 @@ export namespace ActivityColumns {
   }
 
   export class CadenceUnits implements SpecificUnits {
-    public cycling: string;
-    public running: string;
-
-    constructor(cycling: string, running: string) {
-      this.cycling = cycling;
-      this.running = running;
-    }
+    constructor(public cycling: string, public running: string, public swimming: string) {}
   }
 
   export enum ColumnType {
@@ -250,14 +243,14 @@ export namespace ActivityColumns {
       }
 
       if (units && units instanceof CadenceUnits) {
-        if (activity.type === ElevateSport.Run) {
+        if (SyncedActivityModel.isRun(activity.type)) {
           units = units.running;
-        } else if (
-          activity.type === ElevateSport.Ride ||
-          activity.type === ElevateSport.VirtualRide ||
-          activity.type === ElevateSport.EBikeRide
-        ) {
+        } else if (SyncedActivityModel.isSwim(activity.type)) {
+          units = units.swimming;
+        } else if (SyncedActivityModel.isRide(activity.type, true)) {
           units = units.cycling;
+        } else {
+          units = "rpm";
         }
       }
 
@@ -366,7 +359,7 @@ export namespace ActivityColumns {
     public static readonly ELEVATION_SYSTEM_UNITS: SystemUnits = new SystemUnits("m", "ft");
     public static readonly VERTICAL_ASCENT_SYSTEM_UNITS: SystemUnits = new SystemUnits("vm/h", "vft/h");
     public static readonly SPEED_SYSTEM_UNITS: SystemUnits = new SystemUnits("kph", "mph");
-    public static readonly CADENCE_UNITS: CadenceUnits = new CadenceUnits("rpm", "spm");
+    public static readonly CADENCE_UNITS: CadenceUnits = new CadenceUnits("rpm", "spm", "spm");
 
     public static readonly ALL: Column<SyncedActivityModel>[] = [
       /**
@@ -424,8 +417,9 @@ export namespace ActivityColumns {
         "Run Perf. Index",
         Print.number,
         2
-      ),
-      new NumberColumn(Category.COMMON, "calories", null, "Calories", Print.number),
+      ).setDescription("Running Performance Index from Polar company."),
+      new NumberColumn(Category.COMMON, "extendedStats.calories", null, "Calories", Print.number),
+      new NumberColumn(Category.COMMON, "extendedStats.caloriesPerHour", null, "Calories / Hour", Print.number),
       new NumberColumn(Category.COMMON, "extendedStats.moveRatio", null, "Move Ratio", Print.number, 2),
 
       /**
@@ -436,6 +430,16 @@ export namespace ActivityColumns {
         "extendedStats.speedData.totalAvgSpeed",
         Definition.SPEED_SYSTEM_UNITS,
         "Avg Total Speed",
+        Print.number,
+        1,
+        1,
+        Constant.KM_TO_MILE_FACTOR
+      ),
+      new NumberColumn(
+        Category.SPEED,
+        "extendedStats.speedData.maxSpeed",
+        Definition.SPEED_SYSTEM_UNITS,
+        "Max Speed",
         Print.number,
         1,
         1,
@@ -482,7 +486,6 @@ export namespace ActivityColumns {
         1,
         Constant.KM_TO_MILE_FACTOR
       ),
-      // new NumberColumn(Category.SPEED, "extendedStats.speedData.varianceSpeed", Definition.SPEED_SYSTEM_UNITS, "", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
       new NumberColumn(
         Category.SPEED,
         "extendedStats.speedData.standardDeviationSpeed",
@@ -615,25 +618,37 @@ export namespace ActivityColumns {
        */
       new NumberColumn(
         Category.CADENCE,
-        "extendedStats.cadenceData.cadencePercentageMoving",
-        "%",
-        "Cadence % Moving"
-      ).setDescription("Cadence percentage while moving"),
-      new NumberColumn(
-        Category.CADENCE,
-        "extendedStats.cadenceData.cadenceTimeMoving",
-        null,
-        "Cadence Time Moving",
-        Print.time
-      ).setDescription("Cadence Time while moving"),
-      new NumberColumn(
-        Category.CADENCE,
-        "extendedStats.cadenceData.averageCadenceMoving",
+        "extendedStats.cadenceData.averageActiveCadence",
         Definition.CADENCE_UNITS,
-        "Cadence Avg Moving"
+        "Avg Active Cadence"
       )
-        .setDescription("Cadence Average while moving")
+        .setDescription("Average cadence when active")
         .setDefault(true),
+      new NumberColumn(
+        Category.CADENCE,
+        "extendedStats.cadenceData.averageCadence",
+        Definition.CADENCE_UNITS,
+        "Avg Cadence"
+      ).setDescription("Cadence Average inc. pause time"),
+      new NumberColumn(
+        Category.CADENCE,
+        "extendedStats.cadenceData.cadenceActivePercentage",
+        "%",
+        "Active Cadence %"
+      ).setDescription("Active cadence percentage when active"),
+      new NumberColumn(
+        Category.CADENCE,
+        "extendedStats.cadenceData.maxCadence",
+        Definition.CADENCE_UNITS,
+        "Max Cadence"
+      ),
+      new NumberColumn(
+        Category.CADENCE,
+        "extendedStats.cadenceData.cadenceActiveTime",
+        null,
+        "Active Cadence Time",
+        Print.time
+      ).setDescription("Active cadence time"),
       new NumberColumn(
         Category.CADENCE,
         "extendedStats.cadenceData.standardDeviationCadence",
@@ -665,19 +680,19 @@ export namespace ActivityColumns {
         Category.CADENCE,
         "extendedStats.cadenceData.upFlatDownCadencePaceData.up",
         Definition.CADENCE_UNITS,
-        "Climbing Avg Cadence"
+        "Avg Climbing Cadence"
       ),
       new NumberColumn(
         Category.CADENCE,
         "extendedStats.cadenceData.upFlatDownCadencePaceData.flat",
         Definition.CADENCE_UNITS,
-        "Flat Avg Cadence"
+        "Avg Flat Cadence"
       ),
       new NumberColumn(
         Category.CADENCE,
         "extendedStats.cadenceData.upFlatDownCadencePaceData.down",
         Definition.CADENCE_UNITS,
-        "Downhill Avg Cadence"
+        "Avg Downhill Cadence"
       ),
       new NumberColumn(
         Category.CADENCE,
@@ -689,9 +704,6 @@ export namespace ActivityColumns {
         1,
         Constant.METER_TO_FEET_FACTOR
       ),
-      // new NumberColumn(Category.CADENCE, "extendedStats.cadenceData.lowerQuartileDistancePerOccurrence", "rpm", "lowerQuartileDistancePerOccurrence"),
-      // new NumberColumn(Category.CADENCE, "extendedStats.cadenceData.medianDistancePerOccurrence", "rpm", "medianDistancePerOccurrence"),
-      // new NumberColumn(Category.CADENCE, "extendedStats.cadenceData.upperQuartileDistancePerOccurrence", "rpm", "upperQuartileDistancePerOccurrence"),
 
       /**
        * Power

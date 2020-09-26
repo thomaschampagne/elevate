@@ -14,7 +14,8 @@ export class ConfirmDialogComponent implements OnInit {
   public static readonly MAX_WIDTH: string = "80%";
   public static readonly MIN_WIDTH: string = "40%";
 
-  public html: SafeHtml;
+  public htmlTitle: SafeHtml;
+  public htmlContent: SafeHtml;
   public confirmCountdown$: Observable<number>;
 
   constructor(
@@ -24,7 +25,8 @@ export class ConfirmDialogComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    this.html = this.domSanitizer.bypassSecurityTrustHtml(this.dialogData.content);
+    this.htmlTitle = this.domSanitizer.bypassSecurityTrustHtml(this.dialogData.title);
+    this.htmlContent = this.domSanitizer.bypassSecurityTrustHtml(this.dialogData.content);
 
     if (this.dialogData.confirmTimeout > 0) {
       this.dialogRef.disableClose = this.dialogRef.disableClose !== undefined ? this.dialogRef.disableClose : true;

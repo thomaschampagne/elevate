@@ -15,69 +15,6 @@ export class Helper {
     };
   }
 
-  public static HHMMSStoSeconds(str: string): number {
-    const p = str.split(":");
-    let s = 0;
-    let m = 1;
-
-    while (p.length > 0) {
-      s += m * parseInt(p.pop(), 10);
-      m *= 60;
-    }
-    return s;
-  }
-
-  public static secondsToHHMMSS(secondsParam: number, trimLeadingZeros?: boolean): string {
-    const secNum: number = Math.round(secondsParam); // don't forget the second param
-    const hours: number = Math.floor(secNum / 3600);
-    const minutes: number = Math.floor((secNum - hours * 3600) / 60);
-    const seconds: number = secNum - hours * 3600 - minutes * 60;
-
-    let time: string = hours < 10 ? "0" + hours.toFixed(0) : hours.toFixed(0);
-    time += ":" + (minutes < 10 ? "0" + minutes.toFixed(0) : minutes.toFixed(0));
-    time += ":" + (seconds < 10 ? "0" + seconds.toFixed(0) : seconds.toFixed(0));
-
-    return trimLeadingZeros ? Helper.trimLeadingZerosHHMMSS(time) : time;
-  }
-
-  public static trimLeadingZerosHHMMSS(time: string): string {
-    const result: string = time.replace(/^(0*:)*/, "").replace(/^0*/, "") || "0";
-    if (result.indexOf(":") < 0) {
-      return result + "s";
-    }
-    return result;
-  }
-
-  public static weightedPercentiles(values: number[], weights: number[], percentiles: number[]): number[] {
-    // inspired from https://en.wikipedia.org/wiki/Weighted_median and https://en.wikipedia.org/wiki/Percentile#Definition_of_the_Weighted_Percentile_method
-    const list: any[] = [];
-    let tot = 0;
-    for (let i = 0; i < values.length; i++) {
-      list.push({ value: values[i], weight: weights[i] });
-      tot += weights[i];
-    }
-    list.sort((a, b) => {
-      return a.value - b.value;
-    });
-    const result: number[] = [];
-    for (let i = 0; i < percentiles.length; i++) {
-      result.push(0);
-    }
-
-    let cur = 0;
-    for (let i = 0; i < list.length; i++) {
-      for (let j = 0; j < percentiles.length; j++) {
-        // found the sample matching the percentile
-        if (cur < percentiles[j] * tot && cur + list[i].weight > (percentiles[j] - 0.00001) * tot) {
-          result[j] = list[i].value;
-        }
-      }
-      cur += list[i].weight;
-    }
-
-    return result;
-  }
-
   public static heartrateFromHeartRateReserve(hrr: number, maxHr: number, restHr: number): number {
     return Math.abs(Math.floor((hrr / 100) * (maxHr - restHr) + restHr));
   }

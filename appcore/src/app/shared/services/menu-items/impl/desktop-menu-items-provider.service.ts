@@ -31,6 +31,11 @@ export class DesktopMenuItemsProvider implements MenuItemsProvider {
       routerLinkActive: true
     },
     {
+      icon: "format_line_spacing",
+      routerLink: AppRoutes.zonesSettings,
+      routerLinkActive: true
+    },
+    {
       icon: "power",
       routerLink: AppRoutes.connectors,
       routerLinkActive: true

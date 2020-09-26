@@ -26,6 +26,10 @@ import { ConnectorsModule } from "../../../connectors/connectors.module";
 import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/desktop-advanced-menu.component";
 import { DesktopImportBackupDialogComponent } from "../../dialogs/import-backup-dialog/desktop-import-backup-dialog.component";
 import { DesktopRoutingModule } from "../routing/desktop-routing.module";
+import { UserSettingsService } from "../../services/user-settings/user-settings.service";
+import { DesktopUserSettingsService } from "../../services/user-settings/desktop/desktop-user-settings.service";
+import { AthleteService } from "../../services/athlete/athlete.service";
+import { DesktopAthleteService } from "../../services/athlete/desktop/desktop-athlete.service";
 
 @NgModule({
   imports: [CoreModule, DesktopRoutingModule, ConnectorsModule],
@@ -43,6 +47,8 @@ import { DesktopRoutingModule } from "../routing/desktop-routing.module";
     PropertiesDao,
     StravaConnectorInfoDao,
     FileConnectorInfoService,
+    { provide: AthleteService, useClass: DesktopAthleteService },
+    { provide: UserSettingsService, useClass: DesktopUserSettingsService },
     { provide: DataStore, useClass: DesktopDataStore },
     { provide: PROMISE_TRON, useClass: PromiseTronService },
     { provide: ActivityService, useClass: DesktopActivityService },

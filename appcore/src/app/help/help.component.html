@@ -2,10 +2,10 @@
   <mat-progress-bar mode="buffer"></mat-progress-bar>
 </div>
 
-<div *ngIf="(isFaqLoaded === true)">
+<div class="centered-section" *ngIf="(isFaqLoaded === true)">
   <div class="search mat-subheading-2" fxLayout="row" fxLayoutAlign="center center">
     <mat-form-field fxFlex="50">
-      <input [(ngModel)]="keywords" matInput placeholder="Enter keywords..." type="search">
+      <input [(ngModel)]="keywords" matInput placeholder="Search for help with keywords..." type="search">
       <button *ngIf="keywords" (click)="keywords=''" aria-label="keywords" mat-button mat-icon-button
               matSuffix>
         <mat-icon fontSet="material-icons-outlined">close</mat-icon>
@@ -21,6 +21,11 @@
         <mat-panel-title class="mat-h4" [innerHtml]="faqEntry.question"></mat-panel-title>
       </mat-expansion-panel-header>
       <p [innerHtml]="faqEntry.answer"></p>
+      <div class="view-online">
+        <button mat-stroked-button color="accent" (click)="openResourceResolver.openLink(faqEntry.faqUrl)">
+          View online
+        </button>
+      </div>
     </mat-expansion-panel>
   </mat-accordion>
 

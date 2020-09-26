@@ -17,7 +17,7 @@ Remember that _Estimated Weighted Power_ is an estimation because it's based on 
 ---
 _Variability Index_ is an indication of how your activity was paced. This indication shows how smooth or evenly paced the power output was during a race or work out. Basically _Variability Index_ is _Weighted Power_ over _Average watts_:  
 
-> $VariabilityIndex=\frac{WeigthedPower}{Averagewatts}$
+> $VariabilityIndex=\frac{WeightedPower}{Averagewatts}$
 
 # Functional Threshold Power (FTP)
 ---
@@ -28,7 +28,7 @@ Represents your best average power you can sustain for one hour. [Read threshold
 Although _Weighted Power_ is a better measure of training _intensity_ than average power, it does not take into account differences in fitness within or between individuals.
 _Intensity_ is simply the ratio of the _Weighted Power_ as above over your Functional Threshold Power (FTP) (entered in athlete settings):.  
 
-> $Intensity=\frac{WeigthedPower}{Cycling FTP}$
+> $Intensity=\frac{WeightedPower}{Cycling FTP}$
 
 For example, if your _Weighted Power_ for a long training ride done early in the year is 210 W and your threshold power at the time is 280 W, then the PF for that workout would be 0.75\. However, if you did that same exact ride later in the year after your threshold power had risen to 300 W, then the PF would be lower, i.e., 0.70. _Intensity_ therefore provides a valid and convenient way of comparing the relative _intensity_ of a training session or race either within or between riders, taking into account changes or differences in threshold power.  
 
@@ -47,7 +47,7 @@ Greater than 1.15 prologue TT, track pursuit, track miss-and-o;
 ---
 If you own a cycling power meter then you get get the "Power Stress Score (PSS)" into your cycling activities. PSS formula is:  
 
-> $Power Stress Score (PSS)=\frac{EffortInSeconds~\times~WeigthedPower~\times~Intensity}{Cycling FTP~\times~3600}~\times~100$  
+> $Power Stress Score (PSS)=\frac{EffortInSeconds~\times~WeightedPower~\times~Intensity}{Cycling FTP~\times~3600}~\times~100$  
 
 Note that _PSS_ is equivalent to [_TSS&reg;_ from TrainingPeaks&trade;](https://help.trainingpeaks.com/hc/en-us/articles/204071944-Training-Stress-Scores-TSS-Explained)
 

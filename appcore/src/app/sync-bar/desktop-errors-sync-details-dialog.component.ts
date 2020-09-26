@@ -9,7 +9,6 @@ import { LoggerService } from "../shared/services/logging/logger.service";
   selector: "app-desktop-errors-sync-details-dialog",
   template: `
     <h2 mat-dialog-title>{{ eventErrors.length }} sync warning{{ eventErrors.length > 1 ? "s" : "" }} occurred</h2>
-    <h3 class="mat-subheading-1">Warning are also displayed in developer console (CTRL+F12)</h3>
     <mat-dialog-content class="mat-body-1">
       <mat-accordion>
         <mat-expansion-panel *ngFor="let errorEvent of eventErrors">

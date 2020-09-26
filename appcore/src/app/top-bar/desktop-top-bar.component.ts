@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, HostListener, Inject, OnInit } from "@angular/core";
 import { VersionsProvider } from "../shared/services/versions/versions-provider";
 import { ElectronService } from "../desktop/electron/electron.service";
 import { TopBarComponent } from "./top-bar.component";
@@ -7,7 +7,7 @@ import { TopBarComponent } from "./top-bar.component";
   selector: "app-desktop-top-bar",
   template: `
     <div class="top-bar">
-      <div class="draggable"></div>
+      <div *ngIf="!isFullScreen" class="draggable"></div>
       <span class="top-bar-title mat-body-strong" *ngIf="buildMetadata && buildMetadata.commit && buildMetadata.date">
         Elevate v{{ currentVersion }}
       </span>
@@ -67,12 +67,19 @@ export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
   public isFullscreen: boolean = null;
   public currentVersion: string;
   public buildMetadata: { commit: string; date: string };
+  public isFullScreen: boolean;
 
   constructor(
     @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
     @Inject(ElectronService) private readonly electronService: ElectronService
   ) {
     super();
+    this.isFullScreen = false;
+  }
+
+  @HostListener("document:fullscreenchange")
+  public fullScreenListener(): void {
+    this.isFullScreen = !window.screenTop && !window.screenY;
   }
 
   public ngOnInit() {

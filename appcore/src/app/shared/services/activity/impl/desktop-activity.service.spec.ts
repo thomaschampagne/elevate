@@ -47,14 +47,12 @@ describe("DesktopActivityService", () => {
         AthleteSettingsModel.DEFAULT_MODEL
       );
       const streams: ActivityStreamsModel = new ActivityStreamsModel([0, 1], [0, 1], [0, 1]);
-      const smoothAltitude = false;
       const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.COMPUTE_ACTIVITY,
         syncedActivityModel,
         athleteSnapshotModel,
         userSettingsModel,
-        streams,
-        smoothAltitude
+        streams
       );
       const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(
         Promise.resolve(syncedActivityModel)
@@ -90,14 +88,12 @@ describe("DesktopActivityService", () => {
         AthleteSettingsModel.DEFAULT_MODEL
       );
       const streams: ActivityStreamsModel = new ActivityStreamsModel([0, 1], [0, 1], [0, 1]);
-      const smoothAltitude = false;
       const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.COMPUTE_ACTIVITY,
         syncedActivityModel,
         athleteSnapshotModel,
         userSettingsModel,
-        streams,
-        smoothAltitude
+        streams
       );
       const expectedErrorMessage = "Computation error";
       const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(
@@ -145,14 +141,12 @@ describe("DesktopActivityService", () => {
 
       const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
       const streams: ActivityStreamsModel = new ActivityStreamsModel([0, 1], [0, 1], [0, 1]);
-      const smoothAltitude = false;
       const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.COMPUTE_ACTIVITY,
         syncedActivityModel,
         athleteSnapshotModel,
         userSettingsModel,
-        streams,
-        smoothAltitude
+        streams
       );
 
       const athleteSnapshotUpdateSpy = spyOn(desktopActivityService.athleteSnapshotResolver, "update").and.returnValue(
@@ -218,14 +212,12 @@ describe("DesktopActivityService", () => {
 
       const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
       const streams: ActivityStreamsModel = null;
-      const smoothAltitude = false;
       const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.COMPUTE_ACTIVITY,
         syncedActivityModel,
         athleteSnapshotModel,
         userSettingsModel,
-        streams,
-        smoothAltitude
+        streams
       );
 
       const athleteSnapshotUpdateSpy = spyOn(desktopActivityService.athleteSnapshotResolver, "update").and.returnValue(

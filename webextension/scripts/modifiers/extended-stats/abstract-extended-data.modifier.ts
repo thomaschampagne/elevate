@@ -14,6 +14,7 @@ import { AbstractDataView } from "./views/abstract-data.view";
 import { FeaturedDataView } from "./views/featured-data.view";
 import { HeaderView } from "./views/header.view";
 import { HeartRateDataView } from "./views/heart-rate-data.view";
+import { Time } from "@elevate/shared/tools";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export abstract class AbstractExtendedDataModifier {
@@ -180,7 +181,7 @@ export abstract class AbstractExtendedDataModifier {
     let climbTime = "-";
     let climbTimeExtra = "";
     if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
-      climbTime = Helper.secondsToHHMMSS(this.analysisData.gradeData.upFlatDownInSeconds.up);
+      climbTime = Time.secToMilitary(this.analysisData.gradeData.upFlatDownInSeconds.up);
       climbTimeExtra =
         '<span class="summarySubGridTitle">(' +
         this.printNumber(

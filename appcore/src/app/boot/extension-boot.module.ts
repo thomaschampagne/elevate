@@ -16,8 +16,8 @@ import { ExtensionSyncMenuComponent } from "../sync-menu/extension/extension-syn
 import { ExtensionRoutingModule } from "../shared/modules/routing/extension-routing.module";
 import { CoreModule } from "../core/core.module";
 import { AppService } from "../shared/services/app-service/app.service";
-import { ExtensionAppService } from "../shared/services/app-service/impl/extension-app.service";
 import { ChromiumService } from "../extension/chromium.service";
+import { ExtensionAppService } from "../shared/services/app-service/extension/extension-app.service";
 
 @NgModule({
   imports: [CoreModule, ExtensionRoutingModule],

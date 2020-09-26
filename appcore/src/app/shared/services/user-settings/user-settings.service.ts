@@ -1,18 +1,12 @@
-import { Inject, Injectable } from "@angular/core";
 import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
 import { LoggerService } from "../logging/logger.service";
 import { environment } from "../../../../environments/environment";
 import UserSettingsModel = UserSettings.UserSettingsModel;
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
-@Injectable()
-export class UserSettingsService {
-  constructor(
-    @Inject(UserSettingsDao) public readonly userSettingsDao: UserSettingsDao,
-    @Inject(LoggerService) public readonly logger: LoggerService
-  ) {}
+export abstract class UserSettingsService {
+  protected constructor(public readonly userSettingsDao: UserSettingsDao, public readonly logger: LoggerService) {}
 
   public fetch(): Promise<UserSettingsModel> {
     return this.userSettingsDao.findOne();
@@ -25,16 +19,6 @@ export class UserSettingsService {
     });
   }
 
-  /**
-   * Clear local storage on next reload
-   * TODO Should be only for extension, not for desktop
-   */
-  public clearLocalStorageOnNextLoad(): Promise<void> {
-    return this.updateOption<ExtensionUserSettingsModel>("localStorageMustBeCleared", true).then(() =>
-      Promise.resolve()
-    );
-  }
-
   public updateZones(zoneDefinition: ZoneDefinitionModel, zones: ZoneModel[]): Promise<ZoneModel[]> {
     return this.fetch()
       .then(userSettings => {
@@ -42,7 +26,7 @@ export class UserSettingsService {
         userSettings.zones[zoneDefinition.value] = UserZonesModel.serialize(zones);
 
         // Update new user settings
-        return this.userSettingsDao.update(userSettings);
+        return this.userSettingsDao.update(userSettings, true);
       })
       .then(updatedUserSettings => {
         return Promise.resolve(UserZonesModel.deserialize(updatedUserSettings.zones[zoneDefinition.value]));

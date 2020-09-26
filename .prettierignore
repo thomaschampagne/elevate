@@ -23,6 +23,7 @@ node_modules
 .editorconfig
 .gitignore
 .prettierignore
+LICENSE
 
 # Project specific
 *.gpx

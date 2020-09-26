@@ -1,0 +1,8 @@
+<mat-grid-list cols="2" [rowHeight]="getGridRowHeight()">
+  <mat-grid-tile fxFlex="100" *ngFor="let result of sensorTimeInZones;">
+    <app-time-in-zones-chart fxFlex="100"
+                             [sensor]="result.sensor"
+                             [zones]="result.zones"
+                             [measureSystem]="measureSystem"></app-time-in-zones-chart>
+  </mat-grid-tile>
+</mat-grid-list>

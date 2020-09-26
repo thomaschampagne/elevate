@@ -42,29 +42,4 @@ describe("GlobalSettingsComponent", () => {
     expect(component).toBeTruthy();
     done();
   });
-
-  it("should get option helper dir", done => {
-    // Given
-    const pathname = "/app/index.html";
-    const expected = "/app/assets/option-helpers/";
-
-    // When
-    const actual = GlobalSettingsComponent.getOptionHelperDir(pathname);
-
-    // Then
-    expect(actual).toEqual(expected);
-    done();
-  });
-
-  it("should get option helper dir", done => {
-    // Given
-    const pathname = null;
-
-    // When
-    const actual = GlobalSettingsComponent.getOptionHelperDir(pathname);
-
-    // Then
-    expect(actual).toBeNull();
-    done();
-  });
 });

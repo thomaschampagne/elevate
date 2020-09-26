@@ -10,7 +10,7 @@ import { AppService } from "../shared/services/app-service/app.service";
     <div *ngIf="!appService.isAppLoaded" id="init-app-container">
       <div class="wrapper">
         <div class="logo"></div>
-        <div class="text mat-body-1">
+        <div class="text mat-h3">
           <div>Warming up</div>
         </div>
       </div>
@@ -20,7 +20,7 @@ import { AppService } from "../shared/services/app-service/app.service";
   styleUrls: ["./app-load.component.scss"]
 })
 export class AppLoadComponent implements OnInit {
-  private static readonly SPLASH_SCREEN_MIN_TIME_DISPLAYED: number = 500;
+  private static readonly SPLASH_SCREEN_MIN_TIME_DISPLAYED: number = 750;
 
   constructor(
     @Inject(AppLoadService) private readonly appLoadService: AppLoadService,

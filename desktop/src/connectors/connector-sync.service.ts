@@ -73,7 +73,7 @@ export class ConnectorSyncService {
 
         if (syncEvent.type === SyncEventType.ACTIVITY) {
           const activitySyncEvent = syncEvent as ActivitySyncEvent;
-          logger.info(
+          logger.debug(
             "[Connector (" + connectorType + ")]",
             `Notify to insert or update activity name: "${activitySyncEvent.activity.name}", started on "${activitySyncEvent.activity.start_time}", isNew: "${activitySyncEvent.isNew}"`
           );
@@ -166,7 +166,6 @@ export class ConnectorSyncService {
     const streams = (computeActivityMessage.payload[3]
       ? computeActivityMessage.payload[3]
       : null) as ActivityStreamsModel;
-    const smoothAltitude = computeActivityMessage.payload[4] as boolean;
 
     try {
       const analysisDataModel = ActivityComputer.calculate(
@@ -175,11 +174,9 @@ export class ConnectorSyncService {
         userSettingsModel,
         streams,
         false,
-        false,
         null,
         true,
-        null,
-        smoothAltitude
+        null
       );
 
       // Compute bary center from lat/lng stream

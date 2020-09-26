@@ -2,6 +2,7 @@ import _ from "lodash";
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
 import { AthleteSnapshotModel, HeartRateDataModel } from "@elevate/shared/models";
+import { Time } from "@elevate/shared/tools";
 
 export class HeartRateDataView extends AbstractDataView {
   public static instance: HeartRateDataView = null;
@@ -93,8 +94,8 @@ export class HeartRateDataView extends AbstractDataView {
         this.heartRateData.heartRateZones[zone].to +
         "</th>"; // BPM
       htmlTable += "<td>" + fromHRR + "% - " + toHRR + "%</td>"; // %HRR
-      htmlTable += "<td>" + Helper.secondsToHHMMSS(this.heartRateData.heartRateZones[zone].s) + "</td>"; // Time%
-      htmlTable += "<td>" + this.heartRateData.heartRateZones[zone].percentDistrib.toFixed(0) + "%</td>"; // % in zone
+      htmlTable += "<td>" + Time.secToMilitary(this.heartRateData.heartRateZones[zone].s) + "</td>"; // Time%
+      htmlTable += "<td>" + this.heartRateData.heartRateZones[zone].percent.toFixed(0) + "%</td>"; // % in zone
       htmlTable += "</tr>";
       zoneId++;
     }
@@ -112,7 +113,7 @@ export class HeartRateDataView extends AbstractDataView {
     for (zone in this.heartRateData.heartRateZones) {
       const label: string =
         "Z" +
-        (parseInt(zone) + 1) +
+        (parseInt(zone, 10) + 1) +
         " " +
         this.heartRateData.heartRateZones[zone].from +
         "-" +
@@ -176,7 +177,7 @@ export class HeartRateDataView extends AbstractDataView {
         ) * 100
       ) +
       " %HRR during " +
-      Helper.secondsToHHMMSS(timeInMinutes * 60);
+      Time.secToMilitary(timeInMinutes * 60);
   }
 
   protected insertDataIntoGrid(): void {

@@ -21,5 +21,4 @@ export class ComputeActivityThreadMessageModel {
   public activityStream: ActivityStreamsModel;
   public bounds: number[];
   public returnZones: boolean;
-  public returnPowerCurve: boolean;
 }

@@ -11,6 +11,7 @@ import { SharedModule } from "../../shared/shared.module";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../../shared/modules/target/desktop-target.module";
+import { ZoneType } from "@elevate/shared/enums";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZonesService", () => {
@@ -392,56 +393,6 @@ describe("ZonesService", () => {
     zonesService.whisperZoneChange(zoneChange);
   });
 
-  it('should fail when "FROM" & "TO" change are equals', done => {
-    // Given
-    const zoneChange: ZoneChangeWhisperModel = {
-      sourceId: 5,
-      from: true,
-      to: true,
-      value: 99
-    };
-
-    // When, Then
-    zonesService.zoneChangeOrderUpdates.subscribe(
-      (change: ZoneChangeOrderModel) => {
-        expect(change).toBeNull();
-        done();
-      },
-      error => {
-        expect(error).not.toBeNull();
-        expect(error).toBe("Impossible to notify both 'from' & 'to' changes at the same time");
-        done();
-      }
-    );
-
-    zonesService.whisperZoneChange(zoneChange);
-  });
-
-  it("should fail when value is not a number", done => {
-    // Given
-    const zoneChange: ZoneChangeWhisperModel = {
-      sourceId: 3,
-      from: true,
-      to: false,
-      value: null
-    };
-
-    // When, Then
-    zonesService.zoneChangeOrderUpdates.subscribe(
-      (change: ZoneChangeOrderModel) => {
-        expect(change).toBeNull();
-        done();
-      },
-      error => {
-        expect(error).not.toBeNull();
-        expect(error).toBe("Value provided is not a number");
-        done();
-      }
-    );
-
-    zonesService.whisperZoneChange(zoneChange);
-  });
-
   it("should return compliant zones", done => {
     // Given
     const currentZones = zonesService.currentZones;
@@ -594,7 +545,7 @@ describe("ZonesService", () => {
     ];
 
     const SPEED_ZONE_DEFINITION_MOCKED: ZoneDefinitionModel = _.find(ZONE_DEFINITIONS, {
-      value: "speed"
+      value: ZoneType.SPEED
     });
 
     const expectedResetZones = UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed);
@@ -635,8 +586,6 @@ describe("ZonesService", () => {
     ];
     updateZonesSpy.and.returnValue(Promise.resolve(zoneModels));
 
-    const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "clearLocalStorageOnNextLoad");
-
     // When
     const promiseSave: Promise<void> = zonesService.updateZones();
 
@@ -645,7 +594,6 @@ describe("ZonesService", () => {
       () => {
         expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
         expect(updateZonesSpy).toHaveBeenCalledTimes(1);
-        expect(markLocalStorageClearSpy).toHaveBeenCalledTimes(1);
 
         done();
       },
@@ -662,8 +610,6 @@ describe("ZonesService", () => {
     const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(fakeError);
     updateZonesSpy.and.returnValue(Promise.resolve(true));
 
-    const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "clearLocalStorageOnNextLoad");
-
     // When
     const promiseSave: Promise<void> = zonesService.updateZones();
 
@@ -677,7 +623,6 @@ describe("ZonesService", () => {
         expect(error).toBe(fakeError);
         expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
         expect(updateZonesSpy).toHaveBeenCalledTimes(0);
-        expect(markLocalStorageClearSpy).toHaveBeenCalledTimes(0);
 
         done();
       }
@@ -690,8 +635,6 @@ describe("ZonesService", () => {
     const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(null);
     updateZonesSpy.and.returnValue(Promise.reject(fakeError));
 
-    const markLocalStorageClearSpy = spyOn(zonesService.userSettingsService, "clearLocalStorageOnNextLoad");
-
     // When
     const promiseSave: Promise<void> = zonesService.updateZones();
 
@@ -706,44 +649,6 @@ describe("ZonesService", () => {
         expect(error).toBe(fakeError);
         expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
         expect(updateZonesSpy).toHaveBeenCalledTimes(1);
-        expect(markLocalStorageClearSpy).toHaveBeenCalledTimes(0);
-
-        done();
-      }
-    );
-  });
-
-  it("should not save zones on clearLocalStorageOnNextLoad rejection", done => {
-    // Given
-    const fakeError = "clearLocalStorageOnNextLoad Error!";
-    const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(null);
-    const zoneModels: ZoneModel[] = [
-      { from: 0, to: 110 },
-      { from: 110, to: 210 }
-    ];
-    updateZonesSpy.and.returnValue(Promise.resolve(zoneModels));
-
-    const markLocalStorageClearSpy = spyOn(
-      zonesService.userSettingsService,
-      "clearLocalStorageOnNextLoad"
-    ).and.returnValue(Promise.reject(fakeError));
-
-    // When
-    const promiseSave: Promise<void> = zonesService.updateZones();
-
-    // Then
-    promiseSave.then(
-      () => {
-        throw new Error("Test should no go there");
-        done();
-      },
-      error => {
-        expect(error).not.toBeNull();
-        expect(error).toBe(fakeError);
-        expect(zonesCompliantSpy).toHaveBeenCalledTimes(1);
-        expect(updateZonesSpy).toHaveBeenCalledTimes(1);
-        expect(markLocalStorageClearSpy).toHaveBeenCalledTimes(1);
-
         done();
       }
     );

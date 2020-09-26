@@ -17,7 +17,6 @@ import { ActivityStreamsModel, BareActivityModel, SyncedActivityModel } from "@e
 import logger from "electron-log";
 import { AppService } from "../../app-service";
 import _ from "lodash";
-import { ElevateSport } from "@elevate/shared/enums";
 import { inject, singleton } from "tsyringe";
 import { ConnectorConfig, StravaConnectorConfig } from "../connector-config.model";
 import { IpcMessagesSender } from "../../messages/ipc-messages.sender";
@@ -244,8 +243,7 @@ export class StravaConnector extends BaseConnector {
                       syncedActivityModel,
                       syncedActivityModel.athleteSnapshot,
                       this.connectorConfig.userSettingsModel,
-                      activityStreamsModel,
-                      true
+                      activityStreamsModel
                     );
 
                     // Compute bary center from lat/lng stream
@@ -319,9 +317,9 @@ export class StravaConnector extends BaseConnector {
                   const syncedActivityModel = syncedActivityModels[0];
 
                   syncedActivityModel.name = bareActivity.name;
-                  syncedActivityModel.extras = {
+                  syncedActivityModel.extras = _.merge(syncedActivityModel.extras, {
                     strava_activity_id: bareActivity.id as number
-                  };
+                  });
 
                   // Does type change?
                   const hasTypeChanged = bareActivity.type !== syncedActivityModel.type;
@@ -336,8 +334,7 @@ export class StravaConnector extends BaseConnector {
                           syncedActivityModel,
                           syncedActivityModel.athleteSnapshot,
                           this.connectorConfig.userSettingsModel,
-                          activityStreamsModel,
-                          true
+                          activityStreamsModel
                         );
                         logger.info(
                           `Recalculated activity ${syncedActivityModel.id} after type change to ${syncedActivityModel.type}`
@@ -418,7 +415,7 @@ export class StravaConnector extends BaseConnector {
         activityStreamsModel.watts = activityStreamsModel.watts_calc;
       } else {
         // No power at all. Trying to estimated it on elevate side
-        if (bareActivityModel.type === ElevateSport.Ride || bareActivityModel.type === ElevateSport.VirtualRide) {
+        if (SyncedActivityModel.isRide(bareActivityModel.type)) {
           try {
             activityStreamsModel.watts = this.estimateCyclingPowerStream(
               bareActivityModel.type,

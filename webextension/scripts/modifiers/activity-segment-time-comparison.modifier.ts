@@ -1,9 +1,9 @@
 import _ from "lodash";
 import $ from "../../modules/jquery.appear";
-import { Helper } from "../helper";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { AbstractModifier } from "./abstract.modifier";
 import { UserSettings } from "@elevate/shared/models";
+import { Time } from "@elevate/shared/tools";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export interface EffortInfo {
@@ -99,7 +99,7 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
         if (!this.firstAppearDone) {
           let timeColumnHeader = segments.find("table.segments th.time-col");
 
-          if (timeColumnHeader.length == 0) {
+          if (timeColumnHeader.length === 0) {
             // activities other than cycling (like nordic ski) miss time-col class, search by text
             timeColumnHeader = segments.find("table.segments th:contains('Time')");
           }
@@ -189,8 +189,8 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
             }
 
             if (this.displaySegmentTimeComparisonPosition && segmentEffortInfo.overall_rank) {
-              const overallRank = segmentEffortInfo.overall_rank ? parseInt(segmentEffortInfo.overall_rank) : 0;
-              const percentRank: number = overallRank / parseInt(segmentEffortInfo.overall_count);
+              const overallRank = segmentEffortInfo.overall_rank ? parseInt(segmentEffortInfo.overall_rank, 10) : 0;
+              const percentRank: number = overallRank / parseInt(segmentEffortInfo.overall_count, 10);
               positionCell.html(
                 '<div title="Your position" style="text-align: center; font-size:11px; padding: 1px 1px; background-color: #565656; color:' +
                   this.getColorForPercentage(percentRank) +
@@ -206,29 +206,29 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
               positionCell.html("n/a");
             }
 
-            const komSeconds: string = Helper.HHMMSStoSeconds(
+            const komSeconds: string = Time.militaryToSec(
                 (this.isFemale ? segmentEffortInfo.qom_time : segmentEffortInfo.kom_time).replace(/[^0-9:]/gi, "")
               ).toString(),
               elapsedTime = segmentEffortInfo.elapsed_time_raw,
-              komDiffTime = elapsedTime - parseInt(komSeconds),
-              komPercentTime = (elapsedTime / parseInt(komSeconds) - 1) * 100;
+              komDiffTime = elapsedTime - parseInt(komSeconds, 10),
+              komPercentTime = (elapsedTime / parseInt(komSeconds, 10) - 1) * 100;
 
-            if (komSeconds == "NaN") {
+            if (komSeconds === "NaN") {
               deltaKomCell.html("N/A");
             } else if (this.showDifferenceToKOM) {
-              const sign: string = Math.sign(komDiffTime) == 1 ? "+" : "-";
+              const sign: string = Math.sign(komDiffTime) === 1 ? "+" : "-";
               deltaKomCell.html(
                 '<span title="Time difference with current ' +
                   this.crTitle() +
                   " (" +
-                  Helper.secondsToHHMMSS(Math.abs(parseInt(komSeconds)), true) +
+                  Time.secToMilitary(Math.abs(parseInt(komSeconds, 10))) +
                   ")\" style='font-size:11px; color:" +
                   (komDiffTime > 0 ? "#FF5555" : "#2EB92E") +
                   ";'>" +
                   sign +
-                  Helper.secondsToHHMMSS(Math.abs(komDiffTime), true) +
+                  Time.secToMilitary(Math.abs(komDiffTime)) +
                   "<br/>" +
-                  (Math.sign(komPercentTime) == 1 ? "+" : "") +
+                  (Math.sign(komPercentTime) === 1 ? "+" : "") +
                   komPercentTime.toFixed(1) +
                   "%</span>"
               );
@@ -277,7 +277,7 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
   protected findOutGender(): void {
     this.isFemale = false;
     if (!_.isUndefined(window.pageView)) {
-      this.isFemale = window.pageView.activityAthlete() && window.pageView.activityAthlete().get("gender") != "M";
+      this.isFemale = window.pageView.activityAthlete() && window.pageView.activityAthlete().get("gender") !== "M";
     }
   }
 
@@ -323,7 +323,7 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
       .done((leaderBoardData: LeaderBoardData) => {
         for (let i = 0, max = leaderBoardData.top_results.length; i < max; i++) {
           leaderBoardData.top_results[i].__dateTime = new Date(leaderBoardData.top_results[i].start_date_local_raw);
-          if (leaderBoardData.top_results[i].id == segmentEffortId) {
+          if (leaderBoardData.top_results[i].id === segmentEffortId) {
             currentSegmentEffortDateTime = leaderBoardData.top_results[i].__dateTime;
             // no break !
           }
@@ -389,16 +389,16 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
         percentTime = (elapsedTime / previousPersonalSeconds - 1) * 100;
         deltaPRCell.html(
           "<span title='Time difference with your previous PR time (" +
-            Helper.secondsToHHMMSS(previousPersonalSeconds, true) +
+            Time.secToMilitary(previousPersonalSeconds) +
             " on " +
             previousPersonalDate +
             ")' style='font-size:11px; color:" +
             (deltaTime > 0 ? "#FF5555" : "#2EB92E") +
             ";'>" +
-            (Math.sign(deltaTime) == 1 ? "+" : "-") +
-            Helper.secondsToHHMMSS(Math.abs(deltaTime), true) +
+            (Math.sign(deltaTime) === 1 ? "+" : "-") +
+            Time.secToMilitary(Math.abs(deltaTime)) +
             "<br/>" +
-            (Math.sign(percentTime) == 1 ? "+" : "") +
+            (Math.sign(percentTime) === 1 ? "+" : "") +
             percentTime.toFixed(1) +
             "%</span>"
         );
@@ -452,16 +452,16 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
               (currentActivityResult.elapsed_time_raw / previousBestResultThisYear.elapsed_time_raw - 1) * 100;
             deltaYearPRCell.html(
               "<span title='Time difference with your previous best result this year (" +
-                Helper.secondsToHHMMSS(previousBestResultThisYear.elapsed_time_raw, true) +
+                Time.secToMilitary(previousBestResultThisYear.elapsed_time_raw) +
                 " on " +
                 previousBestResultThisYear.start_date_local +
                 ")' style='font-size:11px; color:" +
                 (deltaTime > 0 ? "#FF5555" : "#2EB92E") +
                 ";'>" +
-                (Math.sign(deltaTime) == 1 ? "+" : "-") +
-                Helper.secondsToHHMMSS(Math.abs(deltaTime), true) +
+                (Math.sign(deltaTime) === 1 ? "+" : "-") +
+                Time.secToMilitary(Math.abs(deltaTime)) +
                 "<br/>" +
-                (Math.sign(percentTime) == 1 ? "+" : "") +
+                (Math.sign(percentTime) === 1 ? "+" : "") +
                 percentTime.toFixed(1) +
                 "%</span>"
             );
@@ -469,7 +469,7 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
             // NEW PR This ride of Current Year
             deltaYearPRCell.html(
               "<span title='This time beats previous PR. Time difference with your previous PR time  (" +
-                Helper.secondsToHHMMSS(previousPersonalSeconds, true) +
+                Time.secToMilitary(previousPersonalSeconds) +
                 " on " +
                 previousPersonalDate +
                 ")' style='font-size:11px; color: grey;'>&#9733;</span>"
@@ -482,16 +482,16 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
               (currentActivityResult.elapsed_time_raw / previousBestResultThisYear.elapsed_time_raw - 1) * 100;
             deltaYearPRCell.html(
               "<span title='Time difference with your previous best result this year (" +
-                Helper.secondsToHHMMSS(previousBestResultThisYear.elapsed_time_raw, true) +
+                Time.secToMilitary(previousBestResultThisYear.elapsed_time_raw) +
                 " on " +
                 previousBestResultThisYear.start_date_local +
                 ")' style='font-size:11px; color:" +
                 (deltaTime > 0 ? "#FF5555" : "#2EB92E") +
                 ";'>" +
-                (Math.sign(deltaTime) == 1 ? "+" : "-") +
-                Helper.secondsToHHMMSS(Math.abs(deltaTime), true) +
+                (Math.sign(deltaTime) === 1 ? "+" : "-") +
+                Time.secToMilitary(Math.abs(deltaTime)) +
                 "<br/>" +
-                (Math.sign(percentTime) == 1 ? "+" : "") +
+                (Math.sign(percentTime) === 1 ? "+" : "") +
                 percentTime.toFixed(1) +
                 "%</span>"
             );
@@ -501,14 +501,14 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
             if (deltaTime) {
               deltaYearPRCell.html(
                 "<span title='Time difference with your current year PR time (" +
-                  Helper.secondsToHHMMSS(currentYearPRSeconds, true) +
+                  Time.secToMilitary(currentYearPRSeconds) +
                   " on " +
                   currentYearPRDate +
                   ")' style='font-size:11px; color:" +
                   (deltaTime > 0 ? "#FF5555" : "#2EB92E") +
                   ";'>" +
-                  (Math.sign(deltaTime) == 1 ? "+" : "-") +
-                  Helper.secondsToHHMMSS(Math.abs(deltaTime), true) +
+                  (Math.sign(deltaTime) === 1 ? "+" : "-") +
+                  Time.secToMilitary(Math.abs(deltaTime)) +
                   "</span>"
               );
             } else {

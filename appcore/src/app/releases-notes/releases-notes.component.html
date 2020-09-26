@@ -1,22 +1,16 @@
-<mat-card>
-  <div fxLayout="row" fxLayoutAlign="start center">
-    This project is developed on free time with passion and for <strong>+10 hours of work / week</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button color="primary" mat-stroked-button routerLink="/donate">
-      Support the project you love 💗 💗 💗
-    </button>
-  </div>
-</mat-card>
-<mat-card *ngFor="let releaseNote of releaseNotes; let i = index;">
-  <mat-card-title>
-    <a
-      href="{{versionsProvider.getRepositoryUrl()}}/compare/{{releaseNotes[i + 1] ? releaseNotes[i + 1].version : releaseNote.version}}...{{releaseNote.version}}"
-      target="_blank">Version {{releaseNote.version}}</a>
-  </mat-card-title>
-  <mat-card-subtitle *ngIf="releaseNote.date">
-    Released on {{releaseNote.date | date:'y/MM/dd'}}
-  </mat-card-subtitle>
-  <mat-card-content *ngIf="releaseNote.html" [innerHtml]="releaseNote.html"></mat-card-content>
-  <mat-card-content *ngIf="!releaseNote.html">
-    <i>Information not available</i>
-  </mat-card-content>
-</mat-card>
+<div class="centered-section">
+  <mat-card *ngFor="let releaseNote of releaseNotes; let i = index;">
+    <mat-card-title>
+      <a
+        href="{{versionsProvider.getRepositoryUrl()}}/compare/{{releaseNotes[i + 1] ? releaseNotes[i + 1].version : releaseNote.version}}...{{releaseNote.version}}"
+        target="_blank">Version {{releaseNote.version}}</a>
+    </mat-card-title>
+    <mat-card-subtitle *ngIf="releaseNote.date">
+      Released on {{releaseNote.date | date:'y/MM/dd'}}
+    </mat-card-subtitle>
+    <mat-card-content *ngIf="releaseNote.html" [innerHtml]="releaseNote.html"></mat-card-content>
+    <mat-card-content *ngIf="!releaseNote.html">
+      <i>Information not available</i>
+    </mat-card-content>
+  </mat-card>
+</div>

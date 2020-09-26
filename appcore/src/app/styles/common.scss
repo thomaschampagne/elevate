@@ -9,3 +9,19 @@ html, body, mat-sidenav-container {
 mat-card {
   margin: $default-margin;
 }
+
+.pointer {
+  cursor: pointer;
+}
+
+.centered-section {
+  margin-top: 35px;
+  margin-left: $centered-section-margin;
+  margin-right: $centered-section-margin;
+}
+
+.narrow-centered-section {
+  @extend .centered-section;
+  margin-left: $centered-section-margin * 1.75;
+  margin-right: $centered-section-margin * 1.75;
+}

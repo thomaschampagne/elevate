@@ -14,6 +14,10 @@ import { SyncService } from "../../services/sync/sync.service";
 import { ExtensionSyncService } from "../../services/sync/impl/extension-sync.service";
 import { SyncDateTimeDao } from "../../dao/sync/sync-date-time.dao";
 import { ExtensionRoutingModule } from "../routing/extension-routing.module";
+import { UserSettingsService } from "../../services/user-settings/user-settings.service";
+import { ExtensionUserSettingsService } from "../../services/user-settings/extension/extension-user-settings.service";
+import { AthleteService } from "../../services/athlete/athlete.service";
+import { ExtensionAthleteService } from "../../services/athlete/extension/extension-athlete.service";
 
 @NgModule({
   imports: [CoreModule, ExtensionRoutingModule],
@@ -22,6 +26,8 @@ import { ExtensionRoutingModule } from "../routing/extension-routing.module";
   providers: [
     SyncDateTimeDao,
     ExtensionSyncService,
+    { provide: AthleteService, useClass: ExtensionAthleteService },
+    { provide: UserSettingsService, useClass: ExtensionUserSettingsService },
     { provide: DataStore, useClass: ExtensionDataStore },
     { provide: ActivityService, useClass: ExtensionActivityService },
     { provide: VersionsProvider, useClass: ExtensionVersionsProvider },
