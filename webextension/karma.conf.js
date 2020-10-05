@@ -1,9 +1,7 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 const defaultBrowserKarmaConfig = {
-    browsers: [
-        "HeadlessChrome"
-    ],
+    browsers: ["HeadlessChrome"],
     customLaunchers: {
         HeadlessChrome: {
             base: "Chrome",
@@ -13,14 +11,13 @@ const defaultBrowserKarmaConfig = {
                 "--headless",
                 "--disable-gpu",
                 // Without a remote debugging port, Google Chrome exits immediately.
-                " --remote-debugging-port=9222"
-            ]
-        }
-    }
+                " --remote-debugging-port=9222",
+            ],
+        },
+    },
 };
 
 const provideBrowsersKarmaConfig = () => {
-
     const fs = require("fs");
     const customBrowsersKarmaConfigPath = __dirname + "/../browsers.karma.conf.js";
 
@@ -48,25 +45,17 @@ module.exports = function (config) {
         basePath: "",
         frameworks: ["jasmine", "promise"],
         reporters: ["progress", "spec"],
-        plugins: [
-            "karma-webpack",
-            "karma-jasmine",
-            "karma-promise",
-            "karma-chrome-launcher",
-            "karma-spec-reporter"
-        ],
+        plugins: ["karma-webpack", "karma-jasmine", "karma-promise", "karma-chrome-launcher", "karma-spec-reporter"],
         browsers: browsersKarmaConfig.browsers,
         customLaunchers: browsersKarmaConfig.customLaunchers,
-        files: [
-            "specs/**/*.spec.ts"
-        ],
+        files: ["specs/**/*.spec.ts"],
         preprocessors: {
-            "**/*.spec.ts": ["webpack"]
+            "**/*.spec.ts": ["webpack"],
         },
         webpack: {
             mode: "development",
             resolve: {
-                extensions: [".ts", ".js"]
+                extensions: [".ts", ".js"],
             },
             module: {
                 rules: [
@@ -76,31 +65,31 @@ module.exports = function (config) {
                         use: {
                             loader: "ts-loader",
                             options: {
-                                configFile: "tsconfig.spec.json"
-                            }
-                        }
-                    }
-                ]
-            }
+                                configFile: "tsconfig.spec.json",
+                            },
+                        },
+                    },
+                ],
+            },
         },
         mime: {
-            "text/x-typescript": ["ts", "tsx"]
+            "text/x-typescript": ["ts", "tsx"],
         },
         specReporter: {
-            maxLogLines: 5,             	// limit number of lines logged per test
-            suppressErrorSummary: false, 	// do not print error summary
-            suppressFailed: false,      	// do not print information about failed tests
-            suppressPassed: false,      	// do not print information about passed tests
-            suppressSkipped: true,      	// do not print information about skipped tests
-            showSpecTiming: true,      		// print the time elapsed for each spec
-            failFast: false              	// test would finish with error when a first fail occurs.
+            maxLogLines: 5, // limit number of lines logged per test
+            suppressErrorSummary: false, // do not print error summary
+            suppressFailed: false, // do not print information about failed tests
+            suppressPassed: false, // do not print information about passed tests
+            suppressSkipped: true, // do not print information about skipped tests
+            showSpecTiming: true, // print the time elapsed for each spec
+            failFast: false, // test would finish with error when a first fail occurs.
         },
         autoWatch: true,
         colors: true,
         singleRun: false,
         browserConsoleLogOptions: {
             // path: "./specs.log",
-            terminal: false
-        }
+            terminal: false,
+        },
     });
 };

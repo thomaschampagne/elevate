@@ -4,7 +4,6 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Injectable()
 export class ExtensionOpenResourceResolver extends OpenResourceResolver {
-
     constructor(public snackBar: MatSnackBar) {
         super(snackBar);
     }
@@ -21,4 +20,3 @@ export class ExtensionOpenResourceResolver extends OpenResourceResolver {
         window.open(url, "_blank");
     }
 }
-

@@ -6,7 +6,6 @@ import { NotImplementedException } from "@elevate/shared/exceptions";
 
 @Injectable()
 export class MockSyncService extends SyncService<any> {
-
     public sync(fastSync: boolean, forceSync: boolean): Promise<void> {
         return null;
     }
@@ -43,4 +42,3 @@ export class MockSyncService extends SyncService<any> {
         throw new NotImplementedException("MockSyncService.getCompatibleBackupVersionThreshold() to be implemented");
     }
 }
-

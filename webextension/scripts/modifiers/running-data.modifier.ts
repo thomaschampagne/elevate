@@ -1,7 +1,6 @@
 import { AbstractModifier } from "./abstract.modifier";
 
 abstract class AbstractRunningDataModifier extends AbstractModifier {
-
     public static INTERVAL_DELAY = 750;
     protected intervalId: number;
     protected dataWatch: string;
@@ -28,7 +27,6 @@ abstract class AbstractRunningDataModifier extends AbstractModifier {
             }
         }, AbstractRunningDataModifier.INTERVAL_DELAY);
     }
-
 }
 
 export class RunningHeartRateModifier extends AbstractRunningDataModifier {

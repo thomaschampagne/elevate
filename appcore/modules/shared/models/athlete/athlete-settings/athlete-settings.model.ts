@@ -1,7 +1,6 @@
 import { UserLactateThresholdModel } from "./user-lactate-threshold.model";
 
 export class AthleteSettingsModel {
-
     public static readonly DEFAULT_MAX_HR: number = 190;
     public static readonly DEFAULT_REST_HR: number = 65;
     public static readonly DEFAULT_WEIGHT: number = 70;
@@ -27,7 +26,15 @@ export class AthleteSettingsModel {
     public swimFtp: number;
     public weight: number;
 
-    constructor(maxHr: number, restHr: number, lthr: UserLactateThresholdModel, cyclingFtp: number, runningFtp: number, swimFtp: number, weight: number) {
+    constructor(
+        maxHr: number,
+        restHr: number,
+        lthr: UserLactateThresholdModel,
+        cyclingFtp: number,
+        runningFtp: number,
+        swimFtp: number,
+        weight: number
+    ) {
         this.maxHr = maxHr;
         this.restHr = restHr;
         this.lthr = lthr;

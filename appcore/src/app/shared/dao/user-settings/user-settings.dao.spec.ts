@@ -6,17 +6,15 @@ import { LoggerService } from "../../services/logging/logger.service";
 import { ConsoleLoggerService } from "../../services/logging/console-logger.service";
 
 describe("UserSettingsDao", () => {
-
     let userSettingsDao: UserSettingsDao;
 
     beforeEach(done => {
-
         TestBed.configureTestingModule({
             providers: [
                 UserSettingsDao,
-                {provide: DataStore, useClass: TestingDataStore},
-                {provide: LoggerService, useClass: ConsoleLoggerService}
-            ]
+                { provide: DataStore, useClass: TestingDataStore },
+                { provide: LoggerService, useClass: ConsoleLoggerService },
+            ],
         });
 
         // Retrieve injected service
@@ -29,5 +27,4 @@ describe("UserSettingsDao", () => {
         expect(userSettingsDao).toBeTruthy();
         done();
     });
-
 });

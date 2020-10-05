@@ -1,4 +1,15 @@
-import { Component, ElementRef, HostListener, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import {
+    Component,
+    ElementRef,
+    HostListener,
+    Inject,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    SimpleChanges,
+    ViewChild,
+} from "@angular/core";
 import * as _ from "lodash";
 import * as moment from "moment";
 import * as d3 from "d3";
@@ -17,26 +28,29 @@ import { ViewedDayService } from "../shared/services/viewed-day.service";
 import { FitnessTrendActivitiesLinksDialogComponent } from "../fitness-trend-activities-links-dialog/fitness-trend-activities-links-dialog.component";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { ElevateException } from "@elevate/shared/exceptions";
-import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../../shared/services/links-opener/open-resource-resolver";
+import {
+    OPEN_RESOURCE_RESOLVER,
+    OpenResourceResolver,
+} from "../../shared/services/links-opener/open-resource-resolver";
 
 @Component({
     selector: "app-fitness-trend-graph",
     templateUrl: "./fitness-trend-graph.component.html",
-    styleUrls: ["./fitness-trend-graph.component.scss"]
+    styleUrls: ["./fitness-trend-graph.component.scss"],
 })
 export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy {
-
     public static readonly SLIDE_PERIOD_VIEWED_DAYS: number = 14; // Days
     public static readonly ZOOM_PERIOD_VIEWED_DAYS: number = 14; // Days
     public static readonly TODAY_MARKER_LABEL: string = "Today";
     public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_LG: number = 0.665;
-    public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_MD: number = FitnessTrendGraphComponent.GRAPH_HEIGHT_FACTOR_MEDIA_LG / 1.25;
+    public static readonly GRAPH_HEIGHT_FACTOR_MEDIA_MD: number =
+        FitnessTrendGraphComponent.GRAPH_HEIGHT_FACTOR_MEDIA_LG / 1.25;
     private static readonly GRAPH_DOM_ELEMENT_ID: string = "fitnessTrendGraph";
     private static readonly KEY_CODES = {
         DOWN_ARROW: "ArrowDown",
         RIGHT_ARROW: "ArrowRight",
         UP_ARROW: "ArrowUp",
-        LEFT_ARROW: "ArrowLeft"
+        LEFT_ARROW: "ArrowLeft",
     };
     public PERFORMANCE_MARKER: number;
     public graphHeightFactor: number;
@@ -65,22 +79,23 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     @Input()
     public fitnessTrend: DayFitnessTrendModel[];
 
-    @ViewChild("viewedDayTooltip", {static: true})
+    @ViewChild("viewedDayTooltip", { static: true })
     public viewedDayTooltipElement: ElementRef;
     public viewedDayTooltipBounds: ClientRect = null;
 
-    @ViewChild("fitnessTrendGraph", {static: true})
+    @ViewChild("fitnessTrendGraph", { static: true })
     public fitnessTrendGraphElement: ElementRef;
     public fitnessTrendGraphBounds: ClientRect = null;
     public initialized = false;
 
-    constructor(public sideNavService: SideNavService,
-                public windowService: WindowService,
-                public viewedDayService: ViewedDayService,
-                @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
-                public dialog: MatDialog,
-                public logger: LoggerService) {
-    }
+    constructor(
+        public sideNavService: SideNavService,
+        public windowService: WindowService,
+        public viewedDayService: ViewedDayService,
+        @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
+        public dialog: MatDialog,
+        public logger: LoggerService
+    ) {}
 
     public static getGraphHtmlElement(): HTMLElement {
         return document.getElementById(FitnessTrendGraphComponent.GRAPH_DOM_ELEMENT_ID);
@@ -94,7 +109,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-
         if (!this.initialized) {
             return;
         }
@@ -104,11 +118,9 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
         if (changes.fitnessTrend) {
             this.setupViewableGraphData();
             this.updateGraph();
-
         } else if (changes.periodViewed || changes.isTrainingZonesEnabled) {
             this.updateGraph();
         }
-
     }
 
     /**
@@ -128,7 +140,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public setupViewableGraphData(): void {
-
         // Prepare viewable lines
         const today: string = moment().format(DayFitnessTrendModel.DATE_FORMAT);
 
@@ -143,61 +154,59 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
         const activeLine: GraphPointModel[] = [];
 
         _.forEach(this.fitnessTrend, (dayFitnessTrend: DayFitnessTrendModel) => {
-
             // Real past fitness day
             fatigueLine.push({
                 date: dayFitnessTrend.dateString,
                 value: dayFitnessTrend.atl,
-                hidden: dayFitnessTrend.previewDay
+                hidden: dayFitnessTrend.previewDay,
             });
 
             fitnessLine.push({
                 date: dayFitnessTrend.dateString,
                 value: dayFitnessTrend.ctl,
-                hidden: dayFitnessTrend.previewDay
+                hidden: dayFitnessTrend.previewDay,
             });
 
             formLine.push({
                 date: dayFitnessTrend.dateString,
                 value: dayFitnessTrend.tsb,
-                hidden: dayFitnessTrend.previewDay
+                hidden: dayFitnessTrend.previewDay,
             });
 
             // Preview future fitness day
-            const isHiddenGraphPoint = (!dayFitnessTrend.previewDay && dayFitnessTrend.dateString !== today);
+            const isHiddenGraphPoint = !dayFitnessTrend.previewDay && dayFitnessTrend.dateString !== today;
             previewFatigueLine.push({
                 date: dayFitnessTrend.dateString,
                 value: dayFitnessTrend.atl,
-                hidden: isHiddenGraphPoint
+                hidden: isHiddenGraphPoint,
             });
 
             previewFitnessLine.push({
                 date: dayFitnessTrend.dateString,
                 value: dayFitnessTrend.ctl,
-                hidden: isHiddenGraphPoint
+                hidden: isHiddenGraphPoint,
             });
 
             previewFormLine.push({
                 date: dayFitnessTrend.dateString,
                 value: dayFitnessTrend.tsb,
-                hidden: isHiddenGraphPoint
+                hidden: isHiddenGraphPoint,
             });
 
             activeLine.push({
                 date: dayFitnessTrend.dateString,
                 value: 0,
                 hidden: false,
-                active: dayFitnessTrend.hasActivities()
+                active: dayFitnessTrend.hasActivities(),
             });
 
             if (dayFitnessTrend.dateString === today) {
                 const todayMarker = {
                     date: moment().startOf("day").toDate(),
-                    label: FitnessTrendGraphComponent.TODAY_MARKER_LABEL
+                    label: FitnessTrendGraphComponent.TODAY_MARKER_LABEL,
                 };
                 markers.push(todayMarker);
             }
-
         });
 
         this.viewableFitnessDataModel = new ViewableFitnessDataModel(
@@ -213,35 +222,31 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public updateGraph(): void {
-
         try {
             // Apply changes
             this.updateViewableData();
 
             // Apply graph changes
             this.draw();
-
         } catch (error) {
             this.logger.warn(error);
         }
-
     }
 
     public draw(): void {
-
         _.defer(() => {
             if (FitnessTrendGraphComponent.getGraphHtmlElement()) {
                 MG.data_graphic(this.graphConfig);
-                this.logger.info("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
+                this.logger.info(
+                    "Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms."
+                );
             } else {
                 throw new ElevateException("Fitness trend graph crashed. You may restart the app.");
             }
         });
-
     }
 
     public setupComponentSizeChangeHandlers(): void {
-
         this.windowResizingSubscription = this.windowService.resizing$.subscribe(() => {
             this.findGraphHeightFactor();
             this.onComponentSizeChanged();
@@ -254,7 +259,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public findGraphHeightFactor(): void {
-
         if (this.windowService.isScreenMediaActive(WindowService.SCREEN_MD)) {
             this.graphHeightFactor = FitnessTrendGraphComponent.GRAPH_HEIGHT_FACTOR_MEDIA_MD;
         } else {
@@ -263,10 +267,13 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public updateViewableData(): void {
-
         // Can we slide forward/backward the period viewed?
-        this.canPeriodViewedBackward = this.canBackwardPeriodViewedOf(FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS);
-        this.canPeriodViewedForward = this.canForwardPeriodViewedOf(FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS);
+        this.canPeriodViewedBackward = this.canBackwardPeriodViewedOf(
+            FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS
+        );
+        this.canPeriodViewedForward = this.canForwardPeriodViewedOf(
+            FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS
+        );
         this.canZoomInPeriodViewed = this.canZoomInPeriodViewedOf(FitnessTrendGraphComponent.ZOOM_PERIOD_VIEWED_DAYS);
         this.canZoomOutPeriodViewed = this.canZoomOutPeriodViewedOf(FitnessTrendGraphComponent.ZOOM_PERIOD_VIEWED_DAYS);
 
@@ -280,7 +287,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
         this.graphConfig.data = lines;
         this.graphConfig.markers = this.viewableFitnessDataModel.markers;
         this.graphConfig.baselines = this.viewableFitnessDataModel.getBaseLines(this.isTrainingZonesEnabled);
-
     }
 
     /**
@@ -289,12 +295,12 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
      * @returns {{start: number; end: number}}
      */
     public indexesOf(period: PeriodModel): { start: number; end: number } {
-
         let startIndex = 0; // Use first day as start index by default.
-        if (_.isDate(period.from)) { // Then override index if "From" is specified
+        if (_.isDate(period.from)) {
+            // Then override index if "From" is specified
 
             startIndex = _.findIndex(this.fitnessTrend, {
-                dateString: moment(period.from).format(DayFitnessTrendModel.DATE_FORMAT)
+                dateString: moment(period.from).format(DayFitnessTrendModel.DATE_FORMAT),
             });
 
             if (startIndex === -1) {
@@ -302,26 +308,26 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
             }
         }
 
-        let endIndex = (this.fitnessTrend.length - 1); // Use last preview index by default
-        if (_.isDate(period.to)) { // Then override index if "To" is specified
+        let endIndex = this.fitnessTrend.length - 1; // Use last preview index by default
+        if (_.isDate(period.to)) {
+            // Then override index if "To" is specified
             endIndex = _.findIndex(this.fitnessTrend, {
-                dateString: moment(period.to).format(DayFitnessTrendModel.DATE_FORMAT)
+                dateString: moment(period.to).format(DayFitnessTrendModel.DATE_FORMAT),
             });
         }
 
         if (endIndex === -1) {
-            throw (new Error()).message = "No end activity index found for this TO date";
+            throw (new Error().message = "No end activity index found for this TO date");
         }
 
         if (startIndex >= endIndex) {
-            throw (new Error()).message = "FROM cannot be upper than TO date";
+            throw (new Error().message = "FROM cannot be upper than TO date");
         }
 
-        return {start: startIndex, end: endIndex};
+        return { start: startIndex, end: endIndex };
     }
 
     public onPeriodViewedForward(): void {
-
         this.PERFORMANCE_MARKER = performance.now();
 
         const daysToForward: number = FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS;
@@ -331,11 +337,9 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
         this.periodViewed.from = moment(this.periodViewed.from).add(daysToForward, "days").toDate();
         this.periodViewed.to = moment(this.periodViewed.to).add(daysToForward, "days").toDate();
         this.updateGraph();
-
     }
 
     public onPeriodViewedBackward(): void {
-
         this.PERFORMANCE_MARKER = performance.now();
 
         const daysToRewind: number = FitnessTrendGraphComponent.SLIDE_PERIOD_VIEWED_DAYS;
@@ -358,7 +362,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public onPeriodViewedZoomIn(): void {
-
         this.PERFORMANCE_MARKER = performance.now();
 
         const daysToCrop = FitnessTrendGraphComponent.ZOOM_PERIOD_VIEWED_DAYS;
@@ -371,7 +374,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public onPeriodViewedZoomOut(): void {
-
         this.PERFORMANCE_MARKER = performance.now();
 
         const daysToCrop = FitnessTrendGraphComponent.ZOOM_PERIOD_VIEWED_DAYS;
@@ -392,7 +394,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public onGraphClick(metricsGraphicsEvent: MetricsGraphicsEventModel): void {
-
         const dayFitnessTrend = this.getDayFitnessTrendFromDate(metricsGraphicsEvent.key);
 
         if (_.isEmpty(dayFitnessTrend.ids)) {
@@ -403,7 +404,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
             this.dialog.open(FitnessTrendActivitiesLinksDialogComponent, {
                 minWidth: FitnessTrendActivitiesLinksDialogComponent.MIN_WIDTH,
                 maxWidth: FitnessTrendActivitiesLinksDialogComponent.MAX_WIDTH,
-                data: dayFitnessTrend
+                data: dayFitnessTrend,
             });
         } else {
             this.openResourceResolver.openActivity(_.first(dayFitnessTrend.ids));
@@ -417,7 +418,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
     @HostListener("document:mousemove", ["$event"])
     public onTooltipMouseMove(mouseEvent: MouseEvent): void {
-
         let mouseDistanceX = 50; // Default value in px. Can be changed below if tooltip goes out of the graph
 
         if (!this.fitnessTrendGraphBounds) {
@@ -430,15 +430,16 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
         }
 
         // Place tooltip left to the mouse cursor if she goes out of the graph
-        const horizontalTooltipFlipThreshold = this.fitnessTrendGraphBounds.right - this.viewedDayTooltipBounds.width - mouseDistanceX;
+        const horizontalTooltipFlipThreshold =
+            this.fitnessTrendGraphBounds.right - this.viewedDayTooltipBounds.width - mouseDistanceX;
         if (mouseEvent.clientX > horizontalTooltipFlipThreshold) {
             mouseDistanceX = (mouseDistanceX + this.viewedDayTooltipBounds.width) * -1;
         }
 
         // Finally set tooltip position
-        this.viewedDayTooltipElement.nativeElement.style.left = (mouseEvent.clientX + mouseDistanceX) + "px";
-        this.viewedDayTooltipElement.nativeElement.style.top = (mouseEvent.clientY - (this.viewedDayTooltipBounds.height / 2)) + "px";
-
+        this.viewedDayTooltipElement.nativeElement.style.left = mouseEvent.clientX + mouseDistanceX + "px";
+        this.viewedDayTooltipElement.nativeElement.style.top =
+            mouseEvent.clientY - this.viewedDayTooltipBounds.height / 2 + "px";
     }
 
     public onGraphMouseOut(date: Date): void {
@@ -451,7 +452,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
     public getDayFitnessTrendFromDate(date: Date): DayFitnessTrendModel {
         return _.find(this.fitnessTrend, {
-            dateString: moment(date).format(DayFitnessTrendModel.DATE_FORMAT)
+            dateString: moment(date).format(DayFitnessTrendModel.DATE_FORMAT),
         });
     }
 
@@ -473,7 +474,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
     @HostListener("window:keydown", ["$event"])
     public onKeyDown(event: KeyboardEvent): void {
-
         if (event.code === FitnessTrendGraphComponent.KEY_CODES.RIGHT_ARROW) {
             this.onPeriodViewedForward();
         }
@@ -494,7 +494,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public setupGraphConfig(): void {
-
         this.graphConfig = {
             data: [],
             full_width: true,
@@ -533,12 +532,11 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
             },
             mouseout: (data: MetricsGraphicsEventModel) => {
                 this.onGraphMouseOut(data.key);
-            }
+            },
         };
     }
 
     public ngOnDestroy(): void {
-
         if (this.windowResizingSubscription) {
             this.windowResizingSubscription.unsubscribe();
         }

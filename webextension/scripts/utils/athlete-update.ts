@@ -6,7 +6,6 @@ import { SyncResultModel } from "@elevate/shared/models";
 import { DistributedEndpointsResolver } from "@elevate/shared/resolvers";
 
 export class AthleteUpdate {
-
     /**
      * Provide AthleteUpdateModel object
      * @param stravaId
@@ -19,9 +18,16 @@ export class AthleteUpdate {
      * @param hrMax
      * @returns {AthleteUpdateModel}
      */
-    public static create(stravaId: number, name: string, version: string, isPremium: boolean, isPro: boolean, locale?: string, hrMin?: number,
-                         hrMax?: number): AthleteUpdateModel {
-
+    public static create(
+        stravaId: number,
+        name: string,
+        version: string,
+        isPremium: boolean,
+        isPro: boolean,
+        locale?: string,
+        hrMin?: number,
+        hrMax?: number
+    ): AthleteUpdateModel {
         if (stravaId < 1 || _.isEmpty(name) || _.isEmpty(version) || !_.isBoolean(isPremium) || !_.isBoolean(isPro)) {
             return null;
         }
@@ -50,7 +56,6 @@ export class AthleteUpdate {
     }
 
     public static commit(athleteUpdate: AthleteUpdateModel): Q.IPromise<any> {
-
         const deferred = Q.defer<SyncResultModel>();
         const endPoint = DistributedEndpointsResolver.resolve(ExtensionEnv.endPoint) + "/api/athlete/update";
 
@@ -64,7 +69,7 @@ export class AthleteUpdate {
             },
             error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
                 console.warn("Endpoint <" + endPoint + "> not reachable", jqXHR);
-                deferred.reject({textStatus, errorThrown});
+                deferred.reject({ textStatus, errorThrown });
             },
         });
 

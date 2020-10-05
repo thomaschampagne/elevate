@@ -6,13 +6,14 @@ import { Subject } from "rxjs";
 import { LoggerService } from "../logging/logger.service";
 
 export abstract class ActivityService {
-
     public athleteSettingsConsistency$: Subject<boolean>;
     public activitiesWithSettingsLacks$: Subject<boolean>;
 
-    protected constructor(public activityDao: ActivityDao,
-                          public athleteSnapshotResolverService: AthleteSnapshotResolverService,
-                          public logger: LoggerService) {
+    protected constructor(
+        public activityDao: ActivityDao,
+        public athleteSnapshotResolverService: AthleteSnapshotResolverService,
+        public logger: LoggerService
+    ) {
         this.athleteSettingsConsistency$ = new Subject<boolean>();
         this.activitiesWithSettingsLacks$ = new Subject<boolean>();
     }
@@ -37,11 +38,17 @@ export abstract class ActivityService {
         return this.activityDao.removeById(id, true);
     }
 
-    public update(syncedActivityModel: SyncedActivityModel, persistImmediately: boolean = false): Promise<SyncedActivityModel> {
+    public update(
+        syncedActivityModel: SyncedActivityModel,
+        persistImmediately: boolean = false
+    ): Promise<SyncedActivityModel> {
         return this.activityDao.update(syncedActivityModel, persistImmediately);
     }
 
-    public put(syncedActivityModel: SyncedActivityModel, persistImmediately: boolean = false): Promise<SyncedActivityModel> {
+    public put(
+        syncedActivityModel: SyncedActivityModel,
+        persistImmediately: boolean = false
+    ): Promise<SyncedActivityModel> {
         return this.activityDao.put(syncedActivityModel, persistImmediately);
     }
 
@@ -65,54 +72,61 @@ export abstract class ActivityService {
      * Tells if local synced activities is compliant with current athlete settings
      */
     public isAthleteSettingsConsistent(): Promise<boolean> {
-
-        return this.athleteSnapshotResolverService.update().then(() => {
-            return this.activityDao.find();
-        }).then((syncedActivityModels: SyncedActivityModel[]) => {
-            let isCompliant = true;
-            _.forEachRight(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
-                const athleteModelFound = this.athleteSnapshotResolverService.resolve(new Date(syncedActivityModel.start_time));
-                if (!athleteModelFound.equals(syncedActivityModel.athleteSnapshot)) {
-                    isCompliant = false;
-                    return false;
-                }
+        return this.athleteSnapshotResolverService
+            .update()
+            .then(() => {
+                return this.activityDao.find();
+            })
+            .then((syncedActivityModels: SyncedActivityModel[]) => {
+                let isCompliant = true;
+                _.forEachRight(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
+                    const athleteModelFound = this.athleteSnapshotResolverService.resolve(
+                        new Date(syncedActivityModel.start_time)
+                    );
+                    if (!athleteModelFound.equals(syncedActivityModel.athleteSnapshot)) {
+                        isCompliant = false;
+                        return false;
+                    }
+                });
+                return Promise.resolve(isCompliant);
             });
-            return Promise.resolve(isCompliant);
-        });
     }
 
     /**
      * Ask for athleteSettings consistency check and notify athleteSettingsConsistency subscribers of consistency
      */
     public verifyConsistencyWithAthleteSettings(): void {
-
         this.logger.debug("checking athlete settings consistency");
-        this.isAthleteSettingsConsistent().then(isConsistent => {
-            this.athleteSettingsConsistency$.next(isConsistent);
-            this.logger.debug("Athlete settings consistent: " + isConsistent);
-        }, error => this.athleteSettingsConsistency$.error(error));
-
+        this.isAthleteSettingsConsistent().then(
+            isConsistent => {
+                this.athleteSettingsConsistency$.next(isConsistent);
+                this.logger.debug("Athlete settings consistent: " + isConsistent);
+            },
+            error => this.athleteSettingsConsistency$.error(error)
+        );
     }
-
 
     /**
      * Provide local synced activity ids which are not compliant with current athlete settings
      */
     public nonConsistentActivitiesWithAthleteSettings(): Promise<number[]> {
-
-        return this.athleteSnapshotResolverService.update().then(() => {
-            return this.fetch();
-        }).then((syncedActivityModels: SyncedActivityModel[]) => {
-            const nonConsistentIds = [];
-            _.forEachRight(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
-                const athleteModelFound = this.athleteSnapshotResolverService.resolve(new Date(syncedActivityModel.start_time));
-                if (!athleteModelFound.equals(syncedActivityModel.athleteSnapshot)) {
-                    nonConsistentIds.push(syncedActivityModel.id);
-                }
+        return this.athleteSnapshotResolverService
+            .update()
+            .then(() => {
+                return this.fetch();
+            })
+            .then((syncedActivityModels: SyncedActivityModel[]) => {
+                const nonConsistentIds = [];
+                _.forEachRight(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
+                    const athleteModelFound = this.athleteSnapshotResolverService.resolve(
+                        new Date(syncedActivityModel.start_time)
+                    );
+                    if (!athleteModelFound.equals(syncedActivityModel.athleteSnapshot)) {
+                        nonConsistentIds.push(syncedActivityModel.id);
+                    }
+                });
+                return Promise.resolve(nonConsistentIds);
             });
-            return Promise.resolve(nonConsistentIds);
-        });
-
     }
 
     /**
@@ -120,10 +134,13 @@ export abstract class ActivityService {
      */
     public verifyActivitiesWithSettingsLacking(): void {
         this.logger.debug("checking activities with settings lacks");
-        this.hasActivitiesWithSettingsLacks().then(hasSettingsLack => {
-            this.activitiesWithSettingsLacks$.next(hasSettingsLack);
-            this.logger.debug("Activities with settings lacks: " + hasSettingsLack);
-        }, error => this.activitiesWithSettingsLacks$.error(error));
+        this.hasActivitiesWithSettingsLacks().then(
+            hasSettingsLack => {
+                this.activitiesWithSettingsLacks$.next(hasSettingsLack);
+                this.logger.debug("Activities with settings lacks: " + hasSettingsLack);
+            },
+            error => this.activitiesWithSettingsLacks$.error(error)
+        );
     }
 
     public hasActivitiesWithSettingsLacks(): Promise<boolean> {
@@ -133,6 +150,4 @@ export abstract class ActivityService {
     public findActivitiesWithSettingsLacks(): Promise<SyncedActivityModel[]> {
         return this.activityDao.findActivitiesWithSettingsLacks();
     }
-
 }
-

@@ -4,9 +4,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 export const OPEN_RESOURCE_RESOLVER = new InjectionToken<OpenResourceResolver>("OPEN_RESOURCE_RESOLVER");
 
 export abstract class OpenResourceResolver {
-
-    protected constructor(public snackBar: MatSnackBar) {
-    }
+    protected constructor(public snackBar: MatSnackBar) {}
 
     public abstract openLink(url: string): void;
 
@@ -21,5 +19,4 @@ export abstract class OpenResourceResolver {
             this.snackBar.open(`Activity with id ${JSON.stringify(ids)} not found`, "Close");
         }
     }
-
 }

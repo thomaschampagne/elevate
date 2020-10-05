@@ -6,17 +6,12 @@ import { SharedModule } from "../../shared/shared.module";
 import { FitnessTrendModule } from "../fitness-trend.module";
 
 describe("FitnessTrendLegendComponent", () => {
-
     let component: FitnessTrendLegendComponent;
     let fixture: ComponentFixture<FitnessTrendLegendComponent>;
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                FitnessTrendModule
-            ]
+            imports: [CoreModule, SharedModule, FitnessTrendModule],
         }).compileComponents();
         done();
     });

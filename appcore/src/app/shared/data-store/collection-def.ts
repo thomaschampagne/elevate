@@ -1,5 +1,4 @@
 export class CollectionDef<T> {
-
     public readonly name: string;
 
     public options: Partial<CollectionOptions<T>>;

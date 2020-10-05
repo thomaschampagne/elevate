@@ -5,10 +5,12 @@ import { ConnectorSyncDateTime } from "@elevate/shared/models";
 
 @Injectable()
 export class ConnectorSyncDateTimeDao extends BaseDao<ConnectorSyncDateTime> {
-
-    public static readonly COLLECTION_DEF: CollectionDef<ConnectorSyncDateTime> = new CollectionDef("connectorSyncDateTime", {
-        unique: ["connectorType"]
-    });
+    public static readonly COLLECTION_DEF: CollectionDef<ConnectorSyncDateTime> = new CollectionDef(
+        "connectorSyncDateTime",
+        {
+            unique: ["connectorType"],
+        }
+    );
 
     public getDefaultStorageValue(): ConnectorSyncDateTime[] {
         return [];

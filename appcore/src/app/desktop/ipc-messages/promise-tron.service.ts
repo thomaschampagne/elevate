@@ -5,7 +5,6 @@ import { IPromiseTron } from "./promise-tron.interface";
 
 @Injectable()
 export class PromiseTronService implements IPromiseTron {
-
     public promiseTron: PromiseTron;
 
     constructor(public electronService: ElectronService) {
@@ -17,6 +16,6 @@ export class PromiseTronService implements IPromiseTron {
     }
 
     public send<T>(data: any): Promise<T> {
-        return <Promise<T>> this.promiseTron.send(data);
+        return <Promise<T>>this.promiseTron.send(data);
     }
 }

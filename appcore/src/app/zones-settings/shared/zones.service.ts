@@ -9,7 +9,6 @@ import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 
 @Injectable()
 export class ZonesService {
-
     public currentZones: ZoneModel[];
     /**
      * Subscription mechanism for a {ZoneComponent}.  When a whisper zone change occurs, then all zones receive
@@ -33,16 +32,10 @@ export class ZonesService {
     }
 
     public addLastZone(): Promise<string> {
-
-        return new Promise((resolve: (message: string) => void,
-                            reject: (error: string) => void) => {
-
+        return new Promise((resolve: (message: string) => void, reject: (error: string) => void) => {
             if (this.currentZones.length >= this.getMaxZoneCount()) {
-
                 reject("You can't add more than " + this.getMaxZoneCount() + " zones...");
-
             } else {
-
                 const oldLastZone: ZoneModel = this.getLastZone();
 
                 // Computed middle value between oldLastZone.from and oldLastZone.to
@@ -66,43 +59,29 @@ export class ZonesService {
     }
 
     public removeLastZone(): Promise<string> {
-
-        return new Promise((resolve: (message: string) => void,
-                            reject: (error: string) => void) => {
-
+        return new Promise((resolve: (message: string) => void, reject: (error: string) => void) => {
             if (this.currentZones.length <= this.getMinZoneCount()) {
                 reject("You can't remove more than " + this.getMinZoneCount() + " zones...");
             } else {
-
                 this.currentZones.pop(); // Delete last zone
                 resolve("Zone <" + (this.currentZones.length + 1) + "> has been removed.");
             }
-
         });
     }
 
     public removeZoneAtIndex(index: number): Promise<string> {
-
-        return new Promise((resolve: (message: string) => void,
-                            reject: (error: string) => void) => {
-
+        return new Promise((resolve: (message: string) => void, reject: (error: string) => void) => {
             if (this.currentZones.length <= this.getMinZoneCount()) {
-
                 reject("You can't remove more than " + this.getMinZoneCount() + " zones...");
-
             } else {
-
-                const isFirstZone = (index === 0);
-                const isLastZone = (index === (this.currentZones.length - 1));
+                const isFirstZone = index === 0;
+                const isLastZone = index === this.currentZones.length - 1;
 
                 if (isFirstZone || isLastZone) {
-
                     this.currentZones.splice(index, 1);
 
                     resolve("Zone <" + (index + 1) + "> has been removed.");
-
                 } else {
-
                     // Update next from zone with previous zone to
                     this.currentZones[index + 1].from = this.currentZones[index - 1].to;
 
@@ -110,7 +89,6 @@ export class ZonesService {
                     this.currentZones.splice(index, 1);
 
                     resolve("Zone <" + (index + 1) + "> has been removed.");
-
                 }
             }
         });
@@ -121,8 +99,7 @@ export class ZonesService {
      * Instructions are received by all <ZonesComponents>. But only 1 ZonesComponent will apply instructions to himself
      */
     public whisperZoneChange(zoneChange: ZoneChangeWhisperModel): void {
-
-        if (zoneChange.to && zoneChange.from && (zoneChange.to === zoneChange.from)) {
+        if (zoneChange.to && zoneChange.from && zoneChange.to === zoneChange.from) {
             this.zoneChangeOrderUpdates.error("Impossible to notify both 'from' & 'to' changes at the same time");
         }
 
@@ -130,8 +107,8 @@ export class ZonesService {
             this.zoneChangeOrderUpdates.error("Value provided is not a number");
         }
 
-        const isFirstZoneChange = (zoneChange.sourceId === 0);
-        const isLastZoneChange = (zoneChange.sourceId === (this.currentZones.length - 1));
+        const isFirstZoneChange = zoneChange.sourceId === 0;
+        const isLastZoneChange = zoneChange.sourceId === this.currentZones.length - 1;
 
         let instruction: ZoneChangeOrderModel = {
             sourceId: zoneChange.sourceId,
@@ -142,7 +119,6 @@ export class ZonesService {
         };
 
         if (!isFirstZoneChange && !isLastZoneChange) {
-
             if (zoneChange.from) {
                 instruction.destinationId = zoneChange.sourceId - 1;
                 instruction.from = false;
@@ -154,9 +130,7 @@ export class ZonesService {
                 instruction.from = true;
                 instruction.to = false;
             }
-
         } else if (isFirstZoneChange) {
-
             if (zoneChange.to) {
                 instruction.destinationId = zoneChange.sourceId + 1;
                 instruction.from = true;
@@ -166,9 +140,7 @@ export class ZonesService {
             if (zoneChange.from) {
                 instruction = null;
             }
-
         } else if (isLastZoneChange) {
-
             if (zoneChange.to) {
                 instruction = null;
             }
@@ -184,7 +156,6 @@ export class ZonesService {
     }
 
     public isZonesCompliant(zones: ZoneModel[]): string {
-
         const NOT_COMPLIANT_ZONE = "Not compliant zones provided: pattern is not respected.";
 
         if (!zones) {
@@ -200,20 +171,19 @@ export class ZonesService {
         }
 
         for (let i = 0; i < zones.length; i++) {
-
-
-            if (i === 0) { // First zone
+            if (i === 0) {
+                // First zone
                 if (zones[i].to !== zones[i + 1].from) {
                     return NOT_COMPLIANT_ZONE;
                 }
-
-            } else if (i < (zones.length - 1)) { // Middle zone
+            } else if (i < zones.length - 1) {
+                // Middle zone
 
                 if (zones[i].to !== zones[i + 1].from || zones[i].from !== zones[i - 1].to) {
                     return NOT_COMPLIANT_ZONE;
                 }
-
-            } else { // Last zone
+            } else {
+                // Last zone
                 if (zones[i].from !== zones[i - 1].to) {
                     return NOT_COMPLIANT_ZONE;
                 }
@@ -223,24 +193,21 @@ export class ZonesService {
     }
 
     public updateZones(): Promise<void> {
-
-        return new Promise((resolve: () => void,
-                            reject: (error: string) => void) => {
-
+        return new Promise((resolve: () => void, reject: (error: string) => void) => {
             const complianceError = this.isZonesCompliant(this.currentZones);
 
             if (_.isNull(complianceError)) {
-                this.userSettingsService.updateZones(
-                    this.zoneDefinition,
-                    this.currentZones
-                ).then(() => {
-                    return this.userSettingsService.clearLocalStorageOnNextLoad();
-                }).then(() => {
-                    resolve();
-                }).catch(error => {
-                    reject(error);
-                });
-
+                this.userSettingsService
+                    .updateZones(this.zoneDefinition, this.currentZones)
+                    .then(() => {
+                        return this.userSettingsService.clearLocalStorageOnNextLoad();
+                    })
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
             } else {
                 reject(complianceError);
             }
@@ -248,49 +215,44 @@ export class ZonesService {
     }
 
     public resetZonesToDefault(): Promise<void> {
+        return new Promise((resolve: () => void, reject: (error: string) => void) => {
+            this.currentZones = UserZonesModel.deserialize(
+                _.clone(_.propertyOf(UserZonesModel.DEFAULT_MODEL)(this.zoneDefinition.value))
+            );
 
-        return new Promise((resolve: () => void,
-                            reject: (error: string) => void) => {
-
-            this.currentZones = UserZonesModel.deserialize(_.clone(_.propertyOf(UserZonesModel.DEFAULT_MODEL)(this.zoneDefinition.value)));
-
-            this.updateZones().then(() => {
-
-                resolve();
-                this.zonesUpdates.next(this.currentZones); // Notify ZonesSettingsComponent to tell him to reload his zones
-
-            }, (error: string) => {
-
-                reject(error);
-                this.zonesUpdates.error(error);
-
-            });
-
+            this.updateZones().then(
+                () => {
+                    resolve();
+                    this.zonesUpdates.next(this.currentZones); // Notify ZonesSettingsComponent to tell him to reload his zones
+                },
+                (error: string) => {
+                    reject(error);
+                    this.zonesUpdates.error(error);
+                }
+            );
         });
     }
 
     public importZones(jsonInput: string): Promise<void> {
-
-        return new Promise((resolve: () => void,
-                            reject: (error: string) => void) => {
-
+        return new Promise((resolve: () => void, reject: (error: string) => void) => {
             // Try to parse JSON input
             try {
-                this.currentZones = <ZoneModel[]> JSON.parse(jsonInput);
+                this.currentZones = <ZoneModel[]>JSON.parse(jsonInput);
             } catch (error) {
                 reject("Provided zones do not respect expected format");
                 return;
             }
 
             // Valid JSON Here... Save & emit zones update
-            this.updateZones().then(() => {
-
-                this.zonesUpdates.next(this.currentZones);
-                resolve();
-
-            }, error => {
-                reject(error);
-            });
+            this.updateZones().then(
+                () => {
+                    this.zonesUpdates.next(this.currentZones);
+                    resolve();
+                },
+                error => {
+                    reject(error);
+                }
+            );
         });
     }
 
@@ -313,5 +275,4 @@ export class ZonesService {
     public getMinZoneCount(): number {
         return this.MIN_ZONES_COUNT;
     }
-
 }

@@ -3,13 +3,11 @@ import { EnvTarget } from "../env-target";
 import * as _ from "lodash";
 
 export namespace UserSettings {
-
     export const SYSTEM_UNIT_METRIC_KEY = "metric";
     export const SYSTEM_UNIT_IMPERIAL_KEY = "imperial";
     export const DEFAULT_TEMP_KEY = "C"; // TODO use Enum "C" or "F"
 
     export const getDefaultsByEnvTarget = (envTarget: EnvTarget): UserSettingsModel => {
-
         if (envTarget === EnvTarget.DESKTOP) {
             return _.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL);
         } else if (envTarget === EnvTarget.EXTENSION) {
@@ -27,7 +25,6 @@ export namespace UserSettings {
     }
 
     export class DesktopUserSettingsModel extends UserSettingsModel {
-
         public static readonly DEFAULT_MODEL: DesktopUserSettingsModel = {
             envTarget: EnvTarget.DESKTOP,
             systemUnit: UserSettings.SYSTEM_UNIT_METRIC_KEY,
@@ -39,7 +36,6 @@ export namespace UserSettings {
     }
 
     export class ExtensionUserSettingsModel extends UserSettingsModel {
-
         public static readonly DEFAULT_MODEL: ExtensionUserSettingsModel = {
             envTarget: EnvTarget.EXTENSION,
             localStorageMustBeCleared: false,
@@ -84,7 +80,7 @@ export namespace UserSettings {
             temperatureUnit: UserSettings.DEFAULT_TEMP_KEY,
             showHiddenBetaFeatures: false,
             displayReliveCCLink: true,
-            displayWindyOverlay: false
+            displayWindyOverlay: false,
         };
 
         public envTarget: EnvTarget = EnvTarget.EXTENSION;
@@ -130,4 +126,3 @@ export namespace UserSettings {
         public displayWindyOverlay: boolean;
     }
 }
-

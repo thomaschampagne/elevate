@@ -1,6 +1,9 @@
 import { Component, HostBinding, InjectionToken, OnInit } from "@angular/core";
 import { ActivityService } from "../shared/services/activity/activity.service";
-import { BulkRefreshStatsNotification, DesktopActivityService } from "../shared/services/activity/impl/desktop-activity.service";
+import {
+    BulkRefreshStatsNotification,
+    DesktopActivityService,
+} from "../shared/services/activity/impl/desktop-activity.service";
 import * as moment from "moment";
 import { AppRoutesModel } from "../shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
@@ -22,9 +25,8 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 export const REFRESH_STATS_BAR_COMPONENT = new InjectionToken<RefreshStatsBarComponent>("REFRESH_STATS_BAR_COMPONENT");
 
-@Component({template: ""})
+@Component({ template: "" })
 export class RefreshStatsBarComponent implements OnInit {
-
     public static readonly VERIFY_SETTINGS_LACKS_TIMEOUT: number = 20;
     public static readonly VERIFY_ATHLETE_SETTINGS_CONSISTENCY_TIMEOUT: number = 30;
 
@@ -35,10 +37,12 @@ export class RefreshStatsBarComponent implements OnInit {
     public hideSettingsConsistencyWarning: boolean;
     public hideSettingsLacksWarning: boolean;
 
-    constructor(public router: Router,
-                public activityService: ActivityService,
-                public appEventsService: AppEventsService,
-                public dialog: MatDialog) {
+    constructor(
+        public router: Router,
+        public activityService: ActivityService,
+        public appEventsService: AppEventsService,
+        public dialog: MatDialog
+    ) {
         this.hideGoToAthleteSettingsButton = false;
         this.hideRefreshStatsBar = true;
         this.hideSettingsConsistencyWarning = true;
@@ -46,7 +50,6 @@ export class RefreshStatsBarComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-
         // Delayed check of settings lacks and athlete settings consistency
         this.verifyHistoryCompliance();
 
@@ -56,7 +59,7 @@ export class RefreshStatsBarComponent implements OnInit {
         // Listen for sync/recalculation performed
         this.appEventsService.syncDone$.subscribe((changes: boolean) => {
             if (changes) {
-                sleep(RefreshStatsBarComponent.VERIFY_SETTINGS_LACKS_TIMEOUT * 1000 / 3).then(() => {
+                sleep((RefreshStatsBarComponent.VERIFY_SETTINGS_LACKS_TIMEOUT * 1000) / 3).then(() => {
                     this.activityService.verifyActivitiesWithSettingsLacking();
                 });
             }
@@ -75,7 +78,6 @@ export class RefreshStatsBarComponent implements OnInit {
                 this.showConsistencyWarning();
             }
         });
-
     }
 
     public showSettingsLacks(): void {
@@ -99,14 +101,13 @@ export class RefreshStatsBarComponent implements OnInit {
     }
 
     public onShowActivitiesWithSettingsLacks(): void {
-
         const loadingDialog = this.dialog.open(LoadingDialogComponent);
 
         this.activityService.findActivitiesWithSettingsLacks().then(syncedActivityModels => {
             loadingDialog.close();
             this.dialog.open(ActivitiesSettingsLacksDialogComponent, {
                 data: syncedActivityModels,
-                minWidth: ActivitiesSettingsLacksDialogComponent.MIN_WIDTH
+                minWidth: ActivitiesSettingsLacksDialogComponent.MIN_WIDTH,
             });
         });
     }
@@ -114,7 +115,7 @@ export class RefreshStatsBarComponent implements OnInit {
     public onEditAthleteSettingsFromSettingsLacksIssue(): void {
         if (this.router.isActive(AppRoutesModel.athleteSettings, true)) {
             this.dialog.open(GotItDialogComponent, {
-                data: <GotItDialogDataModel> {content: "You're already on athlete settings section 😉"}
+                data: <GotItDialogDataModel>{ content: "You're already on athlete settings section 😉" },
             });
         } else {
             this.router.navigate([AppRoutesModel.athleteSettings]);
@@ -127,7 +128,6 @@ export class RefreshStatsBarComponent implements OnInit {
     }
 
     private verifyHistoryCompliance(): void {
-
         sleep(RefreshStatsBarComponent.VERIFY_SETTINGS_LACKS_TIMEOUT * 1000).then(() => {
             this.activityService.verifyActivitiesWithSettingsLacking();
         });
@@ -139,9 +139,9 @@ export class RefreshStatsBarComponent implements OnInit {
 
     private handleAthleteSettingButton(): void {
         const athleteSettingsPath = "/" + AppRoutesModel.athleteSettings;
-        this.hideGoToAthleteSettingsButton = (this.router.url !== athleteSettingsPath);
+        this.hideGoToAthleteSettingsButton = this.router.url !== athleteSettingsPath;
         this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: RouterEvent) => {
-            this.hideGoToAthleteSettingsButton = (event.url !== athleteSettingsPath);
+            this.hideGoToAthleteSettingsButton = event.url !== athleteSettingsPath;
         });
     }
 }
@@ -150,17 +150,22 @@ export class RefreshStatsBarComponent implements OnInit {
     selector: "app-desktop-refresh-stats-bar",
     template: `
         <div class="app-refresh-stats-bar">
-
             <!--Missing stress scores detected on some activities-->
             <div *ngIf="!hideSettingsLacksWarning" fxLayout="row" fxLayoutAlign="space-between center">
                 <div fxLayout="column" fxLayoutAlign="center start">
-                    Missing stress scores detected on some activities. You probably forgot some functional thresholds in dated athlete settings.
+                    Missing stress scores detected on some activities. You probably forgot some functional thresholds in
+                    dated athlete settings.
                 </div>
                 <div fxLayout="row" fxLayoutAlign="space-between center">
                     <button mat-flat-button color="accent" (click)="onShowActivitiesWithSettingsLacks()">
                         Details
                     </button>
-                    <button *ngIf="hideGoToAthleteSettingsButton" mat-flat-button color="accent" (click)="onEditAthleteSettingsFromSettingsLacksIssue()">
+                    <button
+                        *ngIf="hideGoToAthleteSettingsButton"
+                        mat-flat-button
+                        color="accent"
+                        (click)="onEditAthleteSettingsFromSettingsLacksIssue()"
+                    >
                         Fix settings
                     </button>
                     <button mat-icon-button (click)="onCloseSettingsLacksWarning()">
@@ -175,9 +180,7 @@ export class RefreshStatsBarComponent implements OnInit {
                     Some of your activities need to be recalculated according to athlete settings changes.
                 </div>
                 <div fxLayout="row" fxLayoutAlign="space-between center">
-                    <button mat-flat-button color="accent" (click)="onFixActivities()">
-                        Recalculate
-                    </button>
+                    <button mat-flat-button color="accent" (click)="onFixActivities()">Recalculate</button>
                     <button mat-icon-button (click)="onCloseSettingsConsistencyWarning()">
                         <mat-icon fontSet="material-icons-outlined">close</mat-icon>
                     </button>
@@ -187,58 +190,63 @@ export class RefreshStatsBarComponent implements OnInit {
             <!--Recalculate activities section-->
             <div *ngIf="!hideRecalculation" fxLayout="row" fxLayoutAlign="space-between center">
                 <div fxLayout="column" fxLayoutAlign="center start">
-                    <span fxFlex class="mat-body-1" *ngIf="statusText">{{statusText}}</span>
-                    <span fxFlex class="mat-caption">{{processed}}/{{toBeProcessed}} activities recalculated.</span>
+                    <span fxFlex class="mat-body-1" *ngIf="statusText">{{ statusText }}</span>
+                    <span fxFlex class="mat-caption">{{ processed }}/{{ toBeProcessed }} activities recalculated.</span>
                 </div>
             </div>
         </div>
     `,
-    styles: [`
-        .app-refresh-stats-bar {
-            padding: 10px 20px;
-        }
+    styles: [
+        `
+            .app-refresh-stats-bar {
+                padding: 10px 20px;
+            }
 
-        button {
-            margin-left: 10px;
-        }
-    `]
+            button {
+                margin-left: 10px;
+            }
+        `,
+    ],
 })
 export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent implements OnInit {
-
     public hideRecalculation: boolean;
 
     public statusText: string;
     public processed: number;
     public toBeProcessed: number;
 
-    constructor(public router: Router,
-                public activityService: ActivityService,
-                public userSettingsService: UserSettingsService,
-                public appEventsService: AppEventsService,
-                public dialog: MatDialog,
-                public logger: LoggerService) {
+    constructor(
+        public router: Router,
+        public activityService: ActivityService,
+        public userSettingsService: UserSettingsService,
+        public appEventsService: AppEventsService,
+        public dialog: MatDialog,
+        public logger: LoggerService
+    ) {
         super(router, activityService, appEventsService, dialog);
         this.hideRecalculation = true;
     }
 
     public ngOnInit(): void {
-
         super.ngOnInit();
 
-        const desktopActivityService = <DesktopActivityService> this.activityService;
-        desktopActivityService.refreshStats$.subscribe((notification: BulkRefreshStatsNotification) => {
-
+        const desktopActivityService = <DesktopActivityService>this.activityService;
+        desktopActivityService.refreshStats$.subscribe(
+            (notification: BulkRefreshStatsNotification) => {
                 if (notification.error) {
                     this.logger.error(notification);
                     this.dialog.open(GotItDialogComponent, {
-                        data: <GotItDialogDataModel> {content: notification.error.message}
+                        data: <GotItDialogDataModel>{ content: notification.error.message },
                     });
                     return;
                 }
 
                 this.showRecalculation();
 
-                this.statusText = moment(notification.syncedActivityModel.start_time).format("ll") + ": " + notification.syncedActivityModel.name;
+                this.statusText =
+                    moment(notification.syncedActivityModel.start_time).format("ll") +
+                    ": " +
+                    notification.syncedActivityModel.name;
 
                 if (notification.isLast) {
                     this.statusText = "Recalculation done. App is being refreshed...";
@@ -254,14 +262,14 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
             err => {
                 this.logger.error(err);
                 throw err;
-            });
-
+            }
+        );
     }
 
     public onFixActivities(): void {
         super.onFixActivities();
         this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
-            const desktopActivityService = <DesktopActivityService> this.activityService;
+            const desktopActivityService = <DesktopActivityService>this.activityService;
             desktopActivityService.nonConsistentActivitiesWithAthleteSettings().then((activitiesIds: number[]) => {
                 desktopActivityService.bulkRefreshStatsFromIds(activitiesIds, userSettingsModel);
             });
@@ -288,13 +296,19 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
             <!--Missing stress scores detected on some activities-->
             <div *ngIf="!hideSettingsLacksWarning" fxLayout="row" fxLayoutAlign="space-between center">
                 <div fxLayout="column" fxLayoutAlign="center start">
-                    Missing stress scores detected on some activities. You probably forgot some functional thresholds in dated athlete settings.
+                    Missing stress scores detected on some activities. You probably forgot some functional thresholds in
+                    dated athlete settings.
                 </div>
                 <div fxLayout="row" fxLayoutAlign="space-between center">
                     <button mat-flat-button color="accent" (click)="onShowActivitiesWithSettingsLacks()">
                         Details
                     </button>
-                    <button *ngIf="hideGoToAthleteSettingsButton" mat-flat-button color="accent" (click)="onEditAthleteSettingsFromSettingsLacksIssue()">
+                    <button
+                        *ngIf="hideGoToAthleteSettingsButton"
+                        mat-flat-button
+                        color="accent"
+                        (click)="onEditAthleteSettingsFromSettingsLacksIssue()"
+                    >
                         Fix settings
                     </button>
                     <button mat-icon-button (click)="onCloseSettingsLacksWarning()">
@@ -309,9 +323,7 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
                     Some of your activities need to be recalculated according to athlete settings changes.
                 </div>
                 <div fxLayout="row" fxLayoutAlign="space-between center">
-                    <button mat-flat-button color="accent" (click)="onFixActivities()">
-                        Recalculate
-                    </button>
+                    <button mat-flat-button color="accent" (click)="onFixActivities()">Recalculate</button>
                     <button mat-icon-button (click)="onCloseSettingsConsistencyWarning()">
                         <mat-icon fontSet="material-icons-outlined">close</mat-icon>
                     </button>
@@ -319,24 +331,27 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
             </div>
         </div>
     `,
-    styles: [`
-        .app-refresh-stats-bar {
-            padding: 10px 20px;
-        }
+    styles: [
+        `
+            .app-refresh-stats-bar {
+                padding: 10px 20px;
+            }
 
-        button {
-            margin-left: 10px;
-        }
-    `]
+            button {
+                margin-left: 10px;
+            }
+        `,
+    ],
 })
 export class ExtensionRefreshStatsBarComponent extends RefreshStatsBarComponent implements OnInit {
-
-    constructor(public router: Router,
-                public activityService: ActivityService,
-                public syncService: SyncService<any>,
-                public appEventsService: AppEventsService,
-                public dialog: MatDialog,
-                public logger: LoggerService) {
+    constructor(
+        public router: Router,
+        public activityService: ActivityService,
+        public syncService: SyncService<any>,
+        public appEventsService: AppEventsService,
+        public dialog: MatDialog,
+        public logger: LoggerService
+    ) {
         super(router, activityService, appEventsService, dialog);
     }
 
@@ -349,49 +364,50 @@ export class ExtensionRefreshStatsBarComponent extends RefreshStatsBarComponent 
 
         const data: ConfirmDialogDataModel = {
             title: "Recalculate synced activities affected by athlete settings changes",
-            content: "Synced activities affected by athlete settings changes will be deleted to be synced again with " +
-                "new athlete settings (equivalent to a \"Sync all activities\")",
-            confirmText: "Proceed to the recalculation"
+            content:
+                "Synced activities affected by athlete settings changes will be deleted to be synced again with " +
+                'new athlete settings (equivalent to a "Sync all activities")',
+            confirmText: "Proceed to the recalculation",
         };
 
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             minWidth: ConfirmDialogComponent.MIN_WIDTH,
             maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-            data: data
+            data: data,
         });
 
         const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
-
             if (confirm) {
-
                 let nonConsistentIds: number[];
 
-                this.activityService.nonConsistentActivitiesWithAthleteSettings().then((result: number[]) => {
-                    nonConsistentIds = result;
-                    return this.activityService.removeByManyIds(nonConsistentIds);
+                this.activityService
+                    .nonConsistentActivitiesWithAthleteSettings()
+                    .then((result: number[]) => {
+                        nonConsistentIds = result;
+                        return this.activityService.removeByManyIds(nonConsistentIds);
+                    })
+                    .then(() => {
+                        this.dialog.open(GotItDialogComponent, {
+                            data: <GotItDialogDataModel>{
+                                content:
+                                    nonConsistentIds.length +
+                                    " activities have been deleted and are synced back now. " +
+                                    'You can sync back these activities manually by yourself by triggering a "Sync all activities"',
+                            },
+                        });
 
-                }).then(() => {
-
-                    this.dialog.open(GotItDialogComponent, {
-                        data: <GotItDialogDataModel> {
-                            content: nonConsistentIds.length + " activities have been deleted and are synced back now. " +
-                                "You can sync back these activities manually by yourself by triggering a \"Sync all activities\""
-                        }
+                        // Start Sync all activities
+                        this.syncService.sync(false, false);
+                    })
+                    .catch(error => {
+                        this.logger.error(error);
+                        this.dialog.open(GotItDialogComponent, {
+                            data: <GotItDialogDataModel>{ content: error },
+                        });
                     });
-
-                    // Start Sync all activities
-                    this.syncService.sync(false, false);
-
-                }).catch(error => {
-                    this.logger.error(error);
-                    this.dialog.open(GotItDialogComponent, {
-                        data: <GotItDialogDataModel> {content: error}
-                    });
-                });
             }
 
             afterClosedSubscription.unsubscribe();
         });
     }
-
 }

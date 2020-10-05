@@ -2,7 +2,6 @@ import { ProgressModel } from "./progress.model";
 import { ProgressMode } from "../enums/progress-mode.enum";
 
 export class YearProgressModel {
-
     public mode: ProgressMode;
     public year: number;
     public progressions: ProgressModel[];
@@ -11,5 +10,4 @@ export class YearProgressModel {
         this.year = year;
         this.progressions = progressions;
     }
-
 }

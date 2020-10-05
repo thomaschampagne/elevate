@@ -9,14 +9,10 @@ describe("DesktopDataStore", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                DesktopDataStore,
-                {provide: LoggerService, useClass: ConsoleLoggerService}
-            ]
+            providers: [DesktopDataStore, { provide: LoggerService, useClass: ConsoleLoggerService }],
         });
 
         service = TestBed.inject(DesktopDataStore);
-
     });
 
     it("should be created", () => {

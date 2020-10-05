@@ -1,5 +1,4 @@
 export abstract class LoggerService {
-
     public static LEVEL_DEBUG = 0;
     public static LEVEL_INFO = 1;
     public static LEVEL_WARN = 2;

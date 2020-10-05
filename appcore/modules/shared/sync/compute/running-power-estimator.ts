@@ -6,9 +6,12 @@ export class RunningPowerEstimator {
      * Create Running Power stream estimation
      * @returns Array of power
      */
-    public static createRunningPowerEstimationStream(athleteWeight: number, distanceArray: Array<number>,
-                                                     timeArray: Array<number>, altitudeArray: Array<number>): Array<number> {
-
+    public static createRunningPowerEstimationStream(
+        athleteWeight: number,
+        distanceArray: Array<number>,
+        timeArray: Array<number>,
+        altitudeArray: Array<number>
+    ): Array<number> {
         if (!_.isNumber(athleteWeight)) {
             throw new InconsistentParametersException("athleteWeight required as number");
         }
@@ -27,7 +30,7 @@ export class RunningPowerEstimator {
             if (i > 0) {
                 const time = timeArray[i] - timeArray[i - 1];
                 const distanceAdjusted = distanceArray[i] - distanceArray[i - 1];
-                const elevationGain = (altitudeArray) ? altitudeArray[i] - altitudeArray[i - 1] : 0;
+                const elevationGain = altitudeArray ? altitudeArray[i] - altitudeArray[i - 1] : 0;
                 power = this.estimateRunningPower(athleteWeight, distanceAdjusted, time, elevationGain);
             }
             powerStream.push(power);
@@ -40,8 +43,12 @@ export class RunningPowerEstimator {
      * From https://alancouzens.com/blog/Run_Power.html
      * @returns power watts
      */
-    public static estimateRunningPower(weightKg: number, meters: number, seconds: number, elevationGain: number): number {
-
+    public static estimateRunningPower(
+        weightKg: number,
+        meters: number,
+        seconds: number,
+        elevationGain: number
+    ): number {
         if (!_.isNumber(seconds) || seconds === 0) {
             return 0;
         }
@@ -53,9 +60,9 @@ export class RunningPowerEstimator {
         const minPerKmPace = minutes / km; // Units: min/km
         const RelativeVO2 = runningEcoVolumeO2PerKm / minPerKmPace; // (ml/kg/km) / (min/km), Units: (ml/kg/min) equals to a "V02"
         const AbsoluteVO2 = RelativeVO2 * weightKg; // Units: ml/min
-        const horizontalWatts = cyclingEcoWattsPerVolumeO2 * AbsoluteVO2 / 1000 /* divide per 1000 to get ml?!  */; // Units: W / min
+        const horizontalWatts = (cyclingEcoWattsPerVolumeO2 * AbsoluteVO2) / 1000; /* divide per 1000 to get ml?!  */ // Units: W / min
         const verticalWatts = (weightKg * 9.81 * elevationGain) / seconds; // Units kg/
         const power = Math.round(horizontalWatts + verticalWatts);
-        return (power > 0) ? power : 0;
+        return power > 0 ? power : 0;
     }
 }

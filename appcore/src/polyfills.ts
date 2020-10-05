@@ -51,7 +51,6 @@ import "zone.js/dist/zone"; // Included with Angular CLI.
 /** Evergreen browsers require these. **/
 // Used for reflect-metadata in JIT. If you use AOT (and only Angular decorators), you can remove.
 
-
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */

@@ -8,17 +8,16 @@ import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-
 import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 import { DataStore } from "../../shared/data-store/data-store";
 
-
 @Injectable()
 export class DesktopMigrationService {
-
     private readonly db: LokiConstructor;
 
-    constructor(@Inject(VERSIONS_PROVIDER) public readonly desktopVersionsProvider: DesktopVersionsProvider,
-                public readonly dataStore: DataStore<object>,
-                public readonly dialog: MatDialog,
-                public readonly logger: LoggerService) {
-
+    constructor(
+        @Inject(VERSIONS_PROVIDER) public readonly desktopVersionsProvider: DesktopVersionsProvider,
+        public readonly dataStore: DataStore<object>,
+        public readonly dialog: MatDialog,
+        public readonly logger: LoggerService
+    ) {
         this.db = this.dataStore.db;
     }
 
@@ -27,38 +26,38 @@ export class DesktopMigrationService {
      * Do nothing if no new versions.
      */
     public upgrade(): Promise<void> {
-
-        return this.detectUpgrade().then((upgradeData: { fromVersion: string, toVersion: string }) => {
-            if (upgradeData) {
-                return this.applyUpgrades(upgradeData.fromVersion, upgradeData.toVersion).then(() => {
-                    return this.dataStore.saveDataStore();
-                });
-            } else {
-                this.logger.info("No upgrade detected");
-            }
-            return Promise.resolve();
-        }).then(() => {
-            return this.trackPackageVersion();
-        }).catch(err => {
-            if (err.reason && err.reason === "DOWNGRADE") {
-                this.dialog.open(GotItDialogComponent, {
-                    data: <GotItDialogDataModel> {
-                        content: err.message
-                    }
-                });
+        return this.detectUpgrade()
+            .then((upgradeData: { fromVersion: string; toVersion: string }) => {
+                if (upgradeData) {
+                    return this.applyUpgrades(upgradeData.fromVersion, upgradeData.toVersion).then(() => {
+                        return this.dataStore.saveDataStore();
+                    });
+                } else {
+                    this.logger.info("No upgrade detected");
+                }
+                return Promise.resolve();
+            })
+            .then(() => {
                 return this.trackPackageVersion();
-            }
-            return Promise.reject(err);
-        });
+            })
+            .catch(err => {
+                if (err.reason && err.reason === "DOWNGRADE") {
+                    this.dialog.open(GotItDialogComponent, {
+                        data: <GotItDialogDataModel>{
+                            content: err.message,
+                        },
+                    });
+                    return this.trackPackageVersion();
+                }
+                return Promise.reject(err);
+            });
     }
 
-    public detectUpgrade(): Promise<{ fromVersion: string, toVersion: string }> {
-
+    public detectUpgrade(): Promise<{ fromVersion: string; toVersion: string }> {
         return Promise.all([
             this.desktopVersionsProvider.getExistingVersion(),
-            this.desktopVersionsProvider.getPackageVersion()
+            this.desktopVersionsProvider.getPackageVersion(),
         ]).then((results: string[]) => {
-
             const existingVersion = results[0];
             const packageVersion = results[1];
 
@@ -72,19 +71,21 @@ export class DesktopMigrationService {
             }
 
             if (semver.eq(existingVersion, packageVersion)) {
-                return Promise.resolve({fromVersion: existingVersion, toVersion: packageVersion});
+                return Promise.resolve({ fromVersion: existingVersion, toVersion: packageVersion });
             }
 
             if (semver.lt(existingVersion, packageVersion)) {
-                return Promise.resolve({fromVersion: existingVersion, toVersion: packageVersion});
+                return Promise.resolve({ fromVersion: existingVersion, toVersion: packageVersion });
             }
 
             if (semver.gt(existingVersion, packageVersion)) {
                 const errorMessage = `Downgrade detected from ${existingVersion} to ${packageVersion}. You might encounter some issues. Consider uninstall this version and reinstall latest version to avoid issues.`;
-                return Promise.reject({reason: "DOWNGRADE", message: errorMessage});
+                return Promise.reject({ reason: "DOWNGRADE", message: errorMessage });
             }
 
-            return Promise.reject(`Upgrade detection error with existing version: ${existingVersion}; packageVersion: ${packageVersion}`);
+            return Promise.reject(
+                `Upgrade detection error with existing version: ${existingVersion}; packageVersion: ${packageVersion}`
+            );
         });
     }
 
@@ -98,7 +99,6 @@ export class DesktopMigrationService {
     }
 
     private applyUpgrades(fromVersion: string, toVersion: string): Promise<void> {
-
         this.logger.info(`Applying upgrade(s) from ${fromVersion} to ${toVersion}`);
 
         // Create upgrade methods here...

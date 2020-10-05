@@ -4,9 +4,7 @@ import { TrainingZone } from "../enums/training-zone.enum";
 import { ElevateSport } from "@elevate/shared/enums";
 
 describe("DayFitnessTrendModel", () => {
-
     it("should provide overload training zone (1)", done => {
-
         // Given
         const previewDay = false;
         const date = new Date();
@@ -23,7 +21,6 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide overload training zone (2)", done => {
-
         // Given
         const previewDay = false;
         const date = new Date();
@@ -40,7 +37,6 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide optimal training zone (1)", done => {
-
         // Given
         const previewDay = false;
         const date = new Date();
@@ -58,7 +54,6 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide optimal training zone (2)", done => {
-
         // Given
         const previewDay = false;
         const date = new Date();
@@ -75,7 +70,6 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide neutral training zone (1)", done => {
-
         // Given
         const previewDay = false;
         const date = new Date();
@@ -92,7 +86,6 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide neutral training zone (2)", done => {
-
         // Given
         const previewDay = false;
         const date = new Date();
@@ -109,7 +102,6 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide freshness training zone (1)", done => {
-
         // Given
         const previewDay = false;
         const date = new Date();
@@ -126,7 +118,6 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide freshness training zone (2)", done => {
-
         // Given
         const previewDay = false;
         const date = new Date();
@@ -143,7 +134,6 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide freshness training zone (3)", done => {
-
         // Given
         const previewDay = false;
         const date = new Date();
@@ -160,7 +150,6 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide transition training zone (1)", done => {
-
         // Given
         const previewDay = false;
         const date = new Date();
@@ -177,7 +166,6 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide transition training zone (2)", done => {
-
         // Given
         const previewDay = false;
         const date = new Date();
@@ -194,12 +182,17 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide types count (1)", done => {
-
         // Given
         const previewDay = false;
         const date = new Date();
         const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
-        dayStressModel.types = [ElevateSport.Ride, ElevateSport.Ride, ElevateSport.Ride, ElevateSport.Run, ElevateSport.Run];
+        dayStressModel.types = [
+            ElevateSport.Ride,
+            ElevateSport.Ride,
+            ElevateSport.Ride,
+            ElevateSport.Run,
+            ElevateSport.Run,
+        ];
 
         const expectedResult = "3 Rides, 2 Runs";
         const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, 30);
@@ -215,12 +208,19 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide types count (2)", done => {
-
         // Given
         const previewDay = false;
         const date = new Date();
         const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
-        dayStressModel.types = [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.AlpineSki, ElevateSport.Run, ElevateSport.Ride, ElevateSport.Run, ElevateSport.Ride];
+        dayStressModel.types = [
+            ElevateSport.Ride,
+            ElevateSport.VirtualRide,
+            ElevateSport.AlpineSki,
+            ElevateSport.Run,
+            ElevateSport.Ride,
+            ElevateSport.Run,
+            ElevateSport.Ride,
+        ];
 
         const expectedResult = "3 Rides, 2 Runs, 1 VirtualRide, 1 AlpineSki";
         const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, 30);
@@ -236,13 +236,20 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide types count with max types with more", done => {
-
         // Given
         const maxTypes = 2;
         const previewDay = false;
         const date = new Date();
         const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
-        dayStressModel.types = [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.AlpineSki, ElevateSport.Run, ElevateSport.Ride, ElevateSport.Run, ElevateSport.Ride];
+        dayStressModel.types = [
+            ElevateSport.Ride,
+            ElevateSport.VirtualRide,
+            ElevateSport.AlpineSki,
+            ElevateSport.Run,
+            ElevateSport.Ride,
+            ElevateSport.Run,
+            ElevateSport.Ride,
+        ];
 
         const expectedResult = "3 Rides, 2 Runs & 2 more";
         const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, 30);
@@ -258,13 +265,18 @@ describe("DayFitnessTrendModel", () => {
     });
 
     it("should provide types count with max types with NO more", done => {
-
         // Given
         const maxTypes = 2;
         const previewDay = false;
         const date = new Date();
         const dayStressModel: DayStressModel = new DayStressModel(date, previewDay);
-        dayStressModel.types = [ElevateSport.Ride, ElevateSport.Run, ElevateSport.Ride, ElevateSport.Run, ElevateSport.Ride];
+        dayStressModel.types = [
+            ElevateSport.Ride,
+            ElevateSport.Run,
+            ElevateSport.Ride,
+            ElevateSport.Run,
+            ElevateSport.Ride,
+        ];
 
         const expectedResult = "3 Rides, 2 Runs";
         const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(dayStressModel, 10, 20, 30);
@@ -278,5 +290,4 @@ describe("DayFitnessTrendModel", () => {
         expect(result).toEqual(expectedResult);
         done();
     });
-
 });

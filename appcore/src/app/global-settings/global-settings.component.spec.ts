@@ -11,25 +11,21 @@ import { TestingDataStore } from "../shared/data-store/testing-datastore.service
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("GlobalSettingsComponent", () => {
-
     let component: GlobalSettingsComponent;
     let fixture: ComponentFixture<GlobalSettingsComponent>;
     let userSettingsService: UserSettingsService;
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-            ],
+            imports: [CoreModule, SharedModule],
             declarations: [],
-            providers: [
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+            providers: [{ provide: DataStore, useClass: TestingDataStore }],
         }).compileComponents();
 
         userSettingsService = TestBed.inject(UserSettingsService);
-        spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
+        spyOn(userSettingsService, "fetch").and.returnValue(
+            Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
+        );
 
         done();
     });
@@ -47,7 +43,6 @@ describe("GlobalSettingsComponent", () => {
     });
 
     it("should get option helper dir", done => {
-
         // Given
         const pathname = "/app/index.html";
         const expected = "/app/assets/option-helpers/";
@@ -58,11 +53,9 @@ describe("GlobalSettingsComponent", () => {
         // Then
         expect(actual).toEqual(expected);
         done();
-
     });
 
     it("should get option helper dir", done => {
-
         // Given
         const pathname = null;
 
@@ -72,6 +65,5 @@ describe("GlobalSettingsComponent", () => {
         // Then
         expect(actual).toBeNull();
         done();
-
     });
 });

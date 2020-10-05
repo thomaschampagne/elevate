@@ -12,18 +12,14 @@ describe("ActivityViewComponent", () => {
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                DesktopModule
-            ]
+            imports: [CoreModule, SharedModule, DesktopModule],
         }).compileComponents();
         const electronService: ElectronService = TestBed.inject(ElectronService);
         electronService.instance = {
-            ipcRenderer: {}
+            ipcRenderer: {},
         };
 
-        const electronWindow = (window as ElectronWindow);
+        const electronWindow = window as ElectronWindow;
         const electronRequire = (module: string) => {
             console.log("Loading module: " + module);
             return {};

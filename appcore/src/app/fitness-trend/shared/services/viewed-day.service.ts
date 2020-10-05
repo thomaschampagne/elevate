@@ -4,7 +4,6 @@ import { Subject } from "rxjs";
 
 @Injectable()
 export class ViewedDayService {
-
     public changes$: Subject<DayFitnessTrendModel>;
 
     constructor() {

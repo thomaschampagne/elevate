@@ -20,7 +20,6 @@ import { TestingDataStore } from "../../shared/data-store/testing-datastore.serv
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("FitnessTrendGraphComponent", () => {
-
     let userSettingsService: UserSettingsService;
     let activityService: ActivityService;
     let fitnessService: FitnessService;
@@ -35,16 +34,9 @@ describe("FitnessTrendGraphComponent", () => {
     let FITNESS_TREND: DayFitnessTrendModel[] = null;
 
     beforeEach(done => {
-
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                FitnessTrendModule
-            ],
-            providers: [
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+            imports: [CoreModule, SharedModule, FitnessTrendModule],
+            providers: [{ provide: DataStore, useClass: TestingDataStore }],
         }).compileComponents();
 
         // Retrieve injected service
@@ -54,7 +46,9 @@ describe("FitnessTrendGraphComponent", () => {
 
         // Mocking
         spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
-        spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
+        spyOn(userSettingsService, "fetch").and.returnValue(
+            Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
+        );
 
         todayMoment = moment("2015-12-01 12:00", "YYYY-MM-DD hh:mm");
         spyOn(fitnessService, "getTodayMoment").and.returnValue(todayMoment);
@@ -63,27 +57,29 @@ describe("FitnessTrendGraphComponent", () => {
             heartRateImpulseMode: HeartRateImpulseMode.HRSS,
             initializedFitnessTrendModel: {
                 atl: null,
-                ctl: null
+                ctl: null,
             },
             allowEstimatedPowerStressScore: false,
             allowEstimatedRunningStressScore: false,
             ignoreBeforeDate: null,
-            ignoreActivityNamePatterns: null
+            ignoreActivityNamePatterns: null,
         };
 
         const powerMeterEnable = true;
         const swimEnable = true;
 
-        const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(fitnessTrendConfigModel, powerMeterEnable, swimEnable);
+        const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(
+            fitnessTrendConfigModel,
+            powerMeterEnable,
+            swimEnable
+        );
         promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
             FITNESS_TREND = fitnessTrend;
             done();
         });
-
     });
 
     beforeEach(done => {
-
         fixture = TestBed.createComponent(FitnessTrendGraphComponent);
 
         component = fixture.componentInstance;
@@ -95,16 +91,17 @@ describe("FitnessTrendGraphComponent", () => {
 
         component.periodViewed = {
             from: component.dateMin,
-            to: component.dateMax
+            to: component.dateMax,
         };
 
-        spyOn(component, "getTodayViewedDay").and.returnValue(component.getDayFitnessTrendFromDate(todayMoment.toDate()));
+        spyOn(component, "getTodayViewedDay").and.returnValue(
+            component.getDayFitnessTrendFromDate(todayMoment.toDate())
+        );
         updateGraphSpy = spyOn(component, "updateGraph").and.stub(); // Do not try to draw the graph
 
         fixture.detectChanges();
 
         done();
-
     });
 
     it("should create", done => {
@@ -113,7 +110,6 @@ describe("FitnessTrendGraphComponent", () => {
     });
 
     it("should allow forward period viewed", done => {
-
         // Given
         component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
         component.dateMax = moment("2015-01-31", "YYYY-MM-DD").toDate();
@@ -123,7 +119,7 @@ describe("FitnessTrendGraphComponent", () => {
 
         component.periodViewed = {
             from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-            to: moment(periodTo, "YYYY-MM-DD").toDate()
+            to: moment(periodTo, "YYYY-MM-DD").toDate(),
         };
         const expectedPeriodFrom = moment("2015-01-20", "YYYY-MM-DD").toDate();
         const expectedPeriodTo = moment("2015-01-30", "YYYY-MM-DD").toDate();
@@ -139,7 +135,6 @@ describe("FitnessTrendGraphComponent", () => {
     });
 
     it("should NOT forward period viewed", done => {
-
         // Given
         component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
         component.dateMax = moment("2015-01-31", "YYYY-MM-DD").toDate();
@@ -148,7 +143,7 @@ describe("FitnessTrendGraphComponent", () => {
         const periodTo = "2015-01-20";
         component.periodViewed = {
             from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-            to: moment(periodTo, "YYYY-MM-DD").toDate()
+            to: moment(periodTo, "YYYY-MM-DD").toDate(),
         };
 
         const expectedPeriodFrom = moment(periodFrom, "YYYY-MM-DD").toDate();
@@ -162,11 +157,9 @@ describe("FitnessTrendGraphComponent", () => {
         expect(component.periodViewed.to.getTime()).toBe(expectedPeriodTo.getTime());
         expect(updateGraphSpy).toHaveBeenCalledTimes(1);
         done();
-
     });
 
     it("should allow backward period viewed", done => {
-
         // Given
         component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
         component.dateMax = moment("2015-01-31", "YYYY-MM-DD").toDate();
@@ -176,7 +169,7 @@ describe("FitnessTrendGraphComponent", () => {
 
         component.periodViewed = {
             from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-            to: moment(periodTo, "YYYY-MM-DD").toDate()
+            to: moment(periodTo, "YYYY-MM-DD").toDate(),
         };
         const expectedPeriodFrom = moment("2015-01-6", "YYYY-MM-DD").toDate();
         const expectedPeriodTo = moment("2015-01-16", "YYYY-MM-DD").toDate();
@@ -192,7 +185,6 @@ describe("FitnessTrendGraphComponent", () => {
     });
 
     it("should NOT backward period viewed", done => {
-
         // Given
         component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
         component.dateMax = moment("2015-01-31", "YYYY-MM-DD").toDate();
@@ -201,7 +193,7 @@ describe("FitnessTrendGraphComponent", () => {
         const periodTo = "2015-01-20";
         component.periodViewed = {
             from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-            to: moment(periodTo, "YYYY-MM-DD").toDate()
+            to: moment(periodTo, "YYYY-MM-DD").toDate(),
         };
 
         const expectedPeriodFrom = moment(periodFrom, "YYYY-MM-DD").toDate();
@@ -218,7 +210,6 @@ describe("FitnessTrendGraphComponent", () => {
     });
 
     it("should allow zoom in period viewed", done => {
-
         // Given
         component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
         component.dateMax = moment("2015-12-31", "YYYY-MM-DD").toDate();
@@ -228,7 +219,7 @@ describe("FitnessTrendGraphComponent", () => {
 
         component.periodViewed = {
             from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-            to: moment(periodTo, "YYYY-MM-DD").toDate()
+            to: moment(periodTo, "YYYY-MM-DD").toDate(),
         };
         const expectedPeriodFrom = moment("2015-06-15", "YYYY-MM-DD").toDate();
         const expectedPeriodTo = moment("2015-12-31", "YYYY-MM-DD").toDate();
@@ -244,7 +235,6 @@ describe("FitnessTrendGraphComponent", () => {
     });
 
     it("should NOT allow zoom in period viewed", done => {
-
         // Given
         component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
         component.dateMax = moment("2015-12-31", "YYYY-MM-DD").toDate();
@@ -254,7 +244,7 @@ describe("FitnessTrendGraphComponent", () => {
 
         component.periodViewed = {
             from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-            to: moment(periodTo, "YYYY-MM-DD").toDate()
+            to: moment(periodTo, "YYYY-MM-DD").toDate(),
         };
         const expectedPeriodFrom = moment(periodFrom, "YYYY-MM-DD").toDate();
         const expectedPeriodTo = moment(periodTo, "YYYY-MM-DD").toDate();
@@ -270,7 +260,6 @@ describe("FitnessTrendGraphComponent", () => {
     });
 
     it("should allow zoom out period viewed", done => {
-
         // Given
         component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
         component.dateMax = moment("2015-12-31", "YYYY-MM-DD").toDate();
@@ -280,7 +269,7 @@ describe("FitnessTrendGraphComponent", () => {
 
         component.periodViewed = {
             from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-            to: moment(periodTo, "YYYY-MM-DD").toDate()
+            to: moment(periodTo, "YYYY-MM-DD").toDate(),
         };
         const expectedPeriodFrom = moment("2015-05-01", "YYYY-MM-DD").toDate();
         const expectedPeriodTo = moment("2015-12-31", "YYYY-MM-DD").toDate();
@@ -296,7 +285,6 @@ describe("FitnessTrendGraphComponent", () => {
     });
 
     it("should NOT allow zoom out period viewed", done => {
-
         // Given
         component.dateMin = moment("2015-01-01", "YYYY-MM-DD").toDate();
         component.dateMax = moment("2015-12-31", "YYYY-MM-DD").toDate();
@@ -306,7 +294,7 @@ describe("FitnessTrendGraphComponent", () => {
 
         component.periodViewed = {
             from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-            to: moment(periodTo, "YYYY-MM-DD").toDate()
+            to: moment(periodTo, "YYYY-MM-DD").toDate(),
         };
         const expectedPeriodFrom = moment(periodFrom, "YYYY-MM-DD").toDate();
         const expectedPeriodTo = moment(periodTo, "YYYY-MM-DD").toDate();
@@ -322,11 +310,10 @@ describe("FitnessTrendGraphComponent", () => {
     });
 
     it("should convert -7 days date based period 'from/to' to 'start/end' fitness trends indexes", done => {
-
         // Given
         const period: PeriodModel = {
             from: moment(todayDate, momentDatePattern).subtract(7, "days").toDate(), // Nov 24 2015
-            to: null // Indicate we use "Last period of TIME"
+            to: null, // Indicate we use "Last period of TIME"
         };
 
         // When
@@ -337,15 +324,13 @@ describe("FitnessTrendGraphComponent", () => {
         expect(indexes.start).toEqual(324); // Should be Nov 24 2015
         expect(indexes.end).toEqual(345); // Last preview day index
         done();
-
     });
 
     it("should convert -6 weeks date based period 'from/to' to 'start/end' fitness trends indexes", done => {
-
         // Given
         const period: PeriodModel = {
             from: moment(todayDate, momentDatePattern).subtract(6, "weeks").toDate(), // (= Oct 20 2015)
-            to: null // Indicate we use "Last period of TIME"
+            to: null, // Indicate we use "Last period of TIME"
         };
 
         // When
@@ -355,11 +340,9 @@ describe("FitnessTrendGraphComponent", () => {
         expect(indexes.start).toEqual(289); // Should be Oct 20 2015 index
         expect(indexes.end).toEqual(345); // Last preview day index
         done();
-
     });
 
     it("should convert date based period 'from/to' to 'start/end' fitness trends indexes", done => {
-
         // Given
         const period: PeriodModel = {
             from: moment("2015-07-01", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate(),
@@ -374,15 +357,13 @@ describe("FitnessTrendGraphComponent", () => {
         expect(indexes.start).toEqual(178);
         expect(indexes.end).toEqual(269);
         done();
-
     });
 
     it("should failed when find indexes of 'from > to' date", done => {
-
         // Given
         const period: PeriodModel = {
             from: moment("2015-06-01", DayFitnessTrendModel.DATE_FORMAT).toDate(),
-            to: moment("2015-05-01", DayFitnessTrendModel.DATE_FORMAT).toDate()
+            to: moment("2015-05-01", DayFitnessTrendModel.DATE_FORMAT).toDate(),
         };
 
         // When
@@ -397,11 +378,9 @@ describe("FitnessTrendGraphComponent", () => {
         expect(error).not.toBeNull();
         expect(error).toBe("FROM cannot be upper than TO date");
         done();
-
     });
 
     it("should provide 'start' index of the first known activity when FROM don't matches athlete activities", done => {
-
         // Given
         const period: PeriodModel = {
             from: moment("2014-06-01", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate(), // Too old date !
@@ -417,15 +396,13 @@ describe("FitnessTrendGraphComponent", () => {
         expect(indexes.end).toEqual(269);
 
         done();
-
     });
 
     it("should failed when find index of TO which do not exists ", done => {
-
         // Given
         const period: PeriodModel = {
             from: moment("2015-06-01", DayFitnessTrendModel.DATE_FORMAT).toDate(),
-            to: moment("2018-05-01", DayFitnessTrendModel.DATE_FORMAT).toDate() // Fake
+            to: moment("2018-05-01", DayFitnessTrendModel.DATE_FORMAT).toDate(), // Fake
         };
 
         // When
@@ -441,5 +418,4 @@ describe("FitnessTrendGraphComponent", () => {
         expect(error).toBe("No end activity index found for this TO date");
         done();
     });
-
 });

@@ -7,7 +7,6 @@ import { SharedModule } from "../../shared.module";
 import { ConfirmDialogDataModel } from "./confirm-dialog-data.model";
 
 describe("ConfirmDialogComponent", () => {
-
     const dialogTitle = "Hello World";
     const dialogContent = "Oh my god !";
 
@@ -16,23 +15,21 @@ describe("ConfirmDialogComponent", () => {
     let confirmDialogDataModel;
 
     beforeEach(done => {
-
         confirmDialogDataModel = new ConfirmDialogDataModel(dialogTitle, dialogContent);
 
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-            ],
+            imports: [CoreModule, SharedModule],
             declarations: [],
             providers: [
                 {
-                    provide: MAT_DIALOG_DATA, useValue: confirmDialogDataModel,
+                    provide: MAT_DIALOG_DATA,
+                    useValue: confirmDialogDataModel,
                 },
                 {
-                    provide: MatDialogRef, useValue: {},
+                    provide: MatDialogRef,
+                    useValue: {},
                 },
-            ]
+            ],
         }).compileComponents();
 
         done();
@@ -51,7 +48,6 @@ describe("ConfirmDialogComponent", () => {
     });
 
     it("should render the confirm dialog", done => {
-
         // Given
         const fixture = TestBed.createComponent(ConfirmDialogComponent);
         const compiled = fixture.debugElement.nativeElement;

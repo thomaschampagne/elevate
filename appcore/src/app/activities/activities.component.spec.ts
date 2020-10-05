@@ -16,7 +16,6 @@ import { TestingDataStore } from "../shared/data-store/testing-datastore.service
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ActivitiesComponent", () => {
-
     const pluginId = "c061d18abea0";
     let activityService: ActivityService = null;
     let userSettingsService: UserSettingsService = null;
@@ -27,19 +26,13 @@ describe("ActivitiesComponent", () => {
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-            ],
-            providers: [
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+            imports: [CoreModule, SharedModule],
+            providers: [{ provide: DataStore, useClass: TestingDataStore }],
         }).compileComponents();
 
         spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
             // @ts-ignore
-            addListener: (message: any, sender: any, sendResponse: any) => {
-            }
+            addListener: (message: any, sender: any, sendResponse: any) => {},
         });
 
         spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
@@ -49,14 +42,17 @@ describe("ActivitiesComponent", () => {
         syncService = TestBed.inject(SyncService);
 
         // Mocking
-        spyOn(activityService, "findSortStartDate").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
-        spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
+        spyOn(activityService, "findSortStartDate").and.returnValue(
+            Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES))
+        );
+        spyOn(userSettingsService, "fetch").and.returnValue(
+            Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
+        );
 
         spyOn(syncService, "getSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
         spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
 
         done();
-
     });
 
     beforeEach(done => {

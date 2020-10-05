@@ -5,14 +5,13 @@ import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { of } from "rxjs";
 
 describe("OptionHelperReaderService", () => {
-
     let http: HttpClient;
     let optionHelperReaderService: OptionHelperReaderService;
 
     beforeEach(done => {
         TestBed.configureTestingModule({
             imports: [HttpClientModule],
-            providers: [OptionHelperReaderService, HttpClient]
+            providers: [OptionHelperReaderService, HttpClient],
         });
 
         http = TestBed.inject(HttpClient);
@@ -27,7 +26,6 @@ describe("OptionHelperReaderService", () => {
     });
 
     it("should return markdown data", done => {
-
         // Given
         const markDownData = "## **This Title has bold style**";
 
@@ -42,7 +40,5 @@ describe("OptionHelperReaderService", () => {
             expect(markDownResultData).toBe(markDownData);
             done();
         });
-
     });
 });
-

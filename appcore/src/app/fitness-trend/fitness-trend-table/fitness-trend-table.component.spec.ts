@@ -14,7 +14,6 @@ import { TestingDataStore } from "../../shared/data-store/testing-datastore.serv
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("FitnessTrendTableComponent", () => {
-
     let activityService: ActivityService = null;
     let userSettingsService: UserSettingsService = null;
 
@@ -23,14 +22,8 @@ describe("FitnessTrendTableComponent", () => {
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                FitnessTrendModule
-            ],
-            providers: [
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+            imports: [CoreModule, SharedModule, FitnessTrendModule],
+            providers: [{ provide: DataStore, useClass: TestingDataStore }],
         }).compileComponents();
 
         activityService = TestBed.inject(ActivityService);
@@ -38,7 +31,9 @@ describe("FitnessTrendTableComponent", () => {
 
         // Mocking
         spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
-        spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
+        spyOn(userSettingsService, "fetch").and.returnValue(
+            Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
+        );
 
         done();
     });

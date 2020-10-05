@@ -1,7 +1,6 @@
 import { AppUsage } from "./app-usage.model";
 
 export class AppUsageDetails extends AppUsage {
-
     public megaBytesInUse: number;
     public percentUsage: number;
 

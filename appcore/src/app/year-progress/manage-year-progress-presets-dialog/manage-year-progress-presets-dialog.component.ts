@@ -17,10 +17,9 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 @Component({
     selector: "app-manage-year-progress-presets-dialog",
     templateUrl: "./manage-year-progress-presets-dialog.component.html",
-    styleUrls: ["./manage-year-progress-presets-dialog.component.scss"]
+    styleUrls: ["./manage-year-progress-presets-dialog.component.scss"],
 })
 export class ManageYearProgressPresetsDialogComponent implements OnInit {
-
     public static readonly MAX_WIDTH: string = "100%";
     public static readonly MIN_WIDTH: string = "80%";
 
@@ -52,16 +51,17 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
         ManageYearProgressPresetsDialogComponent.COLUMN_INCLUDE_INDOOR_RIDE,
         ManageYearProgressPresetsDialogComponent.COLUMN_TARGET_VALUE,
         ManageYearProgressPresetsDialogComponent.COLUMN_ACTION_LOAD,
-        ManageYearProgressPresetsDialogComponent.COLUMN_ACTION_DELETE
+        ManageYearProgressPresetsDialogComponent.COLUMN_ACTION_DELETE,
     ];
 
-    constructor(@Inject(MAT_DIALOG_DATA) public readonly yearProgressTypes: YearProgressTypeModel[],
-                public dialogRef: MatDialogRef<ManageYearProgressPresetsDialogComponent>,
-                public yearProgressService: YearProgressService,
-                public dialog: MatDialog,
-                public snackBar: MatSnackBar,
-                public logger: LoggerService) {
-    }
+    constructor(
+        @Inject(MAT_DIALOG_DATA) public readonly yearProgressTypes: YearProgressTypeModel[],
+        public dialogRef: MatDialogRef<ManageYearProgressPresetsDialogComponent>,
+        public yearProgressService: YearProgressService,
+        public dialog: MatDialog,
+        public snackBar: MatSnackBar,
+        public logger: LoggerService
+    ) {}
 
     public ngOnInit(): void {
         this.dataSource = new MatTableDataSource<YearToDateProgressPresetModel>();
@@ -74,35 +74,36 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
     }
 
     public progressTypeShortUnit(progressType: ProgressType): string {
-        const yearProgressTypeModel = _.find(this.yearProgressTypes, {type: progressType});
-        return (yearProgressTypeModel && yearProgressTypeModel.shortUnit) ? yearProgressTypeModel.shortUnit : "";
+        const yearProgressTypeModel = _.find(this.yearProgressTypes, { type: progressType });
+        return yearProgressTypeModel && yearProgressTypeModel.shortUnit ? yearProgressTypeModel.shortUnit : "";
     }
 
     public onLoad(presetId: string): void {
-        const presetModel = _.find(this.yearProgressPresetModels, {id: presetId});
+        const presetModel = _.find(this.yearProgressPresetModels, { id: presetId });
         this.dialogRef.close(new YearProgressPresetsDialogResponse(this.deletedPresets, presetModel));
     }
 
     public onDelete(presetId: string): void {
-
         const confirmDialogDataModel = new ConfirmDialogDataModel(null, "Are you sure to remove this preset?");
 
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            data: confirmDialogDataModel
+            data: confirmDialogDataModel,
         });
 
         const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirmed: boolean) => {
             if (confirmed) {
-                const deletedPresetCopy = _.find(this.yearProgressPresetModels, {id: presetId});
-                this.yearProgressService.deletePreset(presetId).then(() => {
-                    this.loadData();
-                    this.deletedPresets.push(deletedPresetCopy);
-                }, error => this.handleErrors(error));
+                const deletedPresetCopy = _.find(this.yearProgressPresetModels, { id: presetId });
+                this.yearProgressService.deletePreset(presetId).then(
+                    () => {
+                        this.loadData();
+                        this.deletedPresets.push(deletedPresetCopy);
+                    },
+                    error => this.handleErrors(error)
+                );
             }
 
             afterClosedSubscription.unsubscribe();
         });
-
     }
 
     public onBackClicked(): void {
@@ -119,13 +120,12 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
     private handleErrors(error: any) {
         if (error instanceof AppError) {
             this.logger.warn(error);
-            const message = (<AppError> error).message;
+            const message = (<AppError>error).message;
             this.snackBar.open(message, "Close", {
-                duration: 5000
+                duration: 5000,
             });
         } else {
             this.logger.error(error);
         }
     }
-
 }

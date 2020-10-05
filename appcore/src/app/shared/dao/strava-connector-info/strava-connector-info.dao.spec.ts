@@ -6,13 +6,11 @@ import { SharedModule } from "../../shared.module";
 import { DesktopModule } from "../../modules/desktop/desktop.module";
 
 describe("StravaConnectorInfoDao", () => {
-    beforeEach(() => TestBed.configureTestingModule({
-        imports: [
-            CoreModule,
-            SharedModule,
-            DesktopModule
-        ]
-    }));
+    beforeEach(() =>
+        TestBed.configureTestingModule({
+            imports: [CoreModule, SharedModule, DesktopModule],
+        })
+    );
 
     it("should be created", () => {
         const service: StravaConnectorInfoDao = TestBed.inject(StravaConnectorInfoDao);

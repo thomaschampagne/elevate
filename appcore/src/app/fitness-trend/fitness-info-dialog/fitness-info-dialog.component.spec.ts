@@ -12,20 +12,18 @@ describe("FitnessInfoDialogComponent", () => {
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                FitnessTrendModule
-            ],
+            imports: [CoreModule, SharedModule, FitnessTrendModule],
             declarations: [],
             providers: [
                 {
-                    provide: MAT_DIALOG_DATA, useValue: {},
+                    provide: MAT_DIALOG_DATA,
+                    useValue: {},
                 },
                 {
-                    provide: MatDialogRef, useValue: {},
+                    provide: MatDialogRef,
+                    useValue: {},
                 },
-            ]
+            ],
         }).compileComponents();
 
         done();
@@ -39,7 +37,6 @@ describe("FitnessInfoDialogComponent", () => {
     });
 
     it("should create", done => {
-
         // Given, When
         const compiled = fixture.debugElement.nativeElement;
         const htmlContent = compiled.querySelector("mat-dialog-content").textContent;
@@ -49,6 +46,4 @@ describe("FitnessInfoDialogComponent", () => {
         expect(htmlContent).not.toBeNull();
         done();
     });
-
-
 });

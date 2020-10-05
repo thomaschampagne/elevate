@@ -4,7 +4,6 @@ import { TrainingZone } from "../enums/training-zone.enum";
 import * as _ from "lodash";
 
 export class DayFitnessTrendModel extends DayStressModel {
-
     public static readonly DATE_FORMAT: string = "YYYY-MM-DD";
     public dateString: string;
     public ctl: number;
@@ -16,7 +15,15 @@ export class DayFitnessTrendModel extends DayStressModel {
     public trainingZone: TrainingZone;
     public trainingZoneAsString: string;
 
-    constructor(dayStress: DayStressModel, ctl: number, atl: number, tsb: number, prevCtl?: number, prevAtl?: number, prevTsb?: number) {
+    constructor(
+        dayStress: DayStressModel,
+        ctl: number,
+        atl: number,
+        tsb: number,
+        prevCtl?: number,
+        prevAtl?: number,
+        prevTsb?: number
+    ) {
         super(dayStress.date, dayStress.previewDay);
 
         this.ids = dayStress.ids;
@@ -28,7 +35,7 @@ export class DayFitnessTrendModel extends DayStressModel {
         this.runningStressScore = dayStress.runningStressScore;
         this.swimStressScore = dayStress.swimStressScore;
         this.finalStressScore = dayStress.finalStressScore;
-        this.athleteSnapshot = (dayStress.athleteSnapshot) ? dayStress.athleteSnapshot : null;
+        this.athleteSnapshot = dayStress.athleteSnapshot ? dayStress.athleteSnapshot : null;
 
         this.dateString = moment(this.date).format(DayFitnessTrendModel.DATE_FORMAT);
 
@@ -36,9 +43,9 @@ export class DayFitnessTrendModel extends DayStressModel {
         this.atl = atl;
         this.tsb = tsb;
 
-        this.prevCtl = (prevCtl) ? prevCtl : null;
-        this.prevAtl = (prevAtl) ? prevAtl : null;
-        this.prevTsb = (prevTsb) ? prevTsb : null;
+        this.prevCtl = prevCtl ? prevCtl : null;
+        this.prevAtl = prevAtl ? prevAtl : null;
+        this.prevTsb = prevTsb ? prevTsb : null;
 
         this.trainingZone = this.findTrainingZone(this.tsb);
     }
@@ -60,7 +67,7 @@ export class DayFitnessTrendModel extends DayStressModel {
             return null;
         }
         const delta = _.floor(this.ctl, 1) - _.floor(this.prevCtl, 1);
-        return ((delta >= 0) ? "+" : "") + _.round(delta, 1);
+        return (delta >= 0 ? "+" : "") + _.round(delta, 1);
     }
 
     public printDeltaFatigue(): string {
@@ -68,7 +75,7 @@ export class DayFitnessTrendModel extends DayStressModel {
             return null;
         }
         const delta = _.floor(this.atl, 1) - _.floor(this.prevAtl, 1);
-        return ((delta >= 0) ? "+" : "") + _.round(delta, 1);
+        return (delta >= 0 ? "+" : "") + _.round(delta, 1);
     }
 
     public printDeltaForm(): string {
@@ -76,11 +83,10 @@ export class DayFitnessTrendModel extends DayStressModel {
             return null;
         }
         const delta = _.floor(this.tsb, 1) - _.floor(this.prevTsb, 1);
-        return ((delta >= 0) ? "+" : "") + _.round(delta, 1);
+        return (delta >= 0 ? "+" : "") + _.round(delta, 1);
     }
 
     public printDate(): string {
-
         const dayFitnessMoment = moment(this.date);
         const isToday = moment().startOf("day").isSame(dayFitnessMoment);
 
@@ -98,47 +104,45 @@ export class DayFitnessTrendModel extends DayStressModel {
     }
 
     public hasActivities(): boolean {
-        return (this.activitiesName.length > 0);
+        return this.activitiesName.length > 0;
     }
 
     public printActivities(defaultEmptyValue?: string): string {
-
         if (this.activitiesName.length === 0) {
-            return (defaultEmptyValue) ? defaultEmptyValue : "";
+            return defaultEmptyValue ? defaultEmptyValue : "";
         }
         return this.activitiesName.join("; ");
     }
 
     public printTypes(defaultEmptyValue?: string): string {
-
         if (this.types.length === 0) {
-            return (defaultEmptyValue) ? defaultEmptyValue : "";
+            return defaultEmptyValue ? defaultEmptyValue : "";
         }
         return this.types.join("; ");
-
     }
 
     public printTypesCount(maxType?: number, defaultEmptyValue?: string): string {
-
         if (this.types.length === 0) {
-            return (defaultEmptyValue) ? defaultEmptyValue : "";
+            return defaultEmptyValue ? defaultEmptyValue : "";
         }
 
-        const typesCount = _.chain(this.types).countBy().map((count, type) => {
-            return {type: type, count: count};
-        }).value();
+        const typesCount = _.chain(this.types)
+            .countBy()
+            .map((count, type) => {
+                return { type: type, count: count };
+            })
+            .value();
 
         let result = "";
         _.forEach(_.orderBy(typesCount, "count", "desc"), (obj: any, index: number) => {
+            result += obj.count + " " + obj.type + (obj.count > 1 ? "s" : "");
 
-            result += obj.count + " " + obj.type + ((obj.count > 1) ? "s" : "");
-
-            if (maxType && index === (maxType - 1)) {
-                const remaining = (typesCount.length - 1) - index;
-                result += ((remaining > 0) ? " & " + remaining + " more" : "");
+            if (maxType && index === maxType - 1) {
+                const remaining = typesCount.length - 1 - index;
+                result += remaining > 0 ? " & " + remaining + " more" : "";
                 return false;
             }
-            if (index < (typesCount.length - 1)) {
+            if (index < typesCount.length - 1) {
                 result += ", ";
             }
         });
@@ -146,7 +150,6 @@ export class DayFitnessTrendModel extends DayStressModel {
     }
 
     public findTrainingZone(tsb: number): TrainingZone {
-
         if (tsb <= TrainingZone.OVERLOAD) {
             return TrainingZone.OVERLOAD;
         }
@@ -175,7 +178,6 @@ export class DayFitnessTrendModel extends DayStressModel {
     }
 
     public printAthleteSettings(): string {
-
         if (!this.athleteSnapshot) {
             return null;
         }
@@ -183,24 +185,29 @@ export class DayFitnessTrendModel extends DayStressModel {
         let inlineSettings = "";
 
         if (_.isNumber(this.heartRateStressScore) || _.isNumber(this.trainingImpulseScore)) {
-
             inlineSettings += "MaxHr " + this.athleteSnapshot.athleteSettings.maxHr + "bpm. ";
             inlineSettings += "RestHr " + this.athleteSnapshot.athleteSettings.restHr + "bpm. ";
 
-            if (this.athleteSnapshot.athleteSettings.lthr.default
-                || this.athleteSnapshot.athleteSettings.lthr.cycling
-                || this.athleteSnapshot.athleteSettings.lthr.running) {
-
+            if (
+                this.athleteSnapshot.athleteSettings.lthr.default ||
+                this.athleteSnapshot.athleteSettings.lthr.cycling ||
+                this.athleteSnapshot.athleteSettings.lthr.running
+            ) {
                 let lthrStr = "Lthr ";
 
-                lthrStr += (this.athleteSnapshot.athleteSettings.lthr.default) ? "D:" + this.athleteSnapshot.athleteSettings.lthr.default + "bpm, " : "";
-                lthrStr += (this.athleteSnapshot.athleteSettings.lthr.cycling) ? "C:" + this.athleteSnapshot.athleteSettings.lthr.cycling + "bpm, " : "";
-                lthrStr += (this.athleteSnapshot.athleteSettings.lthr.running) ? "R:" + this.athleteSnapshot.athleteSettings.lthr.running + "bpm, " : "";
+                lthrStr += this.athleteSnapshot.athleteSettings.lthr.default
+                    ? "D:" + this.athleteSnapshot.athleteSettings.lthr.default + "bpm, "
+                    : "";
+                lthrStr += this.athleteSnapshot.athleteSettings.lthr.cycling
+                    ? "C:" + this.athleteSnapshot.athleteSettings.lthr.cycling + "bpm, "
+                    : "";
+                lthrStr += this.athleteSnapshot.athleteSettings.lthr.running
+                    ? "R:" + this.athleteSnapshot.athleteSettings.lthr.running + "bpm, "
+                    : "";
                 lthrStr = lthrStr.slice(0, -2);
 
                 inlineSettings += lthrStr + ". ";
             }
-
         }
 
         if (_.isNumber(this.powerStressScore) && this.athleteSnapshot.athleteSettings.cyclingFtp) {
@@ -218,7 +225,5 @@ export class DayFitnessTrendModel extends DayStressModel {
         inlineSettings += "Weight " + this.athleteSnapshot.athleteSettings.weight + "kg.";
 
         return inlineSettings;
-
     }
-
 }

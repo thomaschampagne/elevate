@@ -2,7 +2,6 @@ import { AppStorageUsage } from "./models/app-storage-usage.model";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
 
 export class LegacyBrowserStorage {
-
     public static readonly ON_GET_MESSAGE: string = "ON_GET_MESSAGE";
     public static readonly ON_SET_MESSAGE: string = "ON_SET_MESSAGE";
     public static readonly ON_RM_MESSAGE: string = "ON_RM_MESSAGE";
@@ -12,40 +11,38 @@ export class LegacyBrowserStorage {
     protected extensionId: string = null;
 
     constructor(extensionId?: string) {
-        this.extensionId = (extensionId) ? extensionId : null;
+        this.extensionId = extensionId ? extensionId : null;
     }
 
     public static getInstance(): LegacyBrowserStorage {
         if (!this.instance) {
-            this.instance = new LegacyBrowserStorage((chrome && chrome.runtime && chrome.runtime.id) ? chrome.runtime.id : null);
+            this.instance = new LegacyBrowserStorage(
+                chrome && chrome.runtime && chrome.runtime.id ? chrome.runtime.id : null
+            );
         }
         return this.instance;
     }
 
     public setExtensionId(extensionId: string): void {
-        this.extensionId = (extensionId) ? extensionId : null;
+        this.extensionId = extensionId ? extensionId : null;
     }
 
     public hasExtensionId(): boolean {
-        return (this.extensionId !== null);
+        return this.extensionId !== null;
     }
 
     public get<T>(storageType: BrowserStorageType, key?: string): Promise<T> {
-
         this.verifyExtensionId();
 
-        key = (!key) ? null : key;
+        key = !key ? null : key;
 
         return new Promise<T>((resolve, reject) => {
-
             if (this.hasStorageAccess()) {
-
                 chrome.storage[storageType].get(key, (result: T) => {
                     const error = chrome.runtime.lastError;
                     if (error) {
                         reject(error.message);
                     } else {
-
                         if (!key) {
                             resolve(result);
                         } else {
@@ -53,24 +50,21 @@ export class LegacyBrowserStorage {
                         }
                     }
                 });
-
             } else {
-
-                this.backgroundStorageQuery<T>(LegacyBrowserStorage.ON_GET_MESSAGE, storageType, key, null).then((result: T) => {
-                    resolve(result);
-                });
+                this.backgroundStorageQuery<T>(LegacyBrowserStorage.ON_GET_MESSAGE, storageType, key, null).then(
+                    (result: T) => {
+                        resolve(result);
+                    }
+                );
             }
         });
     }
 
     public set<T>(storageType: BrowserStorageType, key: string, value: T): Promise<void> {
-
         this.verifyExtensionId();
 
         return new Promise<void>((resolve, reject) => {
-
             if (this.hasStorageAccess()) {
-
                 let object = {};
                 if (key) {
                     object[key] = value;
@@ -86,25 +80,22 @@ export class LegacyBrowserStorage {
                         resolve();
                     }
                 });
-
             } else {
-
-                this.backgroundStorageQuery<T>(LegacyBrowserStorage.ON_SET_MESSAGE, storageType, key, value).then(() => {
-                    resolve();
-                });
+                this.backgroundStorageQuery<T>(LegacyBrowserStorage.ON_SET_MESSAGE, storageType, key, value).then(
+                    () => {
+                        resolve();
+                    }
+                );
             }
         });
     }
 
     public rm<T>(storageType: BrowserStorageType, key: string | string[]): Promise<void> {
-
         this.verifyExtensionId();
 
         return new Promise<void>((resolve, reject) => {
-
             if (this.hasStorageAccess()) {
-
-                chrome.storage[storageType].remove(<any> key, () => {
+                chrome.storage[storageType].remove(<any>key, () => {
                     const error = chrome.runtime.lastError;
                     if (error) {
                         reject(error.message);
@@ -112,9 +103,7 @@ export class LegacyBrowserStorage {
                         resolve();
                     }
                 });
-
             } else {
-
                 this.backgroundStorageQuery<T>(LegacyBrowserStorage.ON_RM_MESSAGE, storageType, key, null).then(() => {
                     resolve();
                 });
@@ -123,13 +112,10 @@ export class LegacyBrowserStorage {
     }
 
     public clear<T>(storageType: BrowserStorageType): Promise<void> {
-
         this.verifyExtensionId();
 
         return new Promise<void>((resolve, reject) => {
-
             if (this.hasStorageAccess()) {
-
                 chrome.storage[storageType].clear(() => {
                     const error = chrome.runtime.lastError;
                     if (error) {
@@ -138,25 +124,22 @@ export class LegacyBrowserStorage {
                         resolve();
                     }
                 });
-
             } else {
-                this.backgroundStorageQuery<T>(LegacyBrowserStorage.ON_CLEAR_MESSAGE, storageType, null, null).then(() => {
-                    resolve();
-                });
+                this.backgroundStorageQuery<T>(LegacyBrowserStorage.ON_CLEAR_MESSAGE, storageType, null, null).then(
+                    () => {
+                        resolve();
+                    }
+                );
             }
         });
     }
 
     public usage(storageType: BrowserStorageType): Promise<AppStorageUsage> {
-
         this.verifyExtensionId();
 
         return new Promise<AppStorageUsage>((resolve, reject) => {
-
             if (this.hasStorageAccess()) {
-
                 chrome.storage[storageType].getBytesInUse((bytesInUse: number) => {
-
                     const error = chrome.runtime.lastError;
                     if (error) {
                         reject(error.message);
@@ -164,24 +147,28 @@ export class LegacyBrowserStorage {
                         const storageUsage = {
                             bytesInUse: bytesInUse,
                             quotaBytes: chrome.storage[storageType].QUOTA_BYTES,
-                            percentUsage: bytesInUse / chrome.storage[storageType].QUOTA_BYTES * 100,
+                            percentUsage: (bytesInUse / chrome.storage[storageType].QUOTA_BYTES) * 100,
                         };
                         resolve(storageUsage);
                     }
                 });
-
             } else {
-                this.backgroundStorageQuery(LegacyBrowserStorage.ON_USAGE_MESSAGE, storageType, null, null).then((result: AppStorageUsage) => {
-                    resolve(result);
-                });
+                this.backgroundStorageQuery(LegacyBrowserStorage.ON_USAGE_MESSAGE, storageType, null, null).then(
+                    (result: AppStorageUsage) => {
+                        resolve(result);
+                    }
+                );
             }
         });
     }
 
-    public backgroundStorageQuery<T>(method: string, storageType: BrowserStorageType, key: string | string[], value: T | T[]): Promise<T> {
-
+    public backgroundStorageQuery<T>(
+        method: string,
+        storageType: BrowserStorageType,
+        key: string | string[],
+        value: T | T[]
+    ): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-
             const params: any = {
                 storage: storageType,
             };
@@ -194,12 +181,16 @@ export class LegacyBrowserStorage {
                 params.value = value;
             }
 
-            chrome.runtime.sendMessage(this.extensionId, {
-                method: method,
-                params: params
-            }, (result: { data: T }) => {
-                resolve(result.data);
-            });
+            chrome.runtime.sendMessage(
+                this.extensionId,
+                {
+                    method: method,
+                    params: params,
+                },
+                (result: { data: T }) => {
+                    resolve(result.data);
+                }
+            );
         });
     }
 
@@ -213,7 +204,6 @@ export class LegacyBrowserStorage {
     }
 
     protected hasStorageAccess(): boolean {
-        return (chrome && chrome.storage !== undefined);
+        return chrome && chrome.storage !== undefined;
     }
-
 }

@@ -20,25 +20,23 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
     selector: "app-global-settings",
     templateUrl: "./global-settings.component.html",
     styleUrls: ["./global-settings.component.scss"],
-
 })
 export class GlobalSettingsComponent implements OnInit, OnDestroy {
-
     public sections: SectionModel[];
     public searchText = null;
 
     public routeQueryParamsSubscription: Subscription;
 
-    constructor(public userSettingsService: UserSettingsService,
-                public globalSettingsService: GlobalSettingsService,
-                public optionHelperReaderService: OptionHelperReaderService,
-                public route: ActivatedRoute,
-                public dialog: MatDialog,
-                public logger: LoggerService) {
-    }
+    constructor(
+        public userSettingsService: UserSettingsService,
+        public globalSettingsService: GlobalSettingsService,
+        public optionHelperReaderService: OptionHelperReaderService,
+        public route: ActivatedRoute,
+        public dialog: MatDialog,
+        public logger: LoggerService
+    ) {}
 
     public static getOptionHelperDir(pathname: string): string {
-
         if (_.isEmpty(pathname)) {
             return null;
         }
@@ -49,7 +47,6 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-
         this.sections = this.globalSettingsService.getSectionsByEnvTarget(environment.target);
 
         this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
@@ -59,7 +56,6 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
         // Watch query params to filter options from URL
         // OR open option dialog from external
         this.routeQueryParamsSubscription = this.route.queryParams.subscribe(params => {
-
             // Check query param: ?searchText=value and apply value to searchText data binding
             if (!_.isEmpty(params.searchText)) {
                 this.searchText = params.searchText;
@@ -72,13 +68,9 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     }
 
     public renderOptionsForEachSection(userSettings: UserSettingsModel): void {
-
         _.forEach(this.sections, (section: SectionModel) => {
-
             _.forEach(section.options, (option: OptionModel) => {
-
                 if (option.type === GlobalSettingsService.TYPE_OPTION_CHECKBOX) {
-
                     option.active = _.propertyOf(userSettings)(option.key);
 
                     if (option.enableSubOption) {
@@ -86,17 +78,12 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
                             this.displaySubOption(subKey, _.propertyOf(userSettings)(option.key));
                         });
                     }
-
                 } else if (option.type === GlobalSettingsService.TYPE_OPTION_LIST) {
-
                     option.active = _.find(option.list, {
                         key: _.propertyOf(userSettings)(option.key),
                     });
-
                 } else if (option.type === GlobalSettingsService.TYPE_OPTION_NUMBER) {
-
                     option.value = _.propertyOf(userSettings)(option.key);
-
                 } else {
                     this.logger.error("Option type not supported");
                 }
@@ -105,12 +92,10 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     }
 
     public onOptionChange(option: OptionModel): void {
-
         let optionKey;
         let optionValue;
 
         if (option.type === GlobalSettingsService.TYPE_OPTION_CHECKBOX) {
-
             optionKey = option.key;
             optionValue = option.active;
 
@@ -122,18 +107,13 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
                 });
             }
         } else if (option.type === GlobalSettingsService.TYPE_OPTION_LIST) {
-
             optionKey = option.key;
             optionValue = option.active.key;
-
         } else if (option.type === GlobalSettingsService.TYPE_OPTION_NUMBER) {
-
-
             if (_.isNull(option.value) || _.isUndefined(option.value) || !_.isNumber(option.value)) {
-
                 this.resetOptionToDefaultValue(option);
-
-            } else { // Save !
+            } else {
+                // Save !
 
                 if (option.value < option.min || option.value > option.max) {
                     this.resetOptionToDefaultValue(option);
@@ -142,7 +122,6 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 
             optionKey = option.key;
             optionValue = option.value;
-
         } else {
             throw new ElevateException(`Unable to handle setting option change with value: ${JSON.stringify(option)}`);
         }
@@ -158,9 +137,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     }
 
     public displaySubOption(subOptionKey: string, show: boolean): void {
-
         _.forEach(this.sections, (section: SectionModel) => {
-
             const foundOption: OptionModel = _.find(section.options, {
                 key: subOptionKey,
             });
@@ -172,11 +149,9 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     }
 
     public showOptionHelperDialog(optionKeyParam: string): void {
-
         let option: OptionModel = null;
 
         _.forEach(this.sections, (section: SectionModel) => {
-
             const foundOption: OptionModel = _.find(section.options, {
                 key: optionKeyParam,
             });
@@ -187,22 +162,21 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
         });
 
         if (option) {
-
             // Construct markdown template URI from asset option helper dir & option key
-            const markdownTemplateUri = GlobalSettingsComponent.getOptionHelperDir(location.pathname) + option.key + ".md";
+            const markdownTemplateUri =
+                GlobalSettingsComponent.getOptionHelperDir(location.pathname) + option.key + ".md";
 
             this.optionHelperReaderService.get(markdownTemplateUri).then(markdownData => {
-
                 const optionHelperData: OptionHelperDataModel = {
                     title: option.title,
-                    markdownData: markdownData
+                    markdownData: markdownData,
                 };
 
                 this.dialog.open(OptionHelperDialogComponent, {
                     minWidth: OptionHelperDialogComponent.MIN_WIDTH,
                     maxWidth: OptionHelperDialogComponent.MAX_WIDTH,
                     data: optionHelperData,
-                    autoFocus: false
+                    autoFocus: false,
                 });
             });
         }

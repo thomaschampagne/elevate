@@ -14,10 +14,9 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 @Component({
     selector: "app-zones-settings",
     templateUrl: "./zones-settings.component.html",
-    styleUrls: ["./zones-settings.component.scss"]
+    styleUrls: ["./zones-settings.component.scss"],
 })
 export class ZonesSettingsComponent implements OnInit, OnDestroy {
-
     public static DEFAULT_ZONE_VALUE = "heartRate";
 
     public zoneDefinitions: ZoneDefinitionModel[] = ZONE_DEFINITIONS;
@@ -29,21 +28,19 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 
     public areZonesLoaded = false;
 
-    constructor(public userSettingsService: UserSettingsService,
-                public route: ActivatedRoute,
-                public router: Router,
-                public zonesService: ZonesService,
-                public snackBar: MatSnackBar) {
-    }
+    constructor(
+        public userSettingsService: UserSettingsService,
+        public route: ActivatedRoute,
+        public router: Router,
+        public zonesService: ZonesService,
+        public snackBar: MatSnackBar
+    ) {}
 
     public ngOnInit(): void {
-
         // Check zoneValue provided in URL
         this.routeParamsSubscription = this.route.params.subscribe(routeParams => {
-
             // Load user zones config
             this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
-
                 // Load user zones data
                 this.userZonesModel = UserZonesModel.asInstance(userSettings.zones);
 
@@ -59,20 +56,21 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
                 }
 
                 try {
-
                     this.loadZonesFromDefinition(zoneDefinition);
-
                 } catch (error) {
-                    const snackBarRef = this.snackBar.open("Your zones are corrupted. Reset your settings from advanced menu.", "Go to advanced menu", {
-                        verticalPosition: "top"
-                    });
+                    const snackBarRef = this.snackBar.open(
+                        "Your zones are corrupted. Reset your settings from advanced menu.",
+                        "Go to advanced menu",
+                        {
+                            verticalPosition: "top",
+                        }
+                    );
                     const subscription = snackBarRef.onAction().subscribe(() => {
                         this.router.navigate([AppRoutesModel.advancedMenu]);
                         subscription.unsubscribe();
                     });
                 }
             });
-
         });
 
         // Listen for reload request from ZonesService
@@ -93,7 +91,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
     }
 
     private getZoneDefinitionFromZoneValue(zoneValue: string): ZoneDefinitionModel {
-        return _.find(this.zoneDefinitions, {value: zoneValue});
+        return _.find(this.zoneDefinitions, { value: zoneValue });
     }
 
     /**
@@ -101,7 +99,6 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
      * Also update the current zones managed by the zone service to add, remove, reset, import, export, ... zones.
      */
     private loadZonesFromDefinition(zoneDefinition: ZoneDefinitionModel) {
-
         // Load current zone from zone definition provided
         this.currentZones = this.userZonesModel.get(zoneDefinition.value);
 
@@ -112,10 +109,10 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
         // Update the zone definition used
         this.zoneDefinitionSelected = zoneDefinition;
 
-        _.defer(() => { // Postpone display of zone at the end of all executions
+        _.defer(() => {
+            // Postpone display of zone at the end of all executions
             this.areZonesLoaded = true;
         });
-
     }
 
     private navigateToZone(zoneValue: string) {

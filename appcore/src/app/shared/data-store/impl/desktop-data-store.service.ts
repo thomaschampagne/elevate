@@ -10,18 +10,16 @@ import { AppUsage } from "../../models/app-usage.model";
 
 @Injectable()
 export class DesktopDataStore<T extends {}> extends DataStore<T> {
-
     constructor(protected readonly logger: LoggerService) {
         super(logger);
     }
 
     public getPersistenceAdapter(): LokiPersistenceAdapter {
         const idbAdapter = new LokiIndexedAdapter();
-        return new Loki.LokiPartitioningAdapter(idbAdapter, {paging: true});
+        return new Loki.LokiPartitioningAdapter(idbAdapter, { paging: true });
     }
 
     public createDump(versionFlag: string): Promise<Blob> {
-
         const dump: LokiConstructor = JSON.parse(this.db.serialize());
 
         const cleanedDump = dump.collections.map(collection => {
@@ -33,24 +31,23 @@ export class DesktopDataStore<T extends {}> extends DataStore<T> {
 
         const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel(versionFlag, Gzip.pack(databaseSerialized));
 
-        const blob = new Blob([desktopDumpModel.serialize()], {type: "application/gzip"});
+        const blob = new Blob([desktopDumpModel.serialize()], { type: "application/gzip" });
 
         return Promise.resolve(blob);
     }
 
     public loadDump(dump: DesktopDumpModel): Promise<void> {
-
         this.db.collections.forEach(collection => {
-            collection.clear({removeIndices: true});
+            collection.clear({ removeIndices: true });
         });
 
         return this.saveDataStore().then(() => {
-
             const inflatedDatabases = Gzip.unpack(dump.gzipData);
             const dumpedCollections: Collection<any>[] = JSON.parse(inflatedDatabases);
 
             dumpedCollections.forEach(collectionDump => {
-                const collection = this.db.getCollection(collectionDump.name) || this.db.addCollection(collectionDump.name);
+                const collection =
+                    this.db.getCollection(collectionDump.name) || this.db.addCollection(collectionDump.name);
                 collection.insert(collectionDump.data);
             });
 
@@ -62,7 +59,7 @@ export class DesktopDataStore<T extends {}> extends DataStore<T> {
         return navigator.storage.estimate().then((storageEstimate: StorageEstimate) => {
             const appUsage = new AppUsage(new Blob([this.db.serialize()]).size, storageEstimate.quota);
             const megaBytesInUse = appUsage.bytesInUse / (1024 * 1024);
-            const percentUsage = appUsage.bytesInUse / appUsage.quotaBytes * 100;
+            const percentUsage = (appUsage.bytesInUse / appUsage.quotaBytes) * 100;
             const appUsageDetails = new AppUsageDetails(appUsage, megaBytesInUse, percentUsage);
             return Promise.resolve(appUsageDetails);
         });

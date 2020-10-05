@@ -5,16 +5,8 @@ import { ReleasesNotesResolverService } from "./releases-notes-resolver.service"
 import { ReleasesNotesRoutingModule } from "./releases-notes-routing.module";
 
 @NgModule({
-    imports: [
-        CoreModule,
-        ReleasesNotesRoutingModule
-    ],
-    declarations: [
-        ReleasesNotesComponent
-    ],
-    providers: [
-        ReleasesNotesResolverService
-    ]
+    imports: [CoreModule, ReleasesNotesRoutingModule],
+    declarations: [ReleasesNotesComponent],
+    providers: [ReleasesNotesResolverService],
 })
-export class ReleasesNotesModule {
-}
+export class ReleasesNotesModule {}

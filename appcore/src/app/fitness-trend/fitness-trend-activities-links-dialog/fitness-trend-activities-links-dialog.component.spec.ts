@@ -12,23 +12,26 @@ describe("FitnessTrendActivitiesLinksDialogComponent", () => {
     let component: FitnessTrendActivitiesLinksDialogComponent;
     let fixture: ComponentFixture<FitnessTrendActivitiesLinksDialogComponent>;
 
-    const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(new DayStressModel(new Date(), false), 0, 0, 0);
+    const dayFitnessTrendModel: DayFitnessTrendModel = new DayFitnessTrendModel(
+        new DayStressModel(new Date(), false),
+        0,
+        0,
+        0
+    );
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                FitnessTrendModule
-            ],
+            imports: [CoreModule, SharedModule, FitnessTrendModule],
             providers: [
                 {
-                    provide: MAT_DIALOG_DATA, useValue: dayFitnessTrendModel,
+                    provide: MAT_DIALOG_DATA,
+                    useValue: dayFitnessTrendModel,
                 },
                 {
-                    provide: MatDialogRef, useValue: {},
+                    provide: MatDialogRef,
+                    useValue: {},
                 },
-            ]
+            ],
         }).compileComponents();
         done();
     });

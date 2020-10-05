@@ -9,5 +9,5 @@ export interface VersionsProvider {
 
     getWrapperVersion(): string;
 
-    getBuildMetadata(): Promise<{ commit: string, date: string }>;
+    getBuildMetadata(): Promise<{ commit: string; date: string }>;
 }

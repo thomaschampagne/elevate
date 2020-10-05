@@ -10,11 +10,17 @@ export class AddYearToDateProgressPresetDialogData {
     public includeIndoorRide: boolean;
     public targetValue: number;
 
-    constructor(yearProgressTypeModel: YearProgressTypeModel, activityTypes: ElevateSport[], includeCommuteRide: boolean, includeIndoorRide: boolean, targetValue: number) {
+    constructor(
+        yearProgressTypeModel: YearProgressTypeModel,
+        activityTypes: ElevateSport[],
+        includeCommuteRide: boolean,
+        includeIndoorRide: boolean,
+        targetValue: number
+    ) {
         this.yearProgressTypeModel = yearProgressTypeModel;
         this.activityTypes = activityTypes;
         this.includeCommuteRide = includeCommuteRide;
         this.includeIndoorRide = includeIndoorRide;
-        this.targetValue = (targetValue) ? targetValue : null;
+        this.targetValue = targetValue ? targetValue : null;
     }
 }

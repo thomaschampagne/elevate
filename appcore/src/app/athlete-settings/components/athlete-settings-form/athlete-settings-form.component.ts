@@ -10,10 +10,9 @@ import { Constant } from "@elevate/shared/constants";
 @Component({
     selector: "app-athlete-settings-form",
     templateUrl: "./athlete-settings-form.component.html",
-    styleUrls: ["./athlete-settings-form.component.scss"]
+    styleUrls: ["./athlete-settings-form.component.scss"],
 })
 export class AthleteSettingsFormComponent implements OnInit {
-
     public static readonly DATED_ATHLETE_SETTING_KEY_WEIGHT: any = "weight";
     public static readonly DATED_ATHLETE_SETTING_KEY_MAX_HR: string = "maxHr";
     public static readonly DATED_ATHLETE_SETTING_KEY_REST_HR: string = "restHr";
@@ -26,7 +25,7 @@ export class AthleteSettingsFormComponent implements OnInit {
 
     public readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = FitnessService.DEFAULT_LTHR_KARVONEN_HRR_FACTOR;
 
-    @ViewChild("bottom", {static: true})
+    @ViewChild("bottom", { static: true })
     public bottomElement: ElementRef;
 
     @Input("athleteSettingsModel")
@@ -41,8 +40,7 @@ export class AthleteSettingsFormComponent implements OnInit {
 
     public isSwimFtpCalculatorEnabled = false;
 
-    constructor(public snackBar: MatSnackBar) {
-    }
+    constructor(public snackBar: MatSnackBar) {}
 
     public ngOnInit(): void {
         this.markCurrentSettingsAsCompliant();
@@ -54,7 +52,7 @@ export class AthleteSettingsFormComponent implements OnInit {
         if (canBeNull === true && _.isNull(value)) {
             return true;
         }
-        return (_.isNumber(value) && value >= 0);
+        return _.isNumber(value) && value >= 0;
     }
 
     public resetPropertyToLatestCompliant(property: string): void {
@@ -81,9 +79,11 @@ export class AthleteSettingsFormComponent implements OnInit {
     }
 
     public onMaxHrChanged() {
-
         const maxHrProperty = AthleteSettingsFormComponent.DATED_ATHLETE_SETTING_KEY_MAX_HR;
-        if (this.isPropertyCompliant(maxHrProperty) && this.athleteSettingsModel.maxHr > this.athleteSettingsModel.restHr) {
+        if (
+            this.isPropertyCompliant(maxHrProperty) &&
+            this.athleteSettingsModel.maxHr > this.athleteSettingsModel.restHr
+        ) {
             this.onValidateChange(maxHrProperty);
         } else {
             this.resetPropertyToLatestCompliant(maxHrProperty);
@@ -92,9 +92,11 @@ export class AthleteSettingsFormComponent implements OnInit {
     }
 
     public onRestHrChanged() {
-
         const restHrProperty = AthleteSettingsFormComponent.DATED_ATHLETE_SETTING_KEY_REST_HR;
-        if (this.isPropertyCompliant(restHrProperty) && this.athleteSettingsModel.restHr < this.athleteSettingsModel.maxHr) {
+        if (
+            this.isPropertyCompliant(restHrProperty) &&
+            this.athleteSettingsModel.restHr < this.athleteSettingsModel.maxHr
+        ) {
             this.onValidateChange(restHrProperty);
         } else {
             this.resetPropertyToLatestCompliant(restHrProperty);
@@ -127,30 +129,26 @@ export class AthleteSettingsFormComponent implements OnInit {
     }
 
     public onSwimFtpChanged(changeFromPaceField?: boolean) {
-        if (_.isUndefined(changeFromPaceField) || !changeFromPaceField) { // If change is not from "hh:mm:ss / 100m" pace field
+        if (_.isUndefined(changeFromPaceField) || !changeFromPaceField) {
+            // If change is not from "hh:mm:ss / 100m" pace field
             this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(this.athleteSettingsModel.swimFtp); // Update min/100m field
         }
         this.onValidateChange(AthleteSettingsFormComponent.DATED_ATHLETE_SETTING_KEY_SWIMMING_FTP, true);
     }
 
     public onSwimFtp100mChanged() {
-
         let hasErrors = false;
 
         this.swimFtp100m = this.swimFtp100m.trim();
 
         if (_.isEmpty(this.swimFtp100m) || this.swimFtp100m === "00:00:00") {
-
             // Ok...
             this.athleteSettingsModel.swimFtp = null;
             this.swimFtp100m = null;
             const changeFromPaceField = true;
             this.onSwimFtpChanged(changeFromPaceField); // Trigger save & swimFtp100m new value
-
         } else {
-
             if (this.swimFtp100m.match("^[0-9]+:[0-5]{1}[0-9]{1}:[0-5]{1}[0-9]{1}$")) {
-
                 this.athleteSettingsModel.swimFtp = SwimFtpHelperComponent.convertPaceToSwimSpeed(this.swimFtp100m);
 
                 if (_.isFinite(this.athleteSettingsModel.swimFtp)) {
@@ -165,13 +163,14 @@ export class AthleteSettingsFormComponent implements OnInit {
         }
 
         if (hasErrors) {
-            this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(this.compliantAthleteSettingsModel.swimFtp);
+            this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(
+                this.compliantAthleteSettingsModel.swimFtp
+            );
             this.popError();
         }
     }
 
     public convertToPace(systemUnit: string): string {
-
         let speedFactor: number;
 
         if (systemUnit === UserSettings.SYSTEM_UNIT_METRIC_KEY) {
@@ -182,14 +181,13 @@ export class AthleteSettingsFormComponent implements OnInit {
             throw new Error("System unit unknown");
         }
 
-        return (_.isNumber(this.athleteSettingsModel.runningFtp) && this.athleteSettingsModel.runningFtp > 0) ?
-            Helper.secondsToHHMMSS(this.athleteSettingsModel.runningFtp / speedFactor) + ((systemUnit === "metric")
-            ? "/km" : "/mi") : null;
-
+        return _.isNumber(this.athleteSettingsModel.runningFtp) && this.athleteSettingsModel.runningFtp > 0
+            ? Helper.secondsToHHMMSS(this.athleteSettingsModel.runningFtp / speedFactor) +
+                  (systemUnit === "metric" ? "/km" : "/mi")
+            : null;
     }
 
     public popError(customMessage?: string) {
-
         let message = "Invalid value entered. Reset to previous value.";
 
         if (customMessage) {
@@ -197,7 +195,7 @@ export class AthleteSettingsFormComponent implements OnInit {
         }
 
         this.snackBar.open(message, "Close", {
-            duration: 2500
+            duration: 2500,
         });
     }
 }

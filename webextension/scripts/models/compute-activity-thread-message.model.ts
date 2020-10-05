@@ -1,4 +1,9 @@
-import { ActivitySourceDataModel, ActivityStreamsModel, AthleteSnapshotModel, UserSettings, } from "@elevate/shared/models";
+import {
+    ActivitySourceDataModel,
+    ActivityStreamsModel,
+    AthleteSnapshotModel,
+    UserSettings,
+} from "@elevate/shared/models";
 import { AppResourcesModel } from "./app-resources.model";
 import { ElevateSport } from "@elevate/shared/enums";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;

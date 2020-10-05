@@ -4,9 +4,7 @@ import { StravaConnectorInfo } from "@elevate/shared/sync";
 
 @Injectable()
 export class StravaConnectorInfoService {
-
-    constructor(public stravaConnectorInfoDao: StravaConnectorInfoDao) {
-    }
+    constructor(public stravaConnectorInfoDao: StravaConnectorInfoDao) {}
 
     public fetch(): Promise<StravaConnectorInfo> {
         return this.stravaConnectorInfoDao.findOne();

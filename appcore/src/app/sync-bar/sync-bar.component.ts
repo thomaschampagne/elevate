@@ -14,9 +14,8 @@ class CurrentActivitySynced {
     public isNew: boolean;
 }
 
-@Component({template: ""})
-export class SyncBarComponent {
-}
+@Component({ template: "" })
+export class SyncBarComponent {}
 
 @Component({
     selector: "app-desktop-sync-bar",
@@ -24,20 +23,27 @@ export class SyncBarComponent {
         <div class="app-sync-bar">
             <div fxLayout="row" fxLayoutAlign="space-between center">
                 <div fxLayout="column" fxLayoutAlign="center start">
-					<span fxFlex class="mat-body-1">
-						<span *ngIf="currentActivitySynced">{{currentActivitySynced.date}}: {{currentActivitySynced.name}} <span
-                            class="activity-existence-tag">{{currentActivitySynced.isNew ? 'new' : 'already exists'}}</span></span>
-						<span *ngIf="!currentActivitySynced && syncStatusText">{{this.syncStatusText}}</span>
-					</span>
-                    <span fxFlex class="mat-caption" *ngIf="counter > 0">{{counter}} activities processed</span>
+                    <span fxFlex class="mat-body-1">
+                        <span *ngIf="currentActivitySynced"
+                            >{{ currentActivitySynced.date }}: {{ currentActivitySynced.name }}
+                            <span class="activity-existence-tag">{{
+                                currentActivitySynced.isNew ? "new" : "already exists"
+                            }}</span></span
+                        >
+                        <span *ngIf="!currentActivitySynced && syncStatusText">{{ this.syncStatusText }}</span>
+                    </span>
+                    <span fxFlex class="mat-caption" *ngIf="counter > 0">{{ counter }} activities processed</span>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="space-between center">
-                    <button *ngIf="eventErrors && eventErrors.length > 0" mat-flat-button color="warn" (click)="onActionShowErrors()">
-                        {{eventErrors.length}} warning{{ (eventErrors.length > 1) ? 's' : ''}}
+                    <button
+                        *ngIf="eventErrors && eventErrors.length > 0"
+                        mat-flat-button
+                        color="warn"
+                        (click)="onActionShowErrors()"
+                    >
+                        {{ eventErrors.length }} warning{{ eventErrors.length > 1 ? "s" : "" }}
                     </button>
-                    <button *ngIf="isSyncing" mat-flat-button color="accent" (click)="onActionStop()">
-                        Stop
-                    </button>
+                    <button *ngIf="isSyncing" mat-flat-button color="accent" (click)="onActionStop()">Stop</button>
                     <button *ngIf="!hideCloseButton" mat-flat-button color="accent" (click)="onActionClose()">
                         Close
                     </button>
@@ -45,18 +51,19 @@ export class SyncBarComponent {
             </div>
         </div>
     `,
-    styles: [`
-        .app-sync-bar {
-            padding: 10px 20px;
-        }
+    styles: [
+        `
+            .app-sync-bar {
+                padding: 10px 20px;
+            }
 
-        button {
-            margin-left: 10px;
-        }
-    `]
+            button {
+                margin-left: 10px;
+            }
+        `,
+    ],
 })
 export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit {
-
     @HostBinding("hidden")
     public hideSyncBar: boolean;
 
@@ -67,9 +74,11 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     public counter: number;
     public eventErrors: ErrorSyncEvent[];
 
-    constructor(public desktopSyncService: DesktopSyncService,
-                public dialog: MatDialog,
-                public changeDetectorRef: ChangeDetectorRef) {
+    constructor(
+        public desktopSyncService: DesktopSyncService,
+        public dialog: MatDialog,
+        public changeDetectorRef: ChangeDetectorRef
+    ) {
         super();
         this.hideSyncBar = true;
         this.hideCloseButton = true;
@@ -81,7 +90,6 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     }
 
     public ngOnInit(): void {
-
         this.hideSyncBar = true;
 
         this.desktopSyncService.syncEvents$.subscribe((syncEvent: SyncEvent) => {
@@ -102,20 +110,18 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     }
 
     public onActionShowErrors(): void {
-
         // Stop sync before showing errors
-        const stopSync = (this.isSyncing) ? this.onActionStop() : Promise.resolve();
+        const stopSync = this.isSyncing ? this.onActionStop() : Promise.resolve();
         stopSync.finally(() => {
             this.dialog.open(DesktopErrorsSyncDetailsDialogComponent, {
                 minWidth: DesktopErrorsSyncDetailsDialogComponent.MIN_WIDTH,
                 maxWidth: DesktopErrorsSyncDetailsDialogComponent.MAX_WIDTH,
-                data: this.eventErrors
+                data: this.eventErrors,
             });
         });
     }
 
     public handleSyncEventDisplay(syncEvent: SyncEvent) {
-
         this.changeDetectorRef.markForCheck();
 
         if (syncEvent.type === SyncEventType.STARTED) {
@@ -133,7 +139,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
         }
 
         if (syncEvent.type === SyncEventType.ERROR) {
-            this.onErrorSyncEvent(<ErrorSyncEvent> syncEvent);
+            this.onErrorSyncEvent(<ErrorSyncEvent>syncEvent);
         }
 
         if (syncEvent.type === SyncEventType.STOPPED) {
@@ -153,12 +159,13 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
         this.isSyncing = true;
         this.hideCloseButton = true;
         this.counter = 0;
-        this.syncStatusText = "Sync started on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
+        this.syncStatusText =
+            'Sync started on connector "' + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + '"';
     }
 
     private onActivitySyncEvent(syncEvent: SyncEvent): void {
         this.counter++;
-        const activitySyncEvent = <ActivitySyncEvent> syncEvent;
+        const activitySyncEvent = <ActivitySyncEvent>syncEvent;
         this.currentActivitySynced = {
             date: moment(activitySyncEvent.activity.start_time).format("ll"),
             name: activitySyncEvent.activity.name,
@@ -175,10 +182,10 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     }
 
     private onStoppedSyncEvent(syncEvent: SyncEvent): void {
-
         this.isSyncing = false;
 
-        this.syncStatusText = "Sync stopped on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
+        this.syncStatusText =
+            'Sync stopped on connector "' + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + '"';
 
         if (this.eventErrors.length > 0) {
             this.hideCloseButton = false;
@@ -188,7 +195,8 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     }
 
     private onCompleteSyncEvent(syncEvent: SyncEvent): void {
-        this.syncStatusText = "Sync completed on connector \"" + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + "\"";
+        this.syncStatusText =
+            'Sync completed on connector "' + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + '"';
         if (this.eventErrors.length > 0) {
             this.hideCloseButton = false;
             this.isSyncing = false;
@@ -196,20 +204,17 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
             this.hideSyncBar = true;
         }
     }
-
 }
 
 @Component({
     selector: "app-extension-sync-bar",
     template: ``,
-    styles: [``]
+    styles: [``],
 })
 export class ExtensionSyncBarComponent extends SyncBarComponent implements OnInit {
-
     constructor() {
         super();
     }
 
-    public ngOnInit(): void {
-    }
+    public ngOnInit(): void {}
 }

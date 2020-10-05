@@ -1,7 +1,6 @@
 import * as _ from "lodash";
 
 export class AppError {
-
     // List of errors that must to be registered in below method
     public static readonly SYNC_NOT_SYNCED: string = "SYNC_1";
     public static readonly FT_NO_ACTIVITIES: string = "FT_1";
@@ -41,11 +40,15 @@ export class AppError {
     }
 
     public checkForDuplicatesErrors(): void {
-        const duplicates = _.transform(_.countBy(this._codes), (result: string[], count: number, value: string) => {
-            if (count > 1) {
-                result.push(value);
-            }
-        }, []);
+        const duplicates = _.transform(
+            _.countBy(this._codes),
+            (result: string[], count: number, value: string) => {
+                if (count > 1) {
+                    result.push(value);
+                }
+            },
+            []
+        );
 
         if (duplicates.length > 0) {
             throw new Error(duplicates.join(";") + " error codes are duplicated");
@@ -61,5 +64,4 @@ export class AppError {
     public toString(): string {
         return "ERROR " + this.code + ": " + this.message;
     }
-
 }

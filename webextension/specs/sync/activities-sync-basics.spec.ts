@@ -9,7 +9,6 @@ import { ElevateSport } from "@elevate/shared/enums";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 describe("ActivitiesSynchronize", () => {
-
     let userSettingsMock: ExtensionUserSettingsModel;
     let athleteModelResolver: AthleteSnapshotResolver;
 
@@ -20,40 +19,44 @@ describe("ActivitiesSynchronize", () => {
     });
 
     it("should remove activity from array properly ", done => {
-
-        let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(require("../fixtures/sync/rawPage0120161213.json").models);
+        let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(
+            require("../fixtures/sync/rawPage0120161213.json").models
+        );
         const sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
 
         expect(rawPageOfActivities).not.toBeNull();
-        expect(_.find(rawPageOfActivities, {id: 722210052})).toBeUndefined();
+        expect(_.find(rawPageOfActivities, { id: 722210052 })).toBeUndefined();
         expect(rawPageOfActivities.length).toEqual(sourceCount - 1);
         done();
     });
 
     it("should edit activity from array properly ", done => {
-
-        let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(require("../fixtures/sync/rawPage0120161213.json").models);
+        let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(
+            require("../fixtures/sync/rawPage0120161213.json").models
+        );
         const sourceCount = rawPageOfActivities.length;
 
         rawPageOfActivities = editActivityFromArray(722210052, rawPageOfActivities, "New_Name", "Ride"); // Edit Hike "Fort saint eynard"
 
         expect(rawPageOfActivities).not.toBeNull();
-        const foundBack: SyncedActivityModel = _.find(rawPageOfActivities, {id: 722210052});
+        const foundBack: SyncedActivityModel = _.find(rawPageOfActivities, { id: 722210052 });
         expect(foundBack).toBeDefined();
         expect(foundBack.name).toEqual("New_Name");
         expect(foundBack.type).toEqual("Ride");
         expect(foundBack.display_type).toEqual("Ride");
         expect(rawPageOfActivities.length).toEqual(sourceCount);
         done();
-
     });
 
     it("should detect activities added, modified and deleted ", done => {
-
-        let syncedActivities: Array<SyncedActivityModel> = _.cloneDeep(require("../fixtures/sync/syncedActivities20161213.json").syncedActivities);
-        let rawPageOfActivities: Array<StravaActivityModel> = _.cloneDeep(require("../fixtures/sync/rawPage0120161213.json").models);
+        let syncedActivities: Array<SyncedActivityModel> = _.cloneDeep(
+            require("../fixtures/sync/syncedActivities20161213.json").syncedActivities
+        );
+        let rawPageOfActivities: Array<StravaActivityModel> = _.cloneDeep(
+            require("../fixtures/sync/rawPage0120161213.json").models
+        );
 
         // Simulate Added in strava: consist to remove since synced activities...
         syncedActivities = removeActivityFromArray(723224273, syncedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
@@ -64,7 +67,10 @@ describe("ActivitiesSynchronize", () => {
         rawPageOfActivities = editActivityFromArray(708752345, rawPageOfActivities, "MTB @ Bastille", "Ride"); // Edit Run "Bastille"
 
         // Now find+test changes
-        const changes: ActivitiesChangesModel = ActivitiesSynchronize.findAddedAndEditedActivities(rawPageOfActivities, syncedActivities);
+        const changes: ActivitiesChangesModel = ActivitiesSynchronize.findAddedAndEditedActivities(
+            rawPageOfActivities,
+            syncedActivities
+        );
 
         expect(changes).not.toBeNull();
         expect(changes.deleted).toEqual([]);
@@ -75,13 +81,13 @@ describe("ActivitiesSynchronize", () => {
         expect(_.indexOf(changes.added, 999999999)).toEqual(-1); // Fake
 
         expect(changes.edited.length).toEqual(2);
-        expect(_.find(changes.edited, {id: 799672885})).toBeDefined();
-        expect(_.find(changes.edited, {id: 708752345})).toBeDefined();
-        let findWhere: any = _.find(changes.edited, {id: 799672885});
+        expect(_.find(changes.edited, { id: 799672885 })).toBeDefined();
+        expect(_.find(changes.edited, { id: 708752345 })).toBeDefined();
+        let findWhere: any = _.find(changes.edited, { id: 799672885 });
         expect(findWhere.name).toEqual("Run comeback");
         expect(findWhere.type).toEqual("Run");
         expect(findWhere.display_type).toEqual("Run");
-        findWhere = _.find(changes.edited, {id: 708752345});
+        findWhere = _.find(changes.edited, { id: 708752345 });
         expect(findWhere.name).toEqual("MTB @ Bastille");
         expect(findWhere.type).toEqual("Ride");
         expect(findWhere.display_type).toEqual("Ride");
@@ -89,19 +95,23 @@ describe("ActivitiesSynchronize", () => {
         expect(ActivitiesSynchronize.findAddedAndEditedActivities(null, null)).not.toBeNull();
 
         done();
-
     });
 
     it("should append activities of pages where activities added, modified and deleted ", done => {
-
-        const appResourcesMock: AppResourcesModel = _.cloneDeep(require("../fixtures/app-resources/app-resources.json"));
-        const activitiesSynchronize: ActivitiesSynchronize = new ActivitiesSynchronize(appResourcesMock, userSettingsMock, athleteModelResolver);
+        const appResourcesMock: AppResourcesModel = _.cloneDeep(
+            require("../fixtures/app-resources/app-resources.json")
+        );
+        const activitiesSynchronize: ActivitiesSynchronize = new ActivitiesSynchronize(
+            appResourcesMock,
+            userSettingsMock,
+            athleteModelResolver
+        );
 
         // Append
         activitiesSynchronize.appendGlobalActivitiesChanges({
             added: [1, 2],
             deleted: [],
-            edited: []
+            edited: [],
         });
 
         expect(activitiesSynchronize.activitiesChanges).not.toBeNull();
@@ -113,7 +123,7 @@ describe("ActivitiesSynchronize", () => {
         activitiesSynchronize.appendGlobalActivitiesChanges({
             added: [4, 5],
             deleted: [],
-            edited: [{id: 6, name: "rideName", type: ElevateSport.Ride, display_type: "Ride"}]
+            edited: [{ id: 6, name: "rideName", type: ElevateSport.Ride, display_type: "Ride" }],
         });
         expect(activitiesSynchronize.activitiesChanges).not.toBeNull();
         expect(activitiesSynchronize.activitiesChanges.added.length).toEqual(4);
@@ -124,12 +134,15 @@ describe("ActivitiesSynchronize", () => {
         activitiesSynchronize.appendGlobalActivitiesChanges({
             added: [5, 10, 11],
             deleted: [15, 16],
-            edited: [{id: 6, name: "rideName", type: ElevateSport.Ride, display_type: "Ride"}, {
-                id: 22,
-                name: "Run...",
-                type: ElevateSport.Run,
-                display_type: "Run"
-            }]
+            edited: [
+                { id: 6, name: "rideName", type: ElevateSport.Ride, display_type: "Ride" },
+                {
+                    id: 22,
+                    name: "Run...",
+                    type: ElevateSport.Run,
+                    display_type: "Run",
+                },
+            ],
         });
         expect(activitiesSynchronize.activitiesChanges).not.toBeNull();
         expect(activitiesSynchronize.activitiesChanges.added.length).toEqual(6); // id:5 already added

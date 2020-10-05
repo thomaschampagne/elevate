@@ -5,7 +5,16 @@ import { AthleteService } from "../../athlete/athlete.service";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { LoggerService } from "../../logging/logger.service";
 import { Subject, Subscription } from "rxjs";
-import { ActivitySyncEvent, CompleteSyncEvent, ConnectorType, ErrorSyncEvent, FileSystemConnectorInfo, StravaConnectorInfo, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+    ActivitySyncEvent,
+    CompleteSyncEvent,
+    ConnectorType,
+    ErrorSyncEvent,
+    FileSystemConnectorInfo,
+    StravaConnectorInfo,
+    SyncEvent,
+    SyncEventType,
+} from "@elevate/shared/sync";
 import { IpcMessagesReceiver } from "../../../../desktop/ipc-messages/ipc-messages-receiver.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { StravaConnectorInfoService } from "../../strava-connector-info/strava-connector-info.service";
@@ -49,21 +58,31 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     public currentConnectorType: ConnectorType;
     public activityUpsertDetected: boolean;
 
-    constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
-                @Inject(DataStore) public desktopDataStore: DesktopDataStore<object>,
-                public activityService: ActivityService,
-                public streamsService: StreamsService,
-                public athleteService: AthleteService,
-                public userSettingsService: UserSettingsService,
-                public ipcMessagesReceiver: IpcMessagesReceiver,
-                public ipcMessagesSender: IpcMessagesSender,
-                public stravaConnectorInfoService: StravaConnectorInfoService,
-                public fileSystemConnectorInfoService: FileSystemConnectorInfoService,
-                public logger: LoggerService,
-                public connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
-                public appEventsService: AppEventsService,
-                public electronService: ElectronService) {
-        super(versionsProvider, desktopDataStore, activityService, streamsService, athleteService, userSettingsService, logger);
+    constructor(
+        @Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
+        @Inject(DataStore) public desktopDataStore: DesktopDataStore<object>,
+        public activityService: ActivityService,
+        public streamsService: StreamsService,
+        public athleteService: AthleteService,
+        public userSettingsService: UserSettingsService,
+        public ipcMessagesReceiver: IpcMessagesReceiver,
+        public ipcMessagesSender: IpcMessagesSender,
+        public stravaConnectorInfoService: StravaConnectorInfoService,
+        public fileSystemConnectorInfoService: FileSystemConnectorInfoService,
+        public logger: LoggerService,
+        public connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
+        public appEventsService: AppEventsService,
+        public electronService: ElectronService
+    ) {
+        super(
+            versionsProvider,
+            desktopDataStore,
+            activityService,
+            streamsService,
+            athleteService,
+            userSettingsService,
+            logger
+        );
         this.syncSubscription = null;
         this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync // TODO ReplaySubject to get old values?! I think no
         this.currentConnectorType = null;
@@ -71,11 +90,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     }
 
     public static transformErrorToSyncException(error: Error | Error[] | string | string[]): SyncException {
-
         if (error instanceof SyncException) {
-            return <SyncException> error;
-        } else if ((<any> error).name === Error.name) {
-            return SyncException.fromError(<Error> error);
+            return <SyncException>error;
+        } else if ((<any>error).name === Error.name) {
+            return SyncException.fromError(<Error>error);
         } else if (_.isString(error)) {
             return new SyncException(error);
         } else {
@@ -87,8 +105,11 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         return _.startCase(_.replace(fromConnectorType.toString().toLowerCase(), "_", " "));
     }
 
-    public sync(fastSync: boolean = null, forceSync: boolean = null, connectorType: ConnectorType = null): Promise<void> {
-
+    public sync(
+        fastSync: boolean = null,
+        forceSync: boolean = null,
+        connectorType: ConnectorType = null
+    ): Promise<void> {
         if (!connectorType) {
             throw new SyncException("ConnectorType param must be given");
         }
@@ -100,7 +121,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         const promisedDataToSync: Promise<any>[] = [
             this.athleteService.fetch(),
             this.userSettingsService.fetch(),
-            (fastSync) ? this.getConnectorSyncDateTime() : Promise.resolve(null)
+            fastSync ? this.getConnectorSyncDateTime() : Promise.resolve(null),
         ];
 
         if (this.currentConnectorType === ConnectorType.STRAVA) {
@@ -123,47 +144,57 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         });
 
         return Promise.all(promisedDataToSync).then(result => {
-
-            const athleteModel: AthleteModel = <AthleteModel> result[0];
-            const userSettingsModel: UserSettingsModel = <UserSettingsModel> result[1];
-            const allConnectorsSyncDateTime: ConnectorSyncDateTime[] = <ConnectorSyncDateTime[]> result[2];
+            const athleteModel: AthleteModel = <AthleteModel>result[0];
+            const userSettingsModel: UserSettingsModel = <UserSettingsModel>result[1];
+            const allConnectorsSyncDateTime: ConnectorSyncDateTime[] = <ConnectorSyncDateTime[]>result[2];
 
             let startSyncMessage: FlaggedIpcMessage;
 
-            const currentConnectorSyncDateTime = (allConnectorsSyncDateTime)
-                ? _.find(allConnectorsSyncDateTime, {connectorType: this.currentConnectorType}) : null;
+            const currentConnectorSyncDateTime = allConnectorsSyncDateTime
+                ? _.find(allConnectorsSyncDateTime, { connectorType: this.currentConnectorType })
+                : null;
 
             if (this.currentConnectorType === ConnectorType.STRAVA) {
-
-                const stravaConnectorInfo: StravaConnectorInfo = <StravaConnectorInfo> result[3];
+                const stravaConnectorInfo: StravaConnectorInfo = <StravaConnectorInfo>result[3];
 
                 // Create message to start sync on connector!
-                startSyncMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA, currentConnectorSyncDateTime,
-                    stravaConnectorInfo, athleteModel, userSettingsModel);
-
+                startSyncMessage = new FlaggedIpcMessage(
+                    MessageFlag.START_SYNC,
+                    ConnectorType.STRAVA,
+                    currentConnectorSyncDateTime,
+                    stravaConnectorInfo,
+                    athleteModel,
+                    userSettingsModel
+                );
             } else if (this.currentConnectorType === ConnectorType.FILE_SYSTEM) {
-
-                const fileSystemConnectorInfo: FileSystemConnectorInfo = <FileSystemConnectorInfo> result[3];
-                startSyncMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.FILE_SYSTEM, currentConnectorSyncDateTime,
-                    fileSystemConnectorInfo, athleteModel, userSettingsModel);
+                const fileSystemConnectorInfo: FileSystemConnectorInfo = <FileSystemConnectorInfo>result[3];
+                startSyncMessage = new FlaggedIpcMessage(
+                    MessageFlag.START_SYNC,
+                    ConnectorType.FILE_SYSTEM,
+                    currentConnectorSyncDateTime,
+                    fileSystemConnectorInfo,
+                    athleteModel,
+                    userSettingsModel
+                );
             }
 
             // Trigger sync start
-            return this.ipcMessagesSender.send<string>(startSyncMessage).then((response: string) => {
-                this.logger.info("Message received by ipcMain. Response:", response);
-                return Promise.resolve();
-            }, error => {
-                // e.g. Impossible to start a new sync. Another sync is already running on connector ...
-                this.logger.error(error);
-                return Promise.reject(error);
-            });
+            return this.ipcMessagesSender.send<string>(startSyncMessage).then(
+                (response: string) => {
+                    this.logger.info("Message received by ipcMain. Response:", response);
+                    return Promise.resolve();
+                },
+                error => {
+                    // e.g. Impossible to start a new sync. Another sync is already running on connector ...
+                    this.logger.error(error);
+                    return Promise.reject(error);
+                }
+            );
         });
     }
 
     public handleSyncEvents(syncEvents$: Subject<SyncEvent>, syncEvent: SyncEvent): void {
-
         switch (syncEvent.type) {
-
             case SyncEventType.STARTED:
                 this.resetActivityTrackingUpsert();
                 syncEvents$.next(syncEvent); // Forward for upward UI use.
@@ -171,7 +202,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
                 break;
 
             case SyncEventType.ACTIVITY:
-                this.handleActivityUpsert(syncEvents$, <ActivitySyncEvent> syncEvent);
+                this.handleActivityUpsert(syncEvents$, <ActivitySyncEvent>syncEvent);
                 break;
 
             case SyncEventType.STOPPED:
@@ -191,11 +222,11 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
                 break;
 
             case SyncEventType.COMPLETE:
-                this.handleSyncCompleteEvents(syncEvents$, <CompleteSyncEvent> syncEvent);
+                this.handleSyncCompleteEvents(syncEvents$, <CompleteSyncEvent>syncEvent);
                 break;
 
             case SyncEventType.ERROR:
-                this.handleErrorSyncEvents(syncEvents$, <ErrorSyncEvent> syncEvent);
+                this.handleErrorSyncEvents(syncEvents$, <ErrorSyncEvent>syncEvent);
                 break;
 
             default:
@@ -203,11 +234,9 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
                 this.logger.error(errorMessage);
                 this.throwSyncError(new SyncException(errorMessage));
         }
-
     }
 
     public handleErrorSyncEvents(syncEvents$: Subject<SyncEvent>, errorSyncEvent: ErrorSyncEvent): void {
-
         this.resetActivityTrackingUpsert();
 
         this.logger.error(errorSyncEvent);
@@ -217,69 +246,68 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
             return;
         }
 
-        if (errorSyncEvent.code === ErrorSyncEvent.SYNC_ERROR_COMPUTE.code
-            || errorSyncEvent.code === ErrorSyncEvent.UNHANDLED_ERROR_SYNC.code
-            || errorSyncEvent.code === ErrorSyncEvent.SYNC_ERROR_UPSERT_ACTIVITY_DATABASE.code
-            || errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.code
-            || errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_FORBIDDEN.code
-            || errorSyncEvent.code === ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.code
-            || errorSyncEvent.code === ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED.code
-            || errorSyncEvent.code === ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.code
+        if (
+            errorSyncEvent.code === ErrorSyncEvent.SYNC_ERROR_COMPUTE.code ||
+            errorSyncEvent.code === ErrorSyncEvent.UNHANDLED_ERROR_SYNC.code ||
+            errorSyncEvent.code === ErrorSyncEvent.SYNC_ERROR_UPSERT_ACTIVITY_DATABASE.code ||
+            errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.code ||
+            errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_FORBIDDEN.code ||
+            errorSyncEvent.code === ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.code ||
+            errorSyncEvent.code === ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED.code ||
+            errorSyncEvent.code === ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.code
         ) {
-
             syncEvents$.next(errorSyncEvent); // Forward for upward UI use.
 
             // Stop sync !!
             this.stop().catch(stopError => {
                 this.throwSyncError(stopError); // Should be caught by Error Handler
             });
-
-        } else if (errorSyncEvent.code === ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.code
-            || errorSyncEvent.code === ErrorSyncEvent.SYNC_ALREADY_STARTED.code
-            || errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.code
-            || errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_TIMEOUT.code
+        } else if (
+            errorSyncEvent.code === ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.code ||
+            errorSyncEvent.code === ErrorSyncEvent.SYNC_ALREADY_STARTED.code ||
+            errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.code ||
+            errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_TIMEOUT.code
         ) {
             syncEvents$.next(errorSyncEvent); // Forward for upward UI use.
         } else {
             const syncException = new SyncException("Unknown ErrorSyncEvent", errorSyncEvent);
             this.throwSyncError(syncException);
         }
-
     }
 
     public handleSyncCompleteEvents(syncEvents$: Subject<SyncEvent>, completeSyncEvent: CompleteSyncEvent): void {
-
         let syncState = null;
-        this.getSyncState().then(userSyncState => {
-            syncState = userSyncState;
-            return this.connectorSyncDateTimeDao.getById(this.currentConnectorType);
-        }).then((currentConnectorSyncDateTime: ConnectorSyncDateTime) => {
-
-            if (currentConnectorSyncDateTime) {
-                currentConnectorSyncDateTime.syncDateTime = Date.now();
-            } else {
-                currentConnectorSyncDateTime = new ConnectorSyncDateTime(this.currentConnectorType, Date.now());
-            }
-            return this.upsertConnectorsSyncDateTimes([currentConnectorSyncDateTime]);
-        }).then(() => {
-
-            // Ensure all activities are well persisted before any reload
-            return this.desktopDataStore.saveDataStore();
-
-        }).then(() => {
-            this.logger.info(completeSyncEvent);
-            (syncState && syncState === SyncState.SYNCED) ? this.appEventsService.syncDone$.next(this.activityUpsertDetected) : this.restartApp();
-            this.resetActivityTrackingUpsert();
-            syncEvents$.next(completeSyncEvent); // Forward for upward UI use.
-        });
+        this.getSyncState()
+            .then(userSyncState => {
+                syncState = userSyncState;
+                return this.connectorSyncDateTimeDao.getById(this.currentConnectorType);
+            })
+            .then((currentConnectorSyncDateTime: ConnectorSyncDateTime) => {
+                if (currentConnectorSyncDateTime) {
+                    currentConnectorSyncDateTime.syncDateTime = Date.now();
+                } else {
+                    currentConnectorSyncDateTime = new ConnectorSyncDateTime(this.currentConnectorType, Date.now());
+                }
+                return this.upsertConnectorsSyncDateTimes([currentConnectorSyncDateTime]);
+            })
+            .then(() => {
+                // Ensure all activities are well persisted before any reload
+                return this.desktopDataStore.saveDataStore();
+            })
+            .then(() => {
+                this.logger.info(completeSyncEvent);
+                syncState && syncState === SyncState.SYNCED
+                    ? this.appEventsService.syncDone$.next(this.activityUpsertDetected)
+                    : this.restartApp();
+                this.resetActivityTrackingUpsert();
+                syncEvents$.next(completeSyncEvent); // Forward for upward UI use.
+            });
     }
 
     public stop(): Promise<void> {
-
         this.logger.info(`Stop sync requested on connector ${this.currentConnectorType}`);
 
         return new Promise((resolve, reject) => {
-
             if (this.currentConnectorType === null) {
                 reject();
                 return;
@@ -287,83 +315,96 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
             const stopSyncMessage = new FlaggedIpcMessage(MessageFlag.STOP_SYNC, this.currentConnectorType);
 
-            this.ipcMessagesSender.send<string>(stopSyncMessage).then((response: string) => {
-                this.logger.info("Sync stopped. Response from main:", response);
-                resolve();
-            }, error => {
-                const errorMessage =
-                    `Unable to stop sync on connector: ${this.currentConnectorType}. Connector replied with ${JSON.stringify(error)}`;
-                this.logger.error(errorMessage);
-                reject(errorMessage);
-            });
+            this.ipcMessagesSender.send<string>(stopSyncMessage).then(
+                (response: string) => {
+                    this.logger.info("Sync stopped. Response from main:", response);
+                    resolve();
+                },
+                error => {
+                    const errorMessage = `Unable to stop sync on connector: ${
+                        this.currentConnectorType
+                    }. Connector replied with ${JSON.stringify(error)}`;
+                    this.logger.error(errorMessage);
+                    reject(errorMessage);
+                }
+            );
         });
     }
 
     public handleActivityUpsert(syncEvents$: Subject<SyncEvent>, activitySyncEvent: ActivitySyncEvent): void {
-
         const errors = [];
 
         // Insert new activity or update an existing one to database
-        this.logger.info(`Trying to upsert activity ${activitySyncEvent.isNew ? "new" : "existing"} "${activitySyncEvent.activity.name}" started on "${activitySyncEvent.activity.start_time}".`);
+        this.logger.info(
+            `Trying to upsert activity ${activitySyncEvent.isNew ? "new" : "existing"} "${
+                activitySyncEvent.activity.name
+            }" started on "${activitySyncEvent.activity.start_time}".`
+        );
 
-        this.activityService.put(activitySyncEvent.activity).then((syncedActivityModel: SyncedActivityModel) => {
+        this.activityService
+            .put(activitySyncEvent.activity)
+            .then((syncedActivityModel: SyncedActivityModel) => {
+                this.logger.info(`Activity "${syncedActivityModel.name}" saved`);
+                this.trackActivityUpsert();
 
-            this.logger.info(`Activity "${syncedActivityModel.name}" saved`);
-            this.trackActivityUpsert();
+                const promiseHandlePutStreams: Promise<void | CompressedStreamModel> = activitySyncEvent.compressedStream
+                    ? this.streamsService.put(
+                          new CompressedStreamModel(
+                              `${activitySyncEvent.activity.id}`,
+                              activitySyncEvent.compressedStream
+                          )
+                      )
+                    : Promise.resolve();
 
-            const promiseHandlePutStreams: Promise<void | CompressedStreamModel> = (activitySyncEvent.compressedStream) ?
-                this.streamsService.put(new CompressedStreamModel(`${activitySyncEvent.activity.id}`, activitySyncEvent.compressedStream))
-                : Promise.resolve();
+                promiseHandlePutStreams.then(() => {
+                    syncEvents$.next(activitySyncEvent); // Forward for upward UI use
+                });
+            })
+            .catch((upsertError: Error) => {
+                this.logger.error(upsertError);
 
-            promiseHandlePutStreams.then(() => {
-                syncEvents$.next(activitySyncEvent); // Forward for upward UI use
-            });
+                const stopSyncPromise = this.stop();
 
-        }).catch((upsertError: Error) => {
+                syncEvents$.next(
+                    ErrorSyncEvent.SYNC_ERROR_UPSERT_ACTIVITY_DATABASE.create(
+                        ConnectorType.STRAVA,
+                        activitySyncEvent.activity,
+                        upsertError.stack
+                    )
+                );
 
-            this.logger.error(upsertError);
+                errors.push(upsertError);
 
-            const stopSyncPromise = this.stop();
-
-            syncEvents$.next(ErrorSyncEvent.SYNC_ERROR_UPSERT_ACTIVITY_DATABASE.create(ConnectorType.STRAVA,
-                activitySyncEvent.activity, upsertError.stack));
-
-            errors.push(upsertError);
-
-            // Trigger sync stop
-            return stopSyncPromise;
-
-        }).then(() => {
-
-            // Stopped properly, throw the upsert error
-            if (errors.length > 0) {
-                this.throwSyncError(errors); // Should be caught by Error Handler
-            }
-
-        }, stopError => {
-            this.logger.error(stopError);
-            errors.push(stopError);
-            this.throwSyncError(errors); // Should be caught by Error Handler
-        });
-
+                // Trigger sync stop
+                return stopSyncPromise;
+            })
+            .then(
+                () => {
+                    // Stopped properly, throw the upsert error
+                    if (errors.length > 0) {
+                        this.throwSyncError(errors); // Should be caught by Error Handler
+                    }
+                },
+                stopError => {
+                    this.logger.error(stopError);
+                    errors.push(stopError);
+                    this.throwSyncError(errors); // Should be caught by Error Handler
+                }
+            );
     }
 
     public throwSyncError(error: Error | Error[] | string | string[]): void {
-
         if (_.isArray(error)) {
-
             const syncExceptions = [];
             _.forEach(error, err => {
-                const syncException = DesktopSyncService.transformErrorToSyncException(<any> err);
+                const syncException = DesktopSyncService.transformErrorToSyncException(<any>err);
                 syncExceptions.push(syncException);
             });
 
             throw syncExceptions;
-
         } else {
-            throw DesktopSyncService.transformErrorToSyncException(<Error | Error[] | string | string[]> error);
+            throw DesktopSyncService.transformErrorToSyncException(<Error | Error[] | string | string[]>error);
         }
-
     }
 
     public export(): Promise<{ filename: string; size: number }> {
@@ -371,7 +412,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
             return this.desktopDataStore.createDump(appVersion).then(blob => {
                 const gzippedFilename = moment().format("Y.MM.DD-H.mm") + "_v" + appVersion + ".elv";
                 this.saveAs(blob, gzippedFilename);
-                return Promise.resolve({filename: gzippedFilename, size: blob.size});
+                return Promise.resolve({ filename: gzippedFilename, size: blob.size });
             });
         });
     }
@@ -387,18 +428,11 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     }
 
     public getSyncState(): Promise<SyncState> {
-
-        return Promise.all([
-
-            this.getSyncDateTime(),
-            this.activityService.count()
-
-        ]).then((result: any[]) => {
-
+        return Promise.all([this.getSyncDateTime(), this.activityService.count()]).then((result: any[]) => {
             const connectorSyncDateTimes: ConnectorSyncDateTime[] = result[0] as ConnectorSyncDateTime[];
             const syncedActivitiesCount: number = result[1] as number;
 
-            const hasASyncDateTime: boolean = (connectorSyncDateTimes.length > 0);
+            const hasASyncDateTime: boolean = connectorSyncDateTimes.length > 0;
             const hasSyncedActivityModels: boolean = syncedActivitiesCount > 0;
 
             let syncState: SyncState;
@@ -412,7 +446,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
             return Promise.resolve(syncState);
         });
-
     }
 
     public getMostRecentSyncedConnector(): Promise<ConnectorSyncDateTime> {
@@ -434,8 +467,9 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         return this.connectorSyncDateTimeDao.find();
     }
 
-    public upsertConnectorsSyncDateTimes(connectorSyncDateTimes: ConnectorSyncDateTime[]): Promise<ConnectorSyncDateTime[]> {
-
+    public upsertConnectorsSyncDateTimes(
+        connectorSyncDateTimes: ConnectorSyncDateTime[]
+    ): Promise<ConnectorSyncDateTime[]> {
         if (!_.isArray(connectorSyncDateTimes)) {
             throw new Error("connectorSyncDateTimes param must be an array");
         }

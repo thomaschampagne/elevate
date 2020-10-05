@@ -6,7 +6,7 @@ import { ExtensionVersionsProvider } from "../../services/versions/impl/extensio
 import { SyncService } from "../../services/sync/sync.service";
 import { ExtensionSyncService } from "../../services/sync/impl/extension-sync.service";
 import { CoreModule } from "../../../core/core.module";
-import { ExtensionImportBackupDialogComponent, } from "../../dialogs/import-backup-dialog/import-backup-dialog.component";
+import { ExtensionImportBackupDialogComponent } from "../../dialogs/import-backup-dialog/import-backup-dialog.component";
 import { SyncDateTimeDao } from "../../dao/sync/sync-date-time.dao";
 import { ExtensionRoutingModule } from "./extension-routing.module";
 import { ExtensionAdvancedMenuComponent } from "../../../advanced-menu/extension/extension-advanced-menu.component";
@@ -18,27 +18,18 @@ import { DataStore } from "../../data-store/data-store";
 import { ExtensionDataStore } from "../../data-store/impl/extension-data-store.service";
 
 @NgModule({
-    imports: [
-        CoreModule,
-        ExtensionRoutingModule
-    ],
-    exports: [
-        ExtensionRoutingModule
-    ],
-    declarations: [
-        ExtensionAdvancedMenuComponent,
-        ExtensionImportBackupDialogComponent,
-    ],
+    imports: [CoreModule, ExtensionRoutingModule],
+    exports: [ExtensionRoutingModule],
+    declarations: [ExtensionAdvancedMenuComponent, ExtensionImportBackupDialogComponent],
     providers: [
-        {provide: DataStore, useClass: ExtensionDataStore},
-        {provide: ActivityService, useClass: ExtensionActivityService},
-        {provide: AppEventsService, useClass: ExtensionEventsService},
-        {provide: VERSIONS_PROVIDER, useClass: ExtensionVersionsProvider},
-        {provide: OPEN_RESOURCE_RESOLVER, useClass: ExtensionOpenResourceResolver},
-        {provide: SyncService, useClass: ExtensionSyncService},
+        { provide: DataStore, useClass: ExtensionDataStore },
+        { provide: ActivityService, useClass: ExtensionActivityService },
+        { provide: AppEventsService, useClass: ExtensionEventsService },
+        { provide: VERSIONS_PROVIDER, useClass: ExtensionVersionsProvider },
+        { provide: OPEN_RESOURCE_RESOLVER, useClass: ExtensionOpenResourceResolver },
+        { provide: SyncService, useClass: ExtensionSyncService },
         SyncDateTimeDao,
         ExtensionSyncService,
-    ]
+    ],
 })
-export class ExtensionModule {
-}
+export class ExtensionModule {}

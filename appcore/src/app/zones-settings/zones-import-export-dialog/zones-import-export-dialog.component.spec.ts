@@ -13,7 +13,6 @@ import { TestingDataStore } from "../../shared/data-store/testing-datastore.serv
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZonesImportExportDialogComponent", () => {
-
     const zoneSpeedDefinition: ZoneDefinitionModel = {
         name: "Cycling Speed",
         value: "speed",
@@ -21,7 +20,7 @@ describe("ZonesImportExportDialogComponent", () => {
         step: 0.1,
         min: 0,
         max: 9999,
-        customDisplay: null
+        customDisplay: null,
     };
 
     let component: ZonesImportExportDialogComponent;
@@ -29,27 +28,29 @@ describe("ZonesImportExportDialogComponent", () => {
     let zoneImportExportDataModel_As_Export: ZoneImportExportDataModel;
 
     beforeEach(done => {
-
-        zoneImportExportDataModel_As_Export = new ZoneImportExportDataModel(zoneSpeedDefinition,
-            UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed), Mode.EXPORT);
+        zoneImportExportDataModel_As_Export = new ZoneImportExportDataModel(
+            zoneSpeedDefinition,
+            UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed),
+            Mode.EXPORT
+        );
 
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-            ],
+            imports: [CoreModule, SharedModule],
             declarations: [],
             providers: [
                 {
-                    provide: MAT_DIALOG_DATA, useValue: zoneImportExportDataModel_As_Export,
+                    provide: MAT_DIALOG_DATA,
+                    useValue: zoneImportExportDataModel_As_Export,
                 },
                 {
-                    provide: MatDialogRef, useValue: {},
+                    provide: MatDialogRef,
+                    useValue: {},
                 },
                 {
-                    provide: DataStore, useClass: TestingDataStore
-                }
-            ]
+                    provide: DataStore,
+                    useClass: TestingDataStore,
+                },
+            ],
         }).compileComponents();
 
         done();
@@ -68,7 +69,6 @@ describe("ZonesImportExportDialogComponent", () => {
     });
 
     it("should render the 'Export' zones dialog", done => {
-
         // Given
         const fixture = TestBed.createComponent(ZonesImportExportDialogComponent);
         const compiled = fixture.debugElement.nativeElement;

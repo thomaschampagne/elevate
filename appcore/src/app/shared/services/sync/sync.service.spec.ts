@@ -12,25 +12,20 @@ import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
 
 describe("SyncService", () => {
-
     let athleteModel: AthleteModel;
     let syncService: SyncService<any>;
     let syncDateTimeDao: SyncDateTimeDao;
 
     beforeEach(done => {
-
         const mockedVersionsProvider: MockedVersionsProvider = new MockedVersionsProvider();
 
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-            ],
+            imports: [CoreModule, SharedModule],
             providers: [
-                {provide: SyncService, useClass: MockSyncService},
-                {provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider},
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+                { provide: SyncService, useClass: MockSyncService },
+                { provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider },
+                { provide: DataStore, useClass: TestingDataStore },
+            ],
         });
 
         athleteModel = _.cloneDeep(AthleteModel.DEFAULT_MODEL);
@@ -41,12 +36,10 @@ describe("SyncService", () => {
         spyOn(window, "open").and.stub(); // Avoid opening window in tests
 
         done();
-
     });
 
     it("should be created", done => {
         expect(syncService).toBeTruthy();
         done();
     });
-
 });

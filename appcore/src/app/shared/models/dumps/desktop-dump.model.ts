@@ -1,7 +1,6 @@
 import { DumpModel } from "./dump.model";
 
 export class DesktopDumpModel extends DumpModel {
-
     private static readonly SERIALIZE_SEPARATOR: string = ";";
     public version: string;
     public gzipData: string;

@@ -14,9 +14,9 @@ describe("PropertiesDao", () => {
         TestBed.configureTestingModule({
             providers: [
                 PropertiesDao,
-                {provide: DataStore, useClass: TestingDataStore},
-                {provide: LoggerService, useClass: ConsoleLoggerService}
-            ]
+                { provide: DataStore, useClass: TestingDataStore },
+                { provide: LoggerService, useClass: ConsoleLoggerService },
+            ],
         });
         service = TestBed.inject(PropertiesDao);
     });

@@ -12,19 +12,12 @@ import { PROMISE_TRON } from "./promise-tron.interface";
 import { PromiseTronServiceMock } from "./promise-tron.service.mock";
 
 describe("IpcMessagesReceiver", () => {
-
     let ipcMessagesReceiver: IpcMessagesReceiver;
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                DesktopModule
-            ],
-            providers: [
-                {provide: PROMISE_TRON, useClass: PromiseTronServiceMock}
-            ]
+            imports: [CoreModule, SharedModule, DesktopModule],
+            providers: [{ provide: PROMISE_TRON, useClass: PromiseTronServiceMock }],
         });
 
         ipcMessagesReceiver = TestBed.inject(IpcMessagesReceiver);
@@ -34,12 +27,10 @@ describe("IpcMessagesReceiver", () => {
     });
 
     it("should handle incoming ipcRequests", done => {
-
         // Given
-        const data = {hello: "world"};
+        const data = { hello: "world" };
         const ipcRequest = new IpcRequest(data);
-        const replyWith = () => {
-        };
+        const replyWith = () => {};
         const expectedFlaggedIpcMessage = IpcRequest.extractData<FlaggedIpcMessage>(ipcRequest);
         const forwardMessagesFromIpcMainSpy = spyOn(ipcMessagesReceiver, "forwardMessagesFromIpcMain");
 
@@ -54,12 +45,10 @@ describe("IpcMessagesReceiver", () => {
     });
 
     it("should handle incoming ipcRequests with no IpcRequest extracted data", done => {
-
         // Given
-        const data = {hello: "world"};
+        const data = { hello: "world" };
         const ipcRequest = new IpcRequest(data);
-        const replyWith = () => {
-        };
+        const replyWith = () => {};
         const expectedError = new Error("Unknown IpcRequest received from IpcMain: " + JSON.stringify(ipcRequest));
 
         spyOn(IpcRequest, "extractData").and.returnValue(null);
@@ -79,12 +68,10 @@ describe("IpcMessagesReceiver", () => {
     });
 
     describe("Forward received messages from IpcMain", () => {
-
         it("should forward 'sync event' messages", done => {
             // Given
             const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT);
-            const replyWith = () => {
-            };
+            const replyWith = () => {};
             const handleSyncEventsMessagesSpy = spyOn(ipcMessagesReceiver, "handleSyncEventsMessages").and.stub();
 
             // When
@@ -99,8 +86,7 @@ describe("IpcMessagesReceiver", () => {
         it("should forward 'find activity' messages", done => {
             // Given
             const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.FIND_ACTIVITY);
-            const replyWith = () => {
-            };
+            const replyWith = () => {};
             const handleFindActivityMessagesSpy = spyOn(ipcMessagesReceiver, "handleFindActivityMessages").and.stub();
 
             // When
@@ -113,17 +99,17 @@ describe("IpcMessagesReceiver", () => {
         });
 
         it("should handle unknown Messages received", done => {
-
             // Given
             const fakeFlag = -1;
             const flaggedIpcMessage = new FlaggedIpcMessage(fakeFlag);
             const replyWith = {
-                callback: () => {
-                },
+                callback: () => {},
                 args: {
                     success: null,
-                    error: "Unknown message received by IpcRenderer. FlaggedIpcMessage: " + JSON.stringify(flaggedIpcMessage)
-                }
+                    error:
+                        "Unknown message received by IpcRenderer. FlaggedIpcMessage: " +
+                        JSON.stringify(flaggedIpcMessage),
+                },
             };
             const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 
@@ -134,15 +120,12 @@ describe("IpcMessagesReceiver", () => {
             expect(replyWithCallbackSpy).toHaveBeenCalledWith(replyWith.args);
             done();
         });
-
     });
 
     it("should handle 'sync event' messages received", done => {
-
         // Given
-        const syncedActivity = <SyncedActivityModel> {}; // Fake SyncedActivityModel
-        const activitySyncEvent = new ActivitySyncEvent(ConnectorType.STRAVA, null,
-            syncedActivity, true);
+        const syncedActivity = <SyncedActivityModel>{}; // Fake SyncedActivityModel
+        const activitySyncEvent = new ActivitySyncEvent(ConnectorType.STRAVA, null, syncedActivity, true);
         const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, activitySyncEvent);
         const syncEventsNextSpy = spyOn(ipcMessagesReceiver.syncEvents$, "next").and.stub();
 

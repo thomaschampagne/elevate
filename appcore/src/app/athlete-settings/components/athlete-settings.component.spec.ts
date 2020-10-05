@@ -13,7 +13,6 @@ import { TestingDataStore } from "../../shared/data-store/testing-datastore.serv
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("AthleteSettingsComponent", () => {
-
     let component: AthleteSettingsComponent;
     let fixture: ComponentFixture<AthleteSettingsComponent>;
     let userSettingsService: UserSettingsService;
@@ -21,20 +20,16 @@ describe("AthleteSettingsComponent", () => {
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                AthleteSettingsModule
-            ],
-            providers: [
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+            imports: [CoreModule, SharedModule, AthleteSettingsModule],
+            providers: [{ provide: DataStore, useClass: TestingDataStore }],
         }).compileComponents();
 
         userSettingsService = TestBed.inject(UserSettingsService);
         athleteService = TestBed.inject(AthleteService);
 
-        spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
+        spyOn(userSettingsService, "fetch").and.returnValue(
+            Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
+        );
         spyOn(athleteService, "fetch").and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
         done();
     });
@@ -50,5 +45,4 @@ describe("AthleteSettingsComponent", () => {
         expect(component).toBeTruthy();
         done();
     });
-
 });

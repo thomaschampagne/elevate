@@ -1,5 +1,4 @@
 export class YearProgressStyleModel {
-
     public yearsColorsMap: Map<number, string>;
     public colors: string[] = [];
 

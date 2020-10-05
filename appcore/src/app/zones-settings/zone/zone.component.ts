@@ -13,10 +13,9 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 @Component({
     selector: "app-zone",
     templateUrl: "./zone.component.html",
-    styleUrls: ["./zone.component.scss"]
+    styleUrls: ["./zone.component.scss"],
 })
 export class ZoneComponent implements OnInit, OnDestroy {
-
     @Input("zone")
     public zone: ZoneModel;
 
@@ -51,30 +50,24 @@ export class ZoneComponent implements OnInit, OnDestroy {
 
     public stepUpdatesSubscription: Subscription;
 
-    constructor(public zonesService: ZonesService,
-                public snackBar: MatSnackBar,
-                public logger: LoggerService) {
-    }
+    constructor(public zonesService: ZonesService, public snackBar: MatSnackBar, public logger: LoggerService) {}
 
     public ngOnInit(): void {
+        this.zoneChangeOrderSubscription = this.zonesService.zoneChangeOrderUpdates.subscribe(
+            (change: ZoneChangeOrderModel) => {
+                const isChangeOrderForMe = !_.isNull(change) && this.zoneId === change.destinationId;
 
-        this.zoneChangeOrderSubscription = this.zonesService.zoneChangeOrderUpdates.subscribe((change: ZoneChangeOrderModel) => {
-
-            const isChangeOrderForMe = (!_.isNull(change) && (this.zoneId === change.destinationId));
-
-            if (isChangeOrderForMe) {
-                this.applyChangeOrder(change);
+                if (isChangeOrderForMe) {
+                    this.applyChangeOrder(change);
+                }
+            },
+            error => {
+                this.logger.error(error);
+            },
+            () => {
+                this.logger.info("InstructionListener complete");
             }
-
-        }, error => {
-
-            this.logger.error(error);
-
-        }, () => {
-
-            this.logger.info("InstructionListener complete");
-
-        });
+        );
 
         this.stepUpdatesSubscription = this.zonesService.stepUpdates.subscribe((step: number) => {
             this.zoneDefinition.step = step;
@@ -89,18 +82,17 @@ export class ZoneComponent implements OnInit, OnDestroy {
      * Whisper a ZoneChangeWhisperModel to <ZoneService>
      */
     public whisperZoneChange(changeType: ZoneChangeTypeModel): void {
-
-        if (changeType.from && changeType.to) { // Skip notify zone service on first component display
+        if (changeType.from && changeType.to) {
+            // Skip notify zone service on first component display
             return;
         }
 
         if (changeType.from || changeType.to) {
-
             const zoneChangeWhisper: ZoneChangeWhisperModel = {
                 sourceId: this.zoneId,
                 from: false,
                 to: false,
-                value: null
+                value: null,
             };
 
             if (changeType.from) {
@@ -116,24 +108,21 @@ export class ZoneComponent implements OnInit, OnDestroy {
     }
 
     public onRemoveZoneAtIndex(zoneId: number): void {
-
-        this.zonesService.removeZoneAtIndex(zoneId)
-            .then(
-                message => this.popSnack(message),
-                error => this.popSnack(error)
-            );
+        this.zonesService.removeZoneAtIndex(zoneId).then(
+            message => this.popSnack(message),
+            error => this.popSnack(error)
+        );
     }
 
     /**
      * Avoid
      */
     public onKeyDown(event: KeyboardEvent): void {
-
         const whiteListCode = [
             38, // Up arrow
             40, // Down arrow
             9, // Tab
-            16 // Shift
+            16, // Shift
         ];
 
         const isKeyWhiteListed = _.indexOf(whiteListCode, event.keyCode) === -1;
@@ -149,7 +138,6 @@ export class ZoneComponent implements OnInit, OnDestroy {
     }
 
     private applyChangeOrder(instruction: ZoneChangeOrderModel): void {
-
         if (instruction.from) {
             this.zone.from = instruction.value;
         }
@@ -159,6 +147,6 @@ export class ZoneComponent implements OnInit, OnDestroy {
     }
 
     private popSnack(message: string): void {
-        this.snackBar.open(message, "Close", {duration: 2500});
+        this.snackBar.open(message, "Close", { duration: 2500 });
     }
 }

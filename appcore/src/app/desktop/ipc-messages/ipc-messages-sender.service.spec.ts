@@ -10,12 +10,8 @@ describe("IpcMessagesSender", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                DesktopModule
-            ],
-            providers: [
-                {provide: PROMISE_TRON, useClass: PromiseTronServiceMock}
-            ]
+            imports: [DesktopModule],
+            providers: [{ provide: PROMISE_TRON, useClass: PromiseTronServiceMock }],
         });
         service = TestBed.inject(IpcMessagesSender);
     });

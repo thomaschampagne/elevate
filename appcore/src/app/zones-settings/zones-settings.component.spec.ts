@@ -10,19 +10,13 @@ import { TestingDataStore } from "../shared/data-store/testing-datastore.service
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZonesSettingsComponent", () => {
-
     let component: ZonesSettingsComponent;
     let fixture: ComponentFixture<ZonesSettingsComponent>;
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-            ],
-            providers: [
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+            imports: [CoreModule, SharedModule],
+            providers: [{ provide: DataStore, useClass: TestingDataStore }],
         }).compileComponents();
 
         done();
@@ -32,7 +26,9 @@ describe("ZonesSettingsComponent", () => {
         fixture = TestBed.createComponent(ZonesSettingsComponent);
         component = fixture.componentInstance;
 
-        spyOn(component.userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
+        spyOn(component.userSettingsService, "fetch").and.returnValue(
+            Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
+        );
 
         fixture.detectChanges();
         done();
@@ -42,5 +38,4 @@ describe("ZonesSettingsComponent", () => {
         expect(component).toBeTruthy();
         done();
     });
-
 });

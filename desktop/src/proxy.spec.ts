@@ -1,10 +1,10 @@
 import { Proxy } from "./proxy";
 import { NotImplementedException } from "@elevate/shared/exceptions";
 
-describe("Proxy", () => { // TODO Proxy test
+describe("Proxy", () => {
+    // TODO Proxy test
 
     xit("should perform a test", done => {
-
         // Given
 
         // When

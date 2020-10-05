@@ -1,4 +1,12 @@
-import { ActivitySourceDataModel, ActivityStreamsModel, AnalysisDataModel, AthleteSettingsModel, AthleteSnapshotModel, Gender, UserSettings, } from "@elevate/shared/models";
+import {
+    ActivitySourceDataModel,
+    ActivityStreamsModel,
+    AnalysisDataModel,
+    AthleteSettingsModel,
+    AthleteSnapshotModel,
+    Gender,
+    UserSettings,
+} from "@elevate/shared/models";
 import * as _ from "lodash";
 import { ElevateSport } from "@elevate/shared/enums";
 import { ActivityComputer } from "@elevate/shared/sync";
@@ -18,7 +26,6 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 function HHMMSStoSeconds(str: string): number {
-
     let p: string[] = str.split(":"),
         s: any = 0,
         m = 1;
@@ -31,17 +38,16 @@ function HHMMSStoSeconds(str: string): number {
 }
 
 function secondsToHHMMSS(secondsParam: number, trimLeadingZeros?: boolean): string {
-
     const secNum: number = Math.round(secondsParam); // don't forget the second param
     const hours: number = Math.floor(secNum / 3600);
-    const minutes: number = Math.floor((secNum - (hours * 3600)) / 60);
-    const seconds: number = secNum - (hours * 3600) - (minutes * 60);
+    const minutes: number = Math.floor((secNum - hours * 3600) / 60);
+    const seconds: number = secNum - hours * 3600 - minutes * 60;
 
-    let time: string = ((hours < 10) ? "0" + hours.toFixed(0) : hours.toFixed(0));
-    time += ":" + ((minutes < 10) ? "0" + minutes.toFixed(0) : minutes.toFixed(0));
-    time += ":" + ((seconds < 10) ? "0" + seconds.toFixed(0) : seconds.toFixed(0));
+    let time: string = hours < 10 ? "0" + hours.toFixed(0) : hours.toFixed(0);
+    time += ":" + (minutes < 10 ? "0" + minutes.toFixed(0) : minutes.toFixed(0));
+    time += ":" + (seconds < 10 ? "0" + seconds.toFixed(0) : seconds.toFixed(0));
 
-    return (trimLeadingZeros ? trimLeadingZerosHHMMSS(time) : time);
+    return trimLeadingZeros ? trimLeadingZerosHHMMSS(time) : time;
 }
 
 function trimLeadingZerosHHMMSS(time: string): string {
@@ -57,19 +63,29 @@ const expectPace = (expectPaceString: string, toEqualPaceString: string, seconds
     const toEqualPace: number = HHMMSStoSeconds(toEqualPaceString);
     const lowerOkPace: number = toEqualPace - secondsTolerance;
     const higherOkPace: number = toEqualPace + secondsTolerance;
-    const isBetween = (lowerOkPace <= expectedPace && expectedPace <= higherOkPace);
+    const isBetween = lowerOkPace <= expectedPace && expectedPace <= higherOkPace;
 
     if (!isBetween) {
-        console.error("Expected pace '" + expectPaceString + "' not between min pace: '" + secondsToHHMMSS(lowerOkPace) + "' and max pace: '"
-            + secondsToHHMMSS(higherOkPace) + "'.\r\n=> Lower: " + lowerOkPace + " <= expected: " + expectedPace + " <= higher: " + higherOkPace);
+        console.error(
+            "Expected pace '" +
+                expectPaceString +
+                "' not between min pace: '" +
+                secondsToHHMMSS(lowerOkPace) +
+                "' and max pace: '" +
+                secondsToHHMMSS(higherOkPace) +
+                "'.\r\n=> Lower: " +
+                lowerOkPace +
+                " <= expected: " +
+                expectedPace +
+                " <= higher: " +
+                higherOkPace
+        );
     }
 
     expect(isBetween).toBeTruthy();
-
 };
 
 describe("ActivityComputer Paces", () => {
-
     const activityType = ElevateSport.Run;
     const isTrainer = false;
     const isOwner = true;
@@ -78,23 +94,36 @@ describe("ActivityComputer Paces", () => {
     const returnZones = false;
     const returnPowerCurve = true;
     const userSettingsMock: UserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
-    const athleteSnapshot = new AthleteSnapshotModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
+    const athleteSnapshot = new AthleteSnapshotModel(
+        Gender.MEN,
+        new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9)
+    );
     const activitySourceData: ActivitySourceDataModel = {
         movingTime: -1,
         elevation: -1,
-        distance: -1
+        distance: -1,
     };
 
     const PACE_SECONDS_TOLERANCE = 10;
 
     it("should compute grade adjusted pace of activity 887284960", done => {
-
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_887284960);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_887284960);
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -102,17 +131,26 @@ describe("ActivityComputer Paces", () => {
         expectPace(secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:06:11", PACE_SECONDS_TOLERANCE);
 
         done();
-
     });
 
     it("should compute grade adjusted pace of activity 878683797", done => {
-
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_878683797);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_878683797);
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -120,17 +158,26 @@ describe("ActivityComputer Paces", () => {
         expectPace(secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:04:43", PACE_SECONDS_TOLERANCE);
 
         done();
-
     });
 
     it("should compute grade adjusted pace of activity 849522984", done => {
-
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_849522984);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_849522984);
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -138,17 +185,26 @@ describe("ActivityComputer Paces", () => {
         expectPace(secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:05:36", PACE_SECONDS_TOLERANCE);
 
         done();
-
     });
 
     it("should compute grade adjusted pace of activity 708752345", done => {
-
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_708752345);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_708752345);
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -156,17 +212,26 @@ describe("ActivityComputer Paces", () => {
         expectPace(secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:06:54", PACE_SECONDS_TOLERANCE);
 
         done();
-
     });
 
     it("should compute grade adjusted pace of activity 1550722452", done => {
-
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1550722452);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1550722452);
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -174,17 +239,26 @@ describe("ActivityComputer Paces", () => {
         expectPace(secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:04:29", PACE_SECONDS_TOLERANCE);
 
         done();
-
     });
 
     it("should compute grade adjusted pace of activity 350379527", done => {
-
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_350379527);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_350379527);
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -192,17 +266,26 @@ describe("ActivityComputer Paces", () => {
         expectPace(secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:06:57", PACE_SECONDS_TOLERANCE);
 
         done();
-
     });
 
     it("should compute grade adjusted pace of activity 1551720271", done => {
-
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1551720271);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1551720271);
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -210,17 +293,26 @@ describe("ActivityComputer Paces", () => {
         expectPace(secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:04:59", PACE_SECONDS_TOLERANCE);
 
         done();
-
     });
 
     it("should compute grade adjusted pace of activity 1553538436", done => {
-
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1553538436);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1553538436);
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -228,17 +320,26 @@ describe("ActivityComputer Paces", () => {
         expectPace(secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:04:02", PACE_SECONDS_TOLERANCE);
 
         done();
-
     });
 
     it("should compute grade adjusted pace of activity 1553976435", done => {
-
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1553976435);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1553976435);
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -246,17 +347,26 @@ describe("ActivityComputer Paces", () => {
         expectPace(secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:06:05", PACE_SECONDS_TOLERANCE);
 
         done();
-
     });
 
     it("should compute grade adjusted pace of activity 1553069082", done => {
-
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1553069082);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1553069082);
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -264,17 +374,26 @@ describe("ActivityComputer Paces", () => {
         expectPace(secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:05:12", PACE_SECONDS_TOLERANCE);
 
         done();
-
     });
 
     it("should compute grade adjusted pace of activity 1654295114", done => {
-
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1654295114);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1654295114);
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -282,8 +401,5 @@ describe("ActivityComputer Paces", () => {
         expectPace(secondsToHHMMSS(result.paceData.genuineGradeAdjustedAvgPace), "00:05:32", PACE_SECONDS_TOLERANCE);
 
         done();
-
     });
-
 });
-

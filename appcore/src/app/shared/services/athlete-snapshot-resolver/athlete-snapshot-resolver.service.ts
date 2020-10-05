@@ -6,19 +6,15 @@ import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 
 @Injectable()
 export class AthleteSnapshotResolverService {
-
     public athleteSnapshotResolver: AthleteSnapshotResolver;
 
-    constructor(public athleteService: AthleteService) {
-    }
+    constructor(public athleteService: AthleteService) {}
 
     /**
      * Update or create AthleteSnapshotResolver
      */
     public update(): Promise<void> {
-
         return this.athleteService.fetch().then((athleteModel: AthleteModel) => {
-
             this.athleteSnapshotResolver = new AthleteSnapshotResolver(athleteModel);
 
             return Promise.resolve();
@@ -30,9 +26,10 @@ export class AthleteSnapshotResolverService {
      * @param onDate Date format YYYY-MM-DD or Date object
      */
     public resolve(onDate: string | Date): AthleteSnapshotModel {
-
         if (_.isEmpty(this.athleteSnapshotResolver)) {
-            throw new Error("AthleteSnapshotResolver do not exists. Please update service at first with AthleteSnapshotResolverService#update()");
+            throw new Error(
+                "AthleteSnapshotResolver do not exists. Please update service at first with AthleteSnapshotResolverService#update()"
+            );
         }
 
         return this.athleteSnapshotResolver.resolve(onDate);

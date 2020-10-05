@@ -1,9 +1,7 @@
 import { AppError } from "./app-error.model";
 
 describe("AppError", () => {
-
     it("should have been registered to be used", done => {
-
         // Given
         const genuineErrorCode = AppError.FT_NO_ACTIVITIES;
         const genuineErrorMessage = "No minimum required activities!";
@@ -20,7 +18,6 @@ describe("AppError", () => {
     });
 
     it("should not be used if not registered", done => {
-
         // Given
         const myErrorCode = "MY_ERR_01";
         const myErrorMessage = "This is error message";
@@ -36,18 +33,13 @@ describe("AppError", () => {
     });
 
     it("should not be used if duplicate", done => {
-
         // Given a fakeAppError with duplicate codes
         const genuineErrorCode = AppError.FT_NO_ACTIVITIES;
         const genuineErrorMessage = "No minimum required activities!";
         const fakeAppError = new AppError(genuineErrorCode, genuineErrorMessage);
 
         const duplicateErrorCode = "FAKE_DUPLICATE";
-        fakeAppError._codes = [
-            AppError.FT_NO_ACTIVITIES,
-            duplicateErrorCode,
-            duplicateErrorCode,
-        ];
+        fakeAppError._codes = [AppError.FT_NO_ACTIVITIES, duplicateErrorCode, duplicateErrorCode];
 
         // When
         const call = () => {
@@ -57,7 +49,5 @@ describe("AppError", () => {
         // Then
         expect(call).toThrow(new Error(duplicateErrorCode + " error codes are duplicated"));
         done();
-
     });
-
 });

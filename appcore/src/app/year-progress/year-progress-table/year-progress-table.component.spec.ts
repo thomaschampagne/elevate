@@ -20,7 +20,6 @@ import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 
 describe("YearProgressTableComponent", () => {
-
     const isMetric = true;
     let component: YearProgressTableComponent;
     let fixture: ComponentFixture<YearProgressTableComponent>;
@@ -29,15 +28,8 @@ describe("YearProgressTableComponent", () => {
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                YearProgressModule
-            ],
-            providers: [
-                YearProgressService,
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+            imports: [CoreModule, SharedModule, YearProgressModule],
+            providers: [YearProgressService, { provide: DataStore, useClass: TestingDataStore }],
         }).compileComponents();
 
         yearProgressService = TestBed.inject(YearProgressService);
@@ -46,7 +38,6 @@ describe("YearProgressTableComponent", () => {
     });
 
     beforeEach(done => {
-
         syncedActivityModels = YearProgressActivitiesFixture.provide();
 
         fixture = TestBed.createComponent(YearProgressTableComponent);
@@ -54,10 +45,18 @@ describe("YearProgressTableComponent", () => {
 
         component.currentYear = 2018;
         component.momentWatched = moment().year(component.currentYear);
-        component.progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
+        component.progressConfig = new YearToDateProgressConfigModel(
+            [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run],
+            true,
+            true
+        );
 
         // Inject fake progression
-        const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
+        const progressConfig = new YearToDateProgressConfigModel(
+            [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run],
+            true,
+            true
+        );
 
         component.yearProgressions = yearProgressService.progressions(progressConfig, isMetric, syncedActivityModels);
 
@@ -65,12 +64,15 @@ describe("YearProgressTableComponent", () => {
         component.selectedYears = yearProgressService.availableYears(syncedActivityModels);
 
         // Inject progress type
-        component.selectedProgressType = new YearProgressTypeModel(ProgressType.DISTANCE, "Distance",
-            (isMetric) ? "kilometers" : "miles",
-            (isMetric) ? "km" : "mi");
+        component.selectedProgressType = new YearProgressTypeModel(
+            ProgressType.DISTANCE,
+            "Distance",
+            isMetric ? "kilometers" : "miles",
+            isMetric ? "km" : "mi"
+        );
 
         // Inject style
-        const colors: string [] = ["red", "blue", "green", "purple"];
+        const colors: string[] = ["red", "blue", "green", "purple"];
 
         const yearsColorsMap = new Map<number, string>();
         yearsColorsMap.set(2015, "red");
@@ -90,7 +92,6 @@ describe("YearProgressTableComponent", () => {
     });
 
     it("should provide proper year progressions time rows between two years (1)", done => {
-
         // Given
         const dayMoment = moment("2017-08-15 12:00", "YYYY-MM-DD hh:mm");
 
@@ -100,7 +101,7 @@ describe("YearProgressTableComponent", () => {
             year: 2017,
             progressType: ProgressType.TIME,
             value: hoursFirstYear,
-            color: null
+            color: null,
         };
 
         const hoursSecondYear = 36;
@@ -109,13 +110,13 @@ describe("YearProgressTableComponent", () => {
             year: 2016,
             progressType: ProgressType.TIME,
             value: hoursSecondYear,
-            color: null
+            color: null,
         };
 
         const targetHours = 31;
         const targetProgressModel = {
             dayOfYear: dayMoment.dayOfYear(),
-            value: targetHours
+            value: targetHours,
         };
 
         component.selectedProgressType = new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h");
@@ -166,7 +167,7 @@ describe("YearProgressTableComponent", () => {
             year: 2017,
             progressType: ProgressType.TIME,
             value: hoursFirstYear,
-            color: null
+            color: null,
         };
 
         const hoursSecondYear = 24;
@@ -175,7 +176,7 @@ describe("YearProgressTableComponent", () => {
             year: 2016,
             progressType: ProgressType.TIME,
             value: hoursSecondYear,
-            color: null
+            color: null,
         };
 
         component.selectedProgressType = new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h");
@@ -218,7 +219,7 @@ describe("YearProgressTableComponent", () => {
             year: 2017,
             progressType: ProgressType.TIME,
             value: hoursFirstYear,
-            color: null
+            color: null,
         };
 
         const hoursSecondYear = 0;
@@ -227,7 +228,7 @@ describe("YearProgressTableComponent", () => {
             year: 2016,
             progressType: ProgressType.TIME,
             value: hoursSecondYear,
-            color: null
+            color: null,
         };
 
         component.selectedProgressType = new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h");
@@ -263,14 +264,13 @@ describe("YearProgressTableComponent", () => {
     });
 
     it("should provide proper year progressions elevation rows when no delta between two years", done => {
-
         // Given
         const firstYear: ProgressAtDayModel = {
             date: moment("2017-08-15 12:00", "YYYY-MM-DD hh:mm").toDate(),
             year: 2017,
             progressType: ProgressType.ELEVATION,
             value: 25000,
-            color: null
+            color: null,
         };
 
         const secondYear: ProgressAtDayModel = {
@@ -278,11 +278,10 @@ describe("YearProgressTableComponent", () => {
             year: 2016,
             progressType: ProgressType.ELEVATION,
             value: 25000,
-            color: null
+            color: null,
         };
 
         component.selectedProgressType = new YearProgressTypeModel(ProgressType.ELEVATION, "Elevation", "feet", "ft");
-
 
         // When
         const progressionRows: ProgressionAtDayRow[] = component.rows([firstYear, secondYear], null);
@@ -313,5 +312,4 @@ describe("YearProgressTableComponent", () => {
         expect(secondRow.deltaPreviousYear.class).toEqual(DeltaType.NAN.toString());
         done();
     });
-
 });

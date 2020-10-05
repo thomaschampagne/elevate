@@ -52,7 +52,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
         MatProgressBarModule,
         MatRadioModule,
         MatExpansionModule,
-        MatChipsModule
+        MatChipsModule,
     ],
     exports: [
         MatButtonModule,
@@ -80,10 +80,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
         MatProgressBarModule,
         MatRadioModule,
         MatExpansionModule,
-        MatChipsModule
+        MatChipsModule,
     ],
-    declarations: []
+    declarations: [],
 })
-
-export class MaterialModule {
-}
+export class MaterialModule {}

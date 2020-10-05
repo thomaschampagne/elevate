@@ -10,10 +10,7 @@ describe("DonateComponent", () => {
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule
-            ]
+            imports: [CoreModule, SharedModule],
         }).compileComponents();
 
         done();

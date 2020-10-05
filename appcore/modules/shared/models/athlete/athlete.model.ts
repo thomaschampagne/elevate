@@ -3,16 +3,20 @@ import { AthleteSettingsModel, DatedAthleteSettingsModel } from "./athlete-setti
 import { AbstractAthleteModel } from "./abstract-athlete.model";
 
 export class AthleteModel extends AbstractAthleteModel {
-
-    public static readonly DEFAULT_MODEL: AthleteModel = new AthleteModel(Gender.MEN, AthleteModel.getDefaultDatedAthleteSettings());
+    public static readonly DEFAULT_MODEL: AthleteModel = new AthleteModel(
+        Gender.MEN,
+        AthleteModel.getDefaultDatedAthleteSettings()
+    );
     public gender: Gender;
     public datedAthleteSettings: DatedAthleteSettingsModel[];
 
     constructor(gender: Gender, datedAthleteSettings: DatedAthleteSettingsModel[]) {
         super();
         this.gender = gender;
-        this.datedAthleteSettings = (!datedAthleteSettings || datedAthleteSettings.length === 0)
-            ? [DatedAthleteSettingsModel.DEFAULT_MODEL] : datedAthleteSettings;
+        this.datedAthleteSettings =
+            !datedAthleteSettings || datedAthleteSettings.length === 0
+                ? [DatedAthleteSettingsModel.DEFAULT_MODEL]
+                : datedAthleteSettings;
     }
 
     public static getDefaultDatedAthleteSettings(): DatedAthleteSettingsModel[] {
@@ -26,6 +30,6 @@ export class AthleteModel extends AbstractAthleteModel {
      */
     public getCurrentSettings(): AthleteSettingsModel {
         const lastDatedAthleteSettingsModel = this.datedAthleteSettings[this.datedAthleteSettings.length - 1];
-        return (lastDatedAthleteSettingsModel) ? lastDatedAthleteSettingsModel.toAthleteSettingsModel() : null;
+        return lastDatedAthleteSettingsModel ? lastDatedAthleteSettingsModel.toAthleteSettingsModel() : null;
     }
 }

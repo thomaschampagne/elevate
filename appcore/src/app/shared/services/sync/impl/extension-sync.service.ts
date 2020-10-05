@@ -20,7 +20,6 @@ import { ExtensionDataStore } from "../../../data-store/impl/extension-data-stor
 
 @Injectable()
 export class ExtensionSyncService extends SyncService<SyncDateTime> {
-
     /**
      * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
      */
@@ -30,24 +29,38 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
     public static readonly SYNC_WINDOW_WIDTH: number = 690;
     public static readonly SYNC_WINDOW_HEIGHT: number = 720;
 
-    constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
-                public activityService: ActivityService,
-                public streamsService: StreamsService,
-                public athleteService: AthleteService,
-                public userSettingsService: UserSettingsService,
-                public logger: LoggerService,
-                public syncDateTimeDao: SyncDateTimeDao,
-                @Inject(DataStore) public extensionDataStore: ExtensionDataStore<object>) {
-        super(versionsProvider, extensionDataStore, activityService, streamsService, athleteService, userSettingsService, logger);
+    constructor(
+        @Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
+        public activityService: ActivityService,
+        public streamsService: StreamsService,
+        public athleteService: AthleteService,
+        public userSettingsService: UserSettingsService,
+        public logger: LoggerService,
+        public syncDateTimeDao: SyncDateTimeDao,
+        @Inject(DataStore) public extensionDataStore: ExtensionDataStore<object>
+    ) {
+        super(
+            versionsProvider,
+            extensionDataStore,
+            activityService,
+            streamsService,
+            athleteService,
+            userSettingsService,
+            logger
+        );
     }
 
     public sync(fastSync: boolean, forceSync: boolean): Promise<void> {
-
         this.getCurrentTab((tab: chrome.tabs.Tab) => {
-            const params = "?elevateSync=true&fastSync=" + fastSync + "&forceSync=" + forceSync + "&sourceTabId=" + tab.id;
+            const params =
+                "?elevateSync=true&fastSync=" + fastSync + "&forceSync=" + forceSync + "&sourceTabId=" + tab.id;
 
-            const features = "width=" + ExtensionSyncService.SYNC_WINDOW_WIDTH +
-                ", height=" + ExtensionSyncService.SYNC_WINDOW_HEIGHT + ", location=0";
+            const features =
+                "width=" +
+                ExtensionSyncService.SYNC_WINDOW_WIDTH +
+                ", height=" +
+                ExtensionSyncService.SYNC_WINDOW_HEIGHT +
+                ", location=0";
 
             window.open(ExtensionSyncService.SYNC_URL_BASE + params, "_blank", features);
         });
@@ -61,14 +74,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
     }
 
     public getSyncState(): Promise<SyncState> {
-
-        return Promise.all([
-
-            this.getSyncDateTime(),
-            this.activityService.count()
-
-        ]).then((result: any[]) => {
-
+        return Promise.all([this.getSyncDateTime(), this.activityService.count()]).then((result: any[]) => {
             const syncDateTime: SyncDateTime = result[0] as SyncDateTime;
             const syncedActivitiesCount: number = result[1] as number;
 
@@ -88,36 +94,31 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
         });
     }
 
-
     public stop(): Promise<void> {
         throw new Error("ExtensionSyncService do not support sync stop");
     }
 
-    public export(): Promise<{ filename: string, size: number }> {
-
-        return this.prepareForExport().then((backupModel: ExtensionDumpModel) => {
-
-            const blob = new Blob([JSON.stringify(backupModel)], {type: "application/json; charset=utf-8"});
-            const filename = moment().format("Y.M.D-H.mm") + "_v" + backupModel.pluginVersion + ".history.json";
-            this.saveAs(blob, filename);
-            return Promise.resolve({filename: filename, size: blob.size});
-
-        }, error => {
-            return Promise.reject(error);
-        });
+    public export(): Promise<{ filename: string; size: number }> {
+        return this.prepareForExport().then(
+            (backupModel: ExtensionDumpModel) => {
+                const blob = new Blob([JSON.stringify(backupModel)], { type: "application/json; charset=utf-8" });
+                const filename = moment().format("Y.M.D-H.mm") + "_v" + backupModel.pluginVersion + ".history.json";
+                this.saveAs(blob, filename);
+                return Promise.resolve({ filename: filename, size: blob.size });
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        );
     }
 
     public prepareForExport(): Promise<DumpModel> {
-
         return Promise.all([
-
             this.syncDateTimeDao.findOne(),
             this.activityService.fetch(),
             this.athleteService.fetch(),
-            this.versionsProvider.getPackageVersion()
-
+            this.versionsProvider.getPackageVersion(),
         ]).then((result: any[]) => {
-
             const syncDateTime: SyncDateTime = result[0] as SyncDateTime;
             const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
             const athleteModel: AthleteModel = result[2] as AthleteModel;
@@ -131,7 +132,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
                 syncDateTime: DataStore.cleanDbObject<SyncDateTime>(syncDateTime),
                 syncedActivities: DataStore.cleanDbCollection<SyncedActivityModel>(syncedActivityModels),
                 athleteModel: DataStore.cleanDbObject<AthleteModel>(athleteModel),
-                pluginVersion: appVersion
+                pluginVersion: appVersion,
             };
 
             return Promise.resolve(backupModel);
@@ -139,39 +140,46 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
     }
 
     public import(importedBackupModel: ExtensionDumpModel): Promise<void> {
-
         if (_.isEmpty(importedBackupModel.syncedActivities)) {
-            return Promise.reject("Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync.");
+            return Promise.reject(
+                "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync."
+            );
         }
 
         if (_.isEmpty(importedBackupModel.pluginVersion)) {
-            return Promise.reject("Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.");
+            return Promise.reject(
+                "Plugin version is not defined in provided backup file. Try to perform a clean full re-sync."
+            );
         }
 
-        return this.isDumpCompatible(importedBackupModel.pluginVersion, this.getCompatibleBackupVersionThreshold()).then(() => {
-            return this.clearSyncedActivities();
-        }).then(() => {
-            return this.athleteService.clear(true);
-        }).then(() => {
+        return this.isDumpCompatible(importedBackupModel.pluginVersion, this.getCompatibleBackupVersionThreshold())
+            .then(() => {
+                return this.clearSyncedActivities();
+            })
+            .then(() => {
+                return this.athleteService.clear(true);
+            })
+            .then(() => {
+                let promiseImportDatedAthleteSettings;
+                // If no dated athlete settings provided in backup then reset dated athlete settings
+                if (_.isEmpty(importedBackupModel.athleteModel)) {
+                    promiseImportDatedAthleteSettings = this.athleteService.resetSettings();
+                } else {
+                    promiseImportDatedAthleteSettings = this.athleteService.validateInsert(
+                        importedBackupModel.athleteModel
+                    );
+                }
 
-            let promiseImportDatedAthleteSettings;
-            // If no dated athlete settings provided in backup then reset dated athlete settings
-            if (_.isEmpty(importedBackupModel.athleteModel)) {
-                promiseImportDatedAthleteSettings = this.athleteService.resetSettings();
-            } else {
-                promiseImportDatedAthleteSettings = this.athleteService.validateInsert(importedBackupModel.athleteModel);
-            }
-
-            return Promise.all([
-                this.updateSyncDateTime(importedBackupModel.syncDateTime),
-                this.activityService.insertMany(importedBackupModel.syncedActivities, true),
-                promiseImportDatedAthleteSettings,
-                this.userSettingsService.clearLocalStorageOnNextLoad()
-            ]);
-
-        }).then(() => {
-            return Promise.resolve();
-        });
+                return Promise.all([
+                    this.updateSyncDateTime(importedBackupModel.syncDateTime),
+                    this.activityService.insertMany(importedBackupModel.syncedActivities, true),
+                    promiseImportDatedAthleteSettings,
+                    this.userSettingsService.clearLocalStorageOnNextLoad(),
+                ]);
+            })
+            .then(() => {
+                return Promise.resolve();
+            });
     }
 
     public getCompatibleBackupVersionThreshold(): string {
@@ -189,5 +197,4 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
     public clearSyncTime(): Promise<void> {
         return this.syncDateTimeDao.clear(true);
     }
-
 }

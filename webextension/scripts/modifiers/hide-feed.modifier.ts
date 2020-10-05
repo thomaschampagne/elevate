@@ -4,7 +4,6 @@ import { UserSettings } from "@elevate/shared/models";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class HideFeedModifier extends AbstractModifier {
-
     private static VIRTUAL_RIDE = "virtualride";
     private static RIDE = "ride";
     private static RUN = "run";
@@ -16,12 +15,12 @@ export class HideFeedModifier extends AbstractModifier {
         this.userSettings = userSettings;
     }
 
-    public modify(): void { // TODO Improve using code of RunningGradeAdjustedPaceModifier & ActivitiesChronologicalFeedModifier
+    public modify(): void {
+        // TODO Improve using code of RunningGradeAdjustedPaceModifier & ActivitiesChronologicalFeedModifier
 
         const timeout = 250;
 
         setInterval(() => {
-
             // If hide challenges
             if (this.userSettings.feedHideChallenges) {
                 $(".feed-container").find(".challenge").remove();
@@ -46,20 +45,24 @@ export class HideFeedModifier extends AbstractModifier {
                 $("#suggested-follows").remove(); // Will work as long as id remains "suggested-follows"
             }
 
-            if (this.userSettings.feedHideVirtualRides || this.userSettings.feedHideRideActivitiesUnderDistance > 0 || this.userSettings.feedHideRunActivitiesUnderDistance > 0) {
-
+            if (
+                this.userSettings.feedHideVirtualRides ||
+                this.userSettings.feedHideRideActivitiesUnderDistance > 0 ||
+                this.userSettings.feedHideRunActivitiesUnderDistance > 0
+            ) {
                 const minRideDistanceToHide: number = this.userSettings.feedHideRideActivitiesUnderDistance;
                 const minRunDistanceToHide: number = this.userSettings.feedHideRunActivitiesUnderDistance;
 
                 $("div.feed>.activity").each((index: number, element: Element) => {
-
                     const activityType: string = $(element)
-                        .find("div.entry-icon.media-left").find(".app-icon").attr("class")
+                        .find("div.entry-icon.media-left")
+                        .find(".app-icon")
+                        .attr("class")
                         // extract the activityType from the first class with icon-<activityType>, ignoring icon-lg and icon-dark
                         .replace(/^.*icon-(?!lg|dark)([^ ]+).*$/, "$1");
 
-                    const distanceElement = _.filter($(element).find("ul.list-stats").find("[class=unit]"), (item) => {
-                        return ($(item).html().trim() == "km" || $(item).html().trim() == "mi");
+                    const distanceElement = _.filter($(element).find("ul.list-stats").find("[class=unit]"), item => {
+                        return $(item).html().trim() == "km" || $(item).html().trim() == "mi";
                     });
 
                     const distance: number = parseFloat($(distanceElement).parent().text().replace(",", "."));
@@ -70,12 +73,22 @@ export class HideFeedModifier extends AbstractModifier {
                     }
 
                     // Remove Ride activities if distance lower than "minRideDistanceToHide", if minRideDistanceToHide equal 0, then keep all.
-                    if ((minRideDistanceToHide > 0) && distance && (distance < minRideDistanceToHide) && (activityType === HideFeedModifier.RIDE || activityType === HideFeedModifier.VIRTUAL_RIDE)) {
+                    if (
+                        minRideDistanceToHide > 0 &&
+                        distance &&
+                        distance < minRideDistanceToHide &&
+                        (activityType === HideFeedModifier.RIDE || activityType === HideFeedModifier.VIRTUAL_RIDE)
+                    ) {
                         $(element).remove();
                     }
 
                     // Remove Run activities if distance lower than "minRunDistanceToHide", if minRunDistanceToHide equal 0, then keep all.
-                    if ((minRunDistanceToHide > 0) && distance && (distance < minRunDistanceToHide) && activityType === HideFeedModifier.RUN) {
+                    if (
+                        minRunDistanceToHide > 0 &&
+                        distance &&
+                        distance < minRunDistanceToHide &&
+                        activityType === HideFeedModifier.RUN
+                    ) {
                         $(element).remove();
                     }
                 });
@@ -88,7 +101,6 @@ export class HideFeedModifier extends AbstractModifier {
                     timeHeaderElement.remove();
                 }
             });
-
         }, timeout);
     }
 }

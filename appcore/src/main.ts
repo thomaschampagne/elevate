@@ -12,4 +12,6 @@ if (environment.production) {
 // Apply default theme class to body. AppComponent will also change body class along themes switches
 document.body.setAttribute("class", Theme.DEFAULT);
 
-platformBrowserDynamic().bootstrapModule(AppModule).catch(err => console.log(err));
+platformBrowserDynamic()
+    .bootstrapModule(AppModule)
+    .catch(err => console.log(err));

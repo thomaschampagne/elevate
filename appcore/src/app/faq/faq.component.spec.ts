@@ -12,13 +12,8 @@ describe("FaqComponent", () => {
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-            ],
-            providers: [
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+            imports: [CoreModule, SharedModule],
+            providers: [{ provide: DataStore, useClass: TestingDataStore }],
         }).compileComponents();
         done();
     });

@@ -4,9 +4,8 @@ import * as _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { ExtensionDumpModel } from "../../models/dumps/extension-dump.model";
 
-@Component({template: ""})
+@Component({ template: "" })
 export class ImportBackupDialogComponent implements OnInit {
-
     public static readonly MAX_WIDTH: string = "80%";
     public static readonly MIN_WIDTH: string = "40%";
 
@@ -14,15 +13,16 @@ export class ImportBackupDialogComponent implements OnInit {
     public displayName: string;
     public displaySize: string;
 
-    constructor(public dialogRef: MatDialogRef<ImportBackupDialogComponent>) {
-    }
+    constructor(public dialogRef: MatDialogRef<ImportBackupDialogComponent>) {}
 
     public ngOnInit(): void {
         this.file = null;
     }
 
     public onRestore(): void {
-        throw new ElevateException("onRestore method must be overridden and used by a child component of ImportBackupDialogComponent.");
+        throw new ElevateException(
+            "onRestore method must be overridden and used by a child component of ImportBackupDialogComponent."
+        );
     }
 
     public onCancel(): void {
@@ -39,10 +39,9 @@ export class ImportBackupDialogComponent implements OnInit {
 @Component({
     selector: "app-import-backup-dialog",
     templateUrl: "./import-backup-dialog.component.html",
-    styleUrls: ["./import-backup-dialog.component.scss"]
+    styleUrls: ["./import-backup-dialog.component.scss"],
 })
 export class DesktopImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
-
     constructor(public dialogRef: MatDialogRef<DesktopImportBackupDialogComponent>) {
         super(dialogRef);
     }
@@ -57,28 +56,26 @@ export class DesktopImportBackupDialogComponent extends ImportBackupDialogCompon
 @Component({
     selector: "app-import-backup-dialog",
     templateUrl: "./import-backup-dialog.component.html",
-    styleUrls: ["./import-backup-dialog.component.scss"]
+    styleUrls: ["./import-backup-dialog.component.scss"],
 })
 export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
-
     constructor(public dialogRef: MatDialogRef<ExtensionImportBackupDialogComponent>) {
         super(dialogRef);
     }
 
     public onRestore(): void {
-
         if (this.file) {
-
             // Reading file, when load, import it
             const reader = new FileReader();
             reader.readAsText(this.file);
             reader.onload = (event: Event) => {
-                const extensionDumpModel: ExtensionDumpModel = JSON.parse((event.target as IDBRequest).result) as ExtensionDumpModel;
+                const extensionDumpModel: ExtensionDumpModel = JSON.parse(
+                    (event.target as IDBRequest).result
+                ) as ExtensionDumpModel;
                 this.dialogRef.close(extensionDumpModel);
             };
         }
     }
-
 }
 
 @Component({
@@ -105,15 +102,16 @@ export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComp
             </div>
         </mat-dialog-content>
     `,
-    styles: [`
-        .progress {
-            height: 100px;
-            width: 450px;
-        }
-    `]
+    styles: [
+        `
+            .progress {
+                height: 100px;
+                width: 450px;
+            }
+        `,
+    ],
 })
 export class ImportExportProgressDialogComponent implements OnInit {
-
     public static readonly MODE_IMPORT: string = "MODE_IMPORT";
     public static readonly MODE_EXPORT: string = "MODE_EXPORT";
 
@@ -121,10 +119,9 @@ export class ImportExportProgressDialogComponent implements OnInit {
     public isExportMode: boolean;
 
     constructor(@Inject(MAT_DIALOG_DATA) public mode: string) {
-        this.isImportMode = (mode === ImportExportProgressDialogComponent.MODE_IMPORT);
+        this.isImportMode = mode === ImportExportProgressDialogComponent.MODE_IMPORT;
         this.isExportMode = !this.isImportMode;
     }
 
-    public ngOnInit(): void {
-    }
+    public ngOnInit(): void {}
 }

@@ -13,10 +13,9 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 @Component({
     selector: "app-zone-tool-bar",
     templateUrl: "./zone-tool-bar.component.html",
-    styleUrls: ["./zone-tool-bar.component.scss"]
+    styleUrls: ["./zone-tool-bar.component.scss"],
 })
 export class ZoneToolBarComponent implements OnInit {
-
     @Input("currentZonesLength")
     public currentZonesLength: number;
 
@@ -29,14 +28,14 @@ export class ZoneToolBarComponent implements OnInit {
     @Output("zoneDefinitionSelectedChange")
     public zoneDefinitionSelectedChange: EventEmitter<ZoneDefinitionModel> = new EventEmitter<ZoneDefinitionModel>();
 
-    constructor(public zonesService: ZonesService,
-                private dialog: MatDialog,
-                private snackBar: MatSnackBar,
-                public logger: LoggerService) {
-    }
+    constructor(
+        public zonesService: ZonesService,
+        private dialog: MatDialog,
+        private snackBar: MatSnackBar,
+        public logger: LoggerService
+    ) {}
 
-    public ngOnInit(): void {
-    }
+    public ngOnInit(): void {}
 
     public onZoneDefinitionSelected(): void {
         // Notify parent ZonesSettings component of new zone definition selected
@@ -48,7 +47,6 @@ export class ZoneToolBarComponent implements OnInit {
     }
 
     public onAddLastZone(): void {
-
         this.zonesService.addLastZone().then(
             message => this.popSnack(message),
             error => {
@@ -69,23 +67,24 @@ export class ZoneToolBarComponent implements OnInit {
     }
 
     public onResetZonesToDefault(): void {
-
         const data: ConfirmDialogDataModel = {
             title: "Reset <" + this.zonesService.zoneDefinition.name + "> zones",
-            content: "Are you sure? Previous data will be lost."
+            content: "Are you sure? Previous data will be lost.",
         };
 
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             minWidth: ConfirmDialogComponent.MIN_WIDTH,
             maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-            data: data
+            data: data,
         });
 
         const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
             if (confirm) {
-                this.zonesService.resetZonesToDefault().then(() => {
+                this.zonesService.resetZonesToDefault().then(
+                    () => {
                         this.popSnack(this.zonesService.zoneDefinition.name + " zones have been set to default");
-                    }, error => {
+                    },
+                    error => {
                         this.logger.error(error);
                         this.popSnack(error);
                     }
@@ -96,7 +95,6 @@ export class ZoneToolBarComponent implements OnInit {
     }
 
     public onSaveZones(): void {
-
         this.zonesService.updateZones().then(
             () => this.popSnack(this.zonesService.zoneDefinition.name + " zones have been saved"),
             error => {
@@ -107,36 +105,33 @@ export class ZoneToolBarComponent implements OnInit {
     }
 
     public onImportZones() {
-
         const importExportData: ZoneImportExportDataModel = {
             zoneDefinition: this.zonesService.zoneDefinition,
-            mode: Mode.IMPORT
+            mode: Mode.IMPORT,
         };
 
         this.dialog.open(ZonesImportExportDialogComponent, {
             minWidth: ZonesImportExportDialogComponent.MIN_WIDTH,
             maxWidth: ZonesImportExportDialogComponent.MAX_WIDTH,
-            data: importExportData
+            data: importExportData,
         });
     }
 
     public onExportZones() {
-
         const importExportData: ZoneImportExportDataModel = {
             zoneDefinition: this.zonesService.zoneDefinition,
             zonesData: this.zonesService.currentZones,
-            mode: Mode.EXPORT
+            mode: Mode.EXPORT,
         };
 
         this.dialog.open(ZonesImportExportDialogComponent, {
             minWidth: ZonesImportExportDialogComponent.MIN_WIDTH,
             maxWidth: ZonesImportExportDialogComponent.MAX_WIDTH,
-            data: importExportData
+            data: importExportData,
         });
-
     }
 
     private popSnack(message: string): void {
-        this.snackBar.open(message, "Close", {duration: 2500});
+        this.snackBar.open(message, "Close", { duration: 2500 });
     }
 }

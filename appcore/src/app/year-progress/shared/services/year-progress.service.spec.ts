@@ -27,7 +27,6 @@ import { ConsoleLoggerService } from "../../../shared/services/logging/console-l
 import Spy = jasmine.Spy;
 
 describe("YearProgressService", () => {
-
     /**
      * @param date YYYY-MM-DD
      * @return Strava start_time format
@@ -43,15 +42,12 @@ describe("YearProgressService", () => {
     let getTodayMomentSpy: Spy;
 
     beforeEach(done => {
-
         TestBed.configureTestingModule({
-            imports: [
-                YearProgressModule
-            ],
+            imports: [YearProgressModule],
             providers: [
-                {provide: DataStore, useClass: TestingDataStore},
-                {provide: LoggerService, useClass: ConsoleLoggerService}
-            ]
+                { provide: DataStore, useClass: TestingDataStore },
+                { provide: LoggerService, useClass: ConsoleLoggerService },
+            ],
         });
 
         service = TestBed.inject(YearProgressService);
@@ -65,18 +61,16 @@ describe("YearProgressService", () => {
     });
 
     it("should be created", done => {
-
         expect(service).toBeTruthy();
         done();
     });
 
     it("should provide activities count by types", done => {
-
         // Given
         const expectedResult: ActivityCountByTypeModel[] = [
-            {type: ElevateSport.Ride, count: 352},
-            {type: ElevateSport.Run, count: 178},
-            {type: ElevateSport.VirtualRide, count: 177}
+            { type: ElevateSport.Ride, count: 352 },
+            { type: ElevateSport.Run, count: 178 },
+            { type: ElevateSport.VirtualRide, count: 177 },
         ];
 
         // When
@@ -92,11 +86,9 @@ describe("YearProgressService", () => {
         expect(_.last(result).type).toEqual(ElevateSport.VirtualRide);
 
         done();
-
     });
 
     it("should provide all available years from user activities", done => {
-
         // Given
         const expectedResult: number[] = [2018, 2017, 2016, 2015];
 
@@ -108,11 +100,9 @@ describe("YearProgressService", () => {
         expect(result).toEqual(expectedResult);
 
         done();
-
     });
 
     it("should notify subscribers when moment watched has changed", done => {
-
         // Given
         const expectedCallCount = 1;
         const spy = spyOn(service.momentWatchedChanges$, "next");
@@ -130,16 +120,22 @@ describe("YearProgressService", () => {
     });
 
     describe("compute year to date progression", () => {
-
         it("should compute progression on 4 years", done => {
-
             // Given
             const expectedLength = 4;
 
-            const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
+            const progressConfig = new YearToDateProgressConfigModel(
+                [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run],
+                true,
+                true
+            );
 
             // When
-            const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
+            const yearProgressions: YearProgressModel[] = service.progressions(
+                progressConfig,
+                isMetric,
+                TEST_SYNCED_MODELS
+            );
 
             // Then
             expect(yearProgressions).not.toBeNull();
@@ -158,32 +154,37 @@ describe("YearProgressService", () => {
             expect(yearProgressions[3].progressions.length).toEqual(365);
 
             done();
-
         });
 
         it("should compute progression by tagging future days of current year", done => {
-
             // Given
-            const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
+            const progressConfig = new YearToDateProgressConfigModel(
+                [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run],
+                true,
+                true
+            );
 
             // When
-            const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
+            const yearProgressions: YearProgressModel[] = service.progressions(
+                progressConfig,
+                isMetric,
+                TEST_SYNCED_MODELS
+            );
 
             // Then
             const yearProgressModel2018 = yearProgressions[3];
             expect(yearProgressModel2018.mode).toEqual(ProgressMode.YEAR_TO_DATE);
 
-            const pastDaysCount2018 = _.filter(yearProgressModel2018.progressions, {isFuture: false}).length;
+            const pastDaysCount2018 = _.filter(yearProgressModel2018.progressions, { isFuture: false }).length;
             expect(pastDaysCount2018).toEqual(60);
 
-            const futureDaysCount2018 = _.filter(yearProgressModel2018.progressions, {isFuture: true}).length;
+            const futureDaysCount2018 = _.filter(yearProgressModel2018.progressions, { isFuture: true }).length;
             expect(futureDaysCount2018).toEqual(305);
 
             done();
         });
 
         it("should compute progression on 4 years even with a walk done the 2016-06-06", done => {
-
             // Given
             const expectedLength = 4;
             const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Walk], true, true);
@@ -202,7 +203,11 @@ describe("YearProgressService", () => {
             TEST_SYNCED_MODELS.push(fakeWalkActivity);
 
             // When
-            const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
+            const yearProgressions: YearProgressModel[] = service.progressions(
+                progressConfig,
+                isMetric,
+                TEST_SYNCED_MODELS
+            );
 
             // Then
             expect(yearProgressions).not.toBeNull();
@@ -224,15 +229,18 @@ describe("YearProgressService", () => {
             expect(yearProgressions[3].progressions.length).toEqual(365);
 
             done();
-
         });
 
         it("should compute progression with proper totals metrics", done => {
-
             // Given
-            const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
+            const progressConfig = new YearToDateProgressConfigModel(
+                [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run],
+                true,
+                true
+            );
 
-            const expectedFirstDay2015 = new ProgressModel(2015,
+            const expectedFirstDay2015 = new ProgressModel(
+                2015,
                 1,
                 10,
                 3600 / 3600, // = Hours
@@ -240,7 +248,8 @@ describe("YearProgressService", () => {
                 1
             );
 
-            const expectedLastDay2015 = new ProgressModel(2015,
+            const expectedLastDay2015 = new ProgressModel(
+                2015,
                 365,
                 6205,
                 788400 / 3600, // = Hours
@@ -248,7 +257,8 @@ describe("YearProgressService", () => {
                 292
             );
 
-            const expectedFirstDay2016 = new ProgressModel(2016,
+            const expectedFirstDay2016 = new ProgressModel(
+                2016,
                 1,
                 10,
                 3600 / 3600, // = Hours
@@ -256,7 +266,8 @@ describe("YearProgressService", () => {
                 1
             );
 
-            const expectedLastDay2016 = new ProgressModel(2016,
+            const expectedLastDay2016 = new ProgressModel(
+                2016,
                 366,
                 6215,
                 792000 / 3600, // = Hours
@@ -264,7 +275,8 @@ describe("YearProgressService", () => {
                 293
             );
 
-            const expectedFirstDay2017 = new ProgressModel(2017,
+            const expectedFirstDay2017 = new ProgressModel(
+                2017,
                 1,
                 10,
                 3600 / 3600, // = Hours
@@ -272,7 +284,8 @@ describe("YearProgressService", () => {
                 1
             );
 
-            const expectedLastDay2017 = new ProgressModel(2017,
+            const expectedLastDay2017 = new ProgressModel(
+                2017,
                 365,
                 2580,
                 329400 / 3600, // = Hours
@@ -281,7 +294,11 @@ describe("YearProgressService", () => {
             );
 
             // When
-            const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
+            const yearProgressions: YearProgressModel[] = service.progressions(
+                progressConfig,
+                isMetric,
+                TEST_SYNCED_MODELS
+            );
 
             // Then
             expect(yearProgressions).not.toBeNull();
@@ -302,15 +319,18 @@ describe("YearProgressService", () => {
             expect(lastDay2017).toEqual(expectedLastDay2017);
 
             done();
-
         });
 
         it("should compute progression without commute rides and with proper totals metrics", done => {
-
             // Given
-            const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], false, true);
+            const progressConfig = new YearToDateProgressConfigModel(
+                [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run],
+                false,
+                true
+            );
 
-            const expectedLastDay2015 = new ProgressModel(2015,
+            const expectedLastDay2015 = new ProgressModel(
+                2015,
                 365,
                 5110,
                 657000 / 3600, // = Hours
@@ -318,14 +338,16 @@ describe("YearProgressService", () => {
                 219
             );
 
-            const expectedLastDay2016 = new ProgressModel(2016,
+            const expectedLastDay2016 = new ProgressModel(
+                2016,
                 366,
                 5120,
                 660600 / 3600, // = Hours
                 69400,
                 220
             );
-            const expectedLastDay2017 = new ProgressModel(2017,
+            const expectedLastDay2017 = new ProgressModel(
+                2017,
                 365,
                 2130,
                 275400 / 3600, // = Hours
@@ -334,7 +356,11 @@ describe("YearProgressService", () => {
             );
 
             // When
-            const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
+            const yearProgressions: YearProgressModel[] = service.progressions(
+                progressConfig,
+                isMetric,
+                TEST_SYNCED_MODELS
+            );
 
             // Then
             expect(yearProgressions).not.toBeNull();
@@ -349,16 +375,19 @@ describe("YearProgressService", () => {
             expect(lastDay2017).toEqual(expectedLastDay2017);
 
             done();
-
         });
 
         it("should compute progression with imperial system unit", done => {
-
             // Given
             const isMetric = false;
-            const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
+            const progressConfig = new YearToDateProgressConfigModel(
+                [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run],
+                true,
+                true
+            );
 
-            const expectedLastDay2015 = new ProgressModel(2015,
+            const expectedLastDay2015 = new ProgressModel(
+                2015,
                 365,
                 3856, // Miles
                 788400 / 3600, // = Hours
@@ -366,7 +395,8 @@ describe("YearProgressService", () => {
                 292
             );
 
-            const expectedLastDay2016 = new ProgressModel(2016,
+            const expectedLastDay2016 = new ProgressModel(
+                2016,
                 366,
                 3862, // Miles
                 792000 / 3600, // = Hours
@@ -374,7 +404,8 @@ describe("YearProgressService", () => {
                 293
             );
 
-            const expectedLastDay2017 = new ProgressModel(2017,
+            const expectedLastDay2017 = new ProgressModel(
+                2017,
                 365,
                 1603, // Miles
                 329400 / 3600, // = Hours
@@ -383,7 +414,11 @@ describe("YearProgressService", () => {
             );
 
             // When
-            const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
+            const yearProgressions: YearProgressModel[] = service.progressions(
+                progressConfig,
+                isMetric,
+                TEST_SYNCED_MODELS
+            );
 
             // Then
             expect(yearProgressions).not.toBeNull();
@@ -398,28 +433,27 @@ describe("YearProgressService", () => {
             expect(lastDay2017).toEqual(expectedLastDay2017);
 
             done();
-
         });
 
         it("should not compute progression with empty activities", done => {
-
             // Given
             const syncedActivityModels = [];
 
-            const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
+            const progressConfig = new YearToDateProgressConfigModel(
+                [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run],
+                true,
+                true
+            );
 
             const progressionMethodCall = () => service.progressions(progressConfig, isMetric, syncedActivityModels);
-
 
             // When, Then
             expect(progressionMethodCall).toThrowError(YearProgressService.ERROR_NO_SYNCED_ACTIVITY_MODELS);
 
             done();
-
         });
 
         it("should not compute progression with empty types filters", done => {
-
             // Given
             const progressConfig = new YearToDateProgressConfigModel([], true, true);
 
@@ -429,13 +463,11 @@ describe("YearProgressService", () => {
             expect(progressionMethodCall).toThrowError(YearProgressService.ERROR_NO_TYPES_FILTER);
 
             done();
-
         });
 
         it("should not compute progression with not existing type", done => {
-
             // Given
-            const progressConfig = new YearToDateProgressConfigModel([<ElevateSport> "FakeType"], true, true);
+            const progressConfig = new YearToDateProgressConfigModel([<ElevateSport>"FakeType"], true, true);
 
             const progressionMethodCall = () => service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 
@@ -443,16 +475,22 @@ describe("YearProgressService", () => {
             expect(progressionMethodCall).toThrowError(YearProgressService.ERROR_NO_YEAR_PROGRESS_MODELS);
 
             done();
-
         });
 
         it("should give progressions for a specific day", done => {
-
             // Given
             const expectedLength = 4;
-            const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
+            const progressConfig = new YearToDateProgressConfigModel(
+                [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run],
+                true,
+                true
+            );
 
-            const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
+            const yearProgressions: YearProgressModel[] = service.progressions(
+                progressConfig,
+                isMetric,
+                TEST_SYNCED_MODELS
+            );
 
             const selectedYears: number[] = [2018, 2017, 2016, 2015];
 
@@ -469,7 +507,13 @@ describe("YearProgressService", () => {
             yearsColorsMap.set(2018, "purple");
 
             // When
-            const progressAtDayModels: ProgressAtDayModel[] = service.findProgressionsAtDay(yearProgressions, dayMoment, progressType, selectedYears, yearsColorsMap);
+            const progressAtDayModels: ProgressAtDayModel[] = service.findProgressionsAtDay(
+                yearProgressions,
+                dayMoment,
+                progressType,
+                selectedYears,
+                yearsColorsMap
+            );
 
             // Then
             expect(progressAtDayModels).not.toBeNull();
@@ -498,22 +542,25 @@ describe("YearProgressService", () => {
             expect(progressAtDayModels[0].color).toEqual("purple");
 
             done();
-
         });
-
     });
 
     describe("compute rolling progression", () => {
-
         let syncedActivityModels: Partial<SyncedActivityModel>[] = [];
 
-        const createActivity = (date: string, type: ElevateSport, distance_raw: number, moving_time_raw: number, elevation_gain_raw: number) => {
+        const createActivity = (
+            date: string,
+            type: ElevateSport,
+            distance_raw: number,
+            moving_time_raw: number,
+            elevation_gain_raw: number
+        ) => {
             return {
                 distance_raw: distance_raw,
                 moving_time_raw: moving_time_raw,
                 elevation_gain_raw: elevation_gain_raw,
                 start_time: stravaStartTime(date),
-                type: type
+                type: type,
             };
         };
 
@@ -523,7 +570,6 @@ describe("YearProgressService", () => {
         });
 
         it("should calculate 1 week rolling distance progression (no previous year)", done => {
-
             // Given
             const expectedYearsLength = 1;
             const expectedYear = 2019;
@@ -553,7 +599,11 @@ describe("YearProgressService", () => {
             /* (Rest) 2019-02-16 */
             /* ... */
 
-            const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, syncedActivityModels as SyncedActivityModel[]);
+            const yearProgressions: YearProgressModel[] = service.progressions(
+                progressConfig,
+                isMetric,
+                syncedActivityModels as SyncedActivityModel[]
+            );
 
             // Then
             /* Common checks */
@@ -590,11 +640,9 @@ describe("YearProgressService", () => {
             expect(rollingWeekProgress[/* Feb 16, 2019 */ 15 + januaryDaysOffset].distance).toEqual(0);
 
             done();
-
         });
 
         it("should calculate 1 week rolling distance progression (overlapping between 2 years with activities)", done => {
-
             // Given
             const expectedYearsLength = 2;
             const expectedDaysInYear = 365;
@@ -633,7 +681,11 @@ describe("YearProgressService", () => {
             /* (Rest) 2019-01-16 */
             /* ... */
 
-            const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, syncedActivityModels as SyncedActivityModel[]);
+            const yearProgressions: YearProgressModel[] = service.progressions(
+                progressConfig,
+                isMetric,
+                syncedActivityModels as SyncedActivityModel[]
+            );
 
             // Then
             /* Common checks */
@@ -690,11 +742,9 @@ describe("YearProgressService", () => {
             expect(rollingWeekProgressOnCurrentYear[/* Jan 17, 2019 */ 16].distance).toEqual(0);
 
             done();
-
         });
 
         it("should calculate 1 week rolling 'distance, time, elevation & count' progression with multiple activities per day (no previous year)", done => {
-
             // Given
             const expectedYearsLength = 1;
             const expectedYear = 2019;
@@ -725,7 +775,11 @@ describe("YearProgressService", () => {
             /* (Rest) 2019-02-16 */
             /* ... */
 
-            const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, syncedActivityModels as SyncedActivityModel[]);
+            const yearProgressions: YearProgressModel[] = service.progressions(
+                progressConfig,
+                isMetric,
+                syncedActivityModels as SyncedActivityModel[]
+            );
 
             // Then
             /* Common checks */
@@ -816,11 +870,9 @@ describe("YearProgressService", () => {
             expect(rollingWeekProgress[/* Feb 16, 2019 */ 15 + januaryDaysOffset].count).toEqual(0);
 
             done();
-
         });
 
         it("should calculate 1 day rolling distance progression with multiple activities per day (no previous year)", done => {
-
             // Given
             const expectedYearsLength = 1;
             const expectedYear = 2019;
@@ -853,7 +905,11 @@ describe("YearProgressService", () => {
             /* (Rest) 2019-02-16 */
             /* ... */
 
-            const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, syncedActivityModels as SyncedActivityModel[]);
+            const yearProgressions: YearProgressModel[] = service.progressions(
+                progressConfig,
+                isMetric,
+                syncedActivityModels as SyncedActivityModel[]
+            );
 
             // Then
             /* Common checks */
@@ -890,17 +946,12 @@ describe("YearProgressService", () => {
             expect(rollingWeekProgress[/* Feb 16, 2019 */ 15 + januaryDaysOffset].distance).toEqual(0);
 
             done();
-
         });
-
     });
 
     describe("compute target progression", () => {
-
         describe("Year to date target progression", () => {
-
             it("should compute year to date target progression on non leap year", done => {
-
                 // Given
                 const year = 2018;
                 const targetValue = 5000;
@@ -908,7 +959,10 @@ describe("YearProgressService", () => {
                 const expectedStep = 13.698;
 
                 // When
-                const targetProgressModels: TargetProgressModel[] = service.yearToDateTargetProgression(year, targetValue);
+                const targetProgressModels: TargetProgressModel[] = service.yearToDateTargetProgression(
+                    year,
+                    targetValue
+                );
 
                 // Then
                 expect(targetProgressModels).not.toBeNull();
@@ -919,7 +973,6 @@ describe("YearProgressService", () => {
             });
 
             it("should compute year to date target progression on leap year", done => {
-
                 // Given
                 const year = 2016;
                 const targetValue = 5000;
@@ -927,7 +980,10 @@ describe("YearProgressService", () => {
                 const expectedStep = 13.661;
 
                 // When
-                const targetProgressModels: TargetProgressModel[] = service.yearToDateTargetProgression(year, targetValue);
+                const targetProgressModels: TargetProgressModel[] = service.yearToDateTargetProgression(
+                    year,
+                    targetValue
+                );
 
                 // Then
                 expect(targetProgressModels).not.toBeNull();
@@ -936,13 +992,10 @@ describe("YearProgressService", () => {
 
                 done();
             });
-
         });
 
         describe("Rolling target progression", () => {
-
             it("should compute rolling distance target progression", done => {
-
                 // Given
                 const year = 2018;
                 const targetValue = 140;
@@ -957,23 +1010,21 @@ describe("YearProgressService", () => {
                 expect(Math.floor(_.first(targetProgressModels).value)).toEqual(targetValue);
                 expect(Math.floor(_.last(targetProgressModels).value)).toEqual(targetValue);
 
-                const targetEachDays = Math.floor(_.sumBy(targetProgressModels, (targetProgressModel: TargetProgressModel) => {
-                    return targetProgressModel.value;
-                }) / expectedTargetProgressionLength);
+                const targetEachDays = Math.floor(
+                    _.sumBy(targetProgressModels, (targetProgressModel: TargetProgressModel) => {
+                        return targetProgressModel.value;
+                    }) / expectedTargetProgressionLength
+                );
 
                 expect(targetEachDays).toEqual(targetValue);
 
                 done();
             });
-
         });
-
     });
 
     describe("format human readable time", () => {
-
         it("should format 24 hours to human readable time", done => {
-
             // Given
             const hours = 24;
             const expected = "24h";
@@ -987,7 +1038,6 @@ describe("YearProgressService", () => {
         });
 
         it("should format 24 hours to human readable time", done => {
-
             // Given
             const hours = 1;
             const expected = "1h";
@@ -1001,7 +1051,6 @@ describe("YearProgressService", () => {
         });
 
         it("should format 50 hours to human readable time", done => {
-
             // Given
             const hours = 50;
             const expected = "50h";
@@ -1015,7 +1064,6 @@ describe("YearProgressService", () => {
         });
 
         it("should format 76.25 hours to human readable time", done => {
-
             // Given
             const hours = 76.25;
             const expected = "76h, 15m";
@@ -1029,7 +1077,6 @@ describe("YearProgressService", () => {
         });
 
         it("should format 29.5 hours to human readable time", done => {
-
             // Given
             const hours = 29.5;
             const expected = "29h, 30m";
@@ -1043,7 +1090,6 @@ describe("YearProgressService", () => {
         });
 
         it("should format 15 hours to human readable time", done => {
-
             // Given
             const hours = 15;
             const expected = "15h";
@@ -1057,7 +1103,6 @@ describe("YearProgressService", () => {
         });
 
         it("should format 5.815 hours to human readable time", done => {
-
             // Given
             const hours = 5.815;
             const expected = "5h, 48m";
@@ -1071,7 +1116,6 @@ describe("YearProgressService", () => {
         });
 
         it("should format 15.3333333 hours to human readable time", done => {
-
             // Given
             const hours = 15.3333333;
             const expected = "15h, 19m";
@@ -1085,7 +1129,6 @@ describe("YearProgressService", () => {
         });
 
         it("should format 0.25 hours to human readable time", done => {
-
             // Given
             const hours = 0.25;
             const expected = "15m";
@@ -1099,7 +1142,6 @@ describe("YearProgressService", () => {
         });
 
         it("should format -12.5 negative hours to human readable time", done => {
-
             // Given
             const hours = -12.5;
             const expected = "12h, 30m";
@@ -1113,7 +1155,6 @@ describe("YearProgressService", () => {
         });
 
         it("should format 0 hours to human readable time", done => {
-
             // Given
             const hours = 0;
             const expected = "0h";
@@ -1127,7 +1168,6 @@ describe("YearProgressService", () => {
         });
 
         it("should format 25.55 hours to human readable time", done => {
-
             // Given
             const hours = 25.55;
             const expected = "25h, 33m";
@@ -1139,88 +1179,113 @@ describe("YearProgressService", () => {
             expect(result).toEqual(expected);
             done();
         });
-
     });
 
     describe("manage presets", () => {
-
         it("should list presets", done => {
-
             // Given
             const expected: YearToDateProgressPresetModel[] = [
                 new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
-                new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false)
+                new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
             ];
 
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find")
-                .and.returnValue(Promise.resolve(expected));
+            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find").and.returnValue(Promise.resolve(expected));
 
             // When
             const promise: Promise<YearToDateProgressPresetModel[]> = service.fetchPresets();
 
             // Then
-            promise.then((list: YearToDateProgressPresetModel[]) => {
-
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-                expect(list).not.toBeNull();
-                expect(list).toEqual(expected);
-                done();
-
-            }, error => {
-                expect(error).toBeNull();
-                done();
-            });
-
+            promise.then(
+                (list: YearToDateProgressPresetModel[]) => {
+                    expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                    expect(list).not.toBeNull();
+                    expect(list).toEqual(expected);
+                    done();
+                },
+                error => {
+                    expect(error).toBeNull();
+                    done();
+                }
+            );
         });
 
         it("should add a year to date preset", done => {
-
             // Given
-            const modelToBeAdded = new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Ride, ElevateSport.VirtualRide], true, true, 5000);
+            const modelToBeAdded = new YearToDateProgressPresetModel(
+                ProgressType.DISTANCE,
+                [ElevateSport.Ride, ElevateSport.VirtualRide],
+                true,
+                true,
+                5000
+            );
 
             const progressPresetModels: YearToDateProgressPresetModel[] = [
-                new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Ride, ElevateSport.VirtualRide], true, true),
+                new YearToDateProgressPresetModel(
+                    ProgressType.DISTANCE,
+                    [ElevateSport.Ride, ElevateSport.VirtualRide],
+                    true,
+                    true
+                ),
                 new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
                 new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000),
                 new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
             ];
 
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find")
-                .and.returnValue(Promise.resolve(progressPresetModels));
+            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find").and.returnValue(
+                Promise.resolve(progressPresetModels)
+            );
 
-            const insertDaoSpy = spyOn(service.yearProgressPresetDao, "insert")
-                .and.returnValue(Promise.resolve(modelToBeAdded));
+            const insertDaoSpy = spyOn(service.yearProgressPresetDao, "insert").and.returnValue(
+                Promise.resolve(modelToBeAdded)
+            );
 
             // When
             const promise: Promise<YearToDateProgressPresetModel> = service.addPreset(modelToBeAdded);
 
             // Then
-            promise.then(() => {
-
-                expect(insertDaoSpy).toHaveBeenCalledTimes(1);
-                expect(insertDaoSpy).toHaveBeenCalledWith(modelToBeAdded, true);
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-                done();
-
-            }, error => {
-                expect(error).toBeNull();
-                done();
-            });
+            promise.then(
+                () => {
+                    expect(insertDaoSpy).toHaveBeenCalledTimes(1);
+                    expect(insertDaoSpy).toHaveBeenCalledWith(modelToBeAdded, true);
+                    expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                    done();
+                },
+                error => {
+                    expect(error).toBeNull();
+                    done();
+                }
+            );
         });
 
         it("should add a rolling progress preset", done => {
-
             // Given
-            const modelToBeAdded = new RollingProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000, "Months", 2);
+            const modelToBeAdded = new RollingProgressPresetModel(
+                ProgressType.ELEVATION,
+                [ElevateSport.Ride],
+                true,
+                true,
+                5000,
+                "Months",
+                2
+            );
             const progressPresetModels: YearToDateProgressPresetModel[] = [
                 new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
                 new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000),
                 new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
-                new RollingProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000, "Months", 1)
+                new RollingProgressPresetModel(
+                    ProgressType.ELEVATION,
+                    [ElevateSport.Ride],
+                    true,
+                    true,
+                    5000,
+                    "Months",
+                    1
+                ),
             ];
 
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find")
-                .and.returnValue(Promise.resolve(progressPresetModels));
+            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find").and.returnValue(
+                Promise.resolve(progressPresetModels)
+            );
 
             const insertDaoSpy = spyOn(service.yearProgressPresetDao, "insert").and.callThrough();
 
@@ -1228,24 +1293,30 @@ describe("YearProgressService", () => {
             const promise: Promise<YearToDateProgressPresetModel> = service.addPreset(modelToBeAdded);
 
             // Then
-            promise.then((presetModel: YearToDateProgressPresetModel) => {
-
-                expect(presetModel).not.toBeNull();
-                expect(insertDaoSpy).toHaveBeenCalledTimes(1);
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-                expect(presetModel).toEqual(modelToBeAdded);
-                done();
-
-            }, error => {
-                expect(error).toBeNull();
-                done();
-            });
+            promise.then(
+                (presetModel: YearToDateProgressPresetModel) => {
+                    expect(presetModel).not.toBeNull();
+                    expect(insertDaoSpy).toHaveBeenCalledTimes(1);
+                    expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                    expect(presetModel).toEqual(modelToBeAdded);
+                    done();
+                },
+                error => {
+                    expect(error).toBeNull();
+                    done();
+                }
+            );
         });
 
         it("should reject adding a year to date preset already existing (with target)", done => {
-
             // Given
-            const modelToBeAdded = new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000);
+            const modelToBeAdded = new YearToDateProgressPresetModel(
+                ProgressType.ELEVATION,
+                [ElevateSport.Ride],
+                true,
+                true,
+                5000
+            );
             const progressPresetModels: YearToDateProgressPresetModel[] = [
                 new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
                 modelToBeAdded,
@@ -1254,8 +1325,9 @@ describe("YearProgressService", () => {
 
             const expectedErrorMessage = "You already saved this preset.";
 
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find")
-                .and.returnValue(Promise.resolve(progressPresetModels));
+            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find").and.returnValue(
+                Promise.resolve(progressPresetModels)
+            );
 
             const insertDaoSpy = spyOn(service.yearProgressPresetDao, "insert").and.callThrough();
 
@@ -1263,27 +1335,31 @@ describe("YearProgressService", () => {
             const promise: Promise<YearToDateProgressPresetModel> = service.addPreset(modelToBeAdded);
 
             // Then
-            promise.then(() => {
-                expect(false).toBeTruthy("Whoops! I should not be here!");
-                done();
+            promise.then(
+                () => {
+                    expect(false).toBeTruthy("Whoops! I should not be here!");
+                    done();
+                },
+                (error: AppError) => {
+                    expect(error).not.toBeNull();
+                    expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                    expect(insertDaoSpy).not.toHaveBeenCalled();
+                    expect(error.code).toEqual(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS);
+                    expect(error.message).toEqual(expectedErrorMessage);
 
-            }, (error: AppError) => {
-
-                expect(error).not.toBeNull();
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-                expect(insertDaoSpy).not.toHaveBeenCalled();
-                expect(error.code).toEqual(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS);
-                expect(error.message).toEqual(expectedErrorMessage);
-
-                done();
-            });
-
+                    done();
+                }
+            );
         });
 
         it("should reject adding a year to date preset already existing (without target)", done => {
-
             // Given
-            const modelToBeAdded = new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Ride, ElevateSport.VirtualRide], true, true);
+            const modelToBeAdded = new YearToDateProgressPresetModel(
+                ProgressType.DISTANCE,
+                [ElevateSport.Ride, ElevateSport.VirtualRide],
+                true,
+                true
+            );
             const progressPresetModels: YearToDateProgressPresetModel[] = [
                 modelToBeAdded,
                 new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
@@ -1293,8 +1369,9 @@ describe("YearProgressService", () => {
 
             const expectedErrorMessage = "You already saved this preset.";
 
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find")
-                .and.returnValue(Promise.resolve(progressPresetModels));
+            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find").and.returnValue(
+                Promise.resolve(progressPresetModels)
+            );
 
             const insertDaoSpy = spyOn(service.yearProgressPresetDao, "insert").and.callThrough();
 
@@ -1302,39 +1379,52 @@ describe("YearProgressService", () => {
             const promise: Promise<YearToDateProgressPresetModel> = service.addPreset(modelToBeAdded);
 
             // Then
-            promise.then(() => {
-                expect(false).toBeTruthy("Whoops! I should not be here!");
-                done();
+            promise.then(
+                () => {
+                    expect(false).toBeTruthy("Whoops! I should not be here!");
+                    done();
+                },
+                (error: AppError) => {
+                    expect(error).not.toBeNull();
+                    expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                    expect(insertDaoSpy).not.toHaveBeenCalled();
+                    expect(error.code).toEqual(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS);
+                    expect(error.message).toEqual(expectedErrorMessage);
 
-            }, (error: AppError) => {
-
-                expect(error).not.toBeNull();
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-                expect(insertDaoSpy).not.toHaveBeenCalled();
-                expect(error.code).toEqual(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS);
-                expect(error.message).toEqual(expectedErrorMessage);
-
-                done();
-            });
-
+                    done();
+                }
+            );
         });
 
         it("should reject adding a rolling preset already existing", done => {
-
             // Given
-            const modelToBeAdded = new RollingProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000, "Months", 2);
+            const modelToBeAdded = new RollingProgressPresetModel(
+                ProgressType.ELEVATION,
+                [ElevateSport.Ride],
+                true,
+                true,
+                5000,
+                "Months",
+                2
+            );
             const progressPresetModels: YearToDateProgressPresetModel[] = [
                 modelToBeAdded,
                 new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
                 new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000),
                 new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
-                new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Ride, ElevateSport.VirtualRide], true, true)
+                new YearToDateProgressPresetModel(
+                    ProgressType.DISTANCE,
+                    [ElevateSport.Ride, ElevateSport.VirtualRide],
+                    true,
+                    true
+                ),
             ];
 
             const expectedErrorMessage = "You already saved this preset.";
 
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find")
-                .and.returnValue(Promise.resolve(progressPresetModels));
+            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find").and.returnValue(
+                Promise.resolve(progressPresetModels)
+            );
 
             const insertDaoSpy = spyOn(service.yearProgressPresetDao, "insert").and.callThrough();
 
@@ -1342,44 +1432,45 @@ describe("YearProgressService", () => {
             const promise: Promise<YearToDateProgressPresetModel> = service.addPreset(modelToBeAdded);
 
             // Then
-            promise.then(() => {
-                expect(false).toBeTruthy("Whoops! I should not be here!");
-                done();
+            promise.then(
+                () => {
+                    expect(false).toBeTruthy("Whoops! I should not be here!");
+                    done();
+                },
+                (error: AppError) => {
+                    expect(error).not.toBeNull();
+                    expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                    expect(insertDaoSpy).not.toHaveBeenCalled();
+                    expect(error.code).toEqual(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS);
+                    expect(error.message).toEqual(expectedErrorMessage);
 
-            }, (error: AppError) => {
-
-                expect(error).not.toBeNull();
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-                expect(insertDaoSpy).not.toHaveBeenCalled();
-                expect(error.code).toEqual(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS);
-                expect(error.message).toEqual(expectedErrorMessage);
-
-                done();
-            });
-
+                    done();
+                }
+            );
         });
 
         it("should delete preset", done => {
-
             // Given
             const model = new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false);
 
-            const removeByIdDaoSpy = spyOn(service.yearProgressPresetDao, "removeById")
-                .and.returnValue(Promise.resolve());
+            const removeByIdDaoSpy = spyOn(service.yearProgressPresetDao, "removeById").and.returnValue(
+                Promise.resolve()
+            );
 
             // When
             const promise: Promise<void> = service.deletePreset(model.id);
 
             // Then
-            promise.then(() => {
-                expect(removeByIdDaoSpy).toHaveBeenCalledWith(model.id);
-                done();
-
-            }, error => {
-                expect(error).toBeNull();
-                done();
-            });
+            promise.then(
+                () => {
+                    expect(removeByIdDaoSpy).toHaveBeenCalledWith(model.id);
+                    done();
+                },
+                error => {
+                    expect(error).toBeNull();
+                    done();
+                }
+            );
         });
-
     });
 });

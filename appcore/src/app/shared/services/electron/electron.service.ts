@@ -11,7 +11,6 @@ export interface ElectronWindow extends Window {
 
 @Injectable()
 export class ElectronService {
-
     public instance: any;
 
     constructor(public logger: LoggerService) {
@@ -40,7 +39,7 @@ export class ElectronService {
 
     public userDirectorySelection(): string {
         const paths = this.electron.remote.dialog.showOpenDialogSync(this.getMainBrowserWindow(), {
-            properties: ["openDirectory", "showHiddenFiles"]
+            properties: ["openDirectory", "showHiddenFiles"],
         });
         return paths && paths.length > 0 ? paths[0] : null;
     }
@@ -73,15 +72,20 @@ export class ElectronService {
 
     public clearAppDataAndRestart(): void {
         const session = this.getSession();
-        session.clearStorageData().then(() => {
-            return session.clearCache();
-        }).then(() => {
-            return session.clearAuthCache();
-        }).then(() => {
-            return session.clearHostResolverCache();
-        }).then(() => {
-            this.restartApp();
-        });
+        session
+            .clearStorageData()
+            .then(() => {
+                return session.clearCache();
+            })
+            .then(() => {
+                return session.clearAuthCache();
+            })
+            .then(() => {
+                return session.clearHostResolverCache();
+            })
+            .then(() => {
+                this.restartApp();
+            });
     }
 
     public rmDirSync(path: string): void {
@@ -89,9 +93,11 @@ export class ElectronService {
         if (fs.existsSync(path)) {
             fs.readdirSync(path).forEach(file => {
                 const curPath = path + "/" + file;
-                if (fs.lstatSync(curPath).isDirectory()) { // recurse
+                if (fs.lstatSync(curPath).isDirectory()) {
+                    // recurse
                     this.rmDirSync(curPath);
-                } else { // delete file
+                } else {
+                    // delete file
                     fs.unlinkSync(curPath);
                 }
             });
@@ -105,7 +111,6 @@ export class ElectronService {
     }
 
     public filesIn(folderPath: string, ext: string | RegExp): string[] {
-
         let files: string[] = this.readDirSync(folderPath);
 
         files = _.remove(files, file => {
@@ -150,7 +155,6 @@ export class ElectronService {
     }
 
     public isDirectory(path: string): boolean {
-
         if (!this.existsSync(path)) {
             return false;
         }
@@ -163,7 +167,6 @@ export class ElectronService {
     }
 
     public isFile(path: string): boolean {
-
         if (!this.existsSync(path)) {
             return false;
         }

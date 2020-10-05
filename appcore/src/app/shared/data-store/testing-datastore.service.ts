@@ -6,7 +6,6 @@ import { AppUsageDetails } from "../models/app-usage-details.model";
 
 @Injectable()
 export class TestingDataStore<T extends {}> extends DataStore<T> {
-
     constructor(protected logger: LoggerService) {
         super(logger);
     }

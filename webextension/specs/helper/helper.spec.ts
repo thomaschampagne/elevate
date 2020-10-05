@@ -1,7 +1,6 @@
 import { Helper } from "../../scripts/helper";
 
 describe("Helper", () => {
-
     it("should give seconds from HH:MM:SS pattern", done => {
         expect(Helper.HHMMSStoSeconds("00:05:00")).toEqual(300);
         expect(Helper.HHMMSStoSeconds("05:00")).toEqual(300);

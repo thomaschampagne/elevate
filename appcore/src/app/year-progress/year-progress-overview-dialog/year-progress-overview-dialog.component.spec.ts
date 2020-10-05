@@ -12,7 +12,6 @@ import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-pro
 import { ElevateSport } from "@elevate/shared/enums";
 
 describe("YearProgressOverviewDialogComponent", () => {
-
     let component: YearProgressOverviewDialogComponent;
     let fixture: ComponentFixture<YearProgressOverviewDialogComponent>;
 
@@ -21,7 +20,7 @@ describe("YearProgressOverviewDialogComponent", () => {
     yearsColorsMap.set(2016, "blue");
     yearsColorsMap.set(2017, "green");
     yearsColorsMap.set(2018, "purple");
-    const colors: string [] = ["red", "blue", "green", "purple"];
+    const colors: string[] = ["red", "blue", "green", "purple"];
 
     const yearProgressForOverviewModel: YearProgressForOverviewModel = {
         progressConfig: new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.Run], true, true),
@@ -29,25 +28,22 @@ describe("YearProgressOverviewDialogComponent", () => {
         selectedYears: [2017, 2016],
         yearProgressStyleModel: new YearProgressStyleModel(yearsColorsMap, colors),
         yearProgressions: [],
-        progressTypes: []
+        progressTypes: [],
     };
 
     beforeEach(done => {
-
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                YearProgressModule
-            ],
+            imports: [CoreModule, SharedModule, YearProgressModule],
             providers: [
                 {
-                    provide: MAT_DIALOG_DATA, useValue: yearProgressForOverviewModel,
+                    provide: MAT_DIALOG_DATA,
+                    useValue: yearProgressForOverviewModel,
                 },
                 {
-                    provide: MatDialogRef, useValue: {},
+                    provide: MatDialogRef,
+                    useValue: {},
                 },
-            ]
+            ],
         }).compileComponents();
 
         done();

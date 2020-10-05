@@ -15,9 +15,10 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
             zoneValue: "speed",
             output: (speedKph: number) => {
                 return (speedKph * Constant.KM_TO_MILE_FACTOR).toFixed(1) + " mph";
-            }
-        }
-    }, {
+            },
+        },
+    },
+    {
         name: "Running Pace",
         value: "pace",
         units: "Seconds",
@@ -29,10 +30,14 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
             zoneValue: "pace",
             output: (seconds: number) => {
                 const paceMetric = moment().startOf("day").seconds(seconds).format("mm:ss") + "/km";
-                const paceImperial = moment().startOf("day").seconds(seconds / Constant.KM_TO_MILE_FACTOR).format("mm:ss") + "/mi";
+                const paceImperial =
+                    moment()
+                        .startOf("day")
+                        .seconds(seconds / Constant.KM_TO_MILE_FACTOR)
+                        .format("mm:ss") + "/mi";
                 return paceMetric + "  | " + paceImperial;
-            }
-        }
+            },
+        },
     },
     {
         name: "Grade Adjusted Running Pace",
@@ -46,73 +51,85 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
             zoneValue: "gradeAdjustedPace",
             output: (seconds: number) => {
                 const paceMetric = moment().startOf("day").seconds(seconds).format("mm:ss") + "/km";
-                const paceImperial = moment().startOf("day").seconds(seconds / Constant.KM_TO_MILE_FACTOR).format("mm:ss") + "/mi";
+                const paceImperial =
+                    moment()
+                        .startOf("day")
+                        .seconds(seconds / Constant.KM_TO_MILE_FACTOR)
+                        .format("mm:ss") + "/mi";
                 return paceMetric + "  | " + paceImperial;
-            }
-        }
-    }, {
+            },
+        },
+    },
+    {
         name: "Heart Rate",
         value: "heartRate",
         units: "BPM",
         step: 1,
         min: 0,
         max: 9999,
-        customDisplay: null
-    }, {
+        customDisplay: null,
+    },
+    {
         name: "Cycling Power",
         value: "power",
         units: "Watts",
         step: 1,
         min: 0,
         max: 9999,
-        customDisplay: null
-    }, {
+        customDisplay: null,
+    },
+    {
         name: "Running Power",
         value: "runningPower",
         units: "Watts",
         step: 1,
         min: 0,
         max: 9999,
-        customDisplay: null
-    }, {
+        customDisplay: null,
+    },
+    {
         name: "Cycling Cadence",
         value: "cyclingCadence",
         units: "RPM",
         step: 1,
         min: 0,
         max: 9999,
-        customDisplay: null
-    }, {
+        customDisplay: null,
+    },
+    {
         name: "Running Cadence",
         value: "runningCadence",
         units: "SPM",
         step: 0.1,
         min: 0,
         max: 9999,
-        customDisplay: null
-    }, {
+        customDisplay: null,
+    },
+    {
         name: "Grade",
         value: "grade",
         units: "%",
         step: 0.1,
         min: -9999,
         max: 9999,
-        customDisplay: null
-    }, {
+        customDisplay: null,
+    },
+    {
         name: "Elevation",
         value: "elevation",
         units: "m",
         step: 5,
         min: 0,
         max: 9999,
-        customDisplay: null
-    }, {
+        customDisplay: null,
+    },
+    {
         name: "Ascent speed",
         value: "ascent",
         units: "Vm/h",
         step: 5,
         min: 0,
         max: 9999,
-        customDisplay: null
-    }
+        customDisplay: null,
+    },
 ];

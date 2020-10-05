@@ -12,19 +12,17 @@ class FakeDoc {
 }
 
 describe("DataStore", () => {
-
-    const collectionDef = new CollectionDef<FakeDoc>("fakeDocs", {unique: ["id"]});
+    const collectionDef = new CollectionDef<FakeDoc>("fakeDocs", { unique: ["id"] });
     let dataStore: TestingDataStore<FakeDoc>;
     let collection: Collection<FakeDoc>;
 
     beforeEach(done => {
-
         TestBed.configureTestingModule({
             providers: [
                 TestingDataStore,
-                {provide: DataStore, useClass: TestingDataStore},
-                {provide: LoggerService, useClass: ConsoleLoggerService}
-            ]
+                { provide: DataStore, useClass: TestingDataStore },
+                { provide: LoggerService, useClass: ConsoleLoggerService },
+            ],
         });
 
         dataStore = TestBed.inject(TestingDataStore) as TestingDataStore<any>;
@@ -34,9 +32,8 @@ describe("DataStore", () => {
     });
 
     it("should insert an document", done => {
-
         // Given
-        const fakeDoc: FakeDoc = {id: "01", name: "My first document"};
+        const fakeDoc: FakeDoc = { id: "01", name: "My first document" };
 
         // When
         const promise = dataStore.insert(collectionDef, fakeDoc, true);
@@ -50,27 +47,30 @@ describe("DataStore", () => {
     });
 
     it("should insert many documents", done => {
-
         // Given
-        const fakeDocs: FakeDoc[] = [{id: "01", name: "My first document"}, {id: "02", name: "My 2nd document"}];
+        const fakeDocs: FakeDoc[] = [
+            { id: "01", name: "My first document" },
+            { id: "02", name: "My 2nd document" },
+        ];
 
         // When
         const promise = dataStore.insertMany(collectionDef, fakeDocs, true);
 
         // Then
-        promise.then(() => {
-            return dataStore.count(collectionDef);
-        }).then(count => {
-            expect(count).toEqual(2);
-            done();
-        });
+        promise
+            .then(() => {
+                return dataStore.count(collectionDef);
+            })
+            .then(count => {
+                expect(count).toEqual(2);
+                done();
+            });
     });
 
     it("should update an document", done => {
-
         // Given
         const expectedName = "Updated document name";
-        const fakeDoc: FakeDoc = {id: "01", name: "My document"};
+        const fakeDoc: FakeDoc = { id: "01", name: "My document" };
         const insertedDocument = collection.insert(fakeDoc);
         insertedDocument.name = expectedName;
 
@@ -86,11 +86,13 @@ describe("DataStore", () => {
     });
 
     it("should update many documents", done => {
-
         // Given
         const expectedName01 = "Updated name 01";
         const expectedName02 = "Updated name 02";
-        const fakeDocs: FakeDoc[] = [{id: "01", name: "My first document"}, {id: "02", name: "My 2nd document"}];
+        const fakeDocs: FakeDoc[] = [
+            { id: "01", name: "My first document" },
+            { id: "02", name: "My 2nd document" },
+        ];
         const insertedDocuments = collection.insert(fakeDocs);
         insertedDocuments[0].name = expectedName01;
         insertedDocuments[1].name = expectedName02;
@@ -99,20 +101,21 @@ describe("DataStore", () => {
         const promise = dataStore.updateMany(collectionDef, insertedDocuments, true);
 
         // Then
-        promise.then(() => {
-            return dataStore.find(collectionDef, []);
-        }).then(results => {
-            expect(results.length).toEqual(2);
-            expect(results[0].name).toEqual(expectedName01);
-            expect(results[1].name).toEqual(expectedName02);
-            done();
-        });
+        promise
+            .then(() => {
+                return dataStore.find(collectionDef, []);
+            })
+            .then(results => {
+                expect(results.length).toEqual(2);
+                expect(results[0].name).toEqual(expectedName01);
+                expect(results[1].name).toEqual(expectedName02);
+                done();
+            });
     });
 
     it("should put not existing document", done => {
-
         // Given
-        const fakeDoc: FakeDoc = {id: "01", name: "My first document"};
+        const fakeDoc: FakeDoc = { id: "01", name: "My first document" };
 
         // When
         const promise = dataStore.put(collectionDef, fakeDoc, true);
@@ -126,11 +129,10 @@ describe("DataStore", () => {
     });
 
     it("should put existing document", done => {
-
         // Given
         const expectedName = "My document";
         const expectedType = "None";
-        const fakeDoc: FakeDoc = {id: "01", name: expectedName};
+        const fakeDoc: FakeDoc = { id: "01", name: expectedName };
         const insertedDocument: FakeDoc = collection.insert(fakeDoc);
         insertedDocument.subject = expectedType;
 
@@ -147,10 +149,9 @@ describe("DataStore", () => {
     });
 
     it("should find and count document results", done => {
-
         // Given
-        const fakeDoc01: FakeDoc = {id: "01", name: "My 1st document"};
-        const fakeDoc02: FakeDoc = {id: "02", name: "My 2nd document"};
+        const fakeDoc01: FakeDoc = { id: "01", name: "My 1st document" };
+        const fakeDoc02: FakeDoc = { id: "02", name: "My 2nd document" };
         collection.insert(fakeDoc01);
         collection.insert(fakeDoc02);
 
@@ -158,31 +159,32 @@ describe("DataStore", () => {
         const promise = dataStore.find(collectionDef, []);
 
         // Then
-        promise.then(results => {
-            expect(results).not.toEqual([]);
-            expect(results.length).toEqual(2);
-            return dataStore.count(collectionDef);
-        }).then(count => {
-            expect(count).toEqual(2);
-            done();
-        });
+        promise
+            .then(results => {
+                expect(results).not.toEqual([]);
+                expect(results.length).toEqual(2);
+                return dataStore.count(collectionDef);
+            })
+            .then(count => {
+                expect(count).toEqual(2);
+                done();
+            });
     });
 
     it("should find and sort document ascending", done => {
-
         // Given
-        const fakeDoc01: FakeDoc = {id: "01", name: "My 1st document"};
-        const fakeDoc03: FakeDoc = {id: "03", name: "My 3nd document"};
-        const fakeDoc02: FakeDoc = {id: "02", name: "My 2nd document"};
+        const fakeDoc01: FakeDoc = { id: "01", name: "My 1st document" };
+        const fakeDoc03: FakeDoc = { id: "03", name: "My 3nd document" };
+        const fakeDoc02: FakeDoc = { id: "02", name: "My 2nd document" };
         collection.insert(fakeDoc01);
         collection.insert(fakeDoc02);
         collection.insert(fakeDoc03);
 
-        const sort: { propName: keyof FakeDoc, options: Partial<SimplesortOptions> } = {
+        const sort: { propName: keyof FakeDoc; options: Partial<SimplesortOptions> } = {
             propName: "name",
             options: {
-                desc: false
-            }
+                desc: false,
+            },
         };
         // When
         const promise = dataStore.find(collectionDef, [], null, sort);
@@ -198,20 +200,19 @@ describe("DataStore", () => {
     });
 
     it("should find and sort document descending", done => {
-
         // Given
-        const fakeDoc01: FakeDoc = {id: "01", name: "My 1st document"};
-        const fakeDoc03: FakeDoc = {id: "03", name: "My 3nd document"};
-        const fakeDoc02: FakeDoc = {id: "02", name: "My 2nd document"};
+        const fakeDoc01: FakeDoc = { id: "01", name: "My 1st document" };
+        const fakeDoc03: FakeDoc = { id: "03", name: "My 3nd document" };
+        const fakeDoc02: FakeDoc = { id: "02", name: "My 2nd document" };
         collection.insert(fakeDoc01);
         collection.insert(fakeDoc02);
         collection.insert(fakeDoc03);
 
-        const sort: { propName: keyof FakeDoc, options: Partial<SimplesortOptions> } = {
+        const sort: { propName: keyof FakeDoc; options: Partial<SimplesortOptions> } = {
             propName: "name",
             options: {
-                desc: true
-            }
+                desc: true,
+            },
         };
 
         // When
@@ -228,16 +229,15 @@ describe("DataStore", () => {
     });
 
     it("should find one document", done => {
-
         // Given
         const expectedName = "My 2nd document";
-        const fakeDoc01: FakeDoc = {id: "01", name: "My 1st document"};
-        const fakeDoc02: FakeDoc = {id: "02", name: expectedName};
+        const fakeDoc01: FakeDoc = { id: "01", name: "My 1st document" };
+        const fakeDoc02: FakeDoc = { id: "02", name: expectedName };
         collection.insert(fakeDoc01);
         collection.insert(fakeDoc02);
 
         // When
-        const promise = dataStore.findOne(collectionDef, null, {name: expectedName});
+        const promise = dataStore.findOne(collectionDef, null, { name: expectedName });
 
         // Then
         promise.then(document => {
@@ -247,11 +247,10 @@ describe("DataStore", () => {
     });
 
     it("should get by specific unique id", done => {
-
         // Given
-        const fakeDoc01: FakeDoc = {id: "01", name: "My 1st document"};
-        const fakeDoc02: FakeDoc = {id: "02", name: "My 2nd document"};
-        const fakeDoc03: FakeDoc = {id: "03", name: "My 3st document"};
+        const fakeDoc01: FakeDoc = { id: "01", name: "My 1st document" };
+        const fakeDoc02: FakeDoc = { id: "02", name: "My 2nd document" };
+        const fakeDoc03: FakeDoc = { id: "03", name: "My 3st document" };
         collection.insert(fakeDoc01);
         collection.insert(fakeDoc02);
         collection.insert(fakeDoc03);
@@ -267,11 +266,10 @@ describe("DataStore", () => {
     });
 
     it("should get by default unique id", done => {
-
         // Given
-        const fakeDoc01: FakeDoc = {id: "01", name: "My 1st document"};
-        const fakeDoc02: FakeDoc = {id: "02", name: "My 2nd document"};
-        const fakeDoc03: FakeDoc = {id: "03", name: "My 3st document"};
+        const fakeDoc01: FakeDoc = { id: "01", name: "My 1st document" };
+        const fakeDoc02: FakeDoc = { id: "02", name: "My 2nd document" };
+        const fakeDoc03: FakeDoc = { id: "03", name: "My 3st document" };
         collection.insert(fakeDoc01);
         collection.insert(fakeDoc02);
         collection.insert(fakeDoc03);
@@ -289,11 +287,10 @@ describe("DataStore", () => {
     });
 
     it("should remove a document", done => {
-
         // Given
         const expectedName = "My 1st document";
-        const fakeDoc01: FakeDoc = {id: "01", name: expectedName};
-        const fakeDoc02: FakeDoc = {id: "02", name: "My 2nd document"};
+        const fakeDoc01: FakeDoc = { id: "01", name: expectedName };
+        const fakeDoc02: FakeDoc = { id: "02", name: "My 2nd document" };
         collection.insert(fakeDoc01);
         collection.insert(fakeDoc02);
 
@@ -301,21 +298,22 @@ describe("DataStore", () => {
         const promise = dataStore.remove(collectionDef, fakeDoc02, true);
 
         // Then
-        promise.then(() => {
-            return dataStore.find(collectionDef, []);
-        }).then(results => {
-            expect(results.length).toEqual(1);
-            expect(results[0].name).toEqual(expectedName);
-            done();
-        });
+        promise
+            .then(() => {
+                return dataStore.find(collectionDef, []);
+            })
+            .then(results => {
+                expect(results.length).toEqual(1);
+                expect(results[0].name).toEqual(expectedName);
+                done();
+            });
     });
 
     it("should remove a document by specific id", done => {
-
         // Given
         const expectedName = "My 1st document";
-        const fakeDoc01: FakeDoc = {id: "01", name: expectedName};
-        const fakeDoc02: FakeDoc = {id: "02", name: "My 2nd document"};
+        const fakeDoc01: FakeDoc = { id: "01", name: expectedName };
+        const fakeDoc02: FakeDoc = { id: "02", name: "My 2nd document" };
         collection.insert(fakeDoc01);
         collection.insert(fakeDoc02);
 
@@ -323,22 +321,23 @@ describe("DataStore", () => {
         const promise = dataStore.removeById(collectionDef, fakeDoc02.id, true);
 
         // Then
-        promise.then(() => {
-            return dataStore.find(collectionDef, []);
-        }).then(results => {
-            expect(results.length).toEqual(1);
-            expect(results[0].name).toEqual(expectedName);
-            done();
-        });
+        promise
+            .then(() => {
+                return dataStore.find(collectionDef, []);
+            })
+            .then(results => {
+                expect(results.length).toEqual(1);
+                expect(results[0].name).toEqual(expectedName);
+                done();
+            });
     });
 
     it("should remove a document by many specifics ids", done => {
-
         // Given
         const expectedName = "My 2nd document";
-        const fakeDoc01: FakeDoc = {id: "01", name: "My 1st document"};
-        const fakeDoc02: FakeDoc = {id: "02", name: expectedName};
-        const fakeDoc03: FakeDoc = {id: "03", name: "My 3rd document"};
+        const fakeDoc01: FakeDoc = { id: "01", name: "My 1st document" };
+        const fakeDoc02: FakeDoc = { id: "02", name: expectedName };
+        const fakeDoc03: FakeDoc = { id: "03", name: "My 3rd document" };
         collection.insert(fakeDoc01);
         collection.insert(fakeDoc02);
         collection.insert(fakeDoc03);
@@ -347,20 +346,21 @@ describe("DataStore", () => {
         const promise = dataStore.removeByManyIds(collectionDef, [fakeDoc01.id, fakeDoc03.id], true);
 
         // Then
-        promise.then(() => {
-            return dataStore.find(collectionDef, []);
-        }).then(results => {
-            expect(results.length).toEqual(1);
-            expect(results[0].name).toEqual(expectedName);
-            done();
-        });
+        promise
+            .then(() => {
+                return dataStore.find(collectionDef, []);
+            })
+            .then(results => {
+                expect(results.length).toEqual(1);
+                expect(results[0].name).toEqual(expectedName);
+                done();
+            });
     });
 
     it("should clear docs", done => {
-
         // Given
-        const fakeDoc01: FakeDoc = {id: "01", name: "My 1st document"};
-        const fakeDoc02: FakeDoc = {id: "02", name: "My 2nd document"};
+        const fakeDoc01: FakeDoc = { id: "01", name: "My 1st document" };
+        const fakeDoc02: FakeDoc = { id: "02", name: "My 2nd document" };
         collection.insert(fakeDoc01);
         collection.insert(fakeDoc02);
 
@@ -368,11 +368,13 @@ describe("DataStore", () => {
         const promise = dataStore.clear(collectionDef, true);
 
         // Then
-        promise.then(() => {
-            return dataStore.count(collectionDef);
-        }).then(count => {
-            expect(count).toEqual(0);
-            done();
-        });
+        promise
+            .then(() => {
+                return dataStore.count(collectionDef);
+            })
+            .then(count => {
+                expect(count).toEqual(0);
+                done();
+            });
     });
 });

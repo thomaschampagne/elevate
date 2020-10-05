@@ -1,6 +1,7 @@
 import { ElevateSport } from "../../enums";
 
-export class ActivityInfoModel { // TODO Merge with ActivitySourceDataModel?!
+export class ActivityInfoModel {
+    // TODO Merge with ActivitySourceDataModel?!
     public id: number;
     public type: ElevateSport;
     public name: string;

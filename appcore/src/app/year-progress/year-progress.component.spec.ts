@@ -22,7 +22,6 @@ import { TestingDataStore } from "../shared/data-store/testing-datastore.service
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("YearProgressComponent", () => {
-
     const pluginId = "c061d18abea0";
     const yearProgressPresetModels = [
         new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false, 750),
@@ -39,24 +38,16 @@ describe("YearProgressComponent", () => {
     let TEST_SYNCED_ACTIVITIES: SyncedActivityModel[];
 
     beforeEach(done => {
-
         spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
             // @ts-ignore
-            addListener: (message: any, sender: any, sendResponse: any) => {
-            }
+            addListener: (message: any, sender: any, sendResponse: any) => {},
         });
 
         spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                YearProgressModule
-            ],
-            providers: [
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+            imports: [CoreModule, SharedModule, YearProgressModule],
+            providers: [{ provide: DataStore, useClass: TestingDataStore }],
         }).compileComponents();
 
         TEST_SYNCED_ACTIVITIES = YearProgressActivitiesFixture.provide();
@@ -86,19 +77,18 @@ describe("YearProgressComponent", () => {
     });
 
     it("should determine most performed activity type", done => {
-
         // Given
         const expected = ElevateSport.Ride;
         const activitiesCountByTypeModels: ActivityCountByTypeModel[] = [
-            {type: ElevateSport.AlpineSki, count: 12},
-            {type: ElevateSport.Ride, count: 522},
-            {type: ElevateSport.Run, count: 25},
-            {type: ElevateSport.Walk, count: 32},
-            {type: ElevateSport.Hike, count: 8},
-            {type: ElevateSport.Swim, count: 5},
-            {type: ElevateSport.VirtualRide, count: 29},
-            {type: ElevateSport.InlineSkate, count: 3},
-            {type: ElevateSport.Workout, count: 6}
+            { type: ElevateSport.AlpineSki, count: 12 },
+            { type: ElevateSport.Ride, count: 522 },
+            { type: ElevateSport.Run, count: 25 },
+            { type: ElevateSport.Walk, count: 32 },
+            { type: ElevateSport.Hike, count: 8 },
+            { type: ElevateSport.Swim, count: 5 },
+            { type: ElevateSport.VirtualRide, count: 29 },
+            { type: ElevateSport.InlineSkate, count: 3 },
+            { type: ElevateSport.Workout, count: 6 },
         ];
 
         // When
@@ -110,10 +100,9 @@ describe("YearProgressComponent", () => {
     });
 
     it("should give proper colors to all year lines from a color palette", done => {
-
         // Given
-        const colorPalette: string [] = ["red", "blue", "green", "purple", "orange"];
-        const expectedGlobalColors: string [] = ["red", "blue", "green", "purple", "orange", "red", "blue"];
+        const colorPalette: string[] = ["red", "blue", "green", "purple", "orange"];
+        const expectedGlobalColors: string[] = ["red", "blue", "green", "purple", "orange", "red", "blue"];
 
         const yearProgressions: YearProgressModel[] = [
             new YearProgressModel(2011, []),
@@ -140,5 +129,4 @@ describe("YearProgressComponent", () => {
         expect(style.yearsColorsMap.get(2017)).toEqual("blue");
         done();
     });
-
 });

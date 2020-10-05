@@ -1,7 +1,6 @@
 import { AbstractModifier } from "./abstract.modifier";
 
 export class ActivityStravaMapTypeModifier extends AbstractModifier {
-
     protected mapType: string;
 
     constructor(mapType: string) {
@@ -10,7 +9,6 @@ export class ActivityStravaMapTypeModifier extends AbstractModifier {
     }
 
     public modify(): void {
-
         if (this.mapType === "terrain") {
             return;
         }

@@ -3,16 +3,15 @@ import { CoreMessages, SpeedUnitDataModel } from "@elevate/shared/models";
 import { Constant } from "@elevate/shared/constants";
 
 export class Helper {
-
     /**
      *
      * @param {string} measurementPreference meters or imperial
      * @returns {SpeedUnitDataModel}
      */
     public static getSpeedUnitData(measurementPreference: string): SpeedUnitDataModel {
-        const units: string = (measurementPreference === "meters") ? "km" : "mi";
-        const speedUnitPerHour: string = (measurementPreference === "meters") ? "km/h" : "mi/h";
-        const speedUnitFactor: number = (speedUnitPerHour === "km/h") ? 1 : Constant.KM_TO_MILE_FACTOR;
+        const units: string = measurementPreference === "meters" ? "km" : "mi";
+        const speedUnitPerHour: string = measurementPreference === "meters" ? "km/h" : "mi/h";
+        const speedUnitFactor: number = speedUnitPerHour === "km/h" ? 1 : Constant.KM_TO_MILE_FACTOR;
 
         const speedUnitData: SpeedUnitDataModel = {
             speedUnitPerHour,
@@ -23,7 +22,6 @@ export class Helper {
     }
 
     public static HHMMSStoSeconds(str: string): number {
-
         let p: string[] = str.split(":"),
             s: any = 0,
             m = 1;
@@ -36,17 +34,16 @@ export class Helper {
     }
 
     public static secondsToHHMMSS(secondsParam: number, trimLeadingZeros?: boolean): string {
-
         const secNum: number = Math.round(secondsParam); // don't forget the second param
         const hours: number = Math.floor(secNum / 3600);
-        const minutes: number = Math.floor((secNum - (hours * 3600)) / 60);
-        const seconds: number = secNum - (hours * 3600) - (minutes * 60);
+        const minutes: number = Math.floor((secNum - hours * 3600) / 60);
+        const seconds: number = secNum - hours * 3600 - minutes * 60;
 
-        let time: string = ((hours < 10) ? "0" + hours.toFixed(0) : hours.toFixed(0));
-        time += ":" + ((minutes < 10) ? "0" + minutes.toFixed(0) : minutes.toFixed(0));
-        time += ":" + ((seconds < 10) ? "0" + seconds.toFixed(0) : seconds.toFixed(0));
+        let time: string = hours < 10 ? "0" + hours.toFixed(0) : hours.toFixed(0);
+        time += ":" + (minutes < 10 ? "0" + minutes.toFixed(0) : minutes.toFixed(0));
+        time += ":" + (seconds < 10 ? "0" + seconds.toFixed(0) : seconds.toFixed(0));
 
-        return (trimLeadingZeros ? Helper.trimLeadingZerosHHMMSS(time) : time);
+        return trimLeadingZeros ? Helper.trimLeadingZerosHHMMSS(time) : time;
     }
 
     public static trimLeadingZerosHHMMSS(time: string): string {
@@ -62,7 +59,7 @@ export class Helper {
         const list: any[] = [];
         let tot = 0;
         for (let i = 0; i < values.length; i++) {
-            list.push({value: values[i], weight: weights[i]});
+            list.push({ value: values[i], weight: weights[i] });
             tot += weights[i];
         }
         list.sort((a, b) => {
@@ -77,7 +74,7 @@ export class Helper {
         for (let i = 0; i < list.length; i++) {
             for (let j = 0; j < percentiles.length; j++) {
                 // found the sample matching the percentile
-                if (cur < percentiles[j] * tot && (cur + list[i].weight) > (percentiles[j] - 0.00001) * tot) {
+                if (cur < percentiles[j] * tot && cur + list[i].weight > (percentiles[j] - 0.00001) * tot) {
                     result[j] = list[i].value;
                 }
             }
@@ -88,7 +85,7 @@ export class Helper {
     }
 
     public static heartrateFromHeartRateReserve(hrr: number, maxHr: number, restHr: number): number {
-        return Math.abs(Math.floor(hrr / 100 * (maxHr - restHr) + restHr));
+        return Math.abs(Math.floor((hrr / 100) * (maxHr - restHr) + restHr));
     }
 
     public static heartRateReserveFromHeartrate(hr: number, maxHr: number, restHr: number): number {
@@ -96,37 +93,47 @@ export class Helper {
     }
 
     public static reloadBrowserTab(extensionId: string, sourceTabId: number) {
-
-        chrome.runtime.sendMessage(extensionId, {
-            method: CoreMessages.ON_RELOAD_BROWSER_TAB,
-            params: {
-                sourceTabId,
+        chrome.runtime.sendMessage(
+            extensionId,
+            {
+                method: CoreMessages.ON_RELOAD_BROWSER_TAB,
+                params: {
+                    sourceTabId,
+                },
             },
-        }, (response: any) => {
-            console.log(response);
-        });
+            (response: any) => {
+                console.log(response);
+            }
+        );
     }
 
     public static formatNumber(n: any, c?: any, d?: any, t?: any): string {
-
-        c = isNaN(c = Math.abs(c)) ? 2 : c,
-            d = d === undefined ? "." : d,
-            t = t === undefined ? "," : t;
+        (c = isNaN((c = Math.abs(c))) ? 2 : c), (d = d === undefined ? "." : d), (t = t === undefined ? "," : t);
 
         const s: any = n < 0 ? "-" : "";
 
-        const i: any = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "";
+        const i: any = parseInt((n = Math.abs(+n || 0).toFixed(c))) + "";
 
         let j: any;
         j = (j = i.length) > 3 ? j % 3 : 0;
 
-        return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+        return (
+            s +
+            (j ? i.substr(0, j) + t : "") +
+            i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) +
+            (c
+                ? d +
+                  Math.abs(n - i)
+                      .toFixed(c)
+                      .slice(2)
+                : "")
+        );
     }
 
     public static secondsToDHM(sec_num: number, trimZeros?: boolean): string {
         const days: number = Math.floor(sec_num / 86400);
-        const hours: number = Math.floor((sec_num - (days * 86400)) / 3600);
-        const minutes: number = Math.floor((sec_num - (days * 86400) - (hours * 3600)) / 60);
+        const hours: number = Math.floor((sec_num - days * 86400) / 3600);
+        const minutes: number = Math.floor((sec_num - days * 86400 - hours * 3600) / 60);
         if (trimZeros && days === 0) {
             if (hours === 0) {
                 return minutes + "m";
@@ -139,14 +146,15 @@ export class Helper {
     public static guid(): string {
         // from http://stackoverflow.com/a/105074
         function s4() {
-            return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
         }
 
         return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
     }
 
     public static params(urlLocation: Location): any {
-
         const params: any = {};
 
         if (urlLocation) {
@@ -182,6 +190,6 @@ export class Helper {
         if (!_.isFinite(speed) || speed <= 0) {
             return -1;
         }
-        return (1 / speed * 60 * 60);
+        return (1 / speed) * 60 * 60;
     }
 }

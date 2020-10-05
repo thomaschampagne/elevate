@@ -7,21 +7,22 @@ import { VERSIONS_PROVIDER, VersionsProvider } from "../../../shared/services/ve
 @Component({
     selector: "app-desktop-unauthorized-machine-id-dialog",
     templateUrl: "./desktop-unauthorized-machine-id-dialog.component.html",
-    styleUrls: ["./desktop-unauthorized-machine-id-dialog.component.scss"]
+    styleUrls: ["./desktop-unauthorized-machine-id-dialog.component.scss"],
 })
 export class DesktopUnauthorizedMachineIdDialogComponent implements OnInit {
-
     public athleteMachineId: string;
     public releaseUrl: string;
 
-    constructor(public electronService: ElectronService,
-                @Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
-                @Inject(MAT_DIALOG_DATA) athleteMachineId: string) {
+    constructor(
+        public electronService: ElectronService,
+        @Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
+        @Inject(MAT_DIALOG_DATA) athleteMachineId: string
+    ) {
         this.athleteMachineId = athleteMachineId;
     }
 
     public ngOnInit(): void {
-        this.releaseUrl = (<DesktopVersionsProvider> this.versionsProvider).getLatestReleaseUrl();
+        this.releaseUrl = (<DesktopVersionsProvider>this.versionsProvider).getLatestReleaseUrl();
     }
 
     public closeApp(): void {

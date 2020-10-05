@@ -4,7 +4,7 @@ import { GlobalSettingsService } from "./global-settings.service";
 describe("GlobalSettingsService", () => {
     beforeEach(done => {
         TestBed.configureTestingModule({
-            providers: [GlobalSettingsService]
+            providers: [GlobalSettingsService],
         });
         done();
     });

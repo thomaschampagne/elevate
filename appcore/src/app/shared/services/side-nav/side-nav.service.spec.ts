@@ -4,12 +4,11 @@ import { SideNavService } from "./side-nav.service";
 import { SideNavStatus } from "./side-nav-status.enum";
 
 describe("SideNavService", () => {
-
     let service: SideNavService;
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            providers: [SideNavService]
+            providers: [SideNavService],
         });
 
         service = TestBed.inject(SideNavService);
@@ -21,7 +20,6 @@ describe("SideNavService", () => {
     }));
 
     it("should notify subscribers when side nav is closed", done => {
-
         // Given
         const expectedCallCount = 1;
         const spy = spyOn(service.changes$, "next");
@@ -36,7 +34,6 @@ describe("SideNavService", () => {
     });
 
     it("should notify subscribers when side nav is opened", done => {
-
         // Given
         const expectedCallCount = 1;
         const spy = spyOn(service.changes$, "next");

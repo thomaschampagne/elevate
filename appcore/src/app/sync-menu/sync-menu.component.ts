@@ -14,24 +14,24 @@ import { ImportExportProgressDialogComponent } from "../shared/dialogs/import-ba
 
 export const SYNC_MENU_COMPONENT = new InjectionToken<SyncMenuComponent>("SYNC_MENU_COMPONENT");
 
-@Component({template: ""})
+@Component({ template: "" })
 export class SyncMenuComponent implements OnInit {
-
     public SyncState = SyncState;
     public syncState: SyncState;
     public syncDateMessage: string;
 
-    constructor(public router: Router,
-                public syncService: SyncService<any>,
-                public appEventsService: AppEventsService,
-                public dialog: MatDialog,
-                public snackBar: MatSnackBar) {
+    constructor(
+        public router: Router,
+        public syncService: SyncService<any>,
+        public appEventsService: AppEventsService,
+        public dialog: MatDialog,
+        public snackBar: MatSnackBar
+    ) {
         this.syncState = null;
         this.syncDateMessage = null;
     }
 
     public ngOnInit(): void {
-
         // Update sync status in toolbar and Refresh SyncDate displayed every minutes
         this.updateSyncDateStatus();
         setInterval(() => {
@@ -51,59 +51,66 @@ export class SyncMenuComponent implements OnInit {
         throw new ElevateException("onSyncedBackupImport must be implemented in a child class");
     }
 
-    public onSync(fastSync: boolean = null, forceSync: boolean = null): void {
-    }
+    public onSync(fastSync: boolean = null, forceSync: boolean = null): void {}
 
     public onClearSyncedData(): void {
-
         const data: ConfirmDialogDataModel = {
             title: "Clear your athlete synced data",
-            content: "Are you sure to perform this action? You will be able to re-import synced data through backup file " +
-                "or a new re-synchronization."
+            content:
+                "Are you sure to perform this action? You will be able to re-import synced data through backup file " +
+                "or a new re-synchronization.",
         };
 
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
             minWidth: ConfirmDialogComponent.MIN_WIDTH,
             maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-            data: data
+            data: data,
         });
 
         const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
-
             if (confirm) {
-                this.syncService.clearSyncedActivities().then(() => {
-                    location.reload();
-                }, error => {
-                    this.snackBar.open(error, "Close");
-                });
+                this.syncService.clearSyncedActivities().then(
+                    () => {
+                        location.reload();
+                    },
+                    error => {
+                        this.snackBar.open(error, "Close");
+                    }
+                );
             }
             afterClosedSubscription.unsubscribe();
         });
     }
 
     public onSyncedBackupExport(): void {
-
         const progressDialogRef = this.dialog.open(ImportExportProgressDialogComponent, {
             disableClose: true,
-            data: ImportExportProgressDialogComponent.MODE_EXPORT
+            data: ImportExportProgressDialogComponent.MODE_EXPORT,
         });
 
-        progressDialogRef.afterOpened().toPromise().then(() => {
-            this.syncService.export().then(result => {
-                progressDialogRef.close(result);
-            }, error => {
-                this.snackBar.open(error, "Close");
+        progressDialogRef
+            .afterOpened()
+            .toPromise()
+            .then(() => {
+                this.syncService.export().then(
+                    result => {
+                        progressDialogRef.close(result);
+                    },
+                    error => {
+                        this.snackBar.open(error, "Close");
+                    }
+                );
             });
-        });
 
-        progressDialogRef.afterClosed().toPromise().then(result => {
-            this.dialog.open(GotItDialogComponent, {
-                minWidth: GotItDialogComponent.MIN_WIDTH,
-                maxWidth: GotItDialogComponent.MAX_WIDTH,
-                data: new GotItDialogDataModel(null, "File \"" + result.filename + "\" is ready to be saved.")
+        progressDialogRef
+            .afterClosed()
+            .toPromise()
+            .then(result => {
+                this.dialog.open(GotItDialogComponent, {
+                    minWidth: GotItDialogComponent.MIN_WIDTH,
+                    maxWidth: GotItDialogComponent.MAX_WIDTH,
+                    data: new GotItDialogDataModel(null, 'File "' + result.filename + '" is ready to be saved.'),
+                });
             });
-        });
-
     }
-
 }

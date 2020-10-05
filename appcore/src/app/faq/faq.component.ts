@@ -7,34 +7,35 @@ import { LoggerService } from "../shared/services/logging/logger.service";
 @Component({
     selector: "app-faq",
     templateUrl: "./faq.component.html",
-    styleUrls: ["./faq.component.scss"]
+    styleUrls: ["./faq.component.scss"],
 })
 export class FaqComponent implements OnInit {
-
-    private static readonly FAQ_URL: string = "https://raw.githubusercontent.com/wiki/thomaschampagne/elevate/Frequently-Asked-Questions.md";
+    private static readonly FAQ_URL: string =
+        "https://raw.githubusercontent.com/wiki/thomaschampagne/elevate/Frequently-Asked-Questions.md";
 
     public html: string;
     public markDownParser: MarkDownIt;
 
     public isFaqLoaded: boolean = null;
 
-    constructor(public httpClient: HttpClient,
-                public domSanitizer: DomSanitizer,
-                public logger: LoggerService) {
-    }
+    constructor(public httpClient: HttpClient, public domSanitizer: DomSanitizer, public logger: LoggerService) {}
 
     public ngOnInit(): void {
-
         this.markDownParser = new MarkDownIt();
 
-        this.httpClient.get(FaqComponent.FAQ_URL, {responseType: "text"}).toPromise().then((markdownData: string) => {
-
-            this.html = <string> this.domSanitizer.bypassSecurityTrustHtml(this.markDownParser.render(markdownData));
-            this.isFaqLoaded = true;
-
-        }, err => {
-            this.logger.error(err);
-        });
+        this.httpClient
+            .get(FaqComponent.FAQ_URL, { responseType: "text" })
+            .toPromise()
+            .then(
+                (markdownData: string) => {
+                    this.html = <string>(
+                        this.domSanitizer.bypassSecurityTrustHtml(this.markDownParser.render(markdownData))
+                    );
+                    this.isFaqLoaded = true;
+                },
+                err => {
+                    this.logger.error(err);
+                }
+            );
     }
-
 }

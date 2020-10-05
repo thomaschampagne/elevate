@@ -12,7 +12,6 @@ import { StreamsDao } from "../../../dao/streams/streams.dao";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 export class BulkRefreshStatsNotification {
-
     public syncedActivityModel: SyncedActivityModel;
     public currentlyProcessed: number;
     public toProcessCount: number;
@@ -20,7 +19,14 @@ export class BulkRefreshStatsNotification {
     public isLast: boolean;
     public error: any;
 
-    private constructor(syncedActivityModel: SyncedActivityModel, currentlyProcessed: number, toProcessCount: number, isFirst: boolean, isLast: boolean, error: any = null) {
+    private constructor(
+        syncedActivityModel: SyncedActivityModel,
+        currentlyProcessed: number,
+        toProcessCount: number,
+        isFirst: boolean,
+        isLast: boolean,
+        error: any = null
+    ) {
         this.syncedActivityModel = syncedActivityModel;
         this.currentlyProcessed = currentlyProcessed;
         this.toProcessCount = toProcessCount;
@@ -29,122 +35,186 @@ export class BulkRefreshStatsNotification {
         this.error = error;
     }
 
-    public static create(syncedActivityModel: SyncedActivityModel, currentlyProcessed: number, toProcessCount: number, isFirst: boolean, isLast: boolean)
-        : BulkRefreshStatsNotification {
-        const bulkRefreshStatsNotification = new BulkRefreshStatsNotification(syncedActivityModel, currentlyProcessed, toProcessCount, isFirst, isLast);
+    public static create(
+        syncedActivityModel: SyncedActivityModel,
+        currentlyProcessed: number,
+        toProcessCount: number,
+        isFirst: boolean,
+        isLast: boolean
+    ): BulkRefreshStatsNotification {
+        const bulkRefreshStatsNotification = new BulkRefreshStatsNotification(
+            syncedActivityModel,
+            currentlyProcessed,
+            toProcessCount,
+            isFirst,
+            isLast
+        );
         delete bulkRefreshStatsNotification.error;
         return bulkRefreshStatsNotification;
     }
 
     public static error(error: any): BulkRefreshStatsNotification {
-        return <BulkRefreshStatsNotification> {
-            error: error
+        return <BulkRefreshStatsNotification>{
+            error: error,
         };
     }
 }
 
 @Injectable()
 export class DesktopActivityService extends ActivityService {
-
-    public static readonly JOB_ALREADY_RUNNING_MESSAGE: string = "A recalculation job is already running. Please wait for the end of the previous one to start a new one.";
+    public static readonly JOB_ALREADY_RUNNING_MESSAGE: string =
+        "A recalculation job is already running. Please wait for the end of the previous one to start a new one.";
 
     public refreshStats$: Subject<BulkRefreshStatsNotification>;
     public isProcessing: boolean;
 
-    constructor(public ipcMessagesSender: IpcMessagesSender,
-                public activityDao: ActivityDao,
-                public streamsDao: StreamsDao,
-                public athleteSnapshotResolverService: AthleteSnapshotResolverService,
-                public logger: LoggerService) {
+    constructor(
+        public ipcMessagesSender: IpcMessagesSender,
+        public activityDao: ActivityDao,
+        public streamsDao: StreamsDao,
+        public athleteSnapshotResolverService: AthleteSnapshotResolverService,
+        public logger: LoggerService
+    ) {
         super(activityDao, athleteSnapshotResolverService, logger);
 
         this.refreshStats$ = new Subject<BulkRefreshStatsNotification>();
         this.isProcessing = false;
     }
 
-    public compute(syncedActivityModel: SyncedActivityModel, userSettingsModel: DesktopUserSettingsModel,
-                   athleteSnapshotModel: AthleteSnapshotModel, streams: ActivityStreamsModel): Promise<SyncedActivityModel> {
-        const computeActivityMessage = new FlaggedIpcMessage(MessageFlag.COMPUTE_ACTIVITY, syncedActivityModel, athleteSnapshotModel, userSettingsModel, streams);
+    public compute(
+        syncedActivityModel: SyncedActivityModel,
+        userSettingsModel: DesktopUserSettingsModel,
+        athleteSnapshotModel: AthleteSnapshotModel,
+        streams: ActivityStreamsModel
+    ): Promise<SyncedActivityModel> {
+        const computeActivityMessage = new FlaggedIpcMessage(
+            MessageFlag.COMPUTE_ACTIVITY,
+            syncedActivityModel,
+            athleteSnapshotModel,
+            userSettingsModel,
+            streams
+        );
         return this.ipcMessagesSender.send<SyncedActivityModel>(computeActivityMessage);
     }
 
-    public refreshStats(syncedActivityModel: SyncedActivityModel, userSettingsModel: UserSettings.DesktopUserSettingsModel): Promise<SyncedActivityModel> {
+    public refreshStats(
+        syncedActivityModel: SyncedActivityModel,
+        userSettingsModel: UserSettings.DesktopUserSettingsModel
+    ): Promise<SyncedActivityModel> {
         let athleteSnapshot: AthleteSnapshotModel = null;
         let streams: ActivityStreamsModel = null;
 
-        return this.athleteSnapshotResolverService.update().then(() => {
-            return this.athleteSnapshotResolverService.resolve(new Date(syncedActivityModel.start_time));
-        }).then((athleteSnapshotModel: AthleteSnapshotModel) => {
-            athleteSnapshot = athleteSnapshotModel;
-            return this.streamsDao.getById(syncedActivityModel.id);
-        }).then(compressedStreamModel => {
-            if (compressedStreamModel) {
-                streams = ActivityStreamsModel.deflate(compressedStreamModel.data);
-            }
-            return this.compute(syncedActivityModel, userSettingsModel, athleteSnapshot, streams).then(newSyncedActivityModel => {
-                return this.put(newSyncedActivityModel);
+        return this.athleteSnapshotResolverService
+            .update()
+            .then(() => {
+                return this.athleteSnapshotResolverService.resolve(new Date(syncedActivityModel.start_time));
+            })
+            .then((athleteSnapshotModel: AthleteSnapshotModel) => {
+                athleteSnapshot = athleteSnapshotModel;
+                return this.streamsDao.getById(syncedActivityModel.id);
+            })
+            .then(compressedStreamModel => {
+                if (compressedStreamModel) {
+                    streams = ActivityStreamsModel.deflate(compressedStreamModel.data);
+                }
+                return this.compute(syncedActivityModel, userSettingsModel, athleteSnapshot, streams).then(
+                    newSyncedActivityModel => {
+                        return this.put(newSyncedActivityModel);
+                    }
+                );
             });
-        });
     }
 
-    public bulkRefreshStats(syncedActivityModels: SyncedActivityModel[], userSettingsModel: UserSettings.DesktopUserSettingsModel): void {
-
+    public bulkRefreshStats(
+        syncedActivityModels: SyncedActivityModel[],
+        userSettingsModel: UserSettings.DesktopUserSettingsModel
+    ): void {
         if (this.isProcessing) {
-            this.refreshStats$.next(BulkRefreshStatsNotification.error(new ElevateException(DesktopActivityService.JOB_ALREADY_RUNNING_MESSAGE)));
+            this.refreshStats$.next(
+                BulkRefreshStatsNotification.error(
+                    new ElevateException(DesktopActivityService.JOB_ALREADY_RUNNING_MESSAGE)
+                )
+            );
             return;
         }
 
         this.isProcessing = true;
 
-        syncedActivityModels.reduce((previousRefreshDone: Promise<void>, syncedActivityModel: SyncedActivityModel, index: number) => {
-            return previousRefreshDone.then(() => {
-                return this.refreshStats(syncedActivityModel, userSettingsModel).then(syncedActivityRefreshed => {
-                    const bulkRefreshStatsNotification = BulkRefreshStatsNotification.create(syncedActivityRefreshed, index + 1,
-                        syncedActivityModels.length, index === 0, index === (syncedActivityModels.length - 1));
-                    this.refreshStats$.next(bulkRefreshStatsNotification);
-                    return Promise.resolve();
+        syncedActivityModels
+            .reduce((previousRefreshDone: Promise<void>, syncedActivityModel: SyncedActivityModel, index: number) => {
+                return previousRefreshDone.then(() => {
+                    return this.refreshStats(syncedActivityModel, userSettingsModel).then(syncedActivityRefreshed => {
+                        const bulkRefreshStatsNotification = BulkRefreshStatsNotification.create(
+                            syncedActivityRefreshed,
+                            index + 1,
+                            syncedActivityModels.length,
+                            index === 0,
+                            index === syncedActivityModels.length - 1
+                        );
+                        this.refreshStats$.next(bulkRefreshStatsNotification);
+                        return Promise.resolve();
+                    });
                 });
+            }, Promise.resolve())
+            .then(() => {
+                this.isProcessing = false;
+                this.activityDao.saveDataStore();
+            })
+            .catch(err => {
+                this.refreshStats$.next(BulkRefreshStatsNotification.error(err));
             });
-        }, Promise.resolve()).then(() => {
-            this.isProcessing = false;
-            this.activityDao.saveDataStore();
-        }).catch(err => {
-            this.refreshStats$.next(BulkRefreshStatsNotification.error(err));
-        });
     }
 
-    public bulkRefreshStatsFromIds(activityIds: (number | string)[], userSettingsModel: UserSettings.DesktopUserSettingsModel): void {
-
+    public bulkRefreshStatsFromIds(
+        activityIds: (number | string)[],
+        userSettingsModel: UserSettings.DesktopUserSettingsModel
+    ): void {
         if (this.isProcessing) {
-            this.refreshStats$.next(BulkRefreshStatsNotification.error(new ElevateException(DesktopActivityService.JOB_ALREADY_RUNNING_MESSAGE)));
+            this.refreshStats$.next(
+                BulkRefreshStatsNotification.error(
+                    new ElevateException(DesktopActivityService.JOB_ALREADY_RUNNING_MESSAGE)
+                )
+            );
             return;
         }
 
         this.isProcessing = true;
 
-        activityIds.reduce((previousRefreshDone: Promise<void>, activityId: (number | string), index: number) => {
-            return previousRefreshDone.then(() => {
-                return this.getById(activityId).then(syncedActivityModel => {
-                    return this.refreshStats(syncedActivityModel, userSettingsModel);
-                }).then(syncedActivityRefreshed => {
-                    const bulkRefreshStatsNotification = BulkRefreshStatsNotification.create(syncedActivityRefreshed, index + 1,
-                        activityIds.length, index === 0, index === (activityIds.length - 1));
-                    this.refreshStats$.next(bulkRefreshStatsNotification);
-                    return Promise.resolve();
+        activityIds
+            .reduce((previousRefreshDone: Promise<void>, activityId: number | string, index: number) => {
+                return previousRefreshDone.then(() => {
+                    return this.getById(activityId)
+                        .then(syncedActivityModel => {
+                            return this.refreshStats(syncedActivityModel, userSettingsModel);
+                        })
+                        .then(syncedActivityRefreshed => {
+                            const bulkRefreshStatsNotification = BulkRefreshStatsNotification.create(
+                                syncedActivityRefreshed,
+                                index + 1,
+                                activityIds.length,
+                                index === 0,
+                                index === activityIds.length - 1
+                            );
+                            this.refreshStats$.next(bulkRefreshStatsNotification);
+                            return Promise.resolve();
+                        });
                 });
+            }, Promise.resolve())
+            .then(() => {
+                this.isProcessing = false;
+            })
+            .catch(err => {
+                this.refreshStats$.next(BulkRefreshStatsNotification.error(err));
             });
-        }, Promise.resolve()).then(() => {
-            this.isProcessing = false;
-        }).catch(err => {
-            this.refreshStats$.next(BulkRefreshStatsNotification.error(err));
-        });
-
     }
 
     public bulkRefreshStatsAll(userSettingsModel: UserSettings.DesktopUserSettingsModel): void {
-
         if (this.isProcessing) {
-            this.refreshStats$.next(BulkRefreshStatsNotification.error(new ElevateException(DesktopActivityService.JOB_ALREADY_RUNNING_MESSAGE)));
+            this.refreshStats$.next(
+                BulkRefreshStatsNotification.error(
+                    new ElevateException(DesktopActivityService.JOB_ALREADY_RUNNING_MESSAGE)
+                )
+            );
             return;
         }
 

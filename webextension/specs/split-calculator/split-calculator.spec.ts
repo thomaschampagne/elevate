@@ -3,8 +3,7 @@ import * as _ from "lodash";
 import { SplitCalculator } from "@elevate/shared/sync";
 
 describe("SplitCalculator", () => {
-
-    let _POWER_TIME_DATA_: { time: number[], watts: number[] };
+    let _POWER_TIME_DATA_: { time: number[]; watts: number[] };
 
     beforeEach(done => {
         _POWER_TIME_DATA_ = _.cloneDeep(powerTimeData);
@@ -12,7 +11,6 @@ describe("SplitCalculator", () => {
     });
 
     it("should normalize data over scale", done => {
-
         // Given
         const scale: number[] = [0, 1, 3, 6];
         const data: number[] = [0, 10, 40, 50];
@@ -31,7 +29,6 @@ describe("SplitCalculator", () => {
     });
 
     it("should NOT normalize scale having a gaps over 5000", done => {
-
         // Given
         const maxScaleGapThreshold = 60 * 60 * 8; // 8 hours
         const scale: number[] = [0, 1, 3, 6, 50 + maxScaleGapThreshold];
@@ -51,7 +48,6 @@ describe("SplitCalculator", () => {
     });
 
     it("should NOT normalize scale having gaps < 0", done => {
-
         // Given
         const scale: number[] = [0, 1, 3, 6, 5];
         const data: number[] = [0, 10, 40, 60, 90];
@@ -70,7 +66,6 @@ describe("SplitCalculator", () => {
     });
 
     it("should get best split with scale of 3", done => {
-
         // Given
         const scale: number[] = [0, 1, 6, 8];
         const data: number[] = [0, 10, 40, 60];
@@ -87,7 +82,6 @@ describe("SplitCalculator", () => {
     });
 
     it("should NOT get best split with scale range higher than scale", done => {
-
         // Given
         const scale: number[] = [0, 1, 3, 6];
         const data: number[] = [0, 10, 40, 60];
@@ -100,13 +94,14 @@ describe("SplitCalculator", () => {
         };
 
         // Then
-        expect(call).toThrow(new Error("Requested scaleRange of " + scaleRange + " is greater than scale range length of 7."));
+        expect(call).toThrow(
+            new Error("Requested scaleRange of " + scaleRange + " is greater than scale range length of 7.")
+        );
 
         done();
     });
 
     it("should get rider FTP of activity 1480020375", done => {
-
         // Given
         const expectedFTP = 226;
         const timeScale: number[] = _POWER_TIME_DATA_.time;
@@ -124,7 +119,6 @@ describe("SplitCalculator", () => {
     });
 
     it("should get rider power curve of activity 1480020375", done => {
-
         // Given
         const expectedPowerOneMinute = 370;
         const expectedFTP = 226;

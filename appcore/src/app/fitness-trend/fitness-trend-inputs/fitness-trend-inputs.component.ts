@@ -9,10 +9,9 @@ import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.m
 @Component({
     selector: "app-fitness-trend-inputs",
     templateUrl: "./fitness-trend-inputs.component.html",
-    styleUrls: ["./fitness-trend-inputs.component.scss"]
+    styleUrls: ["./fitness-trend-inputs.component.scss"],
 })
 export class FitnessTrendInputsComponent implements OnInit, OnChanges {
-
     public readonly HeartRateImpulseMode = HeartRateImpulseMode;
 
     @Input()
@@ -76,8 +75,7 @@ export class FitnessTrendInputsComponent implements OnInit, OnChanges {
 
     public isEstimatedRunningStressScoreEnabled: boolean;
 
-    constructor(public dialog: MatDialog) {
-    }
+    constructor(public dialog: MatDialog) {}
 
     public ngOnInit(): void {
         this.loadEstimatedPowerStressScore();
@@ -92,19 +90,27 @@ export class FitnessTrendInputsComponent implements OnInit, OnChanges {
     }
 
     public loadEstimatedPowerStressScore(): void {
-        this.isEstimatedPowerStressScoreEnabled = this.isPowerMeterEnabled
-            && this.fitnessTrendConfigModel.allowEstimatedPowerStressScore
-            && this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
+        this.isEstimatedPowerStressScoreEnabled =
+            this.isPowerMeterEnabled &&
+            this.fitnessTrendConfigModel.allowEstimatedPowerStressScore &&
+            this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
     }
 
     public loadEstimatedRunningStressScore(): void {
-        this.isEstimatedRunningStressScoreEnabled = this.fitnessTrendConfigModel.allowEstimatedRunningStressScore
-            && this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
+        this.isEstimatedRunningStressScoreEnabled =
+            this.fitnessTrendConfigModel.allowEstimatedRunningStressScore &&
+            this.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS;
     }
 
     public onLastPeriodSelected(): void {
-        this.updatePeriodViewedTo(new LastPeriodModel(this.lastPeriodViewed.from, this.lastPeriodViewed.to,
-            this.lastPeriodViewed.key, this.lastPeriodViewed.label));
+        this.updatePeriodViewedTo(
+            new LastPeriodModel(
+                this.lastPeriodViewed.from,
+                this.lastPeriodViewed.to,
+                this.lastPeriodViewed.key,
+                this.lastPeriodViewed.label
+            )
+        );
     }
 
     public onDateToDateChange(): void {
@@ -144,7 +150,7 @@ export class FitnessTrendInputsComponent implements OnInit, OnChanges {
         this.dialog.open(FitnessInfoDialogComponent, {
             minWidth: FitnessInfoDialogComponent.MIN_WIDTH,
             maxWidth: FitnessInfoDialogComponent.MAX_WIDTH,
-            autoFocus: false
+            autoFocus: false,
         });
     }
 
@@ -152,5 +158,4 @@ export class FitnessTrendInputsComponent implements OnInit, OnChanges {
         this.periodViewed = periodViewed;
         this.periodViewedChange.emit(periodViewed);
     }
-
 }

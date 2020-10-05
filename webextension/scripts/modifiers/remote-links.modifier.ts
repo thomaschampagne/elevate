@@ -6,7 +6,6 @@ import { AppResourcesModel } from "../models/app-resources.model";
 import { AbstractModifier } from "./abstract.modifier";
 
 export class RemoteLinksModifier extends AbstractModifier {
-
     protected appResources: AppResourcesModel;
     protected authorOfActivity: boolean;
     protected activityId: number;
@@ -29,9 +28,8 @@ export class RemoteLinksModifier extends AbstractModifier {
     }
 
     public modifyActivityPage(): void {
-
         const remoteViewActivityLinksArray: string[][] = [
-            ["VeloViewer", "http://veloviewer.com/activities/", "?referrer=elevate", ""]
+            ["VeloViewer", "http://veloviewer.com/activities/", "?referrer=elevate", ""],
         ];
 
         // Activity page
@@ -41,42 +39,49 @@ export class RemoteLinksModifier extends AbstractModifier {
         html += "<ul style='display: none;' id='elevate_remoteViews'>";
         _.forEach(remoteViewActivityLinksArray, (linkArray: string[]) => {
             html += "<li>";
-            html += "<a data-menu='' " + linkArray[3] + " target='_blank' style='color: #333;' href='" + linkArray[1] + this.activityId + linkArray[2] + "'>" + linkArray[0] + "</a>";
+            html +=
+                "<a data-menu='' " +
+                linkArray[3] +
+                " target='_blank' style='color: #333;' href='" +
+                linkArray[1] +
+                this.activityId +
+                linkArray[2] +
+                "'>" +
+                linkArray[0] +
+                "</a>";
         });
         html += "</ul>";
         html += "</li>";
 
-        $("#pagenav").append($(html)).each(() => {
+        $("#pagenav")
+            .append($(html))
+            .each(() => {
+                $("[data-remote-views]").click((evt: JQuery.Event) => {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                });
 
-            $("[data-remote-views]").click((evt: JQuery.Event) => {
-                evt.preventDefault();
-                evt.stopPropagation();
+                $("#elevate_remote_title").click((evt: JQuery.Event) => {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+
+                    if ($("#elevate_remoteViews").is(":visible")) {
+                        $("#elevate_remoteViews").slideUp();
+                    } else {
+                        $("#elevate_remoteViews").slideDown();
+                    }
+                });
             });
-
-            $("#elevate_remote_title").click((evt: JQuery.Event) => {
-
-                evt.preventDefault();
-                evt.stopPropagation();
-
-                if ($("#elevate_remoteViews").is(":visible")) {
-                    $("#elevate_remoteViews").slideUp();
-                } else {
-                    $("#elevate_remoteViews").slideDown();
-                }
-
-            });
-
-        });
 
         // Add tcx export
         if (this.authorOfActivity) {
-            const htmlForTCXExport: string = "<li><a href='" + window.location.pathname + "/export_tcx'>Export TCX</a></li>";
+            const htmlForTCXExport: string =
+                "<li><a href='" + window.location.pathname + "/export_tcx'>Export TCX</a></li>";
             $(".actions-menu .slide-menu .options").append(htmlForTCXExport);
         }
     }
 
     public modifySegmentPage(): void {
-
         // Segment external links
         const segmentData: string[] = window.location.pathname.match(/^\/segments\/(\d+)$/);
 
@@ -88,21 +93,42 @@ export class RemoteLinksModifier extends AbstractModifier {
         const segmentId: number = parseInt(segmentData[1]);
 
         const remoteViewSegmentLinksArray: string[][] = [
-            ["<img width='24px' style='vertical-align:middle' src='" + this.appResources.veloviewerIcon + "'/> <span>VeloViewer</span>", "http://veloviewer.com/segment/", "?referrer=elevate"],
-            ["<img width='24px' style='vertical-align:middle' src='" + this.appResources.pollIcon + "'/> <span>Segment details by J.Okeeffe</span>", "http://www.jonathanokeeffe.com/strava/segmentDetails.php?segmentId=", ""],
+            [
+                "<img width='24px' style='vertical-align:middle' src='" +
+                    this.appResources.veloviewerIcon +
+                    "'/> <span>VeloViewer</span>",
+                "http://veloviewer.com/segment/",
+                "?referrer=elevate",
+            ],
+            [
+                "<img width='24px' style='vertical-align:middle' src='" +
+                    this.appResources.pollIcon +
+                    "'/> <span>Segment details by J.Okeeffe</span>",
+                "http://www.jonathanokeeffe.com/strava/segmentDetails.php?segmentId=",
+                "",
+            ],
         ];
         let html = "<div class='dropdown'>";
         html += "<div class='drop-down-menu' style='width: 100%;' >";
-        html += "<button class='btn btn-default dropdown-toggle'><img style='vertical-align:middle' src='" + this.appResources.remoteViewIcon + "'/> <span>Remote Segment View</span></button>";
+        html +=
+            "<button class='btn btn-default dropdown-toggle'><img style='vertical-align:middle' src='" +
+            this.appResources.remoteViewIcon +
+            "'/> <span>Remote Segment View</span></button>";
         html += "<ul class='dropdown-menu'>";
 
         _.forEach(remoteViewSegmentLinksArray, (linkArray: string[]) => {
-            html += "<li><a target='_blank' href='" + linkArray[1] + segmentId + linkArray[2] + "'>" + linkArray[0] + "</a></li>";
+            html +=
+                "<li><a target='_blank' href='" +
+                linkArray[1] +
+                segmentId +
+                linkArray[2] +
+                "'>" +
+                linkArray[0] +
+                "</a></li>";
         });
         html += "</ul>";
         html += "</div>";
         html += "</div>";
         $(html).prependTo(".segment-activity-my-efforts");
     }
-
 }

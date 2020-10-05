@@ -4,17 +4,17 @@ import * as _ from "lodash";
 import { ElevateSport } from "@elevate/shared/enums";
 
 export class FakeSyncedActivityHelper {
-
-    public static create(id: number,
-                         athleteSnapshot: AthleteSnapshotModel,
-                         name: string,
-                         type: ElevateSport,
-                         dateStr: string,
-                         avgHr: number,
-                         avgWatts: number,
-                         hasPowerMeter: boolean,
-                         avgPace?: number): SyncedActivityModel {
-
+    public static create(
+        id: number,
+        athleteSnapshot: AthleteSnapshotModel,
+        name: string,
+        type: ElevateSport,
+        dateStr: string,
+        avgHr: number,
+        avgWatts: number,
+        hasPowerMeter: boolean,
+        avgPace?: number
+    ): SyncedActivityModel {
         const fakeActivity = new SyncedActivityModel();
         fakeActivity.id = id;
         fakeActivity.athleteSnapshot = athleteSnapshot;
@@ -38,7 +38,7 @@ export class FakeSyncedActivityHelper {
             heartRateData: null,
             paceData: null,
             speedData: null,
-            powerData: null
+            powerData: null,
         };
 
         // If avgHr given? Generate fake stats
@@ -57,7 +57,7 @@ export class FakeSyncedActivityHelper {
                 lowerQuartileHeartRate: avgHr / 4,
                 maxHeartRate: avgHr * 1.5,
                 medianHeartRate: avgHr / 2,
-                upperQuartileHeartRate: (avgHr / 4) * 3
+                upperQuartileHeartRate: (avgHr / 4) * 3,
             };
         }
 
@@ -66,7 +66,7 @@ export class FakeSyncedActivityHelper {
             fakeActivity.extendedStats.powerData = {
                 avgWatts: avgWatts,
                 avgWattsPerKg: avgWatts / 70,
-                hasPowerMeter: (_.isBoolean(hasPowerMeter)) ? hasPowerMeter : true,
+                hasPowerMeter: _.isBoolean(hasPowerMeter) ? hasPowerMeter : true,
                 lowerQuartileWatts: avgWatts / 4,
                 medianWatts: avgWatts / 2,
                 powerStressScore: avgWatts,
@@ -78,8 +78,8 @@ export class FakeSyncedActivityHelper {
                 weightedPower: avgWatts,
                 best20min: avgWatts * 1.5,
                 bestEightyPercent: avgWatts,
-                weightedWattsPerKg: avgWatts * 1.25 / 70,
-                powerCurve: []
+                weightedWattsPerKg: (avgWatts * 1.25) / 70,
+                powerCurve: [],
             };
         }
 
@@ -94,8 +94,8 @@ export class FakeSyncedActivityHelper {
                 genuineGradeAdjustedAvgPace: avgPace,
                 paceZones: null,
                 gradeAdjustedPaceZones: null,
-                runningStressScore: (type === "Run" || type === "VirtualRun") ? avgPace : null,
-                runningStressScorePerHour: (type === "Run" || type === "VirtualRun") ? avgPace : null,
+                runningStressScore: type === "Run" || type === "VirtualRun" ? avgPace : null,
+                runningStressScorePerHour: type === "Run" || type === "VirtualRun" ? avgPace : null,
             };
         }
         return fakeActivity;

@@ -16,7 +16,10 @@ import { DonateComponent } from "../donate/donate.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
-import { ImportBackupDialogComponent, ImportExportProgressDialogComponent } from "./dialogs/import-backup-dialog/import-backup-dialog.component";
+import {
+    ImportBackupDialogComponent,
+    ImportExportProgressDialogComponent,
+} from "./dialogs/import-backup-dialog/import-backup-dialog.component";
 import { ShareComponent } from "../share/share.component";
 import { ReportComponent } from "../report/report.component";
 import { CoreModule } from "../core/core.module";
@@ -45,13 +48,9 @@ import { LoadingDialogComponent } from "./dialogs/loading-dialog/loading-dialog.
         CoreModule,
         BrowserModule,
         BrowserAnimationsModule,
-        (environment.target === EnvTarget.DESKTOP) ? DesktopModule : ExtensionModule
+        environment.target === EnvTarget.DESKTOP ? DesktopModule : ExtensionModule,
     ],
-    exports: [
-        CoreModule,
-        BrowserModule,
-        BrowserAnimationsModule
-    ],
+    exports: [CoreModule, BrowserModule, BrowserAnimationsModule],
     declarations: [
         // Components
         ActivitiesComponent,
@@ -90,8 +89,7 @@ import { LoadingDialogComponent } from "./dialogs/loading-dialog/loading-dialog.
         ZonesService,
         SideNavService,
         WindowService,
-        {provide: LoggerService, useClass: ConsoleLoggerService}
-    ]
+        { provide: LoggerService, useClass: ConsoleLoggerService },
+    ],
 })
-export class SharedModule {
-}
+export class SharedModule {}

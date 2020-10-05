@@ -1,5 +1,4 @@
 export class FileSystemConnectorInfo {
-
     public static readonly DEFAULT_MODEL: FileSystemConnectorInfo = new FileSystemConnectorInfo(null);
 
     public sourceDirectory: string;
@@ -9,8 +8,14 @@ export class FileSystemConnectorInfo {
     public deleteArchivesAfterExtract: boolean;
     public detectSportTypeWhenUnknown: boolean;
 
-    constructor(sourceDirectory: string, scanSubDirectories: boolean = true, deleteActivityFilesAfterSync: boolean = false,
-                extractArchiveFiles: boolean = false, deleteArchivesAfterExtract: boolean = false, detectSportTypeWhenUnknown: boolean = false) {
+    constructor(
+        sourceDirectory: string,
+        scanSubDirectories: boolean = true,
+        deleteActivityFilesAfterSync: boolean = false,
+        extractArchiveFiles: boolean = false,
+        deleteArchivesAfterExtract: boolean = false,
+        detectSportTypeWhenUnknown: boolean = false
+    ) {
         this.sourceDirectory = sourceDirectory;
         this.scanSubDirectories = scanSubDirectories;
         this.deleteActivityFilesAfterSync = deleteActivityFilesAfterSync;

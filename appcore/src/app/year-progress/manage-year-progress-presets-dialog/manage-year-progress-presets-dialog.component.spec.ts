@@ -14,7 +14,6 @@ import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 
 describe("ManageYearProgressPresetsDialogComponent", () => {
-
     const yearProgressPresetModels = [
         new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false, 750),
         new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
@@ -25,27 +24,25 @@ describe("ManageYearProgressPresetsDialogComponent", () => {
     let fixture: ComponentFixture<ManageYearProgressPresetsDialogComponent>;
 
     beforeEach(done => {
-
         const isMetric = true;
         const yearProgressTypeModels: YearProgressTypeModel[] = YearProgressService.provideProgressTypes(isMetric);
 
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                YearProgressModule
-            ],
+            imports: [CoreModule, SharedModule, YearProgressModule],
             providers: [
                 {
-                    provide: MAT_DIALOG_DATA, useValue: yearProgressTypeModels,
+                    provide: MAT_DIALOG_DATA,
+                    useValue: yearProgressTypeModels,
                 },
                 {
-                    provide: MatDialogRef, useValue: {},
+                    provide: MatDialogRef,
+                    useValue: {},
                 },
                 {
-                    provide: DataStore, useClass: TestingDataStore
-                }
-            ]
+                    provide: DataStore,
+                    useClass: TestingDataStore,
+                },
+            ],
         }).compileComponents();
 
         done();

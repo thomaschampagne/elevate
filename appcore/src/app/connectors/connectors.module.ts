@@ -9,23 +9,13 @@ import { FileSystemConnectorComponent } from "./file-system-connector/file-syste
 const routes: Routes = [
     {
         path: "",
-        component: ConnectorsComponent
-    }
+        component: ConnectorsComponent,
+    },
 ];
 
 @NgModule({
-    imports: [
-        CoreModule,
-        RouterModule.forChild(routes)
-    ],
-    declarations: [
-        ConnectorsComponent,
-        StravaConnectorComponent,
-        FileSystemConnectorComponent
-    ],
-    providers: [
-        StravaConnectorService
-    ]
+    imports: [CoreModule, RouterModule.forChild(routes)],
+    declarations: [ConnectorsComponent, StravaConnectorComponent, FileSystemConnectorComponent],
+    providers: [StravaConnectorService],
 })
-export class ConnectorsModule {
-}
+export class ConnectorsModule {}

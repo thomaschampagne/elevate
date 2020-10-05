@@ -13,24 +13,17 @@ describe("StravaConnectorComponent", () => {
     let fixture: ComponentFixture<StravaConnectorComponent>;
 
     beforeEach(done => {
-
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                DesktopModule
-            ],
-            providers: [
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+            imports: [CoreModule, SharedModule, DesktopModule],
+            providers: [{ provide: DataStore, useClass: TestingDataStore }],
         }).compileComponents();
 
         const electronService: ElectronService = TestBed.inject(ElectronService);
         electronService.instance = {
-            ipcRenderer: {}
+            ipcRenderer: {},
         };
 
-        const electronWindow = (window as ElectronWindow);
+        const electronWindow = window as ElectronWindow;
         const electronRequire = (module: string) => {
             console.log("Loading module: " + module);
             return {};

@@ -2,7 +2,6 @@ import { AbstractDataView } from "./abstract-data.view";
 import { CadenceDataModel } from "@elevate/shared/models";
 
 export abstract class AbstractCadenceDataView extends AbstractDataView {
-
     protected cadenceData: CadenceDataModel;
 
     protected constructor(cadenceData: CadenceDataModel, units: string) {
@@ -15,7 +14,6 @@ export abstract class AbstractCadenceDataView extends AbstractDataView {
     }
 
     public render(): void {
-
         // Creates a grid
         this.makeGrid(3, 5); // (col, row)
 
@@ -26,7 +24,5 @@ export abstract class AbstractCadenceDataView extends AbstractDataView {
         this.injectToContent();
     }
 
-    protected insertDataIntoGrid(): void {
-
-    }
+    protected insertDataIntoGrid(): void {}
 }

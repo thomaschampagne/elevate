@@ -5,14 +5,12 @@ import * as _ from "lodash";
 import * as MG from "metrics-graphics";
 
 export class ViewableFitnessDataModel {
-
-    public readonly trainingZonesBaseLines: BaseLineModel[] =
-        [
-            {value: 25, label: "Freshness"},
-            {value: 5, label: "Neutral"},
-            {value: -10, label: "Optimal"},
-            {value: -30, label: "Overload"}
-        ];
+    public readonly trainingZonesBaseLines: BaseLineModel[] = [
+        { value: 25, label: "Freshness" },
+        { value: 5, label: "Neutral" },
+        { value: -10, label: "Optimal" },
+        { value: -30, label: "Overload" },
+    ];
 
     public fatigueLine: GraphPointModel[] = [];
     public fitnessLine: GraphPointModel[] = [];
@@ -25,15 +23,16 @@ export class ViewableFitnessDataModel {
     public previewFormLine: GraphPointModel[] = [];
     public activeLine: GraphPointModel[] = [];
 
-    constructor(markers: MarkerModel[],
-                fatigueLine: GraphPointModel[],
-                fitnessLine: GraphPointModel[],
-                formLine: GraphPointModel[],
-                previewFatigueLine: GraphPointModel[],
-                previewFitnessLine: GraphPointModel[],
-                previewFormLine: GraphPointModel[],
-                activeLine: GraphPointModel[]) {
-
+    constructor(
+        markers: MarkerModel[],
+        fatigueLine: GraphPointModel[],
+        fitnessLine: GraphPointModel[],
+        formLine: GraphPointModel[],
+        previewFatigueLine: GraphPointModel[],
+        previewFitnessLine: GraphPointModel[],
+        previewFormLine: GraphPointModel[],
+        activeLine: GraphPointModel[]
+    ) {
         this.markers = markers;
 
         this.fatigueLine = fatigueLine;
@@ -54,7 +53,6 @@ export class ViewableFitnessDataModel {
     }
 
     public getBaseLines(isTrainingZonesEnabled: boolean): BaseLineModel[] {
-
         let baseLines = [];
 
         if (isTrainingZonesEnabled) {

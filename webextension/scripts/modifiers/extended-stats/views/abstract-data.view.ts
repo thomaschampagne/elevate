@@ -8,7 +8,6 @@ import { PowerBestSplitModel, SpeedUnitDataModel, ZoneModel } from "@elevate/sha
 type GraphTypes = "histogram" | "scatter-line";
 
 export abstract class AbstractDataView {
-
     protected units: string;
     protected chart: Chart;
     protected canvasId: string;
@@ -48,7 +47,7 @@ export abstract class AbstractDataView {
     }
 
     public printNumber(value: number, decimals?: number): string {
-        return (_.isNumber(value) && !_.isNaN(value) && _.isFinite(value)) ? value.toFixed((decimals) ? decimals : 0) : "-";
+        return _.isNumber(value) && !_.isNaN(value) && _.isFinite(value) ? value.toFixed(decimals ? decimals : 0) : "-";
     }
 
     public setIsSegmentEffortView(bool: boolean): void {
@@ -60,7 +59,7 @@ export abstract class AbstractDataView {
     }
 
     public setGraphTitleFromUnits(): void {
-        this.graphTitle = (("" + this.units).toUpperCase() + " distribution in minutes");
+        this.graphTitle = ("" + this.units).toUpperCase() + " distribution in minutes";
     }
 
     public setActivityType(type: string): void {
@@ -72,7 +71,6 @@ export abstract class AbstractDataView {
     }
 
     public displayGraph(): void {
-
         if (!this.canvasId) {
             console.error("View Id must exist in " + typeof this);
             return;
@@ -84,18 +82,27 @@ export abstract class AbstractDataView {
 
         // Generating the chart
         const canvas: HTMLCanvasElement = document.getElementById(this.canvasId) as HTMLCanvasElement;
-        this.chart = this.graphType === "histogram" ?
-            this.generateHistogram(canvas) : this.generateScatterLinePlot(canvas);
+        this.chart =
+            this.graphType === "histogram" ? this.generateHistogram(canvas) : this.generateScatterLinePlot(canvas);
     }
 
     protected abstract insertDataIntoGrid(): void;
 
     protected generateSectionTitle(title: string): string {
-        return "<h2 style='background-color: rgb(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + "); color: white; margin-top: 10px; padding-bottom: 20px; padding-top: 20px;'><span style='padding-left: 10px;'>" + title + "</span></h2>";
+        return (
+            "<h2 style='background-color: rgb(" +
+            this.mainColor[0] +
+            ", " +
+            this.mainColor[1] +
+            ", " +
+            this.mainColor[2] +
+            "); color: white; margin-top: 10px; padding-bottom: 20px; padding-top: 20px;'><span style='padding-left: 10px;'>" +
+            title +
+            "</span></h2>"
+        );
     }
 
     protected generateCanvasForGraph(): void {
-
         if (!this.units) {
             console.error("View must have unit");
             return;
@@ -105,13 +112,12 @@ export abstract class AbstractDataView {
         let htmlCanvas = "";
         htmlCanvas += "<div>";
         htmlCanvas += "<div>";
-        htmlCanvas += "<canvas id=\"" + this.canvasId + "\" height=\"450\" width=\"" + graphWidth + "\"></canvas>";
+        htmlCanvas += '<canvas id="' + this.canvasId + '" height="450" width="' + graphWidth + '"></canvas>';
         htmlCanvas += "</div>";
         this.graph = $(htmlCanvas);
     }
 
     protected setupDistributionGraph(zones: ZoneModel[], ratio?: number): void {
-
         if (!ratio) {
             ratio = 1;
         }
@@ -120,7 +126,15 @@ export abstract class AbstractDataView {
         let zone: any;
 
         for (zone in zones) {
-            const label: string = "Z" + (parseInt(zone) + 1) + " " + (zones[zone].from * ratio).toFixed(1).replace(".0", "") + " to " + (zones[zone].to * ratio).toFixed(1).replace(".0", "") + " " + this.units;
+            const label: string =
+                "Z" +
+                (parseInt(zone) + 1) +
+                " " +
+                (zones[zone].from * ratio).toFixed(1).replace(".0", "") +
+                " to " +
+                (zones[zone].to * ratio).toFixed(1).replace(".0", "") +
+                " " +
+                this.units;
             labelsData.push(label);
         }
 
@@ -128,32 +142,44 @@ export abstract class AbstractDataView {
 
         this.graphData = {
             labels: labelsData,
-            datasets: [{
-                label: this.graphTitle,
-                backgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
-                borderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
-                borderWidth: 1,
-                hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
-                hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
-                data: distributionArray,
-            }],
+            datasets: [
+                {
+                    label: this.graphTitle,
+                    backgroundColor:
+                        "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
+                    borderColor:
+                        "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+                    borderWidth: 1,
+                    hoverBackgroundColor:
+                        "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
+                    hoverBorderColor:
+                        "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+                    data: distributionArray,
+                },
+            ],
         };
     }
 
     protected setupScatterLineGraph(chartPoints: ChartPoint[]): void {
         this.graphData = {
-            datasets: [{
-                label: this.graphTitle,
-                backgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
-                borderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
-                borderWidth: 1,
-                pointRadius: 0,
-                hoverBackgroundColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
-                hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
-                data: chartPoints,
-                fill: false,
-                showLine: true
-            }],
+            datasets: [
+                {
+                    label: this.graphTitle,
+                    backgroundColor:
+                        "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.5)",
+                    borderColor:
+                        "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+                    borderWidth: 1,
+                    pointRadius: 0,
+                    hoverBackgroundColor:
+                        "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
+                    hoverBorderColor:
+                        "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
+                    data: chartPoints,
+                    fill: false,
+                    showLine: true,
+                },
+            ],
         };
     }
 
@@ -169,7 +195,6 @@ export abstract class AbstractDataView {
     }
 
     protected customTooltipsForZones(tooltip: any): void {
-
         // tooltip will be false if tooltip is not visible or should be hidden
         if (!tooltip || !tooltip.body || !tooltip.body[0] || !tooltip.body[0].lines || !tooltip.body[0].lines[0]) {
             return;
@@ -177,15 +202,16 @@ export abstract class AbstractDataView {
 
         const lineValue: string = tooltip.body[0].lines[0];
 
-        const timeInMinutes: any = _.first(lineValue.match(/[+-]?\d+(\.\d+)?/g).map((value: string) => {
-            return parseFloat(value);
-        }));
+        const timeInMinutes: any = _.first(
+            lineValue.match(/[+-]?\d+(\.\d+)?/g).map((value: string) => {
+                return parseFloat(value);
+            })
+        );
 
         tooltip.body[0].lines[0] = "Zone held during " + Helper.secondsToHHMMSS(parseFloat(timeInMinutes) * 60);
     }
 
     protected setupPointDataTable(pointDataModel: PowerBestSplitModel[]): void {
-
         if (!this.units) {
             console.error("View must have units.");
             return;
@@ -193,8 +219,8 @@ export abstract class AbstractDataView {
 
         let htmlTable = "";
         htmlTable += "<div>";
-        htmlTable += "<div style=\"height:500px; overflow:auto;\">";
-        htmlTable += "<table class=\"distributionTable\">";
+        htmlTable += '<div style="height:500px; overflow:auto;">';
+        htmlTable += '<table class="distributionTable">';
 
         // Generate htmlTable header
         htmlTable += "<tr>";
@@ -203,12 +229,20 @@ export abstract class AbstractDataView {
         htmlTable += "</tr>";
 
         // Table body
-        htmlTable += pointDataModel.map(p => {
-            return "<tr>"
-                + "<td>" + Helper.secondsToHHMMSS(p.time) + "</td>" // Time
-                + "<td>" + p.watts.toFixed(1) + "</td>" // Value
-                + "</tr>";
-        }).join("");
+        htmlTable += pointDataModel
+            .map(p => {
+                return (
+                    "<tr>" +
+                    "<td>" +
+                    Helper.secondsToHHMMSS(p.time) +
+                    "</td>" + // Time
+                    "<td>" +
+                    p.watts.toFixed(1) +
+                    "</td>" + // Value
+                    "</tr>"
+                );
+            })
+            .join("");
 
         htmlTable += "</table>";
         htmlTable += "</div>";
@@ -217,7 +251,6 @@ export abstract class AbstractDataView {
     }
 
     protected setupDistributionTable(zones: ZoneModel[], ratio?: number): void {
-
         if (!ratio) {
             ratio = 1;
         }
@@ -229,8 +262,8 @@ export abstract class AbstractDataView {
 
         let htmlTable = "";
         htmlTable += "<div>";
-        htmlTable += "<div style=\"height:500px; overflow:auto;\">";
-        htmlTable += "<table class=\"distributionTable\">";
+        htmlTable += '<div style="height:500px; overflow:auto;">';
+        htmlTable += '<table class="distributionTable">';
 
         // Generate htmlTable header
         htmlTable += "<tr>"; // Zone
@@ -261,16 +294,15 @@ export abstract class AbstractDataView {
     }
 
     protected makeGrid(columns: number, rows: number): void {
-
         let grid = "";
         grid += "<div>";
-        grid += "<div class=\"grid\">";
+        grid += '<div class="grid">';
         grid += "<table>";
 
         for (let i = 0; i < rows; i++) {
             grid += "<tr>";
             for (let j = 0; j < columns; j++) {
-                grid += "<td data-column=\"" + j + "\" data-row=\"" + i + "\">";
+                grid += '<td data-column="' + j + '" data-row="' + i + '">';
                 grid += "</td>";
             }
             grid += "</tr>";
@@ -281,12 +313,32 @@ export abstract class AbstractDataView {
         this.grid = $(grid);
     }
 
-    protected insertContentAtGridPosition(columnId: number, rowId: number, data: any, title: string, units: string, userSettingKey: string): void {
-
-        const onClickHtmlBehaviour: string = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/globalSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
+    protected insertContentAtGridPosition(
+        columnId: number,
+        rowId: number,
+        data: any,
+        title: string,
+        units: string,
+        userSettingKey: string
+    ): void {
+        const onClickHtmlBehaviour: string =
+            "onclick='javascript:window.open(\"" +
+            this.appResources.settingsLink +
+            "#/globalSettings?viewOptionHelperId=" +
+            userSettingKey +
+            '","_blank");\'';
 
         if (this.grid) {
-            const content: string = "<span class=\"gridDataContainer\" " + onClickHtmlBehaviour + ">" + data + " <span class=\"gridUnits\">" + units + "</span><br /><span class=\"gridTitle\">" + title + "</span></span>";
+            const content: string =
+                '<span class="gridDataContainer" ' +
+                onClickHtmlBehaviour +
+                ">" +
+                data +
+                ' <span class="gridUnits">' +
+                units +
+                '</span><br /><span class="gridTitle">' +
+                title +
+                "</span></span>";
             this.grid.find("[data-column=" + columnId + "][data-row=" + rowId + "]").html(content);
         } else {
             console.error("Grid is not initialized");
@@ -302,19 +354,21 @@ export abstract class AbstractDataView {
                     custom: this.customTooltipsForZones,
                 },
                 scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                        },
-                    } as LinearTickOptions],
+                    yAxes: [
+                        {
+                            ticks: {
+                                beginAtZero: true,
+                            },
+                        } as LinearTickOptions,
+                    ],
                 },
             },
         });
     }
 
     private generateScatterLinePlot(canvas: HTMLCanvasElement) {
-
-        const maxXData = _.max(this.graphData.datasets.map(d => _.max((d.data as Chart.ChartPoint[]).map(p => p.x)))) || 1;
+        const maxXData =
+            _.max(this.graphData.datasets.map(d => _.max((d.data as Chart.ChartPoint[]).map(p => p.x)))) || 1;
 
         return new Chart(canvas.getContext("2d"), {
             type: "scatter",
@@ -322,34 +376,38 @@ export abstract class AbstractDataView {
             options: {
                 hover: {
                     intersect: false,
-                    mode: "nearest"
+                    mode: "nearest",
                 },
                 tooltips: {
                     intersect: false,
                     mode: "nearest",
                     callbacks: {
-                        label: (item) =>
-                            Number(item.yLabel).toFixed(1) + this.units + " held during "
-                            + Helper.secondsToHHMMSS(Number(item.xLabel), true)
-                    }
+                        label: item =>
+                            Number(item.yLabel).toFixed(1) +
+                            this.units +
+                            " held during " +
+                            Helper.secondsToHHMMSS(Number(item.xLabel), true),
+                    },
                 },
                 scales: {
-                    xAxes: [{
-                        type: this.logXAxis ? "logarithmic" : "linear",
-                        ticks: {
-                            min: 0,
-                            max: maxXData,
-                            callback: (tick: number) => {
-                                const remain = tick / (Math.pow(10, Math.floor(Math.log10(tick))));
-                                if (remain === 1 || remain === 2 || remain === 5) {
-                                    return Helper.secondsToHHMMSS(tick, true);
-                                }
-                                return "";
-                            }
+                    xAxes: [
+                        {
+                            type: this.logXAxis ? "logarithmic" : "linear",
+                            ticks: {
+                                min: 0,
+                                max: maxXData,
+                                callback: (tick: number) => {
+                                    const remain = tick / Math.pow(10, Math.floor(Math.log10(tick)));
+                                    if (remain === 1 || remain === 2 || remain === 5) {
+                                        return Helper.secondsToHHMMSS(tick, true);
+                                    }
+                                    return "";
+                                },
+                            },
                         },
-                    }],
+                    ],
                 },
-            }
+            },
         });
     }
 }

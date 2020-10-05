@@ -3,7 +3,6 @@ import { Gzip } from "../../tools";
 
 // tslint:disable:variable-name
 export class ActivityStreamsModel {
-
     public time: number[];
     public distance: number[];
     public velocity_smooth: number[];
@@ -16,8 +15,19 @@ export class ActivityStreamsModel {
     public grade_smooth: number[];
     public grade_adjusted_speed: number[];
 
-    constructor(time?: number[], distance?: number[], velocity_smooth?: number[], altitude?: number[], cadence?: number[], heartrate?: number[],
-                watts?: number[], watts_calc?: number[], latlng?: number[][], grade_smooth?: number[], grade_adjusted_speed?: number[]) {
+    constructor(
+        time?: number[],
+        distance?: number[],
+        velocity_smooth?: number[],
+        altitude?: number[],
+        cadence?: number[],
+        heartrate?: number[],
+        watts?: number[],
+        watts_calc?: number[],
+        latlng?: number[][],
+        grade_smooth?: number[],
+        grade_adjusted_speed?: number[]
+    ) {
         this.time = _.isEmpty(time) ? [] : time;
         this.distance = _.isEmpty(distance) ? [] : distance;
         this.velocity_smooth = _.isEmpty(velocity_smooth) ? [] : velocity_smooth;
@@ -38,5 +48,4 @@ export class ActivityStreamsModel {
     public static deflate(inflatedStream: string): ActivityStreamsModel {
         return Gzip.unpack64(inflatedStream);
     }
-
 }

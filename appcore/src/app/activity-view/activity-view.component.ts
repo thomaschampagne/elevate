@@ -16,74 +16,77 @@ am4core.useTheme(am4themes_animated);
 @Component({
     selector: "app-activity-view",
     templateUrl: "./activity-view.component.html",
-    styleUrls: ["./activity-view.component.scss"]
+    styleUrls: ["./activity-view.component.scss"],
 })
 export class ActivityViewComponent implements OnInit, AfterViewInit, OnDestroy {
-
     public syncedActivityModel: SyncedActivityModel;
     public activityStreamsModel: ActivityStreamsModel;
 
     public chart: am4charts.XYChart;
 
-    constructor(@Inject(OPEN_RESOURCE_RESOLVER) private openResourceResolver: OpenResourceResolver,
-                private zone: NgZone,
-                private activityService: ActivityService,
-                private streamsService: StreamsService,
-                private route: ActivatedRoute,
-                private location: Location,
-                private logger: LoggerService) {
+    constructor(
+        @Inject(OPEN_RESOURCE_RESOLVER) private openResourceResolver: OpenResourceResolver,
+        private zone: NgZone,
+        private activityService: ActivityService,
+        private streamsService: StreamsService,
+        private route: ActivatedRoute,
+        private location: Location,
+        private logger: LoggerService
+    ) {
         this.syncedActivityModel = null;
         this.activityStreamsModel = null;
     }
 
-    public ngOnInit(): void {
-
-    }
+    public ngOnInit(): void {}
 
     public ngAfterViewInit(): void {
-
         const activityId = this.route.snapshot.paramMap.get("id");
-        this.activityService.getById(activityId).then(syncedActivityModel => {
+        this.activityService
+            .getById(activityId)
+            .then(syncedActivityModel => {
+                this.syncedActivityModel = syncedActivityModel;
+                this.logger.info("syncedActivityModel", syncedActivityModel);
 
-            this.syncedActivityModel = syncedActivityModel;
-            this.logger.info("syncedActivityModel", syncedActivityModel);
-
-            return this.streamsService.getById(activityId);
-
-        }).then(compressedStreamModel => {
-            this.activityStreamsModel = (compressedStreamModel && compressedStreamModel.data) ? ActivityStreamsModel.deflate(compressedStreamModel.data) : null;
-            this.logger.info("activityStreamsModel", this.activityStreamsModel);
-            this.setupGraphs();
-        });
+                return this.streamsService.getById(activityId);
+            })
+            .then(compressedStreamModel => {
+                this.activityStreamsModel =
+                    compressedStreamModel && compressedStreamModel.data
+                        ? ActivityStreamsModel.deflate(compressedStreamModel.data)
+                        : null;
+                this.logger.info("activityStreamsModel", this.activityStreamsModel);
+                this.setupGraphs();
+            });
     }
 
     public setupGraphs(): void {
-
         if (!this.activityStreamsModel) {
             return;
         }
 
         this.zone.runOutsideAngular(() => {
-
             const chart = am4core.create("chartdiv", am4charts.XYChart);
 
-            const hasSpeed = this.activityStreamsModel.velocity_smooth && this.activityStreamsModel.velocity_smooth.length > 0;
+            const hasSpeed =
+                this.activityStreamsModel.velocity_smooth && this.activityStreamsModel.velocity_smooth.length > 0;
             const hasAltitude = this.activityStreamsModel.altitude && this.activityStreamsModel.altitude.length > 0;
-            const hasGrade = this.activityStreamsModel.grade_smooth && this.activityStreamsModel.grade_smooth.length > 0;
+            const hasGrade =
+                this.activityStreamsModel.grade_smooth && this.activityStreamsModel.grade_smooth.length > 0;
             const hasHeartrate = this.activityStreamsModel.heartrate && this.activityStreamsModel.heartrate.length > 0;
             const hasWatts = this.activityStreamsModel.watts && this.activityStreamsModel.watts.length > 0;
 
             const data = this.activityStreamsModel.time.map((time, index) => {
-
                 const sample: any = {
-                    date: new Date(this.activityStreamsModel.time[index] * 1000)
+                    date: new Date(this.activityStreamsModel.time[index] * 1000),
                 };
 
                 if (hasSpeed) {
                     const speed = this.activityStreamsModel.velocity_smooth[index] * 3.6;
                     sample.speed = speed;
                     sample.pace = Math.floor(Helper.convertSpeedToPace(speed));
-                    sample.gap = Math.floor(Helper.convertSpeedToPace(this.activityStreamsModel.grade_adjusted_speed[index] * 3.6));
+                    sample.gap = Math.floor(
+                        Helper.convertSpeedToPace(this.activityStreamsModel.grade_adjusted_speed[index] * 3.6)
+                    );
                 }
 
                 if (hasAltitude) {
@@ -149,7 +152,13 @@ export class ActivityViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.openResourceResolver.openSourceActivity(id);
     }
 
-    private createSeriesWithAxe(chart: am4charts.XYChart, name: string, units: string, color: string, strokeWidth: number = 1) {
+    private createSeriesWithAxe(
+        chart: am4charts.XYChart,
+        name: string,
+        units: string,
+        color: string,
+        strokeWidth: number = 1
+    ) {
         const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
         valueAxis.title.text = name;
         valueAxis.renderer.opposite = true;

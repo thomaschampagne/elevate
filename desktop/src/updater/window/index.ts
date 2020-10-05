@@ -3,7 +3,7 @@ import { UpdaterComponent } from "./updater.component";
 
 const updaterVueApp = new Vue({
     components: {
-        updater: UpdaterComponent
-    }
+        updater: UpdaterComponent,
+    },
 });
 updaterVueApp.$mount("#app");

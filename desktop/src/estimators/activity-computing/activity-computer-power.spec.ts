@@ -1,4 +1,12 @@
-import { ActivitySourceDataModel, ActivityStreamsModel, AnalysisDataModel, AthleteSettingsModel, AthleteSnapshotModel, Gender, UserSettings, } from "@elevate/shared/models";
+import {
+    ActivitySourceDataModel,
+    ActivityStreamsModel,
+    AnalysisDataModel,
+    AthleteSettingsModel,
+    AthleteSnapshotModel,
+    Gender,
+    UserSettings,
+} from "@elevate/shared/models";
 import * as _ from "lodash";
 import { ElevateSport } from "@elevate/shared/enums";
 import { ActivityComputer } from "@elevate/shared/sync";
@@ -14,21 +22,32 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 const expectBetween = (expectValue: number, toEqual: number, tolerance: number) => {
-
     const lowerOk: number = toEqual - tolerance;
     const higherOk: number = toEqual + tolerance;
-    const isBetween = (lowerOk <= expectValue && expectValue <= higherOk);
+    const isBetween = lowerOk <= expectValue && expectValue <= higherOk;
 
     if (!isBetween) {
-        console.error("Expected '" + expectValue + "' to equals '" + toEqual + "' is not between min: '"
-            + (lowerOk) + "' and max: '" + (higherOk) + "'.\r\n=> Lower: " + lowerOk + " <= expected: " + expectValue + " <= higher: " + higherOk);
+        console.error(
+            "Expected '" +
+                expectValue +
+                "' to equals '" +
+                toEqual +
+                "' is not between min: '" +
+                lowerOk +
+                "' and max: '" +
+                higherOk +
+                "'.\r\n=> Lower: " +
+                lowerOk +
+                " <= expected: " +
+                expectValue +
+                " <= higher: " +
+                higherOk
+        );
     }
     expect(isBetween).toBeTruthy();
-
 };
 
 describe("ActivityComputer Cycling Power", () => {
-
     const activityType = ElevateSport.Ride;
     const isTrainer = false;
     const isOwner = true;
@@ -36,11 +55,14 @@ describe("ActivityComputer Cycling Power", () => {
     const returnZones = false;
     const returnPowerCurve = true;
     const userSettingsMock: UserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
-    const athleteSnapshot = new AthleteSnapshotModel(Gender.MEN, new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9));
+    const athleteSnapshot = new AthleteSnapshotModel(
+        Gender.MEN,
+        new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9)
+    );
     const activitySourceData: ActivitySourceDataModel = {
         movingTime: -1,
         elevation: -1,
-        distance: -1
+        distance: -1,
     };
 
     let TOLERANCE;
@@ -50,17 +72,27 @@ describe("ActivityComputer Cycling Power", () => {
     });
 
     it("should compute REAL power data as ESTIMATED of activity 1109968202 (IM Canada Bike)", done => {
-
         // Power stream is actually from real power sensor. We just said it's estimated to test to test the smoothing.
 
         // Given
         const hasPowerMeter = true;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1109968202);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1109968202);
         athleteSnapshot.athleteSettings.cyclingFtp = 288; // ~FTP in July 2017 (Christophe B)
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -72,15 +104,25 @@ describe("ActivityComputer Cycling Power", () => {
     });
 
     it("should compute REAL power data as ESTIMATED of activity 1302129959 (20-minute FTP test. First time ever!, result not bad!)", done => {
-
         // Given
         const hasPowerMeter = true;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1302129959);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1302129959);
         athleteSnapshot.athleteSettings.cyclingFtp = 380; // ~FTP in December 2017 (Jasper Verkuijl)
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -89,22 +131,31 @@ describe("ActivityComputer Cycling Power", () => {
         expectBetween(_.floor(result.powerData.best20min), 380, TOLERANCE);
 
         done();
-
     });
 
     it("should compute ESTIMATED power data of activity 343080886 (Alpe d'Huez)", done => {
-
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_343080886);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_343080886);
         stream.watts = stream.watts_calc; // because powerMeter is false
         athleteSnapshot.athleteSettings.cyclingFtp = 260; // ~FTP in July 2015 (Thomas Champagne)
         athleteSnapshot.athleteSettings.maxHr = 205; // in July 2015 (Thomas Champagne)
         athleteSnapshot.athleteSettings.restHr = 55; // in July 2015 (Thomas Champagne)
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -115,16 +166,26 @@ describe("ActivityComputer Cycling Power", () => {
     });
 
     it("should compute ESTIMATED power data of activity 600329531 (Sheep Ride)", done => {
-
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_600329531);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_600329531);
         stream.watts = stream.watts_calc; // because powerMeter is false
         athleteSnapshot.athleteSettings.cyclingFtp = 239; // ~FTP in July 2016 (Thomas Champagne)
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -132,19 +193,28 @@ describe("ActivityComputer Cycling Power", () => {
         expectBetween(_.floor(result.powerData.best20min), 224, TOLERANCE);
 
         done();
-
     });
 
     it("should compute ESTIMATED power data of activity 597999523 (4 Seigneurs x Vik + Murianette x Philippe)", done => {
-
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_597999523);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_597999523);
         stream.watts = stream.watts_calc; // because powerMeter is false
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -153,20 +223,29 @@ describe("ActivityComputer Cycling Power", () => {
         expect(result.powerData.best20min > _.floor(result.powerData.avgWatts)).toBeTruthy();
 
         done();
-
     });
 
     it("should compute ESTIMATED power data of activity 1610385844 (#ComeBack - 10 / 43km / 96min / 142HrSS)", done => {
-
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1610385844);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1610385844);
         stream.watts = stream.watts_calc; // because powerMeter is false
         athleteSnapshot.athleteSettings.cyclingFtp = 130; // ~FTP in May 2018 (Thomas Champagne)
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -174,19 +253,28 @@ describe("ActivityComputer Cycling Power", () => {
         expectBetween(_.floor(result.powerData.best20min), 145, TOLERANCE);
 
         done();
-
     });
 
     it("should compute ESTIMATED power data of activity 1811220111 (Brötchen suchen im Hanftal, echte 632Hm)", done => {
-
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1811220111);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1811220111);
         stream.watts = stream.watts_calc; // because powerMeter is false
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -195,19 +283,28 @@ describe("ActivityComputer Cycling Power", () => {
         expect(result.powerData.best20min > _.floor(result.powerData.avgWatts)).toBeTruthy();
 
         done();
-
     });
 
     it("should compute ESTIMATED power data of activity 1817318910", done => {
-
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel> _.cloneDeep(<unknown> streamJson_1817318910);
+        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1817318910);
         stream.watts = stream.watts_calc; // because powerMeter is false
 
         // When
-        const activityComputer: ActivityComputer = new ActivityComputer(activityType, isTrainer, userSettingsMock, athleteSnapshot,
-            isOwner, hasPowerMeter, stream, bounds, returnZones, returnPowerCurve, activitySourceData);
+        const activityComputer: ActivityComputer = new ActivityComputer(
+            activityType,
+            isTrainer,
+            userSettingsMock,
+            athleteSnapshot,
+            isOwner,
+            hasPowerMeter,
+            stream,
+            bounds,
+            returnZones,
+            returnPowerCurve,
+            activitySourceData
+        );
         const result: AnalysisDataModel = activityComputer.compute();
 
         // Then
@@ -215,8 +312,5 @@ describe("ActivityComputer Cycling Power", () => {
         expect(result.powerData.weightedPower > _.floor(result.powerData.avgWatts)).toBeTruthy();
 
         done();
-
     });
-
 });
-

@@ -6,25 +6,23 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { SharedModule } from "../../shared.module";
 
 describe("ImportBackupDialogComponent", () => {
-
     let component: ImportBackupDialogComponent;
     let fixture: ComponentFixture<ImportBackupDialogComponent>;
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-            ],
+            imports: [CoreModule, SharedModule],
             declarations: [],
             providers: [
                 {
-                    provide: MAT_DIALOG_DATA, useValue: {},
+                    provide: MAT_DIALOG_DATA,
+                    useValue: {},
                 },
                 {
-                    provide: MatDialogRef, useValue: {},
+                    provide: MatDialogRef,
+                    useValue: {},
                 },
-            ]
+            ],
         }).compileComponents();
 
         done();

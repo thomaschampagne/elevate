@@ -45,10 +45,9 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 @Component({
     selector: "app-year-progress",
     templateUrl: "./year-progress.component.html",
-    styleUrls: ["./year-progress.component.scss"]
+    styleUrls: ["./year-progress.component.scss"],
 })
 export class YearProgressComponent implements OnInit {
-
     public static readonly PALETTE: string[] = [
         "#9f8aff",
         "#ea7015",
@@ -56,7 +55,7 @@ export class YearProgressComponent implements OnInit {
         "#006dff",
         "#e1ab19",
         "#ee135e",
-        "#00ffe2"
+        "#00ffe2",
     ];
     public static readonly ROLLING_PERIODS: string[] = ["Days", "Weeks", "Months", "Years"];
     public static readonly DEFAULT_ROLLING_PERIOD: string = YearProgressComponent.ROLLING_PERIODS[2];
@@ -71,7 +70,6 @@ export class YearProgressComponent implements OnInit {
     public readonly debouncedPeriodMultiplierChange = _.debounce(this.applyPeriodMultiplierChange, 1000 /*ms*/);
     public readonly ProgressMode = ProgressMode;
     public readonly progressStorage: ProgressStoragePreferences = {
-
         config: {
             set(config: ProgressConfig) {
                 localStorage.setItem(YearProgressComponent.LS_PROGRESS_CONFIG_KEY, JSON.stringify(config));
@@ -82,75 +80,88 @@ export class YearProgressComponent implements OnInit {
                     return null;
                 }
                 const progressConfig: ProgressConfig = JSON.parse(savedProgressConfig) as ProgressConfig;
-                return (progressConfig.mode === ProgressMode.YEAR_TO_DATE) ? YearToDateProgressConfigModel.instanceFrom(progressConfig)
+                return progressConfig.mode === ProgressMode.YEAR_TO_DATE
+                    ? YearToDateProgressConfigModel.instanceFrom(progressConfig)
                     : RollingProgressConfigModel.instanceFrom(progressConfig);
-            }
+            },
         },
         progressType: {
             set(type: ProgressType) {
                 localStorage.setItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY, JSON.stringify(type));
             },
             get: () => {
-                const progressType = parseInt(localStorage.getItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY));
-                return (_.isFinite(progressType)) ? progressType : null;
-            }
+                const progressType = parseInt(
+                    localStorage.getItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY)
+                );
+                return _.isFinite(progressType) ? progressType : null;
+            },
         },
         selectedYears: {
             get: () => {
                 const selectedYears = JSON.parse(localStorage.getItem(YearProgressComponent.LS_SELECTED_YEARS_KEY));
-                return (_.isArray(selectedYears)) ? selectedYears as number[] : null;
+                return _.isArray(selectedYears) ? (selectedYears as number[]) : null;
             },
             set: (selectedYears: number[]) => {
                 localStorage.setItem(YearProgressComponent.LS_SELECTED_YEARS_KEY, JSON.stringify(selectedYears));
-            }
+            },
         },
         targetValue: {
             get: () => {
                 const targetValue = parseInt(localStorage.getItem(YearProgressComponent.LS_TARGET_VALUE_KEY));
-                return (_.isNaN(targetValue)) ? null : targetValue;
+                return _.isNaN(targetValue) ? null : targetValue;
             },
             set: (targetValue: number) => {
                 localStorage.setItem(YearProgressComponent.LS_TARGET_VALUE_KEY, JSON.stringify(targetValue));
             },
             rm: () => {
                 localStorage.removeItem(YearProgressComponent.LS_TARGET_VALUE_KEY);
-            }
+            },
         },
         rollingPeriod: {
             get: () => {
-                const selectedRollingPeriod = localStorage.getItem(YearProgressComponent.LS_SELECTED_ROLLING_SELECTED_PERIOD_KEY);
-                return (selectedRollingPeriod) ? selectedRollingPeriod : null;
+                const selectedRollingPeriod = localStorage.getItem(
+                    YearProgressComponent.LS_SELECTED_ROLLING_SELECTED_PERIOD_KEY
+                );
+                return selectedRollingPeriod ? selectedRollingPeriod : null;
             },
             set: (selectedRollingPeriod: string) => {
-                localStorage.setItem(YearProgressComponent.LS_SELECTED_ROLLING_SELECTED_PERIOD_KEY, selectedRollingPeriod);
+                localStorage.setItem(
+                    YearProgressComponent.LS_SELECTED_ROLLING_SELECTED_PERIOD_KEY,
+                    selectedRollingPeriod
+                );
             },
             rm: () => {
                 localStorage.removeItem(YearProgressComponent.LS_SELECTED_ROLLING_SELECTED_PERIOD_KEY);
-            }
+            },
         },
         periodMultiplier: {
             get: () => {
-                const periodMultiplier = parseInt(localStorage.getItem(YearProgressComponent.LS_SELECTED_ROLLING_PERIOD_MULTIPLIER_KEY));
-                return (_.isNaN(periodMultiplier)) ? null : periodMultiplier;
+                const periodMultiplier = parseInt(
+                    localStorage.getItem(YearProgressComponent.LS_SELECTED_ROLLING_PERIOD_MULTIPLIER_KEY)
+                );
+                return _.isNaN(periodMultiplier) ? null : periodMultiplier;
             },
             set: (periodMultiplier: number) => {
-                localStorage.setItem(YearProgressComponent.LS_SELECTED_ROLLING_PERIOD_MULTIPLIER_KEY, JSON.stringify(periodMultiplier));
+                localStorage.setItem(
+                    YearProgressComponent.LS_SELECTED_ROLLING_PERIOD_MULTIPLIER_KEY,
+                    JSON.stringify(periodMultiplier)
+                );
             },
             rm: () => {
                 localStorage.removeItem(YearProgressComponent.LS_SELECTED_ROLLING_PERIOD_MULTIPLIER_KEY);
-            }
+            },
         },
         isGraphExpanded: {
             get: () => {
-                return (localStorage.getItem(YearProgressComponent.LS_EXPANDED_GRAPH_KEY) === "true");
+                return localStorage.getItem(YearProgressComponent.LS_EXPANDED_GRAPH_KEY) === "true";
             },
-            set: (expanded) => {
+            set: expanded => {
                 localStorage.setItem(YearProgressComponent.LS_EXPANDED_GRAPH_KEY, JSON.stringify(expanded));
-            }
-        }
+            },
+        },
     };
     public isMetric: boolean;
-    public progressModes: { value: ProgressMode, label: string }[];
+    public progressModes: { value: ProgressMode; label: string }[];
     public rollingPeriods: string[];
     public selectedRollingPeriod: string;
     public periodMultiplier: number;
@@ -171,15 +182,16 @@ export class YearProgressComponent implements OnInit {
     public isProgressionInitialized;
     public isGraphExpanded: boolean;
 
-    constructor(public userSettingsService: UserSettingsService,
-                public syncService: SyncService<any>,
-                public activityService: ActivityService,
-                public yearProgressService: YearProgressService,
-                public appEventsService: AppEventsService,
-                public dialog: MatDialog,
-                public mediaObserver: MediaObserver,
-                public logger: LoggerService) {
-
+    constructor(
+        public userSettingsService: UserSettingsService,
+        public syncService: SyncService<any>,
+        public activityService: ActivityService,
+        public yearProgressService: YearProgressService,
+        public appEventsService: AppEventsService,
+        public dialog: MatDialog,
+        public mediaObserver: MediaObserver,
+        public logger: LoggerService
+    ) {
         this.availableYears = [];
         this.availableActivityTypes = [];
         this.hasActivityModels = null; // Can be null: don't know yet true/false status on loadRollingSumPreferences
@@ -189,12 +201,12 @@ export class YearProgressComponent implements OnInit {
         this.progressModes = [
             {
                 value: ProgressMode.YEAR_TO_DATE,
-                label: "Year to date"
+                label: "Year to date",
             },
             {
                 value: ProgressMode.ROLLING,
-                label: "Rolling"
-            }
+                label: "Rolling",
+            },
         ];
     }
 
@@ -213,11 +225,10 @@ export class YearProgressComponent implements OnInit {
      * @param periodMultiplier
      */
     public static findRollingDays(rollingPeriod: string, periodMultiplier: number): number {
-        return moment.duration(periodMultiplier, <moment.DurationInputArg2> rollingPeriod.toLowerCase()).asDays();
+        return moment.duration(periodMultiplier, <moment.DurationInputArg2>rollingPeriod.toLowerCase()).asDays();
     }
 
     public ngOnInit(): void {
-
         this.initialize();
 
         // Listen for syncFinished update then reload year progressions if necessary.
@@ -229,51 +240,52 @@ export class YearProgressComponent implements OnInit {
     }
 
     public initialize(): void {
+        this.syncService
+            .getSyncState()
+            .then((syncState: SyncState) => {
+                if (syncState !== SyncState.SYNCED) {
+                    this.hasActivityModels = false;
+                    return Promise.reject(
+                        new AppError(
+                            AppError.SYNC_NOT_SYNCED,
+                            "Not synced. SyncState is: " + SyncState[syncState].toString()
+                        )
+                    );
+                }
 
-        this.syncService.getSyncState().then((syncState: SyncState) => {
+                return Promise.all([this.userSettingsService.fetch(), this.activityService.fetch()]);
+            })
+            .then(
+                (results: any[]) => {
+                    this.syncedActivityModels = _.last(results) as SyncedActivityModel[];
+                    this.hasActivityModels = !_.isEmpty(this.syncedActivityModels);
 
-            if (syncState !== SyncState.SYNCED) {
-                this.hasActivityModels = false;
-                return Promise.reject(new AppError(AppError.SYNC_NOT_SYNCED, "Not synced. SyncState is: " + SyncState[syncState].toString()));
-            }
+                    if (this.hasActivityModels) {
+                        const userSettingsModel = _.first(results) as UserSettingsModel;
+                        this.isMetric = userSettingsModel.systemUnit === UserSettings.SYSTEM_UNIT_METRIC_KEY;
+                        this.setup();
+                    }
 
-            return Promise.all([
-                this.userSettingsService.fetch(),
-                this.activityService.fetch()
-            ]);
+                    // Use default moment provided by service on init (should be today on first loadRollingSumPreferences)
+                    this.momentWatched = this.yearProgressService.momentWatched;
 
-        }).then((results: any[]) => {
+                    // When user mouse moves on graph, listen for moment watched and update title
+                    this.yearProgressService.momentWatchedChanges$.subscribe((momentWatched: Moment) => {
+                        this.momentWatched = momentWatched;
+                    });
 
-            this.syncedActivityModels = _.last(results) as SyncedActivityModel[];
-            this.hasActivityModels = !_.isEmpty(this.syncedActivityModels);
-
-            if (this.hasActivityModels) {
-                const userSettingsModel = _.first(results) as UserSettingsModel;
-                this.isMetric = (userSettingsModel.systemUnit === UserSettings.SYSTEM_UNIT_METRIC_KEY);
-                this.setup();
-            }
-
-            // Use default moment provided by service on init (should be today on first loadRollingSumPreferences)
-            this.momentWatched = this.yearProgressService.momentWatched;
-
-            // When user mouse moves on graph, listen for moment watched and update title
-            this.yearProgressService.momentWatchedChanges$.subscribe((momentWatched: Moment) => {
-                this.momentWatched = momentWatched;
-            });
-
-            this.showYearProgressWelcomeDialog();
-
-        }, (appError: AppError) => {
-            this.logger.error(appError.toString());
-        });
+                    this.showYearProgressWelcomeDialog();
+                },
+                (appError: AppError) => {
+                    this.logger.error(appError.toString());
+                }
+            );
     }
-
 
     /**
      * Setup prepare year progression and target progression along user saved preferences
      */
     public setup(): void {
-
         // Find all unique sport types
         const activityCountByTypeModels = this.yearProgressService.activitiesByTypes(this.syncedActivityModels);
         this.availableActivityTypes = _.map(activityCountByTypeModels, "type");
@@ -300,14 +312,16 @@ export class YearProgressComponent implements OnInit {
 
         // Find any selected ProgressType existing in local storage. Else set distance progress type as default
         const existingSelectedProgressType: YearProgressTypeModel = this.findExistingSelectedProgressType();
-        this.selectedProgressType = (existingSelectedProgressType) ? existingSelectedProgressType : _.find(this.progressTypes, {type: ProgressType.DISTANCE});
+        this.selectedProgressType = existingSelectedProgressType
+            ? existingSelectedProgressType
+            : _.find(this.progressTypes, { type: ProgressType.DISTANCE });
 
         // List years
         this.availableYears = this.yearProgressService.availableYears(this.syncedActivityModels);
 
         // Seek for selected years saved by the user
         const existingSelectedYears = this.progressStorage.selectedYears.get();
-        this.selectedYears = (existingSelectedYears) ? existingSelectedYears : this.availableYears;
+        this.selectedYears = existingSelectedYears ? existingSelectedYears : this.availableYears;
 
         // Count presets
         this.updateYearProgressPresetsCount();
@@ -330,7 +344,6 @@ export class YearProgressComponent implements OnInit {
         this.isProgressionInitialized = true;
 
         this.logger.info("Setup done");
-
     }
 
     /**
@@ -340,7 +353,9 @@ export class YearProgressComponent implements OnInit {
         const periodMultiplier = this.progressStorage.periodMultiplier.get();
         const selectedRollingPeriod = this.progressStorage.rollingPeriod.get();
         this.periodMultiplier = periodMultiplier ? periodMultiplier : YearProgressComponent.DEFAULT_ROLLING_MULTIPLIER;
-        this.selectedRollingPeriod = selectedRollingPeriod ? selectedRollingPeriod : YearProgressComponent.DEFAULT_ROLLING_PERIOD;
+        this.selectedRollingPeriod = selectedRollingPeriod
+            ? selectedRollingPeriod
+            : YearProgressComponent.DEFAULT_ROLLING_PERIOD;
     }
 
     public updateYearProgressPresetsCount() {
@@ -350,29 +365,35 @@ export class YearProgressComponent implements OnInit {
     }
 
     public computeYearProgressions(): void {
-        this.yearProgressions = this.yearProgressService.progressions(this.progressConfig, this.isMetric, this.syncedActivityModels);
+        this.yearProgressions = this.yearProgressService.progressions(
+            this.progressConfig,
+            this.isMetric,
+            this.syncedActivityModels
+        );
     }
 
     public targetProgression(): void {
-
         if (_.isNumber(this.targetValue)) {
-            this.targetProgressModels = (this.progressConfig.mode === ProgressMode.YEAR_TO_DATE) ?
-                this.yearProgressService.yearToDateTargetProgression((new Date()).getFullYear(), this.targetValue) :
-                this.targetProgressModels = this.yearProgressService.rollingTargetProgression((new Date()).getFullYear(), this.targetValue);
-
+            this.targetProgressModels =
+                this.progressConfig.mode === ProgressMode.YEAR_TO_DATE
+                    ? this.yearProgressService.yearToDateTargetProgression(new Date().getFullYear(), this.targetValue)
+                    : (this.targetProgressModels = this.yearProgressService.rollingTargetProgression(
+                          new Date().getFullYear(),
+                          this.targetValue
+                      ));
         } else {
             this.targetProgressModels = null;
         }
     }
 
     public onProgressModeChanged(): void {
-
         // Update instance of progressConfig member along ProgressMode
-        this.progressConfig = (this.progressConfig.mode === ProgressMode.YEAR_TO_DATE) ? YearToDateProgressConfigModel.instanceFrom(this.progressConfig)
-            : RollingProgressConfigModel.instanceFrom(this.progressConfig);
+        this.progressConfig =
+            this.progressConfig.mode === ProgressMode.YEAR_TO_DATE
+                ? YearToDateProgressConfigModel.instanceFrom(this.progressConfig)
+                : RollingProgressConfigModel.instanceFrom(this.progressConfig);
 
         if (this.progressConfig.mode === ProgressMode.YEAR_TO_DATE) {
-
             if (this.progressStorage.targetValue.get()) {
                 this.progressStorage.targetValue.rm();
             }
@@ -380,25 +401,25 @@ export class YearProgressComponent implements OnInit {
             this.progressStorage.config.set(this.progressConfig);
 
             this.setup();
-
         } else {
-
             // Load rolling period and multiplier from 'local stored' preferences if mode is set to rolling
             this.loadRollingSumPreferences();
 
             // Trigger a rolling day change !
             this.onRollingDaysChanged();
         }
-
     }
 
     public onRollingDaysChanged(): void {
-
         const rollingDays = YearProgressComponent.findRollingDays(this.selectedRollingPeriod, this.periodMultiplier);
 
         // Update progress config
-        this.progressConfig = new RollingProgressConfigModel(this.progressConfig.activityTypes, this.progressConfig.includeCommuteRide,
-            this.progressConfig.includeIndoorRide, rollingDays);
+        this.progressConfig = new RollingProgressConfigModel(
+            this.progressConfig.activityTypes,
+            this.progressConfig.includeCommuteRide,
+            this.progressConfig.includeIndoorRide,
+            rollingDays
+        );
 
         if (this.progressStorage.targetValue.get()) {
             this.progressStorage.targetValue.rm();
@@ -426,12 +447,14 @@ export class YearProgressComponent implements OnInit {
             this.onRollingDaysChanged();
         } else {
             const existingPeriodMultiplier = this.progressStorage.periodMultiplier.get();
-            this.periodMultiplier = (existingPeriodMultiplier > 1) ? existingPeriodMultiplier : YearProgressComponent.DEFAULT_ROLLING_MULTIPLIER;
+            this.periodMultiplier =
+                existingPeriodMultiplier > 1
+                    ? existingPeriodMultiplier
+                    : YearProgressComponent.DEFAULT_ROLLING_MULTIPLIER;
         }
     }
 
     public onSelectedProgressTypeChanged(): void {
-
         this.progressStorage.progressType.set(this.selectedProgressType.type);
 
         // Remove target if exists and reload
@@ -485,21 +508,20 @@ export class YearProgressComponent implements OnInit {
     }
 
     public onShowOverview(): void {
-
         const data: YearProgressForOverviewModel = {
             progressConfig: this.progressConfig,
             momentWatched: this.momentWatched,
             selectedYears: this.selectedYears,
             progressTypes: this.progressTypes,
             yearProgressions: this.yearProgressions,
-            yearProgressStyleModel: this.yearProgressStyleModel
+            yearProgressStyleModel: this.yearProgressStyleModel,
         };
 
         const dialogRef = this.dialog.open(YearProgressOverviewDialogComponent, {
             minWidth: YearProgressOverviewDialogComponent.WIDTH,
             maxWidth: YearProgressOverviewDialogComponent.WIDTH,
             width: YearProgressOverviewDialogComponent.WIDTH,
-            data: data
+            data: data,
         });
 
         const afterClosedSubscription = dialogRef.afterClosed().subscribe(() => afterClosedSubscription.unsubscribe());
@@ -520,133 +542,143 @@ export class YearProgressComponent implements OnInit {
     }
 
     public onCreatePreset(): void {
-
-        const presetDialogData = (this.progressConfig.mode === ProgressMode.YEAR_TO_DATE) ?
-            new AddYearToDateProgressPresetDialogData(
-                this.selectedProgressType,
-                this.progressConfig.activityTypes,
-                this.progressConfig.includeCommuteRide,
-                this.progressConfig.includeIndoorRide,
-                this.targetValue) :
-
-            new AddRollingProgressPresetDialogData(
-                this.selectedProgressType,
-                this.progressConfig.activityTypes,
-                this.progressConfig.includeCommuteRide,
-                this.progressConfig.includeIndoorRide,
-                this.targetValue,
-                this.selectedRollingPeriod,
-                this.periodMultiplier);
+        const presetDialogData =
+            this.progressConfig.mode === ProgressMode.YEAR_TO_DATE
+                ? new AddYearToDateProgressPresetDialogData(
+                      this.selectedProgressType,
+                      this.progressConfig.activityTypes,
+                      this.progressConfig.includeCommuteRide,
+                      this.progressConfig.includeIndoorRide,
+                      this.targetValue
+                  )
+                : new AddRollingProgressPresetDialogData(
+                      this.selectedProgressType,
+                      this.progressConfig.activityTypes,
+                      this.progressConfig.includeCommuteRide,
+                      this.progressConfig.includeIndoorRide,
+                      this.targetValue,
+                      this.selectedRollingPeriod,
+                      this.periodMultiplier
+                  );
 
         const dialogRef = this.dialog.open(AddYearProgressPresetDialogComponent, {
             minWidth: AddYearProgressPresetDialogComponent.MIN_WIDTH,
             maxWidth: AddYearProgressPresetDialogComponent.MAX_WIDTH,
-            data: presetDialogData
+            data: presetDialogData,
         });
 
-        const afterClosedSubscription = dialogRef.afterClosed().subscribe((yearProgressPresetModel: YearToDateProgressPresetModel) => {
+        const afterClosedSubscription = dialogRef
+            .afterClosed()
+            .subscribe((yearProgressPresetModel: YearToDateProgressPresetModel) => {
+                this.updateYearProgressPresetsCount();
 
-            this.updateYearProgressPresetsCount();
+                if (yearProgressPresetModel) {
+                    if (_.isNumber(yearProgressPresetModel.targetValue)) {
+                        this.progressStorage.targetValue.set(yearProgressPresetModel.targetValue);
+                    } else {
+                        this.progressStorage.targetValue.rm();
+                    }
 
-            if (yearProgressPresetModel) {
-
-                if (_.isNumber(yearProgressPresetModel.targetValue)) {
-                    this.progressStorage.targetValue.set(yearProgressPresetModel.targetValue);
-                } else {
-                    this.progressStorage.targetValue.rm();
+                    this.setup();
                 }
 
-                this.setup();
-            }
-
-            afterClosedSubscription.unsubscribe();
-        });
+                afterClosedSubscription.unsubscribe();
+            });
     }
 
     public onManagePresets(): void {
-
         const dialogRef = this.dialog.open(ManageYearProgressPresetsDialogComponent, {
             minWidth: ManageYearProgressPresetsDialogComponent.MIN_WIDTH,
             maxWidth: ManageYearProgressPresetsDialogComponent.MAX_WIDTH,
             data: this.progressTypes,
-            disableClose: true
+            disableClose: true,
         });
 
-        const afterClosedSubscription = dialogRef.afterClosed().subscribe((dialogResponse: YearProgressPresetsDialogResponse) => {
+        const afterClosedSubscription = dialogRef
+            .afterClosed()
+            .subscribe((dialogResponse: YearProgressPresetsDialogResponse) => {
+                let loadPresetRequired = false;
 
-            let loadPresetRequired = false;
+                if (dialogResponse.loadPreset) {
+                    if (dialogResponse.loadPreset.mode === ProgressMode.YEAR_TO_DATE) {
+                        this.progressConfig = new YearToDateProgressConfigModel(
+                            dialogResponse.loadPreset.activityTypes,
+                            dialogResponse.loadPreset.includeCommuteRide,
+                            dialogResponse.loadPreset.includeIndoorRide
+                        );
 
-            if (dialogResponse.loadPreset) {
+                        this.progressStorage.rollingPeriod.rm();
+                        this.progressStorage.periodMultiplier.rm();
+                    } else {
+                        const presetToLoad = dialogResponse.loadPreset as RollingProgressPresetModel;
+                        const rollingDays = YearProgressComponent.findRollingDays(
+                            presetToLoad.rollingPeriod,
+                            presetToLoad.periodMultiplier
+                        );
+                        this.progressConfig = new RollingProgressConfigModel(
+                            presetToLoad.activityTypes,
+                            presetToLoad.includeCommuteRide,
+                            presetToLoad.includeIndoorRide,
+                            rollingDays
+                        );
 
-                if (dialogResponse.loadPreset.mode === ProgressMode.YEAR_TO_DATE) {
+                        this.progressStorage.rollingPeriod.set(presetToLoad.rollingPeriod);
+                        this.progressStorage.periodMultiplier.set(presetToLoad.periodMultiplier);
+                    }
 
-                    this.progressConfig = new YearToDateProgressConfigModel(dialogResponse.loadPreset.activityTypes,
-                        dialogResponse.loadPreset.includeCommuteRide, dialogResponse.loadPreset.includeIndoorRide);
+                    // Save new config
+                    this.progressStorage.config.set(this.progressConfig);
+                    this.progressStorage.progressType.set(dialogResponse.loadPreset.progressType);
+                    this.progressStorage.targetValue.set(dialogResponse.loadPreset.targetValue);
 
-                    this.progressStorage.rollingPeriod.rm();
-                    this.progressStorage.periodMultiplier.rm();
-
-                } else {
-
-                    const presetToLoad = dialogResponse.loadPreset as RollingProgressPresetModel;
-                    const rollingDays = YearProgressComponent.findRollingDays(presetToLoad.rollingPeriod, presetToLoad.periodMultiplier);
-                    this.progressConfig = new RollingProgressConfigModel(presetToLoad.activityTypes, presetToLoad.includeCommuteRide,
-                        presetToLoad.includeIndoorRide, rollingDays);
-
-                    this.progressStorage.rollingPeriod.set(presetToLoad.rollingPeriod);
-                    this.progressStorage.periodMultiplier.set(presetToLoad.periodMultiplier);
+                    loadPresetRequired = true;
                 }
 
-                // Save new config
-                this.progressStorage.config.set(this.progressConfig);
-                this.progressStorage.progressType.set(dialogResponse.loadPreset.progressType);
-                this.progressStorage.targetValue.set(dialogResponse.loadPreset.targetValue);
+                let hideDisplayedTargetLine = false;
 
-                loadPresetRequired = true;
+                // Check for deleted presets to know if we have to remove the current target line display
+                if (dialogResponse.deletedPresets && dialogResponse.deletedPresets.length > 0) {
+                    _.forEach(dialogResponse.deletedPresets, (deletedPreset: YearToDateProgressPresetModel) => {
+                        const isYearToDatePresetAttributesDeleted =
+                            deletedPreset.progressType === this.selectedProgressType.type &&
+                            deletedPreset.activityTypes.join("") === this.progressConfig.activityTypes.join("") &&
+                            deletedPreset.includeCommuteRide === this.progressConfig.includeCommuteRide &&
+                            deletedPreset.includeIndoorRide === this.progressConfig.includeIndoorRide &&
+                            deletedPreset.targetValue === this.targetValue;
 
-            }
-
-            let hideDisplayedTargetLine = false;
-
-            // Check for deleted presets to know if we have to remove the current target line display
-            if (dialogResponse.deletedPresets && dialogResponse.deletedPresets.length > 0) {
-                _.forEach(dialogResponse.deletedPresets, (deletedPreset: YearToDateProgressPresetModel) => {
-
-                    const isYearToDatePresetAttributesDeleted = (deletedPreset.progressType === this.selectedProgressType.type)
-                        && (deletedPreset.activityTypes.join("") === this.progressConfig.activityTypes.join(""))
-                        && (deletedPreset.includeCommuteRide === this.progressConfig.includeCommuteRide)
-                        && (deletedPreset.includeIndoorRide === this.progressConfig.includeIndoorRide)
-                        && (deletedPreset.targetValue === this.targetValue);
-
-                    if (this.progressConfig.mode === ProgressMode.YEAR_TO_DATE && isYearToDatePresetAttributesDeleted) {
-
-                        hideDisplayedTargetLine = true;
-
-                    } else { // Rolling
-
-                        const isRollingPresetAttributesDeleted = ((deletedPreset as RollingProgressPresetModel).rollingPeriod === this.selectedRollingPeriod)
-                            && ((deletedPreset as RollingProgressPresetModel).periodMultiplier === this.periodMultiplier);
-
-                        if (isYearToDatePresetAttributesDeleted && isRollingPresetAttributesDeleted) {
+                        if (
+                            this.progressConfig.mode === ProgressMode.YEAR_TO_DATE &&
+                            isYearToDatePresetAttributesDeleted
+                        ) {
                             hideDisplayedTargetLine = true;
+                        } else {
+                            // Rolling
+
+                            const isRollingPresetAttributesDeleted =
+                                (deletedPreset as RollingProgressPresetModel).rollingPeriod ===
+                                    this.selectedRollingPeriod &&
+                                (deletedPreset as RollingProgressPresetModel).periodMultiplier ===
+                                    this.periodMultiplier;
+
+                            if (isYearToDatePresetAttributesDeleted && isRollingPresetAttributesDeleted) {
+                                hideDisplayedTargetLine = true;
+                            }
                         }
+                    });
+                }
 
-                    }
-                });
-            }
+                if (hideDisplayedTargetLine) {
+                    this.progressStorage.targetValue.rm();
+                }
 
-            if (hideDisplayedTargetLine) {
-                this.progressStorage.targetValue.rm();
-            }
+                if (loadPresetRequired || hideDisplayedTargetLine) {
+                    this.setup();
+                }
 
-            if (loadPresetRequired || hideDisplayedTargetLine) {
-                this.setup();
-            }
+                this.updateYearProgressPresetsCount();
 
-            this.updateYearProgressPresetsCount();
-
-            afterClosedSubscription.unsubscribe();
-        });
+                afterClosedSubscription.unsubscribe();
+            });
     }
 
     /**
@@ -656,7 +688,6 @@ export class YearProgressComponent implements OnInit {
      * @returns {YearProgressStyleModel}
      */
     public styleFromPalette(yearProgressions: YearProgressModel[], colorPalette: string[]): YearProgressStyleModel {
-
         const yearsColorsMap = new Map<number, string>();
         const colors: string[] = [];
 
@@ -670,26 +701,29 @@ export class YearProgressComponent implements OnInit {
     }
 
     public findExistingSelectedProgressType(): YearProgressTypeModel {
-
         const existingProgressType: ProgressType = this.progressStorage.progressType.get();
 
         if (_.isNumber(existingProgressType)) {
-            return _.find(this.progressTypes, {type: existingProgressType});
+            return _.find(this.progressTypes, { type: existingProgressType });
         }
 
         return null;
     }
 
     public showYearProgressWelcomeDialog(): void {
-
-        const show: boolean = _.isEmpty(localStorage.getItem(YearProgressWelcomeDialogComponent.LS_HIDE_YEAR_PROGRESS_WELCOME_DIALOG));
+        const show: boolean = _.isEmpty(
+            localStorage.getItem(YearProgressWelcomeDialogComponent.LS_HIDE_YEAR_PROGRESS_WELCOME_DIALOG)
+        );
 
         if (show) {
-            _.delay(() => this.dialog.open(YearProgressWelcomeDialogComponent, {
-                minWidth: YearProgressWelcomeDialogComponent.MIN_WIDTH,
-                maxWidth: YearProgressWelcomeDialogComponent.MAX_WIDTH,
-            }), 1000);
+            _.delay(
+                () =>
+                    this.dialog.open(YearProgressWelcomeDialogComponent, {
+                        minWidth: YearProgressWelcomeDialogComponent.MIN_WIDTH,
+                        maxWidth: YearProgressWelcomeDialogComponent.MAX_WIDTH,
+                    }),
+                1000
+            );
         }
     }
-
 }

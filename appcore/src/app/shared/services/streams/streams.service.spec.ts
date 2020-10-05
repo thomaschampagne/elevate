@@ -9,13 +9,8 @@ import { TestingDataStore } from "../../data-store/testing-datastore.service";
 describe("StreamsService", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule
-            ],
-            providers: [
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+            imports: [CoreModule, SharedModule],
+            providers: [{ provide: DataStore, useClass: TestingDataStore }],
         });
     });
 

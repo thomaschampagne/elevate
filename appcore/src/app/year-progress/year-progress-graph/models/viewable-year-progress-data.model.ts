@@ -5,7 +5,6 @@ import * as MG from "metrics-graphics";
 import { Moment } from "moment";
 
 export class ViewableYearProgressDataModel {
-
     public yearLines: GraphPointModel[][] = [];
     public targetLine: GraphPointModel[] = [];
     public markers: MarkerModel[] = [];
@@ -28,10 +27,12 @@ export class ViewableYearProgressDataModel {
 
     public setMarkerMoment(markerMoment: Moment): void {
         this.markerMoment = markerMoment;
-        this.markers = [{
-            date: markerMoment.toDate(),
-            label: markerMoment.format("MMM Do")
-        }];
+        this.markers = [
+            {
+                date: markerMoment.toDate(),
+                label: markerMoment.format("MMM Do"),
+            },
+        ];
     }
 
     public getMarkerMoment(): Moment {

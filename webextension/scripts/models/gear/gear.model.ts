@@ -10,8 +10,15 @@ export abstract class GearModel {
     public display_name: string;
     public units: string;
 
-    protected constructor(id: number, total_distance: number, isActive: boolean, isDefault: boolean, description: string,
-                          display_name: string, units: string) {
+    protected constructor(
+        id: number,
+        total_distance: number,
+        isActive: boolean,
+        isDefault: boolean,
+        description: string,
+        display_name: string,
+        units: string
+    ) {
         this.id = id;
         this.total_distance = total_distance;
         this.isActive = isActive;

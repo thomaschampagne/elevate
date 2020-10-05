@@ -8,12 +8,9 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Injectable()
 export class UserSettingsService {
-
     public static readonly MARK_LOCAL_STORAGE_CLEAR: string = "localStorageMustBeCleared";
 
-    constructor(public userSettingsDao: UserSettingsDao,
-                public logger: LoggerService) {
-    }
+    constructor(public userSettingsDao: UserSettingsDao, public logger: LoggerService) {}
 
     public fetch(): Promise<UserSettingsModel> {
         return this.userSettingsDao.findOne();
@@ -29,22 +26,23 @@ export class UserSettingsService {
     /**
      * Clear local storage on next reload
      */
-    public clearLocalStorageOnNextLoad(): Promise<void> { // TODO Should be only for extension, not for desktop.
+    public clearLocalStorageOnNextLoad(): Promise<void> {
+        // TODO Should be only for extension, not for desktop.
         return this.updateOption(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true).then(() => Promise.resolve());
     }
 
     public updateZones(zoneDefinition: ZoneDefinitionModel, zones: ZoneModel[]): Promise<ZoneModel[]> {
-        return this.fetch().then(userSettings => {
+        return this.fetch()
+            .then(userSettings => {
+                // Replace with new zones
+                userSettings.zones[zoneDefinition.value] = UserZonesModel.serialize(zones);
 
-            // Replace with new zones
-            userSettings.zones[zoneDefinition.value] = UserZonesModel.serialize(zones);
-
-            // Update new user settings
-            return this.userSettingsDao.update(userSettings);
-
-        }).then(updatedUserSettings => {
-            return Promise.resolve(UserZonesModel.deserialize(updatedUserSettings.zones[zoneDefinition.value]));
-        });
+                // Update new user settings
+                return this.userSettingsDao.update(userSettings);
+            })
+            .then(updatedUserSettings => {
+                return Promise.resolve(UserZonesModel.deserialize(updatedUserSettings.zones[zoneDefinition.value]));
+            });
     }
 
     public reset(): Promise<UserSettingsModel> {
@@ -55,9 +53,7 @@ export class UserSettingsService {
     }
 
     public resetZones(): Promise<UserSettingsModel> {
-
         return this.fetch().then(userSettings => {
-
             // Get default zones
             const defaultZones = this.userSettingsDao.getDefaultStorageValue().zones;
 
@@ -72,5 +68,4 @@ export class UserSettingsService {
     private updateUserSettings(userSettings: UserSettings.UserSettingsModel): Promise<UserSettingsModel> {
         return this.userSettingsDao.update(userSettings, true);
     }
-
 }

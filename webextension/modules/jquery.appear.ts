@@ -28,7 +28,7 @@ const $prior_appeared: JQuery[] = [];
 function process() {
     check_lock = false;
     for (let index = 0, selectorsLength = selectors.length; index < selectorsLength; index++) {
-        const $appeared = $(selectors[index]).filter(function() {
+        const $appeared = $(selectors[index]).filter(function () {
             return $(this).is(":appeared");
         });
 
@@ -48,7 +48,7 @@ function add_selector(selector: JQuery) {
 }
 
 // "appeared" custom filter
-(<any> $).expr[":"].appeared = function(element: HTMLElement) {
+(<any>$).expr[":"].appeared = function (element: HTMLElement) {
     const $element: JQuery = $(element);
     if (!$element.is(":visible")) {
         return false;
@@ -60,10 +60,12 @@ function add_selector(selector: JQuery) {
     const left: number = offset.left;
     const top: number = offset.top;
 
-    if (top + $element.height() >= window_top &&
+    if (
+        top + $element.height() >= window_top &&
         top - ($element.data("appear-top-offset") || 0) <= window_top + $window.height() &&
         left + $element.width() >= window_left &&
-        left - ($element.data("appear-left-offset") || 0) <= window_left + $window.width()) {
+        left - ($element.data("appear-left-offset") || 0) <= window_left + $window.width()
+    ) {
         return true;
     } else {
         return false;
@@ -76,7 +78,7 @@ $.fn.extend({
         const opts: any = $.extend({}, defaults, options || {});
         const selector = this.selector || this;
         if (!check_binded) {
-            const on_check = function() {
+            const on_check = function () {
                 if (check_lock) {
                     return;
                 }

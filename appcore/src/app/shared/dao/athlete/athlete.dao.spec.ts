@@ -6,17 +6,15 @@ import { LoggerService } from "../../services/logging/logger.service";
 import { ConsoleLoggerService } from "../../services/logging/console-logger.service";
 
 describe("AthleteDao", () => {
-
     let athleteDao: AthleteDao;
 
     beforeEach(done => {
-
         TestBed.configureTestingModule({
             providers: [
                 AthleteDao,
-                {provide: DataStore, useClass: TestingDataStore},
-                {provide: LoggerService, useClass: ConsoleLoggerService}
-            ]
+                { provide: DataStore, useClass: TestingDataStore },
+                { provide: LoggerService, useClass: ConsoleLoggerService },
+            ],
         });
 
         // Retrieve injected service
@@ -28,5 +26,4 @@ describe("AthleteDao", () => {
         expect(athleteDao).toBeTruthy();
         done();
     });
-
 });

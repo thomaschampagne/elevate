@@ -16,20 +16,18 @@ import { OptionHelperDataModel } from "./option-helper-data.model";
 @Component({
     selector: "app-option-helper-dialog",
     templateUrl: "./option-helper-dialog.component.html",
-    styleUrls: ["./option-helper-dialog.component.scss"]
+    styleUrls: ["./option-helper-dialog.component.scss"],
 })
 export class OptionHelperDialogComponent implements OnInit {
-
     public static readonly MAX_WIDTH: string = "80%";
     public static readonly MIN_WIDTH: string = "40%";
 
     public html: string;
     public markDownParser: MarkDownIt;
 
-    constructor(@Inject(MAT_DIALOG_DATA) public dialogData: OptionHelperDataModel,
-                public domSanitizer: DomSanitizer) {
+    constructor(@Inject(MAT_DIALOG_DATA) public dialogData: OptionHelperDataModel, public domSanitizer: DomSanitizer) {
         this.markDownParser = new MarkDownIt();
-        this.markDownParser.use(katex, {throwOnError: false, errorColor: " #cc0000"});
+        this.markDownParser.use(katex, { throwOnError: false, errorColor: " #cc0000" });
     }
 
     public ngOnInit(): void {
@@ -37,8 +35,7 @@ export class OptionHelperDialogComponent implements OnInit {
             throw new Error("No markdown data provided. File is empty?!");
         } else {
             const html = this.markDownParser.render(this.dialogData.markdownData);
-            this.html = <string> this.domSanitizer.bypassSecurityTrustHtml(html);
+            this.html = <string>this.domSanitizer.bypassSecurityTrustHtml(html);
         }
     }
-
 }

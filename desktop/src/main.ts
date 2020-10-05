@@ -12,8 +12,8 @@ import { Updater } from "./updater/updater";
 import { UpdateInfo } from "electron-updater";
 
 const IS_ELECTRON_DEV = !app.isPackaged;
-logger.transports.file.level = (IS_ELECTRON_DEV) ? "debug" : "info";
-logger.transports.console.level = (IS_ELECTRON_DEV) ? "debug" : "info";
+logger.transports.file.level = IS_ELECTRON_DEV ? "debug" : "info";
+logger.transports.console.level = IS_ELECTRON_DEV ? "debug" : "info";
 logger.transports.file.maxSize = 1048576 * 2; // 2MB
 
 /*
@@ -21,10 +21,9 @@ TODO: Fix electron-updater not fully integrated with rollup:
 The current workaround to import electron-updater is: package.json > build > files > "./node_modules/%%/%"
 */
 
-const {autoUpdater} = require("electron-updater"); // Import should remains w/ "require"
+const { autoUpdater } = require("electron-updater"); // Import should remains w/ "require"
 
 class Main {
-
     private static readonly WINDOW_SIZE_RATIO: number = 0.95;
     public ipcMainMessagesService: IpcMainMessagesService;
     private readonly app: Electron.App;
@@ -36,7 +35,6 @@ class Main {
     }
 
     public onElectronReady(): void {
-
         const gotTheLock = this.app.requestSingleInstanceLock();
 
         // If failed to obtain the lock, another instance of application is already running with the lock => exit immediately.
@@ -45,7 +43,6 @@ class Main {
             logger.info("We failed to obtain application the lock. Exit now");
             this.app.quit();
         } else {
-
             this.app.on("second-instance", () => {
                 // Someone tried to run a second instance, we should focus our window.
                 if (this.appWindow) {
@@ -62,22 +59,24 @@ class Main {
             }
 
             const elevateUpdater = new Updater(autoUpdater, logger);
-            elevateUpdater.update().then((updateInfo: UpdateInfo) => {
-                logger.info(`Updated to ${updateInfo.version} or already up to date.`);
-                this.startElevate(() => {
-                    elevateUpdater.close();
-                });
-            }, error => {
-                logger.warn("Update failed", error);
-                this.startElevate(() => {
-                    elevateUpdater.close();
-                });
-            });
+            elevateUpdater.update().then(
+                (updateInfo: UpdateInfo) => {
+                    logger.info(`Updated to ${updateInfo.version} or already up to date.`);
+                    this.startElevate(() => {
+                        elevateUpdater.close();
+                    });
+                },
+                error => {
+                    logger.warn("Update failed", error);
+                    this.startElevate(() => {
+                        elevateUpdater.close();
+                    });
+                }
+            );
         }
     }
 
     public run(): void {
-
         if (Service.instance().isPackaged) {
             logger.log("Running in production");
         } else {
@@ -112,7 +111,6 @@ class Main {
     }
 
     private startElevate(onReady: () => void = null): void {
-
         // Create the browser window.
         const workAreaSize: Electron.Size = Electron.screen.getPrimaryDisplay().workAreaSize;
         const width = Math.floor(workAreaSize.width * Main.WINDOW_SIZE_RATIO);
@@ -128,8 +126,8 @@ class Main {
             autoHideMenuBar: true,
             webPreferences: {
                 nodeIntegration: true,
-                enableRemoteModule: true
-            }
+                enableRemoteModule: true,
+            },
         };
 
         this.appWindow = new BrowserWindow(windowOptions);
@@ -156,7 +154,11 @@ class Main {
         // Detect a proxy on the system before listening for message from renderer
         Proxy.resolve(this.appWindow).then(httpProxy => {
             logger.info("Using proxy value: " + httpProxy);
-            Service.instance().httpClient = new HttpClient("vsts-node-api", null, (httpProxy) ? {proxy: {proxyUrl: httpProxy}} : null);
+            Service.instance().httpClient = new HttpClient(
+                "vsts-node-api",
+                null,
+                httpProxy ? { proxy: { proxyUrl: httpProxy } } : null
+            );
             Service.instance().ipcMainMessages = this.ipcMainMessagesService;
         });
 
@@ -173,14 +175,14 @@ class Main {
         });
 
         // Shortcuts
-        globalShortcut.register(<Electron.Accelerator> "CommandOrControl+R", () => {
+        globalShortcut.register(<Electron.Accelerator>"CommandOrControl+R", () => {
             if (this.appWindow.isFocused() && IS_ELECTRON_DEV) {
                 logger.debug("CommandOrControl+R is pressed, reload app");
                 this.appWindow.reload();
             }
         });
 
-        globalShortcut.register(<Electron.Accelerator> "CommandOrControl+F12", () => {
+        globalShortcut.register(<Electron.Accelerator>"CommandOrControl+F12", () => {
             if (this.appWindow.isFocused()) {
                 logger.debug("CommandOrControl+F12 is pressed, toggle dev tools");
                 this.appWindow.webContents.toggleDevTools();
@@ -190,7 +192,6 @@ class Main {
 }
 
 try {
-
     if (IS_ELECTRON_DEV) {
         logger.debug("Electron is in DEV mode");
         // require("electron-reloader")(module);
@@ -199,8 +200,7 @@ try {
     logger.info("Version: " + pkg.version);
     logger.info("System details:", Service.instance().printRuntimeInfo());
 
-    (new Main(app)).run();
-
+    new Main(app).run();
 } catch (err) {
     logger.error(err);
 }

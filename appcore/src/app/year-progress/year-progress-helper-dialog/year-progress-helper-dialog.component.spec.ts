@@ -12,17 +12,14 @@ describe("YearProgressHelperDialogComponent", () => {
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                YearProgressModule
-            ],
+            imports: [CoreModule, SharedModule, YearProgressModule],
             declarations: [],
             providers: [
                 {
-                    provide: MatDialogRef, useValue: {},
-                }
-            ]
+                    provide: MatDialogRef,
+                    useValue: {},
+                },
+            ],
         }).compileComponents();
 
         done();

@@ -6,7 +6,6 @@ import { Service } from "../../service";
 import { HttpCodes } from "typed-rest-client/HttpClient";
 
 export class StravaAuthenticator {
-
     public static WEB_SERVER_HTTP_PORT = 53445;
     public static AUTH_WINDOW_HEIGHT = 800;
     public static AUTH_WINDOW_WIDTH = 500;
@@ -15,17 +14,21 @@ export class StravaAuthenticator {
     public static STRAVA_HOSTNAME = "www.strava.com";
     public static OAUTH_AUTHORIZE_PATH = "/oauth/authorize";
     public static OAUTH_TOKEN_PATH = "/oauth/token";
-    public static TOKEN_URL: string = "https://" + StravaAuthenticator.STRAVA_HOSTNAME + StravaAuthenticator.OAUTH_TOKEN_PATH;
-    public static AUTHORIZE_URL: string = "https://" + StravaAuthenticator.STRAVA_HOSTNAME + StravaAuthenticator.OAUTH_AUTHORIZE_PATH;
+    public static TOKEN_URL: string =
+        "https://" + StravaAuthenticator.STRAVA_HOSTNAME + StravaAuthenticator.OAUTH_TOKEN_PATH;
+    public static AUTHORIZE_URL: string =
+        "https://" + StravaAuthenticator.STRAVA_HOSTNAME + StravaAuthenticator.OAUTH_AUTHORIZE_PATH;
 
     private authenticationWindow: Electron.BrowserWindow;
     private server: http.Server;
 
-    constructor() {
-    }
+    constructor() {}
 
-    public onAuthorizeRedirectRequest(handleAuthorizeCode, request: http.IncomingMessage, response: http.ServerResponse): void {
-
+    public onAuthorizeRedirectRequest(
+        handleAuthorizeCode,
+        request: http.IncomingMessage,
+        response: http.ServerResponse
+    ): void {
         const url = new URL(request.url, StravaAuthenticator.REDIRECT_HTTP_BASE);
         if (url.pathname !== "/code") {
             logger.info(`Ignoring request to ${request.url}`);
@@ -43,9 +46,19 @@ export class StravaAuthenticator {
         this.server.close();
     }
 
-    public makeTokensExchangeRequest(clientId: number, clientSecret: string, code: string, refreshToken: string,
-                                     responseCallback: (error: any, accessToken: string, refreshToken: string, expiresAt: number, athlete: object) => void): void {
-
+    public makeTokensExchangeRequest(
+        clientId: number,
+        clientSecret: string,
+        code: string,
+        refreshToken: string,
+        responseCallback: (
+            error: any,
+            accessToken: string,
+            refreshToken: string,
+            expiresAt: number,
+            athlete: object
+        ) => void
+    ): void {
         let payload = null;
 
         const isAuthCodeGrantType = code && !refreshToken;
@@ -57,17 +70,16 @@ export class StravaAuthenticator {
                 client_id: clientId,
                 client_secret: clientSecret,
                 grant_type: "authorization_code",
-                code: code
+                code: code,
             };
         } else if (isRefreshTokenGrantType) {
-
             logger.info("Getting tokens with grant_type=refresh_token");
 
             payload = {
                 client_id: clientId,
                 client_secret: clientSecret,
                 grant_type: "refresh_token",
-                refresh_token: refreshToken
+                refresh_token: refreshToken,
             };
         }
 
@@ -80,26 +92,31 @@ export class StravaAuthenticator {
             if (error) {
                 responseCallback(error, null, null, null, null);
             } else {
+                const athlete = isAuthCodeGrantType
+                    ? {
+                          id: body.athlete.id,
+                          username: body.athlete.username,
+                          firstname: body.athlete.firstname,
+                          lastname: body.athlete.lastname,
+                          city: body.athlete.city,
+                          state: body.athlete.state,
+                          country: body.athlete.country,
+                          sex: body.athlete.sex,
+                      }
+                    : null;
 
-                const athlete = (isAuthCodeGrantType) ? {
-                    id: body.athlete.id,
-                    username: body.athlete.username,
-                    firstname: body.athlete.firstname,
-                    lastname: body.athlete.lastname,
-                    city: body.athlete.city,
-                    state: body.athlete.state,
-                    country: body.athlete.country,
-                    sex: body.athlete.sex,
-                } : null;
-
-                responseCallback(null, body.access_token, body.refresh_token, body.expires_at * 1000  /* expires_at as milli seconds */, athlete);
+                responseCallback(
+                    null,
+                    body.access_token,
+                    body.refresh_token,
+                    body.expires_at * 1000 /* expires_at as milli seconds */,
+                    athlete
+                );
             }
         });
-
     }
 
     public startWebServer(port, onAuthorizeCodeReceived, responseCallback): void {
-
         this.server = http.createServer((request: http.IncomingMessage, response: http.ServerResponse) => {
             this.onAuthorizeRedirectRequest(onAuthorizeCodeReceived, request, response);
         });
@@ -116,14 +133,19 @@ export class StravaAuthenticator {
     }
 
     public exchangeForTokens(body: any, callback: (error, body: any) => void): void {
-
-        Service.instance().httpClient.post(StravaAuthenticator.TOKEN_URL, queryString.stringify(body)).then(response => {
-            return (response.message.statusCode === HttpCodes.OK) ? response.readBody() : Promise.reject(response.message);
-        }).then(bodyResponse => {
-            callback(null, JSON.parse(bodyResponse));
-        }).catch((error: http.IncomingMessage) => {
-            callback(error, null);
-        });
+        Service.instance()
+            .httpClient.post(StravaAuthenticator.TOKEN_URL, queryString.stringify(body))
+            .then(response => {
+                return response.message.statusCode === HttpCodes.OK
+                    ? response.readBody()
+                    : Promise.reject(response.message);
+            })
+            .then(bodyResponse => {
+                callback(null, JSON.parse(bodyResponse));
+            })
+            .catch((error: http.IncomingMessage) => {
+                callback(error, null);
+            });
     }
 
     /**
@@ -131,71 +153,105 @@ export class StravaAuthenticator {
      * @param clientId - Strava client ID.
      * @param clientSecret - Strava client secret.
      */
-    public authorize(clientId: number, clientSecret: string): Promise<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: object }> {
+    public authorize(
+        clientId: number,
+        clientSecret: string
+    ): Promise<{ accessToken: string; refreshToken: string; expiresAt: number; athlete: object }> {
+        return new Promise<{ accessToken: string; refreshToken: string; expiresAt: number; athlete: object }>(
+            (resolve, reject) => {
+                this.authenticationWindow = new BrowserWindow({
+                    height: StravaAuthenticator.AUTH_WINDOW_HEIGHT,
+                    resizable: false,
+                    width: StravaAuthenticator.AUTH_WINDOW_WIDTH,
+                    title: null,
+                    autoHideMenuBar: true,
+                    minimizable: false,
+                });
 
-        return new Promise<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: object }>((resolve, reject) => {
+                const redirectUrl = `${StravaAuthenticator.REDIRECT_HTTP_BASE}:${StravaAuthenticator.WEB_SERVER_HTTP_PORT}/code`;
 
-            this.authenticationWindow = new BrowserWindow({
-                height: StravaAuthenticator.AUTH_WINDOW_HEIGHT,
-                resizable: false,
-                width: StravaAuthenticator.AUTH_WINDOW_WIDTH,
-                title: null,
-                autoHideMenuBar: true,
-                minimizable: false
-            });
+                const authUrl = new URL(StravaAuthenticator.AUTHORIZE_URL);
+                authUrl.searchParams.append("client_id", clientId.toString());
+                authUrl.searchParams.append("response_type", "code");
+                authUrl.searchParams.append("redirect_uri", redirectUrl);
+                authUrl.searchParams.append("scope", StravaAuthenticator.STRAVA_SCOPE);
+                authUrl.searchParams.append("approval_prompt", "auto");
 
-            const redirectUrl = `${StravaAuthenticator.REDIRECT_HTTP_BASE}:${StravaAuthenticator.WEB_SERVER_HTTP_PORT}/code`;
+                this.authenticationWindow.loadURL(authUrl.href);
 
-            const authUrl = new URL(StravaAuthenticator.AUTHORIZE_URL);
-            authUrl.searchParams.append("client_id", clientId.toString());
-            authUrl.searchParams.append("response_type", "code");
-            authUrl.searchParams.append("redirect_uri", redirectUrl);
-            authUrl.searchParams.append("scope", StravaAuthenticator.STRAVA_SCOPE);
-            authUrl.searchParams.append("approval_prompt", "auto");
+                this.authenticationWindow.webContents.on("did-finish-load", () => {
+                    this.authenticationWindow.show();
+                    this.authenticationWindow.focus();
+                });
 
-            this.authenticationWindow.loadURL(authUrl.href);
+                this.authenticationWindow.on("close", () => {
+                    this.server.close();
+                });
 
-            this.authenticationWindow.webContents.on("did-finish-load", () => {
-                this.authenticationWindow.show();
-                this.authenticationWindow.focus();
-            });
-
-            this.authenticationWindow.on("close", () => {
-                this.server.close();
-            });
-
-            const responseCallback = (error: any, accessToken: string, refreshToken: string, expiresAt: number, athlete: object) => {
-                if (error) {
-                    logger.error(error);
-                    reject(error);
-                } else {
-                    resolve({accessToken: accessToken, refreshToken: refreshToken, expiresAt: expiresAt, athlete: athlete});
-                }
-            };
-
-            this.startWebServer(StravaAuthenticator.WEB_SERVER_HTTP_PORT, (code: string) => {
-                this.makeTokensExchangeRequest(clientId, clientSecret, code, null, responseCallback);
-            }, responseCallback);
-
-        });
-
-    }
-
-    public refresh(clientId: number, clientSecret: string, refreshToken: string): Promise<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: object }> {
-
-        return new Promise<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: object }>((resolve, reject) => {
-
-            this.makeTokensExchangeRequest(clientId, clientSecret, null, refreshToken,
-                (error: any, accessTokenUpdate: string, refreshTokenUpdate: string, expiresAt: number, athlete: object) => {
+                const responseCallback = (
+                    error: any,
+                    accessToken: string,
+                    refreshToken: string,
+                    expiresAt: number,
+                    athlete: object
+                ) => {
                     if (error) {
                         logger.error(error);
                         reject(error);
                     } else {
-                        resolve({accessToken: accessTokenUpdate, refreshToken: refreshTokenUpdate, expiresAt: expiresAt, athlete: athlete});
+                        resolve({
+                            accessToken: accessToken,
+                            refreshToken: refreshToken,
+                            expiresAt: expiresAt,
+                            athlete: athlete,
+                        });
                     }
-                });
+                };
 
-        });
+                this.startWebServer(
+                    StravaAuthenticator.WEB_SERVER_HTTP_PORT,
+                    (code: string) => {
+                        this.makeTokensExchangeRequest(clientId, clientSecret, code, null, responseCallback);
+                    },
+                    responseCallback
+                );
+            }
+        );
+    }
 
+    public refresh(
+        clientId: number,
+        clientSecret: string,
+        refreshToken: string
+    ): Promise<{ accessToken: string; refreshToken: string; expiresAt: number; athlete: object }> {
+        return new Promise<{ accessToken: string; refreshToken: string; expiresAt: number; athlete: object }>(
+            (resolve, reject) => {
+                this.makeTokensExchangeRequest(
+                    clientId,
+                    clientSecret,
+                    null,
+                    refreshToken,
+                    (
+                        error: any,
+                        accessTokenUpdate: string,
+                        refreshTokenUpdate: string,
+                        expiresAt: number,
+                        athlete: object
+                    ) => {
+                        if (error) {
+                            logger.error(error);
+                            reject(error);
+                        } else {
+                            resolve({
+                                accessToken: accessTokenUpdate,
+                                refreshToken: refreshTokenUpdate,
+                                expiresAt: expiresAt,
+                                athlete: athlete,
+                            });
+                        }
+                    }
+                );
+            }
+        );
     }
 }

@@ -4,9 +4,7 @@ import { CompressedStreamModel } from "@elevate/shared/models";
 
 @Injectable()
 export class StreamsService {
-
-    constructor(public streamsDao: StreamsDao) {
-    }
+    constructor(public streamsDao: StreamsDao) {}
 
     public getById(id: number | string): Promise<CompressedStreamModel> {
         return this.streamsDao.getById(id);

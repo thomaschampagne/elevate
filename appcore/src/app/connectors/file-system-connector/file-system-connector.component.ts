@@ -7,25 +7,29 @@ import { FileSystemConnectorInfoService } from "../../shared/services/file-syste
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../../shared/services/links-opener/open-resource-resolver";
+import {
+    OPEN_RESOURCE_RESOLVER,
+    OpenResourceResolver,
+} from "../../shared/services/links-opener/open-resource-resolver";
 
 @Component({
     selector: "app-file-system-connector",
     templateUrl: "./file-system-connector.component.html",
-    styleUrls: ["./file-system-connector.component.scss"]
+    styleUrls: ["./file-system-connector.component.scss"],
 })
 export class FileSystemConnectorComponent extends ConnectorsComponent implements OnInit {
-
     public showConfigure: boolean;
     public fileSystemConnectorInfo: FileSystemConnectorInfo;
 
-    constructor(public fileSystemConnectorInfoService: FileSystemConnectorInfoService,
-                public desktopSyncService: DesktopSyncService,
-                @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
-                public electronService: ElectronService,
-                public router: Router,
-                public snackBar: MatSnackBar,
-                public dialog: MatDialog) {
+    constructor(
+        public fileSystemConnectorInfoService: FileSystemConnectorInfoService,
+        public desktopSyncService: DesktopSyncService,
+        @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
+        public electronService: ElectronService,
+        public router: Router,
+        public snackBar: MatSnackBar,
+        public dialog: MatDialog
+    ) {
         super(desktopSyncService, openResourceResolver, router, dialog);
         this.connectorType = ConnectorType.FILE_SYSTEM;
         this.showConfigure = false;
@@ -67,14 +71,17 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
     }
 
     public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
-        return super.sync().then(() => {
-            return this.desktopSyncService.sync(fastSync, forceSync, ConnectorType.FILE_SYSTEM);
-        }).catch(err => {
-            if (err !== ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE) {
-                return Promise.reject(err);
-            }
-            return Promise.resolve();
-        });
+        return super
+            .sync()
+            .then(() => {
+                return this.desktopSyncService.sync(fastSync, forceSync, ConnectorType.FILE_SYSTEM);
+            })
+            .catch(err => {
+                if (err !== ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE) {
+                    return Promise.reject(err);
+                }
+                return Promise.resolve();
+            });
     }
 
     private isExistingFolder(path: string) {

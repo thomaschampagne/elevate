@@ -1,7 +1,6 @@
 import * as _ from "lodash";
 
 export class SplitCalculator {
-
     public scale: number[];
     public data: number[];
     public maxScaleGapThreshold: number;
@@ -14,19 +13,16 @@ export class SplitCalculator {
     }
 
     public normalize(): void {
-
         const normalizedScale: number[] = [];
         const interpolatedData: number[] = [];
 
         _.forEach(this.scale, (scaleValue: number, index: number, scale: number[]) => {
-
             interpolatedData.push(_.isNumber(this.data[index]) ? this.data[index] : 0);
             normalizedScale.push(scaleValue);
 
             const nextScaleValue = scale[index + 1];
 
             if (_.isNumber(nextScaleValue)) {
-
                 const nextScaleDiff = nextScaleValue - scaleValue;
 
                 if (nextScaleDiff < 0) {
@@ -37,8 +33,14 @@ export class SplitCalculator {
                     throw new Error("Scale has a too importants gap. Cannot normalize scale");
                 }
 
-                if (nextScaleDiff > 1) { // Is next scale not linear normalized (+1) with current scale?
-                    const linearFunction = this.getLinearFunction(this.data[index + 1], this.data[index], nextScaleValue, scaleValue);
+                if (nextScaleDiff > 1) {
+                    // Is next scale not linear normalized (+1) with current scale?
+                    const linearFunction = this.getLinearFunction(
+                        this.data[index + 1],
+                        this.data[index],
+                        nextScaleValue,
+                        scaleValue
+                    );
                     let missingScaleValue = scaleValue + 1;
 
                     while (missingScaleValue < nextScaleValue) {
@@ -55,16 +57,20 @@ export class SplitCalculator {
     }
 
     public getBestSplit(scaleRange: number): number {
-
         if (scaleRange > this.scale.length) {
-            throw new Error("Requested scaleRange of " + scaleRange + " is greater than scale range length of " + this.scale.length + ".");
+            throw new Error(
+                "Requested scaleRange of " +
+                    scaleRange +
+                    " is greater than scale range length of " +
+                    this.scale.length +
+                    "."
+            );
         }
 
         let maxSumFound: number;
         let currentMaxSum: number;
 
         if (scaleRange > 1) {
-
             let index = 0;
             currentMaxSum = _.sum(this.data.slice(index, scaleRange));
             maxSumFound = currentMaxSum;
@@ -76,22 +82,20 @@ export class SplitCalculator {
                 }
                 index++;
             }
-
         } else {
             maxSumFound = _.max(this.data);
         }
 
-        return (maxSumFound / scaleRange);
+        return maxSumFound / scaleRange;
     }
 
-    public getBestSplitRanges(ranges: number[]): { range: number, result: number }[] {
-
-        const results: { range: number, result: number }[] = [];
+    public getBestSplitRanges(ranges: number[]): { range: number; result: number }[] {
+        const results: { range: number; result: number }[] = [];
 
         _.forEach(ranges, (range: number) => {
             results.push({
                 range: range,
-                result: this.getBestSplit(range)
+                result: this.getBestSplit(range),
             });
         });
 

@@ -17,7 +17,6 @@ export interface ISegmentInfo {
 }
 
 export class SegmentProcessor {
-
     public static cachePrefix = "elevate_nearbySegments_";
 
     protected vacuumProcessor: VacuumProcessor;
@@ -29,7 +28,6 @@ export class SegmentProcessor {
     }
 
     public getNearbySegmentsAround(callback: (segmentsInBounds: ISegmentInfo[]) => void): void {
-
         // NearbySegmentsAround cached?
         const cacheResult: any = JSON.parse(localStorage.getItem(SegmentProcessor.cachePrefix + this.segmentId));
 
@@ -43,18 +41,19 @@ export class SegmentProcessor {
 
         // Find search point of segment first
         this.getSegmentAroundSearchPoint((searchPoint: LatLonSpherical) => {
-
             // Prepare Bounding box 2 km around search point
             const boundingBox: number[] = this.getBoundingBox(searchPoint, 2000);
 
             // Find segments in bounding box
             this.getSegmentsInBoundingBox(boundingBox, (segmentsInBounds: ISegmentInfo[]) => {
-
                 if (ExtensionEnv.debugMode) {
                     console.log("Creating nearbySegments cache: " + JSON.stringify(segmentsInBounds));
                 }
                 try {
-                    localStorage.setItem(SegmentProcessor.cachePrefix + this.segmentId, JSON.stringify(segmentsInBounds)); // Cache the result to local storage
+                    localStorage.setItem(
+                        SegmentProcessor.cachePrefix + this.segmentId,
+                        JSON.stringify(segmentsInBounds)
+                    ); // Cache the result to local storage
                 } catch (err) {
                     console.warn(err);
                     localStorage.clear();
@@ -65,7 +64,6 @@ export class SegmentProcessor {
     }
 
     public getBoundingBox(point: LatLonSpherical, distance: number): number[] {
-
         return [
             point.destinationPoint(distance, 180).lat,
             point.destinationPoint(distance, -90).lon,
@@ -75,12 +73,10 @@ export class SegmentProcessor {
     }
 
     public getSegmentsInBoundingBox(boundingBox: number[], callback: (segmentsData: ISegmentInfo[]) => void): void {
-
         this.vacuumProcessor.getSegmentsFromBounds(
             boundingBox[0] + "," + boundingBox[1],
             boundingBox[2] + "," + boundingBox[3],
             (segmentsData: any) => {
-
                 // Flag cycling/running
                 _.forEach(segmentsData.cycling.segments, (segment: any) => {
                     segment.type = "cycling";
@@ -95,18 +91,16 @@ export class SegmentProcessor {
 
                 // Remove watched segment
                 segmentsData = _.filter(segmentsData, (segment: any) => {
-                    return (segment.id !== this.segmentId);
+                    return segment.id !== this.segmentId;
                 });
 
                 callback(segmentsData);
-            },
+            }
         );
     }
 
     public getSegmentAroundSearchPoint(callback: (latLon: LatLonSpherical) => void) {
-
         this.vacuumProcessor.getSegmentStream(this.segmentId, (stream: any) => {
-
             const startPoint: number[] = stream.latlng[0];
             const midPoint: number[] = stream.latlng[(stream.latlng.length / 2).toFixed(0)];
             const endPoint: number[] = stream.latlng[stream.latlng.length - 1];

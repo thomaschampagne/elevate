@@ -5,14 +5,13 @@ import { FormsModule } from "@angular/forms";
 import { MaterialModule } from "../../../../shared/modules/material.module";
 
 describe("SwimFtpHelperComponent", () => {
-
     let component: SwimFtpHelperComponent;
     let fixture: ComponentFixture<SwimFtpHelperComponent>;
 
     beforeEach(done => {
         TestBed.configureTestingModule({
             imports: [FormsModule, MaterialModule, BrowserAnimationsModule],
-            declarations: [SwimFtpHelperComponent]
+            declarations: [SwimFtpHelperComponent],
         }).compileComponents();
         done();
     });
@@ -30,7 +29,6 @@ describe("SwimFtpHelperComponent", () => {
     });
 
     it("should convert swim speed to pace (1)", done => {
-
         // Given
         const swimFtp = 1;
         const expected = "01:40:00";
@@ -44,7 +42,6 @@ describe("SwimFtpHelperComponent", () => {
     });
 
     it("should convert swim speed to pace (2)", done => {
-
         // Given
         const swimFtp = 31;
         const expected = "00:03:14";
@@ -58,7 +55,6 @@ describe("SwimFtpHelperComponent", () => {
     });
 
     it("should convert swim speed to pace (3)", done => {
-
         // Given
         const swimFtp = 500;
         const expected = "00:00:12";
@@ -72,7 +68,6 @@ describe("SwimFtpHelperComponent", () => {
     });
 
     it("should convert swim speed to pace (4)", done => {
-
         // Given
         const swimFtp = 57;
         const expected = "00:01:45";
@@ -86,7 +81,6 @@ describe("SwimFtpHelperComponent", () => {
     });
 
     it("should convert pace to swim speed (1)", done => {
-
         // Given
         const pace = "00:03:14";
         const expected = 30.93;
@@ -100,7 +94,6 @@ describe("SwimFtpHelperComponent", () => {
     });
 
     it("should convert pace to swim speed (2)", done => {
-
         // Given
         const pace = "00:00:12";
         const expected = 500;

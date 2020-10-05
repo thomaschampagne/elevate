@@ -10,16 +10,16 @@ import { ElevateException } from "@elevate/shared/exceptions";
 
 @Injectable()
 export class DesktopOpenResourceResolver extends OpenResourceResolver {
-
-    constructor(public electronService: ElectronService,
-                public activityService: ActivityService,
-                public router: Router,
-                public snackBar: MatSnackBar) {
+    constructor(
+        public electronService: ElectronService,
+        public activityService: ActivityService,
+        public router: Router,
+        public snackBar: MatSnackBar
+    ) {
         super(snackBar);
     }
 
     public openLink(path: string): void {
-
         // Check if not a web url and verify file exists on file system
         if (!path.startsWith("http") && !this.electronService.existsSync(path)) {
             this.snackBar.open(`Path to file "${path}" do not exists`, "Close");
@@ -57,5 +57,4 @@ export class DesktopOpenResourceResolver extends OpenResourceResolver {
             }
         });
     }
-
 }

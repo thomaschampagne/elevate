@@ -5,16 +5,11 @@ import { SharedModule } from "../../shared.module";
 import { environment } from "../../../../environments/environment";
 
 describe("ConsoleLoggerService", () => {
-
     let service: LoggerService;
 
     beforeEach((done: () => void) => {
-
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule
-            ]
+            imports: [CoreModule, SharedModule],
         });
 
         service = TestBed.inject(LoggerService);
@@ -22,9 +17,7 @@ describe("ConsoleLoggerService", () => {
         done();
     });
 
-
     it("should provide console debug", (done: () => void) => {
-
         // Given
         environment.logLevel = LoggerService.LEVEL_DEBUG;
         const spyDebug = spyOn(console, "debug");
@@ -39,7 +32,6 @@ describe("ConsoleLoggerService", () => {
     });
 
     it("should provide console info", (done: () => void) => {
-
         // Given
         environment.logLevel = LoggerService.LEVEL_INFO;
         const spyDebug = spyOn(console, "info");
@@ -54,7 +46,6 @@ describe("ConsoleLoggerService", () => {
     });
 
     it("should provide console warn", (done: () => void) => {
-
         // Given
         environment.logLevel = LoggerService.LEVEL_INFO;
         const spy = spyOn(console, "warn");
@@ -69,7 +60,6 @@ describe("ConsoleLoggerService", () => {
     });
 
     it("should provide console warn", (done: () => void) => {
-
         // Given
         environment.logLevel = LoggerService.LEVEL_WARN;
         const spy = spyOn(console, "warn");
@@ -84,7 +74,6 @@ describe("ConsoleLoggerService", () => {
     });
 
     it("should provide console error", (done: () => void) => {
-
         // Given
         environment.logLevel = LoggerService.LEVEL_ERROR;
         const spy = spyOn(console, "error");
@@ -99,7 +88,6 @@ describe("ConsoleLoggerService", () => {
     });
 
     it("should not provide log WARN when level is ERROR", (done: () => void) => {
-
         // Given
         environment.logLevel = LoggerService.LEVEL_ERROR;
         const spy = spyOn(console, "warn");
@@ -114,7 +102,6 @@ describe("ConsoleLoggerService", () => {
     });
 
     it("should not provide log INFO when level is WARN", (done: () => void) => {
-
         // Given
         environment.logLevel = LoggerService.LEVEL_WARN;
         const spy = spyOn(console, "info");
@@ -129,7 +116,6 @@ describe("ConsoleLoggerService", () => {
     });
 
     it("should not provide log DEBUG when level is INFO", (done: () => void) => {
-
         // Given
         environment.logLevel = LoggerService.LEVEL_INFO;
         const spy = spyOn(console, "debug");
@@ -142,5 +128,4 @@ describe("ConsoleLoggerService", () => {
 
         done();
     });
-
 });

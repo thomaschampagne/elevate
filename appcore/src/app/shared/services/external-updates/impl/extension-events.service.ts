@@ -6,19 +6,22 @@ import { LoggerService } from "../../logging/logger.service";
 
 @Injectable()
 export class ExtensionEventsService extends AppEventsService {
-
     public pluginId: string;
 
-    constructor(@Inject(DataStore) private readonly dataStore: DataStore<object>,
-                private readonly logger: LoggerService) {
+    constructor(
+        @Inject(DataStore) private readonly dataStore: DataStore<object>,
+        private readonly logger: LoggerService
+    ) {
         super();
 
         this.pluginId = ExtensionEventsService.getBrowserPluginId();
 
         // Listen for external messages
-        ExtensionEventsService.getBrowserExternalMessages().addListener((request: any, sender: chrome.runtime.MessageSender) => {
-            this.onBrowserRequestReceived(request, sender.id);
-        });
+        ExtensionEventsService.getBrowserExternalMessages().addListener(
+            (request: any, sender: chrome.runtime.MessageSender) => {
+                this.onBrowserRequestReceived(request, sender.id);
+            }
+        );
     }
 
     public static getBrowserExternalMessages(): chrome.runtime.ExtensionMessageEvent {
@@ -29,8 +32,7 @@ export class ExtensionEventsService extends AppEventsService {
         return chrome.runtime.id;
     }
 
-    public onBrowserRequestReceived(request: { message: string, results: any }, senderId: any): void {
-
+    public onBrowserRequestReceived(request: { message: string; results: any }, senderId: any): void {
         if (senderId !== this.pluginId) {
             return;
         }
@@ -41,10 +43,11 @@ export class ExtensionEventsService extends AppEventsService {
         }
 
         if (request.message === CoreMessages.ON_EXTERNAL_SYNC_DONE) {
-            const syncResult = <SyncResultModel> request.results;
-            const hasChanges = syncResult.activitiesChangesModel.added.length > 0
-                || syncResult.activitiesChangesModel.edited.length > 0
-                || syncResult.activitiesChangesModel.deleted.length > 0;
+            const syncResult = <SyncResultModel>request.results;
+            const hasChanges =
+                syncResult.activitiesChangesModel.added.length > 0 ||
+                syncResult.activitiesChangesModel.edited.length > 0 ||
+                syncResult.activitiesChangesModel.deleted.length > 0;
             this.syncDone$.next(hasChanges);
         }
     }

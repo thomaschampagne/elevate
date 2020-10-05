@@ -17,7 +17,6 @@ import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 
 describe("YearProgressGraphComponent", () => {
-
     const isMetric = true;
     let component: YearProgressGraphComponent;
     let fixture: ComponentFixture<YearProgressGraphComponent>;
@@ -25,17 +24,9 @@ describe("YearProgressGraphComponent", () => {
     let syncedActivityModels: SyncedActivityModel[];
 
     beforeEach(done => {
-
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                YearProgressModule
-            ],
-            providers: [
-                YearProgressService,
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+            imports: [CoreModule, SharedModule, YearProgressModule],
+            providers: [YearProgressService, { provide: DataStore, useClass: TestingDataStore }],
         }).compileComponents();
 
         yearProgressService = TestBed.inject(YearProgressService);
@@ -44,7 +35,6 @@ describe("YearProgressGraphComponent", () => {
     });
 
     beforeEach(done => {
-
         syncedActivityModels = YearProgressActivitiesFixture.provide();
 
         fixture = TestBed.createComponent(YearProgressGraphComponent);
@@ -54,7 +44,11 @@ describe("YearProgressGraphComponent", () => {
         yearProgressService.momentWatched = moment();
 
         // Inject fake progression
-        const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run], true, true);
+        const progressConfig = new YearToDateProgressConfigModel(
+            [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run],
+            true,
+            true
+        );
 
         component.yearProgressions = yearProgressService.progressions(progressConfig, isMetric, syncedActivityModels);
 
@@ -65,7 +59,7 @@ describe("YearProgressGraphComponent", () => {
         component.selectedProgressType = new YearProgressTypeModel(ProgressType.DISTANCE, "Distance", "km");
 
         // Inject style
-        const colors: string [] = ["red", "blue", "green", "purple", "orange", "red", "blue"];
+        const colors: string[] = ["red", "blue", "green", "purple", "orange", "red", "blue"];
 
         const yearsColorsMap = new Map<number, string>();
         yearsColorsMap.set(2011, "red");
@@ -81,7 +75,6 @@ describe("YearProgressGraphComponent", () => {
         fixture.detectChanges();
 
         done();
-
     });
 
     it("should create", done => {
@@ -90,22 +83,20 @@ describe("YearProgressGraphComponent", () => {
     });
 
     it("should give proper restricted colors from a year selection", done => {
-
         // Given
         const yearSelection: number[] = [2017, 2016, 2013];
 
         const expectedYearSelectedColors: string[] = [
             component.yearProgressStyleModel.yearsColorsMap.get(2013),
             component.yearProgressStyleModel.yearsColorsMap.get(2016),
-            component.yearProgressStyleModel.yearsColorsMap.get(2017)
+            component.yearProgressStyleModel.yearsColorsMap.get(2017),
         ];
 
         // When
-        const yearSelectedColors: string [] = component.colorsOfSelectedYears(yearSelection);
+        const yearSelectedColors: string[] = component.colorsOfSelectedYears(yearSelection);
 
         // Then
         expect(yearSelectedColors).toEqual(expectedYearSelectedColors);
         done();
     });
-
 });

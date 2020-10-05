@@ -4,7 +4,6 @@ import { SideNavStatus } from "./side-nav-status.enum";
 
 @Injectable()
 export class SideNavService {
-
     public changes$: Subject<SideNavStatus>;
 
     constructor() {
@@ -14,5 +13,4 @@ export class SideNavService {
     public onChange(status: SideNavStatus): void {
         this.changes$.next(status);
     }
-
 }

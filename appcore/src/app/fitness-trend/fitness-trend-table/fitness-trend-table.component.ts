@@ -16,15 +16,17 @@ import { FitnessTrendColumnModel } from "./fitness-trend-column.model";
 import { FitnessTrendColumnType } from "./fitness-trend-column.enum";
 import { FitnessTrendActivitiesLinksDialogComponent } from "../fitness-trend-activities-links-dialog/fitness-trend-activities-links-dialog.component";
 import { LoggerService } from "../../shared/services/logging/logger.service";
-import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../../shared/services/links-opener/open-resource-resolver";
+import {
+    OPEN_RESOURCE_RESOLVER,
+    OpenResourceResolver,
+} from "../../shared/services/links-opener/open-resource-resolver";
 
 @Component({
     selector: "app-fitness-trend-table",
     templateUrl: "./fitness-trend-table.component.html",
-    styleUrls: ["./fitness-trend-table.component.scss"]
+    styleUrls: ["./fitness-trend-table.component.scss"],
 })
 export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewInit {
-
     public static readonly COLUMN_DATE: string = "date";
     public static readonly COLUMN_TYPES: string = "types";
     public static readonly COLUMN_ACTIVITIES: string = "activities";
@@ -46,101 +48,102 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
             id: FitnessTrendTableComponent.COLUMN_DATE,
             header: "Date",
             type: FitnessTrendColumnType.TEXT,
-            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${moment(dayFitnessTrend.date).format("ddd, MMM DD, YYYY")}`
+            printText: (dayFitnessTrend: DayFitnessTrendModel) =>
+                `${moment(dayFitnessTrend.date).format("ddd, MMM DD, YYYY")}`,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_TYPES,
             header: "Types",
             type: FitnessTrendColumnType.TEXT,
-            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTypes("-")}`
+            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTypes("-")}`,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_ACTIVITIES,
             header: "Activities",
             type: FitnessTrendColumnType.TEXT,
-            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printActivities("-")}`
+            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printActivities("-")}`,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE,
             header: "HRSS",
             description: "Heart Rate Stress Score",
             type: FitnessTrendColumnType.TEXT,
-            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printHeartRateStressScore()}`
+            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printHeartRateStressScore()}`,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE,
             header: "TRIMP",
             description: "Training Impulse",
             type: FitnessTrendColumnType.TEXT,
-            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTrainingImpulseScore()}`
+            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTrainingImpulseScore()}`,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE,
             header: "PSS",
             description: "Power Stress Score",
             type: FitnessTrendColumnType.TEXT,
-            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printPowerStressScore()}`
+            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printPowerStressScore()}`,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE,
             header: "RSS",
             description: "Running Stress Score",
             type: FitnessTrendColumnType.TEXT,
-            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printRunningStressScore()}`
+            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printRunningStressScore()}`,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE,
             header: "SwimSS",
             description: "Swim Stress Score",
             type: FitnessTrendColumnType.TEXT,
-            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printSwimStressScore()}`
+            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printSwimStressScore()}`,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_FINAL_STRESS_SCORE,
             header: "Final Stress",
             type: FitnessTrendColumnType.TEXT,
-            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFinalStressScore()}`
+            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFinalStressScore()}`,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_CTL,
             header: "Fitness",
             type: FitnessTrendColumnType.TEXT,
-            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFitness()}`
+            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFitness()}`,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_ATL,
             header: "Fatigue",
             type: FitnessTrendColumnType.TEXT,
-            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFatigue()}`
+            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printFatigue()}`,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_TSB,
             header: "Form",
             type: FitnessTrendColumnType.TEXT,
-            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printForm()}`
+            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printForm()}`,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_TRAINING_ZONE,
             header: "Training Zone",
             type: FitnessTrendColumnType.TEXT,
-            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTrainingZone()}`
+            printText: (dayFitnessTrend: DayFitnessTrendModel) => `${dayFitnessTrend.printTrainingZone()}`,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_ATHLETE_SETTINGS,
             header: "Settings",
-            type: FitnessTrendColumnType.ATHLETE_SETTINGS
+            type: FitnessTrendColumnType.ATHLETE_SETTINGS,
         },
         {
             id: FitnessTrendTableComponent.COLUMN_STRAVA_LINK,
             header: "Link",
-            type: FitnessTrendColumnType.STRAVA_LINK
-        }
+            type: FitnessTrendColumnType.STRAVA_LINK,
+        },
     ];
 
     public dataSource: MatTableDataSource<DayFitnessTrendModel>;
     public FitnessTrendColumnType = FitnessTrendColumnType;
     public columns: FitnessTrendColumnModel[];
-    public displayedColumns: string [];
+    public displayedColumns: string[];
     public searchText: string;
 
     public initialized = false;
@@ -160,16 +163,17 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
     @Input("isSwimEnabled")
     public isSwimEnabled;
 
-    @ViewChild(MatPaginator, {static: true})
+    @ViewChild(MatPaginator, { static: true })
     public matPaginator: MatPaginator;
 
-    @ViewChild(MatSort, {static: true})
+    @ViewChild(MatSort, { static: true })
     public matSort: MatSort;
 
-    constructor(@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
-                public dialog: MatDialog,
-                public logger: LoggerService) {
-    }
+    constructor(
+        @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
+        public dialog: MatDialog,
+        public logger: LoggerService
+    ) {}
 
     public ngOnInit(): void {
         this.setup();
@@ -177,19 +181,24 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-
         if (!this.initialized) {
             return;
         }
 
         this.columns = _.filter(FitnessTrendTableComponent.AVAILABLE_COLUMNS, (column: FitnessTrendColumnModel) => {
-            if ((column.id === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE && !this.isPowerMeterEnabled)
-                || (column.id === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE && !this.isSwimEnabled)
-                || (column.id === FitnessTrendTableComponent.COLUMN_TRAINING_ZONE && !this.isTrainingZonesEnabled)
-                || (column.id === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE && !this.fitnessTrendConfigModel.allowEstimatedRunningStressScore)
-                || (column.id === FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)
-                || (column.id === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS)
-                || (column.id === FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE && this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP)) {
+            if (
+                (column.id === FitnessTrendTableComponent.COLUMN_POWER_STRESS_SCORE && !this.isPowerMeterEnabled) ||
+                (column.id === FitnessTrendTableComponent.COLUMN_SWIM_STRESS_SCORE && !this.isSwimEnabled) ||
+                (column.id === FitnessTrendTableComponent.COLUMN_TRAINING_ZONE && !this.isTrainingZonesEnabled) ||
+                (column.id === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE &&
+                    !this.fitnessTrendConfigModel.allowEstimatedRunningStressScore) ||
+                (column.id === FitnessTrendTableComponent.COLUMN_HEART_RATE_STRESS_SCORE &&
+                    this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS) ||
+                (column.id === FitnessTrendTableComponent.COLUMN_RUNNING_STRESS_SCORE &&
+                    this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.HRSS) ||
+                (column.id === FitnessTrendTableComponent.COLUMN_TRAINING_IMPULSE_SCORE &&
+                    this.fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP)
+            ) {
                 return false;
             }
             return true;
@@ -200,16 +209,12 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
         if (changes.fitnessTrend && changes.fitnessTrend.currentValue) {
             this.dataSource.data = this.prepareFitnessTrendModels(changes.fitnessTrend.currentValue);
         }
-
     }
 
     public setup(): void {
-
         this.dataSource = new MatTableDataSource<DayFitnessTrendModel>();
         this.dataSource.sortingDataAccessor = (dayFitnessTrendModel: DayFitnessTrendModel, sortHeaderId: string) => {
-
             switch (sortHeaderId) {
-
                 case FitnessTrendTableComponent.COLUMN_DATE:
                     return dayFitnessTrendModel.timestamp;
 
@@ -257,14 +262,11 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 
                 default:
                     throw new Error("sortHeaderId: " + sortHeaderId + " is not listed");
-
             }
-
         };
     }
 
     public prepareFitnessTrendModels(fitnessTrendModels: DayFitnessTrendModel[]): DayFitnessTrendModel[] {
-
         // Remove preview days
         fitnessTrendModels = _.filter(fitnessTrendModels, {
             previewDay: false,
@@ -290,48 +292,45 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
     }
 
     public onLinkClicked(dayFitnessTrend: DayFitnessTrendModel): void {
-
         if (dayFitnessTrend.ids.length > 1) {
             this.dialog.open(FitnessTrendActivitiesLinksDialogComponent, {
                 minWidth: FitnessTrendActivitiesLinksDialogComponent.MIN_WIDTH,
                 maxWidth: FitnessTrendActivitiesLinksDialogComponent.MAX_WIDTH,
-                data: dayFitnessTrend
+                data: dayFitnessTrend,
             });
         } else {
             this.openResourceResolver.openActivity(_.first(dayFitnessTrend.ids));
         }
-
     }
 
     public onViewAthleteSettings(dayFitnessTrendModel: DayFitnessTrendModel): void {
         this.dialog.open(GotItDialogComponent, {
             minWidth: GotItDialogComponent.MIN_WIDTH,
             maxWidth: GotItDialogComponent.MAX_WIDTH,
-            data: new GotItDialogDataModel("Calculated with athlete settings", dayFitnessTrendModel.printAthleteSettings())
+            data: new GotItDialogDataModel(
+                "Calculated with athlete settings",
+                dayFitnessTrendModel.printAthleteSettings()
+            ),
         });
     }
 
     public onSpreadSheetExport(): void {
-
         try {
             const exportedFields = _.without(this.displayedColumns, FitnessTrendTableComponent.COLUMN_STRAVA_LINK);
-            const parser = new Json2CsvParser({fields: exportedFields});
+            const parser = new Json2CsvParser({ fields: exportedFields });
             const csvData = parser.parse(this.generateSpreadSheetExportData());
-            const blob = new Blob([csvData], {type: "application/csv; charset=utf-8"});
+            const blob = new Blob([csvData], { type: "application/csv; charset=utf-8" });
             const filename = "fitness_trend_export." + moment().format("Y.M.D-H.mm.ss") + ".csv";
             saveAs(blob, filename);
         } catch (err) {
             this.logger.error(err);
         }
-
     }
 
     private generateSpreadSheetExportData(): any[] {
-
         const exportedFitnessTrend = [];
 
         _.forEach(this.fitnessTrend, (dayFitnessTrendModel: DayFitnessTrendModel) => {
-
             const exportedFitnessDay: any = _.clone(dayFitnessTrendModel);
 
             exportedFitnessDay[FitnessTrendTableComponent.COLUMN_DATE] = dayFitnessTrendModel.dateString;
@@ -343,13 +342,25 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
             exportedFitnessDay.tsb = _.floor(dayFitnessTrendModel.tsb, 2);
             exportedFitnessDay.zone = dayFitnessTrendModel.printTrainingZone();
 
-            exportedFitnessDay.trainingImpulseScore = (dayFitnessTrendModel.trainingImpulseScore) ? _.floor(dayFitnessTrendModel.trainingImpulseScore, 2) : "";
-            exportedFitnessDay.heartRateStressScore = (dayFitnessTrendModel.heartRateStressScore) ? _.floor(dayFitnessTrendModel.heartRateStressScore, 2) : "";
-            exportedFitnessDay.runningStressScore = (dayFitnessTrendModel.runningStressScore) ? _.floor(dayFitnessTrendModel.runningStressScore, 2) : "";
-            exportedFitnessDay.powerStressScore = (dayFitnessTrendModel.powerStressScore) ? _.floor(dayFitnessTrendModel.powerStressScore, 2) : "";
-            exportedFitnessDay.finalStressScore = (dayFitnessTrendModel.finalStressScore) ? _.floor(dayFitnessTrendModel.finalStressScore, 2) : "";
+            exportedFitnessDay.trainingImpulseScore = dayFitnessTrendModel.trainingImpulseScore
+                ? _.floor(dayFitnessTrendModel.trainingImpulseScore, 2)
+                : "";
+            exportedFitnessDay.heartRateStressScore = dayFitnessTrendModel.heartRateStressScore
+                ? _.floor(dayFitnessTrendModel.heartRateStressScore, 2)
+                : "";
+            exportedFitnessDay.runningStressScore = dayFitnessTrendModel.runningStressScore
+                ? _.floor(dayFitnessTrendModel.runningStressScore, 2)
+                : "";
+            exportedFitnessDay.powerStressScore = dayFitnessTrendModel.powerStressScore
+                ? _.floor(dayFitnessTrendModel.powerStressScore, 2)
+                : "";
+            exportedFitnessDay.finalStressScore = dayFitnessTrendModel.finalStressScore
+                ? _.floor(dayFitnessTrendModel.finalStressScore, 2)
+                : "";
 
-            exportedFitnessDay.athleteSettings = (dayFitnessTrendModel.printAthleteSettings()) ? dayFitnessTrendModel.printAthleteSettings() : "";
+            exportedFitnessDay.athleteSettings = dayFitnessTrendModel.printAthleteSettings()
+                ? dayFitnessTrendModel.printAthleteSettings()
+                : "";
 
             exportedFitnessTrend.push(exportedFitnessDay);
         });

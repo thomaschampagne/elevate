@@ -1,7 +1,6 @@
 import { ProgressType } from "../enums/progress-type.enum";
 
 export class YearProgressTypeModel {
-
     public type: ProgressType;
     public label: string;
     public unit: string;

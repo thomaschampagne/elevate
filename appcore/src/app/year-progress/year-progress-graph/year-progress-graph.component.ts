@@ -23,10 +23,9 @@ import { ElevateException } from "@elevate/shared/exceptions";
 @Component({
     selector: "app-year-progress-graph",
     templateUrl: "./year-progress-graph.component.html",
-    styleUrls: ["./year-progress-graph.component.scss"]
+    styleUrls: ["./year-progress-graph.component.scss"],
 })
 export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy {
-
     public static readonly GRAPH_DOM_ELEMENT_ID: string = "yearProgressGraph";
     public static readonly GRAPH_WRAPPER_DOM_ELEMENT_ID: string = "graphWrapper";
     public static readonly GRAPH_TARGET_LINE_COLOR: string = "grey";
@@ -58,11 +57,12 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
     public windowResizingSubscription: Subscription;
     public initialized = false;
 
-    constructor(public yearProgressService: YearProgressService,
-                public sideNavService: SideNavService,
-                public windowService: WindowService,
-                public logger: LoggerService) {
-    }
+    constructor(
+        public yearProgressService: YearProgressService,
+        public sideNavService: SideNavService,
+        public windowService: WindowService,
+        public logger: LoggerService
+    ) {}
 
     public static getGraphHtmlElement(): HTMLElement {
         return document.getElementById(YearProgressGraphComponent.GRAPH_DOM_ELEMENT_ID);
@@ -76,7 +76,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public ngOnInit(): void {
-
         this.viewableYearProgressDataModel = new ViewableYearProgressDataModel();
 
         // By default progression shown at marker is today
@@ -95,11 +94,9 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
         this.setupComponentSizeChangeHandlers();
 
         this.initialized = true;
-
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-
         if (!this.initialized) {
             return;
         }
@@ -117,25 +114,20 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
         this.reloadGraph();
     }
 
-
     public setupViewableGraphData(): void {
-
         // Prepare years lines
         const yearLines: GraphPointModel[][] = [];
 
         _.forEach(this.yearProgressions, (yearProgressModel: YearProgressModel) => {
-
-            const isYearSelected = (_.indexOf(this.selectedYears, yearProgressModel.year) !== -1);
+            const isYearSelected = _.indexOf(this.selectedYears, yearProgressModel.year) !== -1;
 
             if (isYearSelected) {
-
                 const yearLine: GraphPointModel[] = [];
 
                 _.forEach(yearProgressModel.progressions, (progressModel: ProgressModel) => {
-
                     const graphPoint: Partial<GraphPointModel> = {
                         date: moment().dayOfYear(progressModel.dayOfYear).format("YYYY-MM-DD"),
-                        hidden: progressModel.isFuture
+                        hidden: progressModel.isFuture,
                     };
 
                     switch (this.selectedProgressType.type) {
@@ -157,7 +149,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
                         default:
                             throw new Error("Unknown progress type: " + this.selectedProgressType.type);
-
                     }
 
                     yearLine.push(graphPoint as GraphPointModel);
@@ -165,34 +156,28 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
                 yearLines.push(yearLine);
             }
-
         });
 
         this.viewableYearProgressDataModel.setGraphicsYearLines(yearLines);
 
         // Prepare target line
         if (this.targetProgressModels) {
-
             const targetLine: GraphPointModel[] = [];
 
             _.forEach(this.targetProgressModels, (targetProgressModel: TargetProgressModel) => {
-
                 const graphPoint: Partial<GraphPointModel> = {
                     date: moment().dayOfYear(targetProgressModel.dayOfYear).format("YYYY-MM-DD"),
                     value: targetProgressModel.value,
-                    hidden: false
+                    hidden: false,
                 };
 
                 targetLine.push(graphPoint as GraphPointModel);
-
             });
 
             this.viewableYearProgressDataModel.setGraphicsTargetLine(targetLine);
-
         } else {
             this.viewableYearProgressDataModel.setGraphicsTargetLine([]);
         }
-
     }
 
     public updateGraph(partialUpdate?: boolean): void {
@@ -202,14 +187,12 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
             // Apply graph changes
             this.draw();
-
         } catch (error) {
             this.logger.warn(error);
         }
     }
 
     public updateViewableData(partialUpdate?: boolean): void {
-
         this.graphConfig.markers = this.viewableYearProgressDataModel.markers;
 
         if (partialUpdate === true) {
@@ -227,7 +210,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
         }
 
         this.graphConfig.max_data_size = this.graphConfig.data.length;
-
     }
 
     public draw(): void {
@@ -251,7 +233,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
      * @returns {string[]}
      */
     public colorsOfSelectedYears(yearSelection: number[]): string[] {
-
         const colors = [];
         _.forEachRight(yearSelection, (year: number) => {
             colors.push(this.yearProgressStyleModel.yearsColorsMap.get(year));
@@ -265,7 +246,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
      * @returns {boolean}
      */
     public isMomentToday(pMoment: Moment) {
-        return (pMoment.dayOfYear() === moment().dayOfYear());
+        return pMoment.dayOfYear() === moment().dayOfYear();
     }
 
     /**
@@ -307,7 +288,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public onComponentSizeChanged(): void {
-
         // Update graph dynamic height
         this.applyGraphHeight();
 
@@ -316,7 +296,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public setupComponentSizeChangeHandlers(): void {
-
         // User resize window
         this.windowResizingSubscription = this.windowService.resizing$.subscribe(() => this.onComponentSizeChanged());
 
@@ -325,7 +304,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
     }
 
     public setupGraphConfig(): void {
-
         this.graphConfig = {
             data: [],
             full_width: true,
@@ -360,7 +338,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
             },
             mouseout: (data: MetricsGraphicsEventModel) => {
                 this.onGraphMouseOut();
-            }
+            },
         };
 
         this.applyGraphHeight();
@@ -370,7 +348,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
      * @return year progress graph height. Height is lower if graph is expanded
      */
     public findGraphicHeight(): number {
-        return window.innerHeight * 0.65 * ((this.isGraphExpanded) ? 0.80 : 1);
+        return window.innerHeight * 0.65 * (this.isGraphExpanded ? 0.8 : 1);
     }
 
     public applyGraphHeight(): void {
@@ -383,5 +361,4 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
         this.windowResizingSubscription.unsubscribe();
         this.sideNavChangesSubscription.unsubscribe();
     }
-
 }

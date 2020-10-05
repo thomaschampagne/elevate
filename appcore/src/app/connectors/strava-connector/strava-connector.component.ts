@@ -11,7 +11,10 @@ import { adjectives, animals, colors, names, uniqueNamesGenerator } from "unique
 import _ from "lodash";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../../shared/services/links-opener/open-resource-resolver";
+import {
+    OPEN_RESOURCE_RESOLVER,
+    OpenResourceResolver,
+} from "../../shared/services/links-opener/open-resource-resolver";
 import { IClipboardResponse } from "ngx-clipboard";
 import jdenticon from "jdenticon/standalone";
 import { StatusCodes } from "http-status-codes";
@@ -25,10 +28,9 @@ class GeneratedStravaApiApplication {
 @Component({
     selector: "app-strava-connector",
     templateUrl: "./strava-connector.component.html",
-    styleUrls: ["./strava-connector.component.scss"]
+    styleUrls: ["./strava-connector.component.scss"],
 })
 export class StravaConnectorComponent extends ConnectorsComponent implements OnInit {
-
     public stravaConnectorInfo: StravaConnectorInfo;
     public expiresAt: string;
 
@@ -36,14 +38,16 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
     public showConfigure: boolean;
     public showHowTo: boolean;
 
-    constructor(public stravaConnectorService: StravaConnectorService,
-                public desktopSyncService: DesktopSyncService,
-                @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
-                public electronService: ElectronService,
-                public router: Router,
-                public snackBar: MatSnackBar,
-                public logger: LoggerService,
-                public dialog: MatDialog) {
+    constructor(
+        public stravaConnectorService: StravaConnectorService,
+        public desktopSyncService: DesktopSyncService,
+        @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
+        public electronService: ElectronService,
+        public router: Router,
+        public snackBar: MatSnackBar,
+        public logger: LoggerService,
+        public dialog: MatDialog
+    ) {
         super(desktopSyncService, openResourceResolver, router, dialog);
         this.connectorType = ConnectorType.STRAVA;
         this.generatedStravaApiApplication = null;
@@ -52,7 +56,6 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
     }
 
     public ngOnInit(): void {
-
         this.stravaConnectorService.fetch().then((stravaConnectorInfo: StravaConnectorInfo) => {
             this.updateSyncDateTimeText();
             this.handleCredentialsChanges(stravaConnectorInfo);
@@ -64,18 +67,23 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
     }
 
     public refreshRandomStravaApiApplication(): void {
-        this.randomStravaApiApplication().then((generatedStravaApiApplication: GeneratedStravaApiApplication) => {
-            this.generatedStravaApiApplication = generatedStravaApiApplication;
-            setTimeout(() => jdenticon.update("#appIcon", this.generatedStravaApiApplication.appName));
-        }).catch(err => {
-            throw err;
-        });
+        this.randomStravaApiApplication()
+            .then((generatedStravaApiApplication: GeneratedStravaApiApplication) => {
+                this.generatedStravaApiApplication = generatedStravaApiApplication;
+                setTimeout(() => jdenticon.update("#appIcon", this.generatedStravaApiApplication.appName));
+            })
+            .catch(err => {
+                throw err;
+            });
     }
 
     public handleCredentialsChanges(stravaConnectorInfo: StravaConnectorInfo): void {
         setTimeout(() => {
             this.stravaConnectorInfo = stravaConnectorInfo;
-            this.expiresAt = (this.stravaConnectorInfo.expiresAt > 0) ? moment(this.stravaConnectorInfo.expiresAt).format("LLLL") : null;
+            this.expiresAt =
+                this.stravaConnectorInfo.expiresAt > 0
+                    ? moment(this.stravaConnectorInfo.expiresAt).format("LLLL")
+                    : null;
         });
     }
 
@@ -88,58 +96,72 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
     }
 
     public resetTokens(): void {
-        this.stravaConnectorService.fetch().then((stravaConnectorInfo: StravaConnectorInfo) => {
-            stravaConnectorInfo.clientId = this.stravaConnectorInfo.clientId;
-            stravaConnectorInfo.clientSecret = (this.stravaConnectorInfo.clientSecret) ? this.stravaConnectorInfo.clientSecret.trim() : null;
-            stravaConnectorInfo.accessToken = null;
-            stravaConnectorInfo.refreshToken = null;
-            stravaConnectorInfo.expiresAt = null;
-            return this.stravaConnectorService.stravaConnectorInfoService.update(stravaConnectorInfo);
-        }).then((stravaConnectorInfo: StravaConnectorInfo) => {
-            this.stravaConnectorInfo = stravaConnectorInfo;
-            // Force clear cookie to allow connection with another strava account
-            this.electronService.electron.remote.getCurrentWindow().webContents.session.clearStorageData({storages: ["cookies"]});
-        });
+        this.stravaConnectorService
+            .fetch()
+            .then((stravaConnectorInfo: StravaConnectorInfo) => {
+                stravaConnectorInfo.clientId = this.stravaConnectorInfo.clientId;
+                stravaConnectorInfo.clientSecret = this.stravaConnectorInfo.clientSecret
+                    ? this.stravaConnectorInfo.clientSecret.trim()
+                    : null;
+                stravaConnectorInfo.accessToken = null;
+                stravaConnectorInfo.refreshToken = null;
+                stravaConnectorInfo.expiresAt = null;
+                return this.stravaConnectorService.stravaConnectorInfoService.update(stravaConnectorInfo);
+            })
+            .then((stravaConnectorInfo: StravaConnectorInfo) => {
+                this.stravaConnectorInfo = stravaConnectorInfo;
+                // Force clear cookie to allow connection with another strava account
+                this.electronService.electron.remote
+                    .getCurrentWindow()
+                    .webContents.session.clearStorageData({ storages: ["cookies"] });
+            });
     }
 
     public onUpdateActivitiesNameAndTypeChanged(): void {
-        this.stravaConnectorService.stravaConnectorInfoService.update(this.stravaConnectorInfo).then((stravaConnectorInfo: StravaConnectorInfo) => {
-            this.stravaConnectorInfo = stravaConnectorInfo;
-        });
+        this.stravaConnectorService.stravaConnectorInfoService
+            .update(this.stravaConnectorInfo)
+            .then((stravaConnectorInfo: StravaConnectorInfo) => {
+                this.stravaConnectorInfo = stravaConnectorInfo;
+            });
     }
 
     public stravaAuthentication(): void {
-        this.stravaConnectorService.authenticate().then((stravaConnectorInfo: StravaConnectorInfo) => {
-            this.stravaConnectorInfo = stravaConnectorInfo;
-            this.showConfigure = false;
-            this.showHowTo = false;
-        }).catch(error => {
+        this.stravaConnectorService
+            .authenticate()
+            .then((stravaConnectorInfo: StravaConnectorInfo) => {
+                this.stravaConnectorInfo = stravaConnectorInfo;
+                this.showConfigure = false;
+                this.showHowTo = false;
+            })
+            .catch(error => {
+                let errorMessage = null;
 
-            let errorMessage = null;
+                if (error.statusCode === StatusCodes.UNAUTHORIZED) {
+                    errorMessage = "Unauthorized access to strava. Check your client id and client secret.";
+                } else if (error.statusCode === StatusCodes.FORBIDDEN) {
+                    errorMessage = "Forbidden access to strava. Please check your client id and client secret.";
+                } else if (error.code === "EADDRINUSE") {
+                    errorMessage = "A Strava login window is already opened. Please use it.";
+                } else {
+                    throw error;
+                }
 
-            if (error.statusCode === StatusCodes.UNAUTHORIZED) {
-                errorMessage = "Unauthorized access to strava. Check your client id and client secret.";
-            } else if (error.statusCode === StatusCodes.FORBIDDEN) {
-                errorMessage = "Forbidden access to strava. Please check your client id and client secret.";
-            } else if (error.code === "EADDRINUSE") {
-                errorMessage = "A Strava login window is already opened. Please use it.";
-            } else {
-                throw error;
-            }
-
-            this.snackBar.open(errorMessage, "Ok");
-        });
+                this.snackBar.open(errorMessage, "Ok");
+            });
     }
 
     public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
-        return super.sync().then(() => {
-            return this.stravaConnectorService.sync(fastSync, forceSync);
-        }).catch(err => {
-            if (err !== ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE) {
-                return Promise.reject(err);
-            }
-            return Promise.resolve();
-        });
+        return super
+            .sync()
+            .then(() => {
+                return this.stravaConnectorService.sync(fastSync, forceSync);
+            })
+            .catch(err => {
+                if (err !== ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE) {
+                    return Promise.reject(err);
+                }
+                return Promise.resolve();
+            });
     }
 
     public disconnect(): void {
@@ -147,34 +169,36 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
     }
 
     public randomStravaApiApplication(): Promise<GeneratedStravaApiApplication> {
-
         return new Promise(resolve => {
-
             this.logger.info("Generating a random strava api application");
 
-            const appNameDictionaries = Math.floor(Math.random() * 10) % 2 === 0 ? [colors, adjectives, animals] : [adjectives, colors, names];
+            const appNameDictionaries =
+                Math.floor(Math.random() * 10) % 2 === 0 ? [colors, adjectives, animals] : [adjectives, colors, names];
 
             const appName = uniqueNamesGenerator({
                 dictionaries: appNameDictionaries,
                 style: "lowerCase",
-                separator: " "
+                separator: " ",
             });
 
-            const webSite = "https://" + uniqueNamesGenerator({
-                dictionaries: [adjectives, names],
-                style: "lowerCase",
-                separator: ".",
-                length: 2
-            }) + "." + ["com", "org", "io"][Math.floor(Math.random() * 10) % 3];
+            const webSite =
+                "https://" +
+                uniqueNamesGenerator({
+                    dictionaries: [adjectives, names],
+                    style: "lowerCase",
+                    separator: ".",
+                    length: 2,
+                }) +
+                "." +
+                ["com", "org", "io"][Math.floor(Math.random() * 10) % 3];
 
             const imageFileName = Math.floor(Math.random() * 10000000).toString(16) + ".png";
 
             resolve({
                 appName: _.upperFirst(appName),
                 imageFileName: imageFileName,
-                webSite: webSite
+                webSite: webSite,
             });
-
         });
     }
 
@@ -189,7 +213,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 
     public onClipBoardSaved($event: IClipboardResponse): void {
         if ($event.isSuccess) {
-            this.snackBar.open(`"${$event.content}" copied to clipboard.`, null, {duration: 1000});
+            this.snackBar.open(`"${$event.content}" copied to clipboard.`, null, { duration: 1000 });
         }
     }
 }

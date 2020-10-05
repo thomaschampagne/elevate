@@ -6,26 +6,24 @@ import { SharedModule } from "../../shared/shared.module";
 import { OptionHelperDataModel } from "./option-helper-data.model";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
-
 describe("OptionHelperDialogComponent", () => {
     let component: OptionHelperDialogComponent;
     let fixture: ComponentFixture<OptionHelperDialogComponent>;
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-            ],
+            imports: [CoreModule, SharedModule],
             declarations: [],
             providers: [
                 {
-                    provide: MAT_DIALOG_DATA, useValue: new OptionHelperDataModel("title", "data"),
+                    provide: MAT_DIALOG_DATA,
+                    useValue: new OptionHelperDataModel("title", "data"),
                 },
                 {
-                    provide: MatDialogRef, useValue: {},
+                    provide: MatDialogRef,
+                    useValue: {},
                 },
-            ]
+            ],
         }).compileComponents();
 
         done();

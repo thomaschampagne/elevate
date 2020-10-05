@@ -4,13 +4,11 @@ import { WindowService } from "./window.service";
 import { MediaObserver } from "@angular/flex-layout";
 
 describe("WindowService", () => {
-
     let service: WindowService;
 
     beforeEach(done => {
-
         TestBed.configureTestingModule({
-            providers: [WindowService, MediaObserver]
+            providers: [WindowService, MediaObserver],
         });
 
         service = TestBed.inject(WindowService);
@@ -23,7 +21,6 @@ describe("WindowService", () => {
     }));
 
     it("should notify subscribers when windows is resized", done => {
-
         // Given
         const expectedCallCount = 1;
         const spy = spyOn(service.resizing$, "next");

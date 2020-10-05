@@ -15,40 +15,39 @@ import { TestingDataStore } from "../../../shared/data-store/testing-datastore.s
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("EditDatedAthleteSettingsDialogComponent", () => {
-
     let component: EditDatedAthleteSettingsDialogComponent;
     let fixture: ComponentFixture<EditDatedAthleteSettingsDialogComponent>;
     let userSettingsService: UserSettingsService;
 
     beforeEach(done => {
-
         const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
             action: DatedAthleteSettingsAction.ACTION_ADD,
-            datedAthleteSettingsModel: DatedAthleteSettingsModel.DEFAULT_MODEL
+            datedAthleteSettingsModel: DatedAthleteSettingsModel.DEFAULT_MODEL,
         };
 
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                AthleteSettingsModule
-            ],
+            imports: [CoreModule, SharedModule, AthleteSettingsModule],
             providers: [
                 {
-                    provide: DataStore, useClass: TestingDataStore
+                    provide: DataStore,
+                    useClass: TestingDataStore,
                 },
                 {
-                    provide: MAT_DIALOG_DATA, useValue: datedAthleteSettingsDialogData
+                    provide: MAT_DIALOG_DATA,
+                    useValue: datedAthleteSettingsDialogData,
                 },
                 {
-                    provide: MatDialogRef, useValue: {}
-                }
-            ]
+                    provide: MatDialogRef,
+                    useValue: {},
+                },
+            ],
         }).compileComponents();
 
         userSettingsService = TestBed.inject(UserSettingsService);
 
-        spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
+        spyOn(userSettingsService, "fetch").and.returnValue(
+            Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
+        );
 
         fixture = TestBed.createComponent(EditDatedAthleteSettingsDialogComponent);
         component = fixture.componentInstance;

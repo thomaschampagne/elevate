@@ -4,18 +4,20 @@ import { VERSIONS_PROVIDER, VersionsProvider } from "../shared/services/versions
 
 export const TOP_BAR_COMPONENT = new InjectionToken<TopBarComponent>("TOP_BAR_COMPONENT");
 
-@Component({template: ""})
-export class TopBarComponent {
-}
+@Component({ template: "" })
+export class TopBarComponent {}
 
 @Component({
     selector: "app-desktop-top-bar",
     template: `
         <div class="top-bar">
             <div class="draggable"></div>
-            <span class="top-bar-title mat-body-strong" *ngIf="buildMetadata && buildMetadata.commit && buildMetadata.date">
-				<span class="alpha-tag">alpha</span>&nbsp;&nbsp;Elevate v{{currentVersion}}
-			</span>
+            <span
+                class="top-bar-title mat-body-strong"
+                *ngIf="buildMetadata && buildMetadata.commit && buildMetadata.date"
+            >
+                <span class="alpha-tag">alpha</span>&nbsp;&nbsp;Elevate v{{ currentVersion }}
+            </span>
             <span class="toolbar-spacer"></span>
             <button mat-icon-button (click)="onMinimizeAppClicked()">
                 <mat-icon fontSet="material-icons-outlined" inline="true">minimize</mat-icon>
@@ -31,66 +33,69 @@ export class TopBarComponent {
             </button>
         </div>
     `,
-    styles: [`
-        .alpha-tag {
-            background-color: #FF004C;
-            color: white;
-            padding: 1px 5px 1px 5px;
-            font-weight: bold;
-            border-radius: 3px;
-        }
+    styles: [
+        `
+            .alpha-tag {
+                background-color: #ff004c;
+                color: white;
+                padding: 1px 5px 1px 5px;
+                font-weight: bold;
+                border-radius: 3px;
+            }
 
-        .top-bar {
-            background-color: #303030;
-            display: flex;
-            align-items: center;
-            color: white;
-        }
+            .top-bar {
+                background-color: #303030;
+                display: flex;
+                align-items: center;
+                color: white;
+            }
 
-        .draggable {
-            -webkit-app-region: drag;
-            position: absolute;
-            left: 3px;
-            right: 3px;
-            top: 3px;
-            height: 35px;
-        }
+            .draggable {
+                -webkit-app-region: drag;
+                position: absolute;
+                left: 3px;
+                right: 3px;
+                top: 3px;
+                height: 35px;
+            }
 
-        .top-bar-title {
-            margin: 0 0 0 16px;
-        }
+            .top-bar-title {
+                margin: 0 0 0 16px;
+            }
 
-        .toolbar-spacer {
-            flex: 1 1 auto;
-        }
+            .toolbar-spacer {
+                flex: 1 1 auto;
+            }
 
-        button {
-            -webkit-app-region: no-drag;
-        }
+            button {
+                -webkit-app-region: no-drag;
+            }
 
-        button:last-child:hover { /* Set close icon red */
-            color: #ff4643;
-        }
-    `]
+            button:last-child:hover {
+                /* Set close icon red */
+                color: #ff4643;
+            }
+        `,
+    ],
 })
 export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
-
     public isFullscreen: boolean = null;
     public currentVersion: string;
-    public buildMetadata: { commit: string, date: string };
+    public buildMetadata: { commit: string; date: string };
 
-    constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
-                public electronService: ElectronService) {
+    constructor(
+        @Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
+        public electronService: ElectronService
+    ) {
         super();
     }
 
     public ngOnInit() {
-
         this.versionsProvider.getPackageVersion().then(version => {
             this.currentVersion = version;
         });
 
-        this.versionsProvider.getBuildMetadata().then((buildMetadata: { commit: string, date: string }) => {
+        this.versionsProvider.getBuildMetadata().then((buildMetadata: { commit: string; date: string }) => {
             this.buildMetadata = buildMetadata;
             this.buildMetadata.date = this.buildMetadata.date.slice(0, 10).replace(/-/g, "");
         });
@@ -123,10 +128,8 @@ export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
     }
 }
 
-
 @Component({
     selector: "app-extension-top-bar",
-    template: ""
+    template: "",
 })
-export class ExtensionTopBarComponent extends TopBarComponent {
-}
+export class ExtensionTopBarComponent extends TopBarComponent {}

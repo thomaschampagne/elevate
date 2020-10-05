@@ -7,16 +7,15 @@ import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services
 
 export const APP_MORE_MENU_COMPONENT = new InjectionToken<AppMoreMenuComponent>("APP_MORE_MENU_COMPONENT");
 
-@Component({template: ""})
+@Component({ template: "" })
 export class AppMoreMenuComponent implements OnInit {
+    constructor(
+        public router: Router,
+        public dialog: MatDialog,
+        @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver
+    ) {}
 
-    constructor(public router: Router,
-                public dialog: MatDialog,
-                @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver) {
-    }
-
-    public ngOnInit(): void {
-    }
+    public ngOnInit(): void {}
 
     public onShowReleaseNotes(): void {
         this.router.navigate([AppRoutesModel.releasesNotes]);
@@ -57,9 +56,7 @@ export class AppMoreMenuComponent implements OnInit {
             <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
         </button>
         <mat-menu #moreMenu="matMenu">
-
-            <button mat-menu-item
-                    (click)="onOpenLink('https://twitter.com/champagnethomas')">
+            <button mat-menu-item (click)="onOpenLink('https://twitter.com/champagnethomas')">
                 <mat-icon fontSet="material-icons-outlined">announcement</mat-icon>
                 App updates
             </button>
@@ -102,10 +99,9 @@ export class AppMoreMenuComponent implements OnInit {
                 About
             </button>
         </mat-menu>
-    `
+    `,
 })
-export class DesktopAppMoreMenuComponent extends AppMoreMenuComponent {
-}
+export class DesktopAppMoreMenuComponent extends AppMoreMenuComponent {}
 
 @Component({
     selector: "app-extension-app-more-menu",
@@ -114,7 +110,6 @@ export class DesktopAppMoreMenuComponent extends AppMoreMenuComponent {
             <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
         </button>
         <mat-menu #moreMenu="matMenu">
-
             <button mat-menu-item (click)="onOpenLink('https://twitter.com/champagnethomas')">
                 <mat-icon fontSet="material-icons-outlined">announcement</mat-icon>
                 Plugin updates
@@ -158,7 +153,6 @@ export class DesktopAppMoreMenuComponent extends AppMoreMenuComponent {
                 About
             </button>
         </mat-menu>
-    `
+    `,
 })
-export class ExtensionAppMoreMenuComponent extends AppMoreMenuComponent {
-}
+export class ExtensionAppMoreMenuComponent extends AppMoreMenuComponent {}

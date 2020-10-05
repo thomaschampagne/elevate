@@ -1,9 +1,8 @@
 import { Directive, ViewContainerRef } from "@angular/core";
 
 @Directive({
-    selector: "[appSyncBar]"
+    selector: "[appSyncBar]",
 })
 export class SyncBarDirective {
-    constructor(public viewContainerRef: ViewContainerRef) {
-    }
+    constructor(public viewContainerRef: ViewContainerRef) {}
 }

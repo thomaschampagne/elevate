@@ -9,7 +9,6 @@ import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 
 describe("ZoneComponent", () => {
-
     let component: ZoneComponent;
 
     let fixture: ComponentFixture<ZoneComponent>;
@@ -17,15 +16,9 @@ describe("ZoneComponent", () => {
     let zonesService: ZonesService;
 
     beforeEach(done => {
-
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule
-            ],
-            providers: [
-                {provide: DataStore, useClass: TestingDataStore}
-            ]
+            imports: [CoreModule, SharedModule],
+            providers: [{ provide: DataStore, useClass: TestingDataStore }],
         }).compileComponents();
 
         zonesService = TestBed.inject(ZonesService);
@@ -45,26 +38,25 @@ describe("ZoneComponent", () => {
         done();
     });
 
-    it("should notify properly a \"from\" zone change", done => {
-
+    it('should notify properly a "from" zone change', done => {
         // Given
         const sourceId = 5;
         const zoneFrom = 50;
         const zoneTo = 75;
-        const changeType: ZoneChangeTypeModel = {from: true, to: false};
+        const changeType: ZoneChangeTypeModel = { from: true, to: false };
 
         const expectedChange: ZoneChangeWhisperModel = {
             sourceId: sourceId,
             from: true,
             to: false,
-            value: zoneFrom
+            value: zoneFrom,
         };
 
         spyOn(zonesService, "whisperZoneChange").and.stub();
         component.zoneId = sourceId;
         component.zone = {
             from: zoneFrom,
-            to: zoneTo
+            to: zoneTo,
         };
 
         // When
@@ -74,29 +66,27 @@ describe("ZoneComponent", () => {
         expect(zonesService.whisperZoneChange).toHaveBeenCalledTimes(1);
         expect(zonesService.whisperZoneChange).toHaveBeenCalledWith(expectedChange);
         done();
-
     });
 
-    it("should notify properly a \"to\" zone change", done => {
-
+    it('should notify properly a "to" zone change', done => {
         // Given
         const sourceId = 5;
         const zoneFrom = 50;
         const zoneTo = 75;
-        const changeType: ZoneChangeTypeModel = {from: false, to: true};
+        const changeType: ZoneChangeTypeModel = { from: false, to: true };
 
         const expectedChange: ZoneChangeWhisperModel = {
             sourceId: sourceId,
             from: false,
             to: true,
-            value: zoneTo
+            value: zoneTo,
         };
 
         spyOn(zonesService, "whisperZoneChange").and.stub();
         component.zoneId = sourceId;
         component.zone = {
             from: zoneFrom,
-            to: zoneTo
+            to: zoneTo,
         };
 
         // When
@@ -109,9 +99,8 @@ describe("ZoneComponent", () => {
     });
 
     it("should skip notify is from + to changes (On first display)", done => {
-
         // Given
-        const changeType: ZoneChangeTypeModel = {from: true, to: true};
+        const changeType: ZoneChangeTypeModel = { from: true, to: true };
         spyOn(zonesService, "whisperZoneChange").and.stub();
 
         // When

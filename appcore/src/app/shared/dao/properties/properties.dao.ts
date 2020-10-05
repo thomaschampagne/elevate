@@ -5,7 +5,6 @@ import { CollectionDef } from "../../data-store/collection-def";
 
 @Injectable()
 export class PropertiesDao extends BaseDao<PropertiesModel> {
-
     public static readonly COLLECTION_DEF: CollectionDef<PropertiesModel> = new CollectionDef("properties", null);
 
     public getCollectionDef(): CollectionDef<PropertiesModel> {
@@ -13,6 +12,6 @@ export class PropertiesDao extends BaseDao<PropertiesModel> {
     }
 
     public getDefaultStorageValue(): PropertiesModel {
-        return {existingVersion: null};
+        return { existingVersion: null };
     }
 }

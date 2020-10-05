@@ -1,7 +1,13 @@
 import * as _ from "lodash";
 import * as $ from "jquery";
 import { Helper } from "../../helper";
-import { ActivityInfoModel, AnalysisDataModel, AthleteSnapshotModel, SpeedUnitDataModel, UserSettings } from "@elevate/shared/models";
+import {
+    ActivityInfoModel,
+    AnalysisDataModel,
+    AthleteSnapshotModel,
+    SpeedUnitDataModel,
+    UserSettings,
+} from "@elevate/shared/models";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AbstractDataView } from "./views/abstract-data.view";
@@ -11,7 +17,6 @@ import { HeartRateDataView } from "./views/heart-rate-data.view";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export abstract class AbstractExtendedDataModifier {
-
     public static TYPE_ACTIVITY = 0;
     public static TYPE_SEGMENT = 1;
 
@@ -29,9 +34,13 @@ export abstract class AbstractExtendedDataModifier {
     protected content: string;
     protected dataViews: AbstractDataView[] = [];
 
-    protected constructor(activityProcessor: ActivityProcessor, activityInfo: ActivityInfoModel, appResources: AppResourcesModel,
-                          userSettings: ExtensionUserSettingsModel, type: number) {
-
+    protected constructor(
+        activityProcessor: ActivityProcessor,
+        activityInfo: ActivityInfoModel,
+        appResources: AppResourcesModel,
+        userSettings: ExtensionUserSettingsModel,
+        type: number
+    ) {
         this.activityProcessor = activityProcessor;
         this.appResources = appResources;
         this.userSettings = userSettings;
@@ -41,63 +50,63 @@ export abstract class AbstractExtendedDataModifier {
     }
 
     public apply(): void {
-
         if (_.isNull(this.type)) {
             console.error("ExtendedDataModifier must be set");
         }
 
         // Getting data to display at least summary panel. Cache will be normally used next if user click 'Show extended stats' in ACTIVITY mode
-        this.getFullAnalysisData().then((result: { athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel }) => {
+        this.getFullAnalysisData().then(
+            (result: { athleteSnapshot: AthleteSnapshotModel; analysisData: AnalysisDataModel }) => {
+                this.athleteSnapshot = result.athleteSnapshot;
+                this.analysisData = result.analysisData;
 
-            this.athleteSnapshot = result.athleteSnapshot;
-            this.analysisData = result.analysisData;
-
-            if (this.type === AbstractExtendedDataModifier.TYPE_ACTIVITY) {
-
-                this.placeSummaryPanel(() => { // Summary panel has been placed...
-                    // Add Show extended statistics to page
-                    this.placeExtendedStatsButton(() => {
-                        // Extended Button has been placed...
+                if (this.type === AbstractExtendedDataModifier.TYPE_ACTIVITY) {
+                    this.placeSummaryPanel(() => {
+                        // Summary panel has been placed...
+                        // Add Show extended statistics to page
+                        this.placeExtendedStatsButton(() => {
+                            // Extended Button has been placed...
+                            console.debug("Extended Button for segment has been placed...");
+                        });
+                    });
+                } else if (this.type === AbstractExtendedDataModifier.TYPE_SEGMENT) {
+                    // Place button for segment
+                    this.placeExtendedStatsButtonSegment(() => {
                         console.debug("Extended Button for segment has been placed...");
                     });
-                });
-
-            } else if (this.type === AbstractExtendedDataModifier.TYPE_SEGMENT) {
-                // Place button for segment
-                this.placeExtendedStatsButtonSegment(() => {
-                    console.debug("Extended Button for segment has been placed...");
-                });
+                }
             }
-        });
+        );
     }
 
     public printNumber(value: number, decimals?: number): string {
-        return (_.isNumber(value) && !_.isNaN(value) && _.isFinite(value)) ? value.toFixed((decimals) ? decimals : 0) : "-";
+        return _.isNumber(value) && !_.isNaN(value) && _.isFinite(value) ? value.toFixed(decimals ? decimals : 0) : "-";
     }
 
     protected placeSummaryPanel(panelAdded: () => void): void {
-
         this.insertContentSummaryGridContent();
 
-        $(".inline-stats.section").first().after(this.summaryGrid.html()).each(() => {
-            // Grid placed
-            if (panelAdded) {
-                panelAdded();
-            }
-        });
+        $(".inline-stats.section")
+            .first()
+            .after(this.summaryGrid.html())
+            .each(() => {
+                // Grid placed
+                if (panelAdded) {
+                    panelAdded();
+                }
+            });
     }
 
     protected makeSummaryGrid(columns: number, rows: number): void {
-
         let summaryGrid = "";
         summaryGrid += "<div>";
-        summaryGrid += "<div class=\"summaryGrid\">";
+        summaryGrid += '<div class="summaryGrid">';
         summaryGrid += "<table>";
 
         for (let i = 0; i < rows; i++) {
             summaryGrid += "<tr>";
             for (let j = 0; j < columns; j++) {
-                summaryGrid += "<td data-column=\"" + j + "\" data-row=\"" + i + "\">";
+                summaryGrid += '<td data-column="' + j + '" data-row="' + i + '">';
                 summaryGrid += "</td>";
             }
             summaryGrid += "</tr>";
@@ -109,7 +118,6 @@ export abstract class AbstractExtendedDataModifier {
     }
 
     protected insertContentSummaryGridContent(): void {
-
         // Insert summary data
         let moveRatio = "-";
         if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio) {
@@ -126,78 +134,115 @@ export abstract class AbstractExtendedDataModifier {
         let activityHeartRateReserveUnit = "";
 
         if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
-            trainingImpulse = this.printNumber(this.analysisData.heartRateData.TRIMP) + " <span class=\"summarySubGridTitle\">(" + this.printNumber(this.analysisData.heartRateData.TRIMPPerHour, 1) + " / hour)</span>";
-            hrss = this.printNumber(this.analysisData.heartRateData.HRSS) + " <span class=\"summarySubGridTitle\">(" + this.printNumber(this.analysisData.heartRateData.HRSSPerHour, 1) + " / hour)</span>";
+            trainingImpulse =
+                this.printNumber(this.analysisData.heartRateData.TRIMP) +
+                ' <span class="summarySubGridTitle">(' +
+                this.printNumber(this.analysisData.heartRateData.TRIMPPerHour, 1) +
+                " / hour)</span>";
+            hrss =
+                this.printNumber(this.analysisData.heartRateData.HRSS) +
+                ' <span class="summarySubGridTitle">(' +
+                this.printNumber(this.analysisData.heartRateData.HRSSPerHour, 1) +
+                " / hour)</span>";
             activityHeartRateReserve = this.printNumber(this.analysisData.heartRateData.activityHeartRateReserve);
             if (_.isNumber(this.analysisData.heartRateData.best20min)) {
                 best20minHr = this.printNumber(this.analysisData.heartRateData.best20min);
                 best20minHrUnit = "bpm";
             }
-            activityHeartRateReserveUnit = "%  <span class=\"summarySubGridTitle\">(Max: " + this.printNumber(this.analysisData.heartRateData.activityHeartRateReserveMax) + "% @ " + this.analysisData.heartRateData.maxHeartRate + "bpm)</span>";
+            activityHeartRateReserveUnit =
+                '%  <span class="summarySubGridTitle">(Max: ' +
+                this.printNumber(this.analysisData.heartRateData.activityHeartRateReserveMax) +
+                "% @ " +
+                this.analysisData.heartRateData.maxHeartRate +
+                "bpm)</span>";
         }
 
         this.insertContentAtGridPosition(0, 1, hrss, "Heart Rate Stress Score", "", "displayAdvancedHrData");
         this.insertContentAtGridPosition(1, 1, trainingImpulse, "TRaining IMPulse", "", "displayAdvancedHrData");
-        this.insertContentAtGridPosition(0, 2, best20minHr, "Best 20min Heart Rate", best20minHrUnit, "displayAdvancedHrData");
-        this.insertContentAtGridPosition(1, 2, activityHeartRateReserve, "Heart Rate Reserve Avg", activityHeartRateReserveUnit, "displayAdvancedHrData");
+        this.insertContentAtGridPosition(
+            0,
+            2,
+            best20minHr,
+            "Best 20min Heart Rate",
+            best20minHrUnit,
+            "displayAdvancedHrData"
+        );
+        this.insertContentAtGridPosition(
+            1,
+            2,
+            activityHeartRateReserve,
+            "Heart Rate Reserve Avg",
+            activityHeartRateReserveUnit,
+            "displayAdvancedHrData"
+        );
 
         // ...
         let climbTime = "-";
         let climbTimeExtra = "";
         if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
             climbTime = Helper.secondsToHHMMSS(this.analysisData.gradeData.upFlatDownInSeconds.up);
-            climbTimeExtra = "<span class=\"summarySubGridTitle\">(" + this.printNumber((this.analysisData.gradeData.upFlatDownInSeconds.up / this.analysisData.gradeData.upFlatDownInSeconds.total * 100)) + "% of time)</span>";
+            climbTimeExtra =
+                '<span class="summarySubGridTitle">(' +
+                this.printNumber(
+                    (this.analysisData.gradeData.upFlatDownInSeconds.up /
+                        this.analysisData.gradeData.upFlatDownInSeconds.total) *
+                        100
+                ) +
+                "% of time)</span>";
         }
 
         this.insertContentAtGridPosition(0, 3, climbTime, "Time climbing", climbTimeExtra, "displayAdvancedGradeData");
-
     }
 
     protected placeExtendedStatsButton(buttonAdded: () => void): void {
-
-        let htmlButton = "<section style=\"text-align: center;\">";
-        htmlButton += "<a class=\"button btn-block btn-primary\" id=\"extendedStatsButton\" href=\"#\">";
+        let htmlButton = '<section style="text-align: center;">';
+        htmlButton += '<a class="button btn-block btn-primary" id="extendedStatsButton" href="#">';
         htmlButton += "Display elevate extended stats";
         htmlButton += "</a>";
         htmlButton += "</section>";
 
-        $(".inline-stats.section").first().after(htmlButton).each(() => {
+        $(".inline-stats.section")
+            .first()
+            .after(htmlButton)
+            .each(() => {
+                $("#extendedStatsButton").click(() => {
+                    this.getFullAnalysisData().then(
+                        (result: { athleteSnapshot: AthleteSnapshotModel; analysisData: AnalysisDataModel }) => {
+                            if (!this.athleteSnapshot) {
+                                this.athleteSnapshot = result.athleteSnapshot;
+                            }
 
-            $("#extendedStatsButton").click(() => {
-
-                this.getFullAnalysisData().then((result: { athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel }) => {
-
-                    if (!this.athleteSnapshot) {
-                        this.athleteSnapshot = result.athleteSnapshot;
-                    }
-
-                    this.analysisData = result.analysisData;
-                    this.renderViews();
-                    this.showResultsAndRefreshGraphs();
-
+                            this.analysisData = result.analysisData;
+                            this.renderViews();
+                            this.showResultsAndRefreshGraphs();
+                        }
+                    );
                 });
+                if (buttonAdded) {
+                    buttonAdded();
+                }
             });
-            if (buttonAdded) {
-                buttonAdded();
-            }
-        });
     }
 
-    protected getFullAnalysisData(): Promise<{ athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel }> {
-
-        return new Promise<{ athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel }>(resolve => {
-            this.activityProcessor.getAnalysisData(this.activityInfo, null, (athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
-                resolve({athleteSnapshot: athleteSnapshot, analysisData: analysisData});
-            });
+    protected getFullAnalysisData(): Promise<{
+        athleteSnapshot: AthleteSnapshotModel;
+        analysisData: AnalysisDataModel;
+    }> {
+        return new Promise<{ athleteSnapshot: AthleteSnapshotModel; analysisData: AnalysisDataModel }>(resolve => {
+            this.activityProcessor.getAnalysisData(
+                this.activityInfo,
+                null,
+                (athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel) => {
+                    // Callback when analysis data has been computed
+                    resolve({ athleteSnapshot: athleteSnapshot, analysisData: analysisData });
+                }
+            );
         });
     }
 
     protected placeExtendedStatsButtonSegment(buttonAdded: () => void): void {
-
-        $("#" + this.segmentEffortButtonId).on("click", (evt) => {
-
+        $("#" + this.segmentEffortButtonId).on("click", evt => {
             this.getSegmentInfos((segmentInfosResponse: any) => {
-
                 // Call Activity Processor with bounds
                 if (!_.isNumber(segmentInfosResponse.start_index) || !_.isNumber(segmentInfosResponse.end_index)) {
                     return;
@@ -212,7 +257,8 @@ export abstract class AbstractExtendedDataModifier {
                 this.activityProcessor.getAnalysisData(
                     this.activityInfo,
                     [segmentInfosResponse.start_index, segmentInfosResponse.end_index], // Bounds given, full activity requested
-                    (athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel) => { // Callback when analysis data has been computed
+                    (athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel) => {
+                        // Callback when analysis data has been computed
 
                         if (!this.athleteSnapshot) {
                             this.athleteSnapshot = athleteSnapshot;
@@ -221,7 +267,8 @@ export abstract class AbstractExtendedDataModifier {
                         this.analysisData = analysisData;
                         this.renderViews();
                         this.showResultsAndRefreshGraphs();
-                    });
+                    }
+                );
             });
             evt.preventDefault();
             evt.stopPropagation();
@@ -233,7 +280,6 @@ export abstract class AbstractExtendedDataModifier {
     }
 
     protected getSegmentInfos(callback: (segmentInfosResponse: any) => any): void {
-
         const effortId: string = _.last(window.location.href.match(/(\d+)$/g));
 
         if (!effortId) {
@@ -254,23 +300,21 @@ export abstract class AbstractExtendedDataModifier {
                 success: (xhrResponseText: any) => {
                     segmentInfosResponse = xhrResponseText;
                 },
-                error: (err) => {
+                error: err => {
                     console.error(err);
                 },
-            }),
+            })
         ).then(() => {
             callback(segmentInfosResponse);
         });
     }
 
     protected renderViews(): void {
-
         this.content = "";
 
         this.setDataViewsNeeded();
 
-        _.forEach(this.dataViews, (view) => {
-
+        _.forEach(this.dataViews, view => {
             if (!view) {
                 console.warn(view);
             }
@@ -278,7 +322,6 @@ export abstract class AbstractExtendedDataModifier {
             view.render();
             this.content += view.getContent();
         });
-
     }
 
     protected showResultsAndRefreshGraphs(): void {
@@ -292,7 +335,7 @@ export abstract class AbstractExtendedDataModifier {
             transitionOut: "none",
             closeBtn: false,
             type: "iframe",
-            content: "<div class=\"elevateExtendedData\">" + this.content + "</div>",
+            content: '<div class="elevateExtendedData">' + this.content + "</div>",
         });
 
         // For each view start making the assossiated graphs
@@ -302,7 +345,6 @@ export abstract class AbstractExtendedDataModifier {
     }
 
     protected setDataViewsNeeded(): void {
-
         // Clean Data View Before
         this.cleanDataViews();
 
@@ -317,7 +359,11 @@ export abstract class AbstractExtendedDataModifier {
         // By default we have... If data exist of course...
         // Featured view
         if (this.analysisData) {
-            const featuredDataView: FeaturedDataView = new FeaturedDataView(this.analysisData, this.userSettings, this.activityInfo);
+            const featuredDataView: FeaturedDataView = new FeaturedDataView(
+                this.analysisData,
+                this.userSettings,
+                this.activityInfo
+            );
             featuredDataView.setAppResources(this.appResources);
             featuredDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
             featuredDataView.setActivityType(this.activityType);
@@ -327,7 +373,11 @@ export abstract class AbstractExtendedDataModifier {
 
         // Heart view
         if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
-            const heartRateDataView: HeartRateDataView = new HeartRateDataView(this.analysisData.heartRateData, "hrr", this.athleteSnapshot);
+            const heartRateDataView: HeartRateDataView = new HeartRateDataView(
+                this.analysisData.heartRateData,
+                "hrr",
+                this.athleteSnapshot
+            );
             heartRateDataView.setAppResources(this.appResources);
             heartRateDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
             heartRateDataView.setActivityType(this.activityType);
@@ -337,7 +387,6 @@ export abstract class AbstractExtendedDataModifier {
     }
 
     protected cleanDataViews(): void {
-
         if (!_.isEmpty(this.dataViews)) {
             for (let i = 0; i < this.dataViews.length; i++) {
                 this.dataViews[i] = null;
@@ -347,15 +396,35 @@ export abstract class AbstractExtendedDataModifier {
         }
     }
 
-    protected insertContentAtGridPosition(columnId: number, rowId: number, data: string, title: string, units: string, userSettingKey: string) {
-
+    protected insertContentAtGridPosition(
+        columnId: number,
+        rowId: number,
+        data: string,
+        title: string,
+        units: string,
+        userSettingKey: string
+    ) {
         let onClickHtmlBehaviour = "";
         if (userSettingKey) {
-            onClickHtmlBehaviour = "onclick='javascript:window.open(\"" + this.appResources.settingsLink + "#/globalSettings?viewOptionHelperId=" + userSettingKey + "\",\"_blank\");'";
+            onClickHtmlBehaviour =
+                "onclick='javascript:window.open(\"" +
+                this.appResources.settingsLink +
+                "#/globalSettings?viewOptionHelperId=" +
+                userSettingKey +
+                '","_blank");\'';
         }
 
         if (this.summaryGrid) {
-            const content: string = "<span class=\"summaryGridDataContainer\" " + onClickHtmlBehaviour + ">" + data + " <span class=\"summaryGridUnits\">" + units + "</span><br /><span class=\"summaryGridTitle\">" + title + "</span></span>";
+            const content: string =
+                '<span class="summaryGridDataContainer" ' +
+                onClickHtmlBehaviour +
+                ">" +
+                data +
+                ' <span class="summaryGridUnits">' +
+                units +
+                '</span><br /><span class="summaryGridTitle">' +
+                title +
+                "</span></span>";
             this.summaryGrid.find("[data-column=" + columnId + "][data-row=" + rowId + "]").html(content);
         } else {
             console.error("Grid is not initialized");

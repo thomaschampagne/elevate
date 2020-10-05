@@ -1,21 +1,19 @@
 import { UserZonesModel, ZoneModel } from "@elevate/shared/models";
 
 describe("UserZonesModel", () => {
-
     it("should serialize ZoneModel[] to number[]", done => {
-
         // Given
         const zones: ZoneModel[] = [
-            {from: 0, to: 10},
-            {from: 10, to: 20},
-            {from: 20, to: 30},
-            {from: 30, to: 40},
-            {from: 40, to: 50},
-            {from: 50, to: 60},
-            {from: 60, to: 70},
-            {from: 70, to: 80},
-            {from: 80, to: 90},
-            {from: 90, to: 100}
+            { from: 0, to: 10 },
+            { from: 10, to: 20 },
+            { from: 20, to: 30 },
+            { from: 30, to: 40 },
+            { from: 40, to: 50 },
+            { from: 50, to: 60 },
+            { from: 60, to: 70 },
+            { from: 70, to: 80 },
+            { from: 80, to: 90 },
+            { from: 90, to: 100 },
         ];
         const expected = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
@@ -30,18 +28,17 @@ describe("UserZonesModel", () => {
     });
 
     it("should deserialize number[] to ZoneModel[]", done => {
-
         // Given
         const zonesSerialized = [-20, -10, 0, 10, 20, 30, 40, 50, 60];
         const expected: ZoneModel[] = [
-            {from: -20, to: -10},
-            {from: -10, to: 0},
-            {from: 0, to: 10},
-            {from: 10, to: 20},
-            {from: 20, to: 30},
-            {from: 30, to: 40},
-            {from: 40, to: 50},
-            {from: 50, to: 60},
+            { from: -20, to: -10 },
+            { from: -10, to: 0 },
+            { from: 0, to: 10 },
+            { from: 10, to: 20 },
+            { from: 20, to: 30 },
+            { from: 30, to: 40 },
+            { from: 40, to: 50 },
+            { from: 50, to: 60 },
         ];
 
         // When

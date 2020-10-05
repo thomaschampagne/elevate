@@ -14,21 +14,18 @@ describe("AboutDialogComponent", () => {
     let fixture: ComponentFixture<AboutDialogComponent>;
 
     beforeEach(done => {
-
         const mockedVersionsProvider: MockedVersionsProvider = new MockedVersionsProvider();
 
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-            ],
+            imports: [CoreModule, SharedModule],
             providers: [
                 {
-                    provide: MatDialogRef, useValue: {},
+                    provide: MatDialogRef,
+                    useValue: {},
                 },
-                {provide: DataStore, useClass: TestingDataStore},
-                {provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider}
-            ]
+                { provide: DataStore, useClass: TestingDataStore },
+                { provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider },
+            ],
         }).compileComponents();
         done();
     });

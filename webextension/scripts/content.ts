@@ -8,7 +8,6 @@ import { BrowserStorage } from "./browser-storage";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class Content {
-
     public static loader: Loader = new Loader();
 
     protected appResources: AppResourcesModel;
@@ -18,11 +17,11 @@ export class Content {
     }
 
     public isExtensionRunnableInThisContext(): boolean {
-
         let isRunnable = true;
 
         // Eject if http://www.strava.com/routes/new OR http://www.strava.com/routes/XXXX/edit
-        if (window.location.pathname.match(/^\/routes\/new/) ||
+        if (
+            window.location.pathname.match(/^\/routes\/new/) ||
             window.location.pathname.match(/^\/routes\/(\d+)\/edit$/) ||
             window.location.pathname.match(/^\/about/) ||
             window.location.pathname.match(/^\/running-app/) ||
@@ -32,15 +31,13 @@ export class Content {
             window.location.pathname.match(/^\/gopremium/) ||
             window.location.pathname.match(/^\/store/) ||
             window.location.pathname.match(/^\/how-it-works/) ||
-            window.location.pathname.match(/^\/careers/)) {
-
+            window.location.pathname.match(/^\/careers/)
+        ) {
             isRunnable = false;
         }
 
         // Do not run extension if user not logged
-        if (document.body.classList.contains("is-home-page") ||
-            document.body.classList.contains("logged-out")
-        ) {
+        if (document.body.classList.contains("is-home-page") || document.body.classList.contains("logged-out")) {
             isRunnable = false;
         }
 
@@ -48,46 +45,45 @@ export class Content {
     }
 
     public start(): void {
-
         // Skip execution if needed
         if (!this.isExtensionRunnableInThisContext()) {
             console.log("Skipping Elevate chrome extension execution in this page");
             return;
         }
 
-        BrowserStorage.getInstance().get<ExtensionUserSettingsModel>(BrowserStorageType.LOCAL, "userSettings", true).then((userSettingsResult: ExtensionUserSettingsModel) => {
+        BrowserStorage.getInstance()
+            .get<ExtensionUserSettingsModel>(BrowserStorageType.LOCAL, "userSettings", true)
+            .then((userSettingsResult: ExtensionUserSettingsModel) => {
+                let userSettingsModel: ExtensionUserSettingsModel;
 
-            let userSettingsModel: ExtensionUserSettingsModel;
+                const defaultUserSettingsData = ExtensionUserSettingsModel.DEFAULT_MODEL;
 
-            const defaultUserSettingsData = ExtensionUserSettingsModel.DEFAULT_MODEL;
+                if (userSettingsResult) {
+                    userSettingsModel = userSettingsResult;
+                } else {
+                    userSettingsModel = defaultUserSettingsData;
+                }
 
-            if (userSettingsResult) {
-                userSettingsModel = userSettingsResult;
-            } else {
-                userSettingsModel = defaultUserSettingsData;
-            }
+                const defaultSettings = _.keys(defaultUserSettingsData);
+                const syncedSettings = _.keys(userSettingsModel);
+                if (_.difference(defaultSettings, syncedSettings).length !== 0) {
+                    // If settings shape has changed
+                    _.defaults(userSettingsModel, defaultUserSettingsData);
+                }
 
-            const defaultSettings = _.keys(defaultUserSettingsData);
-            const syncedSettings = _.keys(userSettingsModel);
-            if (_.difference(defaultSettings, syncedSettings).length !== 0) { // If settings shape has changed
-                _.defaults(userSettingsModel, defaultUserSettingsData);
-            }
+                const startCoreData: StartCoreDataModel = {
+                    extensionId: chrome.runtime.id,
+                    userSettings: userSettingsModel,
+                    appResources: this.appResources,
+                };
 
-            const startCoreData: StartCoreDataModel = {
-                extensionId: chrome.runtime.id,
-                userSettings: userSettingsModel,
-                appResources: this.appResources,
-            };
+                // Inject jQuery as $
+                Content.loader.injectJS("const $ = jQuery;");
 
-            // Inject jQuery as $
-            Content.loader.injectJS("const $ = jQuery;");
-
-            Content.loader.require([
-                "extension/boot.bundle.js"
-            ], () => {
-                this.emitStartCoreEvent(startCoreData);
+                Content.loader.require(["extension/boot.bundle.js"], () => {
+                    this.emitStartCoreEvent(startCoreData);
+                });
             });
-        });
     }
 
     protected emitStartCoreEvent(startCoreData: StartCoreDataModel) {

@@ -1,7 +1,6 @@
 import { Gender } from "../../models/athlete";
 
 export class StravaAccount {
-
     public id: number;
     public username: string;
     public firstname: string;
@@ -11,8 +10,16 @@ export class StravaAccount {
     public country: string;
     public gender: Gender;
 
-    constructor(id: number, username: string, firstname: string, lastname: string, city: string, state: string,
-                country: string, gender: Gender) {
+    constructor(
+        id: number,
+        username: string,
+        firstname: string,
+        lastname: string,
+        city: string,
+        state: string,
+        country: string,
+        gender: Gender
+    ) {
         this.id = id;
         this.username = username;
         this.firstname = firstname;

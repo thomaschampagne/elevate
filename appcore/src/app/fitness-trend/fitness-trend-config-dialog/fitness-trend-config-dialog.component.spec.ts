@@ -14,27 +14,24 @@ describe("FitnessTrendConfigDialogComponent", () => {
     let fitnessTrendConfigDialogData: FitnessTrendConfigDialogData;
 
     beforeEach(done => {
-
         fitnessTrendConfigDialogData = {
             fitnessTrendConfigModel: FitnessTrendComponent.DEFAULT_CONFIG,
             lastFitnessActiveDate: new Date(),
-            isPowerMeterEnabled: true
+            isPowerMeterEnabled: true,
         };
 
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                FitnessTrendModule
-            ],
+            imports: [CoreModule, SharedModule, FitnessTrendModule],
             providers: [
                 {
-                    provide: MAT_DIALOG_DATA, useValue: fitnessTrendConfigDialogData,
+                    provide: MAT_DIALOG_DATA,
+                    useValue: fitnessTrendConfigDialogData,
                 },
                 {
-                    provide: MatDialogRef, useValue: {},
+                    provide: MatDialogRef,
+                    useValue: {},
                 },
-            ]
+            ],
         }).compileComponents();
         done();
     });
@@ -51,9 +48,9 @@ describe("FitnessTrendConfigDialogComponent", () => {
     });
 
     it("should handle ignore patterns formatting for storage", done => {
-
         // Given
-        const userInputPatterns: string = "#tag_1\n" +
+        const userInputPatterns: string =
+            "#tag_1\n" +
             "#tag_2\n" +
             "#tag_3 \n" + // Added space
             "#tag_4\n" +
@@ -61,7 +58,6 @@ describe("FitnessTrendConfigDialogComponent", () => {
             "#tag_6\n" +
             "#tag_6\n" + // Duplicate of previous
             "\n"; // Fake return
-
 
         // When
         const result: string[] = component.formatPatternsForStorage(userInputPatterns);
@@ -74,11 +70,9 @@ describe("FitnessTrendConfigDialogComponent", () => {
         expect(result[2]).toEqual("#tag_3");
 
         done();
-
     });
 
     it("should handle ignore patterns empty (1)", done => {
-
         // Given
         const userInputPatterns = " ";
 
@@ -88,11 +82,9 @@ describe("FitnessTrendConfigDialogComponent", () => {
         // Then
         expect(result).toBeNull();
         done();
-
     });
 
     it("should handle ignore patterns empty (2)", done => {
-
         // Given
         const userInputPatterns = "\n";
 
@@ -102,11 +94,9 @@ describe("FitnessTrendConfigDialogComponent", () => {
         // Then
         expect(result).toBeNull();
         done();
-
     });
 
     it("should handle ignore patterns empty (3)", done => {
-
         // Given
         const userInputPatterns = "";
 
@@ -116,11 +106,9 @@ describe("FitnessTrendConfigDialogComponent", () => {
         // Then
         expect(result).toBeNull();
         done();
-
     });
 
     it("should handle ignore patterns formatting for display", done => {
-
         // Given
         const patterns: string[] = ["#tag_1", "#tag_2"];
         const expectedResult = "#tag_1\n#tag_2";
@@ -132,7 +120,5 @@ describe("FitnessTrendConfigDialogComponent", () => {
         expect(result).not.toBeNull();
         expect(result).toEqual(expectedResult);
         done();
-
     });
-
 });

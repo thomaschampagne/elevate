@@ -5,7 +5,6 @@ import { AthleteModel } from "@elevate/shared/models";
 
 @Injectable()
 export class AthleteDao extends BaseDao<AthleteModel> {
-
     public static readonly COLLECTION_DEF: CollectionDef<AthleteModel> = new CollectionDef("athlete", null);
 
     public getDefaultStorageValue(): AthleteModel {

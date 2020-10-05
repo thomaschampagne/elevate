@@ -1,5 +1,4 @@
 export class AppUsage {
-
     public bytesInUse: number;
     public quotaBytes: number;
 

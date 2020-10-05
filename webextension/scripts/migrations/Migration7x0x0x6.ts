@@ -13,60 +13,57 @@ interface IOldV6Database {
     yearProgressPresets?: YearToDateProgressPresetModel[];
 }
 
-
 interface INewV7Database {
     athlete?: {
-        name: "athlete",
-        data: AthleteModel[] & { $loki: number, meta: {} }[]
+        name: "athlete";
+        data: AthleteModel[] & { $loki: number; meta: {} }[];
     };
     athleteId?: {
-        name: "athleteId",
-        data: { athleteId: number }[] & { $loki: number, meta: {} }[]
+        name: "athleteId";
+        data: { athleteId: number }[] & { $loki: number; meta: {} }[];
     };
     bestSplitsConfiguration?: {
-        name: "bestSplitsConfiguration",
-        data: { splits: any[] }[] & { $loki: number, meta: {} }[]
+        name: "bestSplitsConfiguration";
+        data: { splits: any[] }[] & { $loki: number; meta: {} }[];
     };
     syncDateTime?: {
-        name: "syncDateTime",
-        data: SyncDateTime[] & { $loki: number, meta: {} }[]
+        name: "syncDateTime";
+        data: SyncDateTime[] & { $loki: number; meta: {} }[];
     };
     syncedActivities?: {
-        name: "syncedActivities",
+        name: "syncedActivities";
         binaryIndices: {
             name: {
-                dirty: false,
-                name: "name",
-                values: []
-            },
+                dirty: false;
+                name: "name";
+                values: [];
+            };
             start_time: {
-                dirty: false,
-                name: "start_time",
-                values: []
-            },
+                dirty: false;
+                name: "start_time";
+                values: [];
+            };
             type: {
-                dirty: false,
-                name: "type",
-                values: []
-            }
-        },
-        data: SyncedActivityModel[] & { $loki: number, meta: {} }[],
-        uniqueNames: ["id"]
+                dirty: false;
+                name: "type";
+                values: [];
+            };
+        };
+        data: SyncedActivityModel[] & { $loki: number; meta: {} }[];
+        uniqueNames: ["id"];
     };
     userSettings?: {
-        name: "userSettings",
-        data: ExtensionUserSettingsModel[] & { $loki: number, meta: {} }[]
+        name: "userSettings";
+        data: ExtensionUserSettingsModel[] & { $loki: number; meta: {} }[];
     };
     yearProgressPresets?: {
-        name: "yearProgressPresets",
-        data: YearToDateProgressPresetModel[] & { $loki: number, meta: {} }[]
+        name: "yearProgressPresets";
+        data: YearToDateProgressPresetModel[] & { $loki: number; meta: {} }[];
     };
 }
 
 export class Migration7x0x0x6 {
-
     public perform(oldDatabase: IOldV6Database): INewV7Database {
-
         if (!oldDatabase) {
             return null;
         }
@@ -83,7 +80,7 @@ export class Migration7x0x0x6 {
         // Convert athleteId
         if (oldDatabase.athleteId) {
             newDatabase.athleteId = this.initCollection("athleteId");
-            newDatabase.athleteId.data.push(this.setLokiData({athleteId: oldDatabase.athleteId}));
+            newDatabase.athleteId.data.push(this.setLokiData({ athleteId: oldDatabase.athleteId }));
         }
 
         // Convert bestSplitsConfiguration
@@ -95,12 +92,11 @@ export class Migration7x0x0x6 {
         // Convert syncDateTime
         if (oldDatabase.syncDateTime) {
             newDatabase.syncDateTime = this.initCollection("syncDateTime");
-            newDatabase.syncDateTime.data.push(this.setLokiData({syncDateTime: oldDatabase.syncDateTime}));
+            newDatabase.syncDateTime.data.push(this.setLokiData({ syncDateTime: oldDatabase.syncDateTime }));
         }
 
         // Convert syncedActivities
         if (oldDatabase.syncedActivities) {
-
             newDatabase.syncedActivities = this.initCollection("syncedActivities");
 
             oldDatabase.syncedActivities.forEach((activity, index) => {
@@ -108,9 +104,9 @@ export class Migration7x0x0x6 {
             });
 
             newDatabase.syncedActivities.binaryIndices = {
-                name: {dirty: false, name: "name", values: []},
-                start_time: {dirty: false, name: "start_time", values: []},
-                type: {dirty: false, name: "type", values: []}
+                name: { dirty: false, name: "name", values: [] },
+                start_time: { dirty: false, name: "start_time", values: [] },
+                type: { dirty: false, name: "type", values: [] },
             };
 
             newDatabase.syncedActivities.uniqueNames = ["id"];
@@ -136,7 +132,7 @@ export class Migration7x0x0x6 {
     private initCollection(colName: string): any {
         return {
             name: colName,
-            data: []
+            data: [],
         };
     }
 
@@ -146,7 +142,7 @@ export class Migration7x0x0x6 {
             revision: 1,
             created: time,
             version: 0,
-            updated: time
+            updated: time,
         };
         (doc as any).$loki = index;
         return doc;

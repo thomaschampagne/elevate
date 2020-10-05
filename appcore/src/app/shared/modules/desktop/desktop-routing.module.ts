@@ -12,15 +12,10 @@ import { FaqComponent } from "../../../faq/faq.component";
 import { ActivityViewComponent } from "../../../activity-view/activity-view.component";
 
 @NgModule({
-    imports: [
-        RouterModule.forRoot(DesktopRoutingModule.provideRoutes(), {enableTracing: false, useHash: true})
-    ],
-    exports: [
-        RouterModule
-    ]
+    imports: [RouterModule.forRoot(DesktopRoutingModule.provideRoutes(), { enableTracing: false, useHash: true })],
+    exports: [RouterModule],
 })
 export class DesktopRoutingModule {
-
     public static routes: Routes = [
         {
             path: AppRoutesModel.activities,
@@ -32,31 +27,36 @@ export class DesktopRoutingModule {
         },
         {
             path: AppRoutesModel.fitnessTrend,
-            loadChildren: () => import("../../../fitness-trend/fitness-trend.module").then(module => module.FitnessTrendModule),
+            loadChildren: () =>
+                import("../../../fitness-trend/fitness-trend.module").then(module => module.FitnessTrendModule),
         },
         {
             path: AppRoutesModel.yearProgressions,
-            loadChildren: () => import("../../../year-progress/year-progress.module").then(module => module.YearProgressModule),
+            loadChildren: () =>
+                import("../../../year-progress/year-progress.module").then(module => module.YearProgressModule),
         },
         {
             path: AppRoutesModel.globalSettings,
-            component: GlobalSettingsComponent
+            component: GlobalSettingsComponent,
         },
         {
             path: AppRoutesModel.athleteSettings,
-            loadChildren: () => import("../../../athlete-settings/athlete-settings.module").then(module => module.AthleteSettingsModule)
+            loadChildren: () =>
+                import("../../../athlete-settings/athlete-settings.module").then(
+                    module => module.AthleteSettingsModule
+                ),
         },
         {
             path: AppRoutesModel.zonesSettings,
-            component: ZonesSettingsComponent
+            component: ZonesSettingsComponent,
         },
         {
             path: AppRoutesModel.zonesSettings + "/:zoneValue",
-            component: ZonesSettingsComponent
+            component: ZonesSettingsComponent,
         },
         {
             path: AppRoutesModel.connectors,
-            loadChildren: () => import("../../../connectors/connectors.module").then(module => module.ConnectorsModule)
+            loadChildren: () => import("../../../connectors/connectors.module").then(module => module.ConnectorsModule),
         },
         {
             path: AppRoutesModel.donate,
@@ -64,26 +64,29 @@ export class DesktopRoutingModule {
         },
         {
             path: AppRoutesModel.releasesNotes,
-            loadChildren: () => import("../../../releases-notes/releases-notes.module").then(module => module.ReleasesNotesModule)
+            loadChildren: () =>
+                import("../../../releases-notes/releases-notes.module").then(module => module.ReleasesNotesModule),
         },
         {
             path: AppRoutesModel.share,
-            component: ShareComponent
+            component: ShareComponent,
         },
         {
             path: AppRoutesModel.report,
-            component: ReportComponent
+            component: ReportComponent,
         },
         {
             path: AppRoutesModel.advancedMenu,
-            component: DesktopAdvancedMenuComponent
+            component: DesktopAdvancedMenuComponent,
         },
         {
             path: AppRoutesModel.frequentlyAskedQuestions,
-            component: FaqComponent
+            component: FaqComponent,
         },
         {
-            path: "", redirectTo: AppRoutesModel.activities, pathMatch: "full"
+            path: "",
+            redirectTo: AppRoutesModel.activities,
+            pathMatch: "full",
         },
     ];
 

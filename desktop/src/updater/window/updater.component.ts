@@ -1,6 +1,6 @@
 import Vue from "vue/dist/vue.js";
 
-const {ipcRenderer} = require("electron");
+const { ipcRenderer } = require("electron");
 
 export const UpdaterComponent = Vue.component("Updater", {
     data: () => {
@@ -48,7 +48,7 @@ export const UpdaterComponent = Vue.component("Updater", {
                 "font-family": "Helvetica, Verdana, sans-serif",
                 "margin-bottom": "8px",
             };
-        }
+        },
     },
     beforeCreate() {
         ipcRenderer.on("update-status", (event, text) => {
@@ -59,7 +59,8 @@ export const UpdaterComponent = Vue.component("Updater", {
             this.updateStatus = "Downloading update...";
             this.progressPercent = progress.percent;
 
-            if (this.progressPercent >= 100) { // Download completed
+            if (this.progressPercent >= 100) {
+                // Download completed
                 setTimeout(() => {
                     this.updateStatus = "Update downloaded.";
                 }, 500);
@@ -77,5 +78,5 @@ export const UpdaterComponent = Vue.component("Updater", {
                 <progress style="width: 300px;" max="100" v-if="progressPercent !== null" :value="progressPercent"></progress>
             </div>
         </div>
-    `
+    `,
 });

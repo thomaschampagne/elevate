@@ -7,24 +7,18 @@ import { FitnessTrendModule } from "../fitness-trend.module";
 import { FitnessTrendComponent } from "../fitness-trend.component";
 
 describe("FitnessTrendInputsComponent", () => {
-
     let component: FitnessTrendInputsComponent;
     let fixture: ComponentFixture<FitnessTrendInputsComponent>;
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                FitnessTrendModule
-            ]
+            imports: [CoreModule, SharedModule, FitnessTrendModule],
         }).compileComponents();
 
         done();
     });
 
     beforeEach(done => {
-
         fixture = TestBed.createComponent(FitnessTrendInputsComponent);
 
         component = fixture.componentInstance;
@@ -33,7 +27,7 @@ describe("FitnessTrendInputsComponent", () => {
 
         component.periodViewed = {
             from: new Date(),
-            to: new Date()
+            to: new Date(),
         };
 
         fixture.detectChanges();

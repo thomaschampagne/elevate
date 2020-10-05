@@ -17,25 +17,21 @@ describe("AddYearProgressPresetDialogComponent", () => {
     let fixture: ComponentFixture<AddYearProgressPresetDialogComponent>;
 
     beforeEach(done => {
-
-        const addYearProgressPresetsDialogData: AddYearToDateProgressPresetDialogData =
-            new AddYearToDateProgressPresetDialogData(new YearProgressTypeModel(ProgressType.DISTANCE, "Distance"),
-                [ElevateSport.Ride, ElevateSport.VirtualRide],
-                true,
-                true,
-                5000);
+        const addYearProgressPresetsDialogData: AddYearToDateProgressPresetDialogData = new AddYearToDateProgressPresetDialogData(
+            new YearProgressTypeModel(ProgressType.DISTANCE, "Distance"),
+            [ElevateSport.Ride, ElevateSport.VirtualRide],
+            true,
+            true,
+            5000
+        );
 
         TestBed.configureTestingModule({
-            imports: [
-                CoreModule,
-                SharedModule,
-                YearProgressModule
-            ],
+            imports: [CoreModule, SharedModule, YearProgressModule],
             providers: [
-                {provide: DataStore, useClass: TestingDataStore},
-                {provide: MAT_DIALOG_DATA, useValue: addYearProgressPresetsDialogData},
-                {provide: MatDialogRef, useValue: {}},
-            ]
+                { provide: DataStore, useClass: TestingDataStore },
+                { provide: MAT_DIALOG_DATA, useValue: addYearProgressPresetsDialogData },
+                { provide: MatDialogRef, useValue: {} },
+            ],
         }).compileComponents();
 
         done();

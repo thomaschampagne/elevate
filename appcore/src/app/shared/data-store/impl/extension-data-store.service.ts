@@ -7,21 +7,17 @@ import { AppUsageDetails } from "../../models/app-usage-details.model";
 import { AppUsage } from "../../models/app-usage.model";
 
 class LokiChromeAdapter implements LokiPersistenceAdapter {
-
     public loadDatabase(dbname: string, callback: (data: any) => void): void {
-
         this.chromeLocalStorageArea().get(null, chromeDatabase => {
-
             const error = this.getLastError();
 
             if (error) {
                 throw new Error(error.message);
             } else {
-
                 const collectionsNames = _.keys(chromeDatabase);
 
                 const database: Partial<LokiConstructor> = {
-                    collections: []
+                    collections: [],
                 };
 
                 collectionsNames.forEach(colName => {
@@ -32,11 +28,9 @@ class LokiChromeAdapter implements LokiPersistenceAdapter {
                 callback(database);
             }
         });
-
     }
 
-    public saveDatabase(dbname: string, dbString: string | Uint8Array, callback: (err?: (Error | null)) => void): void {
-
+    public saveDatabase(dbname: string, dbString: string | Uint8Array, callback: (err?: Error | null) => void): void {
         const database: LokiConstructor = JSON.parse(dbString as string);
 
         const chromeDatabase = {};
@@ -50,7 +44,7 @@ class LokiChromeAdapter implements LokiPersistenceAdapter {
         });
     }
 
-    public deleteDatabase(dbname: string, callback: (err?: (Error | null)) => void): void {
+    public deleteDatabase(dbname: string, callback: (err?: Error | null) => void): void {
         this.chromeLocalStorageArea().clear(callback);
     }
 
@@ -65,7 +59,6 @@ class LokiChromeAdapter implements LokiPersistenceAdapter {
 
 @Injectable()
 export class ExtensionDataStore<T extends {}> extends DataStore<T> {
-
     constructor(protected logger: LoggerService) {
         super(logger);
     }
@@ -81,15 +74,14 @@ export class ExtensionDataStore<T extends {}> extends DataStore<T> {
     }
 
     public getAppUsageDetails(): Promise<AppUsageDetails> {
-        return new Promise<AppUsageDetails>((resolve) => {
+        return new Promise<AppUsageDetails>(resolve => {
             chrome.storage.local.getBytesInUse((bytesInUse: number) => {
                 const appUsage = new AppUsage(bytesInUse, chrome.storage.local.QUOTA_BYTES);
                 const megaBytesInUse = appUsage.bytesInUse / (1024 * 1024);
-                const percentUsage = appUsage.bytesInUse / appUsage.quotaBytes * 100;
+                const percentUsage = (appUsage.bytesInUse / appUsage.quotaBytes) * 100;
                 const appUsageDetails: AppUsageDetails = new AppUsageDetails(appUsage, megaBytesInUse, percentUsage);
                 resolve(appUsageDetails);
             });
         });
-
     }
 }

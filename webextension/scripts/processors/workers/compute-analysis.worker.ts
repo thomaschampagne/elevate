@@ -3,7 +3,6 @@ import { AnalysisDataModel } from "@elevate/shared/models";
 import { ActivityComputer } from "@elevate/shared/sync";
 
 onmessage = (mainThreadEvent: MessageEvent) => {
-
     const threadMessage: ComputeActivityThreadMessageModel = mainThreadEvent.data;
 
     const analysisComputer: ActivityComputer = new ActivityComputer(
@@ -17,7 +16,8 @@ onmessage = (mainThreadEvent: MessageEvent) => {
         threadMessage.bounds,
         threadMessage.returnZones,
         threadMessage.returnPowerCurve,
-        threadMessage.activitySourceData);
+        threadMessage.activitySourceData
+    );
 
     const result: AnalysisDataModel = analysisComputer.compute();
     postMessage(result);

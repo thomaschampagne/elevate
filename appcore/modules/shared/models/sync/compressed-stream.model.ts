@@ -1,5 +1,4 @@
 export class CompressedStreamModel {
-
     public activityId: string;
 
     /**

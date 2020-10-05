@@ -4,41 +4,45 @@ import { AppRoutesModel } from "../../../models/app-routes.model";
 
 @Injectable()
 export class ExtensionMenuItemsProvider implements MenuItemsProvider {
-
     public readonly mainMenuItems: MenuItemModel[] = [
         {
             icon: "view_list",
             routerLink: AppRoutesModel.activities,
-            routerLinkActive: true
-        }, {
+            routerLinkActive: true,
+        },
+        {
             icon: "timeline",
             routerLink: AppRoutesModel.fitnessTrend,
-            routerLinkActive: true
-        }, {
+            routerLinkActive: true,
+        },
+        {
             icon: "date_range",
             routerLink: AppRoutesModel.yearProgressions,
-            routerLinkActive: true
-        }, {
+            routerLinkActive: true,
+        },
+        {
             icon: "settings",
             routerLink: AppRoutesModel.globalSettings,
-            routerLinkActive: true
-        }, {
+            routerLinkActive: true,
+        },
+        {
             icon: "portrait",
             routerLink: AppRoutesModel.athleteSettings,
-            routerLinkActive: true
-        }, {
+            routerLinkActive: true,
+        },
+        {
             icon: "format_line_spacing",
             routerLink: AppRoutesModel.zonesSettings,
-            routerLinkActive: true
-        }, {
+            routerLinkActive: true,
+        },
+        {
             icon: "favorite_border",
             routerLink: AppRoutesModel.donate,
-            routerLinkActive: true
-        }
+            routerLinkActive: true,
+        },
     ];
 
     public getMenuItems(): MenuItemModel[] {
         return this.mainMenuItems;
     }
-
 }

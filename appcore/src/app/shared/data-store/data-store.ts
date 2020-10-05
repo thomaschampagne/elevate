@@ -7,11 +7,10 @@ import Loki from "lokijs";
 
 export enum DbEvent {
     AUTO_LOADED,
-    AUTO_SAVED
+    AUTO_SAVED,
 }
 
 export abstract class DataStore<T extends {}> {
-
     private static readonly DATABASE_NAME = "elevate";
     private static readonly DEFAULT_LOKI_ID_FIELD = "$loki";
     private static readonly DEFAULT_LOKI_META_FIELD = "meta";
@@ -41,7 +40,9 @@ export abstract class DataStore<T extends {}> {
 
     public abstract getAppUsageDetails(): Promise<AppUsageDetails>;
 
-    public getDbOptions(): Partial<LokiConstructorOptions> & Partial<LokiConfigOptions> & Partial<ThrottledSaveDrainOptions> {
+    public getDbOptions(): Partial<LokiConstructorOptions> &
+        Partial<LokiConfigOptions> &
+        Partial<ThrottledSaveDrainOptions> {
         return {
             adapter: this.getPersistenceAdapter(),
             env: "BROWSER",
@@ -53,7 +54,6 @@ export abstract class DataStore<T extends {}> {
     }
 
     public resolveCollection(collectionDef: CollectionDef<T>): Collection<T> {
-
         // Is collection already tracked?
         let collection = this.COLLECTIONS_MAP.get(collectionDef.name);
 
@@ -87,9 +87,12 @@ export abstract class DataStore<T extends {}> {
         return collection;
     }
 
-    public find(collectionDef: CollectionDef<T>, defaultStorageValue: T[], query?: LokiQuery<T & LokiObj>, sort?:
-        { propName: keyof T, options: Partial<SimplesortOptions> }): Promise<T[]> {
-
+    public find(
+        collectionDef: CollectionDef<T>,
+        defaultStorageValue: T[],
+        query?: LokiQuery<T & LokiObj>,
+        sort?: { propName: keyof T; options: Partial<SimplesortOptions> }
+    ): Promise<T[]> {
         const collection = this.resolveCollection(collectionDef);
 
         // Find document on current collection
@@ -104,7 +107,6 @@ export abstract class DataStore<T extends {}> {
     }
 
     public findOne(collectionDef: CollectionDef<T>, defaultStorageValue: T, query: LokiQuery<T & LokiObj>): Promise<T> {
-
         const collection = this.resolveCollection(collectionDef);
 
         // Find document on current collection
@@ -120,7 +122,6 @@ export abstract class DataStore<T extends {}> {
     }
 
     public update(collectionDef: CollectionDef<T>, doc: T, persistImmediately: boolean): Promise<T> {
-
         const updatedDoc = this.resolveCollection(collectionDef).update(doc);
 
         const updatePromise = Promise.resolve(updatedDoc);
@@ -132,11 +133,9 @@ export abstract class DataStore<T extends {}> {
         return this.saveDataStore().then(() => {
             return updatePromise;
         });
-
     }
 
     public updateMany(collectionDef: CollectionDef<T>, docs: T[], persistImmediately: boolean): Promise<void> {
-
         this.resolveCollection(collectionDef).update(docs);
 
         if (!persistImmediately) {
@@ -149,7 +148,6 @@ export abstract class DataStore<T extends {}> {
     }
 
     public insert(collectionDef: CollectionDef<T>, doc: T, persistImmediately: boolean): Promise<T> {
-
         const insertedDoc = this.resolveCollection(collectionDef).insert(doc);
 
         const insertedPromise = Promise.resolve(insertedDoc);
@@ -161,11 +159,9 @@ export abstract class DataStore<T extends {}> {
         return this.saveDataStore().then(() => {
             return insertedPromise;
         });
-
     }
 
     public insertMany(collectionDef: CollectionDef<T>, docs: T[], persistImmediately: boolean): Promise<void> {
-
         this.resolveCollection(collectionDef).insert(docs);
 
         if (!persistImmediately) {
@@ -175,11 +171,9 @@ export abstract class DataStore<T extends {}> {
         return this.saveDataStore().then(() => {
             return Promise.resolve();
         });
-
     }
 
     public put(collectionDef: CollectionDef<T>, doc: T, persistImmediately: boolean): Promise<T> {
-
         let putPromise;
 
         const collection = this.resolveCollection(collectionDef);
@@ -195,12 +189,9 @@ export abstract class DataStore<T extends {}> {
         const existingDoc = collection.findOne(query);
 
         if (existingDoc) {
-
             const updatedDoc = _.assign(existingDoc, doc);
             putPromise = this.update(collectionDef, updatedDoc, persistImmediately);
-
         } else {
-
             // The doc don't exists. Do a create.
             putPromise = this.insert(collectionDef, doc, persistImmediately);
         }
@@ -209,7 +200,6 @@ export abstract class DataStore<T extends {}> {
     }
 
     public getById(collectionDef: CollectionDef<T>, id: number | string): Promise<T> {
-
         const collection = this.resolveCollection(collectionDef);
 
         // Resolve unique field on which we will perform the request
@@ -223,7 +213,6 @@ export abstract class DataStore<T extends {}> {
     }
 
     public remove(collectionDef: CollectionDef<T>, doc: T, persistImmediately: boolean): Promise<void> {
-
         this.resolveCollection(collectionDef).remove(doc);
 
         if (!persistImmediately) {
@@ -235,8 +224,11 @@ export abstract class DataStore<T extends {}> {
         });
     }
 
-    public removeById(collectionDef: CollectionDef<T>, id: number | string, persistImmediately: boolean): Promise<void> {
-
+    public removeById(
+        collectionDef: CollectionDef<T>,
+        id: number | string,
+        persistImmediately: boolean
+    ): Promise<void> {
         const collection = this.resolveCollection(collectionDef);
 
         // Resolve unique field on which we will perform the request
@@ -257,8 +249,11 @@ export abstract class DataStore<T extends {}> {
         });
     }
 
-    public removeByManyIds(collectionDef: CollectionDef<T>, ids: (number | string)[], persistImmediately: boolean): Promise<void> {
-
+    public removeByManyIds(
+        collectionDef: CollectionDef<T>,
+        ids: (number | string)[],
+        persistImmediately: boolean
+    ): Promise<void> {
         const collection = this.resolveCollection(collectionDef);
 
         // Resolve unique field on which we will perform the request
@@ -266,7 +261,7 @@ export abstract class DataStore<T extends {}> {
 
         // Format query
         const query: any = {};
-        query[idField] = {$in: ids};
+        query[idField] = { $in: ids };
 
         collection.removeWhere(query);
 
@@ -293,11 +288,9 @@ export abstract class DataStore<T extends {}> {
      * Force persistence of data store
      */
     public saveDataStore(): Promise<void> {
-
         this.logger.debug("Save datastore requested");
 
         return new Promise<void>((resolve, reject) => {
-
             // Force save database to persistence adapter
             const hasDatabaseChanged = this.db.autosaveDirty();
 
@@ -327,7 +320,6 @@ export abstract class DataStore<T extends {}> {
     }
 
     protected onAutoLoadDone(err: Error): void {
-
         if (err) {
             // Broadcast database error
             this.dbEvent$.error(err);

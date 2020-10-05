@@ -1,5 +1,4 @@
 export class DistributedEndpointsResolver {
-
     private static totalEndpoints = 2;
     private static patternId = "${id}";
 

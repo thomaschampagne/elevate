@@ -10,5 +10,5 @@ export const environment = {
     target: EnvTarget.EXTENSION,
     production: false,
     logLevel: LoggerService.LEVEL_DEBUG,
-    skipRestoreSyncedBackupCheck: false
+    skipRestoreSyncedBackupCheck: false,
 };

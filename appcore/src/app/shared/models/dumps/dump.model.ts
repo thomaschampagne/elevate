@@ -1,6 +1,1 @@
-export abstract class DumpModel {
-}
-
-
-
-
+export abstract class DumpModel {}

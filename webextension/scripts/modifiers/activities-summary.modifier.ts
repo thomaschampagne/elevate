@@ -4,9 +4,7 @@ import { Constant } from "@elevate/shared/constants";
 import { AbstractModifier } from "./abstract.modifier";
 
 export class ActivitiesSummaryModifier extends AbstractModifier {
-
     public modify(): void {
-
         let activitiesCountElementId = "totals-activities-count",
             $totals: JQuery = $("#totals"),
             requests: JQueryXHR[] = [],
@@ -20,7 +18,7 @@ export class ActivitiesSummaryModifier extends AbstractModifier {
 
         const waitForTotalActivitiesCountRemove = () => {
             if ($("#" + activitiesCountElementId).length !== 0) {
-                setTimeout(function() {
+                setTimeout(function () {
                     waitForTotalActivitiesCountRemove();
                 }, 1000);
                 return;
@@ -28,7 +26,9 @@ export class ActivitiesSummaryModifier extends AbstractModifier {
             this.modify();
         };
 
-        const measurementPreference: string = window.currentAthlete ? window.currentAthlete.get("measurement_preference") : "meters";
+        const measurementPreference: string = window.currentAthlete
+            ? window.currentAthlete.get("measurement_preference")
+            : "meters";
         if (measurementPreference != "meters") {
             distanceUnit = "mi";
             elevationUnit = "ft";
@@ -42,28 +42,27 @@ export class ActivitiesSummaryModifier extends AbstractModifier {
         $totals.append("<li id='" + activitiesCountElementId + "'></li>");
         $("table.activitiesSummary").remove();
 
-        _.forEach($("#interval-rides a[href='/athletes/" + window.currentAthlete.id + "'].athlete-name"), (element) => {
-
+        _.forEach($("#interval-rides a[href='/athletes/" + window.currentAthlete.id + "'].athlete-name"), element => {
             const $this: JQuery = $(element),
                 $activityUrl: JQuery = $this.prev(".entry-title").find("a[href^='/activities/']"),
                 icon: JQuery = $this.closest("div.entity-details").find("div.app-icon"),
                 pace: boolean = icon.hasClass("icon-walk") || icon.hasClass("icon-run");
 
             if ($activityUrl.attr("href") !== null) {
-
                 if ($activityUrl.attr("href")) {
-
                     const activityId: number = parseInt(_.last($activityUrl.attr("href").split("/")));
                     const url: string = "/athlete/training_activities/" + activityId;
 
-                    requests.push($.ajax({
-                        url,
-                        type: "GET",
-                        dataType: "json",
-                        context: {
-                            pace,
-                        },
-                    }));
+                    requests.push(
+                        $.ajax({
+                            url,
+                            type: "GET",
+                            dataType: "json",
+                            context: {
+                                pace,
+                            },
+                        })
+                    );
                 }
             }
         });
@@ -81,9 +80,8 @@ export class ActivitiesSummaryModifier extends AbstractModifier {
                 };
 
             _.forEach(requests, (request: any) => {
-
                 let data: any = request.responseJSON,
-                    distance: number = data.distance_raw / 1000 * speedUnitRatio,
+                    distance: number = (data.distance_raw / 1000) * speedUnitRatio,
                     movingTime: number = data.moving_time_raw,
                     elevation: number = data.elevation_gain_raw * elevationUnitRatio,
                     calories: number = data.calories || 0,
@@ -91,7 +89,6 @@ export class ActivitiesSummaryModifier extends AbstractModifier {
                     summary: any;
 
                 if (!(summary = activityTypes[type])) {
-
                     index += 1;
 
                     activityTypes[type] = activityTypes[index] = summary = {
@@ -126,16 +123,40 @@ export class ActivitiesSummaryModifier extends AbstractModifier {
             if (activityTypes.length > 2) {
                 activityTypes.push(total);
             }
-            const $table: JQuery = $("<table class='activitiesSummary'><thead><tr><th>Type</th><th style='text-align: right'>Number</th><th style='text-align: right'>Distance</th><th style='text-align: right'>Time</th><th style='text-align: right'>Avg speed/pace</th><th style='text-align: right'>Elevation</th><th style='text-align: right'>Calories</th></tr></thead><tbody></tbody></table>");
-            activityTypes.forEach((type) => {
+            const $table: JQuery = $(
+                "<table class='activitiesSummary'><thead><tr><th>Type</th><th style='text-align: right'>Number</th><th style='text-align: right'>Distance</th><th style='text-align: right'>Time</th><th style='text-align: right'>Avg speed/pace</th><th style='text-align: right'>Elevation</th><th style='text-align: right'>Calories</th></tr></thead><tbody></tbody></table>"
+            );
+            activityTypes.forEach(type => {
                 const $row: JQuery = $("<tr></tr>");
                 $row.append("<td>" + type.type + "</td>");
                 $row.append("<td style='text-align: right'>" + type.count + "</td>");
-                $row.append("<td style='text-align: right'>" + Helper.formatNumber(Math.abs(type.distance), 1) + " " + distanceUnit + "</td>");
+                $row.append(
+                    "<td style='text-align: right'>" +
+                        Helper.formatNumber(Math.abs(type.distance), 1) +
+                        " " +
+                        distanceUnit +
+                        "</td>"
+                );
                 $row.append("<td style='text-align: right'>" + Helper.secondsToDHM(type.time, true) + "</td>");
-                $row.append("<td style='text-align: right'>" + (type.noAverage ? "" : (this.averageSpeedOrPace(type.pace, type.distance, type.time) + " " + (type.pace ? paceUnit : speedUnit))) + "</td>");
-                $row.append("<td style='text-align: right'>" + Helper.formatNumber(Math.abs(type.elevation), 0) + " " + elevationUnit + "</td>");
-                $row.append("<td style='text-align: right'>" + Helper.formatNumber(Math.abs(type.calories), 0) + "</td>");
+                $row.append(
+                    "<td style='text-align: right'>" +
+                        (type.noAverage
+                            ? ""
+                            : this.averageSpeedOrPace(type.pace, type.distance, type.time) +
+                              " " +
+                              (type.pace ? paceUnit : speedUnit)) +
+                        "</td>"
+                );
+                $row.append(
+                    "<td style='text-align: right'>" +
+                        Helper.formatNumber(Math.abs(type.elevation), 0) +
+                        " " +
+                        elevationUnit +
+                        "</td>"
+                );
+                $row.append(
+                    "<td style='text-align: right'>" + Helper.formatNumber(Math.abs(type.calories), 0) + "</td>"
+                );
                 $table.find("tbody").append($row);
             });
 

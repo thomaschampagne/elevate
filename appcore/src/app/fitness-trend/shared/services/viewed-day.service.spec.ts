@@ -5,12 +5,11 @@ import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { DayStressModel } from "../models/day-stress.model";
 
 describe("ViewedDayService", () => {
-
     let service: ViewedDayService;
 
     beforeEach(done => {
         TestBed.configureTestingModule({
-            providers: [ViewedDayService]
+            providers: [ViewedDayService],
         });
 
         service = TestBed.inject(ViewedDayService);
@@ -23,7 +22,6 @@ describe("ViewedDayService", () => {
     });
 
     it("should notify subscribers when ViewedDay change", done => {
-
         // Given
         const expectedCallCount = 1;
         const spy = spyOn(service.changes$, "next");
@@ -38,5 +36,4 @@ describe("ViewedDayService", () => {
         expect(spy).toHaveBeenCalledWith(dayFitnessTrendModel);
         done();
     });
-
 });

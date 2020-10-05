@@ -6,18 +6,15 @@ import { ReleaseNoteModel } from "@elevate/shared/models";
 @Component({
     selector: "app-releases-notes",
     templateUrl: "./releases-notes.component.html",
-    styleUrls: ["./releases-notes.component.scss"]
+    styleUrls: ["./releases-notes.component.scss"],
 })
 export class ReleasesNotesComponent implements OnInit, OnDestroy {
-
     public releasesNotes: ReleaseNoteModel[];
     public routeDataSubscription: Subscription;
 
-    constructor(public route: ActivatedRoute) {
-    }
+    constructor(public route: ActivatedRoute) {}
 
     public ngOnInit(): void {
-
         this.routeDataSubscription = this.route.data.subscribe((data: { releasesNotes: ReleaseNoteModel[] }) => {
             this.releasesNotes = data.releasesNotes;
         });

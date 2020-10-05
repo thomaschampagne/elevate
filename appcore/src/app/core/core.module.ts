@@ -16,7 +16,7 @@ import { ClipboardModule } from "ngx-clipboard";
         HttpClientModule,
         FlexLayoutModule,
         NgPipesModule,
-        ClipboardModule
+        ClipboardModule,
     ],
     exports: [
         CommonModule,
@@ -28,9 +28,6 @@ import { ClipboardModule } from "ngx-clipboard";
         ClipboardModule,
         KatexExpressionComponent,
     ],
-    declarations: [
-        KatexExpressionComponent
-    ]
+    declarations: [KatexExpressionComponent],
 })
-export class CoreModule {
-}
+export class CoreModule {}

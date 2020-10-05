@@ -5,7 +5,6 @@ import { ElevateException, NotImplementedException } from "@elevate/shared/excep
 
 @Injectable()
 export abstract class BaseDao<T> {
-
     public defaultStorage: T | T[];
 
     public collectionDef: CollectionDef<T> = null;
@@ -25,13 +24,18 @@ export abstract class BaseDao<T> {
         this.collectionDef = this.getCollectionDef();
 
         if (!this.collectionDef) {
-            throw new ElevateException(`CollectionDef not set in '${this.constructor.name}'. Please override init method to assign a CollectionDef.`);
+            throw new ElevateException(
+                `CollectionDef not set in '${this.constructor.name}'. Please override init method to assign a CollectionDef.`
+            );
         }
 
         this.defaultStorage = this.getDefaultStorageValue();
     }
 
-    public find(query?: LokiQuery<T & LokiObj>, sort?: { propName: keyof T, options: Partial<SimplesortOptions> }): Promise<T[]> {
+    public find(
+        query?: LokiQuery<T & LokiObj>,
+        sort?: { propName: keyof T; options: Partial<SimplesortOptions> }
+    ): Promise<T[]> {
         return this.dataStore.find(this.collectionDef, this.defaultStorage as T[], query, sort);
     }
 

@@ -30,31 +30,21 @@ import { DesktopDataStore } from "../../data-store/impl/desktop-data-store.servi
 import { PropertiesDao } from "../../dao/properties/properties.dao";
 
 @NgModule({
-    imports: [
-        CoreModule,
-        ConnectorsModule,
-        DesktopRoutingModule
-    ],
-    exports: [
-        ConnectorsModule,
-        DesktopRoutingModule
-    ],
-    declarations: [
-        DesktopAdvancedMenuComponent,
-        DesktopImportBackupDialogComponent
-    ],
+    imports: [CoreModule, ConnectorsModule, DesktopRoutingModule],
+    exports: [ConnectorsModule, DesktopRoutingModule],
+    declarations: [DesktopAdvancedMenuComponent, DesktopImportBackupDialogComponent],
     providers: [
         ElectronService,
         IpcMessagesReceiver,
         IpcMessagesSender,
         DesktopMigrationService,
-        {provide: DataStore, useClass: DesktopDataStore},
-        {provide: PROMISE_TRON, useClass: PromiseTronService},
-        {provide: ActivityService, useClass: DesktopActivityService},
-        {provide: AppEventsService, useClass: DesktopEventsService},
-        {provide: VERSIONS_PROVIDER, useClass: DesktopVersionsProvider},
-        {provide: OPEN_RESOURCE_RESOLVER, useClass: DesktopOpenResourceResolver},
-        {provide: SyncService, useClass: DesktopSyncService},
+        { provide: DataStore, useClass: DesktopDataStore },
+        { provide: PROMISE_TRON, useClass: PromiseTronService },
+        { provide: ActivityService, useClass: DesktopActivityService },
+        { provide: AppEventsService, useClass: DesktopEventsService },
+        { provide: VERSIONS_PROVIDER, useClass: DesktopVersionsProvider },
+        { provide: OPEN_RESOURCE_RESOLVER, useClass: DesktopOpenResourceResolver },
+        { provide: SyncService, useClass: DesktopSyncService },
         DesktopSyncService,
         ConnectorSyncDateTimeDao,
         PropertiesDao,
@@ -62,7 +52,6 @@ import { PropertiesDao } from "../../dao/properties/properties.dao";
         StravaConnectorInfoDao,
         StravaConnectorService,
         FileSystemConnectorInfoService,
-    ]
+    ],
 })
-export class DesktopModule {
-}
+export class DesktopModule {}

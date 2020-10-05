@@ -3,7 +3,6 @@ import { SyncedActivityModel } from "@elevate/shared/models";
 import { ElevateSport } from "@elevate/shared/enums";
 
 export class YearProgressActivitiesFixture {
-
     public static readonly STATES_COUNT = 5;
     public static readonly TYPE_RIDE: number = 0;
     public static readonly TYPE_RUN: number = 1;
@@ -15,27 +14,28 @@ export class YearProgressActivitiesFixture {
     public static readonly DATE_FORMAT: string = "YYYY-MM-DD";
 
     public static provide(): SyncedActivityModel[] {
-
         const models: SyncedActivityModel[] = [];
 
-        const currentMoment = moment(YearProgressActivitiesFixture.START_DATE,
-            YearProgressActivitiesFixture.DATE_FORMAT).startOf("day");
-        const endMoment = moment(YearProgressActivitiesFixture.END_DATE,
-            YearProgressActivitiesFixture.DATE_FORMAT).startOf("day");
+        const currentMoment = moment(
+            YearProgressActivitiesFixture.START_DATE,
+            YearProgressActivitiesFixture.DATE_FORMAT
+        ).startOf("day");
+        const endMoment = moment(
+            YearProgressActivitiesFixture.END_DATE,
+            YearProgressActivitiesFixture.DATE_FORMAT
+        ).startOf("day");
 
         while (currentMoment.isSameOrBefore(endMoment)) {
-
             const dayType = currentMoment.dayOfYear() % YearProgressActivitiesFixture.STATES_COUNT;
 
             let type = null;
             let distanceRaw = null;
             let time = null;
             let elevationGainRaw = 0;
-            let commute = (currentMoment.dayOfYear() % 2 > 0) ? false : null; // Allow "not commute activities" to receive false or null values
+            let commute = currentMoment.dayOfYear() % 2 > 0 ? false : null; // Allow "not commute activities" to receive false or null values
             let restDay = false;
 
             switch (dayType) {
-
                 case YearProgressActivitiesFixture.TYPE_RIDE:
                     type = ElevateSport.Ride;
                     time = 3600;
@@ -68,14 +68,12 @@ export class YearProgressActivitiesFixture {
                 case YearProgressActivitiesFixture.TYPE_REST:
                     restDay = true;
                     break;
-
             }
 
             if (!restDay) {
-
                 const syncedActivityModel = new SyncedActivityModel();
                 syncedActivityModel.id = parseInt(currentMoment.year() + "" + currentMoment.dayOfYear());
-                syncedActivityModel.name = type + " activity" + ((commute) ? " (commute)" : "");
+                syncedActivityModel.name = type + " activity" + (commute ? " (commute)" : "");
                 syncedActivityModel.type = type;
                 syncedActivityModel.display_type = type;
                 syncedActivityModel.start_time = currentMoment.toISOString();

@@ -8,17 +8,17 @@ import { Component } from "@angular/core";
             <mat-progress-bar mode="buffer"></mat-progress-bar>
         </div>
     `,
-    styles: [`
-        mat-progress-bar {
-            padding-top: 5px;
-        }
+    styles: [
+        `
+            mat-progress-bar {
+                padding-top: 5px;
+            }
 
-        div {
-            text-align: center;
-            width: 300px;
-        }
-    `]
+            div {
+                text-align: center;
+                width: 300px;
+            }
+        `,
+    ],
 })
-export class LoadingDialogComponent {
-
-}
+export class LoadingDialogComponent {}

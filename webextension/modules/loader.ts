@@ -1,11 +1,9 @@
 export class Loader {
-
     protected loadingFinished: any;
     protected totalRequired: any;
     protected loadCount: number;
 
     public require(scripts: string[], loadingFinished: Function): void {
-
         this.loadCount = 0;
         this.totalRequired = scripts.length;
         this.loadingFinished = loadingFinished;
@@ -23,7 +21,6 @@ export class Loader {
     }
 
     public writeScript(src: string): void {
-
         const ext: string = src.substr(src.lastIndexOf(".") + 1);
 
         const head: HTMLElement = document.getElementsByTagName("head")[0];
@@ -33,16 +30,24 @@ export class Loader {
             s.type = "text/javascript";
             s.async = false;
             s.src = src;
-            s.addEventListener("load", () => {
-                this.loaded();
-            }, false);
+            s.addEventListener(
+                "load",
+                () => {
+                    this.loaded();
+                },
+                false
+            );
             head.appendChild(s);
         } else if (ext === "css") {
             const link: HTMLLinkElement = document.createElement("link");
             link.href = src;
-            link.addEventListener("load", () => {
-                this.loaded();
-            }, false);
+            link.addEventListener(
+                "load",
+                () => {
+                    this.loaded();
+                },
+                false
+            );
             // link.async = false;
             link.type = "text/css";
             link.rel = "stylesheet";

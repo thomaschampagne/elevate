@@ -5,7 +5,7 @@ import { ReleasesNotesResolverService } from "./releases-notes-resolver.service"
 describe("ReleasesNotesResolverService", () => {
     beforeEach(done => {
         TestBed.configureTestingModule({
-            providers: [ReleasesNotesResolverService]
+            providers: [ReleasesNotesResolverService],
         });
         done();
     });

@@ -2,9 +2,7 @@ import { AthleteUpdateModel } from "../../scripts/models/athlete-update.model";
 import { AthleteUpdate } from "../../scripts/utils/athlete-update";
 
 describe("Generate Athlete Update", () => {
-
     it("should return compliant AthleteUpdate (free)", done => {
-
         const doe: AthleteUpdateModel = AthleteUpdate.create(
             123,
             "John Doe",
@@ -26,9 +24,7 @@ describe("Generate Athlete Update", () => {
         done();
     });
 
-
     it("should return compliant AthleteUpdate (premium)", done => {
-
         const doe: AthleteUpdateModel = AthleteUpdate.create(
             777,
             "My Self",
@@ -51,7 +47,6 @@ describe("Generate Athlete Update", () => {
     });
 
     it("should return compliant AthleteUpdate (pro)", done => {
-
         const froom: AthleteUpdateModel = AthleteUpdate.create(
             999,
             "Chris Froome",
@@ -85,7 +80,6 @@ describe("Generate Athlete Update", () => {
     });
 
     it("should pass monkey tests", done => {
-
         const monkey_01: AthleteUpdateModel = AthleteUpdate.create(
             888,
             "",
@@ -119,4 +113,3 @@ describe("Generate Athlete Update", () => {
         done();
     });
 });
-
