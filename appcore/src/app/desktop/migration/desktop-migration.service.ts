@@ -7,6 +7,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 import { DataStore } from "../../shared/data-store/data-store";
+import { DESKTOP_MIGRATIONS, DesktopMigration } from "./desktop-migrations";
 
 @Injectable()
 export class DesktopMigrationService {
@@ -98,53 +99,22 @@ export class DesktopMigrationService {
         });
     }
 
-    private applyUpgrades(fromVersion: string, toVersion: string): Promise<void> {
+    public applyUpgrades(fromVersion: string, toVersion: string): Promise<void> {
         this.logger.info(`Applying upgrade(s) from ${fromVersion} to ${toVersion}`);
 
-        // Create upgrade methods here...
-        return Promise.resolve();
+        return this.getMigrations().reduce((previousMigrationDone: Promise<void>, migration: DesktopMigration) => {
+            return previousMigrationDone.then(() => {
+                if (semver.lt(fromVersion, migration.version)) {
+                    this.logger.info(`Migrating to ${migration.version}: ${migration.description}`);
+                    return migration.upgrade(this.db);
+                }
 
-        /*abstract class Migration {
-
-            abstract version: string;
-
-            abstract description: string;
-
-            public abstract upgrade(db: LokiConstructor): Promise<void>;
-
-            constructor() {
-            }
-        }
-
-        class SampleMigration extends Migration {
-
-            public version = "7.0.0-alpha.7";
-
-            public description = "Explain migration purpose here";
-
-            public upgrade(db: LokiConstructor): Promise<void> {
-                // db.getCollection("syncedActivities").update({});
-                // ....
                 return Promise.resolve();
-            }
-        }
+            });
+        }, Promise.resolve());
+    }
 
-        // Sample on how migration can be done:
-        const migrations: Migration[] = [
-            new SampleMigration()
-        ];*/
-
-        // TODO Migration sample code below (To be unit tested)
-        // return migrations.reduce((previousMigrationDone: Promise<void>, migration: Migration) => {
-        //
-        //     return previousMigrationDone.then(() => {
-        //         if (semver.lt(fromVersion, migration.version)) {
-        //             this.logger.info(`Migrating to ${migration.version}: ${migration.description}`);
-        //             return migration.upgrade(this.db);
-        //         }
-        //
-        //         return Promise.resolve();
-        //     });
-        // }, Promise.resolve());
+    public getMigrations(): DesktopMigration[] {
+        return DESKTOP_MIGRATIONS;
     }
 }

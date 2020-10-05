@@ -303,6 +303,8 @@ export abstract class DataStore<T extends {}> {
                         resolve();
                     }
                 });
+            } else {
+                resolve();
             }
         });
     }

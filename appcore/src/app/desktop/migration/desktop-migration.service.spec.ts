@@ -4,12 +4,16 @@ import { DesktopMigrationService } from "./desktop-migration.service";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { DesktopModule } from "../../shared/modules/desktop/desktop.module";
+import { DesktopMigration } from "./desktop-migrations";
+import { DataStore } from "../../shared/data-store/data-store";
+import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 
 describe("DesktopMigrationService", () => {
     let service: DesktopMigrationService;
     beforeEach(done => {
         TestBed.configureTestingModule({
             imports: [CoreModule, SharedModule, DesktopModule],
+            providers: [{ provide: DataStore, useClass: TestingDataStore }],
         });
 
         service = TestBed.inject(DesktopMigrationService);
@@ -152,6 +156,64 @@ describe("DesktopMigrationService", () => {
         promise.then(
             () => {
                 expect(setExistingVersionSpy).toHaveBeenCalledWith(packageVersion);
+                done();
+            },
+            () => {
+                throw new Error("Should not be here");
+            }
+        );
+    });
+
+    it("should apply upgrades", done => {
+        // Given
+        const packageVersion = "7.2.0";
+        const existingVersion = "7.0.0";
+        const fakeColName = "fakeCollection";
+        service.dataStore.db.addCollection(fakeColName);
+
+        class FakeMigration01 extends DesktopMigration {
+            public version = "7.1.0";
+
+            public description = "Fake migration to " + this.version;
+
+            public upgrade(db: LokiConstructor): Promise<void> {
+                db.getCollection(fakeColName).insert({ name: "John Doe" });
+                return Promise.resolve();
+            }
+        }
+
+        class FakeMigration02 extends DesktopMigration {
+            public version = "7.2.0";
+
+            public description = "Fake migration to " + this.version;
+
+            public upgrade(db: LokiConstructor): Promise<void> {
+                db.getCollection(fakeColName).insert({ name: "Jane Doe" });
+                return Promise.resolve();
+            }
+        }
+
+        const fakeMigration01 = new FakeMigration01();
+        const fakeMigration02 = new FakeMigration02();
+
+        const fakeMigration01Spy = spyOn(fakeMigration01, "upgrade").and.callThrough();
+        const fakeMigration02Spy = spyOn(fakeMigration02, "upgrade").and.callThrough();
+
+        const DESKTOP_MIGRATIONS: DesktopMigration[] = [fakeMigration01, fakeMigration02];
+
+        spyOn(service, "getMigrations").and.returnValue(DESKTOP_MIGRATIONS);
+
+        // When
+        const promise = service.applyUpgrades(existingVersion, packageVersion);
+
+        // Then
+        promise.then(
+            () => {
+                expect(fakeMigration01Spy).toHaveBeenCalledTimes(1);
+                expect(fakeMigration02Spy).toHaveBeenCalledTimes(1);
+
+                const collection = service.dataStore.db.getCollection(fakeColName);
+                expect(collection.count()).toEqual(2);
                 done();
             },
             () => {
