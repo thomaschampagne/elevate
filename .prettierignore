@@ -1,0 +1,23 @@
+# Templating
+*.css
+*.scss
+*.html
+
+# Generated data
+coverage
+dist
+node_modules
+
+# OS/IDE
+.vscode
+.idea
+.DS_Store
+
+# Others
+*.json
+*.md
+*.yml
+*.log
+
+# Project specific
+athlete-access-checker.js

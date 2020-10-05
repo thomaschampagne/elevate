@@ -23,6 +23,7 @@
         "package:desktop:linux": "npm run clean && cd ./desktop/ && npm run package:linux && node ../node_modules/cpy-cli/cli.js ./package/elevate-* ../package",
         "package:desktop:osx": "echo to be done...",
         "postinstall": "cd webextension/ && npm install && cd ../appcore/ && npm install && cd ../desktop/ && npm install",
+        "prettier": "prettier --write .",
         "test": "cd ./desktop/ && npm test && cd ../appcore/ && npm test && cd ../webextension/ && npm test",
         "type:check": "cd ./appcore/ && npm run type:check && cd ../desktop/ && npm run type:check && cd ../webextension/ && npm run type:check",
         "wipe": "npm run clean && npm run wipe:package-locks && npm run wipe:node-modules",
@@ -48,6 +49,14 @@
     "devDependencies": {
         "cpy-cli": "^3.1.1",
         "del-cli": "^3.0.1",
-        "run-sequence": "^2.2.1"
+        "run-sequence": "^2.2.1",
+        "prettier": "^2.1.2",
+        "husky": "^4.3.0",
+        "pretty-quick": "^3.0.2"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "pretty-quick --staged"
+        }
     }
 }

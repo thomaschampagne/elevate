@@ -1,5 +1,8 @@
 {
-    "extends": "tslint:recommended",
+    "extends": [
+        "tslint:recommended",
+        "tslint-config-prettier"
+    ],
     "rules": {
         "align": {
             "options": [
@@ -7,12 +10,8 @@
                 "statements"
             ]
         },
-        "no-namespace": false,
         "array-type": false,
         "arrow-return-shorthand": true,
-        "object-literal-shorthand": false,
-        "no-angle-bracket-type-assertion": false,
-        "curly": true,
         "deprecation": {
             "severity": "warning"
         },
@@ -31,22 +30,11 @@
             "app",
             "kebab-case"
         ],
-        "eofline": true,
         "import-blacklist": [
             true,
             "rxjs/Rx"
         ],
-        "import-spacing": true,
-        "indent": {
-            "options": [
-                "spaces"
-            ]
-        },
         "max-classes-per-file": false,
-        "max-line-length": [
-            true,
-            180
-        ],
         "member-ordering": [
             true,
             {
@@ -71,6 +59,7 @@
             true,
             "ignore-params"
         ],
+        "object-literal-shorthand": false,
         "no-non-null-assertion": true,
         "no-redundant-jsdoc": true,
         "no-switch-case-fall-through": true,
@@ -79,15 +68,6 @@
             true,
             "as-needed"
         ],
-        "quotemark": [
-            true,
-            "double"
-        ],
-        "semicolon": {
-            "options": [
-                "always"
-            ]
-        },
         "space-before-function-paren": {
             "options": {
                 "anonymous": "never",
@@ -96,24 +76,6 @@
                 "method": "never",
                 "named": "never"
             }
-        },
-        "typedef-whitespace": {
-            "options": [
-                {
-                    "call-signature": "nospace",
-                    "index-signature": "nospace",
-                    "parameter": "nospace",
-                    "property-declaration": "nospace",
-                    "variable-declaration": "nospace"
-                },
-                {
-                    "call-signature": "onespace",
-                    "index-signature": "onespace",
-                    "parameter": "onespace",
-                    "property-declaration": "onespace",
-                    "variable-declaration": "onespace"
-                }
-            ]
         },
         "variable-name": {
             "options": [
@@ -143,9 +105,11 @@
         "template-banana-in-box": true,
         "template-no-negated-async": true,
         "use-lifecycle-interface": true,
-        "use-pipe-transform-interface": true
+        "use-pipe-transform-interface": true,
+        "prettier": true
     },
     "rulesDirectory": [
-        "codelyzer"
+        "codelyzer",
+        "tslint-plugin-prettier"
     ]
 }
