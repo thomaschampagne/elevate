@@ -9,6 +9,8 @@ import * as _ from "lodash";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { UserSettings } from "@elevate/shared/models";
+import { DataStore } from "../../shared/data-store/data-store";
+import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("FitnessTrendTableComponent", () => {
@@ -26,6 +28,9 @@ describe("FitnessTrendTableComponent", () => {
                 SharedModule,
                 FitnessTrendModule
             ],
+            providers: [
+                {provide: DataStore, useClass: TestingDataStore}
+            ]
         }).compileComponents();
 
         activityService = TestBed.inject(ActivityService);

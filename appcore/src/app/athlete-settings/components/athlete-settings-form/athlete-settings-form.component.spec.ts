@@ -6,6 +6,8 @@ import { SharedModule } from "../../../shared/shared.module";
 import { AthleteSettingsModel, UserSettings } from "@elevate/shared/models";
 import { AthleteSettingsModule } from "../../athlete-settings.module";
 import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
+import { DataStore } from "../../../shared/data-store/data-store";
+import { TestingDataStore } from "../../../shared/data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("AthleteSettingsFormComponent", () => {
@@ -21,6 +23,9 @@ describe("AthleteSettingsFormComponent", () => {
                 CoreModule,
                 SharedModule,
                 AthleteSettingsModule
+            ],
+            providers: [
+                {provide: DataStore, useClass: TestingDataStore}
             ]
         }).compileComponents();
 

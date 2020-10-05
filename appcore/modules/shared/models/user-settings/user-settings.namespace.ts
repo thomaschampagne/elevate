@@ -1,5 +1,6 @@
 import { UserZonesModel } from "./user-zones.model";
 import { EnvTarget } from "../env-target";
+import * as _ from "lodash";
 
 export namespace UserSettings {
 
@@ -10,9 +11,9 @@ export namespace UserSettings {
     export const getDefaultsByEnvTarget = (envTarget: EnvTarget): UserSettingsModel => {
 
         if (envTarget === EnvTarget.DESKTOP) {
-            return DesktopUserSettingsModel.DEFAULT_MODEL;
+            return _.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL);
         } else if (envTarget === EnvTarget.EXTENSION) {
-            return ExtensionUserSettingsModel.DEFAULT_MODEL;
+            return _.cloneDeep(ExtensionUserSettingsModel.DEFAULT_MODEL);
         } else {
             throw new Error("Unknown environment target");
         }
@@ -70,10 +71,10 @@ export namespace UserSettings {
             feedHideVirtualRides: false,
             feedHideRideActivitiesUnderDistance: 0,
             feedHideRunActivitiesUnderDistance: 0,
-            displaySegmentTimeComparisonToKOM: true,
-            displaySegmentTimeComparisonToPR: true,
-            displaySegmentTimeComparisonToCurrentYearPR: true,
-            displaySegmentTimeComparisonPosition: true,
+            displaySegmentTimeComparisonToKOM: false,
+            displaySegmentTimeComparisonToPR: false,
+            displaySegmentTimeComparisonToCurrentYearPR: false,
+            displaySegmentTimeComparisonPosition: false,
             displayRecentEffortsHRAdjustedPacePower: false,
             displayRunningPerformanceIndex: true,
             reviveGoogleMaps: true,

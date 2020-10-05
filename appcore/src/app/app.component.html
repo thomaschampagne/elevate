@@ -1,16 +1,7 @@
-<div *ngIf="!isAppUseAllowed" id="init-app-container">
-    <div class="wrapper">
-        <div class="logo"></div>
-        <div class="text mat-body-1">
-            <div>Warming up</div>
-        </div>
-    </div>
-</div>
-<div #appContainer [fxHide]="!isAppUseAllowed" class="mat-body-1" id="app-container">
+<div class="mat-body-1" id="app-container">
     <ng-container appTopBar></ng-container>
     <mat-sidenav-container>
-        <mat-sidenav #sidenav
-                     (closed)="onSideNavClosed()"
+        <mat-sidenav (closed)="onSideNavClosed()"
                      (opened)="onSideNavOpened()"
                      mode="side">
             <mat-nav-list>
@@ -43,11 +34,11 @@
             <ng-container appSyncMenu></ng-container>
 
             <button (click)="onThemeToggle()" id="theme-toggle" mat-icon-button>
-                <mat-icon fontSet="material-icons-outlined" *ngIf="currentTheme === Theme.LIGHT"
+                <mat-icon *ngIf="currentTheme === Theme.LIGHT" fontSet="material-icons-outlined"
                           style="transform: rotate(-35deg) scaleX(-1);">
                     brightness_3 <!--Moon icon rotate by -35deg-->
                 </mat-icon>
-                <mat-icon fontSet="material-icons-outlined" *ngIf="currentTheme === Theme.DARK">wb_sunny</mat-icon>
+                <mat-icon *ngIf="currentTheme === Theme.DARK" fontSet="material-icons-outlined">wb_sunny</mat-icon>
                 <!--Sun icon-->
             </button>
 

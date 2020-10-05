@@ -27,7 +27,7 @@ export class MockSyncService extends SyncService<any> {
         return null;
     }
 
-    public saveSyncDateTime(value: number): Promise<number> {
+    public updateSyncDateTime(value: number): Promise<number> {
         return null;
     }
 

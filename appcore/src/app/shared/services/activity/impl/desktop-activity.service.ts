@@ -6,9 +6,9 @@ import { LoggerService } from "../../logging/logger.service";
 import { ActivityStreamsModel, AthleteSnapshotModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { IpcMessagesSender } from "../../../../desktop/ipc-messages/ipc-messages-sender.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
-import { StreamsService } from "../../streams/streams.service";
 import { Subject } from "rxjs";
 import { ElevateException } from "@elevate/shared/exceptions";
+import { StreamsDao } from "../../../dao/streams/streams.dao";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 export class BulkRefreshStatsNotification {
@@ -29,7 +29,8 @@ export class BulkRefreshStatsNotification {
         this.error = error;
     }
 
-    public static create(syncedActivityModel: SyncedActivityModel, currentlyProcessed: number, toProcessCount: number, isFirst: boolean, isLast: boolean): BulkRefreshStatsNotification {
+    public static create(syncedActivityModel: SyncedActivityModel, currentlyProcessed: number, toProcessCount: number, isFirst: boolean, isLast: boolean)
+        : BulkRefreshStatsNotification {
         const bulkRefreshStatsNotification = new BulkRefreshStatsNotification(syncedActivityModel, currentlyProcessed, toProcessCount, isFirst, isLast);
         delete bulkRefreshStatsNotification.error;
         return bulkRefreshStatsNotification;
@@ -52,7 +53,7 @@ export class DesktopActivityService extends ActivityService {
 
     constructor(public ipcMessagesSender: IpcMessagesSender,
                 public activityDao: ActivityDao,
-                public streamsService: StreamsService,
+                public streamsDao: StreamsDao,
                 public athleteSnapshotResolverService: AthleteSnapshotResolverService,
                 public logger: LoggerService) {
         super(activityDao, athleteSnapshotResolverService, logger);
@@ -75,7 +76,7 @@ export class DesktopActivityService extends ActivityService {
             return this.athleteSnapshotResolverService.resolve(new Date(syncedActivityModel.start_time));
         }).then((athleteSnapshotModel: AthleteSnapshotModel) => {
             athleteSnapshot = athleteSnapshotModel;
-            return this.streamsService.getById(syncedActivityModel.id);
+            return this.streamsDao.getById(syncedActivityModel.id);
         }).then(compressedStreamModel => {
             if (compressedStreamModel) {
                 streams = ActivityStreamsModel.deflate(compressedStreamModel.data);
@@ -106,7 +107,7 @@ export class DesktopActivityService extends ActivityService {
             });
         }, Promise.resolve()).then(() => {
             this.isProcessing = false;
-
+            this.activityDao.saveDataStore();
         }).catch(err => {
             this.refreshStats$.next(BulkRefreshStatsNotification.error(err));
         });
@@ -149,6 +150,12 @@ export class DesktopActivityService extends ActivityService {
 
         this.fetch().then(syncedActivityModels => {
             this.bulkRefreshStats(syncedActivityModels, userSettingsModel);
+        });
+    }
+
+    public removeById(id: number | string): Promise<void> {
+        return super.removeById(id).then(() => {
+            return this.streamsDao.removeById(id, true);
         });
     }
 }

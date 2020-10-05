@@ -6,8 +6,6 @@ import { ElevateSport } from "@elevate/shared/enums";
 
 export class YearToDateProgressPresetModel {
 
-    public static readonly ID_FIELD: string = "id";
-
     public readonly mode: ProgressMode = ProgressMode.YEAR_TO_DATE;
     public id: string;
     public progressType: ProgressType;

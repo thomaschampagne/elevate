@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@angular/core";
-import { SyncDateTimeDao } from "../../../dao/sync/sync-date-time-dao.service";
+import { SyncDateTimeDao } from "../../../dao/sync/sync-date-time.dao";
 import { VERSIONS_PROVIDER, VersionsProvider } from "../../versions/versions-provider.interface";
 import { ActivityService } from "../../activity/activity.service";
 import { AthleteService } from "../../athlete/athlete.service";
@@ -14,14 +14,17 @@ import { SyncState } from "../sync-state.enum";
 import { ExtensionDumpModel } from "../../../models/dumps/extension-dump.model";
 import { DumpModel } from "../../../models/dumps/dump.model";
 import { StreamsService } from "../../streams/streams.service";
+import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
+import { DataStore } from "../../../data-store/data-store";
+import { ExtensionDataStore } from "../../../data-store/impl/extension-data-store.service";
 
 @Injectable()
-export class ExtensionSyncService extends SyncService<number> {
+export class ExtensionSyncService extends SyncService<SyncDateTime> {
 
     /**
      * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
      */
-    public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "6.11.0";
+    public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "7.0.0-6.alpha";
 
     public static readonly SYNC_URL_BASE: string = "https://www.strava.com/dashboard";
     public static readonly SYNC_WINDOW_WIDTH: number = 690;
@@ -33,8 +36,9 @@ export class ExtensionSyncService extends SyncService<number> {
                 public athleteService: AthleteService,
                 public userSettingsService: UserSettingsService,
                 public logger: LoggerService,
-                public syncDateTimeDao: SyncDateTimeDao) {
-        super(versionsProvider, activityService, streamsService, athleteService, userSettingsService, logger);
+                public syncDateTimeDao: SyncDateTimeDao,
+                @Inject(DataStore) public extensionDataStore: ExtensionDataStore<object>) {
+        super(versionsProvider, extensionDataStore, activityService, streamsService, athleteService, userSettingsService, logger);
     }
 
     public sync(fastSync: boolean, forceSync: boolean): Promise<void> {
@@ -50,20 +54,12 @@ export class ExtensionSyncService extends SyncService<number> {
         return Promise.resolve();
     }
 
-    /**
-     *
-     * @param {(tab: chrome.tabs.Tab) => void} callback
-     */
     public getCurrentTab(callback: (tab: chrome.tabs.Tab) => void): void {
         chrome.tabs.getCurrent((tab: chrome.tabs.Tab) => {
             callback(tab);
         });
     }
 
-    /**
-     *
-     * @returns {Promise<SyncState>}
-     */
     public getSyncState(): Promise<SyncState> {
 
         return Promise.all([
@@ -73,10 +69,10 @@ export class ExtensionSyncService extends SyncService<number> {
 
         ]).then((result: any[]) => {
 
-            const syncDateTime: number = result[0] as number;
+            const syncDateTime: SyncDateTime = result[0] as SyncDateTime;
             const syncedActivitiesCount: number = result[1] as number;
 
-            const hasSyncDateTime: boolean = _.isNumber(syncDateTime);
+            const hasSyncDateTime: boolean = syncDateTime && _.isNumber(syncDateTime.syncDateTime);
             const hasSyncedActivityModels: boolean = syncedActivitiesCount > 0;
 
             let syncState: SyncState;
@@ -97,10 +93,6 @@ export class ExtensionSyncService extends SyncService<number> {
         throw new Error("ExtensionSyncService do not support sync stop");
     }
 
-    /**
-     *
-     * @returns {Promise<{filename: string; size: number}>}
-     */
     public export(): Promise<{ filename: string, size: number }> {
 
         return this.prepareForExport().then((backupModel: ExtensionDumpModel) => {
@@ -115,34 +107,30 @@ export class ExtensionSyncService extends SyncService<number> {
         });
     }
 
-    /**
-     *
-     * @returns {Promise<DumpModel>}
-     */
     public prepareForExport(): Promise<DumpModel> {
 
         return Promise.all([
 
-            this.syncDateTimeDao.fetch(),
+            this.syncDateTimeDao.findOne(),
             this.activityService.fetch(),
             this.athleteService.fetch(),
             this.versionsProvider.getPackageVersion()
 
         ]).then((result: any[]) => {
 
-            const syncDateTime: number = result[0] as number;
+            const syncDateTime: SyncDateTime = result[0] as SyncDateTime;
             const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
             const athleteModel: AthleteModel = result[2] as AthleteModel;
             const appVersion: string = result[3] as string;
 
-            if (!_.isNumber(syncDateTime)) {
+            if (!syncDateTime || !_.isNumber(syncDateTime.syncDateTime)) {
                 return Promise.reject("Cannot export. No last synchronization date found.");
             }
 
             const backupModel: DumpModel = {
-                syncDateTime: syncDateTime,
-                syncedActivities: syncedActivityModels,
-                athleteModel: athleteModel,
+                syncDateTime: DataStore.cleanDbObject<SyncDateTime>(syncDateTime),
+                syncedActivities: DataStore.cleanDbCollection<SyncedActivityModel>(syncedActivityModels),
+                athleteModel: DataStore.cleanDbObject<AthleteModel>(athleteModel),
                 pluginVersion: appVersion
             };
 
@@ -150,11 +138,6 @@ export class ExtensionSyncService extends SyncService<number> {
         });
     }
 
-    /**
-     *
-     * @param {DumpModel} importedBackupModel
-     * @returns {Promise<DumpModel>}
-     */
     public import(importedBackupModel: ExtensionDumpModel): Promise<void> {
 
         if (_.isEmpty(importedBackupModel.syncedActivities)) {
@@ -166,7 +149,9 @@ export class ExtensionSyncService extends SyncService<number> {
         }
 
         return this.isDumpCompatible(importedBackupModel.pluginVersion, this.getCompatibleBackupVersionThreshold()).then(() => {
-            return this.clearSyncedData();
+            return this.clearSyncedActivities();
+        }).then(() => {
+            return this.athleteService.clear(true);
         }).then(() => {
 
             let promiseImportDatedAthleteSettings;
@@ -174,12 +159,12 @@ export class ExtensionSyncService extends SyncService<number> {
             if (_.isEmpty(importedBackupModel.athleteModel)) {
                 promiseImportDatedAthleteSettings = this.athleteService.resetSettings();
             } else {
-                promiseImportDatedAthleteSettings = this.athleteService.save(importedBackupModel.athleteModel);
+                promiseImportDatedAthleteSettings = this.athleteService.validateInsert(importedBackupModel.athleteModel);
             }
 
             return Promise.all([
-                this.saveSyncDateTime(importedBackupModel.syncDateTime),
-                this.activityService.save(importedBackupModel.syncedActivities),
+                this.updateSyncDateTime(importedBackupModel.syncDateTime),
+                this.activityService.insertMany(importedBackupModel.syncedActivities, true),
                 promiseImportDatedAthleteSettings,
                 this.userSettingsService.clearLocalStorageOnNextLoad()
             ]);
@@ -193,29 +178,16 @@ export class ExtensionSyncService extends SyncService<number> {
         return ExtensionSyncService.COMPATIBLE_DUMP_VERSION_THRESHOLD;
     }
 
-    /**
-     *
-     * @returns {Promise<number>}
-     */
-    public getSyncDateTime(): Promise<number> {
-        return (<Promise<number>> this.syncDateTimeDao.fetch());
+    public getSyncDateTime(): Promise<SyncDateTime> {
+        return this.syncDateTimeDao.findOne();
     }
 
-    /**
-     *
-     * @param {number} value
-     * @returns {Promise<number>}
-     */
-    public saveSyncDateTime(value: number): Promise<number> {
-        return (<Promise<number>> this.syncDateTimeDao.save(value));
+    public updateSyncDateTime(syncDateTime: SyncDateTime): Promise<SyncDateTime> {
+        return this.syncDateTimeDao.put(syncDateTime, true);
     }
 
-    /**
-     *
-     * @returns {Promise<number>}
-     */
     public clearSyncTime(): Promise<void> {
-        return this.syncDateTimeDao.clear();
+        return this.syncDateTimeDao.clear(true);
     }
 
 }

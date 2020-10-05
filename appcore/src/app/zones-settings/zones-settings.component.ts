@@ -82,27 +82,16 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     *
-     */
     public onZoneDefinitionSelected(zoneDefinition: ZoneDefinitionModel) {
         this.areZonesLoaded = false;
         this.navigateToZone(zoneDefinition.value);
     }
 
-    /**
-     *
-     */
     public ngOnDestroy(): void {
         this.routeParamsSubscription.unsubscribe();
         this.zonesUpdatesSubscription.unsubscribe();
     }
 
-    /**
-     *
-     * @param {string} zoneValue
-     * @returns {ZoneDefinitionModel}
-     */
     private getZoneDefinitionFromZoneValue(zoneValue: string): ZoneDefinitionModel {
         return _.find(this.zoneDefinitions, {value: zoneValue});
     }
@@ -110,7 +99,6 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
     /**
      * Load current zones from a zone definition.
      * Also update the current zones managed by the zone service to add, remove, reset, import, export, ... zones.
-     * @param {ZoneDefinitionModel} zoneDefinition
      */
     private loadZonesFromDefinition(zoneDefinition: ZoneDefinitionModel) {
 
@@ -130,10 +118,6 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
 
     }
 
-    /**
-     *
-     * @param {string} zoneValue
-     */
     private navigateToZone(zoneValue: string) {
         const selectedZoneUrl = AppRoutesModel.zonesSettings + "/" + zoneValue;
         this.router.navigate([selectedZoneUrl]);

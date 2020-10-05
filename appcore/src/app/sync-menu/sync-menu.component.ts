@@ -38,7 +38,7 @@ export class SyncMenuComponent implements OnInit {
             this.updateSyncDateStatus();
         }, 1000 * 60);
 
-        this.appEventsService.onSyncDone.subscribe(() => {
+        this.appEventsService.syncDone$.subscribe(() => {
             this.updateSyncDateStatus();
         });
     }
@@ -71,7 +71,7 @@ export class SyncMenuComponent implements OnInit {
         const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
 
             if (confirm) {
-                this.syncService.clearSyncedData().then(() => {
+                this.syncService.clearSyncedActivities().then(() => {
                     location.reload();
                 }, error => {
                     this.snackBar.open(error, "Close");
@@ -88,19 +88,22 @@ export class SyncMenuComponent implements OnInit {
             data: ImportExportProgressDialogComponent.MODE_EXPORT
         });
 
+        progressDialogRef.afterOpened().toPromise().then(() => {
+            this.syncService.export().then(result => {
+                progressDialogRef.close(result);
+            }, error => {
+                this.snackBar.open(error, "Close");
+            });
+        });
+
         progressDialogRef.afterClosed().toPromise().then(result => {
             this.dialog.open(GotItDialogComponent, {
                 minWidth: GotItDialogComponent.MIN_WIDTH,
                 maxWidth: GotItDialogComponent.MAX_WIDTH,
-                data: new GotItDialogDataModel(null, "File \"" + result.filename + "\" is being saved to your download folder.")
+                data: new GotItDialogDataModel(null, "File \"" + result.filename + "\" is ready to be saved.")
             });
         });
 
-        this.syncService.export().then(result => {
-            progressDialogRef.close(result);
-        }, error => {
-            this.snackBar.open(error, "Close");
-        });
     }
 
 }

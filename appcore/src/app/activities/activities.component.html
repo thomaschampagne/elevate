@@ -15,14 +15,14 @@
 
         <div>
             You can synchronize by clicking on
-            <mat-icon fontSet="material-icons-outlined" color="primary">sync_disabled</mat-icon>
+            <mat-icon color="primary" fontSet="material-icons-outlined">sync_disabled</mat-icon>
             icon in the upper toolbar. The activities will be locally saved in the storage allocated by the extension.
         </div>
 
     </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="isSynced === true" [fxHide]="!hasActivities">
+<mat-card [fxHide]="!isSynced || !hasActivities">
     <div class="mat-subheading-2" fxLayout="row" fxLayoutAlign="center center">
         <mat-form-field fxFlex="50">
             <input (keyup)="requestFilterFor($event.target.value)" [(ngModel)]="searchText" fxFill matInput
@@ -57,7 +57,7 @@
     </mat-form-field>
 
     <div class="table-container">
-        <table [dataSource]="dataSource" mat-table matSort [matSortActive]="'start_time'" [matSortDirection]="'desc'">
+        <table [dataSource]="dataSource" mat-table matSort>
             <ng-container *ngFor="let column of columns" [matColumnDef]="column.id">
                 <mat-header-cell *matHeaderCellDef [fxFlex]="column.width" mat-sort-header
                                  matTooltip="{{column.description}}">
@@ -73,7 +73,7 @@
                         {{column.print(activity, column.path)}}
                     </ng-container>
                     <ng-container *ngIf="column.type === ColumnType.ACTIVITY_LINK">
-                        <button (click)="openActivity(activity.path)" color="primary"
+                        <button (click)="openActivity(activity.id)" color="primary"
                                 mat-button>{{column.print(activity, column.path)}}</button>
                     </ng-container>
                     <ng-container *ngIf="column.type === ColumnType.NUMBER">
@@ -104,4 +104,3 @@
     </mat-paginator>
     <button (click)="onSpreadSheetExport()" color="primary" mat-stroked-button>Export to spreadsheet</button>
 </mat-card>
-

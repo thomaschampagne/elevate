@@ -4,10 +4,10 @@ import { AboutDialogComponent } from "./about-dialog.component";
 import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
 import { MatDialogRef } from "@angular/material/dialog";
-import { DataStore } from "../shared/data-store/data-store";
-import { MockedDataStore } from "../shared/data-store/impl/mock/mocked-data-store.service";
 import { VERSIONS_PROVIDER } from "../shared/services/versions/versions-provider.interface";
 import { MockedVersionsProvider } from "../shared/services/versions/impl/mock/mocked-versions-provider";
+import { DataStore } from "../shared/data-store/data-store";
+import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 
 describe("AboutDialogComponent", () => {
     let component: AboutDialogComponent;
@@ -15,7 +15,6 @@ describe("AboutDialogComponent", () => {
 
     beforeEach(done => {
 
-        const mockedDataStore: MockedDataStore<void> = new MockedDataStore();
         const mockedVersionsProvider: MockedVersionsProvider = new MockedVersionsProvider();
 
         TestBed.configureTestingModule({
@@ -27,7 +26,7 @@ describe("AboutDialogComponent", () => {
                 {
                     provide: MatDialogRef, useValue: {},
                 },
-                {provide: DataStore, useValue: mockedDataStore},
+                {provide: DataStore, useClass: TestingDataStore},
                 {provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider}
             ]
         }).compileComponents();

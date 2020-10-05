@@ -5,7 +5,6 @@ import { ConnectorType, StravaConnectorInfo } from "@elevate/shared/sync";
 import { ConnectorsComponent } from "../connectors.component";
 import { StravaConnectorService } from "../services/strava-connector.service";
 import * as moment from "moment";
-import * as HttpCodes from "http-status-codes";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { ElectronService } from "../../shared/services/electron/electron.service";
 import { adjectives, animals, colors, names, uniqueNamesGenerator } from "unique-names-generator";
@@ -15,6 +14,7 @@ import { Router } from "@angular/router";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../../shared/services/links-opener/open-resource-resolver";
 import { IClipboardResponse } from "ngx-clipboard";
 import jdenticon from "jdenticon/standalone";
+import { StatusCodes } from "http-status-codes";
 
 class GeneratedStravaApiApplication {
     public appName: string;
@@ -94,7 +94,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
             stravaConnectorInfo.accessToken = null;
             stravaConnectorInfo.refreshToken = null;
             stravaConnectorInfo.expiresAt = null;
-            return this.stravaConnectorService.stravaConnectorInfoService.save(stravaConnectorInfo);
+            return this.stravaConnectorService.stravaConnectorInfoService.update(stravaConnectorInfo);
         }).then((stravaConnectorInfo: StravaConnectorInfo) => {
             this.stravaConnectorInfo = stravaConnectorInfo;
             // Force clear cookie to allow connection with another strava account
@@ -103,7 +103,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
     }
 
     public onUpdateActivitiesNameAndTypeChanged(): void {
-        this.stravaConnectorService.stravaConnectorInfoService.save(this.stravaConnectorInfo).then((stravaConnectorInfo: StravaConnectorInfo) => {
+        this.stravaConnectorService.stravaConnectorInfoService.update(this.stravaConnectorInfo).then((stravaConnectorInfo: StravaConnectorInfo) => {
             this.stravaConnectorInfo = stravaConnectorInfo;
         });
     }
@@ -117,9 +117,9 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 
             let errorMessage = null;
 
-            if (error.statusCode === HttpCodes.UNAUTHORIZED) {
+            if (error.statusCode === StatusCodes.UNAUTHORIZED) {
                 errorMessage = "Unauthorized access to strava. Check your client id and client secret.";
-            } else if (error.statusCode === HttpCodes.FORBIDDEN) {
+            } else if (error.statusCode === StatusCodes.FORBIDDEN) {
                 errorMessage = "Forbidden access to strava. Please check your client id and client secret.";
             } else if (error.code === "EADDRINUSE") {
                 errorMessage = "A Strava login window is already opened. Please use it.";

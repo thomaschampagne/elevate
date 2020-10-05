@@ -1,20 +1,18 @@
 import { Injectable } from "@angular/core";
 import { BaseDao } from "../base.dao";
-import { StorageLocationModel } from "../../data-store/storage-location.model";
-import { StorageType } from "../../data-store/storage-type.enum";
+import { CollectionDef } from "../../data-store/collection-def";
 import { StravaConnectorInfo } from "@elevate/shared/sync";
 
 @Injectable()
 export class StravaConnectorInfoDao extends BaseDao<StravaConnectorInfo> {
 
-    public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("stravaConnectorInfo", StorageType.OBJECT);
-    public static readonly DEFAULT_STORAGE_VALUE: StravaConnectorInfo = StravaConnectorInfo.DEFAULT_MODEL;
+    public static readonly COLLECTION_DEF: CollectionDef<StravaConnectorInfo> = new CollectionDef("stravaConnectorInfo", null);
 
-    getDefaultStorageValue(): StravaConnectorInfo {
-        return StravaConnectorInfoDao.DEFAULT_STORAGE_VALUE;
+    public getDefaultStorageValue(): StravaConnectorInfo {
+        return StravaConnectorInfo.DEFAULT_MODEL;
     }
 
-    getStorageLocation(): StorageLocationModel {
-        return StravaConnectorInfoDao.STORAGE_LOCATION;
+    public getCollectionDef(): CollectionDef<StravaConnectorInfo> {
+        return StravaConnectorInfoDao.COLLECTION_DEF;
     }
 }

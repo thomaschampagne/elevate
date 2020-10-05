@@ -21,8 +21,7 @@ import { APP_MORE_MENU_COMPONENT, AppMoreMenuComponent, DesktopAppMoreMenuCompon
 import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
 import { DesktopRoutingModule } from "./shared/modules/desktop/desktop-routing.module";
 import { ExtensionRoutingModule } from "./shared/modules/extension/extension-routing.module";
-import { DesktopPreRunGuard } from "./desktop/pre-run-guard/desktop-pre-run-guard.service";
-import { DesktopPreRunGuardDialogComponent } from "./desktop/pre-run-guard/desktop-pre-run-guard-dialog.component";
+import { DesktopUnauthorizedMachineIdDialogComponent } from "./app-load/desktop/desktop-unauthorized-machine-id-dialog/desktop-unauthorized-machine-id-dialog.component";
 import {
     DesktopRefreshStatsBarComponent,
     ExtensionRefreshStatsBarComponent,
@@ -31,6 +30,10 @@ import {
 } from "./refresh-stats-bar/refresh-stats-bar.component";
 import { RefreshStatsBarDirective } from "./refresh-stats-bar/refresh-stats-bar.directive";
 import { DesktopErrorsSyncDetailsDialogComponent } from "./sync-bar/desktop-errors-sync-details-dialog.component";
+import { AppLoadComponent } from "./app-load/app-load.component";
+import { AppLoadService } from "./app-load/app-load.service";
+import { DesktopLoadService } from "./app-load/desktop/desktop-load.service";
+import { ExtensionLoadService } from "./app-load/extension/extension-load.service";
 
 @NgModule({
     imports: [
@@ -47,17 +50,17 @@ import { DesktopErrorsSyncDetailsDialogComponent } from "./sync-bar/desktop-erro
         DesktopErrorsSyncDetailsDialogComponent,
         DesktopRefreshStatsBarComponent,
         DesktopTopBarComponent,
-        DesktopPreRunGuardDialogComponent,
+        DesktopUnauthorizedMachineIdDialogComponent,
         DesktopAppMoreMenuComponent
     ],
     providers: [
+        {provide: AppLoadService, useClass: DesktopLoadService},
         {provide: MENU_ITEMS_PROVIDER, useClass: DesktopMenuItemsProvider},
         {provide: TOP_BAR_COMPONENT, useValue: DesktopTopBarComponent},
         {provide: SYNC_BAR_COMPONENT, useValue: DesktopSyncBarComponent},
         {provide: REFRESH_STATS_BAR_COMPONENT, useValue: DesktopRefreshStatsBarComponent},
         {provide: SYNC_MENU_COMPONENT, useValue: DesktopSyncMenuComponent},
         {provide: APP_MORE_MENU_COMPONENT, useValue: DesktopAppMoreMenuComponent},
-        DesktopPreRunGuard
     ]
 })
 export class DesktopBootModule {
@@ -80,6 +83,7 @@ export class DesktopBootModule {
         ExtensionAppMoreMenuComponent
     ],
     providers: [
+        {provide: AppLoadService, useClass: ExtensionLoadService},
         {provide: MENU_ITEMS_PROVIDER, useClass: ExtensionMenuItemsProvider},
         {provide: TOP_BAR_COMPONENT, useValue: ExtensionTopBarComponent},
         {provide: SYNC_BAR_COMPONENT, useValue: ExtensionSyncBarComponent},
@@ -93,6 +97,7 @@ export class ExtensionBootModule {
 
 @NgModule({
     declarations: [
+        AppLoadComponent,
         AppComponent,
         TopBarDirective,
         TopBarComponent,
@@ -111,7 +116,7 @@ export class ExtensionBootModule {
     ],
     providers: [{provide: ErrorHandler, useClass: ElevateErrorHandler}],
     bootstrap: [
-        AppComponent
+        AppLoadComponent
     ]
 })
 export class AppModule {

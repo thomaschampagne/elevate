@@ -6,13 +6,20 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MatDialog } from "@angular/material/dialog";
 import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
+import { DataStore } from "../../shared/data-store/data-store";
+
 
 @Injectable()
 export class DesktopMigrationService {
 
-    constructor(@Inject(VERSIONS_PROVIDER) public desktopVersionsProvider: DesktopVersionsProvider,
-                public dialog: MatDialog,
-                public logger: LoggerService) {
+    private readonly db: LokiConstructor;
+
+    constructor(@Inject(VERSIONS_PROVIDER) public readonly desktopVersionsProvider: DesktopVersionsProvider,
+                public readonly dataStore: DataStore<object>,
+                public readonly dialog: MatDialog,
+                public readonly logger: LoggerService) {
+
+        this.db = this.dataStore.db;
     }
 
     /**
@@ -23,7 +30,11 @@ export class DesktopMigrationService {
 
         return this.detectUpgrade().then((upgradeData: { fromVersion: string, toVersion: string }) => {
             if (upgradeData) {
-                return this.applyUpgrades(upgradeData.fromVersion, upgradeData.toVersion);
+                return this.applyUpgrades(upgradeData.fromVersion, upgradeData.toVersion).then(() => {
+                    return this.dataStore.saveDataStore();
+                });
+            } else {
+                this.logger.info("No upgrade detected");
             }
             return Promise.resolve();
         }).then(() => {
@@ -44,36 +55,36 @@ export class DesktopMigrationService {
     public detectUpgrade(): Promise<{ fromVersion: string, toVersion: string }> {
 
         return Promise.all([
-            this.desktopVersionsProvider.getSavedVersion(),
+            this.desktopVersionsProvider.getExistingVersion(),
             this.desktopVersionsProvider.getPackageVersion()
         ]).then((results: string[]) => {
 
-            const savedVersion = results[0];
+            const existingVersion = results[0];
             const packageVersion = results[1];
 
-            if (!savedVersion) {
+            if (!existingVersion) {
                 this.logger.info(`First install detected.`);
                 return Promise.resolve(null);
             }
 
-            if (semver.eq(savedVersion, packageVersion)) {
+            if (semver.eq(existingVersion, packageVersion)) {
                 return Promise.resolve(null);
             }
 
-            if (semver.eq(savedVersion, packageVersion)) {
-                return Promise.resolve({fromVersion: savedVersion, toVersion: packageVersion});
+            if (semver.eq(existingVersion, packageVersion)) {
+                return Promise.resolve({fromVersion: existingVersion, toVersion: packageVersion});
             }
 
-            if (semver.lt(savedVersion, packageVersion)) {
-                return Promise.resolve({fromVersion: savedVersion, toVersion: packageVersion});
+            if (semver.lt(existingVersion, packageVersion)) {
+                return Promise.resolve({fromVersion: existingVersion, toVersion: packageVersion});
             }
 
-            if (semver.gt(savedVersion, packageVersion)) {
-                const errorMessage = `Downgrade detected from ${savedVersion} to ${packageVersion}. You might encounter some issues. Consider uninstall this version and reinstall latest version to avoid issues.`;
+            if (semver.gt(existingVersion, packageVersion)) {
+                const errorMessage = `Downgrade detected from ${existingVersion} to ${packageVersion}. You might encounter some issues. Consider uninstall this version and reinstall latest version to avoid issues.`;
                 return Promise.reject({reason: "DOWNGRADE", message: errorMessage});
             }
 
-            return Promise.reject(`Upgrade detection error with savedVersion: ${savedVersion}; packageVersion: ${packageVersion}`);
+            return Promise.reject(`Upgrade detection error with existing version: ${existingVersion}; packageVersion: ${packageVersion}`);
         });
     }
 
@@ -82,8 +93,7 @@ export class DesktopMigrationService {
      */
     public trackPackageVersion(): Promise<void> {
         return this.desktopVersionsProvider.getPackageVersion().then(packageVersion => {
-            localStorage.setItem(DesktopVersionsProvider.DESKTOP_SAVED_VERSION_KEY, packageVersion);
-            return Promise.resolve();
+            return this.desktopVersionsProvider.setExistingVersion(packageVersion);
         });
     }
 
@@ -92,9 +102,49 @@ export class DesktopMigrationService {
         this.logger.info(`Applying upgrade(s) from ${fromVersion} to ${toVersion}`);
 
         // Create upgrade methods here...
-        // ...
-        // ...
-
         return Promise.resolve();
+
+        /*abstract class Migration {
+
+            abstract version: string;
+
+            abstract description: string;
+
+            public abstract upgrade(db: LokiConstructor): Promise<void>;
+
+            constructor() {
+            }
+        }
+
+        class SampleMigration extends Migration {
+
+            public version = "7.0.0-alpha.7";
+
+            public description = "Explain migration purpose here";
+
+            public upgrade(db: LokiConstructor): Promise<void> {
+                // db.getCollection("syncedActivities").update({});
+                // ....
+                return Promise.resolve();
+            }
+        }
+
+        // Sample on how migration can be done:
+        const migrations: Migration[] = [
+            new SampleMigration()
+        ];*/
+
+        // TODO Migration sample code below (To be unit tested)
+        // return migrations.reduce((previousMigrationDone: Promise<void>, migration: Migration) => {
+        //
+        //     return previousMigrationDone.then(() => {
+        //         if (semver.lt(fromVersion, migration.version)) {
+        //             this.logger.info(`Migrating to ${migration.version}: ${migration.description}`);
+        //             return migration.upgrade(this.db);
+        //         }
+        //
+        //         return Promise.resolve();
+        //     });
+        // }, Promise.resolve());
     }
 }

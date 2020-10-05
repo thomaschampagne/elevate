@@ -26,7 +26,7 @@ describe("WindowService", () => {
 
         // Given
         const expectedCallCount = 1;
-        const spy = spyOn(service.resizing, "next");
+        const spy = spyOn(service.resizing$, "next");
 
         // When
         service.onResize();

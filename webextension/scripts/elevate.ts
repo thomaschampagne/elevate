@@ -1,7 +1,6 @@
 import * as _ from "lodash";
 import { Helper } from "./helper";
-import { ActivityInfoModel, AthleteModel, ReleaseNoteModel, SyncResultModel, UserSettings } from "@elevate/shared/models";
-import { BrowserStorage } from "./browser-storage";
+import { ActivityInfoModel, AthleteModel, CoreMessages, ReleaseNoteModel, SyncResultModel, UserSettings } from "@elevate/shared/models";
 import { ExtensionEnv } from "../config/extension-env";
 import { AppResourcesModel } from "./models/app-resources.model";
 import { AthleteUpdateModel } from "./models/athlete-update.model";
@@ -41,6 +40,8 @@ import { releaseNotesData } from "@elevate/shared/data";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
 import { GenericExtendedDataModifier } from "./modifiers/extended-stats/generic-extended-data.modifier";
 import { ElevateSport } from "@elevate/shared/enums";
+import { BrowserStorage } from "./browser-storage";
+import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class Elevate {
@@ -92,8 +93,19 @@ export class Elevate {
             }
 
             if (this.userSettings.localStorageMustBeCleared) {
+                console.log("Clearing local storage");
                 localStorage.clear();
-                BrowserStorage.getInstance().putAt<ExtensionUserSettingsModel, boolean>(BrowserStorageType.LOCAL, ["userSettings", "localStorageMustBeCleared"], false);
+                BrowserStorage.getInstance().get<ExtensionUserSettingsModel>(BrowserStorageType.LOCAL, "userSettings", true).then(userSettings => {
+                    userSettings.localStorageMustBeCleared = false;
+                    BrowserStorage.getInstance().set<ExtensionUserSettingsModel>(BrowserStorageType.LOCAL, "userSettings", userSettings);
+                }).then(() => {
+                    chrome.runtime.sendMessage(this.extensionId, {
+                        method: CoreMessages.ON_EXTERNAL_DB_CHANGE,
+                        params: {},
+                    }, (response: any) => {
+                        console.log(response);
+                    });
+                });
             }
 
             // Init "elevate bridge"
@@ -186,7 +198,7 @@ export class Elevate {
     public createAthleteModelResolver(): Promise<AthleteSnapshotResolver> {
 
         return new Promise((resolve, reject) => {
-            BrowserStorage.getInstance().get<AthleteModel>(BrowserStorageType.LOCAL, Elevate.LOCAL_ATHLETE_KEY)
+            BrowserStorage.getInstance().get<AthleteModel>(BrowserStorageType.LOCAL, Elevate.LOCAL_ATHLETE_KEY, true)
                 .then((athleteModel: AthleteModel) => {
                     resolve(new AthleteSnapshotResolver(athleteModel));
                 }, error => reject(error));
@@ -269,7 +281,7 @@ export class Elevate {
             return;
         }
 
-        const saveCurrentVersionInstalled = (callback: Function) => {
+        const saveCurrentVersionInstalled = callback => {
 
             const toBeStored = {
                 version: this.appResources.extVersion,
@@ -283,7 +295,7 @@ export class Elevate {
         };
 
         // Check for previous version is installed
-        BrowserStorage.getInstance().get<object>(BrowserStorageType.LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY).then((response: any) => {
+        BrowserStorage.getInstance().get<object>(BrowserStorageType.LOCAL, Elevate.LOCAL_VERSION_INSTALLED_KEY, true).then((response: any) => {
 
             // Override version with fake one to simulate update
             if (ExtensionEnv.simulateUpdate) {
@@ -459,7 +471,7 @@ export class Elevate {
 
         const athleteSnapshot = this.athleteModelResolver.getCurrent(); // TODO Could be improved by using AthleteModel at each dates
 
-        const segmentId: number = parseInt(/^\/segments\/(\d+)$/.exec(window.location.pathname)[1]);
+        const segmentId: number = parseInt(/^\/segments\/(\d+)$/.exec(window.location.pathname)[1], 10);
         const segmentHRATime: SegmentRecentEffortsHRATimeModifier = new SegmentRecentEffortsHRATimeModifier(this.userSettings.displayRecentEffortsHRAdjustedPacePower,
             athleteSnapshot,
             this.athleteId,
@@ -667,7 +679,7 @@ export class Elevate {
         }
 
         // Getting segment id
-        const segmentId: number = parseInt(segmentData[1]);
+        const segmentId: number = parseInt(segmentData[1], 10);
 
         const segmentProcessor: SegmentProcessor = new SegmentProcessor(this.vacuumProcessor, segmentId);
         segmentProcessor.getNearbySegmentsAround((jsonSegments: ISegmentInfo[]) => {
@@ -694,7 +706,7 @@ export class Elevate {
         }
 
         // Avoid running Extended data at the moment
-        if (window.pageView.activity().attributes.type != "Ride") {
+        if (window.pageView.activity().attributes.type !== "Ride") {
             return;
         }
 
@@ -716,7 +728,8 @@ export class Elevate {
         const activityType: string = window.pageView.activity().get("type");
 
         // PR only for my own activities
-        const activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings, this.appResources, activityType, this.isOwner);
+        const activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(this.userSettings,
+            this.appResources, activityType, this.isOwner);
         activitySegmentTimeComparisonModifier.modify();
 
     }
@@ -738,7 +751,7 @@ export class Elevate {
 
         // Only cycling is supported
         const activityType: string = window.pageView.activity().attributes.type;
-        if (activityType != "Ride") {
+        if (activityType !== "Ride") {
             return;
         }
 
@@ -752,10 +765,11 @@ export class Elevate {
             isOwner: this.isOwner
         };
 
-        BrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "bestSplitsConfiguration").then((response: any) => {
-            const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.vacuumProcessor, activityInfo, this.userSettings, response, (splitsConfiguration: any) => {
-                BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "bestSplitsConfiguration", splitsConfiguration);
-            });
+        BrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "bestSplitsConfiguration", true).then((response: any) => {
+            const activityBestSplitsModifier: ActivityBestSplitsModifier = new ActivityBestSplitsModifier(this.vacuumProcessor, activityInfo,
+                this.userSettings, response, (splitsConfiguration: any) => {
+                    BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "bestSplitsConfiguration", splitsConfiguration);
+                });
             activityBestSplitsModifier.modify();
         });
     }
@@ -771,7 +785,7 @@ export class Elevate {
         }
 
         // Avoid bike activity
-        if (window.pageView.activity().attributes.type != "Run") {
+        if (window.pageView.activity().attributes.type !== "Run") {
             return;
         }
 
@@ -794,7 +808,7 @@ export class Elevate {
         }
 
         // Avoid bike activity
-        if (window.pageView.activity().attributes.type != "Run") {
+        if (window.pageView.activity().attributes.type !== "Run") {
             return;
         }
 
@@ -817,7 +831,7 @@ export class Elevate {
         }
 
         // Avoid bike activity
-        if (window.pageView.activity().attributes.type != "Run") {
+        if (window.pageView.activity().attributes.type !== "Run") {
             return;
         }
 
@@ -840,7 +854,7 @@ export class Elevate {
         }
 
         // Avoid bike activity
-        if (window.pageView.activity().attributes.type != "Run") {
+        if (window.pageView.activity().attributes.type !== "Run") {
             return;
         }
 
@@ -978,11 +992,11 @@ export class Elevate {
         setTimeout(() => {
 
             // Allow activities sync if previous sync exists and has been done 12 hours or more ago.
-            BrowserStorage.getInstance().get<number>(BrowserStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY).then((syncDateTime: number) => {
+            BrowserStorage.getInstance().get<SyncDateTime>(BrowserStorageType.LOCAL, ActivitiesSynchronize.LAST_SYNC_DATE_TIME_KEY, true).then((result: SyncDateTime) => {
 
-                if (_.isNumber(syncDateTime)) {
+                if (result && _.isNumber(result.syncDateTime)) {
 
-                    console.log("A previous sync exists on " + new Date(syncDateTime).toString());
+                    console.log("A previous sync exists on " + new Date(result.syncDateTime).toString());
 
                     // At first perform a fast sync to get the "just uploaded ride/run" ready
                     const fastSync = true;
@@ -1020,7 +1034,7 @@ export class Elevate {
 
         const forceSync = (urlParams.forceSync === "true");
         const fastSync = (urlParams.fastSync === "true" && !forceSync);
-        const sourceTabId = (urlParams.sourceTabId) ? parseInt(urlParams.sourceTabId) : -1;
+        const sourceTabId = (urlParams.sourceTabId) ? parseInt(urlParams.sourceTabId, 10) : -1;
 
         const activitiesSyncModifier: ActivitiesSyncModifier = new ActivitiesSyncModifier(this.extensionId, this.activitiesSynchronize, fastSync, forceSync, sourceTabId);
         activitiesSyncModifier.modify();
@@ -1043,7 +1057,7 @@ export class Elevate {
         }
 
         // Avoid bike activity
-        if (window.pageView.activity().attributes.type != "Run") {
+        if (window.pageView.activity().attributes.type !== "Run") {
             return;
         }
 

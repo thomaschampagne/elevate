@@ -9,6 +9,8 @@ import { ProgressType } from "../shared/enums/progress-type.enum";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { ElevateSport } from "@elevate/shared/enums";
+import { DataStore } from "../../shared/data-store/data-store";
+import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 
 describe("AddYearProgressPresetDialogComponent", () => {
     let component: AddYearProgressPresetDialogComponent;
@@ -30,12 +32,9 @@ describe("AddYearProgressPresetDialogComponent", () => {
                 YearProgressModule
             ],
             providers: [
-                {
-                    provide: MAT_DIALOG_DATA, useValue: addYearProgressPresetsDialogData,
-                },
-                {
-                    provide: MatDialogRef, useValue: {},
-                },
+                {provide: DataStore, useClass: TestingDataStore},
+                {provide: MAT_DIALOG_DATA, useValue: addYearProgressPresetsDialogData},
+                {provide: MatDialogRef, useValue: {}},
             ]
         }).compileComponents();
 

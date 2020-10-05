@@ -343,7 +343,7 @@ describe("StravaConnector", () => {
         it("should reject recursive sync strava activities pages when a remote page unreachable", done => {
 
             // Given
-            const syncEvents = new Subject<SyncEvent>();
+            const syncEvents$ = new Subject<SyncEvent>();
             const syncPagesSpy = spyOn(stravaConnector, "syncPages").and.callThrough();
             const expectedSyncPagesCalls = 3;
             const expectedProcessCalls = 2;
@@ -361,7 +361,7 @@ describe("StravaConnector", () => {
             });
 
             // When
-            const promise = stravaConnector.syncPages(syncEvents);
+            const promise = stravaConnector.syncPages(syncEvents$);
 
             // Then
             promise.then(() => {
@@ -382,7 +382,7 @@ describe("StravaConnector", () => {
         it("should reject recursive sync when an error occurs while processing an activity", done => {
 
             // Given
-            const syncEvents = new Subject<SyncEvent>();
+            const syncEvents$ = new Subject<SyncEvent>();
             const errorMessage = "An error has been raised :/";
 
             // Track processBareActivities() calls and throw error on the 3rd call
@@ -396,7 +396,7 @@ describe("StravaConnector", () => {
             });
 
             // When
-            const promise = stravaConnector.syncPages(syncEvents);
+            const promise = stravaConnector.syncPages(syncEvents$);
 
             // Then
             promise.then(() => {
@@ -1287,14 +1287,14 @@ describe("StravaConnector", () => {
         it("should find for existing activity when processing bare activities", done => {
 
             // Given
-            const syncEvents = new Subject<SyncEvent>();
+            const syncEvents$ = new Subject<SyncEvent>();
             const page = 1;
             const perPage = 20;
             const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
             const expectedFindActivityCalls = perPage;
 
             // When
-            const promise = stravaConnector.processBareActivities(syncEvents, bareActivities);
+            const promise = stravaConnector.processBareActivities(syncEvents$, bareActivities);
 
             // Then
             promise.then(() => {
@@ -1312,8 +1312,8 @@ describe("StravaConnector", () => {
         it("should send activity sync event when processing 1 bare activity that already exists (updateSyncedActivitiesNameAndType = true)", done => {
 
             // Given
-            const syncEvents = new Subject<SyncEvent>();
-            const syncEventsSpy = spyOn(syncEvents, "next");
+            const syncEvents$ = new Subject<SyncEvent>();
+            const syncEventsSpy = spyOn(syncEvents$, "next");
             const page = 1;
             const perPage = 20;
             const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
@@ -1336,7 +1336,7 @@ describe("StravaConnector", () => {
 
 
             // When
-            const promise = stravaConnector.processBareActivities(syncEvents, bareActivities);
+            const promise = stravaConnector.processBareActivities(syncEvents$, bareActivities);
 
             // Then
             promise.then(() => {
@@ -1362,8 +1362,8 @@ describe("StravaConnector", () => {
         it("should send activity sync event when processing 1 bare activity that already exists (updateSyncedActivitiesNameAndType = false)", done => {
 
             // Given
-            const syncEvents = new Subject<SyncEvent>();
-            const syncEventsSpy = spyOn(syncEvents, "next");
+            const syncEvents$ = new Subject<SyncEvent>();
+            const syncEventsSpy = spyOn(syncEvents$, "next");
             const page = 1;
             const perPage = 20;
             const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
@@ -1384,7 +1384,7 @@ describe("StravaConnector", () => {
             });
 
             // When
-            const promise = stravaConnector.processBareActivities(syncEvents, bareActivities);
+            const promise = stravaConnector.processBareActivities(syncEvents$, bareActivities);
 
             // Then
             promise.then(() => {
@@ -1409,8 +1409,8 @@ describe("StravaConnector", () => {
         it("should send error sync event when processing 1 bare activity that already exists (multiple results found)", done => {
 
             // Given
-            const syncEvents = new Subject<SyncEvent>();
-            const syncEventNextSpy = spyOn(syncEvents, "next");
+            const syncEvents$ = new Subject<SyncEvent>();
+            const syncEventNextSpy = spyOn(syncEvents$, "next");
             const page = 1;
             const perPage = 20;
             const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
@@ -1436,7 +1436,7 @@ describe("StravaConnector", () => {
                 new Date((<any> bareActivities[trackCallId]).start_date), [expectedActivitiesFound, expectedActivitiesFound]);
 
             // When
-            const promise = stravaConnector.processBareActivities(syncEvents, bareActivities);
+            const promise = stravaConnector.processBareActivities(syncEvents$, bareActivities);
 
             // Then
             promise.then(() => {
@@ -1454,8 +1454,8 @@ describe("StravaConnector", () => {
         it("should send activity sync event when processing 1 bare activity that do not exists", done => {
 
             // Given
-            const syncEvents = new Subject<SyncEvent>();
-            const syncEventsSpy = spyOn(syncEvents, "next");
+            const syncEvents$ = new Subject<SyncEvent>();
+            const syncEventsSpy = spyOn(syncEvents$, "next");
             const page = 1;
             const perPage = 20;
             const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
@@ -1475,7 +1475,7 @@ describe("StravaConnector", () => {
             findSyncedActivityModelsSpy.and.returnValue(Promise.resolve(null));
 
             // When
-            const promise = stravaConnector.processBareActivities(syncEvents, bareActivities);
+            const promise = stravaConnector.processBareActivities(syncEvents$, bareActivities);
 
             // Then
             promise.then(() => {
@@ -1504,8 +1504,8 @@ describe("StravaConnector", () => {
         it("should reject processing bare activities when fetching stream trigger a unhandled error", done => {
 
             // Given
-            const syncEvents = new Subject<SyncEvent>();
-            const syncEventsSpy = spyOn(syncEvents, "next");
+            const syncEvents$ = new Subject<SyncEvent>();
+            const syncEventsSpy = spyOn(syncEvents$, "next");
             const page = 1;
             const perPage = 20;
             const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
@@ -1528,7 +1528,7 @@ describe("StravaConnector", () => {
 
 
             // When
-            const promise = stravaConnector.processBareActivities(syncEvents, bareActivities);
+            const promise = stravaConnector.processBareActivities(syncEvents$, bareActivities);
 
             // Then
             promise.then(() => {

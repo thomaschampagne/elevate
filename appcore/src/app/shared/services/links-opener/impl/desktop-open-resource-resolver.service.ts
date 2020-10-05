@@ -30,7 +30,7 @@ export class DesktopOpenResourceResolver extends OpenResourceResolver {
     }
 
     public openActivity(id: number | string): void {
-        this.activityService.getById(<string> id).then(activity => {
+        this.activityService.getById(id).then(activity => {
             if (activity) {
                 this.router.navigate([AppRoutesModel.activityView, activity.id]);
             } else {
@@ -40,7 +40,7 @@ export class DesktopOpenResourceResolver extends OpenResourceResolver {
     }
 
     public openSourceActivity(id: number | string): void {
-        this.activityService.getById(<string> id).then(activity => {
+        this.activityService.getById(id).then(activity => {
             if (activity) {
                 switch (activity.sourceConnectorType) {
                     case ConnectorType.STRAVA:

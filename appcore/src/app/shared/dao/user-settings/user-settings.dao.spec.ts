@@ -1,9 +1,9 @@
 import { TestBed } from "@angular/core/testing";
 import { UserSettingsDao } from "./user-settings.dao";
 import { DataStore } from "../../data-store/data-store";
-import { MockedDataStore } from "../../data-store/impl/mock/mocked-data-store.service";
-import { UserSettings } from "@elevate/shared/models";
-import UserSettingsModel = UserSettings.UserSettingsModel;
+import { TestingDataStore } from "../../data-store/testing-datastore.service";
+import { LoggerService } from "../../services/logging/logger.service";
+import { ConsoleLoggerService } from "../../services/logging/console-logger.service";
 
 describe("UserSettingsDao", () => {
 
@@ -11,12 +11,11 @@ describe("UserSettingsDao", () => {
 
     beforeEach(done => {
 
-        const mockedDataStore: MockedDataStore<UserSettingsModel> = new MockedDataStore();
-
         TestBed.configureTestingModule({
             providers: [
                 UserSettingsDao,
-                {provide: DataStore, useValue: mockedDataStore}
+                {provide: DataStore, useClass: TestingDataStore},
+                {provide: LoggerService, useClass: ConsoleLoggerService}
             ]
         });
 

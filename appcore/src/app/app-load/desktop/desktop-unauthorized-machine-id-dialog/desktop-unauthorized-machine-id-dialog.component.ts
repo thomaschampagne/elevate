@@ -1,15 +1,15 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { ElectronService } from "../../shared/services/electron/electron.service";
-import { DesktopVersionsProvider } from "../../shared/services/versions/impl/desktop-versions-provider.service";
-import { VERSIONS_PROVIDER, VersionsProvider } from "../../shared/services/versions/versions-provider.interface";
+import { ElectronService } from "../../../shared/services/electron/electron.service";
+import { DesktopVersionsProvider } from "../../../shared/services/versions/impl/desktop-versions-provider.service";
+import { VERSIONS_PROVIDER, VersionsProvider } from "../../../shared/services/versions/versions-provider.interface";
 
 @Component({
-    selector: "app-guard",
-    templateUrl: "./desktop-pre-run-guard-dialog.component.html",
-    styleUrls: ["./desktop-pre-run-guard-dialog.component.scss"]
+    selector: "app-desktop-unauthorized-machine-id-dialog",
+    templateUrl: "./desktop-unauthorized-machine-id-dialog.component.html",
+    styleUrls: ["./desktop-unauthorized-machine-id-dialog.component.scss"]
 })
-export class DesktopPreRunGuardDialogComponent implements OnInit {
+export class DesktopUnauthorizedMachineIdDialogComponent implements OnInit {
 
     public athleteMachineId: string;
     public releaseUrl: string;

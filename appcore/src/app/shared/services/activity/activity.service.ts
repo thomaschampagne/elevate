@@ -4,46 +4,49 @@ import * as _ from "lodash";
 import { AthleteSnapshotResolverService } from "../athlete-snapshot-resolver/athlete-snapshot-resolver.service";
 import { Subject } from "rxjs";
 import { LoggerService } from "../logging/logger.service";
-import FindRequest = PouchDB.Find.FindRequest;
 
 export abstract class ActivityService {
 
-    public athleteSettingsConsistency: Subject<boolean>;
-    public activitiesWithSettingsLacks: Subject<boolean>;
+    public athleteSettingsConsistency$: Subject<boolean>;
+    public activitiesWithSettingsLacks$: Subject<boolean>;
 
     protected constructor(public activityDao: ActivityDao,
                           public athleteSnapshotResolverService: AthleteSnapshotResolverService,
                           public logger: LoggerService) {
-        this.athleteSettingsConsistency = new Subject<boolean>();
-        this.activitiesWithSettingsLacks = new Subject<boolean>();
+        this.athleteSettingsConsistency$ = new Subject<boolean>();
+        this.activitiesWithSettingsLacks$ = new Subject<boolean>();
     }
 
     public fetch(): Promise<SyncedActivityModel[]> {
-        return (<Promise<SyncedActivityModel[]>> this.activityDao.fetch()).then(activities => {
-            return Promise.resolve(_.sortBy<SyncedActivityModel>(activities, "start_time"));
-        });
+        return this.activityDao.findSortStartDate(false);
+    }
+
+    public findSortStartDate(descending: boolean): Promise<SyncedActivityModel[]> {
+        return this.activityDao.findSortStartDate(descending);
+    }
+
+    public insertMany(syncedActivities: SyncedActivityModel[], persistImmediately: boolean = false): Promise<void> {
+        return this.activityDao.insertMany(syncedActivities, persistImmediately);
     }
 
     public getById(id: number | string): Promise<SyncedActivityModel> {
-        return this.activityDao.getById(<string> id);
+        return this.activityDao.getById(id);
     }
 
-    public find(findRequest: PouchDB.Find.FindRequest<SyncedActivityModel[]>): Promise<SyncedActivityModel[]> {
-        return (<Promise<SyncedActivityModel[]>> this.activityDao.find(findRequest)).then(activities => {
-            return Promise.resolve(_.sortBy<SyncedActivityModel>(activities, "start_time"));
-        });
+    public removeById(id: number | string): Promise<void> {
+        return this.activityDao.removeById(id, true);
     }
 
-    public save(syncedActivityModels: SyncedActivityModel[]): Promise<SyncedActivityModel[]> {
-        return (<Promise<SyncedActivityModel[]>> this.activityDao.save(syncedActivityModels));
+    public update(syncedActivityModel: SyncedActivityModel, persistImmediately: boolean = false): Promise<SyncedActivityModel> {
+        return this.activityDao.update(syncedActivityModel, persistImmediately);
     }
 
-    public put(syncedActivityModel: SyncedActivityModel): Promise<SyncedActivityModel> {
-        return (<Promise<SyncedActivityModel>> this.activityDao.put(syncedActivityModel));
+    public put(syncedActivityModel: SyncedActivityModel, persistImmediately: boolean = false): Promise<SyncedActivityModel> {
+        return this.activityDao.put(syncedActivityModel, persistImmediately);
     }
 
-    public clear(): Promise<void> {
-        return this.activityDao.clear();
+    public clear(persistImmediately: boolean = false): Promise<void> {
+        return this.activityDao.clear(persistImmediately);
     }
 
     public count(): Promise<number> {
@@ -51,46 +54,11 @@ export abstract class ActivityService {
     }
 
     public findByDatedSession(startTime: string, activityDurationSeconds: number): Promise<SyncedActivityModel[]> {
-
-        const activityStartTime = new Date(startTime).toISOString();
-        const endDate = new Date(activityStartTime);
-        endDate.setSeconds(endDate.getSeconds() + activityDurationSeconds);
-        const activityEndTime = endDate.toISOString();
-
-        const query: FindRequest<SyncedActivityModel[]> = {
-            selector: {
-                $or: [
-                    {
-                        start_time: {
-                            $gte: activityStartTime,
-                        },
-                        end_time: {
-                            $lte: activityEndTime,
-                        }
-                    },
-                    {
-                        start_time: {
-                            $gte: activityStartTime,
-                            $lte: activityEndTime,
-                        }
-                    },
-                    {
-                        end_time: {
-                            $gte: activityStartTime,
-                            $lte: activityEndTime,
-                        }
-                    }
-
-                ]
-
-            }
-        };
-
-        return this.find(query);
+        return this.activityDao.findByDatedSession(startTime, activityDurationSeconds);
     }
 
-    public removeByIds(activitiesToDelete: (string | number)[]): Promise<SyncedActivityModel[]> {
-        return this.activityDao.removeByIds(activitiesToDelete);
+    public removeByManyIds(activitiesToDelete: (string | number)[]): Promise<void> {
+        return this.activityDao.removeByManyIds(activitiesToDelete, true);
     }
 
     /**
@@ -99,7 +67,7 @@ export abstract class ActivityService {
     public isAthleteSettingsConsistent(): Promise<boolean> {
 
         return this.athleteSnapshotResolverService.update().then(() => {
-            return this.activityDao.fetch();
+            return this.activityDao.find();
         }).then((syncedActivityModels: SyncedActivityModel[]) => {
             let isCompliant = true;
             _.forEachRight(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
@@ -120,9 +88,9 @@ export abstract class ActivityService {
 
         this.logger.debug("checking athlete settings consistency");
         this.isAthleteSettingsConsistent().then(isConsistent => {
-            this.athleteSettingsConsistency.next(isConsistent);
+            this.athleteSettingsConsistency$.next(isConsistent);
             this.logger.debug("Athlete settings consistent: " + isConsistent);
-        }, error => this.athleteSettingsConsistency.error(error));
+        }, error => this.athleteSettingsConsistency$.error(error));
 
     }
 
@@ -153,23 +121,18 @@ export abstract class ActivityService {
     public verifyActivitiesWithSettingsLacking(): void {
         this.logger.debug("checking activities with settings lacks");
         this.hasActivitiesWithSettingsLacks().then(hasSettingsLack => {
-            this.activitiesWithSettingsLacks.next(hasSettingsLack);
+            this.activitiesWithSettingsLacks$.next(hasSettingsLack);
             this.logger.debug("Activities with settings lacks: " + hasSettingsLack);
-        }, error => this.activitiesWithSettingsLacks.error(error));
+        }, error => this.activitiesWithSettingsLacks$.error(error));
     }
 
     public hasActivitiesWithSettingsLacks(): Promise<boolean> {
-        return this.activityDao.fetch().then((syncedActivityModels: SyncedActivityModel[]) => { // TODO Improve using mango query
-            const hasSettingsLack = !!_.find<SyncedActivityModel>(syncedActivityModels, {settingsLack: true});
-            return Promise.resolve(hasSettingsLack);
-        });
+        return this.activityDao.hasActivitiesWithSettingsLacks();
     }
 
     public findActivitiesWithSettingsLacks(): Promise<SyncedActivityModel[]> {
-        return this.activityDao.fetch().then((syncedActivityModels: SyncedActivityModel[]) => { // TODO Improve using mango query
-            const filtered = _.filter<SyncedActivityModel>(syncedActivityModels, {settingsLack: true});
-            return Promise.resolve(filtered);
-        });
+        return this.activityDao.findActivitiesWithSettingsLacks();
     }
+
 }
 

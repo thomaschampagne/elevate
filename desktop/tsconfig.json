@@ -1,12 +1,13 @@
 {
     "compilerOptions": {
         "baseUrl": ".",
-        "target": "esnext",
+        "target": "es2015",
         "lib": [
-            "esnext",
+            "es2015",
             "dom"
         ],
         "moduleResolution": "Node",
+        "esModuleInterop": true,
         "resolveJsonModule": true,
         "allowJs": true,
         "paths": {

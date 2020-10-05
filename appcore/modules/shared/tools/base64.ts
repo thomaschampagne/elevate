@@ -2,13 +2,13 @@ export class Base64 {
 
     private static readonly characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
-    public static encode(string: string): string {
+    public static encode(input: string): string {
         let result = "";
         let i = 0;
         do {
-            let a = string.charCodeAt(i++);
-            let b = string.charCodeAt(i++);
-            let c = string.charCodeAt(i++);
+            let a = input.charCodeAt(i++);
+            let b = input.charCodeAt(i++);
+            let c = input.charCodeAt(i++);
 
             a = a ? a : 0;
             b = b ? b : 0;
@@ -31,21 +31,20 @@ export class Base64 {
 
             result += Base64.characters.charAt(b1) + Base64.characters.charAt(b2) + Base64.characters.charAt(b3) + Base64.characters.charAt(b4);
 
-        } while (i < string.length);
+        } while (i < input.length);
 
         return result;
     }
 
-    public static decode(string: string): string {
-        const characters = Base64.characters;
+    public static decode(input: string): string {
         let result = "";
 
         let i = 0;
         do {
-            const b1 = Base64.characters.indexOf(string.charAt(i++));
-            const b2 = Base64.characters.indexOf(string.charAt(i++));
-            const b3 = Base64.characters.indexOf(string.charAt(i++));
-            const b4 = Base64.characters.indexOf(string.charAt(i++));
+            const b1 = Base64.characters.indexOf(input.charAt(i++));
+            const b2 = Base64.characters.indexOf(input.charAt(i++));
+            const b3 = Base64.characters.indexOf(input.charAt(i++));
+            const b4 = Base64.characters.indexOf(input.charAt(i++));
 
             // tslint:disable-next-line:no-bitwise
             const a = ((b1 & 0x3F) << 2) | ((b2 >> 4) & 0x3);
@@ -56,7 +55,7 @@ export class Base64 {
 
             result += String.fromCharCode(a) + (b ? String.fromCharCode(b) : "") + (c ? String.fromCharCode(c) : "");
 
-        } while (i < string.length);
+        } while (i < input.length);
 
         return result;
     }

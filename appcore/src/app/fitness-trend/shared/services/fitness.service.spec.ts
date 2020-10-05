@@ -15,6 +15,8 @@ import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
 import { FitnessTrendModule } from "../../fitness-trend.module";
 import { ElevateSport } from "@elevate/shared/enums";
+import { DataStore } from "../../../shared/data-store/data-store";
+import { TestingDataStore } from "../../../shared/data-store/testing-datastore.service";
 
 describe("FitnessService", () => {
 
@@ -38,6 +40,9 @@ describe("FitnessService", () => {
                 CoreModule,
                 SharedModule,
                 FitnessTrendModule
+            ],
+            providers: [
+                {provide: DataStore, useClass: TestingDataStore}
             ]
         });
 
@@ -122,7 +127,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -145,7 +150,7 @@ describe("FitnessService", () => {
                 expect(powerScoredActivities.length).toEqual(expectedPowerScoredActivitiesLength);
                 expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 done();
 
@@ -194,7 +199,7 @@ describe("FitnessService", () => {
                 190,
                 true));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -215,7 +220,7 @@ describe("FitnessService", () => {
                 expect(powerScoredActivities.length).toEqual(expectedPowerScoredActivitiesLength);
                 expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 done();
 
@@ -325,7 +330,7 @@ describe("FitnessService", () => {
                 false,
                 300));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -348,7 +353,7 @@ describe("FitnessService", () => {
                 expect(runningScoredActivities.length).toEqual(expectedRunningScoredActivitiesLength);
                 expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 done();
 
@@ -448,7 +453,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -471,7 +476,7 @@ describe("FitnessService", () => {
                 expect(runningScoredActivities.length).toEqual(expectedRunningScoredActivitiesLength);
                 expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 done();
 
@@ -572,7 +577,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -595,7 +600,7 @@ describe("FitnessService", () => {
                 expect(runningScoredActivities.length).toEqual(expectedRunningScoredActivitiesLength);
                 expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 done();
 
@@ -696,7 +701,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -719,7 +724,7 @@ describe("FitnessService", () => {
                 expect(runningScoredActivities.length).toEqual(expectedRunningScoredActivitiesLength);
                 expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 done();
 
@@ -821,7 +826,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -844,7 +849,7 @@ describe("FitnessService", () => {
                 expect(runningScoredActivities.length).toEqual(expectedRunningScoredActivitiesLength);
                 expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 done();
 
@@ -909,7 +914,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -932,7 +937,7 @@ describe("FitnessService", () => {
                 expect(runningScoredActivities.length).toEqual(expectedRunningScoredActivitiesLength);
                 expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 done();
 
@@ -978,7 +983,7 @@ describe("FitnessService", () => {
                 190,
                 true));
 
-            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+            spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
             const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessTrendConfigModel,
@@ -1033,7 +1038,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            spyOn(activityService.activityDao, "fetch")
+            spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -1111,7 +1116,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+            spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
             const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessTrendConfigModel, powerMeterEnable,
@@ -1198,7 +1203,7 @@ describe("FitnessService", () => {
                 150,
                 false));
 
-            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+            spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
             const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessTrendConfigModel,
@@ -1314,7 +1319,7 @@ describe("FitnessService", () => {
                 150,
                 false));
 
-            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+            spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
             const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessTrendConfigModel,
@@ -1400,7 +1405,7 @@ describe("FitnessService", () => {
                 190,
                 true));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -1421,7 +1426,7 @@ describe("FitnessService", () => {
                 expect(powerScoredActivities.length).toEqual(expectedPowerScoredActivitiesLength);
                 expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 done();
 
@@ -1447,7 +1452,7 @@ describe("FitnessService", () => {
             const syncedActivityModels: SyncedActivityModel[] = [];
 
             // Add activity: SuperPoweredRide not having cyclingFtp on his athleteSnapshot
-            const syncedActivityModel_1 = FakeSyncedActivityHelper.create(1,
+            const syncedActivityModel01 = FakeSyncedActivityHelper.create(1,
                 _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
                 "SuperPoweredRide 01",
                 ElevateSport.Ride,
@@ -1455,8 +1460,8 @@ describe("FitnessService", () => {
                 null,
                 250,
                 true);
-            syncedActivityModel_1.athleteSnapshot.athleteSettings.cyclingFtp = null;
-            syncedActivityModels.push(syncedActivityModel_1);
+            syncedActivityModel01.athleteSnapshot.athleteSettings.cyclingFtp = null;
+            syncedActivityModels.push(syncedActivityModel01);
 
             // Add activity
             syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
@@ -1489,7 +1494,7 @@ describe("FitnessService", () => {
                 false));
 
             // Add activity: Swimming 02 not having swimFtp on his athleteSnapshot
-            const syncedActivityModel_5 = FakeSyncedActivityHelper.create(5,
+            const syncedActivityModel05 = FakeSyncedActivityHelper.create(5,
                 _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
                 "Swimming 02", // SSS Scored
                 ElevateSport.Swim,
@@ -1497,8 +1502,8 @@ describe("FitnessService", () => {
                 null,
                 null,
                 false);
-            syncedActivityModel_5.athleteSnapshot.athleteSettings.swimFtp = null;
-            syncedActivityModels.push(syncedActivityModel_5);
+            syncedActivityModel05.athleteSnapshot.athleteSettings.swimFtp = null;
+            syncedActivityModels.push(syncedActivityModel05);
 
             // Add activity:
             syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
@@ -1522,7 +1527,7 @@ describe("FitnessService", () => {
                 300)); // => RSS: 100 (priority)
 
             // Add activity (w/ Est Stress Score): No sensor Run 2 not having runningFtp on his athleteSnapshot
-            const syncedActivityModel_8 = FakeSyncedActivityHelper.create(8,
+            const syncedActivityModel08 = FakeSyncedActivityHelper.create(8,
                 _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
                 "No sensor Run 2", // Est RSS scored
                 ElevateSport.Run,
@@ -1531,8 +1536,8 @@ describe("FitnessService", () => {
                 null,
                 false,
                 300); // => RSS: 100 (priority)
-            syncedActivityModel_8.athleteSnapshot.athleteSettings.runningFtp = null;
-            syncedActivityModels.push(syncedActivityModel_8);
+            syncedActivityModel08.athleteSnapshot.athleteSettings.runningFtp = null;
+            syncedActivityModels.push(syncedActivityModel08);
 
             // Add activity (w/ Est Stress Score)
             syncedActivityModels.push(FakeSyncedActivityHelper.create(9,
@@ -1545,7 +1550,7 @@ describe("FitnessService", () => {
                 false));
 
             // Add activity (w/ Est Stress Score): SuperPoweredRide Est 02 not having runningFtp on his athleteSnapshot
-            const syncedActivityModel_10 = FakeSyncedActivityHelper.create(10,
+            const syncedActivityModel010 = FakeSyncedActivityHelper.create(10,
                 _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
                 "SuperPoweredRide Est 02", // Est PSS scored
                 ElevateSport.Ride,
@@ -1553,10 +1558,10 @@ describe("FitnessService", () => {
                 null,
                 250,
                 false);
-            syncedActivityModel_10.athleteSnapshot.athleteSettings.cyclingFtp = null;
-            syncedActivityModels.push(syncedActivityModel_10);
+            syncedActivityModel010.athleteSnapshot.athleteSettings.cyclingFtp = null;
+            syncedActivityModels.push(syncedActivityModel010);
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -1579,7 +1584,7 @@ describe("FitnessService", () => {
                 expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
                 expect(runningStressScored.length).toEqual(expectedRunningStressScoredActivitiesLength);
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 done();
 
@@ -1605,7 +1610,7 @@ describe("FitnessService", () => {
             const syncedActivityModels: SyncedActivityModel[] = [];
 
             // Add activity: SuperPoweredRide not having cyclingFtp on his athleteSnapshot
-            const syncedActivityModel_1 = FakeSyncedActivityHelper.create(1,
+            const syncedActivityModel01 = FakeSyncedActivityHelper.create(1,
                 _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
                 "SuperPoweredRide 01",
                 ElevateSport.Ride,
@@ -1613,8 +1618,8 @@ describe("FitnessService", () => {
                 null,
                 250,
                 true);
-            syncedActivityModel_1.athleteSnapshot.athleteSettings.cyclingFtp = null;
-            syncedActivityModels.push(syncedActivityModel_1);
+            syncedActivityModel01.athleteSnapshot.athleteSettings.cyclingFtp = null;
+            syncedActivityModels.push(syncedActivityModel01);
 
             // Add activity
             syncedActivityModels.push(FakeSyncedActivityHelper.create(2,
@@ -1647,7 +1652,7 @@ describe("FitnessService", () => {
                 false));
 
             // Add activity: Swimming 02 not having swimFtp on his athleteSnapshot
-            const syncedActivityModel_5 = FakeSyncedActivityHelper.create(5,
+            const syncedActivityModel05 = FakeSyncedActivityHelper.create(5,
                 _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
                 "Swimming 02", // SSS Scored
                 ElevateSport.Swim,
@@ -1655,8 +1660,8 @@ describe("FitnessService", () => {
                 null,
                 null,
                 false);
-            syncedActivityModel_5.athleteSnapshot.athleteSettings.swimFtp = null;
-            syncedActivityModels.push(syncedActivityModel_5);
+            syncedActivityModel05.athleteSnapshot.athleteSettings.swimFtp = null;
+            syncedActivityModels.push(syncedActivityModel05);
 
             // Add activity:
             syncedActivityModels.push(FakeSyncedActivityHelper.create(6,
@@ -1680,7 +1685,7 @@ describe("FitnessService", () => {
                 300)); // => RSS: 100 (priority)
 
             // Add activity (w/ Est Stress Score): No sensor Run 2 not having runningFtp on his athleteSnapshot
-            const syncedActivityModel_8 = FakeSyncedActivityHelper.create(8,
+            const syncedActivityModel08 = FakeSyncedActivityHelper.create(8,
                 _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
                 "No sensor Run 2", // Est RSS scored
                 ElevateSport.Run,
@@ -1689,8 +1694,8 @@ describe("FitnessService", () => {
                 null,
                 false,
                 300); // => RSS: 100 (priority)
-            syncedActivityModel_8.athleteSnapshot.athleteSettings.runningFtp = null;
-            syncedActivityModels.push(syncedActivityModel_8);
+            syncedActivityModel08.athleteSnapshot.athleteSettings.runningFtp = null;
+            syncedActivityModels.push(syncedActivityModel08);
 
             // Add activity (w/ Est Stress Score)
             syncedActivityModels.push(FakeSyncedActivityHelper.create(9,
@@ -1703,7 +1708,7 @@ describe("FitnessService", () => {
                 false));
 
             // Add activity (w/ Est Stress Score): SuperPoweredRide Est 02 not having runningFtp on his athleteSnapshot
-            const syncedActivityModel_10 = FakeSyncedActivityHelper.create(10,
+            const syncedActivityModel10 = FakeSyncedActivityHelper.create(10,
                 _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
                 "SuperPoweredRide Est 02",
                 ElevateSport.Ride,
@@ -1711,10 +1716,10 @@ describe("FitnessService", () => {
                 null,
                 250,
                 false);
-            syncedActivityModel_10.athleteSnapshot.athleteSettings.cyclingFtp = null;
-            syncedActivityModels.push(syncedActivityModel_10);
+            syncedActivityModel10.athleteSnapshot.athleteSettings.cyclingFtp = null;
+            syncedActivityModels.push(syncedActivityModel10);
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -1737,7 +1742,7 @@ describe("FitnessService", () => {
                 expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
                 expect(runningStressScored.length).toEqual(expectedRunningStressScoredActivitiesLength);
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 done();
 
@@ -1799,7 +1804,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -1820,7 +1825,7 @@ describe("FitnessService", () => {
                 expect(powerScoredActivities.length).toEqual(expectedPowerScoredActivitiesLength);
                 expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 done();
 
@@ -1880,7 +1885,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -1905,7 +1910,7 @@ describe("FitnessService", () => {
                 expect(_.first(heartRateStressScoredActivities).powerStressScore).not.toBeNull();
 
                 expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
                 done();
 
             }, error => {
@@ -1977,7 +1982,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -1987,7 +1992,7 @@ describe("FitnessService", () => {
             // Then
             promise.then((result: FitnessPreparedActivityModel[]) => {
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
                 expect(result).not.toBeNull();
                 expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
 
@@ -2065,7 +2070,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -2075,7 +2080,7 @@ describe("FitnessService", () => {
             // Then
             promise.then((result: FitnessPreparedActivityModel[]) => {
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
                 expect(result).not.toBeNull();
                 expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
 
@@ -2165,7 +2170,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -2175,7 +2180,7 @@ describe("FitnessService", () => {
             // Then
             promise.then((result: FitnessPreparedActivityModel[]) => {
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
                 expect(result).not.toBeNull();
                 expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
 
@@ -2206,7 +2211,7 @@ describe("FitnessService", () => {
             swimEnable = false;
 
             const emptyModels: SyncedActivityModel[] = [];
-            spyOn(activityService.activityDao, "fetch")
+            spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(emptyModels));
 
             // When
@@ -2252,7 +2257,7 @@ describe("FitnessService", () => {
             activityModel.athleteSnapshot = undefined;
             syncedActivityModels.push(activityModel);
 
-            spyOn(activityService.activityDao, "fetch")
+            spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -2314,7 +2319,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+            spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
             const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(fitnessTrendConfigModel,
@@ -2519,7 +2524,7 @@ describe("FitnessService", () => {
             swimActivity.distance_raw = 3000; // SSS => 419 (priority)
             syncedActivityModels.push(swimActivity);
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -2529,7 +2534,7 @@ describe("FitnessService", () => {
             // Then
             promise.then((dailyActivity: DayStressModel[]) => {
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
                 expect(dailyActivity).not.toBeNull();
 
                 // Test real & preview days
@@ -2671,7 +2676,7 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
+            spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
 
             const promise: Promise<DayStressModel[]> = fitnessService.generateDailyStress(fitnessTrendConfigModel,
                 powerMeterEnable, swimEnable);
@@ -2802,7 +2807,7 @@ describe("FitnessService", () => {
                 false,
                 300));
 
-            const swimActivity_1 = FakeSyncedActivityHelper.create(8,
+            const swimActivity1 = FakeSyncedActivityHelper.create(8,
                 _ATHLETE_MODEL_SNAPSHOT_,
                 "Swimming", // SSS Scored
                 ElevateSport.Swim,
@@ -2810,8 +2815,8 @@ describe("FitnessService", () => {
                 null,
                 null,
                 false);
-            swimActivity_1.distance_raw = 3000; // SSS => 419 (priority)
-            syncedActivityModels.push(swimActivity_1);
+            swimActivity1.distance_raw = 3000; // SSS => 419 (priority)
+            syncedActivityModels.push(swimActivity1);
 
             // ... Grouped activities 2018-02-12; Final SS => 380
             syncedActivityModels.push(FakeSyncedActivityHelper.create(9,
@@ -2883,7 +2888,7 @@ describe("FitnessService", () => {
                 false,
                 300));  // => RSS: 300
 
-            const swimActivity_2 = FakeSyncedActivityHelper.create(16,
+            const swimActivity2 = FakeSyncedActivityHelper.create(16,
                 _ATHLETE_MODEL_SNAPSHOT_,
                 "Swimming", // SSS Scored
                 ElevateSport.Swim,
@@ -2891,10 +2896,10 @@ describe("FitnessService", () => {
                 null,
                 null,
                 false);
-            swimActivity_2.distance_raw = 3000; // SSS => 419 (priority)
-            syncedActivityModels.push(swimActivity_2);
+            swimActivity2.distance_raw = 3000; // SSS => 419 (priority)
+            syncedActivityModels.push(swimActivity2);
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             // When
@@ -2907,7 +2912,7 @@ describe("FitnessService", () => {
                 expect(fitnessTrend).not.toBeNull();
 
                 expect(fitnessTrend.length).toEqual(expectedLength);
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 let dayTrend: DayFitnessTrendModel;
 
@@ -2977,9 +2982,8 @@ describe("FitnessService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
-
 
             // When
             fitnessTrendConfigModel.initializedFitnessTrendModel = {
@@ -2994,7 +2998,7 @@ describe("FitnessService", () => {
             promise.then((fitnessTrend: DayFitnessTrendModel[]) => {
 
                 expect(fitnessTrend).not.toBeNull();
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 const firstDay = _.first(fitnessTrend);
                 expect(firstDay.ctl).toEqual(fitnessTrendConfigModel.initializedFitnessTrendModel.ctl);

@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import { Component, ComponentFactoryResolver, ElementRef, HostListener, Inject, OnDestroy, OnInit, Renderer2, Type, ViewChild, ViewContainerRef } from "@angular/core";
-import { GuardsCheckEnd, NavigationEnd, Router, RouterEvent } from "@angular/router";
+import { Component, ComponentFactoryResolver, HostListener, Inject, OnDestroy, OnInit, Renderer2, Type, ViewChild, ViewContainerRef } from "@angular/core";
+import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { MatIconRegistry } from "@angular/material/icon";
 import { MatSidenav } from "@angular/material/sidenav";
@@ -34,7 +34,6 @@ import { RefreshStatsBarDirective } from "./refresh-stats-bar/refresh-stats-bar.
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-    public static readonly DISPLAY_INIT_SPLASH_SCREEN_MILLIS: number = 500;
     public static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
     public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
     public static readonly LS_USER_THEME_PREF: string = "theme";
@@ -43,13 +42,8 @@ export class AppComponent implements OnInit, OnDestroy {
     public Theme = Theme;
     public currentTheme: Theme;
     public mainMenuItems: MenuItemModel[];
-    public isAppUseAllowed;
-    public isAppInitialized;
     public toolBarTitle: string;
     public routerEventsSubscription: Subscription;
-
-    @ViewChild("appContainer", {static: true})
-    public appContainer: ElementRef;
 
     @ViewChild(TopBarDirective, {static: true})
     public topBarDirective: TopBarDirective;
@@ -86,8 +80,6 @@ export class AppComponent implements OnInit, OnDestroy {
                 @Inject(REFRESH_STATS_BAR_COMPONENT) public refreshStatsBarComponentType: Type<RefreshStatsBarComponent>,
                 @Inject(SYNC_MENU_COMPONENT) public syncMenuComponentType: Type<SyncMenuComponent>,
                 @Inject(APP_MORE_MENU_COMPONENT) public appMoreMenuComponentType: Type<AppMoreMenuComponent>) {
-        this.isAppUseAllowed = false;
-        this.isAppInitialized = false;
         this.registerCustomIcons();
     }
 
@@ -111,26 +103,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
 
+        this.toolBarTitle = AppComponent.convertRouteToTitle(this.router.url);
+
         this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
-
-            if (routerEvent instanceof GuardsCheckEnd) {
-                if (routerEvent.shouldActivate && !this.isAppInitialized) { // Then init app
-                    setTimeout(() => {
-                        this.isAppUseAllowed = routerEvent.shouldActivate;
-                        this.initApp();
-                    }, AppComponent.DISPLAY_INIT_SPLASH_SCREEN_MILLIS);
-                }
-
-                if (!routerEvent.shouldActivate) {
-                    this.appContainer.nativeElement.remove();
-                }
-            }
-
             if (routerEvent instanceof NavigationEnd) {
                 const route: string = (<NavigationEnd> routerEvent).urlAfterRedirects;
                 this.toolBarTitle = AppComponent.convertRouteToTitle(route);
             }
         });
+
+        this.initApp();
     }
 
     public initApp(): void {
@@ -151,8 +133,6 @@ export class AppComponent implements OnInit, OnDestroy {
         });
 
         this.sideNavSetup();
-
-        this.isAppInitialized = true;
 
         this.logger.info("App initialized.");
     }

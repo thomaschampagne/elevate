@@ -3,13 +3,13 @@ import { HttpClient } from "@angular/common/http";
 import { PackageManifest } from "@angular/cli/utilities/package-metadata";
 import { VersionsProvider } from "../versions-provider.interface";
 import _ from "lodash";
+import { PropertiesDao } from "../../../dao/properties/properties.dao";
 
 @Injectable()
 export class DesktopVersionsProvider implements VersionsProvider {
 
-    public static readonly DESKTOP_SAVED_VERSION_KEY: string = "DESKTOP_SAVED_VERSION";
-
-    constructor(public httpClient: HttpClient) {
+    constructor(public readonly httpClient: HttpClient,
+                public readonly propertiesDao: PropertiesDao) {
     }
 
     private static getGithubReleaseApiUrl(packageManifest: any) {
@@ -21,8 +21,17 @@ export class DesktopVersionsProvider implements VersionsProvider {
         return Promise.resolve(desktopPackageJson.version);
     }
 
-    public getSavedVersion(): Promise<string> {
-        return Promise.resolve(localStorage.getItem(DesktopVersionsProvider.DESKTOP_SAVED_VERSION_KEY));
+    public getExistingVersion(): Promise<string> {
+        return this.propertiesDao.findOne().then(properties => {
+            return Promise.resolve(properties.existingVersion);
+        });
+    }
+
+    public setExistingVersion(version: string): Promise<void> {
+        return this.propertiesDao.findOne().then(properties => {
+            properties.existingVersion = version;
+            return this.propertiesDao.update(properties, true);
+        }).then(() => Promise.resolve());
     }
 
     public getRemoteVersion(): Promise<string> {

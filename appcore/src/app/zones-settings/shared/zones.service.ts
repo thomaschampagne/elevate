@@ -15,7 +15,6 @@ export class ZonesService {
      * Subscription mechanism for a {ZoneComponent}.  When a whisper zone change occurs, then all zones receive
      * the same instruction. Instruction is targeted toward 1 zone using <IZoneChangeOrder.destinationId>.
      * That <ZonesComponent> has to follow change instruction
-     * @returns {Subject<ZoneChangeWhisperModel>}
      */
     public zoneChangeOrderUpdates: Subject<ZoneChangeOrderModel>;
     /**
@@ -33,10 +32,6 @@ export class ZonesService {
         this.stepUpdates = new Subject<number>();
     }
 
-    /**
-     *
-     * @returns {Promise<string>}
-     */
     public addLastZone(): Promise<string> {
 
         return new Promise((resolve: (message: string) => void,
@@ -70,10 +65,6 @@ export class ZonesService {
         });
     }
 
-    /**
-     *
-     * @returns {Promise<string>}
-     */
     public removeLastZone(): Promise<string> {
 
         return new Promise((resolve: (message: string) => void,
@@ -90,11 +81,6 @@ export class ZonesService {
         });
     }
 
-    /**
-     *
-     * @param {number} index
-     * @returns {Promise<string>}
-     */
     public removeZoneAtIndex(index: number): Promise<string> {
 
         return new Promise((resolve: (message: string) => void,
@@ -133,7 +119,6 @@ export class ZonesService {
     /**
      * Receive a <ZoneChangeWhisperModel> and notify all <ZonesComponents> of a zone change.
      * Instructions are received by all <ZonesComponents>. But only 1 ZonesComponent will apply instructions to himself
-     * @param {ZoneChangeWhisperModel} zoneChange
      */
     public whisperZoneChange(zoneChange: ZoneChangeWhisperModel): void {
 
@@ -198,10 +183,6 @@ export class ZonesService {
         this.zoneChangeOrderUpdates.next(instruction);
     }
 
-    /**
-     *
-     * @returns {string} Resolve(null) if OK. Reject(errorString) if KO.
-     */
     public isZonesCompliant(zones: ZoneModel[]): string {
 
         const NOT_COMPLIANT_ZONE = "Not compliant zones provided: pattern is not respected.";
@@ -241,11 +222,7 @@ export class ZonesService {
         return null;
     }
 
-    /**
-     *
-     * @returns {Promise<string>} Resolve(null) if OK. Reject(errorString) if KO.
-     */
-    public saveZones(): Promise<void> {
+    public updateZones(): Promise<void> {
 
         return new Promise((resolve: () => void,
                             reject: (error: string) => void) => {
@@ -253,7 +230,7 @@ export class ZonesService {
             const complianceError = this.isZonesCompliant(this.currentZones);
 
             if (_.isNull(complianceError)) {
-                this.userSettingsService.saveZones(
+                this.userSettingsService.updateZones(
                     this.zoneDefinition,
                     this.currentZones
                 ).then(() => {
@@ -270,10 +247,6 @@ export class ZonesService {
         });
     }
 
-    /**
-     *
-     * @returns {Promise<void>}
-     */
     public resetZonesToDefault(): Promise<void> {
 
         return new Promise((resolve: () => void,
@@ -281,7 +254,7 @@ export class ZonesService {
 
             this.currentZones = UserZonesModel.deserialize(_.clone(_.propertyOf(UserZonesModel.DEFAULT_MODEL)(this.zoneDefinition.value)));
 
-            this.saveZones().then(() => {
+            this.updateZones().then(() => {
 
                 resolve();
                 this.zonesUpdates.next(this.currentZones); // Notify ZonesSettingsComponent to tell him to reload his zones
@@ -296,11 +269,6 @@ export class ZonesService {
         });
     }
 
-    /**
-     *
-     * @param {string} jsonInput
-     * @returns {Promise<void>}
-     */
     public importZones(jsonInput: string): Promise<void> {
 
         return new Promise((resolve: () => void,
@@ -315,7 +283,7 @@ export class ZonesService {
             }
 
             // Valid JSON Here... Save & emit zones update
-            this.saveZones().then(() => {
+            this.updateZones().then(() => {
 
                 this.zonesUpdates.next(this.currentZones);
                 resolve();
@@ -329,7 +297,6 @@ export class ZonesService {
     /**
      * Receive step changes from <ZoneToolBar> and broadcast step change
      * to <ZoneComponents> which have subscribed to stepUpdates subject
-     * @param {number} step
      */
     public notifyStepChange(step: number): void {
         this.stepUpdates.next(step);

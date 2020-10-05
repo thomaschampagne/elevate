@@ -46,7 +46,7 @@ export class AthleteSettingsComponent implements OnInit {
     }
 
     public onGenderChanged(): void {
-        this.athleteService.saveProperty(AthleteSettingsComponent.SYNCED_ATHLETE_MODEL_SETTING_GENDER_KEY, this.athleteModel.gender)
+        this.athleteService.update(this.athleteModel)
             .then(() => this.onAthleteSettingsChanged());
     }
 

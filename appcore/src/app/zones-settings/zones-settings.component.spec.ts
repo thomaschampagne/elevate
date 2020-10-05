@@ -5,6 +5,8 @@ import { CoreModule } from "../core/core.module";
 import { SharedModule } from "../shared/shared.module";
 import * as _ from "lodash";
 import { UserSettings } from "@elevate/shared/models";
+import { DataStore } from "../shared/data-store/data-store";
+import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZonesSettingsComponent", () => {
@@ -17,6 +19,9 @@ describe("ZonesSettingsComponent", () => {
             imports: [
                 CoreModule,
                 SharedModule,
+            ],
+            providers: [
+                {provide: DataStore, useClass: TestingDataStore}
             ]
         }).compileComponents();
 

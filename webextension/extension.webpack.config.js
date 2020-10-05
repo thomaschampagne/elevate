@@ -48,12 +48,14 @@ module.exports = (env, argv) => {
             ]
         },
         plugins: [
-            new copy([
-                {
-                    from: "./icons",
-                    to: "icons"
-                }
-            ])
+            new copy({
+                patterns: [
+                    {
+                        from: "./icons",
+                        to: "icons"
+                    }
+                ]
+            })
         ],
         performance: {
             hints: (argv.mode === "production") ? false : "warning"

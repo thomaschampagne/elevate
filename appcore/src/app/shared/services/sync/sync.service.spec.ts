@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-import { SyncDateTimeDao } from "../../dao/sync/sync-date-time-dao.service";
+import { SyncDateTimeDao } from "../../dao/sync/sync-date-time.dao";
 import { AthleteModel } from "@elevate/shared/models";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
@@ -8,6 +8,8 @@ import { VERSIONS_PROVIDER } from "../versions/versions-provider.interface";
 import { MockedVersionsProvider } from "../versions/impl/mock/mocked-versions-provider";
 import { SyncService } from "./sync.service";
 import { MockSyncService } from "./impl/mock/mock-sync.service";
+import { DataStore } from "../../data-store/data-store";
+import { TestingDataStore } from "../../data-store/testing-datastore.service";
 
 describe("SyncService", () => {
 
@@ -26,7 +28,8 @@ describe("SyncService", () => {
             ],
             providers: [
                 {provide: SyncService, useClass: MockSyncService},
-                {provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider}
+                {provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider},
+                {provide: DataStore, useClass: TestingDataStore}
             ]
         });
 

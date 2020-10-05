@@ -10,6 +10,8 @@ import { YearProgressService } from "../shared/services/year-progress.service";
 import { YearToDateProgressPresetModel } from "../shared/models/year-to-date-progress-preset.model";
 import { ProgressType } from "../shared/enums/progress-type.enum";
 import { ElevateSport } from "@elevate/shared/enums";
+import { DataStore } from "../../shared/data-store/data-store";
+import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 
 describe("ManageYearProgressPresetsDialogComponent", () => {
 
@@ -40,6 +42,9 @@ describe("ManageYearProgressPresetsDialogComponent", () => {
                 {
                     provide: MatDialogRef, useValue: {},
                 },
+                {
+                    provide: DataStore, useClass: TestingDataStore
+                }
             ]
         }).compileComponents();
 

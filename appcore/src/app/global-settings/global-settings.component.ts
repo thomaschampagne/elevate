@@ -13,6 +13,7 @@ import { Subscription } from "rxjs";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { environment } from "../../environments/environment";
 import { UserSettings } from "@elevate/shared/models";
+import { ElevateException } from "@elevate/shared/exceptions";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Component({
@@ -105,11 +106,13 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 
     public onOptionChange(option: OptionModel): void {
 
+        let optionKey;
+        let optionValue;
+
         if (option.type === GlobalSettingsService.TYPE_OPTION_CHECKBOX) {
 
-            this.userSettingsService.saveProperty(option.key, option.active).then(() => {
-                this.logger.info(option.key + " has been updated to ", option.active);
-            });
+            optionKey = option.key;
+            optionValue = option.active;
 
             // Enable/disable sub option if needed
             if (option.enableSubOption) {
@@ -120,9 +123,8 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
             }
         } else if (option.type === GlobalSettingsService.TYPE_OPTION_LIST) {
 
-            this.userSettingsService.saveProperty(option.key, option.active.key).then(() => {
-                this.logger.info(option.key + " has been updated to ", option.active);
-            });
+            optionKey = option.key;
+            optionValue = option.active.key;
 
         } else if (option.type === GlobalSettingsService.TYPE_OPTION_NUMBER) {
 
@@ -136,14 +138,17 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
                 if (option.value < option.min || option.value > option.max) {
                     this.resetOptionToDefaultValue(option);
                 }
-
-                this.userSettingsService.saveProperty(option.key, option.value).then(() => {
-                    this.logger.info(option.key + " has been updated to " + option.value);
-                });
             }
+
+            optionKey = option.key;
+            optionValue = option.value;
+
+        } else {
+            throw new ElevateException(`Unable to handle setting option change with value: ${JSON.stringify(option)}`);
         }
 
-
+        // Update user settings
+        this.userSettingsService.updateOption(optionKey, optionValue);
     }
 
     public resetOptionToDefaultValue(option: OptionModel): void {

@@ -11,7 +11,7 @@ export class ExtensionVersionsProvider implements VersionsProvider {
     }
 
     public getPackageVersion(): Promise<string> {
-        return Promise.resolve(chrome.runtime.getManifest().version);
+        return Promise.resolve(chrome.runtime.getManifest().version_name);
     }
 
     public getRemoteVersion(): Promise<string> {

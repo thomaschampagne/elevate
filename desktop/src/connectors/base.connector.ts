@@ -59,8 +59,8 @@ export abstract class BaseConnector {
         this.athleteModel = athleteModel;
         this.athleteSnapshotResolver = new AthleteSnapshotResolver(this.athleteModel);
         this.userSettingsModel = userSettingsModel;
-        this.syncDateTime = (connectorSyncDateTime && connectorSyncDateTime.dateTime >= 0)
-            ? Math.floor(connectorSyncDateTime.dateTime / 1000) : null; // Convert timestamp to seconds instead of millis
+        this.syncDateTime = (connectorSyncDateTime && connectorSyncDateTime.syncDateTime >= 0)
+            ? Math.floor(connectorSyncDateTime.syncDateTime / 1000) : null; // Convert timestamp to seconds instead of millis
         this.priority = priority;
         this.enabled = enabled;
         this.isSyncing = false;

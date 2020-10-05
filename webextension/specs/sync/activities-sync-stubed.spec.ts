@@ -204,13 +204,6 @@ describe("ActivitiesSynchronize", () => {
             return <any> defer.promise;
         });
 
-        spyOn(activitiesSynchronize, "getAllSavedLocal").and.callFake(() => {
-            const defer = Q.defer();
-            defer.resolve(CHROME_STORAGE_STUB);
-            return defer.promise;
-        });
-
-
     });
 
     it("should ensure ActivitiesSynchronize:getFirstPageRemoteActivities()", done => {
@@ -411,7 +404,7 @@ describe("ActivitiesSynchronize", () => {
             // Sync finished
             expect(activitiesSynchronize.getSyncedActivitiesFromLocal).toHaveBeenCalled(); // Ensure spy call
             expect(activitiesSynchronize.saveSyncedActivitiesToLocal).toHaveBeenCalled(); // Ensure spy call
-            expect(activitiesSynchronize.getSyncDateFromLocal).toHaveBeenCalledTimes(2); // Ensure spy call
+            expect(activitiesSynchronize.getSyncDateFromLocal).toHaveBeenCalledTimes(3); // Ensure spy call
             expect(activitiesSynchronize.saveSyncDateToLocal).toHaveBeenCalledTimes(1); // Ensure spy call
 
             expect(syncResult.syncedActivities).not.toBeNull();

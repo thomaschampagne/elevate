@@ -13,6 +13,8 @@ import { SyncedActivityModel } from "@elevate/shared/models";
 import { YearProgressModule } from "../year-progress.module";
 import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-progress-config.model";
 import { ElevateSport } from "@elevate/shared/enums";
+import { DataStore } from "../../shared/data-store/data-store";
+import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 
 describe("YearProgressGraphComponent", () => {
 
@@ -30,7 +32,10 @@ describe("YearProgressGraphComponent", () => {
                 SharedModule,
                 YearProgressModule
             ],
-            providers: [YearProgressService]
+            providers: [
+                YearProgressService,
+                {provide: DataStore, useClass: TestingDataStore}
+            ]
         }).compileComponents();
 
         yearProgressService = TestBed.inject(YearProgressService);

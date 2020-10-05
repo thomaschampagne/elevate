@@ -4,12 +4,12 @@ export class DesktopDumpModel extends DumpModel {
 
     private static readonly SERIALIZE_SEPARATOR: string = ";";
     public version: string;
-    public gzippedDatabases: string;
+    public gzipData: string;
 
     constructor(version: string = null, gzippedDatabases: string = null) {
         super();
         this.version = version;
-        this.gzippedDatabases = gzippedDatabases;
+        this.gzipData = gzippedDatabases;
     }
 
     public static deserialize(serialized: string): DesktopDumpModel {
@@ -18,6 +18,6 @@ export class DesktopDumpModel extends DumpModel {
     }
 
     public serialize(): string {
-        return this.version + DesktopDumpModel.SERIALIZE_SEPARATOR + this.gzippedDatabases;
+        return this.version + DesktopDumpModel.SERIALIZE_SEPARATOR + this.gzipData;
     }
 }

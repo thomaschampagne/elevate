@@ -8,6 +8,8 @@ import * as _ from "lodash";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { AthleteService } from "../../shared/services/athlete/athlete.service";
 import { AthleteModel, UserSettings } from "@elevate/shared/models";
+import { DataStore } from "../../shared/data-store/data-store";
+import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("AthleteSettingsComponent", () => {
@@ -23,6 +25,9 @@ describe("AthleteSettingsComponent", () => {
                 CoreModule,
                 SharedModule,
                 AthleteSettingsModule
+            ],
+            providers: [
+                {provide: DataStore, useClass: TestingDataStore}
             ]
         }).compileComponents();
 

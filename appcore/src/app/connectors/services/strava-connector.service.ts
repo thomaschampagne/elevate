@@ -1,5 +1,11 @@
 import { Injectable } from "@angular/core";
-import { ConnectorType, StravaAccount, StravaConnectorInfo, StravaCredentialsUpdateSyncEvent, SyncEventType } from "@elevate/shared/sync";
+import {
+    ConnectorType,
+    StravaAccount,
+    StravaConnectorInfo,
+    StravaCredentialsUpdateSyncEvent,
+    SyncEventType
+} from "@elevate/shared/sync";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
@@ -8,6 +14,7 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 import { filter } from "rxjs/operators";
 import { Gender } from "@elevate/shared/models";
 import { IpcMessagesSender } from "../../desktop/ipc-messages/ipc-messages-sender.service";
+import * as _ from "lodash";
 
 @Injectable()
 export class StravaConnectorService {
@@ -49,7 +56,7 @@ export class StravaConnectorService {
             this.stravaConnectorInfo.stravaAccount = new StravaAccount(result.athlete.id, result.athlete.username, result.athlete.firstname,
                 result.athlete.lastname, result.athlete.city, result.athlete.state, result.athlete.country,
                 result.athlete.sex === "M" ? Gender.MEN : Gender.WOMEN);
-            return this.stravaConnectorInfoService.save(this.stravaConnectorInfo);
+            return this.stravaConnectorInfoService.update(this.stravaConnectorInfo);
 
         }).then((stravaConnectorInfo: StravaConnectorInfo) => {
 
@@ -65,16 +72,20 @@ export class StravaConnectorService {
      */
     public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
 
-        const desktopSyncService = <DesktopSyncService> this.syncService;
+        const desktopSyncService = this.syncService as DesktopSyncService;
 
         // Subscribe to listen for StravaCredentialsUpdate (case where refresh token is performed)
         desktopSyncService.syncEvents$.pipe(
             filter(syncEvent => (syncEvent.type === SyncEventType.STRAVA_CREDENTIALS_UPDATE))
         ).subscribe((stravaCredentialsUpdateSyncEvent: StravaCredentialsUpdateSyncEvent) => {
-            this.stravaConnectorInfoService.save(stravaCredentialsUpdateSyncEvent.stravaConnectorInfo)
-                .then((stravaConnectorInfo: StravaConnectorInfo) => {
-                    this.stravaConnectorInfo$.next(stravaConnectorInfo);
-                });
+
+            this.stravaConnectorInfoService.fetch().then(stravaConnectorInfo => {
+                stravaConnectorInfo = _.assign(stravaConnectorInfo, stravaCredentialsUpdateSyncEvent.stravaConnectorInfo);
+                return this.stravaConnectorInfoService.update(stravaConnectorInfo);
+            }).then((stravaConnectorInfo: StravaConnectorInfo) => {
+                this.stravaConnectorInfo$.next(stravaConnectorInfo);
+            });
+
         });
 
         return desktopSyncService.sync(fastSync, forceSync, ConnectorType.STRAVA);

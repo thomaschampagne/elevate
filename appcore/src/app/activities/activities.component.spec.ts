@@ -11,6 +11,8 @@ import { ExtensionEventsService } from "../shared/services/external-updates/impl
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { UserSettings } from "@elevate/shared/models";
 import { SyncService } from "../shared/services/sync/sync.service";
+import { DataStore } from "../shared/data-store/data-store";
+import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ActivitiesComponent", () => {
@@ -28,6 +30,9 @@ describe("ActivitiesComponent", () => {
             imports: [
                 CoreModule,
                 SharedModule,
+            ],
+            providers: [
+                {provide: DataStore, useClass: TestingDataStore}
             ]
         }).compileComponents();
 
@@ -44,7 +49,7 @@ describe("ActivitiesComponent", () => {
         syncService = TestBed.inject(SyncService);
 
         // Mocking
-        spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
+        spyOn(activityService, "findSortStartDate").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
         spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL)));
 
         spyOn(syncService, "getSyncDateTime").and.returnValue(Promise.resolve(Date.now()));

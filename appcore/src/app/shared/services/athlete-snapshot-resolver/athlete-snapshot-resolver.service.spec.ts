@@ -5,6 +5,8 @@ import { SharedModule } from "../../shared.module";
 import { AthleteModel, AthleteSettingsModel, AthleteSnapshotModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
 import * as _ from "lodash";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
+import { DataStore } from "../../data-store/data-store";
+import { TestingDataStore } from "../../data-store/testing-datastore.service";
 
 describe("AthleteSnapshotResolverService", () => {
 
@@ -19,6 +21,9 @@ describe("AthleteSnapshotResolverService", () => {
             imports: [
                 CoreModule,
                 SharedModule
+            ],
+            providers: [
+                {provide: DataStore, useClass: TestingDataStore}
             ]
         });
 

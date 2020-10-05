@@ -9,10 +9,10 @@ export class WindowService {
 
     public static readonly SCREEN_MD: string = "md";
 
-    public resizing: Subject<void>;
+    public resizing$: Subject<void>;
 
     constructor(public media: MediaObserver) {
-        this.resizing = new Subject<void>();
+        this.resizing$ = new Subject<void>();
     }
 
     public isScreenMediaActive(query: string): boolean {
@@ -20,6 +20,6 @@ export class WindowService {
     }
 
     public onResize(): void {
-        this.resizing.next();
+        this.resizing$.next();
     }
 }

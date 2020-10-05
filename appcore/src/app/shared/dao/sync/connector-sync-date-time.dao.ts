@@ -1,21 +1,20 @@
 import { Injectable } from "@angular/core";
 import { BaseDao } from "../base.dao";
-import { StorageLocationModel } from "../../data-store/storage-location.model";
-import { StorageType } from "../../data-store/storage-type.enum";
+import { CollectionDef } from "../../data-store/collection-def";
 import { ConnectorSyncDateTime } from "@elevate/shared/models";
 
 @Injectable()
 export class ConnectorSyncDateTimeDao extends BaseDao<ConnectorSyncDateTime> {
 
-    public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("connectorSyncDateTime",
-        StorageType.COLLECTION, ConnectorSyncDateTime.ID_FIELD);
-    public static readonly DEFAULT_STORAGE_VALUE: ConnectorSyncDateTime[] = [];
+    public static readonly COLLECTION_DEF: CollectionDef<ConnectorSyncDateTime> = new CollectionDef("connectorSyncDateTime", {
+        unique: ["connectorType"]
+    });
 
     public getDefaultStorageValue(): ConnectorSyncDateTime[] {
-        return ConnectorSyncDateTimeDao.DEFAULT_STORAGE_VALUE;
+        return [];
     }
 
-    public getStorageLocation(): StorageLocationModel {
-        return ConnectorSyncDateTimeDao.STORAGE_LOCATION;
+    public getCollectionDef(): CollectionDef<ConnectorSyncDateTime> {
+        return ConnectorSyncDateTimeDao.COLLECTION_DEF;
     }
 }

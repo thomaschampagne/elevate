@@ -221,7 +221,7 @@ export class YearProgressComponent implements OnInit {
         this.initialize();
 
         // Listen for syncFinished update then reload year progressions if necessary.
-        this.appEventsService.onSyncDone.subscribe((changes: boolean) => {
+        this.appEventsService.syncDone$.subscribe((changes: boolean) => {
             if (changes) {
                 this.initialize();
             }
@@ -242,7 +242,7 @@ export class YearProgressComponent implements OnInit {
                 this.activityService.fetch()
             ]);
 
-        }).then((results: Object[]) => {
+        }).then((results: any[]) => {
 
             this.syncedActivityModels = _.last(results) as SyncedActivityModel[];
             this.hasActivityModels = !_.isEmpty(this.syncedActivityModels);
@@ -257,7 +257,7 @@ export class YearProgressComponent implements OnInit {
             this.momentWatched = this.yearProgressService.momentWatched;
 
             // When user mouse moves on graph, listen for moment watched and update title
-            this.yearProgressService.momentWatchedChanges.subscribe((momentWatched: Moment) => {
+            this.yearProgressService.momentWatchedChanges$.subscribe((momentWatched: Moment) => {
                 this.momentWatched = momentWatched;
             });
 

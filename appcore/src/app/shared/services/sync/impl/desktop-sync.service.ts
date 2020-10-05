@@ -14,8 +14,6 @@ import { ActivityService } from "../../activity/activity.service";
 import { ElevateException, SyncException } from "@elevate/shared/exceptions";
 import * as _ from "lodash";
 import { SyncState } from "../sync-state.enum";
-import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.service";
-import { DataStore } from "../../../data-store/data-store";
 import * as moment from "moment";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync";
 import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-time.dao";
@@ -24,9 +22,11 @@ import { AppEventsService } from "../../external-updates/app-events-service";
 import { StreamsService } from "../../streams/streams.service";
 import { FileSystemConnectorInfoService } from "../../file-system-connector-info/file-system-connector-info.service";
 import { IpcMessagesSender } from "../../../../desktop/ipc-messages/ipc-messages-sender.service";
+import { DataStore } from "../../../data-store/data-store";
+import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.service";
+import { ElectronService } from "../../electron/electron.service";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
-// TODO Add sync gen session id as string baseConnector. Goal: more easy to debug sync session with start/stop actions?
 // TODO Handle errors cases (continue or not the sync...)
 // TODO Sync ribbon displayed on startup? Allow user to see the sync log view
 /* TODO Handle connector priority?! Consider not syncing all connector
@@ -43,13 +43,14 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     /**
      * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
      */
-    public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "7.0.0-alpha.6";
+    public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "7.0.0-6.alpha";
     public syncEvents$: Subject<SyncEvent>;
     public syncSubscription: Subscription;
     public currentConnectorType: ConnectorType;
     public activityUpsertDetected: boolean;
 
     constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
+                @Inject(DataStore) public desktopDataStore: DesktopDataStore<object>,
                 public activityService: ActivityService,
                 public streamsService: StreamsService,
                 public athleteService: AthleteService,
@@ -61,8 +62,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
                 public logger: LoggerService,
                 public connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
                 public appEventsService: AppEventsService,
-                @Inject(DataStore) public desktopDataStore: DesktopDataStore<void> /* Injected to create PouchDB dumps & load them */) {
-        super(versionsProvider, activityService, streamsService, athleteService, userSettingsService, logger);
+                public electronService: ElectronService) {
+        super(versionsProvider, desktopDataStore, activityService, streamsService, athleteService, userSettingsService, logger);
         this.syncSubscription = null;
         this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync // TODO ReplaySubject to get old values?! I think no
         this.currentConnectorType = null;
@@ -255,14 +256,19 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         }).then((currentConnectorSyncDateTime: ConnectorSyncDateTime) => {
 
             if (currentConnectorSyncDateTime) {
-                currentConnectorSyncDateTime.dateTime = Date.now();
+                currentConnectorSyncDateTime.syncDateTime = Date.now();
             } else {
-                currentConnectorSyncDateTime = new ConnectorSyncDateTime(this.currentConnectorType);
+                currentConnectorSyncDateTime = new ConnectorSyncDateTime(this.currentConnectorType, Date.now());
             }
             return this.upsertConnectorsSyncDateTimes([currentConnectorSyncDateTime]);
         }).then(() => {
+
+            // Ensure all activities are well persisted before any reload
+            return this.desktopDataStore.saveDataStore();
+
+        }).then(() => {
             this.logger.info(completeSyncEvent);
-            (syncState && syncState === SyncState.SYNCED) ? this.appEventsService.onSyncDone.next(this.activityUpsertDetected) : this.reloadApp();
+            (syncState && syncState === SyncState.SYNCED) ? this.appEventsService.syncDone$.next(this.activityUpsertDetected) : this.restartApp();
             this.resetActivityTrackingUpsert();
             syncEvents$.next(completeSyncEvent); // Forward for upward UI use.
         });
@@ -361,9 +367,9 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     }
 
     public export(): Promise<{ filename: string; size: number }> {
-        return this.desktopDataStore.createDump().then(blob => {
-            return this.versionsProvider.getPackageVersion().then(appVersion => {
-                const gzippedFilename = moment().format("Y.MM.DD-H.mm") + "_v" + appVersion + ".elevate";
+        return this.versionsProvider.getPackageVersion().then(appVersion => {
+            return this.desktopDataStore.createDump(appVersion).then(blob => {
+                const gzippedFilename = moment().format("Y.MM.DD-H.mm") + "_v" + appVersion + ".elv";
                 this.saveAs(blob, gzippedFilename);
                 return Promise.resolve({filename: gzippedFilename, size: blob.size});
             });
@@ -417,7 +423,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     }
 
     public getSyncDateTimeByConnectorType(connectorType: ConnectorType): Promise<ConnectorSyncDateTime> {
-        return <Promise<ConnectorSyncDateTime>> this.connectorSyncDateTimeDao.getById(connectorType);
+        return this.connectorSyncDateTimeDao.getById(connectorType);
     }
 
     public getConnectorSyncDateTime(): Promise<ConnectorSyncDateTime[]> {
@@ -425,7 +431,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     }
 
     public getSyncDateTime(): Promise<ConnectorSyncDateTime[]> {
-        return <Promise<ConnectorSyncDateTime[]>> this.connectorSyncDateTimeDao.fetch();
+        return this.connectorSyncDateTimeDao.find();
     }
 
     public upsertConnectorsSyncDateTimes(connectorSyncDateTimes: ConnectorSyncDateTime[]): Promise<ConnectorSyncDateTime[]> {
@@ -440,16 +446,16 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         });
 
         return Promise.all(putPromises).then(() => {
-            return <Promise<ConnectorSyncDateTime[]>> this.connectorSyncDateTimeDao.fetch();
+            return this.connectorSyncDateTimeDao.find();
         });
     }
 
-    public saveSyncDateTime(connectorSyncDateTimes: ConnectorSyncDateTime[]): Promise<ConnectorSyncDateTime[]> {
+    public updateSyncDateTime(connectorSyncDateTimes: ConnectorSyncDateTime[]): Promise<ConnectorSyncDateTime[]> {
         throw new ElevateException("Please use upsertSyncDateTimes() method when using DesktopSyncService");
     }
 
     public clearSyncTime(): Promise<void> {
-        return this.connectorSyncDateTimeDao.clear();
+        return this.connectorSyncDateTimeDao.clear(true);
     }
 
     public trackActivityUpsert(): void {
@@ -460,8 +466,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         this.activityUpsertDetected = false;
     }
 
-    public reloadApp(): void {
-        window.location.reload();
+    public restartApp(): void {
+        this.electronService.restartApp();
     }
 
     public ngOnDestroy(): void {

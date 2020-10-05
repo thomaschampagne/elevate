@@ -32,8 +32,9 @@
                             "node_modules/metrics-graphics/dist/metricsgraphics.js"
                         ],
                         "allowedCommonJsDependencies": [
-                            "metrics-graphics",
+                            "lokijs",
                             "lodash",
+                            "metrics-graphics",
                             "markdown-it",
                             "@iktakahiro/markdown-it-katex",
                             "pako",

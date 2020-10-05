@@ -87,7 +87,6 @@ export class ZoneComponent implements OnInit, OnDestroy {
 
     /**
      * Whisper a ZoneChangeWhisperModel to <ZoneService>
-     * @param {ZoneChangeTypeModel} changeType
      */
     public whisperZoneChange(changeType: ZoneChangeTypeModel): void {
 
@@ -127,7 +126,6 @@ export class ZoneComponent implements OnInit, OnDestroy {
 
     /**
      * Avoid
-     * @param {KeyboardEvent} event
      */
     public onKeyDown(event: KeyboardEvent): void {
 

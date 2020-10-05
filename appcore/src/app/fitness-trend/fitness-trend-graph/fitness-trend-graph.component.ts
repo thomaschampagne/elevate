@@ -242,7 +242,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
     public setupComponentSizeChangeHandlers(): void {
 
-        this.windowResizingSubscription = this.windowService.resizing.subscribe(() => {
+        this.windowResizingSubscription = this.windowService.resizing$.subscribe(() => {
             this.findGraphHeightFactor();
             this.onComponentSizeChanged();
             // Reset stored fitness graph bounds. It will be updated again by 'onTooltipMouseMove(event: MouseEvent)'
@@ -250,7 +250,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
         });
 
         // Or user toggles the side nav (open/close states)
-        this.sideNavChangesSubscription = this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
+        this.sideNavChangesSubscription = this.sideNavService.changes$.subscribe(() => this.onComponentSizeChanged());
     }
 
     public findGraphHeightFactor(): void {

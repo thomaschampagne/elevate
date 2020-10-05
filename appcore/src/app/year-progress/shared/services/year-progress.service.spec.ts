@@ -16,13 +16,14 @@ import { YearProgressModule } from "../../year-progress.module";
 import { AppError } from "../../../shared/models/app-error.model";
 import { TargetProgressModel } from "../models/target-progress.model";
 import { DataStore } from "../../../shared/data-store/data-store";
-import { MockedDataStore } from "../../../shared/data-store/impl/mock/mocked-data-store.service";
 import { ProgressMode } from "../enums/progress-mode.enum";
 import { RollingProgressConfigModel } from "../models/rolling-progress-config.model";
 import { RollingProgressPresetModel } from "../models/rolling-progress-preset.model";
 import { YearToDateProgressConfigModel } from "../models/year-to-date-progress-config.model";
-import { Identifier } from "@elevate/shared/tools";
 import { ElevateSport } from "@elevate/shared/enums";
+import { TestingDataStore } from "../../../shared/data-store/testing-datastore.service";
+import { LoggerService } from "../../../shared/services/logging/logger.service";
+import { ConsoleLoggerService } from "../../../shared/services/logging/console-logger.service";
 import Spy = jasmine.Spy;
 
 describe("YearProgressService", () => {
@@ -43,14 +44,13 @@ describe("YearProgressService", () => {
 
     beforeEach(done => {
 
-        const mockedDataStore: MockedDataStore<YearToDateProgressPresetModel> = new MockedDataStore();
-
         TestBed.configureTestingModule({
             imports: [
                 YearProgressModule
             ],
             providers: [
-                {provide: DataStore, useValue: mockedDataStore}
+                {provide: DataStore, useClass: TestingDataStore},
+                {provide: LoggerService, useClass: ConsoleLoggerService}
             ]
         });
 
@@ -115,7 +115,7 @@ describe("YearProgressService", () => {
 
         // Given
         const expectedCallCount = 1;
-        const spy = spyOn(service.momentWatchedChanges, "next");
+        const spy = spyOn(service.momentWatchedChanges$, "next");
         const momentWatched: Moment = moment("2017-04-29 12:00", "YYYY-MM-DD hh:mm");
         service.momentWatched = null;
 
@@ -170,14 +170,14 @@ describe("YearProgressService", () => {
             const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 
             // Then
-            const yearProgressModel_2018 = yearProgressions[3];
-            expect(yearProgressModel_2018.mode).toEqual(ProgressMode.YEAR_TO_DATE);
+            const yearProgressModel2018 = yearProgressions[3];
+            expect(yearProgressModel2018.mode).toEqual(ProgressMode.YEAR_TO_DATE);
 
-            const pastDaysCount_2018 = _.filter(yearProgressModel_2018.progressions, {isFuture: false}).length;
-            expect(pastDaysCount_2018).toEqual(60);
+            const pastDaysCount2018 = _.filter(yearProgressModel2018.progressions, {isFuture: false}).length;
+            expect(pastDaysCount2018).toEqual(60);
 
-            const futureDaysCount_2018 = _.filter(yearProgressModel_2018.progressions, {isFuture: true}).length;
-            expect(futureDaysCount_2018).toEqual(305);
+            const futureDaysCount2018 = _.filter(yearProgressModel2018.progressions, {isFuture: true}).length;
+            expect(futureDaysCount2018).toEqual(305);
 
             done();
         });
@@ -1152,7 +1152,7 @@ describe("YearProgressService", () => {
                 new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false)
             ];
 
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "fetch")
+            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find")
                 .and.returnValue(Promise.resolve(expected));
 
             // When
@@ -1185,24 +1185,21 @@ describe("YearProgressService", () => {
                 new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
             ];
 
-            const expected = _.union(progressPresetModels, [modelToBeAdded]);
-
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "fetch")
+            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find")
                 .and.returnValue(Promise.resolve(progressPresetModels));
 
-            const saveDaoSpy = spyOn(service.yearProgressPresetDao, "save")
-                .and.returnValue(Promise.resolve(expected));
+            const insertDaoSpy = spyOn(service.yearProgressPresetDao, "insert")
+                .and.returnValue(Promise.resolve(modelToBeAdded));
 
             // When
-            const promise: Promise<YearToDateProgressPresetModel[]> = service.addPreset(modelToBeAdded);
+            const promise: Promise<YearToDateProgressPresetModel> = service.addPreset(modelToBeAdded);
 
             // Then
-            promise.then((list: YearToDateProgressPresetModel[]) => {
+            promise.then(() => {
 
-                expect(list).not.toBeNull();
-                expect(saveDaoSpy).toHaveBeenCalledTimes(1);
+                expect(insertDaoSpy).toHaveBeenCalledTimes(1);
+                expect(insertDaoSpy).toHaveBeenCalledWith(modelToBeAdded, true);
                 expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-                expect(list).toEqual(expected);
                 done();
 
             }, error => {
@@ -1222,23 +1219,21 @@ describe("YearProgressService", () => {
                 new RollingProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000, "Months", 1)
             ];
 
-            const expected = _.union(progressPresetModels, [modelToBeAdded]);
-
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "fetch")
+            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find")
                 .and.returnValue(Promise.resolve(progressPresetModels));
 
-            const saveDaoSpy = spyOn(service.yearProgressPresetDao, "save").and.callThrough();
+            const insertDaoSpy = spyOn(service.yearProgressPresetDao, "insert").and.callThrough();
 
             // When
-            const promise: Promise<YearToDateProgressPresetModel[]> = service.addPreset(modelToBeAdded);
+            const promise: Promise<YearToDateProgressPresetModel> = service.addPreset(modelToBeAdded);
 
             // Then
-            promise.then((list: YearToDateProgressPresetModel[]) => {
+            promise.then((presetModel: YearToDateProgressPresetModel) => {
 
-                expect(list).not.toBeNull();
-                expect(saveDaoSpy).toHaveBeenCalledTimes(1);
+                expect(presetModel).not.toBeNull();
+                expect(insertDaoSpy).toHaveBeenCalledTimes(1);
                 expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-                expect(list).toEqual(expected);
+                expect(presetModel).toEqual(modelToBeAdded);
                 done();
 
             }, error => {
@@ -1259,13 +1254,13 @@ describe("YearProgressService", () => {
 
             const expectedErrorMessage = "You already saved this preset.";
 
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "fetch")
+            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find")
                 .and.returnValue(Promise.resolve(progressPresetModels));
 
-            const saveDaoSpy = spyOn(service.yearProgressPresetDao, "save").and.callThrough();
+            const insertDaoSpy = spyOn(service.yearProgressPresetDao, "insert").and.callThrough();
 
             // When
-            const promise: Promise<YearToDateProgressPresetModel[]> = service.addPreset(modelToBeAdded);
+            const promise: Promise<YearToDateProgressPresetModel> = service.addPreset(modelToBeAdded);
 
             // Then
             promise.then(() => {
@@ -1276,7 +1271,7 @@ describe("YearProgressService", () => {
 
                 expect(error).not.toBeNull();
                 expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-                expect(saveDaoSpy).not.toHaveBeenCalled();
+                expect(insertDaoSpy).not.toHaveBeenCalled();
                 expect(error.code).toEqual(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS);
                 expect(error.message).toEqual(expectedErrorMessage);
 
@@ -1298,13 +1293,13 @@ describe("YearProgressService", () => {
 
             const expectedErrorMessage = "You already saved this preset.";
 
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "fetch")
+            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find")
                 .and.returnValue(Promise.resolve(progressPresetModels));
 
-            const saveDaoSpy = spyOn(service.yearProgressPresetDao, "save").and.callThrough();
+            const insertDaoSpy = spyOn(service.yearProgressPresetDao, "insert").and.callThrough();
 
             // When
-            const promise: Promise<YearToDateProgressPresetModel[]> = service.addPreset(modelToBeAdded);
+            const promise: Promise<YearToDateProgressPresetModel> = service.addPreset(modelToBeAdded);
 
             // Then
             promise.then(() => {
@@ -1315,7 +1310,7 @@ describe("YearProgressService", () => {
 
                 expect(error).not.toBeNull();
                 expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-                expect(saveDaoSpy).not.toHaveBeenCalled();
+                expect(insertDaoSpy).not.toHaveBeenCalled();
                 expect(error.code).toEqual(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS);
                 expect(error.message).toEqual(expectedErrorMessage);
 
@@ -1338,13 +1333,13 @@ describe("YearProgressService", () => {
 
             const expectedErrorMessage = "You already saved this preset.";
 
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "fetch")
+            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find")
                 .and.returnValue(Promise.resolve(progressPresetModels));
 
-            const saveDaoSpy = spyOn(service.yearProgressPresetDao, "save").and.callThrough();
+            const insertDaoSpy = spyOn(service.yearProgressPresetDao, "insert").and.callThrough();
 
             // When
-            const promise: Promise<YearToDateProgressPresetModel[]> = service.addPreset(modelToBeAdded);
+            const promise: Promise<YearToDateProgressPresetModel> = service.addPreset(modelToBeAdded);
 
             // Then
             promise.then(() => {
@@ -1355,7 +1350,7 @@ describe("YearProgressService", () => {
 
                 expect(error).not.toBeNull();
                 expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-                expect(saveDaoSpy).not.toHaveBeenCalled();
+                expect(insertDaoSpy).not.toHaveBeenCalled();
                 expect(error.code).toEqual(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS);
                 expect(error.message).toEqual(expectedErrorMessage);
 
@@ -1367,80 +1362,24 @@ describe("YearProgressService", () => {
         it("should delete preset", done => {
 
             // Given
-            const model_0 = new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false);
-            const model_1 = new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000);
-            const model_2 = new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false);
-            const progressPresetModels: YearToDateProgressPresetModel[] = [
-                model_0,
-                model_1,
-                model_2
-            ];
+            const model = new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false);
 
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "fetch")
-                .and.returnValue(Promise.resolve(progressPresetModels));
-
-            const saveDaoSpy = spyOn(service.yearProgressPresetDao, "save")
-                .and.returnValue(Promise.resolve([]));
-
-            const deleteId = model_1.id;
+            const removeByIdDaoSpy = spyOn(service.yearProgressPresetDao, "removeById")
+                .and.returnValue(Promise.resolve());
 
             // When
-            const promise: Promise<void> = service.deletePreset(deleteId);
+            const promise: Promise<void> = service.deletePreset(model.id);
 
             // Then
             promise.then(() => {
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-                expect(saveDaoSpy).toHaveBeenCalledWith([model_0, model_2]);
+                expect(removeByIdDaoSpy).toHaveBeenCalledWith(model.id);
                 done();
 
             }, error => {
                 expect(error).toBeNull();
                 done();
             });
-
         });
-
-        it("should reject delete preset", done => {
-
-            // Given
-            const model_0 = new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false);
-            const model_1 = new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000);
-            const model_2 = new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false);
-            const progressPresetModels: YearToDateProgressPresetModel[] = [
-                model_0,
-                model_1,
-                model_2
-            ];
-
-            const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "fetch")
-                .and.returnValue(Promise.resolve(progressPresetModels));
-
-            const saveDaoSpy = spyOn(service.yearProgressPresetDao, "save")
-                .and.returnValue(Promise.resolve(progressPresetModels));
-
-            const fakeId = Identifier.generate(); // Fake index
-
-            // When
-            const promise: Promise<void> = service.deletePreset(fakeId);
-
-            // Then
-            promise.then(() => {
-                expect(false).toBeTruthy("Whoops! I should not be here!");
-                done();
-
-            }, (error: AppError) => {
-
-                expect(error).not.toBeNull();
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-                expect(saveDaoSpy).not.toHaveBeenCalled();
-                expect(error.code).toEqual(AppError.YEAR_PROGRESS_PRESETS_DO_NOT_EXISTS);
-
-                done();
-            });
-
-        });
-
 
     });
-
 });

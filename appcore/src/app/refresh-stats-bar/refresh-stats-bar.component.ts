@@ -54,7 +54,7 @@ export class RefreshStatsBarComponent implements OnInit {
         this.handleAthleteSettingButton();
 
         // Listen for sync/recalculation performed
-        this.appEventsService.onSyncDone.subscribe((changes: boolean) => {
+        this.appEventsService.syncDone$.subscribe((changes: boolean) => {
             if (changes) {
                 sleep(RefreshStatsBarComponent.VERIFY_SETTINGS_LACKS_TIMEOUT * 1000 / 3).then(() => {
                     this.activityService.verifyActivitiesWithSettingsLacking();
@@ -63,38 +63,19 @@ export class RefreshStatsBarComponent implements OnInit {
         });
 
         // Display warning message on settings lacks updates
-        this.activityService.activitiesWithSettingsLacks.subscribe(settingsLacking => {
+        this.activityService.activitiesWithSettingsLacks$.subscribe(settingsLacking => {
             if (settingsLacking) {
                 this.showSettingsLacks();
             }
         });
 
         // Display warning message on athleteSettingsConsistency updates
-        this.activityService.athleteSettingsConsistency.subscribe((isConsistent: boolean) => {
+        this.activityService.athleteSettingsConsistency$.subscribe((isConsistent: boolean) => {
             if (!isConsistent) {
                 this.showConsistencyWarning();
             }
         });
 
-    }
-
-    private verifyHistoryCompliance(): void {
-
-        sleep(RefreshStatsBarComponent.VERIFY_SETTINGS_LACKS_TIMEOUT * 1000).then(() => {
-            this.activityService.verifyActivitiesWithSettingsLacking();
-        });
-
-        sleep(RefreshStatsBarComponent.VERIFY_ATHLETE_SETTINGS_CONSISTENCY_TIMEOUT * 1000).then(() => {
-            this.activityService.verifyConsistencyWithAthleteSettings();
-        });
-    }
-
-    private handleAthleteSettingButton(): void {
-        const athleteSettingsPath = "/" + AppRoutesModel.athleteSettings;
-        this.hideGoToAthleteSettingsButton = (this.router.url !== athleteSettingsPath);
-        this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: RouterEvent) => {
-            this.hideGoToAthleteSettingsButton = (event.url !== athleteSettingsPath);
-        });
     }
 
     public showSettingsLacks(): void {
@@ -143,6 +124,25 @@ export class RefreshStatsBarComponent implements OnInit {
     public onFixActivities(): void {
         this.onCloseSettingsConsistencyWarning();
         this.onCloseSettingsLacksWarning();
+    }
+
+    private verifyHistoryCompliance(): void {
+
+        sleep(RefreshStatsBarComponent.VERIFY_SETTINGS_LACKS_TIMEOUT * 1000).then(() => {
+            this.activityService.verifyActivitiesWithSettingsLacking();
+        });
+
+        sleep(RefreshStatsBarComponent.VERIFY_ATHLETE_SETTINGS_CONSISTENCY_TIMEOUT * 1000).then(() => {
+            this.activityService.verifyConsistencyWithAthleteSettings();
+        });
+    }
+
+    private handleAthleteSettingButton(): void {
+        const athleteSettingsPath = "/" + AppRoutesModel.athleteSettings;
+        this.hideGoToAthleteSettingsButton = (this.router.url !== athleteSettingsPath);
+        this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: RouterEvent) => {
+            this.hideGoToAthleteSettingsButton = (event.url !== athleteSettingsPath);
+        });
     }
 }
 
@@ -242,7 +242,7 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
 
                 if (notification.isLast) {
                     this.statusText = "Recalculation done. App is being refreshed...";
-                    this.appEventsService.onSyncDone.next(true);
+                    this.appEventsService.syncDone$.next(true);
                     setTimeout(() => {
                         this.closeRefreshStatsBar();
                     }, 2000);
@@ -368,7 +368,7 @@ export class ExtensionRefreshStatsBarComponent extends RefreshStatsBarComponent 
 
                 this.activityService.nonConsistentActivitiesWithAthleteSettings().then((result: number[]) => {
                     nonConsistentIds = result;
-                    return this.activityService.removeByIds(nonConsistentIds);
+                    return this.activityService.removeByManyIds(nonConsistentIds);
 
                 }).then(() => {
 

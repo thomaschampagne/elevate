@@ -318,10 +318,10 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
     public setupComponentSizeChangeHandlers(): void {
 
         // User resize window
-        this.windowResizingSubscription = this.windowService.resizing.subscribe(() => this.onComponentSizeChanged());
+        this.windowResizingSubscription = this.windowService.resizing$.subscribe(() => this.onComponentSizeChanged());
 
         // Or user toggles the side nav (open/close states)
-        this.sideNavChangesSubscription = this.sideNavService.changes.subscribe(() => this.onComponentSizeChanged());
+        this.sideNavChangesSubscription = this.sideNavService.changes$.subscribe(() => this.onComponentSizeChanged());
     }
 
     public setupGraphConfig(): void {

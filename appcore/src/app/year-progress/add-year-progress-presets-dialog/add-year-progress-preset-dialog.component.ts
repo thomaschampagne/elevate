@@ -43,7 +43,8 @@ export class AddYearProgressPresetDialogComponent implements OnInit {
                 (<AddRollingProgressPresetDialogData> this.dialogData).rollingPeriod, (<AddRollingProgressPresetDialogData> this.dialogData).periodMultiplier);
 
             this.progressPresetModel = new RollingProgressPresetModel(rollingPresetDialogData.yearProgressTypeModel.type, rollingPresetDialogData.activityTypes,
-                rollingPresetDialogData.includeCommuteRide, rollingPresetDialogData.includeIndoorRide, rollingPresetDialogData.targetValue, rollingPresetDialogData.rollingPeriod, rollingPresetDialogData.periodMultiplier);
+                rollingPresetDialogData.includeCommuteRide, rollingPresetDialogData.includeIndoorRide, rollingPresetDialogData.targetValue,
+                rollingPresetDialogData.rollingPeriod, rollingPresetDialogData.periodMultiplier);
         }
 
     }

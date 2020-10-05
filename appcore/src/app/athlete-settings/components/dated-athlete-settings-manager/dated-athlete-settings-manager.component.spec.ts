@@ -6,6 +6,8 @@ import { SharedModule } from "../../../shared/shared.module";
 import { AthleteSettingsModule } from "../../athlete-settings.module";
 import { AthleteService } from "../../../shared/services/athlete/athlete.service";
 import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel, Gender } from "@elevate/shared/models";
+import { DataStore } from "../../../shared/data-store/data-store";
+import { TestingDataStore } from "../../../shared/data-store/testing-datastore.service";
 
 describe("DatedAthleteSettingsManagerComponent", () => {
     let component: DatedAthleteSettingsManagerComponent;
@@ -17,6 +19,9 @@ describe("DatedAthleteSettingsManagerComponent", () => {
                 CoreModule,
                 SharedModule,
                 AthleteSettingsModule
+            ],
+            providers: [
+                {provide: DataStore, useClass: TestingDataStore}
             ]
         }).compileComponents();
 

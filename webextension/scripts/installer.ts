@@ -11,12 +11,13 @@ import {
 import { Helper } from "./helper";
 import * as semver from "semver";
 import * as _ from "lodash";
-import { BrowserStorage } from "./browser-storage";
+import { LegacyBrowserStorage } from "./legacy-browser-storage";
 import { Constant } from "@elevate/shared/constants";
 import { YearToDateProgressPresetModel } from "../../appcore/src/app/year-progress/shared/models/year-to-date-progress-preset.model";
 import { ProgressMode } from "../../appcore/src/app/year-progress/shared/enums/progress-mode.enum";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
-import { Identifier } from "@elevate/shared/tools";
+import { Identifier, Versioning } from "@elevate/shared/tools";
+import { Migration7x0x0x6 } from "./migrations/Migration7x0x0x6";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
@@ -32,15 +33,15 @@ class Installer {
                 this.handleInstall(); // Pop in tab application and plugin page
             } else if (details.reason === "update") {
 
-                this.currentVersion = chrome.runtime.getManifest().version;
-                this.previousVersion = details.previousVersion;
+                this.currentVersion = Versioning.chromeToSemverVersion(chrome.runtime.getManifest().version);
+                this.previousVersion = Versioning.chromeToSemverVersion(details.previousVersion);
 
                 this.handleUpdate().then(() => {
 
                     // Check and display sync & local storage after update
                     return Promise.all([
-                        BrowserStorage.getInstance().get(BrowserStorageType.SYNC),
-                        BrowserStorage.getInstance().get(BrowserStorageType.LOCAL)
+                        LegacyBrowserStorage.getInstance().get(BrowserStorageType.SYNC),
+                        LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL)
                     ]);
 
                 }).then((result: any[]) => {
@@ -76,7 +77,6 @@ class Installer {
 
     /**
      * Summary: Clear local history if coming from version under 5.1.1
-     * @returns {Promise<void>}
      */
     protected migrate_to_5_1_1(): Promise<void> {
 
@@ -87,9 +87,9 @@ class Installer {
 
             console.log("Migrate to 5.1.1");
 
-            promise = BrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "computedActivities")
+            promise = LegacyBrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "computedActivities")
                 .then(() => {
-                    return BrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "syncDateTime");
+                    return LegacyBrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "syncDateTime");
                 }).then(() => {
                     console.log("Local History cleared");
                     return Promise.resolve();
@@ -105,7 +105,6 @@ class Installer {
 
     /**
      * Summary: Move & convert userHrrZones to generic heartrate zones. Remove enableAlphaFitnessTrend
-     * @returns {Promise<void>}
      */
     protected migrate_to_5_11_0(): Promise<void> {
 
@@ -115,9 +114,9 @@ class Installer {
 
             console.log("Migrate to 5.11.0");
 
-            promise = BrowserStorage.getInstance().rm(BrowserStorageType.SYNC, ["enableAlphaFitnessTrend"]).then(() => {
+            promise = LegacyBrowserStorage.getInstance().rm(BrowserStorageType.SYNC, ["enableAlphaFitnessTrend"]).then(() => {
 
-                return BrowserStorage.getInstance().get(BrowserStorageType.SYNC);
+                return LegacyBrowserStorage.getInstance().get(BrowserStorageType.SYNC);
 
             }).then((currentUserSavedSettings: any) => {
 
@@ -140,12 +139,12 @@ class Installer {
                         }
 
                         currentUserSavedSettings.zones.heartRate = newHeartRateZones;
-                        return BrowserStorage.getInstance().set(BrowserStorageType.SYNC, null, currentUserSavedSettings).then(() => {
-                            return BrowserStorage.getInstance().rm(BrowserStorageType.SYNC, ["userHrrZones"]);
+                        return LegacyBrowserStorage.getInstance().set(BrowserStorageType.SYNC, null, currentUserSavedSettings).then(() => {
+                            return LegacyBrowserStorage.getInstance().rm(BrowserStorageType.SYNC, ["userHrrZones"]);
                         });
 
                     } else {  // Key exists
-                        return BrowserStorage.getInstance().rm(BrowserStorageType.SYNC, ["userHrrZones"]);
+                        return LegacyBrowserStorage.getInstance().rm(BrowserStorageType.SYNC, ["userHrrZones"]);
                     }
                 } else {
                     return Promise.resolve();
@@ -162,7 +161,6 @@ class Installer {
 
     /**
      * Summary: Removing syncWithAthleteProfile local storage object & rename computedActivities to syncedActivities. remove autoSyncMinutes
-     * @returns {Promise<void>}
      */
     protected migrate_to_6_1_2(): Promise<void> {
 
@@ -173,20 +171,21 @@ class Installer {
 
             console.log("Migrate to 6.1.2");
 
-            promise = BrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, ["syncWithAthleteProfile"]).then(() => {
+            promise = LegacyBrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, ["syncWithAthleteProfile"]).then(() => {
 
-                return BrowserStorage.getInstance().get<SyncedActivityModel[]>(BrowserStorageType.LOCAL, "computedActivities").then((computedActivities: SyncedActivityModel[]) => {
+                return LegacyBrowserStorage.getInstance().get<SyncedActivityModel[]>(BrowserStorageType.LOCAL, "computedActivities")
+                    .then((computedActivities: SyncedActivityModel[]) => {
 
-                    if (computedActivities) {
-                        return BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "syncedActivities", computedActivities).then(() => {
-                            return BrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, ["computedActivities"]);
-                        });
-                    } else {
-                        return Promise.resolve();
-                    }
-                }).then(() => {
-                    return BrowserStorage.getInstance().rm(BrowserStorageType.SYNC, ["autoSyncMinutes"]);
-                });
+                        if (computedActivities) {
+                            return LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "syncedActivities", computedActivities).then(() => {
+                                return LegacyBrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, ["computedActivities"]);
+                            });
+                        } else {
+                            return Promise.resolve();
+                        }
+                    }).then(() => {
+                        return LegacyBrowserStorage.getInstance().rm(BrowserStorageType.SYNC, ["autoSyncMinutes"]);
+                    });
 
             });
 
@@ -199,7 +198,6 @@ class Installer {
 
     /**
      * Summary: Removing synced displayMotivationScore
-     * @returns {Promise<void>}
      */
     protected migrate_to_6_4_0(): Promise<void> {
 
@@ -207,7 +205,7 @@ class Installer {
 
         if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.4.0")) {
             console.log("Migrate to 6.4.0");
-            promise = BrowserStorage.getInstance().rm(BrowserStorageType.SYNC, ["displayMotivationScore"]);
+            promise = LegacyBrowserStorage.getInstance().rm(BrowserStorageType.SYNC, ["displayMotivationScore"]);
         } else {
             console.log("Skip migrate to 6.4.0");
         }
@@ -218,7 +216,6 @@ class Installer {
     /**
      * Summary: Migrate old user synced athletes setting to athleteSnapshot. Remove old user synced athletes setting.
      * Create datedAthleteSettings into local storage
-     * @returns {Promise<void>}
      */
     protected migrate_to_6_5_0(): Promise<void> {
 
@@ -228,7 +225,7 @@ class Installer {
 
             console.log("Migrate to 6.5.0");
 
-            promise = BrowserStorage.getInstance().get(BrowserStorageType.SYNC).then((userSettingsModel: any) => {
+            promise = LegacyBrowserStorage.getInstance().get(BrowserStorageType.SYNC).then((userSettingsModel: any) => {
 
                 if (userSettingsModel.userGender) {
                     const userGender = (userSettingsModel.userGender === "men") ? Gender.MEN : Gender.WOMEN;
@@ -244,17 +241,17 @@ class Installer {
                     ));
 
                     // Create new athlete model structure and apply change in sync settings
-                    return BrowserStorage.getInstance().set(BrowserStorageType.SYNC, "athleteModel", athleteModel);
+                    return LegacyBrowserStorage.getInstance().set(BrowserStorageType.SYNC, "athleteModel", athleteModel);
                 } else {
                     return Promise.resolve();
                 }
 
             }).then(() => {
                 // Remove deprecated old user settings
-                return BrowserStorage.getInstance().rm(BrowserStorageType.SYNC, ["userGender", "userMaxHr", "userRestHr", "userLTHR", "userFTP", "userRunningFTP", "userSwimFTP", "userWeight"]);
+                return LegacyBrowserStorage.getInstance().rm(BrowserStorageType.SYNC, ["userGender", "userMaxHr", "userRestHr", "userLTHR", "userFTP", "userRunningFTP", "userSwimFTP", "userWeight"]);
 
             }).then(() => {
-                return BrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "profileConfigured");
+                return LegacyBrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "profileConfigured");
             });
 
         } else {
@@ -273,7 +270,7 @@ class Installer {
             console.log("Migrate to 6.6.0");
 
             // Migrate storage of zones from ZoneModel[] to number[] => less space on storage
-            promise = BrowserStorage.getInstance().get(BrowserStorageType.SYNC).then((userSettingsModel: any) => {
+            promise = LegacyBrowserStorage.getInstance().get(BrowserStorageType.SYNC).then((userSettingsModel: any) => {
 
                 const userZonesModel = userSettingsModel.zones;
 
@@ -292,11 +289,11 @@ class Installer {
                     userZonesModel.elevation = UserZonesModel.serialize(userZonesModel.elevation);
                     userZonesModel.ascent = UserZonesModel.serialize(userZonesModel.ascent);
 
-                    promiseMigrate = BrowserStorage.getInstance().set(BrowserStorageType.SYNC, "zones", userZonesModel);
+                    promiseMigrate = LegacyBrowserStorage.getInstance().set(BrowserStorageType.SYNC, "zones", userZonesModel);
 
                 } catch (err) {
                     console.warn(err);
-                    promiseMigrate = BrowserStorage.getInstance().set(BrowserStorageType.SYNC, "zones", ExtensionUserSettingsModel.DEFAULT_MODEL.zones); // Reset to default
+                    promiseMigrate = LegacyBrowserStorage.getInstance().set(BrowserStorageType.SYNC, "zones", ExtensionUserSettingsModel.DEFAULT_MODEL.zones); // Reset to default
                 }
 
                 return promiseMigrate;
@@ -320,12 +317,12 @@ class Installer {
 
             console.log("Migrate to 6.7.0");
 
-            promise = BrowserStorage.getInstance().get<DatedAthleteSettingsModel[]>(BrowserStorageType.LOCAL, "datedAthleteSettings")
+            promise = LegacyBrowserStorage.getInstance().get<DatedAthleteSettingsModel[]>(BrowserStorageType.LOCAL, "datedAthleteSettings")
                 .then((localDatedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
 
                     if (_.isEmpty(localDatedAthleteSettingsModels)) {
 
-                        return BrowserStorage.getInstance().get(BrowserStorageType.SYNC).then((userSettingsModel: any) => {
+                        return LegacyBrowserStorage.getInstance().get(BrowserStorageType.SYNC).then((userSettingsModel: any) => {
 
                             const athleteSettings = (userSettingsModel && userSettingsModel.athleteModel && userSettingsModel.athleteModel.athleteSettings)
                                 ? userSettingsModel.athleteModel.athleteSettings : AthleteSettingsModel.DEFAULT_MODEL;
@@ -335,8 +332,8 @@ class Installer {
                                 new DatedAthleteSettingsModel(null, athleteSettings)
                             ];
 
-                            return BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "datedAthleteSettings", datedAthleteSettings).then(() => {
-                                return BrowserStorage.getInstance().set(BrowserStorageType.SYNC, "hasDatedAthleteSettings", true);
+                            return LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "datedAthleteSettings", datedAthleteSettings).then(() => {
+                                return LegacyBrowserStorage.getInstance().set(BrowserStorageType.SYNC, "hasDatedAthleteSettings", true);
                             });
 
                         });
@@ -364,7 +361,7 @@ class Installer {
             let userSettingsModel: ExtensionUserSettingsModel;
 
             // Move all user settings content inside specific key
-            promise = BrowserStorage.getInstance().get(BrowserStorageType.SYNC).then((settings: ExtensionUserSettingsModel) => {
+            promise = LegacyBrowserStorage.getInstance().get(BrowserStorageType.SYNC).then((settings: ExtensionUserSettingsModel) => {
 
                 const hasUserSettingsKey = !_.isEmpty((<any> settings).userSettings);
 
@@ -376,8 +373,8 @@ class Installer {
 
                     delete (userSettingsModel as any).bestSplitsConfiguration; // Remove best split config from user settings
 
-                    return BrowserStorage.getInstance().clear(BrowserStorageType.SYNC).then(() => {
-                        return BrowserStorage.getInstance().set(BrowserStorageType.SYNC, "userSettings", userSettingsModel);
+                    return LegacyBrowserStorage.getInstance().clear(BrowserStorageType.SYNC).then(() => {
+                        return LegacyBrowserStorage.getInstance().set(BrowserStorageType.SYNC, "userSettings", userSettingsModel);
                     });
                 }
 
@@ -404,7 +401,7 @@ class Installer {
             let userSettingsModel: ExtensionUserSettingsModel;
 
             // Move all user settings content inside specific key
-            promise = BrowserStorage.getInstance().get(BrowserStorageType.SYNC, "userSettings").then((settings: ExtensionUserSettingsModel) => {
+            promise = LegacyBrowserStorage.getInstance().get(BrowserStorageType.SYNC, "userSettings").then((settings: ExtensionUserSettingsModel) => {
 
                 const hasOldYearProgressTargets = _.isNumber((<any> settings).targetsYearRide) || _.isNumber((<any> settings).targetsYearRun);
 
@@ -412,7 +409,7 @@ class Installer {
                     userSettingsModel = settings;
                     delete (userSettingsModel as any).targetsYearRide;
                     delete (userSettingsModel as any).targetsYearRun;
-                    return BrowserStorage.getInstance().set(BrowserStorageType.SYNC, "userSettings", userSettingsModel);
+                    return LegacyBrowserStorage.getInstance().set(BrowserStorageType.SYNC, "userSettings", userSettingsModel);
                 } else {
                     return Promise.resolve();
                 }
@@ -437,7 +434,7 @@ class Installer {
             console.log("Migrate to 6.10.0");
 
             // Move all user settings content inside specific key
-            promise = BrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "yearProgressPresets").then((oldPresetModels: YearToDateProgressPresetModel[]) => {
+            promise = LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "yearProgressPresets").then((oldPresetModels: YearToDateProgressPresetModel[]) => {
 
                 const migratedPresets: YearToDateProgressPresetModel[] = [];
 
@@ -451,7 +448,7 @@ class Installer {
                 });
 
                 if (hasUpgradedPresets) {
-                    return BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "yearProgressPresets", migratedPresets);
+                    return LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "yearProgressPresets", migratedPresets);
                 } else {
                     return Promise.resolve();
                 }
@@ -479,8 +476,8 @@ class Installer {
 
             // Move all user settings from sync to local
             promise = Promise.all([
-                BrowserStorage.getInstance().get(BrowserStorageType.SYNC, "userSettings"),
-                BrowserStorage.getInstance().get(BrowserStorageType.LOCAL)
+                LegacyBrowserStorage.getInstance().get(BrowserStorageType.SYNC, "userSettings"),
+                LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL)
 
             ]).then(result => {
 
@@ -493,15 +490,15 @@ class Installer {
 
                 localBrowserStorage.userSettings = userSettingsModel;
 
-                return BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, null, localBrowserStorage); // Update local storage
+                return LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, null, localBrowserStorage); // Update local storage
 
             }).then(() => {
-                return BrowserStorage.getInstance().rm(BrowserStorageType.SYNC, "userSettings"); // Remove userSettings from sync
+                return LegacyBrowserStorage.getInstance().rm(BrowserStorageType.SYNC, "userSettings"); // Remove userSettings from sync
             }).then(() => {
 
                 return Promise.all([
-                    BrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "userSettings"), // Get userSettings from local now
-                    BrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "datedAthleteSettings")
+                    LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "userSettings"), // Get userSettings from local now
+                    LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "datedAthleteSettings")
                 ]);
 
             }).then(result => {
@@ -515,7 +512,8 @@ class Installer {
 
                 if (isSingleAthleteSettingsMode) {
 
-                    const athleteSettings: AthleteSettingsModel = (athleteModel && (<any> athleteModel).athleteSettings) ? (<any> athleteModel).athleteSettings : AthleteSettingsModel.DEFAULT_MODEL;
+                    const athleteSettings: AthleteSettingsModel = (athleteModel && (<any> athleteModel).athleteSettings) ?
+                        (<any> athleteModel).athleteSettings : AthleteSettingsModel.DEFAULT_MODEL;
 
                     athleteModel.datedAthleteSettings = [
                         new DatedAthleteSettingsModel(DatedAthleteSettingsModel.DEFAULT_SINCE, athleteSettings),
@@ -532,13 +530,13 @@ class Installer {
                 delete (<any> userSettingsModel).hasDatedAthleteSettings;
 
                 return Promise.all([
-                    BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "userSettings", userSettingsModel), // Update user settings
-                    BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "athlete", athleteModel), // Save new athlete key on local storage
-                    BrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "datedAthleteSettings"), // datedAthleteSettings are now stored in athlete storage
+                    LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "userSettings", userSettingsModel), // Update user settings
+                    LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "athlete", athleteModel), // Save new athlete key on local storage
+                    LegacyBrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "datedAthleteSettings"), // datedAthleteSettings are now stored in athlete storage
                 ]);
 
             }).then(() => {
-                return BrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "syncedActivities");
+                return LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "syncedActivities");
             }).then((syncedActivities: SyncedActivityModel[]) => {
 
                 // Rename athleteModel to athleteSnapshot for each activity
@@ -547,7 +545,7 @@ class Installer {
                     delete (<any> activity).athleteModel;
                 });
 
-                return BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "syncedActivities", syncedActivities);
+                return LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "syncedActivities", syncedActivities);
             }).catch(error => {
 
                 if (error.message === alreadyMigratedMessage) {
@@ -561,14 +559,14 @@ class Installer {
             }).then(() => {
 
                 // Add ids to yearProgressPresets
-                return BrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "yearProgressPresets").then((yearProgressPresets: object[]) => {
+                return LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "yearProgressPresets").then((yearProgressPresets: object[]) => {
 
                     yearProgressPresets = _.map(yearProgressPresets, preset => {
                         (<YearToDateProgressPresetModel> preset).id = Identifier.generate();
                         return preset;
                     });
 
-                    return BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "yearProgressPresets", yearProgressPresets);
+                    return LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "yearProgressPresets", yearProgressPresets);
 
                 });
 
@@ -590,7 +588,7 @@ class Installer {
 
             console.log("Migrate to 6.11.1");
 
-            promise = BrowserStorage.getInstance().get<AthleteModel>(BrowserStorageType.LOCAL, "athlete").then(athleteModel => {
+            promise = LegacyBrowserStorage.getInstance().get<AthleteModel>(BrowserStorageType.LOCAL, "athlete").then(athleteModel => {
 
                 if (athleteModel.datedAthleteSettings && athleteModel.datedAthleteSettings.length > 0) {
 
@@ -601,7 +599,7 @@ class Installer {
 
                     if (_.last(athleteModel.datedAthleteSettings).since !== null) {
                         _.last(athleteModel.datedAthleteSettings).since = null; // Set forever settings
-                        return BrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "athlete", athleteModel);
+                        return LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "athlete", athleteModel);
                     } else {
                         return Promise.resolve();
                     }
@@ -622,10 +620,10 @@ class Installer {
 
             console.log("Migrate to 6.14.0");
 
-            promise = BrowserStorage.getInstance().get<UserSettingsModel>(BrowserStorageType.LOCAL, "userSettings")
+            promise = LegacyBrowserStorage.getInstance().get<UserSettingsModel>(BrowserStorageType.LOCAL, "userSettings")
                 .then((userSettingsModel: UserSettingsModel) => {
                     delete (<any> userSettingsModel).displayReliveCCLink;
-                    return BrowserStorage.getInstance().set<UserSettingsModel>(BrowserStorageType.LOCAL, "userSettings", userSettingsModel);
+                    return LegacyBrowserStorage.getInstance().set<UserSettingsModel>(BrowserStorageType.LOCAL, "userSettings", userSettingsModel);
                 });
 
         } else {
@@ -642,14 +640,14 @@ class Installer {
 
             console.log("Migrate to 6.15.0");
 
-            promise = BrowserStorage.getInstance().get<number>(BrowserStorageType.LOCAL, "lastSyncDateTime").then((lastSyncDateTime: number) => {
+            promise = LegacyBrowserStorage.getInstance().get<number>(BrowserStorageType.LOCAL, "lastSyncDateTime").then((lastSyncDateTime: number) => {
                 if (!lastSyncDateTime) {
                     console.log("Skip migrate to 6.15.0");
                     return Promise.resolve();
                 }
-                return BrowserStorage.getInstance().set<number>(BrowserStorageType.LOCAL, "syncDateTime", lastSyncDateTime);
+                return LegacyBrowserStorage.getInstance().set<number>(BrowserStorageType.LOCAL, "syncDateTime", lastSyncDateTime);
             }).then(() => {
-                return BrowserStorage.getInstance().rm<number>(BrowserStorageType.LOCAL, "lastSyncDateTime");
+                return LegacyBrowserStorage.getInstance().rm<number>(BrowserStorageType.LOCAL, "lastSyncDateTime");
             });
 
         } else {
@@ -666,14 +664,14 @@ class Installer {
 
             console.log("Migrate to 6.15.1");
 
-            promise = BrowserStorage.getInstance().get<number>(BrowserStorageType.LOCAL, "lastSyncDateTime").then((lastSyncDateTime: number) => {
+            promise = LegacyBrowserStorage.getInstance().get<number>(BrowserStorageType.LOCAL, "lastSyncDateTime").then((lastSyncDateTime: number) => {
                 if (!lastSyncDateTime) {
                     console.log("Skip migrate to 6.15.1");
                     return Promise.resolve();
                 }
-                return BrowserStorage.getInstance().set<number>(BrowserStorageType.LOCAL, "syncDateTime", lastSyncDateTime);
+                return LegacyBrowserStorage.getInstance().set<number>(BrowserStorageType.LOCAL, "syncDateTime", lastSyncDateTime);
             }).then(() => {
-                return BrowserStorage.getInstance().rm<number>(BrowserStorageType.LOCAL, "lastSyncDateTime");
+                return LegacyBrowserStorage.getInstance().rm<number>(BrowserStorageType.LOCAL, "lastSyncDateTime");
             });
 
         } else {
@@ -681,6 +679,61 @@ class Installer {
         }
 
         return promise;
+    }
+
+    protected migrate_to_6_16_2(): Promise<void> {
+
+        let promise: Promise<void> = Promise.resolve();
+        if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.16.2")) {
+
+            console.log("Migrate to 6.16.2");
+
+            promise = LegacyBrowserStorage.getInstance().get<UserSettingsModel>(BrowserStorageType.LOCAL, "userSettings").then((userSettingsModel: ExtensionUserSettingsModel) => {
+                userSettingsModel.displaySegmentTimeComparisonToKOM = false;
+                userSettingsModel.displaySegmentTimeComparisonToPR = false;
+                userSettingsModel.displaySegmentTimeComparisonToCurrentYearPR = false;
+                userSettingsModel.displaySegmentTimeComparisonPosition = false;
+                return LegacyBrowserStorage.getInstance().set<UserSettingsModel>(BrowserStorageType.LOCAL, "userSettings", userSettingsModel);
+            });
+
+        } else {
+            console.log("Skip migrate to 6.16.2");
+        }
+
+        return promise;
+    }
+
+    protected migrate_to_7_0_0_6(): Promise<void> {
+
+        if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "7.0.0-6")) {
+            console.log("Migrate to 7.0.0-6");
+
+            return new Promise<void>((resolve, reject) => {
+
+                chrome.storage.local.get(null, (oldDatabase: any) => {
+
+                    const error = chrome.runtime.lastError;
+
+                    if (error) {
+                        reject(error.message);
+                    } else {
+
+                        const newDatabase = new Migration7x0x0x6().perform(oldDatabase);
+
+                        chrome.storage.local.set(newDatabase, () => {
+                            if (error) {
+                                reject(error.message);
+                            } else {
+                                resolve();
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        console.log("Skip migrate to 7.0.0-6");
+        return Promise.resolve();
     }
 
 
@@ -716,6 +769,10 @@ class Installer {
             return this.migrate_to_6_15_0();
         }).then(() => {
             return this.migrate_to_6_15_1();
+        }).then(() => {
+            return this.migrate_to_6_16_2();
+        }).then(() => {
+            return this.migrate_to_7_0_0_6();
         }).catch(error => console.error(error));
 
     }

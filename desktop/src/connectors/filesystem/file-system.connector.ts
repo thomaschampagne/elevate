@@ -12,7 +12,7 @@ import {
 } from "@elevate/shared/sync";
 import { ReplaySubject, Subject } from "rxjs";
 import { ActivityStreamsModel, AthleteModel, AthleteSettingsModel, BareActivityModel, ConnectorSyncDateTime, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
-import * as fs from "fs";
+import fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
 import { Service } from "../../service";
@@ -266,7 +266,7 @@ export class FileSystemConnector extends BaseConnector {
 
     public syncFiles(syncEvents$: Subject<SyncEvent>): Promise<void> {
 
-        if (!fs.existsSync(this.inputDirectory)) {
+        if (!this.getFs().existsSync(this.inputDirectory)) {
             return Promise.reject(ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(this.inputDirectory));
         }
 
@@ -275,14 +275,14 @@ export class FileSystemConnector extends BaseConnector {
         let prepareScanDirectory: Promise<void> = Promise.resolve();
 
         if (!afterDate && this.extractArchiveFiles) {
-            const deflateNotifier = new Subject<string>();
-            deflateNotifier.subscribe(extractedArchivePath => {
+            const deflateNotifier$ = new Subject<string>();
+            deflateNotifier$.subscribe(extractedArchivePath => {
                 const extractedArchiveFileName = path.basename(extractedArchivePath);
                 const evtDesc = `Activities in "${extractedArchiveFileName}" file have been extracted.`;
                 syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE_SYSTEM, evtDesc));
                 logger.info(evtDesc);
             });
-            prepareScanDirectory = this.scanDeflateActivitiesFromArchives(this.inputDirectory, this.deleteArchivesAfterExtract, deflateNotifier, this.scanSubDirectories);
+            prepareScanDirectory = this.scanDeflateActivitiesFromArchives(this.inputDirectory, this.deleteArchivesAfterExtract, deflateNotifier$, this.scanSubDirectories);
         }
 
         return prepareScanDirectory.then(() => {
@@ -302,7 +302,7 @@ export class FileSystemConnector extends BaseConnector {
                         return Promise.reject(new StoppedSyncEvent(ConnectorType.FILE_SYSTEM));
                     }
 
-                    const activityFileBuffer = fs.readFileSync(activityFile.location.path);
+                    const activityFileBuffer = this.getFs().readFileSync(activityFile.location.path);
 
                     let parseSportsLibActivity: Promise<EventInterface> = null;
 
@@ -700,7 +700,7 @@ export class FileSystemConnector extends BaseConnector {
 
     public scanForActivities(directory: string, afterDate: Date = null, recursive: boolean = false, pathsList = []): ActivityFile[] {
 
-        const files = fs.readdirSync(directory);
+        const files = this.getFs().readdirSync(directory);
 
         const trackFile = (absolutePath: string, type: ActivityFileType, lastModificationDate: Date): void => {
             pathsList.push(new ActivityFile(type, absolutePath, this.athleteMachineId, lastModificationDate));
@@ -708,7 +708,7 @@ export class FileSystemConnector extends BaseConnector {
 
         files.forEach(file => {
 
-            const isDirectory = fs.statSync(directory + "/" + file).isDirectory();
+            const isDirectory = this.getFs().statSync(directory + "/" + file).isDirectory();
 
             if (recursive && isDirectory) {
                 pathsList.push(this.scanForActivities(directory + "/" + file, afterDate, recursive, []));
@@ -734,7 +734,7 @@ export class FileSystemConnector extends BaseConnector {
     }
 
     public getLastAccessDate(absolutePath: string): Date {
-        const stats = fs.statSync(absolutePath);
+        const stats = this.getFs().statSync(absolutePath);
         return stats.atime;
     }
 
@@ -748,10 +748,10 @@ export class FileSystemConnector extends BaseConnector {
             const extractDir = currentArchiveDir + "/" + archiveFileNameFingerPrint;
 
             // Create extract directory
-            if (fs.existsSync(extractDir)) {
-                fs.rmdirSync(extractDir, {recursive: true});
+            if (this.getFs().existsSync(extractDir)) {
+                this.getFs().rmdirSync(extractDir, {recursive: true});
             }
-            fs.mkdirSync(extractDir);
+            this.getFs().mkdirSync(extractDir);
 
             const options: any = {
                 targetDir: extractDir,
@@ -766,7 +766,7 @@ export class FileSystemConnector extends BaseConnector {
 
             FileSystemConnector.getAllUnPacker().unpack(archiveFilePath, options, err => {
                 if (err) {
-                    fs.rmdirSync(extractDir, {recursive: true});
+                    this.getFs().rmdirSync(extractDir, {recursive: true});
                     reject(err);
                 } else {
                     // When archive un-packaged
@@ -781,20 +781,20 @@ export class FileSystemConnector extends BaseConnector {
                                 .replace(/\\/gm, "/");
                             const newActivityPath = currentArchiveDir + "/" + archiveFileNameFingerPrint
                                 + ((relativeExtractedDirName) ? "-" + BaseConnector.hashData(relativeExtractedDirName, 6) : "") + "-" + extractedFileName;
-                            fs.renameSync(extractedActivityFile.location.path, newActivityPath);
+                            this.getFs().renameSync(extractedActivityFile.location.path, newActivityPath);
                             trackedNewPaths.push(newActivityPath);
                         });
 
                         // Remove extract directory
-                        fs.rmdirSync(extractDir, {recursive: true});
+                        this.getFs().rmdirSync(extractDir, {recursive: true});
 
                         if (deleteArchive) {
-                            fs.unlinkSync(archiveFilePath);
+                            this.getFs().unlinkSync(archiveFilePath);
                         }
 
                         resolve(trackedNewPaths);
                     } catch (err) {
-                        fs.rmdirSync(extractDir, {recursive: true});
+                        this.getFs().rmdirSync(extractDir, {recursive: true});
                         reject(err);
                     }
                 }
@@ -809,13 +809,13 @@ export class FileSystemConnector extends BaseConnector {
     public scanDeflateActivitiesFromArchives(sourceDir: string, deleteArchives: boolean, deflateNotifier: Subject<string> = new Subject<string>(),
                                              recursive: boolean = false): Promise<void> {
 
-        const files = fs.readdirSync(sourceDir);
+        const files = this.getFs().readdirSync(sourceDir);
 
         return files.reduce((previousPromise: Promise<void>, file: string) => {
 
             return previousPromise.then(() => {
 
-                const isDirectory = fs.statSync(sourceDir + "/" + file).isDirectory();
+                const isDirectory = this.getFs().statSync(sourceDir + "/" + file).isDirectory();
 
                 if (recursive && isDirectory) {
                     return this.scanDeflateActivitiesFromArchives(sourceDir + "/" + file, deleteArchives, deflateNotifier, recursive);
@@ -844,5 +844,10 @@ export class FileSystemConnector extends BaseConnector {
             }
             return Promise.resolve();
         });
+
+    }
+
+    public getFs(): typeof fs {
+        return fs;
     }
 }

@@ -16,36 +16,61 @@ export class UserSettingsService {
     }
 
     public fetch(): Promise<UserSettingsModel> {
-        return (<Promise<UserSettingsModel>> this.userSettingsDao.fetch());
+        return this.userSettingsDao.findOne();
     }
 
-    public saveProperty<V>(path: string | string[], value: V): Promise<UserSettingsModel> {
-        return this.userSettingsDao.putAt<V>(path, value);
+    public updateOption(optionKey: string, optionValue: any): Promise<UserSettingsModel> {
+        return this.fetch().then(userSettings => {
+            userSettings[optionKey] = optionValue;
+            return this.updateUserSettings(userSettings);
+        });
     }
 
     /**
      * Clear local storage on next reload
      */
-    public clearLocalStorageOnNextLoad(): Promise<void> {
-        return this.saveProperty(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true).then(() => {
-            this.logger.info("LocalStorage is marked to be cleared on next core load");
-            return Promise.resolve();
-        });
+    public clearLocalStorageOnNextLoad(): Promise<void> { // TODO Should be only for extension, not for desktop.
+        return this.updateOption(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true).then(() => Promise.resolve());
     }
 
-    public saveZones(zoneDefinition: ZoneDefinitionModel, zones: ZoneModel[]): Promise<ZoneModel[]> {
-        const path = ["zones", zoneDefinition.value];
-        return this.saveProperty<number[]>(path, UserZonesModel.serialize(zones)).then((userSettingsModel: UserSettingsModel) => {
-            return Promise.resolve(UserZonesModel.deserialize(userSettingsModel.zones[zoneDefinition.value]));
+    public updateZones(zoneDefinition: ZoneDefinitionModel, zones: ZoneModel[]): Promise<ZoneModel[]> {
+        return this.fetch().then(userSettings => {
+
+            // Replace with new zones
+            userSettings.zones[zoneDefinition.value] = UserZonesModel.serialize(zones);
+
+            // Update new user settings
+            return this.userSettingsDao.update(userSettings);
+
+        }).then(updatedUserSettings => {
+            return Promise.resolve(UserZonesModel.deserialize(updatedUserSettings.zones[zoneDefinition.value]));
         });
     }
 
     public reset(): Promise<UserSettingsModel> {
-        return (<Promise<UserSettingsModel>> this.userSettingsDao.save(UserSettings.getDefaultsByEnvTarget(environment.target)));
+        return this.userSettingsDao.clear(true).then(() => {
+            const defaultUserSettingsModel = UserSettings.getDefaultsByEnvTarget(environment.target);
+            return this.userSettingsDao.insert(defaultUserSettingsModel, true);
+        });
     }
 
     public resetZones(): Promise<UserSettingsModel> {
-        const defaultZones = (<UserSettingsModel> this.userSettingsDao.getDefaultStorageValue()).zones;
-        return this.saveProperty<UserZonesModel>(["zones"], defaultZones);
+
+        return this.fetch().then(userSettings => {
+
+            // Get default zones
+            const defaultZones = this.userSettingsDao.getDefaultStorageValue().zones;
+
+            // Replace with default zones
+            userSettings.zones = defaultZones;
+
+            // Update new user settings
+            return this.updateUserSettings(userSettings);
+        });
     }
+
+    private updateUserSettings(userSettings: UserSettings.UserSettingsModel): Promise<UserSettingsModel> {
+        return this.userSettingsDao.update(userSettings, true);
+    }
+
 }

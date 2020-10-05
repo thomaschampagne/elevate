@@ -10,6 +10,8 @@ import { DatedAthleteSettingsDialogData } from "./dated-athlete-settings-dialog-
 import { DatedAthleteSettingsAction } from "./dated-athlete-settings-action.enum";
 import { DatedAthleteSettingsModel, UserSettings } from "@elevate/shared/models";
 import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
+import { DataStore } from "../../../shared/data-store/data-store";
+import { TestingDataStore } from "../../../shared/data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("EditDatedAthleteSettingsDialogComponent", () => {
@@ -33,10 +35,13 @@ describe("EditDatedAthleteSettingsDialogComponent", () => {
             ],
             providers: [
                 {
-                    provide: MAT_DIALOG_DATA, useValue: datedAthleteSettingsDialogData,
+                    provide: DataStore, useClass: TestingDataStore
                 },
                 {
-                    provide: MatDialogRef, useValue: {},
+                    provide: MAT_DIALOG_DATA, useValue: datedAthleteSettingsDialogData
+                },
+                {
+                    provide: MatDialogRef, useValue: {}
                 }
             ]
         }).compileComponents();

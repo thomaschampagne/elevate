@@ -82,7 +82,7 @@ export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComp
 }
 
 @Component({
-    selector: "app-desktop-import-export-progress-backup-dialog",
+    selector: "app-import-export-progress-backup-dialog",
     template: `
         <mat-dialog-content class="mat-body-1">
             <div class="progress" fxLayout="column" fxLayoutAlign="center center">

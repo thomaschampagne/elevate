@@ -24,7 +24,7 @@ describe("SideNavService", () => {
 
         // Given
         const expectedCallCount = 1;
-        const spy = spyOn(service.changes, "next");
+        const spy = spyOn(service.changes$, "next");
 
         // When
         service.onChange(SideNavStatus.CLOSED);
@@ -39,7 +39,7 @@ describe("SideNavService", () => {
 
         // Given
         const expectedCallCount = 1;
-        const spy = spyOn(service.changes, "next");
+        const spy = spyOn(service.changes$, "next");
 
         // When
         service.onChange(SideNavStatus.OPENED);

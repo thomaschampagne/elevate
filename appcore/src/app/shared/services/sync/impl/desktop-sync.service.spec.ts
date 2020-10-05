@@ -21,17 +21,16 @@ import { ElectronService, ElectronWindow } from "../../electron/electron.service
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
 import { SyncException } from "@elevate/shared/exceptions";
-import { Gzip } from "@elevate/shared/tools/gzip";
-import * as moment from "moment";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../../shared-fixtures/activities-2015.fixture";
 import { SyncState } from "../sync-state.enum";
-import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
+import { DataStore } from "../../../data-store/data-store";
+import { TestingDataStore } from "../../../data-store/testing-datastore.service";
 import Spy = jasmine.Spy;
 
 describe("DesktopSyncService", () => {
 
     let desktopSyncService: DesktopSyncService;
-    let reloadAppSpy: Spy;
+    let restartAppSpy: Spy;
 
     beforeEach(done => {
 
@@ -43,6 +42,7 @@ describe("DesktopSyncService", () => {
             ],
             providers: [
                 DesktopSyncService,
+                {provide: DataStore, useClass: TestingDataStore},
             ]
         });
 
@@ -59,7 +59,7 @@ describe("DesktopSyncService", () => {
         electronWindow.require = electronRequire;
         spyOn(electronWindow, "require").and.callFake(electronRequire);
         desktopSyncService = TestBed.inject(DesktopSyncService);
-        reloadAppSpy = spyOn(desktopSyncService, "reloadApp").and.stub();
+        restartAppSpy = spyOn(desktopSyncService, "restartApp").and.stub();
         done();
 
     });
@@ -85,7 +85,7 @@ describe("DesktopSyncService", () => {
                 const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch")
                     .and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
                 const fetchUserSettingsSpy = spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
-                const fetchConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+                const findConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find")
                     .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
                 const fetchStravaConnectorInfoSpy = spyOn(desktopSyncService.stravaConnectorInfoService, "fetch").and.returnValue(null);
@@ -102,7 +102,7 @@ describe("DesktopSyncService", () => {
                     expect(listenSyncEventsSpy).toHaveBeenCalledTimes(1);
                     expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
                     expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
-                    expect(fetchConnectorSyncDateTimeSpy).not.toHaveBeenCalled();
+                    expect(findConnectorSyncDateTimeSpy).not.toHaveBeenCalled();
                     expect(fetchStravaConnectorInfoSpy).toHaveBeenCalledTimes(1);
                     expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
 
@@ -132,7 +132,7 @@ describe("DesktopSyncService", () => {
                 const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch")
                     .and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
                 const fetchUserSettingsSpy = spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
-                const fetchConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+                const findConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find")
                     .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
                 const fetchStravaConnectorInfoSpy = spyOn(desktopSyncService.stravaConnectorInfoService, "fetch").and.returnValue(null);
@@ -149,7 +149,7 @@ describe("DesktopSyncService", () => {
                     expect(listenSyncEventsSpy).toHaveBeenCalledTimes(1);
                     expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
                     expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
-                    expect(fetchConnectorSyncDateTimeSpy).toHaveBeenCalledTimes(1);
+                    expect(findConnectorSyncDateTimeSpy).toHaveBeenCalledTimes(1);
                     expect(fetchStravaConnectorInfoSpy).toHaveBeenCalledTimes(1);
                     expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
 
@@ -249,7 +249,7 @@ describe("DesktopSyncService", () => {
                 const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch")
                     .and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
                 const fetchUserSettingsSpy = spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
-                const fetchConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+                const findConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find")
                     .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
                 const expectedFileSystemConnectorInfo = new FileSystemConnectorInfo("/path/to/dir/");
@@ -268,7 +268,7 @@ describe("DesktopSyncService", () => {
                     expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
                     expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
                     expect(fileSystemConnectorInfoServiceSpy).toHaveBeenCalledTimes(1);
-                    expect(fetchConnectorSyncDateTimeSpy).not.toHaveBeenCalled();
+                    expect(findConnectorSyncDateTimeSpy).not.toHaveBeenCalled();
                     expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
 
                     const flaggedStartSyncIpcMessage: FlaggedIpcMessage = <FlaggedIpcMessage> sendStartSyncSpy.calls.mostRecent().args[0];
@@ -426,12 +426,12 @@ describe("DesktopSyncService", () => {
             const syncEvent$ = new Subject<SyncEvent>();
             const connectorType = ConnectorType.STRAVA;
             const completeSyncEvent = new CompleteSyncEvent(connectorType);
-            const connectorSyncDateTime = new ConnectorSyncDateTime(connectorType);
+            const connectorSyncDateTime = new ConnectorSyncDateTime(connectorType, Date.now());
             const getSyncStateSpy = spyOn(desktopSyncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.NOT_SYNCED));
             const getConnectorSyncDateTimeByIdSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "getById")
                 .and.returnValue(Promise.resolve(null));
             const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(Promise.resolve([connectorSyncDateTime]));
-            const syncEventDoneSpy = spyOn(desktopSyncService.appEventsService.onSyncDone, "next").and.stub();
+            const syncEventDoneSpy = spyOn(desktopSyncService.appEventsService.syncDone$, "next").and.stub();
 
             // When
             desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent);
@@ -443,7 +443,7 @@ describe("DesktopSyncService", () => {
                 expect(createdConnectorSyncDateTime.connectorType).toEqual(connectorType);
                 expect(getSyncStateSpy).toHaveBeenCalledTimes(1);
                 expect(syncEventDoneSpy).not.toHaveBeenCalledTimes(1);
-                expect(reloadAppSpy).toHaveBeenCalledTimes(1);
+                expect(restartAppSpy).toHaveBeenCalledTimes(1);
                 done();
 
             }, error => {
@@ -463,19 +463,19 @@ describe("DesktopSyncService", () => {
             const getConnectorSyncDateTimeByIdSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "getById")
                 .and.returnValue(Promise.resolve(connectorSyncDateTime));
             const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(Promise.resolve([connectorSyncDateTime]));
-            const syncEventDoneSpy = spyOn(desktopSyncService.appEventsService.onSyncDone, "next").and.stub();
+            const syncEventDoneSpy = spyOn(desktopSyncService.appEventsService.syncDone$, "next").and.stub();
 
             // When
             desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent);
 
             // Then
             syncEvent$.subscribe(() => {
-                expect(connectorSyncDateTime.dateTime).toBeGreaterThan(oldDateTime);
+                expect(connectorSyncDateTime.syncDateTime).toBeGreaterThan(oldDateTime);
                 expect(getConnectorSyncDateTimeByIdSpy).toHaveBeenCalledWith(connectorType);
                 expect(upsertSyncDateTimesSpy).toHaveBeenCalledWith([connectorSyncDateTime]);
                 expect(getSyncStateSpy).toHaveBeenCalledTimes(1);
                 expect(syncEventDoneSpy).toHaveBeenCalledTimes(1);
-                expect(reloadAppSpy).not.toHaveBeenCalled();
+                expect(restartAppSpy).not.toHaveBeenCalled();
                 done();
 
             }, error => {
@@ -651,7 +651,7 @@ describe("DesktopSyncService", () => {
             const connectorType = ConnectorType.STRAVA;
             desktopSyncService.activityUpsertDetected = true; // Emulate some activities have been upserted
             desktopSyncService.currentConnectorType = connectorType;
-            const connectorSyncDateTime = new ConnectorSyncDateTime(connectorType);
+            const connectorSyncDateTime = new ConnectorSyncDateTime(connectorType, Date.now());
             const completeSyncEvent = new CompleteSyncEvent(desktopSyncService.currentConnectorType);
             const handleSyncCompleteEventsSpy = spyOn(desktopSyncService, "handleSyncCompleteEvents").and.callThrough();
             spyOn(desktopSyncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
@@ -659,7 +659,7 @@ describe("DesktopSyncService", () => {
                 .and.returnValue(Promise.resolve(null));
             spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes")
                 .and.returnValue(Promise.resolve([connectorSyncDateTime]));
-            const onSyncDoneSpy = spyOn(desktopSyncService.appEventsService.onSyncDone, "next");
+            const onSyncDoneSpy = spyOn(desktopSyncService.appEventsService.syncDone$, "next");
             const resetTrackChangesSpy = spyOn(desktopSyncService, "resetActivityTrackingUpsert").and.callThrough();
             const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
@@ -1188,78 +1188,13 @@ describe("DesktopSyncService", () => {
 
     });
 
-    describe("Export", () => {
-
-        it("should export a compressed gzip dump", done => {
-
-            // Given
-            const expectedData = {foo: "bar"};
-            const blob = new Blob([Gzip.pack(JSON.stringify(expectedData))], {type: "application/gzip"});
-            const dumpSpy = spyOn(desktopSyncService.desktopDataStore, "createDump").and.returnValue(Promise.resolve(blob));
-            const appVersion = "1.0.0";
-            const getInstalledAppVersionSpy = spyOn(desktopSyncService.versionsProvider, "getPackageVersion")
-                .and.returnValue(Promise.resolve(appVersion));
-            const saveAsSpy = spyOn(desktopSyncService, "saveAs").and.stub();
-            const expectedFilename = moment().format("Y.MM.DD-H.mm") + "_v" + appVersion + ".elevate";
-
-            // When
-            const promise = desktopSyncService.export();
-
-            // Then
-            promise.then((result: { filename: string; size: number }) => {
-
-                expect(getInstalledAppVersionSpy).toHaveBeenCalledTimes(1);
-                expect(dumpSpy).toHaveBeenCalledTimes(1);
-
-                expect(result.filename).toEqual(expectedFilename);
-                expect(result.size).toEqual(blob.size);
-
-                expect(saveAsSpy).toHaveBeenCalledWith(blob, expectedFilename);
-
-                done();
-
-            }, () => {
-                throw new Error("Should not be here!");
-            });
-        });
-
-
-    });
-
-    describe("Import", () => {
-
-        it("should import a compressed gzip dump", done => {
-
-            // Given
-            const isDumpCompatibleSpy = spyOn(desktopSyncService, "isDumpCompatible").and.callThrough();
-            const loadDumpSpy = spyOn(desktopSyncService.desktopDataStore, "loadDump").and.returnValue(Promise.resolve());
-            const expectedData = {foo: "bar"};
-            const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel("1.0.0", Gzip.pack(JSON.stringify(expectedData)));
-            spyOn(desktopSyncService, "getCompatibleBackupVersionThreshold").and.returnValue("1.0.0");
-
-            // When
-            const promise = desktopSyncService.import(desktopDumpModel);
-
-            // Then
-            promise.then(() => {
-                expect(isDumpCompatibleSpy).toHaveBeenCalledTimes(1);
-                expect(loadDumpSpy).toHaveBeenCalledTimes(1);
-                done();
-
-            }, () => {
-                throw new Error("Should not be here!");
-            });
-        });
-
-    });
-
     describe("Provide sync state", () => {
 
         it("should provide NOT_SYNCED state", done => {
 
             // Given
             const expectedState = SyncState.NOT_SYNCED;
-            const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+            const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find")
                 .and.returnValue(Promise.resolve([]));
 
             const activityServiceSpy = spyOn(desktopSyncService.activityService, "count")
@@ -1271,7 +1206,7 @@ describe("DesktopSyncService", () => {
             // Then
             promise.then(syncState => {
                 expect(syncState).toEqual(expectedState);
-                expect(fetchSpy).toHaveBeenCalledTimes(1);
+                expect(findSpy).toHaveBeenCalledTimes(1);
                 expect(activityServiceSpy).toHaveBeenCalledTimes(1);
                 done();
 
@@ -1290,7 +1225,7 @@ describe("DesktopSyncService", () => {
                 new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
             ];
 
-            const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+            const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find")
                 .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
             const activityServiceSpy = spyOn(desktopSyncService.activityService, "count")
@@ -1302,7 +1237,7 @@ describe("DesktopSyncService", () => {
             // Then
             promise.then(syncState => {
                 expect(syncState).toEqual(expectedState);
-                expect(fetchSpy).toHaveBeenCalledTimes(1);
+                expect(findSpy).toHaveBeenCalledTimes(1);
                 expect(activityServiceSpy).toHaveBeenCalledTimes(1);
                 done();
 
@@ -1320,7 +1255,7 @@ describe("DesktopSyncService", () => {
                 new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111), // Only one !
             ];
 
-            const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+            const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find")
                 .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
             const activityServiceSpy = spyOn(desktopSyncService.activityService, "count")
@@ -1332,7 +1267,7 @@ describe("DesktopSyncService", () => {
             // Then
             promise.then(syncState => {
                 expect(syncState).toEqual(expectedState);
-                expect(fetchSpy).toHaveBeenCalledTimes(1);
+                expect(findSpy).toHaveBeenCalledTimes(1);
                 expect(activityServiceSpy).toHaveBeenCalledTimes(1);
                 done();
 
@@ -1351,7 +1286,7 @@ describe("DesktopSyncService", () => {
                 new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
             ];
 
-            const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+            const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find")
                 .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
             const activityServiceSpy = spyOn(desktopSyncService.activityService, "count")
@@ -1363,7 +1298,7 @@ describe("DesktopSyncService", () => {
             // Then
             promise.then(syncState => {
                 expect(syncState).toEqual(expectedState);
-                expect(fetchSpy).toHaveBeenCalledTimes(1);
+                expect(findSpy).toHaveBeenCalledTimes(1);
                 expect(activityServiceSpy).toHaveBeenCalledTimes(1);
                 done();
 
@@ -1381,7 +1316,7 @@ describe("DesktopSyncService", () => {
                 new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
             ];
 
-            const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+            const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find")
                 .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
             const activityServiceSpy = spyOn(desktopSyncService.activityService, "count")
@@ -1393,7 +1328,7 @@ describe("DesktopSyncService", () => {
             // Then
             promise.then(syncState => {
                 expect(syncState).toEqual(expectedState);
-                expect(fetchSpy).toHaveBeenCalledTimes(1);
+                expect(findSpy).toHaveBeenCalledTimes(1);
                 expect(activityServiceSpy).toHaveBeenCalledTimes(1);
                 done();
 
@@ -1409,7 +1344,7 @@ describe("DesktopSyncService", () => {
             const expectedState = SyncState.PARTIALLY_SYNCED;
             const connectorSyncDateTimes: ConnectorSyncDateTime[] = [];
 
-            const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+            const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find")
                 .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
             const activityServiceSpy = spyOn(desktopSyncService.activityService, "count")
@@ -1421,7 +1356,7 @@ describe("DesktopSyncService", () => {
             // Then
             promise.then(syncState => {
                 expect(syncState).toEqual(expectedState);
-                expect(fetchSpy).toHaveBeenCalledTimes(1);
+                expect(findSpy).toHaveBeenCalledTimes(1);
                 expect(activityServiceSpy).toHaveBeenCalledTimes(1);
                 done();
 
@@ -1443,7 +1378,7 @@ describe("DesktopSyncService", () => {
                 new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
             ];
 
-            const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+            const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find")
                 .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
             // When
@@ -1452,7 +1387,7 @@ describe("DesktopSyncService", () => {
             // Then
             promise.then(() => {
 
-                expect(fetchSpy).toHaveBeenCalledTimes(1);
+                expect(findSpy).toHaveBeenCalledTimes(1);
                 done();
 
             }, () => {
@@ -1469,7 +1404,7 @@ describe("DesktopSyncService", () => {
                 expectedConnector
             ];
 
-            const fetchSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+            const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find")
                 .and.returnValue(Promise.resolve(connectorSyncDateTimes));
 
             // When
@@ -1478,7 +1413,7 @@ describe("DesktopSyncService", () => {
             // Then
             promise.then((mostRecentConnectorSynced: ConnectorSyncDateTime) => {
 
-                expect(fetchSpy).toHaveBeenCalledTimes(1);
+                expect(findSpy).toHaveBeenCalledTimes(1);
                 expect(mostRecentConnectorSynced).toEqual(expectedConnector);
                 done();
 
@@ -1495,7 +1430,7 @@ describe("DesktopSyncService", () => {
                 new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
             ];
 
-            spyOn(desktopSyncService.connectorSyncDateTimeDao, "fetch")
+            spyOn(desktopSyncService.connectorSyncDateTimeDao, "find")
                 .and.returnValue(Promise.resolve(connectorSyncDateTimesToSave));
 
             const putSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "put")

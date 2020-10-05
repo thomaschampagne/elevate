@@ -1,18 +1,14 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { AthleteService } from "../shared/services/athlete/athlete.service";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
-import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { SyncService } from "../shared/services/sync/sync.service";
 
 @Component({template: ""})
 export abstract class AdvancedMenuComponent implements OnInit {
 
-    protected constructor(public userSettingsService: UserSettingsService,
-                          public athleteService: AthleteService,
-                          public syncService: SyncService<any>,
+    protected constructor(public syncService: SyncService<any>,
                           public dialog: MatDialog,
                           public snackBar: MatSnackBar) {
     }
@@ -39,7 +35,7 @@ export abstract class AdvancedMenuComponent implements OnInit {
         const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
 
             if (confirm) {
-                this.syncService.clearSyncedData().then(() => {
+                this.syncService.clearSyncedActivities().then(() => {
                     afterClosedSubscription.unsubscribe();
                     location.reload();
                 }, error => {

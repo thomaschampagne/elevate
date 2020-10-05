@@ -1,9 +1,9 @@
 import { Subject } from "rxjs";
 
 export abstract class AppEventsService {
-    public onSyncDone: Subject<boolean>;
+    public syncDone$: Subject<boolean>;
 
     protected constructor() {
-        this.onSyncDone = new Subject<boolean>();
+        this.syncDone$ = new Subject<boolean>();
     }
 }

@@ -15,6 +15,8 @@ import { FitnessTrendModule } from "../fitness-trend.module";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { UserSettings } from "@elevate/shared/models";
+import { DataStore } from "../../shared/data-store/data-store";
+import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("FitnessTrendGraphComponent", () => {
@@ -40,6 +42,9 @@ describe("FitnessTrendGraphComponent", () => {
                 SharedModule,
                 FitnessTrendModule
             ],
+            providers: [
+                {provide: DataStore, useClass: TestingDataStore}
+            ]
         }).compileComponents();
 
         // Retrieve injected service

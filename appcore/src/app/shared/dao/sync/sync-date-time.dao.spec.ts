@@ -1,9 +1,10 @@
 import { TestBed } from "@angular/core/testing";
 
-import { SyncDateTimeDao } from "./sync-date-time-dao.service";
-import { MockedDataStore } from "../../data-store/impl/mock/mocked-data-store.service";
+import { SyncDateTimeDao } from "./sync-date-time.dao";
 import { DataStore } from "../../data-store/data-store";
-
+import { TestingDataStore } from "../../data-store/testing-datastore.service";
+import { LoggerService } from "../../services/logging/logger.service";
+import { ConsoleLoggerService } from "../../services/logging/console-logger.service";
 
 describe("SyncDateTimeDao", () => {
 
@@ -11,13 +12,11 @@ describe("SyncDateTimeDao", () => {
 
     beforeEach(done => {
 
-        const lastSyncTime = Date.now();
-        const mockedDataStore: MockedDataStore<number> = new MockedDataStore(lastSyncTime);
-
         TestBed.configureTestingModule({
             providers: [
                 SyncDateTimeDao,
-                {provide: DataStore, useValue: mockedDataStore}
+                {provide: DataStore, useClass: TestingDataStore},
+                {provide: LoggerService, useClass: ConsoleLoggerService}
             ]
         });
 

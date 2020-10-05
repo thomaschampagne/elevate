@@ -6,6 +6,8 @@ import * as _ from "lodash";
 import { CoreModule } from "../core/core.module";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { UserSettings } from "@elevate/shared/models";
+import { DataStore } from "../shared/data-store/data-store";
+import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("GlobalSettingsComponent", () => {
@@ -21,7 +23,9 @@ describe("GlobalSettingsComponent", () => {
                 SharedModule,
             ],
             declarations: [],
-            providers: []
+            providers: [
+                {provide: DataStore, useClass: TestingDataStore}
+            ]
         }).compileComponents();
 
         userSettingsService = TestBed.inject(UserSettingsService);

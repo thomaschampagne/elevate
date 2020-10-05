@@ -13,6 +13,8 @@ import { UserSettingsService } from "../shared/services/user-settings/user-setti
 import { Injectable } from "@angular/core";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { UserSettings } from "@elevate/shared/models";
+import { DataStore } from "../shared/data-store/data-store";
+import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("FitnessTrendComponent", () => {
@@ -37,6 +39,7 @@ describe("FitnessTrendComponent", () => {
             ],
             providers: [
                 {provide: AppEventsService, useClass: MockEventsService},
+                {provide: DataStore, useClass: TestingDataStore},
             ]
         }).compileComponents();
 

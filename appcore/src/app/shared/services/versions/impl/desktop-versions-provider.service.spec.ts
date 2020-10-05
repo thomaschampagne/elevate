@@ -5,16 +5,15 @@ import { SharedModule } from "../../../shared.module";
 import { DesktopModule } from "../../../modules/desktop/desktop.module";
 import { PackageManifest } from "@angular/cli/utilities/package-metadata";
 import { of } from "rxjs";
-import { MockedDataStore } from "../../../data-store/impl/mock/mocked-data-store.service";
 import { DataStore } from "../../../data-store/data-store";
+import { TestingDataStore } from "../../../data-store/testing-datastore.service";
+import { PropertiesModel } from "@elevate/shared/models";
 
 describe("DesktopVersionsProvider", () => {
 
     let service: DesktopVersionsProvider;
 
     beforeEach(done => {
-
-        const mockedDataStore: MockedDataStore<string> = new MockedDataStore(null);
 
         TestBed.configureTestingModule({
             imports: [
@@ -24,7 +23,7 @@ describe("DesktopVersionsProvider", () => {
             ],
             providers: [
                 DesktopVersionsProvider,
-                {provide: DataStore, useValue: mockedDataStore}
+                {provide: DataStore, useClass: TestingDataStore},
             ]
         });
 
@@ -54,19 +53,20 @@ describe("DesktopVersionsProvider", () => {
 
     });
 
-    it("should provide the saved version", done => {
+    it("should provide the existing version", done => {
 
         // Given
         const expectedVersion = "5.5.5";
-        const getItemSpy = spyOn(localStorage, "getItem").and.returnValue(expectedVersion);
+        const propertiesModel = new PropertiesModel(expectedVersion);
+        const propertyFindOneSpy = spyOn(service.propertiesDao, "findOne").and.returnValue(Promise.resolve(propertiesModel));
 
         // When
-        const promise = service.getSavedVersion();
+        const promise = service.getExistingVersion();
 
         // Then
-        promise.then(previousVersion => {
-            expect(previousVersion).toEqual(expectedVersion);
-            expect(getItemSpy).toHaveBeenCalledWith(DesktopVersionsProvider.DESKTOP_SAVED_VERSION_KEY);
+        promise.then(existingVersion => {
+            expect(existingVersion).toEqual(expectedVersion);
+            expect(propertyFindOneSpy).toHaveBeenCalledTimes(1);
             done();
         }, () => {
             throw new Error("Should not be here");

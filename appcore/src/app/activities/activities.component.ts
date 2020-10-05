@@ -16,19 +16,16 @@ import * as moment from "moment";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { SyncService } from "../shared/services/sync/sync.service";
+import { SyncState } from "../shared/services/sync/sync-state.enum";
+import { AppError } from "../shared/models/app-error.model";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { Subject, timer } from "rxjs";
 import { debounce } from "rxjs/operators";
 import { StreamsService } from "../shared/services/streams/streams.service";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
-import { SyncState } from "../shared/services/sync/sync-state.enum";
-import { AppError } from "../shared/models/app-error.model";
 import NumberColumn = ActivityColumns.NumberColumn;
 import UserSettingsModel = UserSettings.UserSettingsModel;
-
-// TODO Sticky view ath settings + delete
-// TODO Perf Sort desc activities from query to save time from query
 
 @Component({
     selector: "app-activities",
@@ -41,10 +38,10 @@ export class ActivitiesComponent implements OnInit {
     public static readonly LS_PAGE_SIZE_PREFERENCE: string = "activities_pageSize";
     public readonly ColumnType = ActivityColumns.ColumnType;
 
-    @ViewChild(MatPaginator)
+    @ViewChild(MatPaginator, {static: true})
     public matPaginator: MatPaginator;
 
-    @ViewChild(MatSort)
+    @ViewChild(MatSort, {static: true})
     public matSort: MatSort;
 
     public dataSource: MatTableDataSource<SyncedActivityModel>;
@@ -127,7 +124,6 @@ export class ActivitiesComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        console.time("Print activities time: ");
 
         this.syncService.getSyncState().then((syncState: SyncState) => {
 
@@ -164,7 +160,7 @@ export class ActivitiesComponent implements OnInit {
         });
 
         // Listen for syncFinished update then table if necessary.
-        this.appEventsService.onSyncDone.subscribe((changes: boolean) => {
+        this.appEventsService.syncDone$.subscribe((changes: boolean) => {
             if (changes) {
                 this.initialized = false;
                 this.fetchApplyData();
@@ -219,7 +215,7 @@ export class ActivitiesComponent implements OnInit {
 
     public fetchApplyData(): void {
 
-        this.activityService.fetch().then((syncedActivityModels: SyncedActivityModel[]) => {
+        this.activityService.findSortStartDate(true).then((syncedActivityModels: SyncedActivityModel[]) => {
 
             this.hasActivities = syncedActivityModels.length > 0;
 
@@ -231,8 +227,6 @@ export class ActivitiesComponent implements OnInit {
                 filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
                 this.dataSource.filter = filterValue;
             });
-
-            console.timeEnd("Print activities time: ");
 
         }).catch(error => {
             const message = error.toString() + ". Press (F12) to see a more detailed error message in browser console.";
@@ -323,15 +317,13 @@ export class ActivitiesComponent implements OnInit {
         });
 
         const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
-
             if (confirm) {
-                this.activityService.removeByIds([activity.id]).then(() => {
-                    return this.streamsService.removeByIds([activity.id]);
-                }).then(() => {
-                    this.fetchApplyData();
-                }, error => {
-                    this.snackBar.open(error, "Close");
-                });
+                this.activityService.removeById(activity.id)
+                    .then(() => {
+                        this.fetchApplyData();
+                    }, error => {
+                        this.snackBar.open(error, "Close");
+                    });
             }
             afterClosedSubscription.unsubscribe();
         });

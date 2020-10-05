@@ -7,6 +7,8 @@ import { SharedModule } from "../../shared/shared.module";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { UserSettings } from "@elevate/shared/models";
+import { DataStore } from "../../shared/data-store/data-store";
+import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZoneToolBarComponent", () => {
@@ -38,6 +40,9 @@ describe("ZoneToolBarComponent", () => {
             imports: [
                 CoreModule,
                 SharedModule,
+            ],
+            providers: [
+                {provide: DataStore, useClass: TestingDataStore}
             ]
         }).compileComponents();
 
@@ -95,7 +100,7 @@ describe("ZoneToolBarComponent", () => {
     it("should call zone service on SaveZones", done => {
 
         // Given
-        const spy = spyOn(component.zonesService, "saveZones").and.returnValue(Promise.resolve(null));
+        const spy = spyOn(component.zonesService, "updateZones").and.returnValue(Promise.resolve(null));
         const compiled = fixture.debugElement.nativeElement;
 
         // When

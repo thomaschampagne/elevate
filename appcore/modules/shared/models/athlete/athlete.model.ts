@@ -8,11 +8,6 @@ export class AthleteModel extends AbstractAthleteModel {
     public gender: Gender;
     public datedAthleteSettings: DatedAthleteSettingsModel[];
 
-    /**
-     *
-     * @param {Gender} gender
-     * @param {AthleteSettingsModel} datedAthleteSettings
-     */
     constructor(gender: Gender, datedAthleteSettings: DatedAthleteSettingsModel[]) {
         super();
         this.gender = gender;

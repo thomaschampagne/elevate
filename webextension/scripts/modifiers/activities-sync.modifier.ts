@@ -1,5 +1,4 @@
 import { Helper } from "../helper";
-import { BrowserStorage } from "../browser-storage";
 import { ExtensionEnv } from "../../config/extension-env";
 import { ActivitiesSynchronize } from "../processors/activities-synchronize";
 import { SyncResultModel } from "@elevate/shared/models";
@@ -9,6 +8,7 @@ import * as _ from "lodash";
 import { AppStorageUsage } from "../models/app-storage-usage.model";
 import { BrowserStorageType } from "../models/browser-storage-type.enum";
 import { DistributedEndpointsResolver } from "@elevate/shared/resolvers";
+import { BrowserStorage } from "../browser-storage";
 
 export class ActivitiesSyncModifier extends AbstractModifier {
 

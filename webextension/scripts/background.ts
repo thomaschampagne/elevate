@@ -1,7 +1,8 @@
-import { BrowserStorage } from "./browser-storage";
 import * as _ from "lodash";
 import { CoreMessages, SyncResultModel } from "@elevate/shared/models";
 import { Constant } from "@elevate/shared/constants";
+import { LegacyBrowserStorage } from "./legacy-browser-storage";
+import { BrowserStorage } from "./browser-storage";
 
 export class Background {
 
@@ -17,23 +18,25 @@ export class Background {
 
     /**
      * Forward syncResult to * non url tabs
-     * @param {SyncResult} syncResult
      */
     private forwardOnExternalSyncFinished(syncResult: SyncResultModel): void {
-
         if (syncResult) {
-            chrome.tabs.query({}, (tabs: chrome.tabs.Tab[]) => {
-                _.forEach(tabs, (tab: chrome.tabs.Tab) => {
-                    if (!tab.url) {
-                        const message = {
-                            message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
-                            results: syncResult
-                        };
-                        chrome.tabs.sendMessage(tab.id, message);
-                    }
-                });
-            });
+            this.forwardMessageToApp(CoreMessages.ON_EXTERNAL_SYNC_DONE, syncResult);
         }
+    }
+
+    private forwardMessageToApp<T>(messageKey: string, payload: T = null): void {
+        chrome.tabs.query({}, (tabs: chrome.tabs.Tab[]) => {
+            _.forEach(tabs, (tab: chrome.tabs.Tab) => {
+                if (!tab.url) {
+                    const message = {
+                        message: messageKey,
+                        results: payload
+                    };
+                    chrome.tabs.sendMessage(tab.id, message);
+                }
+            });
+        });
     }
 
     private listenForExternalMessages(): void {
@@ -46,12 +49,16 @@ export class Background {
                     this.forwardOnExternalSyncFinished(request.params.syncResult);
                     break;
 
+                case CoreMessages.ON_EXTERNAL_DB_CHANGE:
+                    this.forwardMessageToApp(CoreMessages.ON_EXTERNAL_DB_CHANGE);
+                    break;
+
                 case CoreMessages.ON_RELOAD_BROWSER_TAB:
                     this.reloadBrowserTab(request.params.sourceTabId);
                     break;
 
-                case BrowserStorage.ON_GET_MESSAGE:
-                    BrowserStorage.getInstance().get(request.params.storage, request.params.key).then(
+                case LegacyBrowserStorage.ON_GET_MESSAGE:
+                    BrowserStorage.getInstance().get(request.params.storage, request.params.key, request.params.getFirstDocOnly).then(
                         result => sendResponse({data: result}),
                         error => {
                             console.error(error);
@@ -59,7 +66,7 @@ export class Background {
                     );
                     break;
 
-                case BrowserStorage.ON_SET_MESSAGE:
+                case LegacyBrowserStorage.ON_SET_MESSAGE:
                     BrowserStorage.getInstance().set(request.params.storage, request.params.key, request.params.value).then(
                         () => sendResponse({message: request.params.key + " has been set to " + request.params.value}),
                         error => {
@@ -68,7 +75,7 @@ export class Background {
                     );
                     break;
 
-                case BrowserStorage.ON_RM_MESSAGE:
+                case LegacyBrowserStorage.ON_RM_MESSAGE:
                     BrowserStorage.getInstance().rm(request.params.storage, request.params.key).then(
                         () => sendResponse({message: request.params.key + " has been removed"}),
                         error => {
@@ -77,7 +84,7 @@ export class Background {
                     );
                     break;
 
-                case BrowserStorage.ON_CLEAR_MESSAGE:
+                case LegacyBrowserStorage.ON_CLEAR_MESSAGE:
                     BrowserStorage.getInstance().clear(request.params.storage).then(
                         () => sendResponse({message: request.params.storage + " has been cleared"}),
                         error => {
@@ -86,7 +93,7 @@ export class Background {
                     );
                     break;
 
-                case BrowserStorage.ON_USAGE_MESSAGE:
+                case LegacyBrowserStorage.ON_USAGE_MESSAGE:
                     BrowserStorage.getInstance().usage(request.params.storage).then(
                         result => sendResponse({data: result}),
                         error => {

@@ -1,20 +1,20 @@
 import { Injectable } from "@angular/core";
 import { YearToDateProgressPresetModel } from "../models/year-to-date-progress-preset.model";
 import { BaseDao } from "../../../shared/dao/base.dao";
-import { StorageLocationModel } from "../../../shared/data-store/storage-location.model";
-import { StorageType } from "../../../shared/data-store/storage-type.enum";
+import { CollectionDef } from "../../../shared/data-store/collection-def";
 
 @Injectable()
 export class YearProgressPresetDao extends BaseDao<YearToDateProgressPresetModel> {
 
-    public static readonly STORAGE_LOCATION: StorageLocationModel = new StorageLocationModel("yearProgressPresets", StorageType.COLLECTION, YearToDateProgressPresetModel.ID_FIELD);
-    public static readonly DEFAULT_STORAGE_VALUE: YearToDateProgressPresetModel[] = [];
+    public static readonly COLLECTION_DEF: CollectionDef<YearToDateProgressPresetModel> = new CollectionDef("yearProgressPresets", {
+        unique: ["id"]
+    });
 
-    public getStorageLocation(): StorageLocationModel {
-        return YearProgressPresetDao.STORAGE_LOCATION;
+    public getCollectionDef(): CollectionDef<YearToDateProgressPresetModel> {
+        return YearProgressPresetDao.COLLECTION_DEF;
     }
 
-    public getDefaultStorageValue(): YearToDateProgressPresetModel[] | YearToDateProgressPresetModel {
-        return YearProgressPresetDao.DEFAULT_STORAGE_VALUE;
+    public getDefaultStorageValue(): YearToDateProgressPresetModel[] {
+        return [];
     }
 }

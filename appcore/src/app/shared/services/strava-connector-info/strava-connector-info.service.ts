@@ -9,10 +9,10 @@ export class StravaConnectorInfoService {
     }
 
     public fetch(): Promise<StravaConnectorInfo> {
-        return <Promise<StravaConnectorInfo>> this.stravaConnectorInfoDao.fetch();
+        return this.stravaConnectorInfoDao.findOne();
     }
 
-    public save(stravaConnectorInfo: StravaConnectorInfo): Promise<StravaConnectorInfo> {
-        return <Promise<StravaConnectorInfo>> this.stravaConnectorInfoDao.save(stravaConnectorInfo);
+    public update(stravaConnectorInfo: StravaConnectorInfo): Promise<StravaConnectorInfo> {
+        return this.stravaConnectorInfoDao.update(stravaConnectorInfo, true);
     }
 }

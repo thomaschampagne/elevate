@@ -8,6 +8,8 @@ import { ZoneImportExportDataModel } from "./zone-import-export-data.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 import { Mode } from "./mode.enum";
 import { UserSettings, UserZonesModel } from "@elevate/shared/models";
+import { DataStore } from "../../shared/data-store/data-store";
+import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZonesImportExportDialogComponent", () => {
@@ -44,6 +46,9 @@ describe("ZonesImportExportDialogComponent", () => {
                 {
                     provide: MatDialogRef, useValue: {},
                 },
+                {
+                    provide: DataStore, useClass: TestingDataStore
+                }
             ]
         }).compileComponents();
 

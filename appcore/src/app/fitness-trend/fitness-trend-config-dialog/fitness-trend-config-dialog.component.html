@@ -19,12 +19,12 @@
                     <mat-slide-toggle
                         [(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedPowerStressScore"
                         [disabled]="!isEstimatedPowerStressScoreToggleEnabled">
-                        Enable cycling estimated PSS (Power Stress Scores) when estimated power data is available
+                        Enable Cycling Estimated PSS (Power Stress Scores) when estimated power data is available
                     </mat-slide-toggle>
 
                     <div *ngIf="!isEstimatedPowerStressScoreToggleEnabled" class="hint">
 
-                        <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'" color="warn">
+                        <mat-icon [style.vertical-align]="'bottom'" color="warn" fontSet="material-icons-outlined">
                             warning
                         </mat-icon>
                         PSS Estimation is currently disabled. To enable it, make sure that:
@@ -34,7 +34,7 @@
                                 athlete settings</a>. A wrong ftp can cause too big/low PSS scores on activities.
                             </li>
                             <li>You switch <strong>ON</strong> the power meter data toggle identified by the icon
-                                <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'">flash_on
+                                <mat-icon [style.vertical-align]="'bottom'" fontSet="material-icons-outlined">flash_on
                                 </mat-icon>
                                 (on screen behind).
                             </li>
@@ -63,11 +63,11 @@
                     <mat-slide-toggle
                         [(ngModel)]="fitnessTrendConfigDialogData.fitnessTrendConfigModel.allowEstimatedRunningStressScore"
                         [disabled]="!isEstimatedRunningStressScoreToggleEnabled">
-                        Enable running estimated RSS (Running Stress Score)
+                        Enable Running Estimated RSS (Running Stress Score)
                     </mat-slide-toggle>
 
                     <div *ngIf="!isEstimatedRunningStressScoreToggleEnabled" class="hint">
-                        <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'" color="warn">
+                        <mat-icon [style.vertical-align]="'bottom'" color="warn" fontSet="material-icons-outlined">
                             warning
                         </mat-icon>
                         RSS Estimation is currently disabled. To enable it, make sure that:
@@ -207,8 +207,8 @@
             <div
                 *ngIf="(fitnessTrendConfigDialogData.fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP)">
 				<span>
-					<mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'"
-                              color="warn">warning</mat-icon>
+					<mat-icon [style.vertical-align]="'bottom'" color="warn"
+                              fontSet="material-icons-outlined">warning</mat-icon>
 					When heart rate stress score calculation method is set to TRIMP (Training Impulse):
 					<ul>
 						<li>

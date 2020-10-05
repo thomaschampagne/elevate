@@ -30,6 +30,29 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 
 export class ActivityComputer {
 
+    public static readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = 0.85;
+    public static readonly MOVING_THRESHOLD_KPH: number = 0.1; // Kph
+    public static readonly CADENCE_THRESHOLD_RPM: number = 35; // RPMs
+    public static readonly GRADE_CLIMBING_LIMIT: number = 1.6;
+    public static readonly GRADE_DOWNHILL_LIMIT: number = -1.6;
+    public static readonly GRADE_PROFILE_FLAT_PERCENTAGE_DETECTED: number = 60;
+    public static readonly GRADE_PROFILE_FLAT: string = "FLAT";
+    public static readonly GRADE_PROFILE_HILLY: string = "HILLY";
+    public static readonly ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
+    public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
+    public static readonly SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
+    protected athleteSnapshot: AthleteSnapshotModel;
+    protected activityType: ElevateSport;
+    protected isTrainer: boolean;
+    protected userSettings: UserSettings.UserSettingsModel;
+    protected isOwner: boolean;
+    protected hasPowerMeter: boolean;
+    protected activitySourceData: ActivitySourceDataModel;
+    protected activityStream: ActivityStreamsModel;
+    protected bounds: number[];
+    protected returnZones: boolean;
+    protected returnPowerCurve: boolean;
+
     constructor(activityType: ElevateSport,
                 isTrainer: boolean,
                 userSettings: UserSettings.UserSettingsModel,
@@ -56,29 +79,6 @@ export class ActivityComputer {
         this.returnPowerCurve = returnPowerCurve;
         this.activitySourceData = activitySourceData;
     }
-
-    public static readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = 0.85;
-    public static readonly MOVING_THRESHOLD_KPH: number = 0.1; // Kph
-    public static readonly CADENCE_THRESHOLD_RPM: number = 35; // RPMs
-    public static readonly GRADE_CLIMBING_LIMIT: number = 1.6;
-    public static readonly GRADE_DOWNHILL_LIMIT: number = -1.6;
-    public static readonly GRADE_PROFILE_FLAT_PERCENTAGE_DETECTED: number = 60;
-    public static readonly GRADE_PROFILE_FLAT: string = "FLAT";
-    public static readonly GRADE_PROFILE_HILLY: string = "HILLY";
-    public static readonly ASCENT_SPEED_GRADE_LIMIT: number = ActivityComputer.GRADE_CLIMBING_LIMIT;
-    public static readonly AVG_POWER_TIME_WINDOW_SIZE: number = 30; // Seconds
-    public static readonly SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
-    protected athleteSnapshot: AthleteSnapshotModel;
-    protected activityType: ElevateSport;
-    protected isTrainer: boolean;
-    protected userSettings: UserSettings.UserSettingsModel;
-    protected isOwner: boolean;
-    protected hasPowerMeter: boolean;
-    protected activitySourceData: ActivitySourceDataModel;
-    protected activityStream: ActivityStreamsModel;
-    protected bounds: number[];
-    protected returnZones: boolean;
-    protected returnPowerCurve: boolean;
 
     public static calculate(bareActivityModel: BareActivityModel, athleteSnapshotModel: AthleteSnapshotModel, userSettingsModel: UserSettingsModel,
                             streams: ActivityStreamsModel, returnZones: boolean = false, returnPowerCurve: boolean = false, bounds: number[] = null, isOwner: boolean = true,
@@ -360,20 +360,18 @@ export class ActivityComputer {
         let moveRatio: number = null;
 
         // Include speed and pace
-        const hasActivityStream = !_.isEmpty(this.activityStream);
-
-        if (hasActivityStream && this.activityStream.time && this.activityStream.time.length > 0) {
+        if (this.activityStream && this.activityStream.time && this.activityStream.time.length > 0) {
             elapsedTime = _.last(this.activityStream.time) - _.first(this.activityStream.time);
         }
 
         // Prepare move data model along stream or activitySourceData
         let moveDataModel = null;
 
-        if (hasActivityStream && this.activityStream.time && this.activityStream.velocity_smooth && this.activityStream.velocity_smooth.length > 0) {
+        if (this.activityStream && this.activityStream.time && this.activityStream.velocity_smooth && this.activityStream.velocity_smooth.length > 0) {
             moveDataModel = this.moveData(this.activityStream.velocity_smooth, this.activityStream.time, this.activityStream.grade_adjusted_speed);
         }
 
-        if (!hasActivityStream && this.activitySourceData && this.activityType === ElevateSport.Run) {
+        if (this.activityStream && !this.activityStream.velocity_smooth && this.activitySourceData && this.activityType === ElevateSport.Run) {
             // Allow to estimate running move data if no stream available (goal is to get RSS computation for manual activities)
             if (this.activitySourceData) {
                 moveDataModel = this.moveDataEstimate(this.activitySourceData.movingTime, this.activitySourceData.distance);
@@ -423,7 +421,7 @@ export class ActivityComputer {
             && this.isOwner) {
             powerData = this.estimatedRunningPower(this.activityStream, this.athleteSnapshot.athleteSettings.weight, this.hasPowerMeter,
                 this.athleteSnapshot.athleteSettings.cyclingFtp);
-        } else if (hasActivityStream) {
+        } else if (this.activityStream) {
             powerData = this.powerData(this.athleteSnapshot.athleteSettings.weight, this.hasPowerMeter, this.athleteSnapshot.athleteSettings.cyclingFtp,
                 this.activityStream.watts, this.activityStream.velocity_smooth, this.activityStream.time);
         } else {
@@ -464,7 +462,7 @@ export class ActivityComputer {
 
         // Find total distance
         let distance;
-        if (hasActivityStream && this.activityStream.distance && this.activityStream.distance.length > 0) {
+        if (this.activityStream && this.activityStream.distance && this.activityStream.distance.length > 0) {
             distance = _.last(this.activityStream.distance);
         } else if (this.activitySourceData && this.activitySourceData.distance > 0) {
             distance = this.activitySourceData.distance;
@@ -493,7 +491,7 @@ export class ActivityComputer {
 
     protected estimatedRunningPower(activityStream: ActivityStreamsModel, athleteWeight: number, hasPowerMeter: boolean, userFTP: number) {
 
-        if (_.isEmpty(activityStream)) {
+        if (_.isEmpty(activityStream.distance)) { // return null if activityStream is basically empty (i.e. a manual run activity)
             return null;
         }
 
@@ -758,7 +756,8 @@ export class ActivityComputer {
             speedZones: (this.returnZones) ? speedZones : null,
         };
 
-        const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed && genuineGradeAdjustedAvgSpeed > 0) ? Math.floor(ActivityComputer.convertSpeedToPace(genuineGradeAdjustedAvgSpeed)) : null;
+        const genuineGradeAdjustedAvgPace = (hasGradeAdjustedSpeed && genuineGradeAdjustedAvgSpeed > 0)
+            ? Math.floor(ActivityComputer.convertSpeedToPace(genuineGradeAdjustedAvgSpeed)) : null;
 
         const runningStressScore = ((this.activityType === ElevateSport.Run || this.activityType === ElevateSport.VirtualRun) && genuineGradeAdjustedAvgPace && this.athleteSnapshot.athleteSettings.runningFtp)
             ? ActivityComputer.computeRunningStressScore(genuineAvgSpeedSecondsSum, genuineGradeAdjustedAvgPace, this.athleteSnapshot.athleteSettings.runningFtp) : null;

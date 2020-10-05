@@ -9,18 +9,18 @@ export class StreamsService {
     }
 
     public getById(id: number | string): Promise<CompressedStreamModel> {
-        return this.streamsDao.getById(<string> id);
+        return this.streamsDao.getById(id);
     }
 
     public put(compressedStreamModel: CompressedStreamModel): Promise<CompressedStreamModel> {
-        return (<Promise<CompressedStreamModel>> this.streamsDao.put(compressedStreamModel));
+        return this.streamsDao.put(compressedStreamModel);
     }
 
-    public removeByIds(activitiesToDelete: (string | number)[]): Promise<CompressedStreamModel[]> {
-        return this.streamsDao.removeByIds(activitiesToDelete);
+    public removeByManyIds(activitiesToDelete: (string | number)[]): Promise<void> {
+        return this.streamsDao.removeByManyIds(activitiesToDelete);
     }
 
-    public clear(): Promise<void> {
-        return this.streamsDao.clear();
+    public clear(persistImmediately: boolean = false): Promise<void> {
+        return this.streamsDao.clear(persistImmediately);
     }
 }

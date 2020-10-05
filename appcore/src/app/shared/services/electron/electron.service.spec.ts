@@ -4,6 +4,8 @@ import { ElectronService, ElectronWindow } from "./electron.service";
 import { noop } from "rxjs";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
+import { DataStore } from "../../data-store/data-store";
+import { TestingDataStore } from "../../data-store/testing-datastore.service";
 
 describe("ElectronService", () => {
 
@@ -17,7 +19,8 @@ describe("ElectronService", () => {
                 SharedModule
             ],
             providers: [
-                ElectronService
+                ElectronService,
+                {provide: DataStore, useClass: TestingDataStore}
             ]
         });
 

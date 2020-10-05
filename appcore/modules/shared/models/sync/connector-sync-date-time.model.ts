@@ -1,14 +1,12 @@
 import { ConnectorType } from "../../sync/connectors";
+import { SyncDateTime } from "./sync-date-time.model";
 
-export class ConnectorSyncDateTime {
-
-    public static readonly ID_FIELD: string = "connectorType";
+export class ConnectorSyncDateTime extends SyncDateTime {
 
     public connectorType: ConnectorType;
-    public dateTime: number;
 
-    constructor(connectorType: ConnectorType, dateTime: number = Date.now()) {
+    constructor(connectorType: ConnectorType, syncDateTime: number) {
+        super(syncDateTime);
         this.connectorType = connectorType;
-        this.dateTime = dateTime;
     }
 }

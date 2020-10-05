@@ -128,8 +128,8 @@ export class StravaAuthenticator {
 
     /**
      * Authorize against the Strava V3 API and return the Strava access token via a callback.
-     * @param {string} clientId - Strava client ID.
-     * @param {string} clientSecret - Strava client secret.
+     * @param clientId - Strava client ID.
+     * @param clientSecret - Strava client secret.
      */
     public authorize(clientId: number, clientSecret: string): Promise<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: object }> {
 
@@ -181,24 +181,19 @@ export class StravaAuthenticator {
 
     }
 
-    /**
-     *
-     * @param clientId
-     * @param clientSecret
-     * @param refreshToken
-     */
     public refresh(clientId: number, clientSecret: string, refreshToken: string): Promise<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: object }> {
 
         return new Promise<{ accessToken: string, refreshToken: string, expiresAt: number, athlete: object }>((resolve, reject) => {
 
-            this.makeTokensExchangeRequest(clientId, clientSecret, null, refreshToken, (error: any, accessTokenUpdate: string, refreshTokenUpdate: string, expiresAt: number, athlete: object) => {
-                if (error) {
-                    logger.error(error);
-                    reject(error);
-                } else {
-                    resolve({accessToken: accessTokenUpdate, refreshToken: refreshTokenUpdate, expiresAt: expiresAt, athlete: athlete});
-                }
-            });
+            this.makeTokensExchangeRequest(clientId, clientSecret, null, refreshToken,
+                (error: any, accessTokenUpdate: string, refreshTokenUpdate: string, expiresAt: number, athlete: object) => {
+                    if (error) {
+                        logger.error(error);
+                        reject(error);
+                    } else {
+                        resolve({accessToken: accessTokenUpdate, refreshToken: refreshTokenUpdate, expiresAt: expiresAt, athlete: athlete});
+                    }
+                });
 
         });
 

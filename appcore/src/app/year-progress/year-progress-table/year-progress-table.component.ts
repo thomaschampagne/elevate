@@ -91,7 +91,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
         }
 
         // When user mouse moves on graph, listen for moment watched and update table rows
-        this.yearProgressService.momentWatchedChanges.subscribe((momentWatched: Moment) => {
+        this.yearProgressService.momentWatchedChanges$.subscribe((momentWatched: Moment) => {
 
             if (this.momentWatched.isSame(momentWatched)) {
                 return;

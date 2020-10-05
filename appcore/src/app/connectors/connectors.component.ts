@@ -38,10 +38,10 @@ export class ConnectorsComponent implements OnInit {
 
     public updateSyncDateTimeText(): void {
         this.getSyncDateTime().then(connectorSyncDateTime => {
-            this.syncDateTime = (connectorSyncDateTime && connectorSyncDateTime.dateTime)
-                ? new Date(connectorSyncDateTime.dateTime) : null;
-            this.humanSyncDateTime = (connectorSyncDateTime && connectorSyncDateTime.dateTime)
-                ? "Synced " + moment(connectorSyncDateTime.dateTime).fromNow() + "." : "Never synced.";
+            this.syncDateTime = (connectorSyncDateTime && connectorSyncDateTime.syncDateTime)
+                ? new Date(connectorSyncDateTime.syncDateTime) : null;
+            this.humanSyncDateTime = (connectorSyncDateTime && connectorSyncDateTime.syncDateTime)
+                ? "Synced " + moment(connectorSyncDateTime.syncDateTime).fromNow() + "." : "Never synced.";
         });
     }
 

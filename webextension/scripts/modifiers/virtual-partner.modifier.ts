@@ -58,7 +58,7 @@ export class VirtualPartnerModifier extends AbstractModifier {
     }
 
     // TODO Refactor from AbstractExtendedDataModifier?
-    protected getSegmentInfos(effortId: number, callback: (segmentInfosResponse: any) => any): void {
+    protected getSegmentInfos(effortId: string, callback: (segmentInfosResponse: any) => any): void {
 
         if (!effortId) {
             console.error("No effort id found");
@@ -89,14 +89,15 @@ export class VirtualPartnerModifier extends AbstractModifier {
 
     protected displayDownloadPopup() {
 
-        const effortId: number = parseInt(window.location.pathname.split("/")[4] || window.location.hash.replace("#", ""));
+        const effortId: string = _.last(window.location.href.match(/(\d+)$/g));
 
         const exportsType = [
             ExportTypes.GPX,
             ExportTypes.TCX,
         ];
 
-        const message: string = "Note: If you are using a Garmin device put downloaded file into <strong>NewFiles/*</strong> folder.<br/><br/><div id=\"elevate_download_course_" + effortId + "\"></div>";
+        const message: string = "Note: If you are using a Garmin device put downloaded file into " +
+            "<strong>NewFiles/*</strong> folder.<br/><br/><div id=\"elevate_download_course_" + effortId + "\"></div>";
 
         $.fancybox("<div width=\"250px\" id=\"elevate_popup_download_course_" + effortId + "\">" + message + "</div>", {
             afterShow: () => {
@@ -112,7 +113,7 @@ export class VirtualPartnerModifier extends AbstractModifier {
         });
     }
 
-    protected download(effortId: number, exportType: ExportTypes) {
+    protected download(effortId: string, exportType: ExportTypes) {
 
         this.getSegmentInfos(effortId, (segmentData: any) => {
 

@@ -9,7 +9,6 @@ import { SharedModule } from "../../shared.module";
 import { ElevateSport } from "@elevate/shared/enums";
 import { DesktopModule } from "../../modules/desktop/desktop.module";
 import { ElectronService, ElectronWindow } from "../electron/electron.service";
-import FindRequest = PouchDB.Find.FindRequest;
 
 describe("ActivityService", () => {
 
@@ -58,7 +57,7 @@ describe("ActivityService", () => {
         it("should fetch activities", done => {
 
             // Given
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
 
             // When
@@ -70,7 +69,7 @@ describe("ActivityService", () => {
                 expect(result).not.toBeNull();
                 expect(result.length).toEqual(_TEST_SYNCED_ACTIVITIES_.length);
                 expect(result).toEqual(_TEST_SYNCED_ACTIVITIES_);
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 done();
 
@@ -80,33 +79,6 @@ describe("ActivityService", () => {
                 done();
             });
 
-        });
-
-        it("should save SyncedActivityModels", done => {
-
-            // Given
-            const syncedActivityModelsToSave = _TEST_SYNCED_ACTIVITIES_;
-            const saveDaoSpy = spyOn(activityService.activityDao, "save")
-                .and.returnValue(Promise.resolve(_TEST_SYNCED_ACTIVITIES_));
-
-            // When
-            const promise: Promise<SyncedActivityModel[]> = activityService.save(syncedActivityModelsToSave);
-
-            // Then
-            promise.then((result: SyncedActivityModel[]) => {
-
-                expect(result).not.toBeNull();
-                expect(result.length).toEqual(_TEST_SYNCED_ACTIVITIES_.length);
-                expect(result).toEqual(_TEST_SYNCED_ACTIVITIES_);
-                expect(saveDaoSpy).toHaveBeenCalledTimes(1);
-
-                done();
-
-            }, error => {
-                expect(error).toBeNull();
-                expect(false).toBeTruthy("Whoops! I should not be here!");
-                done();
-            });
         });
 
         it("should clear SyncedActivityModels", done => {
@@ -138,30 +110,15 @@ describe("ActivityService", () => {
                 296692980, // Fondo 100
             ];
 
-            const expectedExistingActivity = 353633586; // Venon PR 01
-
-            spyOn(activityService.activityDao, "removeByIds")
-                .and.returnValue(Promise.resolve(_.filter(_TEST_SYNCED_ACTIVITIES_, (syncedActivityModel: SyncedActivityModel) => {
-                return (_.indexOf(activitiesToDelete, syncedActivityModel.id) === -1);
-            })));
+            const removeByManyIdsSpy = spyOn(activityService.activityDao, "removeByManyIds").and.returnValue(Promise.resolve());
 
             // When
-            const promise: Promise<SyncedActivityModel[]> = activityService.removeByIds(activitiesToDelete);
+            const promise = activityService.removeByManyIds(activitiesToDelete);
 
             // Then
-            promise.then((result: SyncedActivityModel[]) => {
+            promise.then(() => {
 
-                expect(result.length).toEqual(_TEST_SYNCED_ACTIVITIES_.length - activitiesToDelete.length);
-
-                let activity = _.find(result, {id: activitiesToDelete[0]});
-                expect(_.isEmpty(activity)).toBeTruthy();
-
-                activity = _.find(result, {id: activitiesToDelete[1]});
-                expect(_.isEmpty(activity)).toBeTruthy();
-
-                activity = _.find(result, {id: expectedExistingActivity});
-                expect(_.isEmpty(activity)).toBeFalsy();
-
+                expect(removeByManyIdsSpy).toHaveBeenCalledWith(activitiesToDelete, true);
                 done();
 
             }, error => {
@@ -214,7 +171,7 @@ describe("ActivityService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
@@ -226,7 +183,7 @@ describe("ActivityService", () => {
             // Then
             promise.then((result: boolean) => {
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
                 expect(result).toBeTruthy();
                 done();
 
@@ -287,7 +244,7 @@ describe("ActivityService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
@@ -299,7 +256,7 @@ describe("ActivityService", () => {
             // Then
             promise.then((result: boolean) => {
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
                 expect(result).toBeTruthy();
                 done();
 
@@ -360,7 +317,7 @@ describe("ActivityService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
@@ -372,7 +329,7 @@ describe("ActivityService", () => {
             // Then
             promise.then((result: number[]) => {
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
                 expect(_.indexOf(result, 1)).toEqual(-1);
                 expect(_.indexOf(result, 2)).not.toEqual(-1);
@@ -427,7 +384,7 @@ describe("ActivityService", () => {
                 null,
                 false));
 
-            const fetchDaoSpy = spyOn(activityService.activityDao, "fetch")
+            const findDaoSpy = spyOn(activityService.activityDao, "find")
                 .and.returnValue(Promise.resolve(syncedActivityModels));
 
             spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch")
@@ -439,7 +396,7 @@ describe("ActivityService", () => {
             // Then
             promise.then((result: boolean) => {
 
-                expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
+                expect(findDaoSpy).toHaveBeenCalledTimes(1);
                 expect(result).toBeFalsy();
                 done();
 
@@ -452,180 +409,5 @@ describe("ActivityService", () => {
         });
 
     });
-
-    describe("Activity lacking of athlete settings (= missing stress scores)", () => {
-
-        it("should detect any activities lacking of athlete settings", done => {
-
-            // Given
-            const syncedActivities: Partial<SyncedActivityModel>[] = [
-                {id: "111", name: "111", settingsLack: false},
-                {id: "222", name: "222", settingsLack: true},
-                {id: "333", name: "333", settingsLack: false},
-                {id: "444", name: "444", settingsLack: true},
-                {id: "555", name: "555", settingsLack: false},
-                {id: "666", name: "666"},
-            ];
-
-            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(<SyncedActivityModel[]> syncedActivities));
-
-            // When
-            const promise = activityService.hasActivitiesWithSettingsLacks();
-
-            // Then
-            promise.then(result => {
-                expect(result).toBeTruthy();
-                done();
-
-            }, error => {
-                expect(error).toBeNull();
-                done();
-            });
-        });
-
-        it("should NOT detect any activities lacking of athlete settings", done => {
-
-            // Given
-            const syncedActivities: Partial<SyncedActivityModel>[] = [
-                {id: "111", name: "111", settingsLack: false},
-                {id: "222", name: "222", settingsLack: false},
-                {id: "333", name: "333", settingsLack: false},
-                {id: "444", name: "444", settingsLack: false},
-                {id: "555", name: "555", settingsLack: false},
-                {id: "666", name: "666"},
-            ];
-
-            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(<SyncedActivityModel[]> syncedActivities));
-
-            // When
-            const promise = activityService.hasActivitiesWithSettingsLacks();
-
-            // Then
-            promise.then(result => {
-                expect(result).toBeFalsy();
-                done();
-
-            }, error => {
-                expect(error).toBeNull();
-                done();
-            });
-        });
-
-        it("should find activities lacking of athlete settings", done => {
-
-            // Given
-            const expectedSize = 2;
-            const syncedActivities: Partial<SyncedActivityModel>[] = [
-                {id: "111", name: "111", settingsLack: false},
-                {id: "222", name: "222", settingsLack: true},
-                {id: "333", name: "333", settingsLack: false},
-                {id: "444", name: "444", settingsLack: true},
-                {id: "555", name: "555", settingsLack: false},
-                {id: "666", name: "666"},
-            ];
-
-            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(<SyncedActivityModel[]> syncedActivities));
-
-            // When
-            const promise = activityService.findActivitiesWithSettingsLacks();
-
-            // Then
-            promise.then(activities => {
-                expect(activities.length).toEqual(expectedSize);
-                expect(activities[0]).toEqual(<SyncedActivityModel> syncedActivities[1]);
-                expect(activities[1]).toEqual(<SyncedActivityModel> syncedActivities[3]);
-                done();
-
-            }, error => {
-                expect(error).toBeNull();
-                done();
-            });
-        });
-
-        it("should NOT find activities lacking of athlete settings", done => {
-
-            // Given
-            const expectedSize = 0;
-            const syncedActivities: Partial<SyncedActivityModel>[] = [
-                {id: "111", name: "111", settingsLack: false},
-                {id: "222", name: "222", settingsLack: false},
-                {id: "333", name: "333", settingsLack: false},
-                {id: "444", name: "444", settingsLack: false},
-                {id: "555", name: "555", settingsLack: false},
-                {id: "666", name: "666"},
-            ];
-
-            spyOn(activityService.activityDao, "fetch").and.returnValue(Promise.resolve(<SyncedActivityModel[]> syncedActivities));
-
-            // When
-            const promise = activityService.findActivitiesWithSettingsLacks();
-
-            // Then
-            promise.then(activities => {
-                expect(activities.length).toEqual(expectedSize);
-                done();
-
-            }, error => {
-                expect(error).toBeNull();
-                done();
-            });
-        });
-
-    });
-
-    it("should find activity by start time and duration", done => {
-
-        // Given
-        const date = "2019-03-01T10:00:00.000Z";
-        const activityDuration = 3600;
-
-        const query: FindRequest<SyncedActivityModel[]> = {
-            selector: {
-                $or: [
-                    {
-                        start_time: {
-                            $gte: "2019-03-01T10:00:00.000Z",
-                        },
-                        end_time: {
-                            $lte: "2019-03-01T11:00:00.000Z",
-                        }
-                    },
-                    {
-                        start_time: {
-                            $gte: "2019-03-01T10:00:00.000Z",
-                            $lte: "2019-03-01T11:00:00.000Z",
-                        }
-                    },
-                    {
-                        end_time: {
-                            $gte: "2019-03-01T10:00:00.000Z",
-                            $lte: "2019-03-01T11:00:00.000Z",
-                        }
-                    }
-
-                ]
-
-            }
-        };
-
-        const findActivitySpy = spyOn(activityService, "find").and.returnValue(Promise.resolve([]));
-
-        // When
-        const promise = activityService.findByDatedSession(date, activityDuration);
-
-        // Then
-        promise.then(() => {
-
-            expect(findActivitySpy).toHaveBeenCalledTimes(1);
-            expect(findActivitySpy).toHaveBeenCalledWith(query);
-
-            done();
-
-        }, error => {
-            expect(error).toBeNull();
-            done();
-        });
-    });
-
 
 });

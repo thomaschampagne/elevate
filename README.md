@@ -60,7 +60,7 @@ The `Appcore` main technology stack is:
 
 If build target is desktop, it also includes:
 
-* [PouchDB](https://pouchdb.com/) as local key-value database (working over IndexedDB). Can sync easily with a remote [CouchDB-like database](https://pouchdb.com/faq.html#what_can_pouchdb_sync_with). 
+* [LokiJS](https://https://github.com/techfort/LokiJS) as in-memory NoSQL database persisted in IndexedDB. 
 
 ### Desktop project
 

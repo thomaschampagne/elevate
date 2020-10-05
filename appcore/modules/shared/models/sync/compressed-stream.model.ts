@@ -1,7 +1,5 @@
 export class CompressedStreamModel {
 
-    public static readonly ID_FIELD: string = "activityId";
-
     public activityId: string;
 
     /**

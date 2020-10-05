@@ -13,6 +13,7 @@ import { ExtensionDumpModel } from "../../shared/models/dumps/extension-dump.mod
 import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { AppRoutesModel } from "../../shared/models/app-routes.model";
+import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
 
 @Component({
     selector: "app-extension-sync-menu",
@@ -62,14 +63,13 @@ import { AppRoutesModel } from "../../shared/models/app-routes.model";
                     <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
                     Clear synced activities
                 </button>
-                <button mat-menu-item (click)="onSyncedBackupExport()"
-                        *ngIf="(syncState === SyncState.SYNCED)">
+                <button mat-menu-item (click)="onSyncedBackupExport()" *ngIf="(syncState === SyncState.SYNCED)">
                     <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
-                    Backup activities
+                    Backup profile
                 </button>
                 <button mat-menu-item (click)="onSyncedBackupImport()">
                     <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
-                    Restore activities
+                    Restore profile
                 </button>
             </mat-menu>
         </div>
@@ -94,9 +94,9 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
 
         this.extensionSyncService.getSyncState().then((syncState: SyncState) => {
             this.syncState = syncState;
-            this.extensionSyncService.getSyncDateTime().then((syncDateTime: number) => {
-                if (_.isNumber(syncDateTime)) {
-                    this.syncDateMessage = moment(syncDateTime).fromNow();
+            this.extensionSyncService.getSyncDateTime().then((syncDateTime: SyncDateTime) => {
+                if (_.isNumber(syncDateTime.syncDateTime)) {
+                    this.syncDateMessage = moment(syncDateTime.syncDateTime).fromNow();
                 }
             });
         });

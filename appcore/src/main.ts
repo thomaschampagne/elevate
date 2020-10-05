@@ -9,9 +9,6 @@ if (environment.production) {
     enableProdMode();
 }
 
-(<any> window).performance_start_app = window.performance.now();
-
-
 // Apply default theme class to body. AppComponent will also change body class along themes switches
 document.body.setAttribute("class", Theme.DEFAULT);
 

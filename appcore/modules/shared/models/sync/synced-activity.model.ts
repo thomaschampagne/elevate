@@ -11,8 +11,6 @@ interface Extras {
 
 export class SyncedActivityModel extends BareActivityModel {
 
-    public static readonly ID_FIELD: string = "id";
-
     public start_timestamp: number;
     public extendedStats: AnalysisDataModel;
     public athleteSnapshot: AthleteSnapshotModel;

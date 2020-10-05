@@ -72,15 +72,15 @@ export class ElectronService {
     }
 
     public clearAppDataAndRestart(): void {
-        const session = this.electron.remote.getCurrentWindow().webContents.session;
+        const session = this.getSession();
         session.clearStorageData().then(() => {
             return session.clearCache();
         }).then(() => {
-            return session.clearAuthCache(null);
+            return session.clearAuthCache();
         }).then(() => {
             return session.clearHostResolverCache();
         }).then(() => {
-            this.restart();
+            this.restartApp();
         });
     }
 
@@ -99,7 +99,7 @@ export class ElectronService {
         }
     }
 
-    public restart(): void {
+    public restartApp(): void {
         this.electron.remote.app.relaunch();
         this.electron.remote.app.exit(0);
     }
@@ -193,5 +193,9 @@ export class ElectronService {
 
     public isMacOS(): boolean {
         return this.instance.remote.process.platform === "darwin";
+    }
+
+    private getSession(): Electron.Session {
+        return this.electron.remote.getCurrentWindow().webContents.session;
     }
 }

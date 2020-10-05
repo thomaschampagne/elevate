@@ -3,8 +3,8 @@ import { Loader } from "../modules/loader";
 import { AppResourcesModel } from "./models/app-resources.model";
 import { StartCoreDataModel } from "./models/start-core-data.model";
 import { CoreMessages, UserSettings } from "@elevate/shared/models";
-import { BrowserStorage } from "./browser-storage";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
+import { BrowserStorage } from "./browser-storage";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class Content {
@@ -13,8 +13,8 @@ export class Content {
 
     protected appResources: AppResourcesModel;
 
-    constructor(appResources: AppResourcesModel) {
-        this.appResources = appResources;
+    constructor(appResourcesModel: AppResourcesModel) {
+        this.appResources = appResourcesModel;
     }
 
     public isExtensionRunnableInThisContext(): boolean {
@@ -55,16 +55,14 @@ export class Content {
             return;
         }
 
-        BrowserStorage.getInstance().get<any>(BrowserStorageType.LOCAL).then(result => {
+        BrowserStorage.getInstance().get<ExtensionUserSettingsModel>(BrowserStorageType.LOCAL, "userSettings", true).then((userSettingsResult: ExtensionUserSettingsModel) => {
 
             let userSettingsModel: ExtensionUserSettingsModel;
 
-            const hasUserSettingsKey = !_.isEmpty(result.userSettings);
-
             const defaultUserSettingsData = ExtensionUserSettingsModel.DEFAULT_MODEL;
 
-            if (hasUserSettingsKey) {
-                userSettingsModel = result.userSettings;
+            if (userSettingsResult) {
+                userSettingsModel = userSettingsResult;
             } else {
                 userSettingsModel = defaultUserSettingsData;
             }
@@ -99,7 +97,7 @@ export class Content {
     }
 }
 
-export let appResources: AppResourcesModel = {
+export const appResources: AppResourcesModel = {
     settingsLink: chrome.extension.getURL("/app/index.html"),
     logoElevate: chrome.extension.getURL("/extension/icons/logo_elevate_no_circle.svg"),
     menuIconBlack: chrome.extension.getURL("/extension/icons/ic_menu_24px_black.svg"),
@@ -149,7 +147,7 @@ export let appResources: AppResourcesModel = {
     cogIcon: chrome.extension.getURL("/extension/icons/fa-cog.png"),
     logoNoText: chrome.extension.getURL("/extension/icons/logo_no_text.svg"),
     logoTextOnly: chrome.extension.getURL("/extension/icons/logo_text_only.svg"),
-    extVersion: chrome.runtime.getManifest().version,
+    extVersion: chrome.runtime.getManifest().version_name,
     extVersionName: chrome.runtime.getManifest().version_name,
     extensionId: chrome.runtime.id,
 };

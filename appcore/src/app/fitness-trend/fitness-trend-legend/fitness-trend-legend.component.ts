@@ -24,7 +24,7 @@ export class FitnessTrendLegendComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.subscription = this.viewedDayService.changes.subscribe((viewedDay: DayFitnessTrendModel) => {
+        this.subscription = this.viewedDayService.changes$.subscribe((viewedDay: DayFitnessTrendModel) => {
             this.viewedDay = viewedDay;
         });
     }

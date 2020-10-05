@@ -50,12 +50,12 @@ import { AdvancedMenuComponent } from "../advanced-menu.component";
 })
 export class ExtensionAdvancedMenuComponent extends AdvancedMenuComponent {
 
-    constructor(public userSettingsService: UserSettingsService,
-                public athleteService: AthleteService,
-                public syncService: SyncService<any>,
-                public dialog: MatDialog,
-                public snackBar: MatSnackBar) {
-        super(userSettingsService, athleteService, syncService, dialog, snackBar);
+    constructor(public readonly userSettingsService: UserSettingsService,
+                public readonly athleteService: AthleteService,
+                public readonly syncService: SyncService<any>,
+                public readonly dialog: MatDialog,
+                public readonly snackBar: MatSnackBar) {
+        super(syncService, dialog, snackBar);
     }
 
     public onPluginCacheClear(): void {

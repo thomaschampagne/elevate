@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AthleteModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
-import { AthleteDao } from "../../dao/athlete/athlete-dao.service";
+import { AthleteDao } from "../../dao/athlete/athlete.dao";
 import * as _ from "lodash";
 import { AppError } from "../../models/app-error.model";
 
@@ -17,16 +17,13 @@ export class AthleteService {
      * Provides athlete model with dated settings sorted by descending periods
      */
     public fetch(): Promise<AthleteModel> {
-        return this.athleteModelDao.fetch()
-            .then((athleteModel: AthleteModel) => {
-
-                athleteModel.datedAthleteSettings = _.sortBy(athleteModel.datedAthleteSettings, (model: DatedAthleteSettingsModel) => {
-                    const sortOnDate: Date = (_.isNull(model.since)) ? new Date(0) : new Date(model.since);
-                    return sortOnDate.getTime() * -1;
-                });
-
-                return Promise.resolve(athleteModel);
+        return this.athleteModelDao.findOne().then((athleteModel: AthleteModel) => {
+            athleteModel.datedAthleteSettings = _.sortBy(athleteModel.datedAthleteSettings, (model: DatedAthleteSettingsModel) => {
+                const sortOnDate: Date = (_.isNull(model.since)) ? new Date(0) : new Date(model.since);
+                return sortOnDate.getTime() * -1;
             });
+            return Promise.resolve(athleteModel);
+        });
     }
 
     /**
@@ -60,33 +57,39 @@ export class AthleteService {
                 athleteModel.datedAthleteSettings.push(defaultForeverDatedAthleteSettings);
             }
 
-            return this.save(athleteModel).then(savedAthleteModel => {
-                return Promise.resolve(savedAthleteModel.datedAthleteSettings);
+            return this.validateUpdate(athleteModel).then(updatedAthleteModel => {
+                return Promise.resolve(updatedAthleteModel.datedAthleteSettings);
             });
         });
     }
 
-    /**
-     * Save (replace existing) athlete model.
-     */
-    public save(athleteModel: AthleteModel): Promise<AthleteModel> {
+    public validateUpdate(athleteModel: AthleteModel): Promise<AthleteModel> {
         return this.validate(athleteModel.datedAthleteSettings).then(() => {
-            return (<Promise<AthleteModel>> this.athleteModelDao.save(athleteModel));
+            return this.update(athleteModel);
         });
     }
 
-    public saveProperty<V>(path: string | string[], value: V): Promise<AthleteModel> {
-        return this.athleteModelDao.putAt<V>(path, value);
+    public validateInsert(athleteModel: AthleteModel): Promise<AthleteModel> {
+        return this.validate(athleteModel.datedAthleteSettings).then(() => {
+            return this.insert(athleteModel);
+        });
+    }
+
+    public update(athleteModel: AthleteModel): Promise<AthleteModel> {
+        return this.athleteModelDao.update(athleteModel, true);
+    }
+
+    public insert(athleteModel: AthleteModel): Promise<AthleteModel> {
+        return this.athleteModelDao.insert(athleteModel, true);
     }
 
     /**
      * Reset (replace existing) athlete DatedAthleteSettings with default AthleteSettings
      */
     public resetSettings(): Promise<DatedAthleteSettingsModel[]> {
-
         return this.fetch().then((athleteModel: AthleteModel) => {
             athleteModel.datedAthleteSettings = [];
-            return this.athleteModelDao.save(athleteModel);
+            return this.athleteModelDao.update(athleteModel);
         }).then(() => {
             return this.addSettings(DatedAthleteSettingsModel.DEFAULT_MODEL);
         });
@@ -123,8 +126,8 @@ export class AthleteService {
             // Replace with settings given by the user
             athleteModel.datedAthleteSettings[indexOfSettingsToEdit] = datedAthleteSettings;
 
-            return this.save(athleteModel).then(savedAthleteModel => {
-                return Promise.resolve(savedAthleteModel.datedAthleteSettings);
+            return this.validateUpdate(athleteModel).then(updatedAthleteModel => {
+                return Promise.resolve(updatedAthleteModel.datedAthleteSettings);
             });
         });
     }
@@ -151,8 +154,8 @@ export class AthleteService {
             // Remove dated athlete settings
             athleteModel.datedAthleteSettings.splice(indexOfSettingsToRemove, 1);
 
-            return this.save(athleteModel).then(savedAthleteModel => {
-                return Promise.resolve(savedAthleteModel.datedAthleteSettings);
+            return this.validateUpdate(athleteModel).then(updatedAthleteModel => {
+                return Promise.resolve(updatedAthleteModel.datedAthleteSettings);
             });
 
         });
@@ -211,5 +214,9 @@ export class AthleteService {
         }
 
         return promise;
+    }
+
+    public clear(persistImmediately: boolean = false): Promise<void> {
+        return this.athleteModelDao.clear(persistImmediately);
     }
 }

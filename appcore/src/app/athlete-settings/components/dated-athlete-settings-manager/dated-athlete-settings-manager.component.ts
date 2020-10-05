@@ -189,51 +189,6 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
         });
     }
 
-    private loadData(): void {
-
-        this.hideExportImportForm();
-
-        this.athleteService.fetch().then((athleteModel: AthleteModel) => {
-
-            this.datedAthleteSettingsModels = athleteModel.datedAthleteSettings;
-
-            // Auto creates a dated athlete settings if no one exists
-            if (this.datedAthleteSettingsModels.length === 0) {
-                this.athleteService.resetSettings().then(() => {
-                    this.datedAthleteSettingsModelsChange.emit();
-                    this.loadData();
-                }, error => {
-                    this.handleErrors(error);
-                });
-
-            } else {
-                this.dataSource.data = this.generateTableData(this.datedAthleteSettingsModels);
-            }
-
-        });
-    }
-
-    private generateTableData(datedAthleteSettingsModels: DatedAthleteSettingsModel[]): DatedAthleteSettingsTableModel[] {
-
-        const datedAthleteSettingsTableModels: DatedAthleteSettingsTableModel[] = [];
-        _.forEach(datedAthleteSettingsModels, (datedAthleteSettingsModel: DatedAthleteSettingsModel, index: number) => {
-            const previousDatedAthleteSettingsModel = datedAthleteSettingsModels[index - 1];
-            datedAthleteSettingsTableModels.push(new DatedAthleteSettingsTableModel(datedAthleteSettingsModel, previousDatedAthleteSettingsModel));
-        });
-        return datedAthleteSettingsTableModels;
-    }
-
-    private handleErrors(error: any) {
-
-        this.logger.error(error);
-
-        if (error instanceof AppError) {
-            const message = (<AppError> error).message;
-            this.snackBar.open(message, "Close");
-        }
-
-    }
-
     public onShowExport(): void {
         this.showExport = true;
         this.showImport = !this.showExport;
@@ -267,7 +222,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
                 this.athleteService.fetch().then((athleteModel: AthleteModel) => {
 
                     athleteModel.datedAthleteSettings = datedAthleteSettingsModels;
-                    return this.athleteService.save(athleteModel);
+                    return this.athleteService.validateUpdate(athleteModel);
 
                 }).then(() => {
 
@@ -362,6 +317,51 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
     public getOsPasteShortCut(): string {
         return (navigator.platform.match(/^mac/gi) ? "Command" : "Ctrl") + " + V";
+    }
+
+    private loadData(): void {
+
+        this.hideExportImportForm();
+
+        this.athleteService.fetch().then((athleteModel: AthleteModel) => {
+
+            this.datedAthleteSettingsModels = athleteModel.datedAthleteSettings;
+
+            // Auto creates a dated athlete settings if no one exists
+            if (this.datedAthleteSettingsModels.length === 0) {
+                this.athleteService.resetSettings().then(() => {
+                    this.datedAthleteSettingsModelsChange.emit();
+                    this.loadData();
+                }, error => {
+                    this.handleErrors(error);
+                });
+
+            } else {
+                this.dataSource.data = this.generateTableData(this.datedAthleteSettingsModels);
+            }
+
+        });
+    }
+
+    private generateTableData(datedAthleteSettingsModels: DatedAthleteSettingsModel[]): DatedAthleteSettingsTableModel[] {
+
+        const datedAthleteSettingsTableModels: DatedAthleteSettingsTableModel[] = [];
+        _.forEach(datedAthleteSettingsModels, (datedAthleteSettingsModel: DatedAthleteSettingsModel, index: number) => {
+            const previousDatedAthleteSettingsModel = datedAthleteSettingsModels[index - 1];
+            datedAthleteSettingsTableModels.push(new DatedAthleteSettingsTableModel(datedAthleteSettingsModel, previousDatedAthleteSettingsModel));
+        });
+        return datedAthleteSettingsTableModels;
+    }
+
+    private handleErrors(error: any) {
+
+        this.logger.error(error);
+
+        if (error instanceof AppError) {
+            const message = (<AppError> error).message;
+            this.snackBar.open(message, "Close");
+        }
+
     }
 
     private hideExportImportForm(): void {

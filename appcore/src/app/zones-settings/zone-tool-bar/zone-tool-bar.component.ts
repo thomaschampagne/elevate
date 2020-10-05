@@ -97,7 +97,7 @@ export class ZoneToolBarComponent implements OnInit {
 
     public onSaveZones(): void {
 
-        this.zonesService.saveZones().then(
+        this.zonesService.updateZones().then(
             () => this.popSnack(this.zonesService.zoneDefinition.name + " zones have been saved"),
             error => {
                 this.logger.error(error);

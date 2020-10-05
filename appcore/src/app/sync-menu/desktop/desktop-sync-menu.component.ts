@@ -18,6 +18,7 @@ import _ from "lodash";
 import { ConnectorSyncDateTime } from "@elevate/shared/models";
 import { ConnectorType } from "@elevate/shared/sync";
 import { ElevateException } from "@elevate/shared/exceptions";
+import { ElectronService } from "../../shared/services/electron/electron.service";
 
 @Component({
     selector: "app-desktop-sync-menu",
@@ -70,7 +71,7 @@ import { ElevateException } from "@elevate/shared/exceptions";
                 </button>
                 <button mat-menu-item (click)="onSyncedBackupImport()">
                     <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
-                    Restore a profile
+                    Restore profile
                 </button>
             </mat-menu>
         </div>
@@ -85,6 +86,7 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
                 public desktopSyncService: DesktopSyncService,
                 public appEventsService: AppEventsService,
                 public dialog: MatDialog,
+                public electronService: ElectronService,
                 public snackBar: MatSnackBar) {
         super(router, desktopSyncService, appEventsService, dialog, snackBar);
         this.mostRecentConnectorSyncedType = null;
@@ -102,8 +104,8 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
                 this.desktopSyncService.getMostRecentSyncedConnector().then((connectorSyncDateTime: ConnectorSyncDateTime) => {
                     if (connectorSyncDateTime) {
                         this.mostRecentConnectorSyncedType = connectorSyncDateTime.connectorType;
-                        if (_.isNumber(connectorSyncDateTime.dateTime)) {
-                            this.syncDateMessage = "Synced " + moment(connectorSyncDateTime.dateTime).fromNow();
+                        if (_.isNumber(connectorSyncDateTime.syncDateTime)) {
+                            this.syncDateMessage = "Synced " + moment(connectorSyncDateTime.syncDateTime).fromNow();
                         }
                     }
                 });
@@ -134,7 +136,7 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
                         const desktopDumpModel: DesktopDumpModel = DesktopDumpModel.deserialize(serializedDumpModel);
                         this.desktopSyncService.import(desktopDumpModel).then(() => {
                             importingDialog.close();
-                            location.reload();
+                            this.electronService.restartApp();
                         }, error => {
                             importingDialog.close();
                             this.snackBar.open(error, "Close");

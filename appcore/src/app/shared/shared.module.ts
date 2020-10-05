@@ -24,7 +24,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BrowserModule } from "@angular/platform-browser";
 import { AthleteSnapshotResolverService } from "./services/athlete-snapshot-resolver/athlete-snapshot-resolver.service";
 import { AthleteService } from "./services/athlete/athlete.service";
-import { AthleteDao } from "./dao/athlete/athlete-dao.service";
+import { AthleteDao } from "./dao/athlete/athlete.dao";
 import { ActivityDao } from "./dao/activity/activity.dao";
 import { FaqComponent } from "../faq/faq.component";
 import { ActivitiesComponent } from "../activities/activities.component";

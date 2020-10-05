@@ -5,6 +5,8 @@ import { ZoneChangeWhisperModel } from "../shared/zone-change-whisper.model";
 import { ZoneChangeTypeModel } from "./zone-change-type.model";
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
+import { DataStore } from "../../shared/data-store/data-store";
+import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 
 describe("ZoneComponent", () => {
 
@@ -20,6 +22,9 @@ describe("ZoneComponent", () => {
             imports: [
                 CoreModule,
                 SharedModule
+            ],
+            providers: [
+                {provide: DataStore, useClass: TestingDataStore}
             ]
         }).compileComponents();
 

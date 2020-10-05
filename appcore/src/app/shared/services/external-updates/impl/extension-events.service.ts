@@ -1,13 +1,16 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { CoreMessages, SyncResultModel } from "@elevate/shared/models";
 import { AppEventsService } from "../app-events-service";
+import { DataStore } from "../../../data-store/data-store";
+import { LoggerService } from "../../logging/logger.service";
 
 @Injectable()
 export class ExtensionEventsService extends AppEventsService {
 
     public pluginId: string;
 
-    constructor() {
+    constructor(@Inject(DataStore) private readonly dataStore: DataStore<object>,
+                private readonly logger: LoggerService) {
         super();
 
         this.pluginId = ExtensionEventsService.getBrowserPluginId();
@@ -32,12 +35,17 @@ export class ExtensionEventsService extends AppEventsService {
             return;
         }
 
+        if (request.message === CoreMessages.ON_EXTERNAL_DB_CHANGE) {
+            this.logger.info("External database change detected, reloading database...");
+            this.dataStore.reload(); // Reload datastore if external db changes happened (e.g. localStorageMustBeCleared = false in strava.com)
+        }
+
         if (request.message === CoreMessages.ON_EXTERNAL_SYNC_DONE) {
             const syncResult = <SyncResultModel> request.results;
             const hasChanges = syncResult.activitiesChangesModel.added.length > 0
                 || syncResult.activitiesChangesModel.edited.length > 0
                 || syncResult.activitiesChangesModel.deleted.length > 0;
-            this.onSyncDone.next(hasChanges);
+            this.syncDone$.next(hasChanges);
         }
     }
 }

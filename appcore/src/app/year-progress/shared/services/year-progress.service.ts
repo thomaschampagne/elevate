@@ -31,11 +31,11 @@ export class YearProgressService {
     public static readonly ERROR_NO_YEAR_PROGRESS_MODELS: string = "Empty YearProgressModels from given activity types";
 
     public momentWatched: Moment;
-    public momentWatchedChanges: Subject<Moment>;
+    public momentWatchedChanges$: Subject<Moment>;
 
     constructor(public yearProgressPresetDao: YearProgressPresetDao) {
         this.momentWatched = this.getTodayMoment().clone().startOf("day"); // By default moment watched is today. Moment watched can be edited from external
-        this.momentWatchedChanges = new Subject<Moment>();
+        this.momentWatchedChanges$ = new Subject<Moment>();
     }
 
     public static provideProgressTypes(isMetric: boolean): YearProgressTypeModel[] {
@@ -47,12 +47,6 @@ export class YearProgressService {
         ];
     }
 
-    /**
-     *
-     * @param config
-     * @param isMetric
-     * @param syncedActivityModels
-     */
     public progressions(config: ProgressConfig, isMetric: boolean, syncedActivityModels: SyncedActivityModel[]): YearProgressModel[] {
 
         if (_.isEmpty(syncedActivityModels)) {
@@ -84,15 +78,6 @@ export class YearProgressService {
             : this.computeRollingSumProgressions(config as RollingProgressConfigModel, isMetric, fromMoment, toMoment, todayMoment, yearProgressActivities);
     }
 
-    /**
-     *
-     * @param config
-     * @param isMetric
-     * @param fromMoment
-     * @param toMoment
-     * @param todayMoment
-     * @param yearProgressActivities
-     */
     public computeYearToDateSumProgressions(config: YearToDateProgressConfigModel,
                                             isMetric: boolean,
                                             fromMoment: Moment,
@@ -184,15 +169,6 @@ export class YearProgressService {
         return yearProgressions;
     }
 
-    /**
-     *
-     * @param config
-     * @param isMetric
-     * @param fromMoment
-     * @param toMoment
-     * @param todayMoment
-     * @param yearProgressActivities
-     */
     public computeRollingSumProgressions(config: RollingProgressConfigModel,
                                          isMetric: boolean,
                                          fromMoment: Moment,
@@ -296,11 +272,6 @@ export class YearProgressService {
         return yearProgressions;
     }
 
-    /**
-     *
-     * @param progression
-     * @param isMetric
-     */
     public prepareAlongSystemUnits(progression: ProgressModel, isMetric: boolean): ProgressModel {
 
         // Distance conversion
@@ -324,11 +295,6 @@ export class YearProgressService {
         return progression;
     }
 
-    /**
-     *
-     * @param year
-     * @param targetValue
-     */
     public yearToDateTargetProgression(year: number, targetValue: number): TargetProgressModel[] {
 
         const targetProgressModels: TargetProgressModel[] = [];
@@ -348,11 +314,6 @@ export class YearProgressService {
         return targetProgressModels;
     }
 
-    /**
-     *
-     * @param year
-     * @param targetValue
-     */
     public rollingTargetProgression(year: number, targetValue: number): TargetProgressModel[] {
 
         const targetProgressModels: TargetProgressModel[] = [];
@@ -368,9 +329,7 @@ export class YearProgressService {
     }
 
     /**
-     *    Return activity count for each type of sport. Order by count desc
-     * @param {SyncedActivityModel[]} syncedActivityModels
-     * @returns {ActivityCountByTypeModel[]}
+     * Return activity count for each type of sport. Order by count desc
      */
     public activitiesByTypes(syncedActivityModels: SyncedActivityModel[]): ActivityCountByTypeModel[] {
 
@@ -388,11 +347,6 @@ export class YearProgressService {
         });
     }
 
-    /**
-     *
-     * @param {SyncedActivityModel[]} syncedActivityModels
-     * @returns {number[]}
-     */
     public availableYears(syncedActivityModels: SyncedActivityModel[]): number[] {
 
         syncedActivityModels = _.sortBy(syncedActivityModels, "start_time");
@@ -410,12 +364,6 @@ export class YearProgressService {
         return availableYears.reverse();
     }
 
-    /**
-     *
-     * @param {SyncedActivityModel[]} activities
-     * @param {string[]} typesFilter
-     * @returns {YearProgressActivityModel[]}
-     */
     public filterSyncedActivityModelAlongTypes(activities: SyncedActivityModel[], typesFilter: string[]): YearProgressActivityModel[] {
 
         activities = _.filter(activities, (activity: YearProgressActivityModel) => {
@@ -436,15 +384,6 @@ export class YearProgressService {
         return activities as YearProgressActivityModel[];
     }
 
-    /**
-     *
-     * @param {YearProgressModel[]} yearProgressions
-     * @param {Moment} dayMoment
-     * @param {ProgressType} progressType
-     * @param {number[]} selectedYears
-     * @param {Map<number, string>} yearsColorsMap
-     * @returns {ProgressAtDayModel[]}
-     */
     public findProgressionsAtDay(yearProgressions: YearProgressModel[], dayMoment: Moment,
                                  progressType: ProgressType, selectedYears: number[],
                                  yearsColorsMap: Map<number, string>): ProgressAtDayModel[] {
@@ -484,18 +423,13 @@ export class YearProgressService {
         return progressionsAtDay;
     }
 
-    /**
-     *
-     * @param {Moment} momentWatched
-     */
     public onMomentWatchedChange(momentWatched: Moment): void {
         this.momentWatched = momentWatched;
-        this.momentWatchedChanges.next(momentWatched);
+        this.momentWatchedChanges$.next(momentWatched);
     }
 
     /**
      * Reset moment watch to default (today)
-     * @returns {Moment} default moment
      */
     public resetMomentWatched(): Moment {
         const todayMoment = this.getTodayMoment().clone().startOf("day");
@@ -503,11 +437,6 @@ export class YearProgressService {
         return todayMoment;
     }
 
-    /**
-     *
-     * @returns {string}
-     * @param hoursIn
-     */
     public readableTimeProgress(hoursIn: number): string {
 
         if (!hoursIn) {
@@ -528,16 +457,15 @@ export class YearProgressService {
      * Fetch all preset
      */
     public fetchPresets(): Promise<YearToDateProgressPresetModel[]> {
-        return (<Promise<YearToDateProgressPresetModel[]>> this.yearProgressPresetDao.fetch());
+        return this.yearProgressPresetDao.find();
     }
 
     /**
      * Add preset to existing
-     * @param presetModel
      */
-    public addPreset(presetModel: YearToDateProgressPresetModel): Promise<YearToDateProgressPresetModel[]> {
+    public addPreset(presetModel: YearToDateProgressPresetModel): Promise<YearToDateProgressPresetModel> {
 
-        return (<Promise<YearToDateProgressPresetModel[]>> this.yearProgressPresetDao.fetch().then((models: YearToDateProgressPresetModel[]) => {
+        return this.yearProgressPresetDao.find().then((models: YearToDateProgressPresetModel[]) => {
 
             const query: Partial<YearToDateProgressPresetModel> = {
                 mode: presetModel.mode,
@@ -560,31 +488,15 @@ export class YearProgressService {
                 return Promise.reject(new AppError(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS, "You already saved this preset."));
             }
 
-            models.push(presetModel);
-
-            return this.yearProgressPresetDao.save(models);
-        }));
+            return this.yearProgressPresetDao.insert(presetModel, true);
+        });
     }
 
     /**
      * Remove preset at index
-     * @param id
      */
     public deletePreset(id: string): Promise<void> {
-        return this.yearProgressPresetDao.fetch().then((models: YearToDateProgressPresetModel[]) => {
-
-            const presetIndex = _.findIndex(models, {id: id});
-
-            if (presetIndex === -1) {
-                return Promise.reject(new AppError(AppError.YEAR_PROGRESS_PRESETS_DO_NOT_EXISTS, "Year progress cannot be deleted"));
-            }
-
-            models.splice(presetIndex, 1);
-
-            return this.yearProgressPresetDao.save(models).then(() => {
-                return Promise.resolve();
-            });
-        });
+        return this.yearProgressPresetDao.removeById(id);
     }
 
     public getTodayMoment(): Moment {

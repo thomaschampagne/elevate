@@ -311,7 +311,7 @@ export namespace ActivityColumns {
         public static readonly SPEED_SYSTEM_UNITS: SystemUnits = new SystemUnits("kph", "mph");
         public static readonly CADENCE_UNITS: CadenceUnits = new CadenceUnits("rpm", "spm");
 
-        public static readonly ALL: (ActivityColumns.Column<any>)[] = [
+        public static readonly ALL: Column<SyncedActivityModel>[] = [
 
             /**
              * Common
@@ -358,8 +358,8 @@ export namespace ActivityColumns {
              */
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.averageHeartRate", "bpm", "Avg HR").setDefault(true),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.maxHeartRate", "bpm", "Max HR"),
-            new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.activityHeartRateReserve", "bpm", "Avg HRR").setDescription("Average Heart Rate Reserve"),
-            new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.activityHeartRateReserveMax", "bpm", "Max HRR").setDescription("Max Heart Rate Reserve"),
+            new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.activityHeartRateReserve", "%", "Avg HRR").setDescription("Average Heart Rate Reserve"),
+            new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.activityHeartRateReserveMax", "%", "Max HRR").setDescription("Max Heart Rate Reserve"),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.HRSS").setDescription("Heart Rate Stress Score").setDefault(true),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.HRSSPerHour").setHeader("HRSS / h").setDescription("Heart Rate Stress Score / h"),
             new NumberColumn(Category.HEART_RATE, "extendedStats.heartRateData.TRIMP").setDescription("Training Impulse Score"),
@@ -399,7 +399,7 @@ export namespace ActivityColumns {
             new NumberColumn(Category.POWER, "extendedStats.powerData.best20min", "w", "Best 20min Power"),
             // new NumberColumn(Category.POWER, "extendedStats.powerData.bestEightyPercent", "w", "bestEightyPercent"),
             new NumberColumn(Category.POWER, "extendedStats.powerData.variabilityIndex", null, "Variability Index", Print.number, 2),
-            // new NumberColumn(Category.POWER, "extendedStats.powerData.punchFactor", "w", "punchFactor"),
+            new NumberColumn(Category.POWER, "extendedStats.powerData.punchFactor", null, "Intensity", Print.number, 2),
             new NumberColumn(Category.POWER, "extendedStats.powerData.powerStressScore", null, "Power Stress Score").setDefault(true),
             new NumberColumn(Category.POWER, "extendedStats.powerData.powerStressScorePerHour", null, "Power Stress Score / h"),
             new NumberColumn(Category.POWER, "extendedStats.powerData.lowerQuartileWatts", "w", "25% Watts").setDescription("Lower Quartile Watts"),

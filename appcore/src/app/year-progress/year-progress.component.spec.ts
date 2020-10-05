@@ -17,6 +17,8 @@ import { YearToDateProgressPresetModel } from "./shared/models/year-to-date-prog
 import { ProgressType } from "./shared/enums/progress-type.enum";
 import { ExtensionEventsService } from "../shared/services/external-updates/impl/extension-events.service";
 import { ElevateSport } from "@elevate/shared/enums";
+import { DataStore } from "../shared/data-store/data-store";
+import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("YearProgressComponent", () => {
@@ -52,7 +54,9 @@ describe("YearProgressComponent", () => {
                 SharedModule,
                 YearProgressModule
             ],
-            providers: []
+            providers: [
+                {provide: DataStore, useClass: TestingDataStore}
+            ]
         }).compileComponents();
 
         TEST_SYNCED_ACTIVITIES = YearProgressActivitiesFixture.provide();
@@ -63,7 +67,7 @@ describe("YearProgressComponent", () => {
         spyOn(syncService, "getSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
         spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
         spyOn(userSettingsService, "fetch").and.returnValue(Promise.resolve(DesktopUserSettingsModel.DEFAULT_MODEL));
-        spyOn(activityDao, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+        spyOn(activityDao, "find").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
 
         done();
     });

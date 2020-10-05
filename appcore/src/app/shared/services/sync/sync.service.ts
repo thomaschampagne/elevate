@@ -10,10 +10,12 @@ import { DumpModel } from "../../models/dumps/dump.model";
 import { environment } from "../../../../environments/environment";
 import * as semver from "semver";
 import { StreamsService } from "../streams/streams.service";
+import { DataStore } from "../../data-store/data-store";
 
 export abstract class SyncService<T> {
 
     constructor(@Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
+                public readonly dataStore: DataStore<object>,
                 public activityService: ActivityService,
                 public streamsService: StreamsService,
                 public athleteService: AthleteService,
@@ -23,8 +25,6 @@ export abstract class SyncService<T> {
 
     /**
      * Promise of sync start
-     * @param fastSync
-     * @param forceSync
      */
     public abstract sync(fastSync: boolean, forceSync: boolean): Promise<void>;
 
@@ -32,7 +32,7 @@ export abstract class SyncService<T> {
 
     public abstract getSyncDateTime(): Promise<T>;
 
-    public abstract saveSyncDateTime(value: T): Promise<T>;
+    public abstract updateSyncDateTime(value: T): Promise<T>;
 
     public abstract clearSyncTime(): Promise<void>;
 
@@ -44,18 +44,14 @@ export abstract class SyncService<T> {
 
     public abstract getCompatibleBackupVersionThreshold(): string;
 
-    /**
-     *
-     * @returns {Promise<void>}
-     */
-    public clearSyncedData(): Promise<void> {
+    public clearSyncedActivities(): Promise<void> {
 
-        return Promise.all([
-            this.clearSyncTime(),
-            this.activityService.clear(),
-            this.streamsService.clear()
-        ]).then(() => {
-            return Promise.resolve();
+        return this.clearSyncTime().then(() => {
+            return this.activityService.clear(true);
+        }).then(() => {
+            return this.streamsService.clear(true);
+        }).then(() => {
+            return this.dataStore.saveDataStore();
         }).catch(error => {
             this.logger.error(error);
             return Promise.reject("Athlete synced data has not been cleared totally. " +
@@ -63,11 +59,6 @@ export abstract class SyncService<T> {
         });
     }
 
-    /**
-     *
-     * @param {Blob} blob
-     * @param {string} filename
-     */
     public saveAs(blob: Blob, filename: string): void {
         saveAs(blob, filename);
     }

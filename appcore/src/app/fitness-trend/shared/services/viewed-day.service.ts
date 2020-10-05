@@ -5,13 +5,13 @@ import { Subject } from "rxjs";
 @Injectable()
 export class ViewedDayService {
 
-    public changes: Subject<DayFitnessTrendModel>;
+    public changes$: Subject<DayFitnessTrendModel>;
 
     constructor() {
-        this.changes = new Subject<DayFitnessTrendModel>();
+        this.changes$ = new Subject<DayFitnessTrendModel>();
     }
 
     public onChange(dayFitnessTrendModel: DayFitnessTrendModel): void {
-        this.changes.next(dayFitnessTrendModel);
+        this.changes$.next(dayFitnessTrendModel);
     }
 }

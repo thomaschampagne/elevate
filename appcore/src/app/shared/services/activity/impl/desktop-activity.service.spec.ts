@@ -4,13 +4,14 @@ import { BulkRefreshStatsNotification, DesktopActivityService } from "./desktop-
 import { CoreModule } from "../../../../core/core.module";
 import { SharedModule } from "../../../shared.module";
 import { DesktopModule } from "../../../modules/desktop/desktop.module";
-import { ActivityStreamsModel, AthleteSettingsModel, AthleteSnapshotModel, Gender, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import { ActivityStreamsModel, AnalysisDataModel, AthleteSettingsModel, AthleteSnapshotModel, Gender, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { PROMISE_TRON } from "../../../../desktop/ipc-messages/promise-tron.interface";
 import { PromiseTronServiceMock } from "../../../../desktop/ipc-messages/promise-tron.service.mock";
 import { CompressedStreamModel } from "@elevate/shared/models/sync";
 import * as _ from "lodash";
-import { AnalysisDataModel } from "../../../../../../modules/shared/models/activity-data";
+import { DataStore } from "../../../data-store/data-store";
+import { TestingDataStore } from "../../../data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("DesktopActivityService", () => {
@@ -26,7 +27,8 @@ describe("DesktopActivityService", () => {
             ],
             providers: [
                 DesktopActivityService,
-                {provide: PROMISE_TRON, useClass: PromiseTronServiceMock}
+                {provide: PROMISE_TRON, useClass: PromiseTronServiceMock},
+                {provide: DataStore, useClass: TestingDataStore},
             ]
         });
 
@@ -42,7 +44,8 @@ describe("DesktopActivityService", () => {
             const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
             const athleteSnapshotModel: AthleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
             const streams: ActivityStreamsModel = new ActivityStreamsModel([0, 1], [0, 1], [0, 1]);
-            const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.COMPUTE_ACTIVITY, syncedActivityModel, athleteSnapshotModel, userSettingsModel, streams);
+            const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.COMPUTE_ACTIVITY,
+                syncedActivityModel, athleteSnapshotModel, userSettingsModel, streams);
             const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(Promise.resolve(syncedActivityModel));
 
             // When
@@ -65,7 +68,8 @@ describe("DesktopActivityService", () => {
             const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
             const athleteSnapshotModel: AthleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
             const streams: ActivityStreamsModel = new ActivityStreamsModel([0, 1], [0, 1], [0, 1]);
-            const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.COMPUTE_ACTIVITY, syncedActivityModel, athleteSnapshotModel, userSettingsModel, streams);
+            const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.COMPUTE_ACTIVITY,
+                syncedActivityModel, athleteSnapshotModel, userSettingsModel, streams);
             const expectedErrorMessage = "Computation error";
             const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(Promise.reject(expectedErrorMessage));
 
@@ -107,7 +111,7 @@ describe("DesktopActivityService", () => {
 
             const athleteSnapshotUpdateSpy = spyOn(desktopActivityService.athleteSnapshotResolverService, "update").and.returnValue(Promise.resolve());
             const athleteSnapshotResolveSpy = spyOn(desktopActivityService.athleteSnapshotResolverService, "resolve").and.returnValue(athleteSnapshotModel);
-            const streamGetByIdSpy = spyOn(desktopActivityService.streamsService, "getById").and.returnValue(Promise.resolve(compressedStreamModel));
+            const streamGetByIdSpy = spyOn(desktopActivityService.streamsDao, "getById").and.returnValue(Promise.resolve(compressedStreamModel));
             const deflateCompressedStreamSpy = spyOn(ActivityStreamsModel, "deflate").and.returnValue(streams);
             const selfComputeSpy = spyOn(desktopActivityService, "compute").and.callThrough();
             const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(Promise.resolve(expectedSyncedActivityModel));
@@ -159,7 +163,7 @@ describe("DesktopActivityService", () => {
 
             const athleteSnapshotUpdateSpy = spyOn(desktopActivityService.athleteSnapshotResolverService, "update").and.returnValue(Promise.resolve());
             const athleteSnapshotResolveSpy = spyOn(desktopActivityService.athleteSnapshotResolverService, "resolve").and.returnValue(athleteSnapshotModel);
-            const streamGetByIdSpy = spyOn(desktopActivityService.streamsService, "getById").and.returnValue(Promise.resolve(compressedStreamModel));
+            const streamGetByIdSpy = spyOn(desktopActivityService.streamsDao, "getById").and.returnValue(Promise.resolve(compressedStreamModel));
             const deflateCompressedStreamSpy = spyOn(ActivityStreamsModel, "deflate").and.returnValue(streams);
             const selfComputeSpy = spyOn(desktopActivityService, "compute").and.callThrough();
             const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(Promise.resolve(expectedSyncedActivityModel));
@@ -195,19 +199,19 @@ describe("DesktopActivityService", () => {
 
             const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
 
-            const syncedActivityModel_1 = new SyncedActivityModel();
-            syncedActivityModel_1.id = "1111";
+            const syncedActivityModel01 = new SyncedActivityModel();
+            syncedActivityModel01.id = "1111";
 
-            const syncedActivityModel_2 = new SyncedActivityModel();
-            syncedActivityModel_2.id = "2222";
+            const syncedActivityModel02 = new SyncedActivityModel();
+            syncedActivityModel02.id = "2222";
 
-            const syncedActivityModel_3 = new SyncedActivityModel();
-            syncedActivityModel_3.id = "3333";
+            const syncedActivityModel03 = new SyncedActivityModel();
+            syncedActivityModel03.id = "3333";
 
             const syncedActivityModels = [
-                syncedActivityModel_1,
-                syncedActivityModel_2,
-                syncedActivityModel_3,
+                syncedActivityModel01,
+                syncedActivityModel02,
+                syncedActivityModel03,
             ];
 
             const refreshStatsSpy = spyOn(desktopActivityService, "refreshStats").and.callFake((syncedActivityModel: SyncedActivityModel) => {
@@ -282,19 +286,19 @@ describe("DesktopActivityService", () => {
             // Given
             const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
 
-            const syncedActivityModel_1 = new SyncedActivityModel();
-            syncedActivityModel_1.id = "1111";
+            const syncedActivityModel01 = new SyncedActivityModel();
+            syncedActivityModel01.id = "1111";
 
-            const syncedActivityModel_2 = new SyncedActivityModel();
-            syncedActivityModel_2.id = "2222";
+            const syncedActivityModel02 = new SyncedActivityModel();
+            syncedActivityModel02.id = "2222";
 
-            const syncedActivityModel_3 = new SyncedActivityModel();
-            syncedActivityModel_3.id = "3333";
+            const syncedActivityModel03 = new SyncedActivityModel();
+            syncedActivityModel03.id = "3333";
 
             const syncedActivityModels = [
-                syncedActivityModel_1,
-                syncedActivityModel_2,
-                syncedActivityModel_3,
+                syncedActivityModel01,
+                syncedActivityModel02,
+                syncedActivityModel03,
             ];
 
             const refreshStatsSpy = spyOn(desktopActivityService, "refreshStats").and.callFake((syncedActivityModel: SyncedActivityModel) => {

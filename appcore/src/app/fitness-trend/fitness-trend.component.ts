@@ -216,7 +216,7 @@ export class FitnessTrendComponent implements OnInit {
                 this.lastFitnessActiveDate = (lastDayFitnessTrendModel && lastDayFitnessTrendModel.date) ? lastDayFitnessTrendModel.date : null;
 
                 // Listen for syncFinished update then reload graph if necessary.
-                this.appEventsService.onSyncDone.subscribe((changes: boolean) => {
+                this.appEventsService.syncDone$.subscribe((changes: boolean) => {
                     if (changes) {
                         this.reloadFitnessTrend();
                     }

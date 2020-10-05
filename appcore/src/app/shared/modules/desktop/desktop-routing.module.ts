@@ -9,7 +9,6 @@ import { ShareComponent } from "../../../share/share.component";
 import { ReportComponent } from "../../../report/report.component";
 import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/desktop-advanced-menu.component";
 import { FaqComponent } from "../../../faq/faq.component";
-import { DesktopPreRunGuard } from "../../../desktop/pre-run-guard/desktop-pre-run-guard.service";
 import { ActivityViewComponent } from "../../../activity-view/activity-view.component";
 
 @NgModule({
@@ -84,14 +83,11 @@ export class DesktopRoutingModule {
             component: FaqComponent
         },
         {
-            path: "", redirectTo: AppRoutesModel.fitnessTrend, pathMatch: "full"
+            path: "", redirectTo: AppRoutesModel.activities, pathMatch: "full"
         },
     ];
 
     public static provideRoutes(): Routes {
-        for (let i = 0; i < DesktopRoutingModule.routes.length; i++) {
-            DesktopRoutingModule.routes[i].canActivate = [DesktopPreRunGuard];
-        }
         return DesktopRoutingModule.routes;
     }
 }

@@ -1,6 +1,10 @@
 import { TestBed } from "@angular/core/testing";
 import { ExtensionEventsService } from "./extension-events.service";
 import { CoreMessages, SyncResultModel } from "@elevate/shared/models";
+import { DataStore } from "../../../data-store/data-store";
+import { TestingDataStore } from "../../../data-store/testing-datastore.service";
+import { LoggerService } from "../../logging/logger.service";
+import { ConsoleLoggerService } from "../../logging/console-logger.service";
 
 describe("ExtensionEventsService", () => {
 
@@ -18,7 +22,11 @@ describe("ExtensionEventsService", () => {
         spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
         TestBed.configureTestingModule({
-            providers: [ExtensionEventsService]
+            providers: [
+                ExtensionEventsService,
+                {provide: DataStore, useClass: TestingDataStore},
+                {provide: LoggerService, useClass: ConsoleLoggerService}
+            ]
         });
 
         service = TestBed.inject(ExtensionEventsService);
@@ -28,7 +36,7 @@ describe("ExtensionEventsService", () => {
 
     it("should be created", done => {
         expect(service).toBeTruthy();
-        expect(service.onSyncDone).not.toBeNull();
+        expect(service.syncDone$).not.toBeNull();
         done();
     });
 
@@ -36,7 +44,7 @@ describe("ExtensionEventsService", () => {
 
         // Given
         const expectedCallCount = 1;
-        const spy = spyOn(service.onSyncDone, "next");
+        const spy = spyOn(service.syncDone$, "next");
         const expectedChangesFromSync = true;
         const message: any = {
             message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
@@ -64,7 +72,7 @@ describe("ExtensionEventsService", () => {
 
         // Given
         const expectedCallCount = 1;
-        const spy = spyOn(service.onSyncDone, "next");
+        const spy = spyOn(service.syncDone$, "next");
         const expectedChangesFromSync = false;
         const message: any = {
             message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
@@ -91,7 +99,7 @@ describe("ExtensionEventsService", () => {
     it("should bypass handle external messages receive if sender is not the plugin it self", done => {
 
         // Given
-        const spy = spyOn(service.onSyncDone, "next");
+        const spy = spyOn(service.syncDone$, "next");
         const message: any = {
             message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
             results: {}

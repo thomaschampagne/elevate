@@ -1,11 +1,9 @@
 import { TestBed } from "@angular/core/testing";
-
-import { MockedDataStore } from "../../data-store/impl/mock/mocked-data-store.service";
-import { DataStore } from "../../data-store/data-store";
 import { ConnectorSyncDateTimeDao } from "./connector-sync-date-time.dao";
-import { ConnectorType } from "@elevate/shared/sync/connectors/connector.enum";
-import { ConnectorSyncDateTime } from "../../../../../modules/shared/models/sync";
-
+import { DataStore } from "../../data-store/data-store";
+import { TestingDataStore } from "../../data-store/testing-datastore.service";
+import { LoggerService } from "../../services/logging/logger.service";
+import { ConsoleLoggerService } from "../../services/logging/console-logger.service";
 
 describe("ConnectorSyncDateTimeDao", () => {
 
@@ -13,18 +11,11 @@ describe("ConnectorSyncDateTimeDao", () => {
 
     beforeEach(done => {
 
-        // const lastSyncTime = Date.now();
-        const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
-            new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-            new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
-        ];
-
-        const mockedDataStore: MockedDataStore<ConnectorSyncDateTime> = new MockedDataStore(connectorSyncDateTimes);
-
         TestBed.configureTestingModule({
             providers: [
                 ConnectorSyncDateTimeDao,
-                {provide: DataStore, useValue: mockedDataStore}
+                {provide: DataStore, useClass: TestingDataStore},
+                {provide: LoggerService, useClass: ConsoleLoggerService}
             ]
         });
 
