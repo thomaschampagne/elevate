@@ -242,21 +242,17 @@ class Installer {
 
                         const athleteModel = new AthleteModel(
                             userGender,
-                            <any>(
-                                new AthleteSettingsModel(
-                                    _.isNumber(userSettingsModel.userMaxHr) ? userSettingsModel.userMaxHr : null,
-                                    _.isNumber(userSettingsModel.userRestHr) ? userSettingsModel.userRestHr : null,
-                                    !_.isEmpty(userSettingsModel.userLTHR)
-                                        ? userSettingsModel.userLTHR
-                                        : UserLactateThresholdModel.DEFAULT_MODEL,
-                                    _.isNumber(userSettingsModel.userFTP) ? userSettingsModel.userFTP : null,
-                                    _.isNumber(userSettingsModel.userRunningFTP)
-                                        ? userSettingsModel.userRunningFTP
-                                        : null,
-                                    _.isNumber(userSettingsModel.userSwimFTP) ? userSettingsModel.userSwimFTP : null,
-                                    _.isNumber(userSettingsModel.userWeight) ? userSettingsModel.userWeight : null
-                                )
-                            )
+                            new AthleteSettingsModel(
+                                _.isNumber(userSettingsModel.userMaxHr) ? userSettingsModel.userMaxHr : null,
+                                _.isNumber(userSettingsModel.userRestHr) ? userSettingsModel.userRestHr : null,
+                                !_.isEmpty(userSettingsModel.userLTHR)
+                                    ? userSettingsModel.userLTHR
+                                    : UserLactateThresholdModel.DEFAULT_MODEL,
+                                _.isNumber(userSettingsModel.userFTP) ? userSettingsModel.userFTP : null,
+                                _.isNumber(userSettingsModel.userRunningFTP) ? userSettingsModel.userRunningFTP : null,
+                                _.isNumber(userSettingsModel.userSwimFTP) ? userSettingsModel.userSwimFTP : null,
+                                _.isNumber(userSettingsModel.userWeight) ? userSettingsModel.userWeight : null
+                            ) as any
                         );
 
                         // Create new athlete model structure and apply change in sync settings
@@ -406,7 +402,7 @@ class Installer {
             promise = LegacyBrowserStorage.getInstance()
                 .get(BrowserStorageType.SYNC)
                 .then((settings: ExtensionUserSettingsModel) => {
-                    const hasUserSettingsKey = !_.isEmpty((<any>settings).userSettings);
+                    const hasUserSettingsKey = !_.isEmpty((settings as any).userSettings);
 
                     if (hasUserSettingsKey) {
                         return Promise.resolve();
@@ -448,7 +444,7 @@ class Installer {
                 .get(BrowserStorageType.SYNC, "userSettings")
                 .then((settings: ExtensionUserSettingsModel) => {
                     const hasOldYearProgressTargets =
-                        _.isNumber((<any>settings).targetsYearRide) || _.isNumber((<any>settings).targetsYearRun);
+                        _.isNumber((settings as any).targetsYearRide) || _.isNumber((settings as any).targetsYearRun);
 
                     if (hasOldYearProgressTargets) {
                         userSettingsModel = settings;
@@ -530,8 +526,8 @@ class Installer {
                         throw Error(alreadyMigratedMessage);
                     }
 
-                    const userSettingsModel: ExtensionUserSettingsModel = <ExtensionUserSettingsModel>result[0];
-                    const localBrowserStorage: any = <any>result[1] || <any>{};
+                    const userSettingsModel: ExtensionUserSettingsModel = result[0] as ExtensionUserSettingsModel;
+                    const localBrowserStorage: any = (result[1] as any) || ({} as any);
 
                     localBrowserStorage.userSettings = userSettingsModel;
 
@@ -547,17 +543,17 @@ class Installer {
                     ]);
                 })
                 .then(result => {
-                    const userSettingsModel: ExtensionUserSettingsModel = <ExtensionUserSettingsModel>result[0];
-                    const datedAthleteSettings: DatedAthleteSettingsModel[] = <DatedAthleteSettingsModel[]>result[1];
+                    const userSettingsModel: ExtensionUserSettingsModel = result[0] as ExtensionUserSettingsModel;
+                    const datedAthleteSettings: DatedAthleteSettingsModel[] = result[1] as DatedAthleteSettingsModel[];
 
                     // Create new athlete storage local
-                    const athleteModel: AthleteModel = (<any>userSettingsModel).athleteModel;
-                    const isSingleAthleteSettingsMode = (<any>userSettingsModel).hasDatedAthleteSettings === false;
+                    const athleteModel: AthleteModel = (userSettingsModel as any).athleteModel;
+                    const isSingleAthleteSettingsMode = (userSettingsModel as any).hasDatedAthleteSettings === false;
 
                     if (isSingleAthleteSettingsMode) {
                         const athleteSettings: AthleteSettingsModel =
-                            athleteModel && (<any>athleteModel).athleteSettings
-                                ? (<any>athleteModel).athleteSettings
+                            athleteModel && (athleteModel as any).athleteSettings
+                                ? (athleteModel as any).athleteSettings
                                 : AthleteSettingsModel.DEFAULT_MODEL;
 
                         athleteModel.datedAthleteSettings = [
@@ -569,9 +565,9 @@ class Installer {
                     }
 
                     // Remove deprecated keys
-                    delete (<any>athleteModel).athleteSettings;
-                    delete (<any>userSettingsModel).athleteModel;
-                    delete (<any>userSettingsModel).hasDatedAthleteSettings;
+                    delete (athleteModel as any).athleteSettings;
+                    delete (userSettingsModel as any).athleteModel;
+                    delete (userSettingsModel as any).hasDatedAthleteSettings;
 
                     return Promise.all([
                         LegacyBrowserStorage.getInstance().set(
@@ -589,8 +585,8 @@ class Installer {
                 .then((syncedActivities: SyncedActivityModel[]) => {
                     // Rename athleteModel to athleteSnapshot for each activity
                     _.forEach(syncedActivities, (activity: SyncedActivityModel) => {
-                        activity.athleteSnapshot = (<any>activity).athleteModel;
-                        delete (<any>activity).athleteModel;
+                        activity.athleteSnapshot = (activity as any).athleteModel;
+                        delete (activity as any).athleteModel;
                     });
 
                     return LegacyBrowserStorage.getInstance().set(
@@ -614,7 +610,7 @@ class Installer {
                         .get(BrowserStorageType.LOCAL, "yearProgressPresets")
                         .then((yearProgressPresets: object[]) => {
                             yearProgressPresets = _.map(yearProgressPresets, preset => {
-                                (<YearToDateProgressPresetModel>preset).id = Identifier.generate();
+                                (preset as YearToDateProgressPresetModel).id = Identifier.generate();
                                 return preset;
                             });
 
@@ -678,7 +674,7 @@ class Installer {
             promise = LegacyBrowserStorage.getInstance()
                 .get<UserSettingsModel>(BrowserStorageType.LOCAL, "userSettings")
                 .then((userSettingsModel: UserSettingsModel) => {
-                    delete (<any>userSettingsModel).displayReliveCCLink;
+                    delete (userSettingsModel as any).displayReliveCCLink;
                     return LegacyBrowserStorage.getInstance().set<UserSettingsModel>(
                         BrowserStorageType.LOCAL,
                         "userSettings",

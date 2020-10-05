@@ -92,10 +92,10 @@ export class ElevateErrorHandler implements ErrorHandler {
                         .onAction()
                         .subscribe(() => {
                             this.dialog.open(GotItDialogComponent, {
-                                data: <GotItDialogDataModel>{
+                                data: {
                                     title: `${errorMessage}. Press CTRL+F12 for details`,
                                     content: `<pre>${error.stack}</pre>`,
-                                },
+                                } as GotItDialogDataModel,
                             });
                         });
                 }

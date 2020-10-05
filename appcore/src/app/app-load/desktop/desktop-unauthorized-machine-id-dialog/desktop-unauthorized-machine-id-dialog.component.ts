@@ -22,7 +22,7 @@ export class DesktopUnauthorizedMachineIdDialogComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.releaseUrl = (<DesktopVersionsProvider>this.versionsProvider).getLatestReleaseUrl();
+        this.releaseUrl = (this.versionsProvider as DesktopVersionsProvider).getLatestReleaseUrl();
     }
 
     public closeApp(): void {

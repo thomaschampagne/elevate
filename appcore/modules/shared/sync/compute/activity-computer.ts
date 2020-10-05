@@ -1747,8 +1747,8 @@ export class ActivityComputer {
         };
 
         if (skipAscentSpeedCompute) {
-            elevationData = <ElevationDataModel>_.omit(elevationData, "ascentSpeedZones");
-            elevationData = <ElevationDataModel>_.omit(elevationData, "ascentSpeed");
+            elevationData = _.omit(elevationData, "ascentSpeedZones") as ElevationDataModel;
+            elevationData = _.omit(elevationData, "ascentSpeed") as ElevationDataModel;
         }
 
         return elevationData;

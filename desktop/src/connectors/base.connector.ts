@@ -179,7 +179,7 @@ export abstract class BaseConnector {
         streams: ActivityStreamsModel
     ): AnalysisDataModel {
         return ActivityComputer.calculate(
-            <BareActivityModel>syncedActivityModel,
+            syncedActivityModel as BareActivityModel,
             athleteSnapshotModel,
             userSettingsModel,
             streams

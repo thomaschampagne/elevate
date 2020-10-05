@@ -191,8 +191,8 @@ export class StravaConnector extends BaseConnector {
             },
         };
 
-        const limits = (<string>headers[StravaConnector.STRAVA_RATELIMIT_LIMIT_HEADER]).split(",");
-        const usages = (<string>headers[StravaConnector.STRAVA_RATELIMIT_USAGE_HEADER]).split(",");
+        const limits = (headers[StravaConnector.STRAVA_RATELIMIT_LIMIT_HEADER] as string).split(",");
+        const usages = (headers[StravaConnector.STRAVA_RATELIMIT_USAGE_HEADER] as string).split(",");
 
         rateLimits.instant.limit = parseInt(limits[0].trim(), 10);
         rateLimits.instant.usage = parseInt(usages[0].trim(), 10);
@@ -284,7 +284,7 @@ export class StravaConnector extends BaseConnector {
                     (syncedActivityModels: SyncedActivityModel[]) => {
                         if (_.isEmpty(syncedActivityModels)) {
                             // Fetch stream of the activity
-                            return this.getStravaActivityStreams(<number>bareActivity.id).then(
+                            return this.getStravaActivityStreams(bareActivity.id as number).then(
                                 (activityStreamsModel: ActivityStreamsModel) => {
                                     try {
                                         let syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
@@ -293,7 +293,7 @@ export class StravaConnector extends BaseConnector {
 
                                         // Assign reference to strava activity
                                         syncedActivityModel.extras = {
-                                            strava_activity_id: <number>syncedActivityModel.id,
+                                            strava_activity_id: syncedActivityModel.id as number,
                                         }; // Keep tracking  of activity id
                                         syncedActivityModel.id =
                                             syncedActivityModel.id +
@@ -326,7 +326,7 @@ export class StravaConnector extends BaseConnector {
                                             bareActivity.elevation_gain_raw
                                         );
                                         syncedActivityModel = BaseConnector.updatePrimitiveStatsFromComputation(
-                                            <SyncedActivityModel>syncedActivityModel,
+                                            syncedActivityModel as SyncedActivityModel,
                                             activityStreamsModel,
                                             primitiveSourceData
                                         );
@@ -355,7 +355,7 @@ export class StravaConnector extends BaseConnector {
                                             new ActivitySyncEvent(
                                                 ConnectorType.STRAVA,
                                                 null,
-                                                <SyncedActivityModel>syncedActivityModel,
+                                                syncedActivityModel as SyncedActivityModel,
                                                 true,
                                                 compressedStream
                                             )
@@ -430,20 +430,20 @@ export class StravaConnector extends BaseConnector {
 
     public prepareBareActivity(bareActivity: BareActivityModel): BareActivityModel {
         // Fields re-mapping
-        bareActivity.elapsed_time_raw = (<any>bareActivity).elapsed_time;
-        bareActivity.moving_time_raw = (<any>bareActivity).moving_time;
-        bareActivity.distance_raw = (<any>bareActivity).distance;
-        bareActivity.elevation_gain_raw = (<any>bareActivity).total_elevation_gain;
-        bareActivity.hasPowerMeter = (<any>bareActivity).device_watts;
+        bareActivity.elapsed_time_raw = (bareActivity as any).elapsed_time;
+        bareActivity.moving_time_raw = (bareActivity as any).moving_time;
+        bareActivity.distance_raw = (bareActivity as any).distance;
+        bareActivity.elevation_gain_raw = (bareActivity as any).total_elevation_gain;
+        bareActivity.hasPowerMeter = (bareActivity as any).device_watts;
 
         // Start/End time formatting
-        bareActivity.start_time = new Date((<any>bareActivity).start_date).toISOString();
+        bareActivity.start_time = new Date((bareActivity as any).start_date).toISOString();
         const endDate = new Date(bareActivity.start_time);
         endDate.setSeconds(endDate.getSeconds() + bareActivity.elapsed_time_raw);
         bareActivity.end_time = endDate.toISOString();
 
         // Bare activity cleaning
-        return <BareActivityModel>_.omit(bareActivity, StravaConnector.STRAVA_OMIT_FIELDS);
+        return _.omit(bareActivity, StravaConnector.STRAVA_OMIT_FIELDS) as BareActivityModel;
     }
 
     public appendPowerStream(
@@ -702,10 +702,10 @@ export class StravaConnector extends BaseConnector {
                 (stravaApiStreamTypes: StravaApiStreamType[]) => {
                     const activityStreamsModel: Partial<ActivityStreamsModel> = {};
                     _.forEach(stravaApiStreamTypes, (stravaApiStreamType: StravaApiStreamType) => {
-                        (<number[]>activityStreamsModel[stravaApiStreamType.type]) = stravaApiStreamType.data;
+                        (activityStreamsModel[stravaApiStreamType.type] as number[]) = stravaApiStreamType.data;
                     });
 
-                    resolve(<ActivityStreamsModel>activityStreamsModel);
+                    resolve(activityStreamsModel as ActivityStreamsModel);
                 },
                 (errorSyncEvent: ErrorSyncEvent) => {
                     if (errorSyncEvent) {

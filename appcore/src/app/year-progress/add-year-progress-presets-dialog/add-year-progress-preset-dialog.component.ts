@@ -49,8 +49,8 @@ export class AddYearProgressPresetDialogComponent implements OnInit {
                 this.dialogData.includeCommuteRide,
                 this.dialogData.includeIndoorRide,
                 this.dialogData.targetValue,
-                (<AddRollingProgressPresetDialogData>this.dialogData).rollingPeriod,
-                (<AddRollingProgressPresetDialogData>this.dialogData).periodMultiplier
+                (this.dialogData as AddRollingProgressPresetDialogData).rollingPeriod,
+                (this.dialogData as AddRollingProgressPresetDialogData).periodMultiplier
             );
 
             this.progressPresetModel = new RollingProgressPresetModel(
@@ -86,7 +86,7 @@ export class AddYearProgressPresetDialogComponent implements OnInit {
     private handleErrors(error: any) {
         if (error instanceof AppError) {
             this.logger.warn(error);
-            const message = (<AppError>error).message;
+            const message = (error as AppError).message;
             this.snackBar.open(message, "Close", {
                 duration: 5000,
             });

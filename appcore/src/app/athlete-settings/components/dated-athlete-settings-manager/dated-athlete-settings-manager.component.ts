@@ -371,7 +371,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
         this.logger.error(error);
 
         if (error instanceof AppError) {
-            const message = (<AppError>error).message;
+            const message = (error as AppError).message;
             this.snackBar.open(message, "Close");
         }
     }

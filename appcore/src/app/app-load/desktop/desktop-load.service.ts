@@ -44,7 +44,7 @@ export class DesktopLoadService extends AppLoadService {
     public loadApp(): Promise<void> {
         return super.loadApp().then(() => {
             return this.desktopMigrationService.upgrade().then(() => {
-                if ((<any>environment).bypassAthleteAccessCheck) {
+                if ((environment as any).bypassAthleteAccessCheck) {
                     return Promise.resolve();
                 } else {
                     return this.getRuntimeInfo()

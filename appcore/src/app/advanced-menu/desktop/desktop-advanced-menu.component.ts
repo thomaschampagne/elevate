@@ -130,7 +130,7 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
         dialogRef.afterClosed().subscribe((confirm: boolean) => {
             if (confirm) {
                 this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
-                    (<DesktopActivityService>this.activityService).bulkRefreshStatsAll(userSettingsModel);
+                    (this.activityService as DesktopActivityService).bulkRefreshStatsAll(userSettingsModel);
                 });
             }
         });

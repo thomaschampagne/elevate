@@ -16,6 +16,6 @@ export class PromiseTronService implements IPromiseTron {
     }
 
     public send<T>(data: any): Promise<T> {
-        return <Promise<T>>this.promiseTron.send(data);
+        return this.promiseTron.send(data) as Promise<T>;
     }
 }

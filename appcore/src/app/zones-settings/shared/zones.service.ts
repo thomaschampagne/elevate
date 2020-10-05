@@ -237,7 +237,7 @@ export class ZonesService {
         return new Promise((resolve: () => void, reject: (error: string) => void) => {
             // Try to parse JSON input
             try {
-                this.currentZones = <ZoneModel[]>JSON.parse(jsonInput);
+                this.currentZones = JSON.parse(jsonInput) as ZoneModel[];
             } catch (error) {
                 reject("Provided zones do not respect expected format");
                 return;

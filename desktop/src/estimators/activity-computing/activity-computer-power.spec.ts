@@ -76,7 +76,7 @@ describe("ActivityComputer Cycling Power", () => {
 
         // Given
         const hasPowerMeter = true;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1109968202);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_1109968202 as unknown) as ActivityStreamsModel;
         athleteSnapshot.athleteSettings.cyclingFtp = 288; // ~FTP in July 2017 (Christophe B)
 
         // When
@@ -106,7 +106,7 @@ describe("ActivityComputer Cycling Power", () => {
     it("should compute REAL power data as ESTIMATED of activity 1302129959 (20-minute FTP test. First time ever!, result not bad!)", done => {
         // Given
         const hasPowerMeter = true;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1302129959);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_1302129959 as unknown) as ActivityStreamsModel;
         athleteSnapshot.athleteSettings.cyclingFtp = 380; // ~FTP in December 2017 (Jasper Verkuijl)
 
         // When
@@ -136,7 +136,7 @@ describe("ActivityComputer Cycling Power", () => {
     it("should compute ESTIMATED power data of activity 343080886 (Alpe d'Huez)", done => {
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_343080886);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_343080886 as unknown) as ActivityStreamsModel;
         stream.watts = stream.watts_calc; // because powerMeter is false
         athleteSnapshot.athleteSettings.cyclingFtp = 260; // ~FTP in July 2015 (Thomas Champagne)
         athleteSnapshot.athleteSettings.maxHr = 205; // in July 2015 (Thomas Champagne)
@@ -168,7 +168,7 @@ describe("ActivityComputer Cycling Power", () => {
     it("should compute ESTIMATED power data of activity 600329531 (Sheep Ride)", done => {
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_600329531);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_600329531 as unknown) as ActivityStreamsModel;
         stream.watts = stream.watts_calc; // because powerMeter is false
         athleteSnapshot.athleteSettings.cyclingFtp = 239; // ~FTP in July 2016 (Thomas Champagne)
 
@@ -198,7 +198,7 @@ describe("ActivityComputer Cycling Power", () => {
     it("should compute ESTIMATED power data of activity 597999523 (4 Seigneurs x Vik + Murianette x Philippe)", done => {
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_597999523);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_597999523 as unknown) as ActivityStreamsModel;
         stream.watts = stream.watts_calc; // because powerMeter is false
 
         // When
@@ -228,7 +228,7 @@ describe("ActivityComputer Cycling Power", () => {
     it("should compute ESTIMATED power data of activity 1610385844 (#ComeBack - 10 / 43km / 96min / 142HrSS)", done => {
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1610385844);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_1610385844 as unknown) as ActivityStreamsModel;
         stream.watts = stream.watts_calc; // because powerMeter is false
         athleteSnapshot.athleteSettings.cyclingFtp = 130; // ~FTP in May 2018 (Thomas Champagne)
 
@@ -258,7 +258,7 @@ describe("ActivityComputer Cycling Power", () => {
     it("should compute ESTIMATED power data of activity 1811220111 (Brötchen suchen im Hanftal, echte 632Hm)", done => {
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1811220111);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_1811220111 as unknown) as ActivityStreamsModel;
         stream.watts = stream.watts_calc; // because powerMeter is false
 
         // When
@@ -288,7 +288,7 @@ describe("ActivityComputer Cycling Power", () => {
     it("should compute ESTIMATED power data of activity 1817318910", done => {
         // Given
         const hasPowerMeter = false;
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1817318910);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_1817318910 as unknown) as ActivityStreamsModel;
         stream.watts = stream.watts_calc; // because powerMeter is false
 
         // When

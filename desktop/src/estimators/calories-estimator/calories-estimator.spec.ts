@@ -369,12 +369,12 @@ describe("Detect lack of FTPs settings", () => {
                 athleteSettingsModel.cyclingFtp = null;
                 athleteSettingsModel.runningFtp = null;
                 athleteSettingsModel.swimFtp = null;
-                analysisDataModel = <AnalysisDataModel>{
+                analysisDataModel = {
                     heartRateData: {
                         HRSS: 100,
                         TRIMP: 100,
                     },
-                };
+                } as AnalysisDataModel;
 
                 // When
                 const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(

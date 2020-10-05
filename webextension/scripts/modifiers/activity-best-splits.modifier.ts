@@ -797,10 +797,10 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
                         }
                         const splitType = parseInt($("#best-split-new-unit").val().toString());
 
-                        const splitAlreadyExist = _.find(splitsArray, <any>{
+                        const splitAlreadyExist = _.find(splitsArray, {
                             length: splitLength,
                             unit: splitType,
-                        });
+                        } as any);
 
                         if (splitAlreadyExist) {
                             alert("This split already exist.");

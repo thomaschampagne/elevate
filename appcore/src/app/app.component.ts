@@ -121,7 +121,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
         this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
             if (routerEvent instanceof NavigationEnd) {
-                const route: string = (<NavigationEnd>routerEvent).urlAfterRedirects;
+                const route: string = (routerEvent as NavigationEnd).urlAfterRedirects;
                 this.toolBarTitle = AppComponent.convertRouteToTitle(route);
             }
         });
@@ -158,7 +158,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     public injectHotComponent<C>(component: Type<C>, targetViewRef: ViewContainerRef): C {
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
-        return <C>targetViewRef.createComponent(componentFactory).instance;
+        return targetViewRef.createComponent(componentFactory).instance as C;
     }
 
     public sideNavSetup(): void {

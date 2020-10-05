@@ -455,7 +455,7 @@ export class FileSystemConnector extends BaseConnector {
                                                                 sportsLibActivity
                                                             );
                                                             syncedActivityModel = BaseConnector.updatePrimitiveStatsFromComputation(
-                                                                <SyncedActivityModel>syncedActivityModel,
+                                                                syncedActivityModel as SyncedActivityModel,
                                                                 activityStreamsModel,
                                                                 primitiveSourceData
                                                             );
@@ -485,7 +485,7 @@ export class FileSystemConnector extends BaseConnector {
                                                                 new ActivitySyncEvent(
                                                                     ConnectorType.FILE_SYSTEM,
                                                                     null,
-                                                                    <SyncedActivityModel>syncedActivityModel,
+                                                                    syncedActivityModel as SyncedActivityModel,
                                                                     true,
                                                                     compressedStream
                                                                 )
@@ -499,9 +499,9 @@ export class FileSystemConnector extends BaseConnector {
                                                                 (error.message ? error.message : error.toString());
 
                                                             const activityInError = new SyncedActivityModel();
-                                                            activityInError.type = <any>sportsLibActivity.type;
+                                                            activityInError.type = sportsLibActivity.type as any;
                                                             activityInError.start_time = sportsLibActivity.startDate.toISOString();
-                                                            (<SyncedActivityModel>activityInError).extras = {
+                                                            (activityInError as SyncedActivityModel).extras = {
                                                                 fs_activity_location: activityFile.location,
                                                             }; // Keep tracking  of activity id
                                                             const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(
@@ -527,7 +527,7 @@ export class FileSystemConnector extends BaseConnector {
                                                                 new ActivitySyncEvent(
                                                                     ConnectorType.FILE_SYSTEM,
                                                                     null,
-                                                                    <SyncedActivityModel>syncedActivityModels[0],
+                                                                    syncedActivityModels[0] as SyncedActivityModel,
                                                                     false
                                                                 )
                                                             );
@@ -580,7 +580,7 @@ export class FileSystemConnector extends BaseConnector {
                                     return Promise.reject(error);
                                 }
 
-                                if ((<EventLibError>error).event === null) {
+                                if ((error as EventLibError).event === null) {
                                     // No event available from sports-lib
                                     logger.warn("No sports-lib event available. Skip " + activityFile.location.path);
                                     return Promise.resolve();
@@ -595,7 +595,7 @@ export class FileSystemConnector extends BaseConnector {
                                     error.stack ? error.stack : null
                                 );
                                 errorSyncEvent.activity = new SyncedActivityModel();
-                                (<SyncedActivityModel>errorSyncEvent.activity).extras = {
+                                (errorSyncEvent.activity as SyncedActivityModel).extras = {
                                     fs_activity_location: activityFile.location,
                                 }; // Keep tracking  of activity id
                                 return Promise.reject(errorSyncEvent);
@@ -606,7 +606,7 @@ export class FileSystemConnector extends BaseConnector {
     }
 
     public createBareActivity(sportsLibActivity: ActivityInterface): BareActivityModel {
-        const bareActivityModel: BareActivityModel = <BareActivityModel>new SyncedActivityModel();
+        const bareActivityModel: BareActivityModel = new SyncedActivityModel() as BareActivityModel;
         bareActivityModel.id = BaseConnector.hashData(sportsLibActivity.startDate.toISOString());
         const elevateSportResult = this.convertToElevateSport(sportsLibActivity);
         bareActivityModel.type = elevateSportResult.type;
@@ -634,11 +634,11 @@ export class FileSystemConnector extends BaseConnector {
             if (this.detectSportTypeWhenUnknown) {
                 const stats = sportsLibActivity.getStats();
 
-                const distance = <number>stats.get(DataDistance.type)?.getValue();
-                const duration = <number>stats.get(DataDuration.type)?.getValue();
-                const ascent = <number>stats.get(DataAscent.type)?.getValue();
-                const avgSpeed = <number>stats.get(DataSpeedAvg.type)?.getValue();
-                const maxSpeed = <number>stats.get(DataSpeedMax.type)?.getValue();
+                const distance = stats.get(DataDistance.type)?.getValue() as number;
+                const duration = stats.get(DataDuration.type)?.getValue() as number;
+                const ascent = stats.get(DataAscent.type)?.getValue() as number;
+                const avgSpeed = stats.get(DataSpeedAvg.type)?.getValue() as number;
+                const maxSpeed = stats.get(DataSpeedMax.type)?.getValue() as number;
 
                 const elevateSport = this.attemptDetectCommonSport(distance, duration, ascent, avgSpeed, maxSpeed);
                 return { type: elevateSport, autoDetected: elevateSport !== ElevateSport.Other };
@@ -752,7 +752,7 @@ export class FileSystemConnector extends BaseConnector {
         const elevationGainRaw =
             sportsLibActivity.getStats().get(DataAscent.type) &&
             _.isNumber(sportsLibActivity.getStats().get(DataAscent.type).getValue())
-                ? <number>sportsLibActivity.getStats().get(DataAscent.type).getValue()
+                ? (sportsLibActivity.getStats().get(DataAscent.type).getValue() as number)
                 : null;
         return new PrimitiveSourceData(elapsedTimeRaw, movingTimeRaw, distanceRaw, elevationGainRaw);
     }

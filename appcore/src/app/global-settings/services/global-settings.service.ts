@@ -18,7 +18,7 @@ export class GlobalSettingsService {
                     key: "systemUnit",
                     type: "list",
                     labels: ["All"],
-                    list: <ListItemModel[]>[
+                    list: [
                         {
                             key: UserSettings.SYSTEM_UNIT_METRIC_KEY,
                             name: "Metric",
@@ -27,14 +27,14 @@ export class GlobalSettingsService {
                             key: UserSettings.SYSTEM_UNIT_IMPERIAL_KEY,
                             name: "Imperial",
                         },
-                    ],
+                    ] as ListItemModel[],
                     title: "App system units",
                 },
                 {
                     key: "temperatureUnit",
                     type: "list",
                     labels: ["All"],
-                    list: <ListItemModel[]>[
+                    list: [
                         {
                             key: "F",
                             name: "Fahrenheit",
@@ -43,7 +43,7 @@ export class GlobalSettingsService {
                             key: "C",
                             name: "Celsius",
                         },
-                    ],
+                    ] as ListItemModel[],
                     title: "Temperature",
                 },
             ],
@@ -153,7 +153,7 @@ export class GlobalSettingsService {
                     key: "activityStravaMapType",
                     type: "list",
                     labels: ["All"],
-                    list: <ListItemModel[]>[
+                    list: [
                         {
                             key: "terrain",
                             name: "Terrain",
@@ -166,7 +166,7 @@ export class GlobalSettingsService {
                             key: "satellite",
                             name: "Satellite",
                         },
-                    ],
+                    ] as ListItemModel[],
                     title: "Default Strava Map type displayed in activities",
                 },
                 {
@@ -205,7 +205,7 @@ export class GlobalSettingsService {
                     key: "reviveGoogleMapsLayerType",
                     type: "list",
                     labels: ["All"],
-                    list: <ListItemModel[]>[
+                    list: [
                         {
                             key: "roadmap",
                             name: "Roadmap",
@@ -222,7 +222,7 @@ export class GlobalSettingsService {
                             key: "terrain",
                             name: "Terrain",
                         },
-                    ],
+                    ] as ListItemModel[],
                     title: "Default Google Maps layer type",
                     hidden: true, // Google map feature marked as hidden until it come back
                 },
@@ -236,7 +236,7 @@ export class GlobalSettingsService {
                     key: "defaultLeaderBoardFilter",
                     type: "list",
                     labels: ["All"],
-                    list: <ListItemModel[]>[
+                    list: [
                         {
                             key: "overall",
                             name: "Overall",
@@ -257,7 +257,7 @@ export class GlobalSettingsService {
                             key: "my_results",
                             name: "My Results",
                         },
-                    ],
+                    ] as ListItemModel[],
                     title: "Default Leaderboard Filter",
                 },
                 {

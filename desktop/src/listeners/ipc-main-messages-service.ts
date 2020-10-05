@@ -90,13 +90,13 @@ export class IpcMainMessagesService {
             return;
         }
 
-        const connectorType: ConnectorType = <ConnectorType>message.payload[0];
+        const connectorType: ConnectorType = message.payload[0] as ConnectorType;
 
         if (connectorType === ConnectorType.STRAVA) {
-            const stravaConnectorSyncDateTime: ConnectorSyncDateTime = <ConnectorSyncDateTime>message.payload[1];
-            const stravaConnectorInfo: StravaConnectorInfo = <StravaConnectorInfo>message.payload[2];
-            const athleteModel: AthleteModel = <AthleteModel>message.payload[3];
-            const userSettingsModel: UserSettingsModel = <UserSettingsModel>message.payload[4];
+            const stravaConnectorSyncDateTime: ConnectorSyncDateTime = message.payload[1] as ConnectorSyncDateTime;
+            const stravaConnectorInfo: StravaConnectorInfo = message.payload[2] as StravaConnectorInfo;
+            const athleteModel: AthleteModel = message.payload[3] as AthleteModel;
+            const userSettingsModel: UserSettingsModel = message.payload[4] as UserSettingsModel;
 
             this.service.currentConnector = StravaConnector.create(
                 athleteModel,
@@ -105,10 +105,10 @@ export class IpcMainMessagesService {
                 stravaConnectorInfo
             );
         } else if (connectorType === ConnectorType.FILE_SYSTEM) {
-            const fsConnectorSyncDateTime: ConnectorSyncDateTime = <ConnectorSyncDateTime>message.payload[1];
-            const fileSystemConnectorInfo: FileSystemConnectorInfo = <FileSystemConnectorInfo>message.payload[2];
-            const athleteModel: AthleteModel = <AthleteModel>message.payload[3];
-            const userSettingsModel: UserSettingsModel = <UserSettingsModel>message.payload[4];
+            const fsConnectorSyncDateTime: ConnectorSyncDateTime = message.payload[1] as ConnectorSyncDateTime;
+            const fileSystemConnectorInfo: FileSystemConnectorInfo = message.payload[2] as FileSystemConnectorInfo;
+            const athleteModel: AthleteModel = message.payload[3] as AthleteModel;
+            const userSettingsModel: UserSettingsModel = message.payload[4] as UserSettingsModel;
 
             this.service.currentConnector = FileSystemConnector.create(
                 athleteModel,
@@ -139,7 +139,7 @@ export class IpcMainMessagesService {
                 });
 
                 if (syncEvent.type === SyncEventType.ACTIVITY) {
-                    const activitySyncEvent = <ActivitySyncEvent>syncEvent;
+                    const activitySyncEvent = syncEvent as ActivitySyncEvent;
                     logger.info(
                         "[Connector (" + connectorType + ")]",
                         `Notify to insert or update activity name: "${activitySyncEvent.activity.name}", started on "${activitySyncEvent.activity.start_time}", isNew: "${activitySyncEvent.isNew}"`
@@ -185,7 +185,7 @@ export class IpcMainMessagesService {
     }
 
     public handleStopSync(message: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
-        const requestConnectorType = <ConnectorType>message.payload[0];
+        const requestConnectorType = message.payload[0] as ConnectorType;
 
         const currentConnector = this.service.currentConnector;
 
@@ -232,9 +232,9 @@ export class IpcMainMessagesService {
         message: FlaggedIpcMessage,
         replyWith: (promiseTronReply: PromiseTronReply) => void
     ): void {
-        const clientId = <number>message.payload[0];
-        const clientSecret = <string>message.payload[1];
-        const refreshToken = <string>(message.payload[2] ? message.payload[2] : null);
+        const clientId = message.payload[0] as number;
+        const clientSecret = message.payload[1] as string;
+        const refreshToken = (message.payload[2] ? message.payload[2] : null) as string;
 
         const stravaAuth = new StravaAuthenticator();
 
@@ -272,10 +272,10 @@ export class IpcMainMessagesService {
         message: FlaggedIpcMessage,
         replyWith: (promiseTronReply: PromiseTronReply) => void
     ): void {
-        let syncedActivityModel = <SyncedActivityModel>message.payload[0];
-        const athleteSnapshotModel = <AthleteSnapshotModel>message.payload[1];
-        const userSettingsModel = <DesktopUserSettingsModel>message.payload[2];
-        const streams = <ActivityStreamsModel>(message.payload[3] ? message.payload[3] : null);
+        let syncedActivityModel = message.payload[0] as SyncedActivityModel;
+        const athleteSnapshotModel = message.payload[1] as AthleteSnapshotModel;
+        const userSettingsModel = message.payload[2] as DesktopUserSettingsModel;
+        const streams = (message.payload[3] ? message.payload[3] : null) as ActivityStreamsModel;
 
         try {
             const analysisDataModel = ActivityComputer.calculate(
@@ -337,6 +337,6 @@ export class IpcMainMessagesService {
     }
 
     public send<T>(flaggedIpcMessage: FlaggedIpcMessage): Promise<T> {
-        return <Promise<T>>this.promiseTron.send(flaggedIpcMessage);
+        return this.promiseTron.send(flaggedIpcMessage) as Promise<T>;
     }
 }

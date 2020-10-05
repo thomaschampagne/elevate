@@ -467,7 +467,7 @@ describe("YearProgressService", () => {
 
         it("should not compute progression with not existing type", done => {
             // Given
-            const progressConfig = new YearToDateProgressConfigModel([<ElevateSport>"FakeType"], true, true);
+            const progressConfig = new YearToDateProgressConfigModel(["FakeType" as ElevateSport], true, true);
 
             const progressionMethodCall = () => service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
 

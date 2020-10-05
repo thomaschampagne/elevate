@@ -57,7 +57,7 @@ describe("StravaConnector", () => {
         };
 
         return {
-            message: <http.IncomingMessage>message,
+            message: message as http.IncomingMessage,
             readBody: () => {
                 return Promise.resolve(dataResponse ? JSON.stringify(dataResponse) : null);
             },
@@ -88,8 +88,8 @@ describe("StravaConnector", () => {
     let fakeStreamsFixture: StravaApiStreamType[];
 
     beforeEach(done => {
-        fakeActivitiesFixture = <any>jsonFakeActivitiesFixture;
-        fakeStreamsFixture = <StravaApiStreamType[]>jsonFakeStreamsFixture;
+        fakeActivitiesFixture = jsonFakeActivitiesFixture as any;
+        fakeStreamsFixture = jsonFakeStreamsFixture as StravaApiStreamType[];
 
         const connectorSyncDateTime = null;
         stravaConnector = new StravaConnector(
@@ -188,8 +188,8 @@ describe("StravaConnector", () => {
                         startedSyncEventToBeCaught = syncEvent;
                     } else {
                         expect(syncEvent.type).toEqual(SyncEventType.ACTIVITY);
-                        expect((<ActivitySyncEvent>syncEvent).activity).toBeDefined();
-                        expect((<ActivitySyncEvent>syncEvent).compressedStream).toBeDefined();
+                        expect((syncEvent as ActivitySyncEvent).activity).toBeDefined();
+                        expect((syncEvent as ActivitySyncEvent).compressedStream).toBeDefined();
                     }
 
                     expect(stravaConnector.isSyncing).toBeTruthy();
@@ -236,7 +236,7 @@ describe("StravaConnector", () => {
                 (syncEvent: SyncEvent) => {
                     if (syncEvent.type !== SyncEventType.STARTED) {
                         expect(syncEvent.type).toEqual(SyncEventType.ACTIVITY);
-                        expect((<ActivitySyncEvent>syncEvent).activity).toBeDefined();
+                        expect((syncEvent as ActivitySyncEvent).activity).toBeDefined();
                     }
 
                     expect(stravaConnector.isSyncing).toBeTruthy();
@@ -284,12 +284,12 @@ describe("StravaConnector", () => {
                 (syncEvent: SyncEvent) => {
                     if (syncEvent.type !== SyncEventType.STARTED) {
                         expect(syncEvent.type).toEqual(SyncEventType.ERROR);
-                        expect((<ErrorSyncEvent>syncEvent).fromConnectorType).toEqual(
+                        expect((syncEvent as ErrorSyncEvent).fromConnectorType).toEqual(
                             expectedErrorSyncEvent.fromConnectorType
                         );
-                        expect((<ErrorSyncEvent>syncEvent).description).toEqual(expectedErrorSyncEvent.description);
-                        expect((<ErrorSyncEvent>syncEvent).activity).toBeDefined();
-                        expect((<ErrorSyncEvent>syncEvent).stacktrace).toBeDefined();
+                        expect((syncEvent as ErrorSyncEvent).description).toEqual(expectedErrorSyncEvent.description);
+                        expect((syncEvent as ErrorSyncEvent).activity).toBeDefined();
+                        expect((syncEvent as ErrorSyncEvent).stacktrace).toBeDefined();
                     }
 
                     expect(stravaConnector.isSyncing).toBeTruthy();
@@ -1254,10 +1254,10 @@ describe("StravaConnector", () => {
     describe("Prepare streams", () => {
         it("should use existing estimated power stream when no power meter detected", done => {
             // Given
-            const bareActivity = <BareActivityModel>{
+            const bareActivity = {
                 type: ElevateSport.Ride,
                 hasPowerMeter: false,
-            };
+            } as BareActivityModel;
             const weight = 75;
             const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
             const expectedPowerStreams = [1, 2, 3, 4];
@@ -1279,10 +1279,10 @@ describe("StravaConnector", () => {
 
         it("should use existing given power stream when a power meter is detected", done => {
             // Given
-            const bareActivity = <BareActivityModel>{
+            const bareActivity = {
                 type: ElevateSport.Ride,
                 hasPowerMeter: true,
-            };
+            } as BareActivityModel;
             const weight = 75;
             const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
             const expectedPowerStreams = [1, 2, 3, 4];
@@ -1304,10 +1304,10 @@ describe("StravaConnector", () => {
 
         it("should estimate power stream when no power meter detected and activity type is on a bike (velocity & grade stream available)", done => {
             // Given
-            const bareActivity = <BareActivityModel>{
+            const bareActivity = {
                 type: ElevateSport.Ride,
                 hasPowerMeter: false,
-            };
+            } as BareActivityModel;
             const weight = 75;
             const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
             activityStreamsModel.velocity_smooth = [1, 2, 3, 4];
@@ -1330,10 +1330,10 @@ describe("StravaConnector", () => {
 
         it("should 'try' estimate power stream when no power meter detected and activity type is on a bike (velocity & grade stream NOT available)", done => {
             // Given
-            const bareActivity = <BareActivityModel>{
+            const bareActivity = {
                 type: ElevateSport.Ride,
                 hasPowerMeter: false,
-            };
+            } as BareActivityModel;
             const weight = 75;
             const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
             activityStreamsModel.velocity_smooth = [1, 2, 3, 4];
@@ -1391,10 +1391,10 @@ describe("StravaConnector", () => {
             stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = true;
 
             const expectedSyncedActivityModelUpdate = _.cloneDeep(
-                <SyncedActivityModel>_.cloneDeep(bareActivities[trackCallId])
+                _.cloneDeep(bareActivities[trackCallId]) as SyncedActivityModel
             );
             expectedSyncedActivityModelUpdate.name = "FakeName";
-            expectedSyncedActivityModelUpdate.type = <ElevateSport>"FakeType";
+            expectedSyncedActivityModelUpdate.type = "FakeType" as ElevateSport;
             const expectedActivitySyncEvent = new ActivitySyncEvent(
                 ConnectorType.STRAVA,
                 null,
@@ -1416,7 +1416,7 @@ describe("StravaConnector", () => {
             // Then
             promise.then(
                 () => {
-                    const activitySyncEventSent = <ActivitySyncEvent>syncEventsSpy.calls.argsFor(trackCallId)[0]; // Catching call args
+                    const activitySyncEventSent = syncEventsSpy.calls.argsFor(trackCallId)[0] as ActivitySyncEvent; // Catching call args
                     expect(activitySyncEventSent.fromConnectorType).toEqual(
                         expectedActivitySyncEvent.fromConnectorType
                     );
@@ -1448,10 +1448,10 @@ describe("StravaConnector", () => {
             stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = false;
 
             const expectedSyncedActivityModelUpdate = _.cloneDeep(
-                <SyncedActivityModel>_.cloneDeep(bareActivities[trackCallId])
+                _.cloneDeep(bareActivities[trackCallId]) as SyncedActivityModel
             );
             expectedSyncedActivityModelUpdate.name = "FakeName";
-            expectedSyncedActivityModelUpdate.type = <ElevateSport>"FakeType";
+            expectedSyncedActivityModelUpdate.type = "FakeType" as ElevateSport;
 
             // Emulate 1 existing activity
             findSyncedActivityModelsSpy.and.callFake(() => {
@@ -1470,7 +1470,7 @@ describe("StravaConnector", () => {
                     expect(syncEventsSpy).toBeCalledTimes(perPage - 1);
 
                     _.forEach(syncEventsSpy.calls.all(), call => {
-                        const activitySyncEventSent = <ActivitySyncEvent>call.args[0];
+                        const activitySyncEventSent = call.args[0] as ActivitySyncEvent;
                         expect(activitySyncEventSent.isNew).toEqual(true); // Call is always a new activity
                         expect(activitySyncEventSent.compressedStream).not.toBeNull();
                     });
@@ -1496,10 +1496,10 @@ describe("StravaConnector", () => {
             stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = true;
 
             const expectedSyncedActivityModelUpdate = _.cloneDeep(
-                <SyncedActivityModel>_.cloneDeep(bareActivities[trackCallId])
+                _.cloneDeep(bareActivities[trackCallId]) as SyncedActivityModel
             );
             expectedSyncedActivityModelUpdate.name = "FakeName";
-            expectedSyncedActivityModelUpdate.type = <ElevateSport>"FakeType";
+            expectedSyncedActivityModelUpdate.type = "FakeType" as ElevateSport;
             expectedSyncedActivityModelUpdate.start_time = new Date().toISOString();
 
             // Emulate 1 existing activity
@@ -1518,7 +1518,7 @@ describe("StravaConnector", () => {
             const expectedErrorSyncEvent = ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.create(
                 ConnectorType.STRAVA,
                 bareActivities[trackCallId].name,
-                new Date((<any>bareActivities[trackCallId]).start_date),
+                new Date((bareActivities[trackCallId] as any).start_date),
                 [expectedActivitiesFound, expectedActivitiesFound]
             );
 
@@ -1551,7 +1551,7 @@ describe("StravaConnector", () => {
             stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = true;
 
             const expectedSyncedActivityModelUpdate = _.cloneDeep(
-                <SyncedActivityModel>_.cloneDeep(bareActivities[trackCallId])
+                _.cloneDeep(bareActivities[trackCallId]) as SyncedActivityModel
             ); // "Mini Zwift & Pschitt"
             const expectedStartTime = "2019-03-10T16:17:32.000Z";
             const expectedStartTimeStamp = new Date(expectedStartTime).getTime() / 1000;
@@ -1574,7 +1574,7 @@ describe("StravaConnector", () => {
             // Then
             promise.then(
                 () => {
-                    const activitySyncEventSent = <ActivitySyncEvent>syncEventsSpy.calls.argsFor(trackCallId)[0]; // Catching 2nd call
+                    const activitySyncEventSent = syncEventsSpy.calls.argsFor(trackCallId)[0] as ActivitySyncEvent; // Catching 2nd call
                     expect(activitySyncEventSent.activity.start_time).toEqual(expectedStartTime);
                     expect(activitySyncEventSent.activity.start_timestamp).toEqual(expectedStartTimeStamp);
                     expect(activitySyncEventSent.activity.end_time).toEqual(expectedEndTime);
@@ -1609,10 +1609,10 @@ describe("StravaConnector", () => {
             stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = true;
 
             const expectedSyncedActivityModelUpdate = _.cloneDeep(
-                <SyncedActivityModel>_.cloneDeep(bareActivities[trackCallId])
+                _.cloneDeep(bareActivities[trackCallId]) as SyncedActivityModel
             );
             expectedSyncedActivityModelUpdate.name = "FakeName";
-            expectedSyncedActivityModelUpdate.type = <ElevateSport>"FakeType";
+            expectedSyncedActivityModelUpdate.type = "FakeType" as ElevateSport;
             const expectedErrorSyncEvent = ErrorSyncEvent.UNHANDLED_ERROR_SYNC.create(
                 ConnectorType.STRAVA,
                 "Whoops :/"

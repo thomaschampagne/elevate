@@ -175,14 +175,14 @@ class Main {
         });
 
         // Shortcuts
-        globalShortcut.register(<Electron.Accelerator>"CommandOrControl+R", () => {
+        globalShortcut.register("CommandOrControl+R" as Electron.Accelerator, () => {
             if (this.appWindow.isFocused() && IS_ELECTRON_DEV) {
                 logger.debug("CommandOrControl+R is pressed, reload app");
                 this.appWindow.reload();
             }
         });
 
-        globalShortcut.register(<Electron.Accelerator>"CommandOrControl+F12", () => {
+        globalShortcut.register("CommandOrControl+F12" as Electron.Accelerator, () => {
             if (this.appWindow.isFocused()) {
                 logger.debug("CommandOrControl+F12 is pressed, toggle dev tools");
                 this.appWindow.webContents.toggleDevTools();

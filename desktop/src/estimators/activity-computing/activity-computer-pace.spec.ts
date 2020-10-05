@@ -108,7 +108,7 @@ describe("ActivityComputer Paces", () => {
 
     it("should compute grade adjusted pace of activity 887284960", done => {
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_887284960);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_887284960 as unknown) as ActivityStreamsModel;
 
         // When
         const activityComputer: ActivityComputer = new ActivityComputer(
@@ -135,7 +135,7 @@ describe("ActivityComputer Paces", () => {
 
     it("should compute grade adjusted pace of activity 878683797", done => {
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_878683797);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_878683797 as unknown) as ActivityStreamsModel;
 
         // When
         const activityComputer: ActivityComputer = new ActivityComputer(
@@ -162,7 +162,7 @@ describe("ActivityComputer Paces", () => {
 
     it("should compute grade adjusted pace of activity 849522984", done => {
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_849522984);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_849522984 as unknown) as ActivityStreamsModel;
 
         // When
         const activityComputer: ActivityComputer = new ActivityComputer(
@@ -189,7 +189,7 @@ describe("ActivityComputer Paces", () => {
 
     it("should compute grade adjusted pace of activity 708752345", done => {
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_708752345);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_708752345 as unknown) as ActivityStreamsModel;
 
         // When
         const activityComputer: ActivityComputer = new ActivityComputer(
@@ -216,7 +216,7 @@ describe("ActivityComputer Paces", () => {
 
     it("should compute grade adjusted pace of activity 1550722452", done => {
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1550722452);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_1550722452 as unknown) as ActivityStreamsModel;
 
         // When
         const activityComputer: ActivityComputer = new ActivityComputer(
@@ -243,7 +243,7 @@ describe("ActivityComputer Paces", () => {
 
     it("should compute grade adjusted pace of activity 350379527", done => {
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_350379527);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_350379527 as unknown) as ActivityStreamsModel;
 
         // When
         const activityComputer: ActivityComputer = new ActivityComputer(
@@ -270,7 +270,7 @@ describe("ActivityComputer Paces", () => {
 
     it("should compute grade adjusted pace of activity 1551720271", done => {
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1551720271);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_1551720271 as unknown) as ActivityStreamsModel;
 
         // When
         const activityComputer: ActivityComputer = new ActivityComputer(
@@ -297,7 +297,7 @@ describe("ActivityComputer Paces", () => {
 
     it("should compute grade adjusted pace of activity 1553538436", done => {
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1553538436);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_1553538436 as unknown) as ActivityStreamsModel;
 
         // When
         const activityComputer: ActivityComputer = new ActivityComputer(
@@ -324,7 +324,7 @@ describe("ActivityComputer Paces", () => {
 
     it("should compute grade adjusted pace of activity 1553976435", done => {
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1553976435);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_1553976435 as unknown) as ActivityStreamsModel;
 
         // When
         const activityComputer: ActivityComputer = new ActivityComputer(
@@ -351,7 +351,7 @@ describe("ActivityComputer Paces", () => {
 
     it("should compute grade adjusted pace of activity 1553069082", done => {
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1553069082);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_1553069082 as unknown) as ActivityStreamsModel;
 
         // When
         const activityComputer: ActivityComputer = new ActivityComputer(
@@ -378,7 +378,7 @@ describe("ActivityComputer Paces", () => {
 
     it("should compute grade adjusted pace of activity 1654295114", done => {
         // Given
-        const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_1654295114);
+        const stream: ActivityStreamsModel = _.cloneDeep(streamJson_1654295114 as unknown) as ActivityStreamsModel;
 
         // When
         const activityComputer: ActivityComputer = new ActivityComputer(

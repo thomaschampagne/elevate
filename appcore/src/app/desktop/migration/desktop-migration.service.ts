@@ -43,9 +43,9 @@ export class DesktopMigrationService {
             .catch(err => {
                 if (err.reason && err.reason === "DOWNGRADE") {
                     this.dialog.open(GotItDialogComponent, {
-                        data: <GotItDialogDataModel>{
+                        data: {
                             content: err.message,
-                        },
+                        } as GotItDialogDataModel,
                     });
                     return this.trackPackageVersion();
                 }

@@ -115,7 +115,7 @@ export class RefreshStatsBarComponent implements OnInit {
     public onEditAthleteSettingsFromSettingsLacksIssue(): void {
         if (this.router.isActive(AppRoutesModel.athleteSettings, true)) {
             this.dialog.open(GotItDialogComponent, {
-                data: <GotItDialogDataModel>{ content: "You're already on athlete settings section 😉" },
+                data: { content: "You're already on athlete settings section 😉" } as GotItDialogDataModel,
             });
         } else {
             this.router.navigate([AppRoutesModel.athleteSettings]);
@@ -230,13 +230,13 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
     public ngOnInit(): void {
         super.ngOnInit();
 
-        const desktopActivityService = <DesktopActivityService>this.activityService;
+        const desktopActivityService = this.activityService as DesktopActivityService;
         desktopActivityService.refreshStats$.subscribe(
             (notification: BulkRefreshStatsNotification) => {
                 if (notification.error) {
                     this.logger.error(notification);
                     this.dialog.open(GotItDialogComponent, {
-                        data: <GotItDialogDataModel>{ content: notification.error.message },
+                        data: { content: notification.error.message } as GotItDialogDataModel,
                     });
                     return;
                 }
@@ -269,7 +269,7 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
     public onFixActivities(): void {
         super.onFixActivities();
         this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
-            const desktopActivityService = <DesktopActivityService>this.activityService;
+            const desktopActivityService = this.activityService as DesktopActivityService;
             desktopActivityService.nonConsistentActivitiesWithAthleteSettings().then((activitiesIds: number[]) => {
                 desktopActivityService.bulkRefreshStatsFromIds(activitiesIds, userSettingsModel);
             });
@@ -388,12 +388,12 @@ export class ExtensionRefreshStatsBarComponent extends RefreshStatsBarComponent 
                     })
                     .then(() => {
                         this.dialog.open(GotItDialogComponent, {
-                            data: <GotItDialogDataModel>{
+                            data: {
                                 content:
                                     nonConsistentIds.length +
                                     " activities have been deleted and are synced back now. " +
                                     'You can sync back these activities manually by yourself by triggering a "Sync all activities"',
-                            },
+                            } as GotItDialogDataModel,
                         });
 
                         // Start Sync all activities
@@ -402,7 +402,7 @@ export class ExtensionRefreshStatsBarComponent extends RefreshStatsBarComponent 
                     .catch(error => {
                         this.logger.error(error);
                         this.dialog.open(GotItDialogComponent, {
-                            data: <GotItDialogDataModel>{ content: error },
+                            data: { content: error } as GotItDialogDataModel,
                         });
                     });
             }

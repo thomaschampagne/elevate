@@ -17,6 +17,6 @@ export class GotItDialogComponent implements OnInit {
     constructor(@Inject(MAT_DIALOG_DATA) public dialogData: GotItDialogDataModel, public domSanitizer: DomSanitizer) {}
 
     public ngOnInit(): void {
-        this.html = <string>this.domSanitizer.bypassSecurityTrustHtml(this.dialogData.content);
+        this.html = this.domSanitizer.bypassSecurityTrustHtml(this.dialogData.content) as string;
     }
 }

@@ -120,7 +120,7 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
     private handleErrors(error: any) {
         if (error instanceof AppError) {
             this.logger.warn(error);
-            const message = (<AppError>error).message;
+            const message = (error as AppError).message;
             this.snackBar.open(message, "Close", {
                 duration: 5000,
             });

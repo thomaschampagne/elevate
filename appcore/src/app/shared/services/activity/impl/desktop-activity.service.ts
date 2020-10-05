@@ -54,9 +54,9 @@ export class BulkRefreshStatsNotification {
     }
 
     public static error(error: any): BulkRefreshStatsNotification {
-        return <BulkRefreshStatsNotification>{
+        return {
             error: error,
-        };
+        } as BulkRefreshStatsNotification;
     }
 }
 

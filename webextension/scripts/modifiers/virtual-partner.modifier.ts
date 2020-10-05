@@ -119,9 +119,9 @@ export class VirtualPartnerModifier extends AbstractModifier {
 
     protected download(effortId: string, exportType: ExportTypes) {
         this.getSegmentInfos(effortId, (segmentData: any) => {
-            const activityInfo: ActivityInfoModel = <ActivityInfoModel>{
+            const activityInfo: ActivityInfoModel = {
                 id: this.activityId,
-            };
+            } as ActivityInfoModel;
 
             this.vacuumProcessor.getActivityStream(
                 activityInfo,

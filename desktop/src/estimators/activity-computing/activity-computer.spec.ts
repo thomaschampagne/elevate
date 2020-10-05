@@ -18,8 +18,8 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 describe("ActivityComputer", () => {
     // Cycling
     it('should compute correctly "Bon rythme ! 33 KPH !" @ https://www.strava.com/activities/723224273', done => {
-        const stream = <ActivityStreamsModel>_.cloneDeep(streamJson);
-        const activitySourceData = <ActivitySourceDataModel>(<unknown>_.cloneDeep(activitySourceDataJson));
+        const stream = _.cloneDeep(streamJson) as ActivityStreamsModel;
+        const activitySourceData = (_.cloneDeep(activitySourceDataJson) as unknown) as ActivitySourceDataModel;
         const powerMeter = false;
 
         const userSettingsMock: UserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
@@ -770,12 +770,12 @@ describe("ActivityComputer", () => {
                     athleteSettingsModel.cyclingFtp = null;
                     athleteSettingsModel.runningFtp = null;
                     athleteSettingsModel.swimFtp = null;
-                    analysisDataModel = <AnalysisDataModel>{
+                    analysisDataModel = {
                         heartRateData: {
                             HRSS: 100,
                             TRIMP: 100,
                         },
-                    };
+                    } as AnalysisDataModel;
 
                     // When
                     const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(

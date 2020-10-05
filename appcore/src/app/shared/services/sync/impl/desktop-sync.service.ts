@@ -91,9 +91,9 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
     public static transformErrorToSyncException(error: Error | Error[] | string | string[]): SyncException {
         if (error instanceof SyncException) {
-            return <SyncException>error;
-        } else if ((<any>error).name === Error.name) {
-            return SyncException.fromError(<Error>error);
+            return error as SyncException;
+        } else if ((error as any).name === Error.name) {
+            return SyncException.fromError(error as Error);
         } else if (_.isString(error)) {
             return new SyncException(error);
         } else {
@@ -144,9 +144,9 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         });
 
         return Promise.all(promisedDataToSync).then(result => {
-            const athleteModel: AthleteModel = <AthleteModel>result[0];
-            const userSettingsModel: UserSettingsModel = <UserSettingsModel>result[1];
-            const allConnectorsSyncDateTime: ConnectorSyncDateTime[] = <ConnectorSyncDateTime[]>result[2];
+            const athleteModel: AthleteModel = result[0] as AthleteModel;
+            const userSettingsModel: UserSettingsModel = result[1] as UserSettingsModel;
+            const allConnectorsSyncDateTime: ConnectorSyncDateTime[] = result[2] as ConnectorSyncDateTime[];
 
             let startSyncMessage: FlaggedIpcMessage;
 
@@ -155,7 +155,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
                 : null;
 
             if (this.currentConnectorType === ConnectorType.STRAVA) {
-                const stravaConnectorInfo: StravaConnectorInfo = <StravaConnectorInfo>result[3];
+                const stravaConnectorInfo: StravaConnectorInfo = result[3] as StravaConnectorInfo;
 
                 // Create message to start sync on connector!
                 startSyncMessage = new FlaggedIpcMessage(
@@ -167,7 +167,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
                     userSettingsModel
                 );
             } else if (this.currentConnectorType === ConnectorType.FILE_SYSTEM) {
-                const fileSystemConnectorInfo: FileSystemConnectorInfo = <FileSystemConnectorInfo>result[3];
+                const fileSystemConnectorInfo: FileSystemConnectorInfo = result[3] as FileSystemConnectorInfo;
                 startSyncMessage = new FlaggedIpcMessage(
                     MessageFlag.START_SYNC,
                     ConnectorType.FILE_SYSTEM,
@@ -202,7 +202,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
                 break;
 
             case SyncEventType.ACTIVITY:
-                this.handleActivityUpsert(syncEvents$, <ActivitySyncEvent>syncEvent);
+                this.handleActivityUpsert(syncEvents$, syncEvent as ActivitySyncEvent);
                 break;
 
             case SyncEventType.STOPPED:
@@ -222,11 +222,11 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
                 break;
 
             case SyncEventType.COMPLETE:
-                this.handleSyncCompleteEvents(syncEvents$, <CompleteSyncEvent>syncEvent);
+                this.handleSyncCompleteEvents(syncEvents$, syncEvent as CompleteSyncEvent);
                 break;
 
             case SyncEventType.ERROR:
-                this.handleErrorSyncEvents(syncEvents$, <ErrorSyncEvent>syncEvent);
+                this.handleErrorSyncEvents(syncEvents$, syncEvent as ErrorSyncEvent);
                 break;
 
             default:
@@ -397,13 +397,13 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         if (_.isArray(error)) {
             const syncExceptions = [];
             _.forEach(error, err => {
-                const syncException = DesktopSyncService.transformErrorToSyncException(<any>err);
+                const syncException = DesktopSyncService.transformErrorToSyncException(err as any);
                 syncExceptions.push(syncException);
             });
 
             throw syncExceptions;
         } else {
-            throw DesktopSyncService.transformErrorToSyncException(<Error | Error[] | string | string[]>error);
+            throw DesktopSyncService.transformErrorToSyncException(error as Error | Error[] | string | string[]);
         }
     }
 

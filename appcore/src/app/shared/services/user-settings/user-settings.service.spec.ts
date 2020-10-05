@@ -60,7 +60,7 @@ describe("UserSettingsService", () => {
         // Given
         const key = "displayAdvancedHrData";
         const displayAdvancedHrData = false;
-        const userSettingsData = <ExtensionUserSettingsModel>UserSettings.getDefaultsByEnvTarget(EnvTarget.EXTENSION);
+        const userSettingsData = UserSettings.getDefaultsByEnvTarget(EnvTarget.EXTENSION) as ExtensionUserSettingsModel;
         const expectedSettings: ExtensionUserSettingsModel = _.cloneDeep(userSettingsData);
         expectedSettings.displayAdvancedHrData = displayAdvancedHrData;
 

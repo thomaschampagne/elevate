@@ -295,10 +295,10 @@ export class GoogleMapsModifier extends AbstractModifier {
         }
 
         // if (!this.map) {
-        this.map = new google.maps.Map(document.getElementById("gmaps_canvas"), <MapOptions>{
+        this.map = new google.maps.Map(document.getElementById("gmaps_canvas"), {
             mapTypeId: layerType,
             overviewMapControl: true,
-        });
+        } as MapOptions);
         // }
 
         const points: google.maps.LatLng[] = [];

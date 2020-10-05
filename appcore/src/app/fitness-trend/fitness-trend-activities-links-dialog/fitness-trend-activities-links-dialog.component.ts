@@ -27,6 +27,6 @@ export class FitnessTrendActivitiesLinksDialogComponent implements OnInit {
     }
 
     public openAllActivities(): void {
-        this.openResourceResolver.openActivities(<number[]>this.dayFitnessTrendModel.ids);
+        this.openResourceResolver.openActivities(this.dayFitnessTrendModel.ids as number[]);
     }
 }

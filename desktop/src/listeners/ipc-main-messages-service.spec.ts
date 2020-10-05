@@ -30,8 +30,8 @@ describe("IpcMainMessagesService", () => {
     let ipcMainMessagesService: IpcMainMessagesService;
 
     beforeEach(done => {
-        const ipcMain = <Electron.IpcMain>{};
-        const webContents = <Electron.WebContents>{};
+        const ipcMain = {} as Electron.IpcMain;
+        const webContents = {} as Electron.WebContents;
         ipcMainMessagesService = new IpcMainMessagesService(ipcMain, webContents);
         ipcMainMessagesService.service = new Service(); // Ensure Service instance is new between tests
 

@@ -35,7 +35,7 @@ export class DesktopVersionsProvider implements VersionsProvider {
     }
 
     public getRemoteVersion(): Promise<string> {
-        const packageManifest = <any>this.packageManifest();
+        const packageManifest = this.packageManifest() as any;
         const githubReleaseApiUrl = DesktopVersionsProvider.getGithubReleaseApiUrl(packageManifest);
         return this.httpClient
             .get<object[]>(githubReleaseApiUrl)
@@ -57,13 +57,13 @@ export class DesktopVersionsProvider implements VersionsProvider {
     }
 
     public getLatestReleaseUrl(): string {
-        const packageManifest = <any>this.packageManifest();
+        const packageManifest = this.packageManifest() as any;
         return `https://github.com/${packageManifest.build.publish.owner}/${packageManifest.build.publish.repo}/releases/latest`;
     }
 
     public getBuildMetadata(): Promise<{ commit: string; date: string }> {
         const buildMetadata = require("../../../../../../../desktop/build_metadata.json");
-        return Promise.resolve(<{ commit: string; date: string }>buildMetadata);
+        return Promise.resolve(buildMetadata as { commit: string; date: string });
     }
 
     public getWrapperVersion(): string {
@@ -71,6 +71,6 @@ export class DesktopVersionsProvider implements VersionsProvider {
     }
 
     public packageManifest(): PackageManifest {
-        return <PackageManifest>require("../../../../../../../desktop/package.json");
+        return require("../../../../../../../desktop/package.json") as PackageManifest;
     }
 }

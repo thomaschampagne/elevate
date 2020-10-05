@@ -176,7 +176,7 @@ describe("RunningPowerEstimator", () => {
             // Given
             const expectedPower = 151; // Real Running Average Power = 151 W (From power meter)
             const athleteWeight = 54.32;
-            const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_874762067); // Mikala run sample 1/2 NCNR Run Club
+            const stream: ActivityStreamsModel = _.cloneDeep(streamJson_874762067 as unknown) as ActivityStreamsModel; // Mikala run sample 1/2 NCNR Run Club
 
             // When
             const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(
@@ -201,7 +201,7 @@ describe("RunningPowerEstimator", () => {
             // Given
             const expectedPower = 287;
             const athleteWeight = 79.4;
-            const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_852961332); // Stryd 3/6 lap test .... brrr
+            const stream: ActivityStreamsModel = _.cloneDeep(streamJson_852961332 as unknown) as ActivityStreamsModel; // Stryd 3/6 lap test .... brrr
 
             // When
             const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(
@@ -230,7 +230,7 @@ describe("RunningPowerEstimator", () => {
             const athleteWeight = 79.4;
 
             // Two shooting ranges and a road dedicated to the inventor of Velcro
-            const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_878683797);
+            const stream: ActivityStreamsModel = _.cloneDeep(streamJson_878683797 as unknown) as ActivityStreamsModel;
 
             // When
             const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(
@@ -258,7 +258,7 @@ describe("RunningPowerEstimator", () => {
             const expectedPower = 310;
             const athleteWeight = 79.4;
 
-            const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_833008371); // Morning Run
+            const stream: ActivityStreamsModel = _.cloneDeep(streamJson_833008371 as unknown) as ActivityStreamsModel; // Morning Run
 
             // When
             const powerArray: number[] = RunningPowerEstimator.createRunningPowerEstimationStream(
@@ -291,7 +291,7 @@ describe("RunningPowerEstimator", () => {
             const returnZones = true;
             const returnPowerCurve = true;
             const userSettingsMock: UserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
-            const stream: ActivityStreamsModel = <ActivityStreamsModel>_.cloneDeep(<unknown>streamJson_887284960);
+            const stream: ActivityStreamsModel = _.cloneDeep(streamJson_887284960 as unknown) as ActivityStreamsModel;
             const activitySourceData: ActivitySourceDataModel = {
                 movingTime: -1,
                 elevation: -1,

@@ -298,8 +298,8 @@ describe("ActivityDao", () => {
             promise.then(
                 activities => {
                     expect(activities.length).toEqual(expectedSize);
-                    expect(activities[0]).toEqual(<SyncedActivityModel>syncedActivities[1]);
-                    expect(activities[1]).toEqual(<SyncedActivityModel>syncedActivities[3]);
+                    expect(activities[0]).toEqual(syncedActivities[1] as SyncedActivityModel);
+                    expect(activities[1]).toEqual(syncedActivities[3] as SyncedActivityModel);
                     done();
                 },
                 error => {

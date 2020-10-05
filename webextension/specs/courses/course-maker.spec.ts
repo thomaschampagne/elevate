@@ -65,9 +65,13 @@ describe("CourseMaker", () => {
     it("should export GPX with no HRM, Cadence, altimeter & Power sensor", done => {
         // Given
         const courseName = "MyCourse";
-        activityStream = <ActivityStreamsModel>(
-            _.omit(activityStream, ["heartrate", "cadence", "watts", "watts_calc", "altitude"])
-        );
+        activityStream = _.omit(activityStream, [
+            "heartrate",
+            "cadence",
+            "watts",
+            "watts_calc",
+            "altitude",
+        ]) as ActivityStreamsModel;
         let errorCatched = null;
 
         // When
@@ -142,9 +146,13 @@ describe("CourseMaker", () => {
     it("should export TCX with no HRM, Cadence, altimeter & Power sensor", done => {
         // Given
         const courseName = "MyCourse";
-        activityStream = <ActivityStreamsModel>(
-            _.omit(activityStream, ["heartrate", "cadence", "watts", "watts_calc", "altitude"])
-        );
+        activityStream = _.omit(activityStream, [
+            "heartrate",
+            "cadence",
+            "watts",
+            "watts_calc",
+            "altitude",
+        ]) as ActivityStreamsModel;
         let errorCatched = null;
 
         // When

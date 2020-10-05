@@ -28,9 +28,9 @@ export class FaqComponent implements OnInit {
             .toPromise()
             .then(
                 (markdownData: string) => {
-                    this.html = <string>(
-                        this.domSanitizer.bypassSecurityTrustHtml(this.markDownParser.render(markdownData))
-                    );
+                    this.html = this.domSanitizer.bypassSecurityTrustHtml(
+                        this.markDownParser.render(markdownData)
+                    ) as string;
                     this.isFaqLoaded = true;
                 },
                 err => {

@@ -68,7 +68,7 @@ export class IpcMessagesReceiver {
     }
 
     public handleSyncEventsMessages(flaggedIpcMessage: FlaggedIpcMessage): void {
-        const syncEvent = <SyncEvent>_.first(flaggedIpcMessage.payload);
+        const syncEvent = _.first(flaggedIpcMessage.payload) as SyncEvent;
         this.syncEvents$.next(syncEvent); // forward sync event
     }
 
@@ -76,8 +76,8 @@ export class IpcMessagesReceiver {
         flaggedIpcMessage: FlaggedIpcMessage,
         replyWith: (promiseTronReply: PromiseTronReply) => void
     ): void {
-        const startTime = <string>flaggedIpcMessage.payload[0];
-        const activityDurationSeconds = <number>flaggedIpcMessage.payload[1];
+        const startTime = flaggedIpcMessage.payload[0] as string;
+        const activityDurationSeconds = flaggedIpcMessage.payload[1] as number;
 
         this.activityService.findByDatedSession(startTime, activityDurationSeconds).then(
             activities => {

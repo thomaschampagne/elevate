@@ -108,12 +108,10 @@ describe("DesktopSyncService", () => {
                         expect(fetchStravaConnectorInfoSpy).toHaveBeenCalledTimes(1);
                         expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
 
-                        const flaggedStartSyncIpcMessage: FlaggedIpcMessage = <FlaggedIpcMessage>(
-                            sendStartSyncSpy.calls.mostRecent().args[0]
-                        );
-                        const currentConnectorSyncDateTime = <ConnectorSyncDateTime>(
-                            flaggedStartSyncIpcMessage.payload[1]
-                        );
+                        const flaggedStartSyncIpcMessage: FlaggedIpcMessage = sendStartSyncSpy.calls.mostRecent()
+                            .args[0] as FlaggedIpcMessage;
+                        const currentConnectorSyncDateTime = flaggedStartSyncIpcMessage
+                            .payload[1] as ConnectorSyncDateTime;
                         expect(currentConnectorSyncDateTime).toBeNull();
 
                         done();
@@ -167,12 +165,10 @@ describe("DesktopSyncService", () => {
                         expect(fetchStravaConnectorInfoSpy).toHaveBeenCalledTimes(1);
                         expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
 
-                        const flaggedStartSyncIpcMessage: FlaggedIpcMessage = <FlaggedIpcMessage>(
-                            sendStartSyncSpy.calls.mostRecent().args[0]
-                        );
-                        const currentConnectorSyncDateTime = <ConnectorSyncDateTime>(
-                            flaggedStartSyncIpcMessage.payload[1]
-                        );
+                        const flaggedStartSyncIpcMessage: FlaggedIpcMessage = sendStartSyncSpy.calls.mostRecent()
+                            .args[0] as FlaggedIpcMessage;
+                        const currentConnectorSyncDateTime = flaggedStartSyncIpcMessage
+                            .payload[1] as ConnectorSyncDateTime;
                         expect(currentConnectorSyncDateTime).toBeDefined();
                         expect(currentConnectorSyncDateTime).toEqual(expectedConnectorSyncDateTime);
 
@@ -310,14 +306,13 @@ describe("DesktopSyncService", () => {
                         expect(findConnectorSyncDateTimeSpy).not.toHaveBeenCalled();
                         expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
 
-                        const flaggedStartSyncIpcMessage: FlaggedIpcMessage = <FlaggedIpcMessage>(
-                            sendStartSyncSpy.calls.mostRecent().args[0]
-                        );
-                        const currentConnectorSyncDateTime = <ConnectorSyncDateTime>(
-                            flaggedStartSyncIpcMessage.payload[1]
-                        );
+                        const flaggedStartSyncIpcMessage: FlaggedIpcMessage = sendStartSyncSpy.calls.mostRecent()
+                            .args[0] as FlaggedIpcMessage;
+                        const currentConnectorSyncDateTime = flaggedStartSyncIpcMessage
+                            .payload[1] as ConnectorSyncDateTime;
                         expect(currentConnectorSyncDateTime).toBeNull();
-                        const fileSystemConnectorInfo = <FileSystemConnectorInfo>flaggedStartSyncIpcMessage.payload[2];
+                        const fileSystemConnectorInfo = flaggedStartSyncIpcMessage
+                            .payload[2] as FileSystemConnectorInfo;
                         expect(fileSystemConnectorInfo).toEqual(expectedFileSystemConnectorInfo);
 
                         done();
@@ -833,7 +828,7 @@ describe("DesktopSyncService", () => {
                 expect(syncException).toBeDefined();
                 expect(syncException.message).toEqual(message);
                 expect(syncException instanceof SyncException).toBeTruthy();
-                expect((<SyncException>syncException).errorSyncEvent).toEqual(errorSyncEvent);
+                expect((syncException as SyncException).errorSyncEvent).toEqual(errorSyncEvent);
 
                 done();
             }
@@ -864,7 +859,7 @@ describe("DesktopSyncService", () => {
 
             // When
             try {
-                desktopSyncService.throwSyncError(<any>message);
+                desktopSyncService.throwSyncError(message as any);
             } catch (syncException) {
                 // Then
                 expect(syncException).toBeDefined();
@@ -990,7 +985,7 @@ describe("DesktopSyncService", () => {
             // Given
             const syncEvent$ = new Subject<SyncEvent>();
             desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
-            const activity = <SyncedActivityModel>{ name: "fakeActivity" };
+            const activity = { name: "fakeActivity" } as SyncedActivityModel;
             const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_UPSERT_ACTIVITY_DATABASE.create(
                 desktopSyncService.currentConnectorType,
                 activity
@@ -1524,7 +1519,7 @@ describe("DesktopSyncService", () => {
 
             // When
             const call = () => {
-                desktopSyncService.upsertConnectorsSyncDateTimes(<any>connectorSyncDateTime);
+                desktopSyncService.upsertConnectorsSyncDateTimes(connectorSyncDateTime as any);
             };
 
             // Then

@@ -43,7 +43,7 @@ export class ExtensionEventsService extends AppEventsService {
         }
 
         if (request.message === CoreMessages.ON_EXTERNAL_SYNC_DONE) {
-            const syncResult = <SyncResultModel>request.results;
+            const syncResult = request.results as SyncResultModel;
             const hasChanges =
                 syncResult.activitiesChangesModel.added.length > 0 ||
                 syncResult.activitiesChangesModel.edited.length > 0 ||

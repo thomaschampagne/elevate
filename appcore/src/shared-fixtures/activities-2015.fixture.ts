@@ -26,7 +26,7 @@ import { SyncedActivityModel } from "@elevate/shared/models";
  *
  * @type SyncedActivityModel[]
  */
-export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityModel[]>[
+export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
     {
         athleteSnapshot: {
             athleteSettings: {
@@ -16878,4 +16878,4 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = <SyncedActivityMode
         trainer: false,
         type: "Ride",
     },
-];
+] as SyncedActivityModel[];

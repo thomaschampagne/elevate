@@ -95,7 +95,7 @@ export class LegacyBrowserStorage {
 
         return new Promise<void>((resolve, reject) => {
             if (this.hasStorageAccess()) {
-                chrome.storage[storageType].remove(<any>key, () => {
+                chrome.storage[storageType].remove(key as any, () => {
                     const error = chrome.runtime.lastError;
                     if (error) {
                         reject(error.message);

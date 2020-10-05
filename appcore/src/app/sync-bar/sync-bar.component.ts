@@ -139,7 +139,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
         }
 
         if (syncEvent.type === SyncEventType.ERROR) {
-            this.onErrorSyncEvent(<ErrorSyncEvent>syncEvent);
+            this.onErrorSyncEvent(syncEvent as ErrorSyncEvent);
         }
 
         if (syncEvent.type === SyncEventType.STOPPED) {
@@ -165,7 +165,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 
     private onActivitySyncEvent(syncEvent: SyncEvent): void {
         this.counter++;
-        const activitySyncEvent = <ActivitySyncEvent>syncEvent;
+        const activitySyncEvent = syncEvent as ActivitySyncEvent;
         this.currentActivitySynced = {
             date: moment(activitySyncEvent.activity.start_time).format("ll"),
             name: activitySyncEvent.activity.name,

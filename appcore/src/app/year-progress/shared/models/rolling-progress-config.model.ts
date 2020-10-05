@@ -26,7 +26,7 @@ export class RollingProgressConfigModel extends YearToDateProgressConfigModel {
             progressConfig.activityTypes,
             progressConfig.includeCommuteRide,
             progressConfig.includeIndoorRide,
-            (<RollingProgressConfigModel>progressConfig).rollingDays
+            (progressConfig as RollingProgressConfigModel).rollingDays
         );
     }
 }

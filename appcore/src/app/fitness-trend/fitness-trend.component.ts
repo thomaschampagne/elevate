@@ -206,7 +206,7 @@ export class FitnessTrendComponent implements OnInit {
 
                 const savedFitnessTrendConfig = localStorage.getItem(FitnessTrendComponent.LS_CONFIG_FITNESS_TREND_KEY);
                 if (!_.isEmpty(savedFitnessTrendConfig)) {
-                    this.fitnessTrendConfigModel = <FitnessTrendConfigModel>JSON.parse(savedFitnessTrendConfig);
+                    this.fitnessTrendConfigModel = JSON.parse(savedFitnessTrendConfig) as FitnessTrendConfigModel;
                 }
 
                 // Change toggle state along HRSS/TRIMP heart rate mode
@@ -438,7 +438,7 @@ export class FitnessTrendComponent implements OnInit {
                 ? lastPeriodViewedSaved
                 : FitnessTrendComponent.DEFAULT_LAST_PERIOD_KEY,
         });
-        this.lastPeriodViewed = <LastPeriodModel>this.periodViewed;
+        this.lastPeriodViewed = this.periodViewed as LastPeriodModel;
     }
 
     public showFitnessWelcomeDialog(): void {

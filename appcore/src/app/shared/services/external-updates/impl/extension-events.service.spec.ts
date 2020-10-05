@@ -44,13 +44,13 @@ describe("ExtensionEventsService", () => {
         const expectedChangesFromSync = true;
         const message: any = {
             message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
-            results: <SyncResultModel>{
+            results: {
                 activitiesChangesModel: {
                     added: [null, null],
                     edited: [null],
                     deleted: [],
                 },
-            },
+            } as SyncResultModel,
         };
         const senderId: string = pluginId;
 
@@ -71,13 +71,13 @@ describe("ExtensionEventsService", () => {
         const expectedChangesFromSync = false;
         const message: any = {
             message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
-            results: <SyncResultModel>{
+            results: {
                 activitiesChangesModel: {
                     added: [],
                     edited: [],
                     deleted: [],
                 },
-            },
+            } as SyncResultModel,
         };
         const senderId: string = pluginId;
 

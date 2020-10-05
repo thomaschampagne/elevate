@@ -225,7 +225,7 @@ export class YearProgressComponent implements OnInit {
      * @param periodMultiplier
      */
     public static findRollingDays(rollingPeriod: string, periodMultiplier: number): number {
-        return moment.duration(periodMultiplier, <moment.DurationInputArg2>rollingPeriod.toLowerCase()).asDays();
+        return moment.duration(periodMultiplier, rollingPeriod.toLowerCase() as moment.DurationInputArg2).asDays();
     }
 
     public ngOnInit(): void {

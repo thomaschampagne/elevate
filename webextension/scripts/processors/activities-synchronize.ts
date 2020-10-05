@@ -118,9 +118,9 @@ export class ActivitiesSynchronize {
                     ) {
                         // foundSyncedActivity.name = rawActivity.name; // Update name
                         edited.push({
-                            id: <number>foundSyncedActivity.id,
+                            id: foundSyncedActivity.id as number,
                             name: rawActivity.name,
-                            type: <ElevateSport>rawActivity.type,
+                            type: rawActivity.type as ElevateSport,
                             display_type: rawActivity.display_type,
                         });
                     }
@@ -170,7 +170,7 @@ export class ActivitiesSynchronize {
             // Seek for activity in just interrogated pages
             const notFound: boolean = _.indexOf(rawActivityIds, syncedActivityModel.id) === -1;
             if (notFound) {
-                deleted.push(<number>syncedActivityModel.id);
+                deleted.push(syncedActivityModel.id as number);
             }
         });
 
@@ -280,7 +280,7 @@ export class ActivitiesSynchronize {
 
                                             // Add to activities list without even if no stream...
                                             const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {
-                                                id: <number>data.reason.activityId,
+                                                id: data.reason.activityId as number,
                                             });
                                             const activityWithStream: StreamActivityModel = newlyDetectedActivity as StreamActivityModel;
                                             activityWithStream.hasPowerMeter = null;
@@ -289,7 +289,7 @@ export class ActivitiesSynchronize {
                                         } else if (data.state === "fulfilled") {
                                             // Find raw activities of fetched stream and push
                                             const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {
-                                                id: <number>data.value.activityId,
+                                                id: data.value.activityId as number,
                                             });
 
                                             let hasPowerMeter = true;

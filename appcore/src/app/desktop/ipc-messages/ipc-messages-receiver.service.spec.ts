@@ -124,7 +124,7 @@ describe("IpcMessagesReceiver", () => {
 
     it("should handle 'sync event' messages received", done => {
         // Given
-        const syncedActivity = <SyncedActivityModel>{}; // Fake SyncedActivityModel
+        const syncedActivity = {} as SyncedActivityModel; // Fake SyncedActivityModel
         const activitySyncEvent = new ActivitySyncEvent(ConnectorType.STRAVA, null, syncedActivity, true);
         const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, activitySyncEvent);
         const syncEventsNextSpy = spyOn(ipcMessagesReceiver.syncEvents$, "next").and.stub();

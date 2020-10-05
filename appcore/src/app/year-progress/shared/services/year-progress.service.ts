@@ -501,8 +501,8 @@ export class YearProgressService {
 
             if (presetModel.mode === ProgressMode.ROLLING) {
                 const rollingPresetModel = presetModel as RollingProgressPresetModel;
-                (<RollingProgressPresetModel>query).rollingPeriod = rollingPresetModel.rollingPeriod;
-                (<RollingProgressPresetModel>query).periodMultiplier = rollingPresetModel.periodMultiplier;
+                (query as RollingProgressPresetModel).rollingPeriod = rollingPresetModel.rollingPeriod;
+                (query as RollingProgressPresetModel).periodMultiplier = rollingPresetModel.periodMultiplier;
             }
 
             const existingModel = _.find(models, query);

@@ -21,7 +21,7 @@ export class ConfirmDialogComponent implements OnInit {
     ) {}
 
     public ngOnInit() {
-        this.html = <string>this.domSanitizer.bypassSecurityTrustHtml(this.dialogData.content);
+        this.html = this.domSanitizer.bypassSecurityTrustHtml(this.dialogData.content) as string;
     }
 
     public onConfirm() {

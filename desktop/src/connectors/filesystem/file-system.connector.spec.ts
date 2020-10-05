@@ -361,7 +361,7 @@ describe("FileSystemConnector", () => {
             const runTcx = _.find(activityFiles, { type: ActivityFileType.TCX });
             expect(runTcx).toBeUndefined();
 
-            const activityFake = _.find(activityFiles, { type: <ActivityFileType>"fake" });
+            const activityFake = _.find(activityFiles, { type: "fake" as ActivityFileType });
             expect(activityFake).toBeUndefined();
             done();
         });
@@ -400,7 +400,7 @@ describe("FileSystemConnector", () => {
             expect(runTcx).toBeDefined();
             expect(fs.existsSync(runTcx.location.path)).toBeTruthy();
 
-            const activityFake = _.find(activityFiles, { type: <ActivityFileType>"fake" });
+            const activityFake = _.find(activityFiles, { type: "fake" as ActivityFileType });
             expect(activityFake).toBeUndefined();
             done();
         });
@@ -1183,7 +1183,7 @@ describe("FileSystemConnector", () => {
         describe("Find elevate sport type", () => {
             it("should convert known 'sports-lib' type to ElevateSport", done => {
                 // Given
-                const sportsLibActivity: ActivityInterface = <ActivityInterface>{ type: "Cycling" };
+                const sportsLibActivity: ActivityInterface = { type: "Cycling" } as ActivityInterface;
                 const expectedElevateSport = ElevateSport.Ride;
 
                 // When
@@ -1201,10 +1201,10 @@ describe("FileSystemConnector", () => {
             it("should convert unknown 'sports-lib' type to ElevateSport other type", done => {
                 // Given
                 fileSystemConnector.detectSportTypeWhenUnknown = true;
-                const sportsLibActivity: ActivityInterface = <any>{
-                    type: <ActivityTypes>"FakeSport",
+                const sportsLibActivity: ActivityInterface = {
+                    type: "FakeSport" as ActivityTypes,
                     getStats: () => {},
-                };
+                } as any;
 
                 spyOn(sportsLibActivity, "getStats").and.returnValue({
                     get: () => {
@@ -1608,13 +1608,13 @@ describe("FileSystemConnector", () => {
 
             beforeEach(done => {
                 syncedActivityModel = new SyncedActivityModel();
-                syncedActivityModel.extendedStats = <AnalysisDataModel>{
+                syncedActivityModel.extendedStats = {
                     movingTime: defaultMovingTime,
                     elapsedTime: defaultElapsedTime,
                     elevationData: {
                         accumulatedElevationAscent: defaultElevationGain,
                     },
-                };
+                } as AnalysisDataModel;
                 syncedActivityModel.athleteSnapshot = new AthleteSnapshotModel(
                     Gender.MEN,
                     AthleteSettingsModel.DEFAULT_MODEL
@@ -1687,14 +1687,14 @@ describe("FileSystemConnector", () => {
                     elevationGainRaw: 444,
                 };
 
-                syncedActivityModel.extendedStats = <AnalysisDataModel>{
+                syncedActivityModel.extendedStats = {
                     movingTime: null,
                     elapsedTime: null,
                     pauseTime: null,
                     elevationData: {
                         accumulatedElevationAscent: null,
                     },
-                };
+                } as AnalysisDataModel;
                 activityStreamsModel.distance = [];
 
                 // When
@@ -1721,14 +1721,14 @@ describe("FileSystemConnector", () => {
                     elevationGainRaw: undefined,
                 };
 
-                syncedActivityModel.extendedStats = <AnalysisDataModel>{
+                syncedActivityModel.extendedStats = {
                     movingTime: null,
                     elapsedTime: null,
                     pauseTime: null,
                     elevationData: {
                         accumulatedElevationAscent: null,
                     },
-                };
+                } as AnalysisDataModel;
 
                 activityStreamsModel.distance = [];
 

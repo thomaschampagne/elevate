@@ -164,7 +164,7 @@ export class MultipleActivityProcessor {
         const activitySourceData: ActivitySourceDataModel = this.provideActivitySourceData(activityWithStream);
 
         const threadMessage: ComputeActivityThreadMessageModel = {
-            activityType: <ElevateSport>activityWithStream.type,
+            activityType: activityWithStream.type as ElevateSport,
             supportsGap: activityWithStream.type === "Run",
             isTrainer: activityWithStream.trainer,
             appResources: this.appResources,

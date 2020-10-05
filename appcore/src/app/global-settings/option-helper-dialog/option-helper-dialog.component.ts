@@ -35,7 +35,7 @@ export class OptionHelperDialogComponent implements OnInit {
             throw new Error("No markdown data provided. File is empty?!");
         } else {
             const html = this.markDownParser.render(this.dialogData.markdownData);
-            this.html = <string>this.domSanitizer.bypassSecurityTrustHtml(html);
+            this.html = this.domSanitizer.bypassSecurityTrustHtml(html) as string;
         }
     }
 }

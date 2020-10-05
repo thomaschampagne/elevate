@@ -1,9 +1,9 @@
 import * as _ from "lodash";
 
 export let removeActivityFromArray = (activityId: number, fromArray: Array<any>): Array<any> => {
-    const predicate = <any>{
+    const predicate = {
         id: activityId,
-    };
+    } as any;
 
     return _.without(fromArray, _.find(fromArray, predicate));
 };
@@ -14,9 +14,9 @@ export let editActivityFromArray = (
     newName: string,
     newType: string
 ): Array<any> => {
-    const predicate = <any>{
+    const predicate = {
         id: activityId,
-    };
+    } as any;
 
     const a: any = _.find(fromArray, predicate);
     a.name = newName;
