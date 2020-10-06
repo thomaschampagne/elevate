@@ -1,4 +1,4 @@
 export class InitializedFitnessTrendModel {
-    public atl: number;
-    public ctl: number;
+  public atl: number;
+  public ctl: number;
 }

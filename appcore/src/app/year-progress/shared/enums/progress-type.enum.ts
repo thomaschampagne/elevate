@@ -1,6 +1,6 @@
 export enum ProgressType {
-    DISTANCE,
-    TIME,
-    ELEVATION,
-    COUNT,
+  DISTANCE,
+  TIME,
+  ELEVATION,
+  COUNT,
 }

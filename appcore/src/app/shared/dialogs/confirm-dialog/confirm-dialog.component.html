@@ -1,11 +1,11 @@
 <h2 *ngIf="dialogData.title" mat-dialog-title>{{dialogData.title}}</h2>
 <mat-dialog-content [innerHtml]="html" class="mat-body-1"></mat-dialog-content>
 <mat-dialog-actions>
-    <button (click)="onCancel()" color="primary" mat-dialog-close mat-stroked-button>
-        {{(dialogData.cancelText) ? dialogData.cancelText : "Cancel"}}
-    </button>
-    <span fxFlex="1"></span>
-    <button (click)="onConfirm()" color="primary" mat-dialog-close mat-stroked-button>
-        {{(dialogData.confirmText) ? dialogData.confirmText : "Confirm"}}
-    </button>
+  <button (click)="onCancel()" color="primary" mat-dialog-close mat-stroked-button>
+    {{(dialogData.cancelText) ? dialogData.cancelText : "Cancel"}}
+  </button>
+  <span fxFlex="1"></span>
+  <button (click)="onConfirm()" color="primary" mat-dialog-close mat-stroked-button>
+    {{(dialogData.confirmText) ? dialogData.confirmText : "Confirm"}}
+  </button>
 </mat-dialog-actions>

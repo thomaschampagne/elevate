@@ -4,21 +4,21 @@ import { YearProgressTypeModel } from "./year-progress-type.model";
 import { ElevateSport } from "@elevate/shared/enums";
 
 export class AddRollingProgressPresetDialogData extends AddYearToDateProgressPresetDialogData {
-    public readonly mode: ProgressMode = ProgressMode.ROLLING;
-    public rollingPeriod: string;
-    public periodMultiplier: number;
+  public readonly mode: ProgressMode = ProgressMode.ROLLING;
+  public rollingPeriod: string;
+  public periodMultiplier: number;
 
-    constructor(
-        yearProgressTypeModel: YearProgressTypeModel,
-        activityTypes: ElevateSport[],
-        includeCommuteRide: boolean,
-        includeIndoorRide: boolean,
-        targetValue: number,
-        selectedRollingPeriod: string,
-        periodMultiplier: number
-    ) {
-        super(yearProgressTypeModel, activityTypes, includeCommuteRide, includeIndoorRide, targetValue);
-        this.rollingPeriod = selectedRollingPeriod;
-        this.periodMultiplier = periodMultiplier;
-    }
+  constructor(
+    yearProgressTypeModel: YearProgressTypeModel,
+    activityTypes: ElevateSport[],
+    includeCommuteRide: boolean,
+    includeIndoorRide: boolean,
+    targetValue: number,
+    selectedRollingPeriod: string,
+    periodMultiplier: number
+  ) {
+    super(yearProgressTypeModel, activityTypes, includeCommuteRide, includeIndoorRide, targetValue);
+    this.rollingPeriod = selectedRollingPeriod;
+    this.periodMultiplier = periodMultiplier;
+  }
 }

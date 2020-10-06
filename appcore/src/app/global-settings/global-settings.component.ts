@@ -17,172 +17,171 @@ import { ElevateException } from "@elevate/shared/exceptions";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Component({
-    selector: "app-global-settings",
-    templateUrl: "./global-settings.component.html",
-    styleUrls: ["./global-settings.component.scss"],
+  selector: "app-global-settings",
+  templateUrl: "./global-settings.component.html",
+  styleUrls: ["./global-settings.component.scss"],
 })
 export class GlobalSettingsComponent implements OnInit, OnDestroy {
-    public sections: SectionModel[];
-    public searchText = null;
+  public sections: SectionModel[];
+  public searchText = null;
 
-    public routeQueryParamsSubscription: Subscription;
+  public routeQueryParamsSubscription: Subscription;
 
-    constructor(
-        public userSettingsService: UserSettingsService,
-        public globalSettingsService: GlobalSettingsService,
-        public optionHelperReaderService: OptionHelperReaderService,
-        public route: ActivatedRoute,
-        public dialog: MatDialog,
-        public logger: LoggerService
-    ) {}
+  constructor(
+    public userSettingsService: UserSettingsService,
+    public globalSettingsService: GlobalSettingsService,
+    public optionHelperReaderService: OptionHelperReaderService,
+    public route: ActivatedRoute,
+    public dialog: MatDialog,
+    public logger: LoggerService
+  ) {}
 
-    public static getOptionHelperDir(pathname: string): string {
-        if (_.isEmpty(pathname)) {
-            return null;
-        }
-
-        const pathNames = pathname.split("/");
-        pathNames.pop();
-        return pathNames.join("/") + "/assets/option-helpers/";
+  public static getOptionHelperDir(pathname: string): string {
+    if (_.isEmpty(pathname)) {
+      return null;
     }
 
-    public ngOnInit(): void {
-        this.sections = this.globalSettingsService.getSectionsByEnvTarget(environment.target);
+    const pathNames = pathname.split("/");
+    pathNames.pop();
+    return pathNames.join("/") + "/assets/option-helpers/";
+  }
 
-        this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
-            this.renderOptionsForEachSection(userSettings);
-        });
+  public ngOnInit(): void {
+    this.sections = this.globalSettingsService.getSectionsByEnvTarget(environment.target);
 
-        // Watch query params to filter options from URL
-        // OR open option dialog from external
-        this.routeQueryParamsSubscription = this.route.queryParams.subscribe(params => {
-            // Check query param: ?searchText=value and apply value to searchText data binding
-            if (!_.isEmpty(params.searchText)) {
-                this.searchText = params.searchText;
-            }
+    this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
+      this.renderOptionsForEachSection(userSettings);
+    });
 
-            if (!_.isEmpty(params.viewOptionHelperId)) {
-                _.defer(() => this.showOptionHelperDialog(params.viewOptionHelperId));
-            }
-        });
-    }
+    // Watch query params to filter options from URL
+    // OR open option dialog from external
+    this.routeQueryParamsSubscription = this.route.queryParams.subscribe(params => {
+      // Check query param: ?searchText=value and apply value to searchText data binding
+      if (!_.isEmpty(params.searchText)) {
+        this.searchText = params.searchText;
+      }
 
-    public renderOptionsForEachSection(userSettings: UserSettingsModel): void {
-        _.forEach(this.sections, (section: SectionModel) => {
-            _.forEach(section.options, (option: OptionModel) => {
-                if (option.type === GlobalSettingsService.TYPE_OPTION_CHECKBOX) {
-                    option.active = _.propertyOf(userSettings)(option.key);
+      if (!_.isEmpty(params.viewOptionHelperId)) {
+        _.defer(() => this.showOptionHelperDialog(params.viewOptionHelperId));
+      }
+    });
+  }
 
-                    if (option.enableSubOption) {
-                        _.forEach(option.enableSubOption, (subKey: string) => {
-                            this.displaySubOption(subKey, _.propertyOf(userSettings)(option.key));
-                        });
-                    }
-                } else if (option.type === GlobalSettingsService.TYPE_OPTION_LIST) {
-                    option.active = _.find(option.list, {
-                        key: _.propertyOf(userSettings)(option.key),
-                    });
-                } else if (option.type === GlobalSettingsService.TYPE_OPTION_NUMBER) {
-                    option.value = _.propertyOf(userSettings)(option.key);
-                } else {
-                    this.logger.error("Option type not supported");
-                }
-            });
-        });
-    }
-
-    public onOptionChange(option: OptionModel): void {
-        let optionKey;
-        let optionValue;
-
+  public renderOptionsForEachSection(userSettings: UserSettingsModel): void {
+    _.forEach(this.sections, (section: SectionModel) => {
+      _.forEach(section.options, (option: OptionModel) => {
         if (option.type === GlobalSettingsService.TYPE_OPTION_CHECKBOX) {
-            optionKey = option.key;
-            optionValue = option.active;
+          option.active = _.propertyOf(userSettings)(option.key);
 
-            // Enable/disable sub option if needed
-            if (option.enableSubOption) {
-                // Replace this to find option object from option.enableSubOption
-                _.forEach(option.enableSubOption, (subKey: string) => {
-                    this.displaySubOption(subKey, option.active);
-                });
-            }
+          if (option.enableSubOption) {
+            _.forEach(option.enableSubOption, (subKey: string) => {
+              this.displaySubOption(subKey, _.propertyOf(userSettings)(option.key));
+            });
+          }
         } else if (option.type === GlobalSettingsService.TYPE_OPTION_LIST) {
-            optionKey = option.key;
-            optionValue = option.active.key;
+          option.active = _.find(option.list, {
+            key: _.propertyOf(userSettings)(option.key),
+          });
         } else if (option.type === GlobalSettingsService.TYPE_OPTION_NUMBER) {
-            if (_.isNull(option.value) || _.isUndefined(option.value) || !_.isNumber(option.value)) {
-                this.resetOptionToDefaultValue(option);
-            } else {
-                // Save !
-
-                if (option.value < option.min || option.value > option.max) {
-                    this.resetOptionToDefaultValue(option);
-                }
-            }
-
-            optionKey = option.key;
-            optionValue = option.value;
+          option.value = _.propertyOf(userSettings)(option.key);
         } else {
-            throw new ElevateException(`Unable to handle setting option change with value: ${JSON.stringify(option)}`);
+          this.logger.error("Option type not supported");
         }
+      });
+    });
+  }
 
-        // Update user settings
-        this.userSettingsService.updateOption(optionKey, optionValue);
-    }
+  public onOptionChange(option: OptionModel): void {
+    let optionKey;
+    let optionValue;
 
-    public resetOptionToDefaultValue(option: OptionModel): void {
-        const resetValue = _.propertyOf(UserSettings.getDefaultsByEnvTarget(environment.target))(option.key);
-        this.logger.info(option.key + " value not compliant, Reset to  " + resetValue);
-        option.value = resetValue;
-    }
+    if (option.type === GlobalSettingsService.TYPE_OPTION_CHECKBOX) {
+      optionKey = option.key;
+      optionValue = option.active;
 
-    public displaySubOption(subOptionKey: string, show: boolean): void {
-        _.forEach(this.sections, (section: SectionModel) => {
-            const foundOption: OptionModel = _.find(section.options, {
-                key: subOptionKey,
-            });
-
-            if (foundOption) {
-                foundOption.hidden = !show;
-            }
+      // Enable/disable sub option if needed
+      if (option.enableSubOption) {
+        // Replace this to find option object from option.enableSubOption
+        _.forEach(option.enableSubOption, (subKey: string) => {
+          this.displaySubOption(subKey, option.active);
         });
-    }
+      }
+    } else if (option.type === GlobalSettingsService.TYPE_OPTION_LIST) {
+      optionKey = option.key;
+      optionValue = option.active.key;
+    } else if (option.type === GlobalSettingsService.TYPE_OPTION_NUMBER) {
+      if (_.isNull(option.value) || _.isUndefined(option.value) || !_.isNumber(option.value)) {
+        this.resetOptionToDefaultValue(option);
+      } else {
+        // Save !
 
-    public showOptionHelperDialog(optionKeyParam: string): void {
-        let option: OptionModel = null;
-
-        _.forEach(this.sections, (section: SectionModel) => {
-            const foundOption: OptionModel = _.find(section.options, {
-                key: optionKeyParam,
-            });
-
-            if (foundOption) {
-                option = foundOption;
-            }
-        });
-
-        if (option) {
-            // Construct markdown template URI from asset option helper dir & option key
-            const markdownTemplateUri =
-                GlobalSettingsComponent.getOptionHelperDir(location.pathname) + option.key + ".md";
-
-            this.optionHelperReaderService.get(markdownTemplateUri).then(markdownData => {
-                const optionHelperData: OptionHelperDataModel = {
-                    title: option.title,
-                    markdownData: markdownData,
-                };
-
-                this.dialog.open(OptionHelperDialogComponent, {
-                    minWidth: OptionHelperDialogComponent.MIN_WIDTH,
-                    maxWidth: OptionHelperDialogComponent.MAX_WIDTH,
-                    data: optionHelperData,
-                    autoFocus: false,
-                });
-            });
+        if (option.value < option.min || option.value > option.max) {
+          this.resetOptionToDefaultValue(option);
         }
+      }
+
+      optionKey = option.key;
+      optionValue = option.value;
+    } else {
+      throw new ElevateException(`Unable to handle setting option change with value: ${JSON.stringify(option)}`);
     }
 
-    public ngOnDestroy(): void {
-        this.routeQueryParamsSubscription.unsubscribe();
+    // Update user settings
+    this.userSettingsService.updateOption(optionKey, optionValue);
+  }
+
+  public resetOptionToDefaultValue(option: OptionModel): void {
+    const resetValue = _.propertyOf(UserSettings.getDefaultsByEnvTarget(environment.target))(option.key);
+    this.logger.info(option.key + " value not compliant, Reset to  " + resetValue);
+    option.value = resetValue;
+  }
+
+  public displaySubOption(subOptionKey: string, show: boolean): void {
+    _.forEach(this.sections, (section: SectionModel) => {
+      const foundOption: OptionModel = _.find(section.options, {
+        key: subOptionKey,
+      });
+
+      if (foundOption) {
+        foundOption.hidden = !show;
+      }
+    });
+  }
+
+  public showOptionHelperDialog(optionKeyParam: string): void {
+    let option: OptionModel = null;
+
+    _.forEach(this.sections, (section: SectionModel) => {
+      const foundOption: OptionModel = _.find(section.options, {
+        key: optionKeyParam,
+      });
+
+      if (foundOption) {
+        option = foundOption;
+      }
+    });
+
+    if (option) {
+      // Construct markdown template URI from asset option helper dir & option key
+      const markdownTemplateUri = GlobalSettingsComponent.getOptionHelperDir(location.pathname) + option.key + ".md";
+
+      this.optionHelperReaderService.get(markdownTemplateUri).then(markdownData => {
+        const optionHelperData: OptionHelperDataModel = {
+          title: option.title,
+          markdownData: markdownData,
+        };
+
+        this.dialog.open(OptionHelperDialogComponent, {
+          minWidth: OptionHelperDialogComponent.MIN_WIDTH,
+          maxWidth: OptionHelperDialogComponent.MAX_WIDTH,
+          data: optionHelperData,
+          autoFocus: false,
+        });
+      });
     }
+  }
+
+  public ngOnDestroy(): void {
+    this.routeQueryParamsSubscription.unsubscribe();
+  }
 }

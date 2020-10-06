@@ -6,11 +6,11 @@ import { LoggerService } from "../../logging/logger.service";
 
 @Injectable()
 export class ExtensionActivityService extends ActivityService {
-    constructor(
-        public activityDao: ActivityDao,
-        public athleteSnapshotResolverService: AthleteSnapshotResolverService,
-        public logger: LoggerService
-    ) {
-        super(activityDao, athleteSnapshotResolverService, logger);
-    }
+  constructor(
+    public activityDao: ActivityDao,
+    public athleteSnapshotResolverService: AthleteSnapshotResolverService,
+    public logger: LoggerService
+  ) {
+    super(activityDao, athleteSnapshotResolverService, logger);
+  }
 }

@@ -13,73 +13,73 @@ import { TestingDataStore } from "../../shared/data-store/testing-datastore.serv
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZonesImportExportDialogComponent", () => {
-    const zoneSpeedDefinition: ZoneDefinitionModel = {
-        name: "Cycling Speed",
-        value: "speed",
-        units: "KPH",
-        step: 0.1,
-        min: 0,
-        max: 9999,
-        customDisplay: null,
-    };
+  const zoneSpeedDefinition: ZoneDefinitionModel = {
+    name: "Cycling Speed",
+    value: "speed",
+    units: "KPH",
+    step: 0.1,
+    min: 0,
+    max: 9999,
+    customDisplay: null,
+  };
 
-    let component: ZonesImportExportDialogComponent;
-    let fixture: ComponentFixture<ZonesImportExportDialogComponent>;
-    let zoneImportExportDataModel_As_Export: ZoneImportExportDataModel;
+  let component: ZonesImportExportDialogComponent;
+  let fixture: ComponentFixture<ZonesImportExportDialogComponent>;
+  let zoneImportExportDataModel_As_Export: ZoneImportExportDataModel;
 
-    beforeEach(done => {
-        zoneImportExportDataModel_As_Export = new ZoneImportExportDataModel(
-            zoneSpeedDefinition,
-            UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed),
-            Mode.EXPORT
-        );
+  beforeEach(done => {
+    zoneImportExportDataModel_As_Export = new ZoneImportExportDataModel(
+      zoneSpeedDefinition,
+      UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed),
+      Mode.EXPORT
+    );
 
-        TestBed.configureTestingModule({
-            imports: [CoreModule, SharedModule],
-            declarations: [],
-            providers: [
-                {
-                    provide: MAT_DIALOG_DATA,
-                    useValue: zoneImportExportDataModel_As_Export,
-                },
-                {
-                    provide: MatDialogRef,
-                    useValue: {},
-                },
-                {
-                    provide: DataStore,
-                    useClass: TestingDataStore,
-                },
-            ],
-        }).compileComponents();
+    TestBed.configureTestingModule({
+      imports: [CoreModule, SharedModule],
+      declarations: [],
+      providers: [
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: zoneImportExportDataModel_As_Export,
+        },
+        {
+          provide: MatDialogRef,
+          useValue: {},
+        },
+        {
+          provide: DataStore,
+          useClass: TestingDataStore,
+        },
+      ],
+    }).compileComponents();
 
-        done();
-    });
+    done();
+  });
 
-    beforeEach(done => {
-        fixture = TestBed.createComponent(ZonesImportExportDialogComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-        done();
-    });
+  beforeEach(done => {
+    fixture = TestBed.createComponent(ZonesImportExportDialogComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    done();
+  });
 
-    it("should create", done => {
-        expect(component).toBeTruthy();
-        done();
-    });
+  it("should create", done => {
+    expect(component).toBeTruthy();
+    done();
+  });
 
-    it("should render the 'Export' zones dialog", done => {
-        // Given
-        const fixture = TestBed.createComponent(ZonesImportExportDialogComponent);
-        const compiled = fixture.debugElement.nativeElement;
-        const expected = JSON.stringify(UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed));
+  it("should render the 'Export' zones dialog", done => {
+    // Given
+    const fixture = TestBed.createComponent(ZonesImportExportDialogComponent);
+    const compiled = fixture.debugElement.nativeElement;
+    const expected = JSON.stringify(UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed));
 
-        // When
-        fixture.detectChanges();
+    // When
+    fixture.detectChanges();
 
-        // Then
-        expect(component.zonesJsonData).toEqual(expected);
-        expect(compiled.querySelector("h2").textContent).toContain("Export <Cycling Speed> zones");
-        done();
-    });
+    // Then
+    expect(component.zonesJsonData).toEqual(expected);
+    expect(compiled.querySelector("h2").textContent).toContain("Export <Cycling Speed> zones");
+    done();
+  });
 });

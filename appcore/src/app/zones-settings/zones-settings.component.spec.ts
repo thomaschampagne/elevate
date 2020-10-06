@@ -10,32 +10,32 @@ import { TestingDataStore } from "../shared/data-store/testing-datastore.service
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZonesSettingsComponent", () => {
-    let component: ZonesSettingsComponent;
-    let fixture: ComponentFixture<ZonesSettingsComponent>;
+  let component: ZonesSettingsComponent;
+  let fixture: ComponentFixture<ZonesSettingsComponent>;
 
-    beforeEach(done => {
-        TestBed.configureTestingModule({
-            imports: [CoreModule, SharedModule],
-            providers: [{ provide: DataStore, useClass: TestingDataStore }],
-        }).compileComponents();
+  beforeEach(done => {
+    TestBed.configureTestingModule({
+      imports: [CoreModule, SharedModule],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+    }).compileComponents();
 
-        done();
-    });
+    done();
+  });
 
-    beforeEach(done => {
-        fixture = TestBed.createComponent(ZonesSettingsComponent);
-        component = fixture.componentInstance;
+  beforeEach(done => {
+    fixture = TestBed.createComponent(ZonesSettingsComponent);
+    component = fixture.componentInstance;
 
-        spyOn(component.userSettingsService, "fetch").and.returnValue(
-            Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
-        );
+    spyOn(component.userSettingsService, "fetch").and.returnValue(
+      Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
+    );
 
-        fixture.detectChanges();
-        done();
-    });
+    fixture.detectChanges();
+    done();
+  });
 
-    it("should create", done => {
-        expect(component).toBeTruthy();
-        done();
-    });
+  it("should create", done => {
+    expect(component).toBeTruthy();
+    done();
+  });
 });

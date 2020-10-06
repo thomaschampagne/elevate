@@ -6,15 +6,15 @@ import { AppUsageDetails } from "../models/app-usage-details.model";
 
 @Injectable()
 export class TestingDataStore<T extends {}> extends DataStore<T> {
-    constructor(protected logger: LoggerService) {
-        super(logger);
-    }
+  constructor(protected logger: LoggerService) {
+    super(logger);
+  }
 
-    public getPersistenceAdapter(): LokiPersistenceAdapter {
-        return new Loki.LokiMemoryAdapter(); // Use memory persistence for testing;
-    }
+  public getPersistenceAdapter(): LokiPersistenceAdapter {
+    return new Loki.LokiMemoryAdapter(); // Use memory persistence for testing;
+  }
 
-    public getAppUsageDetails(): Promise<AppUsageDetails> {
-        return Promise.resolve(null);
-    }
+  public getAppUsageDetails(): Promise<AppUsageDetails> {
+    return Promise.resolve(null);
+  }
 }

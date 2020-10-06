@@ -1,43 +1,43 @@
 <div class="mat-subheading-2" fxLayout="row" fxLayoutAlign="center center">
-    <mat-form-field fxFlex="50">
+  <mat-form-field fxFlex="50">
 			<span matPrefix>
 				<mat-icon fontSet="material-icons-outlined">search</mat-icon><span>&nbsp;&nbsp;&nbsp;</span>
 			</span>
-        <input (keyup)="applyFilter($event.target.value)" [(ngModel)]="searchText" fxFill matInput
-               placeholder="Filter by type or activities name">
-        <button (click)="searchText=''; applyFilter(searchText);" *ngIf="searchText" aria-label="Clear" mat-icon-button
-                matSuffix>
-            <mat-icon fontSet="material-icons-outlined">close</mat-icon>
-        </button>
-    </mat-form-field>
+    <input (keyup)="applyFilter($event.target.value)" [(ngModel)]="searchText" fxFill matInput
+           placeholder="Filter by type or activities name">
+    <button (click)="searchText=''; applyFilter(searchText);" *ngIf="searchText" aria-label="Clear" mat-icon-button
+            matSuffix>
+      <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+    </button>
+  </mat-form-field>
 </div>
 <mat-table [dataSource]="dataSource" matSort>
-    <ng-container *ngFor="let column of columns" [matColumnDef]="column.id">
-        <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="{{column.description}}">
-            {{column.header}}
-        </mat-header-cell>
-        <mat-cell *matCellDef="let dayFitnessTrend">
-            <ng-container *ngIf="column.type === FitnessTrendColumnType.TEXT">
-                {{column.printText(dayFitnessTrend)}}
-            </ng-container>
-            <ng-container *ngIf="column.type === FitnessTrendColumnType.ATHLETE_SETTINGS">
-                <button (click)="onViewAthleteSettings(dayFitnessTrend)" *ngIf="dayFitnessTrend.ids.length"
-                        color="primary"
-                        mat-icon-button>
-                    <mat-icon fontSet="material-icons-outlined">portrait</mat-icon>
-                </button>
-            </ng-container>
-            <ng-container *ngIf="column.type === FitnessTrendColumnType.STRAVA_LINK">
-                <button (click)="onLinkClicked(dayFitnessTrend)" *ngIf="dayFitnessTrend.ids.length" color="primary"
-                        mat-icon-button>
-                    <mat-icon fontSet="material-icons-outlined">link</mat-icon>
-                </button>
-            </ng-container>
-        </mat-cell>
-    </ng-container>
+  <ng-container *ngFor="let column of columns" [matColumnDef]="column.id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="{{column.description}}">
+      {{column.header}}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let dayFitnessTrend">
+      <ng-container *ngIf="column.type === FitnessTrendColumnType.TEXT">
+        {{column.printText(dayFitnessTrend)}}
+      </ng-container>
+      <ng-container *ngIf="column.type === FitnessTrendColumnType.ATHLETE_SETTINGS">
+        <button (click)="onViewAthleteSettings(dayFitnessTrend)" *ngIf="dayFitnessTrend.ids.length"
+                color="primary"
+                mat-icon-button>
+          <mat-icon fontSet="material-icons-outlined">portrait</mat-icon>
+        </button>
+      </ng-container>
+      <ng-container *ngIf="column.type === FitnessTrendColumnType.STRAVA_LINK">
+        <button (click)="onLinkClicked(dayFitnessTrend)" *ngIf="dayFitnessTrend.ids.length" color="primary"
+                mat-icon-button>
+          <mat-icon fontSet="material-icons-outlined">link</mat-icon>
+        </button>
+      </ng-container>
+    </mat-cell>
+  </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
 <mat-paginator #paginator
                [pageSizeOptions]="[5, 10, 15, 25, 50]"

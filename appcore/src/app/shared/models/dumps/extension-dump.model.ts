@@ -4,21 +4,21 @@ import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
 
 export class ExtensionDumpModel extends DumpModel {
-    public syncDateTime: SyncDateTime;
-    public syncedActivities: SyncedActivityModel[];
-    public pluginVersion: string;
-    public athleteModel: AthleteModel;
+  public syncDateTime: SyncDateTime;
+  public syncedActivities: SyncedActivityModel[];
+  public pluginVersion: string;
+  public athleteModel: AthleteModel;
 
-    constructor(
-        syncDateTime: SyncDateTime,
-        syncedActivities: SyncedActivityModel[],
-        pluginVersion: string,
-        athleteModel: AthleteModel
-    ) {
-        super();
-        this.syncDateTime = syncDateTime;
-        this.syncedActivities = syncedActivities;
-        this.pluginVersion = pluginVersion;
-        this.athleteModel = athleteModel;
-    }
+  constructor(
+    syncDateTime: SyncDateTime,
+    syncedActivities: SyncedActivityModel[],
+    pluginVersion: string,
+    athleteModel: AthleteModel
+  ) {
+    super();
+    this.syncDateTime = syncDateTime;
+    this.syncedActivities = syncedActivities;
+    this.pluginVersion = pluginVersion;
+    this.athleteModel = athleteModel;
+  }
 }

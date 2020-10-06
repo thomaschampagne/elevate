@@ -6,24 +6,24 @@ import { LoggerService } from "../../services/logging/logger.service";
 import { ConsoleLoggerService } from "../../services/logging/console-logger.service";
 
 describe("AthleteDao", () => {
-    let athleteDao: AthleteDao;
+  let athleteDao: AthleteDao;
 
-    beforeEach(done => {
-        TestBed.configureTestingModule({
-            providers: [
-                AthleteDao,
-                { provide: DataStore, useClass: TestingDataStore },
-                { provide: LoggerService, useClass: ConsoleLoggerService },
-            ],
-        });
-
-        // Retrieve injected service
-        athleteDao = TestBed.inject(AthleteDao);
-        done();
+  beforeEach(done => {
+    TestBed.configureTestingModule({
+      providers: [
+        AthleteDao,
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: LoggerService, useClass: ConsoleLoggerService },
+      ],
     });
 
-    it("should be created", done => {
-        expect(athleteDao).toBeTruthy();
-        done();
-    });
+    // Retrieve injected service
+    athleteDao = TestBed.inject(AthleteDao);
+    done();
+  });
+
+  it("should be created", done => {
+    expect(athleteDao).toBeTruthy();
+    done();
+  });
 });

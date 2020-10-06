@@ -11,142 +11,142 @@ import { ZoneModel } from "@elevate/shared/models";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 
 @Component({
-    selector: "app-zone",
-    templateUrl: "./zone.component.html",
-    styleUrls: ["./zone.component.scss"],
+  selector: "app-zone",
+  templateUrl: "./zone.component.html",
+  styleUrls: ["./zone.component.scss"],
 })
 export class ZoneComponent implements OnInit, OnDestroy {
-    @Input("zone")
-    public zone: ZoneModel;
+  @Input("zone")
+  public zone: ZoneModel;
 
-    @Input("zoneId")
-    public zoneId: number;
+  @Input("zoneId")
+  public zoneId: number;
 
-    @Input("zoneFrom")
-    public zoneFrom: number;
+  @Input("zoneFrom")
+  public zoneFrom: number;
 
-    @Input("zoneTo")
-    public zoneTo: number;
+  @Input("zoneTo")
+  public zoneTo: number;
 
-    @Input("prevZoneFrom")
-    public prevZoneFrom: number;
+  @Input("prevZoneFrom")
+  public prevZoneFrom: number;
 
-    @Input("nextZoneTo")
-    public nextZoneTo: number;
+  @Input("nextZoneTo")
+  public nextZoneTo: number;
 
-    @Input("isFirstZone")
-    public isFirstZone: boolean;
+  @Input("isFirstZone")
+  public isFirstZone: boolean;
 
-    @Input("isLastZone")
-    public isLastZone: boolean;
+  @Input("isLastZone")
+  public isLastZone: boolean;
 
-    @Input("currentZones")
-    public currentZones: ZoneModel[];
+  @Input("currentZones")
+  public currentZones: ZoneModel[];
 
-    @Input("zoneDefinition")
-    public zoneDefinition: ZoneDefinitionModel;
+  @Input("zoneDefinition")
+  public zoneDefinition: ZoneDefinitionModel;
 
-    public zoneChangeOrderSubscription: Subscription;
+  public zoneChangeOrderSubscription: Subscription;
 
-    public stepUpdatesSubscription: Subscription;
+  public stepUpdatesSubscription: Subscription;
 
-    constructor(public zonesService: ZonesService, public snackBar: MatSnackBar, public logger: LoggerService) {}
+  constructor(public zonesService: ZonesService, public snackBar: MatSnackBar, public logger: LoggerService) {}
 
-    public ngOnInit(): void {
-        this.zoneChangeOrderSubscription = this.zonesService.zoneChangeOrderUpdates.subscribe(
-            (change: ZoneChangeOrderModel) => {
-                const isChangeOrderForMe = !_.isNull(change) && this.zoneId === change.destinationId;
+  public ngOnInit(): void {
+    this.zoneChangeOrderSubscription = this.zonesService.zoneChangeOrderUpdates.subscribe(
+      (change: ZoneChangeOrderModel) => {
+        const isChangeOrderForMe = !_.isNull(change) && this.zoneId === change.destinationId;
 
-                if (isChangeOrderForMe) {
-                    this.applyChangeOrder(change);
-                }
-            },
-            error => {
-                this.logger.error(error);
-            },
-            () => {
-                this.logger.info("InstructionListener complete");
-            }
-        );
-
-        this.stepUpdatesSubscription = this.zonesService.stepUpdates.subscribe((step: number) => {
-            this.zoneDefinition.step = step;
-        });
-    }
-
-    public onZoneChange(changeType: ZoneChangeTypeModel): void {
-        this.whisperZoneChange(changeType);
-    }
-
-    /**
-     * Whisper a ZoneChangeWhisperModel to <ZoneService>
-     */
-    public whisperZoneChange(changeType: ZoneChangeTypeModel): void {
-        if (changeType.from && changeType.to) {
-            // Skip notify zone service on first component display
-            return;
+        if (isChangeOrderForMe) {
+          this.applyChangeOrder(change);
         }
+      },
+      error => {
+        this.logger.error(error);
+      },
+      () => {
+        this.logger.info("InstructionListener complete");
+      }
+    );
 
-        if (changeType.from || changeType.to) {
-            const zoneChangeWhisper: ZoneChangeWhisperModel = {
-                sourceId: this.zoneId,
-                from: false,
-                to: false,
-                value: null,
-            };
+    this.stepUpdatesSubscription = this.zonesService.stepUpdates.subscribe((step: number) => {
+      this.zoneDefinition.step = step;
+    });
+  }
 
-            if (changeType.from) {
-                zoneChangeWhisper.from = true;
-                zoneChangeWhisper.value = this.zone.from;
-            } else if (changeType.to) {
-                zoneChangeWhisper.to = true;
-                zoneChangeWhisper.value = this.zone.to;
-            }
+  public onZoneChange(changeType: ZoneChangeTypeModel): void {
+    this.whisperZoneChange(changeType);
+  }
 
-            this.zonesService.whisperZoneChange(zoneChangeWhisper);
-        }
+  /**
+   * Whisper a ZoneChangeWhisperModel to <ZoneService>
+   */
+  public whisperZoneChange(changeType: ZoneChangeTypeModel): void {
+    if (changeType.from && changeType.to) {
+      // Skip notify zone service on first component display
+      return;
     }
 
-    public onRemoveZoneAtIndex(zoneId: number): void {
-        this.zonesService.removeZoneAtIndex(zoneId).then(
-            message => this.popSnack(message),
-            error => this.popSnack(error)
-        );
+    if (changeType.from || changeType.to) {
+      const zoneChangeWhisper: ZoneChangeWhisperModel = {
+        sourceId: this.zoneId,
+        from: false,
+        to: false,
+        value: null,
+      };
+
+      if (changeType.from) {
+        zoneChangeWhisper.from = true;
+        zoneChangeWhisper.value = this.zone.from;
+      } else if (changeType.to) {
+        zoneChangeWhisper.to = true;
+        zoneChangeWhisper.value = this.zone.to;
+      }
+
+      this.zonesService.whisperZoneChange(zoneChangeWhisper);
     }
+  }
 
-    /**
-     * Avoid
-     */
-    public onKeyDown(event: KeyboardEvent): void {
-        const whiteListCode = [
-            38, // Up arrow
-            40, // Down arrow
-            9, // Tab
-            16, // Shift
-        ];
+  public onRemoveZoneAtIndex(zoneId: number): void {
+    this.zonesService.removeZoneAtIndex(zoneId).then(
+      message => this.popSnack(message),
+      error => this.popSnack(error)
+    );
+  }
 
-        const isKeyWhiteListed = _.indexOf(whiteListCode, event.keyCode) === -1;
+  /**
+   * Avoid
+   */
+  public onKeyDown(event: KeyboardEvent): void {
+    const whiteListCode = [
+      38, // Up arrow
+      40, // Down arrow
+      9, // Tab
+      16, // Shift
+    ];
 
-        if (isKeyWhiteListed) {
-            event.preventDefault();
-        }
+    const isKeyWhiteListed = _.indexOf(whiteListCode, event.keyCode) === -1;
+
+    if (isKeyWhiteListed) {
+      event.preventDefault();
     }
+  }
 
-    public ngOnDestroy(): void {
-        this.zoneChangeOrderSubscription.unsubscribe();
-        this.stepUpdatesSubscription.unsubscribe();
-    }
+  public ngOnDestroy(): void {
+    this.zoneChangeOrderSubscription.unsubscribe();
+    this.stepUpdatesSubscription.unsubscribe();
+  }
 
-    private applyChangeOrder(instruction: ZoneChangeOrderModel): void {
-        if (instruction.from) {
-            this.zone.from = instruction.value;
-        }
-        if (instruction.to) {
-            this.zone.to = instruction.value;
-        }
+  private applyChangeOrder(instruction: ZoneChangeOrderModel): void {
+    if (instruction.from) {
+      this.zone.from = instruction.value;
     }
+    if (instruction.to) {
+      this.zone.to = instruction.value;
+    }
+  }
 
-    private popSnack(message: string): void {
-        this.snackBar.open(message, "Close", { duration: 2500 });
-    }
+  private popSnack(message: string): void {
+    this.snackBar.open(message, "Close", { duration: 2500 });
+  }
 }

@@ -9,37 +9,37 @@ import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 
 describe("StravaConnectorComponent", () => {
-    let component: StravaConnectorComponent;
-    let fixture: ComponentFixture<StravaConnectorComponent>;
+  let component: StravaConnectorComponent;
+  let fixture: ComponentFixture<StravaConnectorComponent>;
 
-    beforeEach(done => {
-        TestBed.configureTestingModule({
-            imports: [CoreModule, SharedModule, DesktopModule],
-            providers: [{ provide: DataStore, useClass: TestingDataStore }],
-        }).compileComponents();
+  beforeEach(done => {
+    TestBed.configureTestingModule({
+      imports: [CoreModule, SharedModule, DesktopModule],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+    }).compileComponents();
 
-        const electronService: ElectronService = TestBed.inject(ElectronService);
-        electronService.instance = {
-            ipcRenderer: {},
-        };
+    const electronService: ElectronService = TestBed.inject(ElectronService);
+    electronService.instance = {
+      ipcRenderer: {},
+    };
 
-        const electronWindow = window as ElectronWindow;
-        const electronRequire = (module: string) => {
-            console.log("Loading module: " + module);
-            return {};
-        };
-        electronWindow.require = electronRequire;
-        spyOn(electronWindow, "require").and.callFake(electronRequire);
-        done();
-    });
+    const electronWindow = window as ElectronWindow;
+    const electronRequire = (module: string) => {
+      console.log("Loading module: " + module);
+      return {};
+    };
+    electronWindow.require = electronRequire;
+    spyOn(electronWindow, "require").and.callFake(electronRequire);
+    done();
+  });
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(StravaConnectorComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(StravaConnectorComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    it("should create", () => {
-        expect(component).toBeTruthy();
-    });
+  it("should create", () => {
+    expect(component).toBeTruthy();
+  });
 });

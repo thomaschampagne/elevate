@@ -1,188 +1,188 @@
 <!--Loading-->
 <div *ngIf="(isSynced !== false && areSyncedActivitiesCompliant === null && isReSyncRequired === null)">
-    <mat-progress-bar mode="buffer"></mat-progress-bar>
+  <mat-progress-bar mode="buffer"></mat-progress-bar>
 </div>
 
 <!--History not synced-->
 <mat-card *ngIf="(isSynced === false)" class="no-data">
-    <mat-card-title>
-        Synchronise your activities
-    </mat-card-title>
-    <mat-card-content>
-        <div>
-            Please synchronize your activities to turn on "Fitness Trend" feature.
-        </div>
+  <mat-card-title>
+    Synchronise your activities
+  </mat-card-title>
+  <mat-card-content>
+    <div>
+      Please synchronize your activities to turn on "Fitness Trend" feature.
+    </div>
 
-        <div>
-            You can synchronize by clicking on
-            <mat-icon fontSet="material-icons-outlined">sync_disabled</mat-icon>
-            icon in the upper toolbar. The activities will be locally saved in the storage allocated by the extension.
-        </div>
+    <div>
+      You can synchronize by clicking on
+      <mat-icon fontSet="material-icons-outlined">sync_disabled</mat-icon>
+      icon in the upper toolbar. The activities will be locally saved in the storage allocated by the extension.
+    </div>
 
-        <div>
-            This fitness trend is "Multi-sports" oriented. Whatever the sport, it's strongly recommended that you hold a
-            <i>heart rate monitor</i>, and/or a <i>power meter</i> for cycling. These sensors will provide accurate
-            stress scores and thus an accurate fitness trend.
-        </div>
+    <div>
+      This fitness trend is "Multi-sports" oriented. Whatever the sport, it's strongly recommended that you hold a
+      <i>heart rate monitor</i>, and/or a <i>power meter</i> for cycling. These sensors will provide accurate
+      stress scores and thus an accurate fitness trend.
+    </div>
 
-        <div>
-            What if you don't have sensors? If you don't have sensors (e.g. smart-phone only) or you forgot them for
-            some activities, your fitness trend can still be approximated from estimated running and cycling stress
-            scores. For this you have to setup your own <strong>Running Functional Threshold Pace</strong> as a runner
-            in athlete settings. And as a cyclist, your <strong>Cycling Functional Threshold Power</strong> (always in
-            athlete settings).
-        </div>
+    <div>
+      What if you don't have sensors? If you don't have sensors (e.g. smart-phone only) or you forgot them for
+      some activities, your fitness trend can still be approximated from estimated running and cycling stress
+      scores. For this you have to setup your own <strong>Running Functional Threshold Pace</strong> as a runner
+      in athlete settings. And as a cyclist, your <strong>Cycling Functional Threshold Power</strong> (always in
+      athlete settings).
+    </div>
 
-        <div>
-            This fitness trend is an improved feature of the Strava™ premium one, not a duplicate!
-        </div>
+    <div>
+      This fitness trend is an improved feature of the Strava™ premium one, not a duplicate!
+    </div>
 
-        <div>The fitness trend is based on an impulse-response model by <i>Dr. Eric W. Banister</i>
-            in 1975 and <i>Andrew R. Coggan</i> later. The following references has been used:
-            <a href="http://fellrnr.com/wiki/Modeling_Human_Performance" target="_blank">Modeling Human
-                Performance, fellrnr.com</a>
-        </div>
+    <div>The fitness trend is based on an impulse-response model by <i>Dr. Eric W. Banister</i>
+      in 1975 and <i>Andrew R. Coggan</i> later. The following references has been used:
+      <a href="http://fellrnr.com/wiki/Modeling_Human_Performance" target="_blank">Modeling Human
+        Performance, fellrnr.com</a>
+    </div>
 
-        <div>
-            Please read <a href="https://github.com/thomaschampagne/elevate/wiki/Frequently-Asked-Questions"
-                           target="_blank">Frequently Asked Questions</a>
-        </div>
+    <div>
+      Please read <a href="https://github.com/thomaschampagne/elevate/wiki/Frequently-Asked-Questions"
+                     target="_blank">Frequently Asked Questions</a>
+    </div>
 
-    </mat-card-content>
+  </mat-card-content>
 </mat-card>
 
 <!--History not compliant with the feature-->
 <mat-card *ngIf="(areSyncedActivitiesCompliant === false && isSynced !== false)" class="no-data">
-    <mat-card-title>
-        Unable to generate fitness trend 😢
-    </mat-card-title>
-    <mat-card-content>
+  <mat-card-title>
+    Unable to generate fitness trend 😢
+  </mat-card-title>
+  <mat-card-content>
 
-        <div>
-            Elevate can't generate your fitness trend using your synced activities and fitness trend configuration.
-            Please check that your synced activities have at least:
-            <ul>
-                <li>
-                    A running or cycling activity recorded with or without sensors.
-                </li>
-                <li>
-                    Or an activity recorded with a heart rate monitor (no matter the sport type).
-                </li>
-                <li>
-                    Or a swimming activity having distance & time data.
-                </li>
-            </ul>
-        </div>
+    <div>
+      Elevate can't generate your fitness trend using your synced activities and fitness trend configuration.
+      Please check that your synced activities have at least:
+      <ul>
+        <li>
+          A running or cycling activity recorded with or without sensors.
+        </li>
+        <li>
+          Or an activity recorded with a heart rate monitor (no matter the sport type).
+        </li>
+        <li>
+          Or a swimming activity having distance & time data.
+        </li>
+      </ul>
+    </div>
 
-        <div>
-            <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'middle'" color="warn">warning
-            </mat-icon>
-            Your fitness trend configuration may also have exclusion patterns and date that are probably too
-            restrictive &nbsp;&nbsp;➔
-            <button (click)="onOpenFitnessTrendConfig()" color="primary" mat-stroked-button>
-                <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
-                Verify your fitness trend configuration
-            </button>
-        </div>
+    <div>
+      <mat-icon [style.vertical-align]="'middle'" color="warn" fontSet="material-icons-outlined">warning
+      </mat-icon>
+      Your fitness trend configuration may also have exclusion patterns and date that are probably too
+      restrictive &nbsp;&nbsp;➔
+      <button (click)="onOpenFitnessTrendConfig()" color="primary" mat-stroked-button>
+        <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
+        Verify your fitness trend configuration
+      </button>
+    </div>
 
-    </mat-card-content>
+  </mat-card-content>
 </mat-card>
 
 <!--Re-sync required-->
 <mat-card *ngIf="(isReSyncRequired === true)" class="no-data">
-    <mat-card-title>
-        Your synced activities needs to be recalculated
-    </mat-card-title>
-    <mat-card-content>
-        <div>
-            Don't worry! This behavior can occur after a recent update of the plugin. Indeed Elevate needs your
-            activities to be recalculated for technical reasons. To recalculate your history, please
-            follow below steps:
-            <ul>
-                <li>
-                    Perform a backup of your currently synced activities for security before. Just click
-                    <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'" color="primary">sync
-                    </mat-icon>
-                    icon then
-                    <i>
-                        <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'">file_download
-                        </mat-icon>
-                        Backup activities</i>
-                </li>
-                <li>
-                    Make sure you properly configured all your <a [routerLink]="'/athleteSettings'">dated
-                    athlete settings</a>. Indeed if cycling, running or swim FTPs are not defined in athlete settings,
-                    then stress scores that depend on these settings will not be calculated resulting in missing data
-                    in fitness trend.
-                </li>
-                <li>
-                    Clear and synchronize again your activities. Click
-                    <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'" color="primary">sync
-                    </mat-icon>
-                    icon then
-                    <i>
-                        <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'">redo</mat-icon>
-                        Clear and re-sync activities</i>
-                </li>
-            </ul>
-        </div>
-    </mat-card-content>
+  <mat-card-title>
+    Your synced activities needs to be recalculated
+  </mat-card-title>
+  <mat-card-content>
+    <div>
+      Don't worry! This behavior can occur after a recent update of the plugin. Indeed Elevate needs your
+      activities to be recalculated for technical reasons. To recalculate your history, please
+      follow below steps:
+      <ul>
+        <li>
+          Perform a backup of your currently synced activities for security before. Just click
+          <mat-icon [style.vertical-align]="'bottom'" color="primary" fontSet="material-icons-outlined">sync
+          </mat-icon>
+          icon then
+          <i>
+            <mat-icon [style.vertical-align]="'bottom'" fontSet="material-icons-outlined">file_download
+            </mat-icon>
+            Backup activities</i>
+        </li>
+        <li>
+          Make sure you properly configured all your <a [routerLink]="'/athleteSettings'">dated
+          athlete settings</a>. Indeed if cycling, running or swim FTPs are not defined in athlete settings,
+          then stress scores that depend on these settings will not be calculated resulting in missing data
+          in fitness trend.
+        </li>
+        <li>
+          Clear and synchronize again your activities. Click
+          <mat-icon [style.vertical-align]="'bottom'" color="primary" fontSet="material-icons-outlined">sync
+          </mat-icon>
+          icon then
+          <i>
+            <mat-icon [style.vertical-align]="'bottom'" fontSet="material-icons-outlined">redo</mat-icon>
+            Clear and re-sync activities</i>
+        </li>
+      </ul>
+    </div>
+  </mat-card-content>
 </mat-card>
 
 <mat-card *ngIf="(areSyncedActivitiesCompliant === true)">
-    <mat-card-content>
-        <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
-            <app-fitness-trend-inputs (eBikeRidesToggleChange)="onEBikeRidesToggleChange($event)"
-                                      (estimatedPowerStressScoreToggleChange)="onEstimatedPowerStressScoreToggleChange($event)"
-                                      (estimatedRunningStressScoreToggleChange)="onEstimatedRunningStressScoreChange($event)"
-                                      (openFitnessTrendConfigRequest)="onOpenFitnessTrendConfig()"
-                                      (periodViewedChange)="onPeriodViewedChange($event)"
-                                      (powerMeterToggleChange)="onPowerMeterToggleChange($event)"
-                                      (swimToggleChange)="onSwimToggleChange($event)"
-                                      (trainingZonesToggleChange)="onTrainingZonesToggleChange($event)"
-                                      [dateMax]="dateMax"
-                                      [dateMin]="dateMin"
-                                      [fitnessTrendConfigModel]="fitnessTrendConfigModel"
-                                      [isEBikeRidesEnabled]="isEBikeRidesEnabled"
-                                      [isPowerMeterEnabled]="isPowerMeterEnabled"
-                                      [isSwimEnabled]="isSwimEnabled"
-                                      [isTrainingZonesEnabled]="isTrainingZonesEnabled"
-                                      [lastFitnessActiveDate]="lastFitnessActiveDate"
-                                      [lastPeriodViewed]="lastPeriodViewed"
-                                      [lastPeriods]="lastPeriods"
-                                      [periodViewed]="periodViewed"
-                                      fxFill
-                                      fxFlex="45"
-                                      fxLayout="column"
-                                      fxLayoutAlign="start start">
-            </app-fitness-trend-inputs>
+  <mat-card-content>
+    <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
+      <app-fitness-trend-inputs (eBikeRidesToggleChange)="onEBikeRidesToggleChange($event)"
+                                (estimatedPowerStressScoreToggleChange)="onEstimatedPowerStressScoreToggleChange($event)"
+                                (estimatedRunningStressScoreToggleChange)="onEstimatedRunningStressScoreChange($event)"
+                                (openFitnessTrendConfigRequest)="onOpenFitnessTrendConfig()"
+                                (periodViewedChange)="onPeriodViewedChange($event)"
+                                (powerMeterToggleChange)="onPowerMeterToggleChange($event)"
+                                (swimToggleChange)="onSwimToggleChange($event)"
+                                (trainingZonesToggleChange)="onTrainingZonesToggleChange($event)"
+                                [dateMax]="dateMax"
+                                [dateMin]="dateMin"
+                                [fitnessTrendConfigModel]="fitnessTrendConfigModel"
+                                [isEBikeRidesEnabled]="isEBikeRidesEnabled"
+                                [isPowerMeterEnabled]="isPowerMeterEnabled"
+                                [isSwimEnabled]="isSwimEnabled"
+                                [isTrainingZonesEnabled]="isTrainingZonesEnabled"
+                                [lastFitnessActiveDate]="lastFitnessActiveDate"
+                                [lastPeriodViewed]="lastPeriodViewed"
+                                [lastPeriods]="lastPeriods"
+                                [periodViewed]="periodViewed"
+                                fxFill
+                                fxFlex="45"
+                                fxLayout="column"
+                                fxLayoutAlign="start start">
+      </app-fitness-trend-inputs>
 
-            <app-fitness-trend-legend [isTrainingZonesEnabled]="isTrainingZonesEnabled" class="mat-subheading-2" fxFill
-                                      fxFlex="55" fxLayout="row"
-                                      fxLayoutAlign="end end"></app-fitness-trend-legend>
+      <app-fitness-trend-legend [isTrainingZonesEnabled]="isTrainingZonesEnabled" class="mat-subheading-2" fxFill
+                                fxFlex="55" fxLayout="row"
+                                fxLayoutAlign="end end"></app-fitness-trend-legend>
 
-        </div>
+    </div>
 
-        <app-fitness-trend-graph [dateMax]="dateMax"
-                                 [dateMin]="dateMin"
-                                 [fitnessTrend]="fitnessTrend"
-                                 [isTrainingZonesEnabled]="isTrainingZonesEnabled"
-                                 [periodViewed]="periodViewed">
-        </app-fitness-trend-graph>
+    <app-fitness-trend-graph [dateMax]="dateMax"
+                             [dateMin]="dateMin"
+                             [fitnessTrend]="fitnessTrend"
+                             [isTrainingZonesEnabled]="isTrainingZonesEnabled"
+                             [periodViewed]="periodViewed">
+    </app-fitness-trend-graph>
 
-    </mat-card-content>
+  </mat-card-content>
 </mat-card>
 
 <mat-card [style.visibility]="((areSyncedActivitiesCompliant === true) ? 'visible' : 'hidden')">
-    <mat-card-title>
-        Fitness analysis table
-    </mat-card-title>
-    <mat-card-content>
-        <app-fitness-trend-table [fitnessTrendConfigModel]="fitnessTrendConfigModel"
-                                 [fitnessTrend]="fitnessTrend"
-                                 [isPowerMeterEnabled]="isPowerMeterEnabled"
-                                 [isSwimEnabled]="isSwimEnabled"
-                                 [isTrainingZonesEnabled]="isTrainingZonesEnabled">
-        </app-fitness-trend-table>
-    </mat-card-content>
+  <mat-card-title>
+    Fitness analysis table
+  </mat-card-title>
+  <mat-card-content>
+    <app-fitness-trend-table [fitnessTrendConfigModel]="fitnessTrendConfigModel"
+                             [fitnessTrend]="fitnessTrend"
+                             [isPowerMeterEnabled]="isPowerMeterEnabled"
+                             [isSwimEnabled]="isSwimEnabled"
+                             [isTrainingZonesEnabled]="isTrainingZonesEnabled">
+    </app-fitness-trend-table>
+  </mat-card-content>
 </mat-card>

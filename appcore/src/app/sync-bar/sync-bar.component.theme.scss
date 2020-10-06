@@ -4,25 +4,25 @@ $config: mat-typography-config();
 
 @mixin app-sync-bar-theming($theme) {
 
-    $primary: map-get($theme, primary);
-    $background: map-get($theme, background);
-    $foreground: map-get($theme, foreground);
-    $text-color: mat-color($background, background);
-    $caption-size: mat-font-size($config, caption);
+  $primary: map-get($theme, primary);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  $text-color: mat-color($background, background);
+  $caption-size: mat-font-size($config, caption);
 
-    .app-sync-bar {
-        color: $text-color;
-        background: mat-color($primary);
-    }
+  .app-sync-bar {
+    color: $text-color;
+    background: mat-color($primary);
+  }
 
-    .activity-existence-tag {
-        background-color: mat-color($background, background);
-        color: mat-color($foreground, text);
-        font-size: $caption-size;
-        padding: 1px 5px 1px 5px;
-        font-weight: bold;
-        border-radius: 3px;
-        margin-left: 5px;
-    }
+  .activity-existence-tag {
+    background-color: mat-color($background, background);
+    color: mat-color($foreground, text);
+    font-size: $caption-size;
+    padding: 1px 5px 1px 5px;
+    font-weight: bold;
+    border-radius: 3px;
+    margin-left: 5px;
+  }
 
 }

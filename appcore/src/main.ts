@@ -6,12 +6,12 @@ import { environment } from "./environments/environment";
 import { Theme } from "./app/shared/enums/theme.enum";
 
 if (environment.production) {
-    enableProdMode();
+  enableProdMode();
 }
 
 // Apply default theme class to body. AppComponent will also change body class along themes switches
 document.body.setAttribute("class", Theme.DEFAULT);
 
 platformBrowserDynamic()
-    .bootstrapModule(AppModule)
-    .catch(err => console.log(err));
+  .bootstrapModule(AppModule)
+  .catch(err => console.log(err));

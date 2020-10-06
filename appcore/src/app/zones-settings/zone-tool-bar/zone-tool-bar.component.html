@@ -1,54 +1,54 @@
 <mat-toolbar>
-    <mat-toolbar-row>
-        <mat-form-field>
-            <mat-select
-                (selectionChange)="onZoneDefinitionSelected()"
-                [(ngModel)]="zoneDefinitionSelected"
-                aria-label="Zone selection"
-                id="zoneDefinitionSelection">
-                <mat-option *ngFor="let zoneDef of zoneDefinitions;" [value]="zoneDef">
-                    {{zoneDef.name}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+  <mat-toolbar-row>
+    <mat-form-field>
+      <mat-select
+        (selectionChange)="onZoneDefinitionSelected()"
+        [(ngModel)]="zoneDefinitionSelected"
+        aria-label="Zone selection"
+        id="zoneDefinitionSelection">
+        <mat-option *ngFor="let zoneDef of zoneDefinitions;" [value]="zoneDef">
+          {{zoneDef.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{currentZonesLength}} zones</span>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{currentZonesLength}} zones</span>
 
-        <span class="toolbar-spacer"></span>
+    <span class="toolbar-spacer"></span>
 
-        <mat-form-field class="step">
-            <input
-                (change)="onStepChange()"
-                [(ngModel)]="zoneDefinitionSelected.step"
-                matInput
-                matTooltip="Enter step precision for increase/decrease zone start/end values. For example 0.1, 0.01, 0.001, 0.25, ..."
-                type="number"/>
-        </mat-form-field>
+    <mat-form-field class="step">
+      <input
+        (change)="onStepChange()"
+        [(ngModel)]="zoneDefinitionSelected.step"
+        matInput
+        matTooltip="Enter step precision for increase/decrease zone start/end values. For example 0.1, 0.01, 0.001, 0.25, ..."
+        type="number"/>
+    </mat-form-field>
 
-        <button (click)="onAddLastZone()" id="addLastZone" mat-icon-button matTooltip="Add a last zone">
-            <mat-icon fontSet="material-icons-outlined">add</mat-icon>
-        </button>
+    <button (click)="onAddLastZone()" id="addLastZone" mat-icon-button matTooltip="Add a last zone">
+      <mat-icon fontSet="material-icons-outlined">add</mat-icon>
+    </button>
 
-        <button (click)="onRemoveLastZone()" id="removeLastZone" mat-icon-button matTooltip="Remove the last zone">
-            <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
-        </button>
+    <button (click)="onRemoveLastZone()" id="removeLastZone" mat-icon-button matTooltip="Remove the last zone">
+      <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+    </button>
 
-        <button (click)="onSaveZones()" id="saveZones" mat-icon-button matTooltip="Save zones">
-            <mat-icon fontSet="material-icons-outlined">save</mat-icon>
-        </button>
+    <button (click)="onSaveZones()" id="saveZones" mat-icon-button matTooltip="Save zones">
+      <mat-icon fontSet="material-icons-outlined">save</mat-icon>
+    </button>
 
-        <button (click)="onResetZonesToDefault()" id="resetZonesToDefault" mat-icon-button
-                matTooltip="Reset zones to default">
-            <mat-icon fontSet="material-icons-outlined">refresh</mat-icon>
-        </button>
+    <button (click)="onResetZonesToDefault()" id="resetZonesToDefault" mat-icon-button
+            matTooltip="Reset zones to default">
+      <mat-icon fontSet="material-icons-outlined">refresh</mat-icon>
+    </button>
 
-        <button (click)="onImportZones()" id="importZones" mat-icon-button matTooltip="Import zones from a backup">
-            <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
-        </button>
+    <button (click)="onImportZones()" id="importZones" mat-icon-button matTooltip="Import zones from a backup">
+      <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
+    </button>
 
-        <button (click)="onExportZones()" id="exportZones" mat-icon-button matTooltip="Export for backup/sharing">
-            <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
-        </button>
+    <button (click)="onExportZones()" id="exportZones" mat-icon-button matTooltip="Export for backup/sharing">
+      <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
+    </button>
 
-    </mat-toolbar-row>
+  </mat-toolbar-row>
 </mat-toolbar>

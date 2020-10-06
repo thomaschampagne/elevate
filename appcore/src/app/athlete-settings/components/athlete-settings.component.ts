@@ -10,57 +10,57 @@ import { AthleteService } from "../../shared/services/athlete/athlete.service";
 // TODO Show athleteSnapshot used on strava activities
 
 @Component({
-    selector: "app-athlete-settings",
-    templateUrl: "./athlete-settings.component.html",
-    styleUrls: ["./athlete-settings.component.scss"],
+  selector: "app-athlete-settings",
+  templateUrl: "./athlete-settings.component.html",
+  styleUrls: ["./athlete-settings.component.scss"],
 })
 export class AthleteSettingsComponent implements OnInit {
-    public static readonly SYNCED_ATHLETE_MODEL_SETTING_GENDER_KEY = "gender";
+  public static readonly SYNCED_ATHLETE_MODEL_SETTING_GENDER_KEY = "gender";
 
-    public readonly GENDER_LIST: GenderModel[] = [
-        {
-            type: Gender.MEN,
-            display: "Male",
-        },
-        {
-            type: Gender.WOMEN,
-            display: "Female",
-        },
-    ];
+  public readonly GENDER_LIST: GenderModel[] = [
+    {
+      type: Gender.MEN,
+      display: "Male",
+    },
+    {
+      type: Gender.WOMEN,
+      display: "Female",
+    },
+  ];
 
-    public athleteModel: AthleteModel;
+  public athleteModel: AthleteModel;
 
-    constructor(
-        public userSettingsService: UserSettingsService,
-        public athleteService: AthleteService,
-        public activityService: ActivityService,
-        public logger: LoggerService
-    ) {}
+  constructor(
+    public userSettingsService: UserSettingsService,
+    public athleteService: AthleteService,
+    public activityService: ActivityService,
+    public logger: LoggerService
+  ) {}
 
-    public ngOnInit(): void {
-        this.athleteService.fetch().then((athleteModel: AthleteModel) => {
-            this.athleteModel = athleteModel;
-        });
-    }
+  public ngOnInit(): void {
+    this.athleteService.fetch().then((athleteModel: AthleteModel) => {
+      this.athleteModel = athleteModel;
+    });
+  }
 
-    public onAthleteSettingsChanged(): void {
-        this.verifyConsistencyWithAthleteSettings();
-        this.clearLocalStorageOnNextLoad();
-    }
+  public onAthleteSettingsChanged(): void {
+    this.verifyConsistencyWithAthleteSettings();
+    this.clearLocalStorageOnNextLoad();
+  }
 
-    public onGenderChanged(): void {
-        this.athleteService.update(this.athleteModel).then(() => this.onAthleteSettingsChanged());
-    }
+  public onGenderChanged(): void {
+    this.athleteService.update(this.athleteModel).then(() => this.onAthleteSettingsChanged());
+  }
 
-    public onDatedAthleteSettingsModelsChanged(): void {
-        this.onAthleteSettingsChanged();
-    }
+  public onDatedAthleteSettingsModelsChanged(): void {
+    this.onAthleteSettingsChanged();
+  }
 
-    public clearLocalStorageOnNextLoad(): void {
-        this.userSettingsService.clearLocalStorageOnNextLoad().catch(error => this.logger.error(error));
-    }
+  public clearLocalStorageOnNextLoad(): void {
+    this.userSettingsService.clearLocalStorageOnNextLoad().catch(error => this.logger.error(error));
+  }
 
-    private verifyConsistencyWithAthleteSettings() {
-        this.activityService.verifyConsistencyWithAthleteSettings();
-    }
+  private verifyConsistencyWithAthleteSettings() {
+    this.activityService.verifyConsistencyWithAthleteSettings();
+  }
 }

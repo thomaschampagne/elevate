@@ -14,28 +14,28 @@ import { OptionHelperDataModel } from "./option-helper-data.model";
  */
 
 @Component({
-    selector: "app-option-helper-dialog",
-    templateUrl: "./option-helper-dialog.component.html",
-    styleUrls: ["./option-helper-dialog.component.scss"],
+  selector: "app-option-helper-dialog",
+  templateUrl: "./option-helper-dialog.component.html",
+  styleUrls: ["./option-helper-dialog.component.scss"],
 })
 export class OptionHelperDialogComponent implements OnInit {
-    public static readonly MAX_WIDTH: string = "80%";
-    public static readonly MIN_WIDTH: string = "40%";
+  public static readonly MAX_WIDTH: string = "80%";
+  public static readonly MIN_WIDTH: string = "40%";
 
-    public html: string;
-    public markDownParser: MarkDownIt;
+  public html: string;
+  public markDownParser: MarkDownIt;
 
-    constructor(@Inject(MAT_DIALOG_DATA) public dialogData: OptionHelperDataModel, public domSanitizer: DomSanitizer) {
-        this.markDownParser = new MarkDownIt();
-        this.markDownParser.use(katex, { throwOnError: false, errorColor: " #cc0000" });
+  constructor(@Inject(MAT_DIALOG_DATA) public dialogData: OptionHelperDataModel, public domSanitizer: DomSanitizer) {
+    this.markDownParser = new MarkDownIt();
+    this.markDownParser.use(katex, { throwOnError: false, errorColor: " #cc0000" });
+  }
+
+  public ngOnInit(): void {
+    if (_.isEmpty(this.dialogData.markdownData)) {
+      throw new Error("No markdown data provided. File is empty?!");
+    } else {
+      const html = this.markDownParser.render(this.dialogData.markdownData);
+      this.html = this.domSanitizer.bypassSecurityTrustHtml(html) as string;
     }
-
-    public ngOnInit(): void {
-        if (_.isEmpty(this.dialogData.markdownData)) {
-            throw new Error("No markdown data provided. File is empty?!");
-        } else {
-            const html = this.markDownParser.render(this.dialogData.markdownData);
-            this.html = this.domSanitizer.bypassSecurityTrustHtml(html) as string;
-        }
-    }
+  }
 }

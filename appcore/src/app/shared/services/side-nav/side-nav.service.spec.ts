@@ -4,46 +4,46 @@ import { SideNavService } from "./side-nav.service";
 import { SideNavStatus } from "./side-nav-status.enum";
 
 describe("SideNavService", () => {
-    let service: SideNavService;
+  let service: SideNavService;
 
-    beforeEach(done => {
-        TestBed.configureTestingModule({
-            providers: [SideNavService],
-        });
-
-        service = TestBed.inject(SideNavService);
-        done();
+  beforeEach(done => {
+    TestBed.configureTestingModule({
+      providers: [SideNavService],
     });
 
-    it("should be created", inject([SideNavService], (service: SideNavService) => {
-        expect(service).toBeTruthy();
-    }));
+    service = TestBed.inject(SideNavService);
+    done();
+  });
 
-    it("should notify subscribers when side nav is closed", done => {
-        // Given
-        const expectedCallCount = 1;
-        const spy = spyOn(service.changes$, "next");
+  it("should be created", inject([SideNavService], (service: SideNavService) => {
+    expect(service).toBeTruthy();
+  }));
 
-        // When
-        service.onChange(SideNavStatus.CLOSED);
+  it("should notify subscribers when side nav is closed", done => {
+    // Given
+    const expectedCallCount = 1;
+    const spy = spyOn(service.changes$, "next");
 
-        // Then
-        expect(spy).toHaveBeenCalledTimes(expectedCallCount);
-        expect(spy).toHaveBeenCalledWith(SideNavStatus.CLOSED);
-        done();
-    });
+    // When
+    service.onChange(SideNavStatus.CLOSED);
 
-    it("should notify subscribers when side nav is opened", done => {
-        // Given
-        const expectedCallCount = 1;
-        const spy = spyOn(service.changes$, "next");
+    // Then
+    expect(spy).toHaveBeenCalledTimes(expectedCallCount);
+    expect(spy).toHaveBeenCalledWith(SideNavStatus.CLOSED);
+    done();
+  });
 
-        // When
-        service.onChange(SideNavStatus.OPENED);
+  it("should notify subscribers when side nav is opened", done => {
+    // Given
+    const expectedCallCount = 1;
+    const spy = spyOn(service.changes$, "next");
 
-        // Then
-        expect(spy).toHaveBeenCalledTimes(expectedCallCount);
-        expect(spy).toHaveBeenCalledWith(SideNavStatus.OPENED);
-        done();
-    });
+    // When
+    service.onChange(SideNavStatus.OPENED);
+
+    // Then
+    expect(spy).toHaveBeenCalledTimes(expectedCallCount);
+    expect(spy).toHaveBeenCalledWith(SideNavStatus.OPENED);
+    done();
+  });
 });

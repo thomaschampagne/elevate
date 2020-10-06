@@ -5,17 +5,17 @@ import { LoggerService } from "../../services/logging/logger.service";
 import { ConsoleLoggerService } from "../../services/logging/console-logger.service";
 
 describe("DesktopDataStore", () => {
-    let service: DesktopDataStore<any>;
+  let service: DesktopDataStore<any>;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [DesktopDataStore, { provide: LoggerService, useClass: ConsoleLoggerService }],
-        });
-
-        service = TestBed.inject(DesktopDataStore);
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [DesktopDataStore, { provide: LoggerService, useClass: ConsoleLoggerService }],
     });
 
-    it("should be created", () => {
-        expect(service).toBeTruthy();
-    });
+    service = TestBed.inject(DesktopDataStore);
+  });
+
+  it("should be created", () => {
+    expect(service).toBeTruthy();
+  });
 });

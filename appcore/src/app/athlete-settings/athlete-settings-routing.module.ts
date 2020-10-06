@@ -3,14 +3,14 @@ import { RouterModule, Routes } from "@angular/router";
 import { AthleteSettingsComponent } from "./components/athlete-settings.component";
 
 const routes: Routes = [
-    {
-        path: "",
-        component: AthleteSettingsComponent,
-    },
+  {
+    path: "",
+    component: AthleteSettingsComponent,
+  },
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule],
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
 export class AthleteSettingsRoutingModule {}

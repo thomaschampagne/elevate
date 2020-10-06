@@ -1,9 +1,9 @@
 export class PeriodModel {
-    public from: Date;
-    public to: Date;
+  public from: Date;
+  public to: Date;
 
-    constructor(from: Date, to: Date) {
-        this.from = from;
-        this.to = to;
-    }
+  constructor(from: Date, to: Date) {
+    this.from = from;
+    this.to = to;
+  }
 }

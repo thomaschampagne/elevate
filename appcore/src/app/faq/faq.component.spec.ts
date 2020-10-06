@@ -7,26 +7,26 @@ import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 
 describe("FaqComponent", () => {
-    let component: FaqComponent;
-    let fixture: ComponentFixture<FaqComponent>;
+  let component: FaqComponent;
+  let fixture: ComponentFixture<FaqComponent>;
 
-    beforeEach(done => {
-        TestBed.configureTestingModule({
-            imports: [CoreModule, SharedModule],
-            providers: [{ provide: DataStore, useClass: TestingDataStore }],
-        }).compileComponents();
-        done();
-    });
+  beforeEach(done => {
+    TestBed.configureTestingModule({
+      imports: [CoreModule, SharedModule],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+    }).compileComponents();
+    done();
+  });
 
-    beforeEach(done => {
-        fixture = TestBed.createComponent(FaqComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-        done();
-    });
+  beforeEach(done => {
+    fixture = TestBed.createComponent(FaqComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    done();
+  });
 
-    it("should create", done => {
-        expect(component).toBeTruthy();
-        done();
-    });
+  it("should create", done => {
+    expect(component).toBeTruthy();
+    done();
+  });
 });

@@ -1,7 +1,7 @@
 export class PropertiesModel {
-    public existingVersion: string;
+  public existingVersion: string;
 
-    constructor(existingVersion: string) {
-        this.existingVersion = existingVersion;
-    }
+  constructor(existingVersion: string) {
+    this.existingVersion = existingVersion;
+  }
 }

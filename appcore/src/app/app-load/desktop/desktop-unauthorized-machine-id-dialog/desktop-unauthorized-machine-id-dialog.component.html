@@ -1,28 +1,28 @@
 <app-desktop-top-bar></app-desktop-top-bar>
 <div class="dialog">
-    <h2 mat-dialog-title>Whoops! You can't run this Elevate version.</h2>
-    <mat-dialog-content class="mat-body-1">
+  <h2 mat-dialog-title>Whoops! You can't run this Elevate version.</h2>
+  <mat-dialog-content class="mat-body-1">
 
-        This current version is not a final release of the Elevate desktop app. This version is not intended to be
-        spread. Causes of blocking:
+    This current version is not a final release of the Elevate desktop app. This version is not intended to be
+    spread. Causes of blocking:
 
-        <ul>
-            <li>You may not be connected to internet or your proxy is blocking http requests.</li>
-            <li>This Elevate version is old and deprecated.</li>
-            <li>Your computer is not authorized to run this version: your "machineId" is not verified.</li>
-        </ul>
+    <ul>
+      <li>You may not be connected to internet or your proxy is blocking http requests.</li>
+      <li>This Elevate version is old and deprecated.</li>
+      <li>Your computer is not authorized to run this version: your "machineId" is not verified.</li>
+    </ul>
 
-        So please make sure:
+    So please make sure:
 
-        <ul>
-            <li>Your network connection is operational.</li>
-            <li>You have the <a href="{{releaseUrl}}">latest desktop version</a>.</li>
-            <li>You machineId <i>{{this.athleteMachineId}}</i> has been verified.</li>
-        </ul>
+    <ul>
+      <li>Your network connection is operational.</li>
+      <li>You have the <a href="{{releaseUrl}}">latest desktop version</a>.</li>
+      <li>You machineId <i>{{this.athleteMachineId}}</i> has been verified.</li>
+    </ul>
 
-    </mat-dialog-content>
-    <mat-dialog-actions>
-        <button (click)="closeApp()" color="primary" mat-stroked-button>Close application</button>
-    </mat-dialog-actions>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button (click)="closeApp()" color="primary" mat-stroked-button>Close application</button>
+  </mat-dialog-actions>
 </div>
 

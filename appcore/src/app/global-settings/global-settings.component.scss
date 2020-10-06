@@ -4,14 +4,14 @@
 $config: mat-typography-config();
 
 .search-options {
-    margin: 20px $default-margin;
-    font-size: mat-font-size($config, title);
+  margin: 20px $default-margin;
+  font-size: mat-font-size($config, title);
 }
 
 .info, .tags {
-    color: $light-grey;
+  color: $light-grey;
 }
 
 mat-select, mat-form-field {
-    width: 20%;
+  width: 20%;
 }

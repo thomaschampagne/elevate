@@ -6,39 +6,39 @@ import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 
 @Injectable()
 export class AthleteSnapshotResolverService {
-    public athleteSnapshotResolver: AthleteSnapshotResolver;
+  public athleteSnapshotResolver: AthleteSnapshotResolver;
 
-    constructor(public athleteService: AthleteService) {}
+  constructor(public athleteService: AthleteService) {}
 
-    /**
-     * Update or create AthleteSnapshotResolver
-     */
-    public update(): Promise<void> {
-        return this.athleteService.fetch().then((athleteModel: AthleteModel) => {
-            this.athleteSnapshotResolver = new AthleteSnapshotResolver(athleteModel);
+  /**
+   * Update or create AthleteSnapshotResolver
+   */
+  public update(): Promise<void> {
+    return this.athleteService.fetch().then((athleteModel: AthleteModel) => {
+      this.athleteSnapshotResolver = new AthleteSnapshotResolver(athleteModel);
 
-            return Promise.resolve();
-        });
+      return Promise.resolve();
+    });
+  }
+
+  /**
+   * Resolve the proper AthleteSnapshotModel along activity date
+   * @param onDate Date format YYYY-MM-DD or Date object
+   */
+  public resolve(onDate: string | Date): AthleteSnapshotModel {
+    if (_.isEmpty(this.athleteSnapshotResolver)) {
+      throw new Error(
+        "AthleteSnapshotResolver do not exists. Please update service at first with AthleteSnapshotResolverService#update()"
+      );
     }
 
-    /**
-     * Resolve the proper AthleteSnapshotModel along activity date
-     * @param onDate Date format YYYY-MM-DD or Date object
-     */
-    public resolve(onDate: string | Date): AthleteSnapshotModel {
-        if (_.isEmpty(this.athleteSnapshotResolver)) {
-            throw new Error(
-                "AthleteSnapshotResolver do not exists. Please update service at first with AthleteSnapshotResolverService#update()"
-            );
-        }
+    return this.athleteSnapshotResolver.resolve(onDate);
+  }
 
-        return this.athleteSnapshotResolver.resolve(onDate);
-    }
-
-    /**
-     * Resolve current being used AthleteSnapshotModel
-     */
-    public getCurrent(): AthleteSnapshotModel {
-        return this.athleteSnapshotResolver.resolve(new Date());
-    }
+  /**
+   * Resolve current being used AthleteSnapshotModel
+   */
+  public getCurrent(): AthleteSnapshotModel {
+    return this.athleteSnapshotResolver.resolve(new Date());
+  }
 }

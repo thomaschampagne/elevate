@@ -6,17 +6,17 @@ import { DesktopModule } from "../../shared/modules/desktop/desktop.module";
 import { PromiseTronServiceMock } from "./promise-tron.service.mock";
 
 describe("IpcMessagesSender", () => {
-    let service: IpcMessagesSender;
+  let service: IpcMessagesSender;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [DesktopModule],
-            providers: [{ provide: PROMISE_TRON, useClass: PromiseTronServiceMock }],
-        });
-        service = TestBed.inject(IpcMessagesSender);
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [DesktopModule],
+      providers: [{ provide: PROMISE_TRON, useClass: PromiseTronServiceMock }],
     });
+    service = TestBed.inject(IpcMessagesSender);
+  });
 
-    it("should be created", () => {
-        expect(service).toBeTruthy();
-    });
+  it("should be created", () => {
+    expect(service).toBeTruthy();
+  });
 });

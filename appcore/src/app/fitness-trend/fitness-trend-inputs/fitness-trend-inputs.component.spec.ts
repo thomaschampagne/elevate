@@ -7,35 +7,35 @@ import { FitnessTrendModule } from "../fitness-trend.module";
 import { FitnessTrendComponent } from "../fitness-trend.component";
 
 describe("FitnessTrendInputsComponent", () => {
-    let component: FitnessTrendInputsComponent;
-    let fixture: ComponentFixture<FitnessTrendInputsComponent>;
+  let component: FitnessTrendInputsComponent;
+  let fixture: ComponentFixture<FitnessTrendInputsComponent>;
 
-    beforeEach(done => {
-        TestBed.configureTestingModule({
-            imports: [CoreModule, SharedModule, FitnessTrendModule],
-        }).compileComponents();
+  beforeEach(done => {
+    TestBed.configureTestingModule({
+      imports: [CoreModule, SharedModule, FitnessTrendModule],
+    }).compileComponents();
 
-        done();
-    });
+    done();
+  });
 
-    beforeEach(done => {
-        fixture = TestBed.createComponent(FitnessTrendInputsComponent);
+  beforeEach(done => {
+    fixture = TestBed.createComponent(FitnessTrendInputsComponent);
 
-        component = fixture.componentInstance;
+    component = fixture.componentInstance;
 
-        component.fitnessTrendConfigModel = FitnessTrendComponent.DEFAULT_CONFIG;
+    component.fitnessTrendConfigModel = FitnessTrendComponent.DEFAULT_CONFIG;
 
-        component.periodViewed = {
-            from: new Date(),
-            to: new Date(),
-        };
+    component.periodViewed = {
+      from: new Date(),
+      to: new Date(),
+    };
 
-        fixture.detectChanges();
-        done();
-    });
+    fixture.detectChanges();
+    done();
+  });
 
-    it("should create", done => {
-        expect(component).toBeTruthy();
-        done();
-    });
+  it("should create", done => {
+    expect(component).toBeTruthy();
+    done();
+  });
 });

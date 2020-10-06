@@ -8,13 +8,13 @@ import { AthleteSettingsComponent } from "./components/athlete-settings.componen
 import { EditDatedAthleteSettingsDialogComponent } from "./components/edit-dated-athlete-settings-dialog/edit-dated-athlete-settings-dialog.component";
 
 @NgModule({
-    imports: [CoreModule, AthleteSettingsRoutingModule],
-    declarations: [
-        AthleteSettingsComponent,
-        AthleteSettingsFormComponent,
-        DatedAthleteSettingsManagerComponent,
-        SwimFtpHelperComponent,
-        EditDatedAthleteSettingsDialogComponent,
-    ],
+  imports: [CoreModule, AthleteSettingsRoutingModule],
+  declarations: [
+    AthleteSettingsComponent,
+    AthleteSettingsFormComponent,
+    DatedAthleteSettingsManagerComponent,
+    SwimFtpHelperComponent,
+    EditDatedAthleteSettingsDialogComponent,
+  ],
 })
 export class AthleteSettingsModule {}

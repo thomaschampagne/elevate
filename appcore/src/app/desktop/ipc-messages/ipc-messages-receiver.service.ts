@@ -11,98 +11,98 @@ import { IPromiseTron, PROMISE_TRON } from "./promise-tron.interface";
 
 @Injectable()
 export class IpcMessagesReceiver {
-    public syncEvents$: Subject<SyncEvent>;
-    public isListening: boolean;
+  public syncEvents$: Subject<SyncEvent>;
+  public isListening: boolean;
 
-    constructor(
-        @Inject(PROMISE_TRON) public promiseTron: IPromiseTron,
-        public activityService: ActivityService,
-        public logger: LoggerService
-    ) {
-        this.syncEvents$ = new Subject<SyncEvent>();
-        this.isListening = false;
+  constructor(
+    @Inject(PROMISE_TRON) public promiseTron: IPromiseTron,
+    public activityService: ActivityService,
+    public logger: LoggerService
+  ) {
+    this.syncEvents$ = new Subject<SyncEvent>();
+    this.isListening = false;
+  }
+
+  public listen(): void {
+    if (this.isListening) {
+      return;
     }
 
-    public listen(): void {
-        if (this.isListening) {
-            return;
-        }
+    // Listen for sync events provided by main process
+    this.promiseTron.on((ipcRequest: IpcRequest, replyWith: (promiseTronReply: PromiseTronReply) => void) => {
+      this.onIpcRequest(ipcRequest, replyWith);
+    });
 
-        // Listen for sync events provided by main process
-        this.promiseTron.on((ipcRequest: IpcRequest, replyWith: (promiseTronReply: PromiseTronReply) => void) => {
-            this.onIpcRequest(ipcRequest, replyWith);
-        });
+    this.isListening = true;
+  }
 
-        this.isListening = true;
+  public onIpcRequest(ipcRequest: IpcRequest, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
+    const flaggedIpcMessage = IpcRequest.extractData<FlaggedIpcMessage>(ipcRequest);
+
+    if (!flaggedIpcMessage) {
+      const message = "Unknown IpcRequest received from IpcMain: " + JSON.stringify(ipcRequest);
+      this.logger.error(message);
+      throw new Error(message);
     }
 
-    public onIpcRequest(ipcRequest: IpcRequest, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
-        const flaggedIpcMessage = IpcRequest.extractData<FlaggedIpcMessage>(ipcRequest);
+    this.forwardMessagesFromIpcMain(flaggedIpcMessage, replyWith);
+  }
 
-        if (!flaggedIpcMessage) {
-            const message = "Unknown IpcRequest received from IpcMain: " + JSON.stringify(ipcRequest);
-            this.logger.error(message);
-            throw new Error(message);
-        }
+  public forwardMessagesFromIpcMain(
+    message: FlaggedIpcMessage,
+    replyWith: (promiseTronReply: PromiseTronReply) => void
+  ): void {
+    switch (message.flag) {
+      case MessageFlag.SYNC_EVENT:
+        this.handleSyncEventsMessages(message);
+        break;
 
-        this.forwardMessagesFromIpcMain(flaggedIpcMessage, replyWith);
+      case MessageFlag.FIND_ACTIVITY:
+        this.handleFindActivityMessages(message, replyWith);
+        break;
+
+      default:
+        this.handleUnknownMessage(message, replyWith);
+        break;
     }
+  }
 
-    public forwardMessagesFromIpcMain(
-        message: FlaggedIpcMessage,
-        replyWith: (promiseTronReply: PromiseTronReply) => void
-    ): void {
-        switch (message.flag) {
-            case MessageFlag.SYNC_EVENT:
-                this.handleSyncEventsMessages(message);
-                break;
+  public handleSyncEventsMessages(flaggedIpcMessage: FlaggedIpcMessage): void {
+    const syncEvent = _.first(flaggedIpcMessage.payload) as SyncEvent;
+    this.syncEvents$.next(syncEvent); // forward sync event
+  }
 
-            case MessageFlag.FIND_ACTIVITY:
-                this.handleFindActivityMessages(message, replyWith);
-                break;
+  public handleFindActivityMessages(
+    flaggedIpcMessage: FlaggedIpcMessage,
+    replyWith: (promiseTronReply: PromiseTronReply) => void
+  ): void {
+    const startTime = flaggedIpcMessage.payload[0] as string;
+    const activityDurationSeconds = flaggedIpcMessage.payload[1] as number;
 
-            default:
-                this.handleUnknownMessage(message, replyWith);
-                break;
-        }
-    }
-
-    public handleSyncEventsMessages(flaggedIpcMessage: FlaggedIpcMessage): void {
-        const syncEvent = _.first(flaggedIpcMessage.payload) as SyncEvent;
-        this.syncEvents$.next(syncEvent); // forward sync event
-    }
-
-    public handleFindActivityMessages(
-        flaggedIpcMessage: FlaggedIpcMessage,
-        replyWith: (promiseTronReply: PromiseTronReply) => void
-    ): void {
-        const startTime = flaggedIpcMessage.payload[0] as string;
-        const activityDurationSeconds = flaggedIpcMessage.payload[1] as number;
-
-        this.activityService.findByDatedSession(startTime, activityDurationSeconds).then(
-            activities => {
-                replyWith({
-                    success: activities,
-                    error: null,
-                });
-            },
-            error => {
-                replyWith({
-                    success: null,
-                    error: error,
-                });
-            }
-        );
-    }
-
-    public handleUnknownMessage(
-        message: FlaggedIpcMessage,
-        replyWith: (promiseTronReply: PromiseTronReply) => void
-    ): void {
-        const errorMessage = "Unknown message received by IpcRenderer. FlaggedIpcMessage: " + JSON.stringify(message);
+    this.activityService.findByDatedSession(startTime, activityDurationSeconds).then(
+      activities => {
         replyWith({
-            success: null,
-            error: errorMessage,
+          success: activities,
+          error: null,
         });
-    }
+      },
+      error => {
+        replyWith({
+          success: null,
+          error: error,
+        });
+      }
+    );
+  }
+
+  public handleUnknownMessage(
+    message: FlaggedIpcMessage,
+    replyWith: (promiseTronReply: PromiseTronReply) => void
+  ): void {
+    const errorMessage = "Unknown message received by IpcRenderer. FlaggedIpcMessage: " + JSON.stringify(message);
+    replyWith({
+      success: null,
+      error: errorMessage,
+    });
+  }
 }

@@ -8,52 +8,52 @@ import { EnvTarget } from "@elevate/shared/models";
 import { DataStore } from "../shared/data-store/data-store";
 
 @Component({
-    selector: "app-about-dialog",
-    templateUrl: "./about-dialog.component.html",
-    styleUrls: ["./about-dialog.component.scss"],
+  selector: "app-about-dialog",
+  templateUrl: "./about-dialog.component.html",
+  styleUrls: ["./about-dialog.component.scss"],
 })
 export class AboutDialogComponent implements OnInit {
-    public static readonly MAX_WIDTH: string = "40%";
-    public static readonly MIN_WIDTH: string = "40%";
+  public static readonly MAX_WIDTH: string = "40%";
+  public static readonly MIN_WIDTH: string = "40%";
 
-    public envTarget: EnvTarget = environment.target;
-    public EnvTarget = EnvTarget;
+  public envTarget: EnvTarget = environment.target;
+  public EnvTarget = EnvTarget;
 
-    public angularCoreVersion: string;
-    public angularMaterialVersion: string;
-    public d3Version: string;
-    public installedVersion: string;
-    public appUsageDetails: AppUsageDetails;
-    public remoteVersion: string;
-    public buildMetadata: { commit: string; date: string };
-    public wrapperVersion: string;
+  public angularCoreVersion: string;
+  public angularMaterialVersion: string;
+  public d3Version: string;
+  public installedVersion: string;
+  public appUsageDetails: AppUsageDetails;
+  public remoteVersion: string;
+  public buildMetadata: { commit: string; date: string };
+  public wrapperVersion: string;
 
-    constructor(
-        @Inject(DataStore) private readonly dataStore: DataStore<object>,
-        @Inject(VERSIONS_PROVIDER) private readonly versionsProvider: VersionsProvider
-    ) {}
+  constructor(
+    @Inject(DataStore) private readonly dataStore: DataStore<object>,
+    @Inject(VERSIONS_PROVIDER) private readonly versionsProvider: VersionsProvider
+  ) {}
 
-    public ngOnInit(): void {
-        this.dataStore.getAppUsageDetails().then((appUsageDetails: AppUsageDetails) => {
-            this.appUsageDetails = appUsageDetails;
-        });
+  public ngOnInit(): void {
+    this.dataStore.getAppUsageDetails().then((appUsageDetails: AppUsageDetails) => {
+      this.appUsageDetails = appUsageDetails;
+    });
 
-        this.versionsProvider.getPackageVersion().then(version => {
-            this.installedVersion = version;
-        });
+    this.versionsProvider.getPackageVersion().then(version => {
+      this.installedVersion = version;
+    });
 
-        this.versionsProvider.getRemoteVersion().then(version => {
-            this.remoteVersion = version;
-        });
+    this.versionsProvider.getRemoteVersion().then(version => {
+      this.remoteVersion = version;
+    });
 
-        this.versionsProvider.getBuildMetadata().then((buildMetadata: { commit: string; date: string }) => {
-            this.buildMetadata = buildMetadata;
-            this.buildMetadata.date = this.buildMetadata.date.slice(0, 10).replace(/-/g, "");
-        });
+    this.versionsProvider.getBuildMetadata().then((buildMetadata: { commit: string; date: string }) => {
+      this.buildMetadata = buildMetadata;
+      this.buildMetadata.date = this.buildMetadata.date.slice(0, 10).replace(/-/g, "");
+    });
 
-        this.angularCoreVersion = angularCoreVersion.full;
-        this.angularMaterialVersion = angularMaterialVersion.full;
-        this.d3Version = d3.version;
-        this.wrapperVersion = this.versionsProvider.getWrapperVersion();
-    }
+    this.angularCoreVersion = angularCoreVersion.full;
+    this.angularMaterialVersion = angularMaterialVersion.full;
+    this.d3Version = d3.version;
+    this.wrapperVersion = this.versionsProvider.getWrapperVersion();
+  }
 }

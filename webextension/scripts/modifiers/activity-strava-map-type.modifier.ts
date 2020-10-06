@@ -1,27 +1,27 @@
 import { AbstractModifier } from "./abstract.modifier";
 
 export class ActivityStravaMapTypeModifier extends AbstractModifier {
-    protected mapType: string;
+  protected mapType: string;
 
-    constructor(mapType: string) {
-        super();
-        this.mapType = mapType;
+  constructor(mapType: string) {
+    super();
+    this.mapType = mapType;
+  }
+
+  public modify(): void {
+    if (this.mapType === "terrain") {
+      return;
     }
 
-    public modify(): void {
-        if (this.mapType === "terrain") {
-            return;
-        }
+    const mapGoal = this.mapType;
 
-        const mapGoal = this.mapType;
-
-        setInterval(() => {
-            $("a.map-type-selector[data-map-type-id=" + mapGoal + "]")
-                .not(".once-only")
-                .addClass("once-only")
-                .click()
-                .parents(".drop-down-menu") // Close menu
-                .click();
-        }, 750);
-    }
+    setInterval(() => {
+      $("a.map-type-selector[data-map-type-id=" + mapGoal + "]")
+        .not(".once-only")
+        .addClass("once-only")
+        .click()
+        .parents(".drop-down-menu") // Close menu
+        .click();
+    }, 750);
+  }
 }

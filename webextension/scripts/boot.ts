@@ -7,15 +7,15 @@ import { CoreMessages } from "@elevate/shared/models";
 import { StartCoreDataModel } from "./models/start-core-data.model";
 
 class Boot {
-    public static main(): void {
-        fancyboxBoot($);
+  public static main(): void {
+    fancyboxBoot($);
 
-        addEventListener(CoreMessages.ON_START_CORE_EVENT, (event: any) => {
-            const initData: StartCoreDataModel = event.detail as StartCoreDataModel;
-            const elevate = new Elevate(initData.userSettings, initData.appResources);
-            elevate.run();
-        });
-    }
+    addEventListener(CoreMessages.ON_START_CORE_EVENT, (event: any) => {
+      const initData: StartCoreDataModel = event.detail as StartCoreDataModel;
+      const elevate = new Elevate(initData.userSettings, initData.appResources);
+      elevate.run();
+    });
+  }
 }
 
 Boot.main();

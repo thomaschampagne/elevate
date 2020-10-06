@@ -5,9 +5,9 @@ import { releaseNotesData } from "@elevate/shared/data";
 
 @Injectable()
 export class ReleasesNotesResolverService implements Resolve<ReleaseNoteModel[]> {
-    constructor() {}
+  constructor() {}
 
-    public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): ReleaseNoteModel[] {
-        return releaseNotesData;
-    }
+  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): ReleaseNoteModel[] {
+    return releaseNotesData;
+  }
 }

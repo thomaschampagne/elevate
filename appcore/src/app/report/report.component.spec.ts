@@ -5,26 +5,26 @@ import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
 
 describe("ReportComponent", () => {
-    let component: ReportComponent;
-    let fixture: ComponentFixture<ReportComponent>;
+  let component: ReportComponent;
+  let fixture: ComponentFixture<ReportComponent>;
 
-    beforeEach(done => {
-        TestBed.configureTestingModule({
-            imports: [CoreModule, SharedModule],
-        }).compileComponents();
+  beforeEach(done => {
+    TestBed.configureTestingModule({
+      imports: [CoreModule, SharedModule],
+    }).compileComponents();
 
-        done();
-    });
+    done();
+  });
 
-    beforeEach(done => {
-        fixture = TestBed.createComponent(ReportComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-        done();
-    });
+  beforeEach(done => {
+    fixture = TestBed.createComponent(ReportComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    done();
+  });
 
-    it("should create", done => {
-        expect(component).toBeTruthy();
-        done();
-    });
+  it("should create", done => {
+    expect(component).toBeTruthy();
+    done();
+  });
 });

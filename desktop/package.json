@@ -1,149 +1,149 @@
 {
-    "name": "elevate-training",
-    "description": "Elevate your training experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...",
-    "version": "7.0.0-6.alpha",
-    "scripts": {
-        "assert-app-exists": "node -e \"if ((require('fs').existsSync('./dist/app/')) === false) {console.log('Please run & wait for \\'npm start\\' task before.\\n\\n\\n\\n');process.exit(1);}\";",
-        "build:metadata": "node -e \"console.log('{\\\"commit\\\": \\\"' + require('child_process').execSync('git rev-parse HEAD').toString().trim() + '\\\", \\\"date\\\": \\\"' + (new Date()).toISOString() + '\\\"}')\" > build_metadata.json",
-        "build:appcore@dev": "npm run build:metadata && cd ../appcore/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build --outputPath=../desktop/dist/app/ --base-href --configuration=desktop",
-        "build:appcore@prod": "npm run build:appcore@dev -- --base-href --configuration=desktop-prod",
-        "build:updater@dev": "node ../node_modules/cpy-cli/cli.js ./src/updater/window/index.html ./dist/updater/ && rollup --config rollup-updater.config.js",
-        "build:updater@prod": "npm run build:updater@dev -- --environment ELECTRON_ENV:prod",
-        "build:electron@base": "rollup --config rollup-app.config.js",
-        "build:electron@dev": "npm run build:updater@dev && npm run build:electron@base",
-        "build:electron@prod": "npm run build:updater@prod && npm run build:electron@base -- --environment ELECTRON_ENV:prod",
-        "build:prod": "npm-run-all clean build:electron@prod build:appcore@prod",
-        "clean": "npm-run-all clean:*",
-        "clean:dist": "node ../node_modules/del-cli/cli.js ./dist/",
-        "clean:package": "node ../node_modules/del-cli/cli.js ./package/",
-        "clean:metadata": "node ../node_modules/del-cli/cli.js ./build_metadata.json",
-        "launch:dev:app": "npm run assert-app-exists && run-electron ./dist/desktop.bundle.js",
-        "package:windows": "npm run build:prod && electron-builder build --windows --x64 --publish onTagOrDraft",
-        "package:linux": "npm run build:prod && electron-builder build --linux --x64 --publish onTagOrDraft",
-        "package:mac": "npm run build:prod && electron-builder build --mac --x64",
-        "start": "npm run watch",
-        "test": "npm run build:metadata && jest --coverage",
-        "type:check": "tsc --noEmit --project tsconfig.json",
-        "tslint": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./src/**/*.ts --fix",
-        "watch": "npm run clean && node ../node_modules/cpy-cli/cli.js ./dev-app-update.yml ./dist && npm-run-all --print-label --race --parallel watch:electron watch:appcore",
-        "watch:electron": "npm run build:electron@dev -- -- --watch",
-        "watch:appcore": "npm run build:appcore@dev -- --watch",
-        "upgrade:check": "npx ncu",
-        "upgrade:apply": "npm run upgrade:check -- -u"
+  "name": "elevate-training",
+  "description": "Elevate your training experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...",
+  "version": "7.0.0-6.alpha",
+  "scripts": {
+    "assert-app-exists": "node -e \"if ((require('fs').existsSync('./dist/app/')) === false) {console.log('Please run & wait for \\'npm start\\' task before.\\n\\n\\n\\n');process.exit(1);}\";",
+    "build:metadata": "node -e \"console.log('{\\\"commit\\\": \\\"' + require('child_process').execSync('git rev-parse HEAD').toString().trim() + '\\\", \\\"date\\\": \\\"' + (new Date()).toISOString() + '\\\"}')\" > build_metadata.json",
+    "build:appcore@dev": "npm run build:metadata && cd ../appcore/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build --outputPath=../desktop/dist/app/ --base-href --configuration=desktop",
+    "build:appcore@prod": "npm run build:appcore@dev -- --base-href --configuration=desktop-prod",
+    "build:updater@dev": "node ../node_modules/cpy-cli/cli.js ./src/updater/window/index.html ./dist/updater/ && rollup --config rollup-updater.config.js",
+    "build:updater@prod": "npm run build:updater@dev -- --environment ELECTRON_ENV:prod",
+    "build:electron@base": "rollup --config rollup-app.config.js",
+    "build:electron@dev": "npm run build:updater@dev && npm run build:electron@base",
+    "build:electron@prod": "npm run build:updater@prod && npm run build:electron@base -- --environment ELECTRON_ENV:prod",
+    "build:prod": "npm-run-all clean build:electron@prod build:appcore@prod",
+    "clean": "npm-run-all clean:*",
+    "clean:dist": "node ../node_modules/del-cli/cli.js ./dist/",
+    "clean:package": "node ../node_modules/del-cli/cli.js ./package/",
+    "clean:metadata": "node ../node_modules/del-cli/cli.js ./build_metadata.json",
+    "launch:dev:app": "npm run assert-app-exists && run-electron ./dist/desktop.bundle.js",
+    "package:windows": "npm run build:prod && electron-builder build --windows --x64 --publish onTagOrDraft",
+    "package:linux": "npm run build:prod && electron-builder build --linux --x64 --publish onTagOrDraft",
+    "package:mac": "npm run build:prod && electron-builder build --mac --x64",
+    "start": "npm run watch",
+    "test": "npm run build:metadata && jest --coverage",
+    "type:check": "tsc --noEmit --project tsconfig.json",
+    "tslint": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./src/**/*.ts --fix",
+    "watch": "npm run clean && node ../node_modules/cpy-cli/cli.js ./dev-app-update.yml ./dist && npm-run-all --print-label --race --parallel watch:electron watch:appcore",
+    "watch:electron": "npm run build:electron@dev -- -- --watch",
+    "watch:appcore": "npm run build:appcore@dev -- --watch",
+    "upgrade:check": "npx ncu",
+    "upgrade:apply": "npm run upgrade:check -- -u"
+  },
+  "config": {
+    "unsafe-perm": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thomaschampagne/elevate"
+  },
+  "author": {
+    "name": "Thomas Champagne",
+    "email": "th.champagne@gmail.com",
+    "web": "https://thomaschampagne.github.io"
+  },
+  "license": "MIT",
+  "readme": "README.md",
+  "dependencies": {
+    "@rollup/plugin-json": "^4.1.0",
+    "all-unpacker": "^0.1.3",
+    "electron-log": "^4.2.4",
+    "electron-updater": "^4.3.5",
+    "https-proxy-agent": "^5.0.0",
+    "ini": "^1.3.5",
+    "lodash": "^4.17.20",
+    "node-machine-id": "^1.1.12",
+    "pako": "^1.0.11",
+    "promise-tron": "^10.0.0",
+    "querystring": "^0.2.0",
+    "rxjs": "^6.6.3",
+    "@sports-alliance/sports-lib": "^5.3.2",
+    "typed-rest-client": "^1.7.3",
+    "vue": "^2.6.12",
+    "xmldom": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.14",
+    "@types/lodash": "^4.14.161",
+    "@types/node": "^12",
+    "@types/pako": "^1.0.1",
+    "@types/xmldom": "^0.1.30",
+    "devtron": "^1.4.0",
+    "electron": "^10.1.3",
+    "electron-builder": "^22.8.1",
+    "electron-reloader": "^1.0.1",
+    "jest": "^26.5.2",
+    "jest-config": "^26.5.2",
+    "npm-run-all": "^4.1.5",
+    "rollup": "^2.28.2",
+    "@rollup/plugin-commonjs": "^15.1.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "@rollup/plugin-typescript": "^6.0.0",
+    "rollup-plugin-sourcemaps": "^0.6.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "run-electron": "^1.0.0",
+    "ts-jest": "^26.4.1",
+    "tslint": "^6.1.3",
+    "typescript": "^4.0.3"
+  },
+  "build": {
+    "appId": "com.elevate.app",
+    "productName": "Elevate",
+    "directories": {
+      "output": "./package/"
     },
-    "config": {
-        "unsafe-perm": true
+    "files": [
+      "!**/*",
+      "./dist/**/*.*",
+      "./build/**/*.*",
+      "./node_modules/**/*"
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "thomaschampagne",
+      "repo": "elevate-alpha",
+      "vPrefixedTagName": false
     },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/thomaschampagne/elevate"
-    },
-    "author": {
-        "name": "Thomas Champagne",
-        "email": "th.champagne@gmail.com",
-        "web": "https://thomaschampagne.github.io"
-    },
-    "license": "MIT",
-    "readme": "README.md",
-    "dependencies": {
-        "@rollup/plugin-json": "^4.1.0",
-        "all-unpacker": "^0.1.3",
-        "electron-log": "^4.2.4",
-        "electron-updater": "^4.3.5",
-        "https-proxy-agent": "^5.0.0",
-        "ini": "^1.3.5",
-        "lodash": "^4.17.20",
-        "node-machine-id": "^1.1.12",
-        "pako": "^1.0.11",
-        "promise-tron": "^10.0.0",
-        "querystring": "^0.2.0",
-        "rxjs": "^6.6.3",
-        "@sports-alliance/sports-lib": "^5.3.2",
-        "typed-rest-client": "^1.7.3",
-        "vue": "^2.6.12",
-        "xmldom": "^0.3.0"
-    },
-    "devDependencies": {
-        "@types/jest": "^26.0.14",
-        "@types/lodash": "^4.14.161",
-        "@types/node": "^12",
-        "@types/pako": "^1.0.1",
-        "@types/xmldom": "^0.1.30",
-        "devtron": "^1.4.0",
-        "electron": "^10.1.3",
-        "electron-builder": "^22.8.1",
-        "electron-reloader": "^1.0.1",
-        "jest": "^26.5.2",
-        "jest-config": "^26.5.2",
-        "npm-run-all": "^4.1.5",
-        "rollup": "^2.28.2",
-        "@rollup/plugin-commonjs": "^15.1.0",
-        "@rollup/plugin-node-resolve": "^9.0.0",
-        "@rollup/plugin-typescript": "^6.0.0",
-        "rollup-plugin-sourcemaps": "^0.6.2",
-        "rollup-plugin-terser": "^7.0.2",
-        "run-electron": "^1.0.0",
-        "ts-jest": "^26.4.1",
-        "tslint": "^6.1.3",
-        "typescript": "^4.0.3"
-    },
-    "build": {
-        "appId": "com.elevate.app",
-        "productName": "Elevate",
-        "directories": {
-            "output": "./package/"
+    "win": {
+      "publisherName": "Thomas Champagne",
+      "verifyUpdateCodeSignature": false,
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
         },
-        "files": [
-            "!**/*",
-            "./dist/**/*.*",
-            "./build/**/*.*",
-            "./node_modules/**/*"
-        ],
-        "publish": {
-            "provider": "github",
-            "owner": "thomaschampagne",
-            "repo": "elevate-alpha",
-            "vPrefixedTagName": false
-        },
-        "win": {
-            "publisherName": "Thomas Champagne",
-            "verifyUpdateCodeSignature": false,
-            "target": [
-                {
-                    "target": "nsis",
-                    "arch": [
-                        "x64"
-                    ]
-                },
-                {
-                    "target": "nsis-web"
-                }
-            ]
-        },
-        "mac": {
-            "target": [
-                "dmg"
-            ]
-        },
-        "linux": {
-            "category": "Sports",
-            "target": [
-                "deb"
-            ]
-        },
-        "nsis": {
-            "deleteAppDataOnUninstall": true,
-            "artifactName": "elevate_installer.${ext}"
-        },
-        "nsisWeb": {
-            "deleteAppDataOnUninstall": true,
-            "artifactName": "elevate_web_installer.${ext}"
-        },
-        "deb": {
-            "maintainer": "Thomas Champagne",
-            "category": "Sports",
-            "artifactName": "elevate_installer.${ext}"
+        {
+          "target": "nsis-web"
         }
+      ]
     },
-    "main": "./dist/desktop.bundle.js"
+    "mac": {
+      "target": [
+        "dmg"
+      ]
+    },
+    "linux": {
+      "category": "Sports",
+      "target": [
+        "deb"
+      ]
+    },
+    "nsis": {
+      "deleteAppDataOnUninstall": true,
+      "artifactName": "elevate_installer.${ext}"
+    },
+    "nsisWeb": {
+      "deleteAppDataOnUninstall": true,
+      "artifactName": "elevate_web_installer.${ext}"
+    },
+    "deb": {
+      "maintainer": "Thomas Champagne",
+      "category": "Sports",
+      "artifactName": "elevate_installer.${ext}"
+    }
+  },
+  "main": "./dist/desktop.bundle.js"
 }

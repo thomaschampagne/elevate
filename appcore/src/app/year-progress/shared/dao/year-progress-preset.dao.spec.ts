@@ -6,23 +6,23 @@ import { LoggerService } from "../../../shared/services/logging/logger.service";
 import { ConsoleLoggerService } from "../../../shared/services/logging/console-logger.service";
 
 describe("YearProgressPresetDao", () => {
-    let yearProgressPresetDao: YearProgressPresetDao;
+  let yearProgressPresetDao: YearProgressPresetDao;
 
-    beforeEach(done => {
-        TestBed.configureTestingModule({
-            providers: [
-                YearProgressPresetDao,
-                { provide: DataStore, useClass: TestingDataStore },
-                { provide: LoggerService, useClass: ConsoleLoggerService },
-            ],
-        });
-
-        yearProgressPresetDao = TestBed.inject(YearProgressPresetDao);
-        done();
+  beforeEach(done => {
+    TestBed.configureTestingModule({
+      providers: [
+        YearProgressPresetDao,
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: LoggerService, useClass: ConsoleLoggerService },
+      ],
     });
 
-    it("should be created", done => {
-        expect(yearProgressPresetDao).toBeTruthy();
-        done();
-    });
+    yearProgressPresetDao = TestBed.inject(YearProgressPresetDao);
+    done();
+  });
+
+  it("should be created", done => {
+    expect(yearProgressPresetDao).toBeTruthy();
+    done();
+  });
 });

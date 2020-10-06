@@ -1,29 +1,29 @@
 <div class="hint">
-    Usage: Select a calculation method that fit to you (choose by clicking on the switches). Enter required
-    parameters asked by the method. After this your Swimming Functional Threshold Pace will be automatically
-    calculated. <a href="https://www.trainingpeaks.com/blog/calculating-swimming-tss-score/" target="_blank">Learn
-    more from TrainingPeaks.</a>
+  Usage: Select a calculation method that fit to you (choose by clicking on the switches). Enter required
+  parameters asked by the method. After this your Swimming Functional Threshold Pace will be automatically
+  calculated. <a href="https://www.trainingpeaks.com/blog/calculating-swimming-tss-score/" target="_blank">Learn
+  more from TrainingPeaks.</a>
 </div>
 
 <div *ngFor="let method of calculationMethods;">
 
-    <mat-slide-toggle
-        (change)="onMethodChanged(method)"
-        [(ngModel)]="method.active"
-        aria-label="method.name">
-        {{method.name}}
-    </mat-slide-toggle>
+  <mat-slide-toggle
+    (change)="onMethodChanged(method)"
+    [(ngModel)]="method.active"
+    aria-label="method.name">
+    {{method.name}}
+  </mat-slide-toggle>
 
-    <div *ngFor="let param of method.params;">
-        <mat-form-field fxFill>
-            <input
-                (change)="onMethodChanged(method)"
-                [(ngModel)]="param.value"
-                [disabled]="!method.active"
-                matInput
-                min="0"
-                placeholder="{{param.hint}}"
-                type="number"/>
-        </mat-form-field>
-    </div>
+  <div *ngFor="let param of method.params;">
+    <mat-form-field fxFill>
+      <input
+        (change)="onMethodChanged(method)"
+        [(ngModel)]="param.value"
+        [disabled]="!method.active"
+        matInput
+        min="0"
+        placeholder="{{param.hint}}"
+        type="number"/>
+    </mat-form-field>
+  </div>
 </div>

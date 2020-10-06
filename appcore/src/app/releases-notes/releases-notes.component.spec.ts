@@ -6,26 +6,26 @@ import { CoreModule } from "../core/core.module";
 import { SharedModule } from "../shared/shared.module";
 
 describe("ReleasesNotesComponent", () => {
-    let component: ReleasesNotesComponent;
-    let fixture: ComponentFixture<ReleasesNotesComponent>;
+  let component: ReleasesNotesComponent;
+  let fixture: ComponentFixture<ReleasesNotesComponent>;
 
-    beforeEach(done => {
-        TestBed.configureTestingModule({
-            imports: [CoreModule, SharedModule, ReleasesNotesModule],
-        }).compileComponents();
+  beforeEach(done => {
+    TestBed.configureTestingModule({
+      imports: [CoreModule, SharedModule, ReleasesNotesModule],
+    }).compileComponents();
 
-        done();
-    });
+    done();
+  });
 
-    beforeEach(done => {
-        fixture = TestBed.createComponent(ReleasesNotesComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-        done();
-    });
+  beforeEach(done => {
+    fixture = TestBed.createComponent(ReleasesNotesComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    done();
+  });
 
-    it("should create", done => {
-        expect(component).toBeTruthy();
-        done();
-    });
+  it("should create", done => {
+    expect(component).toBeTruthy();
+    done();
+  });
 });

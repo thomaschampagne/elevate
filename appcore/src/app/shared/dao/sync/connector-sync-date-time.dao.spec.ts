@@ -6,24 +6,24 @@ import { LoggerService } from "../../services/logging/logger.service";
 import { ConsoleLoggerService } from "../../services/logging/console-logger.service";
 
 describe("ConnectorSyncDateTimeDao", () => {
-    let connectorSyncDateTimeDao: ConnectorSyncDateTimeDao = null;
+  let connectorSyncDateTimeDao: ConnectorSyncDateTimeDao = null;
 
-    beforeEach(done => {
-        TestBed.configureTestingModule({
-            providers: [
-                ConnectorSyncDateTimeDao,
-                { provide: DataStore, useClass: TestingDataStore },
-                { provide: LoggerService, useClass: ConsoleLoggerService },
-            ],
-        });
-
-        // Retrieve injected service
-        connectorSyncDateTimeDao = TestBed.inject(ConnectorSyncDateTimeDao);
-        done();
+  beforeEach(done => {
+    TestBed.configureTestingModule({
+      providers: [
+        ConnectorSyncDateTimeDao,
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: LoggerService, useClass: ConsoleLoggerService },
+      ],
     });
 
-    it("should be created", done => {
-        expect(connectorSyncDateTimeDao).toBeTruthy();
-        done();
-    });
+    // Retrieve injected service
+    connectorSyncDateTimeDao = TestBed.inject(ConnectorSyncDateTimeDao);
+    done();
+  });
+
+  it("should be created", done => {
+    expect(connectorSyncDateTimeDao).toBeTruthy();
+    done();
+  });
 });

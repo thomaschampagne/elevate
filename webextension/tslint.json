@@ -1,9 +1,9 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "../appcore/tslint.json"
-    ],
-    "jsRules": {},
-    "rules": {},
-    "rulesDirectory": []
+  "defaultSeverity": "error",
+  "extends": [
+    "../appcore/tslint.json"
+  ],
+  "jsRules": {},
+  "rules": {},
+  "rulesDirectory": []
 }

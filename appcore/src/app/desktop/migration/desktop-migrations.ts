@@ -1,21 +1,21 @@
 export abstract class DesktopMigration {
-    abstract version: string;
-    abstract description: string;
+  abstract version: string;
+  abstract description: string;
 
-    public abstract upgrade(db: LokiConstructor): Promise<void>;
+  constructor() {}
 
-    constructor() {}
+  public abstract upgrade(db: LokiConstructor): Promise<void>;
 }
 
 class SampleMigration extends DesktopMigration {
-    public version = "7.0.0-7.alpha";
+  public version = "7.0.0-7.alpha";
 
-    public description = "Explain migration purpose here";
+  public description = "Explain migration purpose here";
 
-    public upgrade(db: LokiConstructor): Promise<void> {
-        // ....
-        return Promise.resolve();
-    }
+  public upgrade(db: LokiConstructor): Promise<void> {
+    // ....
+    return Promise.resolve();
+  }
 }
 
 export const DESKTOP_MIGRATIONS: DesktopMigration[] = [new SampleMigration()];

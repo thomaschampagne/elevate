@@ -1,4 +1,4 @@
 export enum GearType {
-    BIKE,
-    SHOES,
+  BIKE,
+  SHOES,
 }

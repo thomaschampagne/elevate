@@ -1,7 +1,7 @@
 export class SyncDateTime {
-    public syncDateTime: number;
+  public syncDateTime: number;
 
-    constructor(syncDateTime: number) {
-        this.syncDateTime = syncDateTime;
-    }
+  constructor(syncDateTime: number) {
+    this.syncDateTime = syncDateTime;
+  }
 }

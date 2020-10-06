@@ -18,18 +18,18 @@ import { DataStore } from "../../data-store/data-store";
 import { ExtensionDataStore } from "../../data-store/impl/extension-data-store.service";
 
 @NgModule({
-    imports: [CoreModule, ExtensionRoutingModule],
-    exports: [ExtensionRoutingModule],
-    declarations: [ExtensionAdvancedMenuComponent, ExtensionImportBackupDialogComponent],
-    providers: [
-        { provide: DataStore, useClass: ExtensionDataStore },
-        { provide: ActivityService, useClass: ExtensionActivityService },
-        { provide: AppEventsService, useClass: ExtensionEventsService },
-        { provide: VERSIONS_PROVIDER, useClass: ExtensionVersionsProvider },
-        { provide: OPEN_RESOURCE_RESOLVER, useClass: ExtensionOpenResourceResolver },
-        { provide: SyncService, useClass: ExtensionSyncService },
-        SyncDateTimeDao,
-        ExtensionSyncService,
-    ],
+  imports: [CoreModule, ExtensionRoutingModule],
+  exports: [ExtensionRoutingModule],
+  declarations: [ExtensionAdvancedMenuComponent, ExtensionImportBackupDialogComponent],
+  providers: [
+    { provide: DataStore, useClass: ExtensionDataStore },
+    { provide: ActivityService, useClass: ExtensionActivityService },
+    { provide: AppEventsService, useClass: ExtensionEventsService },
+    { provide: VERSIONS_PROVIDER, useClass: ExtensionVersionsProvider },
+    { provide: OPEN_RESOURCE_RESOLVER, useClass: ExtensionOpenResourceResolver },
+    { provide: SyncService, useClass: ExtensionSyncService },
+    SyncDateTimeDao,
+    ExtensionSyncService,
+  ],
 })
 export class ExtensionModule {}

@@ -7,24 +7,24 @@ import { LoggerService } from "../../services/logging/logger.service";
 import { ConsoleLoggerService } from "../../services/logging/console-logger.service";
 
 describe("SyncDateTimeDao", () => {
-    let syncDateTimeDao: SyncDateTimeDao = null;
+  let syncDateTimeDao: SyncDateTimeDao = null;
 
-    beforeEach(done => {
-        TestBed.configureTestingModule({
-            providers: [
-                SyncDateTimeDao,
-                { provide: DataStore, useClass: TestingDataStore },
-                { provide: LoggerService, useClass: ConsoleLoggerService },
-            ],
-        });
-
-        // Retrieve injected service
-        syncDateTimeDao = TestBed.inject(SyncDateTimeDao);
-        done();
+  beforeEach(done => {
+    TestBed.configureTestingModule({
+      providers: [
+        SyncDateTimeDao,
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: LoggerService, useClass: ConsoleLoggerService },
+      ],
     });
 
-    it("should be created", done => {
-        expect(syncDateTimeDao).toBeTruthy();
-        done();
-    });
+    // Retrieve injected service
+    syncDateTimeDao = TestBed.inject(SyncDateTimeDao);
+    done();
+  });
+
+  it("should be created", done => {
+    expect(syncDateTimeDao).toBeTruthy();
+    done();
+  });
 });

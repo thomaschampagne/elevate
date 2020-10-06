@@ -3,22 +3,22 @@ import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 
 @Injectable({
-    providedIn: "root",
+  providedIn: "root",
 })
 export class WindowService {
-    public static readonly SCREEN_MD: string = "md";
+  public static readonly SCREEN_MD: string = "md";
 
-    public resizing$: Subject<void>;
+  public resizing$: Subject<void>;
 
-    constructor(public media: MediaObserver) {
-        this.resizing$ = new Subject<void>();
-    }
+  constructor(public media: MediaObserver) {
+    this.resizing$ = new Subject<void>();
+  }
 
-    public isScreenMediaActive(query: string): boolean {
-        return this.media.isActive(query);
-    }
+  public isScreenMediaActive(query: string): boolean {
+    return this.media.isActive(query);
+  }
 
-    public onResize(): void {
-        this.resizing$.next();
-    }
+  public onResize(): void {
+    this.resizing$.next();
+  }
 }

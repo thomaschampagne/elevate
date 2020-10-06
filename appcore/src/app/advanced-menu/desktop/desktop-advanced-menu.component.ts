@@ -14,165 +14,163 @@ import { UserSettings } from "@elevate/shared/models";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 @Component({
-    selector: "app-advanced-menu",
-    template: `
-        <mat-card>
-            <mat-card-content>
-                <div class="mat-h3">
-                    In case of problem with the app this section might help you. If problem continues, consider
-                    uninstall/install the app or report a bug.
-                </div>
-                <div class="mat-title">Activities tools</div>
-                <div>
-                    <button mat-stroked-button color="primary" (click)="onRecalculateActivities()">
-                        Recalculate stats on all activities
-                    </button>
-                </div>
-                <div class="mat-title">Clean / Reset</div>
-                <div>
-                    <button mat-stroked-button color="primary" (click)="onSyncedBackupClear()">
-                        Delete athlete's activities
-                    </button>
-                </div>
-                <div>
-                    <button mat-stroked-button color="primary" (click)="onUserSettingsReset()">
-                        Reset athlete & global settings
-                    </button>
-                </div>
-                <div>
-                    <button mat-stroked-button color="primary" (click)="onFullAppReset()">
-                        Full application reset
-                    </button>
-                </div>
-                <div class="mat-title">Debugging</div>
-                <div>
-                    <button mat-stroked-button color="primary" (click)="openLogsFolder()">Open logs folder</button>
-                </div>
-                <div class="mat-title">Others</div>
-                <div>
-                    <button mat-stroked-button color="primary" (click)="openAppDataFolder()">
-                        Open user program data folder
-                    </button>
-                </div>
-                <div>
-                    <button mat-stroked-button color="primary" (click)="openAppExecFolder()">
-                        Open executable program folder
-                    </button>
-                </div>
-                <div>
-                    <button mat-stroked-button color="primary" (click)="onRestart()">Restart app</button>
-                </div>
-            </mat-card-content>
-        </mat-card>
-    `,
-    styles: [
-        `
-            button {
-                width: 300px;
-            }
+  selector: "app-advanced-menu",
+  template: `
+    <mat-card>
+      <mat-card-content>
+        <div class="mat-h3">
+          In case of problem with the app this section might help you. If problem continues, consider uninstall/install
+          the app or report a bug.
+        </div>
+        <div class="mat-title">Activities tools</div>
+        <div>
+          <button mat-stroked-button color="primary" (click)="onRecalculateActivities()">
+            Recalculate stats on all activities
+          </button>
+        </div>
+        <div class="mat-title">Clean / Reset</div>
+        <div>
+          <button mat-stroked-button color="primary" (click)="onSyncedBackupClear()">
+            Delete athlete's activities
+          </button>
+        </div>
+        <div>
+          <button mat-stroked-button color="primary" (click)="onUserSettingsReset()">
+            Reset athlete & global settings
+          </button>
+        </div>
+        <div>
+          <button mat-stroked-button color="primary" (click)="onFullAppReset()">Full application reset</button>
+        </div>
+        <div class="mat-title">Debugging</div>
+        <div>
+          <button mat-stroked-button color="primary" (click)="openLogsFolder()">Open logs folder</button>
+        </div>
+        <div class="mat-title">Others</div>
+        <div>
+          <button mat-stroked-button color="primary" (click)="openAppDataFolder()">
+            Open user program data folder
+          </button>
+        </div>
+        <div>
+          <button mat-stroked-button color="primary" (click)="openAppExecFolder()">
+            Open executable program folder
+          </button>
+        </div>
+        <div>
+          <button mat-stroked-button color="primary" (click)="onRestart()">Restart app</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  `,
+  styles: [
+    `
+      button {
+        width: 300px;
+      }
 
-            div {
-                padding-top: 10px;
-                padding-bottom: 10px;
-            }
-        `,
-    ],
+      div {
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+    `,
+  ],
 })
 export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
-    constructor(
-        public readonly userSettingsService: UserSettingsService,
-        public readonly activityService: ActivityService,
-        public readonly athleteService: AthleteService,
-        public readonly syncService: SyncService<any>,
-        public readonly electronService: ElectronService,
-        public readonly dialog: MatDialog,
-        public readonly snackBar: MatSnackBar
-    ) {
-        super(syncService, dialog, snackBar);
-    }
+  constructor(
+    public readonly userSettingsService: UserSettingsService,
+    public readonly activityService: ActivityService,
+    public readonly athleteService: AthleteService,
+    public readonly syncService: SyncService<any>,
+    public readonly electronService: ElectronService,
+    public readonly dialog: MatDialog,
+    public readonly snackBar: MatSnackBar
+  ) {
+    super(syncService, dialog, snackBar);
+  }
 
-    public onUserSettingsReset(): void {
-        const data: ConfirmDialogDataModel = {
-            title: "Reset settings",
-            content:
-                "This will reset your settings to defaults including: dated athlete settings and global settings. Are you sure to perform this action?",
-        };
+  public onUserSettingsReset(): void {
+    const data: ConfirmDialogDataModel = {
+      title: "Reset settings",
+      content:
+        "This will reset your settings to defaults including: dated athlete settings and global settings. Are you sure to perform this action?",
+    };
 
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            minWidth: ConfirmDialogComponent.MIN_WIDTH,
-            maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-            data: data,
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      minWidth: ConfirmDialogComponent.MIN_WIDTH,
+      maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+      data: data,
+    });
+
+    const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+      if (confirm) {
+        Promise.all([this.userSettingsService.reset(), this.athleteService.resetSettings()]).then(() => {
+          this.snackBar.open("Settings have been reset", "Close");
+          afterClosedSubscription.unsubscribe();
         });
+      }
+    });
+  }
 
-        const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
-            if (confirm) {
-                Promise.all([this.userSettingsService.reset(), this.athleteService.resetSettings()]).then(() => {
-                    this.snackBar.open("Settings have been reset", "Close");
-                    afterClosedSubscription.unsubscribe();
-                });
-            }
+  public onRecalculateActivities(): void {
+    const data: ConfirmDialogDataModel = {
+      title: "Recalculate stats on all activities",
+      content:
+        "This will recompute stats on all your activities based on your current dated athlete settings and sensors' streams of each activity.",
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      minWidth: ConfirmDialogComponent.MIN_WIDTH,
+      maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+      data: data,
+    });
+
+    dialogRef.afterClosed().subscribe((confirm: boolean) => {
+      if (confirm) {
+        this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
+          (this.activityService as DesktopActivityService).bulkRefreshStatsAll(userSettingsModel);
         });
-    }
+      }
+    });
+  }
 
-    public onRecalculateActivities(): void {
-        const data: ConfirmDialogDataModel = {
-            title: "Recalculate stats on all activities",
-            content:
-                "This will recompute stats on all your activities based on your current dated athlete settings and sensors' streams of each activity.",
-        };
+  public onFullAppReset(): void {
+    const data: ConfirmDialogDataModel = {
+      title: "App reset",
+      content:
+        'This will completely delete all the data generated by the application to reach a "fresh install" state. Are you sure to perform this action?',
+    };
 
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            minWidth: ConfirmDialogComponent.MIN_WIDTH,
-            maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-            data: data,
-        });
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      minWidth: ConfirmDialogComponent.MIN_WIDTH,
+      maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+      data: data,
+    });
 
-        dialogRef.afterClosed().subscribe((confirm: boolean) => {
-            if (confirm) {
-                this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
-                    (this.activityService as DesktopActivityService).bulkRefreshStatsAll(userSettingsModel);
-                });
-            }
-        });
-    }
+    dialogRef.afterClosed().subscribe((confirm: boolean) => {
+      if (confirm) {
+        this.electronService.clearAppDataAndRestart();
+      }
+    });
+  }
 
-    public onFullAppReset(): void {
-        const data: ConfirmDialogDataModel = {
-            title: "App reset",
-            content:
-                'This will completely delete all the data generated by the application to reach a "fresh install" state. Are you sure to perform this action?',
-        };
+  public openLogsFolder(): void {
+    this.electronService.openLogsFolder();
+  }
 
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            minWidth: ConfirmDialogComponent.MIN_WIDTH,
-            maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-            data: data,
-        });
+  public openAppDataFolder(): void {
+    this.electronService.openAppDataFolder();
+  }
 
-        dialogRef.afterClosed().subscribe((confirm: boolean) => {
-            if (confirm) {
-                this.electronService.clearAppDataAndRestart();
-            }
-        });
-    }
+  public openAppExecFolder(): void {
+    this.electronService.openAppExecFolder();
+  }
 
-    public openLogsFolder(): void {
-        this.electronService.openLogsFolder();
-    }
+  public onZoneSettingsReset(): void {
+    throw new Error("Method onZoneSettingsReset not implemented.");
+  }
 
-    public openAppDataFolder(): void {
-        this.electronService.openAppDataFolder();
-    }
-
-    public openAppExecFolder(): void {
-        this.electronService.openAppExecFolder();
-    }
-
-    public onZoneSettingsReset(): void {
-        throw new Error("Method onZoneSettingsReset not implemented.");
-    }
-
-    public onRestart(): void {
-        this.electronService.restartApp();
-    }
+  public onRestart(): void {
+    this.electronService.restartApp();
+  }
 }

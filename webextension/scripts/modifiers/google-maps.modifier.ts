@@ -8,388 +8,386 @@ import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 import MapOptions = google.maps.MapOptions;
 
 export class GoogleMapsModifier extends AbstractModifier {
-    // Disabled at the moment (Not free any more).
-    // Both settings keys 'reviveGoogleMaps' & 'reviveGoogleMapsLayerType' are hidden in GlobalSettingsService
-    private static ENABLED = false;
+  // Disabled at the moment (Not free any more).
+  // Both settings keys 'reviveGoogleMaps' & 'reviveGoogleMapsLayerType' are hidden in GlobalSettingsService
+  private static ENABLED = false;
 
-    protected activityId: number;
-    protected appResources: AppResourcesModel;
-    protected userSettings: ExtensionUserSettingsModel;
-    protected pathArray: number[][];
-    protected map: google.maps.Map;
+  protected activityId: number;
+  protected appResources: AppResourcesModel;
+  protected userSettings: ExtensionUserSettingsModel;
+  protected pathArray: number[][];
+  protected map: google.maps.Map;
 
-    constructor(activityId: number, appResources: AppResourcesModel, userSettings: ExtensionUserSettingsModel) {
-        super();
-        this.activityId = activityId;
-        this.appResources = appResources;
-        this.userSettings = userSettings;
+  constructor(activityId: number, appResources: AppResourcesModel, userSettings: ExtensionUserSettingsModel) {
+    super();
+    this.activityId = activityId;
+    this.appResources = appResources;
+    this.userSettings = userSettings;
+  }
+
+  public modify(): void {
+    // Skip modify if analysis section is watched
+    if (this.isAnalysisSection()) {
+      console.log("[GoogleMapsModifier] Skipping Analysis Section");
+      return;
     }
 
-    public modify(): void {
-        // Skip modify if analysis section is watched
-        if (this.isAnalysisSection()) {
-            console.log("[GoogleMapsModifier] Skipping Analysis Section");
-            return;
-        }
-
-        if (!GoogleMapsModifier.ENABLED) {
-            this.placeNoGoogleMapsAvailableInfo();
-            return;
-        }
-
-        // Next load the Google API from external
-        this.getGoogleMapsApi();
-
-        this.googleMapsApiLoaded(this.activityId);
-
-        // If segment Item has been clicked then fetch info on segment and display
-        /*
-         let self = this;
-         $('[data-segment-effort-id]').click(function() {
-         let effortIdClicked = $(this).attr('data-segment-effort-id');
-         self.fetchSegmentInfoAndDisplayWithGoogleMap(self.pathArray, effortIdClicked);
-         });
-         */
+    if (!GoogleMapsModifier.ENABLED) {
+      this.placeNoGoogleMapsAvailableInfo();
+      return;
     }
 
-    public getEffortId(): number {
-        return parseInt(window.location.pathname.split("/")[4] || window.location.hash.replace("#", ""), 2) || null;
-    }
+    // Next load the Google API from external
+    this.getGoogleMapsApi();
 
-    public isAnalysisSection(): boolean {
-        return !_.isEmpty(window.location.pathname.match("analysis"));
-    }
+    this.googleMapsApiLoaded(this.activityId);
 
-    protected googleMapsApiLoaded(activityId: number): boolean {
+    // If segment Item has been clicked then fetch info on segment and display
+    /*
+     let self = this;
+     $('[data-segment-effort-id]').click(function() {
+     let effortIdClicked = $(this).attr('data-segment-effort-id');
+     self.fetchSegmentInfoAndDisplayWithGoogleMap(self.pathArray, effortIdClicked);
+     });
+     */
+  }
+
+  public getEffortId(): number {
+    return parseInt(window.location.pathname.split("/")[4] || window.location.hash.replace("#", ""), 2) || null;
+  }
+
+  public isAnalysisSection(): boolean {
+    return !_.isEmpty(window.location.pathname.match("analysis"));
+  }
+
+  protected googleMapsApiLoaded(activityId: number): boolean {
+    // Place the gmaps buttons
+    this.placeGoogleMapsButtons(activityId);
+
+    // Handle case when user overview button
+    // If user click left overview button then reload gmap buttons placement
+    $('[data-menu="overview"]').click(() => {
+      // Execute at the end with set timeout
+      setTimeout(() => {
         // Place the gmaps buttons
         this.placeGoogleMapsButtons(activityId);
+      });
+    });
 
-        // Handle case when user overview button
-        // If user click left overview button then reload gmap buttons placement
-        $('[data-menu="overview"]').click(() => {
-            // Execute at the end with set timeout
-            setTimeout(() => {
-                // Place the gmaps buttons
-                this.placeGoogleMapsButtons(activityId);
-            });
-        });
+    // If user click left segment button (running ie) then reload gmap buttons placement
+    $('[data-menu="segments"]').click(() => {
+      // Execute at the end with set timeout
+      setTimeout(() => {
+        this.placeGoogleMapsButtons(activityId); // Place the gmaps buttons
+      });
+    });
 
-        // If user click left segment button (running ie) then reload gmap buttons placement
-        $('[data-menu="segments"]').click(() => {
-            // Execute at the end with set timeout
-            setTimeout(() => {
-                this.placeGoogleMapsButtons(activityId); // Place the gmaps buttons
-            });
-        });
+    return true;
+  }
 
-        return true;
+  protected showWaitLoadingMessage(): void {
+    $.fancybox(
+      '<div style="text-align: center; padding-top: 15px;"><img src="' + this.appResources.loadingIcon + '"/></div>',
+      {
+        autoScale: true,
+        closeBtn: false,
+      }
+    );
+  }
+
+  protected placeGoogleMapsButtons(activityId: number): void {
+    // Place show button over MapBox activity main map
+    this.placeMainGoogleMapButton(activityId);
+
+    // PLACE SEGMENT AREA BUTTON 'View in Google Maps'
+    this.placeSegmentAreaGoogleMapButton(activityId);
+  }
+
+  protected placeMainGoogleMapButton(activityId: number): void {
+    // Do not add Main Google Map Button if native strava map not displayed
+    if (!$("#map-canvas") || $("#map-canvas").is(":hidden") || $("#showInGoogleMap").length) {
+      return;
     }
 
-    protected showWaitLoadingMessage(): void {
-        $.fancybox(
-            '<div style="text-align: center; padding-top: 15px;"><img src="' +
-                this.appResources.loadingIcon +
-                '"/></div>',
-            {
-                autoScale: true,
-                closeBtn: false,
-            }
-        );
-    }
+    $("#map-canvas")
+      .before('<a class="button btn-block btn-primary" id="showInGoogleMap">View in Google Maps</a>')
+      .each(() => {
+        $("#showInGoogleMap").on("click", () => {
+          // Show loading message while loading gmaps and path
+          this.showWaitLoadingMessage();
 
-    protected placeGoogleMapsButtons(activityId: number): void {
-        // Place show button over MapBox activity main map
-        this.placeMainGoogleMapButton(activityId);
+          this.fetchPathFromStream(activityId, (pathArray: number[][]) => {
+            this.pathArray = pathArray;
 
-        // PLACE SEGMENT AREA BUTTON 'View in Google Maps'
-        this.placeSegmentAreaGoogleMapButton(activityId);
-    }
+            // Check if effort id is given
+            const effortId: number = this.getEffortId();
 
-    protected placeMainGoogleMapButton(activityId: number): void {
-        // Do not add Main Google Map Button if native strava map not displayed
-        if (!$("#map-canvas") || $("#map-canvas").is(":hidden") || $("#showInGoogleMap").length) {
-            return;
-        }
-
-        $("#map-canvas")
-            .before('<a class="button btn-block btn-primary" id="showInGoogleMap">View in Google Maps</a>')
-            .each(() => {
-                $("#showInGoogleMap").on("click", () => {
-                    // Show loading message while loading gmaps and path
-                    this.showWaitLoadingMessage();
-
-                    this.fetchPathFromStream(activityId, (pathArray: number[][]) => {
-                        this.pathArray = pathArray;
-
-                        // Check if effort id is given
-                        const effortId: number = this.getEffortId();
-
-                        if (effortId) {
-                            this.fetchSegmentInfoAndDisplayWithGoogleMap(this.pathArray, effortId);
-                        } else {
-                            this.displayGoogleMapWithPath(this.pathArray);
-                        }
-                    });
-                });
-            });
-    }
-
-    protected placeSegmentAreaGoogleMapButton(activityId: number): void {
-        // Listening for Segment Change visualization
-        if (!Strava.Labs) {
-            return;
-        }
-
-        const view: any = Strava.Labs.Activities.SegmentLeaderboardView;
-
-        if (!view) {
-            return;
-        }
-
-        const functionRender: Function = view.prototype.render;
-
-        const that = this;
-
-        view.prototype.render = function () {
-            const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
-
-            // Button already existing, skiping...
-            if ($("#showSegInGoogleMap").length) {
-                return;
-            }
-
-            let anchor: JQuery;
-
-            if ($(".effort-map")) {
-                // Try to attach segment button to effort map if cycling activity
-                anchor = $(".effort-map");
-            } else if ($("#map-canvas")) {
-                // Try to attach segment button to map canvas if running activity
-                anchor = $("#map-canvas");
+            if (effortId) {
+              this.fetchSegmentInfoAndDisplayWithGoogleMap(this.pathArray, effortId);
             } else {
-                anchor = null;
+              this.displayGoogleMapWithPath(this.pathArray);
             }
+          });
+        });
+      });
+  }
 
-            if (!anchor) {
-                console.error("No anchor found to attach segment google map button");
-            }
-
-            anchor
-                .before('<a class="button btn-block btn-primary" id="showSegInGoogleMap">View in Google Maps</a>')
-                .each(() => {
-                    $("#showSegInGoogleMap").on("click", () => {
-                        that.showWaitLoadingMessage();
-
-                        that.fetchPathFromStream(activityId, (pathArray: number[][]) => {
-                            that.pathArray = pathArray;
-
-                            // Check if effort id is given
-                            const effortId: number = that.getEffortId();
-
-                            if (effortId) {
-                                that.fetchSegmentInfoAndDisplayWithGoogleMap(that.pathArray, effortId);
-                            } else {
-                                console.error("Cannot display map: effortId not given");
-                            }
-                        });
-                    });
-                });
-
-            return r;
-        };
+  protected placeSegmentAreaGoogleMapButton(activityId: number): void {
+    // Listening for Segment Change visualization
+    if (!Strava.Labs) {
+      return;
     }
 
-    protected fetchPathFromStream(activityId: number, callback: (pathArray: number[][]) => void): void {
-        const streamPathUrl: string = "/activities/" + activityId + "/streams?stream_types[]=latlng";
-        $.ajax({
-            url: streamPathUrl,
-            dataType: "json",
-        }).done((jsonResponse: any) => {
-            callback(jsonResponse.latlng);
-        });
+    const view: any = Strava.Labs.Activities.SegmentLeaderboardView;
+
+    if (!view) {
+      return;
     }
 
-    protected fetchSegmentInfoFromEffortId(effortId: number, callback: (segmentInfoResponse: any) => void): void {
-        let segmentInfoResponse: any;
+    const functionRender: Function = view.prototype.render;
 
-        $.ajax({
-            url: "/segment_efforts/" + effortId,
-            type: "GET",
-            beforeSend: (xhr: JQueryXHR) => {
-                xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-            },
-            dataType: "json",
-            success: (xhrResponseText: string) => {
-                segmentInfoResponse = xhrResponseText;
-            },
-            error: (err: JQueryXHR) => {
-                console.error(err);
-            },
-        }).then(() => {
-            // Call Activity Processor with bounds
-            if (!segmentInfoResponse.start_index && segmentInfoResponse.end_index) {
-                console.error("No start_index end_index found for");
-            }
-            callback(segmentInfoResponse);
-        });
-    }
+    const that = this;
 
-    protected fetchSegmentInfoAndDisplayWithGoogleMap(pathArray: number[][], effortId: number): void {
-        // Display GoogleMap With Path And Segment Effort highlighted
-        this.fetchSegmentInfoFromEffortId(effortId, (segmentInfoResponse: any) => {
-            // Slice latlong array
-            this.displayGoogleMapWithPath(pathArray, [segmentInfoResponse.start_index, segmentInfoResponse.end_index]);
-        });
-    }
+    view.prototype.render = function () {
+      const r: any = functionRender.apply(this, Array.prototype.slice.call(arguments));
 
-    protected displayGoogleMapWithPath(mainPathArray: number[][], highlightFromTo?: number[]): void {
-        const mapSize: number[] = [window.innerWidth * 0.95, window.innerHeight * 0.875];
+      // Button already existing, skiping...
+      if ($("#showSegInGoogleMap").length) {
+        return;
+      }
 
-        const html: string =
-            '<div style="padding-bottom:10px; text-align:center;"><div style="height:' +
-            mapSize[1] +
-            "px;width:" +
-            mapSize[0] +
-            'px;" id="gmaps_canvas"></div><a target="_blank" href="' +
-            this.appResources.settingsLink +
-            '#/globalSettings?searchText=Google%20Maps">Go to extension settings if you want to set specific layer OR disable google maps buttons</a></div>';
+      let anchor: JQuery;
 
-        $.fancybox(html, {
-            autoScale: true,
-            transitionIn: "fade",
-            transitionOut: "fade",
-        });
+      if ($(".effort-map")) {
+        // Try to attach segment button to effort map if cycling activity
+        anchor = $(".effort-map");
+      } else if ($("#map-canvas")) {
+        // Try to attach segment button to map canvas if running activity
+        anchor = $("#map-canvas");
+      } else {
+        anchor = null;
+      }
 
-        // Test if exit then no append before
-        if (!$("#gmaps_canvas").length) {
-            $("#map-canvas")
-                .before(html)
-                .each(() => {
-                    this.applyToMap(mainPathArray, highlightFromTo);
-                });
-        } else {
-            this.applyToMap(mainPathArray, highlightFromTo);
-        }
-    }
+      if (!anchor) {
+        console.error("No anchor found to attach segment google map button");
+      }
 
-    protected applyToMap(mainPathArray: number[][], highlightFromTo: number[]): void {
-        let layerType: google.maps.MapTypeId;
+      anchor
+        .before('<a class="button btn-block btn-primary" id="showSegInGoogleMap">View in Google Maps</a>')
+        .each(() => {
+          $("#showSegInGoogleMap").on("click", () => {
+            that.showWaitLoadingMessage();
 
-        // If user layer settings value exist into Google Maps Layer Type then use it
-        switch (this.userSettings.reviveGoogleMapsLayerType.toUpperCase()) {
-            case "HYBRID":
-                layerType = google.maps.MapTypeId.HYBRID;
-                break;
-            case "ROADMAP":
-                layerType = google.maps.MapTypeId.ROADMAP;
-                break;
-            case "SATELLITE":
-                layerType = google.maps.MapTypeId.SATELLITE;
-                break;
-            case "TERRAIN":
-                layerType = google.maps.MapTypeId.TERRAIN;
-                break;
-            default:
-                layerType = google.maps.MapTypeId.TERRAIN;
-                break;
-        }
+            that.fetchPathFromStream(activityId, (pathArray: number[][]) => {
+              that.pathArray = pathArray;
 
-        // if (!this.map) {
-        this.map = new google.maps.Map(document.getElementById("gmaps_canvas"), {
-            mapTypeId: layerType,
-            overviewMapControl: true,
-        } as MapOptions);
-        // }
+              // Check if effort id is given
+              const effortId: number = that.getEffortId();
 
-        const points: google.maps.LatLng[] = [];
-        let bounds: google.maps.LatLngBounds = new google.maps.LatLngBounds();
-
-        _.forEach(mainPathArray, position => {
-            const point: google.maps.LatLng = new google.maps.LatLng(position[0], position[1]);
-            points.push(point);
-            bounds.extend(point);
-        });
-
-        const mainPathPoly: google.maps.Polyline = new google.maps.Polyline({
-            // use your own style here
-            path: points,
-            strokeColor: "#FF0000",
-            strokeOpacity: 0.7,
-            strokeWeight: 4,
-        });
-
-        // Set path to map
-        mainPathPoly.setMap(this.map);
-
-        // fit bounds to track
-        this.map.fitBounds(bounds);
-
-        if (highlightFromTo) {
-            const secondPathPoly: google.maps.Polyline = new google.maps.Polyline({
-                path: points.slice(highlightFromTo[0], highlightFromTo[1]),
-                strokeColor: "#105cb6",
-                strokeOpacity: 1,
-                strokeWeight: 4,
+              if (effortId) {
+                that.fetchSegmentInfoAndDisplayWithGoogleMap(that.pathArray, effortId);
+              } else {
+                console.error("Cannot display map: effortId not given");
+              }
             });
+          });
+        });
 
-            // Erase bounds and computed new ones with highlighted path
-            bounds = new google.maps.LatLngBounds();
-            _.forEach(mainPathArray.slice(highlightFromTo[0], highlightFromTo[1]), (position: number[]) => {
-                const p: google.maps.LatLng = new google.maps.LatLng(position[0], position[1]);
-                bounds.extend(p);
-            });
+      return r;
+    };
+  }
 
-            // Update with new bounds from highlighted path
-            this.map.fitBounds(bounds);
+  protected fetchPathFromStream(activityId: number, callback: (pathArray: number[][]) => void): void {
+    const streamPathUrl: string = "/activities/" + activityId + "/streams?stream_types[]=latlng";
+    $.ajax({
+      url: streamPathUrl,
+      dataType: "json",
+    }).done((jsonResponse: any) => {
+      callback(jsonResponse.latlng);
+    });
+  }
 
-            // Apply new poly line
-            secondPathPoly.setMap(this.map);
-        }
+  protected fetchSegmentInfoFromEffortId(effortId: number, callback: (segmentInfoResponse: any) => void): void {
+    let segmentInfoResponse: any;
+
+    $.ajax({
+      url: "/segment_efforts/" + effortId,
+      type: "GET",
+      beforeSend: (xhr: JQueryXHR) => {
+        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      },
+      dataType: "json",
+      success: (xhrResponseText: string) => {
+        segmentInfoResponse = xhrResponseText;
+      },
+      error: (err: JQueryXHR) => {
+        console.error(err);
+      },
+    }).then(() => {
+      // Call Activity Processor with bounds
+      if (!segmentInfoResponse.start_index && segmentInfoResponse.end_index) {
+        console.error("No start_index end_index found for");
+      }
+      callback(segmentInfoResponse);
+    });
+  }
+
+  protected fetchSegmentInfoAndDisplayWithGoogleMap(pathArray: number[][], effortId: number): void {
+    // Display GoogleMap With Path And Segment Effort highlighted
+    this.fetchSegmentInfoFromEffortId(effortId, (segmentInfoResponse: any) => {
+      // Slice latlong array
+      this.displayGoogleMapWithPath(pathArray, [segmentInfoResponse.start_index, segmentInfoResponse.end_index]);
+    });
+  }
+
+  protected displayGoogleMapWithPath(mainPathArray: number[][], highlightFromTo?: number[]): void {
+    const mapSize: number[] = [window.innerWidth * 0.95, window.innerHeight * 0.875];
+
+    const html: string =
+      '<div style="padding-bottom:10px; text-align:center;"><div style="height:' +
+      mapSize[1] +
+      "px;width:" +
+      mapSize[0] +
+      'px;" id="gmaps_canvas"></div><a target="_blank" href="' +
+      this.appResources.settingsLink +
+      '#/globalSettings?searchText=Google%20Maps">Go to extension settings if you want to set specific layer OR disable google maps buttons</a></div>';
+
+    $.fancybox(html, {
+      autoScale: true,
+      transitionIn: "fade",
+      transitionOut: "fade",
+    });
+
+    // Test if exit then no append before
+    if (!$("#gmaps_canvas").length) {
+      $("#map-canvas")
+        .before(html)
+        .each(() => {
+          this.applyToMap(mainPathArray, highlightFromTo);
+        });
+    } else {
+      this.applyToMap(mainPathArray, highlightFromTo);
+    }
+  }
+
+  protected applyToMap(mainPathArray: number[][], highlightFromTo: number[]): void {
+    let layerType: google.maps.MapTypeId;
+
+    // If user layer settings value exist into Google Maps Layer Type then use it
+    switch (this.userSettings.reviveGoogleMapsLayerType.toUpperCase()) {
+      case "HYBRID":
+        layerType = google.maps.MapTypeId.HYBRID;
+        break;
+      case "ROADMAP":
+        layerType = google.maps.MapTypeId.ROADMAP;
+        break;
+      case "SATELLITE":
+        layerType = google.maps.MapTypeId.SATELLITE;
+        break;
+      case "TERRAIN":
+        layerType = google.maps.MapTypeId.TERRAIN;
+        break;
+      default:
+        layerType = google.maps.MapTypeId.TERRAIN;
+        break;
     }
 
-    protected getGoogleMapsApi(): void {
-        const script_tag: HTMLScriptElement = document.createElement("script");
-        script_tag.setAttribute("type", "text/javascript");
-        script_tag.setAttribute("src", "https://maps.google.com/maps/api/js?sensor=false");
-        // script_tag.setAttribute("src", "https://maps.google.com/maps/api/js?sensor=false&callback=googleMapsApiLoaded");
-        (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
+    // if (!this.map) {
+    this.map = new google.maps.Map(document.getElementById("gmaps_canvas"), {
+      mapTypeId: layerType,
+      overviewMapControl: true,
+    } as MapOptions);
+    // }
+
+    const points: google.maps.LatLng[] = [];
+    let bounds: google.maps.LatLngBounds = new google.maps.LatLngBounds();
+
+    _.forEach(mainPathArray, position => {
+      const point: google.maps.LatLng = new google.maps.LatLng(position[0], position[1]);
+      points.push(point);
+      bounds.extend(point);
+    });
+
+    const mainPathPoly: google.maps.Polyline = new google.maps.Polyline({
+      // use your own style here
+      path: points,
+      strokeColor: "#FF0000",
+      strokeOpacity: 0.7,
+      strokeWeight: 4,
+    });
+
+    // Set path to map
+    mainPathPoly.setMap(this.map);
+
+    // fit bounds to track
+    this.map.fitBounds(bounds);
+
+    if (highlightFromTo) {
+      const secondPathPoly: google.maps.Polyline = new google.maps.Polyline({
+        path: points.slice(highlightFromTo[0], highlightFromTo[1]),
+        strokeColor: "#105cb6",
+        strokeOpacity: 1,
+        strokeWeight: 4,
+      });
+
+      // Erase bounds and computed new ones with highlighted path
+      bounds = new google.maps.LatLngBounds();
+      _.forEach(mainPathArray.slice(highlightFromTo[0], highlightFromTo[1]), (position: number[]) => {
+        const p: google.maps.LatLng = new google.maps.LatLng(position[0], position[1]);
+        bounds.extend(p);
+      });
+
+      // Update with new bounds from highlighted path
+      this.map.fitBounds(bounds);
+
+      // Apply new poly line
+      secondPathPoly.setMap(this.map);
+    }
+  }
+
+  protected getGoogleMapsApi(): void {
+    const script_tag: HTMLScriptElement = document.createElement("script");
+    script_tag.setAttribute("type", "text/javascript");
+    script_tag.setAttribute("src", "https://maps.google.com/maps/api/js?sensor=false");
+    // script_tag.setAttribute("src", "https://maps.google.com/maps/api/js?sensor=false&callback=googleMapsApiLoaded");
+    (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
+  }
+
+  private placeNoGoogleMapsAvailableInfo() {
+    // Do not add Main Google Map Button if native strava map not displayed
+    if (!$("#map-canvas") || $("#map-canvas").is(":hidden") || $("#showInGoogleMap").length) {
+      return;
     }
 
-    private placeNoGoogleMapsAvailableInfo() {
-        // Do not add Main Google Map Button if native strava map not displayed
-        if (!$("#map-canvas") || $("#map-canvas").is(":hidden") || $("#showInGoogleMap").length) {
-            return;
-        }
+    const dismissKey = "elevate_dismiss_no_gmaps_anymore";
+    const dismissKeyLink = dismissKey + "_link";
 
-        const dismissKey = "elevate_dismiss_no_gmaps_anymore";
-        const dismissKeyLink = dismissKey + "_link";
-
-        if (Cookies.get(dismissKey)) {
-            return;
-        }
-
-        const info =
-            "Google Maps feature provided by 'Elevate' extension is no longer available. This service is now too expensive to be displayed at the moment.";
-        const dismiss = "dismiss this message";
-        $("#map-canvas")
-            .before(
-                "<div id='" +
-                    dismissKey +
-                    "' style='text-align: center;padding: 5px;'>" +
-                    info +
-                    " <a id='" +
-                    dismissKeyLink +
-                    "'>[" +
-                    dismiss +
-                    "]</a></div>"
-            )
-            .each(() => {
-                $("#" + dismissKeyLink).click(() => {
-                    const date = new Date();
-                    date.setFullYear(date.getFullYear() + 1);
-                    Cookies.set(dismissKey, "true", { expires: date });
-                    $("#" + dismissKey).remove();
-                });
-            });
+    if (Cookies.get(dismissKey)) {
+      return;
     }
+
+    const info =
+      "Google Maps feature provided by 'Elevate' extension is no longer available. This service is now too expensive to be displayed at the moment.";
+    const dismiss = "dismiss this message";
+    $("#map-canvas")
+      .before(
+        "<div id='" +
+          dismissKey +
+          "' style='text-align: center;padding: 5px;'>" +
+          info +
+          " <a id='" +
+          dismissKeyLink +
+          "'>[" +
+          dismiss +
+          "]</a></div>"
+      )
+      .each(() => {
+        $("#" + dismissKeyLink).click(() => {
+          const date = new Date();
+          date.setFullYear(date.getFullYear() + 1);
+          Cookies.set(dismissKey, "true", { expires: date });
+          $("#" + dismissKey).remove();
+        });
+      });
+  }
 }

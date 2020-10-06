@@ -7,13 +7,13 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Injectable()
 export class UserSettingsDao extends BaseDao<UserSettingsModel> {
-    public static readonly COLLECTION_DEF: CollectionDef<UserSettingsModel> = new CollectionDef("userSettings", null);
+  public static readonly COLLECTION_DEF: CollectionDef<UserSettingsModel> = new CollectionDef("userSettings", null);
 
-    public getCollectionDef(): CollectionDef<UserSettingsModel> {
-        return UserSettingsDao.COLLECTION_DEF;
-    }
+  public getCollectionDef(): CollectionDef<UserSettingsModel> {
+    return UserSettingsDao.COLLECTION_DEF;
+  }
 
-    public getDefaultStorageValue(): UserSettingsModel {
-        return UserSettings.getDefaultsByEnvTarget(environment.target);
-    }
+  public getDefaultStorageValue(): UserSettingsModel {
+    return UserSettings.getDefaultsByEnvTarget(environment.target);
+  }
 }

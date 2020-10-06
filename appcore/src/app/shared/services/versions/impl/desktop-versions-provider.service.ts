@@ -7,70 +7,70 @@ import { PropertiesDao } from "../../../dao/properties/properties.dao";
 
 @Injectable()
 export class DesktopVersionsProvider implements VersionsProvider {
-    constructor(public readonly httpClient: HttpClient, public readonly propertiesDao: PropertiesDao) {}
+  constructor(public readonly httpClient: HttpClient, public readonly propertiesDao: PropertiesDao) {}
 
-    private static getGithubReleaseApiUrl(packageManifest: any) {
-        return `https://api.github.com/repos/${packageManifest.build.publish.owner}/${packageManifest.build.publish.repo}/releases`;
-    }
+  private static getGithubReleaseApiUrl(packageManifest: any) {
+    return `https://api.github.com/repos/${packageManifest.build.publish.owner}/${packageManifest.build.publish.repo}/releases`;
+  }
 
-    public getPackageVersion(): Promise<string> {
-        const desktopPackageJson = this.packageManifest();
-        return Promise.resolve(desktopPackageJson.version);
-    }
+  public getPackageVersion(): Promise<string> {
+    const desktopPackageJson = this.packageManifest();
+    return Promise.resolve(desktopPackageJson.version);
+  }
 
-    public getExistingVersion(): Promise<string> {
-        return this.propertiesDao.findOne().then(properties => {
-            return Promise.resolve(properties.existingVersion);
-        });
-    }
+  public getExistingVersion(): Promise<string> {
+    return this.propertiesDao.findOne().then(properties => {
+      return Promise.resolve(properties.existingVersion);
+    });
+  }
 
-    public setExistingVersion(version: string): Promise<void> {
-        return this.propertiesDao
-            .findOne()
-            .then(properties => {
-                properties.existingVersion = version;
-                return this.propertiesDao.update(properties, true);
-            })
-            .then(() => Promise.resolve());
-    }
+  public setExistingVersion(version: string): Promise<void> {
+    return this.propertiesDao
+      .findOne()
+      .then(properties => {
+        properties.existingVersion = version;
+        return this.propertiesDao.update(properties, true);
+      })
+      .then(() => Promise.resolve());
+  }
 
-    public getRemoteVersion(): Promise<string> {
-        const packageManifest = this.packageManifest() as any;
-        const githubReleaseApiUrl = DesktopVersionsProvider.getGithubReleaseApiUrl(packageManifest);
-        return this.httpClient
-            .get<object[]>(githubReleaseApiUrl)
-            .toPromise()
-            .then(
-                (release: any[]) => {
-                    if (release && _.isArray(release) && release.length > 0) {
-                        const latestRelease = release[0];
-                        if (!latestRelease.draft && !latestRelease.prerelease && latestRelease.name) {
-                            return Promise.resolve(latestRelease.name);
-                        }
-                    }
-                    return Promise.resolve(null);
-                },
-                err => {
-                    return Promise.reject(err);
-                }
-            );
-    }
+  public getRemoteVersion(): Promise<string> {
+    const packageManifest = this.packageManifest() as any;
+    const githubReleaseApiUrl = DesktopVersionsProvider.getGithubReleaseApiUrl(packageManifest);
+    return this.httpClient
+      .get<object[]>(githubReleaseApiUrl)
+      .toPromise()
+      .then(
+        (release: any[]) => {
+          if (release && _.isArray(release) && release.length > 0) {
+            const latestRelease = release[0];
+            if (!latestRelease.draft && !latestRelease.prerelease && latestRelease.name) {
+              return Promise.resolve(latestRelease.name);
+            }
+          }
+          return Promise.resolve(null);
+        },
+        err => {
+          return Promise.reject(err);
+        }
+      );
+  }
 
-    public getLatestReleaseUrl(): string {
-        const packageManifest = this.packageManifest() as any;
-        return `https://github.com/${packageManifest.build.publish.owner}/${packageManifest.build.publish.repo}/releases/latest`;
-    }
+  public getLatestReleaseUrl(): string {
+    const packageManifest = this.packageManifest() as any;
+    return `https://github.com/${packageManifest.build.publish.owner}/${packageManifest.build.publish.repo}/releases/latest`;
+  }
 
-    public getBuildMetadata(): Promise<{ commit: string; date: string }> {
-        const buildMetadata = require("../../../../../../../desktop/build_metadata.json");
-        return Promise.resolve(buildMetadata as { commit: string; date: string });
-    }
+  public getBuildMetadata(): Promise<{ commit: string; date: string }> {
+    const buildMetadata = require("../../../../../../../desktop/build_metadata.json");
+    return Promise.resolve(buildMetadata as { commit: string; date: string });
+  }
 
-    public getWrapperVersion(): string {
-        return "Electron " + process.versions.electron;
-    }
+  public getWrapperVersion(): string {
+    return "Electron " + process.versions.electron;
+  }
 
-    public packageManifest(): PackageManifest {
-        return require("../../../../../../../desktop/package.json") as PackageManifest;
-    }
+  public packageManifest(): PackageManifest {
+    return require("../../../../../../../desktop/package.json") as PackageManifest;
+  }
 }

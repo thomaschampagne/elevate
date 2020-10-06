@@ -1,105 +1,105 @@
 <h2 mat-dialog-title>Load presets and targets</h2>
 <mat-dialog-content class="mat-body-1">
 
-    <div *ngIf="(yearProgressPresetModels && yearProgressPresetModels.length === 0)">
-        No saved presets
-    </div>
+  <div *ngIf="(yearProgressPresetModels && yearProgressPresetModels.length === 0)">
+    No saved presets
+  </div>
 
-    <mat-table *ngIf="(yearProgressPresetModels && yearProgressPresetModels.length > 0)" [dataSource]="dataSource"
-               matSort>
+  <mat-table *ngIf="(yearProgressPresetModels && yearProgressPresetModels.length > 0)" [dataSource]="dataSource"
+             matSort>
 
-        <ng-container matColumnDef="progressMode">
-            <mat-header-cell *matHeaderCellDef [ngClass]="'progressMode'">Progress Mode</mat-header-cell>
-            <mat-cell *matCellDef="let yearProgressPresetModel">
-                <span *ngIf="yearProgressPresetModel.mode === ProgressMode.YEAR_TO_DATE">Year to date</span>
-                <span *ngIf="yearProgressPresetModel.mode === ProgressMode.ROLLING">Rolling</span>
-            </mat-cell>
-        </ng-container>
+    <ng-container matColumnDef="progressMode">
+      <mat-header-cell *matHeaderCellDef [ngClass]="'progressMode'">Progress Mode</mat-header-cell>
+      <mat-cell *matCellDef="let yearProgressPresetModel">
+        <span *ngIf="yearProgressPresetModel.mode === ProgressMode.YEAR_TO_DATE">Year to date</span>
+        <span *ngIf="yearProgressPresetModel.mode === ProgressMode.ROLLING">Rolling</span>
+      </mat-cell>
+    </ng-container>
 
-        <ng-container matColumnDef="rollingPeriod">
-            <mat-header-cell *matHeaderCellDef>Rolling Period</mat-header-cell>
-            <mat-cell *matCellDef="let yearProgressPresetModel">
-                <span *ngIf="yearProgressPresetModel.mode === ProgressMode.YEAR_TO_DATE">n/a</span>
-                <span
-                    *ngIf="yearProgressPresetModel.mode === ProgressMode.ROLLING">{{yearProgressPresetModel.rollingPeriod}}</span>
-            </mat-cell>
-        </ng-container>
+    <ng-container matColumnDef="rollingPeriod">
+      <mat-header-cell *matHeaderCellDef>Rolling Period</mat-header-cell>
+      <mat-cell *matCellDef="let yearProgressPresetModel">
+        <span *ngIf="yearProgressPresetModel.mode === ProgressMode.YEAR_TO_DATE">n/a</span>
+        <span
+          *ngIf="yearProgressPresetModel.mode === ProgressMode.ROLLING">{{yearProgressPresetModel.rollingPeriod}}</span>
+      </mat-cell>
+    </ng-container>
 
-        <ng-container matColumnDef="periodMultiplier">
-            <mat-header-cell *matHeaderCellDef>Period Multiplier</mat-header-cell>
-            <mat-cell *matCellDef="let yearProgressPresetModel">
-                <span *ngIf="yearProgressPresetModel.mode === ProgressMode.YEAR_TO_DATE">n/a</span>
-                <span
-                    *ngIf="yearProgressPresetModel.mode === ProgressMode.ROLLING">{{yearProgressPresetModel.periodMultiplier}}</span>
-            </mat-cell>
-        </ng-container>
+    <ng-container matColumnDef="periodMultiplier">
+      <mat-header-cell *matHeaderCellDef>Period Multiplier</mat-header-cell>
+      <mat-cell *matCellDef="let yearProgressPresetModel">
+        <span *ngIf="yearProgressPresetModel.mode === ProgressMode.YEAR_TO_DATE">n/a</span>
+        <span
+          *ngIf="yearProgressPresetModel.mode === ProgressMode.ROLLING">{{yearProgressPresetModel.periodMultiplier}}</span>
+      </mat-cell>
+    </ng-container>
 
-        <ng-container matColumnDef="progressType">
-            <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
-            <mat-cell *matCellDef="let yearProgressPresetModel">
-                {{progressTypeLabel(yearProgressPresetModel.progressType)}}
-            </mat-cell>
-        </ng-container>
+    <ng-container matColumnDef="progressType">
+      <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
+      <mat-cell *matCellDef="let yearProgressPresetModel">
+        {{progressTypeLabel(yearProgressPresetModel.progressType)}}
+      </mat-cell>
+    </ng-container>
 
-        <ng-container matColumnDef="activityTypes">
-            <mat-header-cell *matHeaderCellDef [ngClass]="'activityTypesColumn'">Activity Types</mat-header-cell>
-            <mat-cell *matCellDef="let yearProgressPresetModel" [ngClass]="'activityTypesColumn'">
-                {{yearProgressPresetModel.activityTypes.join(", ")}}
-            </mat-cell>
-        </ng-container>
+    <ng-container matColumnDef="activityTypes">
+      <mat-header-cell *matHeaderCellDef [ngClass]="'activityTypesColumn'">Activity Types</mat-header-cell>
+      <mat-cell *matCellDef="let yearProgressPresetModel" [ngClass]="'activityTypesColumn'">
+        {{yearProgressPresetModel.activityTypes.join(", ")}}
+      </mat-cell>
+    </ng-container>
 
-        <ng-container matColumnDef="includeCommuteRide">
-            <mat-header-cell *matHeaderCellDef>Commute</mat-header-cell>
-            <mat-cell *matCellDef="let yearProgressPresetModel">
-                {{(yearProgressPresetModel.includeCommuteRide) ? "Yes" : "No" }}
-            </mat-cell>
-        </ng-container>
+    <ng-container matColumnDef="includeCommuteRide">
+      <mat-header-cell *matHeaderCellDef>Commute</mat-header-cell>
+      <mat-cell *matCellDef="let yearProgressPresetModel">
+        {{(yearProgressPresetModel.includeCommuteRide) ? "Yes" : "No" }}
+      </mat-cell>
+    </ng-container>
 
-        <ng-container matColumnDef="includeIndoorRide">
-            <mat-header-cell *matHeaderCellDef>Indoor</mat-header-cell>
-            <mat-cell *matCellDef="let yearProgressPresetModel">
-                {{(yearProgressPresetModel.includeIndoorRide) ? "Yes" : "No" }}
-            </mat-cell>
-        </ng-container>
+    <ng-container matColumnDef="includeIndoorRide">
+      <mat-header-cell *matHeaderCellDef>Indoor</mat-header-cell>
+      <mat-cell *matCellDef="let yearProgressPresetModel">
+        {{(yearProgressPresetModel.includeIndoorRide) ? "Yes" : "No" }}
+      </mat-cell>
+    </ng-container>
 
-        <ng-container matColumnDef="targetValue">
-            <mat-header-cell *matHeaderCellDef>Target Value</mat-header-cell>
-            <mat-cell *matCellDef="let yearProgressPresetModel">
-                {{(yearProgressPresetModel.targetValue) ? yearProgressPresetModel.targetValue +
-                ' ' + progressTypeShortUnit(yearProgressPresetModel.progressType) : '-'}}
-            </mat-cell>
-        </ng-container>
+    <ng-container matColumnDef="targetValue">
+      <mat-header-cell *matHeaderCellDef>Target Value</mat-header-cell>
+      <mat-cell *matCellDef="let yearProgressPresetModel">
+        {{(yearProgressPresetModel.targetValue) ? yearProgressPresetModel.targetValue +
+        ' ' + progressTypeShortUnit(yearProgressPresetModel.progressType) : '-'}}
+      </mat-cell>
+    </ng-container>
 
-        <ng-container matColumnDef="load">
-            <mat-header-cell *matHeaderCellDef [ngClass]="'loadColumn'"></mat-header-cell>
-            <mat-cell *matCellDef="let yearProgressPresetModel;" [ngClass]="'loadColumn'">
-                <button (click)="onLoad(yearProgressPresetModel.id)" mat-icon-button
-                        matTooltip="Load preset">
-                    <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
-                </button>
-            </mat-cell>
-        </ng-container>
+    <ng-container matColumnDef="load">
+      <mat-header-cell *matHeaderCellDef [ngClass]="'loadColumn'"></mat-header-cell>
+      <mat-cell *matCellDef="let yearProgressPresetModel;" [ngClass]="'loadColumn'">
+        <button (click)="onLoad(yearProgressPresetModel.id)" mat-icon-button
+                matTooltip="Load preset">
+          <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
 
-        <ng-container matColumnDef="delete">
-            <mat-header-cell *matHeaderCellDef [ngClass]="'deleteColumn'"></mat-header-cell>
-            <mat-cell *matCellDef="let yearProgressPresetModel;" [ngClass]="'deleteColumn'">
-                <button (click)="onDelete(yearProgressPresetModel.id)"
-                        mat-icon-button
-                        matTooltip="Delete preset">
-                    <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
-                </button>
-            </mat-cell>
-        </ng-container>
+    <ng-container matColumnDef="delete">
+      <mat-header-cell *matHeaderCellDef [ngClass]="'deleteColumn'"></mat-header-cell>
+      <mat-cell *matCellDef="let yearProgressPresetModel;" [ngClass]="'deleteColumn'">
+        <button (click)="onDelete(yearProgressPresetModel.id)"
+                mat-icon-button
+                matTooltip="Delete preset">
+          <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
-    </mat-table>
+  </mat-table>
 
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button (click)="onBackClicked()" color="primary" mat-stroked-button>
-        Back
-    </button>
+  <button (click)="onBackClicked()" color="primary" mat-stroked-button>
+    Back
+  </button>
 </mat-dialog-actions>
 

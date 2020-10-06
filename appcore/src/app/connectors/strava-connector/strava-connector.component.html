@@ -1,251 +1,253 @@
 <mat-card>
-    <mat-card-title>
-        Strava
-    </mat-card-title>
-    <mat-card-subtitle>
-        <span *ngIf="!stravaConnectorInfo || !stravaConnectorInfo.accessToken">Not configured. </span>
-        <span *ngIf="stravaConnectorInfo && stravaConnectorInfo.accessToken">
+  <mat-card-title>
+    Strava
+  </mat-card-title>
+  <mat-card-subtitle>
+    <span *ngIf="!stravaConnectorInfo || !stravaConnectorInfo.accessToken">Not configured. </span>
+    <span *ngIf="stravaConnectorInfo && stravaConnectorInfo.accessToken">
 			Connected as {{stravaConnectorInfo.stravaAccount.firstname}} {{stravaConnectorInfo.stravaAccount.lastname}}
-            (id: {{stravaConnectorInfo.stravaAccount.id}}).
+      (id: {{stravaConnectorInfo.stravaAccount.id}}).
 		</span>
-        <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
-    </mat-card-subtitle>
-    <mat-card-content>
-        <div *ngIf="showHowTo">
-            <div class="mat-title">
-                How to get your client Id & secret:
-            </div>
-            <div>
-                To connect to Strava you will need to create <strong>your own</strong> "Strava API Application"
-                using your dummy or real Strava account. After this you will be able to synchronize the Strava
-                account of your choice by connecting it to your "Strava API Application" just created. It's not
-                rocket science, <strong>just follow below easy steps</strong>:
-            </div>
-            <ol *ngIf="generatedStravaApiApplication">
-                <li>Open your default web browser and connect to <a
-                    href="https://www.strava.com">www.strava.com</a>
-                    with a dummy or real Strava account.
-                </li>
-                <li>
-                    Open the "Strava API Application" page available here: <a
-                    href="https://www.strava.com/settings/api">https://www.strava.com/settings/api</a>
-                </li>
-                <li>
-                    <div>
-                        Enter application information requested. To help you, here's random app information you can
-                        use:
-                    </div>
-                    <table>
-                        <tr>
-                            <td><strong>Application Name:</strong></td>
-                            <td>Enter
-                                <button (cbOnSuccess)="onClipBoardSaved($event)" [cbContent]="generatedStravaApiApplication.appName" color="primary"
-                                        mat-button
-                                        matTooltip="Click to copy to clipboard"
-                                        matTooltipPosition="above"
-                                        ngxClipboard>{{generatedStravaApiApplication.appName}}</button>
-                                or something of your choice...
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Category:</strong></td>
-                            <td>
-                                <mat-chip-list>Select
-                                    <mat-chip>Performance Analysis</mat-chip>
-                                    or
-                                    <mat-chip>Training</mat-chip>
-                                    or
-                                    <mat-chip>Visualizer</mat-chip>
-                                    option.
-                                </mat-chip-list>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Club:</strong></td>
-                            <td>Something of your choice... or nothing</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Website:</strong></td>
-                            <td>
-                                Enter
-                                <button (cbOnSuccess)="onClipBoardSaved($event)" [cbContent]="generatedStravaApiApplication.webSite" color="primary"
-                                        mat-button
-                                        matTooltip="Click to copy to clipboard"
-                                        matTooltipPosition="above"
-                                        ngxClipboard>{{generatedStravaApiApplication.webSite}}</button>
-                                or something of your choice or your own website...
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Application Description:</strong></td>
-                            <td>Something of your choice... or nothing</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Authorization Callback Domain:</strong></td>
-                            <td>
-                                <button (cbOnSuccess)="onClipBoardSaved($event)" cbContent="localhost" color="primary"
-                                        mat-button
-                                        matTooltip="Click to copy to clipboard"
-                                        matTooltipPosition="above"
-                                        ngxClipboard>localhost
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
-                    <button (click)="refreshRandomStravaApiApplication()" color="primary" mat-button>Re-generate
-                        random App
-                    </button>
-                </li>
-                <li>
-                    Now create application once you agree with <a href="https://www.strava.com/legal/api">Strava's
-                    API Agreement</a>. <u>You are responsible of the application you are going to create</u>
-                </li>
-                <li>
-                    You will be now prompted for an App Icon. You can download <a #appIconDlLink
-                                                                                  (click)="appIconDlLink.href = appIcon.toDataURL('image/png')"
-                                                                                  download="{{generatedStravaApiApplication.imageFileName}}">this
-                    generated app icon</a> or use your own.
-                    <canvas #appIcon height="124" hidden id="appIcon" width="124"></canvas>
-                </li>
-                <li>
-                    Upload your app icon.
-                </li>
-                <li>
-                    Open <a href="https://www.strava.com/settings/api">https://www.strava.com/settings/api</a> back.
-                </li>
-                <li>
-                    Copy-paste the <strong>Client ID</strong> and <strong>Client Secret</strong> to the connector
-                    configuration just below.
-                </li>
-                <li>
-                    Click "Connect to Strava" button, then logon with the Strava account you want to synchronize
-                    with
-                    Elevate.
-                </li>
-            </ol>
+    <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <div *ngIf="showHowTo">
+      <div class="mat-title">
+        How to get your client Id & secret:
+      </div>
+      <div>
+        To connect to Strava you will need to create <strong>your own</strong> "Strava API Application"
+        using your dummy or real Strava account. After this you will be able to synchronize the Strava
+        account of your choice by connecting it to your "Strava API Application" just created. It's not
+        rocket science, <strong>just follow below easy steps</strong>:
+      </div>
+      <ol *ngIf="generatedStravaApiApplication">
+        <li>Open your default web browser and connect to <a
+          href="https://www.strava.com">www.strava.com</a>
+          with a dummy or real Strava account.
+        </li>
+        <li>
+          Open the "Strava API Application" page available here: <a
+          href="https://www.strava.com/settings/api">https://www.strava.com/settings/api</a>
+        </li>
+        <li>
+          <div>
+            Enter application information requested. To help you, here's random app information you can
+            use:
+          </div>
+          <table>
+            <tr>
+              <td><strong>Application Name:</strong></td>
+              <td>Enter
+                <button (cbOnSuccess)="onClipBoardSaved($event)" [cbContent]="generatedStravaApiApplication.appName"
+                        color="primary"
+                        mat-button
+                        matTooltip="Click to copy to clipboard"
+                        matTooltipPosition="above"
+                        ngxClipboard>{{generatedStravaApiApplication.appName}}</button>
+                or something of your choice...
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Category:</strong></td>
+              <td>
+                <mat-chip-list>Select
+                  <mat-chip>Performance Analysis</mat-chip>
+                  or
+                  <mat-chip>Training</mat-chip>
+                  or
+                  <mat-chip>Visualizer</mat-chip>
+                  option.
+                </mat-chip-list>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Club:</strong></td>
+              <td>Something of your choice... or nothing</td>
+            </tr>
+            <tr>
+              <td><strong>Website:</strong></td>
+              <td>
+                Enter
+                <button (cbOnSuccess)="onClipBoardSaved($event)" [cbContent]="generatedStravaApiApplication.webSite"
+                        color="primary"
+                        mat-button
+                        matTooltip="Click to copy to clipboard"
+                        matTooltipPosition="above"
+                        ngxClipboard>{{generatedStravaApiApplication.webSite}}</button>
+                or something of your choice or your own website...
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Application Description:</strong></td>
+              <td>Something of your choice... or nothing</td>
+            </tr>
+            <tr>
+              <td><strong>Authorization Callback Domain:</strong></td>
+              <td>
+                <button (cbOnSuccess)="onClipBoardSaved($event)" cbContent="localhost" color="primary"
+                        mat-button
+                        matTooltip="Click to copy to clipboard"
+                        matTooltipPosition="above"
+                        ngxClipboard>localhost
+                </button>
+              </td>
+            </tr>
+          </table>
+          <button (click)="refreshRandomStravaApiApplication()" color="primary" mat-button>Re-generate
+            random App
+          </button>
+        </li>
+        <li>
+          Now create application once you agree with <a href="https://www.strava.com/legal/api">Strava's
+          API Agreement</a>. <u>You are responsible of the application you are going to create</u>
+        </li>
+        <li>
+          You will be now prompted for an App Icon. You can download <a #appIconDlLink
+                                                                        (click)="appIconDlLink.href = appIcon.toDataURL('image/png')"
+                                                                        download="{{generatedStravaApiApplication.imageFileName}}">this
+          generated app icon</a> or use your own.
+          <canvas #appIcon height="124" hidden id="appIcon" width="124"></canvas>
+        </li>
+        <li>
+          Upload your app icon.
+        </li>
+        <li>
+          Open <a href="https://www.strava.com/settings/api">https://www.strava.com/settings/api</a> back.
+        </li>
+        <li>
+          Copy-paste the <strong>Client ID</strong> and <strong>Client Secret</strong> to the connector
+          configuration just below.
+        </li>
+        <li>
+          Click "Connect to Strava" button, then logon with the Strava account you want to synchronize
+          with
+          Elevate.
+        </li>
+      </ol>
+    </div>
+
+    <div *ngIf="stravaConnectorInfo" class="connector">
+
+      <button
+        (click)="sync(true)"
+        *ngIf="syncDateTime && (stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
+        color="primary"
+        mat-stroked-button
+        matTooltip="Activities performed after date '{{syncDateTime | date:'medium'}}' will be synced">
+        <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+        Sync recent activities
+      </button>
+
+      <button
+        (click)="sync()"
+        *ngIf="(stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
+        color="primary"
+        mat-stroked-button
+        matTooltip="All Strava activities will be synced">
+        <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+        Sync all activities
+      </button>
+
+      <button (click)="onConfigure()" *ngIf="!showConfigure" color="primary" mat-stroked-button>
+        <mat-icon fontSet="material-icons-outlined">build</mat-icon>
+        Configure
+      </button>
+      <button
+        (click)="disconnect()"
+        *ngIf="(stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
+        color="primary"
+        mat-stroked-button>
+        <mat-icon fontSet="material-icons-outlined">power_off</mat-icon>
+        Disconnect
+      </button>
+
+      <div *ngIf="showConfigure" class="configureView">
+        <div class="mat-title">
+          Enter Strava API Application information below:
         </div>
-
-        <div *ngIf="stravaConnectorInfo" class="connector">
-
-            <button
-                (click)="sync(true)"
-                *ngIf="syncDateTime && (stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
-                color="primary"
-                mat-stroked-button
-                matTooltip="Activities performed after date '{{syncDateTime | date:'medium'}}' will be synced">
-                <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
-                Sync recent activities
-            </button>
-
-            <button
-                (click)="sync()"
-                *ngIf="(stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
-                color="primary"
-                mat-stroked-button
-                matTooltip="All Strava activities will be synced">
-                <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
-                Sync all activities
-            </button>
-
-            <button (click)="onConfigure()" *ngIf="!showConfigure" color="primary" mat-stroked-button>
-                <mat-icon fontSet="material-icons-outlined">build</mat-icon>
-                Configure
-            </button>
-            <button
-                (click)="disconnect()"
-                *ngIf="(stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
-                color="primary"
-                mat-stroked-button>
-                <mat-icon fontSet="material-icons-outlined">power_off</mat-icon>
-                Disconnect
-            </button>
-
-            <div *ngIf="showConfigure" class="configureView">
-                <div class="mat-title">
-                    Enter Strava API Application information below:
-                </div>
-                <div>
-                    <mat-form-field fxFlex="50">
-                        <input (change)="onClientIdChange()" [(ngModel)]="stravaConnectorInfo.clientId" matInput min="0"
-                               placeholder="Client id"
-                               type="number">
-                    </mat-form-field>
-                </div>
-                <div>
-                    <mat-form-field fxFlex="50">
-                        <input (change)="onClientSecretChange()" [(ngModel)]="stravaConnectorInfo.clientSecret"
-                               [type]="showSecret.checked ? 'text' : 'password'"
-                               matInput placeholder="Client secret">
-                        <button (click)="showSecret.checked = !showSecret.checked" mat-icon-button
-                                matSuffix>
-                            <mat-icon
-                                fontSet="material-icons-outlined">{{showSecret.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
-                        </button>
-                        <mat-checkbox #showSecret fxHide></mat-checkbox>
-                    </mat-form-field>
-                </div>
-                <div *ngIf="stravaConnectorInfo.accessToken">
-                    <mat-form-field fxFlex="50">
-                        <input [(ngModel)]="stravaConnectorInfo.accessToken"
-                               [type]="showToken.checked ? 'text' : 'password'" disabled
-                               matInput
-                               placeholder="Access Token">
-                        <button (click)="showToken.checked = !showToken.checked" mat-icon-button
-                                matSuffix>
-                            <mat-icon
-                                fontSet="material-icons-outlined">{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
-                        </button>
-                        <mat-checkbox #showToken fxHide></mat-checkbox>
-                    </mat-form-field>
-                </div>
-                <div *ngIf="stravaConnectorInfo.refreshToken">
-                    <mat-form-field fxFlex="50">
-                        <input [(ngModel)]="stravaConnectorInfo.refreshToken"
-                               [type]="showToken.checked ? 'text' : 'password'" disabled
-                               matInput
-                               placeholder="Refresh Token">
-                        <button (click)="showToken.checked = !showToken.checked" mat-icon-button
-                                matSuffix>
-                            <mat-icon
-                                fontSet="material-icons-outlined">{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
-                        </button>
-                        <mat-checkbox #showToken fxHide></mat-checkbox>
-                    </mat-form-field>
-                </div>
-                <div *ngIf="stravaConnectorInfo.expiresAt > 0">
-                    <mat-form-field fxFlex="50">
-                        <input [type]="showToken.checked ? 'text' : 'password'" [value]="expiresAt" disabled
-                               matInput placeholder="Session valid until">
-                        <button (click)="showToken.checked = !showToken.checked" mat-icon-button
-                                matSuffix>
-                            <mat-icon
-                                fontSet="material-icons-outlined">{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
-                        </button>
-                        <mat-checkbox #showToken fxHide></mat-checkbox>
-                    </mat-form-field>
-                </div>
-                <div class="others-options">
-                    <mat-checkbox (change)="onUpdateActivitiesNameAndTypeChanged()"
-                                  [(ngModel)]="stravaConnectorInfo.updateSyncedActivitiesNameAndType">
-                        Override existing activities names and types with those fetched from Strava.
-                    </mat-checkbox>
-                </div>
-                <div>
-                    <button (click)="onHowToClicked()" *ngIf="!showHowTo"
-                            color="primary"
-                            mat-stroked-button>
-                        <mat-icon fontSet="material-icons-outlined">help_outline</mat-icon>&nbsp;How to get your client
-                        id & secret
-                    </button>
-                    <button (click)="stravaAuthentication()" *ngIf="!stravaConnectorInfo.accessToken"
-                            [disabled]="(!stravaConnectorInfo.clientId || !stravaConnectorInfo.clientSecret)"
-                            color="primary"
-                            mat-stroked-button>
-                        <mat-icon fontSet="material-icons-outlined">power</mat-icon>
-                        <span>Connect to Strava</span>
-                    </button>
-                </div>
-            </div>
+        <div>
+          <mat-form-field fxFlex="50">
+            <input (change)="onClientIdChange()" [(ngModel)]="stravaConnectorInfo.clientId" matInput min="0"
+                   placeholder="Client id"
+                   type="number">
+          </mat-form-field>
         </div>
-    </mat-card-content>
+        <div>
+          <mat-form-field fxFlex="50">
+            <input (change)="onClientSecretChange()" [(ngModel)]="stravaConnectorInfo.clientSecret"
+                   [type]="showSecret.checked ? 'text' : 'password'"
+                   matInput placeholder="Client secret">
+            <button (click)="showSecret.checked = !showSecret.checked" mat-icon-button
+                    matSuffix>
+              <mat-icon
+                fontSet="material-icons-outlined">{{showSecret.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-checkbox #showSecret fxHide></mat-checkbox>
+          </mat-form-field>
+        </div>
+        <div *ngIf="stravaConnectorInfo.accessToken">
+          <mat-form-field fxFlex="50">
+            <input [(ngModel)]="stravaConnectorInfo.accessToken"
+                   [type]="showToken.checked ? 'text' : 'password'" disabled
+                   matInput
+                   placeholder="Access Token">
+            <button (click)="showToken.checked = !showToken.checked" mat-icon-button
+                    matSuffix>
+              <mat-icon
+                fontSet="material-icons-outlined">{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-checkbox #showToken fxHide></mat-checkbox>
+          </mat-form-field>
+        </div>
+        <div *ngIf="stravaConnectorInfo.refreshToken">
+          <mat-form-field fxFlex="50">
+            <input [(ngModel)]="stravaConnectorInfo.refreshToken"
+                   [type]="showToken.checked ? 'text' : 'password'" disabled
+                   matInput
+                   placeholder="Refresh Token">
+            <button (click)="showToken.checked = !showToken.checked" mat-icon-button
+                    matSuffix>
+              <mat-icon
+                fontSet="material-icons-outlined">{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-checkbox #showToken fxHide></mat-checkbox>
+          </mat-form-field>
+        </div>
+        <div *ngIf="stravaConnectorInfo.expiresAt > 0">
+          <mat-form-field fxFlex="50">
+            <input [type]="showToken.checked ? 'text' : 'password'" [value]="expiresAt" disabled
+                   matInput placeholder="Session valid until">
+            <button (click)="showToken.checked = !showToken.checked" mat-icon-button
+                    matSuffix>
+              <mat-icon
+                fontSet="material-icons-outlined">{{showToken.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-checkbox #showToken fxHide></mat-checkbox>
+          </mat-form-field>
+        </div>
+        <div class="others-options">
+          <mat-checkbox (change)="onUpdateActivitiesNameAndTypeChanged()"
+                        [(ngModel)]="stravaConnectorInfo.updateSyncedActivitiesNameAndType">
+            Override existing activities names and types with those fetched from Strava.
+          </mat-checkbox>
+        </div>
+        <div>
+          <button (click)="onHowToClicked()" *ngIf="!showHowTo"
+                  color="primary"
+                  mat-stroked-button>
+            <mat-icon fontSet="material-icons-outlined">help_outline</mat-icon>&nbsp;How to get your client
+            id & secret
+          </button>
+          <button (click)="stravaAuthentication()" *ngIf="!stravaConnectorInfo.accessToken"
+                  [disabled]="(!stravaConnectorInfo.clientId || !stravaConnectorInfo.clientSecret)"
+                  color="primary"
+                  mat-stroked-button>
+            <mat-icon fontSet="material-icons-outlined">power</mat-icon>
+            <span>Connect to Strava</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
 </mat-card>

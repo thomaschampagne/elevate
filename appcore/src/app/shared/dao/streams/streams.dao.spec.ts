@@ -6,22 +6,22 @@ import { LoggerService } from "../../services/logging/logger.service";
 import { ConsoleLoggerService } from "../../services/logging/console-logger.service";
 
 describe("StreamsDao", () => {
-    let streamsDao: StreamsDao;
+  let streamsDao: StreamsDao;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [
-                StreamsDao,
-                { provide: DataStore, useClass: TestingDataStore },
-                { provide: LoggerService, useClass: ConsoleLoggerService },
-            ],
-        });
-
-        streamsDao = TestBed.inject(StreamsDao);
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        StreamsDao,
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: LoggerService, useClass: ConsoleLoggerService },
+      ],
     });
 
-    it("should be created", done => {
-        expect(streamsDao).toBeTruthy();
-        done();
-    });
+    streamsDao = TestBed.inject(StreamsDao);
+  });
+
+  it("should be created", done => {
+    expect(streamsDao).toBeTruthy();
+    done();
+  });
 });

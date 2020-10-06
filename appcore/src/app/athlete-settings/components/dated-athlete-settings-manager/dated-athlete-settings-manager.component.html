@@ -1,174 +1,174 @@
 <mat-card>
-    <mat-card-title>
-        Dated Athlete Settings
-    </mat-card-title>
+  <mat-card-title>
+    Dated Athlete Settings
+  </mat-card-title>
 
-    <mat-card-content>
-        <div>
-            <strong>Why Dated Athlete Settings?</strong> The evolution of your physiological attributes over time (heart
-            rate, weight, power, pace, ...) has to be supported because activities' stats including stress
-            scores are functions of these attributes. After configuration by yourself, this feature will provide
-            matching athlete's attributes for a given activity date to calculate stats with actual day's attributes.
-            When enabled, Dated Athlete Settings will be used by all Elevate features which might need it (e.g.
-            fitness trend).
-        </div>
+  <mat-card-content>
+    <div>
+      <strong>Why Dated Athlete Settings?</strong> The evolution of your physiological attributes over time (heart
+      rate, weight, power, pace, ...) has to be supported because activities' stats including stress
+      scores are functions of these attributes. After configuration by yourself, this feature will provide
+      matching athlete's attributes for a given activity date to calculate stats with actual day's attributes.
+      When enabled, Dated Athlete Settings will be used by all Elevate features which might need it (e.g.
+      fitness trend).
+    </div>
 
-        <div>
-            <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'top'" color="primary">warning
-            </mat-icon>&nbsp;&nbsp;<span
-            class="mat-h3"><strong>Functional Thresholds</strong>! Please read carefully!</span>
-        </div>
-        <div>
-            If you don't provide your <strong>Cycling, Running, Swim Functional Thresholds (FTPs)</strong> in the below
-            settings, you will
-            get <strong>EMPTY STRESS SCORES</strong> for activities performed without a heart rate monitor or a real
-            power meter. This will result in a <strong>FLAT FITNESS TREND</strong>. To see how-to configure your various
-            FTPs, just add or edit dated athlete settings.
-        </div>
+    <div>
+      <mat-icon [style.vertical-align]="'top'" color="primary" fontSet="material-icons-outlined">warning
+      </mat-icon>&nbsp;&nbsp;<span
+      class="mat-h3"><strong>Functional Thresholds</strong>! Please read carefully!</span>
+    </div>
+    <div>
+      If you don't provide your <strong>Cycling, Running, Swim Functional Thresholds (FTPs)</strong> in the below
+      settings, you will
+      get <strong>EMPTY STRESS SCORES</strong> for activities performed without a heart rate monitor or a real
+      power meter. This will result in a <strong>FLAT FITNESS TREND</strong>. To see how-to configure your various
+      FTPs, just add or edit dated athlete settings.
+    </div>
 
-        <div>
-            If you are not aware of your past physiological attributes on the first configuration/sync, simply enter
-            some dated athlete settings with rough values and sync! This will allow you to grab the required "static"
-            stats on some "revealing" synced activities! In activities section and for every 4-6 weeks: find activities
-            where you hit your thresholds. Check <i>Max hr</i>,<i>Cycling best 20min power (= ~Cycling FTP)</i>, <i>Running
-            best 20min pace (= ~Running FTP)</i>, <i>Swim best 20min pace (= ~Swim FTP)</i>, ... and create/update dated
-            athlete settings with corresponding values! You will be prompted to recalculate your activities. Do it! All
-            your stats, stress scores, graphs will be updated. Repeat this history analysis & recalculation if needed.
-        </div>
+    <div>
+      If you are not aware of your past physiological attributes on the first configuration/sync, simply enter
+      some dated athlete settings with rough values and sync! This will allow you to grab the required "static"
+      stats on some "revealing" synced activities! In activities section and for every 4-6 weeks: find activities
+      where you hit your thresholds. Check <i>Max hr</i>,<i>Cycling best 20min power (= ~Cycling FTP)</i>, <i>Running
+      best 20min pace (= ~Running FTP)</i>, <i>Swim best 20min pace (= ~Swim FTP)</i>, ... and create/update dated
+      athlete settings with corresponding values! You will be prompted to recalculate your activities. Do it! All
+      your stats, stress scores, graphs will be updated. Repeat this history analysis & recalculation if needed.
+    </div>
 
-    </mat-card-content>
+  </mat-card-content>
 
-    <mat-card-content>
+  <mat-card-content>
 
-        <div fxFill fxLayoutAlign="end center">
-            <button (click)="onAdd()" color="primary" mat-stroked-button>
-                <mat-icon fontSet="material-icons-outlined">add</mat-icon>
-                Add
-            </button>
-            <button (click)="onReset()" color="primary" mat-stroked-button>
-                <mat-icon fontSet="material-icons-outlined">settings_backup_restore</mat-icon>
-                Reset
-            </button>
-            <button matTooltip="Save dated athlete settings" (click)="onShowExport()" color="primary"
-                    mat-stroked-button>
-                <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
-            </button>
-            <button matTooltip="Upload dated athlete settings" (click)="onShowImport()" color="primary"
-                    mat-stroked-button>
-                <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
-            </button>
-        </div>
-        <mat-form-field appearance="outline" fxFill *ngIf="showExport">
-            <mat-label>
-                <span>Exported dated athlete settings to copy ({{getOsCopyShortCut()}})</span>
-            </mat-label>
-            <input matInput readonly [ngModel]="exportedSettings" #exportInput (click)="exportInput.select()">
-            <button mat-icon-button matTooltip="Click to copy content to clipboard"
-                    matSuffix ngxClipboard [cbContent]="exportedSettings"
-                    (cbOnSuccess)="onSettingsClipBoardSaved($event)">
-                <mat-icon fontSet="material-icons-outlined" color="primary">file_copy</mat-icon>
-            </button>
-        </mat-form-field>
+    <div fxFill fxLayoutAlign="end center">
+      <button (click)="onAdd()" color="primary" mat-stroked-button>
+        <mat-icon fontSet="material-icons-outlined">add</mat-icon>
+        Add
+      </button>
+      <button (click)="onReset()" color="primary" mat-stroked-button>
+        <mat-icon fontSet="material-icons-outlined">settings_backup_restore</mat-icon>
+        Reset
+      </button>
+      <button (click)="onShowExport()" color="primary" mat-stroked-button
+              matTooltip="Save dated athlete settings">
+        <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
+      </button>
+      <button (click)="onShowImport()" color="primary" mat-stroked-button
+              matTooltip="Upload dated athlete settings">
+        <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
+      </button>
+    </div>
+    <mat-form-field *ngIf="showExport" appearance="outline" fxFill>
+      <mat-label>
+        <span>Exported dated athlete settings to copy ({{getOsCopyShortCut()}})</span>
+      </mat-label>
+      <input #exportInput (click)="exportInput.select()" [ngModel]="exportedSettings" matInput readonly>
+      <button (cbOnSuccess)="onSettingsClipBoardSaved($event)" [cbContent]="exportedSettings"
+              mat-icon-button matSuffix matTooltip="Click to copy content to clipboard"
+              ngxClipboard>
+        <mat-icon color="primary" fontSet="material-icons-outlined">file_copy</mat-icon>
+      </button>
+    </mat-form-field>
 
-        <mat-form-field appearance="outline" fxFill *ngIf="showImport">
-            <mat-label>
-                <span>Paste previously copied dated athlete settings here ({{getOsPasteShortCut()}})</span>
-            </mat-label>
-            <input #importInput matInput (paste)="onImport()">
-            <button mat-icon-button matTooltip="Click to paste clipboard content here"
-                    matSuffix (click)="onImport(importInput.value);">
-                <mat-icon fontSet="material-icons-outlined" color="primary">file_copy</mat-icon>
-            </button>
-        </mat-form-field>
+    <mat-form-field *ngIf="showImport" appearance="outline" fxFill>
+      <mat-label>
+        <span>Paste previously copied dated athlete settings here ({{getOsPasteShortCut()}})</span>
+      </mat-label>
+      <input #importInput (paste)="onImport()" matInput>
+      <button (click)="onImport(importInput.value);" mat-icon-button
+              matSuffix matTooltip="Click to paste clipboard content here">
+        <mat-icon color="primary" fontSet="material-icons-outlined">file_copy</mat-icon>
+      </button>
+    </mat-form-field>
 
-        <mat-table [dataSource]="dataSource" matSort>
+    <mat-table [dataSource]="dataSource" matSort>
 
-            <ng-container matColumnDef="since">
-                <mat-header-cell *matHeaderCellDef>Since</mat-header-cell>
-                <mat-cell *matCellDef="let datedSettings">
-                    <span *ngIf="!datedSettings.isForever()">{{datedSettings.sinceAsDate | date}}</span>
-                    <span *ngIf="datedSettings.isForever()">Forever</span>
-                </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="since">
+        <mat-header-cell *matHeaderCellDef>Since</mat-header-cell>
+        <mat-cell *matCellDef="let datedSettings">
+          <span *ngIf="!datedSettings.isForever()">{{datedSettings.sinceAsDate | date}}</span>
+          <span *ngIf="datedSettings.isForever()">Forever</span>
+        </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="until">
-                <mat-header-cell *matHeaderCellDef>Until</mat-header-cell>
-                <mat-cell *matCellDef="let datedSettings">
-                    <span *ngIf="!datedSettings.isNow()">{{datedSettings.untilAsDate | date}}</span>
-                    <span *ngIf="datedSettings.isNow()">Today</span>
-                </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="until">
+        <mat-header-cell *matHeaderCellDef>Until</mat-header-cell>
+        <mat-cell *matCellDef="let datedSettings">
+          <span *ngIf="!datedSettings.isNow()">{{datedSettings.untilAsDate | date}}</span>
+          <span *ngIf="datedSettings.isNow()">Today</span>
+        </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="weight">
-                <mat-header-cell *matHeaderCellDef>Weight</mat-header-cell>
-                <mat-cell *matCellDef="let datedSettings">{{datedSettings.weight}}</mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="weight">
+        <mat-header-cell *matHeaderCellDef>Weight</mat-header-cell>
+        <mat-cell *matCellDef="let datedSettings">{{datedSettings.weight}}</mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="maxHr">
-                <mat-header-cell *matHeaderCellDef>Max HR</mat-header-cell>
-                <mat-cell *matCellDef="let datedSettings">{{datedSettings.maxHr}}</mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="maxHr">
+        <mat-header-cell *matHeaderCellDef>Max HR</mat-header-cell>
+        <mat-cell *matCellDef="let datedSettings">{{datedSettings.maxHr}}</mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="restHr">
-                <mat-header-cell *matHeaderCellDef>Rest HR</mat-header-cell>
-                <mat-cell *matCellDef="let datedSettings">{{datedSettings.restHr}}</mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="restHr">
+        <mat-header-cell *matHeaderCellDef>Rest HR</mat-header-cell>
+        <mat-cell *matCellDef="let datedSettings">{{datedSettings.restHr}}</mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="lthr.default">
-                <mat-header-cell *matHeaderCellDef>Default LTHR</mat-header-cell>
-                <mat-cell *matCellDef="let datedSettings">{{datedSettings.lthr.default}}</mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="lthr.default">
+        <mat-header-cell *matHeaderCellDef>Default LTHR</mat-header-cell>
+        <mat-cell *matCellDef="let datedSettings">{{datedSettings.lthr.default}}</mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="lthr.cycling">
-                <mat-header-cell *matHeaderCellDef>Cycling LTHR</mat-header-cell>
-                <mat-cell *matCellDef="let datedSettings">{{datedSettings.lthr.cycling}}</mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="lthr.cycling">
+        <mat-header-cell *matHeaderCellDef>Cycling LTHR</mat-header-cell>
+        <mat-cell *matCellDef="let datedSettings">{{datedSettings.lthr.cycling}}</mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="lthr.running">
-                <mat-header-cell *matHeaderCellDef>Running LTHR</mat-header-cell>
-                <mat-cell *matCellDef="let datedSettings">{{datedSettings.lthr.running}}</mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="lthr.running">
+        <mat-header-cell *matHeaderCellDef>Running LTHR</mat-header-cell>
+        <mat-cell *matCellDef="let datedSettings">{{datedSettings.lthr.running}}</mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="cyclingFtp">
-                <mat-header-cell *matHeaderCellDef>Cycling FTP</mat-header-cell>
-                <mat-cell *matCellDef="let datedSettings">{{datedSettings.cyclingFtp}}</mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="cyclingFtp">
+        <mat-header-cell *matHeaderCellDef>Cycling FTP</mat-header-cell>
+        <mat-cell *matCellDef="let datedSettings">{{datedSettings.cyclingFtp}}</mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="runningFtp">
-                <mat-header-cell *matHeaderCellDef>Running FTP</mat-header-cell>
-                <mat-cell *matCellDef="let datedSettings">{{datedSettings.runningFtp}}</mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="runningFtp">
+        <mat-header-cell *matHeaderCellDef>Running FTP</mat-header-cell>
+        <mat-cell *matCellDef="let datedSettings">{{datedSettings.runningFtp}}</mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="swimFtp">
-                <mat-header-cell *matHeaderCellDef>Swim FTP</mat-header-cell>
-                <mat-cell *matCellDef="let datedSettings">{{datedSettings.swimFtp}}</mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="swimFtp">
+        <mat-header-cell *matHeaderCellDef>Swim FTP</mat-header-cell>
+        <mat-cell *matCellDef="let datedSettings">{{datedSettings.swimFtp}}</mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="edit">
-                <mat-header-cell *matHeaderCellDef [ngClass]="'editColumn'"></mat-header-cell>
-                <mat-cell *matCellDef="let datedSettings" [ngClass]="'editColumn'">
-                    <button (click)="onEdit(datedSettings.since)" mat-icon-button
-                            matTooltip="Edit dated settings">
-                        <mat-icon fontSet="material-icons-outlined" color="primary">edit</mat-icon>
-                    </button>
-                </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="edit">
+        <mat-header-cell *matHeaderCellDef [ngClass]="'editColumn'"></mat-header-cell>
+        <mat-cell *matCellDef="let datedSettings" [ngClass]="'editColumn'">
+          <button (click)="onEdit(datedSettings.since)" mat-icon-button
+                  matTooltip="Edit dated settings">
+            <mat-icon color="primary" fontSet="material-icons-outlined">edit</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="delete">
-                <mat-header-cell *matHeaderCellDef [ngClass]="'deleteColumn'"></mat-header-cell>
-                <mat-cell *matCellDef="let datedSettings" [ngClass]="'deleteColumn'">
-                    <button (click)="onRemove(datedSettings.since)" *ngIf="!datedSettings.isForever()"
-                            mat-icon-button
-                            matTooltip="Delete dated settings">
-                        <mat-icon fontSet="material-icons-outlined" color="primary">delete</mat-icon>
-                    </button>
-                </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="delete">
+        <mat-header-cell *matHeaderCellDef [ngClass]="'deleteColumn'"></mat-header-cell>
+        <mat-cell *matCellDef="let datedSettings" [ngClass]="'deleteColumn'">
+          <button (click)="onRemove(datedSettings.since)" *ngIf="!datedSettings.isForever()"
+                  mat-icon-button
+                  matTooltip="Delete dated settings">
+            <mat-icon color="primary" fontSet="material-icons-outlined">delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
 
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        </mat-table>
-    </mat-card-content>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </mat-card-content>
 </mat-card>
 
 

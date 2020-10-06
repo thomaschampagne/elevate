@@ -5,127 +5,127 @@ import { SharedModule } from "../../shared.module";
 import { environment } from "../../../../environments/environment";
 
 describe("ConsoleLoggerService", () => {
-    let service: LoggerService;
+  let service: LoggerService;
 
-    beforeEach((done: () => void) => {
-        TestBed.configureTestingModule({
-            imports: [CoreModule, SharedModule],
-        });
-
-        service = TestBed.inject(LoggerService);
-
-        done();
+  beforeEach((done: () => void) => {
+    TestBed.configureTestingModule({
+      imports: [CoreModule, SharedModule],
     });
 
-    it("should provide console debug", (done: () => void) => {
-        // Given
-        environment.logLevel = LoggerService.LEVEL_DEBUG;
-        const spyDebug = spyOn(console, "debug");
+    service = TestBed.inject(LoggerService);
 
-        // When
-        service.debug("hello debug");
+    done();
+  });
 
-        // Then
-        expect(spyDebug).toHaveBeenCalled();
+  it("should provide console debug", (done: () => void) => {
+    // Given
+    environment.logLevel = LoggerService.LEVEL_DEBUG;
+    const spyDebug = spyOn(console, "debug");
 
-        done();
-    });
+    // When
+    service.debug("hello debug");
 
-    it("should provide console info", (done: () => void) => {
-        // Given
-        environment.logLevel = LoggerService.LEVEL_INFO;
-        const spyDebug = spyOn(console, "info");
+    // Then
+    expect(spyDebug).toHaveBeenCalled();
 
-        // When
-        service.info("hello info");
+    done();
+  });
 
-        // Then
-        expect(spyDebug).toHaveBeenCalled();
+  it("should provide console info", (done: () => void) => {
+    // Given
+    environment.logLevel = LoggerService.LEVEL_INFO;
+    const spyDebug = spyOn(console, "info");
 
-        done();
-    });
+    // When
+    service.info("hello info");
 
-    it("should provide console warn", (done: () => void) => {
-        // Given
-        environment.logLevel = LoggerService.LEVEL_INFO;
-        const spy = spyOn(console, "warn");
+    // Then
+    expect(spyDebug).toHaveBeenCalled();
 
-        // When
-        service.warn("hello warn");
+    done();
+  });
 
-        // Then
-        expect(spy).toHaveBeenCalled();
+  it("should provide console warn", (done: () => void) => {
+    // Given
+    environment.logLevel = LoggerService.LEVEL_INFO;
+    const spy = spyOn(console, "warn");
 
-        done();
-    });
+    // When
+    service.warn("hello warn");
 
-    it("should provide console warn", (done: () => void) => {
-        // Given
-        environment.logLevel = LoggerService.LEVEL_WARN;
-        const spy = spyOn(console, "warn");
+    // Then
+    expect(spy).toHaveBeenCalled();
 
-        // When
-        service.warn("hello warn");
+    done();
+  });
 
-        // Then
-        expect(spy).toHaveBeenCalled();
+  it("should provide console warn", (done: () => void) => {
+    // Given
+    environment.logLevel = LoggerService.LEVEL_WARN;
+    const spy = spyOn(console, "warn");
 
-        done();
-    });
+    // When
+    service.warn("hello warn");
 
-    it("should provide console error", (done: () => void) => {
-        // Given
-        environment.logLevel = LoggerService.LEVEL_ERROR;
-        const spy = spyOn(console, "error");
+    // Then
+    expect(spy).toHaveBeenCalled();
 
-        // When
-        service.error("hello error");
+    done();
+  });
 
-        // Then
-        expect(spy).toHaveBeenCalled();
+  it("should provide console error", (done: () => void) => {
+    // Given
+    environment.logLevel = LoggerService.LEVEL_ERROR;
+    const spy = spyOn(console, "error");
 
-        done();
-    });
+    // When
+    service.error("hello error");
 
-    it("should not provide log WARN when level is ERROR", (done: () => void) => {
-        // Given
-        environment.logLevel = LoggerService.LEVEL_ERROR;
-        const spy = spyOn(console, "warn");
+    // Then
+    expect(spy).toHaveBeenCalled();
 
-        // When
-        service.warn("hello warn");
+    done();
+  });
 
-        // Then
-        expect(spy).not.toHaveBeenCalled();
+  it("should not provide log WARN when level is ERROR", (done: () => void) => {
+    // Given
+    environment.logLevel = LoggerService.LEVEL_ERROR;
+    const spy = spyOn(console, "warn");
 
-        done();
-    });
+    // When
+    service.warn("hello warn");
 
-    it("should not provide log INFO when level is WARN", (done: () => void) => {
-        // Given
-        environment.logLevel = LoggerService.LEVEL_WARN;
-        const spy = spyOn(console, "info");
+    // Then
+    expect(spy).not.toHaveBeenCalled();
 
-        // When
-        service.info("hello info");
+    done();
+  });
 
-        // Then
-        expect(spy).not.toHaveBeenCalled();
+  it("should not provide log INFO when level is WARN", (done: () => void) => {
+    // Given
+    environment.logLevel = LoggerService.LEVEL_WARN;
+    const spy = spyOn(console, "info");
 
-        done();
-    });
+    // When
+    service.info("hello info");
 
-    it("should not provide log DEBUG when level is INFO", (done: () => void) => {
-        // Given
-        environment.logLevel = LoggerService.LEVEL_INFO;
-        const spy = spyOn(console, "debug");
+    // Then
+    expect(spy).not.toHaveBeenCalled();
 
-        // When
-        service.debug("hello debug");
+    done();
+  });
 
-        // Then
-        expect(spy).not.toHaveBeenCalled();
+  it("should not provide log DEBUG when level is INFO", (done: () => void) => {
+    // Given
+    environment.logLevel = LoggerService.LEVEL_INFO;
+    const spy = spyOn(console, "debug");
 
-        done();
-    });
+    // When
+    service.debug("hello debug");
+
+    // Then
+    expect(spy).not.toHaveBeenCalled();
+
+    done();
+  });
 });

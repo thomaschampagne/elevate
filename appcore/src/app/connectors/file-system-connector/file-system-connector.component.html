@@ -1,79 +1,79 @@
 <mat-card>
-    <mat-card-title>
-        File system
-    </mat-card-title>
-    <mat-card-subtitle *ngIf="fileSystemConnectorInfo">
-        <span *ngIf="!fileSystemConnectorInfo.sourceDirectory">Not configured. </span>
-        <span *ngIf="fileSystemConnectorInfo.sourceDirectory">Configured. </span>
-        <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
-        <br/>
-        <span class="note">Formats supported: gpx, tcx & fit</span>
-    </mat-card-subtitle>
-    <mat-card-content>
-        <div>
-            <button
-                (click)="sync(true)" *ngIf="syncDateTime && fileSystemConnectorInfo.sourceDirectory" color="primary"
-                mat-stroked-button
-                matTooltip="Activity files added or modified after date '{{syncDateTime | date:'medium'}}' will be synced">
-                <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
-                Sync recent activities
-            </button>
-            <button
-                (click)="sync(false)" *ngIf="fileSystemConnectorInfo.sourceDirectory" color="primary"
-                mat-stroked-button
-                matTooltip="All activity files will be synced.">
-                <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
-                Sync all activities
-            </button>
-            <button (click)="showConfigure = !showConfigure" *ngIf="!showConfigure" color="primary" mat-stroked-button>
-                <mat-icon fontSet="material-icons-outlined">build</mat-icon>
-                Configure
-            </button>
-        </div>
-        <div *ngIf="showConfigure && fileSystemConnectorInfo" class="configureView" fxFill>
-            <div>
-                <mat-form-field fxFill>
-                    <input [(ngModel)]="fileSystemConnectorInfo.sourceDirectory" [disabled]="true" matInput
-                           placeholder="{{ (!fileSystemConnectorInfo.sourceDirectory) ? 'Browse for a directory to scan...' : 'Scan directory' }}"
-                           type="text">
-                    <button (click)="onUserDirectorySelection()" color="primary" mat-button
-                            matSuffix>
-                        Browse
-                    </button>
-                </mat-form-field>
-            </div>
+  <mat-card-title>
+    File system
+  </mat-card-title>
+  <mat-card-subtitle *ngIf="fileSystemConnectorInfo">
+    <span *ngIf="!fileSystemConnectorInfo.sourceDirectory">Not configured. </span>
+    <span *ngIf="fileSystemConnectorInfo.sourceDirectory">Configured. </span>
+    <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
+    <br/>
+    <span class="note">Formats supported: gpx, tcx & fit</span>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <div>
+      <button
+        (click)="sync(true)" *ngIf="syncDateTime && fileSystemConnectorInfo.sourceDirectory" color="primary"
+        mat-stroked-button
+        matTooltip="Activity files added or modified after date '{{syncDateTime | date:'medium'}}' will be synced">
+        <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+        Sync recent activities
+      </button>
+      <button
+        (click)="sync(false)" *ngIf="fileSystemConnectorInfo.sourceDirectory" color="primary"
+        mat-stroked-button
+        matTooltip="All activity files will be synced.">
+        <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+        Sync all activities
+      </button>
+      <button (click)="showConfigure = !showConfigure" *ngIf="!showConfigure" color="primary" mat-stroked-button>
+        <mat-icon fontSet="material-icons-outlined">build</mat-icon>
+        Configure
+      </button>
+    </div>
+    <div *ngIf="showConfigure && fileSystemConnectorInfo" class="configureView" fxFill>
+      <div>
+        <mat-form-field fxFill>
+          <input [(ngModel)]="fileSystemConnectorInfo.sourceDirectory" [disabled]="true" matInput
+                 placeholder="{{ (!fileSystemConnectorInfo.sourceDirectory) ? 'Browse for a directory to scan...' : 'Scan directory' }}"
+                 type="text">
+          <button (click)="onUserDirectorySelection()" color="primary" mat-button
+                  matSuffix>
+            Browse
+          </button>
+        </mat-form-field>
+      </div>
 
-            <div *ngIf="fileSystemConnectorInfo.sourceDirectory">
-                <div>
-                    <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileSystemConnectorInfo.scanSubDirectories">
-                        Scan subdirectories
-                    </mat-checkbox>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start start">
-                    <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileSystemConnectorInfo.extractArchiveFiles"
-                                  matTooltip="Activities found in 'zip, rar, 7z, tar, gz, bz2, zipx or xz' files will be extracted into the scan directory. Use case: Strava.com activities backup.">
-                        Extract activities from archives files *
-                    </mat-checkbox>
-                    <div fxFlex="3"></div>
-                    <mat-checkbox (change)="saveChanges()"
-                                  [(ngModel)]="fileSystemConnectorInfo.deleteArchivesAfterExtract"
-                                  [disabled]="!fileSystemConnectorInfo.extractArchiveFiles"
-                                  matTooltip="Once activities have been extracted from a 'zip, rar, 7z, tar, gz, bz2, zipx or xz' file, the archive file will be removed from scan directory">
-                        Delete archives when activities have been extracted (recommended) *
-                    </mat-checkbox>
-                </div>
-                <div>
-                    <mat-checkbox (change)="saveChanges()"
-                                  [(ngModel)]="fileSystemConnectorInfo.detectSportTypeWhenUnknown"
-                                  matTooltip="This case often occurs on GPX files. Note that this may introduce errors (e.g.: Inline skating gpx activity without sport type could be detected as 'Ride')">
-                        <strong>Experimental:</strong> Try to set when possible the activity type to <i>Ride or Run</i>
-                        if sport type is unknown <i>(adds a "#detected" in activities names)</i>
-                    </mat-checkbox>
-                </div>
-                <div>
-                    * Only when <u>syncing all activities</u>
-                </div>
-            </div>
+      <div *ngIf="fileSystemConnectorInfo.sourceDirectory">
+        <div>
+          <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileSystemConnectorInfo.scanSubDirectories">
+            Scan subdirectories
+          </mat-checkbox>
         </div>
-    </mat-card-content>
+        <div fxLayout="row" fxLayoutAlign="start start">
+          <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileSystemConnectorInfo.extractArchiveFiles"
+                        matTooltip="Activities found in 'zip, rar, 7z, tar, gz, bz2, zipx or xz' files will be extracted into the scan directory. Use case: Strava.com activities backup.">
+            Extract activities from archives files *
+          </mat-checkbox>
+          <div fxFlex="3"></div>
+          <mat-checkbox (change)="saveChanges()"
+                        [(ngModel)]="fileSystemConnectorInfo.deleteArchivesAfterExtract"
+                        [disabled]="!fileSystemConnectorInfo.extractArchiveFiles"
+                        matTooltip="Once activities have been extracted from a 'zip, rar, 7z, tar, gz, bz2, zipx or xz' file, the archive file will be removed from scan directory">
+            Delete archives when activities have been extracted (recommended) *
+          </mat-checkbox>
+        </div>
+        <div>
+          <mat-checkbox (change)="saveChanges()"
+                        [(ngModel)]="fileSystemConnectorInfo.detectSportTypeWhenUnknown"
+                        matTooltip="This case often occurs on GPX files. Note that this may introduce errors (e.g.: Inline skating gpx activity without sport type could be detected as 'Ride')">
+            <strong>Experimental:</strong> Try to set when possible the activity type to <i>Ride or Run</i>
+            if sport type is unknown <i>(adds a "#detected" in activities names)</i>
+          </mat-checkbox>
+        </div>
+        <div>
+          * Only when <u>syncing all activities</u>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
 </mat-card>

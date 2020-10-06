@@ -2,6 +2,7 @@
 *.css
 *.scss
 *.html
+*.svg
 
 # Generated data
 coverage
@@ -18,6 +19,8 @@ node_modules
 *.md
 *.yml
 *.log
+.editorconfig
+.prettierignore
 
 # Project specific
 athlete-access-checker.js

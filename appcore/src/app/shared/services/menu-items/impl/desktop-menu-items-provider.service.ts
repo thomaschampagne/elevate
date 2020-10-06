@@ -4,45 +4,45 @@ import { AppRoutesModel } from "../../../models/app-routes.model";
 
 @Injectable()
 export class DesktopMenuItemsProvider implements MenuItemsProvider {
-    public readonly mainMenuItems: MenuItemModel[] = [
-        {
-            icon: "view_list",
-            routerLink: AppRoutesModel.activities,
-            routerLinkActive: true,
-        },
-        {
-            icon: "timeline",
-            routerLink: AppRoutesModel.fitnessTrend,
-            routerLinkActive: true,
-        },
-        {
-            icon: "date_range",
-            routerLink: AppRoutesModel.yearProgressions,
-            routerLinkActive: true,
-        },
-        {
-            icon: "settings",
-            routerLink: AppRoutesModel.globalSettings,
-            routerLinkActive: true,
-        },
-        {
-            icon: "portrait",
-            routerLink: AppRoutesModel.athleteSettings,
-            routerLinkActive: true,
-        },
-        {
-            icon: "power",
-            routerLink: AppRoutesModel.connectors,
-            routerLinkActive: true,
-        },
-        {
-            icon: "favorite_border",
-            routerLink: AppRoutesModel.donate,
-            routerLinkActive: true,
-        },
-    ];
+  public readonly mainMenuItems: MenuItemModel[] = [
+    {
+      icon: "view_list",
+      routerLink: AppRoutesModel.activities,
+      routerLinkActive: true,
+    },
+    {
+      icon: "timeline",
+      routerLink: AppRoutesModel.fitnessTrend,
+      routerLinkActive: true,
+    },
+    {
+      icon: "date_range",
+      routerLink: AppRoutesModel.yearProgressions,
+      routerLinkActive: true,
+    },
+    {
+      icon: "settings",
+      routerLink: AppRoutesModel.globalSettings,
+      routerLinkActive: true,
+    },
+    {
+      icon: "portrait",
+      routerLink: AppRoutesModel.athleteSettings,
+      routerLinkActive: true,
+    },
+    {
+      icon: "power",
+      routerLink: AppRoutesModel.connectors,
+      routerLinkActive: true,
+    },
+    {
+      icon: "favorite_border",
+      routerLink: AppRoutesModel.donate,
+      routerLinkActive: true,
+    },
+  ];
 
-    public getMenuItems(): MenuItemModel[] {
-        return this.mainMenuItems;
-    }
+  public getMenuItems(): MenuItemModel[] {
+    return this.mainMenuItems;
+  }
 }

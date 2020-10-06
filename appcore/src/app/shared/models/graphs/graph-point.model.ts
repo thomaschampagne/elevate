@@ -1,6 +1,6 @@
 export class GraphPointModel {
-    public date: string;
-    public value: number;
-    public hidden: boolean;
-    public active?: boolean;
+  public date: string;
+  public value: number;
+  public hidden: boolean;
+  public active?: boolean;
 }

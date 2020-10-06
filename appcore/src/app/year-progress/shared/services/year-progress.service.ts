@@ -25,506 +25,495 @@ import { ElevateSport } from "@elevate/shared/enums";
 
 @Injectable()
 export class YearProgressService {
-    public static readonly ERROR_NO_SYNCED_ACTIVITY_MODELS: string = "Empty SyncedActivityModels";
-    public static readonly ERROR_NO_TYPES_FILTER: string = "Empty types filter";
-    public static readonly ERROR_NO_YEAR_PROGRESS_MODELS: string = "Empty YearProgressModels from given activity types";
+  public static readonly ERROR_NO_SYNCED_ACTIVITY_MODELS: string = "Empty SyncedActivityModels";
+  public static readonly ERROR_NO_TYPES_FILTER: string = "Empty types filter";
+  public static readonly ERROR_NO_YEAR_PROGRESS_MODELS: string = "Empty YearProgressModels from given activity types";
 
-    public momentWatched: Moment;
-    public momentWatchedChanges$: Subject<Moment>;
+  public momentWatched: Moment;
+  public momentWatchedChanges$: Subject<Moment>;
 
-    constructor(public yearProgressPresetDao: YearProgressPresetDao) {
-        this.momentWatched = this.getTodayMoment().clone().startOf("day"); // By default moment watched is today. Moment watched can be edited from external
-        this.momentWatchedChanges$ = new Subject<Moment>();
+  constructor(public yearProgressPresetDao: YearProgressPresetDao) {
+    this.momentWatched = this.getTodayMoment().clone().startOf("day"); // By default moment watched is today. Moment watched can be edited from external
+    this.momentWatchedChanges$ = new Subject<Moment>();
+  }
+
+  public static provideProgressTypes(isMetric: boolean): YearProgressTypeModel[] {
+    return [
+      new YearProgressTypeModel(
+        ProgressType.DISTANCE,
+        "Distance",
+        isMetric ? "kilometers" : "miles",
+        isMetric ? "km" : "mi"
+      ),
+      new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h"),
+      new YearProgressTypeModel(
+        ProgressType.ELEVATION,
+        "Elevation",
+        isMetric ? "meters" : "feet",
+        isMetric ? "m" : "ft"
+      ),
+      new YearProgressTypeModel(ProgressType.COUNT, "Count"),
+    ];
+  }
+
+  public progressions(
+    config: ProgressConfig,
+    isMetric: boolean,
+    syncedActivityModels: SyncedActivityModel[]
+  ): YearProgressModel[] {
+    if (_.isEmpty(syncedActivityModels)) {
+      throw new Error(YearProgressService.ERROR_NO_SYNCED_ACTIVITY_MODELS);
     }
 
-    public static provideProgressTypes(isMetric: boolean): YearProgressTypeModel[] {
-        return [
-            new YearProgressTypeModel(
-                ProgressType.DISTANCE,
-                "Distance",
-                isMetric ? "kilometers" : "miles",
-                isMetric ? "km" : "mi"
-            ),
-            new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h"),
-            new YearProgressTypeModel(
-                ProgressType.ELEVATION,
-                "Elevation",
-                isMetric ? "meters" : "feet",
-                isMetric ? "m" : "ft"
-            ),
-            new YearProgressTypeModel(ProgressType.COUNT, "Count"),
-        ];
+    if (_.isEmpty(config.activityTypes)) {
+      throw new Error(YearProgressService.ERROR_NO_TYPES_FILTER);
     }
 
-    public progressions(
-        config: ProgressConfig,
-        isMetric: boolean,
-        syncedActivityModels: SyncedActivityModel[]
-    ): YearProgressModel[] {
-        if (_.isEmpty(syncedActivityModels)) {
-            throw new Error(YearProgressService.ERROR_NO_SYNCED_ACTIVITY_MODELS);
-        }
+    let yearProgressActivities = this.filterSyncedActivityModelAlongTypes(syncedActivityModels, config.activityTypes);
 
-        if (_.isEmpty(config.activityTypes)) {
-            throw new Error(YearProgressService.ERROR_NO_TYPES_FILTER);
-        }
+    if (_.isEmpty(yearProgressActivities)) {
+      throw new Error(YearProgressService.ERROR_NO_YEAR_PROGRESS_MODELS);
+    }
 
-        let yearProgressActivities = this.filterSyncedActivityModelAlongTypes(
-            syncedActivityModels,
-            config.activityTypes
+    // Sort yearProgressActivities along start_time
+    yearProgressActivities = _.sortBy(yearProgressActivities, (activity: YearProgressActivityModel) => {
+      return activity.start_time;
+    });
+
+    // Find along types date from & to / From: 1st january of first year / To: Today
+    const todayMoment = this.getTodayMoment();
+    const fromMoment: Moment = moment(_.first(syncedActivityModels).start_time).startOf("year"); // 1st january of first year
+    const toMoment: Moment = this.getTodayMoment().clone().endOf("year").endOf("day");
+
+    return config.mode === ProgressMode.YEAR_TO_DATE
+      ? this.computeYearToDateSumProgressions(
+          config as YearToDateProgressConfigModel,
+          isMetric,
+          fromMoment,
+          toMoment,
+          todayMoment,
+          yearProgressActivities
+        )
+      : this.computeRollingSumProgressions(
+          config as RollingProgressConfigModel,
+          isMetric,
+          fromMoment,
+          toMoment,
+          todayMoment,
+          yearProgressActivities
         );
+  }
 
-        if (_.isEmpty(yearProgressActivities)) {
-            throw new Error(YearProgressService.ERROR_NO_YEAR_PROGRESS_MODELS);
-        }
+  public computeYearToDateSumProgressions(
+    config: YearToDateProgressConfigModel,
+    isMetric: boolean,
+    fromMoment: Moment,
+    toMoment: Moment,
+    todayMoment,
+    yearProgressActivities
+  ): YearProgressModel[] {
+    const yearProgressions: YearProgressModel[] = [];
+    let lastProgress: ProgressModel = null;
 
-        // Sort yearProgressActivities along start_time
-        yearProgressActivities = _.sortBy(yearProgressActivities, (activity: YearProgressActivityModel) => {
-            return activity.start_time;
-        });
+    // From 'fromMoment' to 'todayMoment' loop on days...
+    const currentDayMoment = moment(fromMoment);
+    let currentYearProgress: YearProgressModel = null;
 
-        // Find along types date from & to / From: 1st january of first year / To: Today
-        const todayMoment = this.getTodayMoment();
-        const fromMoment: Moment = moment(_.first(syncedActivityModels).start_time).startOf("year"); // 1st january of first year
-        const toMoment: Moment = this.getTodayMoment().clone().endOf("year").endOf("day");
+    while (currentDayMoment.isSameOrBefore(toMoment)) {
+      const currentYear = currentDayMoment.year();
+      let progress: ProgressModel = null;
 
-        return config.mode === ProgressMode.YEAR_TO_DATE
-            ? this.computeYearToDateSumProgressions(
-                  config as YearToDateProgressConfigModel,
-                  isMetric,
-                  fromMoment,
-                  toMoment,
-                  todayMoment,
-                  yearProgressActivities
-              )
-            : this.computeRollingSumProgressions(
-                  config as RollingProgressConfigModel,
-                  isMetric,
-                  fromMoment,
-                  toMoment,
-                  todayMoment,
-                  yearProgressActivities
-              );
-    }
+      // Create new year progress if current year do not exists
+      const isNewYearProgress = !_.find(yearProgressions, { year: currentYear });
 
-    public computeYearToDateSumProgressions(
-        config: YearToDateProgressConfigModel,
-        isMetric: boolean,
-        fromMoment: Moment,
-        toMoment: Moment,
-        todayMoment,
-        yearProgressActivities
-    ): YearProgressModel[] {
-        const yearProgressions: YearProgressModel[] = [];
-        let lastProgress: ProgressModel = null;
+      if (isNewYearProgress) {
+        lastProgress = null; // New year then remove
 
-        // From 'fromMoment' to 'todayMoment' loop on days...
-        const currentDayMoment = moment(fromMoment);
-        let currentYearProgress: YearProgressModel = null;
-
-        while (currentDayMoment.isSameOrBefore(toMoment)) {
-            const currentYear = currentDayMoment.year();
-            let progress: ProgressModel = null;
-
-            // Create new year progress if current year do not exists
-            const isNewYearProgress = !_.find(yearProgressions, { year: currentYear });
-
-            if (isNewYearProgress) {
-                lastProgress = null; // New year then remove
-
-                currentYearProgress = {
-                    mode: config.mode,
-                    year: currentYear,
-                    progressions: [],
-                };
-
-                // Start totals from 0
-                progress = new ProgressModel(currentDayMoment.year(), currentDayMoment.dayOfYear(), 0, 0, 0, 0);
-
-                yearProgressions.push(currentYearProgress); // register inside yearProgressions
-            } else {
-                // Year exists
-                progress = new ProgressModel(
-                    currentDayMoment.year(),
-                    currentDayMoment.dayOfYear(),
-                    lastProgress.distance,
-                    lastProgress.time,
-                    lastProgress.elevation,
-                    lastProgress.count
-                );
-            }
-
-            // Seek for activities performed that day
-            const activitiesFound: YearProgressActivityModel[] = _.filter<YearProgressActivityModel>(
-                yearProgressActivities,
-                {
-                    year: currentDayMoment.year(),
-                    dayOfYear: currentDayMoment.dayOfYear(),
-                }
-            );
-
-            if (activitiesFound.length > 0) {
-                for (let i = 0; i < activitiesFound.length; i++) {
-                    if (
-                        (!config.includeCommuteRide && activitiesFound[i].commute) ||
-                        (!config.includeIndoorRide && activitiesFound[i].trainer)
-                    ) {
-                        continue;
-                    }
-
-                    progress.distance += activitiesFound[i].distance_raw;
-                    progress.time += activitiesFound[i].moving_time_raw;
-                    progress.elevation += activitiesFound[i].elevation_gain_raw;
-                    progress.count++;
-                }
-            }
-
-            lastProgress = _.clone(progress); // Keep tracking for tomorrow day.
-
-            // Tag progression day as future or not
-            progress.isFuture = !currentDayMoment.isSameOrBefore(todayMoment);
-
-            // Prepare along metric/imperial & push
-            currentYearProgress.progressions.push(this.prepareAlongSystemUnits(progress, isMetric));
-            currentDayMoment.add(1, "days"); // Add a day until todayMoment
-        }
-
-        return yearProgressions;
-    }
-
-    public computeRollingSumProgressions(
-        config: RollingProgressConfigModel,
-        isMetric: boolean,
-        fromMoment: Moment,
-        toMoment: Moment,
-        todayMoment,
-        yearProgressActivities
-    ): YearProgressModel[] {
-        const yearProgressions: YearProgressModel[] = [];
-
-        // From 'fromMoment' to 'todayMoment' loop on days...
-        const currentDayMoment = moment(fromMoment);
-        let currentYearProgress: YearProgressModel = null;
-
-        let isRollingBufferSizeReached = false;
-        let rollingBufferSize = 0;
-        const rollingBuffers = {
-            distance: [],
-            time: [],
-            elevation: [],
-            count: [],
+        currentYearProgress = {
+          mode: config.mode,
+          year: currentYear,
+          progressions: [],
         };
 
-        while (currentDayMoment.isSameOrBefore(toMoment)) {
-            // Increase buffer size until rolling days length is reached
-            if (!isRollingBufferSizeReached) {
-                rollingBufferSize === config.rollingDays ? (isRollingBufferSizeReached = true) : rollingBufferSize++;
-            }
+        // Start totals from 0
+        progress = new ProgressModel(currentDayMoment.year(), currentDayMoment.dayOfYear(), 0, 0, 0, 0);
 
-            const currentYear = currentDayMoment.year();
+        yearProgressions.push(currentYearProgress); // register inside yearProgressions
+      } else {
+        // Year exists
+        progress = new ProgressModel(
+          currentDayMoment.year(),
+          currentDayMoment.dayOfYear(),
+          lastProgress.distance,
+          lastProgress.time,
+          lastProgress.elevation,
+          lastProgress.count
+        );
+      }
 
-            const activitiesFound: YearProgressActivityModel[] = _.filter<YearProgressActivityModel>(
-                yearProgressActivities,
-                {
-                    year: currentDayMoment.year(),
-                    dayOfYear: currentDayMoment.dayOfYear(),
-                }
-            );
+      // Seek for activities performed that day
+      const activitiesFound: YearProgressActivityModel[] = _.filter<YearProgressActivityModel>(yearProgressActivities, {
+        year: currentDayMoment.year(),
+        dayOfYear: currentDayMoment.dayOfYear(),
+      });
 
-            const onDayTotals = {
-                distance: 0,
-                time: 0,
-                elevation: 0,
-                count: 0,
-            };
+      if (activitiesFound.length > 0) {
+        for (let i = 0; i < activitiesFound.length; i++) {
+          if (
+            (!config.includeCommuteRide && activitiesFound[i].commute) ||
+            (!config.includeIndoorRide && activitiesFound[i].trainer)
+          ) {
+            continue;
+          }
 
-            // Seek for activities performed that day
-            const hasCurrentDayActivities = activitiesFound.length > 0;
-            if (hasCurrentDayActivities) {
-                for (let i = 0; i < activitiesFound.length; i++) {
-                    if (
-                        (!config.includeCommuteRide && activitiesFound[i].commute) ||
-                        (!config.includeIndoorRide && activitiesFound[i].trainer)
-                    ) {
-                        continue;
-                    }
-
-                    onDayTotals.distance += activitiesFound[i].distance_raw;
-                    onDayTotals.time += activitiesFound[i].moving_time_raw;
-                    onDayTotals.elevation += activitiesFound[i].elevation_gain_raw;
-                    onDayTotals.count++;
-                }
-            }
-
-            // Push totals performed on current day inside buffer
-            rollingBuffers.distance.push(onDayTotals.distance);
-            rollingBuffers.time.push(onDayTotals.time);
-            rollingBuffers.elevation.push(onDayTotals.elevation);
-            rollingBuffers.count.push(onDayTotals.count);
-
-            const rollingSum = {
-                distance:
-                    _.sum(rollingBuffers.distance) - (isRollingBufferSizeReached ? rollingBuffers.distance.shift() : 0),
-                time: _.sum(rollingBuffers.time) - (isRollingBufferSizeReached ? rollingBuffers.time.shift() : 0),
-                elevation:
-                    _.sum(rollingBuffers.elevation) -
-                    (isRollingBufferSizeReached ? rollingBuffers.elevation.shift() : 0),
-                count: _.sum(rollingBuffers.count) - (isRollingBufferSizeReached ? rollingBuffers.count.shift() : 0),
-            };
-
-            const progression: ProgressModel = new ProgressModel(
-                currentDayMoment.year(),
-                currentDayMoment.dayOfYear(),
-                rollingSum.distance,
-                rollingSum.time,
-                rollingSum.elevation,
-                rollingSum.count
-            );
-
-            // Create new year progress if current year do not exists
-            const isNewYearProgress = !_.find(yearProgressions, { year: currentYear });
-            if (isNewYearProgress) {
-                currentYearProgress = {
-                    mode: config.mode,
-                    year: currentYear,
-                    progressions: [],
-                };
-                yearProgressions.push(currentYearProgress); // register inside yearProgressions
-            }
-
-            // Tag progression day as future or not
-            progression.isFuture = !currentDayMoment.isSameOrBefore(todayMoment);
-
-            // Prepare along metric/imperial & push
-            currentYearProgress.progressions.push(this.prepareAlongSystemUnits(progression, isMetric));
-            currentDayMoment.add(1, "days"); // Add a day until todayMoment
+          progress.distance += activitiesFound[i].distance_raw;
+          progress.time += activitiesFound[i].moving_time_raw;
+          progress.elevation += activitiesFound[i].elevation_gain_raw;
+          progress.count++;
         }
+      }
 
-        return yearProgressions;
+      lastProgress = _.clone(progress); // Keep tracking for tomorrow day.
+
+      // Tag progression day as future or not
+      progress.isFuture = !currentDayMoment.isSameOrBefore(todayMoment);
+
+      // Prepare along metric/imperial & push
+      currentYearProgress.progressions.push(this.prepareAlongSystemUnits(progress, isMetric));
+      currentDayMoment.add(1, "days"); // Add a day until todayMoment
     }
 
-    public prepareAlongSystemUnits(progression: ProgressModel, isMetric: boolean): ProgressModel {
-        // Distance conversion
-        let distance = progression.distance / 1000; // KM
+    return yearProgressions;
+  }
 
-        if (!isMetric) {
-            distance *= Constant.KM_TO_MILE_FACTOR; // Imperial (Miles)
+  public computeRollingSumProgressions(
+    config: RollingProgressConfigModel,
+    isMetric: boolean,
+    fromMoment: Moment,
+    toMoment: Moment,
+    todayMoment,
+    yearProgressActivities
+  ): YearProgressModel[] {
+    const yearProgressions: YearProgressModel[] = [];
+
+    // From 'fromMoment' to 'todayMoment' loop on days...
+    const currentDayMoment = moment(fromMoment);
+    let currentYearProgress: YearProgressModel = null;
+
+    let isRollingBufferSizeReached = false;
+    let rollingBufferSize = 0;
+    const rollingBuffers = {
+      distance: [],
+      time: [],
+      elevation: [],
+      count: [],
+    };
+
+    while (currentDayMoment.isSameOrBefore(toMoment)) {
+      // Increase buffer size until rolling days length is reached
+      if (!isRollingBufferSizeReached) {
+        rollingBufferSize === config.rollingDays ? (isRollingBufferSizeReached = true) : rollingBufferSize++;
+      }
+
+      const currentYear = currentDayMoment.year();
+
+      const activitiesFound: YearProgressActivityModel[] = _.filter<YearProgressActivityModel>(yearProgressActivities, {
+        year: currentDayMoment.year(),
+        dayOfYear: currentDayMoment.dayOfYear(),
+      });
+
+      const onDayTotals = {
+        distance: 0,
+        time: 0,
+        elevation: 0,
+        count: 0,
+      };
+
+      // Seek for activities performed that day
+      const hasCurrentDayActivities = activitiesFound.length > 0;
+      if (hasCurrentDayActivities) {
+        for (let i = 0; i < activitiesFound.length; i++) {
+          if (
+            (!config.includeCommuteRide && activitiesFound[i].commute) ||
+            (!config.includeIndoorRide && activitiesFound[i].trainer)
+          ) {
+            continue;
+          }
+
+          onDayTotals.distance += activitiesFound[i].distance_raw;
+          onDayTotals.time += activitiesFound[i].moving_time_raw;
+          onDayTotals.elevation += activitiesFound[i].elevation_gain_raw;
+          onDayTotals.count++;
         }
-        progression.distance = Math.round(distance);
+      }
 
-        // Elevation conversion
-        let elevation = progression.elevation; // Meters
-        if (!isMetric) {
-            elevation *= Constant.METER_TO_FEET_FACTOR; // Imperial (feet)
-        }
-        progression.elevation = Math.round(elevation);
+      // Push totals performed on current day inside buffer
+      rollingBuffers.distance.push(onDayTotals.distance);
+      rollingBuffers.time.push(onDayTotals.time);
+      rollingBuffers.elevation.push(onDayTotals.elevation);
+      rollingBuffers.count.push(onDayTotals.count);
 
-        // Convert time in seconds to hours
-        progression.time = progression.time / 3600;
+      const rollingSum = {
+        distance: _.sum(rollingBuffers.distance) - (isRollingBufferSizeReached ? rollingBuffers.distance.shift() : 0),
+        time: _.sum(rollingBuffers.time) - (isRollingBufferSizeReached ? rollingBuffers.time.shift() : 0),
+        elevation:
+          _.sum(rollingBuffers.elevation) - (isRollingBufferSizeReached ? rollingBuffers.elevation.shift() : 0),
+        count: _.sum(rollingBuffers.count) - (isRollingBufferSizeReached ? rollingBuffers.count.shift() : 0),
+      };
 
-        return progression;
+      const progression: ProgressModel = new ProgressModel(
+        currentDayMoment.year(),
+        currentDayMoment.dayOfYear(),
+        rollingSum.distance,
+        rollingSum.time,
+        rollingSum.elevation,
+        rollingSum.count
+      );
+
+      // Create new year progress if current year do not exists
+      const isNewYearProgress = !_.find(yearProgressions, { year: currentYear });
+      if (isNewYearProgress) {
+        currentYearProgress = {
+          mode: config.mode,
+          year: currentYear,
+          progressions: [],
+        };
+        yearProgressions.push(currentYearProgress); // register inside yearProgressions
+      }
+
+      // Tag progression day as future or not
+      progression.isFuture = !currentDayMoment.isSameOrBefore(todayMoment);
+
+      // Prepare along metric/imperial & push
+      currentYearProgress.progressions.push(this.prepareAlongSystemUnits(progression, isMetric));
+      currentDayMoment.add(1, "days"); // Add a day until todayMoment
     }
 
-    public yearToDateTargetProgression(year: number, targetValue: number): TargetProgressModel[] {
-        const targetProgressModels: TargetProgressModel[] = [];
-        const daysInYear = moment().year(year).isLeapYear() ? 366 : 365;
-        const progressStep = targetValue / daysInYear;
+    return yearProgressions;
+  }
 
-        let targetProgress = progressStep; // Start progression
+  public prepareAlongSystemUnits(progression: ProgressModel, isMetric: boolean): ProgressModel {
+    // Distance conversion
+    let distance = progression.distance / 1000; // KM
 
-        for (let day = 1; day <= daysInYear; day++) {
-            targetProgressModels.push({
-                dayOfYear: day,
-                value: targetProgress,
-            });
-            targetProgress += progressStep;
-        }
+    if (!isMetric) {
+      distance *= Constant.KM_TO_MILE_FACTOR; // Imperial (Miles)
+    }
+    progression.distance = Math.round(distance);
 
-        return targetProgressModels;
+    // Elevation conversion
+    let elevation = progression.elevation; // Meters
+    if (!isMetric) {
+      elevation *= Constant.METER_TO_FEET_FACTOR; // Imperial (feet)
+    }
+    progression.elevation = Math.round(elevation);
+
+    // Convert time in seconds to hours
+    progression.time = progression.time / 3600;
+
+    return progression;
+  }
+
+  public yearToDateTargetProgression(year: number, targetValue: number): TargetProgressModel[] {
+    const targetProgressModels: TargetProgressModel[] = [];
+    const daysInYear = moment().year(year).isLeapYear() ? 366 : 365;
+    const progressStep = targetValue / daysInYear;
+
+    let targetProgress = progressStep; // Start progression
+
+    for (let day = 1; day <= daysInYear; day++) {
+      targetProgressModels.push({
+        dayOfYear: day,
+        value: targetProgress,
+      });
+      targetProgress += progressStep;
     }
 
-    public rollingTargetProgression(year: number, targetValue: number): TargetProgressModel[] {
-        const targetProgressModels: TargetProgressModel[] = [];
-        const daysInYear = moment().year(year).isLeapYear() ? 366 : 365;
+    return targetProgressModels;
+  }
 
-        for (let day = 1; day <= daysInYear; day++) {
-            targetProgressModels.push({
-                dayOfYear: day,
-                value: targetValue,
-            });
-        }
-        return targetProgressModels;
+  public rollingTargetProgression(year: number, targetValue: number): TargetProgressModel[] {
+    const targetProgressModels: TargetProgressModel[] = [];
+    const daysInYear = moment().year(year).isLeapYear() ? 366 : 365;
+
+    for (let day = 1; day <= daysInYear; day++) {
+      targetProgressModels.push({
+        dayOfYear: day,
+        value: targetValue,
+      });
+    }
+    return targetProgressModels;
+  }
+
+  /**
+   * Return activity count for each type of sport. Order by count desc
+   */
+  public activitiesByTypes(syncedActivityModels: SyncedActivityModel[]): ActivityCountByTypeModel[] {
+    const activitiesCountByTypes: ActivityCountByTypeModel[] = [];
+
+    _.forIn(_.countBy(_.map(syncedActivityModels, "type")), (count: number, type: ElevateSport) => {
+      activitiesCountByTypes.push({
+        type: type,
+        count: count,
+      });
+    });
+
+    return _.orderBy(activitiesCountByTypes, (activityCountByTypeModel: ActivityCountByTypeModel) => {
+      return activityCountByTypeModel.count * -1;
+    });
+  }
+
+  public availableYears(syncedActivityModels: SyncedActivityModel[]): number[] {
+    syncedActivityModels = _.sortBy(syncedActivityModels, "start_time");
+
+    const availableYears = [];
+    const startYear: number = moment(_.first(syncedActivityModels).start_time).year();
+    const endYear: number = this.getTodayMoment().year();
+
+    let year: number = startYear;
+    while (year <= endYear) {
+      availableYears.push(year);
+      year++;
     }
 
-    /**
-     * Return activity count for each type of sport. Order by count desc
-     */
-    public activitiesByTypes(syncedActivityModels: SyncedActivityModel[]): ActivityCountByTypeModel[] {
-        const activitiesCountByTypes: ActivityCountByTypeModel[] = [];
+    return availableYears.reverse();
+  }
 
-        _.forIn(_.countBy(_.map(syncedActivityModels, "type")), (count: number, type: ElevateSport) => {
-            activitiesCountByTypes.push({
-                type: type,
-                count: count,
-            });
-        });
+  public filterSyncedActivityModelAlongTypes(
+    activities: SyncedActivityModel[],
+    typesFilter: string[]
+  ): YearProgressActivityModel[] {
+    activities = _.filter(activities, (activity: YearProgressActivityModel) => {
+      if (_.indexOf(typesFilter, activity.type) !== -1) {
+        const momentStartTime: Moment = moment(activity.start_time);
+        activity.year = momentStartTime.year();
+        activity.dayOfYear = momentStartTime.dayOfYear();
+        return true;
+      }
 
-        return _.orderBy(activitiesCountByTypes, (activityCountByTypeModel: ActivityCountByTypeModel) => {
-            return activityCountByTypeModel.count * -1;
-        });
+      return false;
+    });
+
+    return activities as YearProgressActivityModel[];
+  }
+
+  public findProgressionsAtDay(
+    yearProgressions: YearProgressModel[],
+    dayMoment: Moment,
+    progressType: ProgressType,
+    selectedYears: number[],
+    yearsColorsMap: Map<number, string>
+  ): ProgressAtDayModel[] {
+    const progressionsAtDay: ProgressAtDayModel[] = [];
+
+    _.forEach(selectedYears, (selectedYear: number) => {
+      const dayMomentAtYear = dayMoment.year(selectedYear).startOf("day");
+
+      const yearProgressModel: YearProgressModel = _.find(yearProgressions, {
+        year: selectedYear,
+      });
+
+      if (!yearProgressModel) {
+        // Continue if we don't have year progressions for current selectedYear
+        return;
+      }
+
+      const progressModel: ProgressModel = _.find(yearProgressModel.progressions, {
+        dayOfYear: dayMomentAtYear.dayOfYear(),
+      });
+
+      if (progressModel) {
+        const progressAtDay: ProgressAtDayModel = {
+          date: dayMomentAtYear.toDate(),
+          year: dayMomentAtYear.year(),
+          progressType: progressType,
+          value: progressModel.valueOf(progressType),
+          color: yearsColorsMap ? yearsColorsMap.get(dayMomentAtYear.year()) : null,
+        };
+
+        progressionsAtDay.push(progressAtDay);
+      }
+    });
+
+    return progressionsAtDay;
+  }
+
+  public onMomentWatchedChange(momentWatched: Moment): void {
+    this.momentWatched = momentWatched;
+    this.momentWatchedChanges$.next(momentWatched);
+  }
+
+  /**
+   * Reset moment watch to default (today)
+   */
+  public resetMomentWatched(): Moment {
+    const todayMoment = this.getTodayMoment().clone().startOf("day");
+    this.onMomentWatchedChange(todayMoment.clone());
+    return todayMoment;
+  }
+
+  public readableTimeProgress(hoursIn: number): string {
+    if (!hoursIn) {
+      return "0h";
     }
 
-    public availableYears(syncedActivityModels: SyncedActivityModel[]): number[] {
-        syncedActivityModels = _.sortBy(syncedActivityModels, "start_time");
+    const duration = moment.duration(Math.abs(hoursIn), "hours");
+    const hours = Math.floor(duration.asHours());
+    const minutes = duration.minutes();
 
-        const availableYears = [];
-        const startYear: number = moment(_.first(syncedActivityModels).start_time).year();
-        const endYear: number = this.getTodayMoment().year();
+    const showHours = hours ? `${hours}h` + (minutes ? ", " : "") : "";
+    const showMinutes = minutes ? `${minutes}m` : "";
 
-        let year: number = startYear;
-        while (year <= endYear) {
-            availableYears.push(year);
-            year++;
-        }
+    return `${showHours}${showMinutes}`;
+  }
 
-        return availableYears.reverse();
-    }
+  /**
+   * Fetch all preset
+   */
+  public fetchPresets(): Promise<YearToDateProgressPresetModel[]> {
+    return this.yearProgressPresetDao.find();
+  }
 
-    public filterSyncedActivityModelAlongTypes(
-        activities: SyncedActivityModel[],
-        typesFilter: string[]
-    ): YearProgressActivityModel[] {
-        activities = _.filter(activities, (activity: YearProgressActivityModel) => {
-            if (_.indexOf(typesFilter, activity.type) !== -1) {
-                const momentStartTime: Moment = moment(activity.start_time);
-                activity.year = momentStartTime.year();
-                activity.dayOfYear = momentStartTime.dayOfYear();
-                return true;
-            }
+  /**
+   * Add preset to existing
+   */
+  public addPreset(presetModel: YearToDateProgressPresetModel): Promise<YearToDateProgressPresetModel> {
+    return this.yearProgressPresetDao.find().then((models: YearToDateProgressPresetModel[]) => {
+      const query: Partial<YearToDateProgressPresetModel> = {
+        mode: presetModel.mode,
+        progressType: presetModel.progressType,
+        activityTypes: presetModel.activityTypes,
+        includeCommuteRide: presetModel.includeCommuteRide,
+        includeIndoorRide: presetModel.includeIndoorRide,
+        targetValue: presetModel.targetValue,
+      };
 
-            return false;
-        });
+      if (presetModel.mode === ProgressMode.ROLLING) {
+        const rollingPresetModel = presetModel as RollingProgressPresetModel;
+        (query as RollingProgressPresetModel).rollingPeriod = rollingPresetModel.rollingPeriod;
+        (query as RollingProgressPresetModel).periodMultiplier = rollingPresetModel.periodMultiplier;
+      }
 
-        return activities as YearProgressActivityModel[];
-    }
+      const existingModel = _.find(models, query);
 
-    public findProgressionsAtDay(
-        yearProgressions: YearProgressModel[],
-        dayMoment: Moment,
-        progressType: ProgressType,
-        selectedYears: number[],
-        yearsColorsMap: Map<number, string>
-    ): ProgressAtDayModel[] {
-        const progressionsAtDay: ProgressAtDayModel[] = [];
+      if (existingModel) {
+        return Promise.reject(
+          new AppError(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS, "You already saved this preset.")
+        );
+      }
 
-        _.forEach(selectedYears, (selectedYear: number) => {
-            const dayMomentAtYear = dayMoment.year(selectedYear).startOf("day");
+      return this.yearProgressPresetDao.insert(presetModel, true);
+    });
+  }
 
-            const yearProgressModel: YearProgressModel = _.find(yearProgressions, {
-                year: selectedYear,
-            });
+  /**
+   * Remove preset at index
+   */
+  public deletePreset(id: string): Promise<void> {
+    return this.yearProgressPresetDao.removeById(id);
+  }
 
-            if (!yearProgressModel) {
-                // Continue if we don't have year progressions for current selectedYear
-                return;
-            }
-
-            const progressModel: ProgressModel = _.find(yearProgressModel.progressions, {
-                dayOfYear: dayMomentAtYear.dayOfYear(),
-            });
-
-            if (progressModel) {
-                const progressAtDay: ProgressAtDayModel = {
-                    date: dayMomentAtYear.toDate(),
-                    year: dayMomentAtYear.year(),
-                    progressType: progressType,
-                    value: progressModel.valueOf(progressType),
-                    color: yearsColorsMap ? yearsColorsMap.get(dayMomentAtYear.year()) : null,
-                };
-
-                progressionsAtDay.push(progressAtDay);
-            }
-        });
-
-        return progressionsAtDay;
-    }
-
-    public onMomentWatchedChange(momentWatched: Moment): void {
-        this.momentWatched = momentWatched;
-        this.momentWatchedChanges$.next(momentWatched);
-    }
-
-    /**
-     * Reset moment watch to default (today)
-     */
-    public resetMomentWatched(): Moment {
-        const todayMoment = this.getTodayMoment().clone().startOf("day");
-        this.onMomentWatchedChange(todayMoment.clone());
-        return todayMoment;
-    }
-
-    public readableTimeProgress(hoursIn: number): string {
-        if (!hoursIn) {
-            return "0h";
-        }
-
-        const duration = moment.duration(Math.abs(hoursIn), "hours");
-        const hours = Math.floor(duration.asHours());
-        const minutes = duration.minutes();
-
-        const showHours = hours ? `${hours}h` + (minutes ? ", " : "") : "";
-        const showMinutes = minutes ? `${minutes}m` : "";
-
-        return `${showHours}${showMinutes}`;
-    }
-
-    /**
-     * Fetch all preset
-     */
-    public fetchPresets(): Promise<YearToDateProgressPresetModel[]> {
-        return this.yearProgressPresetDao.find();
-    }
-
-    /**
-     * Add preset to existing
-     */
-    public addPreset(presetModel: YearToDateProgressPresetModel): Promise<YearToDateProgressPresetModel> {
-        return this.yearProgressPresetDao.find().then((models: YearToDateProgressPresetModel[]) => {
-            const query: Partial<YearToDateProgressPresetModel> = {
-                mode: presetModel.mode,
-                progressType: presetModel.progressType,
-                activityTypes: presetModel.activityTypes,
-                includeCommuteRide: presetModel.includeCommuteRide,
-                includeIndoorRide: presetModel.includeIndoorRide,
-                targetValue: presetModel.targetValue,
-            };
-
-            if (presetModel.mode === ProgressMode.ROLLING) {
-                const rollingPresetModel = presetModel as RollingProgressPresetModel;
-                (query as RollingProgressPresetModel).rollingPeriod = rollingPresetModel.rollingPeriod;
-                (query as RollingProgressPresetModel).periodMultiplier = rollingPresetModel.periodMultiplier;
-            }
-
-            const existingModel = _.find(models, query);
-
-            if (existingModel) {
-                return Promise.reject(
-                    new AppError(AppError.YEAR_PROGRESS_PRESETS_ALREADY_EXISTS, "You already saved this preset.")
-                );
-            }
-
-            return this.yearProgressPresetDao.insert(presetModel, true);
-        });
-    }
-
-    /**
-     * Remove preset at index
-     */
-    public deletePreset(id: string): Promise<void> {
-        return this.yearProgressPresetDao.removeById(id);
-    }
-
-    public getTodayMoment(): Moment {
-        return moment();
-    }
+  public getTodayMoment(): Moment {
+    return moment();
+  }
 }
