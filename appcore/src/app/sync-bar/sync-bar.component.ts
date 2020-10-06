@@ -110,14 +110,10 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     }
 
     public onActionShowErrors(): void {
-        // Stop sync before showing errors
-        const stopSync = this.isSyncing ? this.onActionStop() : Promise.resolve();
-        stopSync.finally(() => {
-            this.dialog.open(DesktopErrorsSyncDetailsDialogComponent, {
-                minWidth: DesktopErrorsSyncDetailsDialogComponent.MIN_WIDTH,
-                maxWidth: DesktopErrorsSyncDetailsDialogComponent.MAX_WIDTH,
-                data: this.eventErrors,
-            });
+        this.dialog.open(DesktopErrorsSyncDetailsDialogComponent, {
+            minWidth: DesktopErrorsSyncDetailsDialogComponent.MIN_WIDTH,
+            maxWidth: DesktopErrorsSyncDetailsDialogComponent.MAX_WIDTH,
+            data: this.eventErrors,
         });
     }
 
