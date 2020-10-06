@@ -13,7 +13,8 @@ export class TopBarComponent {}
     <div class="top-bar">
       <div class="draggable"></div>
       <span class="top-bar-title mat-body-strong" *ngIf="buildMetadata && buildMetadata.commit && buildMetadata.date">
-        <span class="alpha-tag">alpha</span>&nbsp;&nbsp;Elevate v{{ currentVersion }}
+        Elevate v{{ currentVersion }}&nbsp;&nbsp;-&nbsp;&nbsp;
+        <i class="mat-caption">(this version don't contains all expected features and might be unstable)</i>
       </span>
       <span class="toolbar-spacer"></span>
       <button mat-icon-button (click)="onMinimizeAppClicked()">
@@ -32,14 +33,6 @@ export class TopBarComponent {}
   `,
   styles: [
     `
-      .alpha-tag {
-        background-color: #ff004c;
-        color: white;
-        padding: 1px 5px 1px 5px;
-        font-weight: bold;
-        border-radius: 3px;
-      }
-
       .top-bar {
         background-color: #303030;
         display: flex;
