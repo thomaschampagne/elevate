@@ -421,7 +421,9 @@ export class FileSystemConnector extends BaseConnector {
                                                             // Assign reference to strava activity
                                                             syncedActivityModel.extras = {
                                                                 fs_activity_location: activityFile.location,
-                                                            }; // Keep tracking  of activity id
+                                                            };
+
+                                                            // Keep tracking  of activity id
                                                             syncedActivityModel.id =
                                                                 BaseConnector.hashData(
                                                                     syncedActivityModel.start_time,
@@ -575,11 +577,6 @@ export class FileSystemConnector extends BaseConnector {
                                     );
                             })
                             .catch(error => {
-                                if (error.code) {
-                                    // Already an ErrorSyncEvent
-                                    return Promise.reject(error);
-                                }
-
                                 if ((error as EventLibError).event === null) {
                                     // No event available from sports-lib
                                     logger.warn("No sports-lib event available. Skip " + activityFile.location.path);
@@ -594,11 +591,15 @@ export class FileSystemConnector extends BaseConnector {
                                     errorMessage,
                                     error.stack ? error.stack : null
                                 );
+
+                                // Keep tracking  of activity id
                                 errorSyncEvent.activity = new SyncedActivityModel();
                                 (errorSyncEvent.activity as SyncedActivityModel).extras = {
                                     fs_activity_location: activityFile.location,
-                                }; // Keep tracking  of activity id
-                                return Promise.reject(errorSyncEvent);
+                                };
+
+                                syncEvents$.next(errorSyncEvent);
+                                return Promise.resolve();
                             });
                     });
                 }, Promise.resolve());
@@ -921,7 +922,7 @@ export class FileSystemConnector extends BaseConnector {
 
     public getLastAccessDate(absolutePath: string): Date {
         const stats = this.getFs().statSync(absolutePath);
-        return stats.atime;
+        return stats.mtime > stats.birthtime ? stats.mtime : stats.birthtime;
     }
 
     public deflateActivitiesFromArchive(archiveFilePath: string, deleteArchive: boolean = false): Promise<string[]> {

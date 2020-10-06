@@ -621,7 +621,7 @@ describe("FileSystemConnector", () => {
         it("should sync fully an input folder never synced before", done => {
             // Given
             const syncDateTime = null; // Never synced before !!
-            const syncEvents = new Subject<SyncEvent>();
+            const syncEvents$ = new Subject<SyncEvent>();
             const scanSubDirectories = true;
             const extractArchiveFiles = true;
             const deleteArchivesAfterExtract = false;
@@ -656,7 +656,7 @@ describe("FileSystemConnector", () => {
                 BaseConnector,
                 "updatePrimitiveStatsFromComputation"
             ).and.callThrough();
-            const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
+            const syncEventNextSpy = spyOn(syncEvents$, "next").and.stub();
 
             const expectedName = "Afternoon Ride";
             const expectedStartTime = "2019-08-15T11:10:49.000Z";
@@ -667,7 +667,7 @@ describe("FileSystemConnector", () => {
             const expectedActivityFilePathMatch = "20190815_ride_3953195468.tcx";
 
             // When
-            const promise = fileSystemConnector.syncFiles(syncEvents);
+            const promise = fileSystemConnector.syncFiles(syncEvents$);
 
             // Then
             promise.then(
@@ -740,7 +740,7 @@ describe("FileSystemConnector", () => {
         it("should sync fully activities of an input folder already synced (no recent activities => syncDateTime = null)", done => {
             // Given
             const syncDateTime = null; // Force sync on all scanned files
-            const syncEvents = new Subject<SyncEvent>();
+            const syncEvents$ = new Subject<SyncEvent>();
             const scanSubDirectories = true;
             const extractArchiveFiles = true;
             const deleteArchivesAfterExtract = false;
@@ -785,10 +785,10 @@ describe("FileSystemConnector", () => {
                 fileSystemConnector,
                 "computeAdditionalStreams"
             ).and.callThrough();
-            const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
+            const syncEventNextSpy = spyOn(syncEvents$, "next").and.stub();
 
             // When
-            const promise = fileSystemConnector.syncFiles(syncEvents);
+            const promise = fileSystemConnector.syncFiles(syncEvents$);
 
             // Then
             promise.then(
@@ -829,7 +829,7 @@ describe("FileSystemConnector", () => {
             // Given
             const syncDate = new Date("2019-01-01T12:00:00.000Z");
             const syncDateTime = syncDate.getTime(); // Force sync on all scanned files
-            const syncEvents = new Subject<SyncEvent>();
+            const syncEvents$ = new Subject<SyncEvent>();
             const scanSubDirectories = true;
             const extractArchiveFiles = true;
             const deleteArchivesAfterExtract = false;
@@ -873,10 +873,10 @@ describe("FileSystemConnector", () => {
                 fileSystemConnector,
                 "computeAdditionalStreams"
             ).and.callThrough();
-            const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
+            const syncEventNextSpy = spyOn(syncEvents$, "next").and.stub();
 
             // When
-            const promise = fileSystemConnector.syncFiles(syncEvents);
+            const promise = fileSystemConnector.syncFiles(syncEvents$);
 
             // Then
             promise.then(
@@ -917,7 +917,7 @@ describe("FileSystemConnector", () => {
         it("should send sync error when multiple activities are found", done => {
             // Given
             const syncDateTime = null; // Force sync on all scanned files
-            const syncEvents = new Subject<SyncEvent>();
+            const syncEvents$ = new Subject<SyncEvent>();
             const scanSubDirectories = true;
             const extractArchiveFiles = true;
             const deleteArchivesAfterExtract = false;
@@ -960,7 +960,7 @@ describe("FileSystemConnector", () => {
                 fileSystemConnector,
                 "computeAdditionalStreams"
             ).and.callThrough();
-            const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
+            const syncEventNextSpy = spyOn(syncEvents$, "next").and.stub();
             const expectedActivitiesFound =
                 expectedExistingSyncedActivity.name +
                 " (" +
@@ -968,7 +968,7 @@ describe("FileSystemConnector", () => {
                 ")";
 
             // When
-            const promise = fileSystemConnector.syncFiles(syncEvents);
+            const promise = fileSystemConnector.syncFiles(syncEvents$);
 
             // Then
             promise.then(
@@ -1012,10 +1012,10 @@ describe("FileSystemConnector", () => {
             );
         });
 
-        it("should send sync error on compute error", done => {
+        it("should continue sync on compute error", done => {
             // Given
             const syncDateTime = null; // Force sync on all scanned files
-            const syncEvents = new Subject<SyncEvent>();
+            const syncEvents$ = new Subject<SyncEvent>();
             const scanSubDirectories = true;
             const extractArchiveFiles = false;
             const deleteArchivesAfterExtract = false;
@@ -1044,35 +1044,26 @@ describe("FileSystemConnector", () => {
                 }
             });
 
-            const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
+            spyOn(syncEvents$, "next").and.stub();
 
             // When
-            const promise = fileSystemConnector.syncFiles(syncEvents);
+            const promise = fileSystemConnector.syncFiles(syncEvents$);
 
             // Then
             promise.then(
                 () => {
-                    throw new Error("Should not be here");
-                },
-                errorSyncEvent => {
-                    expect(syncEventNextSpy).toHaveBeenCalledTimes(1);
-                    expect(errorSyncEvent).toBeDefined();
-                    expect(errorSyncEvent.code).toEqual(ErrorSyncEvent.SYNC_ERROR_COMPUTE.code);
-                    expect(errorSyncEvent.fromConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
-                    expect(errorSyncEvent.description).toContain(errorMessage);
-                    expect(errorSyncEvent.activity.type).toContain(ActivityTypes.Cycling);
-                    expect(errorSyncEvent.activity.extras.fs_activity_location.path).toContain(
-                        "20190811_ride_3939576645.fit"
-                    );
                     done();
+                },
+                () => {
+                    throw new Error("Should not be here");
                 }
             );
         });
 
-        it("should send sync error on parsing error", done => {
+        it("should continue sync on parsing error", done => {
             // Given
             const syncDateTime = null; // Force sync on all scanned files
-            const syncEvents = new Subject<SyncEvent>();
+            const syncEvents$ = new Subject<SyncEvent>();
             const scanSubDirectories = true;
             const extractArchiveFiles = false;
             const deleteArchivesAfterExtract = false;
@@ -1095,27 +1086,18 @@ describe("FileSystemConnector", () => {
             spyOn(SportsLib, "importFromTCX").and.callThrough();
             spyOn(SportsLib, "importFromFit").and.returnValue(Promise.reject(errorMessage));
             spyOn(fileSystemConnector, "createBareActivity").and.callThrough();
-
-            const syncEventNextSpy = spyOn(syncEvents, "next").and.stub();
+            spyOn(syncEvents$, "next").and.stub();
 
             // When
-            const promise = fileSystemConnector.syncFiles(syncEvents);
+            const promise = fileSystemConnector.syncFiles(syncEvents$);
 
             // Then
             promise.then(
                 () => {
-                    throw new Error("Should not be here");
-                },
-                errorSyncEvent => {
-                    expect(syncEventNextSpy).toHaveBeenCalledTimes(1);
-                    expect(errorSyncEvent).toBeDefined();
-                    expect(errorSyncEvent.code).toEqual(ErrorSyncEvent.SYNC_ERROR_COMPUTE.code);
-                    expect(errorSyncEvent.fromConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
-                    expect(errorSyncEvent.description).toContain(errorMessage);
-                    expect(errorSyncEvent.activity.extras.fs_activity_location.path).toContain(
-                        "20190811_ride_3939576645.fit"
-                    );
                     done();
+                },
+                () => {
+                    throw new Error("Should not be here");
                 }
             );
         });
@@ -1123,7 +1105,7 @@ describe("FileSystemConnector", () => {
         it("should send sync error if source directory do not exists", done => {
             // Given
             const syncDateTime = null; // Force sync on all scanned files
-            const syncEvents = new Subject<SyncEvent>();
+            const syncEvents$ = new Subject<SyncEvent>();
             const fakeSourceDir = "/fake/dir/path";
             const expectedErrorSyncEvent = ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(fakeSourceDir);
             fileSystemConnector = FileSystemConnector.create(
@@ -1134,7 +1116,7 @@ describe("FileSystemConnector", () => {
             );
 
             // When
-            const promise = fileSystemConnector.syncFiles(syncEvents);
+            const promise = fileSystemConnector.syncFiles(syncEvents$);
 
             // Then
             promise.then(

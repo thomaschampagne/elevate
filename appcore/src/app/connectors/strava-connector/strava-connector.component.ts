@@ -18,6 +18,7 @@ import {
 import { IClipboardResponse } from "ngx-clipboard";
 import jdenticon from "jdenticon/standalone";
 import { StatusCodes } from "http-status-codes";
+import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
 
 class GeneratedStravaApiApplication {
     public appName: string;
@@ -41,6 +42,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
     constructor(
         public stravaConnectorService: StravaConnectorService,
         public desktopSyncService: DesktopSyncService,
+        public appEventsService: AppEventsService,
         @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
         public electronService: ElectronService,
         public router: Router,
@@ -63,6 +65,12 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
 
         this.stravaConnectorService.stravaConnectorInfo$.subscribe((stravaConnectorInfo: StravaConnectorInfo) => {
             this.handleCredentialsChanges(stravaConnectorInfo);
+        });
+
+        this.appEventsService.syncDone$.subscribe((changes: boolean) => {
+            if (changes) {
+                this.ngOnInit();
+            }
         });
     }
 

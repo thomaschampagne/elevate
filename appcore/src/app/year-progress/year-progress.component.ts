@@ -210,19 +210,12 @@ export class YearProgressComponent implements OnInit {
         ];
     }
 
-    /**
-     *
-     * @param {ActivityCountByTypeModel[]} activitiesCountByTypeModels
-     * @returns {string}
-     */
     public static findMostPerformedActivityType(activitiesCountByTypeModels: ActivityCountByTypeModel[]): ElevateSport {
         return _.maxBy(activitiesCountByTypeModels, "count").type;
     }
 
     /**
      * Retrieve rolling days length from  rolling period and multiplier
-     * @param rollingPeriod
-     * @param periodMultiplier
      */
     public static findRollingDays(rollingPeriod: string, periodMultiplier: number): number {
         return moment.duration(periodMultiplier, rollingPeriod.toLowerCase() as moment.DurationInputArg2).asDays();
@@ -231,10 +224,10 @@ export class YearProgressComponent implements OnInit {
     public ngOnInit(): void {
         this.initialize();
 
-        // Listen for syncFinished update then reload year progressions if necessary.
+        // Listen for sync done to reload component
         this.appEventsService.syncDone$.subscribe((changes: boolean) => {
             if (changes) {
-                this.initialize();
+                this.ngOnInit();
             }
         });
     }

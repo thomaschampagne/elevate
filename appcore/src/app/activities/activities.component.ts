@@ -185,7 +185,7 @@ export class ActivitiesComponent implements OnInit {
         this.appEventsService.syncDone$.subscribe((changes: boolean) => {
             if (changes) {
                 this.initialized = false;
-                this.fetchApplyData();
+                this.ngOnInit();
             }
         });
     }

@@ -129,7 +129,7 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
                         this.desktopSyncService.import(desktopDumpModel).then(
                             () => {
                                 importingDialog.close();
-                                this.electronService.restartApp();
+                                window.location.reload();
                             },
                             error => {
                                 importingDialog.close();

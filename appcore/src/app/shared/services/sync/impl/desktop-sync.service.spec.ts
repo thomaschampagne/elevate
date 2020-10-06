@@ -30,11 +30,9 @@ import { TEST_SYNCED_ACTIVITIES } from "../../../../../shared-fixtures/activitie
 import { SyncState } from "../sync-state.enum";
 import { DataStore } from "../../../data-store/data-store";
 import { TestingDataStore } from "../../../data-store/testing-datastore.service";
-import Spy = jasmine.Spy;
 
 describe("DesktopSyncService", () => {
     let desktopSyncService: DesktopSyncService;
-    let restartAppSpy: Spy;
 
     beforeEach(done => {
         TestBed.configureTestingModule({
@@ -55,7 +53,6 @@ describe("DesktopSyncService", () => {
         electronWindow.require = electronRequire;
         spyOn(electronWindow, "require").and.callFake(electronRequire);
         desktopSyncService = TestBed.inject(DesktopSyncService);
-        restartAppSpy = spyOn(desktopSyncService, "restartApp").and.stub();
         done();
     });
 
@@ -502,8 +499,7 @@ describe("DesktopSyncService", () => {
                         .args[0][0];
                     expect(createdConnectorSyncDateTime.connectorType).toEqual(connectorType);
                     expect(getSyncStateSpy).toHaveBeenCalledTimes(1);
-                    expect(syncEventDoneSpy).not.toHaveBeenCalledTimes(1);
-                    expect(restartAppSpy).toHaveBeenCalledTimes(1);
+                    expect(syncEventDoneSpy).toHaveBeenCalledTimes(1);
                     done();
                 },
                 error => {
@@ -542,7 +538,6 @@ describe("DesktopSyncService", () => {
                     expect(upsertSyncDateTimesSpy).toHaveBeenCalledWith([connectorSyncDateTime]);
                     expect(getSyncStateSpy).toHaveBeenCalledTimes(1);
                     expect(syncEventDoneSpy).toHaveBeenCalledTimes(1);
-                    expect(restartAppSpy).not.toHaveBeenCalled();
                     done();
                 },
                 error => {
@@ -749,7 +744,6 @@ describe("DesktopSyncService", () => {
                     expect(syncEventNextSpy).toHaveBeenCalledWith(completeSyncEvent);
                     expect(onSyncDoneSpy).toHaveBeenCalledWith(expectedDetected);
                     expect(resetTrackChangesSpy).toHaveBeenCalledTimes(1);
-                    expect(desktopSyncService.activityUpsertDetected).toBeFalsy();
                     done();
                 },
                 error => {
@@ -957,7 +951,7 @@ describe("DesktopSyncService", () => {
 
             // Then
             expect(syncEventNextSpy).toHaveBeenCalledTimes(1);
-            expect(stopSpy).toHaveBeenCalledTimes(1);
+            expect(stopSpy).not.toHaveBeenCalled();
             done();
         });
 

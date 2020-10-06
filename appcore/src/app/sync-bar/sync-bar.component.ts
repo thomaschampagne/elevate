@@ -24,15 +24,17 @@ export class SyncBarComponent {}
             <div fxLayout="row" fxLayoutAlign="space-between center">
                 <div fxLayout="column" fxLayoutAlign="center start">
                     <span fxFlex class="mat-body-1">
-                        <span *ngIf="currentActivitySynced"
-                            >{{ currentActivitySynced.date }}: {{ currentActivitySynced.name }}
-                            <span class="activity-existence-tag">{{
-                                currentActivitySynced.isNew ? "new" : "already exists"
-                            }}</span></span
-                        >
+                        <span *ngIf="currentActivitySynced">
+                            {{ currentActivitySynced.date }}: {{ currentActivitySynced.name }}
+                            <span class="activity-existence-tag">
+                                {{ currentActivitySynced.isNew ? "new" : "already exists" }}
+                            </span>
+                        </span>
                         <span *ngIf="!currentActivitySynced && syncStatusText">{{ this.syncStatusText }}</span>
                     </span>
-                    <span fxFlex class="mat-caption" *ngIf="counter > 0">{{ counter }} activities processed</span>
+                    <span fxFlex class="mat-caption" *ngIf="activityCounter > 0">
+                        {{ activityCounter }} activities processed
+                    </span>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="space-between center">
                     <button
@@ -44,8 +46,8 @@ export class SyncBarComponent {}
                         {{ eventErrors.length }} warning{{ eventErrors.length > 1 ? "s" : "" }}
                     </button>
                     <button *ngIf="isSyncing" mat-flat-button color="accent" (click)="onActionStop()">Stop</button>
-                    <button *ngIf="!hideCloseButton" mat-flat-button color="accent" (click)="onActionClose()">
-                        Close
+                    <button *ngIf="!hiddenCloseButton" mat-icon-button (click)="onActionClose()">
+                        <mat-icon fontSet="material-icons-outlined">close</mat-icon>
                     </button>
                 </div>
             </div>
@@ -65,13 +67,12 @@ export class SyncBarComponent {}
 })
 export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit {
     @HostBinding("hidden")
-    public hideSyncBar: boolean;
-
-    public hideCloseButton: boolean;
+    public hiddenSyncBar: boolean;
+    public hiddenCloseButton: boolean;
     public isSyncing: boolean;
     public syncStatusText: string;
     public currentActivitySynced: CurrentActivitySynced;
-    public counter: number;
+    public activityCounter: number;
     public eventErrors: ErrorSyncEvent[];
 
     constructor(
@@ -80,18 +81,16 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
         public changeDetectorRef: ChangeDetectorRef
     ) {
         super();
-        this.hideSyncBar = true;
-        this.hideCloseButton = true;
+        this.hideSyncBar();
+        this.hideCloseButton();
         this.isSyncing = false;
         this.syncStatusText = null;
         this.currentActivitySynced = null;
-        this.counter = 0;
+        this.resetCounter();
         this.eventErrors = [];
     }
 
     public ngOnInit(): void {
-        this.hideSyncBar = true;
-
         this.desktopSyncService.syncEvents$.subscribe((syncEvent: SyncEvent) => {
             this.handleSyncEventDisplay(syncEvent);
         });
@@ -106,7 +105,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     }
 
     public onActionClose(): void {
-        this.hideSyncBar = true;
+        this.hideSyncBar();
     }
 
     public onActionShowErrors(): void {
@@ -151,16 +150,17 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 
     private onStartedSyncEvent(syncEvent: SyncEvent): void {
         this.eventErrors = [];
-        this.hideSyncBar = false;
+        this.showSyncBar();
+        this.hideCloseButton();
         this.isSyncing = true;
-        this.hideCloseButton = true;
-        this.counter = 0;
-        this.syncStatusText =
-            'Sync started on connector "' + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + '"';
+        this.resetCounter();
+        this.syncStatusText = `Sync started on connector "${DesktopSyncService.niceConnectorPrint(
+            syncEvent.fromConnectorType
+        )}"`;
     }
 
     private onActivitySyncEvent(syncEvent: SyncEvent): void {
-        this.counter++;
+        this.activityCounter++;
         const activitySyncEvent = syncEvent as ActivitySyncEvent;
         this.currentActivitySynced = {
             date: moment(activitySyncEvent.activity.start_time).format("ll"),
@@ -178,27 +178,47 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     }
 
     private onStoppedSyncEvent(syncEvent: SyncEvent): void {
-        this.isSyncing = false;
-
         this.syncStatusText =
             'Sync stopped on connector "' + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + '"';
-
-        if (this.eventErrors.length > 0) {
-            this.hideCloseButton = false;
-        } else {
-            this.hideSyncBar = true;
-        }
+        this.onSyncEnded();
     }
 
     private onCompleteSyncEvent(syncEvent: SyncEvent): void {
         this.syncStatusText =
             'Sync completed on connector "' + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + '"';
-        if (this.eventErrors.length > 0) {
-            this.hideCloseButton = false;
-            this.isSyncing = false;
-        } else {
-            this.hideSyncBar = true;
+        this.onSyncEnded();
+
+        if (!this.activityCounter) {
+            // If no activity synced auto close sync bar within 750ms
+            setTimeout(() => {
+                this.hideSyncBar();
+            }, 750);
         }
+    }
+
+    private onSyncEnded(): void {
+        this.isSyncing = false;
+        this.showCloseButton();
+    }
+
+    private showSyncBar(): void {
+        this.hiddenSyncBar = false;
+    }
+
+    private hideSyncBar(): void {
+        this.hiddenSyncBar = true;
+    }
+
+    private showCloseButton(): void {
+        this.hiddenCloseButton = false;
+    }
+
+    private hideCloseButton(): void {
+        this.hiddenCloseButton = true;
+    }
+
+    private resetCounter(): void {
+        this.activityCounter = 0;
     }
 }
 

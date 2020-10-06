@@ -184,6 +184,13 @@ export class FitnessTrendComponent implements OnInit {
         this.initialize().then(() => {
             this.logger.debug("FitnessTrend component initialized");
         });
+
+        // Listen for sync done to reload component
+        this.appEventsService.syncDone$.subscribe((changes: boolean) => {
+            if (changes) {
+                this.ngOnInit();
+            }
+        });
     }
 
     public initialize(): Promise<void> {
@@ -248,13 +255,6 @@ export class FitnessTrendComponent implements OnInit {
                             lastDayFitnessTrendModel && lastDayFitnessTrendModel.date
                                 ? lastDayFitnessTrendModel.date
                                 : null;
-
-                        // Listen for syncFinished update then reload graph if necessary.
-                        this.appEventsService.syncDone$.subscribe((changes: boolean) => {
-                            if (changes) {
-                                this.reloadFitnessTrend();
-                            }
-                        });
 
                         this.showFitnessWelcomeDialog();
 

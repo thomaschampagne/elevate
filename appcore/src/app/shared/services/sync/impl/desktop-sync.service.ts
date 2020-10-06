@@ -247,7 +247,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         }
 
         if (
-            errorSyncEvent.code === ErrorSyncEvent.SYNC_ERROR_COMPUTE.code ||
             errorSyncEvent.code === ErrorSyncEvent.UNHANDLED_ERROR_SYNC.code ||
             errorSyncEvent.code === ErrorSyncEvent.SYNC_ERROR_UPSERT_ACTIVITY_DATABASE.code ||
             errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.code ||
@@ -263,6 +262,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
                 this.throwSyncError(stopError); // Should be caught by Error Handler
             });
         } else if (
+            errorSyncEvent.code === ErrorSyncEvent.SYNC_ERROR_COMPUTE.code ||
             errorSyncEvent.code === ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.code ||
             errorSyncEvent.code === ErrorSyncEvent.SYNC_ALREADY_STARTED.code ||
             errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.code ||
@@ -296,9 +296,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
             })
             .then(() => {
                 this.logger.info(completeSyncEvent);
-                syncState && syncState === SyncState.SYNCED
-                    ? this.appEventsService.syncDone$.next(this.activityUpsertDetected)
-                    : this.restartApp();
+                this.appEventsService.syncDone$.next(this.activityUpsertDetected);
                 this.resetActivityTrackingUpsert();
                 syncEvents$.next(completeSyncEvent); // Forward for upward UI use.
             });
@@ -498,10 +496,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
     public resetActivityTrackingUpsert(): void {
         this.activityUpsertDetected = false;
-    }
-
-    public restartApp(): void {
-        this.electronService.restartApp();
     }
 
     public ngOnDestroy(): void {

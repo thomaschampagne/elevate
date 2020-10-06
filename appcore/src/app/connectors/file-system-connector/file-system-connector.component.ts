@@ -11,6 +11,7 @@ import {
     OPEN_RESOURCE_RESOLVER,
     OpenResourceResolver,
 } from "../../shared/services/links-opener/open-resource-resolver";
+import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
 
 @Component({
     selector: "app-file-system-connector",
@@ -24,6 +25,7 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
     constructor(
         public fileSystemConnectorInfoService: FileSystemConnectorInfoService,
         public desktopSyncService: DesktopSyncService,
+        public appEventsService: AppEventsService,
         @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
         public electronService: ElectronService,
         public router: Router,
@@ -45,6 +47,12 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
             this.fileSystemConnectorInfo.sourceDirectory = null;
             this.saveChanges();
         }
+
+        this.appEventsService.syncDone$.subscribe((changes: boolean) => {
+            if (changes) {
+                this.ngOnInit();
+            }
+        });
     }
 
     public onUserDirectorySelection(): void {
