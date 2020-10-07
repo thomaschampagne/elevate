@@ -303,8 +303,8 @@ export class ActivitiesComponent implements OnInit {
     this.searchText$.next(filterValue);
   }
 
-  public openActivity(id: number | string) {
-    this.openResourceResolver.openActivity(id);
+  public openSourceActivity(id: number | string) {
+    this.openResourceResolver.openSourceActivity(id);
   }
 
   public onViewAthleteSettings(activity: SyncedActivityModel): void {

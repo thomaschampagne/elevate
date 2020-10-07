@@ -9,7 +9,6 @@ import { ShareComponent } from "../../../share/share.component";
 import { ReportComponent } from "../../../report/report.component";
 import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/desktop-advanced-menu.component";
 import { FaqComponent } from "../../../faq/faq.component";
-import { ActivityViewComponent } from "../../../activity-view/activity-view.component";
 
 @NgModule({
   imports: [RouterModule.forRoot(DesktopRoutingModule.provideRoutes(), { enableTracing: false, useHash: true })],
@@ -20,10 +19,6 @@ export class DesktopRoutingModule {
     {
       path: AppRoutesModel.activities,
       component: ActivitiesComponent,
-    },
-    {
-      path: AppRoutesModel.activityView + "/:id",
-      component: ActivityViewComponent,
     },
     {
       path: AppRoutesModel.fitnessTrend,

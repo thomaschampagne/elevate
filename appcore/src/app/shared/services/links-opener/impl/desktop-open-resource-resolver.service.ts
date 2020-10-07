@@ -4,7 +4,6 @@ import { ElectronService } from "../../electron/electron.service";
 import { ActivityService } from "../../activity/activity.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
-import { AppRoutesModel } from "../../../models/app-routes.model";
 import { ConnectorType } from "@elevate/shared/sync";
 import { ElevateException } from "@elevate/shared/exceptions";
 
@@ -32,7 +31,7 @@ export class DesktopOpenResourceResolver extends OpenResourceResolver {
   public openActivity(id: number | string): void {
     this.activityService.getById(id).then(activity => {
       if (activity) {
-        this.router.navigate([AppRoutesModel.activityView, activity.id]);
+        // Implements activity opening here
       } else {
         this.snackBar.open(`Activity with id ${id} not found`, "Close");
       }

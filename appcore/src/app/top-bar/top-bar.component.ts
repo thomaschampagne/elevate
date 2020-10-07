@@ -13,8 +13,8 @@ export class TopBarComponent {}
     <div class="top-bar">
       <div class="draggable"></div>
       <span class="top-bar-title mat-body-strong" *ngIf="buildMetadata && buildMetadata.commit && buildMetadata.date">
-        Elevate v{{ currentVersion }}&nbsp;&nbsp;-&nbsp;&nbsp;
-        <i class="mat-caption">(this version don't contains all expected features and might be unstable)</i>
+        Elevate v{{ currentVersion }} -
+        <span class="mat-caption">(Do not contain all expected features and might be unstable)</span>
       </span>
       <span class="toolbar-spacer"></span>
       <button mat-icon-button (click)="onMinimizeAppClicked()">

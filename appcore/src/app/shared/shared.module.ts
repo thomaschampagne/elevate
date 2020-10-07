@@ -39,7 +39,6 @@ import { ExtensionModule } from "./modules/extension/extension.module";
 import { DesktopModule } from "./modules/desktop/desktop.module";
 import { StreamsDao } from "./dao/streams/streams.dao";
 import { StreamsService } from "./services/streams/streams.service";
-import { ActivityViewComponent } from "../activity-view/activity-view.component";
 import { ActivitiesSettingsLacksDialogComponent } from "../refresh-stats-bar/activities-settings-lacks-dialog.component";
 import { LoadingDialogComponent } from "./dialogs/loading-dialog/loading-dialog.component";
 
@@ -54,7 +53,6 @@ import { LoadingDialogComponent } from "./dialogs/loading-dialog/loading-dialog.
   declarations: [
     // Components
     ActivitiesComponent,
-    ActivityViewComponent,
     GlobalSettingsComponent,
     ZonesSettingsComponent,
     ZoneComponent,

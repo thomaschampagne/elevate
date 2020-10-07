@@ -73,7 +73,7 @@
             {{column.print(activity, column.path)}}
           </ng-container>
           <ng-container *ngIf="column.type === ColumnType.ACTIVITY_LINK">
-            <button (click)="openActivity(activity.id)" color="primary"
+            <button (click)="openSourceActivity(activity.id)" color="primary"
                     mat-button>{{column.print(activity, column.path)}}</button>
           </ng-container>
           <ng-container *ngIf="column.type === ColumnType.NUMBER">
