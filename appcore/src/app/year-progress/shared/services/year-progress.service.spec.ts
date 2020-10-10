@@ -6,8 +6,7 @@ import { YearProgressModel } from "../models/year-progress.model";
 import * as _ from "lodash";
 import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model";
 import { ProgressModel } from "../models/progress.model";
-import * as moment from "moment";
-import { Moment } from "moment";
+import moment, { Moment } from "moment";
 import { ProgressAtDayModel } from "../models/progress-at-date.model";
 import { ProgressType } from "../enums/progress-type.enum";
 import { SyncedActivityModel } from "@elevate/shared/models";
@@ -1295,7 +1294,7 @@ describe("YearProgressService", () => {
       // Then
       promise.then(
         () => {
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         },
         (error: AppError) => {
@@ -1339,7 +1338,7 @@ describe("YearProgressService", () => {
       // Then
       promise.then(
         () => {
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         },
         (error: AppError) => {
@@ -1392,7 +1391,7 @@ describe("YearProgressService", () => {
       // Then
       promise.then(
         () => {
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         },
         (error: AppError) => {

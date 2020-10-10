@@ -1,6 +1,5 @@
 import * as _ from "lodash";
-import * as moment from "moment";
-import { Moment } from "moment";
+import moment, { Moment } from "moment";
 import { Component, OnInit } from "@angular/core";
 import { YearProgressService } from "./shared/services/year-progress.service";
 import { ActivityCountByTypeModel } from "./shared/models/activity-count-by-type.model";

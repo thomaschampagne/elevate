@@ -1,4 +1,4 @@
-import * as moment from "moment";
+import moment from "moment";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { ElevateSport } from "@elevate/shared/enums";
 

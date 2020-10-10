@@ -10,6 +10,8 @@ import { SyncedActivityModel } from "@elevate/shared/models";
 import { ActivitySyncEvent, ConnectorType } from "@elevate/shared/sync";
 import { PROMISE_TRON } from "./promise-tron.interface";
 import { PromiseTronServiceMock } from "./promise-tron.service.mock";
+import { DataStore } from "../../shared/data-store/data-store";
+import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 
 describe("IpcMessagesReceiver", () => {
   let ipcMessagesReceiver: IpcMessagesReceiver;
@@ -17,7 +19,10 @@ describe("IpcMessagesReceiver", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, DesktopModule],
-      providers: [{ provide: PROMISE_TRON, useClass: PromiseTronServiceMock }],
+      providers: [
+        { provide: PROMISE_TRON, useClass: PromiseTronServiceMock },
+        { provide: DataStore, useClass: TestingDataStore },
+      ],
     });
 
     ipcMessagesReceiver = TestBed.inject(IpcMessagesReceiver);

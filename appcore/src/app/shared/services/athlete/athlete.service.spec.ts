@@ -96,7 +96,7 @@ describe("AthleteService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -125,7 +125,7 @@ describe("AthleteService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -143,7 +143,7 @@ describe("AthleteService", () => {
       promise.then(
         (athleteModel: AthleteModel) => {
           expect(athleteModel).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         },
         error => {
@@ -212,7 +212,7 @@ describe("AthleteService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -260,7 +260,7 @@ describe("AthleteService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -309,7 +309,7 @@ describe("AthleteService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -351,7 +351,7 @@ describe("AthleteService", () => {
       promise.then(
         (result: DatedAthleteSettingsModel[]) => {
           expect(result).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
 
           done();
         },
@@ -403,7 +403,7 @@ describe("AthleteService", () => {
       promise.then(
         (result: DatedAthleteSettingsModel[]) => {
           expect(result).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
 
           done();
         },
@@ -462,7 +462,7 @@ describe("AthleteService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -507,7 +507,7 @@ describe("AthleteService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -582,7 +582,7 @@ describe("AthleteService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -657,7 +657,7 @@ describe("AthleteService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -708,7 +708,7 @@ describe("AthleteService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -762,7 +762,7 @@ describe("AthleteService", () => {
       promise.then(
         (result: DatedAthleteSettingsModel[]) => {
           expect(result).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
 
           done();
         },
@@ -825,7 +825,7 @@ describe("AthleteService", () => {
       promise.then(
         (result: DatedAthleteSettingsModel[]) => {
           expect(result).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         },
         (error: AppError) => {
@@ -886,7 +886,7 @@ describe("AthleteService", () => {
       promise.then(
         (result: DatedAthleteSettingsModel[]) => {
           expect(result).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
 
           done();
         },
@@ -954,7 +954,7 @@ describe("AthleteService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -991,7 +991,7 @@ describe("AthleteService", () => {
       promise.then(
         (result: DatedAthleteSettingsModel[]) => {
           expect(result).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         },
         (error: AppError) => {
@@ -1032,7 +1032,7 @@ describe("AthleteService", () => {
       promise.then(
         (result: DatedAthleteSettingsModel[]) => {
           expect(result).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         },
         (error: AppError) => {
@@ -1082,7 +1082,7 @@ describe("AthleteService", () => {
       promise.then(
         (result: DatedAthleteSettingsModel[]) => {
           expect(result).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         },
         (error: AppError) => {

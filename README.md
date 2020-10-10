@@ -352,9 +352,9 @@ npm run package:mac
 
 * You can update the uploaded files draft with a new packaging process. Once ready, click `Publish release`: users will receive the update.
 
-## Use custom browser for unit-testing
+## Use custom browser for unit-testing (web-extension only)
 
-Create a `browsers.karma.conf.js` file at project root.
+Create a `browsers.karma.conf.js` file in `webextension` folder.
 
 To run unit test in a headless **chromium** instead of **chrome**, inject below javascript code:
 

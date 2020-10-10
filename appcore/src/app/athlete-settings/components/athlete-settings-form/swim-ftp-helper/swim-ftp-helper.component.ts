@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import * as _ from "lodash";
-import * as moment from "moment";
+import moment from "moment";
 import { SwimCalculationMethod } from "./swim-calculation-method.model";
 import { FormulaParamsModel } from "./formula-params.model";
 

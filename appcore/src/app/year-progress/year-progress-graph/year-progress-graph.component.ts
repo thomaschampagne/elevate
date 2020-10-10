@@ -1,8 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 import { ViewableYearProgressDataModel } from "./models/viewable-year-progress-data.model";
-import * as moment from "moment";
-import { Moment } from "moment";
+import moment, { Moment } from "moment";
 import * as _ from "lodash";
 import { YearProgressModel } from "../shared/models/year-progress.model";
 import { ProgressModel } from "../shared/models/progress.model";

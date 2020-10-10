@@ -8,7 +8,7 @@ import { LoggerService } from "../../logging/logger.service";
 import { SyncedActivityModel } from "@elevate/shared/models/sync/synced-activity.model";
 import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 import * as _ from "lodash";
-import * as moment from "moment";
+import moment from "moment";
 import { SyncService } from "../sync.service";
 import { SyncState } from "../sync-state.enum";
 import { ExtensionDumpModel } from "../../../models/dumps/extension-dump.model";

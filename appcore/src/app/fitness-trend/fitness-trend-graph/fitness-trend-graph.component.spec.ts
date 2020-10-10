@@ -4,8 +4,7 @@ import { FitnessTrendGraphComponent } from "./fitness-trend-graph.component";
 import { FitnessService } from "../shared/services/fitness.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { TEST_SYNCED_ACTIVITIES } from "../../../shared-fixtures/activities-2015.fixture";
-import * as moment from "moment";
-import { Moment } from "moment";
+import moment, { Moment } from "moment";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
@@ -17,12 +16,14 @@ import { UserSettingsService } from "../../shared/services/user-settings/user-se
 import { UserSettings } from "@elevate/shared/models";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
+import { WindowService } from "../../shared/services/window/window.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("FitnessTrendGraphComponent", () => {
   let userSettingsService: UserSettingsService;
   let activityService: ActivityService;
   let fitnessService: FitnessService;
+  let windowService: WindowService;
   let component: FitnessTrendGraphComponent;
   let fixture: ComponentFixture<FitnessTrendGraphComponent>;
   let todayMoment: Moment;
@@ -43,6 +44,7 @@ describe("FitnessTrendGraphComponent", () => {
     userSettingsService = TestBed.inject(UserSettingsService);
     activityService = TestBed.inject(ActivityService);
     fitnessService = TestBed.inject(FitnessService);
+    windowService = TestBed.inject(WindowService);
 
     // Mocking
     spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
@@ -52,6 +54,7 @@ describe("FitnessTrendGraphComponent", () => {
 
     todayMoment = moment("2015-12-01 12:00", "YYYY-MM-DD hh:mm");
     spyOn(fitnessService, "getTodayMoment").and.returnValue(todayMoment);
+    spyOn(windowService, "isScreenMediaActive").and.returnValue(false);
 
     const fitnessTrendConfigModel = {
       heartRateImpulseMode: HeartRateImpulseMode.HRSS,

@@ -1,4 +1,4 @@
-import * as moment from "moment";
+import moment from "moment";
 import { DayStressModel } from "./day-stress.model";
 import { TrainingZone } from "../enums/training-zone.enum";
 import * as _ from "lodash";

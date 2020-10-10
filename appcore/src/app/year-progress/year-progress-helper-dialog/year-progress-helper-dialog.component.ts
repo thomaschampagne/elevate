@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import * as moment from "moment";
-import { Moment } from "moment";
+import moment, { Moment } from "moment";
 
 @Component({
   selector: "app-year-progress-helper-dialog",

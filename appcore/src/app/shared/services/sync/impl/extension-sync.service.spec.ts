@@ -132,7 +132,7 @@ describe("ExtensionSyncService", () => {
       },
       error => {
         expect(error).toBeNull();
-        expect(false).toBeTruthy("Whoops! I should not be here!");
+        throw new Error("Whoops! I should not be here!");
         done();
       }
     );
@@ -220,7 +220,7 @@ describe("ExtensionSyncService", () => {
       () => {
         expect(prepareForExportSpy).toHaveBeenCalledTimes(1);
         expect(saveAsSpy).toHaveBeenCalledTimes(0);
-        expect(false).toBeTruthy("Whoops! I should not be here!");
+        throw new Error("Whoops! I should not be here!");
         done();
       },
       error => {
@@ -412,7 +412,7 @@ describe("ExtensionSyncService", () => {
     // Then
     promise.then(
       () => {
-        expect(false).toBeTruthy("Whoops! I should not be here!");
+        throw new Error("Whoops! I should not be here!");
         done();
       },
       error => {
@@ -449,7 +449,7 @@ describe("ExtensionSyncService", () => {
     // Then
     promise.then(
       () => {
-        expect(false).toBeTruthy("Whoops! I should not be here!");
+        throw new Error("Whoops! I should not be here!");
         done();
       },
       error => {
@@ -481,7 +481,7 @@ describe("ExtensionSyncService", () => {
     // Then
     promise.then(
       () => {
-        expect(false).toBeTruthy("Whoops! I should not be here!");
+        throw new Error("Whoops! I should not be here!");
         done();
       },
       error => {
@@ -518,7 +518,7 @@ describe("ExtensionSyncService", () => {
     // Then
     promise.then(
       () => {
-        expect(false).toBeTruthy("Whoops! I should not be here!");
+        throw new Error("Whoops! I should not be here!");
         done();
       },
       error => {
@@ -550,7 +550,7 @@ describe("ExtensionSyncService", () => {
     // Then
     promise.then(
       () => {
-        expect(false).toBeTruthy("Whoops! I should not be here!");
+        throw new Error("Whoops! I should not be here!");
         done();
       },
       error => {
@@ -587,7 +587,7 @@ describe("ExtensionSyncService", () => {
     // Then
     promise.then(
       () => {
-        expect(false).toBeTruthy("Whoops! I should not be here!");
+        throw new Error("Whoops! I should not be here!");
         done();
       },
       error => {
@@ -634,7 +634,7 @@ describe("ExtensionSyncService", () => {
     // Then
     promise.then(
       () => {
-        expect(false).toBeTruthy("Whoops! I should not be here!");
+        throw new Error("Whoops! I should not be here!");
         done();
       },
       error => {

@@ -4,7 +4,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { ConnectorType, StravaConnectorInfo } from "@elevate/shared/sync";
 import { ConnectorsComponent } from "../connectors.component";
 import { StravaConnectorService } from "../services/strava-connector.service";
-import * as moment from "moment";
+import moment from "moment";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { ElectronService } from "../../shared/services/electron/electron.service";
 import { adjectives, animals, colors, names, uniqueNamesGenerator } from "unique-names-generator";

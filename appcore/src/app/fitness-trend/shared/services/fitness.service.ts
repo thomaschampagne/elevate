@@ -1,6 +1,5 @@
 import * as _ from "lodash";
-import * as moment from "moment";
-import { Moment } from "moment";
+import moment, { Moment } from "moment";
 import { Injectable } from "@angular/core";
 import { ActivityService } from "../../../shared/services/activity/activity.service";
 import { DayStressModel } from "../models/day-stress.model";

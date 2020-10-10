@@ -5,7 +5,7 @@ import { SyncService } from "../shared/services/sync/sync.service";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { FitnessService } from "./shared/services/fitness.service";
 import { PeriodModel } from "./shared/models/period.model";
-import * as moment from "moment";
+import moment from "moment";
 import { LastPeriodModel } from "./shared/models/last-period.model";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
 import { AppError } from "../shared/models/app-error.model";

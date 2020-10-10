@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { DomSanitizer } from "@angular/platform-browser";
-import * as MarkDownIt from "markdown-it";
+import MarkDownIt from "markdown-it";
 import { LoggerService } from "../shared/services/logging/logger.service";
 
 @Component({

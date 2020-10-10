@@ -16,6 +16,8 @@ import { SharedModule } from "../../shared.module";
 import { ElevateSport } from "@elevate/shared/enums";
 import { DesktopModule } from "../../modules/desktop/desktop.module";
 import { ElectronService, ElectronWindow } from "../electron/electron.service";
+import { DataStore } from "../../data-store/data-store";
+import { TestingDataStore } from "../../data-store/testing-datastore.service";
 
 describe("ActivityService", () => {
   let activityService: ActivityService = null;
@@ -25,6 +27,7 @@ describe("ActivityService", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, DesktopModule],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }],
     });
 
     const electronService: ElectronService = TestBed.inject(ElectronService);
@@ -75,7 +78,7 @@ describe("ActivityService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -96,7 +99,7 @@ describe("ActivityService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -124,7 +127,7 @@ describe("ActivityService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -215,7 +218,7 @@ describe("ActivityService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -312,7 +315,7 @@ describe("ActivityService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -413,7 +416,7 @@ describe("ActivityService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -500,7 +503,7 @@ describe("ActivityService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );

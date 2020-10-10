@@ -1,4 +1,4 @@
-import * as moment from "moment";
+import moment from "moment";
 import * as _ from "lodash";
 import { TestBed } from "@angular/core/testing";
 import { FitnessService } from "./fitness.service";
@@ -173,7 +173,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -259,7 +259,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -433,7 +433,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -593,7 +593,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -754,7 +754,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -915,7 +915,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -1077,7 +1077,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -1186,7 +1186,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -1797,7 +1797,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -1991,7 +1991,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -2185,7 +2185,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -2289,7 +2289,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -2394,7 +2394,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -2513,7 +2513,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -2636,7 +2636,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -2761,7 +2761,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -3305,7 +3305,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -3701,7 +3701,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );
@@ -3777,7 +3777,7 @@ describe("FitnessService", () => {
         },
         error => {
           expect(error).toBeNull();
-          expect(false).toBeTruthy("Whoops! I should not be here!");
+          throw new Error("Whoops! I should not be here!");
           done();
         }
       );

@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from "@angular/core";
 import * as _ from "lodash";
-import * as moment from "moment";
+import moment from "moment";
 import * as d3 from "d3";
 import * as MG from "metrics-graphics";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
@@ -285,8 +285,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
   /**
    * Return start/end indexes of fullFitnessTrend collection corresponding to from/to date given in a period
-   * @param {PeriodModel} period
-   * @returns {{start: number; end: number}}
    */
   public indexesOf(period: PeriodModel): { start: number; end: number } {
     let startIndex = 0; // Use first day as start index by default.

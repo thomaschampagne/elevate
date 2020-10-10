@@ -12,7 +12,7 @@ import { UserSettingsService } from "../shared/services/user-settings/user-setti
 import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 import { Parser as Json2CsvParser } from "json2csv";
-import * as moment from "moment";
+import moment from "moment";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { SyncService } from "../shared/services/sync/sync.service";

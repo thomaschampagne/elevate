@@ -1,4 +1,4 @@
-import * as moment from "moment";
+import moment from "moment";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
 import { Constant } from "@elevate/shared/constants";
 

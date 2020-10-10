@@ -671,7 +671,7 @@ describe("ZonesService", () => {
     // Then
     promiseSave.then(
       () => {
-        expect(true).toBeFalsy("Test should no go there");
+        throw new Error("Test should no go there");
         done();
       },
       error => {
@@ -699,7 +699,7 @@ describe("ZonesService", () => {
     // Then
     promiseSave.then(
       () => {
-        expect(true).toBeFalsy("Test should no go there");
+        throw new Error("Test should no go there");
         done();
       },
       error => {
@@ -735,7 +735,7 @@ describe("ZonesService", () => {
     // Then
     promiseSave.then(
       () => {
-        expect(true).toBeFalsy("Test should no go there");
+        throw new Error("Test should no go there");
         done();
       },
       error => {
@@ -807,7 +807,7 @@ describe("ZonesService", () => {
     // Then
     promiseImport.then(
       () => {
-        expect(true).toBeFalsy("Test should no go there");
+        throw new Error("Test should no go there");
         done();
       },
       (error: string) => {
@@ -834,7 +834,7 @@ describe("ZonesService", () => {
     // Then
     promiseImport.then(
       () => {
-        expect(true).toBeFalsy("Test should no go there");
+        throw new Error("Test should no go there");
         done();
       },
       (error: string) => {

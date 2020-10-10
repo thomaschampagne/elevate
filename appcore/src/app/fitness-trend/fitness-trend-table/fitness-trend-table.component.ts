@@ -5,7 +5,7 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import * as _ from "lodash";
-import * as moment from "moment";
+import moment from "moment";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.model";
 import { Parser as Json2CsvParser } from "json2csv";

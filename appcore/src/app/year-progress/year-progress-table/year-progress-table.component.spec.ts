@@ -4,7 +4,7 @@ import { YearProgressTableComponent } from "./year-progress-table.component";
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
 import { YearProgressService } from "../shared/services/year-progress.service";
-import * as moment from "moment";
+import moment from "moment";
 import { ProgressType } from "../shared/enums/progress-type.enum";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import { YearProgressActivitiesFixture } from "../shared/services/year-progress-activities.fixture";

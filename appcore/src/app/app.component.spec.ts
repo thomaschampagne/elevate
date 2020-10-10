@@ -55,14 +55,13 @@ describe("AppComponent", () => {
 
   it("should not update tool bar title", done => {
     // Given
-    const expected = null;
     const route = null;
 
     // When
     const actual = AppComponent.convertRouteToTitle(route);
 
     // Then
-    expect(actual).toBeNull(expected);
+    expect(actual).toBeNull();
     done();
   });
 });

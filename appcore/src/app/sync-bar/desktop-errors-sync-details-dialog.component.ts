@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ErrorSyncEvent } from "@elevate/shared/sync";
-import * as moment from "moment";
+import moment from "moment";
 import { saveAs } from "file-saver";
 import { LoggerService } from "../shared/services/logging/logger.service";
 

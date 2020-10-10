@@ -7,7 +7,7 @@ import { SharedModule } from "../../shared/shared.module";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { YearProgressForOverviewModel } from "../shared/models/year-progress-for-overview.model";
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
-import * as moment from "moment";
+import moment from "moment";
 import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-progress-config.model";
 import { ElevateSport } from "@elevate/shared/enums";
 

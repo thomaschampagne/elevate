@@ -1,5 +1,5 @@
 import _ from "lodash";
-import * as moment from "moment";
+import moment from "moment";
 import { Component, OnInit } from "@angular/core";
 import { SyncMenuComponent } from "../sync-menu.component";
 import { Router } from "@angular/router";

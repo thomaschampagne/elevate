@@ -64,7 +64,7 @@ describe("AthleteSnapshotResolverService", () => {
       },
       error => {
         expect(error).toBeNull();
-        expect(false).toBeTruthy("Whoops! I should not be here!");
+        throw new Error("Whoops! I should not be here!");
         done();
       }
     );
@@ -82,7 +82,7 @@ describe("AthleteSnapshotResolverService", () => {
     promise.then(
       () => {
         expect(_.isEmpty(athleteSnapshotResolverService.athleteSnapshotResolver)).toBeTruthy();
-        expect(false).toBeTruthy("Whoops! I should not be here!");
+        throw new Error("Whoops! I should not be here!");
 
         done();
       },
@@ -581,7 +581,7 @@ describe("AthleteSnapshotResolverService", () => {
       },
       error => {
         expect(error).toBeNull();
-        expect(false).toBeTruthy("Whoops! I should not be here!");
+        throw new Error("Whoops! I should not be here!");
         done();
       }
     );

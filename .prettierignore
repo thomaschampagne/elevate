@@ -20,6 +20,7 @@ node_modules
 *.yml
 *.log
 .editorconfig
+.gitignore
 .prettierignore
 
 # Project specific

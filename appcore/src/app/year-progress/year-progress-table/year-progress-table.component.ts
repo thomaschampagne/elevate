@@ -1,8 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { YearProgressModel } from "../shared/models/year-progress.model";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
-import * as moment from "moment";
-import { Moment } from "moment";
+import moment, { Moment } from "moment";
 import { ProgressAtDayModel } from "../shared/models/progress-at-date.model";
 import { YearProgressService } from "../shared/services/year-progress.service";
 import { ProgressType } from "../shared/enums/progress-type.enum";

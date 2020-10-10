@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, HostBinding, InjectionToken, OnInit } fro
 import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.service";
 import { ActivitySyncEvent, ErrorSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { SyncException } from "@elevate/shared/exceptions";
-import * as moment from "moment";
+import moment from "moment";
 import { MatDialog } from "@angular/material/dialog";
 import { DesktopErrorsSyncDetailsDialogComponent } from "./desktop-errors-sync-details-dialog.component";
 

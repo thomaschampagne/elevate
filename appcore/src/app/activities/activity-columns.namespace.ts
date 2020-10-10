@@ -2,7 +2,7 @@
 // tslint:disable:no-empty-interface
 import { SyncedActivityModel } from "@elevate/shared/models";
 import * as _ from "lodash";
-import * as moment from "moment";
+import moment from "moment";
 import { Constant } from "@elevate/shared/constants";
 import { ElevateSport } from "@elevate/shared/enums";
 

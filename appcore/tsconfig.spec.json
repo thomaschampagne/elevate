@@ -3,8 +3,9 @@
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "baseUrl": "./",
+    "esModuleInterop": true,
     "types": [
-      "jasmine",
+      "jest",
       "node",
       "chrome",
       "electron"

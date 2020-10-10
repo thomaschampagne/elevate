@@ -1,5 +1,5 @@
 import { DatedAthleteSettingsModel } from "@elevate/shared/models";
-import * as moment from "moment";
+import moment from "moment";
 
 export class DatedAthleteSettingsTableModel extends DatedAthleteSettingsModel {
   public sinceAsDate: Date;

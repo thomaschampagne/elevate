@@ -4,7 +4,7 @@ import {
   BulkRefreshStatsNotification,
   DesktopActivityService,
 } from "../shared/services/activity/impl/desktop-activity.service";
-import * as moment from "moment";
+import moment from "moment";
 import { AppRoutesModel } from "../shared/models/app-routes.model";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";

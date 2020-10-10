@@ -23,7 +23,7 @@ import { ActivityService } from "../../activity/activity.service";
 import { ElevateException, SyncException } from "@elevate/shared/exceptions";
 import * as _ from "lodash";
 import { SyncState } from "../sync-state.enum";
-import * as moment from "moment";
+import moment from "moment";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync";
 import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-time.dao";
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
