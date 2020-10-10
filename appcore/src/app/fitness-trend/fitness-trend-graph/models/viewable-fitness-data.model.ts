@@ -2,7 +2,7 @@ import { GraphPointModel } from "../../../shared/models/graphs/graph-point.model
 import { MarkerModel } from "./marker.model";
 import { BaseLineModel } from "./base-line.model";
 import _ from "lodash";
-import * as MG from "metrics-graphics";
+import MG from "metrics-graphics";
 
 export class ViewableFitnessDataModel {
   public readonly trainingZonesBaseLines: BaseLineModel[] = [

@@ -8,7 +8,7 @@ import { VERSIONS_PROVIDER, VersionsProvider } from "../versions/versions-provid
 import { ActivityService } from "../activity/activity.service";
 import { DumpModel } from "../../models/dumps/dump.model";
 import { environment } from "../../../../environments/environment";
-import * as semver from "semver";
+import semver from "semver";
 import { StreamsService } from "../streams/streams.service";
 import { DataStore } from "../../data-store/data-store";
 

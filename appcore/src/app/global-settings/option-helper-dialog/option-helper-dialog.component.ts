@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import MarkDownIt from "markdown-it";
-import * as katex from "@iktakahiro/markdown-it-katex";
+import katex from "@iktakahiro/markdown-it-katex";
 import _ from "lodash";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OptionHelperDataModel } from "./option-helper-data.model";

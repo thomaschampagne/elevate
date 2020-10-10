@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from "@angular/core";
-import * as katex from "katex";
+import katex from "katex";
 
 @Component({
   selector: "katex",

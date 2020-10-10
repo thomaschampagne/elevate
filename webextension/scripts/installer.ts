@@ -9,7 +9,7 @@ import {
   UserZonesModel,
 } from "@elevate/shared/models";
 import { Helper } from "./helper";
-import * as semver from "semver";
+import semver from "semver";
 import _ from "lodash";
 import { LegacyBrowserStorage } from "./legacy-browser-storage";
 import { Constant } from "@elevate/shared/constants";

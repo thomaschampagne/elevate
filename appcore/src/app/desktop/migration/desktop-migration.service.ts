@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
 import { VERSIONS_PROVIDER } from "../../shared/services/versions/versions-provider.interface";
-import * as semver from "semver";
+import semver from "semver";
 import { DesktopVersionsProvider } from "../../shared/services/versions/impl/desktop-versions-provider.service";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MatDialog } from "@angular/material/dialog";

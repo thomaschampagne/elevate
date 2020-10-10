@@ -13,7 +13,7 @@ import {
 import _ from "lodash";
 import moment from "moment";
 import * as d3 from "d3";
-import * as MG from "metrics-graphics";
+import MG from "metrics-graphics";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import { PeriodModel } from "../shared/models/period.model";
 import { GraphPointModel } from "../../shared/models/graphs/graph-point.model";
