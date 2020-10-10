@@ -10,14 +10,14 @@ import {
 import _ from "lodash";
 import { ElevateSport } from "@elevate/shared/enums";
 import { ActivityComputer } from "@elevate/shared/sync";
-import * as streamJson_1109968202 from "../fixtures/1109968202/stream.json";
-import * as streamJson_1302129959 from "../fixtures/1302129959/stream.json";
-import * as streamJson_343080886 from "../fixtures/343080886/stream.json";
-import * as streamJson_600329531 from "../fixtures/600329531/stream.json";
-import * as streamJson_597999523 from "../fixtures/597999523/stream.json";
-import * as streamJson_1610385844 from "../fixtures/1610385844/stream.json";
-import * as streamJson_1811220111 from "../fixtures/1811220111/stream.json";
-import * as streamJson_1817318910 from "../fixtures/1817318910/stream.json";
+import streamJson_1109968202 from "../fixtures/1109968202/stream.json";
+import streamJson_1302129959 from "../fixtures/1302129959/stream.json";
+import streamJson_343080886 from "../fixtures/343080886/stream.json";
+import streamJson_600329531 from "../fixtures/600329531/stream.json";
+import streamJson_597999523 from "../fixtures/597999523/stream.json";
+import streamJson_1610385844 from "../fixtures/1610385844/stream.json";
+import streamJson_1811220111 from "../fixtures/1811220111/stream.json";
+import streamJson_1817318910 from "../fixtures/1817318910/stream.json";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 

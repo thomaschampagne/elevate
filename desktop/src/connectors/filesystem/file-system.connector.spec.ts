@@ -13,10 +13,10 @@ import {
   SyncedActivityModel,
   UserSettings,
 } from "@elevate/shared/models";
-import * as fs from "fs";
-import * as path from "path";
+import fs from "fs";
+import path from "path";
 import _ from "lodash";
-import * as xmldom from "xmldom";
+import xmldom from "xmldom";
 import {
   ActivitySyncEvent,
   ConnectorType,

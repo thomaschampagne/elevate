@@ -1,12 +1,12 @@
 import { IpcMainMessagesService } from "./listeners/ipc-main-messages-service";
 import { BaseConnector } from "./connectors/base.connector";
 import { HttpClient } from "typed-rest-client/HttpClient";
-import * as os from "os";
+import os from "os";
 import { machineIdSync } from "node-machine-id";
 import { RuntimeInfo } from "@elevate/shared/electron";
-import * as crypto from "crypto";
+import crypto from "crypto";
 import { app } from "electron";
-import * as path from "path";
+import path from "path";
 
 export class Service {
   public static readonly PLATFORM = {

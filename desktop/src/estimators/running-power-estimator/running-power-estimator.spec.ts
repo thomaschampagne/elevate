@@ -11,11 +11,11 @@ import {
 import { ElevateSport } from "@elevate/shared/enums";
 import { ActivityComputer, RunningPowerEstimator } from "@elevate/shared/sync";
 
-import * as streamJson_852961332 from "../fixtures/852961332/stream.json";
-import * as streamJson_878683797 from "../fixtures/878683797/stream.json";
-import * as streamJson_833008371 from "../fixtures/833008371/stream.json";
-import * as streamJson_874762067 from "../fixtures/874762067/stream.json";
-import * as streamJson_887284960 from "../fixtures/887284960/stream.json";
+import streamJson_852961332 from "../fixtures/852961332/stream.json";
+import streamJson_878683797 from "../fixtures/878683797/stream.json";
+import streamJson_833008371 from "../fixtures/833008371/stream.json";
+import streamJson_874762067 from "../fixtures/874762067/stream.json";
+import streamJson_887284960 from "../fixtures/887284960/stream.json";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 

@@ -1,5 +1,5 @@
-import * as http from "http";
-import * as queryString from "querystring";
+import http from "http";
+import queryString from "querystring";
 import { BrowserWindow } from "electron";
 import logger from "electron-log";
 import { Service } from "../../service";

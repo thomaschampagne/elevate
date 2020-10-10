@@ -21,10 +21,10 @@ import {
   UserSettings,
 } from "@elevate/shared/models";
 import fs from "fs";
-import * as path from "path";
+import path from "path";
 import _ from "lodash";
 import { Service } from "../../service";
-import * as xmldom from "xmldom";
+import xmldom from "xmldom";
 import { ElevateSport } from "@elevate/shared/enums";
 import logger from "electron-log";
 import {

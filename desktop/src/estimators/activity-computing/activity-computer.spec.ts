@@ -10,8 +10,8 @@ import {
 import { ElevateSport } from "@elevate/shared/enums";
 import _ from "lodash";
 import { ActivityComputer } from "@elevate/shared/sync";
-import * as streamJson from "../fixtures/723224273/stream.json";
-import * as activitySourceDataJson from "../fixtures/723224273/activitySourceData.json";
+import streamJson from "../fixtures/723224273/stream.json";
+import activitySourceDataJson from "../fixtures/723224273/activitySourceData.json";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 

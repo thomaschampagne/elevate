@@ -1,13 +1,12 @@
-import * as Electron from "electron";
-import { app, BrowserWindow, globalShortcut, ipcMain } from "electron";
-import * as path from "path";
-import * as url from "url";
+import Electron, { app, BrowserWindow, globalShortcut, ipcMain } from "electron";
+import path from "path";
+import url from "url";
 import logger from "electron-log";
 import { IpcMainMessagesService } from "./listeners/ipc-main-messages-service";
 import { Proxy } from "./proxy";
 import { Service } from "./service";
 import { HttpClient } from "typed-rest-client/HttpClient";
-import * as pkg from "../package.json";
+import pkg from "../package.json";
 import { Updater } from "./updater/updater";
 import { UpdateInfo } from "electron-updater";
 

@@ -13,8 +13,7 @@ import {
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Service } from "../service";
 import { filter } from "rxjs/operators";
-import * as crypto from "crypto";
-import { BinaryLike } from "crypto";
+import crypto, { BinaryLike } from "crypto";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { ElevateSport } from "@elevate/shared/enums";
 import _ from "lodash";

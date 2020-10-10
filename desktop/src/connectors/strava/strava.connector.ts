@@ -30,8 +30,7 @@ import { sleep } from "@elevate/shared/tools";
 import { StravaAuthenticator } from "./strava-authenticator";
 import { IHttpClientResponse } from "typed-rest-client/Interfaces";
 import { HttpCodes } from "typed-rest-client/HttpClient";
-import * as http from "http";
-import { IncomingHttpHeaders } from "http";
+import http, { IncomingHttpHeaders } from "http";
 import { ElevateSport } from "@elevate/shared/enums";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 

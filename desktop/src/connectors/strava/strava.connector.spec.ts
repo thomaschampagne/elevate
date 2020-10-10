@@ -11,8 +11,8 @@ import {
   SyncEvent,
   SyncEventType,
 } from "@elevate/shared/sync";
-import * as jsonFakeActivitiesFixture from "./fixtures/sample_activities.fixture.json";
-import * as jsonFakeStreamsFixture from "./fixtures/sample_streams.fixture.json";
+import jsonFakeActivitiesFixture from "./fixtures/sample_activities.fixture.json";
+import jsonFakeStreamsFixture from "./fixtures/sample_streams.fixture.json";
 import {
   ActivityStreamsModel,
   AthleteModel,
@@ -27,8 +27,7 @@ import _ from "lodash";
 import { Subject } from "rxjs";
 import { filter } from "rxjs/operators";
 import { IHttpClientResponse } from "typed-rest-client/Interfaces";
-import * as http from "http";
-import { IncomingHttpHeaders } from "http";
+import http, { IncomingHttpHeaders } from "http";
 import { HttpClient, HttpCodes } from "typed-rest-client/HttpClient";
 import { Service } from "../../service";
 import { BaseConnector } from "../base.connector";

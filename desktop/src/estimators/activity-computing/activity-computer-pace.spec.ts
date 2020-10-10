@@ -11,17 +11,17 @@ import _ from "lodash";
 import { ElevateSport } from "@elevate/shared/enums";
 import { ActivityComputer } from "@elevate/shared/sync";
 
-import * as streamJson_887284960 from "../fixtures/887284960/stream.json";
-import * as streamJson_878683797 from "../fixtures/878683797/stream.json";
-import * as streamJson_849522984 from "../fixtures/849522984/stream.json";
-import * as streamJson_708752345 from "../fixtures/708752345/stream.json";
-import * as streamJson_1550722452 from "../fixtures/1550722452/stream.json";
-import * as streamJson_350379527 from "../fixtures/350379527/stream.json";
-import * as streamJson_1551720271 from "../fixtures/1551720271/stream.json";
-import * as streamJson_1553538436 from "../fixtures/1553538436/stream.json";
-import * as streamJson_1553976435 from "../fixtures/1553976435/stream.json";
-import * as streamJson_1553069082 from "../fixtures/1553069082/stream.json";
-import * as streamJson_1654295114 from "../fixtures/1654295114/stream.json";
+import streamJson_887284960 from "../fixtures/887284960/stream.json";
+import streamJson_878683797 from "../fixtures/878683797/stream.json";
+import streamJson_849522984 from "../fixtures/849522984/stream.json";
+import streamJson_708752345 from "../fixtures/708752345/stream.json";
+import streamJson_1550722452 from "../fixtures/1550722452/stream.json";
+import streamJson_350379527 from "../fixtures/350379527/stream.json";
+import streamJson_1551720271 from "../fixtures/1551720271/stream.json";
+import streamJson_1553538436 from "../fixtures/1553538436/stream.json";
+import streamJson_1553976435 from "../fixtures/1553976435/stream.json";
+import streamJson_1553069082 from "../fixtures/1553069082/stream.json";
+import streamJson_1654295114 from "../fixtures/1654295114/stream.json";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 

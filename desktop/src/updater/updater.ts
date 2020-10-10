@@ -1,11 +1,10 @@
 import { AppUpdater } from "electron-updater/out/AppUpdater";
-import * as Electron from "electron";
-import { app, BrowserWindow } from "electron";
+import Electron, { app, BrowserWindow } from "electron";
 import logger, { ElectronLog } from "electron-log";
-import * as url from "url";
-import * as path from "path";
-import * as fs from "fs";
-import * as ini from "ini";
+import url from "url";
+import path from "path";
+import fs from "fs";
+import ini from "ini";
 import { UpdateInfo } from "electron-updater";
 
 enum UpdateEvent {
