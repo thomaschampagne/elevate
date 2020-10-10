@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { ProgressType } from "../enums/progress-type.enum";
 import { ProgressMode } from "../enums/progress-mode.enum";
 import { Identifier } from "@elevate/shared/tools";

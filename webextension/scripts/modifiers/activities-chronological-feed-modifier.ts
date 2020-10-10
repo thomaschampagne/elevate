@@ -1,5 +1,5 @@
 import { AbstractModifier } from "./abstract.modifier";
-import * as _ from "lodash";
+import _ from "lodash";
 import { UserSettings } from "@elevate/shared/models";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 

@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { ZonesService } from "../shared/zones.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ZoneChangeOrderModel } from "../shared/zone-change-order.model";
 import { ZoneChangeWhisperModel } from "../shared/zone-change-whisper.model";
 import { ZoneChangeTypeModel } from "./zone-change-type.model";

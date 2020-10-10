@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { CoreMessages, SpeedUnitDataModel } from "@elevate/shared/models";
 import { Constant } from "@elevate/shared/constants";
 

@@ -22,7 +22,7 @@ import {
   SyncedActivityModel,
   UserSettings,
 } from "@elevate/shared/models";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 

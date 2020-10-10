@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { YearProgressModel } from "../models/year-progress.model";
-import * as _ from "lodash";
+import _ from "lodash";
 import moment, { Moment } from "moment";
 import { YearProgressActivityModel } from "../models/year-progress-activity.model";
 import { ProgressModel } from "../models/progress.model";

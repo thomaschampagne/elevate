@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 import { ViewableYearProgressDataModel } from "./models/viewable-year-progress-data.model";
 import moment, { Moment } from "moment";
-import * as _ from "lodash";
+import _ from "lodash";
 import { YearProgressModel } from "../shared/models/year-progress.model";
 import { ProgressModel } from "../shared/models/progress.model";
 import * as d3 from "d3";

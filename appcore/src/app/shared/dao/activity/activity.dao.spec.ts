@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivityDao } from "./activity.dao";
-import * as _ from "lodash";
+import _ from "lodash";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { DesktopModule } from "../../modules/desktop/desktop.module";

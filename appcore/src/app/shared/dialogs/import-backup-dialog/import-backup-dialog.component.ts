@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { ExtensionDumpModel } from "../../models/dumps/extension-dump.model";
 

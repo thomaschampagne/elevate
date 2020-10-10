@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ZONE_DEFINITIONS } from "./zone-definitions";
 import { ZonesService } from "./shared/zones.service";
 import { ActivatedRoute, Router } from "@angular/router";

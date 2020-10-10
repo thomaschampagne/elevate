@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import $ from "../../modules/jquery.appear";
 import { Helper } from "../helper";
 import { AppResourcesModel } from "../models/app-resources.model";

@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { CadenceDataModel, UserSettings } from "@elevate/shared/models";
 import { AbstractCadenceDataView } from "./abstract-cadence-data.view";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;

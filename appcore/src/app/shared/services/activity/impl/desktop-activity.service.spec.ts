@@ -17,7 +17,7 @@ import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { PROMISE_TRON } from "../../../../desktop/ipc-messages/promise-tron.interface";
 import { PromiseTronServiceMock } from "../../../../desktop/ipc-messages/promise-tron.service.mock";
 import { CompressedStreamModel } from "@elevate/shared/models/sync";
-import * as _ from "lodash";
+import _ from "lodash";
 import { DataStore } from "../../../data-store/data-store";
 import { TestingDataStore } from "../../../data-store/testing-datastore.service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;

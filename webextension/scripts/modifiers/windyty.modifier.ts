@@ -1,5 +1,5 @@
-import * as _ from "lodash";
-import * as $ from "jquery";
+import _ from "lodash";
+import $ from "jquery";
 import { SpeedUnitDataModel, UserSettings } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { Helper } from "../helper";

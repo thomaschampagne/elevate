@@ -1,6 +1,6 @@
 import { GraphPointModel } from "../../../shared/models/graphs/graph-point.model";
 import { MarkerModel } from "../../../fitness-trend/fitness-trend-graph/models/marker.model";
-import * as _ from "lodash";
+import _ from "lodash";
 import * as MG from "metrics-graphics";
 import { Moment } from "moment";
 

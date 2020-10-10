@@ -17,7 +17,7 @@ import * as crypto from "crypto";
 import { BinaryLike } from "crypto";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { ElevateSport } from "@elevate/shared/enums";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { CyclingPower } from "../estimators/cycling-power-estimator/cycling-power-estimator";
 import { CaloriesEstimator } from "../estimators/calories-estimator/calories-estimator";

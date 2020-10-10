@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { Helper } from "../helper";
 import { Constant } from "@elevate/shared/constants";
 import { AbstractModifier } from "./abstract.modifier";

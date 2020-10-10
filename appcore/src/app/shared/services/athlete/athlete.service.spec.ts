@@ -1,7 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { AthleteService } from "./athlete.service";
 import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel, Gender } from "@elevate/shared/models";
-import * as _ from "lodash";
+import _ from "lodash";
 import { AppError } from "../../models/app-error.model";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";

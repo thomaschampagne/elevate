@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { CourseMaker, ExportTypes, ICourseBounds } from "../../scripts/processors/course-marker";
 import { ActivityStreamsModel } from "@elevate/shared/models";
 

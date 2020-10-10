@@ -1,7 +1,7 @@
 // tslint:disable:max-line-length
 // tslint:disable:no-empty-interface
 import { SyncedActivityModel } from "@elevate/shared/models";
-import * as _ from "lodash";
+import _ from "lodash";
 import moment from "moment";
 import { Constant } from "@elevate/shared/constants";
 import { ElevateSport } from "@elevate/shared/enums";

@@ -22,7 +22,7 @@ import {
 } from "@elevate/shared/models";
 import fs from "fs";
 import * as path from "path";
-import * as _ from "lodash";
+import _ from "lodash";
 import { Service } from "../../service";
 import * as xmldom from "xmldom";
 import { ElevateSport } from "@elevate/shared/enums";

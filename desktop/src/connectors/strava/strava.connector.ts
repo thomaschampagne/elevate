@@ -25,7 +25,7 @@ import {
 } from "@elevate/shared/models";
 import logger from "electron-log";
 import { Service } from "../../service";
-import * as _ from "lodash";
+import _ from "lodash";
 import { sleep } from "@elevate/shared/tools";
 import { StravaAuthenticator } from "./strava-authenticator";
 import { IHttpClientResponse } from "typed-rest-client/Interfaces";

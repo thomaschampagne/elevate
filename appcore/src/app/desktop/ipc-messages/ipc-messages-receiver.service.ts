@@ -3,7 +3,7 @@ import { SyncEvent } from "@elevate/shared/sync";
 import { FlaggedIpcMessage } from "@elevate/shared/electron";
 import { IpcRequest, PromiseTronReply } from "promise-tron";
 import { Subject } from "rxjs";
-import * as _ from "lodash";
+import _ from "lodash";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MessageFlag } from "@elevate/shared/electron/message-flag.enum";
 import { ActivityService } from "../../shared/services/activity/activity.service";

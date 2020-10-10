@@ -5,7 +5,7 @@ import { CoreModule } from "../core/core.module";
 import { SharedModule } from "../shared/shared.module";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import * as _ from "lodash";
+import _ from "lodash";
 import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fixture";
 import { ExtensionEventsService } from "../shared/services/external-updates/impl/extension-events.service";
 import { SyncState } from "../shared/services/sync/sync-state.enum";

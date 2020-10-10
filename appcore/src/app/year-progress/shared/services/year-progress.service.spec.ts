@@ -3,7 +3,7 @@ import { TestBed } from "@angular/core/testing";
 import { YearProgressService } from "./year-progress.service";
 import { YearProgressActivitiesFixture } from "./year-progress-activities.fixture";
 import { YearProgressModel } from "../models/year-progress.model";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model";
 import { ProgressModel } from "../models/progress.model";
 import moment, { Moment } from "moment";

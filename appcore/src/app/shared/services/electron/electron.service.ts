@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ChildProcess } from "child_process";
 import { LoggerService } from "../logging/logger.service";
 

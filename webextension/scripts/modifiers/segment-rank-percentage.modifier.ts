@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { AbstractModifier } from "./abstract.modifier";
 
 export class SegmentRankPercentageModifier extends AbstractModifier {

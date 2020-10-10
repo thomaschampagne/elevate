@@ -1,7 +1,7 @@
 import "fancyboxCss";
 import "../css/core.css";
 import { Elevate } from "./elevate";
-import * as $ from "jquery";
+import $ from "jquery";
 import * as fancyboxBoot from "fancybox";
 import { CoreMessages } from "@elevate/shared/models";
 import { StartCoreDataModel } from "./models/start-core-data.model";

@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 
 export class AppError {
   // List of errors that must to be registered in below method

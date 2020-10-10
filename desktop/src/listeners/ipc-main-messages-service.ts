@@ -23,7 +23,7 @@ import {
   UserSettings,
 } from "@elevate/shared/models";
 import { Service } from "../service";
-import * as _ from "lodash";
+import _ from "lodash";
 import { FileSystemConnector } from "../connectors/filesystem/file-system.connector";
 import { BaseConnector } from "../connectors/base.connector";
 import UserSettingsModel = UserSettings.UserSettingsModel;

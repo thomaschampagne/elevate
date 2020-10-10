@@ -1,5 +1,5 @@
-import * as _ from "lodash";
-import * as $ from "jquery";
+import _ from "lodash";
+import $ from "jquery";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { AbstractModifier } from "./abstract.modifier";
 import * as Cookies from "js-cookie";

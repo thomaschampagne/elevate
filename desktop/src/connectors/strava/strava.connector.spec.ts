@@ -23,7 +23,7 @@ import {
   SyncedActivityModel,
   UserSettings,
 } from "@elevate/shared/models";
-import * as _ from "lodash";
+import _ from "lodash";
 import { Subject } from "rxjs";
 import { filter } from "rxjs/operators";
 import { IHttpClientResponse } from "typed-rest-client/Interfaces";

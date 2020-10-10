@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { FitnessService } from "../../../fitness-trend/shared/services/fitness.service";

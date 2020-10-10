@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { Loader } from "../modules/loader";
 import { AppResourcesModel } from "./models/app-resources.model";
 import { StartCoreDataModel } from "./models/start-core-data.model";

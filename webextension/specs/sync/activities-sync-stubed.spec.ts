@@ -1,6 +1,6 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import * as Q from "q";
-import * as $ from "jquery";
+import $ from "jquery";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/specs-tools";
 import {
   ActivitiesChangesModel,

@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import * as Q from "q";
 import { ActivitySourceDataModel, AnalysisDataModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";

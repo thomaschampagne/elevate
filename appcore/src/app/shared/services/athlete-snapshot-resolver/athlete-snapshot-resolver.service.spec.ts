@@ -8,7 +8,7 @@ import {
   AthleteSnapshotModel,
   DatedAthleteSettingsModel,
 } from "@elevate/shared/models";
-import * as _ from "lodash";
+import _ from "lodash";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";

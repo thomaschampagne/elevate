@@ -1,5 +1,5 @@
 import { ZoneModel } from "../zone.model";
-import * as _ from "lodash";
+import _ from "lodash";
 
 export class UserZonesModel {
   public static readonly DEFAULT_MODEL: UserZonesModel = {

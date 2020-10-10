@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { ExtensionEnv } from "../../config/extension-env";
 import { VacuumProcessor } from "./vacuum-processor";
 import LatLonSpherical from "geodesy/latlon-spherical";

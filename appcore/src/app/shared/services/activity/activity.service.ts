@@ -1,6 +1,6 @@
 import { ActivityDao } from "../../dao/activity/activity.dao";
 import { SyncedActivityModel } from "@elevate/shared/models";
-import * as _ from "lodash";
+import _ from "lodash";
 import { AthleteSnapshotResolverService } from "../athlete-snapshot-resolver/athlete-snapshot-resolver.service";
 import { Subject } from "rxjs";
 import { LoggerService } from "../logging/logger.service";

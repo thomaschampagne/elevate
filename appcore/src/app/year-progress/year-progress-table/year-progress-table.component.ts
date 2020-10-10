@@ -5,7 +5,7 @@ import moment, { Moment } from "moment";
 import { ProgressAtDayModel } from "../shared/models/progress-at-date.model";
 import { YearProgressService } from "../shared/services/year-progress.service";
 import { ProgressType } from "../shared/enums/progress-type.enum";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ProgressionAtDayRow } from "./models/progression-at-day-row.model";
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
 import { DeltaType } from "./models/delta-type.enum";

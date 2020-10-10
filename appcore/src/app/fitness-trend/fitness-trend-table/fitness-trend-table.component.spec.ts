@@ -5,7 +5,7 @@ import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
 import { TEST_SYNCED_ACTIVITIES } from "../../../shared-fixtures/activities-2015.fixture";
 import { FitnessTrendModule } from "../fitness-trend.module";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { UserSettings } from "@elevate/shared/models";

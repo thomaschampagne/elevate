@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { ExtensionEnv } from "../../config/extension-env";
 import { ActivityInfoModel, ActivitySourceDataModel, ActivityStreamsModel, Gender } from "@elevate/shared/models";
 import { BikeGearModel } from "../models/gear/bike-gear.model";

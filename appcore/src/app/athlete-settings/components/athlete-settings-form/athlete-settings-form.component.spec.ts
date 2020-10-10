@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { AthleteSettingsFormComponent } from "./athlete-settings-form.component";
-import * as _ from "lodash";
+import _ from "lodash";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
 import { AthleteSettingsModel, UserSettings } from "@elevate/shared/models";

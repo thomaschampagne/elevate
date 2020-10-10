@@ -21,7 +21,7 @@ import { StravaConnectorInfoService } from "../../strava-connector-info/strava-c
 import { AthleteModel, CompressedStreamModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { ActivityService } from "../../activity/activity.service";
 import { ElevateException, SyncException } from "@elevate/shared/exceptions";
-import * as _ from "lodash";
+import _ from "lodash";
 import { SyncState } from "../sync-state.enum";
 import moment from "moment";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync";

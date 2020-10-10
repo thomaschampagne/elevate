@@ -4,7 +4,7 @@ import { DatedAthleteSettingsModel } from "@elevate/shared/models";
 import moment from "moment";
 import { DatedAthleteSettingsDialogData } from "./dated-athlete-settings-dialog-data.model";
 import { DatedAthleteSettingsAction } from "./dated-athlete-settings-action.enum";
-import * as _ from "lodash";
+import _ from "lodash";
 
 @Component({
   selector: "app-edit-dated-athlete-settings-dialog",

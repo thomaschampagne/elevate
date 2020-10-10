@@ -4,7 +4,7 @@ import { AthleteSettingsComponent } from "./athlete-settings.component";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { AthleteSettingsModule } from "../athlete-settings.module";
-import * as _ from "lodash";
+import _ from "lodash";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { AthleteService } from "../../shared/services/athlete/athlete.service";
 import { AthleteModel, UserSettings } from "@elevate/shared/models";

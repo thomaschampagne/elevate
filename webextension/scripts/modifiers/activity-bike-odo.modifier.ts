@@ -1,5 +1,5 @@
 import { AbstractModifier } from "./abstract.modifier";
-import * as _ from "lodash";
+import _ from "lodash";
 import { GearType } from "../models/gear/gear-type.enum";
 import { BikeGearModel } from "../models/gear/bike-gear.model";
 import { VacuumProcessor } from "../processors/vacuum-processor";

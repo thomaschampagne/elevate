@@ -1,7 +1,7 @@
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
 import { SpeedDataModel } from "@elevate/shared/models";
-import * as _ from "lodash";
+import _ from "lodash";
 
 export class SpeedDataView extends AbstractDataView {
   protected speedData: SpeedDataModel;

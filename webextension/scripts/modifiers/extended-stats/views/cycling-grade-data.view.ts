@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { AbstractGradeDataView } from "./abstract-grade-data.view";
 import { GradeDataModel } from "@elevate/shared/models";
 

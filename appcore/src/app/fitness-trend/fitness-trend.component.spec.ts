@@ -7,7 +7,7 @@ import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { FitnessTrendModule } from "./fitness-trend.module";
 import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enum";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { Injectable } from "@angular/core";

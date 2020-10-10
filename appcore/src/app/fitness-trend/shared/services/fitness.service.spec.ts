@@ -1,5 +1,5 @@
 import moment from "moment";
-import * as _ from "lodash";
+import _ from "lodash";
 import { TestBed } from "@angular/core/testing";
 import { FitnessService } from "./fitness.service";
 import { ActivityService } from "../../../shared/services/activity/activity.service";

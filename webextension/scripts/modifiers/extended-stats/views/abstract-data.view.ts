@@ -1,6 +1,5 @@
-import * as Chart from "chart.js";
-import { ChartPoint, LinearTickOptions } from "chart.js";
-import * as _ from "lodash";
+import Chart, { ChartPoint, LinearTickOptions } from "chart.js";
+import _ from "lodash";
 import { Helper } from "../../../helper";
 import { AppResourcesModel } from "../../../models/app-resources.model";
 import { PowerBestSplitModel, SpeedUnitDataModel, ZoneModel } from "@elevate/shared/models";

@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
 import { ActivityInfoModel } from "@elevate/shared/models";

@@ -1,6 +1,6 @@
 import { AthleteModel, AthleteSettingsModel, AthleteSnapshotModel } from "../models/athlete";
 import { DatedAthleteSettingsModel } from "../models/athlete/athlete-settings";
-import * as _ from "lodash";
+import _ from "lodash";
 
 /**
  * Shared by core and app to resolve AthleteModel for a given activity date

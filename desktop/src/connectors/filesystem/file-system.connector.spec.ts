@@ -15,7 +15,7 @@ import {
 } from "@elevate/shared/models";
 import * as fs from "fs";
 import * as path from "path";
-import * as _ from "lodash";
+import _ from "lodash";
 import * as xmldom from "xmldom";
 import {
   ActivitySyncEvent,

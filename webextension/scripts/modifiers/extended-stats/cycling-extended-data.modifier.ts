@@ -9,9 +9,9 @@ import { CyclingGradeDataView } from "./views/cycling-grade-data.view";
 import { CyclingPowerDataView } from "./views/cycling-power-data.view";
 import { ElevationDataView } from "./views/elevation-data.view";
 import { SpeedDataView } from "./views/speed-data.view";
-import * as _ from "lodash";
+import _ from "lodash";
 import { CyclingPowerCurveView } from "./views/cycling-power-curve.view";
-import * as $ from "jquery";
+import $ from "jquery";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {

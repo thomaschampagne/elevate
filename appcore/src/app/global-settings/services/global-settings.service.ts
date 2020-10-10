@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
 import { EnvTarget, UserSettings } from "@elevate/shared/models";
 import { ListItemModel } from "../models/list-item.model";
-import * as _ from "lodash";
+import _ from "lodash";
 
 @Injectable()
 export class GlobalSettingsService {

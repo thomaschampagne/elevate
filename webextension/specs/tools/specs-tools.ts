@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 
 export let removeActivityFromArray = (activityId: number, fromArray: Array<any>): Array<any> => {
   const predicate = {

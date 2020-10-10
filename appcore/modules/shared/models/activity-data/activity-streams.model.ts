@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { Gzip } from "../../tools";
 
 // tslint:disable:variable-name

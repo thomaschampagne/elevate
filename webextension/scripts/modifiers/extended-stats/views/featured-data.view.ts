@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { Helper } from "../../../helper";
 
 import { ActivityInfoModel, AnalysisDataModel, SpeedUnitDataModel, UserSettings } from "@elevate/shared/models";

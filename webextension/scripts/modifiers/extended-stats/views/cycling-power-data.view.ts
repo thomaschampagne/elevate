@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { AbstractDataView } from "./abstract-data.view";
 import { PowerDataModel } from "@elevate/shared/models";
 

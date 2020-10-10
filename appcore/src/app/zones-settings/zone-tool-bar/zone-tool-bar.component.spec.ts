@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { ZoneToolBarComponent } from "./zone-tool-bar.component";
-import * as _ from "lodash";
+import _ from "lodash";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";

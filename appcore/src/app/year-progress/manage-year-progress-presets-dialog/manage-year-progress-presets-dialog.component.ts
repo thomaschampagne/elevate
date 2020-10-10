@@ -5,7 +5,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatTableDataSource } from "@angular/material/table";
 import { YearToDateProgressPresetModel } from "../shared/models/year-to-date-progress-preset.model";
 import { ProgressType } from "../shared/enums/progress-type.enum";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { AppError } from "../../shared/models/app-error.model";

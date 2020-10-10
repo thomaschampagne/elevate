@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import moment, { Moment } from "moment";
 import { Component, OnInit } from "@angular/core";
 import { YearProgressService } from "./shared/services/year-progress.service";

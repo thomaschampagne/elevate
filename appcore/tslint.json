@@ -15,6 +15,7 @@
     "deprecation": {
       "severity": "warning"
     },
+    "no-namespace": false,
     "component-class-suffix": true,
     "contextual-lifecycle": true,
     "directive-class-suffix": true,

@@ -1,5 +1,5 @@
 import { powerTimeData } from "./power_data_1480020375";
-import * as _ from "lodash";
+import _ from "lodash";
 import { SplitCalculator } from "@elevate/shared/sync";
 
 describe("SplitCalculator", () => {

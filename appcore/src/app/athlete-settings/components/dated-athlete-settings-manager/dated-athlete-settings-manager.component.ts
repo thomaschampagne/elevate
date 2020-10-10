@@ -5,7 +5,7 @@ import { MatTableDataSource } from "@angular/material/table";
 import { AthleteModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { AthleteService } from "../../../shared/services/athlete/athlete.service";
 import { EditDatedAthleteSettingsDialogComponent } from "../edit-dated-athlete-settings-dialog/edit-dated-athlete-settings-dialog.component";
-import * as _ from "lodash";
+import _ from "lodash";
 import { DatedAthleteSettingsTableModel } from "./models/dated-athlete-settings-table.model";
 import { DatedAthleteSettingsAction } from "../edit-dated-athlete-settings-dialog/dated-athlete-settings-action.enum";
 import { DatedAthleteSettingsDialogData } from "../edit-dated-athlete-settings-dialog/dated-athlete-settings-dialog-data.model";

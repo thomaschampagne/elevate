@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
 import { AthleteSettingsModule } from "../../athlete-settings.module";
-import * as _ from "lodash";
+import _ from "lodash";
 import { DatedAthleteSettingsDialogData } from "./dated-athlete-settings-dialog-data.model";
 import { DatedAthleteSettingsAction } from "./dated-athlete-settings-action.enum";
 import { DatedAthleteSettingsModel, UserSettings } from "@elevate/shared/models";

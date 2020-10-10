@@ -14,7 +14,7 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 import { filter } from "rxjs/operators";
 import { Gender } from "@elevate/shared/models";
 import { IpcMessagesSender } from "../../desktop/ipc-messages/ipc-messages-sender.service";
-import * as _ from "lodash";
+import _ from "lodash";
 
 @Injectable()
 export class StravaConnectorService {

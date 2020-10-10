@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ISegmentInfo } from "../processors/segment-processor";
 import { AbstractModifier } from "./abstract.modifier";

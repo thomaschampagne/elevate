@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import * as _ from "lodash";
+import _ from "lodash";
 import { DayFitnessTrendModel } from "./shared/models/day-fitness-trend.model";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { SyncState } from "../shared/services/sync/sync-state.enum";

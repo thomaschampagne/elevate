@@ -1,6 +1,6 @@
 import { UserZonesModel } from "./user-zones.model";
 import { EnvTarget } from "../env-target";
-import * as _ from "lodash";
+import _ from "lodash";
 
 export namespace UserSettings {
   export const SYSTEM_UNIT_METRIC_KEY = "metric";

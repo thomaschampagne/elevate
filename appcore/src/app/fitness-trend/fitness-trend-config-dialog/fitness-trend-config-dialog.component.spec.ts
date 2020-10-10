@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";

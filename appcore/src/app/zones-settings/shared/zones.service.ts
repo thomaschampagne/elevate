@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import * as _ from "lodash";
+import _ from "lodash";
 import { Subject } from "rxjs";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { UserZonesModel, ZoneModel } from "@elevate/shared/models";

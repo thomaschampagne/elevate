@@ -1,7 +1,7 @@
 /**
  *   RemoteLinksModifier is responsible of ...
  */
-import * as _ from "lodash";
+import _ from "lodash";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { AbstractModifier } from "./abstract.modifier";
 

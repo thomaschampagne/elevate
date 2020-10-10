@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { SyncedActivityModel } from "@elevate/shared/models";
 import { MatTableDataSource } from "@angular/material/table";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ElevateSport } from "@elevate/shared/enums";
 
 @Component({

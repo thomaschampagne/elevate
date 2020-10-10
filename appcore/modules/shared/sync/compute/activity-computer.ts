@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { AthleteSettingsModel, AthleteSnapshotModel, Gender } from "../../models/athlete";
 import {
   ActivitySourceDataModel,

@@ -1,6 +1,6 @@
 import { AthleteSnapshotModel, SyncedActivityModel } from "@elevate/shared/models";
 import moment from "moment";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ElevateSport } from "@elevate/shared/enums";
 
 export class FakeSyncedActivityHelper {

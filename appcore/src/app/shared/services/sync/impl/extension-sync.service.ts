@@ -7,7 +7,7 @@ import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { LoggerService } from "../../logging/logger.service";
 import { SyncedActivityModel } from "@elevate/shared/models/sync/synced-activity.model";
 import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
-import * as _ from "lodash";
+import _ from "lodash";
 import moment from "moment";
 import { SyncService } from "../sync.service";
 import { SyncState } from "../sync-state.enum";

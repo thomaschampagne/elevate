@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AthleteService } from "../athlete/athlete.service";
-import * as _ from "lodash";
+import _ from "lodash";
 import { AthleteModel, AthleteSnapshotModel } from "@elevate/shared/models";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 

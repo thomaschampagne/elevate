@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import moment from "moment";
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";

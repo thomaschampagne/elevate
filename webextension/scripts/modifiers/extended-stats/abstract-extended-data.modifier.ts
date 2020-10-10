@@ -1,5 +1,5 @@
-import * as _ from "lodash";
-import * as $ from "jquery";
+import _ from "lodash";
+import $ from "jquery";
 import { Helper } from "../../helper";
 import {
   ActivityInfoModel,

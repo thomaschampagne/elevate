@@ -9,8 +9,8 @@ import { RunningCadenceDataView } from "./views/running-cadence.data.view";
 import { RunningGradeDataView } from "./views/running-grade-data.view";
 import { RunningPowerDataView } from "./views/running-power-data.view";
 import { GradeAdjustedPaceDataView } from "./views/grade-adjusted-pace-data.view";
-import * as $ from "jquery";
-import * as _ from "lodash";
+import $ from "jquery";
+import _ from "lodash";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
@@ -159,7 +159,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
     // Pace view
     if (this.analysisData.paceData && this.userSettings.displayAdvancedSpeedData) {
       const measurementPreference: string = window.currentAthlete.get("measurement_preference");
-      const units: string = measurementPreference == "meters" ? "/km" : "/mi";
+      const units: string = measurementPreference === "meters" ? "/km" : "/mi";
 
       const paceDataView: PaceDataView = new PaceDataView(this.analysisData.paceData, units);
       paceDataView.setSupportsGap(this.activityInfo.supportsGap);
@@ -176,7 +176,7 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
       this.userSettings.displayAdvancedSpeedData
     ) {
       const measurementPreference: string = window.currentAthlete.get("measurement_preference");
-      const units: string = measurementPreference == "meters" ? "/km" : "/mi";
+      const units: string = measurementPreference === "meters" ? "/km" : "/mi";
 
       const gradeAdjustedPaceDataView: GradeAdjustedPaceDataView = new GradeAdjustedPaceDataView(
         this.analysisData.paceData,

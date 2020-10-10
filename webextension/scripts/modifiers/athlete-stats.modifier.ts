@@ -2,7 +2,7 @@ import { AbstractModifier } from "./abstract.modifier";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ISegmentInfo } from "../processors/segment-processor";
 import * as Cookies from "js-cookie";
-import * as $ from "jquery";
+import $ from "jquery";
 
 export class AthleteStatsModifier extends AbstractModifier {
   protected appResources: AppResourcesModel;

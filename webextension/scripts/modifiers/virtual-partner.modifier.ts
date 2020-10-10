@@ -1,6 +1,6 @@
 import { saveAs } from "file-saver";
-import * as _ from "lodash";
-import * as $ from "jquery";
+import _ from "lodash";
+import $ from "jquery";
 import { CourseMaker, ExportTypes, ICourseBounds } from "../processors/course-marker";
 import { VacuumProcessor } from "../processors/vacuum-processor";
 import { ActivityInfoModel, ActivitySourceDataModel, ActivityStreamsModel } from "@elevate/shared/models";

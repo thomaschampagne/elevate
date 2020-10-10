@@ -1,7 +1,7 @@
 import { AppUsageDetails } from "../models/app-usage-details.model";
 import { CollectionDef } from "./collection-def";
 import { ReplaySubject } from "rxjs";
-import * as _ from "lodash";
+import _ from "lodash";
 import { LoggerService } from "../services/logging/logger.service";
 import Loki from "lokijs";
 

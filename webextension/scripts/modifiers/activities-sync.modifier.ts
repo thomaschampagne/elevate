@@ -4,7 +4,7 @@ import { ActivitiesSynchronize } from "../processors/activities-synchronize";
 import { SyncResultModel } from "@elevate/shared/models";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { AbstractModifier } from "./abstract.modifier";
-import * as _ from "lodash";
+import _ from "lodash";
 import { AppStorageUsage } from "../models/app-storage-usage.model";
 import { BrowserStorageType } from "../models/browser-storage-type.enum";
 import { DistributedEndpointsResolver } from "@elevate/shared/resolvers";

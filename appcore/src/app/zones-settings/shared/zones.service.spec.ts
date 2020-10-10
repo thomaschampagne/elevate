@@ -1,6 +1,6 @@
 import { inject, TestBed } from "@angular/core/testing";
 import { ZonesService } from "./zones.service";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ZONE_DEFINITIONS } from "../zone-definitions";
 import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";

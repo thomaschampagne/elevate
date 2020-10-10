@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/specs-tools";
 import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";

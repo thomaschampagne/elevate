@@ -10,7 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from "@angular/core";
-import * as _ from "lodash";
+import _ from "lodash";
 import moment from "moment";
 import * as d3 from "d3";
 import * as MG from "metrics-graphics";

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { GlobalSettingsComponent } from "./global-settings.component";
 import { SharedModule } from "../shared/shared.module";
-import * as _ from "lodash";
+import _ from "lodash";
 import { CoreModule } from "../core/core.module";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { UserSettings } from "@elevate/shared/models";

@@ -6,7 +6,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { SyncedActivityModel, UserSettings } from "@elevate/shared/models";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ActivityColumns } from "./activity-columns.namespace";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";

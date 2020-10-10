@@ -1,6 +1,6 @@
 import { Helper } from "../../../helper";
 import { AbstractCadenceDataView } from "./abstract-cadence-data.view";
-import * as _ from "lodash";
+import _ from "lodash";
 import { CadenceDataModel } from "@elevate/shared/models";
 
 export class CyclingCadenceDataView extends AbstractCadenceDataView {

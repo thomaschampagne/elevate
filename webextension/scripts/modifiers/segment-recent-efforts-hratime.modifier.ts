@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { Helper } from "../helper";
 import { EffortInfo, LeaderBoardData } from "./activity-segment-time-comparison.modifier";
 import { AbstractModifier } from "./abstract.modifier";

@@ -8,7 +8,7 @@ import {
   UserSettings,
 } from "@elevate/shared/models";
 import { ElevateSport } from "@elevate/shared/enums";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ActivityComputer } from "@elevate/shared/sync";
 import * as streamJson from "../fixtures/723224273/stream.json";
 import * as activitySourceDataJson from "../fixtures/723224273/activitySourceData.json";

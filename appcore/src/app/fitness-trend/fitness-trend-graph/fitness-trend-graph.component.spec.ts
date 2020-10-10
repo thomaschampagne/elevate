@@ -8,7 +8,7 @@ import moment, { Moment } from "moment";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
-import * as _ from "lodash";
+import _ from "lodash";
 import { PeriodModel } from "../shared/models/period.model";
 import { FitnessTrendModule } from "../fitness-trend.module";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";

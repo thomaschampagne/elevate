@@ -7,7 +7,7 @@ import {
   Gender,
   UserSettings,
 } from "@elevate/shared/models";
-import * as _ from "lodash";
+import _ from "lodash";
 import { ElevateSport } from "@elevate/shared/enums";
 import { ActivityComputer } from "@elevate/shared/sync";
 
