@@ -24,7 +24,7 @@ describe("AppError", () => {
 
     // When
     const call = () => {
-      new AppError(myErrorCode, myErrorMessage);
+      return new AppError(myErrorCode, myErrorMessage);
     };
 
     // Then

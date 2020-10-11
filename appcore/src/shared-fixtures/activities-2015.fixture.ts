@@ -23,8 +23,6 @@ import { SyncedActivityModel } from "@elevate/shared/models";
 
 /**
  * 2015-01-05 => 2015-11-15 fake data
- *
- * @type SyncedActivityModel[]
  */
 export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
   {

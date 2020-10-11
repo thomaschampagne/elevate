@@ -16,16 +16,16 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
   styleUrls: ["./zone-tool-bar.component.scss"],
 })
 export class ZoneToolBarComponent implements OnInit {
-  @Input("currentZonesLength")
+  @Input()
   public currentZonesLength: number;
 
-  @Input("zoneDefinitions")
+  @Input()
   public zoneDefinitions: ZoneDefinitionModel[];
 
-  @Input("zoneDefinitionSelected")
+  @Input()
   public zoneDefinitionSelected: ZoneDefinitionModel;
 
-  @Output("zoneDefinitionSelectedChange")
+  @Output()
   public zoneDefinitionSelectedChange: EventEmitter<ZoneDefinitionModel> = new EventEmitter<ZoneDefinitionModel>();
 
   constructor(

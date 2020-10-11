@@ -15,8 +15,8 @@ describe("SideNavService", () => {
     done();
   });
 
-  it("should be created", inject([SideNavService], (service: SideNavService) => {
-    expect(service).toBeTruthy();
+  it("should be created", inject([SideNavService], (sideNavService: SideNavService) => {
+    expect(sideNavService).toBeTruthy();
   }));
 
   it("should notify subscribers when side nav is closed", done => {

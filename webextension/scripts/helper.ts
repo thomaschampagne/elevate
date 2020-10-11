@@ -3,11 +3,6 @@ import { CoreMessages, SpeedUnitDataModel } from "@elevate/shared/models";
 import { Constant } from "@elevate/shared/constants";
 
 export class Helper {
-  /**
-   *
-   * @param {string} measurementPreference meters or imperial
-   * @returns {SpeedUnitDataModel}
-   */
   public static getSpeedUnitData(measurementPreference: string): SpeedUnitDataModel {
     const units: string = measurementPreference === "meters" ? "km" : "mi";
     const speedUnitPerHour: string = measurementPreference === "meters" ? "km/h" : "mi/h";
@@ -22,9 +17,9 @@ export class Helper {
   }
 
   public static HHMMSStoSeconds(str: string): number {
-    let p: string[] = str.split(":"),
-      s: any = 0,
-      m = 1;
+    const p = str.split(":");
+    let s = 0;
+    let m = 1;
 
     while (p.length > 0) {
       s += m * parseInt(p.pop(), 10);
@@ -112,7 +107,7 @@ export class Helper {
 
     const s: any = n < 0 ? "-" : "";
 
-    const i: any = parseInt((n = Math.abs(+n || 0).toFixed(c))) + "";
+    const i: any = parseInt((n = Math.abs(+n || 0).toFixed(c)), 10) + "";
 
     let j: any;
     j = (j = i.length) > 3 ? j % 3 : 0;
@@ -130,10 +125,10 @@ export class Helper {
     );
   }
 
-  public static secondsToDHM(sec_num: number, trimZeros?: boolean): string {
-    const days: number = Math.floor(sec_num / 86400);
-    const hours: number = Math.floor((sec_num - days * 86400) / 3600);
-    const minutes: number = Math.floor((sec_num - days * 86400 - hours * 3600) / 60);
+  public static secondsToDHM(secNum: number, trimZeros?: boolean): string {
+    const days: number = Math.floor(secNum / 86400);
+    const hours: number = Math.floor((secNum - days * 86400) / 3600);
+    const minutes: number = Math.floor((secNum - days * 86400 - hours * 3600) / 60);
     if (trimZeros && days === 0) {
       if (hours === 0) {
         return minutes + "m";

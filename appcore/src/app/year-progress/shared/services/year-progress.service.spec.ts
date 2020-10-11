@@ -358,7 +358,7 @@ describe("YearProgressService", () => {
 
     it("should compute progression with imperial system unit", done => {
       // Given
-      const isMetric = false;
+      const isMetricSystem = false;
       const progressConfig = new YearToDateProgressConfigModel(
         [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run],
         true,
@@ -393,7 +393,11 @@ describe("YearProgressService", () => {
       );
 
       // When
-      const yearProgressions: YearProgressModel[] = service.progressions(progressConfig, isMetric, TEST_SYNCED_MODELS);
+      const yearProgressions: YearProgressModel[] = service.progressions(
+        progressConfig,
+        isMetricSystem,
+        TEST_SYNCED_MODELS
+      );
 
       // Then
       expect(yearProgressions).not.toBeNull();
@@ -522,14 +526,14 @@ describe("YearProgressService", () => {
     const createActivity = (
       date: string,
       type: ElevateSport,
-      distance_raw: number,
-      moving_time_raw: number,
-      elevation_gain_raw: number
+      distanceRaw: number,
+      movingTimeRaw: number,
+      elevationGainRaw: number
     ) => {
       return {
-        distance_raw: distance_raw,
-        moving_time_raw: moving_time_raw,
-        elevation_gain_raw: elevation_gain_raw,
+        distance_raw: distanceRaw,
+        moving_time_raw: movingTimeRaw,
+        elevation_gain_raw: elevationGainRaw,
         start_time: stravaStartTime(date),
         type: type,
       };

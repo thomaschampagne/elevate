@@ -47,7 +47,6 @@ describe("GotItDialogComponent", () => {
 
   it("should render the 'got-it' dialog", done => {
     // Given
-    const fixture = TestBed.createComponent(GotItDialogComponent);
     const compiled = fixture.debugElement.nativeElement;
 
     // When

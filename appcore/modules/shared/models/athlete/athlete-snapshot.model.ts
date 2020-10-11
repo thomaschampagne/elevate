@@ -12,10 +12,6 @@ export class AthleteSnapshotModel extends AbstractAthleteModel {
     this.athleteSettings = athleteSettings;
   }
 
-  /**
-   *
-   * @param otherSnapshot {AthleteModel}
-   */
   public equals(otherSnapshot: AthleteSnapshotModel): boolean {
     const isSame =
       otherSnapshot &&

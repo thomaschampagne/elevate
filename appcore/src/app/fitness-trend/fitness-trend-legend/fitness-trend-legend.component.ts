@@ -13,7 +13,7 @@ export class FitnessTrendLegendComponent implements OnInit, OnDestroy {
   public readonly MAX_MULTIPLE_ACTIVITIES_CHAR_COUNT_DISPLAYED: number = 30;
   public readonly MAX_SINGLE_ACTIVITY_CHAR_COUNT_DISPLAYED: number = 90;
 
-  @Input("isTrainingZonesEnabled")
+  @Input()
   public isTrainingZonesEnabled;
 
   public viewedDay: DayFitnessTrendModel;

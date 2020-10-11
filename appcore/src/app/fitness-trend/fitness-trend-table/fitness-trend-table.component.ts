@@ -148,19 +148,19 @@ export class FitnessTrendTableComponent implements OnInit, OnChanges, AfterViewI
 
   public initialized = false;
 
-  @Input("fitnessTrend")
+  @Input()
   public fitnessTrend: DayFitnessTrendModel[];
 
-  @Input("fitnessTrendConfigModel")
+  @Input()
   public fitnessTrendConfigModel: FitnessTrendConfigModel;
 
-  @Input("isTrainingZonesEnabled")
+  @Input()
   public isTrainingZonesEnabled;
 
-  @Input("isPowerMeterEnabled")
+  @Input()
   public isPowerMeterEnabled;
 
-  @Input("isSwimEnabled")
+  @Input()
   public isSwimEnabled;
 
   @ViewChild(MatPaginator, { static: true })

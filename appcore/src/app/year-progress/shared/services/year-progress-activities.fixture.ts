@@ -71,7 +71,7 @@ export class YearProgressActivitiesFixture {
 
       if (!restDay) {
         const syncedActivityModel = new SyncedActivityModel();
-        syncedActivityModel.id = parseInt(currentMoment.year() + "" + currentMoment.dayOfYear());
+        syncedActivityModel.id = parseInt(currentMoment.year() + "" + currentMoment.dayOfYear(), 10);
         syncedActivityModel.name = type + " activity" + (commute ? " (commute)" : "");
         syncedActivityModel.type = type;
         syncedActivityModel.display_type = type;

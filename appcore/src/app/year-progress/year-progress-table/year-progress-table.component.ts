@@ -49,28 +49,28 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
   public dataSource: MatTableDataSource<ProgressionAtDayRow>;
   public initialized = false;
 
-  @Input("progressConfig")
+  @Input()
   public progressConfig: ProgressConfig;
 
-  @Input("hideYearsColumn")
+  @Input()
   public hideYearsColumn: boolean;
 
-  @Input("selectedYears")
+  @Input()
   public selectedYears: number[];
 
-  @Input("momentWatched")
+  @Input()
   public momentWatched: Moment;
 
-  @Input("selectedProgressType")
+  @Input()
   public selectedProgressType: YearProgressTypeModel;
 
-  @Input("yearProgressions")
+  @Input()
   public yearProgressions: YearProgressModel[];
 
-  @Input("targetProgressModels")
+  @Input()
   public targetProgressModels: TargetProgressModel[];
 
-  @Input("yearProgressStyleModel")
+  @Input()
   public yearProgressStyleModel: YearProgressStyleModel;
 
   constructor(public yearProgressService: YearProgressService) {}
@@ -224,15 +224,12 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
     };
   }
 
-  public getDeltaValueBetween(
-    progressAtDayModel_A: ProgressAtDayModel,
-    progressAtDayModel_B: ProgressAtDayModel
-  ): Delta {
+  public getDeltaValueBetween(progressAtDayModelA: ProgressAtDayModel, progressAtDayModelB: ProgressAtDayModel): Delta {
     const isSameYearComparison =
-      progressAtDayModel_A && progressAtDayModel_B && progressAtDayModel_A.year === progressAtDayModel_B.year;
-    const B_value: number =
-      progressAtDayModel_B && _.isNumber(progressAtDayModel_B.value) ? progressAtDayModel_B.value : null;
-    const deltaValue: number = _.isNumber(B_value) ? progressAtDayModel_A.value - B_value : null;
+      progressAtDayModelA && progressAtDayModelB && progressAtDayModelA.year === progressAtDayModelB.year;
+    const BValue: number =
+      progressAtDayModelB && _.isNumber(progressAtDayModelB.value) ? progressAtDayModelB.value : null;
+    const deltaValue: number = _.isNumber(BValue) ? progressAtDayModelA.value - BValue : null;
 
     // Sign of delta
     let deltaType: DeltaType;
@@ -253,18 +250,13 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
 
     return {
       type: deltaType,
-      date: progressAtDayModel_B ? moment(progressAtDayModel_B.date).format("MMMM DD, YYYY") : null,
+      date: progressAtDayModelB ? moment(progressAtDayModelB.date).format("MMMM DD, YYYY") : null,
       value: !_.isNull(deltaValue) ? Math.abs(deltaValue) : null,
       signSymbol: deltaSignSymbol,
       class: deltaType.toString(),
     };
   }
 
-  /**
-   *
-   * @param {number} hours
-   * @returns {string}
-   */
   public readableTimeProgress(hours: number): string {
     return this.yearProgressService.readableTimeProgress(hours);
   }

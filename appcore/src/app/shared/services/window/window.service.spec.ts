@@ -16,8 +16,8 @@ describe("WindowService", () => {
     done();
   });
 
-  it("should be created", inject([WindowService], (service: WindowService) => {
-    expect(service).toBeTruthy();
+  it("should be created", inject([WindowService], (windowService: WindowService) => {
+    expect(windowService).toBeTruthy();
   }));
 
   it("should notify subscribers when windows is resized", done => {

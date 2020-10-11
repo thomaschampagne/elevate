@@ -16,34 +16,34 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
   styleUrls: ["./zone.component.scss"],
 })
 export class ZoneComponent implements OnInit, OnDestroy {
-  @Input("zone")
+  @Input()
   public zone: ZoneModel;
 
-  @Input("zoneId")
+  @Input()
   public zoneId: number;
 
-  @Input("zoneFrom")
+  @Input()
   public zoneFrom: number;
 
-  @Input("zoneTo")
+  @Input()
   public zoneTo: number;
 
-  @Input("prevZoneFrom")
+  @Input()
   public prevZoneFrom: number;
 
-  @Input("nextZoneTo")
+  @Input()
   public nextZoneTo: number;
 
-  @Input("isFirstZone")
+  @Input()
   public isFirstZone: boolean;
 
-  @Input("isLastZone")
+  @Input()
   public isLastZone: boolean;
 
-  @Input("currentZones")
+  @Input()
   public currentZones: ZoneModel[];
 
-  @Input("zoneDefinition")
+  @Input()
   public zoneDefinition: ZoneDefinitionModel;
 
   public zoneChangeOrderSubscription: Subscription;
@@ -112,24 +112,6 @@ export class ZoneComponent implements OnInit, OnDestroy {
       message => this.popSnack(message),
       error => this.popSnack(error)
     );
-  }
-
-  /**
-   * Avoid
-   */
-  public onKeyDown(event: KeyboardEvent): void {
-    const whiteListCode = [
-      38, // Up arrow
-      40, // Down arrow
-      9, // Tab
-      16, // Shift
-    ];
-
-    const isKeyWhiteListed = _.indexOf(whiteListCode, event.keyCode) === -1;
-
-    if (isKeyWhiteListed) {
-      event.preventDefault();
-    }
   }
 
   public ngOnDestroy(): void {

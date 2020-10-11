@@ -49,7 +49,6 @@ describe("ConfirmDialogComponent", () => {
 
   it("should render the confirm dialog", done => {
     // Given
-    const fixture = TestBed.createComponent(ConfirmDialogComponent);
     const compiled = fixture.debugElement.nativeElement;
 
     // When

@@ -28,10 +28,10 @@ export class AthleteSettingsFormComponent implements OnInit {
   @ViewChild("bottom", { static: true })
   public bottomElement: ElementRef;
 
-  @Input("athleteSettingsModel")
+  @Input()
   public athleteSettingsModel: AthleteSettingsModel;
 
-  @Output("athleteSettingsModelChange")
+  @Output()
   public athleteSettingsModelChange: EventEmitter<AthleteSettingsModel> = new EventEmitter<AthleteSettingsModel>();
 
   public compliantAthleteSettingsModel: AthleteSettingsModel;

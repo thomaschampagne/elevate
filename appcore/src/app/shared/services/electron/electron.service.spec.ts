@@ -79,7 +79,7 @@ describe("ElectronService", () => {
     const nodeModule = "child_process";
 
     const childProcessObject = {
-      exec: (cmd: string, fn: Function) => {
+      exec: (cmd: string, fn: () => void) => {
         fn();
       },
     };
@@ -128,7 +128,7 @@ describe("ElectronService", () => {
     const content = "Hello world";
 
     const nodeFsMethods = {
-      readFileSync: (file: string) => {
+      readFileSync: () => {
         return content;
       },
     };
@@ -152,7 +152,7 @@ describe("ElectronService", () => {
     const exists = true;
 
     const nodeFsMethods = {
-      existsSync: (file: string) => {
+      existsSync: () => {
         return true;
       },
     };

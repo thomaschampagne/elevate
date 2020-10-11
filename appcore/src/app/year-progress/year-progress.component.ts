@@ -89,7 +89,7 @@ export class YearProgressComponent implements OnInit {
         localStorage.setItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY, JSON.stringify(type));
       },
       get: () => {
-        const progressType = parseInt(localStorage.getItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY));
+        const progressType = parseInt(localStorage.getItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY), 10);
         return _.isFinite(progressType) ? progressType : null;
       },
     },
@@ -104,7 +104,7 @@ export class YearProgressComponent implements OnInit {
     },
     targetValue: {
       get: () => {
-        const targetValue = parseInt(localStorage.getItem(YearProgressComponent.LS_TARGET_VALUE_KEY));
+        const targetValue = parseInt(localStorage.getItem(YearProgressComponent.LS_TARGET_VALUE_KEY), 10);
         return _.isNaN(targetValue) ? null : targetValue;
       },
       set: (targetValue: number) => {
@@ -131,7 +131,8 @@ export class YearProgressComponent implements OnInit {
     periodMultiplier: {
       get: () => {
         const periodMultiplier = parseInt(
-          localStorage.getItem(YearProgressComponent.LS_SELECTED_ROLLING_PERIOD_MULTIPLIER_KEY)
+          localStorage.getItem(YearProgressComponent.LS_SELECTED_ROLLING_PERIOD_MULTIPLIER_KEY),
+          10
         );
         return _.isNaN(periodMultiplier) ? null : periodMultiplier;
       },
@@ -658,12 +659,6 @@ export class YearProgressComponent implements OnInit {
       });
   }
 
-  /**
-   *
-   * @param {YearProgressModel[]} yearProgressions
-   * @param {string[]} colorPalette
-   * @returns {YearProgressStyleModel}
-   */
   public styleFromPalette(yearProgressions: YearProgressModel[], colorPalette: string[]): YearProgressStyleModel {
     const yearsColorsMap = new Map<number, string>();
     const colors: string[] = [];

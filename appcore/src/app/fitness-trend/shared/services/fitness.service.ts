@@ -227,7 +227,9 @@ export class FitnessService {
     return new Promise((resolve: (fitnessTrend: DayFitnessTrendModel[]) => void, reject: (error: string) => void) => {
       this.generateDailyStress(fitnessTrendConfigModel, isPowerMeterEnabled, isSwimEnabled, skipActivityTypes).then(
         (dailyActivity: DayStressModel[]) => {
-          let ctl, atl, tsb;
+          let ctl;
+          let atl;
+          let tsb;
 
           const fitnessTrend: DayFitnessTrendModel[] = [];
 

@@ -1,3 +1,4 @@
+// tslint:disable:component-selector
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from "@angular/core";
 import katex from "katex";
 
@@ -7,7 +8,7 @@ import katex from "katex";
   styleUrls: ["./katex-expression.component.scss"],
 })
 export class KatexExpressionComponent implements AfterViewInit {
-  @Input("expression")
+  @Input()
   public expression: string;
 
   @ViewChild("element", { static: true })

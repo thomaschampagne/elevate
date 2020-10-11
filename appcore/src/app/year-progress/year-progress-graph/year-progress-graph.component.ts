@@ -226,11 +226,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
     this.updateGraph();
   }
 
-  /**
-   *
-   * @param {number[]} yearSelection
-   * @returns {string[]}
-   */
   public colorsOfSelectedYears(yearSelection: number[]): string[] {
     const colors = [];
     _.forEachRight(yearSelection, (year: number) => {
@@ -241,17 +236,11 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
   /**
    * Tell you if moment given is today without taking care of the year
-   * @param {moment.Moment} pMoment
-   * @returns {boolean}
    */
   public isMomentToday(pMoment: Moment) {
     return pMoment.dayOfYear() === moment().dayOfYear();
   }
 
-  /**
-   *
-   * @param {MetricsGraphicsEventModel} mgEvent
-   */
   public onGraphClick(mgEvent: MetricsGraphicsEventModel): void {
     const momentWatched = moment(mgEvent.key || mgEvent.date);
     this.viewableYearProgressDataModel.setMarkerMoment(momentWatched);
@@ -259,10 +248,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
     this.isMomentWatchedToday = this.isMomentToday(momentWatched);
   }
 
-  /**
-   *
-   * @param {MetricsGraphicsEventModel} mgEvent
-   */
   public onGraphMouseOver(mgEvent: MetricsGraphicsEventModel): void {
     // Seek date for multiple lines at first @ "mgEvent.key"
     // If not defined, it's a single line, then get date @ "mgEvent.date"
@@ -270,10 +255,6 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
     this.yearProgressService.onMomentWatchedChange(momentWatched);
   }
 
-  /**
-   *
-   * @param {MetricsGraphicsEventModel} event
-   */
   public onGraphMouseOut(): void {
     const momentWatched = this.viewableYearProgressDataModel.getMarkerMoment();
     this.yearProgressService.onMomentWatchedChange(momentWatched);

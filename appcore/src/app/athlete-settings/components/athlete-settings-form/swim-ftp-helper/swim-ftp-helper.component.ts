@@ -10,10 +10,10 @@ import { FormulaParamsModel } from "./formula-params.model";
   styleUrls: ["./swim-ftp-helper.component.scss"],
 })
 export class SwimFtpHelperComponent implements OnInit {
-  @Input("swimFtp")
+  @Input()
   public swimFtp: number;
 
-  @Output("swimFtpChange")
+  @Output()
   public swimFtpChange: EventEmitter<number> = new EventEmitter<number>();
 
   public calculationMethods: SwimCalculationMethod[] = [
@@ -67,8 +67,8 @@ export class SwimFtpHelperComponent implements OnInit {
 
   /**
    * Convert swimming speed to swimming pace
-   * @param {number} swimFtp: speed in meters / min
-   * @returns {string} Swim FTP pace hh:mm:ss / 100 meters
+   * @param swimFtp: speed in meters / min
+   * @returns Swim FTP pace hh:mm:ss / 100 meters
    */
   public static convertSwimSpeedToPace(swimFtp: number): string {
     if (!_.isNumber(swimFtp)) {

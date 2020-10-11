@@ -601,7 +601,6 @@ describe("ZonesService", () => {
     zonesService.currentZones = FAKE_EXISTING_ZONES;
     zonesService.zoneDefinition = SPEED_ZONE_DEFINITION_MOCKED;
 
-    const updateZonesSpy = spyOn(zonesService, "updateZones").and.returnValue(Promise.resolve());
     const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");
 
     // When
@@ -610,7 +609,6 @@ describe("ZonesService", () => {
     // Then
     promiseReset.then(
       () => {
-        // expect(zoneDefinitionSpy).toHaveBeenCalledTimes(1);
         expect(updateZonesSpy).toHaveBeenCalledTimes(1);
         expect(zonesUpdatesSpy).toHaveBeenCalledTimes(1);
 
@@ -770,7 +768,7 @@ describe("ZonesService", () => {
     const jsonInput = '[{"from":120,"to":140},{"from":140,"to":150},{"from":150,"to":160}]';
     const zonesToImport: ZoneModel[] = JSON.parse(jsonInput) as ZoneModel[];
 
-    const updateZonesSpy = spyOn(zonesService, "updateZones").and.returnValue(Promise.resolve());
+    updateZonesSpy = spyOn(zonesService, "updateZones").and.returnValue(Promise.resolve());
     const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");
 
     // When
@@ -798,7 +796,7 @@ describe("ZonesService", () => {
     // Given
     const wrongJsonInput = '[{"from":120,"to":140},{"from":140,"to":150},{"from":150,"to":160}]'.replace(",", "");
 
-    const updateZonesSpy = spyOn(zonesService, "updateZones").and.returnValue(Promise.resolve());
+    updateZonesSpy = spyOn(zonesService, "updateZones").and.returnValue(Promise.resolve());
     const zonesUpdatesSpy = spyOn(zonesService.zonesUpdates, "next");
 
     // When

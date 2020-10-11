@@ -25,10 +25,10 @@ describe("ZonesImportExportDialogComponent", () => {
 
   let component: ZonesImportExportDialogComponent;
   let fixture: ComponentFixture<ZonesImportExportDialogComponent>;
-  let zoneImportExportDataModel_As_Export: ZoneImportExportDataModel;
+  let zoneImportExportDataModelAsExport: ZoneImportExportDataModel;
 
   beforeEach(done => {
-    zoneImportExportDataModel_As_Export = new ZoneImportExportDataModel(
+    zoneImportExportDataModelAsExport = new ZoneImportExportDataModel(
       zoneSpeedDefinition,
       UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed),
       Mode.EXPORT
@@ -40,7 +40,7 @@ describe("ZonesImportExportDialogComponent", () => {
       providers: [
         {
           provide: MAT_DIALOG_DATA,
-          useValue: zoneImportExportDataModel_As_Export,
+          useValue: zoneImportExportDataModelAsExport,
         },
         {
           provide: MatDialogRef,
@@ -70,7 +70,6 @@ describe("ZonesImportExportDialogComponent", () => {
 
   it("should render the 'Export' zones dialog", done => {
     // Given
-    const fixture = TestBed.createComponent(ZonesImportExportDialogComponent);
     const compiled = fixture.debugElement.nativeElement;
     const expected = JSON.stringify(UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed));
 

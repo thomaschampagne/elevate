@@ -47,7 +47,6 @@ export class AthleteSnapshotResolver {
   /**
    * Resolve the proper AthleteModel and activity date
    * @param onDate Date format YYYY-MM-DD or Date object
-   * @returns {AthleteModel}
    */
   public resolve(onDate: string | Date): AthleteSnapshotModel {
     const onDateString: string = AthleteSnapshotResolver.getShortDateString(onDate);
