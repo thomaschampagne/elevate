@@ -19,7 +19,7 @@ describe("GlobalSettingsComponent", () => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule],
       declarations: [],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 
     userSettingsService = TestBed.inject(UserSettingsService);

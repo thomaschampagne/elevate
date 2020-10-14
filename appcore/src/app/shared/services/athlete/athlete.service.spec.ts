@@ -25,7 +25,7 @@ describe("AthleteService", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     });
 
     // Retrieve injected service
@@ -40,7 +40,7 @@ describe("AthleteService", () => {
     lthr = {
       default: 185,
       cycling: null,
-      running: null,
+      running: null
     };
     cyclingFTP = 210;
     runningFTP = 350;
@@ -72,7 +72,7 @@ describe("AthleteService", () => {
       defaultAthleteModel.datedAthleteSettings = [
         expectedAthleteSettingsModel03,
         expectedApsModel01, // Introduce not sorted period between 01/02
-        expectedApsModel02, // Introduce not sorted period between 01/02
+        expectedApsModel02 // Introduce not sorted period between 01/02
       ];
 
       const fetchDaoSpy = spyOn(service.athleteModelDao, "findOne").and.returnValue(
@@ -173,7 +173,7 @@ describe("AthleteService", () => {
           "2018-02-01",
           new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
         ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       defaultAthleteModel.datedAthleteSettings = existingPeriodAthleteSettings;
@@ -186,7 +186,7 @@ describe("AthleteService", () => {
       const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
       expectedAthleteModel.datedAthleteSettings = _.flatten([
         athletePeriodSettingsToAdd,
-        existingPeriodAthleteSettings,
+        existingPeriodAthleteSettings
       ]);
 
       const fetchDaoSpy = spyOn(service.athleteModelDao, "findOne").and.returnValue(
@@ -221,7 +221,7 @@ describe("AthleteService", () => {
     it("should add a dated athlete settings with the single 'forever' existing period", done => {
       // Given
       const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       defaultAthleteModel.datedAthleteSettings = existingPeriodAthleteSettings;
@@ -234,7 +234,7 @@ describe("AthleteService", () => {
       const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
       expectedAthleteModel.datedAthleteSettings = _.flatten([
         athletePeriodSettingsToAdd,
-        existingPeriodAthleteSettings,
+        existingPeriodAthleteSettings
       ]);
 
       const fetchDaoSpy = spyOn(service.athleteModelDao, "findOne").and.returnValue(
@@ -331,7 +331,7 @@ describe("AthleteService", () => {
           "2018-02-01",
           new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
         ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       const athletePeriodSettingsToAdd = new DatedAthleteSettingsModel(
@@ -382,7 +382,7 @@ describe("AthleteService", () => {
           "2018-02-01",
           new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
         ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       const invalidDate = "2018-99-99";
@@ -436,7 +436,7 @@ describe("AthleteService", () => {
           "2018-02-01",
           new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
         ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       const athleteModelToSave = _.cloneDeep(defaultAthleteModel);
@@ -485,7 +485,7 @@ describe("AthleteService", () => {
           "2018-02-01",
           new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
         ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       const updateDaoSpy = spyOn(service.athleteModelDao, "update").and.callThrough();
@@ -539,7 +539,7 @@ describe("AthleteService", () => {
         datedAthleteSettingsModel01,
         datedAthleteSettingsModel02,
         datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04,
+        datedAthleteSettingsModel04
       ];
 
       const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(
@@ -550,7 +550,7 @@ describe("AthleteService", () => {
         datedAthleteSettingsModel01,
         expectedEditedDatedAthleteSettings,
         datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04,
+        datedAthleteSettingsModel04
       ];
 
       const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -612,7 +612,7 @@ describe("AthleteService", () => {
         datedAthleteSettingsModel01,
         datedAthleteSettingsModel02,
         datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04,
+        datedAthleteSettingsModel04
       ];
 
       const expectedNewDate = "2018-03-01";
@@ -625,7 +625,7 @@ describe("AthleteService", () => {
         datedAthleteSettingsModel01,
         expectedEditedDatedAthleteSettings,
         datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04,
+        datedAthleteSettingsModel04
       ];
 
       const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -738,7 +738,7 @@ describe("AthleteService", () => {
         datedAthleteSettingsModel01,
         datedAthleteSettingsModel02,
         datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04,
+        datedAthleteSettingsModel04
       ];
 
       const expectedNewDate = "2018-03-01";
@@ -802,7 +802,7 @@ describe("AthleteService", () => {
         datedAthleteSettingsModel01,
         datedAthleteSettingsModel02,
         datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04,
+        datedAthleteSettingsModel04
       ];
 
       const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(
@@ -863,7 +863,7 @@ describe("AthleteService", () => {
         datedAthleteSettingsModel01,
         datedAthleteSettingsModel02,
         datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04,
+        datedAthleteSettingsModel04
       ];
 
       const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(
@@ -920,7 +920,7 @@ describe("AthleteService", () => {
           "2018-02-01",
           new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
         ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       defaultAthleteModel.datedAthleteSettings = existingPeriodAthleteSettings;
@@ -971,7 +971,7 @@ describe("AthleteService", () => {
         new DatedAthleteSettingsModel(
           removeSinceIdentifier,
           new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
+        )
       ];
 
       const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
@@ -1012,7 +1012,7 @@ describe("AthleteService", () => {
         new DatedAthleteSettingsModel(
           removeSinceIdentifier,
           new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
+        )
       ];
 
       const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
@@ -1062,7 +1062,7 @@ describe("AthleteService", () => {
           "2018-02-01",
           new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
         ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
@@ -1113,7 +1113,7 @@ describe("AthleteService", () => {
           "2018-02-01",
           new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
         ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       const spyResolve = spyOn(Promise, "resolve").and.callThrough();
@@ -1150,7 +1150,7 @@ describe("AthleteService", () => {
           "2018-02-01",
           new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
         ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       // When
@@ -1189,7 +1189,7 @@ describe("AthleteService", () => {
         new DatedAthleteSettingsModel(
           duplicateSinceIdentifier,
           new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
+        )
       ];
 
       // When
@@ -1223,7 +1223,7 @@ describe("AthleteService", () => {
         new DatedAthleteSettingsModel(
           "2018-02-01",
           new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
+        )
       ];
 
       // When

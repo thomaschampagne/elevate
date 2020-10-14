@@ -137,9 +137,9 @@ export class HeartRateDataView extends AbstractDataView {
           hoverBackgroundColor:
             "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
           hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
-          data: hrDistributionInMinutesArray,
-        },
-      ],
+          data: hrDistributionInMinutesArray
+        }
+      ]
     };
   }
 

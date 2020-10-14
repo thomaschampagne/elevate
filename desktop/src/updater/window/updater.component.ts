@@ -6,7 +6,7 @@ export const UpdaterComponent = Vue.component("Updater", {
   data: () => {
     return {
       updateStatus: null,
-      progressPercent: null,
+      progressPercent: null
     };
   },
   computed: {
@@ -16,7 +16,7 @@ export const UpdaterComponent = Vue.component("Updater", {
         height: "100%",
         background: "#111",
         margin: 0,
-        "-webkit-app-region": "drag",
+        "-webkit-app-region": "drag"
       };
     },
     wrapper: () => {
@@ -27,7 +27,7 @@ export const UpdaterComponent = Vue.component("Updater", {
         "flex-direction": "column",
         "align-items": "center",
         "justify-content": "center",
-        "transform-origin": "center",
+        "transform-origin": "center"
       };
     },
     logo: () => {
@@ -38,7 +38,7 @@ export const UpdaterComponent = Vue.component("Updater", {
         "background-color": "#aaa",
         "-webkit-mask": "url('../app/assets/icons/elevate.svg') no-repeat center",
         mask: "url('../app/assets/icons/elevate.svg') no-repeat center",
-        animation: "fadeAnimation 2s infinite",
+        animation: "fadeAnimation 2s infinite"
       };
     },
     status: () => {
@@ -46,9 +46,9 @@ export const UpdaterComponent = Vue.component("Updater", {
         color: "#aaa",
         "font-size": "12px",
         "font-family": "Helvetica, Verdana, sans-serif",
-        "margin-bottom": "8px",
+        "margin-bottom": "8px"
       };
-    },
+    }
   },
   beforeCreate() {
     ipcRenderer.on("update-status", (event, text) => {
@@ -78,5 +78,5 @@ export const UpdaterComponent = Vue.component("Updater", {
                 <progress style="width: 300px;" max="100" v-if="progressPercent !== null" :value="progressPercent"></progress>
             </div>
         </div>
-    `,
+    `
 });

@@ -68,8 +68,8 @@ import { ElevateSport } from "@elevate/shared/enums";
       table {
         width: 100%;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class ActivitiesSettingsLacksDialogComponent implements OnInit {
   public static readonly MIN_WIDTH: string = "50%";

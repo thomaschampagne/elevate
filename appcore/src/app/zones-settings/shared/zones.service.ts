@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import _ from "lodash";
 import { Subject } from "rxjs";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
@@ -25,7 +25,7 @@ export class ZonesService {
   private readonly MAX_ZONES_COUNT: number = 40;
   private readonly MIN_ZONES_COUNT: number = 3;
 
-  constructor(public userSettingsService: UserSettingsService) {
+  constructor(@Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService) {
     this.zoneChangeOrderUpdates = new Subject<ZoneChangeOrderModel>();
     this.zonesUpdates = new Subject<ZoneModel[]>();
     this.stepUpdates = new Subject<number>();
@@ -44,7 +44,7 @@ export class ZonesService {
         // Creating new Zone
         const lastZone: ZoneModel = {
           from: intermediateZoneValue,
-          to: oldLastZone.to,
+          to: oldLastZone.to
         };
 
         // Apply middle value computed to previous last zone (to)
@@ -115,7 +115,7 @@ export class ZonesService {
       destinationId: null,
       to: null,
       from: null,
-      value: zoneChange.value,
+      value: zoneChange.value
     };
 
     if (!isFirstZoneChange && !isLastZoneChange) {

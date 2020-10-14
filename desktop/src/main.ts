@@ -9,6 +9,7 @@ import { HttpClient } from "typed-rest-client/HttpClient";
 import pkg from "../package.json";
 import { Updater } from "./updater/updater";
 import { UpdateInfo } from "electron-updater";
+import { Platform } from "@elevate/shared/enums";
 
 const IS_ELECTRON_DEV = !app.isPackaged;
 logger.transports.file.level = IS_ELECTRON_DEV ? "debug" : "info";
@@ -95,7 +96,7 @@ class Main {
     this.app.on("window-all-closed", () => {
       // On OS X it is common for this.applications and their menu bar
       // to stay active until the user quits explicitly with Cmd + Q
-      if (process.platform !== "darwin") {
+      if (process.platform !== Platform.MACOS) {
         this.app.quit();
       }
     });
@@ -125,8 +126,8 @@ class Main {
       autoHideMenuBar: true,
       webPreferences: {
         nodeIntegration: true,
-        enableRemoteModule: true,
-      },
+        enableRemoteModule: true
+      }
     };
 
     this.appWindow = new BrowserWindow(windowOptions);
@@ -139,7 +140,7 @@ class Main {
       url.format({
         pathname: path.join(__dirname, "app", "index.html"),
         protocol: "file:",
-        slashes: true,
+        slashes: true
       })
     );
 

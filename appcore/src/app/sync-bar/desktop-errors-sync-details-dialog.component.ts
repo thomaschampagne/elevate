@@ -32,13 +32,16 @@ import { LoggerService } from "../shared/services/logging/logger.service";
       <button mat-stroked-button mat-dialog-close color="primary">Ok</button>
     </mat-dialog-actions>
   `,
-  styles: [``],
+  styles: [``]
 })
 export class DesktopErrorsSyncDetailsDialogComponent implements OnInit {
   public static readonly MAX_WIDTH: string = "90%";
   public static readonly MIN_WIDTH: string = "80%";
 
-  constructor(@Inject(MAT_DIALOG_DATA) public eventErrors: ErrorSyncEvent[], public logger: LoggerService) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public readonly eventErrors: ErrorSyncEvent[],
+    @Inject(LoggerService) private readonly logger: LoggerService
+  ) {}
 
   public ngOnInit(): void {
     this.logger.warn("SYNC WARNS", this.eventErrors);

@@ -5,5 +5,5 @@ export enum TrainingZone {
   FRESHNESS = 25,
   NEUTRAL = 5,
   OPTIMAL = -10,
-  OVERLOAD = -30,
+  OVERLOAD = -30
 }

@@ -6,7 +6,7 @@ describe("CyclingPowerEstimator", () => {
     const speedKph = 10;
     const params: Partial<CyclingPower.Params> = {
       riderWeightKg: 75,
-      gradePercentage: 6,
+      gradePercentage: 6
     };
     const expectedPower = 153.99;
 
@@ -23,7 +23,7 @@ describe("CyclingPowerEstimator", () => {
     const speedKph = 35;
     const params: Partial<CyclingPower.Params> = {
       riderWeightKg: 75,
-      gradePercentage: -2,
+      gradePercentage: -2
     };
     const expectedPower = 63.23;
 
@@ -40,7 +40,7 @@ describe("CyclingPowerEstimator", () => {
     const speedKph = 35;
     const params: Partial<CyclingPower.Params> = {
       riderWeightKg: 75,
-      gradePercentage: -10,
+      gradePercentage: -10
     };
     const expectedPower = 0;
 

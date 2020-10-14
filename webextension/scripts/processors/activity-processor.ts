@@ -5,7 +5,7 @@ import {
   AnalysisDataModel,
   AthleteSnapshotModel,
   Gender,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
@@ -114,7 +114,7 @@ export class ActivityProcessor {
       activityStream: activityStream,
       bounds: bounds,
       returnZones: true,
-      returnPowerCurve: true,
+      returnPowerCurve: true
     };
 
     this.computeAnalysisThread.postMessage(threadMessage);

@@ -22,7 +22,7 @@ describe("EditDatedAthleteSettingsDialogComponent", () => {
   beforeEach(done => {
     const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
       action: DatedAthleteSettingsAction.ACTION_ADD,
-      datedAthleteSettingsModel: DatedAthleteSettingsModel.DEFAULT_MODEL,
+      datedAthleteSettingsModel: DatedAthleteSettingsModel.DEFAULT_MODEL
     };
 
     TestBed.configureTestingModule({
@@ -30,17 +30,17 @@ describe("EditDatedAthleteSettingsDialogComponent", () => {
       providers: [
         {
           provide: DataStore,
-          useClass: TestingDataStore,
+          useClass: TestingDataStore
         },
         {
           provide: MAT_DIALOG_DATA,
-          useValue: datedAthleteSettingsDialogData,
+          useValue: datedAthleteSettingsDialogData
         },
         {
           provide: MatDialogRef,
-          useValue: {},
-        },
-      ],
+          useValue: {}
+        }
+      ]
     }).compileComponents();
 
     userSettingsService = TestBed.inject(UserSettingsService);

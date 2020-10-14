@@ -1,16 +1,15 @@
 import _ from "lodash";
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { FitnessService } from "../../../fitness-trend/shared/services/fitness.service";
 import { AthleteSettingsModel, UserSettings } from "@elevate/shared/models";
-import { Helper } from "../../../../../../webextension/scripts/helper";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
 import { Constant } from "@elevate/shared/constants";
 
 @Component({
   selector: "app-athlete-settings-form",
   templateUrl: "./athlete-settings-form.component.html",
-  styleUrls: ["./athlete-settings-form.component.scss"],
+  styleUrls: ["./athlete-settings-form.component.scss"]
 })
 export class AthleteSettingsFormComponent implements OnInit {
   public static readonly DATED_ATHLETE_SETTING_KEY_WEIGHT: any = "weight";
@@ -40,7 +39,7 @@ export class AthleteSettingsFormComponent implements OnInit {
 
   public isSwimFtpCalculatorEnabled = false;
 
-  constructor(public snackBar: MatSnackBar) {}
+  constructor(@Inject(MatSnackBar) private readonly snackBar: MatSnackBar) {}
 
   public ngOnInit(): void {
     this.markCurrentSettingsAsCompliant();
@@ -177,7 +176,7 @@ export class AthleteSettingsFormComponent implements OnInit {
     }
 
     return _.isNumber(this.athleteSettingsModel.runningFtp) && this.athleteSettingsModel.runningFtp > 0
-      ? Helper.secondsToHHMMSS(this.athleteSettingsModel.runningFtp / speedFactor) +
+      ? this.secondsToHHMMSS(this.athleteSettingsModel.runningFtp / speedFactor) +
           (systemUnit === "metric" ? "/km" : "/mi")
       : null;
   }
@@ -190,7 +189,28 @@ export class AthleteSettingsFormComponent implements OnInit {
     }
 
     this.snackBar.open(message, "Close", {
-      duration: 2500,
+      duration: 2500
     });
+  }
+
+  private secondsToHHMMSS(secondsParam: number, trimLeadingZeros?: boolean): string {
+    const secNum: number = Math.round(secondsParam); // don't forget the second param
+    const hours: number = Math.floor(secNum / 3600);
+    const minutes: number = Math.floor((secNum - hours * 3600) / 60);
+    const seconds: number = secNum - hours * 3600 - minutes * 60;
+
+    let time: string = hours < 10 ? "0" + hours.toFixed(0) : hours.toFixed(0);
+    time += ":" + (minutes < 10 ? "0" + minutes.toFixed(0) : minutes.toFixed(0));
+    time += ":" + (seconds < 10 ? "0" + seconds.toFixed(0) : seconds.toFixed(0));
+
+    return trimLeadingZeros ? this.trimLeadingZerosHHMMSS(time) : time;
+  }
+
+  private trimLeadingZerosHHMMSS(time: string): string {
+    const result: string = time.replace(/^(0*:)*/, "").replace(/^0*/, "") || "0";
+    if (result.indexOf(":") < 0) {
+      return result + "s";
+    }
+    return result;
   }
 }

@@ -5,12 +5,12 @@ import { FitnessTrendComponent } from "./fitness-trend.component";
 const routes: Routes = [
   {
     path: "",
-    component: FitnessTrendComponent,
-  },
+    component: FitnessTrendComponent
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class FitnessTrendRoutingModule {}

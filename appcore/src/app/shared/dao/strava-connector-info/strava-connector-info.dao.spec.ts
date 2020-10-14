@@ -11,7 +11,7 @@ describe("StravaConnectorInfoDao", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, DesktopModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     });
   });
 

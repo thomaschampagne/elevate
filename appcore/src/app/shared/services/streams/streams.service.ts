@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { StreamsDao } from "../../dao/streams/streams.dao";
 import { CompressedStreamModel } from "@elevate/shared/models";
 
 @Injectable()
 export class StreamsService {
-  constructor(public streamsDao: StreamsDao) {}
+  constructor(@Inject(StreamsDao) private readonly streamsDao: StreamsDao) {}
 
   public getById(id: number | string): Promise<CompressedStreamModel> {
     return this.streamsDao.getById(id);

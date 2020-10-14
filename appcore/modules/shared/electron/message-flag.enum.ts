@@ -8,5 +8,5 @@ export enum MessageFlag {
 
   // From main to renderer
   SYNC_EVENT,
-  FIND_ACTIVITY,
+  FIND_ACTIVITY
 }

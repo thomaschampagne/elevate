@@ -30,7 +30,7 @@ export class MultipleActivityProcessor {
     "elevation_unit",
     "elevation_gain_raw",
     "calories",
-    "hasPowerMeter",
+    "hasPowerMeter"
   ];
   protected appResources: AppResourcesModel;
   protected userSettings: ExtensionUserSettingsModel;
@@ -71,7 +71,7 @@ export class MultipleActivityProcessor {
               step: "syncedActivitiesPercentage",
               progress: (syncedActivitiesPercentageCount / activitiesWithStream.length) * 100,
               index: index,
-              activityId: activityWithStream.id,
+              activityId: activityWithStream.id
             };
 
             deferred.notify(notify);
@@ -125,7 +125,7 @@ export class MultipleActivityProcessor {
           // Finishing... force progress @ 100% for compute progress callback
           const notify: SyncNotifyModel = {
             step: "syncedActivitiesPercentage",
-            progress: 100,
+            progress: 100
           };
 
           deferred.notify(notify);
@@ -150,7 +150,7 @@ export class MultipleActivityProcessor {
     return {
       elevation: parseInt(activityWithStream.elevation_gain),
       movingTime: activityWithStream.moving_time_raw,
-      distance: activityWithStream.distance_raw,
+      distance: activityWithStream.distance_raw
     };
   }
 
@@ -176,7 +176,7 @@ export class MultipleActivityProcessor {
       activityStream: activityWithStream.stream,
       bounds: null,
       returnZones: false,
-      returnPowerCurve: false,
+      returnPowerCurve: false
     };
 
     computeAnalysisThread.postMessage(threadMessage);
@@ -196,7 +196,7 @@ export class MultipleActivityProcessor {
     computeAnalysisThread.onerror = err => {
       const errorMessage: any = {
         errObject: err,
-        activityId: activityWithStream.id,
+        activityId: activityWithStream.id
       };
 
       // Push error uppper

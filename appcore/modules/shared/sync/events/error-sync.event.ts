@@ -10,9 +10,9 @@ export class ErrorSyncEvent extends SyncEvent {
       return new ErrorSyncEvent(fromConnectorType, {
         code: ErrorSyncEvent.UNHANDLED_ERROR_SYNC.code,
         description: description,
-        stacktrace: null,
+        stacktrace: null
       });
-    },
+    }
   };
 
   public static MULTIPLE_ACTIVITIES_FOUND = {
@@ -28,9 +28,9 @@ export class ErrorSyncEvent extends SyncEvent {
         description: `Unable to save the new activity "${activityName}" starting on date "${onDate.toISOString()}" because multiple activities are already saved in database for same date: ${existingActivities.join(
           "; "
         )}`,
-        stacktrace: null,
+        stacktrace: null
       });
-    },
+    }
   };
 
   public static SYNC_ERROR_COMPUTE = {
@@ -46,11 +46,11 @@ export class ErrorSyncEvent extends SyncEvent {
         {
           code: ErrorSyncEvent.SYNC_ERROR_COMPUTE.code,
           description: description,
-          stacktrace: stacktrace,
+          stacktrace: stacktrace
         },
         activity
       );
-    },
+    }
   };
 
   public static SYNC_ALREADY_STARTED = {
@@ -63,9 +63,9 @@ export class ErrorSyncEvent extends SyncEvent {
       return new ErrorSyncEvent(fromConnectorType, {
         code: ErrorSyncEvent.SYNC_ALREADY_STARTED.code,
         description: description,
-        stacktrace: stacktrace,
+        stacktrace: stacktrace
       });
-    },
+    }
   };
 
   public static SYNC_ERROR_UPSERT_ACTIVITY_DATABASE = {
@@ -78,11 +78,11 @@ export class ErrorSyncEvent extends SyncEvent {
       const errorSyncEvent = new ErrorSyncEvent(fromConnectorType, {
         code: ErrorSyncEvent.SYNC_ERROR_UPSERT_ACTIVITY_DATABASE.code,
         description: `Unable to save the new activity "${activity.name}" on date "${activity.start_time}" into database.`,
-        stacktrace: stacktrace,
+        stacktrace: stacktrace
       });
       errorSyncEvent.activity = activity;
       return errorSyncEvent;
-    },
+    }
   };
 
   public static STRAVA_API_UNAUTHORIZED = {
@@ -91,9 +91,9 @@ export class ErrorSyncEvent extends SyncEvent {
       return new ErrorSyncEvent(ConnectorType.STRAVA, {
         code: ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.code,
         description: `Unauthorized call to Strava api`,
-        stacktrace: null,
+        stacktrace: null
       });
-    },
+    }
   };
 
   public static STRAVA_API_FORBIDDEN = {
@@ -102,9 +102,9 @@ export class ErrorSyncEvent extends SyncEvent {
       return new ErrorSyncEvent(ConnectorType.STRAVA, {
         code: ErrorSyncEvent.STRAVA_API_FORBIDDEN.code,
         description: `Unauthorized call to Strava api`,
-        stacktrace: null,
+        stacktrace: null
       });
-    },
+    }
   };
 
   public static STRAVA_INSTANT_QUOTA_REACHED = {
@@ -113,9 +113,9 @@ export class ErrorSyncEvent extends SyncEvent {
       return new ErrorSyncEvent(ConnectorType.STRAVA, {
         code: ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.code,
         description: `The instant strava api calls have been reached: ${usage} calls performed for a limit of ${limit} each 15 minutes. Wait 20 minutes and retry.`,
-        stacktrace: null,
+        stacktrace: null
       });
-    },
+    }
   };
 
   public static STRAVA_DAILY_QUOTA_REACHED = {
@@ -124,9 +124,9 @@ export class ErrorSyncEvent extends SyncEvent {
       return new ErrorSyncEvent(ConnectorType.STRAVA, {
         code: ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED.code,
         description: `The instant strava api calls have been reached for today: ${usage} calls performed for a limit of ${limit} per day. Please retry tomorrow.`,
-        stacktrace: null,
+        stacktrace: null
       });
-    },
+    }
   };
 
   public static STRAVA_API_RESOURCE_NOT_FOUND = {
@@ -135,9 +135,9 @@ export class ErrorSyncEvent extends SyncEvent {
       return new ErrorSyncEvent(ConnectorType.STRAVA, {
         code: ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.code,
         description: `Resource not found at url: '${url}'`,
-        stacktrace: null,
+        stacktrace: null
       });
-    },
+    }
   };
 
   public static STRAVA_API_TIMEOUT = {
@@ -146,9 +146,9 @@ export class ErrorSyncEvent extends SyncEvent {
       return new ErrorSyncEvent(ConnectorType.STRAVA, {
         code: ErrorSyncEvent.STRAVA_API_TIMEOUT.code,
         description: `Request Timeout at url: '${url}'`,
-        stacktrace: null,
+        stacktrace: null
       });
-    },
+    }
   };
 
   public static FS_SOURCE_DIRECTORY_DONT_EXISTS = {
@@ -157,9 +157,9 @@ export class ErrorSyncEvent extends SyncEvent {
       return new ErrorSyncEvent(ConnectorType.FILE_SYSTEM, {
         code: ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.code,
         description: "Source directory '" + sourceDirectory + "' do not exists",
-        stacktrace: stacktrace,
+        stacktrace: stacktrace
       });
-    },
+    }
   };
 
   public code: string;

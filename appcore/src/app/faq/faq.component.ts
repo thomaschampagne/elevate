@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { DomSanitizer } from "@angular/platform-browser";
 import MarkDownIt from "markdown-it";
@@ -7,7 +7,7 @@ import { LoggerService } from "../shared/services/logging/logger.service";
 @Component({
   selector: "app-faq",
   templateUrl: "./faq.component.html",
-  styleUrls: ["./faq.component.scss"],
+  styleUrls: ["./faq.component.scss"]
 })
 export class FaqComponent implements OnInit {
   private static readonly FAQ_URL: string =
@@ -18,11 +18,14 @@ export class FaqComponent implements OnInit {
 
   public isFaqLoaded: boolean = null;
 
-  constructor(public httpClient: HttpClient, public domSanitizer: DomSanitizer, public logger: LoggerService) {}
+  constructor(
+    @Inject(HttpClient) private readonly httpClient: HttpClient,
+    @Inject(DomSanitizer) private readonly domSanitizer: DomSanitizer,
+    @Inject(LoggerService) private readonly logger: LoggerService
+  ) {}
 
   public ngOnInit(): void {
     this.markDownParser = new MarkDownIt();
-
     this.httpClient
       .get(FaqComponent.FAQ_URL, { responseType: "text" })
       .toPromise()

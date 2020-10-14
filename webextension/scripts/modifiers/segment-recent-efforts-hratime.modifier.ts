@@ -412,7 +412,7 @@ export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
 
             infobox = createElementSVG("g", [
               "transform",
-              "translate(" + boxX.toString() + ", " + infoY.toString() + ")",
+              "translate(" + boxX.toString() + ", " + infoY.toString() + ")"
             ]);
 
             {
@@ -470,7 +470,7 @@ export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
                 "Estimation of " + performance + " you could",
                 "achieve at " + maxHR.toFixed() + "bpm,",
                 "the highest average HR of",
-                "all efforts in this segment.",
+                "all efforts in this segment."
               ];
 
               const infoboxH = infoText.length * lineH + textY * 2 + 5;

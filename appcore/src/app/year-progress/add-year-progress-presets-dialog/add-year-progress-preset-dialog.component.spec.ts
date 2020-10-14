@@ -30,8 +30,8 @@ describe("AddYearProgressPresetDialogComponent", () => {
       providers: [
         { provide: DataStore, useClass: TestingDataStore },
         { provide: MAT_DIALOG_DATA, useValue: addYearProgressPresetsDialogData },
-        { provide: MatDialogRef, useValue: {} },
-      ],
+        { provide: MatDialogRef, useValue: {} }
+      ]
     }).compileComponents();
 
     done();

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { AthleteService } from "../athlete/athlete.service";
 import _ from "lodash";
 import { AthleteModel, AthleteSnapshotModel } from "@elevate/shared/models";
@@ -8,7 +8,7 @@ import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 export class AthleteSnapshotResolverService {
   public athleteSnapshotResolver: AthleteSnapshotResolver;
 
-  constructor(public athleteService: AthleteService) {}
+  constructor(@Inject(AthleteService) public readonly athleteService: AthleteService) {}
 
   /**
    * Update or create AthleteSnapshotResolver

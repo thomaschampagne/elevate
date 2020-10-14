@@ -6,8 +6,8 @@ Object.defineProperty(window, "getComputedStyle", {
   value: () => ({
     getPropertyValue: () => {
       return null;
-    },
-  }),
+    }
+  })
 });
 
 const localStorageMock = (() => {
@@ -22,20 +22,20 @@ const localStorageMock = (() => {
     },
     removeItem: key => {
       delete store[key];
-    },
+    }
   };
 })();
 
 Object.defineProperty(window, "localStorage", { value: localStorageMock });
 
 Object.defineProperty(document, "doctype", {
-  value: "<!DOCTYPE html>",
+  value: "<!DOCTYPE html>"
 });
 Object.defineProperty(document.body.style, "transform", {
   value: () => {
     return {
       enumerable: true,
-      configurable: true,
+      configurable: true
     };
-  },
+  }
 });

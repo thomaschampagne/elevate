@@ -8,7 +8,7 @@ import {
   StartedSyncEvent,
   StoppedSyncEvent,
   SyncEvent,
-  SyncEventType,
+  SyncEventType
 } from "@elevate/shared/sync";
 import { ReplaySubject, Subject } from "rxjs";
 import {
@@ -18,7 +18,7 @@ import {
   BareActivityModel,
   ConnectorSyncDateTime,
   SyncedActivityModel,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import fs from "fs";
 import path from "path";
@@ -30,7 +30,7 @@ import logger from "electron-log";
 import {
   ActivityTypeGroups,
   ActivityTypes,
-  ActivityTypesHelper,
+  ActivityTypesHelper
 } from "@sports-alliance/sports-lib/lib/activities/activity.types";
 import { SportsLib } from "@sports-alliance/sports-lib";
 import { DataSpeed } from "@sports-alliance/sports-lib/lib/data/data.speed";
@@ -55,7 +55,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 export enum ActivityFileType {
   GPX = "gpx",
   TCX = "tcx",
-  FIT = "fit",
+  FIT = "fit"
 }
 
 /**
@@ -205,7 +205,7 @@ export class FileSystemConnector extends BaseConnector {
     { from: ActivityTypes.Windsurfing, to: ElevateSport.Windsurf },
     { from: ActivityTypes.Workout, to: ElevateSport.Workout },
     { from: ActivityTypes.Yoga, to: ElevateSport.Yoga },
-    { from: ActivityTypes.YogaPilates, to: ElevateSport.Yoga },
+    { from: ActivityTypes.YogaPilates, to: ElevateSport.Yoga }
   ];
   private static unPackerInstance: { unpack: (path: string, options: any, callback: (err: any) => void) => void };
   public inputDirectory: string;
@@ -404,7 +404,7 @@ export class FileSystemConnector extends BaseConnector {
 
                             // Assign reference to strava activity
                             syncedActivityModel.extras = {
-                              fs_activity_location: activityFile.location,
+                              fs_activity_location: activityFile.location
                             };
 
                             // Keep tracking  of activity id
@@ -482,7 +482,7 @@ export class FileSystemConnector extends BaseConnector {
                             activityInError.type = sportsLibActivity.type as any;
                             activityInError.start_time = sportsLibActivity.startDate.toISOString();
                             (activityInError as SyncedActivityModel).extras = {
-                              fs_activity_location: activityFile.location,
+                              fs_activity_location: activityFile.location
                             }; // Keep tracking  of activity id
                             const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(
                               ConnectorType.FILE_SYSTEM,
@@ -557,7 +557,7 @@ export class FileSystemConnector extends BaseConnector {
                 // Keep tracking  of activity id
                 errorSyncEvent.activity = new SyncedActivityModel();
                 (errorSyncEvent.activity as SyncedActivityModel).extras = {
-                  fs_activity_location: activityFile.location,
+                  fs_activity_location: activityFile.location
                 };
 
                 syncEvents$.next(errorSyncEvent);
@@ -899,7 +899,7 @@ export class FileSystemConnector extends BaseConnector {
       const options: any = {
         targetDir: extractDir,
         noDirectory: true,
-        quiet: true,
+        quiet: true
       };
 
       // Append resources path to unar exec (unarchiver) if app is packaged

@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { OpenResourceResolver } from "../open-resource-resolver";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Injectable()
 export class ExtensionOpenResourceResolver extends OpenResourceResolver {
-  constructor(public snackBar: MatSnackBar) {
+  constructor(@Inject(MatSnackBar) protected readonly snackBar: MatSnackBar) {
     super(snackBar);
   }
 

@@ -275,7 +275,7 @@ export class VacuumProcessor {
             activityCommonStats: this.getActivityStatsMap(),
             stream: activityStream,
             athleteWeight: this.getAthleteWeight(),
-            hasPowerMeter,
+            hasPowerMeter
           };
 
           localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), Gzip.pack64(cache));
@@ -311,7 +311,7 @@ export class VacuumProcessor {
   public getSegmentsFromBounds(vectorA: string, vectorB: string, callback: (segmentsUnify: any) => void): void {
     const segmentsUnify: any = {
       cycling: null,
-      running: null,
+      running: null
     };
 
     $.when(
@@ -321,7 +321,7 @@ export class VacuumProcessor {
           bounds: vectorA + "," + vectorB,
           min_cat: "0",
           max_cat: "5",
-          activity_type: "cycling",
+          activity_type: "cycling"
         },
         type: "GET",
         crossDomain: true, // enable this
@@ -331,7 +331,7 @@ export class VacuumProcessor {
         },
         error: (err: any) => {
           console.error(err);
-        },
+        }
       }),
 
       $.ajax({
@@ -340,7 +340,7 @@ export class VacuumProcessor {
           bounds: vectorA + "," + vectorB,
           min_cat: "0",
           max_cat: "5",
-          activity_type: "running",
+          activity_type: "running"
         },
         type: "GET",
         crossDomain: true, // enable this
@@ -350,7 +350,7 @@ export class VacuumProcessor {
         },
         error: (err: any) => {
           console.error(err);
-        },
+        }
       })
     ).then(() => {
       callback(segmentsUnify);
@@ -370,7 +370,7 @@ export class VacuumProcessor {
       },
       error: (err: any) => {
         console.error(err);
-      },
+      }
     });
   }
 
@@ -399,7 +399,7 @@ export class VacuumProcessor {
     return new Promise((resolve, reject) => {
       $.ajax({
         url,
-        dataType: "json",
+        dataType: "json"
       }).done((results: any[], textStatus: string, jqXHR: JQuery.jqXHR) => {
         if (textStatus !== "success") {
           reject(jqXHR);
@@ -501,7 +501,7 @@ export class VacuumProcessor {
     return {
       movingTime: movingTime ? movingTime : null,
       elevation: elevGain ? elevGain : null,
-      distance: distance ? distance : null,
+      distance: distance ? distance : null
     };
   }
 }

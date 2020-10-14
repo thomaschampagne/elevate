@@ -20,7 +20,7 @@ export class CaloriesEstimator {
     { sportType: ElevateSport.AlpineSki, value: 7 },
     { sportType: ElevateSport.Snowboard, value: 7 },
     { sportType: ElevateSport.WeightTraining, value: 3 },
-    { sportType: ElevateSport.Climbing, value: 8 },
+    { sportType: ElevateSport.Climbing, value: 8 }
   ];
 
   public static calc(sportType: ElevateSport, movingTime: number, weight: number): number {

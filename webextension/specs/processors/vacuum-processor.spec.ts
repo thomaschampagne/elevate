@@ -15,13 +15,13 @@ describe("VacuumProcessor", () => {
 
     // ... return premium status and test...
     getCurrentAthleteSpy.and.returnValue({
-      attributes: { premium: true },
+      attributes: { premium: true }
     });
     expect(vacuumProcessor.getProStatus()).toEqual(false);
 
     // ... return pro status and test...
     getCurrentAthleteSpy.and.returnValue({
-      attributes: { pro: true },
+      attributes: { pro: true }
     });
     expect(vacuumProcessor.getProStatus()).toEqual(true);
 

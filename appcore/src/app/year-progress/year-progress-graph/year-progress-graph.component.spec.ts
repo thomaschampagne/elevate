@@ -26,7 +26,7 @@ describe("YearProgressGraphComponent", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, YearProgressModule],
-      providers: [YearProgressService, { provide: DataStore, useClass: TestingDataStore }],
+      providers: [YearProgressService, { provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 
     yearProgressService = TestBed.inject(YearProgressService);
@@ -89,7 +89,7 @@ describe("YearProgressGraphComponent", () => {
     const expectedYearSelectedColors: string[] = [
       component.yearProgressStyleModel.yearsColorsMap.get(2013),
       component.yearProgressStyleModel.yearsColorsMap.get(2016),
-      component.yearProgressStyleModel.yearsColorsMap.get(2017),
+      component.yearProgressStyleModel.yearsColorsMap.get(2017)
     ];
 
     // When

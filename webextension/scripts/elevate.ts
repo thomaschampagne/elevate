@@ -1,13 +1,6 @@
 import _ from "lodash";
 import { Helper } from "./helper";
-import {
-  ActivityInfoModel,
-  AthleteModel,
-  CoreMessages,
-  ReleaseNoteModel,
-  SyncResultModel,
-  UserSettings,
-} from "@elevate/shared/models";
+import { ActivityInfoModel, AthleteModel, CoreMessages, SyncResultModel, UserSettings } from "@elevate/shared/models";
 import { ExtensionEnv } from "../config/extension-env";
 import { AppResourcesModel } from "./models/app-resources.model";
 import { AthleteUpdateModel } from "./models/athlete-update.model";
@@ -31,7 +24,7 @@ import {
   RunningCadenceModifier,
   RunningGradeAdjustedPaceModifier,
   RunningHeartRateModifier,
-  RunningTemperatureModifier,
+  RunningTemperatureModifier
 } from "./modifiers/running-data.modifier";
 import { RunningAnalysisGraph } from "./modifiers/running-analysis-graph.modifier";
 import { SegmentRankPercentageModifier } from "./modifiers/segment-rank-percentage.modifier";
@@ -48,7 +41,6 @@ import "./follow";
 import * as Cookies from "js-cookie";
 import { ActivitiesChronologicalFeedModifier } from "./modifiers/activities-chronological-feed-modifier";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
-import { releaseNotesData } from "@elevate/shared/data";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
 import { GenericExtendedDataModifier } from "./modifiers/extended-stats/generic-extended-data.modifier";
 import { ElevateSport } from "@elevate/shared/enums";
@@ -118,7 +110,7 @@ export class Elevate {
               this.extensionId,
               {
                 method: CoreMessages.ON_EXTERNAL_DB_CHANGE,
-                params: {},
+                params: {}
               },
               (response: any) => {
                 console.log(response);
@@ -196,7 +188,7 @@ export class Elevate {
       this.pageMatches = {
         activity: window.location.pathname.match(/^\/activities/) !== null,
         dashboard: window.location.pathname.match(/^\/dashboard/) !== null,
-        segment: window.location.pathname.match(/^\/segments\/(\d+)$/) !== null,
+        segment: window.location.pathname.match(/^\/segments\/(\d+)$/) !== null
       };
 
       return Promise.resolve();
@@ -237,35 +229,25 @@ export class Elevate {
   }
 
   public showPluginInstallOrUpgradeRibbon(): void {
-    const latestRelease: ReleaseNoteModel = _.first(releaseNotesData);
-
-    if (_.isBoolean(latestRelease.silent) && latestRelease.silent) {
-      console.log("Silent update... skip update ribbon");
-      return;
-    }
-
     const ribbonHtml: string =
       '<div id="pluginInstallOrUpgrade" style="display: flex; justify-content: flex-start; position: fixed; z-index: 999; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white; font-size: 12px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;">' +
-      '<div style="margin-right: 10px; line-height: 20px; white-space: nowrap;"><strong>Elevate updated' +
-      (latestRelease.isPatch
-        ? " <span style='color: aquamarine'>(Patch " + this.appResources.extVersion + ")</span>"
-        : " to " + this.appResources.extVersion) +
-      "</strong></div>" +
+      '<div style="margin-right: 10px; line-height: 20px; white-space: nowrap;"><strong>Elevate has been updated to version ' +
+      this.appResources.extVersion +
+      ".</strong></div>" +
       '<div style="margin-right: 10px; line-height: 20px;">' +
-      latestRelease.message +
+      "  <a href='#' class=\"pluginInstallOrUpgrade_details\" style='color:#FC4C02; font-size: 12px; font-weight: bold'>(View release note)</a>" +
       "</div>" +
       '<div style="margin-right: 10px; white-space: nowrap; flex: 1; display: flex; justify-content: flex-end;">' +
       "	<div>" +
-      '		<div class="btn btn-primary btn-xs pluginInstallOrUpgrade_details">View full release note</div>' +
+      '		<div class="btn btn-primary btn-xs pluginInstallOrUpgrade_details">Show release note</div>' +
       '		<div id="pluginInstallOrUpgrade_close" class="btn btn-primary btn-xs" style="margin-left: 10px;">Close (<span id="pluginInstallOrUpgrade_counter"></span>)</div>' +
       "	</div>" +
-      "</div>" +
       "</div>";
 
     $("body")
       .before(ribbonHtml)
       .each(() => {
-        const closeRibbon = function () {
+        const closeRibbon = () => {
           $("#pluginInstallOrUpgrade").slideUp(450, () => {
             $("#pluginInstallOrUpgrade").remove();
           });
@@ -311,7 +293,7 @@ export class Elevate {
     const saveCurrentVersionInstalled = callback => {
       const toBeStored = {
         version: this.appResources.extVersion,
-        on: Date.now(),
+        on: Date.now()
       };
 
       BrowserStorage.getInstance()
@@ -331,8 +313,8 @@ export class Elevate {
           response = {
             data: {
               version: "fakeVersion",
-              on: 0,
-            },
+              on: 0
+            }
           };
         }
 
@@ -366,7 +348,7 @@ export class Elevate {
             const updatedToEvent: any = {
               categorie: "Exploitation",
               action: "updatedVersion",
-              name: this.appResources.extVersion,
+              name: this.appResources.extVersion
             };
 
             follow("send", "event", updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
@@ -566,7 +548,7 @@ export class Elevate {
       startTime: this.vacuumProcessor.getActivityStartDate(),
       supportsGap: window.pageView.activity().get("supportsGap"),
       isTrainer: window.pageView.activity().get("trainer"),
-      isOwner: this.isOwner,
+      isOwner: this.isOwner
     };
 
     // Skip manual activities
@@ -621,7 +603,7 @@ export class Elevate {
     const updatedToEvent: any = {
       categorie: "Analyse",
       action: "openedActivityType",
-      name: activityInfo.type,
+      name: activityInfo.type
     };
 
     follow("send", "event", updatedToEvent.categorie, updatedToEvent.action, updatedToEvent.name);
@@ -643,7 +625,7 @@ export class Elevate {
       startTime: this.vacuumProcessor.getActivityStartDate(),
       supportsGap: window.pageView.activity().get("supportsGap"),
       isTrainer: window.pageView.activity().get("trainer"),
-      isOwner: this.isOwner,
+      isOwner: this.isOwner
     };
 
     // Skip manual activities
@@ -816,7 +798,7 @@ export class Elevate {
       startTime: this.vacuumProcessor.getActivityStartDate(),
       supportsGap: window.pageView.activity().get("supportsGap"),
       isTrainer: window.pageView.activity().get("trainer"),
-      isOwner: this.isOwner,
+      isOwner: this.isOwner
     };
 
     BrowserStorage.getInstance()

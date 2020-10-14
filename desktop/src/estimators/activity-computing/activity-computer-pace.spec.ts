@@ -5,7 +5,7 @@ import {
   AthleteSettingsModel,
   AthleteSnapshotModel,
   Gender,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import _ from "lodash";
 import { ElevateSport } from "@elevate/shared/enums";
@@ -101,7 +101,7 @@ describe("ActivityComputer Paces", () => {
   const activitySourceData: ActivitySourceDataModel = {
     movingTime: -1,
     elevation: -1,
-    distance: -1,
+    distance: -1
   };
 
   const PACE_SECONDS_TOLERANCE = 10;

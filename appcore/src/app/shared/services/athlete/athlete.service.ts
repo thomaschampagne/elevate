@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { AthleteModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { AthleteDao } from "../../dao/athlete/athlete.dao";
 import _ from "lodash";
@@ -9,7 +9,7 @@ import { AppError } from "../../models/app-error.model";
  */
 @Injectable()
 export class AthleteService {
-  constructor(public athleteModelDao: AthleteDao) {}
+  constructor(@Inject(AthleteDao) public readonly athleteModelDao: AthleteDao) {}
 
   /**
    * Provides athlete model with dated settings sorted by descending periods
@@ -38,7 +38,7 @@ export class AthleteService {
       .then((athleteModel: AthleteModel) => {
         // Check if period already exists
         const alreadyExistingDatedSettings = _.find(athleteModel.datedAthleteSettings, {
-          since: datedAthleteSettings.since,
+          since: datedAthleteSettings.since
         });
 
         if (!_.isEmpty(alreadyExistingDatedSettings)) {
@@ -130,7 +130,7 @@ export class AthleteService {
         }
 
         const indexOfSettingsToEdit = _.findIndex(athleteModel.datedAthleteSettings, {
-          since: sinceIdentifier,
+          since: sinceIdentifier
         });
 
         if (indexOfSettingsToEdit === -1) {

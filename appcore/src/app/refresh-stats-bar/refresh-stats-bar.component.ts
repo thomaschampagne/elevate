@@ -1,8 +1,8 @@
-import { Component, HostBinding, InjectionToken, OnInit } from "@angular/core";
+import { Component, HostBinding, Inject, InjectionToken, OnInit } from "@angular/core";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import {
   BulkRefreshStatsNotification,
-  DesktopActivityService,
+  DesktopActivityService
 } from "../shared/services/activity/impl/desktop-activity.service";
 import moment from "moment";
 import { AppRoutesModel } from "../shared/models/app-routes.model";
@@ -38,10 +38,10 @@ export class RefreshStatsBarComponent implements OnInit {
   public hideSettingsLacksWarning: boolean;
 
   constructor(
-    public router: Router,
-    public activityService: ActivityService,
-    public appEventsService: AppEventsService,
-    public dialog: MatDialog
+    @Inject(Router) protected readonly router: Router,
+    @Inject(ActivityService) protected readonly activityService: ActivityService,
+    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
+    @Inject(MatDialog) protected readonly dialog: MatDialog
   ) {
     this.hideGoToAthleteSettingsButton = false;
     this.hideRefreshStatsBar = true;
@@ -107,7 +107,7 @@ export class RefreshStatsBarComponent implements OnInit {
       loadingDialog.close();
       this.dialog.open(ActivitiesSettingsLacksDialogComponent, {
         data: syncedActivityModels,
-        minWidth: ActivitiesSettingsLacksDialogComponent.MIN_WIDTH,
+        minWidth: ActivitiesSettingsLacksDialogComponent.MIN_WIDTH
       });
     });
   }
@@ -115,7 +115,7 @@ export class RefreshStatsBarComponent implements OnInit {
   public onEditAthleteSettingsFromSettingsLacksIssue(): void {
     if (this.router.isActive(AppRoutesModel.athleteSettings, true)) {
       this.dialog.open(GotItDialogComponent, {
-        data: { content: "You're already on athlete settings section 😉" } as GotItDialogDataModel,
+        data: { content: "You're already on athlete settings section 😉" } as GotItDialogDataModel
       });
     } else {
       this.router.navigate([AppRoutesModel.athleteSettings]);
@@ -203,8 +203,8 @@ export class RefreshStatsBarComponent implements OnInit {
       button {
         margin-left: 10px;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent implements OnInit {
   public hideRecalculation: boolean;
@@ -214,12 +214,12 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
   public toBeProcessed: number;
 
   constructor(
-    public router: Router,
-    public activityService: ActivityService,
-    public userSettingsService: UserSettingsService,
-    public appEventsService: AppEventsService,
-    public dialog: MatDialog,
-    public logger: LoggerService
+    @Inject(Router) protected readonly router: Router,
+    @Inject(ActivityService) protected readonly activityService: ActivityService,
+    @Inject(UserSettingsService) protected readonly userSettingsService: UserSettingsService,
+    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
+    @Inject(MatDialog) protected readonly dialog: MatDialog,
+    @Inject(LoggerService) protected readonly logger: LoggerService
   ) {
     super(router, activityService, appEventsService, dialog);
     this.hideRecalculation = true;
@@ -234,7 +234,7 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
         if (notification.error) {
           this.logger.error(notification);
           this.dialog.open(GotItDialogComponent, {
-            data: { content: notification.error.message } as GotItDialogDataModel,
+            data: { content: notification.error.message } as GotItDialogDataModel
           });
           return;
         }
@@ -336,17 +336,17 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
       button {
         margin-left: 10px;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class ExtensionRefreshStatsBarComponent extends RefreshStatsBarComponent implements OnInit {
   constructor(
-    public router: Router,
-    public activityService: ActivityService,
-    public syncService: SyncService<any>,
-    public appEventsService: AppEventsService,
-    public dialog: MatDialog,
-    public logger: LoggerService
+    @Inject(Router) protected readonly router: Router,
+    @Inject(ActivityService) protected readonly activityService: ActivityService,
+    @Inject(SyncService) protected readonly syncService: SyncService<any>,
+    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
+    @Inject(MatDialog) protected readonly dialog: MatDialog,
+    @Inject(LoggerService) protected readonly logger: LoggerService
   ) {
     super(router, activityService, appEventsService, dialog);
   }
@@ -363,13 +363,13 @@ export class ExtensionRefreshStatsBarComponent extends RefreshStatsBarComponent 
       content:
         "Synced activities affected by athlete settings changes will be deleted to be synced again with " +
         'new athlete settings (equivalent to a "Sync all activities")',
-      confirmText: "Proceed to the recalculation",
+      confirmText: "Proceed to the recalculation"
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       minWidth: ConfirmDialogComponent.MIN_WIDTH,
       maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-      data: data,
+      data: data
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
@@ -388,8 +388,8 @@ export class ExtensionRefreshStatsBarComponent extends RefreshStatsBarComponent 
                 content:
                   nonConsistentIds.length +
                   " activities have been deleted and are synced back now. " +
-                  'You can sync back these activities manually by yourself by triggering a "Sync all activities"',
-              } as GotItDialogDataModel,
+                  'You can sync back these activities manually by yourself by triggering a "Sync all activities"'
+              } as GotItDialogDataModel
             });
 
             // Start Sync all activities
@@ -398,7 +398,7 @@ export class ExtensionRefreshStatsBarComponent extends RefreshStatsBarComponent 
           .catch(error => {
             this.logger.error(error);
             this.dialog.open(GotItDialogComponent, {
-              data: { content: error } as GotItDialogDataModel,
+              data: { content: error } as GotItDialogDataModel
             });
           });
       }

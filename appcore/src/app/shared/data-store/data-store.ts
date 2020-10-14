@@ -4,10 +4,11 @@ import { ReplaySubject } from "rxjs";
 import _ from "lodash";
 import { LoggerService } from "../services/logging/logger.service";
 import Loki from "lokijs";
+import { Inject } from "@angular/core";
 
 export enum DbEvent {
   AUTO_LOADED,
-  AUTO_SAVED,
+  AUTO_SAVED
 }
 
 export abstract class DataStore<T extends {}> {
@@ -18,7 +19,7 @@ export abstract class DataStore<T extends {}> {
   public dbEvent$: ReplaySubject<DbEvent>;
   private COLLECTIONS_MAP: Map<string, Collection<T>>;
 
-  protected constructor(protected logger: LoggerService) {
+  protected constructor(@Inject(LoggerService) protected readonly logger: LoggerService) {
     this.dbEvent$ = new ReplaySubject<DbEvent>();
     this.db = new Loki(DataStore.DATABASE_NAME, this.getDbOptions());
     this.COLLECTIONS_MAP = new Map<string, Collection<T>>();
@@ -49,7 +50,7 @@ export abstract class DataStore<T extends {}> {
       autosave: true,
       autoload: true,
       autoloadCallback: err => this.onAutoLoadDone(err),
-      autosaveCallback: () => this.onAutoSaveDone(),
+      autosaveCallback: () => this.onAutoSaveDone()
     };
   }
 

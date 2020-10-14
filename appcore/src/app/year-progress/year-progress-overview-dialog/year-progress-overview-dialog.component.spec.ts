@@ -28,7 +28,7 @@ describe("YearProgressOverviewDialogComponent", () => {
     selectedYears: [2017, 2016],
     yearProgressStyleModel: new YearProgressStyleModel(yearsColorsMap, colors),
     yearProgressions: [],
-    progressTypes: [],
+    progressTypes: []
   };
 
   beforeEach(done => {
@@ -37,13 +37,13 @@ describe("YearProgressOverviewDialogComponent", () => {
       providers: [
         {
           provide: MAT_DIALOG_DATA,
-          useValue: yearProgressForOverviewModel,
+          useValue: yearProgressForOverviewModel
         },
         {
           provide: MatDialogRef,
-          useValue: {},
-        },
-      ],
+          useValue: {}
+        }
+      ]
     }).compileComponents();
 
     done();

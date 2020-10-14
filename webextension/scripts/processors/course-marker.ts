@@ -9,7 +9,7 @@ export interface ICourseBounds {
 
 export enum ExportTypes {
   GPX,
-  TCX,
+  TCX
 }
 
 export class CourseMaker {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { AthleteModel, Gender } from "@elevate/shared/models";
 import { GenderModel } from "../models/gender.model";
@@ -12,7 +12,7 @@ import { AthleteService } from "../../shared/services/athlete/athlete.service";
 @Component({
   selector: "app-athlete-settings",
   templateUrl: "./athlete-settings.component.html",
-  styleUrls: ["./athlete-settings.component.scss"],
+  styleUrls: ["./athlete-settings.component.scss"]
 })
 export class AthleteSettingsComponent implements OnInit {
   public static readonly SYNCED_ATHLETE_MODEL_SETTING_GENDER_KEY = "gender";
@@ -20,21 +20,21 @@ export class AthleteSettingsComponent implements OnInit {
   public readonly GENDER_LIST: GenderModel[] = [
     {
       type: Gender.MEN,
-      display: "Male",
+      display: "Male"
     },
     {
       type: Gender.WOMEN,
-      display: "Female",
-    },
+      display: "Female"
+    }
   ];
 
   public athleteModel: AthleteModel;
 
   constructor(
-    public userSettingsService: UserSettingsService,
-    public athleteService: AthleteService,
-    public activityService: ActivityService,
-    public logger: LoggerService
+    @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
+    @Inject(AthleteService) private readonly athleteService: AthleteService,
+    @Inject(ActivityService) private readonly activityService: ActivityService,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
   public ngOnInit(): void {

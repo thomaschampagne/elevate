@@ -17,7 +17,7 @@ describe("FitnessTrendConfigDialogComponent", () => {
     fitnessTrendConfigDialogData = {
       fitnessTrendConfigModel: FitnessTrendComponent.DEFAULT_CONFIG,
       lastFitnessActiveDate: new Date(),
-      isPowerMeterEnabled: true,
+      isPowerMeterEnabled: true
     };
 
     TestBed.configureTestingModule({
@@ -25,13 +25,13 @@ describe("FitnessTrendConfigDialogComponent", () => {
       providers: [
         {
           provide: MAT_DIALOG_DATA,
-          useValue: fitnessTrendConfigDialogData,
+          useValue: fitnessTrendConfigDialogData
         },
         {
           provide: MatDialogRef,
-          useValue: {},
-        },
-      ],
+          useValue: {}
+        }
+      ]
     }).compileComponents();
     done();
   });

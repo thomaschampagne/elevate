@@ -13,7 +13,7 @@ describe("ExtensionActivityService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, ExtensionModule],
-      providers: [ExtensionActivityService, { provide: DataStore, useClass: TestingDataStore }],
+      providers: [ExtensionActivityService, { provide: DataStore, useClass: TestingDataStore }]
     });
     service = TestBed.inject(ExtensionActivityService);
   });

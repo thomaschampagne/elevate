@@ -21,13 +21,13 @@ describe("GotItDialogComponent", () => {
       providers: [
         {
           provide: MAT_DIALOG_DATA,
-          useValue: gotItDialogDataModel,
+          useValue: gotItDialogDataModel
         },
         {
           provide: MatDialogRef,
-          useValue: {},
-        },
-      ],
+          useValue: {}
+        }
+      ]
     }).compileComponents();
 
     done();

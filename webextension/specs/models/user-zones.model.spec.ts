@@ -13,7 +13,7 @@ describe("UserZonesModel", () => {
       { from: 60, to: 70 },
       { from: 70, to: 80 },
       { from: 80, to: 90 },
-      { from: 90, to: 100 },
+      { from: 90, to: 100 }
     ];
     const expected = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
@@ -38,7 +38,7 @@ describe("UserZonesModel", () => {
       { from: 20, to: 30 },
       { from: 30, to: 40 },
       { from: 40, to: 50 },
-      { from: 50, to: 60 },
+      { from: 50, to: 60 }
     ];
 
     // When

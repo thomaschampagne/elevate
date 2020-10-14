@@ -143,7 +143,7 @@ export class LegacyBrowserStorage {
             const storageUsage = {
               bytesInUse: bytesInUse,
               quotaBytes: chrome.storage[storageType].QUOTA_BYTES,
-              percentUsage: (bytesInUse / chrome.storage[storageType].QUOTA_BYTES) * 100,
+              percentUsage: (bytesInUse / chrome.storage[storageType].QUOTA_BYTES) * 100
             };
             resolve(storageUsage);
           }
@@ -166,7 +166,7 @@ export class LegacyBrowserStorage {
   ): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       const params: any = {
-        storage: storageType,
+        storage: storageType
       };
 
       if (key !== null) {
@@ -181,7 +181,7 @@ export class LegacyBrowserStorage {
         this.extensionId,
         {
           method: method,
-          params: params,
+          params: params
         },
         (result: { data: T }) => {
           resolve(result.data);

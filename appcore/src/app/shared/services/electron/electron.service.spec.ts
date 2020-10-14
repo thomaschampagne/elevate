@@ -6,6 +6,7 @@ import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
+import { Platform } from "@elevate/shared/enums";
 
 describe("ElectronService", () => {
   let service: ElectronService;
@@ -13,7 +14,7 @@ describe("ElectronService", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule],
-      providers: [ElectronService, { provide: DataStore, useClass: TestingDataStore }],
+      providers: [ElectronService, { provide: DataStore, useClass: TestingDataStore }]
     });
 
     // Retrieve injected preferencesService
@@ -81,7 +82,7 @@ describe("ElectronService", () => {
     const childProcessObject = {
       exec: (cmd: string, fn: () => void) => {
         fn();
-      },
+      }
     };
 
     const requireSpy = spyOn(service, "require").and.returnValue(childProcessObject);
@@ -106,7 +107,7 @@ describe("ElectronService", () => {
     const nodeFsMethods = {
       readdirSync: () => {
         return folders;
-      },
+      }
     };
 
     spyOn(service, "getNodeFsModule").and.returnValue(nodeFsMethods);
@@ -130,7 +131,7 @@ describe("ElectronService", () => {
     const nodeFsMethods = {
       readFileSync: () => {
         return content;
-      },
+      }
     };
 
     spyOn(service, "getNodeFsModule").and.returnValue(nodeFsMethods);
@@ -154,7 +155,7 @@ describe("ElectronService", () => {
     const nodeFsMethods = {
       existsSync: () => {
         return true;
-      },
+      }
     };
 
     spyOn(service, "getNodeFsModule").and.returnValue(nodeFsMethods);
@@ -175,11 +176,11 @@ describe("ElectronService", () => {
     const file = "/path/to/folder/file";
     const statSyncMethods = {
       isDirectory: () => {},
-      isFile: () => {},
+      isFile: () => {}
     };
 
     const nodeFsMethods = {
-      statSync: statSyncMethods,
+      statSync: statSyncMethods
     };
 
     spyOn(service, "getNodeFsModule").and.returnValue(nodeFsMethods);
@@ -246,7 +247,7 @@ describe("ElectronService", () => {
       return {
         isDirectory: (): boolean => {
           return true;
-        },
+        }
       };
     });
 
@@ -269,7 +270,7 @@ describe("ElectronService", () => {
       return {
         isDirectory: (): boolean => {
           return false;
-        },
+        }
       };
     });
 
@@ -291,7 +292,7 @@ describe("ElectronService", () => {
       return {
         isDirectory: (): boolean => {
           return false;
-        },
+        }
       };
     });
 
@@ -313,7 +314,7 @@ describe("ElectronService", () => {
       return {
         isDirectory: (): boolean => {
           throw new Error("Whoops!");
-        },
+        }
       };
     });
 
@@ -335,7 +336,7 @@ describe("ElectronService", () => {
       return {
         isFile: (): boolean => {
           return true;
-        },
+        }
       };
     });
 
@@ -358,7 +359,7 @@ describe("ElectronService", () => {
       return {
         isFile: (): boolean => {
           return false;
-        },
+        }
       };
     });
 
@@ -380,7 +381,7 @@ describe("ElectronService", () => {
       return {
         isFile: (): boolean => {
           return false;
-        },
+        }
       };
     });
 
@@ -402,7 +403,7 @@ describe("ElectronService", () => {
       return {
         isFile: (): boolean => {
           throw new Error("Whoops!");
-        },
+        }
       };
     });
 
@@ -418,13 +419,13 @@ describe("ElectronService", () => {
 
   it("should identify windows platform", done => {
     // Given
-    const platform = "win32";
+    const platform = Platform.WINDOWS;
     service.instance = {
       remote: {
         process: {
-          platform: platform,
-        },
-      },
+          platform: platform
+        }
+      }
     } as any;
 
     // When
@@ -437,13 +438,13 @@ describe("ElectronService", () => {
 
   it("should not identify windows platform", done => {
     // Given
-    const platform = "darwin";
+    const platform = Platform.MACOS;
     service.instance = {
       remote: {
         process: {
-          platform: platform,
-        },
-      },
+          platform: platform
+        }
+      }
     } as any;
 
     // When
@@ -472,15 +473,15 @@ describe("ElectronService", () => {
     const myNodeModule = {
       hello: () => {
         return message;
-      },
+      }
     };
 
     service.instance = {
       remote: {
         require(module: string): any {
           return myNodeModule;
-        },
-      },
+        }
+      }
     } as any;
 
     const requireSpy = spyOn(service.remote, "require").and.callThrough();

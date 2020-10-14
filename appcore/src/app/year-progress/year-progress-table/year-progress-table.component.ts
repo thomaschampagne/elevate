@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import { Component, Inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { YearProgressModel } from "../shared/models/year-progress.model";
 import { YearProgressTypeModel } from "../shared/models/year-progress-type.model";
 import moment, { Moment } from "moment";
@@ -18,7 +18,7 @@ import { ProgressMode } from "../shared/enums/progress-mode.enum";
 @Component({
   selector: "app-year-progress-table",
   templateUrl: "./year-progress-table.component.html",
-  styleUrls: ["./year-progress-table.component.scss"],
+  styleUrls: ["./year-progress-table.component.scss"]
 })
 export class YearProgressTableComponent implements OnInit, OnChanges {
   public static readonly COLUMN_YEAR: string = "year";
@@ -36,7 +36,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
     YearProgressTableComponent.COLUMN_PROGRESS_TYPE_VALUE,
     YearProgressTableComponent.COLUMN_DELTA_PREVIOUS_VALUE,
     YearProgressTableComponent.COLUMN_DELTA_CURRENT_VALUE,
-    YearProgressTableComponent.COLUMN_DELTA_CURRENT_TARGET,
+    YearProgressTableComponent.COLUMN_DELTA_CURRENT_TARGET
   ];
 
   public readonly ProgressType = ProgressType;
@@ -73,7 +73,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
   @Input()
   public yearProgressStyleModel: YearProgressStyleModel;
 
-  constructor(public yearProgressService: YearProgressService) {}
+  constructor(@Inject(YearProgressService) public readonly yearProgressService: YearProgressService) {}
 
   public ngOnInit(): void {
     this.todayMoment = moment();
@@ -151,7 +151,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
     // It includes the value that athlete should reach at that day to respect target
     const targetProgressModel = this.targetProgressModels
       ? _.find(this.targetProgressModels, {
-          dayOfYear: this.momentWatched.dayOfYear(),
+          dayOfYear: this.momentWatched.dayOfYear()
         })
       : null;
 
@@ -182,7 +182,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
         currentValue: progressAtDayModel.value,
         deltaPreviousYear: deltaPreviousYear,
         deltaCurrentYear: deltaCurrentYear,
-        deltaTarget: deltaTarget,
+        deltaTarget: deltaTarget
       };
 
       progressionAtDayRows.push(progressionAtDayRow);
@@ -220,7 +220,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
       class:
         progressAtDayModel.year === this.currentYear && this.momentWatched.dayOfYear() > this.todayMoment.dayOfYear()
           ? DeltaType.NAN
-          : deltaType.toString(),
+          : deltaType.toString()
     };
   }
 
@@ -253,7 +253,7 @@ export class YearProgressTableComponent implements OnInit, OnChanges {
       date: progressAtDayModelB ? moment(progressAtDayModelB.date).format("MMMM DD, YYYY") : null,
       value: !_.isNull(deltaValue) ? Math.abs(deltaValue) : null,
       signSymbol: deltaSignSymbol,
-      class: deltaType.toString(),
+      class: deltaType.toString()
     };
   }
 

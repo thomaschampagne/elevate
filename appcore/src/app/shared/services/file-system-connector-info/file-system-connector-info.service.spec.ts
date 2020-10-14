@@ -8,7 +8,7 @@ import { DesktopModule } from "../../modules/desktop/desktop.module";
 describe("FileSystemConnectorInfoService", () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, DesktopModule],
+      imports: [CoreModule, SharedModule, DesktopModule]
     })
   );
 

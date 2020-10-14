@@ -6,7 +6,7 @@ import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services
 @Component({
   selector: "app-share",
   templateUrl: "./share.component.html",
-  styleUrls: ["./share.component.scss"],
+  styleUrls: ["./share.component.scss"]
 })
 export class ShareComponent implements OnInit {
   public static readonly TWEET: string =
@@ -19,9 +19,9 @@ export class ShareComponent implements OnInit {
   public static readonly LANDING_PAGE_URL: string = "http://thomaschampagne.github.io/elevate/";
 
   constructor(
-    public iconRegistry: MatIconRegistry,
-    public sanitizer: DomSanitizer,
-    @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver
+    @Inject(MatIconRegistry) private readonly iconRegistry: MatIconRegistry,
+    @Inject(DomSanitizer) private readonly sanitizer: DomSanitizer,
+    @Inject(OPEN_RESOURCE_RESOLVER) private readonly openResourceResolver: OpenResourceResolver
   ) {}
 
   public ngOnInit(): void {

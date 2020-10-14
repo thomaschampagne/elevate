@@ -5,7 +5,7 @@ import {
   AthleteSettingsModel,
   AthleteSnapshotModel,
   Gender,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import { ElevateSport } from "@elevate/shared/enums";
 import _ from "lodash";
@@ -136,7 +136,7 @@ describe("ActivityComputer", () => {
           {
             default: 163,
             cycling: null,
-            running: null,
+            running: null
           },
           150,
           300,
@@ -239,7 +239,7 @@ describe("ActivityComputer", () => {
           {
             default: 163,
             cycling: null,
-            running: null,
+            running: null
           },
           150,
           300,
@@ -257,7 +257,7 @@ describe("ActivityComputer", () => {
       _ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
         default: null,
         cycling: null,
-        running: null,
+        running: null
       };
 
       // When
@@ -289,7 +289,7 @@ describe("ActivityComputer", () => {
       _ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
         default: null,
         cycling: null,
-        running: null,
+        running: null
       };
 
       // When
@@ -307,7 +307,7 @@ describe("ActivityComputer", () => {
       _ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
         default: 163,
         cycling: 175,
-        running: 185,
+        running: 185
       };
 
       // When
@@ -325,7 +325,7 @@ describe("ActivityComputer", () => {
       _ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
         default: 163,
         cycling: null,
-        running: null,
+        running: null
       };
 
       // When
@@ -343,7 +343,7 @@ describe("ActivityComputer", () => {
       _ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
         default: 163,
         cycling: null,
-        running: null,
+        running: null
       };
 
       // When
@@ -361,7 +361,7 @@ describe("ActivityComputer", () => {
       _ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
         default: 163,
         cycling: null,
-        running: null,
+        running: null
       };
 
       // When
@@ -379,7 +379,7 @@ describe("ActivityComputer", () => {
       _ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
         default: 163,
         cycling: 175,
-        running: null,
+        running: null
       };
 
       // When
@@ -397,7 +397,7 @@ describe("ActivityComputer", () => {
       _ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
         default: null,
         cycling: 175,
-        running: null,
+        running: null
       };
 
       // When
@@ -415,7 +415,7 @@ describe("ActivityComputer", () => {
       _ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
         default: null,
         cycling: 175,
-        running: 185,
+        running: 185
       };
 
       // When
@@ -433,7 +433,7 @@ describe("ActivityComputer", () => {
       _ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
         default: null,
         cycling: 175,
-        running: 185,
+        running: 185
       };
 
       // When
@@ -451,7 +451,7 @@ describe("ActivityComputer", () => {
       _ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
         default: 163,
         cycling: 175,
-        running: 185,
+        running: 185
       };
 
       // When
@@ -469,7 +469,7 @@ describe("ActivityComputer", () => {
       _ATHLETE_MODEL_SNAP_.athleteSettings.lthr = {
         default: 163,
         cycling: 175,
-        running: 185,
+        running: 185
       };
 
       // When
@@ -763,7 +763,7 @@ describe("ActivityComputer", () => {
         ElevateSport.Run,
         ElevateSport.VirtualRun,
         ElevateSport.AlpineSki,
-        ElevateSport.WeightTraining,
+        ElevateSport.WeightTraining
       ].forEach(type => {
         it(`should NOT lack of ftp settings if heart rate stress score are available for ${type} activity`, done => {
           // Given
@@ -773,8 +773,8 @@ describe("ActivityComputer", () => {
           analysisDataModel = {
             heartRateData: {
               HRSS: 100,
-              TRIMP: 100,
-            },
+              TRIMP: 100
+            }
           } as AnalysisDataModel;
 
           // When

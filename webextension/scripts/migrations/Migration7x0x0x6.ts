@@ -64,11 +64,23 @@ interface INewV7Database {
 
 export class Migration7x0x0x6 {
   public perform(oldDatabase: IOldV6Database): INewV7Database {
-    if (!oldDatabase) {
+    if (oldDatabase === null || oldDatabase === undefined) {
       return null;
     }
 
     const newDatabase: INewV7Database = {};
+
+    if (
+      (oldDatabase.athlete && (oldDatabase.athlete as any).data) ||
+      (oldDatabase.athleteId && (oldDatabase.athleteId as any).data) ||
+      (oldDatabase.bestSplitsConfiguration && (oldDatabase.bestSplitsConfiguration as any).data) ||
+      (oldDatabase.syncDateTime && (oldDatabase.syncDateTime as any).data) ||
+      (oldDatabase.syncedActivities && (oldDatabase.syncedActivities as any).data) ||
+      (oldDatabase.userSettings && (oldDatabase.userSettings as any).data) ||
+      (oldDatabase.yearProgressPresets && (oldDatabase.yearProgressPresets as any).data)
+    ) {
+      throw new Error("NOT_AN_OLD_DATABASE");
+    }
 
     // Convert athlete
     if (oldDatabase.athlete) {
@@ -106,7 +118,7 @@ export class Migration7x0x0x6 {
       newDatabase.syncedActivities.binaryIndices = {
         name: { dirty: false, name: "name", values: [] },
         start_time: { dirty: false, name: "start_time", values: [] },
-        type: { dirty: false, name: "type", values: [] },
+        type: { dirty: false, name: "type", values: [] }
       };
 
       newDatabase.syncedActivities.uniqueNames = ["id"];
@@ -132,7 +144,7 @@ export class Migration7x0x0x6 {
   private initCollection(colName: string): any {
     return {
       name: colName,
-      data: [],
+      data: []
     };
   }
 
@@ -142,7 +154,7 @@ export class Migration7x0x0x6 {
       revision: 1,
       created: time,
       version: 0,
-      updated: time,
+      updated: time
     };
     (doc as any).$loki = index;
     return doc;

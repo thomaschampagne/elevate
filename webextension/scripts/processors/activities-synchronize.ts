@@ -5,7 +5,7 @@ import {
   CoreMessages,
   SyncedActivityModel,
   SyncResultModel,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { MultipleActivityProcessor } from "./multiple-activity-processor";
@@ -61,7 +61,7 @@ export class ActivitiesSynchronize {
   private _activitiesChanges: ActivitiesChangesModel = {
     added: [],
     deleted: [],
-    edited: [],
+    edited: []
   };
 
   get activitiesChanges(): ActivitiesChangesModel {
@@ -74,8 +74,8 @@ export class ActivitiesSynchronize {
       {
         method: CoreMessages.ON_EXTERNAL_SYNC_DONE,
         params: {
-          syncResult: syncResult,
-        },
+          syncResult: syncResult
+        }
       },
       (response: any) => {
         console.log(response);
@@ -118,7 +118,7 @@ export class ActivitiesSynchronize {
               id: foundSyncedActivity.id as number,
               name: rawActivity.name,
               type: rawActivity.type as ElevateSport,
-              display_type: rawActivity.display_type,
+              display_type: rawActivity.display_type
             });
           }
         } else {
@@ -132,7 +132,7 @@ export class ActivitiesSynchronize {
     return {
       added: added,
       deleted: deleted,
-      edited: edited,
+      edited: edited
     };
   }
 
@@ -174,7 +174,7 @@ export class ActivitiesSynchronize {
     return {
       added: added,
       deleted: deleted,
-      edited: edited,
+      edited: edited
     };
   }
 
@@ -223,7 +223,7 @@ export class ActivitiesSynchronize {
                   const notify: SyncNotifyModel = {
                     step: "fetchedStreamsPercentage",
                     progress: fetchedActivitiesProgress,
-                    activityId: activityId,
+                    activityId: activityId
                   };
 
                   deferred.notify(notify);
@@ -261,7 +261,7 @@ export class ActivitiesSynchronize {
 
                       // Add to activities list without even if no stream...
                       const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {
-                        id: data.reason.activityId as number,
+                        id: data.reason.activityId as number
                       });
                       const activityWithStream: StreamActivityModel = newlyDetectedActivity as StreamActivityModel;
                       activityWithStream.hasPowerMeter = null;
@@ -270,7 +270,7 @@ export class ActivitiesSynchronize {
                     } else if (data.state === "fulfilled") {
                       // Find raw activities of fetched stream and push
                       const newlyDetectedActivity: StravaActivityModel = _.find(rawActivities, {
-                        id: data.value.activityId as number,
+                        id: data.value.activityId as number
                       });
 
                       let hasPowerMeter = true;
@@ -290,7 +290,7 @@ export class ActivitiesSynchronize {
                   // Finishing... force progress @ 100% because 'rejected' promises don't call progress callback
                   const notify: SyncNotifyModel = {
                     step: "fetchedStreamsPercentage",
-                    progress: 100,
+                    progress: 100
                   };
                   deferred.notify(notify);
                   deferred.resolve(activitiesWithStream);
@@ -389,7 +389,7 @@ export class ActivitiesSynchronize {
 
         const result = {
           hasMisMatch: hasAddedOrEditedActivitiesMisMatch,
-          activitiesChangesModel: activitiesChangesModel,
+          activitiesChangesModel: activitiesChangesModel
         };
 
         deferred.resolve(result);
@@ -441,7 +441,7 @@ export class ActivitiesSynchronize {
     const promiseActivitiesRequest: JQueryXHR = this.httpPageGet(perPage, page);
 
     const notify: SyncNotifyModel = {
-      step: "fetchActivitiesPercentage",
+      step: "fetchActivitiesPercentage"
     };
 
     promiseActivitiesRequest.then(
@@ -490,7 +490,7 @@ export class ActivitiesSynchronize {
           page,
           data,
           textStatus,
-          errorThrown,
+          errorThrown
         };
 
         console.error(err);
@@ -503,8 +503,6 @@ export class ActivitiesSynchronize {
 
   /**
    * Fetch the stream of an activity
-   * @param activityId
-   * @return {Q.Promise<T>}
    */
   public fetchStreamByActivityId(activityId: number): Q.Promise<StreamActivityModel> {
     const deferred = Q.defer<StreamActivityModel>();
@@ -530,7 +528,7 @@ export class ActivitiesSynchronize {
             streamFailure: true,
             activityId: activityId,
             statusCode: jqXHR.status,
-            statusText: jqXHR.statusText,
+            statusText: jqXHR.statusText
           });
         } else {
           deferred.resolve({ activityId: activityId } as any);
@@ -688,7 +686,7 @@ export class ActivitiesSynchronize {
                   step: "savedSyncedActivities",
                   progress: 100,
                   pageGroupId: handledGroupCount + 1,
-                  browsedActivitiesCount: this.totalRawActivityIds.length, // pagesGroupSaved.data.syncedActivities.length,
+                  browsedActivitiesCount: this.totalRawActivityIds.length // pagesGroupSaved.data.syncedActivities.length,
                 };
 
                 deferred.notify(notify);
@@ -722,7 +720,7 @@ export class ActivitiesSynchronize {
                 step: "savedSyncedActivities",
                 progress: 100,
                 pageGroupId: handledGroupCount + 1,
-                browsedActivitiesCount: this.totalRawActivityIds.length,
+                browsedActivitiesCount: this.totalRawActivityIds.length
               };
 
               deferred.notify(notify);
@@ -775,7 +773,7 @@ export class ActivitiesSynchronize {
     let activitiesChangesModel: ActivitiesChangesModel = {
       added: [],
       edited: [],
-      deleted: [],
+      deleted: []
     };
 
     // Reset values for a sync
@@ -898,7 +896,7 @@ export class ActivitiesSynchronize {
           const syncResult: SyncResultModel = {
             activitiesChangesModel: activitiesChangesModel,
             syncedActivities: syncedActivities,
-            syncDateTime: syncDateTime,
+            syncDateTime: syncDateTime
           };
 
           deferred.resolve(syncResult); // Sync finish !!
@@ -928,7 +926,7 @@ export class ActivitiesSynchronize {
               ? progress.totalActivities
               : syncNotify && syncNotify.totalActivities
               ? syncNotify.totalActivities
-              : null,
+              : null
           };
           deferred.notify(syncNotify);
         }
@@ -1010,7 +1008,7 @@ export class ActivitiesSynchronize {
     this._activitiesChanges = {
       added: [],
       deleted: [],
-      edited: [],
+      edited: []
     };
     this._endReached = false;
     this.totalRawActivityIds = [];
@@ -1024,7 +1022,7 @@ export class ActivitiesSynchronize {
       syncedActivitiesStored = _.without(
         syncedActivitiesStored,
         _.find(syncedActivitiesStored, {
-          id: deleteId,
+          id: deleteId
         })
       );
     });

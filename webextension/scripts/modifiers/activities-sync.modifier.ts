@@ -159,7 +159,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
 
         const errorUpdate: any = {
           stravaId: window.currentAthlete && window.currentAthlete.get("id") ? window.currentAthlete.get("id") : null,
-          error: { path: window.location.href, date: new Date(), content: error },
+          error: { path: window.location.href, date: new Date(), content: error }
         };
 
         const endPoint = DistributedEndpointsResolver.resolve(ExtensionEnv.endPoint) + "/api/errorReport";
@@ -174,7 +174,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
           },
           error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
             console.warn("Endpoint <" + endPoint + "> not reachable", jqXHR);
-          },
+          }
         });
 
         if (error) {

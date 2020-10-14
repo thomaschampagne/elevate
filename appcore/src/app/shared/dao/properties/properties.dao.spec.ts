@@ -14,8 +14,8 @@ describe("PropertiesDao", () => {
       providers: [
         PropertiesDao,
         { provide: DataStore, useClass: TestingDataStore },
-        { provide: LoggerService, useClass: ConsoleLoggerService },
-      ],
+        { provide: LoggerService, useClass: ConsoleLoggerService }
+      ]
     });
     service = TestBed.inject(PropertiesDao);
   });

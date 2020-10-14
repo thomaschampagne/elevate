@@ -24,8 +24,8 @@ import { FitnessTrendActivitiesLinksDialogComponent } from "./fitness-trend-acti
     FitnessInfoDialogComponent,
     FitnessTrendConfigDialogComponent,
     FitnessTrendWelcomeDialogComponent,
-    FitnessTrendActivitiesLinksDialogComponent,
+    FitnessTrendActivitiesLinksDialogComponent
   ],
-  providers: [FitnessService, ViewedDayService],
+  providers: [FitnessService, ViewedDayService]
 })
 export class FitnessTrendModule {}

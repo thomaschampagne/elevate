@@ -1,4 +1,4 @@
-import { Component, InjectionToken, OnInit } from "@angular/core";
+import { Component, Inject, InjectionToken, OnInit } from "@angular/core";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
@@ -16,16 +16,17 @@ export const SYNC_MENU_COMPONENT = new InjectionToken<SyncMenuComponent>("SYNC_M
 
 @Component({ template: "" })
 export class SyncMenuComponent implements OnInit {
+  private static readonly UPDATE_SYNC_DATE_STATUS_EVERY: number = 1000 * 60;
   public SyncState = SyncState;
   public syncState: SyncState;
   public syncDateMessage: string;
 
   constructor(
-    public router: Router,
-    public syncService: SyncService<any>,
-    public appEventsService: AppEventsService,
-    public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    @Inject(Router) protected readonly router: Router,
+    @Inject(SyncService) protected readonly syncService: SyncService<any>,
+    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
+    @Inject(MatDialog) protected readonly dialog: MatDialog,
+    @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar
   ) {
     this.syncState = null;
     this.syncDateMessage = null;
@@ -36,7 +37,7 @@ export class SyncMenuComponent implements OnInit {
     this.updateSyncDateStatus();
     setInterval(() => {
       this.updateSyncDateStatus();
-    }, 1000 * 60);
+    }, SyncMenuComponent.UPDATE_SYNC_DATE_STATUS_EVERY);
 
     this.appEventsService.syncDone$.subscribe(() => {
       this.updateSyncDateStatus();
@@ -58,13 +59,13 @@ export class SyncMenuComponent implements OnInit {
       title: "Clear your athlete synced data",
       content:
         "Are you sure to perform this action? You will be able to re-import synced data through backup file " +
-        "or a new re-synchronization.",
+        "or a new re-synchronization."
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       minWidth: ConfirmDialogComponent.MIN_WIDTH,
       maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-      data: data,
+      data: data
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
@@ -85,7 +86,7 @@ export class SyncMenuComponent implements OnInit {
   public onSyncedBackupExport(): void {
     const progressDialogRef = this.dialog.open(ImportExportProgressDialogComponent, {
       disableClose: true,
-      data: ImportExportProgressDialogComponent.MODE_EXPORT,
+      data: ImportExportProgressDialogComponent.MODE_EXPORT
     });
 
     progressDialogRef
@@ -109,7 +110,7 @@ export class SyncMenuComponent implements OnInit {
         this.dialog.open(GotItDialogComponent, {
           minWidth: GotItDialogComponent.MIN_WIDTH,
           maxWidth: GotItDialogComponent.MAX_WIDTH,
-          data: new GotItDialogDataModel(null, 'File "' + result.filename + '" is ready to be saved.'),
+          data: new GotItDialogDataModel(null, 'File "' + result.filename + '" is ready to be saved.')
         });
       });
   }

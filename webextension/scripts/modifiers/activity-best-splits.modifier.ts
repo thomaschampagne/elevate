@@ -5,7 +5,7 @@ import {
   ActivitySourceDataModel,
   ActivityStreamsModel,
   Gender,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import { AbstractModifier } from "./abstract.modifier";
 import { VacuumProcessor } from "../processors/vacuum-processor";
@@ -35,7 +35,7 @@ function BestSplitWorker() {
           avgCadence: this.newSplitValue(),
           elevationGain: this.newSplitValue(),
           elevationDrop: this.newSplitValue(),
-          timeOrDistance: 0,
+          timeOrDistance: 0
         },
         checkValues = (timeOrDistance: number, ratio: number) => {
           hr = this.averageOfValues(activityJson, begin, end, activityJson.heartrate);
@@ -207,7 +207,7 @@ function BestSplitWorker() {
         begin: 0,
         end: -1,
         samples: 0,
-        timeOrDistance: 0,
+        timeOrDistance: 0
       };
     }
 
@@ -216,12 +216,12 @@ function BestSplitWorker() {
         value: {
           value: 0,
           beginValue: 0,
-          endValue: 0,
+          endValue: 0
         },
         begin: 0,
         end: -1,
         samples: 0,
-        timeOrDistance: 0,
+        timeOrDistance: 0
       };
     }
 
@@ -307,7 +307,7 @@ function BestSplitWorker() {
       dropHr.value = {
         value: maxDrop,
         beginValue: maxValueBegin,
-        endValue: maxValueEnd,
+        endValue: maxValueEnd
       };
       dropHr.begin = maxBegin;
       dropHr.end = maxEnd;
@@ -345,7 +345,7 @@ function BestSplitWorker() {
       riseHr.value = {
         value: maxRise,
         beginValue: maxValueBegin,
-        endValue: maxValueEnd,
+        endValue: maxValueEnd
       };
       riseHr.begin = maxBegin;
       riseHr.end = maxEnd;
@@ -413,7 +413,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
         default:
           return "";
       }
-    },
+    }
   };
 
   private activityStreams: ActivityStreamsModel;
@@ -540,7 +540,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
             }
             $("[data-activity-points].selected").removeClass("selected").css({
               "background-color": "",
-              color: "black",
+              color: "black"
             });
             selectedSplitId = undefined;
           };
@@ -569,12 +569,12 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
             if (map) {
               $("[data-activity-points].selected").removeClass("selected").css({
                 "background-color": "",
-                color: "black",
+                color: "black"
               });
 
               $(eventObject.currentTarget).addClass("selected").css({
                 "background-color": splitColor,
-                color: "white",
+                color: "white"
               });
 
               if (splitPolyLine) {
@@ -587,7 +587,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
                 stop = parseInt(range[1]);
 
               splitPolyLine = L.polyline([], {
-                color: splitColor,
+                color: splitColor
               });
 
               for (let i: number = start; i <= stop; i++) {
@@ -689,43 +689,43 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
             {
               length: 1,
               unit: ActivityBestSplitsModifier.Units.Kilometers,
-              id: Helper.guid(),
+              id: Helper.guid()
             },
             {
               length: 10,
               unit: ActivityBestSplitsModifier.Units.Kilometers,
-              id: Helper.guid(),
+              id: Helper.guid()
             },
             {
               length: 30,
               unit: ActivityBestSplitsModifier.Units.Kilometers,
-              id: Helper.guid(),
+              id: Helper.guid()
             },
             {
               length: 50,
               unit: ActivityBestSplitsModifier.Units.Kilometers,
-              id: Helper.guid(),
+              id: Helper.guid()
             },
             {
               length: 1,
               unit: ActivityBestSplitsModifier.Units.Minutes,
-              id: Helper.guid(),
+              id: Helper.guid()
             },
             {
               length: 10,
               unit: ActivityBestSplitsModifier.Units.Minutes,
-              id: Helper.guid(),
+              id: Helper.guid()
             },
             {
               length: 20,
               unit: ActivityBestSplitsModifier.Units.Minutes,
-              id: Helper.guid(),
+              id: Helper.guid()
             },
             {
               length: 60,
               unit: ActivityBestSplitsModifier.Units.Minutes,
-              id: Helper.guid(),
-            },
+              id: Helper.guid()
+            }
           ];
 
           if (this.splitsConfiguration) {
@@ -750,7 +750,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
 
           const saveSplitsConfiguration = (splitsArray: any[]) => {
             this.saveSplitsConfigurationMethod({
-              splits: splitsArray,
+              splits: splitsArray
             });
           };
 
@@ -784,7 +784,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
 
             const splitAlreadyExist = _.find(splitsArray, {
               length: splitLength,
-              unit: splitType,
+              unit: splitType
             } as any);
 
             if (splitAlreadyExist) {
@@ -803,7 +803,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
                     content: "<div>The length of the split cannot be longer than the activity time.</div>",
                     afterClose: () => {
                       $("#best-split-new-length").focus();
-                    },
+                    }
                   });
                   return;
                 }
@@ -819,7 +819,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
                     content: "<div>The length of the split cannot be longer than the activity time.</div>",
                     afterClose: () => {
                       $("#best-split-new-length").focus();
-                    },
+                    }
                   });
                   return;
                 }
@@ -841,7 +841,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
                     content: "<div>The length of the split cannot be longer than the activity distance.</div>",
                     afterClose: () => {
                       $("#best-split-new-length").focus();
-                    },
+                    }
                   });
                   return;
                 }
@@ -855,7 +855,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
             const newSplit = {
               id: Helper.guid(),
               unit: splitType,
-              length: splitLength,
+              length: splitLength
             };
             splitsArray.push(newSplit);
             saveSplitsConfiguration(splitsArray);
@@ -870,7 +870,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
             if (!worker) {
               const blobURL = URL.createObjectURL(
                 new Blob(["(", BestSplitWorker.toString(), ")()"], {
-                  type: "application/javascript",
+                  type: "application/javascript"
                 })
               );
               worker = new Worker(blobURL);
@@ -894,8 +894,8 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
                 MetersTo0001hMileFactor: ActivityBestSplitsModifier.Units.MetersTo0001hMileFactor,
                 KilometersToMilesFactor: ActivityBestSplitsModifier.Units.KilometersToMilesFactor,
                 MilesToMetersFactor: ActivityBestSplitsModifier.Units.MilesToMetersFactor,
-                KilometersToMetersFactor: ActivityBestSplitsModifier.Units.KilometersToMetersFactor,
-              },
+                KilometersToMetersFactor: ActivityBestSplitsModifier.Units.KilometersToMetersFactor
+              }
             });
             return workerPromises[split.id].promise();
           };
@@ -918,7 +918,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
                   element.attr("data-activity-points", value.begin + "-" + value.end);
                   element.data("split-id", split.id);
                   element.css({
-                    cursor: "pointer",
+                    cursor: "pointer"
                   });
                   if (value.timeOrDistance && tooltipFormatFunction) {
                     element.attr("title", tooltipFormatFunction(value));

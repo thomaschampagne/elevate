@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { AppEventsService } from "../../services/external-updates/app-events-service";
 import { DesktopEventsService } from "../../services/external-updates/impl/desktop-events.service";
-import { VERSIONS_PROVIDER } from "../../services/versions/versions-provider.interface";
 import { DesktopVersionsProvider } from "../../services/versions/impl/desktop-versions-provider.service";
 import { SyncService } from "../../services/sync/sync.service";
 import { DesktopSyncService } from "../../services/sync/impl/desktop-sync.service";
@@ -28,6 +27,7 @@ import { PROMISE_TRON } from "../../../desktop/ipc-messages/promise-tron.interfa
 import { DataStore } from "../../data-store/data-store";
 import { DesktopDataStore } from "../../data-store/impl/desktop-data-store.service";
 import { PropertiesDao } from "../../dao/properties/properties.dao";
+import { VersionsProvider } from "../../services/versions/versions-provider";
 
 @NgModule({
   imports: [CoreModule, ConnectorsModule, DesktopRoutingModule],
@@ -42,7 +42,7 @@ import { PropertiesDao } from "../../dao/properties/properties.dao";
     { provide: PROMISE_TRON, useClass: PromiseTronService },
     { provide: ActivityService, useClass: DesktopActivityService },
     { provide: AppEventsService, useClass: DesktopEventsService },
-    { provide: VERSIONS_PROVIDER, useClass: DesktopVersionsProvider },
+    { provide: VersionsProvider, useClass: DesktopVersionsProvider },
     { provide: OPEN_RESOURCE_RESOLVER, useClass: DesktopOpenResourceResolver },
     { provide: SyncService, useClass: DesktopSyncService },
     DesktopSyncService,
@@ -51,7 +51,7 @@ import { PropertiesDao } from "../../dao/properties/properties.dao";
     StravaConnectorInfoService,
     StravaConnectorInfoDao,
     StravaConnectorService,
-    FileSystemConnectorInfoService,
-  ],
+    FileSystemConnectorInfoService
+  ]
 })
 export class DesktopModule {}

@@ -13,8 +13,8 @@ describe("StreamsDao", () => {
       providers: [
         StreamsDao,
         { provide: DataStore, useClass: TestingDataStore },
-        { provide: LoggerService, useClass: ConsoleLoggerService },
-      ],
+        { provide: LoggerService, useClass: ConsoleLoggerService }
+      ]
     });
 
     streamsDao = TestBed.inject(StreamsDao);

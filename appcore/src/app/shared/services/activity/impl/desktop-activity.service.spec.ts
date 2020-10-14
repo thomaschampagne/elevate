@@ -11,7 +11,7 @@ import {
   AthleteSnapshotModel,
   Gender,
   SyncedActivityModel,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { PROMISE_TRON } from "../../../../desktop/ipc-messages/promise-tron.interface";
@@ -31,8 +31,8 @@ describe("DesktopActivityService", () => {
       providers: [
         DesktopActivityService,
         { provide: PROMISE_TRON, useClass: PromiseTronServiceMock },
-        { provide: DataStore, useClass: TestingDataStore },
-      ],
+        { provide: DataStore, useClass: TestingDataStore }
+      ]
     });
 
     desktopActivityService = TestBed.inject(DesktopActivityService);

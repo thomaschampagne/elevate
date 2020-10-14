@@ -1,4 +1,4 @@
 export enum Mode {
   IMPORT,
-  EXPORT,
+  EXPORT
 }

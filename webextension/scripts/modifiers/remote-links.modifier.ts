@@ -29,7 +29,7 @@ export class RemoteLinksModifier extends AbstractModifier {
 
   public modifyActivityPage(): void {
     const remoteViewActivityLinksArray: string[][] = [
-      ["VeloViewer", "http://veloviewer.com/activities/", "?referrer=elevate", ""],
+      ["VeloViewer", "http://veloviewer.com/activities/", "?referrer=elevate", ""]
     ];
 
     // Activity page
@@ -97,15 +97,15 @@ export class RemoteLinksModifier extends AbstractModifier {
           this.appResources.veloviewerIcon +
           "'/> <span>VeloViewer</span>",
         "http://veloviewer.com/segment/",
-        "?referrer=elevate",
+        "?referrer=elevate"
       ],
       [
         "<img width='24px' style='vertical-align:middle' src='" +
           this.appResources.pollIcon +
           "'/> <span>Segment details by J.Okeeffe</span>",
         "http://www.jonathanokeeffe.com/strava/segmentDetails.php?segmentId=",
-        "",
-      ],
+        ""
+      ]
     ];
     let html = "<div class='dropdown'>";
     html += "<div class='drop-down-menu' style='width: 100%;' >";

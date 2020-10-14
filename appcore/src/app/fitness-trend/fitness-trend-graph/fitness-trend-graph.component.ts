@@ -8,7 +8,7 @@ import {
   OnDestroy,
   OnInit,
   SimpleChanges,
-  ViewChild,
+  ViewChild
 } from "@angular/core";
 import _ from "lodash";
 import moment from "moment";
@@ -30,13 +30,13 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 import { ElevateException } from "@elevate/shared/exceptions";
 import {
   OPEN_RESOURCE_RESOLVER,
-  OpenResourceResolver,
+  OpenResourceResolver
 } from "../../shared/services/links-opener/open-resource-resolver";
 
 @Component({
   selector: "app-fitness-trend-graph",
   templateUrl: "./fitness-trend-graph.component.html",
-  styleUrls: ["./fitness-trend-graph.component.scss"],
+  styleUrls: ["./fitness-trend-graph.component.scss"]
 })
 export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy {
   public static readonly SLIDE_PERIOD_VIEWED_DAYS: number = 14; // Days
@@ -50,7 +50,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     DOWN_ARROW: "ArrowDown",
     RIGHT_ARROW: "ArrowRight",
     UP_ARROW: "ArrowUp",
-    LEFT_ARROW: "ArrowLeft",
+    LEFT_ARROW: "ArrowLeft"
   };
   public PERFORMANCE_MARKER: number;
   public graphHeightFactor: number;
@@ -89,12 +89,12 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
   public initialized = false;
 
   constructor(
-    public sideNavService: SideNavService,
-    public windowService: WindowService,
-    public viewedDayService: ViewedDayService,
-    @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
-    public dialog: MatDialog,
-    public logger: LoggerService
+    @Inject(SideNavService) private readonly sideNavService: SideNavService,
+    @Inject(WindowService) private readonly windowService: WindowService,
+    @Inject(ViewedDayService) private readonly viewedDayService: ViewedDayService,
+    @Inject(OPEN_RESOURCE_RESOLVER) private readonly openResourceResolver: OpenResourceResolver,
+    @Inject(MatDialog) private readonly dialog: MatDialog,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
   public static getGraphHtmlElement(): HTMLElement {
@@ -158,19 +158,19 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
       fatigueLine.push({
         date: dayFitnessTrend.dateString,
         value: dayFitnessTrend.atl,
-        hidden: dayFitnessTrend.previewDay,
+        hidden: dayFitnessTrend.previewDay
       });
 
       fitnessLine.push({
         date: dayFitnessTrend.dateString,
         value: dayFitnessTrend.ctl,
-        hidden: dayFitnessTrend.previewDay,
+        hidden: dayFitnessTrend.previewDay
       });
 
       formLine.push({
         date: dayFitnessTrend.dateString,
         value: dayFitnessTrend.tsb,
-        hidden: dayFitnessTrend.previewDay,
+        hidden: dayFitnessTrend.previewDay
       });
 
       // Preview future fitness day
@@ -178,32 +178,32 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
       previewFatigueLine.push({
         date: dayFitnessTrend.dateString,
         value: dayFitnessTrend.atl,
-        hidden: isHiddenGraphPoint,
+        hidden: isHiddenGraphPoint
       });
 
       previewFitnessLine.push({
         date: dayFitnessTrend.dateString,
         value: dayFitnessTrend.ctl,
-        hidden: isHiddenGraphPoint,
+        hidden: isHiddenGraphPoint
       });
 
       previewFormLine.push({
         date: dayFitnessTrend.dateString,
         value: dayFitnessTrend.tsb,
-        hidden: isHiddenGraphPoint,
+        hidden: isHiddenGraphPoint
       });
 
       activeLine.push({
         date: dayFitnessTrend.dateString,
         value: 0,
         hidden: false,
-        active: dayFitnessTrend.hasActivities(),
+        active: dayFitnessTrend.hasActivities()
       });
 
       if (dayFitnessTrend.dateString === today) {
         const todayMarker = {
           date: moment().startOf("day").toDate(),
-          label: FitnessTrendGraphComponent.TODAY_MARKER_LABEL,
+          label: FitnessTrendGraphComponent.TODAY_MARKER_LABEL
         };
         markers.push(todayMarker);
       }
@@ -292,7 +292,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
       // Then override index if "From" is specified
 
       startIndex = _.findIndex(this.fitnessTrend, {
-        dateString: moment(period.from).format(DayFitnessTrendModel.DATE_FORMAT),
+        dateString: moment(period.from).format(DayFitnessTrendModel.DATE_FORMAT)
       });
 
       if (startIndex === -1) {
@@ -304,7 +304,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     if (_.isDate(period.to)) {
       // Then override index if "To" is specified
       endIndex = _.findIndex(this.fitnessTrend, {
-        dateString: moment(period.to).format(DayFitnessTrendModel.DATE_FORMAT),
+        dateString: moment(period.to).format(DayFitnessTrendModel.DATE_FORMAT)
       });
     }
 
@@ -396,7 +396,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
       this.dialog.open(FitnessTrendActivitiesLinksDialogComponent, {
         minWidth: FitnessTrendActivitiesLinksDialogComponent.MIN_WIDTH,
         maxWidth: FitnessTrendActivitiesLinksDialogComponent.MAX_WIDTH,
-        data: dayFitnessTrend,
+        data: dayFitnessTrend
       });
     } else {
       this.openResourceResolver.openActivity(_.first(dayFitnessTrend.ids));
@@ -444,7 +444,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
   public getDayFitnessTrendFromDate(date: Date): DayFitnessTrendModel {
     return _.find(this.fitnessTrend, {
-      dateString: moment(date).format(DayFitnessTrendModel.DATE_FORMAT),
+      dateString: moment(date).format(DayFitnessTrendModel.DATE_FORMAT)
     });
   }
 
@@ -524,7 +524,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
       },
       mouseout: (data: MetricsGraphicsEventModel) => {
         this.onGraphMouseOut(data.key);
-      },
+      }
     };
   }
 

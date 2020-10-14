@@ -23,7 +23,7 @@ describe("FitnessTrendTableComponent", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, FitnessTrendModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 
     activityService = TestBed.inject(ActivityService);

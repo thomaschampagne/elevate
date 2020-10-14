@@ -9,7 +9,7 @@ describe("ViewedDayService", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      providers: [ViewedDayService],
+      providers: [ViewedDayService]
     });
 
     service = TestBed.inject(ViewedDayService);

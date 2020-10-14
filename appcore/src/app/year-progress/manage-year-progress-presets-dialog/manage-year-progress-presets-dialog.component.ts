@@ -17,7 +17,7 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 @Component({
   selector: "app-manage-year-progress-presets-dialog",
   templateUrl: "./manage-year-progress-presets-dialog.component.html",
-  styleUrls: ["./manage-year-progress-presets-dialog.component.scss"],
+  styleUrls: ["./manage-year-progress-presets-dialog.component.scss"]
 })
 export class ManageYearProgressPresetsDialogComponent implements OnInit {
   public static readonly MAX_WIDTH: string = "100%";
@@ -51,16 +51,16 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
     ManageYearProgressPresetsDialogComponent.COLUMN_INCLUDE_INDOOR_RIDE,
     ManageYearProgressPresetsDialogComponent.COLUMN_TARGET_VALUE,
     ManageYearProgressPresetsDialogComponent.COLUMN_ACTION_LOAD,
-    ManageYearProgressPresetsDialogComponent.COLUMN_ACTION_DELETE,
+    ManageYearProgressPresetsDialogComponent.COLUMN_ACTION_DELETE
   ];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public readonly yearProgressTypes: YearProgressTypeModel[],
-    public dialogRef: MatDialogRef<ManageYearProgressPresetsDialogComponent>,
-    public yearProgressService: YearProgressService,
-    public dialog: MatDialog,
-    public snackBar: MatSnackBar,
-    public logger: LoggerService
+    @Inject(MatDialogRef) private readonly dialogRef: MatDialogRef<ManageYearProgressPresetsDialogComponent>,
+    @Inject(YearProgressService) public readonly yearProgressService: YearProgressService,
+    @Inject(MatDialog) private readonly dialog: MatDialog,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
   public ngOnInit(): void {
@@ -87,7 +87,7 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
     const confirmDialogDataModel = new ConfirmDialogDataModel(null, "Are you sure to remove this preset?");
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: confirmDialogDataModel,
+      data: confirmDialogDataModel
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirmed: boolean) => {
@@ -122,7 +122,7 @@ export class ManageYearProgressPresetsDialogComponent implements OnInit {
       this.logger.warn(error);
       const message = (error as AppError).message;
       this.snackBar.open(message, "Close", {
-        duration: 5000,
+        duration: 5000
       });
     } else {
       this.logger.error(error);

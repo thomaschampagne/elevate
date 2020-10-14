@@ -6,7 +6,7 @@ import {
   SyncedActivityModel,
   UserLactateThresholdModel,
   UserSettings,
-  UserZonesModel,
+  UserZonesModel
 } from "@elevate/shared/models";
 import { Helper } from "./helper";
 import semver from "semver";
@@ -38,7 +38,7 @@ class Installer {
             // Check and display sync & local storage after update
             return Promise.all([
               LegacyBrowserStorage.getInstance().get(BrowserStorageType.SYNC),
-              LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL),
+              LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL)
             ]);
           })
           .then((result: any[]) => {
@@ -60,13 +60,13 @@ class Installer {
   protected handleInstall() {
     chrome.tabs.create(
       {
-        url: Constant.LANDING_PAGE_URL,
+        url: Constant.LANDING_PAGE_URL
       },
       (tab: chrome.tabs.Tab) => {
         console.log("First install. Display website new tab:", tab);
         chrome.tabs.create(
           {
-            url: chrome.extension.getURL(Constant.APP_ROOT_URL),
+            url: chrome.extension.getURL(Constant.APP_ROOT_URL)
           },
           (tab: chrome.tabs.Tab) => {
             console.log("First install. Display settings:", tab);
@@ -138,7 +138,7 @@ class Installer {
                     hrrZone.toHrr,
                     currentUserSavedSettings.userMaxHr,
                     currentUserSavedSettings.userRestHr
-                  ),
+                  )
                 });
               }
 
@@ -267,7 +267,7 @@ class Installer {
             "userFTP",
             "userRunningFTP",
             "userSwimFTP",
-            "userWeight",
+            "userWeight"
           ]);
         })
         .then(() => {
@@ -349,7 +349,7 @@ class Installer {
 
                 const datedAthleteSettings: DatedAthleteSettingsModel[] = [
                   new DatedAthleteSettingsModel(DatedAthleteSettingsModel.DEFAULT_SINCE, athleteSettings),
-                  new DatedAthleteSettingsModel(null, athleteSettings),
+                  new DatedAthleteSettingsModel(null, athleteSettings)
                 ];
 
                 return LegacyBrowserStorage.getInstance()
@@ -498,7 +498,7 @@ class Installer {
       // Move all user settings from sync to local
       promise = Promise.all([
         LegacyBrowserStorage.getInstance().get(BrowserStorageType.SYNC, "userSettings"),
-        LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL),
+        LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL)
       ])
         .then(result => {
           if (!result[0]) {
@@ -518,7 +518,7 @@ class Installer {
         .then(() => {
           return Promise.all([
             LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "userSettings"), // Get userSettings from local now
-            LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "datedAthleteSettings"),
+            LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "datedAthleteSettings")
           ]);
         })
         .then(result => {
@@ -537,7 +537,7 @@ class Installer {
 
             athleteModel.datedAthleteSettings = [
               new DatedAthleteSettingsModel(DatedAthleteSettingsModel.DEFAULT_SINCE, athleteSettings),
-              new DatedAthleteSettingsModel(null, athleteSettings),
+              new DatedAthleteSettingsModel(null, athleteSettings)
             ];
           } else if (athleteModel) {
             athleteModel.datedAthleteSettings = datedAthleteSettings;
@@ -551,7 +551,7 @@ class Installer {
           return Promise.all([
             LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "userSettings", userSettingsModel), // Update user settings
             LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "athlete", athleteModel), // Save new athlete key on local storage
-            LegacyBrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "datedAthleteSettings"), // datedAthleteSettings are now stored in athlete storage
+            LegacyBrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "datedAthleteSettings") // datedAthleteSettings are now stored in athlete storage
           ]);
         })
         .then(() => {
@@ -747,15 +747,24 @@ class Installer {
           if (error) {
             reject(error.message);
           } else {
-            const newDatabase = new Migration7x0x0x6().perform(oldDatabase);
+            try {
+              const newDatabase = new Migration7x0x0x6().perform(oldDatabase);
 
-            chrome.storage.local.set(newDatabase, () => {
-              if (error) {
-                reject(error.message);
-              } else {
+              chrome.storage.local.set(newDatabase, () => {
+                if (error) {
+                  reject(error.message);
+                } else {
+                  resolve();
+                }
+              });
+            } catch (err) {
+              if (err.message === "NOT_AN_OLD_DATABASE") {
+                console.log("Skip migrate to 7.0.0-6");
                 resolve();
+              } else {
+                reject(err);
               }
-            });
+            }
           }
         });
       });

@@ -5,7 +5,7 @@ import katex from "katex";
 @Component({
   selector: "katex",
   template: `<span #element></span>`,
-  styleUrls: ["./katex-expression.component.scss"],
+  styleUrls: ["./katex-expression.component.scss"]
 })
 export class KatexExpressionComponent implements AfterViewInit {
   @Input()

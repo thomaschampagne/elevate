@@ -8,7 +8,7 @@ export class ConnectorSyncDateTimeDao extends BaseDao<ConnectorSyncDateTime> {
   public static readonly COLLECTION_DEF: CollectionDef<ConnectorSyncDateTime> = new CollectionDef(
     "connectorSyncDateTime",
     {
-      unique: ["connectorType"],
+      unique: ["connectorType"]
     }
   );
 

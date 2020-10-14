@@ -9,7 +9,7 @@ import _ from "lodash";
 @Component({
   selector: "app-edit-dated-athlete-settings-dialog",
   templateUrl: "./edit-dated-athlete-settings-dialog.component.html",
-  styleUrls: ["./edit-dated-athlete-settings-dialog.component.scss"],
+  styleUrls: ["./edit-dated-athlete-settings-dialog.component.scss"]
 })
 export class EditDatedAthleteSettingsDialogComponent implements OnInit {
   public static readonly WIDTH: string = "60%";
@@ -21,8 +21,8 @@ export class EditDatedAthleteSettingsDialogComponent implements OnInit {
   public DatedAthleteSettingsAction = DatedAthleteSettingsAction;
 
   constructor(
-    public dialogRef: MatDialogRef<EditDatedAthleteSettingsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DatedAthleteSettingsDialogData
+    @Inject(MatDialogRef) private readonly dialogRef: MatDialogRef<EditDatedAthleteSettingsDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public readonly data: DatedAthleteSettingsDialogData
   ) {}
 
   public ngOnInit(): void {

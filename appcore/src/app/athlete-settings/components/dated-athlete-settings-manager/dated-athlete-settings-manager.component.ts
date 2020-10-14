@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Inject, OnInit, Output } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatTableDataSource } from "@angular/material/table";
@@ -18,7 +18,7 @@ import { ClipboardService, IClipboardResponse } from "ngx-clipboard";
 @Component({
   selector: "app-dated-athlete-settings-manager",
   templateUrl: "./dated-athlete-settings-manager.component.html",
-  styleUrls: ["./dated-athlete-settings-manager.component.scss"],
+  styleUrls: ["./dated-athlete-settings-manager.component.scss"]
 })
 export class DatedAthleteSettingsManagerComponent implements OnInit {
   public static readonly COLUMN_SINCE: string = "since";
@@ -48,7 +48,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
     DatedAthleteSettingsManagerComponent.COLUMN_RUNNING_FTP,
     DatedAthleteSettingsManagerComponent.COLUMN_SWIM_FTP,
     DatedAthleteSettingsManagerComponent.COLUMN_ACTION_EDIT,
-    DatedAthleteSettingsManagerComponent.COLUMN_ACTION_DELETE,
+    DatedAthleteSettingsManagerComponent.COLUMN_ACTION_DELETE
   ];
 
   public datedAthleteSettingsModels: DatedAthleteSettingsModel[];
@@ -63,11 +63,11 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
   public datedAthleteSettingsModelsChange: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
-    private athleteService: AthleteService,
-    private clipboardService: ClipboardService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private logger: LoggerService
+    @Inject(AthleteService) private readonly athleteService: AthleteService,
+    @Inject(ClipboardService) private readonly clipboardService: ClipboardService,
+    @Inject(MatDialog) private readonly dialog: MatDialog,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
   public ngOnInit(): void {
@@ -85,12 +85,12 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
     const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
       action: DatedAthleteSettingsAction.ACTION_ADD,
-      datedAthleteSettingsModel: datedAthleteSettingsModelBase,
+      datedAthleteSettingsModel: datedAthleteSettingsModelBase
     };
 
     const dialogRef = this.dialog.open(EditDatedAthleteSettingsDialogComponent, {
       width: EditDatedAthleteSettingsDialogComponent.WIDTH,
-      data: datedAthleteSettingsDialogData,
+      data: datedAthleteSettingsDialogData
     });
 
     const afterClosedSubscription = dialogRef
@@ -120,12 +120,12 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
     const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
       action: DatedAthleteSettingsAction.ACTION_EDIT,
-      datedAthleteSettingsModel: datedAthleteSettingsModelToEdit,
+      datedAthleteSettingsModel: datedAthleteSettingsModelToEdit
     };
 
     const dialogRef = this.dialog.open(EditDatedAthleteSettingsDialogComponent, {
       width: EditDatedAthleteSettingsDialogComponent.WIDTH,
-      data: datedAthleteSettingsDialogData,
+      data: datedAthleteSettingsDialogData
     });
 
     const afterClosedSubscription = dialogRef
@@ -154,7 +154,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
     );
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: confirmDialogDataModel,
+      data: confirmDialogDataModel
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirmed: boolean) => {
@@ -176,13 +176,13 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
   public onReset(): void {
     const data: ConfirmDialogDataModel = {
       title: "Reset your dated athlete settings",
-      content: "Are you sure to perform this action? Current settings will be lost.",
+      content: "Are you sure to perform this action? Current settings will be lost."
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       minWidth: ConfirmDialogComponent.MIN_WIDTH,
       maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-      data: data,
+      data: data
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {

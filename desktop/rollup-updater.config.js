@@ -12,17 +12,17 @@ module.exports = {
   output: [
     {
       file: "./dist/updater/index.js",
-      format: "cjs",
-    },
+      format: "cjs"
+    }
   ],
   external: [],
   plugins: [
     typescript({
       include: ["./src/updater/updater.ts"],
-      removeComments: true,
+      removeComments: true
     }),
     resolve(),
     commonjs({ sourceMap: false }),
-    IS_ELECTRON_PROD ? terser() : null,
-  ],
+    IS_ELECTRON_PROD ? terser() : null
+  ]
 };

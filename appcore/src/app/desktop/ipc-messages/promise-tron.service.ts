@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { ElectronService } from "../../shared/services/electron/electron.service";
 import { IpcRequest, PromiseTron, PromiseTronReply } from "promise-tron";
 import { IPromiseTron } from "./promise-tron.interface";
@@ -7,7 +7,7 @@ import { IPromiseTron } from "./promise-tron.interface";
 export class PromiseTronService implements IPromiseTron {
   public promiseTron: PromiseTron;
 
-  constructor(public electronService: ElectronService) {
+  constructor(@Inject(ElectronService) private readonly electronService: ElectronService) {
     this.promiseTron = new PromiseTron(this.electronService.electron.ipcRenderer);
   }
 

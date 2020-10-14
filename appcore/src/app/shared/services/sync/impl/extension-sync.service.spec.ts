@@ -8,13 +8,13 @@ import { SharedModule } from "../../../shared.module";
 import { SyncState } from "../sync-state.enum";
 import { MockedVersionsProvider } from "../../versions/impl/mock/mocked-versions-provider";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../../shared-fixtures/activities-2015.fixture";
-import { VERSIONS_PROVIDER } from "../../versions/versions-provider.interface";
 import { DumpModel } from "../../../models/dumps/dump.model";
 import { CoreModule } from "../../../../core/core.module";
 import _ from "lodash";
 import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
 import { DataStore } from "../../../data-store/data-store";
 import { TestingDataStore } from "../../../data-store/testing-datastore.service";
+import { VersionsProvider } from "../../versions/versions-provider";
 
 describe("ExtensionSyncService", () => {
   const installedVersion = "2.0.0";
@@ -23,15 +23,13 @@ describe("ExtensionSyncService", () => {
   let syncDateTimeDao: SyncDateTimeDao;
 
   beforeEach(done => {
-    const mockedVersionsProvider: MockedVersionsProvider = new MockedVersionsProvider();
-
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule],
       providers: [
         { provide: SyncService, useClass: ExtensionSyncService },
-        { provide: VERSIONS_PROVIDER, useValue: mockedVersionsProvider },
-        { provide: DataStore, useClass: TestingDataStore },
-      ],
+        { provide: VersionsProvider, useClass: MockedVersionsProvider },
+        { provide: DataStore, useClass: TestingDataStore }
+      ]
     });
 
     athleteModel = _.cloneDeep(AthleteModel.DEFAULT_MODEL);
@@ -146,7 +144,7 @@ describe("ExtensionSyncService", () => {
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, null, 190, null, null, 75)),
       new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, null, null, 150, null, null, 76)),
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
-      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
+      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78))
     ];
 
     athleteModel.datedAthleteSettings = expectedPeriodAthleteSettings;
@@ -239,7 +237,7 @@ describe("ExtensionSyncService", () => {
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, null, 190, null, null, 75)),
       new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, null, null, 150, null, null, 76)),
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
-      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
+      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78))
     ];
 
     spyOn(extensionSyncService, "getCompatibleBackupVersionThreshold").and.returnValue(
@@ -250,11 +248,11 @@ describe("ExtensionSyncService", () => {
       syncedActivities: TEST_SYNCED_ACTIVITIES,
       athleteModel: athleteModel,
       syncDateTime: syncDateTime,
-      pluginVersion: importedBackupVersion,
+      pluginVersion: importedBackupVersion
     };
 
     const getPackageVersionSpy = spyOn(extensionSyncService.versionsProvider, "getPackageVersion").and.returnValue(
-      Promise.resolve(importedBackupVersion)
+      importedBackupVersion
     );
     const syncDateTimeSaveSpy = spyOn(extensionSyncService.syncDateTimeDao, "put").and.returnValue(
       Promise.resolve(importedSyncedBackupModel.syncDateTime)
@@ -285,7 +283,7 @@ describe("ExtensionSyncService", () => {
     // Then
     promise.then(
       () => {
-        expect(getPackageVersionSpy).toHaveBeenCalledTimes(1);
+        expect(getPackageVersionSpy).toHaveBeenCalledTimes(0);
         expect(syncDateTimeSaveSpy).toHaveBeenCalledTimes(1);
         expect(activityServiceSaveSpy).toHaveBeenCalledTimes(1);
         expect(athleteServiceInsertSpy).toHaveBeenCalledTimes(1);
@@ -318,7 +316,7 @@ describe("ExtensionSyncService", () => {
       syncedActivities: TEST_SYNCED_ACTIVITIES,
       athleteModel: athleteModel,
       syncDateTime: syncDateTime,
-      pluginVersion: importedBackupVersion,
+      pluginVersion: importedBackupVersion
     };
 
     const syncDateTimeSaveSpy = spyOn(extensionSyncService.syncDateTimeDao, "put").and.returnValue(
@@ -398,7 +396,7 @@ describe("ExtensionSyncService", () => {
       syncedActivities: TEST_SYNCED_ACTIVITIES,
       athleteModel: athleteModel,
       syncDateTime: syncDateTime,
-      pluginVersion: importedBackupVersion,
+      pluginVersion: importedBackupVersion
     };
 
     spyOn(extensionSyncService.syncDateTimeDao, "put").and.returnValue(
@@ -435,7 +433,7 @@ describe("ExtensionSyncService", () => {
       syncedActivities: TEST_SYNCED_ACTIVITIES,
       athleteModel: athleteModel,
       syncDateTime: syncDateTime,
-      pluginVersion: null,
+      pluginVersion: null
     };
 
     spyOn(extensionSyncService.syncDateTimeDao, "put").and.returnValue(
@@ -467,7 +465,7 @@ describe("ExtensionSyncService", () => {
 
     const syncedBackupModelPartial: Partial<ExtensionDumpModel> = {
       syncedActivities: TEST_SYNCED_ACTIVITIES,
-      syncDateTime: syncDateTime,
+      syncDateTime: syncDateTime
     };
 
     spyOn(extensionSyncService.syncDateTimeDao, "put").and.returnValue(
@@ -504,7 +502,7 @@ describe("ExtensionSyncService", () => {
       syncedActivities: null,
       athleteModel: athleteModel,
       syncDateTime: syncDateTime,
-      pluginVersion: importedBackupVersion,
+      pluginVersion: importedBackupVersion
     };
 
     spyOn(extensionSyncService.syncDateTimeDao, "put").and.returnValue(
@@ -537,7 +535,7 @@ describe("ExtensionSyncService", () => {
 
     const importedSyncedBackupModelPartial: Partial<ExtensionDumpModel> = {
       syncDateTime: syncDateTime,
-      pluginVersion: importedBackupVersion,
+      pluginVersion: importedBackupVersion
     };
 
     spyOn(extensionSyncService.syncDateTimeDao, "put").and.returnValue(
@@ -573,7 +571,7 @@ describe("ExtensionSyncService", () => {
       syncedActivities: [],
       athleteModel: athleteModel,
       syncDateTime: syncDateTime,
-      pluginVersion: importedBackupVersion,
+      pluginVersion: importedBackupVersion
     };
 
     spyOn(extensionSyncService.syncDateTimeDao, "put").and.returnValue(

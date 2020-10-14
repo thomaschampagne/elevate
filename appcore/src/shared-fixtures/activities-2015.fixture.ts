@@ -34,9 +34,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 202.969212372,
     commute: null,
@@ -55,7 +55,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 53,
         medianElevation: 53,
-        upperQuartileElevation: 53,
+        upperQuartileElevation: 53
       },
       gradeData: {
         avgGrade: 0.011640189462212208,
@@ -69,11 +69,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 0.023300000000000088,
           flat: 2.3316000000000003,
-          up: 0.030799999999999956,
+          up: 0.030799999999999956
         },
         upFlatDownInSeconds: { down: 16, flat: 1070, total: 1099, up: 13 },
         upFlatDownMoveData: { down: 5.24250000000002, flat: 7.844635514018693, up: 8.529230769230757 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 10.985943559348224,
@@ -88,7 +88,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 101,
         maxHeartRate: 179,
         medianHeartRate: 127,
-        upperQuartileHeartRate: 141,
+        upperQuartileHeartRate: 141
       },
       moveRatio: 0.9188963210702341,
       paceData: {
@@ -102,7 +102,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: 28.371169504776795,
         runningStressScorePerHour: 92.93558709481023,
         upperQuartilePace: 370.3703703703703,
-        variancePace: 296.8432118747288,
+        variancePace: 296.8432118747288
       },
       powerData: {
         avgWatts: 144.12694300518135,
@@ -120,7 +120,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 177,
         variabilityIndex: 1.2217105091934604,
         weightedPower: 176.08140092735695,
-        weightedWattsPerKg: 2.5154485846765278,
+        weightedWattsPerKg: 2.5154485846765278
       },
       speedData: {
         avgPace: 462,
@@ -133,8 +133,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 3.4824724497642694,
         totalAvgSpeed: 7.15785953177258,
         upperQuartileSpeed: 9.72,
-        varianceSpeed: 12.127614363367151,
-      },
+        varianceSpeed: 12.127614363367151
+      }
     },
     hasPowerMeter: false,
     id: 237250976,
@@ -143,7 +143,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-01-05T14:30:44+0000",
     trainer: false,
-    type: "Run",
+    type: "Run"
   },
   {
     athleteSnapshot: {
@@ -154,9 +154,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 94.58323115,
     commute: false,
@@ -180,10 +180,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.28846153846153,
           flat: 67.11940298507463,
-          up: 71.03478260869565,
+          up: 71.03478260869565
         },
         upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.719008264462787,
+        upperQuartileDistancePerOccurrence: 6.719008264462787
       },
       elevationData: {
         accumulatedElevationAscent: 63.07594181742829,
@@ -194,7 +194,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 82,
         medianElevation: 85,
-        upperQuartileElevation: 91,
+        upperQuartileElevation: 91
       },
       gradeData: {
         avgGrade: 0.34091603053435104,
@@ -207,12 +207,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.28846153846153,
           flat: 67.11940298507463,
-          up: 71.03478260869565,
+          up: 71.03478260869565
         },
         upFlatDownDistanceData: { down: 0.8325000000000002, flat: 2.793700000000001, up: 0.8932999999999989 },
         upFlatDownInSeconds: { down: 105, flat: 438, total: 700, up: 157 },
         upFlatDownMoveData: { down: 28.54285714285715, flat: 22.961917808219187, up: 20.4833121019108 },
-        upperQuartileGrade: 0.8,
+        upperQuartileGrade: 0.8
       },
       heartRateData: {
         HRSS: 9.4789214334442,
@@ -227,7 +227,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 127,
         maxHeartRate: 178,
         medianHeartRate: 146,
-        upperQuartileHeartRate: 157,
+        upperQuartileHeartRate: 157
       },
       moveRatio: 0.9985734664764622,
       paceData: {
@@ -241,7 +241,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 131.57894736842104,
-        variancePace: 48.321588731138355,
+        variancePace: 48.321588731138355
       },
       powerData: {
         avgWatts: 140.17333333333335,
@@ -258,7 +258,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 122,
         variabilityIndex: 1.3231632252829484,
         weightedPower: 185.47219983199517,
-        weightedWattsPerKg: 2.6496028547427883,
+        weightedWattsPerKg: 2.6496028547427883
       },
       speedData: {
         avgPace: 154,
@@ -271,8 +271,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 8.63138816859208,
         totalAvgSpeed: 23.212553495007146,
         upperQuartileSpeed: 27.36,
-        varianceSpeed: 74.50086171691134,
-      },
+        varianceSpeed: 74.50086171691134
+      }
     },
     hasPowerMeter: false,
     id: 239185425,
@@ -281,7 +281,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-01-10T11:57:15+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -292,9 +292,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 922.0196344849999,
     commute: false,
@@ -317,7 +317,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 6232.416666666658,
         upFlatDownCadencePaceData: { down: 80.4408945686901, flat: 75.1304347826087, up: 63.18005354752343 },
         upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.56953642384183,
+        upperQuartileDistancePerOccurrence: 6.56953642384183
       },
       elevationData: {
         accumulatedElevationAscent: 597.4210066083363,
@@ -328,7 +328,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 165,
         medianElevation: 171,
-        upperQuartileElevation: 416,
+        upperQuartileElevation: 416
       },
       gradeData: {
         avgGrade: -0.12313808098289719,
@@ -342,7 +342,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 9.137999999999995, flat: 21.395700000000012, up: 8.58319999999999 },
         upFlatDownInSeconds: { down: 885, flat: 2842, total: 6095, up: 2368 },
         upFlatDownMoveData: { down: 37.17152542372879, flat: 27.102223786066165, up: 13.04878378378377 },
-        upperQuartileGrade: 0.8,
+        upperQuartileGrade: 0.8
       },
       heartRateData: {
         HRSS: 136.99420998140343,
@@ -357,7 +357,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 157,
         maxHeartRate: 189,
         medianHeartRate: 169,
-        upperQuartileHeartRate: 179,
+        upperQuartileHeartRate: 179
       },
       moveRatio: 0.9281254758641694,
       paceData: {
@@ -371,7 +371,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 117.64705882352942,
-        variancePace: 19.801358477049924,
+        variancePace: 19.801358477049924
       },
       powerData: {
         avgWatts: 156.61502493765585,
@@ -388,7 +388,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 168,
         variabilityIndex: 1.3216602336596668,
         weightedPower: 206.99185045371678,
-        weightedWattsPerKg: 2.957026435053097,
+        weightedWattsPerKg: 2.957026435053097
       },
       speedData: {
         avgPace: 155,
@@ -401,8 +401,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 13.483534704863938,
         totalAvgSpeed: 21.428222932846083,
         upperQuartileSpeed: 30.6,
-        varianceSpeed: 181.80570813727024,
-      },
+        varianceSpeed: 181.80570813727024
+      }
     },
     hasPowerMeter: false,
     id: 239185861,
@@ -411,7 +411,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-01-10T13:26:41+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -422,9 +422,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 335.68067082399995,
     commute: false,
@@ -448,10 +448,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 76.60416666666667,
           flat: 71.63352826510722,
-          up: 63.80701754385965,
+          up: 63.80701754385965
         },
         upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.986842105263176,
+        upperQuartileDistancePerOccurrence: 6.986842105263176
       },
       elevationData: {
         accumulatedElevationAscent: 97.49778324979522,
@@ -462,7 +462,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 47,
         medianElevation: 49,
-        upperQuartileElevation: 52,
+        upperQuartileElevation: 52
       },
       gradeData: {
         avgGrade: -0.0477196989846226,
@@ -475,12 +475,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 76.60416666666667,
           flat: 71.63352826510722,
-          up: 63.80701754385965,
+          up: 63.80701754385965
         },
         upFlatDownDistanceData: { down: 1.9911999999999999, flat: 15.481499999999999, up: 1.702400000000002 },
         upFlatDownInSeconds: { down: 312, flat: 3123, total: 3768, up: 333 },
         upFlatDownMoveData: { down: 22.975384615384613, flat: 17.846109510086453, up: 18.404324324324346 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 39.1330416735852,
@@ -495,7 +495,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 114,
         maxHeartRate: 181,
         medianHeartRate: 133,
-        upperQuartileHeartRate: 143,
+        upperQuartileHeartRate: 143
       },
       moveRatio: 0.9368473396320238,
       paceData: {
@@ -509,7 +509,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 133.33333333333334,
-        variancePace: 20.81790943361138,
+        variancePace: 20.81790943361138
       },
       powerData: {
         avgWatts: 96.07010309278351,
@@ -526,7 +526,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 107,
         variabilityIndex: 1.6093028294243001,
         weightedPower: 154.6058887303007,
-        weightedWattsPerKg: 2.20865555329001,
+        weightedWattsPerKg: 2.20865555329001
       },
       speedData: {
         avgPace: 196,
@@ -539,8 +539,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 13.15021014197563,
         totalAvgSpeed: 17.19469915464938,
         upperQuartileSpeed: 27,
-        varianceSpeed: 172.92802677811875,
-      },
+        varianceSpeed: 172.92802677811875
+      }
     },
     hasPowerMeter: false,
     id: 239727858,
@@ -549,7 +549,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-01-11T14:32:39+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -560,9 +560,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: null,
     commute: null,
@@ -581,7 +581,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 1832,
         medianElevation: 1888,
-        upperQuartileElevation: 1951,
+        upperQuartileElevation: 1951
       },
       gradeData: {
         avgGrade: 0.298899647642575,
@@ -595,7 +595,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 29.83510000000002, flat: 1.5470999999999981, up: 22.56869999999999 },
         upFlatDownInSeconds: { down: 9569, flat: 2644, total: 19322, up: 7109 },
         upFlatDownMoveData: { down: 11.224407984115379, flat: 2.106490166414521, up: 11.428797299198195 },
-        upperQuartileGrade: 17.8,
+        upperQuartileGrade: 17.8
       },
       heartRateData: null,
       moveRatio: 0.7514779091474798,
@@ -610,7 +610,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 250.00000000000003,
-        variancePace: 9.702618529873929,
+        variancePace: 9.702618529873929
       },
       powerData: null,
       speedData: {
@@ -624,8 +624,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 19.262239211972588,
         totalAvgSpeed: 8.30065883634105,
         upperQuartileSpeed: 14.4,
-        varianceSpeed: 371.03385945925436,
-      },
+        varianceSpeed: 371.03385945925436
+      }
     },
     hasPowerMeter: false,
     id: 245459929,
@@ -634,7 +634,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-01-24T08:50:56+0000",
     trainer: false,
-    type: "AlpineSki",
+    type: "AlpineSki"
   },
   {
     athleteSnapshot: {
@@ -645,9 +645,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: null,
     commute: null,
@@ -666,7 +666,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 2043,
         medianElevation: 2111,
-        upperQuartileElevation: 2178,
+        upperQuartileElevation: 2178
       },
       gradeData: {
         avgGrade: 0.23389470867447845,
@@ -680,11 +680,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 31.872399999999992,
           flat: 0.5897000000000041,
-          up: 23.219600000000007,
+          up: 23.219600000000007
         },
         upFlatDownInSeconds: { down: 5627, flat: 382, total: 11889, up: 5880 },
         upFlatDownMoveData: { down: 20.39108583614714, flat: 5.557382198952919, up: 14.216081632653065 },
-        upperQuartileGrade: 18.6,
+        upperQuartileGrade: 18.6
       },
       heartRateData: null,
       moveRatio: 0.5122140364482357,
@@ -699,7 +699,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 181.8181818181818,
-        variancePace: 15.611598380550495,
+        variancePace: 15.611598380550495
       },
       powerData: null,
       speedData: {
@@ -713,8 +713,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 15.185446472207948,
         totalAvgSpeed: 8.442846064366112,
         upperQuartileSpeed: 19.8,
-        varianceSpeed: 230.59778456029284,
-      },
+        varianceSpeed: 230.59778456029284
+      }
     },
     hasPowerMeter: false,
     id: 248932866,
@@ -723,7 +723,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-01-31T08:40:23+0000",
     trainer: false,
-    type: "AlpineSki",
+    type: "AlpineSki"
   },
   {
     athleteSnapshot: {
@@ -734,9 +734,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: null,
     commute: null,
@@ -755,7 +755,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 2328,
         medianElevation: 2460,
-        upperQuartileElevation: 2613,
+        upperQuartileElevation: 2613
       },
       gradeData: {
         avgGrade: 0.2599543434356889,
@@ -769,7 +769,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 71.18470000000005, flat: 3.986399999999952, up: 45.2497 },
         upFlatDownInSeconds: { down: 9056, flat: 2273, total: 22867, up: 11538 },
         upFlatDownMoveData: { down: 28.297804770318045, flat: 6.313699956005204, up: 14.118471138845553 },
-        upperQuartileGrade: 22,
+        upperQuartileGrade: 22
       },
       heartRateData: null,
       moveRatio: 0.9162926751081905,
@@ -784,7 +784,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 175.43859649122808,
-        variancePace: 5.7497881406132105,
+        variancePace: 5.7497881406132105
       },
       powerData: null,
       speedData: {
@@ -798,8 +798,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 25.022190663788255,
         totalAvgSpeed: 17.762146978682562,
         upperQuartileSpeed: 20.52,
-        varianceSpeed: 626.1100256149721,
-      },
+        varianceSpeed: 626.1100256149721
+      }
     },
     hasPowerMeter: false,
     id: 251641603,
@@ -808,7 +808,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-02-07T08:03:06+0000",
     trainer: false,
-    type: "AlpineSki",
+    type: "AlpineSki"
   },
   {
     athleteSnapshot: {
@@ -819,9 +819,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 612.849856896,
     commute: null,
@@ -840,7 +840,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 155,
         medianElevation: 169,
-        upperQuartileElevation: 180,
+        upperQuartileElevation: 180
       },
       gradeData: {
         avgGrade: -0.17217094730980786,
@@ -854,7 +854,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 0.9168999999999994, flat: 5.4955, up: 0.7711000000000006 },
         upFlatDownInSeconds: { down: 370, flat: 2258, total: 2964, up: 336 },
         upFlatDownMoveData: { down: 8.921189189189183, flat: 8.761647475642162, up: 8.261785714285722 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 65.50239896487372,
@@ -869,7 +869,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 159,
         maxHeartRate: 187,
         medianHeartRate: 168,
-        upperQuartileHeartRate: 176,
+        upperQuartileHeartRate: 176
       },
       moveRatio: 0.9863560732113145,
       paceData: {
@@ -883,7 +883,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: 98.02795198961938,
         runningStressScorePerHour: 119.06228986593447,
         upperQuartilePace: 344.82758620689657,
-        variancePace: 498.4674475251058,
+        variancePace: 498.4674475251058
       },
       powerData: {
         avgWatts: 163.388698630137,
@@ -901,7 +901,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 192,
         variabilityIndex: 1.251066936260827,
         weightedPower: 204.4101986148491,
-        weightedWattsPerKg: 2.9201456944978443,
+        weightedWattsPerKg: 2.9201456944978443
       },
       speedData: {
         avgPace: 412,
@@ -914,8 +914,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 2.687403320430546,
         totalAvgSpeed: 8.612086522462558,
         upperQuartileSpeed: 10.44,
-        varianceSpeed: 7.222136606661124,
-      },
+        varianceSpeed: 7.222136606661124
+      }
     },
     hasPowerMeter: false,
     id: 260637750,
@@ -924,7 +924,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-02-26T17:09:31+0000",
     trainer: false,
-    type: "Run",
+    type: "Run"
   },
   {
     athleteSnapshot: {
@@ -935,9 +935,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 189.180177915,
     commute: false,
@@ -956,7 +956,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 111,
         medianElevation: 112,
-        upperQuartileElevation: 114,
+        upperQuartileElevation: 114
       },
       gradeData: {
         avgGrade: -0.0008384727873844948,
@@ -970,11 +970,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 0.5424000000000008,
           flat: 11.633599999999996,
-          up: 0.4064000000000019,
+          up: 0.4064000000000019
         },
         upFlatDownInSeconds: { down: 72, flat: 1822, total: 2024, up: 130 },
         upFlatDownMoveData: { down: 27.12000000000004, flat: 22.98625686059275, up: 11.2541538461539 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: null,
       moveRatio: 0.5474709223694888,
@@ -989,7 +989,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 129.87012987012986,
-        variancePace: 51.03093238263165,
+        variancePace: 51.03093238263165
       },
       powerData: {
         avgWatts: 91.09152542372881,
@@ -1006,7 +1006,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 79,
         variabilityIndex: 1.2876406021477524,
         weightedPower: 117.29314664716748,
-        weightedWattsPerKg: 1.6756163806738211,
+        weightedWattsPerKg: 1.6756163806738211
       },
       speedData: {
         avgPace: 161,
@@ -1019,8 +1019,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 8.39913378026887,
         totalAvgSpeed: 12.173735461184755,
         upperQuartileSpeed: 27.720000000000002,
-        varianceSpeed: 70.54544825885364,
-      },
+        varianceSpeed: 70.54544825885364
+      }
     },
     hasPowerMeter: false,
     id: 262615809,
@@ -1029,7 +1029,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-03-03T17:22:33+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -1040,9 +1040,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1337.33663075,
     commute: false,
@@ -1066,10 +1066,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 79.57967032967034,
           flat: 73.69412607449857,
-          up: 57.21547619047619,
+          up: 57.21547619047619
         },
         upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.572916666666515,
+        upperQuartileDistancePerOccurrence: 6.572916666666515
       },
       elevationData: {
         accumulatedElevationAscent: 699.7295627500218,
@@ -1080,7 +1080,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 96,
         medianElevation: 103,
-        upperQuartileElevation: 116,
+        upperQuartileElevation: 116
       },
       gradeData: {
         avgGrade: -0.05314046782847034,
@@ -1093,12 +1093,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 79.57967032967034,
           flat: 73.69412607449857,
-          up: 57.21547619047619,
+          up: 57.21547619047619
         },
         upFlatDownDistanceData: { down: 10.496700000000004, flat: 44.352299999999985, up: 9.70030000000001 },
         upFlatDownInSeconds: { down: 1084, flat: 6103, total: 10047, up: 2860 },
         upFlatDownMoveData: { down: 34.85988929889301, flat: 26.162261183024736, up: 12.210167832167844 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 173.78722788999534,
@@ -1113,7 +1113,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 147,
         maxHeartRate: 184,
         medianHeartRate: 157,
-        upperQuartileHeartRate: 166,
+        upperQuartileHeartRate: 166
       },
       moveRatio: 0.9710999420065726,
       paceData: {
@@ -1127,7 +1127,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 119.04761904761904,
-        variancePace: 33.15652832733332,
+        variancePace: 33.15652832733332
       },
       powerData: {
         avgWatts: 138.30786366674093,
@@ -1144,7 +1144,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 150,
         variabilityIndex: 1.2926996494862655,
         weightedPower: 178.79052688319018,
-        weightedWattsPerKg: 2.554150384045574,
+        weightedWattsPerKg: 2.554150384045574
       },
       speedData: {
         avgPace: 155,
@@ -1157,8 +1157,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 10.419976146560202,
         totalAvgSpeed: 22.46120239706166,
         upperQuartileSpeed: 30.240000000000002,
-        varianceSpeed: 108.5759028948836,
-      },
+        varianceSpeed: 108.5759028948836
+      }
     },
     hasPowerMeter: false,
     id: 264280115,
@@ -1167,7 +1167,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-03-07T12:18:17+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -1178,9 +1178,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: null,
     commute: null,
@@ -1199,7 +1199,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 1741,
         medianElevation: 1886,
-        upperQuartileElevation: 1966,
+        upperQuartileElevation: 1966
       },
       gradeData: {
         avgGrade: -0.573263278779831,
@@ -1213,11 +1213,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 51.668000000000035,
           flat: 1.8795999999999904,
-          up: 27.608199999999993,
+          up: 27.608199999999993
         },
         upFlatDownInSeconds: { down: 6985, flat: 2014, total: 17143, up: 8144 },
         upFlatDownMoveData: { down: 26.629176807444544, flat: 3.3597616683217306, up: 12.204017681728876 },
-        upperQuartileGrade: 23.1,
+        upperQuartileGrade: 23.1
       },
       heartRateData: null,
       moveRatio: 0.8199646051561678,
@@ -1232,7 +1232,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 196.07843137254903,
-        variancePace: 7.259293583121435,
+        variancePace: 7.259293583121435
       },
       powerData: null,
       speedData: {
@@ -1246,8 +1246,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 22.26917202128514,
         totalAvgSpeed: 13.755092552733664,
         upperQuartileSpeed: 18.36,
-        varianceSpeed: 495.9160225135888,
-      },
+        varianceSpeed: 495.9160225135888
+      }
     },
     hasPowerMeter: false,
     id: 264947554,
@@ -1256,7 +1256,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-03-08T07:47:10+0000",
     trainer: false,
-    type: "AlpineSki",
+    type: "AlpineSki"
   },
   {
     athleteSnapshot: {
@@ -1267,9 +1267,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 495.069616875,
     commute: false,
@@ -1292,7 +1292,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 3242.8249999999975,
         upFlatDownCadencePaceData: { down: 80.3265306122449, flat: 80.20725388601036, up: 73.86507936507937 },
         upperQuartileCadence: 87,
-        upperQuartileDistancePerOccurrence: 7.0695652173914,
+        upperQuartileDistancePerOccurrence: 7.0695652173914
       },
       elevationData: {
         accumulatedElevationAscent: 84.73228628197774,
@@ -1303,7 +1303,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 184,
         medianElevation: 187,
-        upperQuartileElevation: 189,
+        upperQuartileElevation: 189
       },
       gradeData: {
         avgGrade: -0.02419392185238713,
@@ -1317,7 +1317,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.682200000000003, flat: 19.382399999999997, up: 1.3928999999999987 },
         upFlatDownInSeconds: { down: 184, flat: 2149, total: 2541, up: 208 },
         upFlatDownMoveData: { down: 32.91260869565224, flat: 32.46935318752908, up: 24.107884615384595 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 49.92289018127208,
@@ -1332,7 +1332,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 155,
         maxHeartRate: 185,
         medianHeartRate: 164,
-        upperQuartileHeartRate: 170,
+        upperQuartileHeartRate: 170
       },
       moveRatio: 0.9988207547169812,
       paceData: {
@@ -1346,7 +1346,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 101.01010101010101,
-        variancePace: -755.6558395152174,
+        variancePace: -755.6558395152174
       },
       powerData: {
         avgWatts: 172.64034151547492,
@@ -1363,7 +1363,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 211,
         variabilityIndex: 1.2576621897111233,
         weightedPower: 217.12322994282835,
-        weightedWattsPerKg: 3.101760427754691,
+        weightedWattsPerKg: 3.101760427754691
       },
       speedData: {
         avgPace: 113,
@@ -1376,8 +1376,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 0,
         totalAvgSpeed: 31.73759433962269,
         upperQuartileSpeed: 35.64,
-        varianceSpeed: -4.764073552729428,
-      },
+        varianceSpeed: -4.764073552729428
+      }
     },
     hasPowerMeter: false,
     id: 270802574,
@@ -1386,7 +1386,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-03-19T17:35:22+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -1397,9 +1397,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1509.906791925,
     commute: false,
@@ -1423,10 +1423,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 74.62724014336918,
           flat: 73.27117031398667,
-          up: 61.18703919285991,
+          up: 61.18703919285991
         },
         upperQuartileCadence: 77,
-        upperQuartileDistancePerOccurrence: 6.580301685891865,
+        upperQuartileDistancePerOccurrence: 6.580301685891865
       },
       elevationData: {
         accumulatedElevationAscent: 810.203799195876,
@@ -1437,7 +1437,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 213,
         medianElevation: 222,
-        upperQuartileElevation: 369,
+        upperQuartileElevation: 369
       },
       gradeData: {
         avgGrade: -0.07632715089146919,
@@ -1450,16 +1450,16 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 74.62724014336918,
           flat: 73.27117031398667,
-          up: 61.18703919285991,
+          up: 61.18703919285991
         },
         upFlatDownDistanceData: {
           down: 15.724499999999981,
           flat: 31.291700000000077,
-          up: 15.661299999999938,
+          up: 15.661299999999938
         },
         upFlatDownInSeconds: { down: 1401, flat: 4163, total: 10016, up: 4452 },
         upFlatDownMoveData: { down: 40.40556745182008, flat: 27.059841460485295, up: 12.66412398921828 },
-        upperQuartileGrade: 1.6,
+        upperQuartileGrade: 1.6
       },
       heartRateData: {
         HRSS: 170.4141429254331,
@@ -1474,7 +1474,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 143,
         maxHeartRate: 181,
         medianHeartRate: 157,
-        upperQuartileHeartRate: 166,
+        upperQuartileHeartRate: 166
       },
       moveRatio: 0.6781313473256602,
       paceData: {
@@ -1488,7 +1488,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 119.04761904761904,
-        variancePace: 14.91986102297248,
+        variancePace: 14.91986102297248
       },
       powerData: {
         avgWatts: 160.33179900268507,
@@ -1505,7 +1505,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 130,
         variabilityIndex: 1.3264487428100808,
         weightedPower: 212.67191321959018,
-        weightedWattsPerKg: 3.0381701888512884,
+        weightedWattsPerKg: 3.0381701888512884
       },
       speedData: {
         avgPace: 159,
@@ -1518,8 +1518,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 15.533483538279745,
         totalAvgSpeed: 15.271519295870084,
         upperQuartileSpeed: 30.240000000000002,
-        varianceSpeed: 241.28911083400783,
-      },
+        varianceSpeed: 241.28911083400783
+      }
     },
     hasPowerMeter: false,
     id: 271244292,
@@ -1528,7 +1528,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-03-20T12:41:37+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -1539,9 +1539,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 621.0536976800001,
     commute: false,
@@ -1565,10 +1565,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 81.67403314917127,
           flat: 78.02224824355972,
-          up: 68.11046511627907,
+          up: 68.11046511627907
         },
         upperQuartileCadence: 87,
-        upperQuartileDistancePerOccurrence: 6.67669172932298,
+        upperQuartileDistancePerOccurrence: 6.67669172932298
       },
       elevationData: {
         accumulatedElevationAscent: 129.05736284586584,
@@ -1579,7 +1579,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 263,
         medianElevation: 269,
-        upperQuartileElevation: 272,
+        upperQuartileElevation: 272
       },
       gradeData: {
         avgGrade: 0.03531414337116254,
@@ -1592,12 +1592,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 81.67403314917127,
           flat: 78.02224824355972,
-          up: 68.11046511627907,
+          up: 68.11046511627907
         },
         upFlatDownDistanceData: { down: 2.103799999999993, flat: 26.518199999999986, up: 2.0885000000000185 },
         upFlatDownInSeconds: { down: 253, flat: 3334, total: 3946, up: 359 },
         upFlatDownMoveData: { down: 29.93549407114614, flat: 28.633929214157156, up: 20.943175487465368 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 60.735464170616424,
@@ -1612,7 +1612,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 142,
         maxHeartRate: 183,
         medianHeartRate: 150,
-        upperQuartileHeartRate: 158,
+        upperQuartileHeartRate: 158
       },
       moveRatio: 0.9818362776810152,
       paceData: {
@@ -1626,7 +1626,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 109.8901098901099,
-        variancePace: 282.7095505796841,
+        variancePace: 282.7095505796841
       },
       powerData: {
         avgWatts: 145.25132625994695,
@@ -1643,7 +1643,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 172,
         variabilityIndex: 1.3288946277350362,
         weightedPower: 193.02370713823248,
-        weightedWattsPerKg: 2.7574815305461784,
+        weightedWattsPerKg: 2.7574815305461784
       },
       speedData: {
         avgPace: 128,
@@ -1656,8 +1656,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 3.5684614568630324,
         totalAvgSpeed: 27.48746454341875,
         upperQuartileSpeed: 32.76,
-        varianceSpeed: 12.733917169117035,
-      },
+        varianceSpeed: 12.733917169117035
+      }
     },
     hasPowerMeter: false,
     id: 273477702,
@@ -1666,7 +1666,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-03-24T17:35:03+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -1677,9 +1677,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 887.2320213900001,
     commute: false,
@@ -1703,10 +1703,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.78703703703704,
           flat: 73.37010904425914,
-          up: 66.66057441253264,
+          up: 66.66057441253264
         },
         upperQuartileCadence: 81,
-        upperQuartileDistancePerOccurrence: 6.222222222222222,
+        upperQuartileDistancePerOccurrence: 6.222222222222222
       },
       elevationData: {
         accumulatedElevationAscent: 213.84765328247812,
@@ -1717,7 +1717,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 161,
         medianElevation: 166,
-        upperQuartileElevation: 169,
+        upperQuartileElevation: 169
       },
       gradeData: {
         avgGrade: -0.01682018776812013,
@@ -1730,12 +1730,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.78703703703704,
           flat: 73.37010904425914,
-          up: 66.66057441253264,
+          up: 66.66057441253264
         },
         upFlatDownDistanceData: { down: 3.6774000000000044, flat: 44.776900000000026, up: 3.482099999999971 },
         upFlatDownInSeconds: { down: 487, flat: 6398, total: 7539, up: 654 },
         upFlatDownMoveData: { down: 27.184065708418927, flat: 25.194879649890606, up: 19.167522935779658 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 64.80873556578977,
@@ -1750,7 +1750,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 121,
         maxHeartRate: 158,
         medianHeartRate: 127,
-        upperQuartileHeartRate: 135,
+        upperQuartileHeartRate: 135
       },
       moveRatio: 0.9871677360219981,
       paceData: {
@@ -1764,7 +1764,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 126.58227848101265,
-        variancePace: 328.9816757299832,
+        variancePace: 328.9816757299832
       },
       powerData: {
         avgWatts: 115.1063829787234,
@@ -1781,7 +1781,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 120,
         variabilityIndex: 1.386705804132473,
         weightedPower: 159.61868936929102,
-        weightedWattsPerKg: 2.2802669909898716,
+        weightedWattsPerKg: 2.2802669909898716
       },
       speedData: {
         avgPace: 145,
@@ -1794,8 +1794,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 3.3079992024022946,
         totalAvgSpeed: 24.42067565798083,
         upperQuartileSpeed: 28.44,
-        varianceSpeed: 10.942858723094218,
-      },
+        varianceSpeed: 10.942858723094218
+      }
     },
     hasPowerMeter: false,
     id: 274883979,
@@ -1804,7 +1804,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-03-27T15:04:14+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -1815,9 +1815,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 679.476534425,
     commute: false,
@@ -1840,7 +1840,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 5341.791666666662,
         upFlatDownCadencePaceData: { down: 80.33333333333333, flat: 74.17077986179665, up: 65.1 },
         upperQuartileCadence: 81,
-        upperQuartileDistancePerOccurrence: 6.599999999998545,
+        upperQuartileDistancePerOccurrence: 6.599999999998545
       },
       elevationData: {
         accumulatedElevationAscent: 143.6786960009709,
@@ -1851,7 +1851,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 129,
         medianElevation: 140,
-        upperQuartileElevation: 147,
+        upperQuartileElevation: 147
       },
       gradeData: {
         avgGrade: 0.05556581290234154,
@@ -1865,7 +1865,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 2.5611000000000073, flat: 31.129500000000004, up: 2.81439999999999 },
         upFlatDownInSeconds: { down: 316, flat: 4106, total: 4926, up: 504 },
         upFlatDownMoveData: { down: 29.17708860759502, flat: 27.29327812956649, up: 20.10285714285707 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 55.66088915380557,
@@ -1880,7 +1880,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 130,
         maxHeartRate: 169,
         medianHeartRate: 136,
-        upperQuartileHeartRate: 143,
+        upperQuartileHeartRate: 143
       },
       moveRatio: 0.9997970367363507,
       paceData: {
@@ -1894,7 +1894,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 117.64705882352942,
-        variancePace: 164.98181605622574,
+        variancePace: 164.98181605622574
       },
       powerData: {
         avgWatts: 135.74788970174453,
@@ -1911,7 +1911,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 149,
         variabilityIndex: 1.2752851101984493,
         weightedPower: 173.1172624774962,
-        weightedWattsPerKg: 2.473103749678517,
+        weightedWattsPerKg: 2.473103749678517
       },
       speedData: {
         avgPace: 135,
@@ -1924,8 +1924,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 4.671251071354693,
         totalAvgSpeed: 26.659070428252463,
         upperQuartileSpeed: 30.6,
-        varianceSpeed: 21.82058657163236,
-      },
+        varianceSpeed: 21.82058657163236
+      }
     },
     hasPowerMeter: false,
     id: 275456782,
@@ -1934,7 +1934,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-03-28T14:32:01+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -1945,9 +1945,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 559.1831713304999,
     commute: false,
@@ -1971,10 +1971,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 70.71818181818182,
           flat: 53.90523465703971,
-          up: 53.040712468193384,
+          up: 53.040712468193384
         },
         upperQuartileCadence: 61,
-        upperQuartileDistancePerOccurrence: 7.066666666667313,
+        upperQuartileDistancePerOccurrence: 7.066666666667313
       },
       elevationData: {
         accumulatedElevationAscent: 225.16270843896066,
@@ -1985,7 +1985,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 219,
         medianElevation: 224,
-        upperQuartileElevation: 228,
+        upperQuartileElevation: 228
       },
       gradeData: {
         avgGrade: -0.0598805183482652,
@@ -1998,16 +1998,16 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 70.71818181818182,
           flat: 53.90523465703971,
-          up: 53.040712468193384,
+          up: 53.040712468193384
         },
         upFlatDownDistanceData: {
           down: 3.9040000000000106,
           flat: 33.093900000000005,
-          up: 3.3764999999999925,
+          up: 3.3764999999999925
         },
         upFlatDownInSeconds: { down: 565, flat: 7048, total: 8641, up: 1028 },
         upFlatDownMoveData: { down: 24.875044247787677, flat: 16.903808172531214, up: 11.824319066147835 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 45.622497996081165,
@@ -2022,7 +2022,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 95,
         maxHeartRate: 173,
         medianHeartRate: 109,
-        upperQuartileHeartRate: 119,
+        upperQuartileHeartRate: 119
       },
       moveRatio: 0.4891039791702043,
       paceData: {
@@ -2036,7 +2036,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 172.41379310344828,
-        variancePace: 38.25167228535339,
+        variancePace: 38.25167228535339
       },
       powerData: {
         avgWatts: 76.47415443522655,
@@ -2053,7 +2053,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 31,
         variabilityIndex: 1.7800102842857148,
         weightedPower: 136.12478137675728,
-        weightedWattsPerKg: 1.9446397339536754,
+        weightedWattsPerKg: 1.9446397339536754
       },
       speedData: {
         avgPace: 214,
@@ -2066,8 +2066,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 9.701212935845637,
         totalAvgSpeed: 8.226428935303097,
         upperQuartileSpeed: 20.88,
-        varianceSpeed: 94.11353242661875,
-      },
+        varianceSpeed: 94.11353242661875
+      }
     },
     hasPowerMeter: false,
     id: 282212953,
@@ -2076,7 +2076,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-06T09:02:44+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -2087,9 +2087,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 461.88127281,
     commute: false,
@@ -2113,10 +2113,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.12738853503184,
           flat: 72.81841763942931,
-          up: 66.89944134078212,
+          up: 66.89944134078212
         },
         upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.588039867109489,
+        upperQuartileDistancePerOccurrence: 6.588039867109489
       },
       elevationData: {
         accumulatedElevationAscent: 99.72811643260611,
@@ -2127,7 +2127,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 61,
         medianElevation: 62,
-        upperQuartileElevation: 66,
+        upperQuartileElevation: 66
       },
       gradeData: {
         avgGrade: 0.002456709329937604,
@@ -2140,16 +2140,16 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.12738853503184,
           flat: 72.81841763942931,
-          up: 66.89944134078212,
+          up: 66.89944134078212
         },
         upFlatDownDistanceData: {
           down: 1.8282999999999985,
           flat: 22.318500000000004,
-          up: 1.7536999999999958,
+          up: 1.7536999999999958
         },
         upFlatDownInSeconds: { down: 231, flat: 3059, total: 3624, up: 334 },
         upFlatDownMoveData: { down: 28.492987012986994, flat: 26.265642366786533, up: 18.90215568862271 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 29.993438329923976,
@@ -2164,7 +2164,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 118,
         maxHeartRate: 165,
         medianHeartRate: 125,
-        upperQuartileHeartRate: 134,
+        upperQuartileHeartRate: 134
       },
       moveRatio: 0.9770827716365598,
       paceData: {
@@ -2178,7 +2178,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 120.48192771084338,
-        variancePace: 138.45689163852953,
+        variancePace: 138.45689163852953
       },
       powerData: {
         avgWatts: 119.73923076923077,
@@ -2195,7 +2195,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 136,
         variabilityIndex: 1.3337496909248425,
         weightedPower: 159.70216203003994,
-        weightedWattsPerKg: 2.2814594575719993,
+        weightedWattsPerKg: 2.2814594575719993
       },
       speedData: {
         avgPace: 140,
@@ -2208,8 +2208,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 5.099105078284141,
         totalAvgSpeed: 25.118856834726337,
         upperQuartileSpeed: 29.880000000000003,
-        varianceSpeed: 26.000872599383115,
-      },
+        varianceSpeed: 26.000872599383115
+      }
     },
     hasPowerMeter: false,
     id: 282212940,
@@ -2218,7 +2218,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-07T16:15:57+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -2229,9 +2229,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 67.7253917955,
     commute: false,
@@ -2254,7 +2254,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 462.47499999999997,
         upFlatDownCadencePaceData: { down: 85.61111111111111, flat: 75.8586956521739, up: 67.21875 },
         upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 7.034482758620668,
+        upperQuartileDistancePerOccurrence: 7.034482758620668
       },
       elevationData: {
         accumulatedElevationAscent: 60.410156106896466,
@@ -2265,7 +2265,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 81,
         medianElevation: 83,
-        upperQuartileElevation: 87,
+        upperQuartileElevation: 87
       },
       gradeData: {
         avgGrade: -0.3116272639292145,
@@ -2279,7 +2279,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 0.5141999999999995, flat: 2.8199, up: 0.2824000000000001 },
         upFlatDownInSeconds: { down: 92, flat: 762, total: 934, up: 80 },
         upFlatDownMoveData: { down: 20.120869565217376, flat: 13.32236220472441, up: 12.708000000000004 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 4.780814160573136,
@@ -2294,7 +2294,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 89,
         maxHeartRate: 145,
         medianHeartRate: 107,
-        upperQuartileHeartRate: 123,
+        upperQuartileHeartRate: 123
       },
       moveRatio: 0.709726443768997,
       paceData: {
@@ -2308,7 +2308,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 133.33333333333334,
-        variancePace: 12.634409258606539,
+        variancePace: 12.634409258606539
       },
       powerData: {
         avgWatts: 82.58456973293768,
@@ -2325,7 +2325,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 39,
         variabilityIndex: 1.7507030270811559,
         weightedPower: 144.5810562216488,
-        weightedWattsPerKg: 2.0654436603092683,
+        weightedWattsPerKg: 2.0654436603092683
       },
       speedData: {
         avgPace: 254,
@@ -2338,8 +2338,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 16.880051996605694,
         totalAvgSpeed: 10.046489361702129,
         upperQuartileSpeed: 27,
-        varianceSpeed: 284.93615540811186,
-      },
+        varianceSpeed: 284.93615540811186
+      }
     },
     hasPowerMeter: false,
     id: 282212296,
@@ -2348,7 +2348,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-08T16:26:20+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -2359,9 +2359,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 481.84372214,
     commute: false,
@@ -2385,10 +2385,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 74.43478260869566,
           flat: 70.47660098522168,
-          up: 59.43604651162791,
+          up: 59.43604651162791
         },
         upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.640776699029973,
+        upperQuartileDistancePerOccurrence: 6.640776699029973
       },
       elevationData: {
         accumulatedElevationAscent: 90.33168460204153,
@@ -2399,7 +2399,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 101,
         medianElevation: 104,
-        upperQuartileElevation: 108,
+        upperQuartileElevation: 108
       },
       gradeData: {
         avgGrade: -0.0204793209019522,
@@ -2412,12 +2412,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 74.43478260869566,
           flat: 70.47660098522168,
-          up: 59.43604651162791,
+          up: 59.43604651162791
         },
         upFlatDownDistanceData: { down: 1.862999999999987, flat: 24.187400000000004, up: 1.680500000000008 },
         upFlatDownInSeconds: { down: 244, flat: 3368, total: 3899, up: 287 },
         upFlatDownMoveData: { down: 27.48688524590145, flat: 25.853515439429934, up: 21.079442508710905 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 32.75704775537701,
@@ -2432,7 +2432,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 118,
         maxHeartRate: 158,
         medianHeartRate: 126,
-        upperQuartileHeartRate: 134,
+        upperQuartileHeartRate: 134
       },
       moveRatio: 1,
       paceData: {
@@ -2446,7 +2446,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 119.04761904761904,
-        variancePace: 198.04861407594652,
+        variancePace: 198.04861407594652
       },
       powerData: {
         avgWatts: 115.83078045222466,
@@ -2463,7 +2463,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 138,
         variabilityIndex: 1.3659571226822607,
         weightedPower: 158.21987958456143,
-        weightedWattsPerKg: 2.2602839940651633,
+        weightedWattsPerKg: 2.2602839940651633
       },
       speedData: {
         avgPace: 140,
@@ -2476,8 +2476,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 4.263490961070084,
         totalAvgSpeed: 25.611151577327515,
         upperQuartileSpeed: 30.240000000000002,
-        varianceSpeed: 18.17735517512631,
-      },
+        varianceSpeed: 18.17735517512631
+      }
     },
     hasPowerMeter: false,
     id: 282212375,
@@ -2486,7 +2486,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-09T16:45:52+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -2497,9 +2497,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 818.072004475,
     commute: false,
@@ -2523,10 +2523,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 79.93449781659389,
           flat: 75.81001727115716,
-          up: 68.40989660265879,
+          up: 68.40989660265879
         },
         upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.644067796609984,
+        upperQuartileDistancePerOccurrence: 6.644067796609984
       },
       elevationData: {
         accumulatedElevationAscent: 565.0877071653083,
@@ -2537,7 +2537,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 94,
         medianElevation: 123,
-        upperQuartileElevation: 390,
+        upperQuartileElevation: 390
       },
       gradeData: {
         avgGrade: 0.0063947963117727685,
@@ -2550,12 +2550,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 79.93449781659389,
           flat: 75.81001727115716,
-          up: 68.40989660265879,
+          up: 68.40989660265879
         },
         upFlatDownDistanceData: { down: 8.00290000000001, flat: 15.347899999999976, up: 8.111500000000019 },
         upFlatDownInSeconds: { down: 731, flat: 2048, total: 4891, up: 2112 },
         upFlatDownMoveData: { down: 39.41236662106708, flat: 26.97873046874996, up: 13.826420454545486 },
-        upperQuartileGrade: 1.9,
+        upperQuartileGrade: 1.9
       },
       heartRateData: {
         HRSS: 87.1836695108031,
@@ -2570,7 +2570,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 142,
         maxHeartRate: 187,
         medianHeartRate: 156,
-        upperQuartileHeartRate: 174,
+        upperQuartileHeartRate: 174
       },
       moveRatio: 0.8718360071301248,
       paceData: {
@@ -2584,7 +2584,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 111.11111111111111,
-        variancePace: 21.069407583623118,
+        variancePace: 21.069407583623118
       },
       powerData: {
         avgWatts: 171.10033198081888,
@@ -2601,7 +2601,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 199,
         variabilityIndex: 1.3035947062531712,
         weightedPower: 223.04548700835568,
-        weightedWattsPerKg: 3.1863641001193668,
+        weightedWattsPerKg: 3.1863641001193668
       },
       speedData: {
         avgPace: 155,
@@ -2614,8 +2614,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 13.071489792606176,
         totalAvgSpeed: 20.173379679144364,
         upperQuartileSpeed: 32.4,
-        varianceSpeed: 170.86384539820745,
-      },
+        varianceSpeed: 170.86384539820745
+      }
     },
     hasPowerMeter: false,
     id: 284737783,
@@ -2624,7 +2624,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-13T15:59:16+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -2635,9 +2635,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 907.3793154200001,
     commute: false,
@@ -2661,10 +2661,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.57961783439491,
           flat: 75.38935108153078,
-          up: 65.22524609148813,
+          up: 65.22524609148813
         },
         upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.516201117318424,
+        upperQuartileDistancePerOccurrence: 6.516201117318424
       },
       elevationData: {
         accumulatedElevationAscent: 669.4002518594066,
@@ -2675,7 +2675,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 121,
         medianElevation: 230,
-        upperQuartileElevation: 485,
+        upperQuartileElevation: 485
       },
       gradeData: {
         avgGrade: -0.03081027454502832,
@@ -2688,12 +2688,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.57961783439491,
           flat: 75.38935108153078,
-          up: 65.22524609148813,
+          up: 65.22524609148813
         },
         upFlatDownDistanceData: { down: 9.622500000000002, flat: 15.847899999999997, up: 9.707799999999997 },
         upFlatDownInSeconds: { down: 907, flat: 2285, total: 5913, up: 2721 },
         upFlatDownMoveData: { down: 38.19294377067256, flat: 24.968245076586427, up: 12.8438368246968 },
-        upperQuartileGrade: 2.4,
+        upperQuartileGrade: 2.4
       },
       heartRateData: {
         HRSS: 72.84118093803855,
@@ -2708,7 +2708,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 128,
         maxHeartRate: 168,
         medianHeartRate: 143,
-        upperQuartileHeartRate: 154,
+        upperQuartileHeartRate: 154
       },
       moveRatio: 0.7577854671280276,
       paceData: {
@@ -2722,7 +2722,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 119.04761904761904,
-        variancePace: 18.861725585340523,
+        variancePace: 18.861725585340523
       },
       powerData: {
         avgWatts: 161.50632911392404,
@@ -2739,7 +2739,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 146,
         variabilityIndex: 1.3241299767952868,
         weightedPower: 213.8553718219122,
-        weightedWattsPerKg: 3.0550767403130314,
+        weightedWattsPerKg: 3.0550767403130314
       },
       speedData: {
         avgPace: 167,
@@ -2752,8 +2752,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 13.815306974249308,
         totalAvgSpeed: 16.275755478662074,
         upperQuartileSpeed: 30.240000000000002,
-        varianceSpeed: 190.86270679274156,
-      },
+        varianceSpeed: 190.86270679274156
+      }
     },
     hasPowerMeter: false,
     id: 285393369,
@@ -2762,7 +2762,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-14T16:14:52+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -2773,9 +2773,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 672.3802652200001,
     commute: false,
@@ -2798,7 +2798,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 4580.074999999997,
         upFlatDownCadencePaceData: { down: 79.79802955665025, flat: 74.48567870485678, up: 67.49 },
         upperQuartileCadence: 82,
-        upperQuartileDistancePerOccurrence: 6.92941176470584,
+        upperQuartileDistancePerOccurrence: 6.92941176470584
       },
       elevationData: {
         accumulatedElevationAscent: 233.60224932681913,
@@ -2809,7 +2809,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 184,
         medianElevation: 188,
-        upperQuartileElevation: 191,
+        upperQuartileElevation: 191
       },
       gradeData: {
         avgGrade: 0.002660623409668958,
@@ -2823,7 +2823,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 3.6406999999999927, flat: 24.253400000000013, up: 3.545899999999994 },
         upFlatDownInSeconds: { down: 396, flat: 3133, total: 4300, up: 771 },
         upFlatDownMoveData: { down: 33.09727272727266, flat: 27.86857325247368, up: 16.556731517509697 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 61.560070984149306,
@@ -2838,7 +2838,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 135,
         maxHeartRate: 181,
         medianHeartRate: 145,
-        upperQuartileHeartRate: 156,
+        upperQuartileHeartRate: 156
       },
       moveRatio: 0.9596072305288998,
       paceData: {
@@ -2852,7 +2852,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 112.35955056179775,
-        variancePace: 81.90992667492718,
+        variancePace: 81.90992667492718
       },
       powerData: {
         avgWatts: 151.68409818569904,
@@ -2869,7 +2869,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 169,
         variabilityIndex: 1.3078224106458565,
         weightedPower: 198.3758629458637,
-        weightedWattsPerKg: 2.8339408992266244,
+        weightedWattsPerKg: 2.8339408992266244
       },
       speedData: {
         avgPace: 136,
@@ -2882,8 +2882,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.629533687765705,
         totalAvgSpeed: 25.242660120508837,
         upperQuartileSpeed: 32.04,
-        varianceSpeed: 43.95071691722035,
-      },
+        varianceSpeed: 43.95071691722035
+      }
     },
     hasPowerMeter: false,
     id: 286667453,
@@ -2892,7 +2892,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-16T16:29:13+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -2903,9 +2903,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1039.91747215,
     commute: false,
@@ -2928,7 +2928,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 7232.374999999996,
         upFlatDownCadencePaceData: { down: 80.7531914893617, flat: 76.52231793265466, up: 66.61787072243347 },
         upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 6.857142857143345,
+        upperQuartileDistancePerOccurrence: 6.857142857143345
       },
       elevationData: {
         accumulatedElevationAscent: 294.20599305664297,
@@ -2939,7 +2939,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 189,
         medianElevation: 194,
-        upperQuartileElevation: 198,
+        upperQuartileElevation: 198
       },
       gradeData: {
         avgGrade: 0.007720312159355684,
@@ -2953,7 +2953,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 5.635299999999987, flat: 39.13140000000002, up: 4.772099999999986 },
         upFlatDownInSeconds: { down: 649, flat: 4950, total: 6413, up: 814 },
         upFlatDownMoveData: { down: 31.258983050847384, flat: 28.45920000000002, up: 21.105110565110504 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 83.90625197877733,
@@ -2968,7 +2968,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 136,
         maxHeartRate: 179,
         medianHeartRate: 143,
-        upperQuartileHeartRate: 151,
+        upperQuartileHeartRate: 151
       },
       moveRatio: 0.6500101358199878,
       paceData: {
@@ -2982,7 +2982,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 111.11111111111111,
-        variancePace: 99.91117934097474,
+        variancePace: 99.91117934097474
       },
       powerData: {
         avgWatts: 148.3962962962963,
@@ -2999,7 +2999,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 143,
         variabilityIndex: 1.3701414930156273,
         weightedPower: 203.3239229653968,
-        weightedWattsPerKg: 2.90462747093424,
+        weightedWattsPerKg: 2.90462747093424
       },
       speedData: {
         avgPace: 129,
@@ -3012,8 +3012,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.002666396135252,
         totalAvgSpeed: 18.049205351712956,
         upperQuartileSpeed: 32.4,
-        varianceSpeed: 36.03200386329138,
-      },
+        varianceSpeed: 36.03200386329138
+      }
     },
     hasPowerMeter: false,
     id: 287794642,
@@ -3022,7 +3022,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-18T12:47:34+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -3033,9 +3033,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1165.9384193150001,
     commute: false,
@@ -3058,7 +3058,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 7471.291666666666,
         upFlatDownCadencePaceData: { down: 80.6103896103896, flat: 78.73548387096774, up: 71.8072880168185 },
         upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 6.574468085106209,
+        upperQuartileDistancePerOccurrence: 6.574468085106209
       },
       elevationData: {
         accumulatedElevationAscent: 618.0708752273171,
@@ -3069,7 +3069,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 163,
         medianElevation: 170,
-        upperQuartileElevation: 334,
+        upperQuartileElevation: 334
       },
       gradeData: {
         avgGrade: -0.042107009565500876,
@@ -3083,7 +3083,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 9.39809999999999, flat: 29.258399999999998, up: 9.412100000000008 },
         upFlatDownInSeconds: { down: 863, flat: 3704, total: 6713, up: 2146 },
         upFlatDownMoveData: { down: 39.20412514484354, flat: 28.436889848812093, up: 15.789170549860218 },
-        upperQuartileGrade: 0.4,
+        upperQuartileGrade: 0.4
       },
       heartRateData: {
         HRSS: 127.90950397231815,
@@ -3098,7 +3098,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 144,
         maxHeartRate: 253,
         medianHeartRate: 157,
-        upperQuartileHeartRate: 171,
+        upperQuartileHeartRate: 171
       },
       moveRatio: 0.9808591466978375,
       paceData: {
@@ -3112,7 +3112,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 111.11111111111111,
-        variancePace: 23.842556875899543,
+        variancePace: 23.842556875899543
       },
       powerData: {
         avgWatts: 172.41909889487107,
@@ -3129,7 +3129,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 191,
         variabilityIndex: 1.29351854247512,
         weightedPower: 223.0273014973672,
-        weightedWattsPerKg: 3.186104307105246,
+        weightedWattsPerKg: 3.186104307105246
       },
       speedData: {
         avgPace: 139,
@@ -3142,8 +3142,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 12.287819881859841,
         totalAvgSpeed: 25.264988310929283,
         upperQuartileSpeed: 32.4,
-        varianceSpeed: 150.99051744903,
-      },
+        varianceSpeed: 150.99051744903
+      }
     },
     hasPowerMeter: false,
     id: 289256521,
@@ -3152,7 +3152,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-20T16:11:00+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -3163,9 +3163,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 998.1949437300001,
     commute: false,
@@ -3189,10 +3189,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 84.05566600397614,
           flat: 78.42583732057416,
-          up: 74.88176726820161,
+          up: 74.88176726820161
         },
         upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 6.702702702699557,
+        upperQuartileDistancePerOccurrence: 6.702702702699557
       },
       elevationData: {
         accumulatedElevationAscent: 670.1429593433115,
@@ -3203,7 +3203,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 157,
         medianElevation: 269,
-        upperQuartileElevation: 501,
+        upperQuartileElevation: 501
       },
       gradeData: {
         avgGrade: 0.03615394992377071,
@@ -3216,12 +3216,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 84.05566600397614,
           flat: 78.42583732057416,
-          up: 74.88176726820161,
+          up: 74.88176726820161
         },
         upFlatDownDistanceData: { down: 11.842500000000003, flat: 17.723100000000006, up: 9.722499999999997 },
         upFlatDownInSeconds: { down: 1041, flat: 2251, total: 5608, up: 2316 },
         upFlatDownMoveData: { down: 40.953890489913555, flat: 28.344362505553097, up: 15.11269430051813 },
-        upperQuartileGrade: 1.5,
+        upperQuartileGrade: 1.5
       },
       heartRateData: {
         HRSS: 120.29758841235802,
@@ -3236,7 +3236,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 140,
         maxHeartRate: 194,
         medianHeartRate: 160,
-        upperQuartileHeartRate: 185,
+        upperQuartileHeartRate: 185
       },
       moveRatio: 0.9859353023909986,
       paceData: {
@@ -3250,7 +3250,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 108.69565217391305,
-        variancePace: 18.3685707707531,
+        variancePace: 18.3685707707531
       },
       powerData: {
         avgWatts: 172.31673665266948,
@@ -3267,7 +3267,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 234,
         variabilityIndex: 1.3211259946760785,
         weightedPower: 227.65212010959382,
-        weightedWattsPerKg: 3.252173144422769,
+        weightedWattsPerKg: 3.252173144422769
       },
       speedData: {
         avgPace: 142,
@@ -3280,8 +3280,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 13.999533607342183,
         totalAvgSpeed: 24.867310126582307,
         upperQuartileSpeed: 33.12,
-        varianceSpeed: 195.98694122310326,
-      },
+        varianceSpeed: 195.98694122310326
+      }
     },
     hasPowerMeter: false,
     id: 289885825,
@@ -3290,7 +3290,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-21T16:21:12+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -3301,9 +3301,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1147.4593403400002,
     commute: false,
@@ -3327,10 +3327,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 82.57396449704142,
           flat: 76.59299191374663,
-          up: 59.799240626483154,
+          up: 59.799240626483154
         },
         upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.508108108108186,
+        upperQuartileDistancePerOccurrence: 6.508108108108186
       },
       elevationData: {
         accumulatedElevationAscent: 829.0001974398504,
@@ -3341,7 +3341,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 196,
         medianElevation: 264,
-        upperQuartileElevation: 571,
+        upperQuartileElevation: 571
       },
       gradeData: {
         avgGrade: -0.06275401293466032,
@@ -3354,16 +3354,16 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 82.57396449704142,
           flat: 76.59299191374663,
-          up: 59.799240626483154,
+          up: 59.799240626483154
         },
         upFlatDownDistanceData: {
           down: 12.167900000000017,
           flat: 20.784599999999962,
-          up: 11.223400000000018,
+          up: 11.223400000000018
         },
         upFlatDownInSeconds: { down: 1151, flat: 2961, total: 7426, up: 3314 },
         upFlatDownMoveData: { down: 38.057723718505706, flat: 25.270030395136732, up: 12.191985515992778 },
-        upperQuartileGrade: 1.8,
+        upperQuartileGrade: 1.8
       },
       heartRateData: {
         HRSS: 117.66421269462822,
@@ -3378,7 +3378,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 132,
         maxHeartRate: 204,
         medianHeartRate: 149,
-        upperQuartileHeartRate: 170,
+        upperQuartileHeartRate: 170
       },
       moveRatio: 0.9502239283429302,
       paceData: {
@@ -3392,7 +3392,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 117.64705882352942,
-        variancePace: 17.9957922418031,
+        variancePace: 17.9957922418031
       },
       powerData: {
         avgWatts: 163.6052373959863,
@@ -3409,7 +3409,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 178,
         variabilityIndex: 1.330956456168466,
         weightedPower: 217.7514469751625,
-        weightedWattsPerKg: 3.110734956788036,
+        weightedWattsPerKg: 3.110734956788036
       },
       speedData: {
         avgPace: 164,
@@ -3422,8 +3422,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 14.143788877120713,
         totalAvgSpeed: 20.742149712092235,
         upperQuartileSpeed: 30.6,
-        varianceSpeed: 200.0467638005636,
-      },
+        varianceSpeed: 200.0467638005636
+      }
     },
     hasPowerMeter: false,
     id: 290654204,
@@ -3432,7 +3432,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-22T16:11:38+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -3443,9 +3443,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 834.8754882100001,
     commute: false,
@@ -3469,10 +3469,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.11619718309859,
           flat: 74.00869565217391,
-          up: 66.01869158878505,
+          up: 66.01869158878505
         },
         upperQuartileCadence: 82,
-        upperQuartileDistancePerOccurrence: 7.032258064516129,
+        upperQuartileDistancePerOccurrence: 7.032258064516129
       },
       elevationData: {
         accumulatedElevationAscent: 201.4487503028844,
@@ -3483,7 +3483,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 195,
         medianElevation: 201,
-        upperQuartileElevation: 211,
+        upperQuartileElevation: 211
       },
       gradeData: {
         avgGrade: 0.008124487962809407,
@@ -3496,12 +3496,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.11619718309859,
           flat: 74.00869565217391,
-          up: 66.01869158878505,
+          up: 66.01869158878505
         },
         upFlatDownDistanceData: { down: 3.503600000000004, flat: 33.73229999999999, up: 3.2885000000000044 },
         upFlatDownInSeconds: { down: 428, flat: 4406, total: 5395, up: 561 },
         upFlatDownMoveData: { down: 29.469532710280404, flat: 27.561570585565132, up: 21.102673796791475 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 76.69224641181587,
@@ -3516,7 +3516,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 138,
         maxHeartRate: 187,
         medianHeartRate: 143,
-        upperQuartileHeartRate: 151,
+        upperQuartileHeartRate: 151
       },
       moveRatio: 0.9948368061958326,
       paceData: {
@@ -3530,7 +3530,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 113.63636363636361,
-        variancePace: 83.09967214301597,
+        variancePace: 83.09967214301597
       },
       powerData: {
         avgWatts: 148.32879377431905,
@@ -3547,7 +3547,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 166,
         variabilityIndex: 1.4902246390468759,
         weightedPower: 221.0432231625931,
-        weightedWattsPerKg: 3.1577603308941873,
+        weightedWattsPerKg: 3.1577603308941873
       },
       speedData: {
         avgPace: 132,
@@ -3560,8 +3560,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.581904781787596,
         totalAvgSpeed: 26.96757145491431,
         upperQuartileSpeed: 31.680000000000003,
-        varianceSpeed: 43.32147055651842,
-      },
+        varianceSpeed: 43.32147055651842
+      }
     },
     hasPowerMeter: false,
     id: 291227883,
@@ -3570,7 +3570,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-23T16:26:44+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -3581,9 +3581,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 270.64587672,
     commute: false,
@@ -3607,10 +3607,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 69.01030927835052,
           flat: 64.63967611336032,
-          up: 50.669724770642205,
+          up: 50.669724770642205
         },
         upperQuartileCadence: 74,
-        upperQuartileDistancePerOccurrence: 7.094890510948826,
+        upperQuartileDistancePerOccurrence: 7.094890510948826
       },
       elevationData: {
         accumulatedElevationAscent: 63.80119812017017,
@@ -3621,7 +3621,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 208,
         medianElevation: 209,
-        upperQuartileElevation: 211,
+        upperQuartileElevation: 211
       },
       gradeData: {
         avgGrade: -0.029516991848148256,
@@ -3634,12 +3634,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 69.01030927835052,
           flat: 64.63967611336032,
-          up: 50.669724770642205,
+          up: 50.669724770642205
         },
         upFlatDownDistanceData: { down: 1.2461999999999993, flat: 13.7667, up: 1.0448000000000006 },
         upFlatDownInSeconds: { down: 165, flat: 1973, total: 2377, up: 239 },
         upFlatDownMoveData: { down: 27.18981818181817, flat: 25.119168778509884, up: 15.737573221757332 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 20.11156854744677,
@@ -3654,7 +3654,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 117,
         maxHeartRate: 174,
         medianHeartRate: 123,
-        upperQuartileHeartRate: 133,
+        upperQuartileHeartRate: 133
       },
       moveRatio: 0.9970637583892618,
       paceData: {
@@ -3668,7 +3668,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 123.45679012345678,
-        variancePace: 186.59336312121508,
+        variancePace: 186.59336312121508
       },
       powerData: {
         avgWatts: 107.52413019079685,
@@ -3685,7 +3685,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 129,
         variabilityIndex: 1.3359676106346932,
         weightedPower: 143.64875529657255,
-        weightedWattsPerKg: 2.052125075665322,
+        weightedWattsPerKg: 2.052125075665322
       },
       speedData: {
         avgPace: 147,
@@ -3698,8 +3698,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 4.3924128578717365,
         totalAvgSpeed: 24.26345637583893,
         upperQuartileSpeed: 29.16,
-        varianceSpeed: 19.293290713996953,
-      },
+        varianceSpeed: 19.293290713996953
+      }
     },
     hasPowerMeter: false,
     id: 294194932,
@@ -3708,7 +3708,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-24T16:39:30+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -3719,9 +3719,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: null,
     commute: false,
@@ -3737,7 +3737,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-29T10:00:00+0000",
     trainer: false,
-    type: "Swim",
+    type: "Swim"
   },
   {
     athleteSnapshot: {
@@ -3748,9 +3748,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 835.55686248,
     commute: false,
@@ -3773,7 +3773,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 4954.416666666675,
         upFlatDownCadencePaceData: { down: 82.3529411764706, flat: 75.65241635687732, up: 65.7979870596693 },
         upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.62937062937185,
+        upperQuartileDistancePerOccurrence: 6.62937062937185
       },
       elevationData: {
         accumulatedElevationAscent: 611.014987928814,
@@ -3784,7 +3784,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 196,
         medianElevation: 245,
-        upperQuartileElevation: 534,
+        upperQuartileElevation: 534
       },
       gradeData: {
         avgGrade: 0.0787830582943957,
@@ -3798,7 +3798,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 7.862499999999996, flat: 15.106100000000003, up: 7.802800000000002 },
         upFlatDownInSeconds: { down: 720, flat: 2110, total: 4953, up: 2123 },
         upFlatDownMoveData: { down: 39.312499999999986, flat: 25.773440758293848, up: 13.231314178049933 },
-        upperQuartileGrade: 1.8,
+        upperQuartileGrade: 1.8
       },
       heartRateData: {
         HRSS: 76.59261838500505,
@@ -3813,7 +3813,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 142,
         maxHeartRate: 171,
         medianHeartRate: 154,
-        upperQuartileHeartRate: 162,
+        upperQuartileHeartRate: 162
       },
       moveRatio: 0.8142363965148776,
       paceData: {
@@ -3827,7 +3827,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 111.11111111111111,
-        variancePace: 17.026508410881,
+        variancePace: 17.026508410881
       },
       powerData: {
         avgWatts: 170.66963967178023,
@@ -3844,7 +3844,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 181,
         variabilityIndex: 1.3664176392660141,
         weightedPower: 233.2060061346952,
-        weightedWattsPerKg: 3.3315143733527885,
+        weightedWattsPerKg: 3.3315143733527885
       },
       speedData: {
         avgPace: 161,
@@ -3857,8 +3857,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 14.540805046576207,
         totalAvgSpeed: 18.19361170475097,
         upperQuartileSpeed: 32.4,
-        varianceSpeed: 211.43501140253608,
-      },
+        varianceSpeed: 211.43501140253608
+      }
     },
     hasPowerMeter: false,
     id: 294909522,
@@ -3867,7 +3867,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-29T16:16:43+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -3878,9 +3878,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 956.57403864,
     commute: false,
@@ -3904,10 +3904,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 80.70212765957447,
           flat: 74.48379351740697,
-          up: 63.261464750171115,
+          up: 63.261464750171115
         },
         upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.588235294117539,
+        upperQuartileDistancePerOccurrence: 6.588235294117539
       },
       elevationData: {
         accumulatedElevationAscent: 587.8403402062123,
@@ -3918,7 +3918,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 181,
         medianElevation: 193,
-        upperQuartileElevation: 410,
+        upperQuartileElevation: 410
       },
       gradeData: {
         avgGrade: -0.0554060744263515,
@@ -3931,12 +3931,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 80.70212765957447,
           flat: 74.48379351740697,
-          up: 63.261464750171115,
+          up: 63.261464750171115
         },
         upFlatDownDistanceData: { down: 8.790800000000011, flat: 22.505099999999985, up: 8.698000000000008 },
         upFlatDownInSeconds: { down: 823, flat: 3050, total: 6233, up: 2360 },
         upFlatDownMoveData: { down: 38.453074119076604, flat: 26.563396721311456, up: 13.26813559322035 },
-        upperQuartileGrade: 0.7,
+        upperQuartileGrade: 0.7
       },
       heartRateData: {
         HRSS: 115.25119854976818,
@@ -3951,7 +3951,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 140,
         maxHeartRate: 254,
         medianHeartRate: 154,
-        upperQuartileHeartRate: 163,
+        upperQuartileHeartRate: 163
       },
       moveRatio: 0.9067500727378528,
       paceData: {
@@ -3965,7 +3965,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 117.64705882352942,
-        variancePace: 19.603323324548665,
+        variancePace: 19.603323324548665
       },
       powerData: {
         avgWatts: 156.2478966346154,
@@ -3982,7 +3982,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 158,
         variabilityIndex: 1.305812112820101,
         weightedPower: 204.03039602814385,
-        weightedWattsPerKg: 2.914719943259198,
+        weightedWattsPerKg: 2.914719943259198
       },
       speedData: {
         avgPace: 155,
@@ -3995,8 +3995,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 13.551469716458937,
         totalAvgSpeed: 20.930328775094612,
         upperQuartileSpeed: 30.6,
-        varianceSpeed: 183.64233147610366,
-      },
+        varianceSpeed: 183.64233147610366
+      }
     },
     hasPowerMeter: false,
     id: 295523202,
@@ -4005,7 +4005,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-04-30T16:20:03+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -4016,9 +4016,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 2153.039182175,
     commute: false,
@@ -4041,7 +4041,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 14818.400000000023,
         upFlatDownCadencePaceData: { down: 84.31501831501832, flat: 73.43111313868613, up: 65.3030303030303 },
         upperQuartileCadence: 82,
-        upperQuartileDistancePerOccurrence: 7.06206896551684,
+        upperQuartileDistancePerOccurrence: 7.06206896551684
       },
       elevationData: {
         accumulatedElevationAscent: 810.3341428759627,
@@ -4052,7 +4052,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 218,
         medianElevation: 244,
-        upperQuartileElevation: 263,
+        upperQuartileElevation: 263
       },
       gradeData: {
         avgGrade: -0.0190074656188594,
@@ -4066,7 +4066,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 18.22150000000007, flat: 66.68219999999995, up: 16.89629999999998 },
         upFlatDownInSeconds: { down: 1736, flat: 8739, total: 13442, up: 2967 },
         upFlatDownMoveData: { down: 37.78652073732733, flat: 27.46949536560245, up: 20.501071789686527 },
-        upperQuartileGrade: 0.5,
+        upperQuartileGrade: 0.5
       },
       heartRateData: {
         HRSS: 175.0549383569538,
@@ -4081,7 +4081,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 137,
         maxHeartRate: 174,
         medianHeartRate: 144,
-        upperQuartileHeartRate: 152,
+        upperQuartileHeartRate: 152
       },
       moveRatio: 0.8667225481978206,
       paceData: {
@@ -4095,7 +4095,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 109.8901098901099,
-        variancePace: 26.56452179854726,
+        variancePace: 26.56452179854726
       },
       powerData: {
         avgWatts: 158.76783952647156,
@@ -4112,7 +4112,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 164,
         variabilityIndex: 1.3577510966636024,
         weightedPower: 215.5672082319776,
-        weightedWattsPerKg: 3.0795315461711086,
+        weightedWattsPerKg: 3.0795315461711086
       },
       speedData: {
         avgPace: 132,
@@ -4125,8 +4125,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 11.641266974001708,
         totalAvgSpeed: 23.602782900251412,
         upperQuartileSpeed: 32.76,
-        varianceSpeed: 135.51909675998286,
-      },
+        varianceSpeed: 135.51909675998286
+      }
     },
     hasPowerMeter: false,
     id: 296692980,
@@ -4135,7 +4135,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-05-02T11:18:26+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -4146,9 +4146,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 951.2261373800002,
     commute: false,
@@ -4171,7 +4171,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 5823.4583333333285,
         upFlatDownCadencePaceData: { down: 78.9752808988764, flat: 69.62135922330097, up: 70.25967540574283 },
         upperQuartileCadence: 78,
-        upperQuartileDistancePerOccurrence: 7.032167832167924,
+        upperQuartileDistancePerOccurrence: 7.032167832167924
       },
       elevationData: {
         accumulatedElevationAscent: 674.8646293685206,
@@ -4182,7 +4182,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 198,
         medianElevation: 314,
-        upperQuartileElevation: 547,
+        upperQuartileElevation: 547
       },
       gradeData: {
         avgGrade: 0.032483183499314505,
@@ -4196,7 +4196,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 12.102900000000002, flat: 17.331400000000016, up: 9.797999999999988 },
         upFlatDownInSeconds: { down: 1095, flat: 2539, total: 6098, up: 2464 },
         upFlatDownMoveData: { down: 39.79035616438357, flat: 24.573863725876354, up: 14.315259740259723 },
-        upperQuartileGrade: 1.6,
+        upperQuartileGrade: 1.6
       },
       heartRateData: {
         HRSS: 81.11829240861627,
@@ -4211,7 +4211,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 124,
         maxHeartRate: 183,
         medianHeartRate: 135,
-        upperQuartileHeartRate: 163,
+        upperQuartileHeartRate: 163
       },
       moveRatio: 0.9175443876015649,
       paceData: {
@@ -4225,7 +4225,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 114.9425287356322,
-        variancePace: 18.269647175574438,
+        variancePace: 18.269647175574438
       },
       powerData: {
         avgWatts: 157.85685771314513,
@@ -4242,7 +4242,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 177,
         variabilityIndex: 1.3474322238217429,
         weightedPower: 212.70141683393558,
-        weightedWattsPerKg: 3.0385916690562227,
+        weightedWattsPerKg: 3.0385916690562227
       },
       speedData: {
         avgPace: 155,
@@ -4255,8 +4255,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 14.037383670269342,
         totalAvgSpeed: 21.243466746915406,
         upperQuartileSpeed: 31.319999999999997,
-        varianceSpeed: 197.0481403063444,
-      },
+        varianceSpeed: 197.0481403063444
+      }
     },
     hasPowerMeter: false,
     id: 299340910,
@@ -4265,7 +4265,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-05-06T15:59:48+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -4276,9 +4276,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 2069.902777405,
     commute: false,
@@ -4301,7 +4301,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 15741.658333333338,
         upFlatDownCadencePaceData: { down: 81.74305555555556, flat: 80.2084752175558, up: 68.0530303030303 },
         upperQuartileCadence: 86,
-        upperQuartileDistancePerOccurrence: 6.57959183673465,
+        upperQuartileDistancePerOccurrence: 6.57959183673465
       },
       elevationData: {
         accumulatedElevationAscent: 278.24218251597813,
@@ -4312,7 +4312,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 185,
         medianElevation: 199,
-        upperQuartileElevation: 213,
+        upperQuartileElevation: 213
       },
       gradeData: {
         avgGrade: -0.017534921993537837,
@@ -4326,7 +4326,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 5.322399999999946, flat: 96.26420000000016, up: 4.2635999999998955 },
         upFlatDownInSeconds: { down: 627, flat: 11476, total: 12783, up: 680 },
         upFlatDownMoveData: { down: 30.559234449760453, flat: 30.197901707912216, up: 22.57199999999945 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 160.5047618616115,
@@ -4341,7 +4341,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 135,
         maxHeartRate: 175,
         medianHeartRate: 141,
-        upperQuartileHeartRate: 149,
+        upperQuartileHeartRate: 149
       },
       moveRatio: 0.9563818644321412,
       paceData: {
@@ -4355,7 +4355,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 108.69565217391305,
-        variancePace: -363.6377296906456,
+        variancePace: -363.6377296906456
       },
       powerData: {
         avgWatts: 144.03838533927686,
@@ -4372,7 +4372,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 167,
         variabilityIndex: 1.2328332570667024,
         weightedPower: 177.57531174044945,
-        weightedWattsPerKg: 2.5367901677207065,
+        weightedWattsPerKg: 2.5367901677207065
       },
       speedData: {
         avgPace: 120,
@@ -4385,8 +4385,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 0,
         totalAvgSpeed: 28.48814454586255,
         upperQuartileSpeed: 33.12,
-        varianceSpeed: -9.899962809311887,
-      },
+        varianceSpeed: -9.899962809311887
+      }
     },
     hasPowerMeter: false,
     id: 301786155,
@@ -4395,7 +4395,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-05-10T10:26:22+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -4406,9 +4406,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1894.1709824399998,
     commute: false,
@@ -4431,7 +4431,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 12026.41666666673,
         upFlatDownCadencePaceData: { down: 87.28851540616246, flat: 75.85278514588859, up: 74.3383850931677 },
         upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 6.150993377483271,
+        upperQuartileDistancePerOccurrence: 6.150993377483271
       },
       elevationData: {
         accumulatedElevationAscent: 1610.0891160063074,
@@ -4442,7 +4442,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 309,
         medianElevation: 639,
-        upperQuartileElevation: 1192,
+        upperQuartileElevation: 1192
       },
       gradeData: {
         avgGrade: 0.06633303429934152,
@@ -4456,7 +4456,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 24.293200000000013, flat: 20.43599999999998, up: 24.493699999999993 },
         upFlatDownInSeconds: { down: 1914, flat: 2828, total: 11096, up: 6354 },
         upFlatDownMoveData: { down: 45.692539184953, flat: 26.01471004243279, up: 13.877450424929176 },
-        upperQuartileGrade: 4.3,
+        upperQuartileGrade: 4.3
       },
       heartRateData: {
         HRSS: 201.85407914437502,
@@ -4471,7 +4471,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 142,
         maxHeartRate: 184,
         medianHeartRate: 161,
-        upperQuartileHeartRate: 172,
+        upperQuartileHeartRate: 172
       },
       moveRatio: 0.8823856858846918,
       paceData: {
@@ -4485,7 +4485,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 121.95121951219514,
-        variancePace: 11.364542461709766,
+        variancePace: 11.364542461709766
       },
       powerData: {
         avgWatts: 179.89811706320245,
@@ -4502,7 +4502,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 194,
         variabilityIndex: 1.5558959126366037,
         weightedPower: 279.9027450296579,
-        weightedWattsPerKg: 3.9986106432808275,
+        weightedWattsPerKg: 3.9986106432808275
       },
       speedData: {
         avgPace: 160,
@@ -4515,8 +4515,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 17.79816680024946,
         totalAvgSpeed: 19.808903379721585,
         upperQuartileSpeed: 29.52,
-        varianceSpeed: 316.7747414495022,
-      },
+        varianceSpeed: 316.7747414495022
+      }
     },
     hasPowerMeter: false,
     id: 302537043,
@@ -4525,7 +4525,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-05-11T14:29:34+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -4536,9 +4536,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1477.6289546300002,
     commute: false,
@@ -4562,10 +4562,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.79550561797753,
           flat: 74.93815513626835,
-          up: 61.55607790463398,
+          up: 61.55607790463398
         },
         upperQuartileCadence: 78,
-        upperQuartileDistancePerOccurrence: 6.176470588235294,
+        upperQuartileDistancePerOccurrence: 6.176470588235294
       },
       elevationData: {
         accumulatedElevationAscent: 950.7505763100371,
@@ -4576,7 +4576,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 232,
         medianElevation: 292,
-        upperQuartileElevation: 540,
+        upperQuartileElevation: 540
       },
       gradeData: {
         avgGrade: -0.06335614500500755,
@@ -4589,12 +4589,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.79550561797753,
           flat: 74.93815513626835,
-          up: 61.55607790463398,
+          up: 61.55607790463398
         },
         upFlatDownDistanceData: { down: 17.136500000000023, flat: 26.38199999999997, up: 16.56770000000001 },
         upFlatDownInSeconds: { down: 1771, flat: 3794, total: 10417, up: 4852 },
         upFlatDownMoveData: { down: 34.834217955957136, flat: 25.032999472851845, up: 12.292605111294318 },
-        upperQuartileGrade: 2.6,
+        upperQuartileGrade: 2.6
       },
       heartRateData: {
         HRSS: 145.1878372091441,
@@ -4609,7 +4609,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 132,
         maxHeartRate: 175,
         medianHeartRate: 147,
-        upperQuartileHeartRate: 161,
+        upperQuartileHeartRate: 161
       },
       moveRatio: 0.9296742525658188,
       paceData: {
@@ -4623,7 +4623,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 123.45679012345678,
-        variancePace: 19.729932359223664,
+        variancePace: 19.729932359223664
       },
       powerData: {
         avgWatts: 152.6245052486663,
@@ -4640,7 +4640,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 149,
         variabilityIndex: 1.3322559039320776,
         weightedPower: 203.33489820224807,
-        weightedWattsPerKg: 2.904784260032115,
+        weightedWattsPerKg: 2.904784260032115
       },
       speedData: {
         avgPace: 173,
@@ -4653,8 +4653,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 13.507919139260714,
         totalAvgSpeed: 19.299534136546217,
         upperQuartileSpeed: 29.16,
-        varianceSpeed: 182.4638794728059,
-      },
+        varianceSpeed: 182.4638794728059
+      }
     },
     hasPowerMeter: false,
     id: 303080029,
@@ -4663,7 +4663,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-05-12T13:07:05+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -4674,9 +4674,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 819.2678364,
     commute: false,
@@ -4700,10 +4700,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.99586776859505,
           flat: 74.14519056261344,
-          up: 65.08496240601504,
+          up: 65.08496240601504
         },
         upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 7.016759776536639,
+        upperQuartileDistancePerOccurrence: 7.016759776536639
       },
       elevationData: {
         accumulatedElevationAscent: 559.0949862924344,
@@ -4714,7 +4714,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 231,
         medianElevation: 252,
-        upperQuartileElevation: 516,
+        upperQuartileElevation: 516
       },
       gradeData: {
         avgGrade: 0.0017088243111594605,
@@ -4727,12 +4727,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.99586776859505,
           flat: 74.14519056261344,
-          up: 65.08496240601504,
+          up: 65.08496240601504
         },
         upFlatDownDistanceData: { down: 8.0771, flat: 15.483299999999995, up: 8.043200000000006 },
         upFlatDownInSeconds: { down: 698, flat: 1944, total: 4575, up: 1933 },
         upFlatDownMoveData: { down: 41.658395415472775, flat: 28.672777777777767, up: 14.97957578892914 },
-        upperQuartileGrade: 1.8,
+        upperQuartileGrade: 1.8
       },
       heartRateData: {
         HRSS: 66.4027403045479,
@@ -4747,7 +4747,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 133,
         maxHeartRate: 185,
         medianHeartRate: 148,
-        upperQuartileHeartRate: 160,
+        upperQuartileHeartRate: 160
       },
       moveRatio: 0.9746484874307627,
       paceData: {
@@ -4761,7 +4761,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 111.11111111111111,
-        variancePace: 19.244834658939368,
+        variancePace: 19.244834658939368
       },
       powerData: {
         avgWatts: 177.46381702287215,
@@ -4778,7 +4778,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 241,
         variabilityIndex: 1.283255778930938,
         weightedPower: 227.73146874574326,
-        weightedWattsPerKg: 3.2533066963677606,
+        weightedWattsPerKg: 3.2533066963677606
       },
       speedData: {
         avgPace: 145,
@@ -4791,8 +4791,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 13.67710428290044,
         totalAvgSpeed: 24.197959096719146,
         upperQuartileSpeed: 32.4,
-        varianceSpeed: 187.0631815653336,
-      },
+        varianceSpeed: 187.0631815653336
+      }
     },
     hasPowerMeter: false,
     id: 304491323,
@@ -4801,7 +4801,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-05-14T15:20:54+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -4812,9 +4812,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 596.337656585,
     commute: false,
@@ -4838,10 +4838,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 73.29113924050633,
           flat: 69.47477477477477,
-          up: 62.54471544715447,
+          up: 62.54471544715447
         },
         upperQuartileCadence: 77,
-        upperQuartileDistancePerOccurrence: 6.983870967741818,
+        upperQuartileDistancePerOccurrence: 6.983870967741818
       },
       elevationData: {
         accumulatedElevationAscent: 52.33722772653624,
@@ -4852,7 +4852,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 172,
         medianElevation: 174,
-        upperQuartileElevation: 175,
+        upperQuartileElevation: 175
       },
       gradeData: {
         avgGrade: -0.0035190584199292206,
@@ -4865,12 +4865,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 73.29113924050633,
           flat: 69.47477477477477,
-          up: 62.54471544715447,
+          up: 62.54471544715447
         },
         upFlatDownDistanceData: { down: 1.013600000000007, flat: 35.1042, up: 0.9602999999999967 },
         upFlatDownInSeconds: { down: 121, flat: 4871, total: 5199, up: 207 },
         upFlatDownMoveData: { down: 30.156694214876236, flat: 25.944389242455347, up: 16.700869565217335 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 41.12282358727711,
@@ -4885,7 +4885,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 118,
         maxHeartRate: 177,
         medianHeartRate: 123,
-        upperQuartileHeartRate: 131,
+        upperQuartileHeartRate: 131
       },
       moveRatio: 0.9936926605504587,
       paceData: {
@@ -4899,7 +4899,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 121.95121951219514,
-        variancePace: 171.74738064814065,
+        variancePace: 171.74738064814065
       },
       powerData: {
         avgWatts: 105.08179419525067,
@@ -4916,7 +4916,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 127,
         variabilityIndex: 1.28173121934579,
         weightedPower: 134.686616204922,
-        weightedWattsPerKg: 1.9240945172131714,
+        weightedWattsPerKg: 1.9240945172131714
       },
       speedData: {
         avgPace: 140,
@@ -4929,8 +4929,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 4.578320474316476,
         totalAvgSpeed: 25.480837155963325,
         upperQuartileSpeed: 29.52,
-        varianceSpeed: 20.961018365545442,
-      },
+        varianceSpeed: 20.961018365545442
+      }
     },
     hasPowerMeter: false,
     id: 313660900,
@@ -4939,7 +4939,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-05-28T16:23:16+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -4950,9 +4950,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 618.2974618339999,
     commute: false,
@@ -4975,7 +4975,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 5959.633333333328,
         upFlatDownCadencePaceData: { down: 72.74789915966386, flat: 70.1210332103321, up: 65.04347826086956 },
         upperQuartileCadence: 77,
-        upperQuartileDistancePerOccurrence: 6.58333333333303,
+        upperQuartileDistancePerOccurrence: 6.58333333333303
       },
       elevationData: {
         accumulatedElevationAscent: 69.8069041325862,
@@ -4986,7 +4986,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 190,
         medianElevation: 195,
-        upperQuartileElevation: 197,
+        upperQuartileElevation: 197
       },
       gradeData: {
         avgGrade: -0.017744459818085714,
@@ -5000,7 +5000,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.5278999999999796, flat: 36.9944, up: 1.1560000000000132 },
         upFlatDownInSeconds: { down: 210, flat: 5372, total: 5822, up: 240 },
         upFlatDownMoveData: { down: 26.192571428571082, flat: 24.791481757259866, up: 17.3400000000002 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 41.318472323681355,
@@ -5015,7 +5015,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 113,
         maxHeartRate: 173,
         medianHeartRate: 120,
-        upperQuartileHeartRate: 125,
+        upperQuartileHeartRate: 125
       },
       moveRatio: 0.9531761624099542,
       paceData: {
@@ -5029,7 +5029,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 125.00000000000001,
-        variancePace: 133.27401052610242,
+        variancePace: 133.27401052610242
       },
       powerData: {
         avgWatts: 101.05538461538461,
@@ -5046,7 +5046,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 120,
         variabilityIndex: 1.5098953505158428,
         weightedPower: 152.58305537535946,
-        weightedWattsPerKg: 2.1797579339337068,
+        weightedWattsPerKg: 2.1797579339337068
       },
       speedData: {
         avgPace: 146,
@@ -5059,8 +5059,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 5.197308747382767,
         totalAvgSpeed: 23.381846758349777,
         upperQuartileSpeed: 28.8,
-        varianceSpeed: 27.012018215621424,
-      },
+        varianceSpeed: 27.012018215621424
+      }
     },
     hasPowerMeter: false,
     id: 316281840,
@@ -5069,7 +5069,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-05-30T13:12:19+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -5080,9 +5080,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 527.08110966,
     commute: false,
@@ -5106,10 +5106,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.33333333333333,
           flat: 74.99019607843137,
-          up: 66.46508563899869,
+          up: 66.46508563899869
         },
         upperQuartileCadence: 81,
-        upperQuartileDistancePerOccurrence: 6.545454545454546,
+        upperQuartileDistancePerOccurrence: 6.545454545454546
       },
       elevationData: {
         accumulatedElevationAscent: 310.82017419771853,
@@ -5120,7 +5120,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 201,
         medianElevation: 246,
-        upperQuartileElevation: 291,
+        upperQuartileElevation: 291
       },
       gradeData: {
         avgGrade: 0.13405026850467888,
@@ -5133,12 +5133,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.33333333333333,
           flat: 74.99019607843137,
-          up: 66.46508563899869,
+          up: 66.46508563899869
         },
         upFlatDownDistanceData: { down: 4.2907999999999875, flat: 14.63440000000002, up: 4.5566999999999895 },
         upFlatDownInSeconds: { down: 720, flat: 2162, total: 4156, up: 1274 },
         upFlatDownMoveData: { down: 21.45399999999994, flat: 24.36810360777062, up: 12.876075353218182 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 40.42469423175693,
@@ -5153,7 +5153,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 113,
         maxHeartRate: 177,
         medianHeartRate: 127,
-        upperQuartileHeartRate: 145,
+        upperQuartileHeartRate: 145
       },
       moveRatio: 0.9064340239912759,
       paceData: {
@@ -5167,7 +5167,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 128.2051282051282,
-        variancePace: 95.46307744965864,
+        variancePace: 95.46307744965864
       },
       powerData: {
         avgWatts: 131.1376673040153,
@@ -5184,7 +5184,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 155,
         variabilityIndex: 1.4968671976427186,
         weightedPower: 196.29567256276457,
-        weightedWattsPerKg: 2.8042238937537793,
+        weightedWattsPerKg: 2.8042238937537793
       },
       speedData: {
         avgPace: 177,
@@ -5197,8 +5197,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.14092134837172,
         totalAvgSpeed: 18.418652126499495,
         upperQuartileSpeed: 28.08,
-        varianceSpeed: 37.71091500688755,
-      },
+        varianceSpeed: 37.71091500688755
+      }
     },
     hasPowerMeter: false,
     id: 316282392,
@@ -5207,7 +5207,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-01T16:22:00+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -5218,9 +5218,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 421.42695988500003,
     commute: false,
@@ -5244,10 +5244,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 71.98203592814372,
           flat: 69.11842105263158,
-          up: 59.27403846153846,
+          up: 59.27403846153846
         },
         upperQuartileCadence: 77,
-        upperQuartileDistancePerOccurrence: 6.963855421686659,
+        upperQuartileDistancePerOccurrence: 6.963855421686659
       },
       elevationData: {
         accumulatedElevationAscent: 96.81752955216717,
@@ -5258,7 +5258,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 147,
         medianElevation: 149,
-        upperQuartileElevation: 152,
+        upperQuartileElevation: 152
       },
       gradeData: {
         avgGrade: -0.014667773013218564,
@@ -5271,16 +5271,16 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 71.98203592814372,
           flat: 69.11842105263158,
-          up: 59.27403846153846,
+          up: 59.27403846153846
         },
         upFlatDownDistanceData: {
           down: 1.8692999999999969,
           flat: 21.276700000000005,
-          up: 1.6201999999999994,
+          up: 1.6201999999999994
         },
         upFlatDownInSeconds: { down: 253, flat: 3071, total: 3677, up: 353 },
         upFlatDownMoveData: { down: 26.598735177865567, flat: 24.94175187235429, up: 16.523286118980163 },
-        upperQuartileGrade: 0,
+        upperQuartileGrade: 0
       },
       heartRateData: {
         HRSS: 27.06436632361649,
@@ -5295,7 +5295,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 110,
         maxHeartRate: 196,
         medianHeartRate: 119,
-        upperQuartileHeartRate: 126,
+        upperQuartileHeartRate: 126
       },
       moveRatio: 0.9666140904311251,
       paceData: {
@@ -5309,7 +5309,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 120.48192771084338,
-        variancePace: 104.80114379214179,
+        variancePace: 104.80114379214179
       },
       powerData: {
         avgWatts: 108.38026315789473,
@@ -5326,7 +5326,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 132,
         variabilityIndex: 1.3440780082329915,
         weightedPower: 145.67152823703063,
-        weightedWattsPerKg: 2.0810218319575804,
+        weightedWattsPerKg: 2.0810218319575804
       },
       speedData: {
         avgPace: 148,
@@ -5339,8 +5339,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 5.860953005462758,
         totalAvgSpeed: 23.399100946372226,
         upperQuartileSpeed: 29.880000000000003,
-        varianceSpeed: 34.35077013224293,
-      },
+        varianceSpeed: 34.35077013224293
+      }
     },
     hasPowerMeter: false,
     id: 319062713,
@@ -5349,7 +5349,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-02T16:17:26+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -5360,9 +5360,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 364.37182941599997,
     commute: false,
@@ -5386,10 +5386,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 65.62162162162163,
           flat: 71.82986767485822,
-          up: 63.956989247311824,
+          up: 63.956989247311824
         },
         upperQuartileCadence: 78,
-        upperQuartileDistancePerOccurrence: 6.535135135135092,
+        upperQuartileDistancePerOccurrence: 6.535135135135092
       },
       elevationData: {
         accumulatedElevationAscent: 39.081931831311664,
@@ -5400,7 +5400,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 183,
         medianElevation: 184,
-        upperQuartileElevation: 185,
+        upperQuartileElevation: 185
       },
       gradeData: {
         avgGrade: -0.0053765234068132925,
@@ -5413,12 +5413,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 65.62162162162163,
           flat: 71.82986767485822,
-          up: 63.956989247311824,
+          up: 63.956989247311824
         },
         upFlatDownDistanceData: { down: 1.442899999999999, flat: 19.7504, up: 1.5928000000000029 },
         upFlatDownInSeconds: { down: 293, flat: 2918, total: 3575, up: 364 },
         upFlatDownMoveData: { down: 17.728464163822512, flat: 24.36649760109664, up: 15.752967032967064 },
-        upperQuartileGrade: 0.3,
+        upperQuartileGrade: 0.3
       },
       heartRateData: null,
       moveRatio: 0.9958217270194986,
@@ -5433,7 +5433,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 128.2051282051282,
-        variancePace: 57.97040126765842,
+        variancePace: 57.97040126765842
       },
       powerData: {
         avgWatts: 94.60859728506787,
@@ -5450,7 +5450,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 124,
         variabilityIndex: 1.3041563345552822,
         weightedPower: 123.38440145271095,
-        weightedWattsPerKg: 1.7626343064672991,
+        weightedWattsPerKg: 1.7626343064672991
       },
       speedData: {
         avgPace: 156,
@@ -5463,8 +5463,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 7.880397001991809,
         totalAvgSpeed: 22.8918384401114,
         upperQuartileSpeed: 28.08,
-        varianceSpeed: 62.100656909001486,
-      },
+        varianceSpeed: 62.100656909001486
+      }
     },
     hasPowerMeter: false,
     id: 322731272,
@@ -5472,7 +5472,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-10T17:00:39+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -5483,9 +5483,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 518.443524665,
     commute: false,
@@ -5508,7 +5508,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 3701.9916666666695,
         upFlatDownCadencePaceData: { down: 72.32413793103449, flat: 72.2021563342318, up: 67.33333333333333 },
         upperQuartileCadence: 79,
-        upperQuartileDistancePerOccurrence: 6.692307692308952,
+        upperQuartileDistancePerOccurrence: 6.692307692308952
       },
       elevationData: {
         accumulatedElevationAscent: 55.884661064423256,
@@ -5519,7 +5519,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 216,
         medianElevation: 216,
-        upperQuartileElevation: 217,
+        upperQuartileElevation: 217
       },
       gradeData: {
         avgGrade: -0.004879692152909294,
@@ -5533,7 +5533,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 2.776199999999999, flat: 21.757700000000007, up: 2.700399999999995 },
         upFlatDownInSeconds: { down: 461, flat: 3204, total: 4238, up: 573 },
         upFlatDownMoveData: { down: 21.67965292841648, flat: 24.44685393258428, up: 16.965863874345516 },
-        upperQuartileGrade: 0.7,
+        upperQuartileGrade: 0.7
       },
       heartRateData: {
         HRSS: 44.779435957165994,
@@ -5548,7 +5548,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 120,
         maxHeartRate: 192,
         medianHeartRate: 128,
-        upperQuartileHeartRate: 139,
+        upperQuartileHeartRate: 139
       },
       moveRatio: 0.8886559027049696,
       paceData: {
@@ -5562,7 +5562,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 123.45679012345678,
-        variancePace: 44.54961239127627,
+        variancePace: 44.54961239127627
       },
       powerData: {
         avgWatts: 92.37806140048292,
@@ -5579,7 +5579,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 147,
         variabilityIndex: 1.6049760381304585,
         weightedPower: 148.26457499671932,
-        weightedWattsPerKg: 2.11806535709599,
+        weightedWattsPerKg: 2.11806535709599
       },
       speedData: {
         avgPace: 155,
@@ -5592,8 +5592,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 8.989370605750597,
         totalAvgSpeed: 20.56449989515622,
         upperQuartileSpeed: 29.16,
-        varianceSpeed: 80.80878388753285,
-      },
+        varianceSpeed: 80.80878388753285
+      }
     },
     hasPowerMeter: false,
     id: 323354228,
@@ -5602,7 +5602,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-11T16:34:52+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -5613,9 +5613,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 720.18775896,
     commute: false,
@@ -5638,7 +5638,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 4667.941666666664,
         upFlatDownCadencePaceData: { down: 70.5979381443299, flat: 74.9866504854369, up: 63.87007874015748 },
         upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 7.285714285714285,
+        upperQuartileDistancePerOccurrence: 7.285714285714285
       },
       elevationData: {
         accumulatedElevationAscent: 164.69746564833443,
@@ -5649,7 +5649,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 219,
         medianElevation: 221,
-        upperQuartileElevation: 224,
+        upperQuartileElevation: 224
       },
       gradeData: {
         avgGrade: 0.028862392516516712,
@@ -5663,7 +5663,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 3.618699999999992, flat: 27.5071, up: 3.809800000000007 },
         upFlatDownInSeconds: { down: 567, flat: 3642, total: 5095, up: 886 },
         upFlatDownMoveData: { down: 22.975873015872967, flat: 27.189884678747944, up: 15.480000000000029 },
-        upperQuartileGrade: 0.5,
+        upperQuartileGrade: 0.5
       },
       heartRateData: {
         HRSS: 56.42025035836377,
@@ -5678,7 +5678,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 122,
         maxHeartRate: 181,
         medianHeartRate: 132,
-        upperQuartileHeartRate: 147,
+        upperQuartileHeartRate: 147
       },
       moveRatio: 0.9645967436577054,
       paceData: {
@@ -5692,7 +5692,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 116.27906976744185,
-        variancePace: 42.59040427103056,
+        variancePace: 42.59040427103056
       },
       powerData: {
         avgWatts: 114.35668040023543,
@@ -5709,7 +5709,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 180,
         variabilityIndex: 1.4831640068085352,
         weightedPower: 169.60971230773626,
-        weightedWattsPerKg: 2.422995890110518,
+        weightedWattsPerKg: 2.422995890110518
       },
       speedData: {
         avgPace: 145,
@@ -5722,8 +5722,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 9.193806714857617,
         totalAvgSpeed: 23.79121544869365,
         upperQuartileSpeed: 30.96,
-        varianceSpeed: 84.526081910161,
-      },
+        varianceSpeed: 84.526081910161
+      }
     },
     hasPowerMeter: false,
     id: 324511047,
@@ -5732,7 +5732,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-13T13:08:56+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -5743,9 +5743,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 230.37576558599997,
     commute: false,
@@ -5769,10 +5769,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 78.58333333333333,
           flat: 73.44680851063829,
-          up: 57.723684210526315,
+          up: 57.723684210526315
         },
         upperQuartileCadence: 81,
-        upperQuartileDistancePerOccurrence: 6.521212121212032,
+        upperQuartileDistancePerOccurrence: 6.521212121212032
       },
       elevationData: {
         accumulatedElevationAscent: 32.02788059838454,
@@ -5783,7 +5783,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 240,
         medianElevation: 242,
-        upperQuartileElevation: 242,
+        upperQuartileElevation: 242
       },
       gradeData: {
         avgGrade: 0.043332381496287944,
@@ -5796,16 +5796,16 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 78.58333333333333,
           flat: 73.44680851063829,
-          up: 57.723684210526315,
+          up: 57.723684210526315
         },
         upFlatDownDistanceData: {
           down: 0.8060999999999994,
           flat: 12.455399999999997,
-          up: 1.0967000000000011,
+          up: 1.0967000000000011
         },
         upFlatDownInSeconds: { down: 131, flat: 1781, total: 2186, up: 274 },
         upFlatDownMoveData: { down: 22.152366412213723, flat: 25.17655249859629, up: 14.409197080291985 },
-        upperQuartileGrade: 0.3,
+        upperQuartileGrade: 0.3
       },
       heartRateData: null,
       moveRatio: 1,
@@ -5820,7 +5820,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 123.45679012345678,
-        variancePace: 90.70685239931382,
+        variancePace: 90.70685239931382
       },
       powerData: {
         avgWatts: 98.16091954022988,
@@ -5837,7 +5837,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 129,
         variabilityIndex: 1.2081390675551642,
         weightedPower: 118.59204180369082,
-        weightedWattsPerKg: 1.6941720257670116,
+        weightedWattsPerKg: 1.6941720257670116
       },
       speedData: {
         avgPace: 152,
@@ -5850,8 +5850,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.299864404115133,
         totalAvgSpeed: 23.5742360475755,
         upperQuartileSpeed: 29.16,
-        varianceSpeed: 39.68829151023692,
-      },
+        varianceSpeed: 39.68829151023692
+      }
     },
     hasPowerMeter: false,
     id: 327425583,
@@ -5860,7 +5860,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-14T13:34:53+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -5871,9 +5871,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 243.49256493,
     commute: false,
@@ -5896,7 +5896,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 1952.0916666666672,
         upFlatDownCadencePaceData: { down: 73.5, flat: 74.24752475247524, up: 64.1923076923077 },
         upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.827067669172969,
+        upperQuartileDistancePerOccurrence: 6.827067669172969
       },
       elevationData: {
         accumulatedElevationAscent: 30.92210623376863,
@@ -5907,7 +5907,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 199,
         medianElevation: 200,
-        upperQuartileElevation: 201,
+        upperQuartileElevation: 201
       },
       gradeData: {
         avgGrade: -0.007881570879090376,
@@ -5921,11 +5921,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 0.8108000000000015,
           flat: 12.497900000000001,
-          up: 1.0424999999999969,
+          up: 1.0424999999999969
         },
         upFlatDownInSeconds: { down: 148, flat: 1736, total: 2154, up: 270 },
         upFlatDownMoveData: { down: 19.722162162162203, flat: 25.91730414746544, up: 13.899999999999958 },
-        upperQuartileGrade: 0.2,
+        upperQuartileGrade: 0.2
       },
       heartRateData: null,
       moveRatio: 1,
@@ -5940,7 +5940,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 121.95121951219514,
-        variancePace: 50.66647229237672,
+        variancePace: 50.66647229237672
       },
       powerData: {
         avgWatts: 101.01375245579568,
@@ -5957,7 +5957,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 144,
         variabilityIndex: 1.4370745280552275,
         weightedPower: 145.16429063750016,
-        weightedWattsPerKg: 2.0737755805357168,
+        weightedWattsPerKg: 2.0737755805357168
       },
       speedData: {
         avgPace: 150,
@@ -5970,8 +5970,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 8.429288473036559,
         totalAvgSpeed: 23.956880222841214,
         upperQuartileSpeed: 29.52,
-        varianceSpeed: 71.05290416166702,
-      },
+        varianceSpeed: 71.05290416166702
+      }
     },
     hasPowerMeter: false,
     id: 327425606,
@@ -5980,7 +5980,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-15T16:03:13+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -5991,9 +5991,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 678.8782131600001,
     commute: false,
@@ -6016,7 +6016,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 4934.1333333333305,
         upFlatDownCadencePaceData: { down: 71.4375, flat: 74.21302428256071, up: 60.101851851851855 },
         upperQuartileCadence: 82,
-        upperQuartileDistancePerOccurrence: 7.2631578947369375,
+        upperQuartileDistancePerOccurrence: 7.2631578947369375
       },
       elevationData: {
         accumulatedElevationAscent: 48.962109148008295,
@@ -6027,7 +6027,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 165,
         medianElevation: 166,
-        upperQuartileElevation: 169,
+        upperQuartileElevation: 169
       },
       gradeData: {
         avgGrade: 0.0005679093059958276,
@@ -6041,7 +6041,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.7610999999999946, flat: 33.68520000000001, up: 1.8747999999999905 },
         upFlatDownInSeconds: { down: 292, flat: 4359, total: 5063, up: 412 },
         upFlatDownMoveData: { down: 21.71219178082185, flat: 27.819848589125957, up: 16.38174757281545 },
-        upperQuartileGrade: 0.2,
+        upperQuartileGrade: 0.2
       },
       heartRateData: {
         HRSS: 47.0436175061159,
@@ -6056,7 +6056,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 119,
         maxHeartRate: 176,
         medianHeartRate: 126,
-        upperQuartileHeartRate: 136,
+        upperQuartileHeartRate: 136
       },
       moveRatio: 0.9990134175217048,
       paceData: {
@@ -6070,7 +6070,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 113.63636363636361,
-        variancePace: 110.04597569090927,
+        variancePace: 110.04597569090927
       },
       powerData: {
         avgWatts: 118.9475549255847,
@@ -6087,7 +6087,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 168,
         variabilityIndex: 1.4469767720858517,
         weightedPower: 172.1143490737271,
-        weightedWattsPerKg: 2.4587764153389586,
+        weightedWattsPerKg: 2.4587764153389586
       },
       speedData: {
         avgPace: 135,
@@ -6100,8 +6100,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 5.719580380071248,
         totalAvgSpeed: 26.51611681136541,
         upperQuartileSpeed: 31.680000000000003,
-        varianceSpeed: 32.71359972409596,
-      },
+        varianceSpeed: 32.71359972409596
+      }
     },
     hasPowerMeter: false,
     id: 327425584,
@@ -6110,7 +6110,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-17T15:59:21+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -6121,9 +6121,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 181.63908168999998,
     commute: false,
@@ -6147,10 +6147,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 79.82352941176471,
           flat: 82.95045045045045,
-          up: 71.65217391304348,
+          up: 71.65217391304348
         },
         upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.844444444444485,
+        upperQuartileDistancePerOccurrence: 6.844444444444485
       },
       elevationData: {
         accumulatedElevationAscent: 17.00429461394745,
@@ -6161,7 +6161,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 218,
         medianElevation: 219,
-        upperQuartileElevation: 220,
+        upperQuartileElevation: 220
       },
       gradeData: {
         avgGrade: -0.025740676583332556,
@@ -6174,16 +6174,16 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 79.82352941176471,
           flat: 82.95045045045045,
-          up: 71.65217391304348,
+          up: 71.65217391304348
         },
         upFlatDownDistanceData: {
           down: 0.44289999999999885,
           flat: 8.154900000000003,
-          up: 0.3500999999999986,
+          up: 0.3500999999999986
         },
         upFlatDownInSeconds: { down: 54, flat: 958, total: 1073, up: 61 },
         upFlatDownMoveData: { down: 29.526666666666586, flat: 30.644718162839258, up: 20.661639344262216 },
-        upperQuartileGrade: 0.3,
+        upperQuartileGrade: 0.3
       },
       heartRateData: {
         HRSS: 15.821491173503055,
@@ -6198,7 +6198,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 137,
         maxHeartRate: 185,
         medianHeartRate: 144,
-        upperQuartileHeartRate: 158,
+        upperQuartileHeartRate: 158
       },
       moveRatio: 1,
       paceData: {
@@ -6212,7 +6212,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 104.16666666666666,
-        variancePace: 112.67184054038054,
+        variancePace: 112.67184054038054
       },
       powerData: {
         avgWatts: 148.96496815286625,
@@ -6229,7 +6229,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 200,
         variabilityIndex: 1.2431441322539705,
         weightedPower: 185.18492607063527,
-        weightedWattsPerKg: 2.645498943866218,
+        weightedWattsPerKg: 2.645498943866218
       },
       speedData: {
         avgPace: 120,
@@ -6242,8 +6242,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 5.65253885086163,
         totalAvgSpeed: 29.95112767940356,
         upperQuartileSpeed: 34.56,
-        varianceSpeed: 31.951195460500116,
-      },
+        varianceSpeed: 31.951195460500116
+      }
     },
     hasPowerMeter: false,
     id: 328043275,
@@ -6252,7 +6252,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-18T15:59:10+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -6263,9 +6263,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 690.38845405,
     commute: false,
@@ -6289,10 +6289,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.36206896551724,
           flat: 76.53968253968254,
-          up: 65.45638432364096,
+          up: 65.45638432364096
         },
         upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 5.868613138686769,
+        upperQuartileDistancePerOccurrence: 5.868613138686769
       },
       elevationData: {
         accumulatedElevationAscent: 486.8159647066351,
@@ -6303,7 +6303,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 222,
         medianElevation: 278,
-        upperQuartileElevation: 529,
+        upperQuartileElevation: 529
       },
       gradeData: {
         avgGrade: 0.02714235514069649,
@@ -6316,12 +6316,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.36206896551724,
           flat: 76.53968253968254,
-          up: 65.45638432364096,
+          up: 65.45638432364096
         },
         upFlatDownDistanceData: { down: 7.796900000000007, flat: 12.87359999999999, up: 8.640700000000002 },
         upFlatDownInSeconds: { down: 819, flat: 1858, total: 5216, up: 2539 },
         upFlatDownMoveData: { down: 34.27208791208795, flat: 24.943466092572642, up: 12.251484836549826 },
-        upperQuartileGrade: 2.5,
+        upperQuartileGrade: 2.5
       },
       heartRateData: {
         HRSS: 61.82226173037024,
@@ -6336,7 +6336,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 129,
         maxHeartRate: 169,
         medianHeartRate: 140,
-        upperQuartileHeartRate: 151,
+        upperQuartileHeartRate: 151
       },
       moveRatio: 0.9988510149368058,
       paceData: {
@@ -6350,7 +6350,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 128.2051282051282,
-        variancePace: 13.000481449635531,
+        variancePace: 13.000481449635531
       },
       powerData: {
         avgWatts: 105.94155154091392,
@@ -6367,7 +6367,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 172,
         variabilityIndex: 1.4210947878126645,
         weightedPower: 150.55298670757952,
-        weightedWattsPerKg: 2.1507569529654216,
+        weightedWattsPerKg: 2.1507569529654216
       },
       speedData: {
         avgPace: 177,
@@ -6380,8 +6380,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 16.640697748922626,
         totalAvgSpeed: 20.215633856759858,
         upperQuartileSpeed: 28.08,
-        varianceSpeed: 276.9128215709985,
-      },
+        varianceSpeed: 276.9128215709985
+      }
     },
     hasPowerMeter: false,
     id: 328196791,
@@ -6390,7 +6390,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-18T16:17:42+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -6401,9 +6401,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 953.55583176,
     commute: false,
@@ -6426,7 +6426,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 6007.716666666663,
         upFlatDownCadencePaceData: { down: 88.6116504854369, flat: 77.18055555555556, up: 70.52709883103081 },
         upperQuartileCadence: 84,
-        upperQuartileDistancePerOccurrence: 6.461538461536019,
+        upperQuartileDistancePerOccurrence: 6.461538461536019
       },
       elevationData: {
         accumulatedElevationAscent: 608.8997926010315,
@@ -6437,7 +6437,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 208,
         medianElevation: 317,
-        upperQuartileElevation: 559,
+        upperQuartileElevation: 559
       },
       gradeData: {
         avgGrade: -0.007872367658241949,
@@ -6451,7 +6451,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 13.81109999999998, flat: 15.208900000000012, up: 10.825700000000005 },
         upFlatDownInSeconds: { down: 1414, flat: 2039, total: 6395, up: 2942 },
         upFlatDownMoveData: { down: 35.16263083451197, flat: 26.852398234428666, up: 13.246947654656703 },
-        upperQuartileGrade: 2.1,
+        upperQuartileGrade: 2.1
       },
       heartRateData: {
         HRSS: 87.56478174414791,
@@ -6466,7 +6466,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 129,
         maxHeartRate: 176,
         medianHeartRate: 146,
-        upperQuartileHeartRate: 159,
+        upperQuartileHeartRate: 159
       },
       moveRatio: 0.9902446577887891,
       paceData: {
@@ -6480,7 +6480,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 119.04761904761904,
-        variancePace: 13.748596500451985,
+        variancePace: 13.748596500451985
       },
       powerData: {
         avgWatts: 124.65183917878528,
@@ -6497,7 +6497,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 196,
         variabilityIndex: 1.3580530922846092,
         weightedPower: 169.28381565571317,
-        weightedWattsPerKg: 2.418340223653045,
+        weightedWattsPerKg: 2.418340223653045
       },
       speedData: {
         avgPace: 160,
@@ -6510,8 +6510,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 16.1816225711009,
         totalAvgSpeed: 22.214837410963156,
         upperQuartileSpeed: 30.240000000000002,
-        varianceSpeed: 261.8449090335621,
-      },
+        varianceSpeed: 261.8449090335621
+      }
     },
     hasPowerMeter: false,
     id: 328739521,
@@ -6520,7 +6520,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-19T16:03:36+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -6531,9 +6531,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 412.80061186000006,
     commute: false,
@@ -6557,10 +6557,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 79.97402597402598,
           flat: 77.78834355828221,
-          up: 69.94392523364486,
+          up: 69.94392523364486
         },
         upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 6.467532467532468,
+        upperQuartileDistancePerOccurrence: 6.467532467532468
       },
       elevationData: {
         accumulatedElevationAscent: 201.05917534092222,
@@ -6571,7 +6571,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 215,
         medianElevation: 242,
-        upperQuartileElevation: 264,
+        upperQuartileElevation: 264
       },
       gradeData: {
         avgGrade: 0.1385986629113243,
@@ -6584,12 +6584,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 79.97402597402598,
           flat: 77.78834355828221,
-          up: 69.94392523364486,
+          up: 69.94392523364486
         },
         upFlatDownDistanceData: { down: 4.305199999999992, flat: 10.738200000000004, up: 4.910400000000004 },
         upFlatDownInSeconds: { down: 581, flat: 1448, total: 3104, up: 1075 },
         upFlatDownMoveData: { down: 26.675938037865706, flat: 26.697182320442, up: 16.44413023255815 },
-        upperQuartileGrade: 1.6,
+        upperQuartileGrade: 1.6
       },
       heartRateData: {
         HRSS: 32.874280641435774,
@@ -6604,7 +6604,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 126,
         maxHeartRate: 162,
         medianHeartRate: 136,
-        upperQuartileHeartRate: 145,
+        upperQuartileHeartRate: 145
       },
       moveRatio: 0.9324121357765095,
       paceData: {
@@ -6618,7 +6618,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 119.04761904761904,
-        variancePace: 39.021039158522456,
+        variancePace: 39.021039158522456
       },
       powerData: {
         avgWatts: 106.54305799648506,
@@ -6635,7 +6635,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 169,
         variabilityIndex: 1.3681008813546562,
         weightedPower: 145.76165154721147,
-        weightedWattsPerKg: 2.0823093078173067,
+        weightedWattsPerKg: 2.0823093078173067
       },
       speedData: {
         avgPace: 155,
@@ -6648,8 +6648,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 9.605098767424366,
         totalAvgSpeed: 21.595404025232803,
         upperQuartileSpeed: 30.240000000000002,
-        varianceSpeed: 92.25792233197706,
-      },
+        varianceSpeed: 92.25792233197706
+      }
     },
     hasPowerMeter: false,
     id: 329236603,
@@ -6658,7 +6658,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-20T09:14:40+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -6669,9 +6669,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 577.25843555,
     commute: false,
@@ -6695,10 +6695,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 74.53448275862068,
           flat: 77.65126050420169,
-          up: 67.13986013986013,
+          up: 67.13986013986013
         },
         upperQuartileCadence: 82,
-        upperQuartileDistancePerOccurrence: 7.035175879396984,
+        upperQuartileDistancePerOccurrence: 7.035175879396984
       },
       elevationData: {
         accumulatedElevationAscent: 82.21014057910708,
@@ -6709,7 +6709,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 217,
         medianElevation: 219,
-        upperQuartileElevation: 222,
+        upperQuartileElevation: 222
       },
       gradeData: {
         avgGrade: -0.05093019609892578,
@@ -6722,12 +6722,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 74.53448275862068,
           flat: 77.65126050420169,
-          up: 67.13986013986013,
+          up: 67.13986013986013
         },
         upFlatDownDistanceData: { down: 2.9335000000000107, flat: 24.90959999999999, up: 2.7740999999999967 },
         upFlatDownInSeconds: { down: 471, flat: 3353, total: 4455, up: 631 },
         upFlatDownMoveData: { down: 22.421656050955495, flat: 26.744575007456, up: 15.826877971473833 },
-        upperQuartileGrade: 0.5,
+        upperQuartileGrade: 0.5
       },
       heartRateData: {
         HRSS: 41.47681597786081,
@@ -6742,7 +6742,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 120,
         maxHeartRate: 186,
         medianHeartRate: 129,
-        upperQuartileHeartRate: 137,
+        upperQuartileHeartRate: 137
       },
       moveRatio: 0.886038186157518,
       paceData: {
@@ -6756,7 +6756,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 119.04761904761904,
-        variancePace: 49.45292803494266,
+        variancePace: 49.45292803494266
       },
       powerData: {
         avgWatts: 107.74040338321406,
@@ -6773,7 +6773,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 160,
         variabilityIndex: 1.5645360569917637,
         weightedPower: 168.5637458878758,
-        weightedWattsPerKg: 2.40805351268394,
+        weightedWattsPerKg: 2.40805351268394
       },
       speedData: {
         avgPace: 145,
@@ -6786,8 +6786,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 8.532086407751525,
         totalAvgSpeed: 21.91968973747017,
         upperQuartileSpeed: 30.240000000000002,
-        varianceSpeed: 72.7964984693383,
-      },
+        varianceSpeed: 72.7964984693383
+      }
     },
     hasPowerMeter: false,
     id: 329236648,
@@ -6796,7 +6796,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-20T12:09:43+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -6807,9 +6807,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 342.20952032,
     commute: false,
@@ -6832,7 +6832,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 2269.1,
         upFlatDownCadencePaceData: { down: 71.33333333333333, flat: 75.5871121718377, up: 64.64197530864197 },
         upperQuartileCadence: 82,
-        upperQuartileDistancePerOccurrence: 7.202380952380952,
+        upperQuartileDistancePerOccurrence: 7.202380952380952
       },
       elevationData: {
         accumulatedElevationAscent: 38.04901468927187,
@@ -6843,7 +6843,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 173,
         medianElevation: 175,
-        upperQuartileElevation: 176,
+        upperQuartileElevation: 176
       },
       gradeData: {
         avgGrade: 0.01864257914354327,
@@ -6857,7 +6857,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.3063000000000007, flat: 15.451300000000009, up: 1.459299999999992 },
         upFlatDownInSeconds: { down: 229, flat: 2015, total: 2548, up: 304 },
         upFlatDownMoveData: { down: 20.535720524017478, flat: 27.605300248138974, up: 17.28118421052622 },
-        upperQuartileGrade: 0.4,
+        upperQuartileGrade: 0.4
       },
       heartRateData: {
         HRSS: 27.92276222111132,
@@ -6872,7 +6872,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 127,
         maxHeartRate: 186,
         medianHeartRate: 135,
-        upperQuartileHeartRate: 142,
+        upperQuartileHeartRate: 142
       },
       moveRatio: 0.9895145631067961,
       paceData: {
@@ -6886,7 +6886,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 116.27906976744185,
-        variancePace: 85.46538134544119,
+        variancePace: 85.46538134544119
       },
       powerData: {
         avgWatts: 118.22921914357683,
@@ -6903,7 +6903,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 168,
         variabilityIndex: 1.479912029416428,
         weightedPower: 174.96884363909038,
-        weightedWattsPerKg: 2.499554909129863,
+        weightedWattsPerKg: 2.499554909129863
       },
       speedData: {
         avgPace: 139,
@@ -6916,8 +6916,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.490170902144145,
         totalAvgSpeed: 25.45689320388351,
         upperQuartileSpeed: 30.96,
-        varianceSpeed: 42.12231833903854,
-      },
+        varianceSpeed: 42.12231833903854
+      }
     },
     hasPowerMeter: false,
     id: 329349712,
@@ -6926,7 +6926,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-20T14:39:07+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -6937,9 +6937,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1289.355777925,
     commute: false,
@@ -6962,7 +6962,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 7410.575000000043,
         upFlatDownCadencePaceData: { down: 78.68595041322314, flat: 77.62047244094488, up: 72.144 },
         upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 6.409638554216954,
+        upperQuartileDistancePerOccurrence: 6.409638554216954
       },
       elevationData: {
         accumulatedElevationAscent: 873.0732525287331,
@@ -6973,7 +6973,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 172,
         medianElevation: 308,
-        upperQuartileElevation: 658,
+        upperQuartileElevation: 658
       },
       gradeData: {
         avgGrade: 0.010469794777916142,
@@ -6987,7 +6987,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 14.14529999999999, flat: 22.027300000000025, up: 15.722399999999983 },
         upFlatDownInSeconds: { down: 1499, flat: 2959, total: 8352, up: 3894 },
         upFlatDownMoveData: { down: 33.97136757838557, flat: 26.79901318012845, up: 14.53534668721108 },
-        upperQuartileGrade: 2.6,
+        upperQuartileGrade: 2.6
       },
       heartRateData: {
         HRSS: 105.51192415970138,
@@ -7002,7 +7002,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 121,
         maxHeartRate: 184,
         medianHeartRate: 139,
-        upperQuartileHeartRate: 155,
+        upperQuartileHeartRate: 155
       },
       moveRatio: 0.9595588235294118,
       paceData: {
@@ -7016,7 +7016,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 114.9425287356322,
-        variancePace: 13.39560460931358,
+        variancePace: 13.39560460931358
       },
       powerData: {
         avgWatts: 124.3683404776485,
@@ -7033,7 +7033,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 199,
         variabilityIndex: 1.4211214644474512,
         weightedPower: 176.74251815049507,
-        weightedWattsPerKg: 2.524893116435644,
+        weightedWattsPerKg: 2.524893116435644
       },
       speedData: {
         avgPace: 160,
@@ -7046,8 +7046,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 16.39343980252851,
         totalAvgSpeed: 21.45852711397045,
         upperQuartileSpeed: 31.319999999999997,
-        varianceSpeed: 268.74486855912596,
-      },
+        varianceSpeed: 268.74486855912596
+      }
     },
     hasPowerMeter: false,
     id: 330098749,
@@ -7056,7 +7056,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-21T13:43:51+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -7067,9 +7067,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 987.94664423,
     commute: false,
@@ -7093,10 +7093,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 84.01709401709402,
           flat: 85.52158273381295,
-          up: 72.34727503168568,
+          up: 72.34727503168568
         },
         upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.4574468085111025,
+        upperQuartileDistancePerOccurrence: 6.4574468085111025
       },
       elevationData: {
         accumulatedElevationAscent: 551.5688126564567,
@@ -7107,7 +7107,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 228,
         medianElevation: 236,
-        upperQuartileElevation: 469,
+        upperQuartileElevation: 469
       },
       gradeData: {
         avgGrade: 0.01452318494549402,
@@ -7120,12 +7120,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 84.01709401709402,
           flat: 85.52158273381295,
-          up: 72.34727503168568,
+          up: 72.34727503168568
         },
         upFlatDownDistanceData: { down: 8.991699999999986, flat: 19.6506, up: 9.55490000000001 },
         upFlatDownInSeconds: { down: 979, flat: 2340, total: 5704, up: 2385 },
         upFlatDownMoveData: { down: 33.06447395301323, flat: 30.23169230769231, up: 14.422490566037752 },
-        upperQuartileGrade: 1.7,
+        upperQuartileGrade: 1.7
       },
       heartRateData: {
         HRSS: 88.59516178166578,
@@ -7140,7 +7140,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 137,
         maxHeartRate: 185,
         medianHeartRate: 152,
-        upperQuartileHeartRate: 163,
+        upperQuartileHeartRate: 163
       },
       moveRatio: 0.9904497308560514,
       paceData: {
@@ -7154,7 +7154,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 103.09278350515463,
-        variancePace: 11.900881890316228,
+        variancePace: 11.900881890316228
       },
       powerData: {
         avgWatts: 142.17075471698112,
@@ -7171,7 +7171,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 217,
         variabilityIndex: 1.382206215028274,
         weightedPower: 196.5093007650716,
-        weightedWattsPerKg: 2.8072757252153084,
+        weightedWattsPerKg: 2.8072757252153084
       },
       speedData: {
         avgPace: 149,
@@ -7184,8 +7184,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 17.39248661657517,
         totalAvgSpeed: 23.9142142733113,
         upperQuartileSpeed: 34.92,
-        varianceSpeed: 302.4985907077464,
-      },
+        varianceSpeed: 302.4985907077464
+      }
     },
     hasPowerMeter: false,
     id: 330753578,
@@ -7194,7 +7194,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-22T16:08:30+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -7205,9 +7205,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1113.2518361,
     commute: false,
@@ -7230,7 +7230,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 6747.183333333336,
         upFlatDownCadencePaceData: { down: 79.3359375, flat: 81.92737430167598, up: 69.47738693467336 },
         upperQuartileCadence: 86,
-        upperQuartileDistancePerOccurrence: 6.468965517241581,
+        upperQuartileDistancePerOccurrence: 6.468965517241581
       },
       elevationData: {
         accumulatedElevationAscent: 566.9369998195085,
@@ -7241,7 +7241,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 150,
         medianElevation: 156,
-        upperQuartileElevation: 330,
+        upperQuartileElevation: 330
       },
       gradeData: {
         avgGrade: 0.02514712520333546,
@@ -7255,7 +7255,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 9.316000000000038, flat: 27.377799999999944, up: 10.273000000000016 },
         upFlatDownInSeconds: { down: 1192, flat: 3698, total: 7515, up: 2625 },
         upFlatDownMoveData: { down: 28.135570469798775, flat: 26.652266089778205, up: 14.088685714285736 },
-        upperQuartileGrade: 1.3,
+        upperQuartileGrade: 1.3
       },
       heartRateData: {
         HRSS: 104.7624332913033,
@@ -7270,7 +7270,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 130,
         maxHeartRate: 188,
         medianHeartRate: 143,
-        upperQuartileHeartRate: 158,
+        upperQuartileHeartRate: 158
       },
       moveRatio: 0.9982731137088204,
       paceData: {
@@ -7284,7 +7284,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 112.35955056179775,
-        variancePace: 13.322671247080786,
+        variancePace: 13.322671247080786
       },
       powerData: {
         avgWatts: 128.06474536123173,
@@ -7301,7 +7301,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 197,
         variabilityIndex: 1.432010443838965,
         weightedPower: 183.3900528448615,
-        weightedWattsPerKg: 2.6198578977837355,
+        weightedWattsPerKg: 2.6198578977837355
       },
       speedData: {
         avgPace: 158,
@@ -7314,8 +7314,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 16.43825051629318,
         totalAvgSpeed: 22.616086609989374,
         upperQuartileSpeed: 32.04,
-        varianceSpeed: 270.216080036413,
-      },
+        varianceSpeed: 270.216080036413
+      }
     },
     hasPowerMeter: false,
     id: 332833796,
@@ -7324,7 +7324,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-25T16:02:43+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -7335,9 +7335,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1494.60247475,
     commute: false,
@@ -7361,10 +7361,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 83.95833333333333,
           flat: 80.88992974238876,
-          up: 70.66547533952823,
+          up: 70.66547533952823
         },
         upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 6.389937106918376,
+        upperQuartileDistancePerOccurrence: 6.389937106918376
       },
       elevationData: {
         accumulatedElevationAscent: 938.3625369277086,
@@ -7375,7 +7375,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 165,
         medianElevation: 259,
-        upperQuartileElevation: 661,
+        upperQuartileElevation: 661
       },
       gradeData: {
         avgGrade: -0.00274665667285122,
@@ -7388,12 +7388,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 83.95833333333333,
           flat: 80.88992974238876,
-          up: 70.66547533952823,
+          up: 70.66547533952823
         },
         upFlatDownDistanceData: { down: 15.262699999999992, flat: 29.09180000000004, up: 16.483099999999972 },
         upFlatDownInSeconds: { down: 1664, flat: 3949, total: 9879, up: 4266 },
         upFlatDownMoveData: { down: 33.02026442307691, flat: 26.520759685996488, up: 13.909789029535842 },
-        upperQuartileGrade: 2.1,
+        upperQuartileGrade: 2.1
       },
       heartRateData: {
         HRSS: 137.56332529247098,
@@ -7408,7 +7408,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 129,
         maxHeartRate: 186,
         medianHeartRate: 144,
-        upperQuartileHeartRate: 160,
+        upperQuartileHeartRate: 160
       },
       moveRatio: 0.9758000790201501,
       paceData: {
@@ -7422,7 +7422,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 113.63636363636361,
-        variancePace: 12.4838447302349,
+        variancePace: 12.4838447302349
       },
       powerData: {
         avgWatts: 127.32946504387206,
@@ -7439,7 +7439,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 195,
         variabilityIndex: 1.4014469766086983,
         weightedPower: 178.44549381893745,
-        weightedWattsPerKg: 2.549221340270535,
+        weightedWattsPerKg: 2.549221340270535
       },
       speedData: {
         avgPace: 161,
@@ -7452,8 +7452,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 16.98153995077442,
         totalAvgSpeed: 21.70242789411295,
         upperQuartileSpeed: 31.680000000000003,
-        varianceSpeed: 288.3726990997477,
-      },
+        varianceSpeed: 288.3726990997477
+      }
     },
     hasPowerMeter: false,
     id: 333536909,
@@ -7462,7 +7462,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-26T15:49:37+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -7473,9 +7473,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 2579.5925608350003,
     commute: false,
@@ -7499,10 +7499,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 80.91911764705883,
           flat: 80.75182038834951,
-          up: 68.09712793733681,
+          up: 68.09712793733681
         },
         upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 6.431137724551094,
+        upperQuartileDistancePerOccurrence: 6.431137724551094
       },
       elevationData: {
         accumulatedElevationAscent: 1289.5784027030725,
@@ -7513,7 +7513,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 173,
         medianElevation: 239,
-        upperQuartileElevation: 501,
+        upperQuartileElevation: 501
       },
       gradeData: {
         avgGrade: 0.006923216544266111,
@@ -7526,12 +7526,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 80.91911764705883,
           flat: 80.75182038834951,
-          up: 68.09712793733681,
+          up: 68.09712793733681
         },
         upFlatDownDistanceData: { down: 26.29149999999997, flat: 51.61390000000004, up: 26.222500000000004 },
         upFlatDownInSeconds: { down: 2892, flat: 6663, total: 16694, up: 7139 },
         upFlatDownMoveData: { down: 32.72800829875515, flat: 27.88684376407026, up: 13.223280571508617 },
-        upperQuartileGrade: 1.7,
+        upperQuartileGrade: 1.7
       },
       heartRateData: {
         HRSS: 220.85378041526536,
@@ -7546,7 +7546,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 132,
         maxHeartRate: 181,
         medianHeartRate: 144,
-        upperQuartileHeartRate: 154,
+        upperQuartileHeartRate: 154
       },
       moveRatio: 0.9614144206404054,
       paceData: {
@@ -7560,7 +7560,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 114.9425287356322,
-        variancePace: 23.53916733395291,
+        variancePace: 23.53916733395291
       },
       powerData: {
         avgWatts: 134.60036143023106,
@@ -7577,7 +7577,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 186,
         variabilityIndex: 1.2090158838333658,
         weightedPower: 162.73397493886128,
-        weightedWattsPerKg: 2.324771070555161,
+        weightedWattsPerKg: 2.324771070555161
       },
       speedData: {
         avgPace: 159,
@@ -7590,8 +7590,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 12.366753442242144,
         totalAvgSpeed: 21.6740255701452,
         upperQuartileSpeed: 31.319999999999997,
-        varianceSpeed: 152.93659070120793,
-      },
+        varianceSpeed: 152.93659070120793
+      }
     },
     hasPowerMeter: false,
     id: 334111753,
@@ -7600,7 +7600,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-27T11:20:30+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -7611,9 +7611,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1180.9330285149997,
     commute: false,
@@ -7637,10 +7637,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 74.07096774193549,
           flat: 73.10089020771514,
-          up: 63.765294771968854,
+          up: 63.765294771968854
         },
         upperQuartileCadence: 77,
-        upperQuartileDistancePerOccurrence: 6.457142857142857,
+        upperQuartileDistancePerOccurrence: 6.457142857142857
       },
       elevationData: {
         accumulatedElevationAscent: 580.3701292554481,
@@ -7651,7 +7651,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 206,
         medianElevation: 211,
-        upperQuartileElevation: 305,
+        upperQuartileElevation: 305
       },
       gradeData: {
         avgGrade: 0.010951414269389396,
@@ -7664,12 +7664,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 74.07096774193549,
           flat: 73.10089020771514,
-          up: 63.765294771968854,
+          up: 63.765294771968854
         },
         upFlatDownDistanceData: { down: 9.935699999999986, flat: 34.115100000000005, up: 10.726600000000007 },
         upFlatDownInSeconds: { down: 1267, flat: 4761, total: 8932, up: 2904 },
         upFlatDownMoveData: { down: 28.230876085240688, flat: 25.795916824196603, up: 13.297438016528933 },
-        upperQuartileGrade: 1,
+        upperQuartileGrade: 1
       },
       heartRateData: {
         HRSS: 76.3508602550977,
@@ -7684,7 +7684,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 115,
         maxHeartRate: 165,
         medianHeartRate: 124,
-        upperQuartileHeartRate: 139,
+        upperQuartileHeartRate: 139
       },
       moveRatio: 0.9998880555244599,
       paceData: {
@@ -7698,7 +7698,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 125.00000000000001,
-        variancePace: 16.034706126826848,
+        variancePace: 16.034706126826848
       },
       powerData: {
         avgWatts: 113.79830795262268,
@@ -7715,7 +7715,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 166,
         variabilityIndex: 1.3771740071091219,
         weightedPower: 156.72007176535124,
-        weightedWattsPerKg: 2.238858168076446,
+        weightedWattsPerKg: 2.238858168076446
       },
       speedData: {
         avgPace: 162,
@@ -7728,8 +7728,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 14.983757921698894,
         totalAvgSpeed: 22.181146311429547,
         upperQuartileSpeed: 28.8,
-        varianceSpeed: 224.51300145607433,
-      },
+        varianceSpeed: 224.51300145607433
+      }
     },
     hasPowerMeter: false,
     id: 335068858,
@@ -7738,7 +7738,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-28T13:07:57+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -7749,9 +7749,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 871.78388148,
     commute: false,
@@ -7775,10 +7775,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 80.23134328358209,
           flat: 80.36607142857143,
-          up: 76.79918588873812,
+          up: 76.79918588873812
         },
         upperQuartileCadence: 86,
-        upperQuartileDistancePerOccurrence: 6.971428571428597,
+        upperQuartileDistancePerOccurrence: 6.971428571428597
       },
       elevationData: {
         accumulatedElevationAscent: 529.0279701243451,
@@ -7789,7 +7789,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 207,
         medianElevation: 216,
-        upperQuartileElevation: 475,
+        upperQuartileElevation: 475
       },
       gradeData: {
         avgGrade: -0.005151749895438115,
@@ -7802,12 +7802,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 80.23134328358209,
           flat: 80.36607142857143,
-          up: 76.79918588873812,
+          up: 76.79918588873812
         },
         upFlatDownDistanceData: { down: 9.08410000000001, flat: 15.368699999999986, up: 9.497800000000007 },
         upFlatDownInSeconds: { down: 897, flat: 1837, total: 4967, up: 2233 },
         upFlatDownMoveData: { down: 36.45792642140472, flat: 30.118301578660837, up: 15.31217196596508 },
-        upperQuartileGrade: 2.2,
+        upperQuartileGrade: 2.2
       },
       heartRateData: {
         HRSS: 74.23768413215659,
@@ -7822,7 +7822,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 131,
         maxHeartRate: 183,
         medianHeartRate: 146,
-        upperQuartileHeartRate: 164,
+        upperQuartileHeartRate: 164
       },
       moveRatio: 0.9997987117552335,
       paceData: {
@@ -7836,7 +7836,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 105.26315789473684,
-        variancePace: 12.390568071874329,
+        variancePace: 12.390568071874329
       },
       powerData: {
         avgWatts: 145.91302027748134,
@@ -7853,7 +7853,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 226,
         variabilityIndex: 1.4060613017929318,
         weightedPower: 205.16265123989385,
-        weightedWattsPerKg: 2.930895017712769,
+        weightedWattsPerKg: 2.930895017712769
       },
       speedData: {
         avgPace: 145,
@@ -7866,8 +7866,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 17.04533893851898,
         totalAvgSpeed: 24.725181159420313,
         upperQuartileSpeed: 34.2,
-        varianceSpeed: 290.54357952899136,
-      },
+        varianceSpeed: 290.54357952899136
+      }
     },
     hasPowerMeter: false,
     id: 335573787,
@@ -7876,7 +7876,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-29T16:29:35+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -7887,9 +7887,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1090.84674735,
     commute: false,
@@ -7913,10 +7913,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.65873015873017,
           flat: 84.73621323529412,
-          up: 68.45679012345678,
+          up: 68.45679012345678
         },
         upperQuartileCadence: 90,
-        upperQuartileDistancePerOccurrence: 7.327272727272595,
+        upperQuartileDistancePerOccurrence: 7.327272727272595
       },
       elevationData: {
         accumulatedElevationAscent: 116.6257397970816,
@@ -7927,7 +7927,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 199,
         medianElevation: 206,
-        upperQuartileElevation: 210,
+        upperQuartileElevation: 210
       },
       gradeData: {
         avgGrade: -0.03505750893984182,
@@ -7940,12 +7940,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.65873015873017,
           flat: 84.73621323529412,
-          up: 68.45679012345678,
+          up: 68.45679012345678
         },
         upFlatDownDistanceData: { down: 2.853999999999984, flat: 41.9606, up: 2.4737000000000124 },
         upFlatDownInSeconds: { down: 493, flat: 4546, total: 5417, up: 378 },
         upFlatDownMoveData: { down: 20.840567951318345, flat: 33.22880774307083, up: 23.55904761904774 },
-        upperQuartileGrade: 0.4,
+        upperQuartileGrade: 0.4
       },
       heartRateData: {
         HRSS: 83.11802326269033,
@@ -7960,7 +7960,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 142,
         maxHeartRate: 176,
         medianHeartRate: 152,
-        upperQuartileHeartRate: 160,
+        upperQuartileHeartRate: 160
       },
       moveRatio: 1,
       paceData: {
@@ -7974,7 +7974,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 98.03921568627452,
-        variancePace: 79.32612128513105,
+        variancePace: 79.32612128513105
       },
       powerData: {
         avgWatts: 170.01427684667908,
@@ -7991,7 +7991,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 251,
         variabilityIndex: 1.1977298559749117,
         weightedPower: 203.6311753212517,
-        weightedWattsPerKg: 2.9090167903035957,
+        weightedWattsPerKg: 2.9090167903035957
       },
       speedData: {
         avgPace: 114,
@@ -8004,8 +8004,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.736636911714466,
         totalAvgSpeed: 31.48670851024555,
         upperQuartileSpeed: 36.72,
-        varianceSpeed: 45.38227688027382,
-      },
+        varianceSpeed: 45.38227688027382
+      }
     },
     hasPowerMeter: false,
     id: 336354220,
@@ -8014,7 +8014,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-06-30T17:38:55+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -8025,9 +8025,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1423.0161185999998,
     commute: false,
@@ -8051,10 +8051,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 80.47852760736197,
           flat: 77.86184210526316,
-          up: 66.97200287150037,
+          up: 66.97200287150037
         },
         upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.549019607843155,
+        upperQuartileDistancePerOccurrence: 6.549019607843155
       },
       elevationData: {
         accumulatedElevationAscent: 894.6517100050983,
@@ -8065,7 +8065,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 168,
         medianElevation: 229,
-        upperQuartileElevation: 598,
+        upperQuartileElevation: 598
       },
       gradeData: {
         avgGrade: -0.011954375349883141,
@@ -8078,12 +8078,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 80.47852760736197,
           flat: 77.86184210526316,
-          up: 66.97200287150037,
+          up: 66.97200287150037
         },
         upFlatDownDistanceData: { down: 15.806199999999972, flat: 22.185500000000037, up: 14.16869999999999 },
         upFlatDownInSeconds: { down: 1699, flat: 2671, total: 8697, up: 4327 },
         upFlatDownMoveData: { down: 33.49165391406704, flat: 29.901834518906828, up: 11.788148832909629 },
-        upperQuartileGrade: 2.7,
+        upperQuartileGrade: 2.7
       },
       heartRateData: {
         HRSS: 124.36201822031747,
@@ -8098,7 +8098,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 129,
         maxHeartRate: 176,
         medianHeartRate: 150,
-        upperQuartileHeartRate: 162,
+        upperQuartileHeartRate: 162
       },
       moveRatio: 0.9766423357664233,
       paceData: {
@@ -8112,7 +8112,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 111.11111111111111,
-        variancePace: 10.039576447152811,
+        variancePace: 10.039576447152811
       },
       powerData: {
         avgWatts: 131.9549322407816,
@@ -8129,7 +8129,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 205,
         variabilityIndex: 1.3675171052887585,
         weightedPower: 180.45062696648793,
-        weightedWattsPerKg: 2.5778660995212563,
+        weightedWattsPerKg: 2.5778660995212563
       },
       speedData: {
         avgPace: 165,
@@ -8142,8 +8142,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 18.936231524177526,
         totalAvgSpeed: 21.221605839416085,
         upperQuartileSpeed: 32.4,
-        varianceSpeed: 358.58086433725475,
-      },
+        varianceSpeed: 358.58086433725475
+      }
     },
     hasPowerMeter: false,
     id: 337740078,
@@ -8152,7 +8152,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-02T16:18:52+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -8163,9 +8163,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1265.7555195599998,
     commute: false,
@@ -8189,10 +8189,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 72.48818897637796,
           flat: 78.59398496240601,
-          up: 67.43650793650794,
+          up: 67.43650793650794
         },
         upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 7.361445783132354,
+        upperQuartileDistancePerOccurrence: 7.361445783132354
       },
       elevationData: {
         accumulatedElevationAscent: 135.9840098603672,
@@ -8203,7 +8203,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 179,
         medianElevation: 188,
-        upperQuartileElevation: 191,
+        upperQuartileElevation: 191
       },
       gradeData: {
         avgGrade: -0.026593645528064157,
@@ -8216,12 +8216,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 72.48818897637796,
           flat: 78.59398496240601,
-          up: 67.43650793650794,
+          up: 67.43650793650794
         },
         upFlatDownDistanceData: { down: 3.3355000000000037, flat: 51.51810000000002, up: 3.3258999999999794 },
         upFlatDownInSeconds: { down: 522, flat: 5936, total: 7030, up: 572 },
         upFlatDownMoveData: { down: 23.003448275862095, flat: 31.244130727762816, up: 20.932237762237634 },
-        upperQuartileGrade: 0.4,
+        upperQuartileGrade: 0.4
       },
       heartRateData: {
         HRSS: 100.87519335775855,
@@ -8236,7 +8236,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 141,
         maxHeartRate: 187,
         medianHeartRate: 148,
-        upperQuartileHeartRate: 155,
+        upperQuartileHeartRate: 155
       },
       moveRatio: 1,
       paceData: {
@@ -8250,7 +8250,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 101.01010101010101,
-        variancePace: 77.03756647204757,
+        variancePace: 77.03756647204757
       },
       powerData: {
         avgWatts: 156.8721618953603,
@@ -8267,7 +8267,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 227,
         variabilityIndex: 1.2795612433096724,
         weightedPower: 200.72753851550345,
-        weightedWattsPerKg: 2.867536264507192,
+        weightedWattsPerKg: 2.867536264507192
       },
       speedData: {
         avgPace: 120,
@@ -8280,8 +8280,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.835967237852599,
         totalAvgSpeed: 29.868887624466513,
         upperQuartileSpeed: 35.64,
-        varianceSpeed: 46.730448076994094,
-      },
+        varianceSpeed: 46.730448076994094
+      }
     },
     hasPowerMeter: false,
     id: 340466401,
@@ -8290,7 +8290,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-06T16:37:17+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -8301,9 +8301,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 723.377179665,
     commute: false,
@@ -8327,10 +8327,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.86666666666666,
           flat: 75.16706443914082,
-          up: 68.10854816824965,
+          up: 68.10854816824965
         },
         upperQuartileCadence: 78,
-        upperQuartileDistancePerOccurrence: 6.425806451612926,
+        upperQuartileDistancePerOccurrence: 6.425806451612926
       },
       elevationData: {
         accumulatedElevationAscent: 491.26532007029084,
@@ -8341,7 +8341,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 218,
         medianElevation: 270,
-        upperQuartileElevation: 511,
+        upperQuartileElevation: 511
       },
       gradeData: {
         avgGrade: -0.015090406899328864,
@@ -8354,12 +8354,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.86666666666666,
           flat: 75.16706443914082,
-          up: 68.10854816824965,
+          up: 68.10854816824965
         },
         upFlatDownDistanceData: { down: 7.807500000000002, flat: 13.146099999999988, up: 8.33620000000001 },
         upFlatDownInSeconds: { down: 753, flat: 1727, total: 4758, up: 2278 },
         upFlatDownMoveData: { down: 37.326693227091646, flat: 27.403566878980868, up: 13.173977172958752 },
-        upperQuartileGrade: 2.5,
+        upperQuartileGrade: 2.5
       },
       heartRateData: {
         HRSS: 57.6181240333125,
@@ -8374,7 +8374,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 124,
         maxHeartRate: 169,
         medianHeartRate: 136,
-        upperQuartileHeartRate: 156,
+        upperQuartileHeartRate: 156
       },
       moveRatio: 0.9995798319327731,
       paceData: {
@@ -8388,7 +8388,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 121.95121951219514,
-        variancePace: 11.13536669657245,
+        variancePace: 11.13536669657245
       },
       powerData: {
         avgWatts: 126.63423010875788,
@@ -8405,7 +8405,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 190,
         variabilityIndex: 1.3590788252601393,
         weightedPower: 172.10590069393282,
-        weightedWattsPerKg: 2.4586557241990405,
+        weightedWattsPerKg: 2.4586557241990405
       },
       speedData: {
         avgPace: 162,
@@ -8418,8 +8418,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 17.980385084500497,
         totalAvgSpeed: 22.208256302521036,
         upperQuartileSpeed: 29.52,
-        varianceSpeed: 323.294247786928,
-      },
+        varianceSpeed: 323.294247786928
+      }
     },
     hasPowerMeter: false,
     id: 341057035,
@@ -8428,7 +8428,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-07T16:15:08+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -8439,9 +8439,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 303.20390125,
     commute: false,
@@ -8464,7 +8464,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 3053.4583333333335,
         upFlatDownCadencePaceData: { down: 79.1025641025641, flat: 75.49632352941177, up: 68.71612903225807 },
         upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 6.738461538460867,
+        upperQuartileDistancePerOccurrence: 6.738461538460867
       },
       elevationData: {
         accumulatedElevationAscent: 99.29358000177925,
@@ -8475,7 +8475,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 176,
         medianElevation: 186,
-        upperQuartileElevation: 197,
+        upperQuartileElevation: 197
       },
       gradeData: {
         avgGrade: -0.1589577886692028,
@@ -8489,7 +8489,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 2.7858000000000005, flat: 9.514100000000001, up: 2.6557999999999993 },
         upFlatDownInSeconds: { down: 506, flat: 1828, total: 2800, up: 466 },
         upFlatDownMoveData: { down: 19.819920948616605, flat: 18.736739606126918, up: 20.51690987124463 },
-        upperQuartileGrade: 0.8,
+        upperQuartileGrade: 0.8
       },
       heartRateData: null,
       moveRatio: 0.22956464704435517,
@@ -8504,7 +8504,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 120.48192771084338,
-        variancePace: 16.96972314369573,
+        variancePace: 16.96972314369573
       },
       powerData: {
         avgWatts: 121.73249299719888,
@@ -8521,7 +8521,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 0,
         variabilityIndex: 1.4253308082766238,
         weightedPower: 173.50907263722593,
-        weightedWattsPerKg: 2.478701037674656,
+        weightedWattsPerKg: 2.478701037674656
       },
       speedData: {
         avgPace: 158,
@@ -8534,8 +8534,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 14.565113454243743,
         totalAvgSpeed: 5.204637205870301,
         upperQuartileSpeed: 29.880000000000003,
-        varianceSpeed: 212.14252993499213,
-      },
+        varianceSpeed: 212.14252993499213
+      }
     },
     hasPowerMeter: false,
     id: 342901792,
@@ -8544,7 +8544,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-08T16:23:02+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -8555,9 +8555,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 3846.37527972,
     commute: false,
@@ -8581,10 +8581,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 88.01719901719902,
           flat: 84.98692287163064,
-          up: 72.17060956656881,
+          up: 72.17060956656881
         },
         upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.502994011972911,
+        upperQuartileDistancePerOccurrence: 6.502994011972911
       },
       elevationData: {
         accumulatedElevationAscent: 1855.333327969558,
@@ -8595,7 +8595,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 318,
         medianElevation: 455,
-        upperQuartileElevation: 727,
+        upperQuartileElevation: 727
       },
       gradeData: {
         avgGrade: 0.014636373504306013,
@@ -8608,12 +8608,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 88.01719901719902,
           flat: 84.98692287163064,
-          up: 72.17060956656881,
+          up: 72.17060956656881
         },
         upFlatDownDistanceData: { down: 40.96589999999991, flat: 58.9553000000001, up: 41.9524 },
         upFlatDownInSeconds: { down: 3895, flat: 6761, total: 19926, up: 9270 },
         upFlatDownMoveData: { down: 37.863219512195045, flat: 31.391669871320865, up: 16.29219417475728 },
-        upperQuartileGrade: 2.2,
+        upperQuartileGrade: 2.2
       },
       heartRateData: {
         HRSS: 291.63420331663457,
@@ -8628,7 +8628,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 142,
         maxHeartRate: 174,
         medianHeartRate: 151,
-        upperQuartileHeartRate: 157,
+        upperQuartileHeartRate: 157
       },
       moveRatio: 0.9043707166522943,
       paceData: {
@@ -8642,7 +8642,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 105.26315789473684,
-        variancePace: 17.040162103832152,
+        variancePace: 17.040162103832152
       },
       powerData: {
         avgWatts: 152.9779960408101,
@@ -8659,7 +8659,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 231,
         variabilityIndex: 1.1866990081214266,
         weightedPower: 181.53883616603287,
-        weightedWattsPerKg: 2.593411945229041,
+        weightedWattsPerKg: 2.593411945229041
       },
       speedData: {
         avgPace: 140,
@@ -8672,8 +8672,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 14.534978356899025,
         totalAvgSpeed: 23.220122543457236,
         upperQuartileSpeed: 34.2,
-        varianceSpeed: 211.26559583552307,
-      },
+        varianceSpeed: 211.26559583552307
+      }
     },
     hasPowerMeter: false,
     id: 343080886,
@@ -8682,7 +8682,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-10T08:58:32+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -8693,9 +8693,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 797.6640056049998,
     commute: false,
@@ -8719,10 +8719,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.51685393258427,
           flat: 75.81885593220339,
-          up: 61.96153846153846,
+          up: 61.96153846153846
         },
         upperQuartileCadence: 81,
-        upperQuartileDistancePerOccurrence: 7.228389444950034,
+        upperQuartileDistancePerOccurrence: 7.228389444950034
       },
       elevationData: {
         accumulatedElevationAscent: 139.90727778999124,
@@ -8733,7 +8733,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 210,
         medianElevation: 211,
-        upperQuartileElevation: 212,
+        upperQuartileElevation: 212
       },
       gradeData: {
         avgGrade: -0.029050248249396445,
@@ -8746,12 +8746,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.51685393258427,
           flat: 75.81885593220339,
-          up: 61.96153846153846,
+          up: 61.96153846153846
         },
         upFlatDownDistanceData: { down: 3.0220000000000042, flat: 34.54830000000001, up: 2.8728999999999916 },
         upFlatDownInSeconds: { down: 664, flat: 4481, total: 5965, up: 820 },
         upFlatDownMoveData: { down: 16.384337349397615, flat: 27.755831287659014, up: 12.612731707317037 },
-        upperQuartileGrade: 0.4,
+        upperQuartileGrade: 0.4
       },
       heartRateData: {
         HRSS: 47.40129524219583,
@@ -8766,7 +8766,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 112,
         maxHeartRate: 175,
         medianHeartRate: 122,
-        upperQuartileHeartRate: 128,
+        upperQuartileHeartRate: 128
       },
       moveRatio: 0.9991624790619765,
       paceData: {
@@ -8780,7 +8780,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 117.64705882352942,
-        variancePace: 32.68526876390302,
+        variancePace: 32.68526876390302
       },
       powerData: {
         avgWatts: 122.38594401429422,
@@ -8797,7 +8797,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 174,
         variabilityIndex: 1.3791268560869105,
         weightedPower: 168.78574219766224,
-        weightedWattsPerKg: 2.411224888538032,
+        weightedWattsPerKg: 2.411224888538032
       },
       speedData: {
         avgPace: 145,
@@ -8810,8 +8810,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 10.494825459193349,
         totalAvgSpeed: 24.73046231155781,
         upperQuartileSpeed: 30.6,
-        varianceSpeed: 110.14136141893289,
-      },
+        varianceSpeed: 110.14136141893289
+      }
     },
     hasPowerMeter: false,
     id: 344445749,
@@ -8820,7 +8820,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-11T15:36:20+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -8831,9 +8831,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 811.238814837,
     commute: false,
@@ -8852,7 +8852,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 173,
         medianElevation: 221,
-        upperQuartileElevation: 434,
+        upperQuartileElevation: 434
       },
       gradeData: {
         avgGrade: -0.06027446450694094,
@@ -8866,7 +8866,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 8.8651, flat: 15.75850000000001, up: 8.794199999999986 },
         upFlatDownInSeconds: { down: 1965, flat: 3279, total: 9711, up: 4467 },
         upFlatDownMoveData: { down: 16.241404580152672, flat: 17.301189387008247, up: 7.087333781061104 },
-        upperQuartileGrade: 1.9,
+        upperQuartileGrade: 1.9
       },
       heartRateData: null,
       moveRatio: 0.7955271565495208,
@@ -8881,7 +8881,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 181.8181818181818,
-        variancePace: 32.23325095208057,
+        variancePace: 32.23325095208057
       },
       powerData: {
         avgWatts: 67.93152972611891,
@@ -8898,7 +8898,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 110,
         variabilityIndex: 1.5443345325766256,
         weightedPower: 104.909007206801,
-        weightedWattsPerKg: 1.4987001029543,
+        weightedWattsPerKg: 1.4987001029543
       },
       speedData: {
         avgPace: 289,
@@ -8911,8 +8911,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 10.568155519803492,
         totalAvgSpeed: 9.906414352420724,
         upperQuartileSpeed: 19.8,
-        varianceSpeed: 111.685911090753,
-      },
+        varianceSpeed: 111.685911090753
+      }
     },
     hasPowerMeter: false,
     id: 344445817,
@@ -8921,7 +8921,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-12T09:17:59+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -8932,9 +8932,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 462.91715241,
     commute: false,
@@ -8953,7 +8953,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 183,
         medianElevation: 185,
-        upperQuartileElevation: 191,
+        upperQuartileElevation: 191
       },
       gradeData: {
         avgGrade: 0.020854926712419525,
@@ -8967,7 +8967,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 2.8253000000000057, flat: 20.356199999999987, up: 3.119000000000011 },
         upFlatDownInSeconds: { down: 463, flat: 2945, total: 4082, up: 674 },
         upFlatDownMoveData: { down: 21.967775377969804, flat: 24.8836400679117, up: 16.65934718100896 },
-        upperQuartileGrade: 0.8,
+        upperQuartileGrade: 0.8
       },
       heartRateData: null,
       moveRatio: 0.34201927105152913,
@@ -8982,7 +8982,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 125.00000000000001,
-        variancePace: 64.17275012912302,
+        variancePace: 64.17275012912302
       },
       powerData: {
         avgWatts: 103.24456048738033,
@@ -8999,7 +8999,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 27,
         variabilityIndex: 1.2681814035968508,
         weightedPower: 130.93283163262595,
-        weightedWattsPerKg: 1.8704690233232277,
+        weightedWattsPerKg: 1.8704690233232277
       },
       speedData: {
         avgPace: 154,
@@ -9012,8 +9012,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 7.48989836743031,
         totalAvgSpeed: 7.94990699622958,
         upperQuartileSpeed: 28.8,
-        varianceSpeed: 56.098577554435224,
-      },
+        varianceSpeed: 56.098577554435224
+      }
     },
     hasPowerMeter: false,
     id: 345256833,
@@ -9022,7 +9022,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-12T14:08:29+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -9033,9 +9033,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 544.447407262,
     commute: false,
@@ -9054,7 +9054,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 1114,
         medianElevation: 1297,
-        upperQuartileElevation: 1409,
+        upperQuartileElevation: 1409
       },
       gradeData: {
         avgGrade: -1.1435094918504272,
@@ -9068,7 +9068,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 6.409599999999998, flat: 1.4679000000000104, up: 5.15999999999999 },
         upFlatDownInSeconds: { down: 2275, flat: 734, total: 8859, up: 5850 },
         upFlatDownMoveData: { down: 10.142663736263735, flat: 7.199509536784792, up: 3.1753846153846093 },
-        upperQuartileGrade: 7.7,
+        upperQuartileGrade: 7.7
       },
       heartRateData: {
         HRSS: 95.74458984712652,
@@ -9083,7 +9083,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 126,
         maxHeartRate: 171,
         medianHeartRate: 137,
-        upperQuartileHeartRate: 146,
+        upperQuartileHeartRate: 146
       },
       moveRatio: 0.5658894921750239,
       paceData: {
@@ -9097,7 +9097,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 555.5555555555555,
-        variancePace: 42.59570565058748,
+        variancePace: 42.59570565058748
       },
       powerData: {
         avgWatts: 33.68612224448898,
@@ -9114,7 +9114,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 29,
         variabilityIndex: 2.456195813348462,
         weightedPower: 82.73971242485833,
-        weightedWattsPerKg: 1.1819958917836904,
+        weightedWattsPerKg: 1.1819958917836904
       },
       speedData: {
         avgPace: 678,
@@ -9127,8 +9127,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 9.193234575309326,
         totalAvgSpeed: 3.0023264132864935,
         upperQuartileSpeed: 6.48,
-        varianceSpeed: 84.51556195666285,
-      },
+        varianceSpeed: 84.51556195666285
+      }
     },
     hasPowerMeter: false,
     id: 345256865,
@@ -9137,7 +9137,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-13T09:21:49+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -9148,9 +9148,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 503.73786726899993,
     commute: false,
@@ -9169,7 +9169,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 179,
         medianElevation: 194,
-        upperQuartileElevation: 221,
+        upperQuartileElevation: 221
       },
       gradeData: {
         avgGrade: 0.061114482398618455,
@@ -9183,7 +9183,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 2.7678999999999996, flat: 25.522699999999997, up: 2.360400000000001 },
         upFlatDownInSeconds: { down: 624, flat: 4704, total: 6378, up: 1050 },
         upFlatDownMoveData: { down: 15.968653846153844, flat: 19.53267857142857, up: 8.092800000000004 },
-        upperQuartileGrade: 0.6,
+        upperQuartileGrade: 0.6
       },
       heartRateData: null,
       moveRatio: 0.43661007667031765,
@@ -9198,7 +9198,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 138.88888888888889,
-        variancePace: 23.124831306328776,
+        variancePace: 23.124831306328776
       },
       powerData: {
         avgWatts: 88.70224719101124,
@@ -9215,7 +9215,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 22,
         variabilityIndex: 1.3768125257010206,
         weightedPower: 122.12636499041244,
-        weightedWattsPerKg: 1.7446623570058921,
+        weightedWattsPerKg: 1.7446623570058921
       },
       speedData: {
         avgPace: 200,
@@ -9228,8 +9228,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 12.477051387104508,
         totalAvgSpeed: 7.854656352683464,
         upperQuartileSpeed: 25.92,
-        varianceSpeed: 155.6768113164465,
-      },
+        varianceSpeed: 155.6768113164465
+      }
     },
     hasPowerMeter: false,
     id: 346420018,
@@ -9238,7 +9238,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-14T10:45:08+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -9249,9 +9249,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 818.932846915,
     commute: false,
@@ -9274,7 +9274,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 5077.983333333337,
         upFlatDownCadencePaceData: { down: 74.5625, flat: 79.48982035928144, up: 72.02631578947368 },
         upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 7.179220779221006,
+        upperQuartileDistancePerOccurrence: 7.179220779221006
       },
       elevationData: {
         accumulatedElevationAscent: 144.65841185028575,
@@ -9285,7 +9285,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 212,
         medianElevation: 220,
-        upperQuartileElevation: 224,
+        upperQuartileElevation: 224
       },
       gradeData: {
         avgGrade: 0.006239702533806253,
@@ -9299,7 +9299,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 3.1630999999999947, flat: 31.645299999999995, up: 3.004300000000015 },
         upFlatDownInSeconds: { down: 528, flat: 3817, total: 4859, up: 514 },
         upFlatDownMoveData: { down: 21.566590909090877, flat: 29.84623526329578, up: 21.04178988326859 },
-        upperQuartileGrade: 0.6,
+        upperQuartileGrade: 0.6
       },
       heartRateData: null,
       moveRatio: 0.9402089783281734,
@@ -9314,7 +9314,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 111.11111111111111,
-        variancePace: 47.4111636914549,
+        variancePace: 47.4111636914549
       },
       powerData: {
         avgWatts: 147.0102414045355,
@@ -9331,7 +9331,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 205,
         variabilityIndex: 1.3749367165955926,
         weightedPower: 202.12977862267746,
-        weightedWattsPerKg: 2.8875682660382496,
+        weightedWattsPerKg: 2.8875682660382496
       },
       speedData: {
         avgPace: 128,
@@ -9344,8 +9344,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 8.713867318015,
         totalAvgSpeed: 26.38431501547988,
         upperQuartileSpeed: 32.4,
-        varianceSpeed: 75.93148363596993,
-      },
+        varianceSpeed: 75.93148363596993
+      }
     },
     hasPowerMeter: false,
     id: 346420035,
@@ -9354,7 +9354,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-14T15:31:11+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -9365,9 +9365,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 2909.6918420399998,
     commute: false,
@@ -9391,10 +9391,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 87.22222222222223,
           flat: 83.22787996127784,
-          up: 79.36862003780719,
+          up: 79.36862003780719
         },
         upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.508474576272667,
+        upperQuartileDistancePerOccurrence: 6.508474576272667
       },
       elevationData: {
         accumulatedElevationAscent: 739.5922022998657,
@@ -9405,7 +9405,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 212,
         medianElevation: 231,
-        upperQuartileElevation: 397,
+        upperQuartileElevation: 397
       },
       gradeData: {
         avgGrade: -0.0024631025453172076,
@@ -9418,12 +9418,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 87.22222222222223,
           flat: 83.22787996127784,
-          up: 79.36862003780719,
+          up: 79.36862003780719
         },
         upFlatDownDistanceData: { down: 20.99029999999998, flat: 81.09100000000011, up: 21.687399999999915 },
         upFlatDownInSeconds: { down: 2153, flat: 9728, total: 15522, up: 3641 },
         upFlatDownMoveData: { down: 35.097575476079854, flat: 30.009004934210566, up: 21.443185937929055 },
-        upperQuartileGrade: 1,
+        upperQuartileGrade: 1
       },
       heartRateData: {
         HRSS: 167.2471533955149,
@@ -9438,7 +9438,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 131,
         maxHeartRate: 163,
         medianHeartRate: 137,
-        upperQuartileHeartRate: 142,
+        upperQuartileHeartRate: 142
       },
       moveRatio: 0.9486615328199487,
       paceData: {
@@ -9452,7 +9452,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 107.5268817204301,
-        variancePace: 31.07834203713784,
+        variancePace: 31.07834203713784
       },
       powerData: {
         avgWatts: 150.32240549124066,
@@ -9469,7 +9469,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 226,
         variabilityIndex: 1.1403528208325528,
         weightedPower: 171.4205791362711,
-        weightedWattsPerKg: 2.448865416232444,
+        weightedWattsPerKg: 2.448865416232444
       },
       speedData: {
         avgPace: 125,
@@ -9482,8 +9482,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 10.762727122725726,
         totalAvgSpeed: 27.256622662266125,
         upperQuartileSpeed: 33.480000000000004,
-        varianceSpeed: 115.83629511825598,
-      },
+        varianceSpeed: 115.83629511825598
+      }
     },
     hasPowerMeter: false,
     id: 346535547,
@@ -9492,7 +9492,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-15T08:27:00+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -9503,9 +9503,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1941.264781405,
     commute: false,
@@ -9528,7 +9528,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 11485.45,
         upFlatDownCadencePaceData: { down: 78.92207792207792, flat: 78.2621359223301, up: 63.48512045347189 },
         upperQuartileCadence: 78,
-        upperQuartileDistancePerOccurrence: 6.399999999998873,
+        upperQuartileDistancePerOccurrence: 6.399999999998873
       },
       elevationData: {
         accumulatedElevationAscent: 1238.5568779406383,
@@ -9539,7 +9539,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 236,
         medianElevation: 261,
-        upperQuartileElevation: 554,
+        upperQuartileElevation: 554
       },
       gradeData: {
         avgGrade: 0.01703732020834097,
@@ -9553,7 +9553,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 22.859699999999993, flat: 27.28669999999999, up: 23.098100000000013 },
         upFlatDownInSeconds: { down: 2936, flat: 3712, total: 13674, up: 7026 },
         upFlatDownMoveData: { down: 28.029604904632144, flat: 26.463394396551713, up: 11.83506404782238 },
-        upperQuartileGrade: 3.4,
+        upperQuartileGrade: 3.4
       },
       heartRateData: {
         HRSS: 146.5582064269863,
@@ -9568,7 +9568,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 115,
         maxHeartRate: 175,
         medianHeartRate: 140,
-        upperQuartileHeartRate: 150,
+        upperQuartileHeartRate: 150
       },
       moveRatio: 0.9496492812000833,
       paceData: {
@@ -9582,7 +9582,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 123.45679012345678,
-        variancePace: 8.988821954099935,
+        variancePace: 8.988821954099935
       },
       powerData: {
         avgWatts: 119.27793326157158,
@@ -9599,7 +9599,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 182,
         variabilityIndex: 1.4353159702459026,
         weightedPower: 171.20152250825862,
-        weightedWattsPerKg: 2.445736035832266,
+        weightedWattsPerKg: 2.445736035832266
       },
       speedData: {
         avgPace: 184,
@@ -9612,8 +9612,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 20.012431632312413,
         totalAvgSpeed: 18.51397319258281,
         upperQuartileSpeed: 29.16,
-        varianceSpeed: 400.49741983797855,
-      },
+        varianceSpeed: 400.49741983797855
+      }
     },
     hasPowerMeter: false,
     id: 348186050,
@@ -9622,7 +9622,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-17T12:35:01+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -9633,9 +9633,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1124.0665779,
     commute: false,
@@ -9659,10 +9659,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 78.26271186440678,
           flat: 78.21627647714604,
-          up: 60.246469833119384,
+          up: 60.246469833119384
         },
         upperQuartileCadence: 81,
-        upperQuartileDistancePerOccurrence: 6.525547445255447,
+        upperQuartileDistancePerOccurrence: 6.525547445255447
       },
       elevationData: {
         accumulatedElevationAscent: 496.41691354589767,
@@ -9673,7 +9673,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 212,
         medianElevation: 216,
-        upperQuartileElevation: 227,
+        upperQuartileElevation: 227
       },
       gradeData: {
         avgGrade: 0.009492761899928391,
@@ -9686,12 +9686,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 78.26271186440678,
           flat: 78.21627647714604,
-          up: 60.246469833119384,
+          up: 60.246469833119384
         },
         upFlatDownDistanceData: { down: 8.788000000000004, flat: 29.006099999999975, up: 9.483500000000015 },
         upFlatDownInSeconds: { down: 1382, flat: 3893, total: 8193, up: 2918 },
         upFlatDownMoveData: { down: 22.892040520984093, flat: 26.823005394297436, up: 11.700000000000017 },
-        upperQuartileGrade: 1.1,
+        upperQuartileGrade: 1.1
       },
       heartRateData: {
         HRSS: 60.67247131765977,
@@ -9706,7 +9706,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 108,
         maxHeartRate: 175,
         medianHeartRate: 122,
-        upperQuartileHeartRate: 131,
+        upperQuartileHeartRate: 131
       },
       moveRatio: 0.8192180781921807,
       paceData: {
@@ -9720,7 +9720,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 117.64705882352942,
-        variancePace: 10.893557510457759,
+        variancePace: 10.893557510457759
       },
       powerData: {
         avgWatts: 122.13070692194404,
@@ -9737,7 +9737,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 158,
         variabilityIndex: 1.352049940389701,
         weightedPower: 165.1268150135665,
-        weightedWattsPerKg: 2.358954500193807,
+        weightedWattsPerKg: 2.358954500193807
       },
       speedData: {
         avgPace: 170,
@@ -9750,8 +9750,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 18.1788491200619,
         totalAvgSpeed: 17.308527147285293,
         upperQuartileSpeed: 30.6,
-        varianceSpeed: 330.4705553299754,
-      },
+        varianceSpeed: 330.4705553299754
+      }
     },
     hasPowerMeter: false,
     id: 348840376,
@@ -9760,7 +9760,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-18T15:08:52+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -9771,9 +9771,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 166.24429676,
     commute: false,
@@ -9792,7 +9792,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 218,
         medianElevation: 227,
-        upperQuartileElevation: 230,
+        upperQuartileElevation: 230
       },
       gradeData: {
         avgGrade: -0.010545828737988283,
@@ -9806,7 +9806,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.3808, flat: 6.993800000000003, up: 1.7805999999999953 },
         upFlatDownInSeconds: { down: 278, flat: 1204, total: 1942, up: 460 },
         upFlatDownMoveData: { down: 17.88086330935252, flat: 20.911694352159476, up: 13.935130434782574 },
-        upperQuartileGrade: 1,
+        upperQuartileGrade: 1
       },
       heartRateData: null,
       moveRatio: 0.24214463840399003,
@@ -9821,7 +9821,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 151.51515151515153,
-        variancePace: 89.78712595913821,
+        variancePace: 89.78712595913821
       },
       powerData: {
         avgWatts: 72.6470588235294,
@@ -9838,7 +9838,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 0,
         variabilityIndex: 1.4690055550441792,
         weightedPower: 106.71893296938595,
-        weightedWattsPerKg: 1.524556185276942,
+        weightedWattsPerKg: 1.524556185276942
       },
       speedData: {
         avgPace: 190,
@@ -9851,8 +9851,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.33204824641465,
         totalAvgSpeed: 4.573279301745635,
         upperQuartileSpeed: 23.759999999999998,
-        varianceSpeed: 40.09483499492285,
-      },
+        varianceSpeed: 40.09483499492285
+      }
     },
     hasPowerMeter: false,
     id: 349674579,
@@ -9861,7 +9861,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-19T14:00:16+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -9872,9 +9872,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 174.616828638,
     commute: false,
@@ -9893,7 +9893,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 218,
         medianElevation: 219,
-        upperQuartileElevation: 220,
+        upperQuartileElevation: 220
       },
       gradeData: {
         avgGrade: -0.01940024423611884,
@@ -9907,7 +9907,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.037500000000001, flat: 8.762699999999993, up: 1.0909000000000038 },
         upFlatDownInSeconds: { down: 382, flat: 1234, total: 1866, up: 250 },
         upFlatDownMoveData: { down: 9.777486910994773, flat: 25.563792544570482, up: 15.708960000000054 },
-        upperQuartileGrade: 0.4,
+        upperQuartileGrade: 0.4
       },
       heartRateData: null,
       moveRatio: 0.9983948635634029,
@@ -9922,7 +9922,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 128.2051282051282,
-        variancePace: 33.91615908013309,
+        variancePace: 33.91615908013309
       },
       powerData: {
         avgWatts: 96.60706860706861,
@@ -9939,7 +9939,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 127,
         variabilityIndex: 1.2371616039438764,
         weightedPower: 119.51855595023711,
-        weightedWattsPerKg: 1.7074079421462445,
+        weightedWattsPerKg: 1.7074079421462445
       },
       speedData: {
         avgPace: 163,
@@ -9952,8 +9952,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 10.302625619850174,
         totalAvgSpeed: 21.964141252006407,
         upperQuartileSpeed: 28.08,
-        varianceSpeed: 106.14409466279318,
-      },
+        varianceSpeed: 106.14409466279318
+      }
     },
     hasPowerMeter: false,
     id: 349674619,
@@ -9962,7 +9962,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-19T18:04:41+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -9973,9 +9973,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 44.857425290500004,
     commute: true,
@@ -9994,7 +9994,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 231,
         medianElevation: 232,
-        upperQuartileElevation: 234,
+        upperQuartileElevation: 234
       },
       gradeData: {
         avgGrade: -0.14473983739837418,
@@ -10008,11 +10008,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 0.4232999999999996,
           flat: 2.3123000000000005,
-          up: 0.3393999999999996,
+          up: 0.3393999999999996
         },
         upFlatDownInSeconds: { down: 60, flat: 342, total: 479, up: 77 },
         upFlatDownMoveData: { down: 25.39799999999998, flat: 24.340000000000007, up: 15.86805194805193 },
-        upperQuartileGrade: 0.5,
+        upperQuartileGrade: 0.5
       },
       heartRateData: null,
       moveRatio: 1,
@@ -10027,7 +10027,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 126.58227848101265,
-        variancePace: 78.3590784147545,
+        variancePace: 78.3590784147545
       },
       powerData: {
         avgWatts: 86.18954248366013,
@@ -10044,7 +10044,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 132,
         variabilityIndex: 1.130467866021772,
         weightedPower: 97.43450816489613,
-        weightedWattsPerKg: 1.3919215452128018,
+        weightedWattsPerKg: 1.3919215452128018
       },
       speedData: {
         avgPace: 156,
@@ -10057,8 +10057,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.7780784421855955,
         totalAvgSpeed: 23.04,
         upperQuartileSpeed: 28.44,
-        varianceSpeed: 45.94234736842111,
-      },
+        varianceSpeed: 45.94234736842111
+      }
     },
     hasPowerMeter: false,
     id: 350952822,
@@ -10067,7 +10067,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-20T06:55:11+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -10078,9 +10078,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 60.49898012500001,
     commute: true,
@@ -10099,7 +10099,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 219,
         medianElevation: 219,
-        upperQuartileElevation: 220,
+        upperQuartileElevation: 220
       },
       gradeData: {
         avgGrade: 1.2100948393711544,
@@ -10113,11 +10113,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 0.17250000000000018,
           flat: 1.5662000000000003,
-          up: 0.6020999999999996,
+          up: 0.6020999999999996
         },
         upFlatDownInSeconds: { down: 29, flat: 215, total: 395, up: 151 },
         upFlatDownMoveData: { down: 21.4137931034483, flat: 26.224744186046518, up: 14.354701986754959 },
-        upperQuartileGrade: 1.7,
+        upperQuartileGrade: 1.7
       },
       heartRateData: null,
       moveRatio: 1,
@@ -10132,7 +10132,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 121.95121951219514,
-        variancePace: 70.74675167573098,
+        variancePace: 70.74675167573098
       },
       powerData: {
         avgWatts: 132.34615384615384,
@@ -10149,7 +10149,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 204,
         variabilityIndex: 1.169915998493029,
         weightedPower: 154.8338827236351,
-        weightedWattsPerKg: 2.2119126103376443,
+        weightedWattsPerKg: 2.2119126103376443
       },
       speedData: {
         avgPace: 169,
@@ -10162,8 +10162,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 7.133423338613216,
         totalAvgSpeed: 21.29787341772153,
         upperQuartileSpeed: 29.52,
-        varianceSpeed: 50.88572852787172,
-      },
+        varianceSpeed: 50.88572852787172
+      }
     },
     hasPowerMeter: false,
     id: 350952833,
@@ -10172,7 +10172,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-20T10:12:17+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -10183,9 +10183,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 30.317346621,
     commute: true,
@@ -10204,7 +10204,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: -30,
         medianElevation: -30,
-        upperQuartileElevation: -24,
+        upperQuartileElevation: -24
       },
       gradeData: {
         avgGrade: -1.1972480892559092,
@@ -10218,7 +10218,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 0.5382, flat: 1.5284, up: 0.21 },
         upFlatDownInSeconds: { down: 86, flat: 243, total: 373, up: 44 },
         upFlatDownMoveData: { down: 22.529302325581398, flat: 22.642962962962965, up: 17.18181818181818 },
-        upperQuartileGrade: 0.7,
+        upperQuartileGrade: 0.7
       },
       heartRateData: null,
       moveRatio: 0.9841688654353562,
@@ -10233,7 +10233,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 140.84507042253523,
-        variancePace: 111.82515968306566,
+        variancePace: 111.82515968306566
       },
       powerData: {
         avgWatts: 60.89032258064516,
@@ -10250,7 +10250,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 107,
         variabilityIndex: 1.785008533142636,
         weightedPower: 108.68974539225934,
-        weightedWattsPerKg: 1.5527106484608477,
+        weightedWattsPerKg: 1.5527106484608477
       },
       speedData: {
         avgPace: 164,
@@ -10263,8 +10263,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 5.6738975125420215,
         totalAvgSpeed: 21.570554089709766,
         upperQuartileSpeed: 25.56,
-        varianceSpeed: 32.19311298283054,
-      },
+        varianceSpeed: 32.19311298283054
+      }
     },
     hasPowerMeter: false,
     id: 350952841,
@@ -10273,7 +10273,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-20T11:35:58+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -10284,9 +10284,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 58.97811901000001,
     commute: true,
@@ -10305,7 +10305,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 225,
         medianElevation: 227,
-        upperQuartileElevation: 229,
+        upperQuartileElevation: 229
       },
       gradeData: {
         avgGrade: 0.18924468651203594,
@@ -10319,11 +10319,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 0.3664999999999992,
           flat: 2.2736000000000014,
-          up: 0.5545999999999996,
+          up: 0.5545999999999996
         },
         upFlatDownInSeconds: { down: 78, flat: 345, total: 522, up: 99 },
         upFlatDownMoveData: { down: 16.91538461538458, flat: 23.72452173913045, up: 20.167272727272717 },
-        upperQuartileGrade: 1.1,
+        upperQuartileGrade: 1.1
       },
       heartRateData: null,
       moveRatio: 0.9980879541108987,
@@ -10338,7 +10338,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 129.87012987012986,
-        variancePace: 85.14688022264356,
+        variancePace: 85.14688022264356
       },
       powerData: {
         avgWatts: 97.86111111111111,
@@ -10355,7 +10355,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 154,
         variabilityIndex: 1.4085075027819673,
         weightedPower: 137.83810923057976,
-        weightedWattsPerKg: 1.9691158461511395,
+        weightedWattsPerKg: 1.9691158461511395
       },
       speedData: {
         avgPace: 163,
@@ -10368,8 +10368,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.502298165311498,
         totalAvgSpeed: 21.95724665391969,
         upperQuartileSpeed: 27.720000000000002,
-        varianceSpeed: 42.27988143061327,
-      },
+        varianceSpeed: 42.27988143061327
+      }
     },
     hasPowerMeter: false,
     id: 350952856,
@@ -10378,7 +10378,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-20T16:01:23+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -10389,9 +10389,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 329.64839527500004,
     commute: false,
@@ -10414,7 +10414,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 1946.5000000000018,
         upFlatDownCadencePaceData: { down: 73.625, flat: 81.95268138801262, up: 74.60655737704919 },
         upperQuartileCadence: 86,
-        upperQuartileDistancePerOccurrence: 7.285714285714263,
+        upperQuartileDistancePerOccurrence: 7.285714285714263
       },
       elevationData: {
         accumulatedElevationAscent: 50.07475166570805,
@@ -10425,7 +10425,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 224,
         medianElevation: 225,
-        upperQuartileElevation: 226,
+        upperQuartileElevation: 226
       },
       gradeData: {
         avgGrade: -0.01012460543817003,
@@ -10439,7 +10439,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.343199999999998, flat: 12.332500000000001, up: 1.4360000000000006 },
         upFlatDownInSeconds: { down: 214, flat: 1496, total: 1955, up: 245 },
         upFlatDownMoveData: { down: 22.595887850467257, flat: 29.677139037433157, up: 21.100408163265318 },
-        upperQuartileGrade: 0.5,
+        upperQuartileGrade: 0.5
       },
       heartRateData: null,
       moveRatio: 1,
@@ -10454,7 +10454,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 112.35955056179775,
-        variancePace: 39.24722681830406,
+        variancePace: 39.24722681830406
       },
       powerData: {
         avgWatts: 150.38225255972696,
@@ -10471,7 +10471,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 203,
         variabilityIndex: 1.5078555000609422,
         weightedPower: 226.754706633738,
-        weightedWattsPerKg: 3.239352951910543,
+        weightedWattsPerKg: 3.239352951910543
       },
       speedData: {
         avgPace: 129,
@@ -10484,8 +10484,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 9.577380961213182,
         totalAvgSpeed: 27.876982097186712,
         upperQuartileSpeed: 32.04,
-        varianceSpeed: 91.72622607620872,
-      },
+        varianceSpeed: 91.72622607620872
+      }
     },
     hasPowerMeter: false,
     id: 350265303,
@@ -10494,7 +10494,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-20T17:03:16+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -10505,9 +10505,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 445.11193818,
     commute: false,
@@ -10530,7 +10530,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 2837.266666666671,
         upFlatDownCadencePaceData: { down: 85.79787234042553, flat: 85.702, up: 78.65555555555555 },
         upperQuartileCadence: 91,
-        upperQuartileDistancePerOccurrence: 6.596026490065647,
+        upperQuartileDistancePerOccurrence: 6.596026490065647
       },
       elevationData: {
         accumulatedElevationAscent: 79.75784702840858,
@@ -10541,7 +10541,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 204,
         medianElevation: 206,
-        upperQuartileElevation: 210,
+        upperQuartileElevation: 210
       },
       gradeData: {
         avgGrade: -0.10968459340614739,
@@ -10555,11 +10555,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 2.4088999999999907,
           flat: 15.388400000000011,
-          up: 1.9422999999999968,
+          up: 1.9422999999999968
         },
         upFlatDownInSeconds: { down: 568, flat: 1799, total: 2650, up: 283 },
         upFlatDownMoveData: { down: 15.267676056337969, flat: 30.79390772651475, up: 24.707703180211972 },
-        upperQuartileGrade: 0.6,
+        upperQuartileGrade: 0.6
       },
       heartRateData: {
         HRSS: 25.39426167972455,
@@ -10574,7 +10574,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 115,
         maxHeartRate: 182,
         medianHeartRate: 127,
-        upperQuartileHeartRate: 142,
+        upperQuartileHeartRate: 142
       },
       moveRatio: 0.998869204673954,
       paceData: {
@@ -10588,7 +10588,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 108.69565217391305,
-        variancePace: 19.038191086184245,
+        variancePace: 19.038191086184245
       },
       powerData: {
         avgWatts: 150.68597914252607,
@@ -10605,7 +10605,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 213,
         variabilityIndex: 1.3458966105737127,
         weightedPower: 202.807748588907,
-        weightedWattsPerKg: 2.8972535512701,
+        weightedWattsPerKg: 2.8972535512701
       },
       speedData: {
         avgPace: 133,
@@ -10618,8 +10618,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 13.751130690746857,
         totalAvgSpeed: 27.029445910290207,
         upperQuartileSpeed: 33.12,
-        varianceSpeed: 189.0935952740001,
-      },
+        varianceSpeed: 189.0935952740001
+      }
     },
     hasPowerMeter: false,
     id: 350952876,
@@ -10628,7 +10628,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-21T16:25:34+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -10639,9 +10639,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 838.6583442500001,
     commute: false,
@@ -10665,10 +10665,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 90.35211267605634,
           flat: 78.56346749226006,
-          up: 76.98433048433048,
+          up: 76.98433048433048
         },
         upperQuartileCadence: 86,
-        upperQuartileDistancePerOccurrence: 6.466666666666545,
+        upperQuartileDistancePerOccurrence: 6.466666666666545
       },
       elevationData: {
         accumulatedElevationAscent: 511.86375277572824,
@@ -10679,7 +10679,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 227,
         medianElevation: 305,
-        upperQuartileElevation: 497,
+        upperQuartileElevation: 497
       },
       gradeData: {
         avgGrade: -0.01982266054277705,
@@ -10692,12 +10692,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 90.35211267605634,
           flat: 78.56346749226006,
-          up: 76.98433048433048,
+          up: 76.98433048433048
         },
         upFlatDownDistanceData: { down: 10.784899999999991, flat: 11.927100000000008, up: 8.335799999999999 },
         upFlatDownInSeconds: { down: 1040, flat: 1870, total: 5043, up: 2133 },
         upFlatDownMoveData: { down: 37.33234615384613, flat: 22.96126203208558, up: 14.06886075949367 },
-        upperQuartileGrade: 2,
+        upperQuartileGrade: 2
       },
       heartRateData: {
         HRSS: 76.83443122789194,
@@ -10712,7 +10712,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 119,
         maxHeartRate: 184,
         medianHeartRate: 141,
-        upperQuartileHeartRate: 172,
+        upperQuartileHeartRate: 172
       },
       moveRatio: 0.9698076923076923,
       paceData: {
@@ -10726,7 +10726,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 120.48192771084338,
-        variancePace: 9.230514340706458,
+        variancePace: 9.230514340706458
       },
       powerData: {
         avgWatts: 149.4041965764771,
@@ -10743,7 +10743,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 213,
         variabilityIndex: 1.3835610010823578,
         weightedPower: 206.70981978125602,
-        weightedWattsPerKg: 2.9529974254465143,
+        weightedWattsPerKg: 2.9529974254465143
       },
       speedData: {
         avgPace: 160,
@@ -10756,8 +10756,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 19.748690321196708,
         totalAvgSpeed: 21.789484615384588,
         upperQuartileSpeed: 29.880000000000003,
-        varianceSpeed: 390.0107694025286,
-      },
+        varianceSpeed: 390.0107694025286
+      }
     },
     hasPowerMeter: false,
     id: 352513047,
@@ -10766,7 +10766,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-23T16:46:31+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -10777,9 +10777,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 190.76622415999998,
     commute: true,
@@ -10798,7 +10798,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 233,
         medianElevation: 250,
-        upperQuartileElevation: 261,
+        upperQuartileElevation: 261
       },
       gradeData: {
         avgGrade: 0.05832931012577813,
@@ -10812,7 +10812,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.4793999999999965, flat: 8.622200000000008, up: 1.704899999999997 },
         upFlatDownInSeconds: { down: 240, flat: 1584, total: 2268, up: 444 },
         upFlatDownMoveData: { down: 22.190999999999946, flat: 19.59590909090911, up: 13.823513513513488 },
-        upperQuartileGrade: 0.9,
+        upperQuartileGrade: 0.9
       },
       heartRateData: null,
       moveRatio: 0.06414027149321266,
@@ -10827,7 +10827,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 138.88888888888889,
-        variancePace: 28.232856870875363,
+        variancePace: 28.232856870875363
       },
       powerData: {
         avgWatts: 84.99557522123894,
@@ -10844,7 +10844,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 0,
         variabilityIndex: 1.2244047172864225,
         weightedPower: 104.06898324935793,
-        weightedWattsPerKg: 1.4866997607051133,
+        weightedWattsPerKg: 1.4866997607051133
       },
       speedData: {
         avgPace: 188,
@@ -10857,8 +10857,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 11.292077162441707,
         totalAvgSpeed: 1.2222743212669698,
         upperQuartileSpeed: 25.92,
-        varianceSpeed: 127.51100664253755,
-      },
+        varianceSpeed: 127.51100664253755
+      }
     },
     hasPowerMeter: false,
     id: 353113683,
@@ -10867,7 +10867,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-24T06:54:18+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -10878,9 +10878,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1784.573044215,
     commute: false,
@@ -10903,7 +10903,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 10363.21666666666,
         upFlatDownCadencePaceData: { down: 81.2511013215859, flat: 85.1292471685543, up: 77.18028359216746 },
         upperQuartileCadence: 90,
-        upperQuartileDistancePerOccurrence: 6.385964912279681,
+        upperQuartileDistancePerOccurrence: 6.385964912279681
       },
       elevationData: {
         accumulatedElevationAscent: 762.4867564115773,
@@ -10914,7 +10914,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 203,
         medianElevation: 207,
-        upperQuartileElevation: 485,
+        upperQuartileElevation: 485
       },
       gradeData: {
         avgGrade: 0.03420173016749837,
@@ -10928,7 +10928,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 16.093599999999938, flat: 34.53540000000006, up: 17.283500000000007 },
         upFlatDownInSeconds: { down: 1914, flat: 4195, total: 10254, up: 4145 },
         upFlatDownMoveData: { down: 30.270094043887035, flat: 29.637053635280147, up: 15.011001206272624 },
-        upperQuartileGrade: 1.7,
+        upperQuartileGrade: 1.7
       },
       heartRateData: {
         HRSS: 159.68847324736493,
@@ -10943,7 +10943,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 131,
         maxHeartRate: 192,
         medianHeartRate: 146,
-        upperQuartileHeartRate: 167,
+        upperQuartileHeartRate: 167
       },
       moveRatio: 0.9613725857866117,
       paceData: {
@@ -10957,7 +10957,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 114.9425287356322,
-        variancePace: 13.107270848660626,
+        variancePace: 13.107270848660626
       },
       powerData: {
         avgWatts: 141.92658557775846,
@@ -10974,7 +10974,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 224,
         variabilityIndex: 1.4467080346550374,
         weightedPower: 205.32633168649892,
-        weightedWattsPerKg: 2.9332333098071275,
+        weightedWattsPerKg: 2.9332333098071275
       },
       speedData: {
         avgPace: 150,
@@ -10987,8 +10987,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 16.572770393524788,
         totalAvgSpeed: 23.011023813988395,
         upperQuartileSpeed: 31.319999999999997,
-        varianceSpeed: 274.65671851649176,
-      },
+        varianceSpeed: 274.65671851649176
+      }
     },
     hasPowerMeter: false,
     id: 353633586,
@@ -10997,7 +10997,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-25T10:01:08+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -11008,9 +11008,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 726.97380283,
     commute: false,
@@ -11033,7 +11033,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 3875.808333333334,
         upFlatDownCadencePaceData: { down: 83.12295081967213, flat: 87.0374149659864, up: 72.89481946624804 },
         upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.469387755102189,
+        upperQuartileDistancePerOccurrence: 6.469387755102189
       },
       elevationData: {
         accumulatedElevationAscent: 473.139797700789,
@@ -11044,7 +11044,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: -28,
         medianElevation: -20,
-        upperQuartileElevation: 136,
+        upperQuartileElevation: 136
       },
       gradeData: {
         avgGrade: -0.07426587309326113,
@@ -11058,7 +11058,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 7.611699999999998, flat: 10.200099999999999, up: 7.827500000000002 },
         upFlatDownInSeconds: { down: 767, flat: 1171, total: 3839, up: 1901 },
         upFlatDownMoveData: { down: 35.72636245110821, flat: 31.358121263877024, up: 14.823250920568128 },
-        upperQuartileGrade: 2.9,
+        upperQuartileGrade: 2.9
       },
       heartRateData: {
         HRSS: 68.82034719417913,
@@ -11073,7 +11073,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 133,
         maxHeartRate: 194,
         medianHeartRate: 160,
-        upperQuartileHeartRate: 173,
+        upperQuartileHeartRate: 173
       },
       moveRatio: 0.9437069813176008,
       paceData: {
@@ -11087,7 +11087,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 102.0408163265306,
-        variancePace: 10.4849277467796,
+        variancePace: 10.4849277467796
       },
       powerData: {
         avgWatts: 145.3195074530136,
@@ -11104,7 +11104,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 236,
         variabilityIndex: 1.452083263329948,
         weightedPower: 211.0160246078727,
-        weightedWattsPerKg: 3.014514637255324,
+        weightedWattsPerKg: 3.014514637255324
       },
       speedData: {
         avgPace: 149,
@@ -11117,8 +11117,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 18.529706029654385,
         totalAvgSpeed: 22.69769911504427,
         upperQuartileSpeed: 35.28,
-        varianceSpeed: 343.3500055454101,
-      },
+        varianceSpeed: 343.3500055454101
+      }
     },
     hasPowerMeter: false,
     id: 353805002,
@@ -11127,7 +11127,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-25T15:37:56+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -11138,9 +11138,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1078.6001783040003,
     commute: false,
@@ -11159,7 +11159,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 9,
         medianElevation: 17,
-        upperQuartileElevation: 25,
+        upperQuartileElevation: 25
       },
       gradeData: {
         avgGrade: 0.05415393608729657,
@@ -11173,7 +11173,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 4.622899999999996, flat: 3.5835999999999966, up: 4.623500000000006 },
         upFlatDownInSeconds: { down: 4308, flat: 4026, total: 12988, up: 4654 },
         upFlatDownMoveData: { down: 3.863147632311974, flat: 3.2044113263785365, up: 3.576407391491195 },
-        upperQuartileGrade: 3.5,
+        upperQuartileGrade: 3.5
       },
       heartRateData: null,
       moveRatio: 0.5624215130126012,
@@ -11188,7 +11188,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 769.230769230769,
-        variancePace: 464.23035071151594,
+        variancePace: 464.23035071151594
       },
       powerData: null,
       speedData: {
@@ -11202,8 +11202,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 2.7847389228726693,
         totalAvgSpeed: 2.0822257827047195,
         upperQuartileSpeed: 4.680000000000001,
-        varianceSpeed: 7.754770868562034,
-      },
+        varianceSpeed: 7.754770868562034
+      }
     },
     hasPowerMeter: false,
     id: 355886705,
@@ -11212,7 +11212,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-28T07:56:39+0000",
     trainer: false,
-    type: "Walk",
+    type: "Walk"
   },
   {
     athleteSnapshot: {
@@ -11223,9 +11223,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 312.8579294995,
     commute: false,
@@ -11244,7 +11244,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 4,
         medianElevation: 9,
-        upperQuartileElevation: 11,
+        upperQuartileElevation: 11
       },
       gradeData: {
         avgGrade: -0.08523208910038405,
@@ -11258,7 +11258,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 3.6577999999999964, flat: 4.537199999999999, up: 3.5311000000000052 },
         upFlatDownInSeconds: { down: 1562, flat: 2205, total: 5327, up: 1560 },
         upFlatDownMoveData: { down: 8.430268886043526, flat: 7.407673469387754, up: 8.14869230769232 },
-        upperQuartileGrade: 2.2,
+        upperQuartileGrade: 2.2
       },
       heartRateData: null,
       moveRatio: 0.798172010788133,
@@ -11273,7 +11273,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 294.11764705882354,
-        variancePace: 39.1461825116204,
+        variancePace: 39.1461825116204
       },
       powerData: {
         avgWatts: 70.31202046035806,
@@ -11290,7 +11290,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 52,
         variabilityIndex: 1.525693284703719,
         weightedPower: 107.27457745031877,
-        weightedWattsPerKg: 1.5324939635759824,
+        weightedWattsPerKg: 1.5324939635759824
       },
       speedData: {
         avgPace: 442,
@@ -11303,8 +11303,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 9.589733585122627,
         totalAvgSpeed: 6.4970991908900375,
         upperQuartileSpeed: 12.24,
-        varianceSpeed: 91.96299023362887,
-      },
+        varianceSpeed: 91.96299023362887
+      }
     },
     hasPowerMeter: false,
     id: 356460422,
@@ -11313,7 +11313,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-07-29T08:00:32+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -11324,9 +11324,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 876.971551665,
     commute: false,
@@ -11350,10 +11350,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 70.98275862068965,
           flat: 74.90353143841516,
-          up: 64.11111111111111,
+          up: 64.11111111111111
         },
         upperQuartileCadence: 80,
-        upperQuartileDistancePerOccurrence: 6.524590163934306,
+        upperQuartileDistancePerOccurrence: 6.524590163934306
       },
       elevationData: {
         accumulatedElevationAscent: 111.15340045416474,
@@ -11364,7 +11364,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 201,
         medianElevation: 204,
-        upperQuartileElevation: 205,
+        upperQuartileElevation: 205
       },
       gradeData: {
         avgGrade: 0.0018340773735141627,
@@ -11377,12 +11377,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 70.98275862068965,
           flat: 74.90353143841516,
-          up: 64.11111111111111,
+          up: 64.11111111111111
         },
         upFlatDownDistanceData: { down: 3.3320999999999867, flat: 43.453400000000016, up: 3.234199999999997 },
         upFlatDownInSeconds: { down: 661, flat: 6036, total: 7354, up: 657 },
         upFlatDownMoveData: { down: 18.147594553706433, flat: 25.916540755467206, up: 17.72164383561642 },
-        upperQuartileGrade: 0.4,
+        upperQuartileGrade: 0.4
       },
       heartRateData: {
         HRSS: 56.73065633416212,
@@ -11397,7 +11397,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 115,
         maxHeartRate: 175,
         medianHeartRate: 122,
-        upperQuartileHeartRate: 130,
+        upperQuartileHeartRate: 130
       },
       moveRatio: 1,
       paceData: {
@@ -11411,7 +11411,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 120.48192771084338,
-        variancePace: 77.16886651418048,
+        variancePace: 77.16886651418048
       },
       powerData: {
         avgWatts: 105.24941724941725,
@@ -11428,7 +11428,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 150,
         variabilityIndex: 1.354181445284069,
         weightedPower: 142.52680796612188,
-        weightedWattsPerKg: 2.036097256658884,
+        weightedWattsPerKg: 2.036097256658884
       },
       speedData: {
         avgPace: 146,
@@ -11441,8 +11441,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.830149186190485,
         totalAvgSpeed: 24.595945063910825,
         upperQuartileSpeed: 29.880000000000003,
-        varianceSpeed: 46.65093790561855,
-      },
+        varianceSpeed: 46.65093790561855
+      }
     },
     hasPowerMeter: false,
     id: 360360173,
@@ -11451,7 +11451,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-02T15:22:39+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -11462,9 +11462,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 818.5759030800001,
     commute: false,
@@ -11487,7 +11487,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 4819.7500000000055,
         upFlatDownCadencePaceData: { down: 85.92964824120602, flat: 78.77126099706744, up: 72.5296551724138 },
         upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 6.460714285714207,
+        upperQuartileDistancePerOccurrence: 6.460714285714207
       },
       elevationData: {
         accumulatedElevationAscent: 517.8669081049441,
@@ -11498,7 +11498,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 224,
         medianElevation: 283,
-        upperQuartileElevation: 473,
+        upperQuartileElevation: 473
       },
       gradeData: {
         avgGrade: -0.0037650887115519304,
@@ -11512,7 +11512,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 10.850900000000019, flat: 13.399299999999991, up: 8.017299999999988 },
         upFlatDownInSeconds: { down: 1144, flat: 1727, total: 5000, up: 2129 },
         upFlatDownMoveData: { down: 34.14618881118887, flat: 27.931372321945556, up: 13.556730859558458 },
-        upperQuartileGrade: 1.6,
+        upperQuartileGrade: 1.6
       },
       heartRateData: null,
       moveRatio: 0.9996001599360256,
@@ -11527,7 +11527,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 116.27906976744185,
-        variancePace: 12.1280573887401,
+        variancePace: 12.1280573887401
       },
       powerData: {
         avgWatts: 142.23806881243064,
@@ -11544,7 +11544,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 207,
         variabilityIndex: 1.3685616508091432,
         weightedPower: 194.66156626184457,
-        weightedWattsPerKg: 2.780879518026351,
+        weightedWattsPerKg: 2.780879518026351
       },
       speedData: {
         avgPace: 154,
@@ -11557,8 +11557,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 17.228823770057524,
         totalAvgSpeed: 23.29013594562176,
         upperQuartileSpeed: 30.96,
-        varianceSpeed: 296.8323684996991,
-      },
+        varianceSpeed: 296.8323684996991
+      }
     },
     hasPowerMeter: false,
     id: 360424486,
@@ -11567,7 +11567,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-03T16:14:32+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -11578,9 +11578,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 672.94784928,
     commute: false,
@@ -11604,10 +11604,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.63414634146342,
           flat: 84.41237113402062,
-          up: 78.74581939799332,
+          up: 78.74581939799332
         },
         upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.462279293739915,
+        upperQuartileDistancePerOccurrence: 6.462279293739915
       },
       elevationData: {
         accumulatedElevationAscent: 440.97445186478006,
@@ -11618,7 +11618,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 228,
         medianElevation: 233,
-        upperQuartileElevation: 402,
+        upperQuartileElevation: 402
       },
       gradeData: {
         avgGrade: -0.0356571996486491,
@@ -11631,12 +11631,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.63414634146342,
           flat: 84.41237113402062,
-          up: 78.74581939799332,
+          up: 78.74581939799332
         },
         upFlatDownDistanceData: { down: 6.912499999999998, flat: 10.296200000000002, up: 7.040400000000001 },
         upFlatDownInSeconds: { down: 805, flat: 1158, total: 3660, up: 1697 },
         upFlatDownMoveData: { down: 30.913043478260864, flat: 32.00891191709845, up: 14.93543901001768 },
-        upperQuartileGrade: 2.7,
+        upperQuartileGrade: 2.7
       },
       heartRateData: {
         HRSS: 68.96213072105998,
@@ -11651,7 +11651,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 139,
         maxHeartRate: 188,
         medianHeartRate: 154,
-        upperQuartileHeartRate: 175,
+        upperQuartileHeartRate: 175
       },
       moveRatio: 0.9994538503549972,
       paceData: {
@@ -11665,7 +11665,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 107.5268817204301,
-        variancePace: 9.352322314869426,
+        variancePace: 9.352322314869426
       },
       powerData: {
         avgWatts: 149.5887784090909,
@@ -11682,7 +11682,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 241,
         variabilityIndex: 1.4167848769530318,
         weightedPower: 211.93511901187821,
-        weightedWattsPerKg: 3.027644557312546,
+        weightedWattsPerKg: 3.027644557312546
       },
       speedData: {
         avgPace: 150,
@@ -11695,8 +11695,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 19.619661830509752,
         totalAvgSpeed: 23.952386673948645,
         upperQuartileSpeed: 33.480000000000004,
-        varianceSpeed: 384.93113034356134,
-      },
+        varianceSpeed: 384.93113034356134
+      }
     },
     hasPowerMeter: false,
     id: 361131285,
@@ -11705,7 +11705,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-04T16:14:55+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -11716,9 +11716,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 183.92834059499998,
     commute: false,
@@ -11737,7 +11737,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 218,
         medianElevation: 224,
-        upperQuartileElevation: 228,
+        upperQuartileElevation: 228
       },
       gradeData: {
         avgGrade: 0.010481704492820196,
@@ -11751,7 +11751,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.9360999999999988, flat: 4.674500000000002, up: 2.0253999999999994 },
         upFlatDownInSeconds: { down: 511, flat: 1092, total: 2858, up: 1255 },
         upFlatDownMoveData: { down: 13.639843444226997, flat: 15.410439560439565, up: 5.8099123505976085 },
-        upperQuartileGrade: 1.6,
+        upperQuartileGrade: 1.6
       },
       heartRateData: null,
       moveRatio: 0.08302829585730057,
@@ -11766,7 +11766,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 181.8181818181818,
-        variancePace: 10.937757927774824,
+        variancePace: 10.937757927774824
       },
       powerData: {
         avgWatts: 91.1611030478955,
@@ -11783,7 +11783,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 0,
         variabilityIndex: 1.371446832882534,
         weightedPower: 125.02260605711459,
-        weightedWattsPerKg: 1.7860372293873512,
+        weightedWattsPerKg: 1.7860372293873512
       },
       speedData: {
         avgPace: 288,
@@ -11796,8 +11796,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 18.142080792719806,
         totalAvgSpeed: 1.0363517517866476,
         upperQuartileSpeed: 19.8,
-        varianceSpeed: 329.1350954895729,
-      },
+        varianceSpeed: 329.1350954895729
+      }
     },
     hasPowerMeter: false,
     id: 362748671,
@@ -11806,7 +11806,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-06T07:09:25+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -11817,9 +11817,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 600.460531875,
     commute: false,
@@ -11843,10 +11843,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 76.34328358208955,
           flat: 79.86882716049382,
-          up: 65.04918032786885,
+          up: 65.04918032786885
         },
         upperQuartileCadence: 85,
-        upperQuartileDistancePerOccurrence: 6.576819407008086,
+        upperQuartileDistancePerOccurrence: 6.576819407008086
       },
       elevationData: {
         accumulatedElevationAscent: 137.18288046577237,
@@ -11857,7 +11857,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 221,
         medianElevation: 222,
-        upperQuartileElevation: 228,
+        upperQuartileElevation: 228
       },
       gradeData: {
         avgGrade: 0.008223251823251853,
@@ -11870,12 +11870,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 76.34328358208955,
           flat: 79.86882716049382,
-          up: 65.04918032786885,
+          up: 65.04918032786885
         },
         upFlatDownDistanceData: { down: 2.846199999999995, flat: 23.55070000000001, up: 2.7405999999999966 },
         upFlatDownInSeconds: { down: 409, flat: 2894, total: 3925, up: 622 },
         upFlatDownMoveData: { down: 25.052127139364263, flat: 29.29596406357983, up: 15.861993569131815 },
-        upperQuartileGrade: 0.4,
+        upperQuartileGrade: 0.4
       },
       heartRateData: {
         HRSS: 38.94333202665324,
@@ -11890,7 +11890,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 121,
         maxHeartRate: 179,
         medianHeartRate: 128,
-        upperQuartileHeartRate: 139,
+        upperQuartileHeartRate: 139
       },
       moveRatio: 1,
       paceData: {
@@ -11904,7 +11904,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 112.35955056179775,
-        variancePace: 55.437371704573394,
+        variancePace: 55.437371704573394
       },
       powerData: {
         avgWatts: 127.1402789171452,
@@ -11921,7 +11921,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 187,
         variabilityIndex: 1.3579364442744923,
         weightedPower: 172.64841827681536,
-        weightedWattsPerKg: 2.4664059753830765,
+        weightedWattsPerKg: 2.4664059753830765
       },
       speedData: {
         avgPace: 134,
@@ -11934,8 +11934,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 8.058420659023588,
         totalAvgSpeed: 26.747908280254777,
         upperQuartileSpeed: 32.04,
-        varianceSpeed: 64.93814351777814,
-      },
+        varianceSpeed: 64.93814351777814
+      }
     },
     hasPowerMeter: false,
     id: 364024554,
@@ -11944,7 +11944,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-08T10:19:49+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -11955,9 +11955,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 172.21375468799997,
     commute: false,
@@ -11976,7 +11976,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 1768,
         medianElevation: 1810,
-        upperQuartileElevation: 1865,
+        upperQuartileElevation: 1865
       },
       gradeData: {
         avgGrade: -1.0879112207151762,
@@ -11990,11 +11990,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 1.0599000000000005,
           flat: 0.08509999999999968,
-          up: 0.8824999999999995,
+          up: 0.8824999999999995
         },
         upFlatDownInSeconds: { down: 2243, flat: 201, total: 4263, up: 1819 },
         upFlatDownMoveData: { down: 1.7011324119482845, flat: 1.5241791044776063, up: 1.7465640461792185 },
-        upperQuartileGrade: 18.8,
+        upperQuartileGrade: 18.8
       },
       heartRateData: null,
       moveRatio: 0.8386779460948259,
@@ -12009,7 +12009,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 1666.6666666666665,
-        variancePace: 133.64153345330362,
+        variancePace: 133.64153345330362
       },
       powerData: null,
       speedData: {
@@ -12023,8 +12023,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 5.190157358404116,
         totalAvgSpeed: 1.6583159551445996,
         upperQuartileSpeed: 2.16,
-        varianceSpeed: 26.93773340499639,
-      },
+        varianceSpeed: 26.93773340499639
+      }
     },
     hasPowerMeter: false,
     id: 366535437,
@@ -12033,7 +12033,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-11T14:01:22+0000",
     trainer: false,
-    type: "Hike",
+    type: "Hike"
   },
   {
     athleteSnapshot: {
@@ -12044,9 +12044,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 956.592687015,
     commute: false,
@@ -12070,10 +12070,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 85.65546218487395,
           flat: 85.68249258160238,
-          up: 74.05183585313175,
+          up: 74.05183585313175
         },
         upperQuartileCadence: 87,
-        upperQuartileDistancePerOccurrence: 6.381909547738693,
+        upperQuartileDistancePerOccurrence: 6.381909547738693
       },
       elevationData: {
         accumulatedElevationAscent: 687.8461387569505,
@@ -12084,7 +12084,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 189,
         medianElevation: 264,
-        upperQuartileElevation: 547,
+        upperQuartileElevation: 547
       },
       gradeData: {
         avgGrade: 0.000030638332806213666,
@@ -12097,12 +12097,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 85.65546218487395,
           flat: 85.68249258160238,
-          up: 74.05183585313175,
+          up: 74.05183585313175
         },
         upFlatDownDistanceData: { down: 10.497200000000015, flat: 12.77599999999999, up: 10.83439999999999 },
         upFlatDownInSeconds: { down: 988, flat: 1646, total: 5540, up: 2906 },
         upFlatDownMoveData: { down: 38.24890688259115, flat: 27.942648845686488, up: 13.421830695113547 },
-        upperQuartileGrade: 4.3,
+        upperQuartileGrade: 4.3
       },
       heartRateData: {
         HRSS: 110.2392351125971,
@@ -12117,7 +12117,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 141,
         maxHeartRate: 189,
         medianHeartRate: 161,
-        upperQuartileHeartRate: 179,
+        upperQuartileHeartRate: 179
       },
       moveRatio: 0.9559965487489215,
       paceData: {
@@ -12131,7 +12131,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 113.63636363636361,
-        variancePace: 8.030740294646785,
+        variancePace: 8.030740294646785
       },
       powerData: {
         avgWatts: 140.3856671381424,
@@ -12148,7 +12148,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 211,
         variabilityIndex: 1.4775907739883711,
         weightedPower: 207.43256656352168,
-        weightedWattsPerKg: 2.963322379478881,
+        weightedWattsPerKg: 2.963322379478881
       },
       speedData: {
         avgPace: 161,
@@ -12161,8 +12161,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 21.17256425856585,
         totalAvgSpeed: 21.290816220880092,
         upperQuartileSpeed: 31.680000000000003,
-        varianceSpeed: 448.2774772831,
-      },
+        varianceSpeed: 448.2774772831
+      }
     },
     hasPowerMeter: false,
     id: 367463594,
@@ -12171,7 +12171,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-12T16:39:14+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -12182,9 +12182,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: null,
     commute: false,
@@ -12200,7 +12200,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-13T16:20:00+0000",
     trainer: false,
-    type: "Swim",
+    type: "Swim"
   },
   {
     athleteSnapshot: {
@@ -12211,9 +12211,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 997.8805605600002,
     commute: false,
@@ -12236,7 +12236,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 5517.716666666673,
         upFlatDownCadencePaceData: { down: 86.13861386138613, flat: 87.8298800436205, up: 74.96078431372548 },
         upperQuartileCadence: 95,
-        upperQuartileDistancePerOccurrence: 7.323529411764733,
+        upperQuartileDistancePerOccurrence: 7.323529411764733
       },
       elevationData: {
         accumulatedElevationAscent: 107.27958650769648,
@@ -12247,7 +12247,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 209,
         medianElevation: 213,
-        upperQuartileElevation: 218,
+        upperQuartileElevation: 218
       },
       gradeData: {
         avgGrade: -0.04002894892564846,
@@ -12261,7 +12261,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 2.687799999999998, flat: 35.661100000000005, up: 2.377999999999991 },
         upFlatDownInSeconds: { down: 379, flat: 3680, total: 4395, up: 336 },
         upFlatDownMoveData: { down: 25.530554089709746, flat: 34.88585869565218, up: 25.478571428571332 },
-        upperQuartileGrade: 0.4,
+        upperQuartileGrade: 0.4
       },
       heartRateData: {
         HRSS: 89.44853859072155,
@@ -12276,7 +12276,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 156,
         maxHeartRate: 189,
         medianHeartRate: 163,
-        upperQuartileHeartRate: 171,
+        upperQuartileHeartRate: 171
       },
       moveRatio: 0.9849843119677275,
       paceData: {
@@ -12290,7 +12290,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 94.33962264150944,
-        variancePace: 114.03203659815958,
+        variancePace: 114.03203659815958
       },
       powerData: {
         avgWatts: 190.14708056171472,
@@ -12307,7 +12307,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 274,
         variabilityIndex: 1.2161185343626908,
         weightedPower: 231.241388926057,
-        weightedWattsPerKg: 3.3034484132293858,
+        weightedWattsPerKg: 3.3034484132293858
       },
       speedData: {
         avgPace: 107,
@@ -12320,8 +12320,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 5.618725429998145,
         totalAvgSpeed: 32.862545943522996,
         upperQuartileSpeed: 38.16,
-        varianceSpeed: 31.570075457707844,
-      },
+        varianceSpeed: 31.570075457707844
+      }
     },
     hasPowerMeter: false,
     id: 371317512,
@@ -12330,7 +12330,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-17T16:24:18+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -12341,9 +12341,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 282.40540485,
     commute: false,
@@ -12362,7 +12362,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 164,
         medianElevation: 165,
-        upperQuartileElevation: 169,
+        upperQuartileElevation: 169
       },
       gradeData: {
         avgGrade: -0.06070042855420245,
@@ -12376,7 +12376,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 2.8231999999999955, flat: 12.661500000000004, up: 2.7627 },
         upFlatDownInSeconds: { down: 770, flat: 2683, total: 4426, up: 973 },
         upFlatDownMoveData: { down: 13.199376623376603, flat: 16.988967573611635, up: 10.221706063720452 },
-        upperQuartileGrade: 0.6,
+        upperQuartileGrade: 0.6
       },
       heartRateData: null,
       moveRatio: 0.9733890477237739,
@@ -12391,7 +12391,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 169.4915254237288,
-        variancePace: 71.310511607951,
+        variancePace: 71.310511607951
       },
       powerData: {
         avgWatts: 57.88737717309146,
@@ -12408,7 +12408,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 86,
         variabilityIndex: 1.479761459709666,
         weightedPower: 85.65950974441782,
-        weightedWattsPerKg: 1.2237072820631116,
+        weightedWattsPerKg: 1.2237072820631116
       },
       speedData: {
         avgPace: 242,
@@ -12421,8 +12421,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 7.105170013709495,
         totalAvgSpeed: 14.433094347921704,
         upperQuartileSpeed: 21.240000000000002,
-        varianceSpeed: 50.483440923716586,
-      },
+        varianceSpeed: 50.483440923716586
+      }
     },
     hasPowerMeter: false,
     id: 372761597,
@@ -12431,7 +12431,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-19T17:09:02+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -12442,9 +12442,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 431.79680508900003,
     commute: false,
@@ -12463,7 +12463,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 208,
         medianElevation: 210,
-        upperQuartileElevation: 213,
+        upperQuartileElevation: 213
       },
       gradeData: {
         avgGrade: -0.039888658813944725,
@@ -12477,7 +12477,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 2.7793000000000023, flat: 24.21389999999999, up: 2.465800000000003 },
         upFlatDownInSeconds: { down: 640, flat: 4609, total: 6065, up: 816 },
         upFlatDownMoveData: { down: 15.633562500000014, flat: 18.913004990236487, up: 10.878529411764719 },
-        upperQuartileGrade: 0.4,
+        upperQuartileGrade: 0.4
       },
       heartRateData: null,
       moveRatio: 0.947804344428817,
@@ -12492,7 +12492,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 151.51515151515153,
-        variancePace: 86.17821824701612,
+        variancePace: 86.17821824701612
       },
       powerData: {
         avgWatts: 65.6487106017192,
@@ -12509,7 +12509,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 96,
         variabilityIndex: 1.3899911680017083,
         weightedPower: 91.2511279270898,
-        weightedWattsPerKg: 1.3035875418155685,
+        weightedWattsPerKg: 1.3035875418155685
       },
       speedData: {
         avgPace: 205,
@@ -12522,8 +12522,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.463272921105551,
         totalAvgSpeed: 16.58661040787622,
         upperQuartileSpeed: 23.759999999999998,
-        varianceSpeed: 41.77389685269628,
-      },
+        varianceSpeed: 41.77389685269628
+      }
     },
     hasPowerMeter: false,
     id: 375518573,
@@ -12532,7 +12532,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-20T17:09:13+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -12543,9 +12543,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 2435.9427656800003,
     commute: false,
@@ -12564,7 +12564,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 1801,
         medianElevation: 1880,
-        upperQuartileElevation: 1963,
+        upperQuartileElevation: 1963
       },
       gradeData: {
         avgGrade: -1.2731219795892956,
@@ -12578,7 +12578,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 27.88149999999996, flat: 1.7954000000000396, up: 13.653300000000003 },
         upFlatDownInSeconds: { down: 5180, flat: 554, total: 9948, up: 4214 },
         upFlatDownMoveData: { down: 19.37710424710422, flat: 11.666859205776431, up: 11.663948742287616 },
-        upperQuartileGrade: 9.8,
+        upperQuartileGrade: 9.8
       },
       heartRateData: null,
       moveRatio: 0.7019475021168501,
@@ -12593,7 +12593,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 175.43859649122808,
-        variancePace: 18.639805061451334,
+        variancePace: 18.639805061451334
       },
       powerData: {
         avgWatts: 244.45649097983727,
@@ -12610,7 +12610,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 202,
         variabilityIndex: 2.214154733734627,
         weightedPower: 541.2644966951628,
-        weightedWattsPerKg: 7.732349952788041,
+        weightedWattsPerKg: 7.732349952788041
       },
       speedData: {
         avgPace: 229,
@@ -12623,8 +12623,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 13.897304308089188,
         totalAvgSpeed: 11.007180355630869,
         upperQuartileSpeed: 20.52,
-        varianceSpeed: 193.1350670316343,
-      },
+        varianceSpeed: 193.1350670316343
+      }
     },
     hasPowerMeter: false,
     id: 375518033,
@@ -12633,7 +12633,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-22T09:19:07+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -12644,9 +12644,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 829.9940472,
     commute: false,
@@ -12670,10 +12670,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 81.90217391304348,
           flat: 84.82456140350877,
-          up: 81.14583333333333,
+          up: 81.14583333333333
         },
         upperQuartileCadence: 91,
-        upperQuartileDistancePerOccurrence: 6.685314685314583,
+        upperQuartileDistancePerOccurrence: 6.685314685314583
       },
       elevationData: {
         accumulatedElevationAscent: 522.7865542289031,
@@ -12684,7 +12684,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 220,
         medianElevation: 257,
-        upperQuartileElevation: 525,
+        upperQuartileElevation: 525
       },
       gradeData: {
         avgGrade: 0.02652596536634169,
@@ -12697,12 +12697,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 81.90217391304348,
           flat: 84.82456140350877,
-          up: 81.14583333333333,
+          up: 81.14583333333333
         },
         upFlatDownDistanceData: { down: 8.207999999999993, flat: 13.267899999999996, up: 8.893400000000012 },
         upFlatDownInSeconds: { down: 793, flat: 1667, total: 4493, up: 2033 },
         upFlatDownMoveData: { down: 37.2620428751576, flat: 28.65293341331733, up: 15.748273487456983 },
-        upperQuartileGrade: 2.5,
+        upperQuartileGrade: 2.5
       },
       heartRateData: {
         HRSS: 98.04657402421002,
@@ -12717,7 +12717,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 147,
         maxHeartRate: 197,
         medianHeartRate: 165,
-        upperQuartileHeartRate: 182,
+        upperQuartileHeartRate: 182
       },
       moveRatio: 0.9618925283665168,
       paceData: {
@@ -12731,7 +12731,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 104.16666666666666,
-        variancePace: 10.357936226161637,
+        variancePace: 10.357936226161637
       },
       powerData: {
         avgWatts: 153.0415512465374,
@@ -12748,7 +12748,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 243,
         variabilityIndex: 1.405049134462449,
         weightedPower: 215.0308991157379,
-        weightedWattsPerKg: 3.071869987367684,
+        weightedWattsPerKg: 3.071869987367684
       },
       speedData: {
         avgPace: 146,
@@ -12761,8 +12761,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 18.642949965977344,
         totalAvgSpeed: 23.634104046242786,
         upperQuartileSpeed: 34.56,
-        varianceSpeed: 347.5595834339347,
-      },
+        varianceSpeed: 347.5595834339347
+      }
     },
     hasPowerMeter: false,
     id: 377239233,
@@ -12771,7 +12771,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-25T16:30:19+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -12782,9 +12782,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 499.04194151999997,
     commute: false,
@@ -12807,7 +12807,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 2834.425000000001,
         upFlatDownCadencePaceData: { down: 83.95, flat: 87.54564315352697, up: 70.27450980392157 },
         upperQuartileCadence: 94,
-        upperQuartileDistancePerOccurrence: 7.284916201117299,
+        upperQuartileDistancePerOccurrence: 7.284916201117299
       },
       elevationData: {
         accumulatedElevationAscent: 50.94816646681909,
@@ -12818,7 +12818,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 213,
         medianElevation: 214,
-        upperQuartileElevation: 214,
+        upperQuartileElevation: 214
       },
       gradeData: {
         avgGrade: 0.015115049239663832,
@@ -12832,7 +12832,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.1923000000000001, flat: 18.7798, up: 1.3013999999999961 },
         upFlatDownInSeconds: { down: 182, flat: 2063, total: 2449, up: 204 },
         upFlatDownMoveData: { down: 23.583956043956046, flat: 32.77134270479884, up: 22.96588235294111 },
-        upperQuartileGrade: 0.4,
+        upperQuartileGrade: 0.4
       },
       heartRateData: {
         HRSS: 49.34003717660056,
@@ -12847,7 +12847,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 152,
         maxHeartRate: 189,
         medianHeartRate: 162,
-        upperQuartileHeartRate: 176,
+        upperQuartileHeartRate: 176
       },
       moveRatio: 0.9898949070331448,
       paceData: {
@@ -12861,7 +12861,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 96.15384615384613,
-        variancePace: 44.28838235396821,
+        variancePace: 44.28838235396821
       },
       powerData: {
         avgWatts: 175.26566757493188,
@@ -12878,7 +12878,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 256,
         variabilityIndex: 1.2254449771011702,
         weightedPower: 214.7784319879837,
-        weightedWattsPerKg: 3.068263314114053,
+        weightedWattsPerKg: 3.068263314114053
       },
       speedData: {
         avgPace: 115,
@@ -12891,8 +12891,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 9.015843022247157,
         totalAvgSpeed: 30.985392077607134,
         upperQuartileSpeed: 37.440000000000005,
-        varianceSpeed: 81.28542540180274,
-      },
+        varianceSpeed: 81.28542540180274
+      }
     },
     hasPowerMeter: false,
     id: 377946066,
@@ -12901,7 +12901,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-08-26T16:23:42+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -12912,9 +12912,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 826.09327545,
     commute: false,
@@ -12938,10 +12938,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.76760563380282,
           flat: 80.53731343283582,
-          up: 74.08563535911603,
+          up: 74.08563535911603
         },
         upperQuartileCadence: 84,
-        upperQuartileDistancePerOccurrence: 7.216216216216216,
+        upperQuartileDistancePerOccurrence: 7.216216216216216
       },
       elevationData: {
         accumulatedElevationAscent: 533.9445542508763,
@@ -12952,7 +12952,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 205,
         medianElevation: 227,
-        upperQuartileElevation: 499,
+        upperQuartileElevation: 499
       },
       gradeData: {
         avgGrade: -0.016356100721677442,
@@ -12965,12 +12965,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 77.76760563380282,
           flat: 80.53731343283582,
-          up: 74.08563535911603,
+          up: 74.08563535911603
         },
         upFlatDownDistanceData: { down: 8.675799999999999, flat: 13.408599999999995, up: 9.245500000000007 },
         upFlatDownInSeconds: { down: 1101, flat: 1699, total: 4959, up: 2159 },
         upFlatDownMoveData: { down: 28.367738419618526, flat: 28.411394938198928, up: 15.416303844372408 },
-        upperQuartileGrade: 2.6,
+        upperQuartileGrade: 2.6
       },
       heartRateData: {
         HRSS: 94.37899056518269,
@@ -12985,7 +12985,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 139,
         maxHeartRate: 191,
         medianHeartRate: 163,
-        upperQuartileHeartRate: 175,
+        upperQuartileHeartRate: 175
       },
       moveRatio: 0.9827586206896551,
       paceData: {
@@ -12999,7 +12999,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 111.11111111111111,
-        variancePace: 10.37159842118407,
+        variancePace: 10.37159842118407
       },
       powerData: {
         avgWatts: 140.0887052341598,
@@ -13016,7 +13016,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 223,
         variabilityIndex: 1.4534214932620937,
         weightedPower: 203.6079351505858,
-        weightedWattsPerKg: 2.9086847878655115,
+        weightedWattsPerKg: 2.9086847878655115
       },
       speedData: {
         avgPace: 156,
@@ -13029,8 +13029,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 18.630667020691153,
         totalAvgSpeed: 22.568026159334135,
         upperQuartileSpeed: 32.4,
-        varianceSpeed: 347.10175363586893,
-      },
+        varianceSpeed: 347.10175363586893
+      }
     },
     hasPowerMeter: false,
     id: 384884871,
@@ -13039,7 +13039,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-09-04T15:57:50+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -13050,9 +13050,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1278.17165112,
     commute: false,
@@ -13075,7 +13075,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 10423.508333333335,
         upFlatDownCadencePaceData: { down: 80.20388349514563, flat: 81.9066487575554, up: 69.43010752688173 },
         upperQuartileCadence: 87,
-        upperQuartileDistancePerOccurrence: 6.4406779661016955,
+        upperQuartileDistancePerOccurrence: 6.4406779661016955
       },
       elevationData: {
         accumulatedElevationAscent: 153.43356140350875,
@@ -13086,7 +13086,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 181,
         medianElevation: 193,
-        upperQuartileElevation: 205,
+        upperQuartileElevation: 205
       },
       gradeData: {
         avgGrade: 0.0031420468655909434,
@@ -13100,7 +13100,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 3.1158999999999857, flat: 63.330800000000025, up: 3.617499999999995 },
         upFlatDownInSeconds: { down: 460, flat: 7881, total: 8996, up: 655 },
         upFlatDownMoveData: { down: 24.385304347825976, flat: 28.929181575942152, up: 19.882442748091574 },
-        upperQuartileGrade: 0.3,
+        upperQuartileGrade: 0.3
       },
       heartRateData: null,
       moveRatio: 1,
@@ -13115,7 +13115,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 114.9425287356322,
-        variancePace: 828.8234124555416,
+        variancePace: 828.8234124555416
       },
       powerData: {
         avgWatts: 126.36808413351623,
@@ -13132,7 +13132,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 167,
         variabilityIndex: 1.1443326162543996,
         weightedPower: 144.6071203275627,
-        weightedWattsPerKg: 2.0658160046794674,
+        weightedWattsPerKg: 2.0658160046794674
       },
       speedData: {
         avgPace: 128,
@@ -13145,8 +13145,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 2.084108117532387,
         totalAvgSpeed: 28.018292574477528,
         upperQuartileSpeed: 31.319999999999997,
-        varianceSpeed: 4.343506645564389,
-      },
+        varianceSpeed: 4.343506645564389
+      }
     },
     hasPowerMeter: false,
     id: 385490294,
@@ -13155,7 +13155,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-09-05T13:29:59+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -13166,9 +13166,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 209.11589958,
     commute: false,
@@ -13192,10 +13192,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 84.57142857142857,
           flat: 77.41714285714286,
-          up: 68.27927927927928,
+          up: 68.27927927927928
         },
         upperQuartileCadence: 84,
-        upperQuartileDistancePerOccurrence: 6.569343065693431,
+        upperQuartileDistancePerOccurrence: 6.569343065693431
       },
       elevationData: {
         accumulatedElevationAscent: 73.03261312939009,
@@ -13206,7 +13206,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 198,
         medianElevation: 206,
-        upperQuartileElevation: 211,
+        upperQuartileElevation: 211
       },
       gradeData: {
         avgGrade: 0.02157444038259174,
@@ -13219,12 +13219,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 84.57142857142857,
           flat: 77.41714285714286,
-          up: 68.27927927927928,
+          up: 68.27927927927928
         },
         upFlatDownDistanceData: { down: 2.064100000000003, flat: 5.947899999999995, up: 1.9725000000000021 },
         upFlatDownInSeconds: { down: 316, flat: 835, total: 1512, up: 361 },
         upFlatDownMoveData: { down: 23.515063291139278, flat: 25.643640718562853, up: 19.670360110803347 },
-        upperQuartileGrade: 1.2,
+        upperQuartileGrade: 1.2
       },
       heartRateData: null,
       moveRatio: 0.31972932966800593,
@@ -13239,7 +13239,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 126.58227848101265,
-        variancePace: 43.55540757885029,
+        variancePace: 43.55540757885029
       },
       powerData: {
         avgWatts: 119.08348457350272,
@@ -13256,7 +13256,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 0,
         variabilityIndex: 1.4961524440740073,
         weightedPower: 178.16704649349543,
-        weightedWattsPerKg: 2.545243521335649,
+        weightedWattsPerKg: 2.545243521335649
       },
       speedData: {
         avgPace: 151,
@@ -13269,8 +13269,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 9.091388344635108,
         totalAvgSpeed: 7.611156692746879,
         upperQuartileSpeed: 28.44,
-        varianceSpeed: 82.65334203296709,
-      },
+        varianceSpeed: 82.65334203296709
+      }
     },
     hasPowerMeter: false,
     id: 386268058,
@@ -13279,7 +13279,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-09-06T14:04:53+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -13290,9 +13290,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 709.0235271,
     commute: false,
@@ -13315,7 +13315,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 3788.9249999999956,
         upFlatDownCadencePaceData: { down: 85.5904761904762, flat: 87.79411764705883, up: 72.94444444444444 },
         upperQuartileCadence: 96,
-        upperQuartileDistancePerOccurrence: 7.283582089551949,
+        upperQuartileDistancePerOccurrence: 7.283582089551949
       },
       elevationData: {
         accumulatedElevationAscent: 145.60370441357753,
@@ -13326,7 +13326,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 178,
         medianElevation: 179,
-        upperQuartileElevation: 182,
+        upperQuartileElevation: 182
       },
       gradeData: {
         avgGrade: -0.006731320895574606,
@@ -13340,7 +13340,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 3.304300000000003, flat: 21.925599999999992, up: 3.703500000000006 },
         upFlatDownInSeconds: { down: 422, flat: 2354, total: 3332, up: 556 },
         upFlatDownMoveData: { down: 28.188341232227515, flat: 33.53107901444349, up: 23.979496402877736 },
-        upperQuartileGrade: 0.7,
+        upperQuartileGrade: 0.7
       },
       heartRateData: null,
       moveRatio: 1,
@@ -13355,7 +13355,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 95.23809523809523,
-        variancePace: 54.20700707779153,
+        variancePace: 54.20700707779153
       },
       powerData: {
         avgWatts: 180.52919020715632,
@@ -13372,7 +13372,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 272,
         variabilityIndex: 1.338548856461335,
         weightedPower: 241.64714110967992,
-        weightedWattsPerKg: 3.4521020158525704,
+        weightedWattsPerKg: 3.4521020158525704
       },
       speedData: {
         avgPace: 115,
@@ -13385,8 +13385,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 8.149360608564887,
         totalAvgSpeed: 31.21957382953181,
         upperQuartileSpeed: 37.800000000000004,
-        varianceSpeed: 66.41207832842906,
-      },
+        varianceSpeed: 66.41207832842906
+      }
     },
     hasPowerMeter: false,
     id: 387059955,
@@ -13395,7 +13395,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-09-07T16:07:00+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -13406,9 +13406,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 837.6778021,
     commute: false,
@@ -13432,10 +13432,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 81.07643312101911,
           flat: 81.79240506329114,
-          up: 76.73368146214099,
+          up: 76.73368146214099
         },
         upperQuartileCadence: 88,
-        upperQuartileDistancePerOccurrence: 6.489795918367291,
+        upperQuartileDistancePerOccurrence: 6.489795918367291
       },
       elevationData: {
         accumulatedElevationAscent: 542.2234285139633,
@@ -13446,7 +13446,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 195,
         medianElevation: 210,
-        upperQuartileElevation: 498,
+        upperQuartileElevation: 498
       },
       gradeData: {
         avgGrade: 0.04823588277341,
@@ -13459,12 +13459,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 81.07643312101911,
           flat: 81.79240506329114,
-          up: 76.73368146214099,
+          up: 76.73368146214099
         },
         upFlatDownDistanceData: { down: 8.462099999999994, flat: 13.608600000000008, up: 9.406799999999997 },
         upFlatDownInSeconds: { down: 911, flat: 1672, total: 4764, up: 2181 },
         upFlatDownMoveData: { down: 33.439692645444545, flat: 29.300813397129204, up: 15.527042640990368 },
-        upperQuartileGrade: 2.7,
+        upperQuartileGrade: 2.7
       },
       heartRateData: {
         HRSS: 92.46602034285085,
@@ -13479,7 +13479,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 144,
         maxHeartRate: 195,
         medianHeartRate: 161,
-        upperQuartileHeartRate: 173,
+        upperQuartileHeartRate: 173
       },
       moveRatio: 1,
       paceData: {
@@ -13493,7 +13493,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 112.35955056179775,
-        variancePace: 10.5307228555722,
+        variancePace: 10.5307228555722
       },
       powerData: {
         avgWatts: 147.835958718088,
@@ -13510,7 +13510,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 228,
         variabilityIndex: 1.4066910222949975,
         weightedPower: 207.95951590110826,
-        weightedWattsPerKg: 2.9708502271586896,
+        weightedWattsPerKg: 2.9708502271586896
       },
       speedData: {
         avgPace: 150,
@@ -13523,8 +13523,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 18.4893719294372,
         totalAvgSpeed: 23.96350125944586,
         upperQuartileSpeed: 32.04,
-        varianceSpeed: 341.8568743450603,
-      },
+        varianceSpeed: 341.8568743450603
+      }
     },
     hasPowerMeter: false,
     id: 387847432,
@@ -13533,7 +13533,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-09-08T16:17:57+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -13544,9 +13544,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 311.450229648,
     commute: false,
@@ -13565,7 +13565,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 164,
         medianElevation: 178,
-        upperQuartileElevation: 236,
+        upperQuartileElevation: 236
       },
       gradeData: {
         avgGrade: -0.6192726091898076,
@@ -13579,11 +13579,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 1.7524000000000017,
           flat: 0.3870999999999993,
-          up: 1.5558999999999987,
+          up: 1.5558999999999987
         },
         upFlatDownInSeconds: { down: 1813, flat: 598, total: 4455, up: 2044 },
         upFlatDownMoveData: { down: 3.4796690568119173, flat: 2.3303678929765845, up: 2.7403326810176103 },
-        upperQuartileGrade: 12.1,
+        upperQuartileGrade: 12.1
       },
       heartRateData: null,
       moveRatio: 0.856401384083045,
@@ -13598,7 +13598,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 833.3333333333333,
-        variancePace: 184.21784019497957,
+        variancePace: 184.21784019497957
       },
       powerData: null,
       speedData: {
@@ -13612,8 +13612,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 4.420642628138204,
         totalAvgSpeed: 2.728719723183395,
         upperQuartileSpeed: 4.32,
-        varianceSpeed: 19.542081245712648,
-      },
+        varianceSpeed: 19.542081245712648
+      }
     },
     hasPowerMeter: false,
     id: 392354127,
@@ -13622,7 +13622,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-09-14T18:04:39+0000",
     trainer: false,
-    type: "Hike",
+    type: "Hike"
   },
   {
     athleteSnapshot: {
@@ -13633,9 +13633,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 476.27322839999994,
     commute: false,
@@ -13654,7 +13654,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 79,
         medianElevation: 85,
-        upperQuartileElevation: 94,
+        upperQuartileElevation: 94
       },
       gradeData: {
         avgGrade: 0.010228600992585912,
@@ -13668,7 +13668,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.635799999999999, flat: 1.9324999999999994, up: 1.650400000000001 },
         upFlatDownInSeconds: { down: 770, flat: 1041, total: 2586, up: 775 },
         upFlatDownMoveData: { down: 7.647896103896099, flat: 6.682997118155619, up: 7.666374193548391 },
-        upperQuartileGrade: 2.5,
+        upperQuartileGrade: 2.5
       },
       heartRateData: null,
       moveRatio: 1,
@@ -13683,7 +13683,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: 72.48532851807774,
         runningStressScorePerHour: 100.90764990915694,
         upperQuartilePace: 357.1428571428571,
-        variancePace: 130.24464578024825,
+        variancePace: 130.24464578024825
       },
       powerData: {
         avgWatts: 166.36683006535947,
@@ -13701,7 +13701,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 192,
         variabilityIndex: 1.1687321240358417,
         weightedPower: 194.4382586713975,
-        weightedWattsPerKg: 2.777689409591393,
+        weightedWattsPerKg: 2.777689409591393
       },
       speedData: {
         avgPace: 490,
@@ -13714,8 +13714,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 5.2574035118795255,
         totalAvgSpeed: 7.33517401392112,
         upperQuartileSpeed: 10.08,
-        varianceSpeed: 27.640291686723167,
-      },
+        varianceSpeed: 27.640291686723167
+      }
     },
     hasPowerMeter: false,
     id: 393116784,
@@ -13724,7 +13724,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-09-15T22:25:25+0000",
     trainer: false,
-    type: "Run",
+    type: "Run"
   },
   {
     athleteSnapshot: {
@@ -13735,9 +13735,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 255.15407793600005,
     commute: false,
@@ -13756,7 +13756,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 11,
         medianElevation: 17,
-        upperQuartileElevation: 43,
+        upperQuartileElevation: 43
       },
       gradeData: {
         avgGrade: 0.6746079374026056,
@@ -13770,11 +13770,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 1.1242999999999996,
           flat: 0.5253999999999995,
-          up: 1.3664000000000005,
+          up: 1.3664000000000005
         },
         upFlatDownInSeconds: { down: 1409, flat: 949, total: 4073, up: 1715 },
         upFlatDownMoveData: { down: 2.872590489709013, flat: 1.993087460484719, up: 2.868244897959185 },
-        upperQuartileGrade: 6.2,
+        upperQuartileGrade: 6.2
       },
       heartRateData: null,
       moveRatio: 0.7089643167972149,
@@ -13789,7 +13789,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 909.0909090909089,
-        variancePace: 617.4254314216786,
+        variancePace: 617.4254314216786
       },
       powerData: null,
       speedData: {
@@ -13803,8 +13803,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 2.414676710927206,
         totalAvgSpeed: 2.0165639686684047,
         upperQuartileSpeed: 3.9600000000000004,
-        varianceSpeed: 5.8306636182942295,
-      },
+        varianceSpeed: 5.8306636182942295
+      }
     },
     hasPowerMeter: false,
     id: 393874622,
@@ -13813,7 +13813,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-09-16T21:28:01+0000",
     trainer: false,
-    type: "Hike",
+    type: "Hike"
   },
   {
     athleteSnapshot: {
@@ -13824,9 +13824,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 850.8935213450001,
     commute: false,
@@ -13849,7 +13849,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 4942.241666666658,
         upFlatDownCadencePaceData: { down: 79.60714285714286, flat: 87.9946949602122, up: 78.11904761904762 },
         upperQuartileCadence: 93,
-        upperQuartileDistancePerOccurrence: 6.407999999999956,
+        upperQuartileDistancePerOccurrence: 6.407999999999956
       },
       elevationData: {
         accumulatedElevationAscent: 543.6834825592626,
@@ -13860,7 +13860,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 209,
         medianElevation: 230,
-        upperQuartileElevation: 504,
+        upperQuartileElevation: 504
       },
       gradeData: {
         avgGrade: 0.001223772344422542,
@@ -13874,7 +13874,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 8.887899999999995, flat: 13.308500000000013, up: 9.349499999999995 },
         upFlatDownInSeconds: { down: 892, flat: 1532, total: 4612, up: 2188 },
         upFlatDownMoveData: { down: 35.87044843049325, flat: 31.27323759791126, up: 15.383089579524675 },
-        upperQuartileGrade: 2.5,
+        upperQuartileGrade: 2.5
       },
       heartRateData: {
         HRSS: 95.6730876814602,
@@ -13889,7 +13889,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 147,
         maxHeartRate: 189,
         medianHeartRate: 169,
-        upperQuartileHeartRate: 177,
+        upperQuartileHeartRate: 177
       },
       moveRatio: 0.999783221331021,
       paceData: {
@@ -13903,7 +13903,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 105.26315789473684,
-        variancePace: 11.862013150741321,
+        variancePace: 11.862013150741321
       },
       powerData: {
         avgWatts: 143.82886823400764,
@@ -13920,7 +13920,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 238,
         variabilityIndex: 1.4357407248629488,
         weightedPower: 206.50096353451167,
-        weightedWattsPerKg: 2.9500137647787383,
+        weightedWattsPerKg: 2.9500137647787383
       },
       speedData: {
         avgPace: 146,
@@ -13933,8 +13933,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 17.42095864492701,
         totalAvgSpeed: 24.624530674181695,
         upperQuartileSpeed: 34.2,
-        varianceSpeed: 303.4898001082571,
-      },
+        varianceSpeed: 303.4898001082571
+      }
     },
     hasPowerMeter: false,
     id: 397193741,
@@ -13943,7 +13943,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-09-21T16:01:46+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -13954,9 +13954,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 827.3318955,
     commute: false,
@@ -13979,7 +13979,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 5013.591666666667,
         upFlatDownCadencePaceData: { down: 78, flat: 86.23306233062331, up: 75.47738693467336 },
         upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.346368715083312,
+        upperQuartileDistancePerOccurrence: 6.346368715083312
       },
       elevationData: {
         accumulatedElevationAscent: 533.6996512985016,
@@ -13990,7 +13990,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 227,
         medianElevation: 251,
-        upperQuartileElevation: 524,
+        upperQuartileElevation: 524
       },
       gradeData: {
         avgGrade: -0.006273815873946184,
@@ -14004,7 +14004,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 8.697500000000002, flat: 13.475799999999996, up: 9.134600000000002 },
         upFlatDownInSeconds: { down: 952, flat: 1740, total: 4982, up: 2290 },
         upFlatDownMoveData: { down: 32.88970588235295, flat: 27.88096551724137, up: 14.360069868995637 },
-        upperQuartileGrade: 2.5,
+        upperQuartileGrade: 2.5
       },
       heartRateData: {
         HRSS: 88.3406991264042,
@@ -14019,7 +14019,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 134,
         maxHeartRate: 186,
         medianHeartRate: 155,
-        upperQuartileHeartRate: 174,
+        upperQuartileHeartRate: 174
       },
       moveRatio: 0.9997993176801124,
       paceData: {
@@ -14033,7 +14033,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 111.11111111111111,
-        variancePace: 14.614659521498195,
+        variancePace: 14.614659521498195
       },
       powerData: {
         avgWatts: 133.91020191285867,
@@ -14050,7 +14050,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 218,
         variabilityIndex: 1.4489540530709564,
         weightedPower: 194.0297298091867,
-        weightedWattsPerKg: 2.7718532829883813,
+        weightedWattsPerKg: 2.7718532829883813
       },
       speedData: {
         avgPace: 158,
@@ -14063,8 +14063,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 15.69484024199731,
         totalAvgSpeed: 22.658217940999393,
         upperQuartileSpeed: 32.4,
-        varianceSpeed: 246.3280102218182,
-      },
+        varianceSpeed: 246.3280102218182
+      }
     },
     hasPowerMeter: false,
     id: 403560013,
@@ -14073,7 +14073,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-09-22T15:47:48+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -14084,9 +14084,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 873.9592777,
     commute: false,
@@ -14109,7 +14109,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 4755.225000000006,
         upFlatDownCadencePaceData: { down: 81.1747572815534, flat: 83.77002583979328, up: 72.99069148936171 },
         upperQuartileCadence: 89,
-        upperQuartileDistancePerOccurrence: 6.424870466321243,
+        upperQuartileDistancePerOccurrence: 6.424870466321243
       },
       elevationData: {
         accumulatedElevationAscent: 537.609236264527,
@@ -14120,7 +14120,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 166,
         medianElevation: 189,
-        upperQuartileElevation: 466,
+        upperQuartileElevation: 466
       },
       gradeData: {
         avgGrade: -0.00717987606157018,
@@ -14134,7 +14134,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 8.6825, flat: 13.549999999999997, up: 9.218600000000002 },
         upFlatDownInSeconds: { down: 922, flat: 1617, total: 4765, up: 2226 },
         upFlatDownMoveData: { down: 33.90130151843818, flat: 30.16697588126159, up: 14.908787061994612 },
-        upperQuartileGrade: 2.6,
+        upperQuartileGrade: 2.6
       },
       heartRateData: {
         HRSS: 100.82549581953965,
@@ -14149,7 +14149,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 152,
         maxHeartRate: 189,
         medianHeartRate: 166,
-        upperQuartileHeartRate: 178,
+        upperQuartileHeartRate: 178
       },
       moveRatio: 0.9993708053691275,
       paceData: {
@@ -14163,7 +14163,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 107.5268817204301,
-        variancePace: 12.636235615637533,
+        variancePace: 12.636235615637533
       },
       powerData: {
         avgWatts: 142.51707317073172,
@@ -14180,7 +14180,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 237,
         variabilityIndex: 1.4369637633383547,
         weightedPower: 204.79186980338233,
-        weightedWattsPerKg: 2.925598140048319,
+        weightedWattsPerKg: 2.925598140048319
       },
       speedData: {
         avgPace: 151,
@@ -14193,8 +14193,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 16.878832087582932,
         totalAvgSpeed: 23.739727348993327,
         upperQuartileSpeed: 33.480000000000004,
-        varianceSpeed: 284.8949726408192,
-      },
+        varianceSpeed: 284.8949726408192
+      }
     },
     hasPowerMeter: false,
     id: 403560066,
@@ -14203,7 +14203,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-09-30T16:03:22+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -14214,9 +14214,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1106.41489917,
     commute: false,
@@ -14240,10 +14240,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 89.38317757009345,
           flat: 86.43932038834951,
-          up: 76.78717201166181,
+          up: 76.78717201166181
         },
         upperQuartileCadence: 90,
-        upperQuartileDistancePerOccurrence: 6.29461077844314,
+        upperQuartileDistancePerOccurrence: 6.29461077844314
       },
       elevationData: {
         accumulatedElevationAscent: 785.1429273471445,
@@ -14254,7 +14254,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 182,
         medianElevation: 354,
-        upperQuartileElevation: 590,
+        upperQuartileElevation: 590
       },
       gradeData: {
         avgGrade: 0.016811366621870754,
@@ -14267,12 +14267,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 89.38317757009345,
           flat: 86.43932038834951,
-          up: 76.78717201166181,
+          up: 76.78717201166181
         },
         upFlatDownDistanceData: { down: 11.984899999999989, flat: 14.75170000000001, up: 13.000800000000003 },
         upFlatDownInSeconds: { down: 1256, flat: 1816, total: 6072, up: 3000 },
         upFlatDownMoveData: { down: 34.35162420382162, flat: 29.243458149779755, up: 15.600960000000002 },
-        upperQuartileGrade: 3.2,
+        upperQuartileGrade: 3.2
       },
       heartRateData: {
         HRSS: 122.43539382797212,
@@ -14287,7 +14287,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 148,
         maxHeartRate: 188,
         medianHeartRate: 165,
-        upperQuartileHeartRate: 175,
+        upperQuartileHeartRate: 175
       },
       moveRatio: 1,
       paceData: {
@@ -14301,7 +14301,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 113.63636363636361,
-        variancePace: 10.014616133312689,
+        variancePace: 10.014616133312689
       },
       powerData: {
         avgWatts: 151.62612419700213,
@@ -14318,7 +14318,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 231,
         variabilityIndex: 1.446483505262248,
         weightedPower: 219.3246876178086,
-        weightedWattsPerKg: 3.1332098231115513,
+        weightedWattsPerKg: 3.1332098231115513
       },
       speedData: {
         avgPace: 152,
@@ -14331,8 +14331,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 18.959815061101402,
         totalAvgSpeed: 23.676432806324122,
         upperQuartileSpeed: 31.680000000000003,
-        varianceSpeed: 359.4745871511675,
-      },
+        varianceSpeed: 359.4745871511675
+      }
     },
     hasPowerMeter: false,
     id: 406217194,
@@ -14341,7 +14341,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-10-04T13:18:03+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -14352,9 +14352,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 499.0554129600001,
     commute: false,
@@ -14373,7 +14373,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 217,
         medianElevation: 219,
-        upperQuartileElevation: 223,
+        upperQuartileElevation: 223
       },
       gradeData: {
         avgGrade: -0.04208050182958708,
@@ -14387,11 +14387,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 0.9471000000000009,
           flat: 3.7879000000000005,
-          up: 0.8126999999999982,
+          up: 0.8126999999999982
         },
         upFlatDownInSeconds: { down: 432, flat: 1734, total: 2702, up: 536 },
         upFlatDownMoveData: { down: 7.892500000000008, flat: 7.864152249134949, up: 5.458432835820884 },
-        upperQuartileGrade: 0.7,
+        upperQuartileGrade: 0.7
       },
       heartRateData: null,
       moveRatio: 0.9818313953488372,
@@ -14406,7 +14406,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: 58.868390305554165,
         runningStressScorePerHour: 78.43308849000555,
         upperQuartilePace: 357.1428571428571,
-        variancePace: 248.03378751444384,
+        variancePace: 248.03378751444384
       },
       powerData: {
         avgWatts: 141.04790419161677,
@@ -14424,7 +14424,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 182,
         variabilityIndex: 1.175052917377084,
         weightedPower: 165.73875131028274,
-        weightedWattsPerKg: 2.3676964472897533,
+        weightedWattsPerKg: 2.3676964472897533
       },
       speedData: {
         avgPace: 480,
@@ -14437,8 +14437,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 3.809744299105375,
         totalAvgSpeed: 7.351090116279079,
         upperQuartileSpeed: 10.08,
-        varianceSpeed: 14.514151624565905,
-      },
+        varianceSpeed: 14.514151624565905
+      }
     },
     hasPowerMeter: false,
     id: 406963466,
@@ -14447,7 +14447,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-10-05T16:31:52+0000",
     trainer: false,
-    type: "Run",
+    type: "Run"
   },
   {
     athleteSnapshot: {
@@ -14458,9 +14458,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 102.91963569,
     commute: true,
@@ -14479,7 +14479,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 160,
         medianElevation: 161,
-        upperQuartileElevation: 162,
+        upperQuartileElevation: 162
       },
       gradeData: {
         avgGrade: -0.2278545178050946,
@@ -14493,7 +14493,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 0.7381999999999996, flat: 5.2543, up: 0.32029999999999986 },
         upFlatDownInSeconds: { down: 104, flat: 757, total: 962, up: 101 },
         upFlatDownMoveData: { down: 25.553076923076908, flat: 24.987424042272128, up: 11.416633663366332 },
-        upperQuartileGrade: 0.3,
+        upperQuartileGrade: 0.3
       },
       heartRateData: null,
       moveRatio: 1,
@@ -14508,7 +14508,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 117.64705882352942,
-        variancePace: 31.825914485876424,
+        variancePace: 31.825914485876424
       },
       powerData: {
         avgWatts: 99.58823529411765,
@@ -14525,7 +14525,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 138,
         variabilityIndex: 1.3399433470000872,
         weightedPower: 133.44259332183222,
-        weightedWattsPerKg: 1.9063227617404603,
+        weightedWattsPerKg: 1.9063227617404603
       },
       speedData: {
         avgPace: 149,
@@ -14538,8 +14538,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 10.635570839808762,
         totalAvgSpeed: 24.005675675675693,
         upperQuartileSpeed: 30.6,
-        varianceSpeed: 113.11536708859046,
-      },
+        varianceSpeed: 113.11536708859046
+      }
     },
     hasPowerMeter: false,
     id: 420019631,
@@ -14548,7 +14548,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-10-17T08:45:47+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -14559,9 +14559,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 256.733509935,
     commute: true,
@@ -14580,7 +14580,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 242,
         medianElevation: 243,
-        upperQuartileElevation: 245,
+        upperQuartileElevation: 245
       },
       gradeData: {
         avgGrade: 0.3310245103653649,
@@ -14594,7 +14594,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 0.4713999999999992, flat: 10.5478, up: 1.2041999999999982 },
         upFlatDownInSeconds: { down: 72, flat: 1344, total: 1659, up: 243 },
         upFlatDownMoveData: { down: 23.56999999999996, flat: 28.25303571428572, up: 17.839999999999975 },
-        upperQuartileGrade: 0.6,
+        upperQuartileGrade: 0.6
       },
       heartRateData: null,
       moveRatio: 1,
@@ -14609,7 +14609,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 117.64705882352942,
-        variancePace: 1769.4926059572797,
+        variancePace: 1769.4926059572797
       },
       powerData: {
         avgWatts: 140.16869918699186,
@@ -14626,7 +14626,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 188,
         variabilityIndex: 1.1023647905050213,
         weightedPower: 154.51703871462962,
-        weightedWattsPerKg: 2.207386267351852,
+        weightedWattsPerKg: 2.207386267351852
       },
       speedData: {
         avgPace: 135,
@@ -14639,8 +14639,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 1.4263525217392672,
         totalAvgSpeed: 26.494285714285734,
         upperQuartileSpeed: 30.6,
-        varianceSpeed: 2.034481516271967,
-      },
+        varianceSpeed: 2.034481516271967
+      }
     },
     hasPowerMeter: false,
     id: 420019708,
@@ -14649,7 +14649,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-10-17T09:58:56+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -14660,9 +14660,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 76.197678375,
     commute: true,
@@ -14681,7 +14681,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 205,
         medianElevation: 206,
-        upperQuartileElevation: 212,
+        upperQuartileElevation: 212
       },
       gradeData: {
         avgGrade: -0.38483978534991015,
@@ -14695,11 +14695,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 1.0974999999999997,
           flat: 2.9667000000000003,
-          up: 0.4640999999999998,
+          up: 0.4640999999999998
         },
         upFlatDownInSeconds: { down: 141, flat: 421, total: 651, up: 89 },
         upFlatDownMoveData: { down: 28.021276595744677, flat: 25.36845605700713, up: 18.772584269662914 },
-        upperQuartileGrade: 1,
+        upperQuartileGrade: 1
       },
       heartRateData: null,
       moveRatio: 1,
@@ -14714,7 +14714,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 126.58227848101265,
-        variancePace: 76.40882110729186,
+        variancePace: 76.40882110729186
       },
       powerData: {
         avgWatts: 97.36286919831224,
@@ -14731,7 +14731,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 161,
         variabilityIndex: 1.37988492556959,
         weightedPower: 134.3495555169548,
-        weightedWattsPerKg: 1.9192793645279258,
+        weightedWattsPerKg: 1.9192793645279258
       },
       speedData: {
         avgPace: 143,
@@ -14744,8 +14744,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 6.864035181679397,
         totalAvgSpeed: 25.140276497695865,
         upperQuartileSpeed: 28.44,
-        varianceSpeed: 47.11497897533252,
-      },
+        varianceSpeed: 47.11497897533252
+      }
     },
     hasPowerMeter: false,
     id: 420019810,
@@ -14754,7 +14754,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-10-17T14:14:52+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -14765,9 +14765,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 259.563098955,
     commute: true,
@@ -14786,7 +14786,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 222,
         medianElevation: 227,
-        upperQuartileElevation: 229,
+        upperQuartileElevation: 229
       },
       gradeData: {
         avgGrade: -0.002314002401323279,
@@ -14800,7 +14800,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 2.4325000000000037, flat: 6.9447, up: 2.532899999999996 },
         upFlatDownInSeconds: { down: 386, flat: 1746, total: 2593, up: 461 },
         upFlatDownMoveData: { down: 22.68652849740936, flat: 14.318969072164949, up: 19.779696312364397 },
-        upperQuartileGrade: 1.3,
+        upperQuartileGrade: 1.3
       },
       heartRateData: null,
       moveRatio: 0.08023144280454222,
@@ -14815,7 +14815,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 135.13513513513513,
-        variancePace: 11.965399647489935,
+        variancePace: 11.965399647489935
       },
       powerData: {
         avgWatts: 107.13606194690266,
@@ -14832,7 +14832,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 0,
         variabilityIndex: 1.3520342543631392,
         weightedPower: 144.85162562978363,
-        weightedWattsPerKg: 2.0693089375683376,
+        weightedWattsPerKg: 2.0693089375683376
       },
       speedData: {
         avgPace: 213,
@@ -14845,8 +14845,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 17.345532858900427,
         totalAvgSpeed: 1.3517961570593142,
         upperQuartileSpeed: 26.64,
-        varianceSpeed: 300.8675101591944,
-      },
+        varianceSpeed: 300.8675101591944
+      }
     },
     hasPowerMeter: false,
     id: 417483106,
@@ -14855,7 +14855,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-10-21T07:00:36+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -14866,9 +14866,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 191.92554674800002,
     commute: true,
@@ -14887,7 +14887,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 168,
         medianElevation: 173,
-        upperQuartileElevation: 228,
+        upperQuartileElevation: 228
       },
       gradeData: {
         avgGrade: -0.011686806039926872,
@@ -14901,7 +14901,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.599399999999996, flat: 7.1684000000000045, up: 1.841599999999999 },
         upFlatDownInSeconds: { down: 347, flat: 1130, total: 1886, up: 409 },
         upFlatDownMoveData: { down: 16.593198847262205, flat: 22.837380530973466, up: 16.209682151589234 },
-        upperQuartileGrade: 1,
+        upperQuartileGrade: 1
       },
       heartRateData: null,
       moveRatio: 0.05995485901389198,
@@ -14916,7 +14916,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 136.98630136986299,
-        variancePace: 38.81328057698425,
+        variancePace: 38.81328057698425
       },
       powerData: {
         avgWatts: 95.73846153846154,
@@ -14933,7 +14933,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 0,
         variabilityIndex: 1.3459179058208368,
         weightedPower: 128.8561096603549,
-        weightedWattsPerKg: 1.8408015665764985,
+        weightedWattsPerKg: 1.8408015665764985
       },
       speedData: {
         avgPace: 177,
@@ -14946,8 +14946,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 9.63077140279454,
         totalAvgSpeed: 1.2184747433003762,
         upperQuartileSpeed: 26.28,
-        varianceSpeed: 92.7517578128851,
-      },
+        varianceSpeed: 92.7517578128851
+      }
     },
     hasPowerMeter: false,
     id: 420019949,
@@ -14956,7 +14956,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-10-22T07:06:30+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -14967,9 +14967,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 43.6032808725,
     commute: true,
@@ -14988,7 +14988,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 228,
         medianElevation: 230,
-        upperQuartileElevation: 232,
+        upperQuartileElevation: 232
       },
       gradeData: {
         avgGrade: -0.2805364099490564,
@@ -15002,11 +15002,11 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: {
           down: 0.5480000000000004,
           flat: 2.1174999999999997,
-          up: 0.3378000000000002,
+          up: 0.3378000000000002
         },
         upFlatDownInSeconds: { down: 80, flat: 315, total: 454, up: 59 },
         upFlatDownMoveData: { down: 24.660000000000014, flat: 24.199999999999996, up: 20.61152542372883 },
-        upperQuartileGrade: 0.8,
+        upperQuartileGrade: 0.8
       },
       heartRateData: null,
       moveRatio: 0.9763440860215054,
@@ -15021,7 +15021,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 126.58227848101265,
-        variancePace: 157.8024860426133,
+        variancePace: 157.8024860426133
       },
       powerData: {
         avgWatts: 85.03614457831326,
@@ -15038,7 +15038,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 131,
         variabilityIndex: 1.2494923900922192,
         weightedPower: 106.25201553338414,
-        weightedWattsPerKg: 1.517885936191202,
+        weightedWattsPerKg: 1.517885936191202
       },
       speedData: {
         avgPace: 151,
@@ -15051,8 +15051,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 4.776330055897227,
         totalAvgSpeed: 23.19483870967742,
         upperQuartileSpeed: 28.44,
-        varianceSpeed: 22.813328802867204,
-      },
+        varianceSpeed: 22.813328802867204
+      }
     },
     hasPowerMeter: false,
     id: 420019984,
@@ -15061,7 +15061,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-10-23T07:00:12+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -15072,9 +15072,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 199.9254575565,
     commute: true,
@@ -15093,7 +15093,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 132,
         medianElevation: 155,
-        upperQuartileElevation: 172,
+        upperQuartileElevation: 172
       },
       gradeData: {
         avgGrade: 0.13384182599945013,
@@ -15107,7 +15107,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.5810999999999982, flat: 7.542199999999999, up: 1.8077000000000034 },
         upFlatDownInSeconds: { down: 258, flat: 1334, total: 2083, up: 491 },
         upFlatDownMoveData: { down: 22.061860465116254, flat: 20.353763118440778, up: 13.254012219959293 },
-        upperQuartileGrade: 0.9,
+        upperQuartileGrade: 0.9
       },
       heartRateData: null,
       moveRatio: 0.10039521881627145,
@@ -15122,7 +15122,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 136.98630136986299,
-        variancePace: 25.536593925649264,
+        variancePace: 25.536593925649264
       },
       powerData: {
         avgWatts: 94.16429699842023,
@@ -15139,7 +15139,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 0,
         variabilityIndex: 1.3647174004553915,
         weightedPower: 128.50765461539348,
-        weightedWattsPerKg: 1.8358236373627639,
+        weightedWattsPerKg: 1.8358236373627639
       },
       speedData: {
         avgPace: 189,
@@ -15152,8 +15152,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 11.873254178203137,
         totalAvgSpeed: 1.9102139965297873,
         upperQuartileSpeed: 26.28,
-        varianceSpeed: 140.97416478021825,
-      },
+        varianceSpeed: 140.97416478021825
+      }
     },
     hasPowerMeter: false,
     id: 420020088,
@@ -15162,7 +15162,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-10-23T09:58:49+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -15173,9 +15173,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 169.16904879999998,
     commute: true,
@@ -15194,7 +15194,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 153,
         medianElevation: 163,
-        upperQuartileElevation: 167,
+        upperQuartileElevation: 167
       },
       gradeData: {
         avgGrade: 0.010576398672909038,
@@ -15208,7 +15208,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 1.6358999999999997, flat: 5.5369, up: 1.6283999999999992 },
         upFlatDownInSeconds: { down: 244, flat: 802, total: 1353, up: 307 },
         upFlatDownMoveData: { down: 24.136229508196717, flat: 24.85391521197008, up: 19.09524429967426 },
-        upperQuartileGrade: 1.3,
+        upperQuartileGrade: 1.3
       },
       heartRateData: null,
       moveRatio: 0.11282521681120747,
@@ -15223,7 +15223,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 126.58227848101265,
-        variancePace: 72.1952417975651,
+        variancePace: 72.1952417975651
       },
       powerData: {
         avgWatts: 107.38369781312127,
@@ -15240,7 +15240,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 0,
         variabilityIndex: 1.3852922310586473,
         weightedPower: 148.75780232286635,
-        weightedWattsPerKg: 2.1251114617552336,
+        weightedWattsPerKg: 2.1251114617552336
       },
       speedData: {
         avgPace: 153,
@@ -15253,8 +15253,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 7.0614999885037975,
         totalAvgSpeed: 2.637678452301534,
         upperQuartileSpeed: 28.44,
-        varianceSpeed: 49.86478208763913,
-      },
+        varianceSpeed: 49.86478208763913
+      }
     },
     hasPowerMeter: false,
     id: 420018674,
@@ -15263,7 +15263,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-10-24T10:47:07+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -15274,9 +15274,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 193.535379065,
     commute: true,
@@ -15295,7 +15295,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 184,
         medianElevation: 193,
-        upperQuartileElevation: 229,
+        upperQuartileElevation: 229
       },
       gradeData: {
         avgGrade: -0.006997555194743235,
@@ -15309,7 +15309,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 2.051200000000001, flat: 6.756099999999998, up: 1.9093000000000004 },
         upFlatDownInSeconds: { down: 294, flat: 989, total: 1778, up: 495 },
         upFlatDownMoveData: { down: 25.116734693877564, flat: 24.592477249747215, up: 13.885818181818186 },
-        upperQuartileGrade: 1,
+        upperQuartileGrade: 1
       },
       heartRateData: null,
       moveRatio: 0.05744935216000517,
@@ -15324,7 +15324,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 128.2051282051282,
-        variancePace: 39.468094984667225,
+        variancePace: 39.468094984667225
       },
       powerData: {
         avgWatts: 105.97903225806452,
@@ -15341,7 +15341,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 0,
         variabilityIndex: 1.54179926535344,
         weightedPower: 163.3983940783524,
-        weightedWattsPerKg: 2.3342627725478913,
+        weightedWattsPerKg: 2.3342627725478913
       },
       speedData: {
         avgPace: 164,
@@ -15354,8 +15354,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 9.5505452816126,
         totalAvgSpeed: 1.2604943616918172,
         upperQuartileSpeed: 28.08,
-        varianceSpeed: 91.2129151761327,
-      },
+        varianceSpeed: 91.2129151761327
+      }
     },
     hasPowerMeter: false,
     id: 420778529,
@@ -15364,7 +15364,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-10-26T08:07:54+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -15375,9 +15375,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1831.93190544,
     commute: false,
@@ -15401,10 +15401,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 83.26754385964912,
           flat: 81.98331346841478,
-          up: 67.71602787456446,
+          up: 67.71602787456446
         },
         upperQuartileCadence: 84,
-        upperQuartileDistancePerOccurrence: 6.362068965517492,
+        upperQuartileDistancePerOccurrence: 6.362068965517492
       },
       elevationData: {
         accumulatedElevationAscent: 1028.8348128120247,
@@ -15415,7 +15415,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 113,
         medianElevation: 139,
-        upperQuartileElevation: 419,
+        upperQuartileElevation: 419
       },
       gradeData: {
         avgGrade: 0.014377418978872191,
@@ -15428,12 +15428,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 83.26754385964912,
           flat: 81.98331346841478,
-          up: 67.71602787456446,
+          up: 67.71602787456446
         },
         upFlatDownDistanceData: { down: 18.13439999999998, flat: 28.645500000000037, up: 19.286199999999976 },
         upFlatDownInSeconds: { down: 1863, flat: 3683, total: 11350, up: 5804 },
         upFlatDownMoveData: { down: 35.042318840579675, flat: 27.999945696443152, up: 11.962494831150915 },
-        upperQuartileGrade: 2.8,
+        upperQuartileGrade: 2.8
       },
       heartRateData: {
         HRSS: 289.4115931052765,
@@ -15448,7 +15448,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 159,
         maxHeartRate: 199,
         medianHeartRate: 174,
-        upperQuartileHeartRate: 186,
+        upperQuartileHeartRate: 186
       },
       moveRatio: 0.786228872263785,
       paceData: {
@@ -15462,7 +15462,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 119.04761904761904,
-        variancePace: 9.646045328559426,
+        variancePace: 9.646045328559426
       },
       powerData: {
         avgWatts: 133.01458590852906,
@@ -15479,7 +15479,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 185,
         variabilityIndex: 1.3877928893681668,
         weightedPower: 184.59669650610778,
-        weightedWattsPerKg: 2.637095664372968,
+        weightedWattsPerKg: 2.637095664372968
       },
       speedData: {
         avgPace: 170,
@@ -15492,8 +15492,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 19.31864229637556,
         totalAvgSpeed: 16.59189526184537,
         upperQuartileSpeed: 30.240000000000002,
-        varianceSpeed: 373.20994017531086,
-      },
+        varianceSpeed: 373.20994017531086
+      }
     },
     hasPowerMeter: false,
     id: 423706687,
@@ -15502,7 +15502,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-10-31T10:53:28+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -15513,9 +15513,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1995.4309740800002,
     commute: false,
@@ -15538,7 +15538,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 12304.683333333318,
         upFlatDownCadencePaceData: { down: 84.77852348993288, flat: 83.41059602649007, up: 64.9971181556196 },
         upperQuartileCadence: 86,
-        upperQuartileDistancePerOccurrence: 5.761904761904762,
+        upperQuartileDistancePerOccurrence: 5.761904761904762
       },
       elevationData: {
         accumulatedElevationAscent: 1040.299063434164,
@@ -15549,7 +15549,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 230,
         medianElevation: 279,
-        upperQuartileElevation: 766,
+        upperQuartileElevation: 766
       },
       gradeData: {
         avgGrade: 0.011592139900771499,
@@ -15563,7 +15563,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 21.991400000000052, flat: 32.811499999999896, up: 23.52690000000004 },
         upFlatDownInSeconds: { down: 2547, flat: 4670, total: 13640, up: 6423 },
         upFlatDownMoveData: { down: 31.083250883392303, flat: 25.29366167023547, up: 13.186492293320901 },
-        upperQuartileGrade: 2.4,
+        upperQuartileGrade: 2.4
       },
       heartRateData: {
         HRSS: 247.35635398295005,
@@ -15578,7 +15578,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 145,
         maxHeartRate: 189,
         medianHeartRate: 159,
-        upperQuartileHeartRate: 169,
+        upperQuartileHeartRate: 169
       },
       moveRatio: 0.9454495044014695,
       paceData: {
@@ -15592,7 +15592,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 123.45679012345678,
-        variancePace: 11.966285693190695,
+        variancePace: 11.966285693190695
       },
       powerData: {
         avgWatts: 121.60816575258988,
@@ -15609,7 +15609,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 186,
         variabilityIndex: 1.3820464524867793,
         weightedPower: 168.0681340717911,
-        weightedWattsPerKg: 2.40097334388273,
+        weightedWattsPerKg: 2.40097334388273
       },
       speedData: {
         avgPace: 173,
@@ -15622,8 +15622,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 17.344890670517145,
         totalAvgSpeed: 19.621734248284525,
         upperQuartileSpeed: 29.16,
-        varianceSpeed: 300.8452323721927,
-      },
+        varianceSpeed: 300.8452323721927
+      }
     },
     hasPowerMeter: false,
     id: 424565561,
@@ -15632,7 +15632,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-11-01T12:38:37+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -15643,9 +15643,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 241.81931788,
     commute: false,
@@ -15664,7 +15664,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 6,
         medianElevation: 12,
-        upperQuartileElevation: 35,
+        upperQuartileElevation: 35
       },
       gradeData: {
         avgGrade: 0.45643996633880257,
@@ -15678,7 +15678,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 2.5404999999999998, flat: 5.758899999999997, up: 2.751900000000004 },
         upFlatDownInSeconds: { down: 237, flat: 742, total: 1813, up: 834 },
         upFlatDownMoveData: { down: 38.58987341772151, flat: 27.940754716981118, up: 11.87870503597124 },
-        upperQuartileGrade: 1.6,
+        upperQuartileGrade: 1.6
       },
       heartRateData: {
         HRSS: 60.78650687570787,
@@ -15693,7 +15693,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 186,
         maxHeartRate: 197,
         medianHeartRate: 189,
-        upperQuartileHeartRate: 192,
+        upperQuartileHeartRate: 192
       },
       moveRatio: 1,
       paceData: {
@@ -15707,7 +15707,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 112.35955056179775,
-        variancePace: 23.302035785370133,
+        variancePace: 23.302035785370133
       },
       powerData: {
         avgWatts: 119.3186328555678,
@@ -15724,7 +15724,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 133,
         variabilityIndex: 1.0406402604481757,
         weightedPower: 124.16777317113832,
-        weightedWattsPerKg: 1.7738253310162617,
+        weightedWattsPerKg: 1.7738253310162617
       },
       speedData: {
         avgPace: 163,
@@ -15737,8 +15737,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 12.429518868134913,
         totalAvgSpeed: 21.952653061224407,
         upperQuartileSpeed: 32.04,
-        varianceSpeed: 154.4929392933218,
-      },
+        varianceSpeed: 154.4929392933218
+      }
     },
     hasPowerMeter: true,
     id: 427606185,
@@ -15747,7 +15747,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-11-06T17:31:29+0000",
     trainer: false,
-    type: "VirtualRide",
+    type: "VirtualRide"
   },
   {
     athleteSnapshot: {
@@ -15758,9 +15758,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 850.272513175,
     commute: false,
@@ -15783,7 +15783,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 5230.666666666661,
         upFlatDownCadencePaceData: { down: 74.07920792079207, flat: 79.0953488372093, up: 73.06540880503145 },
         upperQuartileCadence: 83,
-        upperQuartileDistancePerOccurrence: 6.4107382550335865,
+        upperQuartileDistancePerOccurrence: 6.4107382550335865
       },
       elevationData: {
         accumulatedElevationAscent: 544.6438944150252,
@@ -15794,7 +15794,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 197,
         medianElevation: 206,
-        upperQuartileElevation: 473,
+        upperQuartileElevation: 473
       },
       gradeData: {
         avgGrade: -0.012266000886527698,
@@ -15808,7 +15808,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 8.967799999999999, flat: 15.619700000000012, up: 9.477799999999991 },
         upFlatDownInSeconds: { down: 1043, flat: 2066, total: 5480, up: 2371 },
         upFlatDownMoveData: { down: 30.953096836049856, flat: 27.217289448209122, up: 14.39058625052719 },
-        upperQuartileGrade: 2.3,
+        upperQuartileGrade: 2.3
       },
       heartRateData: {
         HRSS: 119.60734573399587,
@@ -15823,7 +15823,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 148,
         maxHeartRate: 196,
         medianHeartRate: 160,
-        upperQuartileHeartRate: 184,
+        upperQuartileHeartRate: 184
       },
       moveRatio: 0.9998175515416895,
       paceData: {
@@ -15837,7 +15837,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 120.48192771084338,
-        variancePace: 14.8033116392721,
+        variancePace: 14.8033116392721
       },
       powerData: {
         avgWatts: 125.44455544455545,
@@ -15854,7 +15854,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 207,
         variabilityIndex: 1.4442572414599228,
         weightedPower: 181.17420760252,
-        weightedWattsPerKg: 2.588202965750286,
+        weightedWattsPerKg: 2.588202965750286
       },
       speedData: {
         avgPace: 160,
@@ -15867,8 +15867,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 15.594512735402349,
         totalAvgSpeed: 22.416880131362902,
         upperQuartileSpeed: 29.880000000000003,
-        varianceSpeed: 243.18882745462605,
-      },
+        varianceSpeed: 243.18882745462605
+      }
     },
     hasPowerMeter: false,
     id: 428142857,
@@ -15877,7 +15877,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-11-07T13:54:46+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -15888,9 +15888,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1711.59159003,
     commute: false,
@@ -15913,7 +15913,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         totalOccurrences: 11977.24999999999,
         upFlatDownCadencePaceData: { down: 79.8125, flat: 81.91616105901821, up: 68.82291666666667 },
         upperQuartileCadence: 88,
-        upperQuartileDistancePerOccurrence: 6.543673469387774,
+        upperQuartileDistancePerOccurrence: 6.543673469387774
       },
       elevationData: {
         accumulatedElevationAscent: 171.90949479400047,
@@ -15924,7 +15924,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 123,
         medianElevation: 133,
-        upperQuartileElevation: 143,
+        upperQuartileElevation: 143
       },
       gradeData: {
         avgGrade: 0.002099649019067695,
@@ -15938,7 +15938,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 3.7583000000000037, flat: 78.90339999999999, up: 3.9241999999999972 },
         upFlatDownInSeconds: { down: 628, flat: 9737, total: 11020, up: 655 },
         upFlatDownMoveData: { down: 21.54439490445862, flat: 29.172459689842864, up: 21.568122137404565 },
-        upperQuartileGrade: 0.4,
+        upperQuartileGrade: 0.4
       },
       heartRateData: {
         HRSS: 203.44242534236506,
@@ -15953,7 +15953,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 151,
         maxHeartRate: 195,
         medianHeartRate: 158,
-        upperQuartileHeartRate: 163,
+        upperQuartileHeartRate: 163
       },
       moveRatio: 0.9999092641321115,
       paceData: {
@@ -15967,7 +15967,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 109.8901098901099,
-        variancePace: 101.80448042559622,
+        variancePace: 101.80448042559622
       },
       powerData: {
         avgWatts: 138.36235038084874,
@@ -15984,7 +15984,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 183,
         variabilityIndex: 1.2513001273954194,
         weightedPower: 173.1328266582857,
-        weightedWattsPerKg: 2.473326095118367,
+        weightedWattsPerKg: 2.473326095118367
       },
       speedData: {
         avgPace: 126,
@@ -15997,8 +15997,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 5.946587375202797,
         totalAvgSpeed: 28.398629888394886,
         upperQuartileSpeed: 32.76,
-        varianceSpeed: 35.36190141092129,
-      },
+        varianceSpeed: 35.36190141092129
+      }
     },
     hasPowerMeter: false,
     id: 429009625,
@@ -16007,7 +16007,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-11-08T13:15:01+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -16018,9 +16018,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 598.81470156,
     commute: false,
@@ -16039,7 +16039,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 13,
         medianElevation: 49,
-        upperQuartileElevation: 54,
+        upperQuartileElevation: 54
       },
       gradeData: {
         avgGrade: -0.10420503058768389,
@@ -16052,12 +16052,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 80.29206349206349,
           flat: 81.65154639175258,
-          up: 78.85747126436782,
+          up: 78.85747126436782
         },
         upFlatDownDistanceData: { down: 4.25160000000001, flat: 21.448899999999984, up: 3.298100000000007 },
         upFlatDownInSeconds: { down: 333, flat: 2435, total: 3664, up: 896 },
         upFlatDownMoveData: { down: 45.96324324324335, flat: 31.710899383983552, up: 13.25129464285717 },
-        upperQuartileGrade: 0.6,
+        upperQuartileGrade: 0.6
       },
       heartRateData: {
         HRSS: 102.91083158382636,
@@ -16072,7 +16072,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 174,
         maxHeartRate: 195,
         medianHeartRate: 181,
-        upperQuartileHeartRate: 186,
+        upperQuartileHeartRate: 186
       },
       moveRatio: 0.9986372308530935,
       paceData: {
@@ -16086,7 +16086,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 105.26315789473684,
-        variancePace: 23.952811983431374,
+        variancePace: 23.952811983431374
       },
       powerData: {
         avgWatts: 145.992637032997,
@@ -16103,7 +16103,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 164,
         variabilityIndex: 1.080672855592432,
         weightedPower: 157.77027995791832,
-        weightedWattsPerKg: 2.253861142255976,
+        weightedWattsPerKg: 2.253861142255976
       },
       speedData: {
         avgPace: 126,
@@ -16116,8 +16116,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 12.25950676487586,
         totalAvgSpeed: 28.45594439901884,
         upperQuartileSpeed: 34.2,
-        varianceSpeed: 150.295506118037,
-      },
+        varianceSpeed: 150.295506118037
+      }
     },
     hasPowerMeter: true,
     id: 429628737,
@@ -16126,7 +16126,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-11-09T17:24:39+0000",
     trainer: false,
-    type: "VirtualRide",
+    type: "VirtualRide"
   },
   {
     athleteSnapshot: {
@@ -16137,9 +16137,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 450.4447289600001,
     commute: false,
@@ -16158,7 +16158,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 24,
         medianElevation: 49,
-        upperQuartileElevation: 56,
+        upperQuartileElevation: 56
       },
       gradeData: {
         avgGrade: 0.05772378113445433,
@@ -16171,12 +16171,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 78.67464114832536,
           flat: 74.42354821523708,
-          up: 84.71986417657045,
+          up: 84.71986417657045
         },
         upFlatDownDistanceData: { down: 2.6796000000000046, flat: 15.647199999999996, up: 2.606599999999999 },
         upFlatDownInSeconds: { down: 214, flat: 1928, total: 2732, up: 590 },
         upFlatDownMoveData: { down: 45.07738317757017, flat: 29.21676348547717, up: 15.904677966101689 },
-        upperQuartileGrade: 0.7,
+        upperQuartileGrade: 0.7
       },
       heartRateData: {
         HRSS: 61.97781004614372,
@@ -16191,7 +16191,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 141,
         maxHeartRate: 199,
         medianHeartRate: 173,
-        upperQuartileHeartRate: 187,
+        upperQuartileHeartRate: 187
       },
       moveRatio: 1,
       paceData: {
@@ -16205,7 +16205,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 103.09278350515463,
-        variancePace: 30.08858515192691,
+        variancePace: 30.08858515192691
       },
       powerData: {
         avgWatts: 147.78924259055984,
@@ -16222,7 +16222,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 198,
         variabilityIndex: 1.160656060871227,
         weightedPower: 171.53248014430136,
-        weightedWattsPerKg: 2.450464002061448,
+        weightedWattsPerKg: 2.450464002061448
       },
       speedData: {
         avgPace: 130,
@@ -16235,8 +16235,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 10.938313518196251,
         totalAvgSpeed: 27.587701317715887,
         upperQuartileSpeed: 34.92,
-        varianceSpeed: 119.64670262235484,
-      },
+        varianceSpeed: 119.64670262235484
+      }
     },
     hasPowerMeter: true,
     id: 430204077,
@@ -16245,7 +16245,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-11-10T17:22:44+0000",
     trainer: false,
-    type: "VirtualRide",
+    type: "VirtualRide"
   },
   {
     athleteSnapshot: {
@@ -16256,9 +16256,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 864.2161869299999,
     commute: false,
@@ -16282,10 +16282,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 78.76068376068376,
           flat: 81.12596401028277,
-          up: 74.14838709677419,
+          up: 74.14838709677419
         },
         upperQuartileCadence: 87,
-        upperQuartileDistancePerOccurrence: 6.392857142857094,
+        upperQuartileDistancePerOccurrence: 6.392857142857094
       },
       elevationData: {
         accumulatedElevationAscent: 548.7191992280908,
@@ -16296,7 +16296,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 104,
         medianElevation: 124,
-        upperQuartileElevation: 405,
+        upperQuartileElevation: 405
       },
       gradeData: {
         avgGrade: -0.0019553723536564305,
@@ -16309,12 +16309,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 78.76068376068376,
           flat: 81.12596401028277,
-          up: 74.14838709677419,
+          up: 74.14838709677419
         },
         upFlatDownDistanceData: { down: 8.904799999999998, flat: 13.460299999999995, up: 9.391000000000007 },
         upFlatDownInSeconds: { down: 1037, flat: 1760, total: 5114, up: 2317 },
         upFlatDownMoveData: { down: 30.913481195756983, flat: 27.53243181818181, up: 14.591109192921893 },
-        upperQuartileGrade: 2.7,
+        upperQuartileGrade: 2.7
       },
       heartRateData: {
         HRSS: 98.98082342527812,
@@ -16329,7 +16329,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 147,
         maxHeartRate: 192,
         medianHeartRate: 161,
-        upperQuartileHeartRate: 173,
+        upperQuartileHeartRate: 173
       },
       moveRatio: 0.9992184447049629,
       paceData: {
@@ -16343,7 +16343,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 117.64705882352942,
-        variancePace: 11.652111884856664,
+        variancePace: 11.652111884856664
       },
       powerData: {
         avgWatts: 144.59756742464305,
@@ -16360,7 +16360,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 226,
         variabilityIndex: 1.4194220198651977,
         weightedPower: 205.24497122148094,
-        weightedWattsPerKg: 2.9320710174497275,
+        weightedWattsPerKg: 2.9320710174497275
       },
       speedData: {
         avgPace: 160,
@@ -16373,8 +16373,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 17.57716895734884,
         totalAvgSpeed: 22.460433763188774,
         upperQuartileSpeed: 30.6,
-        varianceSpeed: 308.9568685551876,
-      },
+        varianceSpeed: 308.9568685551876
+      }
     },
     hasPowerMeter: false,
     id: 430765595,
@@ -16383,7 +16383,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-11-11T13:29:05+0000",
     trainer: false,
-    type: "Ride",
+    type: "Ride"
   },
   {
     athleteSnapshot: {
@@ -16394,9 +16394,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 205.85531400000002,
     commute: false,
@@ -16415,7 +16415,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 9,
         medianElevation: 13,
-        upperQuartileElevation: 38,
+        upperQuartileElevation: 38
       },
       gradeData: {
         avgGrade: 0.04537554245020591,
@@ -16429,7 +16429,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownDistanceData: { down: 2.3822999999999994, flat: 4.671599999999999, up: 1.9331000000000018 },
         upFlatDownInSeconds: { down: 206, flat: 519, total: 1055, up: 330 },
         upFlatDownMoveData: { down: 41.63242718446601, flat: 32.404161849710974, up: 21.088363636363656 },
-        upperQuartileGrade: 1.1,
+        upperQuartileGrade: 1.1
       },
       heartRateData: {
         HRSS: 16.315243884906167,
@@ -16444,7 +16444,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 136,
         maxHeartRate: 176,
         medianHeartRate: 155,
-        upperQuartileHeartRate: 162,
+        upperQuartileHeartRate: 162
       },
       moveRatio: 0.8487530168946098,
       paceData: {
@@ -16458,7 +16458,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 88.49557522123894,
-        variancePace: 24.430327069937796,
+        variancePace: 24.430327069937796
       },
       powerData: {
         avgWatts: 169.2942779291553,
@@ -16475,7 +16475,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 210,
         variabilityIndex: 1.123833223488639,
         weightedPower: 190.25853408330417,
-        weightedWattsPerKg: 2.717979058332917,
+        weightedWattsPerKg: 2.717979058332917
       },
       speedData: {
         avgPace: 117,
@@ -16488,8 +16488,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 12.139103372449012,
         totalAvgSpeed: 25.954030571198697,
         upperQuartileSpeed: 40.68000000000001,
-        varianceSpeed: 147.357830687003,
-      },
+        varianceSpeed: 147.357830687003
+      }
     },
     hasPowerMeter: true,
     id: 431464624,
@@ -16498,7 +16498,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-11-12T17:12:06+0000",
     trainer: false,
-    type: "VirtualRide",
+    type: "VirtualRide"
   },
   {
     athleteSnapshot: {
@@ -16509,9 +16509,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 378.89437616,
     commute: false,
@@ -16530,7 +16530,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 9,
         medianElevation: 13,
-        upperQuartileElevation: 36,
+        upperQuartileElevation: 36
       },
       gradeData: {
         avgGrade: -0.017779977686638176,
@@ -16543,12 +16543,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 71.11529933481152,
           flat: 73.77629063097514,
-          up: 74.63324175824175,
+          up: 74.63324175824175
         },
         upFlatDownDistanceData: { down: 5.273000000000002, flat: 9.87679999999999, up: 3.9419000000000084 },
         upFlatDownInSeconds: { down: 491, flat: 1096, total: 2335, up: 748 },
         upFlatDownMoveData: { down: 38.66150712830959, flat: 32.44204379562041, up: 18.971711229946564 },
-        upperQuartileGrade: 1,
+        upperQuartileGrade: 1
       },
       heartRateData: {
         HRSS: 44.44415042638431,
@@ -16563,7 +16563,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 156,
         maxHeartRate: 185,
         medianHeartRate: 160,
-        upperQuartileHeartRate: 167,
+        upperQuartileHeartRate: 167
       },
       moveRatio: 0.960510078157137,
       paceData: {
@@ -16577,7 +16577,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 94.33962264150944,
-        variancePace: 26.804464700231982,
+        variancePace: 26.804464700231982
       },
       powerData: {
         avgWatts: 144.8394534585824,
@@ -16594,7 +16594,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 167,
         variabilityIndex: 1.1368995833432842,
         weightedPower: 164.66791428873134,
-        weightedWattsPerKg: 2.3523987755533047,
+        weightedWattsPerKg: 2.3523987755533047
       },
       speedData: {
         avgPace: 122,
@@ -16607,8 +16607,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 11.589045850843712,
         totalAvgSpeed: 28.281842863019275,
         upperQuartileSpeed: 38.16,
-        varianceSpeed: 134.30598373295788,
-      },
+        varianceSpeed: 134.30598373295788
+      }
     },
     hasPowerMeter: true,
     id: 431449241,
@@ -16617,7 +16617,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-11-12T17:40:11+0000",
     trainer: false,
-    type: "VirtualRide",
+    type: "VirtualRide"
   },
   {
     athleteSnapshot: {
@@ -16628,9 +16628,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 640.62999798,
     commute: false,
@@ -16649,7 +16649,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 9,
         medianElevation: 13,
-        upperQuartileElevation: 37,
+        upperQuartileElevation: 37
       },
       gradeData: {
         avgGrade: -0.002530411200717765,
@@ -16662,12 +16662,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 75.97314375987362,
           flat: 72.90957803081045,
-          up: 76.74384236453201,
+          up: 76.74384236453201
         },
         upFlatDownDistanceData: { down: 7.6633999999999896, flat: 14.553100000000011, up: 5.881700000000001 },
         upFlatDownInSeconds: { down: 640, flat: 1606, total: 3293, up: 1047 },
         upFlatDownMoveData: { down: 43.106624999999944, flat: 32.622141967621445, up: 20.22361031518625 },
-        upperQuartileGrade: 1,
+        upperQuartileGrade: 1
       },
       heartRateData: {
         HRSS: 66.38612128490816,
@@ -16682,7 +16682,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 155,
         maxHeartRate: 189,
         medianHeartRate: 163,
-        upperQuartileHeartRate: 174,
+        upperQuartileHeartRate: 174
       },
       moveRatio: 0.9381766381766382,
       paceData: {
@@ -16696,7 +16696,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 91.74311926605505,
-        variancePace: 22.449665179789207,
+        variancePace: 22.449665179789207
       },
       powerData: {
         avgWatts: 173.12183353437877,
@@ -16713,7 +16713,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 206,
         variabilityIndex: 1.1159074200342032,
         weightedPower: 193.1879386109394,
-        weightedWattsPerKg: 2.7598276944419915,
+        weightedWattsPerKg: 2.7598276944419915
       },
       speedData: {
         avgPace: 117,
@@ -16726,8 +16726,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 12.663283106504903,
         totalAvgSpeed: 28.81507692307692,
         upperQuartileSpeed: 39.24,
-        varianceSpeed: 160.35873903549248,
-      },
+        varianceSpeed: 160.35873903549248
+      }
     },
     hasPowerMeter: true,
     id: 432040117,
@@ -16736,7 +16736,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-11-13T17:39:09+0000",
     trainer: false,
-    type: "VirtualRide",
+    type: "VirtualRide"
   },
   {
     athleteSnapshot: {
@@ -16747,9 +16747,9 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         restHr: 55,
         runningFtp: 450,
         swimFtp: 31,
-        weight: 70,
+        weight: 70
       },
-      gender: "men",
+      gender: "men"
     },
     calories: 1540.28403144,
     commute: false,
@@ -16773,10 +16773,10 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 82.28616352201257,
           flat: 79.24856815578465,
-          up: 71.07588279489106,
+          up: 71.07588279489106
         },
         upperQuartileCadence: 84,
-        upperQuartileDistancePerOccurrence: 6.456140350877703,
+        upperQuartileDistancePerOccurrence: 6.456140350877703
       },
       elevationData: {
         accumulatedElevationAscent: 908.6547236835765,
@@ -16787,7 +16787,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         elevationZones: null,
         lowerQuartileElevation: 226,
         medianElevation: 233,
-        upperQuartileElevation: 543,
+        upperQuartileElevation: 543
       },
       gradeData: {
         avgGrade: 0.015347574015500775,
@@ -16800,12 +16800,12 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upFlatDownCadencePaceData: {
           down: 82.28616352201257,
           flat: 79.24856815578465,
-          up: 71.07588279489106,
+          up: 71.07588279489106
         },
         upFlatDownDistanceData: { down: 15.378699999999997, flat: 29.213500000000003, up: 16.8983 },
         upFlatDownInSeconds: { down: 1632, flat: 3679, total: 9194, up: 3883 },
         upFlatDownMoveData: { down: 33.92360294117647, flat: 28.586191899972825, up: 15.666721607004892 },
-        upperQuartileGrade: 2.1,
+        upperQuartileGrade: 2.1
       },
       heartRateData: {
         HRSS: 160.49879070579138,
@@ -16820,7 +16820,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         lowerQuartileHeartRate: 148,
         maxHeartRate: 183,
         medianHeartRate: 157,
-        upperQuartileHeartRate: 167,
+        upperQuartileHeartRate: 167
       },
       moveRatio: 0.9640348117856768,
       paceData: {
@@ -16834,7 +16834,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         runningStressScore: null,
         runningStressScorePerHour: null,
         upperQuartilePace: 114.9425287356322,
-        variancePace: 14.175417465479505,
+        variancePace: 14.175417465479505
       },
       powerData: {
         avgWatts: 136.2505194419709,
@@ -16851,7 +16851,7 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         upperQuartileWatts: 212,
         variabilityIndex: 1.36501842210617,
         weightedPower: 185.9844690598252,
-        weightedWattsPerKg: 2.6569209865689314,
+        weightedWattsPerKg: 2.6569209865689314
       },
       speedData: {
         avgPace: 149,
@@ -16864,8 +16864,8 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
         standardDeviationSpeed: 15.936146793164733,
         totalAvgSpeed: 23.2383642654923,
         upperQuartileSpeed: 31.319999999999997,
-        varianceSpeed: 253.96077461329457,
-      },
+        varianceSpeed: 253.96077461329457
+      }
     },
     hasPowerMeter: false,
     id: 432548748,
@@ -16874,6 +16874,6 @@ export const TEST_SYNCED_ACTIVITIES: SyncedActivityModel[] = [
 
     start_time: "2015-11-14T13:01:07+0000",
     trainer: false,
-    type: "Ride",
-  },
+    type: "Ride"
+  }
 ] as SyncedActivityModel[];

@@ -4,11 +4,11 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 import { LoggerService } from "../app/shared/services/logging/logger.service";
-import { EnvTarget } from "@elevate/shared/models";
+import { BuildTarget } from "@elevate/shared/enums";
 
 export const environment = {
-  target: EnvTarget.EXTENSION,
+  buildTarget: BuildTarget.EXTENSION,
   production: false,
   logLevel: LoggerService.LEVEL_DEBUG,
-  skipRestoreSyncedBackupCheck: false,
+  skipRestoreSyncedBackupCheck: false
 };

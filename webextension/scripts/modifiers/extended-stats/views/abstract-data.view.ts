@@ -149,9 +149,9 @@ export abstract class AbstractDataView {
           hoverBackgroundColor:
             "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 0.8)",
           hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
-          data: distributionArray,
-        },
-      ],
+          data: distributionArray
+        }
+      ]
     };
   }
 
@@ -169,9 +169,9 @@ export abstract class AbstractDataView {
           hoverBorderColor: "rgba(" + this.mainColor[0] + ", " + this.mainColor[1] + ", " + this.mainColor[2] + ", 1)",
           data: chartPoints,
           fill: false,
-          showLine: true,
-        },
-      ],
+          showLine: true
+        }
+      ]
     };
   }
 
@@ -343,18 +343,18 @@ export abstract class AbstractDataView {
       data: this.graphData,
       options: {
         tooltips: {
-          custom: this.customTooltipsForZones,
+          custom: this.customTooltipsForZones
         },
         scales: {
           yAxes: [
             {
               ticks: {
-                beginAtZero: true,
-              },
-            } as LinearTickOptions,
-          ],
-        },
-      },
+                beginAtZero: true
+              }
+            } as LinearTickOptions
+          ]
+        }
+      }
     });
   }
 
@@ -367,7 +367,7 @@ export abstract class AbstractDataView {
       options: {
         hover: {
           intersect: false,
-          mode: "nearest",
+          mode: "nearest"
         },
         tooltips: {
           intersect: false,
@@ -377,8 +377,8 @@ export abstract class AbstractDataView {
               Number(item.yLabel).toFixed(1) +
               this.units +
               " held during " +
-              Helper.secondsToHHMMSS(Number(item.xLabel), true),
-          },
+              Helper.secondsToHHMMSS(Number(item.xLabel), true)
+          }
         },
         scales: {
           xAxes: [
@@ -393,12 +393,12 @@ export abstract class AbstractDataView {
                     return Helper.secondsToHHMMSS(tick, true);
                   }
                   return "";
-                },
-              },
-            },
-          ],
-        },
-      },
+                }
+              }
+            }
+          ]
+        }
+      }
     });
   }
 }

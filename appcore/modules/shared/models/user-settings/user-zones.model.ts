@@ -35,7 +35,7 @@ export class UserZonesModel {
       110,
       115,
       125,
-      150,
+      150
     ],
     runningCadence: [
       65,
@@ -63,7 +63,7 @@ export class UserZonesModel {
       109,
       111,
       115,
-      120,
+      120
     ],
     grade: [
       -20,
@@ -96,7 +96,7 @@ export class UserZonesModel {
       17,
       18,
       20,
-      25,
+      25
     ],
     elevation: [
       0,
@@ -122,7 +122,7 @@ export class UserZonesModel {
       3000,
       3500,
       4000,
-      5000,
+      5000
     ],
     ascent: [
       0,
@@ -156,8 +156,8 @@ export class UserZonesModel {
       4600,
       4800,
       5000,
-      6000,
-    ],
+      6000
+    ]
   };
 
   public static readonly TYPE_SPEED: string = "speed";
@@ -238,7 +238,7 @@ export class UserZonesModel {
       if (_.isNumber(zones[index + 1])) {
         zoneModels.push({
           from: zone,
-          to: zones[index + 1],
+          to: zones[index + 1]
         });
       }
     });

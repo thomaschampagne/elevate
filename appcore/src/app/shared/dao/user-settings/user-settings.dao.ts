@@ -14,6 +14,6 @@ export class UserSettingsDao extends BaseDao<UserSettingsModel> {
   }
 
   public getDefaultStorageValue(): UserSettingsModel {
-    return UserSettings.getDefaultsByEnvTarget(environment.target);
+    return UserSettings.getDefaultsByBuildTarget(environment.buildTarget);
   }
 }

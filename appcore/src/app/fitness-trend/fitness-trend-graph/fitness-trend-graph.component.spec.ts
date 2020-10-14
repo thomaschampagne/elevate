@@ -37,7 +37,7 @@ describe("FitnessTrendGraphComponent", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, FitnessTrendModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 
     // Retrieve injected service
@@ -60,12 +60,12 @@ describe("FitnessTrendGraphComponent", () => {
       heartRateImpulseMode: HeartRateImpulseMode.HRSS,
       initializedFitnessTrendModel: {
         atl: null,
-        ctl: null,
+        ctl: null
       },
       allowEstimatedPowerStressScore: false,
       allowEstimatedRunningStressScore: false,
       ignoreBeforeDate: null,
-      ignoreActivityNamePatterns: null,
+      ignoreActivityNamePatterns: null
     };
 
     const powerMeterEnable = true;
@@ -94,7 +94,7 @@ describe("FitnessTrendGraphComponent", () => {
 
     component.periodViewed = {
       from: component.dateMin,
-      to: component.dateMax,
+      to: component.dateMax
     };
 
     spyOn(component, "getTodayViewedDay").and.returnValue(component.getDayFitnessTrendFromDate(todayMoment.toDate()));
@@ -120,7 +120,7 @@ describe("FitnessTrendGraphComponent", () => {
 
     component.periodViewed = {
       from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-      to: moment(periodTo, "YYYY-MM-DD").toDate(),
+      to: moment(periodTo, "YYYY-MM-DD").toDate()
     };
     const expectedPeriodFrom = moment("2015-01-20", "YYYY-MM-DD").toDate();
     const expectedPeriodTo = moment("2015-01-30", "YYYY-MM-DD").toDate();
@@ -144,7 +144,7 @@ describe("FitnessTrendGraphComponent", () => {
     const periodTo = "2015-01-20";
     component.periodViewed = {
       from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-      to: moment(periodTo, "YYYY-MM-DD").toDate(),
+      to: moment(periodTo, "YYYY-MM-DD").toDate()
     };
 
     const expectedPeriodFrom = moment(periodFrom, "YYYY-MM-DD").toDate();
@@ -170,7 +170,7 @@ describe("FitnessTrendGraphComponent", () => {
 
     component.periodViewed = {
       from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-      to: moment(periodTo, "YYYY-MM-DD").toDate(),
+      to: moment(periodTo, "YYYY-MM-DD").toDate()
     };
     const expectedPeriodFrom = moment("2015-01-6", "YYYY-MM-DD").toDate();
     const expectedPeriodTo = moment("2015-01-16", "YYYY-MM-DD").toDate();
@@ -194,7 +194,7 @@ describe("FitnessTrendGraphComponent", () => {
     const periodTo = "2015-01-20";
     component.periodViewed = {
       from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-      to: moment(periodTo, "YYYY-MM-DD").toDate(),
+      to: moment(periodTo, "YYYY-MM-DD").toDate()
     };
 
     const expectedPeriodFrom = moment(periodFrom, "YYYY-MM-DD").toDate();
@@ -220,7 +220,7 @@ describe("FitnessTrendGraphComponent", () => {
 
     component.periodViewed = {
       from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-      to: moment(periodTo, "YYYY-MM-DD").toDate(),
+      to: moment(periodTo, "YYYY-MM-DD").toDate()
     };
     const expectedPeriodFrom = moment("2015-06-15", "YYYY-MM-DD").toDate();
     const expectedPeriodTo = moment("2015-12-31", "YYYY-MM-DD").toDate();
@@ -245,7 +245,7 @@ describe("FitnessTrendGraphComponent", () => {
 
     component.periodViewed = {
       from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-      to: moment(periodTo, "YYYY-MM-DD").toDate(),
+      to: moment(periodTo, "YYYY-MM-DD").toDate()
     };
     const expectedPeriodFrom = moment(periodFrom, "YYYY-MM-DD").toDate();
     const expectedPeriodTo = moment(periodTo, "YYYY-MM-DD").toDate();
@@ -270,7 +270,7 @@ describe("FitnessTrendGraphComponent", () => {
 
     component.periodViewed = {
       from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-      to: moment(periodTo, "YYYY-MM-DD").toDate(),
+      to: moment(periodTo, "YYYY-MM-DD").toDate()
     };
     const expectedPeriodFrom = moment("2015-05-01", "YYYY-MM-DD").toDate();
     const expectedPeriodTo = moment("2015-12-31", "YYYY-MM-DD").toDate();
@@ -295,7 +295,7 @@ describe("FitnessTrendGraphComponent", () => {
 
     component.periodViewed = {
       from: moment(periodFrom, "YYYY-MM-DD").toDate(),
-      to: moment(periodTo, "YYYY-MM-DD").toDate(),
+      to: moment(periodTo, "YYYY-MM-DD").toDate()
     };
     const expectedPeriodFrom = moment(periodFrom, "YYYY-MM-DD").toDate();
     const expectedPeriodTo = moment(periodTo, "YYYY-MM-DD").toDate();
@@ -314,7 +314,7 @@ describe("FitnessTrendGraphComponent", () => {
     // Given
     const period: PeriodModel = {
       from: moment(todayDate, momentDatePattern).subtract(7, "days").toDate(), // Nov 24 2015
-      to: null, // Indicate we use "Last period of TIME"
+      to: null // Indicate we use "Last period of TIME"
     };
 
     // When
@@ -331,7 +331,7 @@ describe("FitnessTrendGraphComponent", () => {
     // Given
     const period: PeriodModel = {
       from: moment(todayDate, momentDatePattern).subtract(6, "weeks").toDate(), // (= Oct 20 2015)
-      to: null, // Indicate we use "Last period of TIME"
+      to: null // Indicate we use "Last period of TIME"
     };
 
     // When
@@ -347,7 +347,7 @@ describe("FitnessTrendGraphComponent", () => {
     // Given
     const period: PeriodModel = {
       from: moment("2015-07-01", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate(),
-      to: moment("2015-09-30", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate(),
+      to: moment("2015-09-30", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate()
     };
 
     // When
@@ -364,7 +364,7 @@ describe("FitnessTrendGraphComponent", () => {
     // Given
     const period: PeriodModel = {
       from: moment("2015-06-01", DayFitnessTrendModel.DATE_FORMAT).toDate(),
-      to: moment("2015-05-01", DayFitnessTrendModel.DATE_FORMAT).toDate(),
+      to: moment("2015-05-01", DayFitnessTrendModel.DATE_FORMAT).toDate()
     };
 
     // When
@@ -385,7 +385,7 @@ describe("FitnessTrendGraphComponent", () => {
     // Given
     const period: PeriodModel = {
       from: moment("2014-06-01", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate(), // Too old date !
-      to: moment("2015-09-30", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate(),
+      to: moment("2015-09-30", DayFitnessTrendModel.DATE_FORMAT).startOf("day").toDate()
     };
 
     // When
@@ -403,7 +403,7 @@ describe("FitnessTrendGraphComponent", () => {
     // Given
     const period: PeriodModel = {
       from: moment("2015-06-01", DayFitnessTrendModel.DATE_FORMAT).toDate(),
-      to: moment("2018-05-01", DayFitnessTrendModel.DATE_FORMAT).toDate(), // Fake
+      to: moment("2018-05-01", DayFitnessTrendModel.DATE_FORMAT).toDate() // Fake
     };
 
     // When

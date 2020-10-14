@@ -80,5 +80,5 @@ export enum ElevateSport {
   Wheelchair = "Wheelchair",
   Windsurf = "Windsurf",
   Workout = "Workout",
-  Yoga = "Yoga",
+  Yoga = "Yoga"
 }

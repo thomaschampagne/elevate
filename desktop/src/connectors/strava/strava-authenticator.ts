@@ -70,7 +70,7 @@ export class StravaAuthenticator {
         client_id: clientId,
         client_secret: clientSecret,
         grant_type: "authorization_code",
-        code: code,
+        code: code
       };
     } else if (isRefreshTokenGrantType) {
       logger.info("Getting tokens with grant_type=refresh_token");
@@ -79,7 +79,7 @@ export class StravaAuthenticator {
         client_id: clientId,
         client_secret: clientSecret,
         grant_type: "refresh_token",
-        refresh_token: refreshToken,
+        refresh_token: refreshToken
       };
     }
 
@@ -101,7 +101,7 @@ export class StravaAuthenticator {
               city: body.athlete.city,
               state: body.athlete.state,
               country: body.athlete.country,
-              sex: body.athlete.sex,
+              sex: body.athlete.sex
             }
           : null;
 
@@ -163,7 +163,7 @@ export class StravaAuthenticator {
           width: StravaAuthenticator.AUTH_WINDOW_WIDTH,
           title: null,
           autoHideMenuBar: true,
-          minimizable: false,
+          minimizable: false
         });
 
         const redirectUrl = `${StravaAuthenticator.REDIRECT_HTTP_BASE}:${StravaAuthenticator.WEB_SERVER_HTTP_PORT}/code`;
@@ -201,7 +201,7 @@ export class StravaAuthenticator {
               accessToken: accessToken,
               refreshToken: refreshToken,
               expiresAt: expiresAt,
-              athlete: athlete,
+              athlete: athlete
             });
           }
         };
@@ -238,7 +238,7 @@ export class StravaAuthenticator {
                 accessToken: accessTokenUpdate,
                 refreshToken: refreshTokenUpdate,
                 expiresAt: expiresAt,
-                athlete: athlete,
+                athlete: athlete
               });
             }
           }

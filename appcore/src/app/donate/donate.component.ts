@@ -4,7 +4,7 @@ import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services
 @Component({
   selector: "app-donate",
   templateUrl: "./donate.component.html",
-  styleUrls: ["./donate.component.scss"],
+  styleUrls: ["./donate.component.scss"]
 })
 export class DonateComponent implements OnInit {
   public static readonly DEFAULT_AMOUNT: number = 25;
@@ -13,7 +13,7 @@ export class DonateComponent implements OnInit {
 
   public donateUrl: string;
 
-  constructor(@Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver) {}
+  constructor(@Inject(OPEN_RESOURCE_RESOLVER) private readonly openResourceResolver: OpenResourceResolver) {}
 
   public ngOnInit() {
     this.donateUrl =

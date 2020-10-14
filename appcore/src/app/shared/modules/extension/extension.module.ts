@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { AppEventsService } from "../../services/external-updates/app-events-service";
 import { ExtensionEventsService } from "../../services/external-updates/impl/extension-events.service";
-import { VERSIONS_PROVIDER } from "../../services/versions/versions-provider.interface";
 import { ExtensionVersionsProvider } from "../../services/versions/impl/extension-versions-provider.service";
 import { SyncService } from "../../services/sync/sync.service";
 import { ExtensionSyncService } from "../../services/sync/impl/extension-sync.service";
@@ -16,6 +15,7 @@ import { ActivityService } from "../../services/activity/activity.service";
 import { ExtensionActivityService } from "../../services/activity/impl/extension-activity.service";
 import { DataStore } from "../../data-store/data-store";
 import { ExtensionDataStore } from "../../data-store/impl/extension-data-store.service";
+import { VersionsProvider } from "../../services/versions/versions-provider";
 
 @NgModule({
   imports: [CoreModule, ExtensionRoutingModule],
@@ -25,11 +25,11 @@ import { ExtensionDataStore } from "../../data-store/impl/extension-data-store.s
     { provide: DataStore, useClass: ExtensionDataStore },
     { provide: ActivityService, useClass: ExtensionActivityService },
     { provide: AppEventsService, useClass: ExtensionEventsService },
-    { provide: VERSIONS_PROVIDER, useClass: ExtensionVersionsProvider },
+    { provide: VersionsProvider, useClass: ExtensionVersionsProvider },
     { provide: OPEN_RESOURCE_RESOLVER, useClass: ExtensionOpenResourceResolver },
     { provide: SyncService, useClass: ExtensionSyncService },
     SyncDateTimeDao,
-    ExtensionSyncService,
-  ],
+    ExtensionSyncService
+  ]
 })
 export class ExtensionModule {}

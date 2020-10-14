@@ -12,7 +12,7 @@ import {
   StravaConnectorInfo,
   StravaCredentialsUpdateSyncEvent,
   SyncEvent,
-  SyncEventType,
+  SyncEventType
 } from "@elevate/shared/sync";
 import {
   ActivityStreamsModel,
@@ -21,7 +21,7 @@ import {
   ConnectorSyncDateTime,
   Gender,
   SyncedActivityModel,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import logger from "electron-log";
 import { Service } from "../../service";
@@ -106,7 +106,7 @@ export class StravaConnector extends BaseConnector {
     "start_latlng",
     "end_latlng",
     "has_heartrate",
-    "max_watts",
+    "max_watts"
   ];
   public static readonly STRAVA_RATELIMIT_LIMIT_HEADER: string = "x-ratelimit-limit";
   public static readonly STRAVA_RATELIMIT_USAGE_HEADER: string = "x-ratelimit-usage";
@@ -177,13 +177,13 @@ export class StravaConnector extends BaseConnector {
     const rateLimits = {
       instant: {
         usage: null,
-        limit: null,
+        limit: null
       },
 
       daily: {
         usage: null,
-        limit: null,
-      },
+        limit: null
+      }
     };
 
     const limits = (headers[StravaConnector.STRAVA_RATELIMIT_LIMIT_HEADER] as string).split(",");
@@ -287,7 +287,7 @@ export class StravaConnector extends BaseConnector {
 
                     // Assign reference to strava activity
                     syncedActivityModel.extras = {
-                      strava_activity_id: syncedActivityModel.id as number,
+                      strava_activity_id: syncedActivityModel.id as number
                     }; // Keep tracking  of activity id
                     syncedActivityModel.id =
                       syncedActivityModel.id + "-" + BaseConnector.hashData(syncedActivityModel.start_time, 8);
@@ -485,7 +485,7 @@ export class StravaConnector extends BaseConnector {
         return sleep(this.nextCallWaitTime).then(() => {
           return Service.instance().httpClient.get(url, {
             Authorization: `Bearer ${this.stravaConnectorInfo.accessToken}`,
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           });
         });
       })

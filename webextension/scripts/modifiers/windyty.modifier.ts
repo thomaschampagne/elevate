@@ -78,7 +78,7 @@ export class WindyTyModifier extends AbstractModifier {
       ["Wind", "wind"],
       ["Temp", "temp"],
       ["Clouds", "clouds"],
-      ["Humidity", "rh"],
+      ["Humidity", "rh"]
     ];
 
     let html = "<li class='group'>";
@@ -155,7 +155,7 @@ export class WindyTyModifier extends AbstractModifier {
         window.innerWidth * 0.95 +
         '" height="' +
         window.innerHeight * 0.875 +
-        '" frameborder="0"></iframe>',
+        '" frameborder="0"></iframe>'
     });
   }
 

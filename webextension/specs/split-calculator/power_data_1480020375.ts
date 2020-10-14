@@ -5386,7 +5386,7 @@ export const powerTimeData: { time: number[]; watts: number[] } = {
     5444,
     5445,
     5446,
-    5447,
+    5447
   ],
   watts: [
     0,
@@ -10775,6 +10775,6 @@ export const powerTimeData: { time: number[]; watts: number[] } = {
     107,
     0,
     0,
-    0,
-  ],
+    0
+  ]
 };

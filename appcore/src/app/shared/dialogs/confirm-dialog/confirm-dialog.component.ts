@@ -6,7 +6,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 @Component({
   selector: "app-confirm-dialog",
   templateUrl: "./confirm-dialog.component.html",
-  styleUrls: ["./confirm-dialog.component.scss"],
+  styleUrls: ["./confirm-dialog.component.scss"]
 })
 export class ConfirmDialogComponent implements OnInit {
   public static readonly MAX_WIDTH: string = "80%";
@@ -15,9 +15,9 @@ export class ConfirmDialogComponent implements OnInit {
   public html: string;
 
   constructor(
-    public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    public domSanitizer: DomSanitizer,
-    @Inject(MAT_DIALOG_DATA) public dialogData: ConfirmDialogDataModel
+    @Inject(MatDialogRef) private readonly dialogRef: MatDialogRef<ConfirmDialogComponent>,
+    @Inject(DomSanitizer) private readonly domSanitizer: DomSanitizer,
+    @Inject(MAT_DIALOG_DATA) public readonly dialogData: ConfirmDialogDataModel
   ) {}
 
   public ngOnInit() {

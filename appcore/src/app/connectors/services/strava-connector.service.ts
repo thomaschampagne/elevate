@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import {
   ConnectorType,
   StravaAccount,
   StravaConnectorInfo,
   StravaCredentialsUpdateSyncEvent,
-  SyncEventType,
+  SyncEventType
 } from "@elevate/shared/sync";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
@@ -22,10 +22,10 @@ export class StravaConnectorService {
   public stravaConnectorInfo$: Subject<StravaConnectorInfo>;
 
   constructor(
-    public stravaConnectorInfoService: StravaConnectorInfoService,
-    public ipcMessagesSender: IpcMessagesSender,
-    public syncService: DesktopSyncService,
-    public logger: LoggerService
+    @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
+    @Inject(IpcMessagesSender) private readonly ipcMessagesSender: IpcMessagesSender,
+    @Inject(DesktopSyncService) private readonly syncService: DesktopSyncService,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     this.stravaConnectorInfo$ = new Subject<StravaConnectorInfo>();
   }

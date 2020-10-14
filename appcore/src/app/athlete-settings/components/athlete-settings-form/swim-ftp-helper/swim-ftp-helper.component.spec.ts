@@ -11,7 +11,7 @@ describe("SwimFtpHelperComponent", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [FormsModule, MaterialModule, BrowserAnimationsModule],
-      declarations: [SwimFtpHelperComponent],
+      declarations: [SwimFtpHelperComponent]
     }).compileComponents();
     done();
   });

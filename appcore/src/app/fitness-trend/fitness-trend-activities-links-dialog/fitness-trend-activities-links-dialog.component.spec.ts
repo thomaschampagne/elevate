@@ -25,13 +25,13 @@ describe("FitnessTrendActivitiesLinksDialogComponent", () => {
       providers: [
         {
           provide: MAT_DIALOG_DATA,
-          useValue: dayFitnessTrendModel,
+          useValue: dayFitnessTrendModel
         },
         {
           provide: MatDialogRef,
-          useValue: {},
-        },
-      ],
+          useValue: {}
+        }
+      ]
     }).compileComponents();
     done();
   });

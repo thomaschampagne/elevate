@@ -8,7 +8,7 @@ describe("SideNavService", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      providers: [SideNavService],
+      providers: [SideNavService]
     });
 
     service = TestBed.inject(SideNavService);

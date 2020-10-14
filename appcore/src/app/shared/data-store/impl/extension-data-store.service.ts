@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { DataStore } from "../data-store";
 import { LoggerService } from "../../services/logging/logger.service";
 import _ from "lodash";
@@ -17,7 +17,7 @@ class LokiChromeAdapter implements LokiPersistenceAdapter {
         const collectionsNames = _.keys(chromeDatabase);
 
         const database: Partial<LokiConstructor> = {
-          collections: [],
+          collections: []
         };
 
         collectionsNames.forEach(colName => {
@@ -59,7 +59,7 @@ class LokiChromeAdapter implements LokiPersistenceAdapter {
 
 @Injectable()
 export class ExtensionDataStore<T extends {}> extends DataStore<T> {
-  constructor(protected logger: LoggerService) {
+  constructor(@Inject(LoggerService) protected readonly logger: LoggerService) {
     super(logger);
   }
 

@@ -12,7 +12,7 @@ describe("FitnessTrendInputsComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, FitnessTrendModule],
+      imports: [CoreModule, SharedModule, FitnessTrendModule]
     }).compileComponents();
 
     done();
@@ -27,7 +27,7 @@ describe("FitnessTrendInputsComponent", () => {
 
     component.periodViewed = {
       from: new Date(),
-      to: new Date(),
+      to: new Date()
     };
 
     fixture.detectChanges();

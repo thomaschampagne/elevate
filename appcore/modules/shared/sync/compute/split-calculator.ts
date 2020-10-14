@@ -91,7 +91,7 @@ export class SplitCalculator {
     _.forEach(ranges, (range: number) => {
       results.push({
         range: range,
-        result: this.getBestSplit(range),
+        result: this.getBestSplit(range)
       });
     });
 

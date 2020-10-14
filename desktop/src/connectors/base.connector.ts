@@ -8,7 +8,7 @@ import {
   BareActivityModel,
   ConnectorSyncDateTime,
   SyncedActivityModel,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Service } from "../service";
@@ -222,7 +222,7 @@ export abstract class BaseConnector {
     }
 
     const powerEstimatorParams: Partial<CyclingPower.Params> = {
-      riderWeightKg: riderWeight,
+      riderWeightKg: riderWeight
     };
 
     const estimatedPowerStream = [];

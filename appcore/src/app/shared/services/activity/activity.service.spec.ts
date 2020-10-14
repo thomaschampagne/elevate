@@ -8,7 +8,7 @@ import {
   AthleteSnapshotModel,
   DatedAthleteSettingsModel,
   Gender,
-  SyncedActivityModel,
+  SyncedActivityModel
 } from "@elevate/shared/models";
 import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/fake-synced-activity.helper";
 import { CoreModule } from "../../../core/core.module";
@@ -27,12 +27,12 @@ describe("ActivityService", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, DesktopModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     });
 
     const electronService: ElectronService = TestBed.inject(ElectronService);
     electronService.instance = {
-      ipcRenderer: {},
+      ipcRenderer: {}
     };
 
     const electronWindow = window as ElectronWindow;
@@ -109,7 +109,7 @@ describe("ActivityService", () => {
       // Given
       const activitiesToDelete = [
         302537043, // Chamrousse 1750
-        296692980, // Fondo 100
+        296692980 // Fondo 100
       ];
 
       const removeByManyIdsSpy = spyOn(activityService.activityDao, "removeByManyIds").and.returnValue(
@@ -145,7 +145,7 @@ describe("ActivityService", () => {
           {
             default: 163,
             cycling: null,
-            running: null,
+            running: null
           },
           150,
           300,
@@ -155,7 +155,7 @@ describe("ActivityService", () => {
       );
 
       const athleteModel = new AthleteModel(Gender.MEN, [
-        new DatedAthleteSettingsModel(null, athleteSnapshot.athleteSettings),
+        new DatedAthleteSettingsModel(null, athleteSnapshot.athleteSettings)
       ]);
 
       const syncedActivityModels: SyncedActivityModel[] = [];
@@ -234,7 +234,7 @@ describe("ActivityService", () => {
           {
             default: 163,
             cycling: null,
-            running: null,
+            running: null
           },
           150,
           300,
@@ -250,7 +250,7 @@ describe("ActivityService", () => {
 
       const datedAthleteSettingsModels = [
         new DatedAthleteSettingsModel("2018-01-14", athleteSnapshot02.athleteSettings),
-        new DatedAthleteSettingsModel(null, athleteSnapshot01.athleteSettings),
+        new DatedAthleteSettingsModel(null, athleteSnapshot01.athleteSettings)
       ];
 
       const athleteModel = new AthleteModel(Gender.MEN, datedAthleteSettingsModels);
@@ -331,7 +331,7 @@ describe("ActivityService", () => {
           {
             default: 163,
             cycling: null,
-            running: null,
+            running: null
           },
           150,
           300,
@@ -347,7 +347,7 @@ describe("ActivityService", () => {
 
       const datedAthleteSettingsModels = [
         new DatedAthleteSettingsModel("2018-01-15", athleteModel02.athleteSettings),
-        new DatedAthleteSettingsModel(null, athleteModel01.athleteSettings),
+        new DatedAthleteSettingsModel(null, athleteModel01.athleteSettings)
       ];
 
       const athleteModel = new AthleteModel(Gender.MEN, datedAthleteSettingsModels);
@@ -432,7 +432,7 @@ describe("ActivityService", () => {
           {
             default: 163,
             cycling: null,
-            running: null,
+            running: null
           },
           150,
           300,

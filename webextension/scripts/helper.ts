@@ -11,7 +11,7 @@ export class Helper {
     const speedUnitData: SpeedUnitDataModel = {
       speedUnitPerHour,
       speedUnitFactor,
-      units,
+      units
     };
     return speedUnitData;
   }
@@ -93,8 +93,8 @@ export class Helper {
       {
         method: CoreMessages.ON_RELOAD_BROWSER_TAB,
         params: {
-          sourceTabId,
-        },
+          sourceTabId
+        }
       },
       (response: any) => {
         console.log(response);

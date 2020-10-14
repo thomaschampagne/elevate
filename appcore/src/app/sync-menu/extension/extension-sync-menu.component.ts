@@ -1,6 +1,6 @@
 import _ from "lodash";
 import moment from "moment";
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { SyncMenuComponent } from "../sync-menu.component";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
@@ -8,7 +8,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
 import {
   ExtensionImportBackupDialogComponent,
-  ImportBackupDialogComponent,
+  ImportBackupDialogComponent
 } from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { ExtensionSyncService } from "../../shared/services/sync/impl/extension-sync.service";
@@ -65,15 +65,15 @@ import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
       </mat-menu>
     </div>
   `,
-  styleUrls: ["./extension-sync-menu.component.scss"],
+  styleUrls: ["./extension-sync-menu.component.scss"]
 })
 export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnInit {
   constructor(
-    public router: Router,
-    public extensionSyncService: ExtensionSyncService,
-    public appEventsService: AppEventsService,
-    public dialog: MatDialog,
-    public snackBar: MatSnackBar
+    @Inject(Router) protected readonly router: Router,
+    @Inject(ExtensionSyncService) protected readonly extensionSyncService: ExtensionSyncService,
+    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
+    @Inject(MatDialog) protected readonly dialog: MatDialog,
+    @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar
   ) {
     super(router, extensionSyncService, appEventsService, dialog, snackBar);
   }
@@ -96,7 +96,7 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
   public onSyncedBackupImport(): void {
     const dialogRef = this.dialog.open(ExtensionImportBackupDialogComponent, {
       minWidth: ImportBackupDialogComponent.MIN_WIDTH,
-      maxWidth: ImportBackupDialogComponent.MAX_WIDTH,
+      maxWidth: ImportBackupDialogComponent.MAX_WIDTH
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((dumpModel: ExtensionDumpModel) => {
@@ -125,13 +125,13 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
           "athlete settings before (Cycling FTP, Running FTP, Swim FTP, Heart rate, ...) or may have missing results in " +
           "Elevate features. This is to avoid a redo of the first synchronisation.",
         confirmText: "Start sync",
-        cancelText: "Check my athlete settings",
+        cancelText: "Check my athlete settings"
       };
 
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         minWidth: ConfirmDialogComponent.MIN_WIDTH,
         maxWidth: "50%",
-        data: data,
+        data: data
       });
 
       const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {

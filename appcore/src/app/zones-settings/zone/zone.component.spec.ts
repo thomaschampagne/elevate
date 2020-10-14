@@ -18,7 +18,7 @@ describe("ZoneComponent", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 
     zonesService = TestBed.inject(ZonesService);
@@ -49,14 +49,14 @@ describe("ZoneComponent", () => {
       sourceId: sourceId,
       from: true,
       to: false,
-      value: zoneFrom,
+      value: zoneFrom
     };
 
     spyOn(zonesService, "whisperZoneChange").and.stub();
     component.zoneId = sourceId;
     component.zone = {
       from: zoneFrom,
-      to: zoneTo,
+      to: zoneTo
     };
 
     // When
@@ -79,14 +79,14 @@ describe("ZoneComponent", () => {
       sourceId: sourceId,
       from: false,
       to: true,
-      value: zoneTo,
+      value: zoneTo
     };
 
     spyOn(zonesService, "whisperZoneChange").and.stub();
     component.zoneId = sourceId;
     component.zone = {
       from: zoneFrom,
-      to: zoneTo,
+      to: zoneTo
     };
 
     // When

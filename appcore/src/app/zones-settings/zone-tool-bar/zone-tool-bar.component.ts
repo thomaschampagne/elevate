@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from "@angular/core";
 import { ZonesService } from "../shared/zones.service";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -13,7 +13,7 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 @Component({
   selector: "app-zone-tool-bar",
   templateUrl: "./zone-tool-bar.component.html",
-  styleUrls: ["./zone-tool-bar.component.scss"],
+  styleUrls: ["./zone-tool-bar.component.scss"]
 })
 export class ZoneToolBarComponent implements OnInit {
   @Input()
@@ -29,10 +29,10 @@ export class ZoneToolBarComponent implements OnInit {
   public zoneDefinitionSelectedChange: EventEmitter<ZoneDefinitionModel> = new EventEmitter<ZoneDefinitionModel>();
 
   constructor(
-    public zonesService: ZonesService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    public logger: LoggerService
+    @Inject(ZonesService) public readonly zonesService: ZonesService,
+    @Inject(MatDialog) private readonly dialog: MatDialog,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
   public ngOnInit(): void {}
@@ -69,13 +69,13 @@ export class ZoneToolBarComponent implements OnInit {
   public onResetZonesToDefault(): void {
     const data: ConfirmDialogDataModel = {
       title: "Reset <" + this.zonesService.zoneDefinition.name + "> zones",
-      content: "Are you sure? Previous data will be lost.",
+      content: "Are you sure? Previous data will be lost."
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       minWidth: ConfirmDialogComponent.MIN_WIDTH,
       maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-      data: data,
+      data: data
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
@@ -107,13 +107,13 @@ export class ZoneToolBarComponent implements OnInit {
   public onImportZones() {
     const importExportData: ZoneImportExportDataModel = {
       zoneDefinition: this.zonesService.zoneDefinition,
-      mode: Mode.IMPORT,
+      mode: Mode.IMPORT
     };
 
     this.dialog.open(ZonesImportExportDialogComponent, {
       minWidth: ZonesImportExportDialogComponent.MIN_WIDTH,
       maxWidth: ZonesImportExportDialogComponent.MAX_WIDTH,
-      data: importExportData,
+      data: importExportData
     });
   }
 
@@ -121,13 +121,13 @@ export class ZoneToolBarComponent implements OnInit {
     const importExportData: ZoneImportExportDataModel = {
       zoneDefinition: this.zonesService.zoneDefinition,
       zonesData: this.zonesService.currentZones,
-      mode: Mode.EXPORT,
+      mode: Mode.EXPORT
     };
 
     this.dialog.open(ZonesImportExportDialogComponent, {
       minWidth: ZonesImportExportDialogComponent.MIN_WIDTH,
       maxWidth: ZonesImportExportDialogComponent.MAX_WIDTH,
-      data: importExportData,
+      data: importExportData
     });
   }
 

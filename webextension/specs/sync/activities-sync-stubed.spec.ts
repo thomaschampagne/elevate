@@ -8,7 +8,7 @@ import {
   AthleteModel,
   SyncedActivityModel,
   SyncResultModel,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { ActivitiesSynchronize } from "../../scripts/processors/activities-synchronize";
@@ -93,7 +93,7 @@ describe("ActivitiesSynchronize", () => {
       _.cloneDeep(require("../fixtures/sync/rawPage0420161213.json")), // Page 04 - 20 ACT
       _.cloneDeep(require("../fixtures/sync/rawPage0520161213.json")), // Page 05 - 20 ACT
       _.cloneDeep(require("../fixtures/sync/rawPage0620161213.json")), // Page 06 - 20 ACT
-      _.cloneDeep(require("../fixtures/sync/rawPage0720161213.json")), // Page 07 - 20 ACT
+      _.cloneDeep(require("../fixtures/sync/rawPage0720161213.json")) // Page 07 - 20 ACT
     ];
 
     // Setup athlete models resolution
@@ -159,7 +159,7 @@ describe("ActivitiesSynchronize", () => {
           heartRateData: null,
           cadenceData: null,
           gradeData: null,
-          elevationData: null,
+          elevationData: null
         };
         _.forEach(activitiesWithStream, (awStream: StreamActivityModel) => {
           const activityComputed: SyncedActivityModel = _.pick(
@@ -697,12 +697,12 @@ describe("ActivitiesSynchronize", () => {
           expect(ride).toBeUndefined();
 
           const virtualRide: SyncedActivityModel = _.find(CHROME_STORAGE_STUB.syncedActivities, {
-            id: 427606185,
+            id: 427606185
           }); // Page 1, "First Zwift", old "1st zwift ride"
           expect(virtualRide).toBeUndefined();
 
           const anotherRide: SyncedActivityModel = _.find(CHROME_STORAGE_STUB.syncedActivities, {
-            id: 424565561,
+            id: 424565561
           }); // Should still exists
           expect(anotherRide).toBeDefined();
 
@@ -1003,7 +1003,7 @@ describe("ActivitiesSynchronize", () => {
       expect(syncResultModel.activitiesChangesModel.deleted.length).toEqual(0);
 
       const activity: SyncedActivityModel = _.find(CHROME_STORAGE_STUB.syncedActivities, {
-        id: addedStravaActivityId,
+        id: addedStravaActivityId
       });
       expect(activity.name).toEqual(expectedName);
       expect(activity.type).toEqual(expectedType);
@@ -1034,7 +1034,7 @@ describe("ActivitiesSynchronize", () => {
       expect(syncResultModel.activitiesChangesModel.deleted.length).toEqual(0);
 
       const activity: SyncedActivityModel = _.find(CHROME_STORAGE_STUB.syncedActivities, {
-        id: editedActivityId,
+        id: editedActivityId
       });
       expect(activity.name).toEqual(newName);
       expect(activity.type).toEqual(newType);
@@ -1065,7 +1065,7 @@ describe("ActivitiesSynchronize", () => {
       expect(syncResultModel.activitiesChangesModel.deleted.length).toEqual(1);
 
       const activity: SyncedActivityModel = _.find(CHROME_STORAGE_STUB.syncedActivities, {
-        id: deletedActivityId,
+        id: deletedActivityId
       }) as SyncedActivityModel;
       expect(_.isEmpty(activity)).toBeTruthy();
 

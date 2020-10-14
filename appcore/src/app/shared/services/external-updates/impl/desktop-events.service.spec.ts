@@ -5,7 +5,7 @@ import { DesktopEventsService } from "./desktop-events.service";
 describe("DesktopEventsService", () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
-      providers: [DesktopEventsService],
+      providers: [DesktopEventsService]
     })
   );
 

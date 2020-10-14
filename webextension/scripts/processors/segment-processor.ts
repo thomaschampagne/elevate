@@ -65,7 +65,7 @@ export class SegmentProcessor {
       point.destinationPoint(distance, 180).lat,
       point.destinationPoint(distance, -90).lon,
       point.destinationPoint(distance, 0).lat,
-      point.destinationPoint(distance, 90).lon,
+      point.destinationPoint(distance, 90).lon
     ];
   }
 

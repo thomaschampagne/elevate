@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import _ from "lodash";
 import { ZONE_DEFINITIONS } from "./zone-definitions";
@@ -14,7 +14,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 @Component({
   selector: "app-zones-settings",
   templateUrl: "./zones-settings.component.html",
-  styleUrls: ["./zones-settings.component.scss"],
+  styleUrls: ["./zones-settings.component.scss"]
 })
 export class ZonesSettingsComponent implements OnInit, OnDestroy {
   public static DEFAULT_ZONE_VALUE = "heartRate";
@@ -29,11 +29,11 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
   public areZonesLoaded = false;
 
   constructor(
-    public userSettingsService: UserSettingsService,
-    public route: ActivatedRoute,
-    public router: Router,
-    public zonesService: ZonesService,
-    public snackBar: MatSnackBar
+    @Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService,
+    @Inject(ActivatedRoute) private readonly route: ActivatedRoute,
+    @Inject(Router) private readonly router: Router,
+    @Inject(ZonesService) private readonly zonesService: ZonesService,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar
   ) {}
 
   public ngOnInit(): void {
@@ -62,7 +62,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
             "Your zones are corrupted. Reset your settings from advanced menu.",
             "Go to advanced menu",
             {
-              verticalPosition: "top",
+              verticalPosition: "top"
             }
           );
           const subscription = snackBarRef.onAction().subscribe(() => {

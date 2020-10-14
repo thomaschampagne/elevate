@@ -23,13 +23,13 @@ describe("ConfirmDialogComponent", () => {
       providers: [
         {
           provide: MAT_DIALOG_DATA,
-          useValue: confirmDialogDataModel,
+          useValue: confirmDialogDataModel
         },
         {
           provide: MatDialogRef,
-          useValue: {},
-        },
-      ],
+          useValue: {}
+        }
+      ]
     }).compileComponents();
 
     done();

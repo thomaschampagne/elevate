@@ -6,7 +6,7 @@ import { CollectionDef } from "../../data-store/collection-def";
 @Injectable()
 export class StreamsDao extends BaseDao<CompressedStreamModel> {
   public static readonly COLLECTION_DEF: CollectionDef<CompressedStreamModel> = new CollectionDef("streams", {
-    unique: ["activityId"],
+    unique: ["activityId"]
   });
 
   public getCollectionDef(): CollectionDef<CompressedStreamModel> {

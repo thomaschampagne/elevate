@@ -11,7 +11,7 @@ import {
   FileSystemConnectorInfo,
   StravaConnectorInfo,
   SyncEvent,
-  SyncEventType,
+  SyncEventType
 } from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
 import {
@@ -20,7 +20,7 @@ import {
   AthleteSnapshotModel,
   ConnectorSyncDateTime,
   SyncedActivityModel,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import { Service } from "../service";
 import _ from "lodash";
@@ -85,7 +85,7 @@ export class IpcMainMessagesService {
     if (this.service.currentConnector && this.service.currentConnector.isSyncing) {
       replyWith({
         success: null,
-        error: `Impossible to start a new sync. Another sync is already running on connector ${this.service.currentConnector.type}`,
+        error: `Impossible to start a new sync. Another sync is already running on connector ${this.service.currentConnector.type}`
       });
       return;
     }
@@ -126,7 +126,7 @@ export class IpcMainMessagesService {
       logger.error(errorMessage);
       replyWith({
         success: null,
-        error: errorMessage,
+        error: errorMessage
       });
       return;
     }
@@ -177,7 +177,7 @@ export class IpcMainMessagesService {
 
     replyWith({
       success: "Started sync of connector " + connectorType,
-      error: null,
+      error: null
     });
   }
 
@@ -191,7 +191,7 @@ export class IpcMainMessagesService {
 
       replyWith({
         success: null,
-        error: errorMessage,
+        error: errorMessage
       });
 
       logger.error(errorMessage);
@@ -202,7 +202,7 @@ export class IpcMainMessagesService {
             const successMessage = "Sync of connector '" + requestConnectorType + "' has been cancelled";
             replyWith({
               success: successMessage,
-              error: null,
+              error: null
             });
 
             logger.info(successMessage);
@@ -210,7 +210,7 @@ export class IpcMainMessagesService {
           error => {
             replyWith({
               success: null,
-              error: error,
+              error: error
             });
 
             logger.error(error);
@@ -219,7 +219,7 @@ export class IpcMainMessagesService {
       } else {
         replyWith({
           success: null,
-          error: `Trying to stop a sync on ${requestConnectorType} connector but current connector synced type is: ${currentConnector.type}`,
+          error: `Trying to stop a sync on ${requestConnectorType} connector but current connector synced type is: ${currentConnector.type}`
         });
       }
     }
@@ -250,15 +250,15 @@ export class IpcMainMessagesService {
             accessToken: result.accessToken,
             refreshToken: result.refreshToken,
             expiresAt: result.expiresAt,
-            athlete: result.athlete,
+            athlete: result.athlete
           },
-          error: null,
+          error: null
         });
       },
       error => {
         replyWith({
           success: null,
-          error: error,
+          error: error
         });
         logger.error(error);
       }
@@ -300,12 +300,12 @@ export class IpcMainMessagesService {
 
       replyWith({
         success: syncedActivityModel,
-        error: null,
+        error: null
       });
     } catch (error) {
       replyWith({
         success: null,
-        error: error,
+        error: error
       });
       logger.error(error);
     }
@@ -317,7 +317,7 @@ export class IpcMainMessagesService {
   ): void {
     replyWith({
       success: Service.instance().getRuntimeInfo(),
-      error: null,
+      error: null
     });
   }
 
@@ -329,7 +329,7 @@ export class IpcMainMessagesService {
     logger.error(errorMessage);
     replyWith({
       success: null,
-      error: errorMessage,
+      error: errorMessage
     });
   }
 

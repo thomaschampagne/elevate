@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { OpenResourceResolver } from "../open-resource-resolver";
 import { ElectronService } from "../../electron/electron.service";
 import { ActivityService } from "../../activity/activity.service";
@@ -10,10 +10,10 @@ import { ElevateException } from "@elevate/shared/exceptions";
 @Injectable()
 export class DesktopOpenResourceResolver extends OpenResourceResolver {
   constructor(
-    public electronService: ElectronService,
-    public activityService: ActivityService,
-    public router: Router,
-    public snackBar: MatSnackBar
+    @Inject(ElectronService) protected readonly electronService: ElectronService,
+    @Inject(ActivityService) protected readonly activityService: ActivityService,
+    @Inject(Router) protected readonly router: Router,
+    @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar
   ) {
     super(snackBar);
   }

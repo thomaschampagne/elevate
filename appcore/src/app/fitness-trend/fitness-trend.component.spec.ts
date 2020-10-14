@@ -32,8 +32,8 @@ describe("FitnessTrendComponent", () => {
       imports: [CoreModule, SharedModule, FitnessTrendModule],
       providers: [
         { provide: AppEventsService, useClass: MockEventsService },
-        { provide: DataStore, useClass: TestingDataStore },
-      ],
+        { provide: DataStore, useClass: TestingDataStore }
+      ]
     }).compileComponents();
 
     // Retrieve injected service

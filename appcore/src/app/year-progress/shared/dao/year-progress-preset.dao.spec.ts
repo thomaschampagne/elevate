@@ -13,8 +13,8 @@ describe("YearProgressPresetDao", () => {
       providers: [
         YearProgressPresetDao,
         { provide: DataStore, useClass: TestingDataStore },
-        { provide: LoggerService, useClass: ConsoleLoggerService },
-      ],
+        { provide: LoggerService, useClass: ConsoleLoggerService }
+      ]
     });
 
     yearProgressPresetDao = TestBed.inject(YearProgressPresetDao);

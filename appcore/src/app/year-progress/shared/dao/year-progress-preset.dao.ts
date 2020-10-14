@@ -8,7 +8,7 @@ export class YearProgressPresetDao extends BaseDao<YearToDateProgressPresetModel
   public static readonly COLLECTION_DEF: CollectionDef<YearToDateProgressPresetModel> = new CollectionDef(
     "yearProgressPresets",
     {
-      unique: ["id"],
+      unique: ["id"]
     }
   );
 

@@ -1,10 +1,10 @@
-import { InjectionToken } from "@angular/core";
+import { Inject, InjectionToken } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
 export const OPEN_RESOURCE_RESOLVER = new InjectionToken<OpenResourceResolver>("OPEN_RESOURCE_RESOLVER");
 
 export abstract class OpenResourceResolver {
-  protected constructor(public snackBar: MatSnackBar) {}
+  protected constructor(@Inject(MatSnackBar) protected readonly snackBar: MatSnackBar) {}
 
   public abstract openLink(url: string): void;
 

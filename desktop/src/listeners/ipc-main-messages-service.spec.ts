@@ -7,7 +7,7 @@ import {
   ErrorSyncEvent,
   FileSystemConnectorInfo,
   GenericSyncEvent,
-  SyncEvent,
+  SyncEvent
 } from "@elevate/shared/sync";
 import { StravaConnector } from "../connectors/strava/strava.connector";
 import { Subject } from "rxjs";
@@ -20,7 +20,7 @@ import {
   AthleteSnapshotModel,
   Gender,
   SyncedActivityModel,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
@@ -133,8 +133,8 @@ describe("IpcMainMessagesService", () => {
         callback: () => {},
         args: {
           success: null,
-          error: "Unknown message received by IpcMain. FlaggedIpcMessage: " + JSON.stringify(flaggedIpcMessage),
-        },
+          error: "Unknown message received by IpcMain. FlaggedIpcMessage: " + JSON.stringify(flaggedIpcMessage)
+        }
       };
       const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 
@@ -166,8 +166,8 @@ describe("IpcMainMessagesService", () => {
         callback: () => {},
         args: {
           success: "Started sync of connector " + ConnectorType.STRAVA,
-          error: null,
-        },
+          error: null
+        }
       };
       const stravaConnectorSyncCalls = 1;
 
@@ -211,8 +211,8 @@ describe("IpcMainMessagesService", () => {
         callback: () => {},
         args: {
           success: "Started sync of connector " + ConnectorType.FILE_SYSTEM,
-          error: null,
-        },
+          error: null
+        }
       };
       const fsConnectorSyncCalls = 1;
 
@@ -254,8 +254,8 @@ describe("IpcMainMessagesService", () => {
         args: {
           success: null,
           error:
-            "Impossible to start a new sync. Another sync is already running on connector " + ConnectorType.FILE_SYSTEM,
-        },
+            "Impossible to start a new sync. Another sync is already running on connector " + ConnectorType.FILE_SYSTEM
+        }
       };
       const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 
@@ -300,8 +300,8 @@ describe("IpcMainMessagesService", () => {
         callback: () => {},
         args: {
           success: "Started sync of connector " + ConnectorType.STRAVA,
-          error: null,
-        },
+          error: null
+        }
       };
       const stravaConnectorSyncCalls = 1;
       const stravaConnectorMock = StravaConnector.create(
@@ -348,15 +348,15 @@ describe("IpcMainMessagesService", () => {
       const fakeErrorSyncEvent = new ErrorSyncEvent(ConnectorType.STRAVA, {
         code: "fake_code",
         description: "fake_desc",
-        stacktrace: "fake_stack",
+        stacktrace: "fake_stack"
       });
       const expectedFlaggedMessageSent = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, fakeErrorSyncEvent);
       const replyWith = {
         callback: () => {},
         args: {
           success: "Started sync of connector " + ConnectorType.STRAVA,
-          error: null,
-        },
+          error: null
+        }
       };
       const stravaConnectorSyncCalls = 1;
       const stravaConnectorMock = StravaConnector.create(
@@ -420,8 +420,8 @@ describe("IpcMainMessagesService", () => {
         callback: () => {},
         args: {
           success: "Started sync of connector " + ConnectorType.STRAVA,
-          error: null,
-        },
+          error: null
+        }
       };
       const stravaConnectorSyncCalls = 1;
       const stravaConnectorMock = StravaConnector.create(
@@ -486,8 +486,8 @@ describe("IpcMainMessagesService", () => {
         callback: () => {},
         args: {
           success: null,
-          error: "No existing connector found to stop sync",
-        },
+          error: "No existing connector found to stop sync"
+        }
       };
 
       const connector = StravaConnector.create(null, null, null, null);
@@ -513,8 +513,8 @@ describe("IpcMainMessagesService", () => {
         callback: () => {},
         args: {
           success: null,
-          error: `Trying to stop a sync on ${requestConnectorType} connector but current connector synced type is: ${ConnectorType.FILE_SYSTEM}`,
-        },
+          error: `Trying to stop a sync on ${requestConnectorType} connector but current connector synced type is: ${ConnectorType.FILE_SYSTEM}`
+        }
       };
 
       const connector = FileSystemConnector.create(null, null, null, null);
@@ -549,7 +549,7 @@ describe("IpcMainMessagesService", () => {
       );
       const analysisDataModel = new AnalysisDataModel();
       const replyWrapper = {
-        replyWith: () => {},
+        replyWith: () => {}
       };
 
       const calculateSpy = spyOn(ActivityComputer, "calculate").and.returnValue(analysisDataModel);
@@ -581,7 +581,7 @@ describe("IpcMainMessagesService", () => {
       );
       const analysisDataModel = new AnalysisDataModel();
       const replyWrapper = {
-        replyWith: () => {},
+        replyWith: () => {}
       };
 
       const calculateSpy = spyOn(ActivityComputer, "calculate").and.returnValue(analysisDataModel);
@@ -617,7 +617,7 @@ describe("IpcMainMessagesService", () => {
       const expectedErrorMessage = `unable to calculate activity ${syncedActivityModel.name} started at ${syncedActivityModel.start_timestamp}: Whoops.`;
       const expectedElevateException = new ElevateException(expectedErrorMessage);
       const replyWrapper = {
-        replyWith: () => {},
+        replyWith: () => {}
       };
 
       const calculateSpy = spyOn(ActivityComputer, "calculate").and.callFake(() => {
@@ -639,7 +639,7 @@ describe("IpcMainMessagesService", () => {
     it("should get runtime info", done => {
       // Given
       const replyWrapper = {
-        replyWith: () => {},
+        replyWith: () => {}
       };
       const fakeRuntimeInfo = new RuntimeInfo(null, null, null, null, null, null, null);
       const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.GET_RUNTIME_INFO, fakeRuntimeInfo);

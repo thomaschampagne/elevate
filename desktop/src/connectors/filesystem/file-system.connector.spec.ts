@@ -8,10 +8,9 @@ import {
   AthleteSnapshotModel,
   BareActivityModel,
   ConnectorSyncDateTime,
-  EnvTarget,
   Gender,
   SyncedActivityModel,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import fs from "fs";
 import path from "path";
@@ -24,11 +23,11 @@ import {
   StartedSyncEvent,
   StoppedSyncEvent,
   SyncEvent,
-  SyncEventType,
+  SyncEventType
 } from "@elevate/shared/sync";
 import { filter } from "rxjs/operators";
 import { Subject } from "rxjs";
-import { ElevateSport } from "@elevate/shared/enums";
+import { BuildTarget, ElevateSport } from "@elevate/shared/enums";
 import { BaseConnector, PrimitiveSourceData } from "../base.connector";
 import { SportsLib } from "@sports-alliance/sports-lib";
 import { ActivityInterface } from "@sports-alliance/sports-lib/lib/activities/activity.interface";
@@ -106,7 +105,7 @@ import { DataPower } from "@sports-alliance/sports-lib/lib/data/data.power";
  ]*/
 
 describe("FileSystemConnector", () => {
-  const defaultsByEnvTarget = UserSettings.getDefaultsByEnvTarget(EnvTarget.DESKTOP);
+  const defaultsByBuildTarget = UserSettings.getDefaultsByBuildTarget(BuildTarget.DESKTOP);
   const activitiesLocalPath01 = __dirname + "/fixtures/activities-01/";
   const activitiesLocalPath02 = __dirname + "/fixtures/activities-02/";
   const compressedActivitiesPath = __dirname + "/fixtures/compressed-activities/";
@@ -118,7 +117,7 @@ describe("FileSystemConnector", () => {
   beforeEach(done => {
     fileSystemConnector = FileSystemConnector.create(
       AthleteModel.DEFAULT_MODEL,
-      defaultsByEnvTarget,
+      defaultsByBuildTarget,
       connectorSyncDateTime,
       activitiesLocalPath01
     );
@@ -135,7 +134,7 @@ describe("FileSystemConnector", () => {
       const expectedDecompressedFiles = [
         compressedActivitiesPath + archiveFileNameFP + "-11111.fit",
         compressedActivitiesPath + archiveFileNameFP + "-22222.fit",
-        compressedActivitiesPath + archiveFileNameFP + "-" + BaseConnector.hashData("/subfolder", 6) + "-33333.fit",
+        compressedActivitiesPath + archiveFileNameFP + "-" + BaseConnector.hashData("/subfolder", 6) + "-33333.fit"
       ];
       const unlinkSyncSpy = spyOn(fileSystemConnector.getFs(), "unlinkSync").and.callThrough();
       const deleteArchive = false;
@@ -332,7 +331,7 @@ describe("FileSystemConnector", () => {
       // Given
       fileSystemConnector = FileSystemConnector.create(
         AthleteModel.DEFAULT_MODEL,
-        defaultsByEnvTarget,
+        defaultsByBuildTarget,
         connectorSyncDateTime,
         activitiesLocalPath01
       );
@@ -366,7 +365,7 @@ describe("FileSystemConnector", () => {
       // Given
       fileSystemConnector = FileSystemConnector.create(
         AthleteModel.DEFAULT_MODEL,
-        defaultsByEnvTarget,
+        defaultsByBuildTarget,
         connectorSyncDateTime,
         activitiesLocalPath01
       );
@@ -405,7 +404,7 @@ describe("FileSystemConnector", () => {
       // Given
       fileSystemConnector = FileSystemConnector.create(
         AthleteModel.DEFAULT_MODEL,
-        defaultsByEnvTarget,
+        defaultsByBuildTarget,
         connectorSyncDateTime,
         activitiesLocalPath01
       );
@@ -503,14 +502,7 @@ describe("FileSystemConnector", () => {
 
       // Then
       syncEvent$.subscribe(
-        (syncEvent: SyncEvent) => {
-          /*
-      todo?!
-      if (syncEvent.type !== SyncEventType.STARTED) {
-                      expect(syncEvent.type).toEqual(SyncEventType.ACTIVITY);
-                      expect((<ActivitySyncEvent> syncEvent).activity).toBeDefined();
-                  }
-  */
+        () => {
           expect(fileSystemConnector.isSyncing).toBeTruthy();
         },
         error => {
@@ -623,7 +615,7 @@ describe("FileSystemConnector", () => {
       const deleteArchivesAfterExtract = false;
       fileSystemConnector = FileSystemConnector.create(
         AthleteModel.DEFAULT_MODEL,
-        defaultsByEnvTarget,
+        defaultsByBuildTarget,
         new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
         activitiesLocalPath02,
         scanSubDirectories,
@@ -729,7 +721,7 @@ describe("FileSystemConnector", () => {
       const deleteArchivesAfterExtract = false;
       fileSystemConnector = FileSystemConnector.create(
         AthleteModel.DEFAULT_MODEL,
-        defaultsByEnvTarget,
+        defaultsByBuildTarget,
         new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
         activitiesLocalPath02,
         scanSubDirectories,
@@ -811,7 +803,7 @@ describe("FileSystemConnector", () => {
       const deleteArchivesAfterExtract = false;
       fileSystemConnector = FileSystemConnector.create(
         AthleteModel.DEFAULT_MODEL,
-        defaultsByEnvTarget,
+        defaultsByBuildTarget,
         new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
         activitiesLocalPath02,
         scanSubDirectories,
@@ -892,7 +884,7 @@ describe("FileSystemConnector", () => {
       const deleteArchivesAfterExtract = false;
       fileSystemConnector = FileSystemConnector.create(
         AthleteModel.DEFAULT_MODEL,
-        defaultsByEnvTarget,
+        defaultsByBuildTarget,
         new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
         activitiesLocalPath02,
         scanSubDirectories,
@@ -982,7 +974,7 @@ describe("FileSystemConnector", () => {
       const errorMessage = "Unable to create bare activity";
       fileSystemConnector = FileSystemConnector.create(
         AthleteModel.DEFAULT_MODEL,
-        defaultsByEnvTarget,
+        defaultsByBuildTarget,
         new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
         activitiesLocalPath02,
         scanSubDirectories,
@@ -1029,7 +1021,7 @@ describe("FileSystemConnector", () => {
       const deleteArchivesAfterExtract = false;
       fileSystemConnector = FileSystemConnector.create(
         AthleteModel.DEFAULT_MODEL,
-        defaultsByEnvTarget,
+        defaultsByBuildTarget,
         new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
         activitiesLocalPath02,
         scanSubDirectories,
@@ -1070,7 +1062,7 @@ describe("FileSystemConnector", () => {
       const expectedErrorSyncEvent = ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(fakeSourceDir);
       fileSystemConnector = FileSystemConnector.create(
         AthleteModel.DEFAULT_MODEL,
-        defaultsByEnvTarget,
+        defaultsByBuildTarget,
         new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
         fakeSourceDir
       );
@@ -1145,7 +1137,7 @@ describe("FileSystemConnector", () => {
         fileSystemConnector.detectSportTypeWhenUnknown = true;
         const sportsLibActivity: ActivityInterface = {
           type: "FakeSport" as ActivityTypes,
-          getStats: () => {},
+          getStats: () => {}
         } as any;
 
         spyOn(sportsLibActivity, "getStats").and.returnValue({
@@ -1153,9 +1145,9 @@ describe("FileSystemConnector", () => {
             return {
               getValue: () => {
                 return {};
-              },
+              }
             };
-          },
+          }
         });
         const attemptDetectCommonSportSpy = spyOn(fileSystemConnector, "attemptDetectCommonSport").and.returnValue(
           ElevateSport.Other
@@ -1197,7 +1189,7 @@ describe("FileSystemConnector", () => {
             ascent: 3562.2,
             avgSpeed: 36.3,
             maxSpeed: 81.7,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 66,
@@ -1205,7 +1197,7 @@ describe("FileSystemConnector", () => {
             ascent: 1578,
             avgSpeed: 20.9,
             maxSpeed: 70.9,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 30,
@@ -1213,7 +1205,7 @@ describe("FileSystemConnector", () => {
             ascent: 15,
             avgSpeed: 30,
             maxSpeed: 55,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 17,
@@ -1221,7 +1213,7 @@ describe("FileSystemConnector", () => {
             ascent: 33,
             avgSpeed: 26,
             maxSpeed: 37.4,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 168,
@@ -1229,7 +1221,7 @@ describe("FileSystemConnector", () => {
             ascent: 274,
             avgSpeed: 28,
             maxSpeed: 45.3,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 32,
@@ -1237,7 +1229,7 @@ describe("FileSystemConnector", () => {
             ascent: 721,
             avgSpeed: 27.5,
             maxSpeed: 91.8,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 49,
@@ -1245,7 +1237,7 @@ describe("FileSystemConnector", () => {
             ascent: 1054.56,
             avgSpeed: 22.2,
             maxSpeed: 77,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 141,
@@ -1253,7 +1245,7 @@ describe("FileSystemConnector", () => {
             ascent: 4043.44,
             avgSpeed: 21.9,
             maxSpeed: 70.5,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 31,
@@ -1261,7 +1253,7 @@ describe("FileSystemConnector", () => {
             ascent: 525,
             avgSpeed: 20,
             maxSpeed: 56.5,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 44,
@@ -1269,7 +1261,7 @@ describe("FileSystemConnector", () => {
             ascent: 554,
             avgSpeed: 22.1,
             maxSpeed: 61.2,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 82,
@@ -1277,7 +1269,7 @@ describe("FileSystemConnector", () => {
             ascent: 1098,
             avgSpeed: 25.4,
             maxSpeed: 61.9,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 53,
@@ -1285,7 +1277,7 @@ describe("FileSystemConnector", () => {
             ascent: null,
             avgSpeed: 35.3,
             maxSpeed: 39.9,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 32,
@@ -1293,7 +1285,7 @@ describe("FileSystemConnector", () => {
             ascent: null,
             avgSpeed: 21.9,
             maxSpeed: 28.4,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 12,
@@ -1301,7 +1293,7 @@ describe("FileSystemConnector", () => {
             ascent: 20,
             avgSpeed: 30.8,
             maxSpeed: 38.1,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 20,
@@ -1309,7 +1301,7 @@ describe("FileSystemConnector", () => {
             ascent: 99,
             avgSpeed: 22.4,
             maxSpeed: 38.8,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
 
           // Runs
@@ -1319,7 +1311,7 @@ describe("FileSystemConnector", () => {
             ascent: 226,
             avgSpeed: 12.8,
             maxSpeed: 17,
-            expectedSport: ElevateSport.Run,
+            expectedSport: ElevateSport.Run
           },
           {
             distance: 3,
@@ -1327,7 +1319,7 @@ describe("FileSystemConnector", () => {
             ascent: 16.2052,
             avgSpeed: 6.6,
             maxSpeed: 18.3,
-            expectedSport: ElevateSport.Other,
+            expectedSport: ElevateSport.Other
           }, // It's "Run" but too much doubt, then type: Other
           {
             distance: 6,
@@ -1335,7 +1327,7 @@ describe("FileSystemConnector", () => {
             ascent: 343,
             avgSpeed: 6.7,
             maxSpeed: 12,
-            expectedSport: ElevateSport.Run,
+            expectedSport: ElevateSport.Run
           },
           {
             distance: 6.17,
@@ -1343,7 +1335,7 @@ describe("FileSystemConnector", () => {
             ascent: 316,
             avgSpeed: 10,
             maxSpeed: 16.4,
-            expectedSport: ElevateSport.Run,
+            expectedSport: ElevateSport.Run
           },
           {
             distance: 8,
@@ -1351,7 +1343,7 @@ describe("FileSystemConnector", () => {
             ascent: 44.5919,
             avgSpeed: 13.3,
             maxSpeed: 21.9,
-            expectedSport: ElevateSport.Run,
+            expectedSport: ElevateSport.Run
           },
           {
             distance: 5,
@@ -1359,7 +1351,7 @@ describe("FileSystemConnector", () => {
             ascent: 10.1495,
             avgSpeed: 10.9,
             maxSpeed: 18.3,
-            expectedSport: ElevateSport.Run,
+            expectedSport: ElevateSport.Run
           },
           {
             distance: 4,
@@ -1367,7 +1359,7 @@ describe("FileSystemConnector", () => {
             ascent: 6,
             avgSpeed: 10.4,
             maxSpeed: 15.8,
-            expectedSport: ElevateSport.Run,
+            expectedSport: ElevateSport.Run
           },
           {
             distance: 2,
@@ -1375,7 +1367,7 @@ describe("FileSystemConnector", () => {
             ascent: 37,
             avgSpeed: 6.3,
             maxSpeed: 11.5,
-            expectedSport: ElevateSport.Run,
+            expectedSport: ElevateSport.Run
           },
           {
             distance: 12,
@@ -1383,7 +1375,7 @@ describe("FileSystemConnector", () => {
             ascent: 42,
             avgSpeed: 9.8,
             maxSpeed: 13.6,
-            expectedSport: ElevateSport.Run,
+            expectedSport: ElevateSport.Run
           },
           {
             distance: 1,
@@ -1391,7 +1383,7 @@ describe("FileSystemConnector", () => {
             ascent: 17.145,
             avgSpeed: 4.6,
             maxSpeed: 7.9,
-            expectedSport: ElevateSport.Run,
+            expectedSport: ElevateSport.Run
           },
           {
             distance: 15,
@@ -1399,7 +1391,7 @@ describe("FileSystemConnector", () => {
             ascent: 205.137,
             avgSpeed: 14.5,
             maxSpeed: 20.8,
-            expectedSport: ElevateSport.Run,
+            expectedSport: ElevateSport.Run
           },
           {
             distance: 1,
@@ -1407,7 +1399,7 @@ describe("FileSystemConnector", () => {
             ascent: null,
             avgSpeed: 6.3,
             maxSpeed: 12.9,
-            expectedSport: ElevateSport.Run,
+            expectedSport: ElevateSport.Run
           },
           {
             distance: 6,
@@ -1415,7 +1407,7 @@ describe("FileSystemConnector", () => {
             ascent: 594.8,
             avgSpeed: 4.8,
             maxSpeed: 10.4,
-            expectedSport: ElevateSport.Run,
+            expectedSport: ElevateSport.Run
           },
           {
             distance: 2,
@@ -1423,7 +1415,7 @@ describe("FileSystemConnector", () => {
             ascent: 12.4471,
             avgSpeed: 4.7,
             maxSpeed: 12.2,
-            expectedSport: ElevateSport.Run,
+            expectedSport: ElevateSport.Run
           },
 
           // Low pace Rides
@@ -1433,7 +1425,7 @@ describe("FileSystemConnector", () => {
             ascent: 2,
             avgSpeed: 21.3,
             maxSpeed: 33.4,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 1,
@@ -1441,7 +1433,7 @@ describe("FileSystemConnector", () => {
             ascent: null,
             avgSpeed: 19.4,
             maxSpeed: 29.5,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 7,
@@ -1449,7 +1441,7 @@ describe("FileSystemConnector", () => {
             ascent: 55,
             avgSpeed: 8.4,
             maxSpeed: 19.8,
-            expectedSport: ElevateSport.Other,
+            expectedSport: ElevateSport.Other
           }, // It's "Ride" but too much doubt, then type: Other
           {
             distance: 11,
@@ -1457,7 +1449,7 @@ describe("FileSystemConnector", () => {
             ascent: 103.688,
             avgSpeed: 12.2,
             maxSpeed: 34.2,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
           {
             distance: 2,
@@ -1465,7 +1457,7 @@ describe("FileSystemConnector", () => {
             ascent: 14,
             avgSpeed: 19.9,
             maxSpeed: 28.8,
-            expectedSport: ElevateSport.Ride,
+            expectedSport: ElevateSport.Ride
           },
 
           // Skiing
@@ -1475,7 +1467,7 @@ describe("FileSystemConnector", () => {
             ascent: 14283,
             avgSpeed: 18.3,
             maxSpeed: 108.7,
-            expectedSport: ElevateSport.Other,
+            expectedSport: ElevateSport.Other
           },
           {
             distance: 100,
@@ -1483,7 +1475,7 @@ describe("FileSystemConnector", () => {
             ascent: 10511,
             avgSpeed: 17.6,
             maxSpeed: 144.3,
-            expectedSport: ElevateSport.Other,
+            expectedSport: ElevateSport.Other
           },
           {
             distance: 42,
@@ -1491,7 +1483,7 @@ describe("FileSystemConnector", () => {
             ascent: 3405,
             avgSpeed: 13.2,
             maxSpeed: 85.3,
-            expectedSport: ElevateSport.Other,
+            expectedSport: ElevateSport.Other
           },
           {
             distance: 40,
@@ -1499,7 +1491,7 @@ describe("FileSystemConnector", () => {
             ascent: 4477,
             avgSpeed: 13.2,
             maxSpeed: 81.3,
-            expectedSport: ElevateSport.Other,
+            expectedSport: ElevateSport.Other
           },
 
           // Unexpected with strange values
@@ -1509,7 +1501,7 @@ describe("FileSystemConnector", () => {
             ascent: 10,
             avgSpeed: null,
             maxSpeed: null,
-            expectedSport: ElevateSport.Other,
+            expectedSport: ElevateSport.Other
           },
           {
             distance: null,
@@ -1517,8 +1509,8 @@ describe("FileSystemConnector", () => {
             ascent: 10,
             avgSpeed: 10,
             maxSpeed: 15,
-            expectedSport: ElevateSport.Other,
-          },
+            expectedSport: ElevateSport.Other
+          }
         ].map(testData => prepareTestData(testData));
 
         // When, Then
@@ -1553,8 +1545,8 @@ describe("FileSystemConnector", () => {
           movingTime: defaultMovingTime,
           elapsedTime: defaultElapsedTime,
           elevationData: {
-            accumulatedElevationAscent: defaultElevationGain,
-          },
+            accumulatedElevationAscent: defaultElevationGain
+          }
         } as AnalysisDataModel;
         syncedActivityModel.athleteSnapshot = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
 
@@ -1570,7 +1562,7 @@ describe("FileSystemConnector", () => {
           distanceRaw: 111,
           elapsedTimeRaw: 333,
           movingTimeRaw: 222,
-          elevationGainRaw: 444,
+          elevationGainRaw: 444
         };
 
         // When
@@ -1595,7 +1587,7 @@ describe("FileSystemConnector", () => {
           distanceRaw: 111,
           elapsedTimeRaw: 333,
           movingTimeRaw: 222,
-          elevationGainRaw: 444,
+          elevationGainRaw: 444
         };
 
         syncedActivityModel.extendedStats = null;
@@ -1622,7 +1614,7 @@ describe("FileSystemConnector", () => {
           distanceRaw: 111,
           elapsedTimeRaw: 333,
           movingTimeRaw: 222,
-          elevationGainRaw: 444,
+          elevationGainRaw: 444
         };
 
         syncedActivityModel.extendedStats = {
@@ -1630,8 +1622,8 @@ describe("FileSystemConnector", () => {
           elapsedTime: null,
           pauseTime: null,
           elevationData: {
-            accumulatedElevationAscent: null,
-          },
+            accumulatedElevationAscent: null
+          }
         } as AnalysisDataModel;
         activityStreamsModel.distance = [];
 
@@ -1656,7 +1648,7 @@ describe("FileSystemConnector", () => {
           distanceRaw: undefined,
           elapsedTimeRaw: undefined,
           movingTimeRaw: undefined,
-          elevationGainRaw: undefined,
+          elevationGainRaw: undefined
         };
 
         syncedActivityModel.extendedStats = {
@@ -1664,8 +1656,8 @@ describe("FileSystemConnector", () => {
           elapsedTime: null,
           pauseTime: null,
           elevationData: {
-            accumulatedElevationAscent: null,
-          },
+            accumulatedElevationAscent: null
+          }
         } as AnalysisDataModel;
 
         activityStreamsModel.distance = [];
@@ -1760,7 +1752,7 @@ describe("FileSystemConnector", () => {
         const sportsLibActivity = new Activity(new Date(), new Date(), ActivityTypes.Running, new Creator("John Doo"));
 
         spyOn(sportsLibActivity, "generateTimeStream").and.returnValue({
-          getData: () => [-1],
+          getData: () => [-1]
         });
         spyOn(sportsLibActivity, "getSquashedStreamData").and.callFake((streamType: string) => {
           if (streamType === DataHeartRate.type || streamType === DataCadence.type || streamType === DataPower.type) {

@@ -13,7 +13,7 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 @Component({
   selector: "app-add-year-progress-presets-dialog",
   templateUrl: "./add-year-progress-preset-dialog.component.html",
-  styleUrls: ["./add-year-progress-preset-dialog.component.scss"],
+  styleUrls: ["./add-year-progress-preset-dialog.component.scss"]
 })
 export class AddYearProgressPresetDialogComponent implements OnInit {
   public static readonly MAX_WIDTH: string = "80%";
@@ -25,12 +25,11 @@ export class AddYearProgressPresetDialogComponent implements OnInit {
   public progressPresetModel: YearToDateProgressPresetModel;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA)
-    public dialogData: any /*AddYearToDateProgressPresetDialogData | AddRollingProgressPresetDialogData*/,
-    public dialogRef: MatDialogRef<AddYearProgressPresetDialogComponent>,
-    public yearProgressService: YearProgressService,
-    public snackBar: MatSnackBar,
-    public logger: LoggerService
+    @Inject(MAT_DIALOG_DATA) public readonly dialogData: any,
+    @Inject(MatDialogRef) private readonly dialogRef: MatDialogRef<AddYearProgressPresetDialogComponent>,
+    @Inject(YearProgressService) private readonly yearProgressService: YearProgressService,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
   public ngOnInit(): void {
@@ -88,7 +87,7 @@ export class AddYearProgressPresetDialogComponent implements OnInit {
       this.logger.warn(error);
       const message = (error as AppError).message;
       this.snackBar.open(message, "Close", {
-        duration: 5000,
+        duration: 5000
       });
     } else {
       this.logger.error(error);

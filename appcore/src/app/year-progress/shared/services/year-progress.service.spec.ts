@@ -45,8 +45,8 @@ describe("YearProgressService", () => {
       imports: [YearProgressModule],
       providers: [
         { provide: DataStore, useClass: TestingDataStore },
-        { provide: LoggerService, useClass: ConsoleLoggerService },
-      ],
+        { provide: LoggerService, useClass: ConsoleLoggerService }
+      ]
     });
 
     service = TestBed.inject(YearProgressService);
@@ -69,7 +69,7 @@ describe("YearProgressService", () => {
     const expectedResult: ActivityCountByTypeModel[] = [
       { type: ElevateSport.Ride, count: 352 },
       { type: ElevateSport.Run, count: 178 },
-      { type: ElevateSport.VirtualRide, count: 177 },
+      { type: ElevateSport.VirtualRide, count: 177 }
     ];
 
     // When
@@ -535,7 +535,7 @@ describe("YearProgressService", () => {
         moving_time_raw: movingTimeRaw,
         elevation_gain_raw: elevationGainRaw,
         start_time: stravaStartTime(date),
-        type: type,
+        type: type
       };
     };
 
@@ -1155,7 +1155,7 @@ describe("YearProgressService", () => {
       // Given
       const expected: YearToDateProgressPresetModel[] = [
         new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
-        new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
+        new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false)
       ];
 
       const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find").and.returnValue(Promise.resolve(expected));
@@ -1197,7 +1197,7 @@ describe("YearProgressService", () => {
         ),
         new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
         new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000),
-        new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
+        new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false)
       ];
 
       const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find").and.returnValue(
@@ -1241,7 +1241,7 @@ describe("YearProgressService", () => {
         new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
         new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000),
         new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
-        new RollingProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000, "Months", 1),
+        new RollingProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000, "Months", 1)
       ];
 
       const fetchDaoSpy = spyOn(service.yearProgressPresetDao, "find").and.returnValue(
@@ -1281,7 +1281,7 @@ describe("YearProgressService", () => {
       const progressPresetModels: YearToDateProgressPresetModel[] = [
         new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
         modelToBeAdded,
-        new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
+        new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false)
       ];
 
       const expectedErrorMessage = "You already saved this preset.";
@@ -1325,7 +1325,7 @@ describe("YearProgressService", () => {
         modelToBeAdded,
         new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false),
         new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], true, true, 5000),
-        new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
+        new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false)
       ];
 
       const expectedErrorMessage = "You already saved this preset.";
@@ -1378,7 +1378,7 @@ describe("YearProgressService", () => {
           [ElevateSport.Ride, ElevateSport.VirtualRide],
           true,
           true
-        ),
+        )
       ];
 
       const expectedErrorMessage = "You already saved this preset.";

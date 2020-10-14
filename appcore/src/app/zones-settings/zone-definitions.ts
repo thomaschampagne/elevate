@@ -15,8 +15,8 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
       zoneValue: "speed",
       output: (speedKph: number) => {
         return (speedKph * Constant.KM_TO_MILE_FACTOR).toFixed(1) + " mph";
-      },
-    },
+      }
+    }
   },
   {
     name: "Running Pace",
@@ -36,8 +36,8 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
             .seconds(seconds / Constant.KM_TO_MILE_FACTOR)
             .format("mm:ss") + "/mi";
         return paceMetric + "  | " + paceImperial;
-      },
-    },
+      }
+    }
   },
   {
     name: "Grade Adjusted Running Pace",
@@ -57,8 +57,8 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
             .seconds(seconds / Constant.KM_TO_MILE_FACTOR)
             .format("mm:ss") + "/mi";
         return paceMetric + "  | " + paceImperial;
-      },
-    },
+      }
+    }
   },
   {
     name: "Heart Rate",
@@ -67,7 +67,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
     step: 1,
     min: 0,
     max: 9999,
-    customDisplay: null,
+    customDisplay: null
   },
   {
     name: "Cycling Power",
@@ -76,7 +76,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
     step: 1,
     min: 0,
     max: 9999,
-    customDisplay: null,
+    customDisplay: null
   },
   {
     name: "Running Power",
@@ -85,7 +85,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
     step: 1,
     min: 0,
     max: 9999,
-    customDisplay: null,
+    customDisplay: null
   },
   {
     name: "Cycling Cadence",
@@ -94,7 +94,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
     step: 1,
     min: 0,
     max: 9999,
-    customDisplay: null,
+    customDisplay: null
   },
   {
     name: "Running Cadence",
@@ -103,7 +103,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
     step: 0.1,
     min: 0,
     max: 9999,
-    customDisplay: null,
+    customDisplay: null
   },
   {
     name: "Grade",
@@ -112,7 +112,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
     step: 0.1,
     min: -9999,
     max: 9999,
-    customDisplay: null,
+    customDisplay: null
   },
   {
     name: "Elevation",
@@ -121,7 +121,7 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
     step: 5,
     min: 0,
     max: 9999,
-    customDisplay: null,
+    customDisplay: null
   },
   {
     name: "Ascent speed",
@@ -130,6 +130,6 @@ export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
     step: 5,
     min: 0,
     max: 9999,
-    customDisplay: null,
-  },
+    customDisplay: null
+  }
 ];

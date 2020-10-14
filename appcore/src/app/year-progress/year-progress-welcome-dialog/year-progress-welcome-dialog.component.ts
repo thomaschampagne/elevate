@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
@@ -34,7 +34,7 @@ import { MatDialogRef } from "@angular/material/dialog";
     <mat-dialog-actions>
       <div fxLayout="column" fxLayoutAlign="start start">
         <div fxFlex>
-          <mat-checkbox [(ngModel)]="hideMessage"> Don't show this message again</mat-checkbox>
+          <mat-checkbox [(ngModel)]="hideMessage">Don't show this message again</mat-checkbox>
         </div>
         <div fxFlex>
           <button mat-stroked-button mat-dialog-close color="primary" (click)="onGotIt()">Got it</button>
@@ -48,8 +48,8 @@ import { MatDialogRef } from "@angular/material/dialog";
         padding-top: 10px;
         padding-bottom: 10px;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class YearProgressWelcomeDialogComponent implements OnInit {
   public static readonly LS_HIDE_YEAR_PROGRESS_WELCOME_DIALOG: string = "yearProgress_hideWelcomeInfoDialog"; // TODO To be removed in future
@@ -59,7 +59,7 @@ export class YearProgressWelcomeDialogComponent implements OnInit {
 
   public hideMessage: boolean;
 
-  constructor(public dialogRef: MatDialogRef<YearProgressWelcomeDialogComponent>) {}
+  constructor(@Inject(MatDialogRef) private readonly dialogRef: MatDialogRef<YearProgressWelcomeDialogComponent>) {}
 
   public ngOnInit(): void {}
 

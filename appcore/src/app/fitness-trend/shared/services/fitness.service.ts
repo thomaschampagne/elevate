@@ -1,6 +1,6 @@
 import _ from "lodash";
 import moment, { Moment } from "moment";
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { ActivityService } from "../../../shared/services/activity/activity.service";
 import { DayStressModel } from "../models/day-stress.model";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
@@ -16,7 +16,7 @@ export class FitnessService {
   public static readonly FUTURE_DAYS_PREVIEW: number = 14;
   public static readonly DEFAULT_LTHR_KARVONEN_HRR_FACTOR: number = 0.85;
 
-  constructor(public activityService: ActivityService) {}
+  constructor(@Inject(ActivityService) private readonly activityService: ActivityService) {}
 
   /**
    * Prepare activities by assigning stress scores on each of them
@@ -124,7 +124,7 @@ export class FitnessService {
                 activity.extendedStats.powerData &&
                 activity.extendedStats.powerData.hasPowerMeter,
               name: activity.name,
-              athleteSnapshot: activity.athleteSnapshot,
+              athleteSnapshot: activity.athleteSnapshot
             };
 
             if (hasHeartRateData) {
@@ -324,7 +324,7 @@ export class FitnessService {
   ): DayStressModel {
     const foundActivitiesThatDay: FitnessPreparedActivityModel[] = _.filter(fitnessPreparedActivities, {
       year: currentDay.year(),
-      dayOfYear: currentDay.dayOfYear(),
+      dayOfYear: currentDay.dayOfYear()
     });
 
     const dayActivity: DayStressModel = new DayStressModel(currentDay.toDate(), false);

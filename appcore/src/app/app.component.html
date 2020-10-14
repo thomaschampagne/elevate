@@ -11,7 +11,7 @@
           <span class="mat-body-1">{{item.name}}</span>
         </mat-list-item>
         <mat-list-item (click)="onOpenLink('https://www.strava.com/dashboard')"
-                       *ngIf="(envTarget === EnvTarget.EXTENSION)">
+                       *ngIf="(buildTarget === BuildTarget.EXTENSION)">
           <mat-icon fontSet="material-icons-outlined" svgIcon="strava"></mat-icon>
           <span class="mat-body-1">Strava Dashboard</span>
         </mat-list-item>

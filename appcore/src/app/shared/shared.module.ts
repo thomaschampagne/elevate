@@ -18,7 +18,7 @@ import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
 import {
   ImportBackupDialogComponent,
-  ImportExportProgressDialogComponent,
+  ImportExportProgressDialogComponent
 } from "./dialogs/import-backup-dialog/import-backup-dialog.component";
 import { ShareComponent } from "../share/share.component";
 import { ReportComponent } from "../report/report.component";
@@ -34,20 +34,23 @@ import { ActivitiesComponent } from "../activities/activities.component";
 import { LoggerService } from "./services/logging/logger.service";
 import { ConsoleLoggerService } from "./services/logging/console-logger.service";
 import { environment } from "../../environments/environment";
-import { EnvTarget } from "@elevate/shared/models";
+import { BuildTarget } from "@elevate/shared/enums";
 import { ExtensionModule } from "./modules/extension/extension.module";
 import { DesktopModule } from "./modules/desktop/desktop.module";
 import { StreamsDao } from "./dao/streams/streams.dao";
 import { StreamsService } from "./services/streams/streams.service";
 import { ActivitiesSettingsLacksDialogComponent } from "../refresh-stats-bar/activities-settings-lacks-dialog.component";
 import { LoadingDialogComponent } from "./dialogs/loading-dialog/loading-dialog.component";
+import { NewRemoteVersionNoticeDialogComponent } from "./services/versions/new-remote-version-notice-dialog.component";
+import { ReleaseNoteService } from "../releases-notes/release-note.service";
+import { NewInstalledVersionNoticeDialogComponent } from "./services/versions/new-installed-version-notice-dialog.component";
 
 @NgModule({
   imports: [
     CoreModule,
     BrowserModule,
     BrowserAnimationsModule,
-    environment.target === EnvTarget.DESKTOP ? DesktopModule : ExtensionModule,
+    environment.buildTarget === BuildTarget.DESKTOP ? DesktopModule : ExtensionModule
   ],
   exports: [CoreModule, BrowserModule, BrowserAnimationsModule],
   declarations: [
@@ -72,6 +75,8 @@ import { LoadingDialogComponent } from "./dialogs/loading-dialog/loading-dialog.
     ImportBackupDialogComponent,
     ImportExportProgressDialogComponent,
     ActivitiesSettingsLacksDialogComponent,
+    NewRemoteVersionNoticeDialogComponent,
+    NewInstalledVersionNoticeDialogComponent
   ],
   providers: [
     UserSettingsService,
@@ -87,7 +92,8 @@ import { LoadingDialogComponent } from "./dialogs/loading-dialog/loading-dialog.
     ZonesService,
     SideNavService,
     WindowService,
-    { provide: LoggerService, useClass: ConsoleLoggerService },
-  ],
+    ReleaseNoteService,
+    { provide: LoggerService, useClass: ConsoleLoggerService }
+  ]
 })
 export class SharedModule {}

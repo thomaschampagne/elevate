@@ -13,7 +13,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import {
   OPEN_RESOURCE_RESOLVER,
-  OpenResourceResolver,
+  OpenResourceResolver
 } from "../../shared/services/links-opener/open-resource-resolver";
 import { IClipboardResponse } from "ngx-clipboard";
 import jdenticon from "jdenticon/standalone";
@@ -29,7 +29,7 @@ class GeneratedStravaApiApplication {
 @Component({
   selector: "app-strava-connector",
   templateUrl: "./strava-connector.component.html",
-  styleUrls: ["./strava-connector.component.scss"],
+  styleUrls: ["./strava-connector.component.scss"]
 })
 export class StravaConnectorComponent extends ConnectorsComponent implements OnInit {
   public stravaConnectorInfo: StravaConnectorInfo;
@@ -40,15 +40,15 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
   public showHowTo: boolean;
 
   constructor(
-    public stravaConnectorService: StravaConnectorService,
-    public desktopSyncService: DesktopSyncService,
-    public appEventsService: AppEventsService,
-    @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
-    public electronService: ElectronService,
-    public router: Router,
-    public snackBar: MatSnackBar,
-    public logger: LoggerService,
-    public dialog: MatDialog
+    @Inject(StravaConnectorService) protected readonly stravaConnectorService: StravaConnectorService,
+    @Inject(DesktopSyncService) protected readonly desktopSyncService: DesktopSyncService,
+    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
+    @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
+    @Inject(ElectronService) protected readonly electronService: ElectronService,
+    @Inject(Router) protected readonly router: Router,
+    @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar,
+    @Inject(LoggerService) protected readonly logger: LoggerService,
+    @Inject(MatDialog) protected readonly dialog: MatDialog
   ) {
     super(desktopSyncService, openResourceResolver, router, dialog);
     this.connectorType = ConnectorType.STRAVA;
@@ -184,7 +184,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
       const appName = uniqueNamesGenerator({
         dictionaries: appNameDictionaries,
         style: "lowerCase",
-        separator: " ",
+        separator: " "
       });
 
       const webSite =
@@ -193,7 +193,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
           dictionaries: [adjectives, names],
           style: "lowerCase",
           separator: ".",
-          length: 2,
+          length: 2
         }) +
         "." +
         ["com", "org", "io"][Math.floor(Math.random() * 10) % 3];
@@ -203,7 +203,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
       resolve({
         appName: _.upperFirst(appName),
         imageFileName: imageFileName,
-        webSite: webSite,
+        webSite: webSite
       });
     });
   }

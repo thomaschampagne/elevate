@@ -1,6 +1,6 @@
 import { Component, Inject, InjectionToken, OnInit } from "@angular/core";
 import { ElectronService } from "../shared/services/electron/electron.service";
-import { VERSIONS_PROVIDER, VersionsProvider } from "../shared/services/versions/versions-provider.interface";
+import { VersionsProvider } from "../shared/services/versions/versions-provider";
 
 export const TOP_BAR_COMPONENT = new InjectionToken<TopBarComponent>("TOP_BAR_COMPONENT");
 
@@ -65,8 +65,8 @@ export class TopBarComponent {}
         /* Set close icon red */
         color: #ff4643;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
   public isFullscreen: boolean = null;
@@ -74,16 +74,14 @@ export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
   public buildMetadata: { commit: string; date: string };
 
   constructor(
-    @Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
-    public electronService: ElectronService
+    @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
+    @Inject(ElectronService) private readonly electronService: ElectronService
   ) {
     super();
   }
 
   public ngOnInit() {
-    this.versionsProvider.getPackageVersion().then(version => {
-      this.currentVersion = version;
-    });
+    this.currentVersion = this.versionsProvider.getPackageVersion();
 
     this.versionsProvider.getBuildMetadata().then((buildMetadata: { commit: string; date: string }) => {
       this.buildMetadata = buildMetadata;
@@ -120,6 +118,6 @@ export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
 
 @Component({
   selector: "app-extension-top-bar",
-  template: "",
+  template: ""
 })
 export class ExtensionTopBarComponent extends TopBarComponent {}

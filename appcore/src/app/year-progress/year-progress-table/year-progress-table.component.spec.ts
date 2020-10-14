@@ -29,7 +29,7 @@ describe("YearProgressTableComponent", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, YearProgressModule],
-      providers: [YearProgressService, { provide: DataStore, useClass: TestingDataStore }],
+      providers: [YearProgressService, { provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 
     yearProgressService = TestBed.inject(YearProgressService);
@@ -101,7 +101,7 @@ describe("YearProgressTableComponent", () => {
       year: 2017,
       progressType: ProgressType.TIME,
       value: hoursFirstYear,
-      color: null,
+      color: null
     };
 
     const hoursSecondYear = 36;
@@ -110,13 +110,13 @@ describe("YearProgressTableComponent", () => {
       year: 2016,
       progressType: ProgressType.TIME,
       value: hoursSecondYear,
-      color: null,
+      color: null
     };
 
     const targetHours = 31;
     const targetProgressModel = {
       dayOfYear: dayMoment.dayOfYear(),
-      value: targetHours,
+      value: targetHours
     };
 
     component.selectedProgressType = new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h");
@@ -167,7 +167,7 @@ describe("YearProgressTableComponent", () => {
       year: 2017,
       progressType: ProgressType.TIME,
       value: hoursFirstYear,
-      color: null,
+      color: null
     };
 
     const hoursSecondYear = 24;
@@ -176,7 +176,7 @@ describe("YearProgressTableComponent", () => {
       year: 2016,
       progressType: ProgressType.TIME,
       value: hoursSecondYear,
-      color: null,
+      color: null
     };
 
     component.selectedProgressType = new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h");
@@ -219,7 +219,7 @@ describe("YearProgressTableComponent", () => {
       year: 2017,
       progressType: ProgressType.TIME,
       value: hoursFirstYear,
-      color: null,
+      color: null
     };
 
     const hoursSecondYear = 0;
@@ -228,7 +228,7 @@ describe("YearProgressTableComponent", () => {
       year: 2016,
       progressType: ProgressType.TIME,
       value: hoursSecondYear,
-      color: null,
+      color: null
     };
 
     component.selectedProgressType = new YearProgressTypeModel(ProgressType.TIME, "Time", "hours", "h");
@@ -270,7 +270,7 @@ describe("YearProgressTableComponent", () => {
       year: 2017,
       progressType: ProgressType.ELEVATION,
       value: 25000,
-      color: null,
+      color: null
     };
 
     const secondYear: ProgressAtDayModel = {
@@ -278,7 +278,7 @@ describe("YearProgressTableComponent", () => {
       year: 2016,
       progressType: ProgressType.ELEVATION,
       value: 25000,
-      color: null,
+      color: null
     };
 
     component.selectedProgressType = new YearProgressTypeModel(ProgressType.ELEVATION, "Elevation", "feet", "ft");

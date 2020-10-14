@@ -21,7 +21,7 @@ describe("ActivityDao", () => {
 
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, DesktopModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     });
 
     // Retrieve injected service
@@ -41,17 +41,17 @@ describe("ActivityDao", () => {
       syncedActivityModel01 = {
         name: "My 1st ride",
         start_time: "2020-06-01T12:00:00.000Z",
-        end_time: "2020-06-01T13:00:00.000Z",
+        end_time: "2020-06-01T13:00:00.000Z"
       } as SyncedActivityModel;
       syncedActivityModel02 = {
         name: "My 2nd ride",
         start_time: "2020-06-01T14:00:00.000Z",
-        end_time: "2020-06-01T15:00:00.000Z",
+        end_time: "2020-06-01T15:00:00.000Z"
       } as SyncedActivityModel;
       syncedActivityModel03 = {
         name: "My 3rd ride",
         start_time: "2020-06-01T16:00:00.000Z",
-        end_time: "2020-06-01T17:00:00.000Z",
+        end_time: "2020-06-01T17:00:00.000Z"
       } as SyncedActivityModel;
       activitiesCollection.insert(syncedActivityModel01);
       activitiesCollection.insert(syncedActivityModel02);
@@ -227,7 +227,7 @@ describe("ActivityDao", () => {
         { id: "333", name: "333", settingsLack: false },
         { id: "444", name: "444", settingsLack: true },
         { id: "555", name: "555", settingsLack: false },
-        { id: "666", name: "666" },
+        { id: "666", name: "666" }
       ];
 
       activitiesCollection.insert(syncedActivities as any);
@@ -256,7 +256,7 @@ describe("ActivityDao", () => {
         { id: "333", name: "333", settingsLack: false },
         { id: "444", name: "444", settingsLack: false },
         { id: "555", name: "555", settingsLack: false },
-        { id: "666", name: "666" },
+        { id: "666", name: "666" }
       ];
 
       activitiesCollection.insert(syncedActivities as any);
@@ -286,7 +286,7 @@ describe("ActivityDao", () => {
         { id: "333", name: "333", settingsLack: false },
         { id: "444", name: "444", settingsLack: true },
         { id: "555", name: "555", settingsLack: false },
-        { id: "666", name: "666" },
+        { id: "666", name: "666" }
       ];
 
       activitiesCollection.insert(syncedActivities as any);
@@ -318,7 +318,7 @@ describe("ActivityDao", () => {
         { id: "333", name: "333", settingsLack: false },
         { id: "444", name: "444", settingsLack: false },
         { id: "555", name: "555", settingsLack: false },
-        { id: "666", name: "666" },
+        { id: "666", name: "666" }
       ];
 
       activitiesCollection.insert(syncedActivities as any);

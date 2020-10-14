@@ -6,7 +6,7 @@ import { FlaggedIpcMessage, MessageFlag, RuntimeInfo } from "@elevate/shared/ele
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { environment } from "../../../environments/environment";
 import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
-import { VERSIONS_PROVIDER, VersionsProvider } from "../../shared/services/versions/versions-provider.interface";
+import { VersionsProvider } from "../../shared/services/versions/versions-provider";
 import { AppLoadService } from "../app-load.service";
 import { concatMap, delay, retryWhen } from "rxjs/operators";
 import { of, throwError } from "rxjs";
@@ -28,14 +28,14 @@ export class DesktopLoadService extends AppLoadService {
 
   constructor(
     @Inject(DataStore) protected readonly dataStore: DataStore<object>,
-    @Inject(VERSIONS_PROVIDER) private readonly versionsProvider: VersionsProvider,
-    private readonly ipcMessagesSender: IpcMessagesSender,
-    private readonly stravaConnectorInfoService: StravaConnectorInfoService,
-    private readonly desktopMigrationService: DesktopMigrationService,
-    private readonly httpClient: HttpClient,
-    private readonly router: Router,
-    private readonly dialog: MatDialog,
-    private readonly logger: LoggerService
+    @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
+    @Inject(IpcMessagesSender) private readonly ipcMessagesSender: IpcMessagesSender,
+    @Inject(HttpClient) private readonly httpClient: HttpClient,
+    @Inject(StravaConnectorInfoService) private readonly stravaConnectorInfoService: StravaConnectorInfoService,
+    @Inject(DesktopMigrationService) private readonly desktopMigrationService: DesktopMigrationService,
+    @Inject(Router) private readonly router: Router,
+    @Inject(MatDialog) private readonly dialog: MatDialog,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     super(dataStore);
     this.runtimeInfo = null;
@@ -43,43 +43,50 @@ export class DesktopLoadService extends AppLoadService {
 
   public loadApp(): Promise<void> {
     return super.loadApp().then(() => {
-      return this.desktopMigrationService.upgrade().then(() => {
-        if ((environment as any).bypassAthleteAccessCheck) {
-          return Promise.resolve();
-        } else {
-          return this.getRuntimeInfo()
-            .then(runtimeInfo => {
-              this.runtimeInfo = runtimeInfo;
-            })
-            .then(() => {
-              return this.checkAthleteAccess(this.runtimeInfo);
-            })
-            .then(accessAuthorized => {
-              if (!accessAuthorized) {
-                this.dialog.open(DesktopUnauthorizedMachineIdDialogComponent, {
-                  minHeight: "100%",
-                  maxHeight: "100%",
-                  minWidth: "100%",
-                  maxWidth: "100%",
-                  width: "100%",
-                  height: "100%",
-                  hasBackdrop: true,
-                  closeOnNavigation: false,
-                  disableClose: true,
-                  data: this.runtimeInfo.athleteMachineId,
-                });
+      return this.desktopMigrationService
+        .upgrade()
+        .then((hasBeenUpgradedTo: string) => {
+          if ((environment as any).bypassAthleteAccessCheck) {
+            return Promise.resolve(hasBeenUpgradedTo);
+          } else {
+            return this.getRuntimeInfo()
+              .then(runtimeInfo => {
+                this.runtimeInfo = runtimeInfo;
+              })
+              .then(() => {
+                return this.checkAthleteAccess(this.runtimeInfo);
+              })
+              .then(accessAuthorized => {
+                if (!accessAuthorized) {
+                  this.dialog.open(DesktopUnauthorizedMachineIdDialogComponent, {
+                    minHeight: "100%",
+                    maxHeight: "100%",
+                    minWidth: "100%",
+                    maxWidth: "100%",
+                    width: "100%",
+                    height: "100%",
+                    hasBackdrop: true,
+                    closeOnNavigation: false,
+                    disableClose: true,
+                    data: this.runtimeInfo.athleteMachineId
+                  });
 
-                return Promise.reject(`Access non-authorized for machine: ${this.runtimeInfo.athleteMachineId}`);
-              }
+                  return Promise.reject(`Access non-authorized for machine: ${this.runtimeInfo.athleteMachineId}`);
+                }
 
-              return Promise.resolve();
-            })
-            .catch(error => {
-              this.logger.error(error);
-              return Promise.reject(error);
-            });
-        }
-      });
+                return Promise.resolve(hasBeenUpgradedTo);
+              })
+              .catch(error => {
+                this.logger.error(error);
+                return Promise.reject(error);
+              });
+          }
+        })
+        .then((hasBeenUpgradedToVersion: string) => {
+          if (hasBeenUpgradedToVersion) {
+            this.versionsProvider.notifyInstalledVersion(hasBeenUpgradedToVersion);
+          }
+        });
     });
   }
 
@@ -97,18 +104,18 @@ export class DesktopLoadService extends AppLoadService {
           const athleteAccessBodyData = {
             athleteMachineId: this.runtimeInfo.athleteMachineId,
             version: {
-              name: installedVersion,
+              name: installedVersion
             },
             osPlatform: `${this.runtimeInfo.osPlatform.name}; ${this.runtimeInfo.osPlatform.arch}`,
             osUsername: this.runtimeInfo.osUsername,
             memorySizeGb: this.runtimeInfo.memorySizeGb,
             cpu: `${this.runtimeInfo.cpu.name}; ${this.runtimeInfo.cpu.threads}`,
-            stravaAccount: stravaConnectorInfo.stravaAccount ? stravaConnectorInfo.stravaAccount : null,
+            stravaAccount: stravaConnectorInfo.stravaAccount ? stravaConnectorInfo.stravaAccount : null
           };
 
           this.httpClient
             .post(DesktopLoadService.ATHLETE_ACCESS_API_URL, athleteAccessBodyData, {
-              responseType: "text",
+              responseType: "text"
             })
             .pipe(
               retryWhen(errors =>
@@ -141,7 +148,7 @@ export class DesktopLoadService extends AppLoadService {
                   }, DesktopLoadService.AUTH_RETRY_DELAY);
                 }
               },
-              error => {
+              () => {
                 resolve(false);
               }
             );

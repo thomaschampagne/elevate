@@ -1,4 +1,4 @@
 export enum SideNavStatus {
   OPENED,
-  CLOSED,
+  CLOSED
 }

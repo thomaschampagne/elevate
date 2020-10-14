@@ -6,7 +6,7 @@ import {
   AthleteModel,
   AthleteSettingsModel,
   AthleteSnapshotModel,
-  DatedAthleteSettingsModel,
+  DatedAthleteSettingsModel
 } from "@elevate/shared/models";
 import _ from "lodash";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
@@ -23,7 +23,7 @@ describe("AthleteSnapshotResolverService", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     });
 
     athleteSnapshotResolverService = TestBed.inject(AthleteSnapshotResolverService);
@@ -43,7 +43,7 @@ describe("AthleteSnapshotResolverService", () => {
     const datedAthleteSettingsModels: DatedAthleteSettingsModel[] = [
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
     ];
 
     defaultAthleteModel.datedAthleteSettings = datedAthleteSettingsModels;
@@ -106,7 +106,7 @@ describe("AthleteSnapshotResolverService", () => {
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
       expectedDatedAthleteSettingsModel,
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
     ];
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
@@ -138,7 +138,7 @@ describe("AthleteSnapshotResolverService", () => {
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
       expectedDatedAthleteSettingsModel,
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
     ];
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
@@ -170,7 +170,7 @@ describe("AthleteSnapshotResolverService", () => {
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
       expectedDatedAthleteSettingsModel,
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
     ];
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
@@ -202,7 +202,7 @@ describe("AthleteSnapshotResolverService", () => {
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
       new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      expectedDatedAthleteSettingsModel,
+      expectedDatedAthleteSettingsModel
     ];
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
@@ -261,7 +261,7 @@ describe("AthleteSnapshotResolverService", () => {
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
       new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      expectedDatedAthleteSettingsModel,
+      expectedDatedAthleteSettingsModel
     ];
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
@@ -291,7 +291,7 @@ describe("AthleteSnapshotResolverService", () => {
       expectedDatedAthleteSettingsModel,
       new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
+      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78))
     ];
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
@@ -325,7 +325,7 @@ describe("AthleteSnapshotResolverService", () => {
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
       new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      expectedDatedAthleteSettingsModel,
+      expectedDatedAthleteSettingsModel
     ];
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
@@ -380,7 +380,7 @@ describe("AthleteSnapshotResolverService", () => {
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
       new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      expectedDatedAthleteSettingsModel,
+      expectedDatedAthleteSettingsModel
     ];
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
@@ -412,7 +412,7 @@ describe("AthleteSnapshotResolverService", () => {
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
       new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      expectedDatedAthleteSettingsModel,
+      expectedDatedAthleteSettingsModel
     ];
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
@@ -444,7 +444,7 @@ describe("AthleteSnapshotResolverService", () => {
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
       new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      expectedDatedAthleteSettingsModel,
+      expectedDatedAthleteSettingsModel
     ];
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
@@ -476,7 +476,7 @@ describe("AthleteSnapshotResolverService", () => {
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
       new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      expectedDatedAthleteSettingsModel,
+      expectedDatedAthleteSettingsModel
     ];
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
@@ -508,7 +508,7 @@ describe("AthleteSnapshotResolverService", () => {
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
       new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      expectedDatedAthleteSettingsModel,
+      expectedDatedAthleteSettingsModel
     ];
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
@@ -540,7 +540,7 @@ describe("AthleteSnapshotResolverService", () => {
       new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, lthr, 190, 325, 32, 75)),
       new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, 55, lthr, 150, 325, 32, 76)),
       new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, lthr, 110, 325, 32, 78)),
-      expectedDatedAthleteSettingsModel,
+      expectedDatedAthleteSettingsModel
     ];
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(

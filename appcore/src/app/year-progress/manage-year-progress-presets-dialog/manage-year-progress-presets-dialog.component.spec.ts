@@ -17,7 +17,7 @@ describe("ManageYearProgressPresetsDialogComponent", () => {
   const yearProgressPresetModels = [
     new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false, 750),
     new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
-    new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], false, false, 30000),
+    new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], false, false, 30000)
   ];
 
   let component: ManageYearProgressPresetsDialogComponent;
@@ -32,17 +32,17 @@ describe("ManageYearProgressPresetsDialogComponent", () => {
       providers: [
         {
           provide: MAT_DIALOG_DATA,
-          useValue: yearProgressTypeModels,
+          useValue: yearProgressTypeModels
         },
         {
           provide: MatDialogRef,
-          useValue: {},
+          useValue: {}
         },
         {
           provide: DataStore,
-          useClass: TestingDataStore,
-        },
-      ],
+          useClass: TestingDataStore
+        }
+      ]
     }).compileComponents();
 
     done();

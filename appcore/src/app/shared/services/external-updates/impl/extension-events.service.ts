@@ -10,7 +10,7 @@ export class ExtensionEventsService extends AppEventsService {
 
   constructor(
     @Inject(DataStore) private readonly dataStore: DataStore<object>,
-    private readonly logger: LoggerService
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     super();
 

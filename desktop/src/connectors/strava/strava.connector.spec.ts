@@ -9,7 +9,7 @@ import {
   StravaConnectorInfo,
   StravaCredentialsUpdateSyncEvent,
   SyncEvent,
-  SyncEventType,
+  SyncEventType
 } from "@elevate/shared/sync";
 import jsonFakeActivitiesFixture from "./fixtures/sample_activities.fixture.json";
 import jsonFakeStreamsFixture from "./fixtures/sample_streams.fixture.json";
@@ -18,10 +18,9 @@ import {
   AthleteModel,
   BareActivityModel,
   ConnectorSyncDateTime,
-  EnvTarget,
   Gender,
   SyncedActivityModel,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import _ from "lodash";
 import { Subject } from "rxjs";
@@ -31,7 +30,7 @@ import http, { IncomingHttpHeaders } from "http";
 import { HttpClient, HttpCodes } from "typed-rest-client/HttpClient";
 import { Service } from "../../service";
 import { BaseConnector } from "../base.connector";
-import { ElevateSport } from "@elevate/shared/enums";
+import { BuildTarget, ElevateSport } from "@elevate/shared/enums";
 
 const getActivitiesFixture = (page: number, perPage: number, activities: Array<BareActivityModel[]>) => {
   const from = page > 1 ? (page - 1) * perPage : 0;
@@ -52,14 +51,14 @@ describe("StravaConnector", () => {
     const message: Partial<http.IncomingMessage> = {
       statusCode: statusCode,
       statusMessage: statusMessage,
-      headers: headers,
+      headers: headers
     };
 
     return {
       message: message as http.IncomingMessage,
       readBody: () => {
         return Promise.resolve(dataResponse ? JSON.stringify(dataResponse) : null);
-      },
+      }
     };
   };
 
@@ -90,7 +89,7 @@ describe("StravaConnector", () => {
     stravaConnector = new StravaConnector(
       priority,
       AthleteModel.DEFAULT_MODEL,
-      UserSettings.getDefaultsByEnvTarget(EnvTarget.DESKTOP),
+      UserSettings.getDefaultsByBuildTarget(BuildTarget.DESKTOP),
       connectorSyncDateTime,
       new StravaConnectorInfo(clientId, clientSecret, accessToken)
     );
@@ -429,7 +428,7 @@ describe("StravaConnector", () => {
       city: "Grenoble",
       state: "Isere",
       country: "France",
-      sex: "M",
+      sex: "M"
     };
 
     const expectedStravaAccount: StravaAccount = {
@@ -440,7 +439,7 @@ describe("StravaConnector", () => {
       city: stravaAthlete.city,
       state: stravaAthlete.state,
       country: stravaAthlete.country,
-      gender: stravaAthlete.sex === "M" ? Gender.MEN : Gender.WOMEN,
+      gender: stravaAthlete.sex === "M" ? Gender.MEN : Gender.WOMEN
     };
 
     it("should successfully authenticate to strava when no access token exists", done => {
@@ -451,7 +450,7 @@ describe("StravaConnector", () => {
         accessToken: "fakeAccessToken",
         refreshToken: "fakeRefreshToken",
         expiresAt: 11111,
-        athlete: stravaAthlete,
+        athlete: stravaAthlete
       };
       const authorizeSpy = spyOn(stravaConnector.stravaAuthenticator, "authorize").and.returnValue(
         Promise.resolve(authorizeResponse)
@@ -490,7 +489,7 @@ describe("StravaConnector", () => {
         accessToken: "fakeAccessToken",
         refreshToken: "fakeRefreshToken",
         expiresAt: 11111,
-        athlete: stravaAthlete,
+        athlete: stravaAthlete
       };
       const authorizeSpy = spyOn(stravaConnector.stravaAuthenticator, "authorize").and.returnValue(
         Promise.resolve(authorizeResponse)
@@ -530,7 +529,7 @@ describe("StravaConnector", () => {
         accessToken: "fakeAccessToken",
         refreshToken: "fakeRefreshToken",
         expiresAt: 11111,
-        athlete: stravaAthlete,
+        athlete: stravaAthlete
       };
       const refreshSpy = spyOn(stravaConnector.stravaAuthenticator, "refresh").and.returnValue(
         Promise.resolve(refreshResponse)
@@ -574,7 +573,7 @@ describe("StravaConnector", () => {
         accessToken: "fakeAccessToken",
         refreshToken: "fakeRefreshToken",
         expiresAt: 11111,
-        athlete: stravaAthlete,
+        athlete: stravaAthlete
       };
       const authorizeSpy = spyOn(stravaConnector.stravaAuthenticator, "authorize").and.returnValue(
         Promise.resolve(authorizeResponse)
@@ -614,7 +613,7 @@ describe("StravaConnector", () => {
         accessToken: "fakeAccessToken",
         refreshToken: "fakeRefreshToken",
         expiresAt: 11111,
-        athlete: stravaAthlete,
+        athlete: stravaAthlete
       };
       const refreshSpy = spyOn(stravaConnector.stravaAuthenticator, "refresh").and.returnValue(
         Promise.resolve(authorizeResponse)
@@ -1217,7 +1216,7 @@ describe("StravaConnector", () => {
       // Given
       const bareActivity = {
         type: ElevateSport.Ride,
-        hasPowerMeter: false,
+        hasPowerMeter: false
       } as BareActivityModel;
       const weight = 75;
       const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
@@ -1242,7 +1241,7 @@ describe("StravaConnector", () => {
       // Given
       const bareActivity = {
         type: ElevateSport.Ride,
-        hasPowerMeter: true,
+        hasPowerMeter: true
       } as BareActivityModel;
       const weight = 75;
       const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
@@ -1267,7 +1266,7 @@ describe("StravaConnector", () => {
       // Given
       const bareActivity = {
         type: ElevateSport.Ride,
-        hasPowerMeter: false,
+        hasPowerMeter: false
       } as BareActivityModel;
       const weight = 75;
       const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
@@ -1293,7 +1292,7 @@ describe("StravaConnector", () => {
       // Given
       const bareActivity = {
         type: ElevateSport.Ride,
-        hasPowerMeter: false,
+        hasPowerMeter: false
       } as BareActivityModel;
       const weight = 75;
       const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();

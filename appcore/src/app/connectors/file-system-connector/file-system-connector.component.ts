@@ -9,28 +9,29 @@ import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import {
   OPEN_RESOURCE_RESOLVER,
-  OpenResourceResolver,
+  OpenResourceResolver
 } from "../../shared/services/links-opener/open-resource-resolver";
 import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
 
 @Component({
   selector: "app-file-system-connector",
   templateUrl: "./file-system-connector.component.html",
-  styleUrls: ["./file-system-connector.component.scss"],
+  styleUrls: ["./file-system-connector.component.scss"]
 })
 export class FileSystemConnectorComponent extends ConnectorsComponent implements OnInit {
   public showConfigure: boolean;
   public fileSystemConnectorInfo: FileSystemConnectorInfo;
 
   constructor(
-    public fileSystemConnectorInfoService: FileSystemConnectorInfoService,
-    public desktopSyncService: DesktopSyncService,
-    public appEventsService: AppEventsService,
-    @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
-    public electronService: ElectronService,
-    public router: Router,
-    public snackBar: MatSnackBar,
-    public dialog: MatDialog
+    @Inject(FileSystemConnectorInfoService)
+    protected readonly fileSystemConnectorInfoService: FileSystemConnectorInfoService,
+    @Inject(DesktopSyncService) protected readonly desktopSyncService: DesktopSyncService,
+    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
+    @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
+    @Inject(ElectronService) protected readonly electronService: ElectronService,
+    @Inject(Router) protected readonly router: Router,
+    @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar,
+    @Inject(MatDialog) protected readonly dialog: MatDialog
   ) {
     super(desktopSyncService, openResourceResolver, router, dialog);
     this.connectorType = ConnectorType.FILE_SYSTEM;

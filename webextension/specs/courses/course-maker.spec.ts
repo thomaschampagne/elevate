@@ -70,7 +70,7 @@ describe("CourseMaker", () => {
       "cadence",
       "watts",
       "watts_calc",
-      "altitude",
+      "altitude"
     ]) as ActivityStreamsModel;
     let errorCatched = null;
 
@@ -150,7 +150,7 @@ describe("CourseMaker", () => {
       "cadence",
       "watts",
       "watts_calc",
-      "altitude",
+      "altitude"
     ]) as ActivityStreamsModel;
     let errorCatched = null;
 

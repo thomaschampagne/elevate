@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostBinding, InjectionToken, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, HostBinding, Inject, InjectionToken, OnInit } from "@angular/core";
 import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.service";
 import { ActivitySyncEvent, ErrorSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { SyncException } from "@elevate/shared/exceptions";
@@ -62,8 +62,8 @@ export class SyncBarComponent {}
       button {
         margin-left: 10px;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit {
   @HostBinding("hidden")
@@ -76,9 +76,9 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
   public eventErrors: ErrorSyncEvent[];
 
   constructor(
-    public desktopSyncService: DesktopSyncService,
-    public dialog: MatDialog,
-    public changeDetectorRef: ChangeDetectorRef
+    @Inject(DesktopSyncService) private readonly desktopSyncService: DesktopSyncService,
+    @Inject(MatDialog) private readonly dialog: MatDialog,
+    @Inject(ChangeDetectorRef) private readonly changeDetectorRef: ChangeDetectorRef
   ) {
     super();
     this.hideSyncBar();
@@ -112,7 +112,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     this.dialog.open(DesktopErrorsSyncDetailsDialogComponent, {
       minWidth: DesktopErrorsSyncDetailsDialogComponent.MIN_WIDTH,
       maxWidth: DesktopErrorsSyncDetailsDialogComponent.MAX_WIDTH,
-      data: this.eventErrors,
+      data: this.eventErrors
     });
   }
 
@@ -165,7 +165,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     this.currentActivitySynced = {
       date: moment(activitySyncEvent.activity.start_time).format("ll"),
       name: activitySyncEvent.activity.name,
-      isNew: activitySyncEvent.isNew,
+      isNew: activitySyncEvent.isNew
     };
   }
 
@@ -225,7 +225,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
 @Component({
   selector: "app-extension-sync-bar",
   template: ``,
-  styles: [``],
+  styles: [``]
 })
 export class ExtensionSyncBarComponent extends SyncBarComponent implements OnInit {
   constructor() {

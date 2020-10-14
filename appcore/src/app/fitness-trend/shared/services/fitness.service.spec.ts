@@ -35,7 +35,7 @@ describe("FitnessService", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, FitnessTrendModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     });
 
     // Define default athlete model
@@ -47,7 +47,7 @@ describe("FitnessService", () => {
         {
           default: 163,
           cycling: null,
-          running: null,
+          running: null
         },
         150,
         300,
@@ -64,12 +64,12 @@ describe("FitnessService", () => {
       heartRateImpulseMode: HeartRateImpulseMode.HRSS,
       initializedFitnessTrendModel: {
         atl: null,
-        ctl: null,
+        ctl: null
       },
       allowEstimatedPowerStressScore: false,
       allowEstimatedRunningStressScore: false,
       ignoreBeforeDate: null,
-      ignoreActivityNamePatterns: null,
+      ignoreActivityNamePatterns: null
     };
 
     // Enable PSS and SSS by default
@@ -3745,7 +3745,7 @@ describe("FitnessService", () => {
       // When
       fitnessTrendConfigModel.initializedFitnessTrendModel = {
         atl: 100,
-        ctl: 50,
+        ctl: 50
       };
 
       const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(

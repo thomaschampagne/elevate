@@ -26,7 +26,7 @@ describe("YearProgressComponent", () => {
   const yearProgressPresetModels = [
     new YearToDateProgressPresetModel(ProgressType.DISTANCE, [ElevateSport.Run], false, false, 750),
     new YearToDateProgressPresetModel(ProgressType.COUNT, [ElevateSport.VirtualRide], false, false),
-    new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], false, false, 30000),
+    new YearToDateProgressPresetModel(ProgressType.ELEVATION, [ElevateSport.Ride], false, false, 30000)
   ];
 
   let component: YearProgressComponent;
@@ -40,14 +40,14 @@ describe("YearProgressComponent", () => {
   beforeEach(done => {
     spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
       // @ts-ignore
-      addListener: (message: any, sender: any, sendResponse: any) => {},
+      addListener: (message: any, sender: any, sendResponse: any) => {}
     });
 
     spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, YearProgressModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 
     TEST_SYNCED_ACTIVITIES = YearProgressActivitiesFixture.provide();
@@ -88,7 +88,7 @@ describe("YearProgressComponent", () => {
       { type: ElevateSport.Swim, count: 5 },
       { type: ElevateSport.VirtualRide, count: 29 },
       { type: ElevateSport.InlineSkate, count: 3 },
-      { type: ElevateSport.Workout, count: 6 },
+      { type: ElevateSport.Workout, count: 6 }
     ];
 
     // When
@@ -111,7 +111,7 @@ describe("YearProgressComponent", () => {
       new YearProgressModel(2014, []),
       new YearProgressModel(2015, []),
       new YearProgressModel(2016, []),
-      new YearProgressModel(2017, []),
+      new YearProgressModel(2017, [])
     ];
 
     // When

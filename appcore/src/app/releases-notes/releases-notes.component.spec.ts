@@ -11,7 +11,7 @@ describe("ReleasesNotesComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, ReleasesNotesModule],
+      imports: [CoreModule, SharedModule, ReleasesNotesModule]
     }).compileComponents();
 
     done();

@@ -14,7 +14,7 @@ import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services
 @Component({
   selector: "app-connectors",
   templateUrl: "./connectors.component.html",
-  styleUrls: ["./connectors.component.scss"],
+  styleUrls: ["./connectors.component.scss"]
 })
 export class ConnectorsComponent implements OnInit {
   public static readonly ATHLETE_CHECKING_FIRST_SYNC_MESSAGE: string = "ATHLETE_CHECKING_FIRST_SYNC";
@@ -24,10 +24,10 @@ export class ConnectorsComponent implements OnInit {
   public humanSyncDateTime: string;
 
   constructor(
-    public desktopSyncService: DesktopSyncService,
-    @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
-    public router: Router,
-    public dialog: MatDialog
+    @Inject(DesktopSyncService) protected readonly desktopSyncService: DesktopSyncService,
+    @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
+    @Inject(Router) protected readonly router: Router,
+    @Inject(MatDialog) protected readonly dialog: MatDialog
   ) {
     this.connectorType = null;
     this.syncDateTime = null;
@@ -58,13 +58,13 @@ export class ConnectorsComponent implements OnInit {
             "No activities were synced before. First make sure you have properly configured your dated athlete settings including functional thresholds before. " +
             "A lack of athlete settings configuration can result in empty stats/charts (e.g. flat fitness trend).",
           confirmText: "Sync",
-          cancelText: "Configure athlete settings",
+          cancelText: "Configure athlete settings"
         };
 
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
           minWidth: ConfirmDialogComponent.MIN_WIDTH,
           maxWidth: "50%",
-          data: data,
+          data: data
         });
 
         return dialogRef
@@ -89,13 +89,13 @@ export class ConnectorsComponent implements OnInit {
     const data: ConfirmDialogDataModel = {
       title: "Plug your connector on this page as a fitness company or organization",
       content: "Please contact me on twitter to get your fitness company or organization connector in Elevate.",
-      confirmText: "Contact me",
+      confirmText: "Contact me"
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       minWidth: ConfirmDialogComponent.MIN_WIDTH,
       maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-      data: data,
+      data: data
     });
 
     dialogRef.afterClosed().subscribe((confirm: boolean) => {

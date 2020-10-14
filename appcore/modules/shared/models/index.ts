@@ -4,7 +4,5 @@ export * from "./sync";
 export * from "./user-settings";
 export * from "./properties.model";
 export * from "./core-messages";
-export * from "./release-note.model";
 export * from "./zone.model";
-export * from "./env-target";
 export * from "./power-best-split.model";

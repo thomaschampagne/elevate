@@ -38,7 +38,7 @@ export class FakeSyncedActivityHelper {
       heartRateData: null,
       paceData: null,
       speedData: null,
-      powerData: null,
+      powerData: null
     };
 
     // If avgHr given? Generate fake stats
@@ -57,7 +57,7 @@ export class FakeSyncedActivityHelper {
         lowerQuartileHeartRate: avgHr / 4,
         maxHeartRate: avgHr * 1.5,
         medianHeartRate: avgHr / 2,
-        upperQuartileHeartRate: (avgHr / 4) * 3,
+        upperQuartileHeartRate: (avgHr / 4) * 3
       };
     }
 
@@ -79,7 +79,7 @@ export class FakeSyncedActivityHelper {
         best20min: avgWatts * 1.5,
         bestEightyPercent: avgWatts,
         weightedWattsPerKg: (avgWatts * 1.25) / 70,
-        powerCurve: [],
+        powerCurve: []
       };
     }
 
@@ -95,7 +95,7 @@ export class FakeSyncedActivityHelper {
         paceZones: null,
         gradeAdjustedPaceZones: null,
         runningStressScore: type === "Run" || type === "VirtualRun" ? avgPace : null,
-        runningStressScorePerHour: type === "Run" || type === "VirtualRun" ? avgPace : null,
+        runningStressScorePerHour: type === "Run" || type === "VirtualRun" ? avgPace : null
       };
     }
     return fakeActivity;

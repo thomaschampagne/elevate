@@ -51,7 +51,7 @@ describe("migration_to_7_0_0_6", () => {
     expect(newDatabase.syncedActivities.binaryIndices).toEqual({
       name: { dirty: false, name: "name", values: [] },
       start_time: { dirty: false, name: "start_time", values: [] },
-      type: { dirty: false, name: "type", values: [] },
+      type: { dirty: false, name: "type", values: [] }
     });
     expect(newDatabase.syncedActivities.uniqueNames).toEqual(["id"]);
 
@@ -111,7 +111,7 @@ describe("migration_to_7_0_0_6", () => {
     expect(newDatabase.syncedActivities.binaryIndices).toEqual({
       name: { dirty: false, name: "name", values: [] },
       start_time: { dirty: false, name: "start_time", values: [] },
-      type: { dirty: false, name: "type", values: [] },
+      type: { dirty: false, name: "type", values: [] }
     });
     expect(newDatabase.syncedActivities.uniqueNames).toEqual(["id"]);
 
@@ -135,6 +135,37 @@ describe("migration_to_7_0_0_6", () => {
 
     // Then
     expect(newDatabase).toBeNull();
+    done();
+  });
+
+  it("should return new empty database", done => {
+    // Given
+    const oldDatabase = {};
+
+    // When
+    const newDatabase = migration.perform(oldDatabase);
+
+    // Then
+    expect(newDatabase).toEqual(oldDatabase);
+    done();
+  });
+
+  it("should throw NOT_AN_OLD_DATABASE and skip", done => {
+    // Given
+    const oldDatabase: any = {
+      athlete: {
+        data: []
+      }
+    };
+    const expected = new Error("NOT_AN_OLD_DATABASE");
+
+    // When
+    const call = () => {
+      migration.perform(oldDatabase);
+    };
+
+    // Then
+    expect(call).toThrow(expected);
     done();
   });
 });

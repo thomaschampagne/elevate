@@ -21,8 +21,8 @@ describe("DataStore", () => {
       providers: [
         TestingDataStore,
         { provide: DataStore, useClass: TestingDataStore },
-        { provide: LoggerService, useClass: ConsoleLoggerService },
-      ],
+        { provide: LoggerService, useClass: ConsoleLoggerService }
+      ]
     });
 
     dataStore = TestBed.inject(TestingDataStore) as TestingDataStore<any>;
@@ -50,7 +50,7 @@ describe("DataStore", () => {
     // Given
     const fakeDocs: FakeDoc[] = [
       { id: "01", name: "My first document" },
-      { id: "02", name: "My 2nd document" },
+      { id: "02", name: "My 2nd document" }
     ];
 
     // When
@@ -91,7 +91,7 @@ describe("DataStore", () => {
     const expectedName02 = "Updated name 02";
     const fakeDocs: FakeDoc[] = [
       { id: "01", name: "My first document" },
-      { id: "02", name: "My 2nd document" },
+      { id: "02", name: "My 2nd document" }
     ];
     const insertedDocuments = collection.insert(fakeDocs);
     insertedDocuments[0].name = expectedName01;
@@ -183,8 +183,8 @@ describe("DataStore", () => {
     const sort: { propName: keyof FakeDoc; options: Partial<SimplesortOptions> } = {
       propName: "name",
       options: {
-        desc: false,
-      },
+        desc: false
+      }
     };
     // When
     const promise = dataStore.find(collectionDef, [], null, sort);
@@ -211,8 +211,8 @@ describe("DataStore", () => {
     const sort: { propName: keyof FakeDoc; options: Partial<SimplesortOptions> } = {
       propName: "name",
       options: {
-        desc: true,
-      },
+        desc: true
+      }
     };
 
     // When

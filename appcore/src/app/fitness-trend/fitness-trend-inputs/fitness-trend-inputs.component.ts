@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
+import { Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
 import { LastPeriodModel } from "../shared/models/last-period.model";
 import { PeriodModel } from "../shared/models/period.model";
 import { MatDialog } from "@angular/material/dialog";
@@ -9,7 +9,7 @@ import { FitnessTrendConfigModel } from "../shared/models/fitness-trend-config.m
 @Component({
   selector: "app-fitness-trend-inputs",
   templateUrl: "./fitness-trend-inputs.component.html",
-  styleUrls: ["./fitness-trend-inputs.component.scss"],
+  styleUrls: ["./fitness-trend-inputs.component.scss"]
 })
 export class FitnessTrendInputsComponent implements OnInit, OnChanges {
   public readonly HeartRateImpulseMode = HeartRateImpulseMode;
@@ -75,7 +75,7 @@ export class FitnessTrendInputsComponent implements OnInit, OnChanges {
 
   public isEstimatedRunningStressScoreEnabled: boolean;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(@Inject(MatDialog) private readonly dialog: MatDialog) {}
 
   public ngOnInit(): void {
     this.loadEstimatedPowerStressScore();
@@ -150,7 +150,7 @@ export class FitnessTrendInputsComponent implements OnInit, OnChanges {
     this.dialog.open(FitnessInfoDialogComponent, {
       minWidth: FitnessInfoDialogComponent.MIN_WIDTH,
       maxWidth: FitnessInfoDialogComponent.MAX_WIDTH,
-      autoFocus: false,
+      autoFocus: false
     });
   }
 

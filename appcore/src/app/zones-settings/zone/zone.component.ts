@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, Inject, Input, OnDestroy, OnInit } from "@angular/core";
 import { ZonesService } from "../shared/zones.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import _ from "lodash";
@@ -13,7 +13,7 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 @Component({
   selector: "app-zone",
   templateUrl: "./zone.component.html",
-  styleUrls: ["./zone.component.scss"],
+  styleUrls: ["./zone.component.scss"]
 })
 export class ZoneComponent implements OnInit, OnDestroy {
   @Input()
@@ -50,7 +50,11 @@ export class ZoneComponent implements OnInit, OnDestroy {
 
   public stepUpdatesSubscription: Subscription;
 
-  constructor(public zonesService: ZonesService, public snackBar: MatSnackBar, public logger: LoggerService) {}
+  constructor(
+    @Inject(ZonesService) private readonly zonesService: ZonesService,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
+    @Inject(LoggerService) private readonly logger: LoggerService
+  ) {}
 
   public ngOnInit(): void {
     this.zoneChangeOrderSubscription = this.zonesService.zoneChangeOrderUpdates.subscribe(
@@ -92,7 +96,7 @@ export class ZoneComponent implements OnInit, OnDestroy {
         sourceId: this.zoneId,
         from: false,
         to: false,
-        value: null,
+        value: null
       };
 
       if (changeType.from) {

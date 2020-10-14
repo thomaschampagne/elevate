@@ -8,7 +8,7 @@ import { Mode } from "./mode.enum";
 @Component({
   selector: "app-zones-import-export-dialog",
   templateUrl: "./zones-import-export-dialog.component.html",
-  styleUrls: ["./zones-import-export-dialog.component.scss"],
+  styleUrls: ["./zones-import-export-dialog.component.scss"]
 })
 export class ZonesImportExportDialogComponent implements OnInit {
   public static readonly MAX_WIDTH: string = "80%";
@@ -19,10 +19,10 @@ export class ZonesImportExportDialogComponent implements OnInit {
   public placeholder: string;
 
   constructor(
-    private dialogRef: MatDialogRef<ZonesImportExportDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ZoneImportExportDataModel,
-    private zonesService: ZonesService,
-    private snackBar: MatSnackBar
+    @Inject(MatDialogRef) private readonly dialogRef: MatDialogRef<ZonesImportExportDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public readonly data: ZoneImportExportDataModel,
+    @Inject(ZonesService) private readonly zonesService: ZonesService,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar
   ) {}
 
   public ngOnInit() {

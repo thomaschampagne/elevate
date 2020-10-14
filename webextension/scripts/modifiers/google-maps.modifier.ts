@@ -90,7 +90,7 @@ export class GoogleMapsModifier extends AbstractModifier {
       '<div style="text-align: center; padding-top: 15px;"><img src="' + this.appResources.loadingIcon + '"/></div>',
       {
         autoScale: true,
-        closeBtn: false,
+        closeBtn: false
       }
     );
   }
@@ -201,7 +201,7 @@ export class GoogleMapsModifier extends AbstractModifier {
     const streamPathUrl: string = "/activities/" + activityId + "/streams?stream_types[]=latlng";
     $.ajax({
       url: streamPathUrl,
-      dataType: "json",
+      dataType: "json"
     }).done((jsonResponse: any) => {
       callback(jsonResponse.latlng);
     });
@@ -222,7 +222,7 @@ export class GoogleMapsModifier extends AbstractModifier {
       },
       error: (err: JQueryXHR) => {
         console.error(err);
-      },
+      }
     }).then(() => {
       // Call Activity Processor with bounds
       if (!segmentInfoResponse.start_index && segmentInfoResponse.end_index) {
@@ -255,7 +255,7 @@ export class GoogleMapsModifier extends AbstractModifier {
     $.fancybox(html, {
       autoScale: true,
       transitionIn: "fade",
-      transitionOut: "fade",
+      transitionOut: "fade"
     });
 
     // Test if exit then no append before
@@ -295,7 +295,7 @@ export class GoogleMapsModifier extends AbstractModifier {
     // if (!this.map) {
     this.map = new google.maps.Map(document.getElementById("gmaps_canvas"), {
       mapTypeId: layerType,
-      overviewMapControl: true,
+      overviewMapControl: true
     } as MapOptions);
     // }
 
@@ -313,7 +313,7 @@ export class GoogleMapsModifier extends AbstractModifier {
       path: points,
       strokeColor: "#FF0000",
       strokeOpacity: 0.7,
-      strokeWeight: 4,
+      strokeWeight: 4
     });
 
     // Set path to map
@@ -327,7 +327,7 @@ export class GoogleMapsModifier extends AbstractModifier {
         path: points.slice(highlightFromTo[0], highlightFromTo[1]),
         strokeColor: "#105cb6",
         strokeOpacity: 1,
-        strokeWeight: 4,
+        strokeWeight: 4
       });
 
       // Erase bounds and computed new ones with highlighted path

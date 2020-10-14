@@ -29,7 +29,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 @Component({
   selector: "app-activities",
   templateUrl: "./activities.component.html",
-  styleUrls: ["./activities.component.scss"],
+  styleUrls: ["./activities.component.scss"]
 })
 export class ActivitiesComponent implements OnInit {
   public static readonly LS_SELECTED_COLUMNS: string = "activities_selectedColumns";
@@ -55,14 +55,14 @@ export class ActivitiesComponent implements OnInit {
   public initialized: boolean;
 
   constructor(
-    public syncService: SyncService<any>,
-    public activityService: ActivityService,
-    public userSettingsService: UserSettingsService,
-    public appEventsService: AppEventsService,
-    @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver,
-    public snackBar: MatSnackBar,
-    public dialog: MatDialog,
-    public logger: LoggerService
+    @Inject(SyncService) private readonly syncService: SyncService<any>,
+    @Inject(ActivityService) private readonly activityService: ActivityService,
+    @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
+    @Inject(AppEventsService) private readonly appEventsService: AppEventsService,
+    @Inject(OPEN_RESOURCE_RESOLVER) private readonly openResourceResolver: OpenResourceResolver,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
+    @Inject(MatDialog) private readonly dialog: MatDialog,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     this.hasActivities = null; // Can be null: don't know yet true/false status
     this.initialized = false;
@@ -314,7 +314,7 @@ export class ActivitiesComponent implements OnInit {
       data: new GotItDialogDataModel(
         "Calculated with athlete settings",
         ActivitiesComponent.printAthleteSettings(activity, this.isImperial)
-      ),
+      )
     });
   }
 
@@ -323,13 +323,13 @@ export class ActivitiesComponent implements OnInit {
       title: 'Deleting activity "' + activity.name + '"',
       content:
         'Are you sure to perform this action? You will be able to fetch back this activity with a "Sync all activities".',
-      confirmText: "Delete",
+      confirmText: "Delete"
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       minWidth: ConfirmDialogComponent.MIN_WIDTH,
       maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-      data: data,
+      data: data
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
@@ -421,7 +421,7 @@ export class ActivitiesComponent implements OnInit {
             }
 
             return cellValue;
-          },
+          }
         };
       });
 

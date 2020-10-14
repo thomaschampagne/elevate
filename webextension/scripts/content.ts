@@ -74,7 +74,7 @@ export class Content {
         const startCoreData: StartCoreDataModel = {
           extensionId: chrome.runtime.id,
           userSettings: userSettingsModel,
-          appResources: this.appResources,
+          appResources: this.appResources
         };
 
         // Inject jQuery as $
@@ -145,7 +145,7 @@ export const appResources: AppResourcesModel = {
   logoTextOnly: chrome.extension.getURL("/extension/icons/logo_text_only.svg"),
   extVersion: chrome.runtime.getManifest().version_name,
   extVersionName: chrome.runtime.getManifest().version_name,
-  extensionId: chrome.runtime.id,
+  extensionId: chrome.runtime.id
 };
 
 const content: Content = new Content(appResources);

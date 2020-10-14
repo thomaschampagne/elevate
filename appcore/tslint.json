@@ -15,6 +15,7 @@
     "deprecation": {
       "severity": "warning"
     },
+    "trailing-comma": false,
     "no-shadowed-variable": true,
     "no-namespace": false,
     "component-class-suffix": true,

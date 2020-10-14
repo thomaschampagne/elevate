@@ -2,7 +2,7 @@ import {
   ActivitySourceDataModel,
   ActivityStreamsModel,
   AthleteSnapshotModel,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import { AppResourcesModel } from "./app-resources.model";
 import { ElevateSport } from "@elevate/shared/enums";

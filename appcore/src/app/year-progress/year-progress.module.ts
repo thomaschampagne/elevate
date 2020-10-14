@@ -22,8 +22,8 @@ import { YearProgressWelcomeDialogComponent } from "./year-progress-welcome-dial
     YearProgressHelperDialogComponent,
     AddYearProgressPresetDialogComponent,
     ManageYearProgressPresetsDialogComponent,
-    YearProgressWelcomeDialogComponent,
+    YearProgressWelcomeDialogComponent
   ],
-  providers: [YearProgressService, YearProgressPresetDao],
+  providers: [YearProgressService, YearProgressPresetDao]
 })
 export class YearProgressModule {}

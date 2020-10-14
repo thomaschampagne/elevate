@@ -20,7 +20,7 @@ import {
   UpFlatDownSumTotalModel,
   UserSettings,
   UserZonesModel,
-  ZoneModel,
+  ZoneModel
 } from "../../models";
 import { RunningPowerEstimator } from "./running-power-estimator";
 import { SplitCalculator } from "./split-calculator";
@@ -214,7 +214,7 @@ export class ActivityComputer {
             ..._.range(5 * 60 + 30, 20 * 60, 30), // to 20 min in 30s
             ..._.range(20 * 60, 60 * 60, 60), // to 60 min in minutes
             ..._.range(60 * 60, 5 * 60 * 60, 5 * 60), // to 5 hour in 5 min
-            ..._.range(5 * 60 * 60, 24 * 60 * 60, 60 * 60), // to 24 hour in 1 hour
+            ..._.range(5 * 60 * 60, 24 * 60 * 60, 60 * 60) // to 24 hour in 1 hour
           ];
 
           // Ensure the final value is the maximum time
@@ -573,7 +573,7 @@ export class ActivityComputer {
       heartRateData: heartRateData,
       cadenceData: cadenceData,
       gradeData: gradeData,
-      elevationData: elevationData,
+      elevationData: elevationData
     };
   }
 
@@ -700,7 +700,7 @@ export class ActivityComputer {
       varianceSpeed: 0,
       genuineGradeAdjustedAvgSpeed: averageSpeed,
       standardDeviationSpeed: 0,
-      speedZones: null,
+      speedZones: null
     };
 
     const runningStressScore =
@@ -723,13 +723,13 @@ export class ActivityComputer {
       paceZones: null,
       gradeAdjustedPaceZones: null,
       runningStressScore: runningStressScore,
-      runningStressScorePerHour: runningStressScore ? (runningStressScore / movingTime) * 60 * 60 : null,
+      runningStressScorePerHour: runningStressScore ? (runningStressScore / movingTime) * 60 * 60 : null
     };
 
     return {
       movingTime: movingTime,
       speed: speedData,
-      pace: paceData,
+      pace: paceData
     };
   }
 
@@ -861,7 +861,7 @@ export class ActivityComputer {
     const percentiles: number[] = ActivityComputer.weightedPercentiles(speedsNonZero, speedsNonZeroDuration, [
       0.25,
       0.5,
-      0.75,
+      0.75
     ]);
 
     let best20min = null;
@@ -889,7 +889,7 @@ export class ActivityComputer {
       varianceSpeed: varianceSpeed,
       genuineGradeAdjustedAvgSpeed: genuineGradeAdjustedAvgSpeed,
       standardDeviationSpeed: standardDeviationSpeed,
-      speedZones: this.returnZones ? speedZones : null,
+      speedZones: this.returnZones ? speedZones : null
     };
 
     const genuineGradeAdjustedAvgPace =
@@ -919,13 +919,13 @@ export class ActivityComputer {
       paceZones: this.returnZones ? paceZones : null,
       gradeAdjustedPaceZones: this.returnZones && hasGradeAdjustedSpeed ? gradeAdjustedPaceZones : null,
       runningStressScore: runningStressScore,
-      runningStressScorePerHour: runningStressScore ? (runningStressScore / genuineAvgSpeedSecondsSum) * 60 * 60 : null,
+      runningStressScorePerHour: runningStressScore ? (runningStressScore / genuineAvgSpeedSecondsSum) * 60 * 60 : null
     };
 
     return {
       movingTime: genuineAvgSpeedSecondsSum,
       speed: speedData,
-      pace: paceData,
+      pace: paceData
     };
   }
 
@@ -1039,7 +1039,7 @@ export class ActivityComputer {
     const percentiles: number[] = ActivityComputer.weightedPercentiles(wattsSamplesOnMove, wattsSamplesOnMoveDuration, [
       0.25,
       0.5,
-      0.75,
+      0.75
     ]);
 
     // Update zone distribution percentage
@@ -1071,7 +1071,7 @@ export class ActivityComputer {
       medianWatts: percentiles[1],
       upperQuartileWatts: percentiles[2],
       powerZones: this.returnZones ? powerZonesAlongActivityType : null, // Only while moving
-      powerCurve: powerCurve || [],
+      powerCurve: powerCurve || []
     };
 
     if (!_.isUndefined(isEstimatedRunningPower)) {
@@ -1217,7 +1217,7 @@ export class ActivityComputer {
           maxHeartRate,
           athleteSnapshot.athleteSettings.maxHr,
           athleteSnapshot.athleteSettings.restHr
-        ) * 100,
+        ) * 100
     };
   }
 
@@ -1340,7 +1340,7 @@ export class ActivityComputer {
     const cadencesPercentiles: number[] = ActivityComputer.weightedPercentiles(cadencesOnMoving, cadencesDuration, [
       0.25,
       0.5,
-      0.75,
+      0.75
     ]);
 
     const distancesPerOccurrencePercentiles: number[] = ActivityComputer.weightedPercentiles(
@@ -1362,7 +1362,7 @@ export class ActivityComputer {
       lowerQuartileDistancePerOccurrence: distancesPerOccurrencePercentiles[0],
       medianDistancePerOccurrence: distancesPerOccurrencePercentiles[1],
       upperQuartileDistancePerOccurrence: distancesPerOccurrencePercentiles[2],
-      cadenceZones: this.returnZones ? cadenceZones : null,
+      cadenceZones: this.returnZones ? cadenceZones : null
     };
 
     return cadenceData;
@@ -1393,20 +1393,20 @@ export class ActivityComputer {
       up: 0,
       flat: 0,
       down: 0,
-      total: 0,
+      total: 0
     };
 
     // Currently deals with avg speed/pace
     const upFlatDownMoveData: UpFlatDownModel = {
       up: 0,
       flat: 0,
-      down: 0,
+      down: 0
     };
 
     const upFlatDownDistanceData: UpFlatDownModel = {
       up: 0,
       flat: 0,
-      down: 0,
+      down: 0
     };
 
     const upFlatDownCadenceData: UpFlatDownSumCounterModel = {
@@ -1415,7 +1415,7 @@ export class ActivityComputer {
       down: 0,
       countUp: 0,
       countFlat: 0,
-      countDown: 0,
+      countDown: 0
     };
 
     let durationInSeconds: number,
@@ -1536,7 +1536,7 @@ export class ActivityComputer {
     const percentiles: number[] = ActivityComputer.weightedPercentiles(gradeArrayMoving, gradeArrayDistance, [
       0.25,
       0.5,
-      0.75,
+      0.75
     ]);
 
     const avgGrade: number = gradeSum / gradeCount;
@@ -1570,10 +1570,10 @@ export class ActivityComputer {
         ? {
             up: upFlatDownCadenceData.up,
             flat: upFlatDownCadenceData.flat,
-            down: upFlatDownCadenceData.down,
+            down: upFlatDownCadenceData.down
           }
         : null,
-      gradeProfile,
+      gradeProfile
     };
 
     return gradeData;
@@ -1705,7 +1705,7 @@ export class ActivityComputer {
       avg: _.isFinite(avgAscentSpeed) ? avgAscentSpeed : -1,
       lowerQuartile: parseFloat(percentilesAscent[0].toFixed(0)),
       median: parseFloat(percentilesAscent[1].toFixed(0)),
-      upperQuartile: parseFloat(percentilesAscent[2].toFixed(0)),
+      upperQuartile: parseFloat(percentilesAscent[2].toFixed(0))
     };
 
     let elevationData: ElevationDataModel = {
@@ -1717,7 +1717,7 @@ export class ActivityComputer {
       upperQuartileElevation: parseFloat(percentilesElevation[2].toFixed(0)),
       elevationZones: this.returnZones ? elevationZones : null, // Only while moving
       ascentSpeedZones: this.returnZones ? ascentSpeedZones : null, // Only while moving
-      ascentSpeed: ascentSpeedData,
+      ascentSpeed: ascentSpeedData
     };
 
     if (skipAscentSpeedCompute) {

@@ -7,7 +7,7 @@ import { CollectionDef } from "../../data-store/collection-def";
 export class ActivityDao extends BaseDao<SyncedActivityModel> {
   public static readonly COLLECTION_DEF = new CollectionDef("syncedActivities", {
     unique: ["id"],
-    indices: ["name", "start_time", "type"],
+    indices: ["name", "start_time", "type"]
   });
 
   public getCollectionDef(): CollectionDef<SyncedActivityModel> {
@@ -26,18 +26,18 @@ export class ActivityDao extends BaseDao<SyncedActivityModel> {
 
     return this.find({
       start_time: {
-        $lt: activityEndTime,
+        $lt: activityEndTime
       },
       end_time: {
-        $gt: activityStartTime,
-      },
+        $gt: activityStartTime
+      }
     });
   }
 
   public findSortStartDate(descending: boolean): Promise<SyncedActivityModel[]> {
     const sort: { propName: keyof SyncedActivityModel; options: Partial<SimplesortOptions> } = {
       propName: "start_time",
-      options: { desc: descending },
+      options: { desc: descending }
     };
     return this.find(null, sort);
   }

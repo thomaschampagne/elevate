@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
 import { SyncDateTimeDao } from "../../../dao/sync/sync-date-time.dao";
-import { VERSIONS_PROVIDER, VersionsProvider } from "../../versions/versions-provider.interface";
+import { VersionsProvider } from "../../versions/versions-provider";
 import { ActivityService } from "../../activity/activity.service";
 import { AthleteService } from "../../athlete/athlete.service";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
@@ -30,14 +30,14 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
   public static readonly SYNC_WINDOW_HEIGHT: number = 720;
 
   constructor(
-    @Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
-    public activityService: ActivityService,
-    public streamsService: StreamsService,
-    public athleteService: AthleteService,
-    public userSettingsService: UserSettingsService,
-    public logger: LoggerService,
-    public syncDateTimeDao: SyncDateTimeDao,
-    @Inject(DataStore) public extensionDataStore: ExtensionDataStore<object>
+    @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
+    @Inject(DataStore) public readonly extensionDataStore: ExtensionDataStore<object>,
+    @Inject(ActivityService) public readonly activityService: ActivityService,
+    @Inject(StreamsService) public readonly streamsService: StreamsService,
+    @Inject(AthleteService) public readonly athleteService: AthleteService,
+    @Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService,
+    @Inject(LoggerService) public readonly logger: LoggerService,
+    @Inject(SyncDateTimeDao) public readonly syncDateTimeDao: SyncDateTimeDao
   ) {
     super(
       versionsProvider,
@@ -116,7 +116,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
       this.syncDateTimeDao.findOne(),
       this.activityService.fetch(),
       this.athleteService.fetch(),
-      this.versionsProvider.getPackageVersion(),
+      this.versionsProvider.getPackageVersion()
     ]).then((result: any[]) => {
       const syncDateTime: SyncDateTime = result[0] as SyncDateTime;
       const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
@@ -131,7 +131,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
         syncDateTime: DataStore.cleanDbObject<SyncDateTime>(syncDateTime),
         syncedActivities: DataStore.cleanDbCollection<SyncedActivityModel>(syncedActivityModels),
         athleteModel: DataStore.cleanDbObject<AthleteModel>(athleteModel),
-        pluginVersion: appVersion,
+        pluginVersion: appVersion
       };
 
       return Promise.resolve(backupModel);
@@ -171,7 +171,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
           this.updateSyncDateTime(importedBackupModel.syncDateTime),
           this.activityService.insertMany(importedBackupModel.syncedActivities, true),
           promiseImportDatedAthleteSettings,
-          this.userSettingsService.clearLocalStorageOnNextLoad(),
+          this.userSettingsService.clearLocalStorageOnNextLoad()
         ]);
       })
       .then(() => {

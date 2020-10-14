@@ -20,7 +20,7 @@ describe("ZonesImportExportDialogComponent", () => {
     step: 0.1,
     min: 0,
     max: 9999,
-    customDisplay: null,
+    customDisplay: null
   };
 
   let component: ZonesImportExportDialogComponent;
@@ -40,17 +40,17 @@ describe("ZonesImportExportDialogComponent", () => {
       providers: [
         {
           provide: MAT_DIALOG_DATA,
-          useValue: zoneImportExportDataModelAsExport,
+          useValue: zoneImportExportDataModelAsExport
         },
         {
           provide: MatDialogRef,
-          useValue: {},
+          useValue: {}
         },
         {
           provide: DataStore,
-          useClass: TestingDataStore,
-        },
-      ],
+          useClass: TestingDataStore
+        }
+      ]
     }).compileComponents();
 
     done();

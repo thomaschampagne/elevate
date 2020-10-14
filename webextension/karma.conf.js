@@ -11,10 +11,10 @@ const defaultBrowserKarmaConfig = {
         "--headless",
         "--disable-gpu",
         // Without a remote debugging port, Google Chrome exits immediately.
-        " --remote-debugging-port=9222",
-      ],
-    },
-  },
+        " --remote-debugging-port=9222"
+      ]
+    }
+  }
 };
 
 const provideBrowsersKarmaConfig = () => {
@@ -50,12 +50,12 @@ module.exports = function (config) {
     customLaunchers: browsersKarmaConfig.customLaunchers,
     files: ["specs/**/*.spec.ts"],
     preprocessors: {
-      "**/*.spec.ts": ["webpack"],
+      "**/*.spec.ts": ["webpack"]
     },
     webpack: {
       mode: "development",
       resolve: {
-        extensions: [".ts", ".js"],
+        extensions: [".ts", ".js"]
       },
       module: {
         rules: [
@@ -65,15 +65,15 @@ module.exports = function (config) {
             use: {
               loader: "ts-loader",
               options: {
-                configFile: "tsconfig.spec.json",
-              },
-            },
-          },
-        ],
-      },
+                configFile: "tsconfig.spec.json"
+              }
+            }
+          }
+        ]
+      }
     },
     mime: {
-      "text/x-typescript": ["ts", "tsx"],
+      "text/x-typescript": ["ts", "tsx"]
     },
     specReporter: {
       maxLogLines: 5, // limit number of lines logged per test
@@ -82,14 +82,14 @@ module.exports = function (config) {
       suppressPassed: false, // do not print information about passed tests
       suppressSkipped: true, // do not print information about skipped tests
       showSpecTiming: true, // print the time elapsed for each spec
-      failFast: false, // test would finish with error when a first fail occurs.
+      failFast: false // test would finish with error when a first fail occurs.
     },
     autoWatch: true,
     colors: true,
     singleRun: false,
     browserConsoleLogOptions: {
       // path: "./specs.log",
-      terminal: false,
-    },
+      terminal: false
+    }
   });
 };

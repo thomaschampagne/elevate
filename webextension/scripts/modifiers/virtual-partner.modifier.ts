@@ -79,7 +79,7 @@ export class VirtualPartnerModifier extends AbstractModifier {
         },
         error: err => {
           console.error(err);
-        },
+        }
       })
     ).then(() => {
       callback(segmentInfosResponse);
@@ -113,14 +113,14 @@ export class VirtualPartnerModifier extends AbstractModifier {
           });
           $("#elevate_download_course_" + effortId).append(link);
         });
-      },
+      }
     });
   }
 
   protected download(effortId: string, exportType: ExportTypes) {
     this.getSegmentInfos(effortId, (segmentData: any) => {
       const activityInfo: ActivityInfoModel = {
-        id: this.activityId,
+        id: this.activityId
       } as ActivityInfoModel;
 
       this.vacuumProcessor.getActivityStream(
@@ -134,12 +134,12 @@ export class VirtualPartnerModifier extends AbstractModifier {
 
           const bounds: ICourseBounds = {
             start: segmentData.start_index,
-            end: segmentData.end_index,
+            end: segmentData.end_index
           };
 
           saveAs(
             new Blob([this.courseMaker.create(exportType, segmentData.display_name, activityStream, bounds)], {
-              type: "application/xml; charset=utf-8",
+              type: "application/xml; charset=utf-8"
             }),
             "course_" + effortId + "." + ExportTypes[exportType].toLowerCase()
           ); // Filename

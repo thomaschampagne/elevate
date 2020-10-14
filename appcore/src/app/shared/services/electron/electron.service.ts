@@ -1,7 +1,8 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import _ from "lodash";
 import { ChildProcess } from "child_process";
 import { LoggerService } from "../logging/logger.service";
+import { Platform } from "@elevate/shared/enums";
 
 declare let window: ElectronWindow;
 
@@ -13,7 +14,7 @@ export interface ElectronWindow extends Window {
 export class ElectronService {
   public instance: any;
 
-  constructor(public logger: LoggerService) {
+  constructor(@Inject(LoggerService) private readonly logger: LoggerService) {
     this.forwardHtmlLinkClicksToDefaultBrowser();
   }
 
@@ -39,7 +40,7 @@ export class ElectronService {
 
   public userDirectorySelection(): string {
     const paths = this.electron.remote.dialog.showOpenDialogSync(this.getMainBrowserWindow(), {
-      properties: ["openDirectory", "showHiddenFiles"],
+      properties: ["openDirectory", "showHiddenFiles"]
     });
     return paths && paths.length > 0 ? paths[0] : null;
   }
@@ -186,16 +187,20 @@ export class ElectronService {
     return this.electron.remote.app.isPackaged;
   }
 
+  public getPlatform(): Platform {
+    return this.instance.remote.process.platform as Platform;
+  }
+
   public isWindows(): boolean {
-    return this.instance.remote.process.platform === "win32";
+    return this.instance.remote.process.platform === Platform.WINDOWS;
   }
 
   public isLinux(): boolean {
-    return this.instance.remote.process.platform === "linux";
+    return this.instance.remote.process.platform === Platform.LINUX;
   }
 
   public isMacOS(): boolean {
-    return this.instance.remote.process.platform === "darwin";
+    return this.instance.remote.process.platform === Platform.MACOS;
   }
 
   private getSession(): Electron.Session {

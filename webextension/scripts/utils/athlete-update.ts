@@ -45,7 +45,7 @@ export class AthleteUpdate {
       version,
       status,
       hrMin,
-      hrMax,
+      hrMax
     };
 
     if (!_.isEmpty(locale)) {
@@ -70,7 +70,7 @@ export class AthleteUpdate {
       error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
         console.warn("Endpoint <" + endPoint + "> not reachable", jqXHR);
         deferred.reject({ textStatus, errorThrown });
-      },
+      }
     });
 
     return deferred.promise;

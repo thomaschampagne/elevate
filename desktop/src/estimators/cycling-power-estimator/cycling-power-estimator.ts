@@ -13,7 +13,7 @@ export namespace CyclingPower {
       crrRollingResistanceFactor: 0.005,
       rhoAirDensity: 1.22601,
       headWindSpeed: 0,
-      gradePercentage: 0,
+      gradePercentage: 0
     };
 
     public static csvPowerAnalysisData(
@@ -91,7 +91,7 @@ export namespace CyclingPower {
       return {
         FGravity: FGravity,
         FRolling: FRolling,
-        FDrag: FDrag,
+        FDrag: FDrag
       };
     }
   }

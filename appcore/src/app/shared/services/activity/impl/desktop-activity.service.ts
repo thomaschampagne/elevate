@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { ActivityService } from "../activity.service";
 import { ActivityDao } from "../../../dao/activity/activity.dao";
 import { AthleteSnapshotResolverService } from "../../athlete-snapshot-resolver/athlete-snapshot-resolver.service";
@@ -55,7 +55,7 @@ export class BulkRefreshStatsNotification {
 
   public static error(error: any): BulkRefreshStatsNotification {
     return {
-      error: error,
+      error: error
     } as BulkRefreshStatsNotification;
   }
 }
@@ -69,11 +69,12 @@ export class DesktopActivityService extends ActivityService {
   public isProcessing: boolean;
 
   constructor(
-    public ipcMessagesSender: IpcMessagesSender,
-    public activityDao: ActivityDao,
-    public streamsDao: StreamsDao,
-    public athleteSnapshotResolverService: AthleteSnapshotResolverService,
-    public logger: LoggerService
+    @Inject(IpcMessagesSender) public readonly ipcMessagesSender: IpcMessagesSender,
+    @Inject(ActivityDao) public readonly activityDao: ActivityDao,
+    @Inject(StreamsDao) public readonly streamsDao: StreamsDao,
+    @Inject(AthleteSnapshotResolverService)
+    public readonly athleteSnapshotResolverService: AthleteSnapshotResolverService,
+    @Inject(LoggerService) protected readonly logger: LoggerService
   ) {
     super(activityDao, athleteSnapshotResolverService, logger);
 

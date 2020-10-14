@@ -18,7 +18,7 @@ import { Component } from "@angular/core";
         text-align: center;
         width: 300px;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class LoadingDialogComponent {}

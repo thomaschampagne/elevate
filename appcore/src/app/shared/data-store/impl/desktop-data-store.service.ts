@@ -3,14 +3,14 @@ import Loki from "lokijs";
 import LokiIndexedAdapter from "lokijs/src/loki-indexed-adapter";
 import { DesktopDumpModel } from "../../models/dumps/desktop-dump.model";
 import { LoggerService } from "../../services/logging/logger.service";
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { Gzip } from "@elevate/shared/tools";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
 import { AppUsage } from "../../models/app-usage.model";
 
 @Injectable()
 export class DesktopDataStore<T extends {}> extends DataStore<T> {
-  constructor(protected readonly logger: LoggerService) {
+  constructor(@Inject(LoggerService) protected readonly logger: LoggerService) {
     super(logger);
   }
 

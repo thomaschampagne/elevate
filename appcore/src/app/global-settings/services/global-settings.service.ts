@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
-import { EnvTarget, UserSettings } from "@elevate/shared/models";
+import { BuildTarget } from "@elevate/shared/enums";
 import { ListItemModel } from "../models/list-item.model";
 import _ from "lodash";
+import { UserSettings } from "@elevate/shared/models";
 
 @Injectable()
 export class GlobalSettingsService {
@@ -21,14 +22,14 @@ export class GlobalSettingsService {
           list: [
             {
               key: UserSettings.SYSTEM_UNIT_METRIC_KEY,
-              name: "Metric",
+              name: "Metric"
             },
             {
               key: UserSettings.SYSTEM_UNIT_IMPERIAL_KEY,
-              name: "Imperial",
-            },
+              name: "Imperial"
+            }
           ] as ListItemModel[],
-          title: "App system units",
+          title: "App system units"
         },
         {
           key: "temperatureUnit",
@@ -37,117 +38,117 @@ export class GlobalSettingsService {
           list: [
             {
               key: "F",
-              name: "Fahrenheit",
+              name: "Fahrenheit"
             },
             {
               key: "C",
-              name: "Celsius",
-            },
+              name: "Celsius"
+            }
           ] as ListItemModel[],
-          title: "Temperature",
-        },
-      ],
+          title: "Temperature"
+        }
+      ]
     },
     {
       title: "Activities Extended Statistics",
-      envTarget: EnvTarget.EXTENSION,
+      buildTarget: BuildTarget.EXTENSION,
       options: [
         {
           key: "displayActivityRatio",
           type: "checkbox",
           title: "Move Ratio stat",
-          labels: ["Cycling", "Running"],
+          labels: ["Cycling", "Running"]
         },
         {
           key: "displayAdvancedPowerData",
           type: "checkbox",
           title: "Power stats",
           enableSubOption: ["displayRunningPowerEstimation"],
-          labels: ["Cycling", "Running"],
+          labels: ["Cycling", "Running"]
         },
         {
           key: "displayRunningPowerEstimation",
           type: "checkbox",
           title: "Running power estimation (your activities only)",
-          labels: ["Running"],
+          labels: ["Running"]
         },
         {
           key: "displayAdvancedHrData",
           type: "checkbox",
           title: "Heart rate stats",
-          labels: ["Cycling", "Running"],
+          labels: ["Cycling", "Running"]
         },
         {
           key: "displayAdvancedSpeedData",
           type: "checkbox",
           title: "Speed/Pace stats",
-          labels: ["Cycling", "Running"],
+          labels: ["Cycling", "Running"]
         },
         {
           key: "displayCadenceData",
           type: "checkbox",
           title: "Cadence stats",
-          labels: ["Cycling", "Running"],
+          labels: ["Cycling", "Running"]
         },
         {
           key: "displayAdvancedGradeData",
           type: "checkbox",
           title: "Grade stats",
-          labels: ["Cycling", "Running"],
+          labels: ["Cycling", "Running"]
         },
         {
           key: "displayAdvancedElevationData",
           type: "checkbox",
           title: "Elevation stats",
-          labels: ["Cycling", "Running"],
-        },
-      ],
+          labels: ["Cycling", "Running"]
+        }
+      ]
     },
     {
       title: "Activity viewing options",
-      envTarget: EnvTarget.EXTENSION,
+      buildTarget: BuildTarget.EXTENSION,
       options: [
         {
           key: "enableBothLegsCadence",
           type: "checkbox",
           title: "Enable both legs extended cadence data",
-          labels: ["Running"],
+          labels: ["Running"]
         },
         {
           key: "displayBikeOdoInActivity",
           type: "checkbox",
           title: "Enable bike odo display",
-          labels: ["Cycling"],
+          labels: ["Cycling"]
         },
         {
           key: "displayRunningPerformanceIndex",
           type: "checkbox",
           title: "Display running performance index",
-          labels: ["Running"],
+          labels: ["Running"]
         },
         {
           key: "activateRunningGradeAdjustedPace",
           type: "checkbox",
           title: "Enable Grade Adjusted Pace graph",
-          labels: ["Running"],
+          labels: ["Running"]
         },
         {
           key: "activateRunningHeartRate",
           type: "checkbox",
           title: "Enable Heart Rate graph",
-          labels: ["Running"],
+          labels: ["Running"]
         },
         {
           key: "activateRunningTemperature",
           type: "checkbox",
           title: "Enable Temperature graph",
-          labels: ["Running"],
+          labels: ["Running"]
         },
         {
           key: "activateRunningCadence",
           type: "checkbox",
           title: "Enable Cadence graph",
-          labels: ["Running"],
+          labels: ["Running"]
         },
         {
           key: "activityStravaMapType",
@@ -156,42 +157,42 @@ export class GlobalSettingsService {
           list: [
             {
               key: "terrain",
-              name: "Terrain",
+              name: "Terrain"
             },
             {
               key: "standard",
-              name: "Standard",
+              name: "Standard"
             },
             {
               key: "satellite",
-              name: "Satellite",
-            },
+              name: "Satellite"
+            }
           ] as ListItemModel[],
-          title: "Default Strava Map type displayed in activities",
+          title: "Default Strava Map type displayed in activities"
         },
         {
           key: "displaySegmentTimeComparisonToKOM",
           type: "checkbox",
           title: "Enabled segment time comparison to KOM/QOM display",
-          labels: ["All"],
+          labels: ["All"]
         },
         {
           key: "displaySegmentTimeComparisonToPR",
           type: "checkbox",
           title: "Enabled segment time comparison to PR display",
-          labels: ["All"],
+          labels: ["All"]
         },
         {
           key: "displaySegmentTimeComparisonToCurrentYearPR",
           type: "checkbox",
           title: "Enabled segment time comparison to current year PR display",
-          labels: ["All"],
+          labels: ["All"]
         },
         {
           key: "displaySegmentTimeComparisonPosition",
           type: "checkbox",
           title: "Enabled segment time comparison rank column",
-          labels: ["All"],
+          labels: ["All"]
         },
         {
           key: "reviveGoogleMaps",
@@ -199,7 +200,7 @@ export class GlobalSettingsService {
           title: "Revive Google Maps on activities",
           labels: ["All"],
           enableSubOption: ["reviveGoogleMapsLayerType"],
-          hidden: true, // Google map feature marked as hidden until it come back
+          hidden: true // Google map feature marked as hidden until it come back
         },
         {
           key: "reviveGoogleMapsLayerType",
@@ -208,29 +209,29 @@ export class GlobalSettingsService {
           list: [
             {
               key: "roadmap",
-              name: "Roadmap",
+              name: "Roadmap"
             },
             {
               key: "satellite",
-              name: "Satellite",
+              name: "Satellite"
             },
             {
               key: "hybrid",
-              name: "Satellite + Legends",
+              name: "Satellite + Legends"
             },
             {
               key: "terrain",
-              name: "Terrain",
-            },
+              name: "Terrain"
+            }
           ] as ListItemModel[],
           title: "Default Google Maps layer type",
-          hidden: true, // Google map feature marked as hidden until it come back
+          hidden: true // Google map feature marked as hidden until it come back
         },
         {
           key: "displayActivityBestSplits",
           type: "checkbox",
           title: "Enable best splits into your cycling activities",
-          labels: ["Cycling"],
+          labels: ["Cycling"]
         },
         {
           key: "defaultLeaderBoardFilter",
@@ -239,152 +240,152 @@ export class GlobalSettingsService {
           list: [
             {
               key: "overall",
-              name: "Overall",
+              name: "Overall"
             },
             {
               key: "men",
-              name: "Men",
+              name: "Men"
             },
             {
               key: "women",
-              name: "Women",
+              name: "Women"
             },
             {
               key: "following",
-              name: "Following",
+              name: "Following"
             },
             {
               key: "my_results",
-              name: "My Results",
-            },
+              name: "My Results"
+            }
           ] as ListItemModel[],
-          title: "Default Leaderboard Filter",
+          title: "Default Leaderboard Filter"
         },
         {
           key: "displayWindyOverlay",
           type: "checkbox",
           title: "Display Wind, Temp, Clouds & Humidity overlay of your cycling activity",
-          labels: ["Cycling"],
-        },
-      ],
+          labels: ["Cycling"]
+        }
+      ]
     },
     {
       title: "Segments viewing options",
-      envTarget: EnvTarget.EXTENSION,
+      buildTarget: BuildTarget.EXTENSION,
       options: [
         {
           key: "displaySegmentRankPercentage",
           type: "checkbox",
           title: "Segment Rank %",
-          labels: ["All"],
+          labels: ["All"]
         },
         {
           key: "displayNearbySegments",
           type: "checkbox",
           title: "Nearby Segments",
-          labels: ["Cycling", "Running"],
-        },
-      ],
+          labels: ["Cycling", "Running"]
+        }
+      ]
     },
     {
       title: "Activities and Segments viewing options",
-      envTarget: EnvTarget.EXTENSION,
+      buildTarget: BuildTarget.EXTENSION,
       options: [
         {
           key: "remoteLinks",
           type: "checkbox",
           title: "Enable Veloviewer & Segment details remote views",
-          labels: ["All"],
-        },
-      ],
+          labels: ["All"]
+        }
+      ]
     },
     {
       title: "Dashboard",
-      envTarget: EnvTarget.EXTENSION,
+      buildTarget: BuildTarget.EXTENSION,
       options: [
         {
           key: "feedChronologicalOrder",
           type: "checkbox",
           title: "Organize activity feed chronologically",
-          labels: ["All"],
+          labels: ["All"]
         },
         {
           key: "feedHideChallenges",
           type: "checkbox",
           title: "Hide challenges",
-          labels: ["All"],
+          labels: ["All"]
         },
         {
           key: "feedHideCreatedRoutes",
           type: "checkbox",
           title: "Hide created routes",
-          labels: ["All"],
+          labels: ["All"]
         },
         {
           key: "feedHidePosts",
           type: "checkbox",
           title: "Hide posts",
-          labels: ["All"],
+          labels: ["All"]
         },
         {
           key: "feedHideSuggestedAthletes",
           type: "checkbox",
           title: "Hide suggested athletes",
-          labels: ["All"],
+          labels: ["All"]
         },
         {
           key: "feedHideVirtualRides",
           type: "checkbox",
           title: "Hide virtual rides.",
           labels: ["Cycling"],
-          min: 0,
+          min: 0
         },
         {
           key: "feedHideRideActivitiesUnderDistance",
           type: "number",
           title: "Hide rides activities under distance.",
           labels: ["Cycling"],
-          min: 0,
+          min: 0
         },
         {
           key: "feedHideRunActivitiesUnderDistance",
           type: "number",
           title: "Hide running activities under distance.",
           labels: ["Running"],
-          min: 0,
-        },
-      ],
+          min: 0
+        }
+      ]
     },
     {
       title: "Hidden/Beta features",
-      envTarget: EnvTarget.EXTENSION,
+      buildTarget: BuildTarget.EXTENSION,
       options: [
         {
           key: "showHiddenBetaFeatures",
           type: "checkbox",
           title: "Enable Hidden/Beta features",
           labels: ["All"],
-          enableSubOption: ["displayRecentEffortsHRAdjustedPacePower"],
+          enableSubOption: ["displayRecentEffortsHRAdjustedPacePower"]
         },
         {
           key: "displayRecentEffortsHRAdjustedPacePower",
           type: "checkbox",
           title:
             "Display running estimated paces & cycling estimated powers from most painful effort on a segment (Experimental)",
-          labels: ["Cycling", "Running"],
-        },
-      ],
-    },
+          labels: ["Cycling", "Running"]
+        }
+      ]
+    }
   ];
 
-  public getSectionsByEnvTarget(envTarget: EnvTarget): SectionModel[] {
+  public getSectionsByBuildTarget(buildTarget: BuildTarget): SectionModel[] {
     const filteredSections: SectionModel[] = [];
 
     _.forEach(this.sections, section => {
-      if (_.isUndefined(section.envTarget)) {
+      if (_.isUndefined(section.buildTarget)) {
         filteredSections.push(section);
       } else {
-        if (section.envTarget === envTarget) {
+        if (section.buildTarget === buildTarget) {
           filteredSections.push(section);
         }
       }

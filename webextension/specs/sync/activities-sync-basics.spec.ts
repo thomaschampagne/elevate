@@ -109,7 +109,7 @@ describe("ActivitiesSynchronize", () => {
     activitiesSynchronize.appendGlobalActivitiesChanges({
       added: [1, 2],
       deleted: [],
-      edited: [],
+      edited: []
     });
 
     expect(activitiesSynchronize.activitiesChanges).not.toBeNull();
@@ -121,7 +121,7 @@ describe("ActivitiesSynchronize", () => {
     activitiesSynchronize.appendGlobalActivitiesChanges({
       added: [4, 5],
       deleted: [],
-      edited: [{ id: 6, name: "rideName", type: ElevateSport.Ride, display_type: "Ride" }],
+      edited: [{ id: 6, name: "rideName", type: ElevateSport.Ride, display_type: "Ride" }]
     });
     expect(activitiesSynchronize.activitiesChanges).not.toBeNull();
     expect(activitiesSynchronize.activitiesChanges.added.length).toEqual(4);
@@ -138,9 +138,9 @@ describe("ActivitiesSynchronize", () => {
           id: 22,
           name: "Run...",
           type: ElevateSport.Run,
-          display_type: "Run",
-        },
-      ],
+          display_type: "Run"
+        }
+      ]
     });
     expect(activitiesSynchronize.activitiesChanges).not.toBeNull();
     expect(activitiesSynchronize.activitiesChanges.added.length).toEqual(6); // id:5 already added

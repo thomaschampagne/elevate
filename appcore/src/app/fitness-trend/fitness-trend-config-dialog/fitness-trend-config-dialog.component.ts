@@ -9,7 +9,7 @@ import { FitnessTrendConfigDialogData } from "../shared/models/fitness-trend-con
 @Component({
   selector: "app-fitness-trend-config-dialog",
   templateUrl: "./fitness-trend-config-dialog.component.html",
-  styleUrls: ["./fitness-trend-config-dialog.component.scss"],
+  styleUrls: ["./fitness-trend-config-dialog.component.scss"]
 })
 export class FitnessTrendConfigDialogComponent implements OnInit {
   public static readonly MAX_WIDTH: string = "80%";
@@ -25,9 +25,9 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
   public initialized = false;
 
   constructor(
-    public dialogRef: MatDialogRef<FitnessTrendConfigDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public fitnessTrendConfigDialogData: FitnessTrendConfigDialogData,
-    public snackBar: MatSnackBar
+    @Inject(MatDialogRef) public readonly dialogRef: MatDialogRef<FitnessTrendConfigDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public readonly fitnessTrendConfigDialogData: FitnessTrendConfigDialogData,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar
   ) {}
 
   public ngOnInit(): void {
@@ -82,7 +82,7 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
     if (this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.initializedFitnessTrendModel.ctl < 0) {
       this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.initializedFitnessTrendModel.ctl = null;
       this.snackBar.open("Invalid value entered. Reset to default value.", "Close", {
-        duration: 2500,
+        duration: 2500
       });
     }
   }
@@ -91,7 +91,7 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
     if (this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.initializedFitnessTrendModel.atl < 0) {
       this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.initializedFitnessTrendModel.atl = null;
       this.snackBar.open("Invalid value entered. Reset to default value.", "Close", {
-        duration: 2500,
+        duration: 2500
       });
     }
   }

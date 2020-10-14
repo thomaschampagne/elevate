@@ -6,27 +6,17 @@
     </button>
   </div>
 </mat-card>
-<mat-card *ngFor="let note of releasesNotes; let i = index;">
+<mat-card *ngFor="let releaseNote of releaseNotes; let i = index;">
   <mat-card-title>
-    <a href="https://github.com/thomaschampagne/elevate/compare/{{releasesNotes[i + 1]?.version}}...{{note.version}}"
-       target="_blank">Version
-      {{note.version}}</a>
+    <a
+      href="{{versionsProvider.getRepositoryUrl()}}/compare/{{releaseNotes[i + 1] ? releaseNotes[i + 1].version : releaseNote.version}}...{{releaseNote.version}}"
+      target="_blank">Version {{releaseNote.version}}</a>
   </mat-card-title>
-  <mat-card-subtitle *ngIf="note.date">
-    Released on {{note.date}}
+  <mat-card-subtitle *ngIf="releaseNote.date">
+    Released on {{releaseNote.date | date:'y/MM/dd'}}
   </mat-card-subtitle>
-  <mat-card-content>
-    <mat-list *ngIf="(note.hotFixes && note.hotFixes.length)">
-      <h3 class="mat-subheading-2">Hot fixes</h3>
-      <mat-list-item *ngFor="let hotfix of note.hotFixes;">▹&nbsp;&nbsp;&nbsp;{{hotfix}}</mat-list-item>
-    </mat-list>
-    <mat-list *ngIf="(note.features && note.features.length)">
-      <h3 class="mat-subheading-2">Features</h3>
-      <mat-list-item *ngFor="let feature of note.features;">▹&nbsp;&nbsp;&nbsp;{{feature}}</mat-list-item>
-    </mat-list>
-    <mat-list *ngIf="(note.fixes && note.fixes.length)">
-      <h3 class="mat-subheading-2">Improvements and fixes</h3>
-      <mat-list-item *ngFor="let fix of note.fixes;">▹&nbsp;&nbsp;&nbsp;{{fix}}</mat-list-item>
-    </mat-list>
+  <mat-card-content *ngIf="releaseNote.html" [innerHtml]="releaseNote.html"></mat-card-content>
+  <mat-card-content *ngIf="!releaseNote.html">
+    <i>Information not available</i>
   </mat-card-content>
 </mat-card>

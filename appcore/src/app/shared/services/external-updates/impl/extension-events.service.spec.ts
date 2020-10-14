@@ -13,7 +13,7 @@ describe("ExtensionEventsService", () => {
   beforeEach(done => {
     spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
       // @ts-ignore
-      addListener: (message: any, sender: any, sendResponse: any) => {},
+      addListener: (message: any, sender: any, sendResponse: any) => {}
     });
 
     spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
@@ -22,8 +22,8 @@ describe("ExtensionEventsService", () => {
       providers: [
         ExtensionEventsService,
         { provide: DataStore, useClass: TestingDataStore },
-        { provide: LoggerService, useClass: ConsoleLoggerService },
-      ],
+        { provide: LoggerService, useClass: ConsoleLoggerService }
+      ]
     });
 
     service = TestBed.inject(ExtensionEventsService);
@@ -48,9 +48,9 @@ describe("ExtensionEventsService", () => {
         activitiesChangesModel: {
           added: [null, null],
           edited: [null],
-          deleted: [],
-        },
-      } as SyncResultModel,
+          deleted: []
+        }
+      } as SyncResultModel
     };
     const senderId: string = pluginId;
 
@@ -75,9 +75,9 @@ describe("ExtensionEventsService", () => {
         activitiesChangesModel: {
           added: [],
           edited: [],
-          deleted: [],
-        },
-      } as SyncResultModel,
+          deleted: []
+        }
+      } as SyncResultModel
     };
     const senderId: string = pluginId;
 
@@ -96,7 +96,7 @@ describe("ExtensionEventsService", () => {
     const spy = spyOn(service.syncDone$, "next");
     const message: any = {
       message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
-      results: {},
+      results: {}
     };
     const senderId = "fakeId";
 

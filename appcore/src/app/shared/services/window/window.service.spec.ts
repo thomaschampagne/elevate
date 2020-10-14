@@ -8,7 +8,7 @@ describe("WindowService", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      providers: [WindowService, MediaObserver],
+      providers: [WindowService, MediaObserver]
     });
 
     service = TestBed.inject(WindowService);

@@ -13,8 +13,8 @@ describe("UserSettingsDao", () => {
       providers: [
         UserSettingsDao,
         { provide: DataStore, useClass: TestingDataStore },
-        { provide: LoggerService, useClass: ConsoleLoggerService },
-      ],
+        { provide: LoggerService, useClass: ConsoleLoggerService }
+      ]
     });
 
     // Retrieve injected service

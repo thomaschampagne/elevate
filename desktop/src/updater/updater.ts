@@ -13,7 +13,7 @@ enum UpdateEvent {
   UPDATE_NOT_AVAILABLE = "update-not-available",
   ERROR = "error",
   DOWNLOAD_PROGRESS = "download-progress",
-  UPDATE_DOWNLOADED = "update-downloaded",
+  UPDATE_DOWNLOADED = "update-downloaded"
 }
 
 export class Updater {
@@ -54,8 +54,8 @@ export class Updater {
       resizable: false,
       movable: false,
       webPreferences: {
-        nodeIntegration: true,
-      },
+        nodeIntegration: true
+      }
     };
 
     const updateWindow = new BrowserWindow(windowOptions);
@@ -69,7 +69,7 @@ export class Updater {
         url.format({
           pathname: path.join(__dirname, "/updater/index.html"),
           protocol: "file:",
-          slashes: true,
+          slashes: true
         })
       )
       .then(() => {

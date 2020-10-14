@@ -1,8 +1,8 @@
 import { OptionModel } from "./option.model";
-import { EnvTarget } from "@elevate/shared/models";
+import { BuildTarget } from "@elevate/shared/enums";
 
 export class SectionModel {
   public title: string;
   public options: OptionModel[];
-  public envTarget?: EnvTarget;
+  public buildTarget?: BuildTarget;
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
+import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 import { ViewableYearProgressDataModel } from "./models/viewable-year-progress-data.model";
 import moment, { Moment } from "moment";
@@ -22,7 +22,7 @@ import { ElevateException } from "@elevate/shared/exceptions";
 @Component({
   selector: "app-year-progress-graph",
   templateUrl: "./year-progress-graph.component.html",
-  styleUrls: ["./year-progress-graph.component.scss"],
+  styleUrls: ["./year-progress-graph.component.scss"]
 })
 export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy {
   public static readonly GRAPH_DOM_ELEMENT_ID: string = "yearProgressGraph";
@@ -57,10 +57,10 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
   public initialized = false;
 
   constructor(
-    public yearProgressService: YearProgressService,
-    public sideNavService: SideNavService,
-    public windowService: WindowService,
-    public logger: LoggerService
+    @Inject(YearProgressService) private readonly yearProgressService: YearProgressService,
+    @Inject(SideNavService) private readonly sideNavService: SideNavService,
+    @Inject(WindowService) private readonly windowService: WindowService,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
   public static getGraphHtmlElement(): HTMLElement {
@@ -126,7 +126,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
         _.forEach(yearProgressModel.progressions, (progressModel: ProgressModel) => {
           const graphPoint: Partial<GraphPointModel> = {
             date: moment().dayOfYear(progressModel.dayOfYear).format("YYYY-MM-DD"),
-            hidden: progressModel.isFuture,
+            hidden: progressModel.isFuture
           };
 
           switch (this.selectedProgressType.type) {
@@ -167,7 +167,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
         const graphPoint: Partial<GraphPointModel> = {
           date: moment().dayOfYear(targetProgressModel.dayOfYear).format("YYYY-MM-DD"),
           value: targetProgressModel.value,
-          hidden: false,
+          hidden: false
         };
 
         targetLine.push(graphPoint as GraphPointModel);
@@ -318,7 +318,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
       },
       mouseout: (data: MetricsGraphicsEventModel) => {
         this.onGraphMouseOut();
-      },
+      }
     };
 
     this.applyGraphHeight();

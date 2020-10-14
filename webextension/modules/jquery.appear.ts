@@ -18,7 +18,7 @@ let check_binded = false;
 let check_lock = false;
 const defaults: any = {
   interval: 250,
-  force_process: false,
+  force_process: false
 };
 
 const $window: JQuery<Window> = $(window);
@@ -96,7 +96,7 @@ $.fn.extend({
     }
     add_selector(selector);
     return $(selector);
-  },
+  }
 });
 
 $.extend($, {
@@ -107,7 +107,7 @@ $.extend($, {
       return true;
     }
     return false;
-  },
+  }
 });
 
 export default $;

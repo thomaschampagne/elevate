@@ -24,7 +24,7 @@ describe("ZoneToolBarComponent", () => {
       step: 0.1,
       min: 0,
       max: 9999,
-      customDisplay: null,
+      customDisplay: null
     },
     {
       name: "Heart Rate",
@@ -33,14 +33,14 @@ describe("ZoneToolBarComponent", () => {
       step: 1,
       min: 0,
       max: 9999,
-      customDisplay: null,
-    },
+      customDisplay: null
+    }
   ];
 
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 
     userSettingsService = TestBed.inject(UserSettingsService);

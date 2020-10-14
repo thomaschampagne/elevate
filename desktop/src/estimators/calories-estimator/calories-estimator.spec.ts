@@ -362,7 +362,7 @@ describe("Detect lack of FTPs settings", () => {
       ElevateSport.Run,
       ElevateSport.VirtualRun,
       ElevateSport.AlpineSki,
-      ElevateSport.WeightTraining,
+      ElevateSport.WeightTraining
     ].forEach(type => {
       it(`should NOT lack of ftp settings if heart rate stress score are available for ${type} activity`, done => {
         // Given
@@ -372,8 +372,8 @@ describe("Detect lack of FTPs settings", () => {
         analysisDataModel = {
           heartRateData: {
             HRSS: 100,
-            TRIMP: 100,
-          },
+            TRIMP: 100
+          }
         } as AnalysisDataModel;
 
         // When

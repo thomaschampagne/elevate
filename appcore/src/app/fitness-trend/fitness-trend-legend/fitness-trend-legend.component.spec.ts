@@ -11,7 +11,7 @@ describe("FitnessTrendLegendComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, FitnessTrendModule],
+      imports: [CoreModule, SharedModule, FitnessTrendModule]
     }).compileComponents();
     done();
   });

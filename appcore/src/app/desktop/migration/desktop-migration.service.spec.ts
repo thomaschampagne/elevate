@@ -7,13 +7,18 @@ import { DesktopModule } from "../../shared/modules/desktop/desktop.module";
 import { DesktopMigration } from "./desktop-migrations";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
+import { VersionsProvider } from "../../shared/services/versions/versions-provider";
+import { DesktopVersionsProvider } from "../../shared/services/versions/impl/desktop-versions-provider.service";
 
 describe("DesktopMigrationService", () => {
   let service: DesktopMigrationService;
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, DesktopModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: VersionsProvider, useClass: DesktopVersionsProvider }
+      ]
     });
 
     service = TestBed.inject(DesktopMigrationService);
@@ -24,8 +29,10 @@ describe("DesktopMigrationService", () => {
     // Given
     const packageVersion = "7.1.0";
     const existingVersion = "7.0.0";
-    spyOn(service.desktopVersionsProvider, "getPackageVersion").and.returnValue(Promise.resolve(packageVersion));
-    spyOn(service.desktopVersionsProvider, "getExistingVersion").and.returnValue(Promise.resolve(existingVersion));
+    spyOn(service.versionsProvider, "getPackageVersion").and.returnValue(packageVersion);
+    spyOn(service.versionsProvider as DesktopVersionsProvider, "getExistingVersion").and.returnValue(
+      Promise.resolve(existingVersion)
+    );
 
     // When
     const promise = service.detectUpgrade();
@@ -48,8 +55,10 @@ describe("DesktopMigrationService", () => {
     // Given
     const packageVersion = "7.0.0";
     const existingVersion = "7.0.0";
-    spyOn(service.desktopVersionsProvider, "getPackageVersion").and.returnValue(Promise.resolve(packageVersion));
-    spyOn(service.desktopVersionsProvider, "getExistingVersion").and.returnValue(Promise.resolve(existingVersion));
+    spyOn(service.versionsProvider, "getPackageVersion").and.returnValue(packageVersion);
+    spyOn(service.versionsProvider as DesktopVersionsProvider, "getExistingVersion").and.returnValue(
+      Promise.resolve(existingVersion)
+    );
 
     // When
     const promise = service.detectUpgrade();
@@ -70,8 +79,10 @@ describe("DesktopMigrationService", () => {
     // Given
     const packageVersion = "7.0.0";
     const existingVersion = "7.0.0";
-    spyOn(service.desktopVersionsProvider, "getPackageVersion").and.returnValue(Promise.resolve(packageVersion));
-    spyOn(service.desktopVersionsProvider, "getExistingVersion").and.returnValue(Promise.resolve(existingVersion));
+    spyOn(service.versionsProvider, "getPackageVersion").and.returnValue(packageVersion);
+    spyOn(service.versionsProvider as DesktopVersionsProvider, "getExistingVersion").and.returnValue(
+      Promise.resolve(existingVersion)
+    );
 
     // When
     const promise = service.detectUpgrade();
@@ -94,8 +105,10 @@ describe("DesktopMigrationService", () => {
     const existingVersion = "7.0.0";
     const errorMessage = `Downgrade detected from ${existingVersion} to ${packageVersion}. You might encounter some issues. Consider uninstall this version and reinstall latest version to avoid issues.`;
     const expectedError = { reason: "DOWNGRADE", message: errorMessage };
-    spyOn(service.desktopVersionsProvider, "getPackageVersion").and.returnValue(Promise.resolve(packageVersion));
-    spyOn(service.desktopVersionsProvider, "getExistingVersion").and.returnValue(Promise.resolve(existingVersion));
+    spyOn(service.versionsProvider, "getPackageVersion").and.returnValue(packageVersion);
+    spyOn(service.versionsProvider as DesktopVersionsProvider, "getExistingVersion").and.returnValue(
+      Promise.resolve(existingVersion)
+    );
 
     // When
     const promise = service.detectUpgrade();
@@ -118,21 +131,59 @@ describe("DesktopMigrationService", () => {
     const packageVersion = "7.1.0";
     const existingVersion = "7.0.0";
     const detectUpgradeSpy = spyOn(service, "detectUpgrade").and.callThrough();
-    spyOn(service.desktopVersionsProvider, "getPackageVersion").and.returnValue(Promise.resolve(packageVersion));
-    spyOn(service.desktopVersionsProvider, "getExistingVersion").and.returnValue(Promise.resolve(existingVersion));
-    const setExistingVersionSpy = spyOn(service.desktopVersionsProvider, "setExistingVersion").and.returnValue(
-      Promise.resolve()
+    spyOn(service.versionsProvider, "getPackageVersion").and.returnValue(packageVersion);
+    spyOn(service.versionsProvider as DesktopVersionsProvider, "getExistingVersion").and.returnValue(
+      Promise.resolve(existingVersion)
     );
-    spyOn(service.dataStore, "saveDataStore").and.returnValue(Promise.resolve());
+    const setExistingVersionSpy = spyOn(
+      service.versionsProvider as DesktopVersionsProvider,
+      "setExistingVersion"
+    ).and.returnValue(Promise.resolve());
+    const saveDataStoreSpy = spyOn(service.dataStore, "saveDataStore").and.returnValue(Promise.resolve());
 
     // When
     const promise = service.upgrade();
 
     // Then
     promise.then(
-      () => {
+      hasBeenUpgradedTo => {
+        expect(hasBeenUpgradedTo).toEqual(packageVersion);
         expect(detectUpgradeSpy).toHaveBeenCalledTimes(1);
         expect(setExistingVersionSpy).toHaveBeenCalledTimes(1);
+        expect(saveDataStoreSpy).toHaveBeenCalledTimes(1);
+        done();
+      },
+      () => {
+        throw new Error("Should not be here");
+      }
+    );
+  });
+
+  it("should NOT trigger upgrade", done => {
+    // Given
+    const packageVersion = "7.0.0";
+    const existingVersion = packageVersion;
+    const detectUpgradeSpy = spyOn(service, "detectUpgrade").and.callThrough();
+    spyOn(service.versionsProvider, "getPackageVersion").and.returnValue(packageVersion);
+    spyOn(service.versionsProvider as DesktopVersionsProvider, "getExistingVersion").and.returnValue(
+      Promise.resolve(existingVersion)
+    );
+    const setExistingVersionSpy = spyOn(
+      service.versionsProvider as DesktopVersionsProvider,
+      "setExistingVersion"
+    ).and.returnValue(Promise.resolve());
+    const saveDataStoreSpy = spyOn(service.dataStore, "saveDataStore").and.returnValue(Promise.resolve());
+
+    // When
+    const promise = service.upgrade();
+
+    // Then
+    promise.then(
+      hasBeenUpgradedTo => {
+        expect(hasBeenUpgradedTo).toBeNull();
+        expect(detectUpgradeSpy).toHaveBeenCalledTimes(1);
+        expect(setExistingVersionSpy).toHaveBeenCalledTimes(1);
+        expect(saveDataStoreSpy).not.toHaveBeenCalled();
         done();
       },
       () => {
@@ -144,10 +195,11 @@ describe("DesktopMigrationService", () => {
   it("should track package version from newly migrated version", done => {
     // Given
     const packageVersion = "7.1.0";
-    spyOn(service.desktopVersionsProvider, "getPackageVersion").and.returnValue(Promise.resolve(packageVersion));
-    const setExistingVersionSpy = spyOn(service.desktopVersionsProvider, "setExistingVersion").and.returnValue(
-      Promise.resolve()
-    );
+    spyOn(service.versionsProvider, "getPackageVersion").and.returnValue(packageVersion);
+    const setExistingVersionSpy = spyOn(
+      service.versionsProvider as DesktopVersionsProvider,
+      "setExistingVersion"
+    ).and.returnValue(Promise.resolve());
 
     // When
     const promise = service.trackPackageVersion();

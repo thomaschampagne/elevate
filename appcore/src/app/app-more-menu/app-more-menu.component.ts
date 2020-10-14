@@ -4,15 +4,16 @@ import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
+import { ElectronService } from "../shared/services/electron/electron.service";
 
 export const APP_MORE_MENU_COMPONENT = new InjectionToken<AppMoreMenuComponent>("APP_MORE_MENU_COMPONENT");
 
 @Component({ template: "" })
 export class AppMoreMenuComponent implements OnInit {
   constructor(
-    public router: Router,
-    public dialog: MatDialog,
-    @Inject(OPEN_RESOURCE_RESOLVER) public openResourceResolver: OpenResourceResolver
+    @Inject(Router) protected readonly router: Router,
+    @Inject(MatDialog) protected readonly dialog: MatDialog,
+    @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver
   ) {}
 
   public ngOnInit(): void {}
@@ -36,7 +37,7 @@ export class AppMoreMenuComponent implements OnInit {
   public onShowAbout(): void {
     this.dialog.open(AboutDialogComponent, {
       minWidth: AboutDialogComponent.MIN_WIDTH,
-      maxWidth: AboutDialogComponent.MAX_WIDTH,
+      maxWidth: AboutDialogComponent.MAX_WIDTH
     });
   }
 
@@ -94,14 +95,31 @@ export class AppMoreMenuComponent implements OnInit {
         <mat-icon fontSet="material-icons-outlined">build</mat-icon>
         Advanced
       </button>
+      <button mat-menu-item (click)="onRestartApp()">
+        <mat-icon fontSet="material-icons-outlined">replay</mat-icon>
+        Restart App
+      </button>
       <button mat-menu-item (click)="onShowAbout()">
         <mat-icon fontSet="material-icons-outlined">info</mat-icon>
         About
       </button>
     </mat-menu>
-  `,
+  `
 })
-export class DesktopAppMoreMenuComponent extends AppMoreMenuComponent {}
+export class DesktopAppMoreMenuComponent extends AppMoreMenuComponent {
+  constructor(
+    @Inject(Router) protected readonly router: Router,
+    @Inject(MatDialog) protected readonly dialog: MatDialog,
+    @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
+    @Inject(ElectronService) private readonly electronService: ElectronService
+  ) {
+    super(router, dialog, openResourceResolver);
+  }
+
+  public onRestartApp(): void {
+    this.electronService.restartApp();
+  }
+}
 
 @Component({
   selector: "app-extension-app-more-menu",
@@ -153,6 +171,6 @@ export class DesktopAppMoreMenuComponent extends AppMoreMenuComponent {}
         About
       </button>
     </mat-menu>
-  `,
+  `
 })
 export class ExtensionAppMoreMenuComponent extends AppMoreMenuComponent {}

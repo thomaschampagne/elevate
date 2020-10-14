@@ -7,13 +7,9 @@ import { RuntimeInfo } from "@elevate/shared/electron";
 import crypto from "crypto";
 import { app } from "electron";
 import path from "path";
+import { Platform } from "@elevate/shared/enums";
 
 export class Service {
-  public static readonly PLATFORM = {
-    WINDOWS: "win32",
-    LINUX: "linux",
-    MACOS: "darwin",
-  };
   private static _instance: Service = null;
   private _httpProxy: string;
   private _machineId: string;
@@ -79,15 +75,15 @@ export class Service {
   }
 
   public isWindows(): boolean {
-    return this.getRuntimeInfo().osPlatform.name === Service.PLATFORM.WINDOWS;
+    return this.getRuntimeInfo().osPlatform.name === Platform.WINDOWS;
   }
 
   public isLinux(): boolean {
-    return this.getRuntimeInfo().osPlatform.name === Service.PLATFORM.LINUX;
+    return this.getRuntimeInfo().osPlatform.name === Platform.LINUX;
   }
 
   public isMacOS(): boolean {
-    return this.getRuntimeInfo().osPlatform.name === Service.PLATFORM.MACOS;
+    return this.getRuntimeInfo().osPlatform.name === Platform.MACOS;
   }
 
   public getRuntimeInfo(): RuntimeInfo {

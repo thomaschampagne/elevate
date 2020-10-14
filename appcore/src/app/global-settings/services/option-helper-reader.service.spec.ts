@@ -11,7 +11,7 @@ describe("OptionHelperReaderService", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
-      providers: [OptionHelperReaderService, HttpClient],
+      providers: [OptionHelperReaderService, HttpClient]
     });
 
     http = TestBed.inject(HttpClient);

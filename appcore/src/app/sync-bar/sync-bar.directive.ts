@@ -1,8 +1,8 @@
-import { Directive, ViewContainerRef } from "@angular/core";
+import { Directive, Inject, ViewContainerRef } from "@angular/core";
 
 @Directive({
-  selector: "[appSyncBar]",
+  selector: "[appSyncBar]"
 })
 export class SyncBarDirective {
-  constructor(public viewContainerRef: ViewContainerRef) {}
+  constructor(@Inject(ViewContainerRef) public readonly viewContainerRef: ViewContainerRef) {}
 }

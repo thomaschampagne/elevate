@@ -4,15 +4,17 @@ import _ from "lodash";
 import { AthleteSnapshotResolverService } from "../athlete-snapshot-resolver/athlete-snapshot-resolver.service";
 import { Subject } from "rxjs";
 import { LoggerService } from "../logging/logger.service";
+import { Inject } from "@angular/core";
 
 export abstract class ActivityService {
   public athleteSettingsConsistency$: Subject<boolean>;
   public activitiesWithSettingsLacks$: Subject<boolean>;
 
   protected constructor(
-    public activityDao: ActivityDao,
-    public athleteSnapshotResolverService: AthleteSnapshotResolverService,
-    public logger: LoggerService
+    @Inject(ActivityDao) public readonly activityDao: ActivityDao,
+    @Inject(AthleteSnapshotResolverService)
+    public readonly athleteSnapshotResolverService: AthleteSnapshotResolverService,
+    @Inject(LoggerService) protected readonly logger: LoggerService
   ) {
     this.athleteSettingsConsistency$ = new Subject<boolean>();
     this.activitiesWithSettingsLacks$ = new Subject<boolean>();

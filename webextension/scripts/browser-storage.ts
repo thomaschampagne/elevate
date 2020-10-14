@@ -24,7 +24,7 @@ export class BrowserStorage extends LegacyBrowserStorage {
         revision: 1,
         created: time,
         version: 0,
-        updated: time,
+        updated: time
       };
     }
 
@@ -79,7 +79,7 @@ export class BrowserStorage extends LegacyBrowserStorage {
             if (!collection[colName] || !collection[colName].data) {
               collection = {};
               collection[colName] = {
-                name: colName,
+                name: colName
               };
             }
 
@@ -134,7 +134,7 @@ export class BrowserStorage extends LegacyBrowserStorage {
   ): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       const params: any = {
-        storage: storageType,
+        storage: storageType
       };
 
       if (key !== undefined) {
@@ -153,7 +153,7 @@ export class BrowserStorage extends LegacyBrowserStorage {
         this.extensionId,
         {
           method: method,
-          params: params,
+          params: params
         },
         (result: { data: T }) => {
           resolve(result.data);

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { UserSettingsDao } from "../../dao/user-settings/user-settings.dao";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
@@ -10,7 +10,10 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 export class UserSettingsService {
   public static readonly MARK_LOCAL_STORAGE_CLEAR: string = "localStorageMustBeCleared";
 
-  constructor(public userSettingsDao: UserSettingsDao, public logger: LoggerService) {}
+  constructor(
+    @Inject(UserSettingsDao) public readonly userSettingsDao: UserSettingsDao,
+    @Inject(LoggerService) public readonly logger: LoggerService
+  ) {}
 
   public fetch(): Promise<UserSettingsModel> {
     return this.userSettingsDao.findOne();
@@ -47,7 +50,7 @@ export class UserSettingsService {
 
   public reset(): Promise<UserSettingsModel> {
     return this.userSettingsDao.clear(true).then(() => {
-      const defaultUserSettingsModel = UserSettings.getDefaultsByEnvTarget(environment.target);
+      const defaultUserSettingsModel = UserSettings.getDefaultsByBuildTarget(environment.buildTarget);
       return this.userSettingsDao.insert(defaultUserSettingsModel, true);
     });
   }

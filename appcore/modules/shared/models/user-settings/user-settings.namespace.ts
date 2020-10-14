@@ -1,5 +1,5 @@
 import { UserZonesModel } from "./user-zones.model";
-import { EnvTarget } from "../env-target";
+import { BuildTarget } from "../../enums/build-target";
 import _ from "lodash";
 
 export namespace UserSettings {
@@ -7,10 +7,10 @@ export namespace UserSettings {
   export const SYSTEM_UNIT_IMPERIAL_KEY = "imperial";
   export const DEFAULT_TEMP_KEY = "C"; // TODO use Enum "C" or "F"
 
-  export const getDefaultsByEnvTarget = (envTarget: EnvTarget): UserSettingsModel => {
-    if (envTarget === EnvTarget.DESKTOP) {
+  export const getDefaultsByBuildTarget = (buildTarget: BuildTarget): UserSettingsModel => {
+    if (buildTarget === BuildTarget.DESKTOP) {
       return _.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL);
-    } else if (envTarget === EnvTarget.EXTENSION) {
+    } else if (buildTarget === BuildTarget.EXTENSION) {
       return _.cloneDeep(ExtensionUserSettingsModel.DEFAULT_MODEL);
     } else {
       throw new Error("Unknown environment target");
@@ -18,7 +18,7 @@ export namespace UserSettings {
   };
 
   export abstract class UserSettingsModel {
-    public abstract readonly envTarget: EnvTarget;
+    public abstract readonly buildTarget: BuildTarget;
     public systemUnit: string;
     public temperatureUnit: string;
     public zones: UserZonesModel;
@@ -26,18 +26,18 @@ export namespace UserSettings {
 
   export class DesktopUserSettingsModel extends UserSettingsModel {
     public static readonly DEFAULT_MODEL: DesktopUserSettingsModel = {
-      envTarget: EnvTarget.DESKTOP,
+      buildTarget: BuildTarget.DESKTOP,
       systemUnit: UserSettings.SYSTEM_UNIT_METRIC_KEY,
       zones: UserZonesModel.DEFAULT_MODEL,
-      temperatureUnit: UserSettings.DEFAULT_TEMP_KEY,
+      temperatureUnit: UserSettings.DEFAULT_TEMP_KEY
     };
 
-    public envTarget: EnvTarget = EnvTarget.DESKTOP;
+    public buildTarget: BuildTarget = BuildTarget.DESKTOP;
   }
 
   export class ExtensionUserSettingsModel extends UserSettingsModel {
     public static readonly DEFAULT_MODEL: ExtensionUserSettingsModel = {
-      envTarget: EnvTarget.EXTENSION,
+      buildTarget: BuildTarget.EXTENSION,
       localStorageMustBeCleared: false,
       systemUnit: UserSettings.SYSTEM_UNIT_METRIC_KEY,
       zones: UserZonesModel.DEFAULT_MODEL,
@@ -80,10 +80,10 @@ export namespace UserSettings {
       temperatureUnit: UserSettings.DEFAULT_TEMP_KEY,
       showHiddenBetaFeatures: false,
       displayReliveCCLink: true,
-      displayWindyOverlay: false,
+      displayWindyOverlay: false
     };
 
-    public envTarget: EnvTarget = EnvTarget.EXTENSION;
+    public buildTarget: BuildTarget = BuildTarget.EXTENSION;
     public localStorageMustBeCleared: boolean;
     public remoteLinks: boolean;
     public defaultLeaderBoardFilter: string;

@@ -1,26 +1,25 @@
+import { DataStore } from "../../data-store/data-store";
+import { VersionsProvider } from "../versions/versions-provider";
 import { Inject } from "@angular/core";
-import { saveAs } from "file-saver";
-import { SyncState } from "./sync-state.enum";
 import { AthleteService } from "../athlete/athlete.service";
+import { SyncState } from "./sync-state.enum";
+import semver from "semver/preload";
 import { UserSettingsService } from "../user-settings/user-settings.service";
+import { StreamsService } from "../streams/streams.service";
 import { LoggerService } from "../logging/logger.service";
-import { VERSIONS_PROVIDER, VersionsProvider } from "../versions/versions-provider.interface";
 import { ActivityService } from "../activity/activity.service";
 import { DumpModel } from "../../models/dumps/dump.model";
 import { environment } from "../../../../environments/environment";
-import semver from "semver";
-import { StreamsService } from "../streams/streams.service";
-import { DataStore } from "../../data-store/data-store";
 
 export abstract class SyncService<T> {
   constructor(
-    @Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
-    public readonly dataStore: DataStore<object>,
-    public activityService: ActivityService,
-    public streamsService: StreamsService,
-    public athleteService: AthleteService,
-    public userSettingsService: UserSettingsService,
-    public logger: LoggerService
+    @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
+    @Inject(DataStore) public readonly dataStore: DataStore<object>,
+    @Inject(ActivityService) public readonly activityService: ActivityService,
+    @Inject(StreamsService) public readonly streamsService: StreamsService,
+    @Inject(AthleteService) public readonly athleteService: AthleteService,
+    @Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService,
+    @Inject(LoggerService) public readonly logger: LoggerService
   ) {}
 
   /**
@@ -73,19 +72,14 @@ export abstract class SyncService<T> {
       return Promise.resolve();
     }
 
-    return this.versionsProvider.getPackageVersion().then(appVersion => {
-      // Check if imported backup is compatible with current code
-      if (semver.lt(dumpVersion, compatibleDumpVersionThreshold)) {
-        return Promise.reject(
-          "Imported backup version " +
-            dumpVersion +
-            " is not compatible with current installed version " +
-            appVersion +
-            "."
-        );
-      } else {
-        return Promise.resolve();
-      }
-    });
+    // Check if imported backup is compatible with current code
+    if (semver.lt(dumpVersion, compatibleDumpVersionThreshold)) {
+      const appVersion = this.versionsProvider.getPackageVersion();
+      return Promise.reject(
+        `Imported backup version ${dumpVersion} is not compatible with current installed version ${appVersion}.`
+      );
+    } else {
+      return Promise.resolve();
+    }
   }
 }

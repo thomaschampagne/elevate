@@ -6,7 +6,7 @@ import {
   AthleteSettingsModel,
   AthleteSnapshotModel,
   Gender,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import { ElevateSport } from "@elevate/shared/enums";
 import { ActivityComputer, RunningPowerEstimator } from "@elevate/shared/sync";
@@ -294,7 +294,7 @@ describe("RunningPowerEstimator", () => {
       const activitySourceData: ActivitySourceDataModel = {
         movingTime: -1,
         elevation: -1,
-        distance: -1,
+        distance: -1
       };
       const athleteSnapshot = new AthleteSnapshotModel(
         Gender.MEN,

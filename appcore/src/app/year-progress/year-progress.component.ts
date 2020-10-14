@@ -1,6 +1,6 @@
 import _ from "lodash";
 import moment, { Moment } from "moment";
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { YearProgressService } from "./shared/services/year-progress.service";
 import { ActivityCountByTypeModel } from "./shared/models/activity-count-by-type.model";
 import { YearProgressModel } from "./shared/models/year-progress.model";
@@ -44,7 +44,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 @Component({
   selector: "app-year-progress",
   templateUrl: "./year-progress.component.html",
-  styleUrls: ["./year-progress.component.scss"],
+  styleUrls: ["./year-progress.component.scss"]
 })
 export class YearProgressComponent implements OnInit {
   public static readonly PALETTE: string[] = [
@@ -54,7 +54,7 @@ export class YearProgressComponent implements OnInit {
     "#006dff",
     "#e1ab19",
     "#ee135e",
-    "#00ffe2",
+    "#00ffe2"
   ];
   public static readonly ROLLING_PERIODS: string[] = ["Days", "Weeks", "Months", "Years"];
   public static readonly DEFAULT_ROLLING_PERIOD: string = YearProgressComponent.ROLLING_PERIODS[2];
@@ -82,7 +82,7 @@ export class YearProgressComponent implements OnInit {
         return progressConfig.mode === ProgressMode.YEAR_TO_DATE
           ? YearToDateProgressConfigModel.instanceFrom(progressConfig)
           : RollingProgressConfigModel.instanceFrom(progressConfig);
-      },
+      }
     },
     progressType: {
       set(type: ProgressType) {
@@ -91,7 +91,7 @@ export class YearProgressComponent implements OnInit {
       get: () => {
         const progressType = parseInt(localStorage.getItem(YearProgressComponent.LS_SELECTED_PROGRESS_TYPE_KEY), 10);
         return _.isFinite(progressType) ? progressType : null;
-      },
+      }
     },
     selectedYears: {
       get: () => {
@@ -100,7 +100,7 @@ export class YearProgressComponent implements OnInit {
       },
       set: (selectedYears: number[]) => {
         localStorage.setItem(YearProgressComponent.LS_SELECTED_YEARS_KEY, JSON.stringify(selectedYears));
-      },
+      }
     },
     targetValue: {
       get: () => {
@@ -112,7 +112,7 @@ export class YearProgressComponent implements OnInit {
       },
       rm: () => {
         localStorage.removeItem(YearProgressComponent.LS_TARGET_VALUE_KEY);
-      },
+      }
     },
     rollingPeriod: {
       get: () => {
@@ -126,7 +126,7 @@ export class YearProgressComponent implements OnInit {
       },
       rm: () => {
         localStorage.removeItem(YearProgressComponent.LS_SELECTED_ROLLING_SELECTED_PERIOD_KEY);
-      },
+      }
     },
     periodMultiplier: {
       get: () => {
@@ -144,7 +144,7 @@ export class YearProgressComponent implements OnInit {
       },
       rm: () => {
         localStorage.removeItem(YearProgressComponent.LS_SELECTED_ROLLING_PERIOD_MULTIPLIER_KEY);
-      },
+      }
     },
     isGraphExpanded: {
       get: () => {
@@ -152,8 +152,8 @@ export class YearProgressComponent implements OnInit {
       },
       set: expanded => {
         localStorage.setItem(YearProgressComponent.LS_EXPANDED_GRAPH_KEY, JSON.stringify(expanded));
-      },
-    },
+      }
+    }
   };
   public isMetric: boolean;
   public progressModes: { value: ProgressMode; label: string }[];
@@ -178,14 +178,14 @@ export class YearProgressComponent implements OnInit {
   public isGraphExpanded: boolean;
 
   constructor(
-    public userSettingsService: UserSettingsService,
-    public syncService: SyncService<any>,
-    public activityService: ActivityService,
-    public yearProgressService: YearProgressService,
-    public appEventsService: AppEventsService,
-    public dialog: MatDialog,
-    public mediaObserver: MediaObserver,
-    public logger: LoggerService
+    @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
+    @Inject(SyncService) private readonly syncService: SyncService<any>,
+    @Inject(ActivityService) private readonly activityService: ActivityService,
+    @Inject(YearProgressService) public readonly yearProgressService: YearProgressService,
+    @Inject(AppEventsService) private readonly appEventsService: AppEventsService,
+    @Inject(MatDialog) private readonly dialog: MatDialog,
+    @Inject(MediaObserver) public readonly mediaObserver: MediaObserver,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     this.availableYears = [];
     this.availableActivityTypes = [];
@@ -196,12 +196,12 @@ export class YearProgressComponent implements OnInit {
     this.progressModes = [
       {
         value: ProgressMode.YEAR_TO_DATE,
-        label: "Year to date",
+        label: "Year to date"
       },
       {
         value: ProgressMode.ROLLING,
-        label: "Rolling",
-      },
+        label: "Rolling"
+      }
     ];
   }
 
@@ -497,14 +497,14 @@ export class YearProgressComponent implements OnInit {
       selectedYears: this.selectedYears,
       progressTypes: this.progressTypes,
       yearProgressions: this.yearProgressions,
-      yearProgressStyleModel: this.yearProgressStyleModel,
+      yearProgressStyleModel: this.yearProgressStyleModel
     };
 
     const dialogRef = this.dialog.open(YearProgressOverviewDialogComponent, {
       minWidth: YearProgressOverviewDialogComponent.WIDTH,
       maxWidth: YearProgressOverviewDialogComponent.WIDTH,
       width: YearProgressOverviewDialogComponent.WIDTH,
-      data: data,
+      data: data
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe(() => afterClosedSubscription.unsubscribe());
@@ -513,7 +513,7 @@ export class YearProgressComponent implements OnInit {
   public onHelperClick(): void {
     const dialogRef = this.dialog.open(YearProgressHelperDialogComponent, {
       minWidth: YearProgressHelperDialogComponent.MIN_WIDTH,
-      maxWidth: YearProgressHelperDialogComponent.MAX_WIDTH,
+      maxWidth: YearProgressHelperDialogComponent.MAX_WIDTH
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe(() => afterClosedSubscription.unsubscribe());
@@ -547,7 +547,7 @@ export class YearProgressComponent implements OnInit {
     const dialogRef = this.dialog.open(AddYearProgressPresetDialogComponent, {
       minWidth: AddYearProgressPresetDialogComponent.MIN_WIDTH,
       maxWidth: AddYearProgressPresetDialogComponent.MAX_WIDTH,
-      data: presetDialogData,
+      data: presetDialogData
     });
 
     const afterClosedSubscription = dialogRef
@@ -574,7 +574,7 @@ export class YearProgressComponent implements OnInit {
       minWidth: ManageYearProgressPresetsDialogComponent.MIN_WIDTH,
       maxWidth: ManageYearProgressPresetsDialogComponent.MAX_WIDTH,
       data: this.progressTypes,
-      disableClose: true,
+      disableClose: true
     });
 
     const afterClosedSubscription = dialogRef
@@ -692,7 +692,7 @@ export class YearProgressComponent implements OnInit {
         () =>
           this.dialog.open(YearProgressWelcomeDialogComponent, {
             minWidth: YearProgressWelcomeDialogComponent.MIN_WIDTH,
-            maxWidth: YearProgressWelcomeDialogComponent.MAX_WIDTH,
+            maxWidth: YearProgressWelcomeDialogComponent.MAX_WIDTH
           }),
         1000
       );

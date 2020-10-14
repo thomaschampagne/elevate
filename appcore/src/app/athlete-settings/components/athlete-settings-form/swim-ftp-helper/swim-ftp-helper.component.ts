@@ -7,7 +7,7 @@ import { FormulaParamsModel } from "./formula-params.model";
 @Component({
   selector: "app-swim-ftp-helper",
   templateUrl: "./swim-ftp-helper.component.html",
-  styleUrls: ["./swim-ftp-helper.component.scss"],
+  styleUrls: ["./swim-ftp-helper.component.scss"]
 })
 export class SwimFtpHelperComponent implements OnInit {
   @Input()
@@ -23,12 +23,12 @@ export class SwimFtpHelperComponent implements OnInit {
       params: [
         {
           hint: "Swim as far as possible during 60 minutes and enter distance performed in meters (ex: 1800 meters)",
-          value: null,
-        },
+          value: null
+        }
       ],
       formula: (params: FormulaParamsModel[]) => {
         return params[0].value / 60;
-      },
+      }
     },
     {
       active: false,
@@ -36,12 +36,12 @@ export class SwimFtpHelperComponent implements OnInit {
       params: [
         {
           hint: "Swim as far as possible during 30 minutes and enter distance performed in meters (ex: 950 meters)",
-          value: null,
-        },
+          value: null
+        }
       ],
       formula: (params: FormulaParamsModel[]) => {
         return params[0].value / 30 - ((2 * params[0].value) / 30) * 0.025; // (distance(m) / 30) - ( (2 * distance(m) / 30 ) * 0.025)
-      },
+      }
     },
     {
       active: false,
@@ -49,18 +49,18 @@ export class SwimFtpHelperComponent implements OnInit {
       params: [
         {
           hint: "Swim as fast as possible on 200 meters. Enter time performed in seconds (ex: 210 seconds)",
-          value: null,
+          value: null
         },
         {
           hint:
             "After a rest (same session), swim as fast as possible on 400 meters. Enter time performed in seconds (ex: 590 seconds)",
-          value: null,
-        },
+          value: null
+        }
       ],
       formula: (params: FormulaParamsModel[]) => {
         return (400 - 200) / ((params[1].value - params[0].value) / 60); // (400m – 200m) / (400mTimeInMinutes - 200mTimeInMinutes)
-      },
-    },
+      }
+    }
   ];
 
   constructor() {}

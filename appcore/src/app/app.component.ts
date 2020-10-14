@@ -9,7 +9,7 @@ import {
   Renderer2,
   Type,
   ViewChild,
-  ViewContainerRef,
+  ViewContainerRef
 } from "@angular/core";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
@@ -23,7 +23,7 @@ import { WindowService } from "./shared/services/window/window.service";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/enums/theme.enum";
-import { EnvTarget } from "@elevate/shared/models";
+import { BuildTarget } from "@elevate/shared/enums";
 import { environment } from "../environments/environment";
 import { SYNC_MENU_COMPONENT, SyncMenuComponent } from "./sync-menu/sync-menu.component";
 import { SyncMenuDirective } from "./sync-menu/sync-menu.directive";
@@ -35,24 +35,25 @@ import { LoggerService } from "./shared/services/logging/logger.service";
 import {
   MENU_ITEMS_PROVIDER,
   MenuItemModel,
-  MenuItemsProvider,
+  MenuItemsProvider
 } from "./shared/services/menu-items/menu-items-provider.interface";
 import { APP_MORE_MENU_COMPONENT, AppMoreMenuComponent } from "./app-more-menu/app-more-menu.component";
 import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
 import { REFRESH_STATS_BAR_COMPONENT, RefreshStatsBarComponent } from "./refresh-stats-bar/refresh-stats-bar.component";
 import { RefreshStatsBarDirective } from "./refresh-stats-bar/refresh-stats-bar.directive";
+import { VersionsProvider } from "./shared/services/versions/versions-provider";
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
+  styleUrls: ["./app.component.scss"]
 })
 export class AppComponent implements OnInit, OnDestroy {
   public static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
   public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
   public static readonly LS_USER_THEME_PREF: string = "theme";
-  public envTarget: EnvTarget = environment.target;
-  public EnvTarget = EnvTarget;
+  public buildTarget: BuildTarget = environment.buildTarget;
+  public BuildTarget = BuildTarget;
   public Theme = Theme;
   public currentTheme: Theme;
   public mainMenuItems: MenuItemModel[];
@@ -78,23 +79,24 @@ export class AppComponent implements OnInit, OnDestroy {
   public sideNav: MatSidenav;
 
   constructor(
-    public router: Router,
-    public dialog: MatDialog,
-    public snackBar: MatSnackBar,
-    public sideNavService: SideNavService,
-    public windowService: WindowService,
-    public overlayContainer: OverlayContainer,
-    public renderer: Renderer2,
-    public iconRegistry: MatIconRegistry,
-    public sanitizer: DomSanitizer,
-    public logger: LoggerService,
-    public componentFactoryResolver: ComponentFactoryResolver,
-    @Inject(MENU_ITEMS_PROVIDER) public menuItemsProvider: MenuItemsProvider,
-    @Inject(TOP_BAR_COMPONENT) public topBarComponentType: Type<TopBarComponent>,
-    @Inject(SYNC_BAR_COMPONENT) public syncBarComponentType: Type<SyncBarComponent>,
-    @Inject(REFRESH_STATS_BAR_COMPONENT) public refreshStatsBarComponentType: Type<RefreshStatsBarComponent>,
-    @Inject(SYNC_MENU_COMPONENT) public syncMenuComponentType: Type<SyncMenuComponent>,
-    @Inject(APP_MORE_MENU_COMPONENT) public appMoreMenuComponentType: Type<AppMoreMenuComponent>
+    @Inject(Router) private readonly router: Router,
+    @Inject(MatDialog) private readonly dialog: MatDialog,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
+    @Inject(SideNavService) private readonly sideNavService: SideNavService,
+    @Inject(WindowService) private readonly windowService: WindowService,
+    @Inject(OverlayContainer) private readonly overlayContainer: OverlayContainer,
+    @Inject(Renderer2) private readonly renderer: Renderer2,
+    @Inject(MatIconRegistry) private readonly iconRegistry: MatIconRegistry,
+    @Inject(DomSanitizer) private readonly sanitizer: DomSanitizer,
+    @Inject(ComponentFactoryResolver) private readonly componentFactoryResolver: ComponentFactoryResolver,
+    @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
+    @Inject(LoggerService) private readonly logger: LoggerService,
+    @Inject(MENU_ITEMS_PROVIDER) private readonly menuItemsProvider: MenuItemsProvider,
+    @Inject(TOP_BAR_COMPONENT) private readonly topBarComponentType: Type<TopBarComponent>,
+    @Inject(SYNC_BAR_COMPONENT) private readonly syncBarComponentType: Type<SyncBarComponent>,
+    @Inject(REFRESH_STATS_BAR_COMPONENT) private readonly refreshStatsBarComponentType: Type<RefreshStatsBarComponent>,
+    @Inject(SYNC_MENU_COMPONENT) private readonly syncMenuComponentType: Type<SyncMenuComponent>,
+    @Inject(APP_MORE_MENU_COMPONENT) private readonly appMoreMenuComponentType: Type<AppMoreMenuComponent>
   ) {
     this.registerCustomIcons();
   }
@@ -152,6 +154,8 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     this.sideNavSetup();
+
+    this.versionsProvider.checkForUpdates();
 
     this.logger.info("App initialized.");
   }

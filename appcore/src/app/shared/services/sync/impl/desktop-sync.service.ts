@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnDestroy } from "@angular/core";
 import { SyncService } from "../sync.service";
-import { VERSIONS_PROVIDER, VersionsProvider } from "../../versions/versions-provider.interface";
+import { VersionsProvider } from "../../versions/versions-provider";
 import { AthleteService } from "../../athlete/athlete.service";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { LoggerService } from "../../logging/logger.service";
@@ -13,7 +13,7 @@ import {
   FileSystemConnectorInfo,
   StravaConnectorInfo,
   SyncEvent,
-  SyncEventType,
+  SyncEventType
 } from "@elevate/shared/sync";
 import { IpcMessagesReceiver } from "../../../../desktop/ipc-messages/ipc-messages-receiver.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
@@ -59,20 +59,21 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   public activityUpsertDetected: boolean;
 
   constructor(
-    @Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
-    @Inject(DataStore) public desktopDataStore: DesktopDataStore<object>,
-    public activityService: ActivityService,
-    public streamsService: StreamsService,
-    public athleteService: AthleteService,
-    public userSettingsService: UserSettingsService,
-    public ipcMessagesReceiver: IpcMessagesReceiver,
-    public ipcMessagesSender: IpcMessagesSender,
-    public stravaConnectorInfoService: StravaConnectorInfoService,
-    public fileSystemConnectorInfoService: FileSystemConnectorInfoService,
-    public logger: LoggerService,
-    public connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
-    public appEventsService: AppEventsService,
-    public electronService: ElectronService
+    @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
+    @Inject(DataStore) public readonly desktopDataStore: DesktopDataStore<object>,
+    @Inject(ActivityService) public readonly activityService: ActivityService,
+    @Inject(StreamsService) public readonly streamsService: StreamsService,
+    @Inject(AthleteService) public readonly athleteService: AthleteService,
+    @Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService,
+    @Inject(IpcMessagesReceiver) public readonly ipcMessagesReceiver: IpcMessagesReceiver,
+    @Inject(IpcMessagesSender) public readonly ipcMessagesSender: IpcMessagesSender,
+    @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
+    @Inject(FileSystemConnectorInfoService)
+    public readonly fileSystemConnectorInfoService: FileSystemConnectorInfoService,
+    @Inject(LoggerService) public readonly logger: LoggerService,
+    @Inject(ConnectorSyncDateTimeDao) public readonly connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
+    @Inject(AppEventsService) public readonly appEventsService: AppEventsService,
+    @Inject(ElectronService) public readonly electronService: ElectronService
   ) {
     super(
       versionsProvider,
@@ -117,7 +118,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     const promisedDataToSync: Promise<any>[] = [
       this.athleteService.fetch(),
       this.userSettingsService.fetch(),
-      fastSync ? this.getConnectorSyncDateTime() : Promise.resolve(null),
+      fastSync ? this.getConnectorSyncDateTime() : Promise.resolve(null)
     ];
 
     if (this.currentConnectorType === ConnectorType.STRAVA) {
@@ -399,12 +400,11 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   }
 
   public export(): Promise<{ filename: string; size: number }> {
-    return this.versionsProvider.getPackageVersion().then(appVersion => {
-      return this.desktopDataStore.createDump(appVersion).then(blob => {
-        const gzippedFilename = moment().format("Y.MM.DD-H.mm") + "_v" + appVersion + ".elv";
-        this.saveAs(blob, gzippedFilename);
-        return Promise.resolve({ filename: gzippedFilename, size: blob.size });
-      });
+    const appVersion = this.versionsProvider.getPackageVersion();
+    return this.desktopDataStore.createDump(appVersion).then(blob => {
+      const gzippedFilename = moment().format("Y.MM.DD-H.mm") + "_v" + appVersion + ".elv";
+      this.saveAs(blob, gzippedFilename);
+      return Promise.resolve({ filename: gzippedFilename, size: blob.size });
     });
   }
 

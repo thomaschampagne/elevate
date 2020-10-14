@@ -191,7 +191,7 @@ describe("DayFitnessTrendModel", () => {
       ElevateSport.Ride,
       ElevateSport.Ride,
       ElevateSport.Run,
-      ElevateSport.Run,
+      ElevateSport.Run
     ];
 
     const expectedResult = "3 Rides, 2 Runs";
@@ -219,7 +219,7 @@ describe("DayFitnessTrendModel", () => {
       ElevateSport.Run,
       ElevateSport.Ride,
       ElevateSport.Run,
-      ElevateSport.Ride,
+      ElevateSport.Ride
     ];
 
     const expectedResult = "3 Rides, 2 Runs, 1 VirtualRide, 1 AlpineSki";
@@ -248,7 +248,7 @@ describe("DayFitnessTrendModel", () => {
       ElevateSport.Run,
       ElevateSport.Ride,
       ElevateSport.Run,
-      ElevateSport.Ride,
+      ElevateSport.Ride
     ];
 
     const expectedResult = "3 Rides, 2 Runs & 2 more";
@@ -275,7 +275,7 @@ describe("DayFitnessTrendModel", () => {
       ElevateSport.Run,
       ElevateSport.Ride,
       ElevateSport.Run,
-      ElevateSport.Ride,
+      ElevateSport.Ride
     ];
 
     const expectedResult = "3 Rides, 2 Runs";

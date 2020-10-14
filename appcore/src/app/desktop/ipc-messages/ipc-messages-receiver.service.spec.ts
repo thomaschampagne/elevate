@@ -21,8 +21,8 @@ describe("IpcMessagesReceiver", () => {
       imports: [CoreModule, SharedModule, DesktopModule],
       providers: [
         { provide: PROMISE_TRON, useClass: PromiseTronServiceMock },
-        { provide: DataStore, useClass: TestingDataStore },
-      ],
+        { provide: DataStore, useClass: TestingDataStore }
+      ]
     });
 
     ipcMessagesReceiver = TestBed.inject(IpcMessagesReceiver);
@@ -111,8 +111,8 @@ describe("IpcMessagesReceiver", () => {
         callback: () => {},
         args: {
           success: null,
-          error: "Unknown message received by IpcRenderer. FlaggedIpcMessage: " + JSON.stringify(flaggedIpcMessage),
-        },
+          error: "Unknown message received by IpcRenderer. FlaggedIpcMessage: " + JSON.stringify(flaggedIpcMessage)
+        }
       };
       const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 

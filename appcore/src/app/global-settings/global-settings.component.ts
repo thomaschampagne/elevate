@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { GlobalSettingsService } from "./services/global-settings.service";
 import _ from "lodash";
@@ -19,7 +19,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 @Component({
   selector: "app-global-settings",
   templateUrl: "./global-settings.component.html",
-  styleUrls: ["./global-settings.component.scss"],
+  styleUrls: ["./global-settings.component.scss"]
 })
 export class GlobalSettingsComponent implements OnInit, OnDestroy {
   public sections: SectionModel[];
@@ -28,12 +28,12 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
   public routeQueryParamsSubscription: Subscription;
 
   constructor(
-    public userSettingsService: UserSettingsService,
-    public globalSettingsService: GlobalSettingsService,
-    public optionHelperReaderService: OptionHelperReaderService,
-    public route: ActivatedRoute,
-    public dialog: MatDialog,
-    public logger: LoggerService
+    @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
+    @Inject(GlobalSettingsService) private readonly globalSettingsService: GlobalSettingsService,
+    @Inject(OptionHelperReaderService) private readonly optionHelperReaderService: OptionHelperReaderService,
+    @Inject(ActivatedRoute) private readonly route: ActivatedRoute,
+    @Inject(MatDialog) private readonly dialog: MatDialog,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
   public static getOptionHelperDir(pathname: string): string {
@@ -47,7 +47,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.sections = this.globalSettingsService.getSectionsByEnvTarget(environment.target);
+    this.sections = this.globalSettingsService.getSectionsByBuildTarget(environment.buildTarget);
 
     this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
       this.renderOptionsForEachSection(userSettings);
@@ -80,7 +80,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
           }
         } else if (option.type === GlobalSettingsService.TYPE_OPTION_LIST) {
           option.active = _.find(option.list, {
-            key: _.propertyOf(userSettings)(option.key),
+            key: _.propertyOf(userSettings)(option.key)
           });
         } else if (option.type === GlobalSettingsService.TYPE_OPTION_NUMBER) {
           option.value = _.propertyOf(userSettings)(option.key);
@@ -131,7 +131,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
   }
 
   public resetOptionToDefaultValue(option: OptionModel): void {
-    const resetValue = _.propertyOf(UserSettings.getDefaultsByEnvTarget(environment.target))(option.key);
+    const resetValue = _.propertyOf(UserSettings.getDefaultsByBuildTarget(environment.buildTarget))(option.key);
     this.logger.info(option.key + " value not compliant, Reset to  " + resetValue);
     option.value = resetValue;
   }
@@ -139,7 +139,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
   public displaySubOption(subOptionKey: string, show: boolean): void {
     _.forEach(this.sections, (section: SectionModel) => {
       const foundOption: OptionModel = _.find(section.options, {
-        key: subOptionKey,
+        key: subOptionKey
       });
 
       if (foundOption) {
@@ -153,7 +153,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 
     _.forEach(this.sections, (section: SectionModel) => {
       const foundOption: OptionModel = _.find(section.options, {
-        key: optionKeyParam,
+        key: optionKeyParam
       });
 
       if (foundOption) {
@@ -168,14 +168,14 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
       this.optionHelperReaderService.get(markdownTemplateUri).then(markdownData => {
         const optionHelperData: OptionHelperDataModel = {
           title: option.title,
-          markdownData: markdownData,
+          markdownData: markdownData
         };
 
         this.dialog.open(OptionHelperDialogComponent, {
           minWidth: OptionHelperDialogComponent.MIN_WIDTH,
           maxWidth: OptionHelperDialogComponent.MAX_WIDTH,
           data: optionHelperData,
-          autoFocus: false,
+          autoFocus: false
         });
       });
     }

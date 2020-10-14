@@ -20,7 +20,7 @@ const EXTERNALS = [
   "tty",
   "child_process",
   "stream",
-  "zlib",
+  "zlib"
 ];
 
 const IS_ELECTRON_PROD = process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "prod";
@@ -32,24 +32,24 @@ module.exports = {
   output: [
     {
       file: "./dist/desktop.bundle.js",
-      format: "cjs",
-    },
+      format: "cjs"
+    }
   ],
   watch: {
-    chokidar: false,
+    chokidar: false
   },
   external: EXTERNALS,
   plugins: [
     typescript({
       tsconfig: "./tsconfig.json",
-      include: ["./src/**/*.ts", "!./src/**/*.spec.ts", "./../appcore/modules/**/*.ts"],
+      include: ["./src/**/*.ts", "!./src/**/*.spec.ts", "./../appcore/modules/**/*.ts"]
     }),
     resolve({ preferBuiltins: true }),
     commonjs({
       ignore: ["assert"],
-      sourceMap: false,
+      sourceMap: false
     }),
     json(),
-    IS_ELECTRON_PROD ? terser() : null,
-  ],
+    IS_ELECTRON_PROD ? terser() : null
+  ]
 };

@@ -9,7 +9,7 @@ describe("ConsoleLoggerService", () => {
 
   beforeEach((done: () => void) => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule],
+      imports: [CoreModule, SharedModule]
     });
 
     service = TestBed.inject(LoggerService);

@@ -59,8 +59,8 @@ export class ActivitiesSummaryModifier extends AbstractModifier {
               type: "GET",
               dataType: "json",
               context: {
-                pace,
-              },
+                pace
+              }
             })
           );
         }
@@ -76,7 +76,7 @@ export class ActivitiesSummaryModifier extends AbstractModifier {
           elevation: 0,
           time: 0,
           calories: 0,
-          noAverage: true,
+          noAverage: true
         };
 
       _.forEach(requests, (request: any) => {
@@ -98,7 +98,7 @@ export class ActivitiesSummaryModifier extends AbstractModifier {
             elevation: 0,
             time: 0,
             calories: 0,
-            index,
+            index
           };
         }
 

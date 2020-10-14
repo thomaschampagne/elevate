@@ -6,7 +6,7 @@ import {
   AnalysisDataModel,
   AthleteSnapshotModel,
   SpeedUnitDataModel,
-  UserSettings,
+  UserSettings
 } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/activity-processor";
@@ -250,7 +250,7 @@ export abstract class AbstractExtendedDataModifier {
         // Update basic Infos
         this.activityInfo.segmentEffort = {
           name: segmentInfosResponse.display_name,
-          elapsedTimeSec: segmentInfosResponse.elapsed_time_raw,
+          elapsedTimeSec: segmentInfosResponse.elapsed_time_raw
         };
 
         this.activityProcessor.getAnalysisData(
@@ -301,7 +301,7 @@ export abstract class AbstractExtendedDataModifier {
         },
         error: err => {
           console.error(err);
-        },
+        }
       })
     ).then(() => {
       callback(segmentInfosResponse);
@@ -334,7 +334,7 @@ export abstract class AbstractExtendedDataModifier {
       transitionOut: "none",
       closeBtn: false,
       type: "iframe",
-      content: '<div class="elevateExtendedData">' + this.content + "</div>",
+      content: '<div class="elevateExtendedData">' + this.content + "</div>"
     });
 
     // For each view start making the assossiated graphs

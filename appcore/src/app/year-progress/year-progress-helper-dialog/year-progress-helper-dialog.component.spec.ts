@@ -17,9 +17,9 @@ describe("YearProgressHelperDialogComponent", () => {
       providers: [
         {
           provide: MatDialogRef,
-          useValue: {},
-        },
-      ],
+          useValue: {}
+        }
+      ]
     }).compileComponents();
 
     done();

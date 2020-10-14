@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
@@ -7,7 +7,11 @@ import { SyncService } from "../shared/services/sync/sync.service";
 
 @Component({ template: "" })
 export abstract class AdvancedMenuComponent implements OnInit {
-  protected constructor(public syncService: SyncService<any>, public dialog: MatDialog, public snackBar: MatSnackBar) {}
+  protected constructor(
+    @Inject(SyncService) protected readonly syncService: SyncService<any>,
+    @Inject(MatDialog) protected readonly dialog: MatDialog,
+    @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar
+  ) {}
 
   public ngOnInit(): void {}
 
@@ -18,13 +22,13 @@ export abstract class AdvancedMenuComponent implements OnInit {
       title: "Clear your athlete synced data",
       content:
         "Are you sure to perform this action? You will be able to re-import synced data through backup file " +
-        "or a new re-synchronization.",
+        "or a new re-synchronization."
     };
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       minWidth: ConfirmDialogComponent.MIN_WIDTH,
       maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-      data: data,
+      data: data
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {

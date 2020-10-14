@@ -57,6 +57,7 @@ The `Appcore` main technology stack is:
 * [Angular](https://angular.io/) as frontend (build with [@angular/cli](https://cli.angular.io/)). 
 * [Angular Material](https://material.angular.io/) for material designed components.
 * [Metrics Graphics](https://www.metricsgraphicsjs.org/) and [d3js](https://d3js.org/) for charting.
+* [Jest](https://jestjs.io/) as Javascript test runner (instead of "stock" karma one).
 
 If build target is desktop, it also includes:
 
@@ -69,7 +70,7 @@ Holds the container behaviour to provide a cross-platform desktop app under _Win
 The `Desktop` main technology stack is:
 
 * [Typescript](https://www.typescriptlang.org/) as programming language.
-* [Jest](https://jestjs.io/) as Javascript test framework.
+* [Jest](https://jestjs.io/) as Javascript test runner.
 * [Electron](https://electronjs.org/) as cross-platform desktop container.
 * [Electron-builder](https://www.electron.build/) to build, sign and publish installers per platform. Also handle app updates process (via `electron-updater`).
 * [Rollup.js](https://rollupjs.org/guide/en/) to load & bundle modules.

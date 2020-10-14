@@ -16,7 +16,7 @@ import { sleep } from "@elevate/shared/tools";
     </div>
     <app-root *ngIf="isAppLoaded"></app-root>
   `,
-  styleUrls: ["./app-load.component.scss"],
+  styleUrls: ["./app-load.component.scss"]
 })
 export class AppLoadComponent implements OnInit {
   private static readonly SPLASH_SCREEN_MIN_TIME_DISPLAYED: number = 500;
@@ -24,7 +24,7 @@ export class AppLoadComponent implements OnInit {
 
   constructor(
     @Inject(AppLoadService) private readonly appLoadService: AppLoadService,
-    private readonly logger: LoggerService
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     this.isAppLoaded = false;
   }
@@ -32,9 +32,10 @@ export class AppLoadComponent implements OnInit {
   public ngOnInit(): void {
     this.logger.debug("App loading started");
 
-    this.appLoadService
-      .loadApp()
-      .then(() => sleep(AppLoadComponent.SPLASH_SCREEN_MIN_TIME_DISPLAYED)) // Wait a minimum of time to display splash screen
+    sleep(AppLoadComponent.SPLASH_SCREEN_MIN_TIME_DISPLAYED) // Wait a minimum of time to display splash screen
+      .then(() => {
+        return this.appLoadService.loadApp();
+      })
       .then(() => {
         this.isAppLoaded = true;
         this.logger.debug("App loading ended");

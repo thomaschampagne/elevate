@@ -13,7 +13,7 @@ export class ImportBackupDialogComponent implements OnInit {
   public displayName: string;
   public displaySize: string;
 
-  constructor(public dialogRef: MatDialogRef<ImportBackupDialogComponent>) {}
+  constructor(@Inject(MatDialogRef) protected readonly dialogRef: MatDialogRef<ImportBackupDialogComponent>) {}
 
   public ngOnInit(): void {
     this.file = null;
@@ -39,10 +39,10 @@ export class ImportBackupDialogComponent implements OnInit {
 @Component({
   selector: "app-import-backup-dialog",
   templateUrl: "./import-backup-dialog.component.html",
-  styleUrls: ["./import-backup-dialog.component.scss"],
+  styleUrls: ["./import-backup-dialog.component.scss"]
 })
 export class DesktopImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
-  constructor(public dialogRef: MatDialogRef<DesktopImportBackupDialogComponent>) {
+  constructor(@Inject(MatDialogRef) protected readonly dialogRef: MatDialogRef<DesktopImportBackupDialogComponent>) {
     super(dialogRef);
   }
 
@@ -56,10 +56,10 @@ export class DesktopImportBackupDialogComponent extends ImportBackupDialogCompon
 @Component({
   selector: "app-import-backup-dialog",
   templateUrl: "./import-backup-dialog.component.html",
-  styleUrls: ["./import-backup-dialog.component.scss"],
+  styleUrls: ["./import-backup-dialog.component.scss"]
 })
 export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
-  constructor(public dialogRef: MatDialogRef<ExtensionImportBackupDialogComponent>) {
+  constructor(@Inject(MatDialogRef) protected readonly dialogRef: MatDialogRef<ExtensionImportBackupDialogComponent>) {
     super(dialogRef);
   }
 
@@ -108,8 +108,8 @@ export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComp
         height: 100px;
         width: 450px;
       }
-    `,
-  ],
+    `
+  ]
 })
 export class ImportExportProgressDialogComponent implements OnInit {
   public static readonly MODE_IMPORT: string = "MODE_IMPORT";

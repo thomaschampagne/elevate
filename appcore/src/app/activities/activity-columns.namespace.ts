@@ -35,7 +35,7 @@ export namespace ActivityColumns {
     NUMBER,
     ATHLETE_SETTINGS,
     ACTIVITY_LINK,
-    ACTIVITY_DELETE,
+    ACTIVITY_DELETE
   }
 
   /**
@@ -804,7 +804,7 @@ export namespace ActivityColumns {
        * Others
        */
       new AthleteSettingsColumn(Category.OTHERS).setDefault(true),
-      new ActivityDeleteColumn(Category.OTHERS).setDefault(true),
+      new ActivityDeleteColumn(Category.OTHERS).setDefault(true)
     ];
   }
 }

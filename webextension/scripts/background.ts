@@ -30,7 +30,7 @@ export class Background {
         if (!tab.url) {
           const message = {
             message: messageKey,
-            results: payload,
+            results: payload
           };
           chrome.tabs.sendMessage(tab.id, message);
         }
@@ -70,7 +70,7 @@ export class Background {
             .then(
               () =>
                 sendResponse({
-                  message: request.params.key + " has been set to " + request.params.value,
+                  message: request.params.key + " has been set to " + request.params.value
                 }),
               error => {
                 console.error(error);
@@ -121,7 +121,7 @@ export class Background {
   private setBrowserActionBehaviour(): void {
     chrome.browserAction.onClicked.addListener(() => {
       chrome.tabs.create({
-        url: chrome.extension.getURL(Constant.APP_ROOT_URL),
+        url: chrome.extension.getURL(Constant.APP_ROOT_URL)
       });
     });
   }

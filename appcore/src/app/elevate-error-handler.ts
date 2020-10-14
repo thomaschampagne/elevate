@@ -3,35 +3,33 @@ import { LoggerService } from "./shared/services/logging/logger.service";
 import { MatDialog } from "@angular/material/dialog";
 import * as Sentry from "@sentry/browser";
 import { environment } from "../environments/environment";
-import { EnvTarget } from "@elevate/shared/models";
+import { BuildTarget } from "@elevate/shared/enums";
 import { ConfirmDialogComponent } from "./shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { ConfirmDialogDataModel } from "./shared/dialogs/confirm-dialog/confirm-dialog-data.model";
-import { VERSIONS_PROVIDER, VersionsProvider } from "./shared/services/versions/versions-provider.interface";
+import { VersionsProvider } from "./shared/services/versions/versions-provider";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ElevateException, SyncException } from "@elevate/shared/exceptions";
 import { GotItDialogComponent } from "./shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "./shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class ElevateErrorHandler implements ErrorHandler {
   private static readonly SENTRY_DATA_SOURCE_NAME: string =
     "https://884e69ce1f2c4891abbaca363d8474ce@sentry.io/1839710";
 
   constructor(
-    @Inject(VERSIONS_PROVIDER) public versionsProvider: VersionsProvider,
-    public dialog: MatDialog,
-    public snackBar: MatSnackBar,
-    public loggerService: LoggerService
+    @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
+    @Inject(MatDialog) private readonly dialog: MatDialog,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
+    @Inject(LoggerService) private readonly loggerService: LoggerService
   ) {
-    if (environment.target === EnvTarget.DESKTOP) {
-      this.versionsProvider.getPackageVersion().then(version => {
-        Sentry.init({
-          dsn: ElevateErrorHandler.SENTRY_DATA_SOURCE_NAME,
-          release: version,
-          environment: environment.production ? "production" : "development",
-        });
+    if (environment.buildTarget === BuildTarget.DESKTOP) {
+      Sentry.init({
+        dsn: ElevateErrorHandler.SENTRY_DATA_SOURCE_NAME,
+        release: this.versionsProvider.getPackageVersion(),
+        environment: environment.production ? "production" : "development"
       });
     }
   }
@@ -67,7 +65,7 @@ export class ElevateErrorHandler implements ErrorHandler {
         errorMessage = error.message;
       }
 
-      if (environment.target === EnvTarget.DESKTOP) {
+      if (environment.buildTarget === BuildTarget.DESKTOP) {
         if (environment.production) {
           // Sentry error tracking
           const sentryEventId = ElevateErrorHandler.captureSentryEventId(error);
@@ -82,7 +80,7 @@ export class ElevateErrorHandler implements ErrorHandler {
                 subtitle2: "",
                 labelEmail: "Your email (it will not be shared)",
                 labelComments:
-                  "Please give all steps to reproduce the error + files shared links (like Google Drive, Dropbox, OneDrive, Mediafire, Mega, ...) if you can. Thanks for your help!!",
+                  "Please give all steps to reproduce the error + files shared links (like Google Drive, Dropbox, OneDrive, Mediafire, Mega, ...) if you can. Thanks for your help!!"
               });
             });
         } else {
@@ -93,12 +91,12 @@ export class ElevateErrorHandler implements ErrorHandler {
               this.dialog.open(GotItDialogComponent, {
                 data: {
                   title: `${errorMessage}. Press CTRL+F12 for details`,
-                  content: `<pre>${error.stack}</pre>`,
-                } as GotItDialogDataModel,
+                  content: `<pre>${error.stack}</pre>`
+                } as GotItDialogDataModel
               });
             });
         }
-      } else if (environment.target === EnvTarget.EXTENSION) {
+      } else if (environment.buildTarget === BuildTarget.EXTENSION) {
         this.snackBar
           .open(errorMessage, "Show")
           .onAction()
@@ -107,7 +105,7 @@ export class ElevateErrorHandler implements ErrorHandler {
             this.dialog.open(ConfirmDialogComponent, {
               minWidth: ConfirmDialogComponent.MAX_WIDTH,
               maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-              data: new ConfirmDialogDataModel(errorMessage, content, "Report what happened", "Close"),
+              data: new ConfirmDialogDataModel(errorMessage, content, "Report what happened", "Close")
             });
           });
       }

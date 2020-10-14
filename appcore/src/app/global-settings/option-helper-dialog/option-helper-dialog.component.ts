@@ -16,7 +16,7 @@ import { OptionHelperDataModel } from "./option-helper-data.model";
 @Component({
   selector: "app-option-helper-dialog",
   templateUrl: "./option-helper-dialog.component.html",
-  styleUrls: ["./option-helper-dialog.component.scss"],
+  styleUrls: ["./option-helper-dialog.component.scss"]
 })
 export class OptionHelperDialogComponent implements OnInit {
   public static readonly MAX_WIDTH: string = "80%";

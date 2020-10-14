@@ -16,8 +16,8 @@ export class IpcMessagesReceiver {
 
   constructor(
     @Inject(PROMISE_TRON) public promiseTron: IPromiseTron,
-    public activityService: ActivityService,
-    public logger: LoggerService
+    @Inject(ActivityService) private readonly activityService: ActivityService,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     this.syncEvents$ = new Subject<SyncEvent>();
     this.isListening = false;
@@ -83,13 +83,13 @@ export class IpcMessagesReceiver {
       activities => {
         replyWith({
           success: activities,
-          error: null,
+          error: null
         });
       },
       error => {
         replyWith({
           success: null,
-          error: error,
+          error: error
         });
       }
     );
@@ -102,7 +102,7 @@ export class IpcMessagesReceiver {
     const errorMessage = "Unknown message received by IpcRenderer. FlaggedIpcMessage: " + JSON.stringify(message);
     replyWith({
       success: null,
-      error: errorMessage,
+      error: errorMessage
     });
   }
 }

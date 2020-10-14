@@ -19,7 +19,7 @@ describe("ZonesService", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     });
 
     // Retrieve injected service
@@ -38,7 +38,7 @@ describe("ZonesService", () => {
       { from: 60, to: 70 },
       { from: 70, to: 80 },
       { from: 80, to: 90 },
-      { from: 90, to: 100 },
+      { from: 90, to: 100 }
     ];
 
     done();
@@ -244,7 +244,7 @@ describe("ZonesService", () => {
       sourceId: index,
       from: true,
       to: false,
-      value: updatedFromValue,
+      value: updatedFromValue
     };
 
     // When, Then
@@ -278,7 +278,7 @@ describe("ZonesService", () => {
       sourceId: index,
       from: true,
       to: false,
-      value: updatedFromValue,
+      value: updatedFromValue
     };
 
     // When, Then
@@ -305,7 +305,7 @@ describe("ZonesService", () => {
       sourceId: index,
       from: false,
       to: true,
-      value: updatedToValue,
+      value: updatedToValue
     };
 
     // When, Then
@@ -339,7 +339,7 @@ describe("ZonesService", () => {
       sourceId: index,
       from: false,
       to: true,
-      value: updatedToValue,
+      value: updatedToValue
     };
 
     // When, Then
@@ -373,7 +373,7 @@ describe("ZonesService", () => {
       sourceId: index,
       from: false,
       to: true,
-      value: updatedToValue,
+      value: updatedToValue
     };
 
     // When, Then
@@ -397,7 +397,7 @@ describe("ZonesService", () => {
       sourceId: 5,
       from: true,
       to: true,
-      value: 99,
+      value: 99
     };
 
     // When, Then
@@ -422,7 +422,7 @@ describe("ZonesService", () => {
       sourceId: 3,
       from: true,
       to: false,
-      value: null,
+      value: null
     };
 
     // When, Then
@@ -467,7 +467,7 @@ describe("ZonesService", () => {
       { from: 60, to: 70 },
       { from: 70, to: 80 },
       { from: 80, to: 90 },
-      { from: 90, to: 100 },
+      { from: 90, to: 100 }
     ];
 
     // When
@@ -493,7 +493,7 @@ describe("ZonesService", () => {
       { from: 60, to: 70 },
       { from: 70, to: 80 },
       { from: 80, to: 90 },
-      { from: 90, to: 100 },
+      { from: 90, to: 100 }
     ];
 
     // When
@@ -522,7 +522,7 @@ describe("ZonesService", () => {
       { from: 70, to: 80 },
       { from: 80, to: 90 },
       { from: 90, to: 100 },
-      { from: 100, to: 110 }, // Add a 11th zone
+      { from: 100, to: 110 } // Add a 11th zone
     ];
 
     spyOn(zonesService, "getMaxZoneCount").and.returnValue(MAX_ZONE_COUNT);
@@ -546,7 +546,7 @@ describe("ZonesService", () => {
       { from: 0, to: 10 },
       { from: 10, to: 20 },
       { from: 20, to: 30 },
-      { from: 30, to: 40 },
+      { from: 30, to: 40 }
     ];
 
     spyOn(zonesService, "getMinZoneCount").and.returnValue(MIN_ZONE_COUNT);
@@ -589,11 +589,11 @@ describe("ZonesService", () => {
       { from: 610, to: 710 },
       { from: 710, to: 810 },
       { from: 810, to: 910 },
-      { from: 910, to: 1100 },
+      { from: 910, to: 1100 }
     ];
 
     const SPEED_ZONE_DEFINITION_MOCKED: ZoneDefinitionModel = _.find(ZONE_DEFINITIONS, {
-      value: "speed",
+      value: "speed"
     });
 
     const expectedResetZones = UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed);
@@ -630,7 +630,7 @@ describe("ZonesService", () => {
     const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(null);
     const zoneModels: ZoneModel[] = [
       { from: 0, to: 110 },
-      { from: 110, to: 210 },
+      { from: 110, to: 210 }
     ];
     updateZonesSpy.and.returnValue(Promise.resolve(zoneModels));
 
@@ -718,7 +718,7 @@ describe("ZonesService", () => {
     const zonesCompliantSpy = spyOn(zonesService, "isZonesCompliant").and.returnValue(null);
     const zoneModels: ZoneModel[] = [
       { from: 0, to: 110 },
-      { from: 110, to: 210 },
+      { from: 110, to: 210 }
     ];
     updateZonesSpy.and.returnValue(Promise.resolve(zoneModels));
 
