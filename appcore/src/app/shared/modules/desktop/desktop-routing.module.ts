@@ -8,7 +8,7 @@ import { DonateComponent } from "../../../donate/donate.component";
 import { ShareComponent } from "../../../share/share.component";
 import { ReportComponent } from "../../../report/report.component";
 import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/desktop-advanced-menu.component";
-import { FaqComponent } from "../../../faq/faq.component";
+import { HelpComponent } from "../../../help/help.component";
 
 @NgModule({
   imports: [RouterModule.forRoot(DesktopRoutingModule.provideRoutes(), { enableTracing: false, useHash: true })],
@@ -73,8 +73,8 @@ export class DesktopRoutingModule {
       component: DesktopAdvancedMenuComponent
     },
     {
-      path: AppRoutesModel.frequentlyAskedQuestions,
-      component: FaqComponent
+      path: AppRoutesModel.help,
+      component: HelpComponent
     },
     {
       path: "",

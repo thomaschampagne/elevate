@@ -1,6 +1,6 @@
 <!--Search for options-->
 <div class="search-options" fxLayout="row" fxLayoutAlign="center center">
-  <mat-form-field fxFlex="50">
+  <mat-form-field class="mat-subheading-2" fxFlex="50">
     <input [(ngModel)]="searchText" matInput placeholder="Search" type="search">
     <button (click)="searchText=''" *ngIf="searchText" aria-label="Clear" mat-button mat-icon-button
             matSuffix>

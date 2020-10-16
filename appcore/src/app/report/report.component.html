@@ -1,41 +1,34 @@
 <mat-card>
   <mat-card-content>
     <div class="mat-title">
-      About Elevate and Github
-    </div>
-    <div>
-      Elevate source code is hosted on GitHub (a social open-source development platform). This implies
-      that Elevate's development workflow including features, bugs, and open-source contributions are managed
-      in the <a href="https://github.com/thomaschampagne/elevate/" target="_blank">Elevate project repository</a>.
-    </div>
-    <div class="mat-title">
-      Before reporting a bug please check if someone else has already reported your problem or request:
+      ⚠️ Before creating any useless or duplicate issues, you <strong>have to</strong>:
     </div>
     <div>
       <ul>
-        <li>First check the <a [routerLink]="'/frequentlyAskedQuestions'">Frequently Asked Questions</a>
+        <li>
+          <strong>Deep check</strong> for your bug in the <a [routerLink]="'/help'">help</a> section.
         </li>
-        <li>Then check for <a href="https://github.com/thomaschampagne/elevate/issues?q=is%3Aissue"
-                              target="_blank">existing
-          issues or requests on GitHub</a>
+        <li>
+          <strong>Deep check</strong> for your bug or request <a
+          href="{{getIssuesUrl()}}?q=is%3Aissue" target="_blank">in the existing issues
+          or requests</a> (use filter input).
         </li>
       </ul>
-    </div>
-    <div class="mat-title">
-      Your problem or request is unknown. How to report it:
-    </div>
-    <div>
-      Using a GitHub account submit your bug or request <strong><a
-      href="https://github.com/thomaschampagne/elevate/issues/new"
-      target="_blank">here</a></strong>.
-    </div>
-    <div class="mat-title">
-      You may don't want to create a github account with your primary email?
+      <div class="unsuitable-issues-message accent">
+        Any unsuitable issues will not be handled at all! Since this project is performed on free time and has hundreds
+        of thousands users now, there's no room for handling counterproductive issues... Be wise when opening an issue.
+        Thank you for your understanding!
+      </div>
     </div>
     <div>
-      This is understandable. Just create a "temporary email" with <a href="https://tempail.com" target="_blank">tempail.com</a>
-      and register to <a href="https://github.com" target="_blank">github.com</a> with this email to report your
-      request/bug.
+
+      <button color="primary" mat-stroked-button (click)="onReport()" [disabled]="(allowReportCountdown$ | async) > 0">
+        Report <span *ngIf="(allowReportCountdown$ | async) > 0">({{allowReportCountdown$ | async | number:'2.0'}}
+        )</span>
+      </button>
     </div>
   </mat-card-content>
 </mat-card>
+
+
+

@@ -1,0 +1,34 @@
+@import "~@angular/material/theming";
+
+@mixin create-theme-classes($theme) {
+
+  // Parse the theme and create variables for each color in the palette
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+
+  // Create theme specific styles
+  .primary-color {
+    color: mat-color($primary);
+  }
+  .accent-color {
+    color: mat-color($accent);
+  }
+  .warn-color {
+    color: mat-color($warn);
+  }
+
+  .primary {
+    background-color: mat-color($primary);
+    color: mat-color($primary, default-contrast);
+  }
+  .accent {
+    background-color: mat-color($accent);
+    color: mat-color($accent, default-contrast);
+  }
+  .warn {
+    background-color: mat-color($warn);
+    color: mat-color($warn, default-contrast);
+  }
+
+}

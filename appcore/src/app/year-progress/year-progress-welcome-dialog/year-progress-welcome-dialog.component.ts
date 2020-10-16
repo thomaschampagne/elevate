@@ -27,7 +27,7 @@ import { MatDialogRef } from "@angular/material/dialog";
 
       <div>
         To get help about the <strong>rolling and year to date progressions</strong>, click
-        <mat-icon fontSet="material-icons-outlined" color="primary" inline>help_outline</mat-icon>
+        <mat-icon fontSet="material-icons-outlined" color="primary" inline>support</mat-icon>
         icon.
       </div>
     </mat-dialog-content>

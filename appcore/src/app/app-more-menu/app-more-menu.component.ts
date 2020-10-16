@@ -30,10 +30,6 @@ export class AppMoreMenuComponent implements OnInit {
     this.router.navigate([AppRoutesModel.report]);
   }
 
-  public onShowFaq(): void {
-    this.router.navigate([AppRoutesModel.frequentlyAskedQuestions]);
-  }
-
   public onShowAbout(): void {
     this.dialog.open(AboutDialogComponent, {
       minWidth: AboutDialogComponent.MIN_WIDTH,
@@ -87,18 +83,16 @@ export class AppMoreMenuComponent implements OnInit {
         Report a bug
       </button>
 
-      <button mat-menu-item (click)="onShowFaq()">
-        <mat-icon fontSet="material-icons-outlined">help_outline</mat-icon>
-        FAQ
-      </button>
       <button mat-menu-item (click)="onAdvanceMenu()">
         <mat-icon fontSet="material-icons-outlined">build</mat-icon>
         Advanced
       </button>
+
       <button mat-menu-item (click)="onRestartApp()">
         <mat-icon fontSet="material-icons-outlined">replay</mat-icon>
         Restart App
       </button>
+
       <button mat-menu-item (click)="onShowAbout()">
         <mat-icon fontSet="material-icons-outlined">info</mat-icon>
         About
@@ -158,14 +152,11 @@ export class DesktopAppMoreMenuComponent extends AppMoreMenuComponent {
         Report a bug
       </button>
 
-      <button mat-menu-item (click)="onShowFaq()">
-        <mat-icon fontSet="material-icons-outlined">help_outline</mat-icon>
-        FAQ
-      </button>
       <button mat-menu-item (click)="onAdvanceMenu()">
         <mat-icon fontSet="material-icons-outlined">build</mat-icon>
         Advanced
       </button>
+
       <button mat-menu-item (click)="onShowAbout()">
         <mat-icon fontSet="material-icons-outlined">info</mat-icon>
         About

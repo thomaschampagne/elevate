@@ -7,7 +7,7 @@ import { ZonesSettingsComponent } from "../../../zones-settings/zones-settings.c
 import { DonateComponent } from "../../../donate/donate.component";
 import { ShareComponent } from "../../../share/share.component";
 import { ReportComponent } from "../../../report/report.component";
-import { FaqComponent } from "../../../faq/faq.component";
+import { HelpComponent } from "../../../help/help.component";
 import { ExtensionAdvancedMenuComponent } from "../../../advanced-menu/extension/extension-advanced-menu.component";
 
 @NgModule({
@@ -73,8 +73,8 @@ export class ExtensionRoutingModule {
       component: ExtensionAdvancedMenuComponent
     },
     {
-      path: AppRoutesModel.frequentlyAskedQuestions,
-      component: FaqComponent
+      path: AppRoutesModel.help,
+      component: HelpComponent
     },
     {
       path: "",

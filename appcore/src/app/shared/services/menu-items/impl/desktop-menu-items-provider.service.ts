@@ -36,6 +36,11 @@ export class DesktopMenuItemsProvider implements MenuItemsProvider {
       routerLinkActive: true
     },
     {
+      icon: "support",
+      routerLink: AppRoutesModel.help,
+      routerLinkActive: true
+    },
+    {
       icon: "favorite_border",
       routerLink: AppRoutesModel.donate,
       routerLinkActive: true

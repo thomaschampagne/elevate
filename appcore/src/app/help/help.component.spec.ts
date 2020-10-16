@@ -1,14 +1,14 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FaqComponent } from "./faq.component";
+import { HelpComponent } from "./help.component";
 import { CoreModule } from "../core/core.module";
 import { SharedModule } from "../shared/shared.module";
 import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 
-describe("FaqComponent", () => {
-  let component: FaqComponent;
-  let fixture: ComponentFixture<FaqComponent>;
+describe("HelpComponent", () => {
+  let component: HelpComponent;
+  let fixture: ComponentFixture<HelpComponent>;
 
   beforeEach(done => {
     TestBed.configureTestingModule({
@@ -19,7 +19,7 @@ describe("FaqComponent", () => {
   });
 
   beforeEach(done => {
-    fixture = TestBed.createComponent(FaqComponent);
+    fixture = TestBed.createComponent(HelpComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     done();

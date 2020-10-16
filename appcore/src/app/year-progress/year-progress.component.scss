@@ -1,10 +1,12 @@
+@import "../styles/constant";
+
 .no-data div {
   padding-top: 10px;
   padding-bottom: 10px;
 }
 
 mat-divider {
-  margin: 20px;
+  margin: $default-margin;
 }
 
 #inputsSelection {

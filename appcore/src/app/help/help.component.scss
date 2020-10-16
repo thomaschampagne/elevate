@@ -1,0 +1,13 @@
+@import "../styles/constant";
+
+mat-expansion-panel {
+  margin: $default-margin;
+}
+
+mat-panel-title {
+  margin-top: 25px;
+}
+
+.search, .improve-helper {
+  margin: $default-margin;
+}

@@ -29,7 +29,7 @@ import { AthleteSnapshotResolverService } from "./services/athlete-snapshot-reso
 import { AthleteService } from "./services/athlete/athlete.service";
 import { AthleteDao } from "./dao/athlete/athlete.dao";
 import { ActivityDao } from "./dao/activity/activity.dao";
-import { FaqComponent } from "../faq/faq.component";
+import { HelpComponent } from "../help/help.component";
 import { ActivitiesComponent } from "../activities/activities.component";
 import { LoggerService } from "./services/logging/logger.service";
 import { ConsoleLoggerService } from "./services/logging/console-logger.service";
@@ -62,7 +62,7 @@ import { NewInstalledVersionNoticeDialogComponent } from "./services/versions/ne
     DonateComponent,
     ShareComponent,
     ReportComponent,
-    FaqComponent,
+    HelpComponent,
 
     // Dialogs
     LoadingDialogComponent,

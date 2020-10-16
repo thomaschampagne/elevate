@@ -1,0 +1,30 @@
+<div *ngIf="(!isFaqLoaded)">
+  <mat-progress-bar mode="buffer"></mat-progress-bar>
+</div>
+
+<div *ngIf="(isFaqLoaded === true)">
+  <div class="search mat-subheading-2" fxLayout="row" fxLayoutAlign="center center">
+    <mat-form-field fxFlex="50">
+      <input [(ngModel)]="searchText" matInput placeholder="Search for questions or answers" type="search">
+      <button (click)="searchText=''" *ngIf="searchText" aria-label="Clear" mat-button mat-icon-button
+              matSuffix>
+        <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <mat-accordion [multi]="true">
+    <mat-expansion-panel
+      *ngFor="let faqEntry of faqEntries | filterBy: ['question', 'answer']: searchText; count as size;"
+      [expanded]="size === 1">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="mat-h4" [innerHtml]="faqEntry.question"></mat-panel-title>
+      </mat-expansion-panel-header>
+      <p [innerHtml]="faqEntry.answer"></p>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div class="improve-helper" fxLayout="row" fxLayoutAlign="center center">
+    <a class="mat-caption" href="{{getRepositoryUrl()}}/tree/faq" target="_blank">Edit and improve this helper</a>
+  </div>
+</div>
