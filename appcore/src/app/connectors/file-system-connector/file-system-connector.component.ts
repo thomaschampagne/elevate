@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { ConnectorsComponent } from "../connectors.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ElectronService } from "../../shared/services/electron/electron.service";
@@ -12,15 +12,17 @@ import {
   OpenResourceResolver
 } from "../../shared/services/links-opener/open-resource-resolver";
 import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-file-system-connector",
   templateUrl: "./file-system-connector.component.html",
   styleUrls: ["./file-system-connector.component.scss"]
 })
-export class FileSystemConnectorComponent extends ConnectorsComponent implements OnInit {
+export class FileSystemConnectorComponent extends ConnectorsComponent implements OnInit, OnDestroy {
   public showConfigure: boolean;
   public fileSystemConnectorInfo: FileSystemConnectorInfo;
+  public syncDoneSub: Subscription;
 
   constructor(
     @Inject(FileSystemConnectorInfoService)
@@ -49,8 +51,9 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
       this.saveChanges();
     }
 
-    this.appEventsService.syncDone$.subscribe((changes: boolean) => {
+    this.syncDoneSub = this.appEventsService.syncDone$.subscribe((changes: boolean) => {
       if (changes) {
+        this.ngOnDestroy();
         this.ngOnInit();
       }
     });
@@ -91,6 +94,10 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
         }
         return Promise.resolve();
       });
+  }
+
+  public ngOnDestroy(): void {
+    this.syncDoneSub.unsubscribe();
   }
 
   private isExistingFolder(path: string) {

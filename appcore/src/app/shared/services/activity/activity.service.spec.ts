@@ -202,7 +202,7 @@ describe("ActivityService", () => {
         Promise.resolve(syncedActivityModels)
       );
 
-      spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch").and.returnValue(
+      spyOn(activityService.athleteSnapshotResolver.athleteService, "fetch").and.returnValue(
         Promise.resolve(athleteModel)
       );
 
@@ -299,7 +299,7 @@ describe("ActivityService", () => {
         Promise.resolve(syncedActivityModels)
       );
 
-      spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch").and.returnValue(
+      spyOn(activityService.athleteSnapshotResolver.athleteService, "fetch").and.returnValue(
         Promise.resolve(athleteModel)
       );
 
@@ -396,7 +396,7 @@ describe("ActivityService", () => {
         Promise.resolve(syncedActivityModels)
       );
 
-      spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch").and.returnValue(
+      spyOn(activityService.athleteSnapshotResolver.athleteService, "fetch").and.returnValue(
         Promise.resolve(athleteModel)
       );
 
@@ -487,7 +487,7 @@ describe("ActivityService", () => {
         Promise.resolve(syncedActivityModels)
       );
 
-      spyOn(activityService.athleteSnapshotResolverService.athleteService, "fetch").and.returnValue(
+      spyOn(activityService.athleteSnapshotResolver.athleteService, "fetch").and.returnValue(
         Promise.resolve(AthleteModel.DEFAULT_MODEL)
       );
 

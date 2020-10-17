@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from "@angular/core";
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import _ from "lodash";
 import { DayFitnessTrendModel } from "./shared/models/day-fitness-trend.model";
 import { SyncService } from "../shared/services/sync/sync.service";
@@ -18,13 +18,14 @@ import { FitnessTrendConfigDialogData } from "./shared/models/fitness-trend-conf
 import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog/fitness-trend-config-dialog.component";
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { LoggerService } from "../shared/services/logging/logger.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-fitness-trend",
   templateUrl: "./fitness-trend.component.html",
   styleUrls: ["./fitness-trend.component.scss"]
 })
-export class FitnessTrendComponent implements OnInit {
+export class FitnessTrendComponent implements OnInit, OnDestroy {
   public static readonly DEFAULT_CONFIG: FitnessTrendConfigModel = {
     heartRateImpulseMode: HeartRateImpulseMode.HRSS,
     initializedFitnessTrendModel: { ctl: null, atl: null },
@@ -67,6 +68,7 @@ export class FitnessTrendComponent implements OnInit {
   public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
   public areSyncedActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
   public isReSyncRequired: boolean = null; // Can be null: don't know yet true/false status on load
+  public syncDoneSub: Subscription;
 
   constructor(
     @Inject(SyncService) private readonly syncService: SyncService<any>,
@@ -186,8 +188,9 @@ export class FitnessTrendComponent implements OnInit {
     });
 
     // Listen for sync done to reload component
-    this.appEventsService.syncDone$.subscribe((changes: boolean) => {
+    this.syncDoneSub = this.appEventsService.syncDone$.subscribe((changes: boolean) => {
       if (changes) {
+        this.ngOnDestroy();
         this.ngOnInit();
       }
     });
@@ -447,5 +450,9 @@ export class FitnessTrendComponent implements OnInit {
       JSON.stringify(this.fitnessTrendConfigModel)
     ); // Save config local
     this.reloadFitnessTrend();
+  }
+
+  public ngOnDestroy(): void {
+    this.syncDoneSub.unsubscribe();
   }
 }

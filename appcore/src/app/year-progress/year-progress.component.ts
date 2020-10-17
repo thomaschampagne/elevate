@@ -1,6 +1,6 @@
 import _ from "lodash";
 import moment, { Moment } from "moment";
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { YearProgressService } from "./shared/services/year-progress.service";
 import { ActivityCountByTypeModel } from "./shared/models/activity-count-by-type.model";
 import { YearProgressModel } from "./shared/models/year-progress.model";
@@ -35,6 +35,7 @@ import { YearProgressWelcomeDialogComponent } from "./year-progress-welcome-dial
 import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { ElevateSport } from "@elevate/shared/enums";
+import { Subscription } from "rxjs";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 /* Legacy tasks */
@@ -46,7 +47,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
   templateUrl: "./year-progress.component.html",
   styleUrls: ["./year-progress.component.scss"]
 })
-export class YearProgressComponent implements OnInit {
+export class YearProgressComponent implements OnInit, OnDestroy {
   public static readonly PALETTE: string[] = [
     "#9f8aff",
     "#ea7015",
@@ -177,6 +178,8 @@ export class YearProgressComponent implements OnInit {
   public isProgressionInitialized;
   public isGraphExpanded: boolean;
 
+  public syncDoneSub: Subscription;
+
   constructor(
     @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
     @Inject(SyncService) private readonly syncService: SyncService<any>,
@@ -220,8 +223,9 @@ export class YearProgressComponent implements OnInit {
     this.initialize();
 
     // Listen for sync done to reload component
-    this.appEventsService.syncDone$.subscribe((changes: boolean) => {
+    this.syncDoneSub = this.appEventsService.syncDone$.subscribe((changes: boolean) => {
       if (changes) {
+        this.ngOnDestroy();
         this.ngOnInit();
       }
     });
@@ -697,5 +701,9 @@ export class YearProgressComponent implements OnInit {
         1000
       );
     }
+  }
+
+  public ngOnDestroy(): void {
+    this.syncDoneSub.unsubscribe();
   }
 }

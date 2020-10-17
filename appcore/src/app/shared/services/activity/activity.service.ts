@@ -12,8 +12,7 @@ export abstract class ActivityService {
 
   protected constructor(
     @Inject(ActivityDao) public readonly activityDao: ActivityDao,
-    @Inject(AthleteSnapshotResolverService)
-    public readonly athleteSnapshotResolverService: AthleteSnapshotResolverService,
+    @Inject(AthleteSnapshotResolverService) public readonly athleteSnapshotResolver: AthleteSnapshotResolverService,
     @Inject(LoggerService) protected readonly logger: LoggerService
   ) {
     this.athleteSettingsConsistency$ = new Subject<boolean>();
@@ -74,7 +73,7 @@ export abstract class ActivityService {
    * Tells if local synced activities is compliant with current athlete settings
    */
   public isAthleteSettingsConsistent(): Promise<boolean> {
-    return this.athleteSnapshotResolverService
+    return this.athleteSnapshotResolver
       .update()
       .then(() => {
         return this.activityDao.find();
@@ -82,9 +81,7 @@ export abstract class ActivityService {
       .then((syncedActivityModels: SyncedActivityModel[]) => {
         let isCompliant = true;
         _.forEachRight(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
-          const athleteModelFound = this.athleteSnapshotResolverService.resolve(
-            new Date(syncedActivityModel.start_time)
-          );
+          const athleteModelFound = this.athleteSnapshotResolver.resolve(new Date(syncedActivityModel.start_time));
           if (!athleteModelFound.equals(syncedActivityModel.athleteSnapshot)) {
             isCompliant = false;
             return false;
@@ -112,7 +109,7 @@ export abstract class ActivityService {
    * Provide local synced activity ids which are not compliant with current athlete settings
    */
   public nonConsistentActivitiesWithAthleteSettings(): Promise<number[]> {
-    return this.athleteSnapshotResolverService
+    return this.athleteSnapshotResolver
       .update()
       .then(() => {
         return this.fetch();
@@ -120,9 +117,7 @@ export abstract class ActivityService {
       .then((syncedActivityModels: SyncedActivityModel[]) => {
         const nonConsistentIds = [];
         _.forEachRight(syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
-          const athleteModelFound = this.athleteSnapshotResolverService.resolve(
-            new Date(syncedActivityModel.start_time)
-          );
+          const athleteModelFound = this.athleteSnapshotResolver.resolve(new Date(syncedActivityModel.start_time));
           if (!athleteModelFound.equals(syncedActivityModel.athleteSnapshot)) {
             nonConsistentIds.push(syncedActivityModel.id);
           }

@@ -15,7 +15,6 @@ import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { LoggerService } from "../shared/services/logging/logger.service";
-import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { UserSettings } from "@elevate/shared/models";
 import { ActivitiesSettingsLacksDialogComponent } from "./activities-settings-lacks-dialog.component";
 import { LoadingDialogComponent } from "../shared/dialogs/loading-dialog/loading-dialog.component";
@@ -40,7 +39,6 @@ export class RefreshStatsBarComponent implements OnInit {
   constructor(
     @Inject(Router) protected readonly router: Router,
     @Inject(ActivityService) protected readonly activityService: ActivityService,
-    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
     @Inject(MatDialog) protected readonly dialog: MatDialog
   ) {
     this.hideGoToAthleteSettingsButton = false;
@@ -55,15 +53,6 @@ export class RefreshStatsBarComponent implements OnInit {
 
     // Listen for url change to display or not the "Go to athlete settings" button
     this.handleAthleteSettingButton();
-
-    // Listen for sync/recalculation performed
-    this.appEventsService.syncDone$.subscribe((changes: boolean) => {
-      if (changes) {
-        sleep((RefreshStatsBarComponent.VERIFY_SETTINGS_LACKS_TIMEOUT * 1000) / 3).then(() => {
-          this.activityService.verifyActivitiesWithSettingsLacking();
-        });
-      }
-    });
 
     // Display warning message on settings lacks updates
     this.activityService.activitiesWithSettingsLacks$.subscribe(settingsLacking => {
@@ -191,6 +180,11 @@ export class RefreshStatsBarComponent implements OnInit {
           <span fxFlex class="mat-body-1" *ngIf="statusText">{{ statusText }}</span>
           <span fxFlex class="mat-caption">{{ processed }}/{{ toBeProcessed }} activities recalculated.</span>
         </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <button mat-icon-button (click)="onCloseRecalculation()">
+            <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
   `,
@@ -217,11 +211,10 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
     @Inject(Router) protected readonly router: Router,
     @Inject(ActivityService) protected readonly activityService: ActivityService,
     @Inject(UserSettingsService) protected readonly userSettingsService: UserSettingsService,
-    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
     @Inject(MatDialog) protected readonly dialog: MatDialog,
     @Inject(LoggerService) protected readonly logger: LoggerService
   ) {
-    super(router, activityService, appEventsService, dialog);
+    super(router, activityService, dialog);
     this.hideRecalculation = true;
   }
 
@@ -247,11 +240,7 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
           notification.syncedActivityModel.name;
 
         if (notification.isLast) {
-          this.statusText = "Recalculation done. App is being refreshed...";
-          this.appEventsService.syncDone$.next(true);
-          setTimeout(() => {
-            this.closeRefreshStatsBar();
-          }, 2000);
+          this.statusText = "Recalculation done.";
         }
 
         this.processed = notification.currentlyProcessed;
@@ -279,11 +268,8 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
     this.hideRecalculation = false; // Show calculation
   }
 
-  public closeRefreshStatsBar(): void {
-    this.hideRefreshStatsBar = true;
+  public onCloseRecalculation(): void {
     this.hideRecalculation = true;
-    this.hideSettingsLacksWarning = true;
-    this.hideSettingsConsistencyWarning = true;
   }
 }
 
@@ -344,11 +330,10 @@ export class ExtensionRefreshStatsBarComponent extends RefreshStatsBarComponent 
     @Inject(Router) protected readonly router: Router,
     @Inject(ActivityService) protected readonly activityService: ActivityService,
     @Inject(SyncService) protected readonly syncService: SyncService<any>,
-    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
     @Inject(MatDialog) protected readonly dialog: MatDialog,
     @Inject(LoggerService) protected readonly logger: LoggerService
   ) {
-    super(router, activityService, appEventsService, dialog);
+    super(router, activityService, dialog);
   }
 
   public ngOnInit(): void {

@@ -8,10 +8,9 @@ import { LoggerService } from "../../logging/logger.service";
 export class ExtensionActivityService extends ActivityService {
   constructor(
     @Inject(ActivityDao) public readonly activityDao: ActivityDao,
-    @Inject(AthleteSnapshotResolverService)
-    public readonly athleteSnapshotResolverService: AthleteSnapshotResolverService,
+    @Inject(AthleteSnapshotResolverService) public readonly athleteSnapshotResolver: AthleteSnapshotResolverService,
     @Inject(LoggerService) protected readonly logger: LoggerService
   ) {
-    super(activityDao, athleteSnapshotResolverService, logger);
+    super(activityDao, athleteSnapshotResolver, logger);
   }
 }

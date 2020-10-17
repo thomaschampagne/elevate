@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ConnectorType, StravaConnectorInfo } from "@elevate/shared/sync";
@@ -19,6 +19,7 @@ import { IClipboardResponse } from "ngx-clipboard";
 import jdenticon from "jdenticon/standalone";
 import { StatusCodes } from "http-status-codes";
 import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
+import { Subscription } from "rxjs";
 
 class GeneratedStravaApiApplication {
   public appName: string;
@@ -31,13 +32,15 @@ class GeneratedStravaApiApplication {
   templateUrl: "./strava-connector.component.html",
   styleUrls: ["./strava-connector.component.scss"]
 })
-export class StravaConnectorComponent extends ConnectorsComponent implements OnInit {
+export class StravaConnectorComponent extends ConnectorsComponent implements OnInit, OnDestroy {
   public stravaConnectorInfo: StravaConnectorInfo;
   public expiresAt: string;
 
   public generatedStravaApiApplication: GeneratedStravaApiApplication;
   public showConfigure: boolean;
   public showHowTo: boolean;
+
+  public syncDoneSub: Subscription;
 
   constructor(
     @Inject(StravaConnectorService) protected readonly stravaConnectorService: StravaConnectorService,
@@ -67,8 +70,9 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
       this.handleCredentialsChanges(stravaConnectorInfo);
     });
 
-    this.appEventsService.syncDone$.subscribe((changes: boolean) => {
+    this.syncDoneSub = this.appEventsService.syncDone$.subscribe((changes: boolean) => {
       if (changes) {
+        this.ngOnDestroy();
         this.ngOnInit();
       }
     });
@@ -221,5 +225,9 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
     if ($event.isSuccess) {
       this.snackBar.open(`"${$event.content}" copied to clipboard.`, null, { duration: 1000 });
     }
+  }
+
+  public ngOnDestroy(): void {
+    this.syncDoneSub.unsubscribe();
   }
 }

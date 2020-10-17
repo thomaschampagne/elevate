@@ -1,4 +1,4 @@
-import { Component, Inject, InjectionToken, OnInit } from "@angular/core";
+import { Component, Inject, InjectionToken, OnDestroy, OnInit } from "@angular/core";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
@@ -11,15 +11,17 @@ import { AppEventsService } from "../shared/services/external-updates/app-events
 import { ElevateException } from "@elevate/shared/exceptions";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { ImportExportProgressDialogComponent } from "../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
+import { Subscription } from "rxjs";
 
 export const SYNC_MENU_COMPONENT = new InjectionToken<SyncMenuComponent>("SYNC_MENU_COMPONENT");
 
 @Component({ template: "" })
-export class SyncMenuComponent implements OnInit {
+export class SyncMenuComponent implements OnInit, OnDestroy {
   private static readonly UPDATE_SYNC_DATE_STATUS_EVERY: number = 1000 * 60;
   public SyncState = SyncState;
   public syncState: SyncState;
   public syncDateMessage: string;
+  public syncDoneSub: Subscription;
 
   constructor(
     @Inject(Router) protected readonly router: Router,
@@ -39,7 +41,7 @@ export class SyncMenuComponent implements OnInit {
       this.updateSyncDateStatus();
     }, SyncMenuComponent.UPDATE_SYNC_DATE_STATUS_EVERY);
 
-    this.appEventsService.syncDone$.subscribe(() => {
+    this.syncDoneSub = this.appEventsService.syncDone$.subscribe(() => {
       this.updateSyncDateStatus();
     });
   }
@@ -113,5 +115,9 @@ export class SyncMenuComponent implements OnInit {
           data: new GotItDialogDataModel(null, 'File "' + result.filename + '" is ready to be saved.')
         });
       });
+  }
+
+  public ngOnDestroy(): void {
+    this.syncDoneSub.unsubscribe();
   }
 }

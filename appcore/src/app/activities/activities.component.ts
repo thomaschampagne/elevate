@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from "@angular/core";
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
@@ -20,7 +20,7 @@ import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { AppError } from "../shared/models/app-error.model";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
-import { Subject, timer } from "rxjs";
+import { Subject, Subscription, timer } from "rxjs";
 import { debounce } from "rxjs/operators";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 import NumberColumn = ActivityColumns.NumberColumn;
@@ -31,7 +31,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
   templateUrl: "./activities.component.html",
   styleUrls: ["./activities.component.scss"]
 })
-export class ActivitiesComponent implements OnInit {
+export class ActivitiesComponent implements OnInit, OnDestroy {
   public static readonly LS_SELECTED_COLUMNS: string = "activities_selectedColumns";
   public static readonly LS_PAGE_SIZE_PREFERENCE: string = "activities_pageSize";
   public readonly ColumnType = ActivityColumns.ColumnType;
@@ -53,6 +53,7 @@ export class ActivitiesComponent implements OnInit {
   public hasActivities: boolean;
   public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
   public initialized: boolean;
+  public syncDoneSub: Subscription;
 
   constructor(
     @Inject(SyncService) private readonly syncService: SyncService<any>,
@@ -172,9 +173,10 @@ export class ActivitiesComponent implements OnInit {
       });
 
     // Listen for syncFinished update then table if necessary.
-    this.appEventsService.syncDone$.subscribe((changes: boolean) => {
+    this.syncDoneSub = this.appEventsService.syncDone$.subscribe((changes: boolean) => {
       if (changes) {
         this.initialized = false;
+        this.ngOnDestroy();
         this.ngOnInit();
       }
     });
@@ -433,5 +435,9 @@ export class ActivitiesComponent implements OnInit {
     } catch (err) {
       this.logger.error(err);
     }
+  }
+
+  public ngOnDestroy(): void {
+    this.syncDoneSub.unsubscribe();
   }
 }

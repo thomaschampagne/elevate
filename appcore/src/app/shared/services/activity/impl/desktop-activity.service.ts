@@ -9,6 +9,7 @@ import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { StreamsDao } from "../../../dao/streams/streams.dao";
+import { AppEventsService } from "../../external-updates/app-events-service";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 export class BulkRefreshStatsNotification {
@@ -71,12 +72,12 @@ export class DesktopActivityService extends ActivityService {
   constructor(
     @Inject(IpcMessagesSender) public readonly ipcMessagesSender: IpcMessagesSender,
     @Inject(ActivityDao) public readonly activityDao: ActivityDao,
+    @Inject(AthleteSnapshotResolverService) public readonly athleteSnapshotResolver: AthleteSnapshotResolverService,
+    @Inject(LoggerService) protected readonly logger: LoggerService,
     @Inject(StreamsDao) public readonly streamsDao: StreamsDao,
-    @Inject(AthleteSnapshotResolverService)
-    public readonly athleteSnapshotResolverService: AthleteSnapshotResolverService,
-    @Inject(LoggerService) protected readonly logger: LoggerService
+    @Inject(AppEventsService) public readonly appEventsService: AppEventsService
   ) {
-    super(activityDao, athleteSnapshotResolverService, logger);
+    super(activityDao, athleteSnapshotResolver, logger);
 
     this.refreshStats$ = new Subject<BulkRefreshStatsNotification>();
     this.isProcessing = false;
@@ -105,10 +106,10 @@ export class DesktopActivityService extends ActivityService {
     let athleteSnapshot: AthleteSnapshotModel = null;
     let streams: ActivityStreamsModel = null;
 
-    return this.athleteSnapshotResolverService
+    return this.athleteSnapshotResolver
       .update()
       .then(() => {
-        return this.athleteSnapshotResolverService.resolve(new Date(syncedActivityModel.start_time));
+        return this.athleteSnapshotResolver.resolve(new Date(syncedActivityModel.start_time));
       })
       .then((athleteSnapshotModel: AthleteSnapshotModel) => {
         athleteSnapshot = athleteSnapshotModel;
@@ -158,6 +159,8 @@ export class DesktopActivityService extends ActivityService {
       .then(() => {
         this.isProcessing = false;
         this.activityDao.saveDataStore();
+        this.appEventsService.syncDone$.next(true);
+        this.verifyActivitiesWithSettingsLacking();
       })
       .catch(err => {
         this.refreshStats$.next(BulkRefreshStatsNotification.error(err));
@@ -199,6 +202,8 @@ export class DesktopActivityService extends ActivityService {
       }, Promise.resolve())
       .then(() => {
         this.isProcessing = false;
+        this.appEventsService.syncDone$.next(true);
+        this.verifyActivitiesWithSettingsLacking();
       })
       .catch(err => {
         this.refreshStats$.next(BulkRefreshStatsNotification.error(err));

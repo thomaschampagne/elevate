@@ -78,13 +78,13 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 })
 export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
   constructor(
+    @Inject(SyncService) protected readonly syncService: SyncService<any>,
+    @Inject(MatDialog) protected readonly dialog: MatDialog,
+    @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar,
     @Inject(UserSettingsService) protected readonly userSettingsService: UserSettingsService,
     @Inject(ActivityService) protected readonly activityService: ActivityService,
     @Inject(AthleteService) protected readonly athleteService: AthleteService,
-    @Inject(SyncService) protected readonly syncService: SyncService<any>,
-    @Inject(ElectronService) protected readonly electronService: ElectronService,
-    @Inject(MatDialog) protected readonly dialog: MatDialog,
-    @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar
+    @Inject(ElectronService) protected readonly electronService: ElectronService
   ) {
     super(syncService, dialog, snackBar);
   }
