@@ -11,7 +11,7 @@ assignees: ''
 
 Before creating any useless or duplicate issues, you HAVE TO:
 
-* Check for answer in Frequently Asked Questions here: https://github.com/thomaschampagne/elevate-alpha/tree/faq/
+* Check for answer in Frequently Asked Questions here: https://github.com/thomaschampagne/elevate/tree/faq/
 * Check for already existing issues matching with yours: https://github.com/thomaschampagne/elevate/issues
 
 Any unsuitable issues will not be handled at all! Since this project is performed on free time and has hundreds

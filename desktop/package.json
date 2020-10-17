@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/thomaschampagne/elevate-alpha"
+    "url": "https://github.com/thomaschampagne/elevate"
   },
   "author": {
     "name": "Thomas Champagne",
@@ -102,7 +102,7 @@
     "publish": {
       "provider": "github",
       "owner": "thomaschampagne",
-      "repo": "elevate-alpha",
+      "repo": "elevate",
       "vPrefixedTagName": false
     },
     "win": {
