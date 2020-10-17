@@ -24,4 +24,4 @@ node_modules
 .prettierignore
 
 # Project specific
-athlete-access-checker.js
+desktop-boot.js

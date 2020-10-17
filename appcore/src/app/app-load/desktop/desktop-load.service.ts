@@ -4,13 +4,12 @@ import { MatDialog } from "@angular/material/dialog";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { FlaggedIpcMessage, MessageFlag, RuntimeInfo } from "@elevate/shared/electron";
 import { LoggerService } from "../../shared/services/logging/logger.service";
-import { environment } from "../../../environments/environment";
 import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
 import { VersionsProvider } from "../../shared/services/versions/versions-provider";
 import { AppLoadService } from "../app-load.service";
 import { concatMap, delay, retryWhen } from "rxjs/operators";
 import { of, throwError } from "rxjs";
-import { AthleteAccessChecker } from "./athlete-access-checker";
+import { DesktopBoot } from "./desktop-boot";
 import { StatusCodes } from "http-status-codes";
 import { StravaConnectorInfo } from "@elevate/shared/sync";
 import { DesktopUnauthorizedMachineIdDialogComponent } from "./desktop-unauthorized-machine-id-dialog/desktop-unauthorized-machine-id-dialog.component";
@@ -46,41 +45,37 @@ export class DesktopLoadService extends AppLoadService {
       return this.desktopMigrationService
         .upgrade()
         .then((hasBeenUpgradedTo: string) => {
-          if ((environment as any).bypassAthleteAccessCheck) {
-            return Promise.resolve(hasBeenUpgradedTo);
-          } else {
-            return this.getRuntimeInfo()
-              .then(runtimeInfo => {
-                this.runtimeInfo = runtimeInfo;
-              })
-              .then(() => {
-                return this.checkAthleteAccess(this.runtimeInfo);
-              })
-              .then(accessAuthorized => {
-                if (!accessAuthorized) {
-                  this.dialog.open(DesktopUnauthorizedMachineIdDialogComponent, {
-                    minHeight: "100%",
-                    maxHeight: "100%",
-                    minWidth: "100%",
-                    maxWidth: "100%",
-                    width: "100%",
-                    height: "100%",
-                    hasBackdrop: true,
-                    closeOnNavigation: false,
-                    disableClose: true,
-                    data: this.runtimeInfo.athleteMachineId
-                  });
+          return this.getRuntimeInfo()
+            .then(runtimeInfo => {
+              this.runtimeInfo = runtimeInfo;
+            })
+            .then(() => {
+              return this.desktopBoot(this.runtimeInfo);
+            })
+            .then(accessAuthorized => {
+              if (!accessAuthorized) {
+                this.dialog.open(DesktopUnauthorizedMachineIdDialogComponent, {
+                  minHeight: "100%",
+                  maxHeight: "100%",
+                  minWidth: "100%",
+                  maxWidth: "100%",
+                  width: "100%",
+                  height: "100%",
+                  hasBackdrop: true,
+                  closeOnNavigation: false,
+                  disableClose: true,
+                  data: this.runtimeInfo.athleteMachineId
+                });
 
-                  return Promise.reject(`Access non-authorized for machine: ${this.runtimeInfo.athleteMachineId}`);
-                }
+                return Promise.reject(`Access non-authorized for machine: ${this.runtimeInfo.athleteMachineId}`);
+              }
 
-                return Promise.resolve(hasBeenUpgradedTo);
-              })
-              .catch(error => {
-                this.logger.error(error);
-                return Promise.reject(error);
-              });
-          }
+              return Promise.resolve(hasBeenUpgradedTo);
+            })
+            .catch(error => {
+              this.logger.error(error);
+              return Promise.reject(error);
+            });
         })
         .then((hasBeenUpgradedToVersion: string) => {
           if (hasBeenUpgradedToVersion) {
@@ -94,7 +89,7 @@ export class DesktopLoadService extends AppLoadService {
     return this.ipcMessagesSender.send<RuntimeInfo>(new FlaggedIpcMessage(MessageFlag.GET_RUNTIME_INFO));
   }
 
-  public checkAthleteAccess(runtimeInfo: RuntimeInfo, authRetry: boolean = false): Promise<boolean> {
+  public desktopBoot(runtimeInfo: RuntimeInfo, authRetry: boolean = false): Promise<boolean> {
     return Promise.all([this.versionsProvider.getPackageVersion(), this.stravaConnectorInfoService.fetch()]).then(
       result => {
         const installedVersion = result[0];
@@ -142,7 +137,7 @@ export class DesktopLoadService extends AppLoadService {
                 } else {
                   setTimeout(() => {
                     this.logger.info("Retry machine authentication");
-                    this.checkAthleteAccess(runtimeInfo, true).then(isAuthenticated => {
+                    this.desktopBoot(runtimeInfo, true).then(isAuthenticated => {
                       resolve(isAuthenticated);
                     });
                   }, DesktopLoadService.AUTH_RETRY_DELAY);
@@ -158,6 +153,6 @@ export class DesktopLoadService extends AppLoadService {
   }
 
   public verifyAthleteMachineId(athleteMachineId: string, remoteAuthCode: string): boolean {
-    return AthleteAccessChecker.test(athleteMachineId, remoteAuthCode);
+    return DesktopBoot.test(athleteMachineId, remoteAuthCode);
   }
 }
