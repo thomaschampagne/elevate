@@ -23,7 +23,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
   /**
    * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
    */
-  public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "7.0.0-6.alpha";
+  public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "7.0.0-0.alpha";
 
   public static readonly SYNC_URL_BASE: string = "https://www.strava.com/dashboard";
   public static readonly SYNC_WINDOW_WIDTH: number = 690;

@@ -17,7 +17,7 @@ import { YearToDateProgressPresetModel } from "../../appcore/src/app/year-progre
 import { ProgressMode } from "../../appcore/src/app/year-progress/shared/enums/progress-mode.enum";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
 import { Identifier, Versioning } from "@elevate/shared/tools";
-import { Migration7x0x0x6 } from "./migrations/Migration7x0x0x6";
+import { Migration7x0x0x0 } from "./migrations/Migration7x0x0x0";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
@@ -736,9 +736,9 @@ class Installer {
     return promise;
   }
 
-  protected migrate_to_7_0_0_6(): Promise<void> {
-    if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "7.0.0-6")) {
-      console.log("Migrate to 7.0.0-6");
+  protected migrate_to_7_0_0_0(): Promise<void> {
+    if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "7.0.0-0")) {
+      console.log("Migrate to 7.0.0-0");
 
       return new Promise<void>((resolve, reject) => {
         chrome.storage.local.get(null, (oldDatabase: any) => {
@@ -748,7 +748,7 @@ class Installer {
             reject(error.message);
           } else {
             try {
-              const newDatabase = new Migration7x0x0x6().perform(oldDatabase);
+              const newDatabase = new Migration7x0x0x0().perform(oldDatabase);
 
               chrome.storage.local.set(newDatabase, () => {
                 if (error) {
@@ -759,7 +759,7 @@ class Installer {
               });
             } catch (err) {
               if (err.message === "NOT_AN_OLD_DATABASE") {
-                console.log("Skip migrate to 7.0.0-6");
+                console.log("Skip migrate to 7.0.0-0");
                 resolve();
               } else {
                 reject(err);
@@ -770,7 +770,7 @@ class Installer {
       });
     }
 
-    console.log("Skip migrate to 7.0.0-6");
+    console.log("Skip migrate to 7.0.0-0");
     return Promise.resolve();
   }
 
@@ -824,7 +824,7 @@ class Installer {
         return this.migrate_to_6_16_2();
       })
       .then(() => {
-        return this.migrate_to_7_0_0_6();
+        return this.migrate_to_7_0_0_0();
       })
       .catch(error => console.error(error));
   }

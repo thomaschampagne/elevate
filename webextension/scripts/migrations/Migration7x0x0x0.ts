@@ -11,6 +11,7 @@ interface IOldV6Database {
   syncedActivities?: SyncedActivityModel[];
   userSettings?: ExtensionUserSettingsModel;
   yearProgressPresets?: YearToDateProgressPresetModel[];
+  versionInstalled?: { on: number; version: string };
 }
 
 interface INewV7Database {
@@ -60,9 +61,13 @@ interface INewV7Database {
     name: "yearProgressPresets";
     data: YearToDateProgressPresetModel[] & { $loki: number; meta: {} }[];
   };
+  versionInstalled?: {
+    name: "versionInstalled";
+    data: { on: number; version: string }[] & { $loki: number; meta: {} }[];
+  };
 }
 
-export class Migration7x0x0x6 {
+export class Migration7x0x0x0 {
   public perform(oldDatabase: IOldV6Database): INewV7Database {
     if (oldDatabase === null || oldDatabase === undefined) {
       return null;
@@ -77,7 +82,8 @@ export class Migration7x0x0x6 {
       (oldDatabase.syncDateTime && (oldDatabase.syncDateTime as any).data) ||
       (oldDatabase.syncedActivities && (oldDatabase.syncedActivities as any).data) ||
       (oldDatabase.userSettings && (oldDatabase.userSettings as any).data) ||
-      (oldDatabase.yearProgressPresets && (oldDatabase.yearProgressPresets as any).data)
+      (oldDatabase.yearProgressPresets && (oldDatabase.yearProgressPresets as any).data) ||
+      (oldDatabase.versionInstalled && (oldDatabase.versionInstalled as any).data)
     ) {
       throw new Error("NOT_AN_OLD_DATABASE");
     }
@@ -136,6 +142,11 @@ export class Migration7x0x0x6 {
       oldDatabase.yearProgressPresets.forEach((preset, index) => {
         newDatabase.yearProgressPresets.data.push(this.setLokiData(preset, index + 1));
       });
+    }
+
+    if (oldDatabase.versionInstalled) {
+      newDatabase.versionInstalled = this.initCollection("versionInstalled");
+      newDatabase.versionInstalled.data.push(this.setLokiData(oldDatabase.versionInstalled));
     }
 
     return newDatabase;

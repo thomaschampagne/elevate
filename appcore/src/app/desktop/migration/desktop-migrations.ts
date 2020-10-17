@@ -8,7 +8,7 @@ export abstract class DesktopMigration {
 }
 
 class SampleMigration extends DesktopMigration {
-  public version = "7.0.0-7.alpha";
+  public version = "7.0.0-1.alpha";
 
   public description = "Explain migration purpose here";
 
