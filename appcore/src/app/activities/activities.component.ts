@@ -1,3 +1,4 @@
+import { saveAs } from "file-saver";
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import { MatDialog } from "@angular/material/dialog";
