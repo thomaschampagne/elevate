@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { MENU_ITEMS_PROVIDER } from "../shared/services/menu-items/menu-items-provider.interface";
 import { ExtensionMenuItemsProvider } from "../shared/services/menu-items/impl/extension-menu-items-provider.service";
-import { SharedModule } from "../shared/shared.module";
 import { TOP_BAR_COMPONENT } from "../top-bar/top-bar.component";
 import { ExtensionTopBarComponent } from "../top-bar/extension-top-bar.component";
 import { AppLoadService } from "../app-load/app-load.service";
@@ -14,9 +13,12 @@ import { ExtensionRefreshStatsBarComponent } from "../refresh-stats-bar/extensio
 import { REFRESH_STATS_BAR_COMPONENT } from "../refresh-stats-bar/refresh-stats-bar.component";
 import { SYNC_MENU_COMPONENT } from "../sync-menu/sync-menu.component";
 import { ExtensionSyncMenuComponent } from "../sync-menu/extension/extension-sync-menu.component";
+import { ExtensionRoutingModule } from "../shared/modules/extension/extension-routing.module";
+import { CoreModule } from "../core/core.module";
 
 @NgModule({
-  imports: [SharedModule],
+  imports: [CoreModule, ExtensionRoutingModule],
+  exports: [CoreModule, ExtensionRoutingModule],
   declarations: [
     ExtensionRefreshStatsBarComponent,
     ExtensionSyncBarComponent,
