@@ -25,8 +25,7 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
   public syncDoneSub: Subscription;
 
   constructor(
-    @Inject(FileSystemConnectorInfoService)
-    protected readonly fileSystemConnectorInfoService: FileSystemConnectorInfoService,
+    @Inject(FileSystemConnectorInfoService) protected readonly fsConnectorInfoService: FileSystemConnectorInfoService,
     @Inject(DesktopSyncService) protected readonly desktopSyncService: DesktopSyncService,
     @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
@@ -42,7 +41,7 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
   }
 
   public ngOnInit(): void {
-    this.fileSystemConnectorInfo = this.fileSystemConnectorInfoService.fetch();
+    this.fileSystemConnectorInfo = this.fsConnectorInfoService.fetch();
     this.updateSyncDateTimeText();
 
     // Test if source directory folder exists on app load
@@ -79,7 +78,7 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
     if (!this.fileSystemConnectorInfo.extractArchiveFiles) {
       this.fileSystemConnectorInfo.deleteArchivesAfterExtract = false;
     }
-    this.fileSystemConnectorInfoService.save(this.fileSystemConnectorInfo);
+    this.fsConnectorInfoService.save(this.fileSystemConnectorInfo);
   }
 
   public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {

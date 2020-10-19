@@ -13,7 +13,7 @@ import { ExtensionRefreshStatsBarComponent } from "../refresh-stats-bar/extensio
 import { REFRESH_STATS_BAR_COMPONENT } from "../refresh-stats-bar/refresh-stats-bar.component";
 import { SYNC_MENU_COMPONENT } from "../sync-menu/sync-menu.component";
 import { ExtensionSyncMenuComponent } from "../sync-menu/extension/extension-sync-menu.component";
-import { ExtensionRoutingModule } from "../shared/modules/extension/extension-routing.module";
+import { ExtensionRoutingModule } from "../shared/modules/routing/extension-routing.module";
 import { CoreModule } from "../core/core.module";
 
 @NgModule({

@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
-import { ExtensionDumpModel } from "../../models/dumps/extension-dump.model";
 
 @Component({ template: "" })
 export class ImportBackupDialogComponent implements OnInit {
@@ -33,48 +32,6 @@ export class ImportBackupDialogComponent implements OnInit {
     this.file = file;
     this.displayName = this.file.name;
     this.displaySize = _.floor(this.file.size / (1024 * 1024), 2) + " MB";
-  }
-}
-
-@Component({
-  selector: "app-import-backup-dialog",
-  templateUrl: "./import-backup-dialog.component.html",
-  styleUrls: ["./import-backup-dialog.component.scss"]
-})
-export class DesktopImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
-  constructor(@Inject(MatDialogRef) protected readonly dialogRef: MatDialogRef<DesktopImportBackupDialogComponent>) {
-    super(dialogRef);
-  }
-
-  public onRestore(): void {
-    if (this.file) {
-      this.dialogRef.close(this.file);
-    }
-  }
-}
-
-@Component({
-  selector: "app-import-backup-dialog",
-  templateUrl: "./import-backup-dialog.component.html",
-  styleUrls: ["./import-backup-dialog.component.scss"]
-})
-export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
-  constructor(@Inject(MatDialogRef) protected readonly dialogRef: MatDialogRef<ExtensionImportBackupDialogComponent>) {
-    super(dialogRef);
-  }
-
-  public onRestore(): void {
-    if (this.file) {
-      // Reading file, when load, import it
-      const reader = new FileReader();
-      reader.readAsText(this.file);
-      reader.onload = (event: Event) => {
-        const extensionDumpModel: ExtensionDumpModel = JSON.parse(
-          (event.target as IDBRequest).result
-        ) as ExtensionDumpModel;
-        this.dialogRef.close(extensionDumpModel);
-      };
-    }
   }
 }
 

@@ -3,13 +3,14 @@ import { LoggerService } from "./logger.service";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import { environment } from "../../../../environments/environment";
+import { TargetModule } from "../../modules/target/desktop-target.module";
 
 describe("ConsoleLoggerService", () => {
   let service: LoggerService;
 
   beforeEach((done: () => void) => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule]
+      imports: [CoreModule, SharedModule, TargetModule]
     });
 
     service = TestBed.inject(LoggerService);

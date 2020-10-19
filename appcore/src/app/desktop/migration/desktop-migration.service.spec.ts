@@ -3,18 +3,18 @@ import { TestBed } from "@angular/core/testing";
 import { DesktopMigrationService } from "./desktop-migration.service";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
-import { DesktopModule } from "../../shared/modules/desktop/desktop.module";
 import { DesktopMigration } from "./desktop-migrations";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import { VersionsProvider } from "../../shared/services/versions/versions-provider";
 import { DesktopVersionsProvider } from "../../shared/services/versions/impl/desktop-versions-provider.service";
+import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 
 describe("DesktopMigrationService", () => {
   let service: DesktopMigrationService;
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, DesktopModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [
         { provide: DataStore, useClass: TestingDataStore },
         { provide: VersionsProvider, useClass: DesktopVersionsProvider }

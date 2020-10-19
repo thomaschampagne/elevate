@@ -15,6 +15,7 @@ import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
 import { DataStore } from "../../../data-store/data-store";
 import { TestingDataStore } from "../../../data-store/testing-datastore.service";
 import { VersionsProvider } from "../../versions/versions-provider";
+import { TargetModule } from "../../../modules/target/extension-target.module";
 
 describe("ExtensionSyncService", () => {
   const installedVersion = "2.0.0";
@@ -24,7 +25,7 @@ describe("ExtensionSyncService", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [
         { provide: SyncService, useClass: ExtensionSyncService },
         { provide: VersionsProvider, useClass: MockedVersionsProvider },

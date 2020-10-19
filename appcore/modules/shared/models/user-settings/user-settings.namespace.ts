@@ -1,5 +1,5 @@
 import { UserZonesModel } from "./user-zones.model";
-import { BuildTarget } from "../../enums/build-target";
+import { BuildTarget } from "../../enums";
 import _ from "lodash";
 
 export namespace UserSettings {

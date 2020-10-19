@@ -16,7 +16,7 @@ import { DesktopSyncMenuComponent } from "../sync-menu/desktop/desktop-sync-menu
 import { DesktopErrorsSyncDetailsDialogComponent } from "../sync-bar/desktop-errors-sync-details-dialog.component";
 import { DesktopUnauthorizedMachineIdDialogComponent } from "../app-load/desktop/desktop-unauthorized-machine-id-dialog/desktop-unauthorized-machine-id-dialog.component";
 import { CoreModule } from "../core/core.module";
-import { DesktopRoutingModule } from "../shared/modules/desktop/desktop-routing.module";
+import { DesktopRoutingModule } from "../shared/modules/routing/desktop-routing.module";
 
 @NgModule({
   imports: [CoreModule, DesktopRoutingModule],

@@ -5,6 +5,7 @@ import { CoreModule } from "../../core/core.module";
 import { MatDialogRef } from "@angular/material/dialog";
 import { SharedModule } from "../../shared/shared.module";
 import { YearProgressModule } from "../year-progress.module";
+import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 
 describe("YearProgressHelperDialogComponent", () => {
   let component: YearProgressHelperDialogComponent;
@@ -12,7 +13,7 @@ describe("YearProgressHelperDialogComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, YearProgressModule],
+      imports: [CoreModule, SharedModule, TargetModule, YearProgressModule],
       declarations: [],
       providers: [
         {

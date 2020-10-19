@@ -53,8 +53,12 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "src/app/target-boot-modules/target-boot.module.ts",
-                  "with": "src/app/target-boot-modules/extension-boot.module.ts"
+                  "replace": "src/app/boot/target-boot.module.ts",
+                  "with": "src/app/boot/extension-boot.module.ts"
+                },
+                {
+                  "replace": "src/app/shared/modules/target/target.module.ts",
+                  "with": "src/app/shared/modules/target/extension-target.module.ts"
                 }
               ]
             },
@@ -73,8 +77,12 @@
                   "with": "src/environments/environment.prod.ts"
                 },
                 {
-                  "replace": "src/app/target-boot-modules/target-boot.module.ts",
-                  "with": "src/app/target-boot-modules/extension-boot.module.ts"
+                  "replace": "src/app/boot/target-boot.module.ts",
+                  "with": "src/app/boot/extension-boot.module.ts"
+                },
+                {
+                  "replace": "src/app/shared/modules/target/target.module.ts",
+                  "with": "src/app/shared/modules/target/extension-target.module.ts"
                 }
               ],
               "budgets": [
@@ -102,8 +110,12 @@
                   "with": "src/environments/environment.desktop.ts"
                 },
                 {
-                  "replace": "src/app/target-boot-modules/target-boot.module.ts",
-                  "with": "src/app/target-boot-modules/desktop-boot.module.ts"
+                  "replace": "src/app/boot/target-boot.module.ts",
+                  "with": "src/app/boot/desktop-boot.module.ts"
+                },
+                {
+                  "replace": "src/app/shared/modules/target/target.module.ts",
+                  "with": "src/app/shared/modules/target/desktop-target.module.ts"
                 }
               ]
             },
@@ -128,8 +140,12 @@
                   "with": "src/environments/environment.desktop.prod.ts"
                 },
                 {
-                  "replace": "src/app/target-boot-modules/target-boot.module.ts",
-                  "with": "src/app/target-boot-modules/desktop-boot.module.ts"
+                  "replace": "src/app/boot/target-boot.module.ts",
+                  "with": "src/app/boot/desktop-boot.module.ts"
+                },
+                {
+                  "replace": "src/app/shared/modules/target/target.module.ts",
+                  "with": "src/app/shared/modules/target/desktop-target.module.ts"
                 }
               ]
             }

@@ -8,6 +8,7 @@ import { MockedVersionsProvider } from "../shared/services/versions/impl/mock/mo
 import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 import { VersionsProvider } from "../shared/services/versions/versions-provider";
+import { TargetModule } from "../shared/modules/target/desktop-target.module";
 
 describe("AboutDialogComponent", () => {
   let component: AboutDialogComponent;
@@ -15,7 +16,7 @@ describe("AboutDialogComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [
         {
           provide: MatDialogRef,

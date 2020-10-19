@@ -7,6 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { FitnessTrendComponent } from "../fitness-trend.component";
 import { FitnessTrendConfigDialogData } from "../shared/models/fitness-trend-config-dialog-data.model";
 import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog.component";
+import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 
 describe("FitnessTrendConfigDialogComponent", () => {
   let component: FitnessTrendConfigDialogComponent;
@@ -21,7 +22,7 @@ describe("FitnessTrendConfigDialogComponent", () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, FitnessTrendModule],
+      imports: [CoreModule, SharedModule, TargetModule, FitnessTrendModule],
       providers: [
         {
           provide: MAT_DIALOG_DATA,

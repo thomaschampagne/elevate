@@ -1,7 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { CoreModule } from "../../../../core/core.module";
 import { SharedModule } from "../../../shared.module";
-import { DesktopModule } from "../../../modules/desktop/desktop.module";
 import { DesktopSyncService } from "./desktop-sync.service";
 import {
   ActivitySyncEvent,
@@ -22,7 +21,6 @@ import {
   ConnectorSyncDateTime,
   SyncedActivityModel
 } from "@elevate/shared/models";
-import { ElectronService, ElectronWindow } from "../../electron/electron.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
 import { SyncException } from "@elevate/shared/exceptions";
@@ -30,28 +28,16 @@ import { TEST_SYNCED_ACTIVITIES } from "../../../../../shared-fixtures/activitie
 import { SyncState } from "../sync-state.enum";
 import { DataStore } from "../../../data-store/data-store";
 import { TestingDataStore } from "../../../data-store/testing-datastore.service";
+import { TargetModule } from "../../../modules/target/desktop-target.module";
 
 describe("DesktopSyncService", () => {
   let desktopSyncService: DesktopSyncService;
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, DesktopModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [DesktopSyncService, { provide: DataStore, useClass: TestingDataStore }]
     });
-
-    const electronService: ElectronService = TestBed.inject(ElectronService);
-    electronService.instance = {
-      ipcRenderer: {}
-    };
-
-    const electronWindow = window as ElectronWindow;
-    const electronRequire = (module: string) => {
-      console.log("Loading module: " + module);
-      return {};
-    };
-    electronWindow.require = electronRequire;
-    spyOn(electronWindow, "require").and.callFake(electronRequire);
     desktopSyncService = TestBed.inject(DesktopSyncService);
     done();
   });
@@ -263,7 +249,7 @@ describe("DesktopSyncService", () => {
 
         const expectedFileSystemConnectorInfo = new FileSystemConnectorInfo("/path/to/dir/");
         const fileSystemConnectorInfoServiceSpy = spyOn(
-          desktopSyncService.fileSystemConnectorInfoService,
+          desktopSyncService.fsConnectorInfoService,
           "fetch"
         ).and.returnValue(expectedFileSystemConnectorInfo);
         const sendStartSyncSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(

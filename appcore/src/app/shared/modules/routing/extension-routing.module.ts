@@ -48,10 +48,6 @@ export class ExtensionRoutingModule {
       component: ZonesSettingsComponent
     },
     {
-      path: AppRoutesModel.connectors,
-      loadChildren: () => import("../../../connectors/connectors.module").then(module => module.ConnectorsModule)
-    },
-    {
       path: AppRoutesModel.donate,
       component: DonateComponent
     },

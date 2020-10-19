@@ -11,6 +11,7 @@ import { SharedModule } from "../../shared/shared.module";
 import { ElevateSport } from "@elevate/shared/enums";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
+import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 
 describe("AddYearProgressPresetDialogComponent", () => {
   let component: AddYearProgressPresetDialogComponent;
@@ -26,7 +27,7 @@ describe("AddYearProgressPresetDialogComponent", () => {
     );
 
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, YearProgressModule],
+      imports: [CoreModule, SharedModule, TargetModule, YearProgressModule],
       providers: [
         { provide: DataStore, useClass: TestingDataStore },
         { provide: MAT_DIALOG_DATA, useValue: addYearProgressPresetsDialogData },

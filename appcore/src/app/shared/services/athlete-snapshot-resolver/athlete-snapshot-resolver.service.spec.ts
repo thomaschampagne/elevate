@@ -12,6 +12,7 @@ import _ from "lodash";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
+import { TargetModule } from "../../modules/target/desktop-target.module";
 
 describe("AthleteSnapshotResolverService", () => {
   const lthr = { default: 172, cycling: null, running: null };
@@ -22,7 +23,7 @@ describe("AthleteSnapshotResolverService", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     });
 

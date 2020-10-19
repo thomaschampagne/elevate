@@ -5,6 +5,7 @@ import { CoreModule } from "../../core/core.module";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { SharedModule } from "../../shared/shared.module";
 import { FitnessTrendModule } from "../fitness-trend.module";
+import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 
 describe("FitnessInfoDialogComponent", () => {
   let component: FitnessInfoDialogComponent;
@@ -12,7 +13,7 @@ describe("FitnessInfoDialogComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, FitnessTrendModule],
+      imports: [CoreModule, SharedModule, TargetModule, FitnessTrendModule],
       declarations: [],
       providers: [
         {

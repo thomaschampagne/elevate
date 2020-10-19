@@ -6,10 +6,7 @@ import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
-import {
-  ExtensionImportBackupDialogComponent,
-  ImportBackupDialogComponent
-} from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
+import { ImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { ExtensionSyncService } from "../../shared/services/sync/impl/extension-sync.service";
 import { ExtensionDumpModel } from "../../shared/models/dumps/extension-dump.model";
@@ -17,6 +14,7 @@ import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/conf
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { AppRoutesModel } from "../../shared/models/app-routes.model";
 import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
+import { ExtensionImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/extension-import-backup-dialog.component";
 
 @Component({
   selector: "app-extension-sync-menu",

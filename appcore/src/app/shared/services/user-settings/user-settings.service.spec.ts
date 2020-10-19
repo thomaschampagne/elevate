@@ -8,6 +8,7 @@ import _ from "lodash";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
 import { BuildTarget } from "@elevate/shared/enums";
+import { TargetModule } from "../../modules/target/desktop-target.module";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
@@ -17,7 +18,7 @@ describe("UserSettingsService", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     });
 

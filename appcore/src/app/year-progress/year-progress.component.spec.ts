@@ -19,6 +19,7 @@ import { ExtensionEventsService } from "../shared/services/external-updates/impl
 import { ElevateSport } from "@elevate/shared/enums";
 import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
+import { TargetModule } from "../shared/modules/target/desktop-target.module";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("YearProgressComponent", () => {
@@ -46,7 +47,7 @@ describe("YearProgressComponent", () => {
     spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
 
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, YearProgressModule],
+      imports: [CoreModule, SharedModule, TargetModule, YearProgressModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 

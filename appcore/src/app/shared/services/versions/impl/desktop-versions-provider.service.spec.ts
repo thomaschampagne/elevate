@@ -1,7 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 import { CoreModule } from "../../../../core/core.module";
 import { SharedModule } from "../../../shared.module";
-import { DesktopModule } from "../../../modules/desktop/desktop.module";
 import { of } from "rxjs";
 import { DataStore } from "../../../data-store/data-store";
 import { TestingDataStore } from "../../../data-store/testing-datastore.service";
@@ -10,13 +9,14 @@ import { Platform } from "@elevate/shared/enums";
 import { DesktopVersionsProvider } from "./desktop-versions-provider.service";
 import { GhAsset, GhRelease } from "../gh-release.model";
 import _ from "lodash";
+import { TargetModule } from "../../../modules/target/desktop-target.module";
 
 describe("DesktopVersionsProvider", () => {
   let service: DesktopVersionsProvider;
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, DesktopModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [DesktopVersionsProvider, { provide: DataStore, useClass: TestingDataStore }]
     });
 

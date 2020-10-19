@@ -68,8 +68,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     @Inject(IpcMessagesReceiver) public readonly ipcMessagesReceiver: IpcMessagesReceiver,
     @Inject(IpcMessagesSender) public readonly ipcMessagesSender: IpcMessagesSender,
     @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
-    @Inject(FileSystemConnectorInfoService)
-    public readonly fileSystemConnectorInfoService: FileSystemConnectorInfoService,
+    @Inject(FileSystemConnectorInfoService) public readonly fsConnectorInfoService: FileSystemConnectorInfoService,
     @Inject(LoggerService) public readonly logger: LoggerService,
     @Inject(ConnectorSyncDateTimeDao) public readonly connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
     @Inject(AppEventsService) public readonly appEventsService: AppEventsService,
@@ -124,7 +123,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     if (this.currentConnectorType === ConnectorType.STRAVA) {
       promisedDataToSync.push(this.stravaConnectorInfoService.fetch());
     } else if (this.currentConnectorType === ConnectorType.FILE_SYSTEM) {
-      promisedDataToSync.push(Promise.resolve(this.fileSystemConnectorInfoService.fetch()));
+      promisedDataToSync.push(Promise.resolve(this.fsConnectorInfoService.fetch()));
     } else {
       const errorMessage = "Unknown connector type to sync";
       this.logger.error(errorMessage);

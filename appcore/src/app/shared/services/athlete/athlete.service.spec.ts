@@ -7,6 +7,7 @@ import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
+import { TargetModule } from "../../modules/target/desktop-target.module";
 
 describe("AthleteService", () => {
   let service: AthleteService = null;
@@ -24,7 +25,7 @@ describe("AthleteService", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     });
 

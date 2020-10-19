@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import { ConfirmDialogDataModel } from "./confirm-dialog-data.model";
+import { TargetModule } from "../../modules/target/desktop-target.module";
 
 describe("ConfirmDialogComponent", () => {
   const dialogTitle = "Hello World";
@@ -18,7 +19,7 @@ describe("ConfirmDialogComponent", () => {
     confirmDialogDataModel = new ConfirmDialogDataModel(dialogTitle, dialogContent);
 
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       declarations: [],
       providers: [
         {

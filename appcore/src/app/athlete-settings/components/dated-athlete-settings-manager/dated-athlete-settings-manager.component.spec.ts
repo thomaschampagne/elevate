@@ -8,6 +8,7 @@ import { AthleteService } from "../../../shared/services/athlete/athlete.service
 import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel, Gender } from "@elevate/shared/models";
 import { DataStore } from "../../../shared/data-store/data-store";
 import { TestingDataStore } from "../../../shared/data-store/testing-datastore.service";
+import { TargetModule } from "../../../shared/modules/target/desktop-target.module";
 
 describe("DatedAthleteSettingsManagerComponent", () => {
   let component: DatedAthleteSettingsManagerComponent;
@@ -15,7 +16,7 @@ describe("DatedAthleteSettingsManagerComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, AthleteSettingsModule],
+      imports: [CoreModule, SharedModule, TargetModule, AthleteSettingsModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 

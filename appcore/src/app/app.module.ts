@@ -8,7 +8,7 @@ import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
 import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
 import { RefreshStatsBarDirective } from "./refresh-stats-bar/refresh-stats-bar.directive";
 import { AppLoadComponent } from "./app-load/app-load.component";
-import { TargetBootModule } from "./target-boot-modules/target-boot.module";
+import { TargetBootModule } from "./boot/target-boot.module";
 
 @NgModule({
   declarations: [
@@ -20,7 +20,7 @@ import { TargetBootModule } from "./target-boot-modules/target-boot.module";
     SyncMenuDirective,
     AppMoreMenuDirective
   ],
-  imports: [TargetBootModule, SharedModule], // TODO Change order: SharedModule, TargetBootModule
+  imports: [SharedModule, TargetBootModule],
   providers: [{ provide: ErrorHandler, useClass: ElevateErrorHandler }],
   bootstrap: [AppLoadComponent]
 })

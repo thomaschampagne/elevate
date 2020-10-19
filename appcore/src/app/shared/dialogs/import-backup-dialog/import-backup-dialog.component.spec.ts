@@ -4,6 +4,7 @@ import { ImportBackupDialogComponent } from "./import-backup-dialog.component";
 import { CoreModule } from "../../../core/core.module";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { SharedModule } from "../../shared.module";
+import { TargetModule } from "../../modules/target/desktop-target.module";
 
 describe("ImportBackupDialogComponent", () => {
   let component: ImportBackupDialogComponent;
@@ -11,7 +12,7 @@ describe("ImportBackupDialogComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       declarations: [],
       providers: [
         {

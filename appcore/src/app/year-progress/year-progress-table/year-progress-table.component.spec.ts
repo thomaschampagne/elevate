@@ -18,6 +18,7 @@ import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-pro
 import { ElevateSport } from "@elevate/shared/enums";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
+import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 
 describe("YearProgressTableComponent", () => {
   const isMetric = true;
@@ -28,7 +29,7 @@ describe("YearProgressTableComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, YearProgressModule],
+      imports: [CoreModule, SharedModule, TargetModule, YearProgressModule],
       providers: [YearProgressService, { provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 

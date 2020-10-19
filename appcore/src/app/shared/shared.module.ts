@@ -33,10 +33,6 @@ import { HelpComponent } from "../help/help.component";
 import { ActivitiesComponent } from "../activities/activities.component";
 import { LoggerService } from "./services/logging/logger.service";
 import { ConsoleLoggerService } from "./services/logging/console-logger.service";
-import { environment } from "../../environments/environment";
-import { BuildTarget } from "@elevate/shared/enums";
-import { ExtensionModule } from "./modules/extension/extension.module";
-import { DesktopModule } from "./modules/desktop/desktop.module";
 import { StreamsDao } from "./dao/streams/streams.dao";
 import { StreamsService } from "./services/streams/streams.service";
 import { ActivitiesSettingsLacksDialogComponent } from "../refresh-stats-bar/activities-settings-lacks-dialog.component";
@@ -44,15 +40,11 @@ import { LoadingDialogComponent } from "./dialogs/loading-dialog/loading-dialog.
 import { NewRemoteVersionNoticeDialogComponent } from "./services/versions/new-remote-version-notice-dialog.component";
 import { ReleaseNoteService } from "../releases-notes/release-note.service";
 import { NewInstalledVersionNoticeDialogComponent } from "./services/versions/new-installed-version-notice-dialog.component";
+import { TargetModule } from "./modules/target/target.module";
 
 @NgModule({
-  imports: [
-    CoreModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    environment.buildTarget === BuildTarget.DESKTOP ? DesktopModule : ExtensionModule
-  ],
-  exports: [CoreModule, BrowserModule, BrowserAnimationsModule],
+  imports: [CoreModule, BrowserModule, BrowserAnimationsModule, TargetModule],
+  exports: [CoreModule, BrowserModule, BrowserAnimationsModule, TargetModule],
   declarations: [
     // Components
     ActivitiesComponent,

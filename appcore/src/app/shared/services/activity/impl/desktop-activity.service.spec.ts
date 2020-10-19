@@ -3,7 +3,6 @@ import { TestBed } from "@angular/core/testing";
 import { BulkRefreshStatsNotification, DesktopActivityService } from "./desktop-activity.service";
 import { CoreModule } from "../../../../core/core.module";
 import { SharedModule } from "../../../shared.module";
-import { DesktopModule } from "../../../modules/desktop/desktop.module";
 import {
   ActivityStreamsModel,
   AnalysisDataModel,
@@ -20,6 +19,7 @@ import { CompressedStreamModel } from "@elevate/shared/models/sync";
 import _ from "lodash";
 import { DataStore } from "../../../data-store/data-store";
 import { TestingDataStore } from "../../../data-store/testing-datastore.service";
+import { TargetModule } from "../../../modules/target/desktop-target.module";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("DesktopActivityService", () => {
@@ -27,7 +27,7 @@ describe("DesktopActivityService", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, DesktopModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [
         DesktopActivityService,
         { provide: PROMISE_TRON, useClass: PromiseTronServiceMock },

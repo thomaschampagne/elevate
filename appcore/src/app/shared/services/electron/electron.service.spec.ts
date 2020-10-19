@@ -1,74 +1,25 @@
 import { TestBed } from "@angular/core/testing";
 
-import { ElectronService, ElectronWindow } from "./electron.service";
+import { ElectronService } from "./electron.service";
 import { noop } from "rxjs";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
 import { Platform } from "@elevate/shared/enums";
+import { TargetModule } from "../../modules/target/desktop-target.module";
 
 describe("ElectronService", () => {
   let service: ElectronService;
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [ElectronService, { provide: DataStore, useClass: TestingDataStore }]
     });
 
     // Retrieve injected preferencesService
     service = TestBed.inject(ElectronService);
-
-    done();
-  });
-
-  it("should provide electron instance if not existing", done => {
-    // Given
-    service.instance = undefined;
-
-    const electronWindow = window as ElectronWindow;
-
-    const electronRequire = (module: string) => {
-      console.log("Loading module: " + module);
-      return {};
-    };
-
-    electronWindow.require = electronRequire;
-
-    const requireSpy = spyOn(electronWindow, "require").and.callFake(electronRequire);
-
-    // When
-    const electronInstance = service.electron;
-
-    // Then
-    expect(electronInstance).not.toBeNull();
-    expect(requireSpy).toHaveBeenCalledWith("electron");
-
-    done();
-  });
-
-  it("should provide electron instance when existing", done => {
-    // Given
-    service.instance = {};
-
-    const electronWindow = window as ElectronWindow;
-
-    const electronRequire = (module: string) => {
-      console.log("Loading module: " + module);
-      return {};
-    };
-
-    electronWindow.require = electronRequire;
-
-    const requireSpy = spyOn(electronWindow, "require").and.callFake(electronRequire);
-
-    // When
-    const electronInstance = service.electron;
-
-    // Then
-    expect(electronInstance).not.toBeNull();
-    expect(requireSpy).not.toHaveBeenCalled();
 
     done();
   });

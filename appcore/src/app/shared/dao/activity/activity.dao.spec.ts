@@ -3,11 +3,11 @@ import { ActivityDao } from "./activity.dao";
 import _ from "lodash";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
 import { SyncedActivityModel } from "@elevate/shared/models";
-import { DesktopModule } from "../../modules/desktop/desktop.module";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
+import { TargetModule } from "../../modules/target/desktop-target.module";
 
 describe("ActivityDao", () => {
   let activityDao: ActivityDao;
@@ -20,7 +20,7 @@ describe("ActivityDao", () => {
     _TEST_SYNCED_ACTIVITIES_ = _.cloneDeep(TEST_SYNCED_ACTIVITIES);
 
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, DesktopModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     });
 

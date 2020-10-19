@@ -7,6 +7,9 @@ import { FitnessTrendModule } from "../fitness-trend.module";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import { DayStressModel } from "../shared/models/day-stress.model";
+import { TargetModule } from "../../shared/modules/target/desktop-target.module";
+import { DataStore } from "../../shared/data-store/data-store";
+import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 
 describe("FitnessTrendActivitiesLinksDialogComponent", () => {
   let component: FitnessTrendActivitiesLinksDialogComponent;
@@ -21,7 +24,7 @@ describe("FitnessTrendActivitiesLinksDialogComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, FitnessTrendModule],
+      imports: [CoreModule, SharedModule, TargetModule, FitnessTrendModule],
       providers: [
         {
           provide: MAT_DIALOG_DATA,
@@ -30,7 +33,8 @@ describe("FitnessTrendActivitiesLinksDialogComponent", () => {
         {
           provide: MatDialogRef,
           useValue: {}
-        }
+        },
+        { provide: DataStore, useClass: TestingDataStore }
       ]
     }).compileComponents();
     done();

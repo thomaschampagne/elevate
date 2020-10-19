@@ -1,7 +1,6 @@
-<!--Search for options-->
-<div class="search-options" fxLayout="row" fxLayoutAlign="center center">
-  <mat-form-field class="mat-subheading-2" fxFlex="50">
-    <input [(ngModel)]="searchText" matInput placeholder="Search" type="search">
+<div class="search mat-subheading-2" fxLayout="row" fxLayoutAlign="center center">
+  <mat-form-field fxFlex="50">
+    <input [(ngModel)]="searchText" matInput placeholder="Search for questions or answers" type="search">
     <button (click)="searchText=''" *ngIf="searchText" aria-label="Clear" mat-button mat-icon-button
             matSuffix>
       <mat-icon fontSet="material-icons-outlined">close</mat-icon>
@@ -64,7 +63,7 @@
               max="{{option.max}}"
               min="{{option.min}}"
               step="{{option.step}}"
-              type="number"/>
+              type="number" />
           </mat-form-field>
 
         </mat-list-item>

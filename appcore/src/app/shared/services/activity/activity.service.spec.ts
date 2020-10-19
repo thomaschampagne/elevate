@@ -14,10 +14,9 @@ import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import { ElevateSport } from "@elevate/shared/enums";
-import { DesktopModule } from "../../modules/desktop/desktop.module";
-import { ElectronService, ElectronWindow } from "../electron/electron.service";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
+import { TargetModule } from "../../modules/target/desktop-target.module";
 
 describe("ActivityService", () => {
   let activityService: ActivityService = null;
@@ -26,22 +25,9 @@ describe("ActivityService", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, DesktopModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     });
-
-    const electronService: ElectronService = TestBed.inject(ElectronService);
-    electronService.instance = {
-      ipcRenderer: {}
-    };
-
-    const electronWindow = window as ElectronWindow;
-    const electronRequire = (module: string) => {
-      console.log("Loading module: " + module);
-      return {};
-    };
-    electronWindow.require = electronRequire;
-    spyOn(electronWindow, "require").and.callFake(electronRequire);
 
     _TEST_SYNCED_ACTIVITIES_ = _.cloneDeep(TEST_SYNCED_ACTIVITIES);
 

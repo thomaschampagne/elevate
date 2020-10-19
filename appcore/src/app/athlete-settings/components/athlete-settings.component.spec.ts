@@ -10,6 +10,7 @@ import { AthleteService } from "../../shared/services/athlete/athlete.service";
 import { AthleteModel, UserSettings } from "@elevate/shared/models";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
+import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("AthleteSettingsComponent", () => {
@@ -20,7 +21,7 @@ describe("AthleteSettingsComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, AthleteSettingsModule],
+      imports: [CoreModule, SharedModule, TargetModule, AthleteSettingsModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 

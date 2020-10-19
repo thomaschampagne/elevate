@@ -13,6 +13,7 @@ import { UserSettings } from "@elevate/shared/models";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
+import { TargetModule } from "../shared/modules/target/desktop-target.module";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ActivitiesComponent", () => {
@@ -26,13 +27,12 @@ describe("ActivitiesComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 
     spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
-      // @ts-ignore
-      addListener: (message: any, sender: any, sendResponse: any) => {}
+      addListener: () => {}
     });
 
     spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);

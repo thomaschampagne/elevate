@@ -8,6 +8,7 @@ import { AthleteSettingsModule } from "../../athlete-settings.module";
 import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
 import { DataStore } from "../../../shared/data-store/data-store";
 import { TestingDataStore } from "../../../shared/data-store/testing-datastore.service";
+import { TargetModule } from "../../../shared/modules/target/desktop-target.module";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("AthleteSettingsFormComponent", () => {
@@ -17,7 +18,7 @@ describe("AthleteSettingsFormComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, AthleteSettingsModule],
+      imports: [CoreModule, SharedModule, TargetModule, AthleteSettingsModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 

@@ -4,7 +4,6 @@ import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import {
-  DesktopImportBackupDialogComponent,
   ImportBackupDialogComponent,
   ImportExportProgressDialogComponent
 } from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
@@ -19,6 +18,7 @@ import { ConnectorSyncDateTime } from "@elevate/shared/models";
 import { ConnectorType } from "@elevate/shared/sync";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { ElectronService } from "../../shared/services/electron/electron.service";
+import { DesktopImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/desktop-import-backup-dialog.component";
 
 @Component({
   selector: "app-desktop-sync-menu",

@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { SharedModule } from "../../shared.module";
 import { CoreModule } from "../../../core/core.module";
 import { GotItDialogDataModel } from "./got-it-dialog-data.model";
+import { TargetModule } from "../../modules/target/desktop-target.module";
 
 describe("GotItDialogComponent", () => {
   const dialogTitle = "Hello World";
@@ -17,7 +18,7 @@ describe("GotItDialogComponent", () => {
   beforeEach(done => {
     gotItDialogDataModel = new GotItDialogDataModel(dialogTitle, dialogContent);
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule],
+      imports: [CoreModule, SharedModule, TargetModule],
       providers: [
         {
           provide: MAT_DIALOG_DATA,

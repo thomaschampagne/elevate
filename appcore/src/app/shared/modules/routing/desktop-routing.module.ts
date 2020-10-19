@@ -3,7 +3,6 @@ import { RouterModule, Routes } from "@angular/router";
 import { AppRoutesModel } from "../../models/app-routes.model";
 import { ActivitiesComponent } from "../../../activities/activities.component";
 import { GlobalSettingsComponent } from "../../../global-settings/global-settings.component";
-import { ZonesSettingsComponent } from "../../../zones-settings/zones-settings.component";
 import { DonateComponent } from "../../../donate/donate.component";
 import { ShareComponent } from "../../../share/share.component";
 import { ReportComponent } from "../../../report/report.component";
@@ -38,14 +37,6 @@ export class DesktopRoutingModule {
       path: AppRoutesModel.athleteSettings,
       loadChildren: () =>
         import("../../../athlete-settings/athlete-settings.module").then(module => module.AthleteSettingsModule)
-    },
-    {
-      path: AppRoutesModel.zonesSettings,
-      component: ZonesSettingsComponent
-    },
-    {
-      path: AppRoutesModel.zonesSettings + "/:zoneValue",
-      component: ZonesSettingsComponent
     },
     {
       path: AppRoutesModel.connectors,

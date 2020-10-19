@@ -1,5 +1,6 @@
 import "jest-preset-angular";
 
+// Css
 Object.defineProperty(window, "CSS", { value: null });
 
 Object.defineProperty(window, "getComputedStyle", {
@@ -10,6 +11,7 @@ Object.defineProperty(window, "getComputedStyle", {
   })
 });
 
+// Local storage
 const localStorageMock = (() => {
   let store = {};
   return {
@@ -28,6 +30,7 @@ const localStorageMock = (() => {
 
 Object.defineProperty(window, "localStorage", { value: localStorageMock });
 
+// Html
 Object.defineProperty(document, "doctype", {
   value: "<!DOCTYPE html>"
 });
@@ -37,5 +40,13 @@ Object.defineProperty(document.body.style, "transform", {
       enumerable: true,
       configurable: true
     };
+  }
+});
+
+// Electron
+Object.defineProperty(window, "require", {
+  value: () => (module: string) => {
+    console.log("Loading require module: " + module);
+    return {};
   }
 });

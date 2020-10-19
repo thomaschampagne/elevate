@@ -15,6 +15,7 @@ import { AppEventsService } from "../shared/services/external-updates/app-events
 import { UserSettings } from "@elevate/shared/models";
 import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
+import { TargetModule } from "../shared/modules/target/desktop-target.module";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("FitnessTrendComponent", () => {
@@ -29,7 +30,7 @@ describe("FitnessTrendComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, FitnessTrendModule],
+      imports: [CoreModule, SharedModule, TargetModule, FitnessTrendModule],
       providers: [
         { provide: AppEventsService, useClass: MockEventsService },
         { provide: DataStore, useClass: TestingDataStore }

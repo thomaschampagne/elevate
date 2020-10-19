@@ -12,6 +12,7 @@ import { ProgressType } from "../shared/enums/progress-type.enum";
 import { ElevateSport } from "@elevate/shared/enums";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
+import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 
 describe("ManageYearProgressPresetsDialogComponent", () => {
   const yearProgressPresetModels = [
@@ -28,7 +29,7 @@ describe("ManageYearProgressPresetsDialogComponent", () => {
     const yearProgressTypeModels: YearProgressTypeModel[] = YearProgressService.provideProgressTypes(isMetric);
 
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, YearProgressModule],
+      imports: [CoreModule, SharedModule, TargetModule, YearProgressModule],
       providers: [
         {
           provide: MAT_DIALOG_DATA,

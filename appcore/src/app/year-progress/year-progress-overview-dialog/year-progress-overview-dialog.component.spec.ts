@@ -10,6 +10,7 @@ import { YearProgressStyleModel } from "../year-progress-graph/models/year-progr
 import moment from "moment";
 import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-progress-config.model";
 import { ElevateSport } from "@elevate/shared/enums";
+import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 
 describe("YearProgressOverviewDialogComponent", () => {
   let component: YearProgressOverviewDialogComponent;
@@ -33,7 +34,7 @@ describe("YearProgressOverviewDialogComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, YearProgressModule],
+      imports: [CoreModule, SharedModule, TargetModule, YearProgressModule],
       providers: [
         {
           provide: MAT_DIALOG_DATA,
