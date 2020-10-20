@@ -572,7 +572,7 @@ export class StravaConnector extends BaseConnector {
             return Promise.reject(
               ErrorSyncEvent.UNHANDLED_ERROR_SYNC.create(
                 ConnectorType.STRAVA,
-                `UNHANDLED HTTP GET ERROR on '${url}'. Response code: ${error.statusCode} ${error.statusMessage}`
+                `UNHANDLED HTTP GET ERROR on '${url}'. Error: ${JSON.stringify(error)}`
               )
             );
         }
