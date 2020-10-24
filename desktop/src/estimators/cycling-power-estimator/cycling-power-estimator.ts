@@ -34,9 +34,7 @@ export namespace CyclingPower {
     }
 
     /**
-     *
-     * @param velocity in kph
-     * @param params
+     * Get power estimation from speed and CyclingPower.Params
      */
     public static calc(velocity: number, params: Partial<CyclingPower.Params>): number {
       params = Object.assign(Estimator.DEFAULT_PARAMS, params);

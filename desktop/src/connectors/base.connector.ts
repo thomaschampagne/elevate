@@ -3,15 +3,12 @@ import { ActivityComputer, ConnectorType, SyncEvent, SyncEventType } from "@elev
 import {
   ActivityStreamsModel,
   AnalysisDataModel,
-  AthleteModel,
   AthleteSnapshotModel,
   BareActivityModel,
-  ConnectorSyncDateTime,
   SyncedActivityModel,
   UserSettings
 } from "@elevate/shared/models";
-import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
-import { Service } from "../service";
+import { AppService } from "../app-service";
 import { filter } from "rxjs/operators";
 import crypto, { BinaryLike } from "crypto";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
@@ -20,6 +17,9 @@ import _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { CyclingPower } from "../estimators/cycling-power-estimator/cycling-power-estimator";
 import { CaloriesEstimator } from "../estimators/calories-estimator/calories-estimator";
+import { ConnectorConfig } from "./connector-config.model";
+import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
+import { IpcMessagesSender } from "../messages/ipc-messages.sender";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 /**
@@ -41,37 +41,18 @@ export class PrimitiveSourceData {
 
 export abstract class BaseConnector {
   public type: ConnectorType;
-  public athleteModel: AthleteModel;
-  public userSettingsModel: UserSettingsModel;
-  public athleteSnapshotResolver: AthleteSnapshotResolver;
-  public priority: number;
   public enabled: boolean;
+  public connectorConfig: ConnectorConfig;
+  public athleteSnapshotResolver: AthleteSnapshotResolver;
   public isSyncing: boolean;
   public stopRequested: boolean;
   public syncDateTime: number;
   public syncEvents$: ReplaySubject<SyncEvent>;
 
   protected constructor(
-    type: ConnectorType,
-    athleteModel: AthleteModel,
-    userSettingsModel: UserSettingsModel,
-    connectorSyncDateTime: ConnectorSyncDateTime,
-    priority: number,
-    enabled: boolean
-  ) {
-    this.type = type;
-    this.athleteModel = athleteModel;
-    this.athleteSnapshotResolver = new AthleteSnapshotResolver(this.athleteModel);
-    this.userSettingsModel = userSettingsModel;
-    this.syncDateTime =
-      connectorSyncDateTime && connectorSyncDateTime.syncDateTime >= 0
-        ? Math.floor(connectorSyncDateTime.syncDateTime / 1000)
-        : null; // Convert timestamp to seconds instead of millis
-    this.priority = priority;
-    this.enabled = enabled;
-    this.isSyncing = false;
-    this.stopRequested = false;
-  }
+    protected readonly appService: AppService,
+    protected readonly ipcMessagesSender: IpcMessagesSender
+  ) {}
 
   /**
    * Hash data
@@ -148,6 +129,18 @@ export abstract class BaseConnector {
     return syncedActivityModel;
   }
 
+  public configure(connectorConfig: ConnectorConfig): this {
+    this.connectorConfig = connectorConfig;
+    this.athleteSnapshotResolver = new AthleteSnapshotResolver(this.connectorConfig.athleteModel);
+    this.syncDateTime =
+      this.connectorConfig.connectorSyncDateTime && this.connectorConfig.connectorSyncDateTime.syncDateTime >= 0
+        ? Math.floor(this.connectorConfig.connectorSyncDateTime.syncDateTime / 1000)
+        : null; // Convert timestamp to seconds instead of millis
+    this.isSyncing = false;
+    this.stopRequested = false;
+    return this;
+  }
+
   public abstract sync(): Subject<SyncEvent>;
 
   public stop(): Promise<void> {
@@ -171,6 +164,18 @@ export abstract class BaseConnector {
     });
   }
 
+  public findSyncedActivityModels(
+    activityStartDate: string,
+    activityDurationSeconds: number
+  ): Promise<SyncedActivityModel[]> {
+    const flaggedIpcMessage = new FlaggedIpcMessage(
+      MessageFlag.FIND_ACTIVITY,
+      activityStartDate,
+      activityDurationSeconds
+    );
+    return this.ipcMessagesSender.send<SyncedActivityModel[]>(flaggedIpcMessage);
+  }
+
   public computeExtendedStats(
     syncedActivityModel: Partial<SyncedActivityModel>,
     athleteSnapshotModel: AthleteSnapshotModel,
@@ -183,18 +188,6 @@ export abstract class BaseConnector {
       userSettingsModel,
       streams
     );
-  }
-
-  public findSyncedActivityModels(
-    activityStartDate: string,
-    activityDurationSeconds: number
-  ): Promise<SyncedActivityModel[]> {
-    const flaggedIpcMessage = new FlaggedIpcMessage(
-      MessageFlag.FIND_ACTIVITY,
-      activityStartDate,
-      activityDurationSeconds
-    );
-    return Service.instance().ipcMainMessages.send<SyncedActivityModel[]>(flaggedIpcMessage);
   }
 
   public estimateCyclingPowerStream(

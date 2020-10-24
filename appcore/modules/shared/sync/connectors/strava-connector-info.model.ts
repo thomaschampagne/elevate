@@ -1,6 +1,7 @@
-import { StravaAccount } from "./strava-account";
+import { StravaAccount } from "../strava";
+import { ConnectorInfo } from "./connector-info.model";
 
-export class StravaConnectorInfo {
+export class StravaConnectorInfo extends ConnectorInfo {
   public static readonly DEFAULT_MODEL: StravaConnectorInfo = new StravaConnectorInfo(null, null);
 
   public clientId: number;
@@ -20,6 +21,7 @@ export class StravaConnectorInfo {
     updateSyncedActivitiesNameAndType: boolean = false,
     stravaAccount: StravaAccount = null
   ) {
+    super();
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.accessToken = accessToken;

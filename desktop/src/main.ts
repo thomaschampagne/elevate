@@ -1,15 +1,17 @@
+import "reflect-metadata";
 import Electron, { app, BrowserWindow, globalShortcut, ipcMain } from "electron";
 import path from "path";
 import url from "url";
 import logger from "electron-log";
-import { IpcMainMessagesService } from "./listeners/ipc-main-messages-service";
-import { Proxy } from "./proxy";
-import { Service } from "./service";
-import { HttpClient } from "typed-rest-client/HttpClient";
+import { AppService } from "./app-service";
 import pkg from "../package.json";
 import { Updater } from "./updater/updater";
 import { UpdateInfo } from "electron-updater";
 import { Platform } from "@elevate/shared/enums";
+import { container, inject, singleton } from "tsyringe";
+import { IpcMessagesReceiver } from "./messages/ipc-messages.receiver";
+import { HttpClient } from "./clients/http.client";
+import { IpcMessagesSender } from "./messages/ipc-messages.sender";
 
 const IS_ELECTRON_DEV = !app.isPackaged;
 logger.transports.file.level = IS_ELECTRON_DEV ? "debug" : "info";
@@ -23,16 +25,19 @@ The current workaround to import electron-updater is: package.json > build > fil
 
 const { autoUpdater } = require("electron-updater"); // Import should remains w/ "require"
 
+@singleton()
 class Main {
   private static readonly WINDOW_SIZE_RATIO: number = 0.95;
-  public ipcMainMessagesService: IpcMainMessagesService;
-  private readonly app: Electron.App;
+
+  private app: Electron.App;
   private appWindow: BrowserWindow;
 
-  constructor(electronApp: Electron.App) {
-    this.app = electronApp;
-    Service.instance().isPackaged = this.app.isPackaged;
-  }
+  constructor(
+    @inject(AppService) private readonly appService: AppService,
+    @inject(IpcMessagesSender) private readonly ipcMessagesSender: IpcMessagesSender,
+    @inject(IpcMessagesReceiver) private readonly messagesService: IpcMessagesReceiver,
+    @inject(HttpClient) private readonly httpClient: HttpClient
+  ) {}
 
   public onElectronReady(): void {
     const gotTheLock = this.app.requestSingleInstanceLock();
@@ -40,7 +45,7 @@ class Main {
     // If failed to obtain the lock, another instance of application is already running with the lock => exit immediately.
     // @see https://github.com/electron/electron/blob/master/docs/api/app.md#apprequestsingleinstancelock
     if (!gotTheLock) {
-      logger.info("We failed to obtain application the lock. Exit now");
+      logger.info("We failed to obtain application the lock. Exit now"); // TODO Inject logger with DI
       this.app.quit();
     } else {
       this.app.on("second-instance", () => {
@@ -53,7 +58,7 @@ class Main {
         }
       });
 
-      if (Service.instance().isLinux() || !Service.instance().isPackaged) {
+      if (this.appService.isLinux() || !this.appService.isPackaged) {
         this.startElevate();
         return;
       }
@@ -76,8 +81,14 @@ class Main {
     }
   }
 
-  public run(): void {
-    if (Service.instance().isPackaged) {
+  public run(electronApp: Electron.App): void {
+    this.app = electronApp;
+
+    logger.info("System details:", this.appService.printRuntimeInfo());
+
+    this.appService.isPackaged = this.app.isPackaged;
+
+    if (this.appService.isPackaged) {
       logger.log("Running in production");
     } else {
       logger.log("Running in development");
@@ -133,8 +144,8 @@ class Main {
     this.appWindow = new BrowserWindow(windowOptions);
 
     // Create the request listener to listen renderer request events
-    this.ipcMainMessagesService = new IpcMainMessagesService(ipcMain, this.appWindow.webContents);
-    this.ipcMainMessagesService.listen();
+    this.ipcMessagesSender.configure(ipcMain, this.appWindow.webContents);
+    this.messagesService.listen();
 
     this.appWindow.loadURL(
       url.format({
@@ -152,17 +163,9 @@ class Main {
     });
 
     // Detect a proxy on the system before listening for message from renderer
-    Proxy.resolve(this.appWindow).then(httpProxy => {
-      logger.info("Using proxy value: " + httpProxy);
-      Service.instance().httpClient = new HttpClient(
-        "vsts-node-api",
-        null,
-        httpProxy ? { proxy: { proxyUrl: httpProxy } } : null
-      );
-      Service.instance().ipcMainMessages = this.ipcMainMessagesService;
-    });
+    this.httpClient.detectProxy(this.appWindow);
 
-    if (!Service.instance().isPackaged) {
+    if (!this.appService.isPackaged) {
       this.appWindow.webContents.openDevTools();
     }
 
@@ -194,13 +197,10 @@ class Main {
 try {
   if (IS_ELECTRON_DEV) {
     logger.debug("Electron is in DEV mode");
-    // require("electron-reloader")(module);
   }
 
   logger.info("Version: " + pkg.version);
-  logger.info("System details:", Service.instance().printRuntimeInfo());
-
-  new Main(app).run();
+  container.resolve(Main).run(app); // Run app
 } catch (err) {
   logger.error(err);
 }

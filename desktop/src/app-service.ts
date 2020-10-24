@@ -1,56 +1,18 @@
-import { IpcMainMessagesService } from "./listeners/ipc-main-messages-service";
-import { BaseConnector } from "./connectors/base.connector";
-import { HttpClient } from "typed-rest-client/HttpClient";
 import os from "os";
 import { machineIdSync } from "node-machine-id";
 import { RuntimeInfo } from "@elevate/shared/electron";
 import crypto from "crypto";
 import { app } from "electron";
 import path from "path";
+import { singleton } from "tsyringe";
 import { Platform } from "@elevate/shared/enums";
 
-export class Service {
-  private static _instance: Service = null;
-  private _httpProxy: string;
-  private _machineId: string;
+@singleton()
+export class AppService {
   private _runtimeInfo: RuntimeInfo;
 
   constructor() {
-    this._ipcMainMessages = null;
-    this._httpProxy = null;
-    this._currentConnector = null;
-    this._machineId = null;
     this._runtimeInfo = null;
-  }
-
-  private _ipcMainMessages: IpcMainMessagesService;
-
-  get ipcMainMessages(): IpcMainMessagesService {
-    return this._ipcMainMessages;
-  }
-
-  set ipcMainMessages(value: IpcMainMessagesService) {
-    this._ipcMainMessages = value;
-  }
-
-  private _httpClient: HttpClient;
-
-  get httpClient(): HttpClient {
-    return this._httpClient;
-  }
-
-  set httpClient(value: HttpClient) {
-    this._httpClient = value;
-  }
-
-  private _currentConnector: BaseConnector;
-
-  get currentConnector(): BaseConnector {
-    return this._currentConnector;
-  }
-
-  set currentConnector(value: BaseConnector) {
-    this._currentConnector = value; // TODO Test if currentConnector is in syncing before set anything!!
   }
 
   private _isPackaged: boolean;
@@ -61,13 +23,6 @@ export class Service {
 
   set isPackaged(value: boolean) {
     this._isPackaged = value;
-  }
-
-  public static instance(): Service {
-    if (!Service._instance) {
-      Service._instance = new Service();
-    }
-    return Service._instance;
   }
 
   public getResourceFolder(): string {

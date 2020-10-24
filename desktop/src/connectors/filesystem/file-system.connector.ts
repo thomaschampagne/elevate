@@ -13,17 +13,14 @@ import {
 import { ReplaySubject, Subject } from "rxjs";
 import {
   ActivityStreamsModel,
-  AthleteModel,
   AthleteSettingsModel,
   BareActivityModel,
-  ConnectorSyncDateTime,
-  SyncedActivityModel,
-  UserSettings
+  SyncedActivityModel
 } from "@elevate/shared/models";
 import fs from "fs";
 import path from "path";
 import _ from "lodash";
-import { Service } from "../../service";
+import { AppService } from "../../app-service";
 import xmldom from "xmldom";
 import { ElevateSport } from "@elevate/shared/enums";
 import logger from "electron-log";
@@ -50,7 +47,9 @@ import { DataCadence } from "@sports-alliance/sports-lib/lib/data/data.cadence";
 import { DataLongitudeDegrees } from "@sports-alliance/sports-lib/lib/data/data.longitude-degrees";
 import { DataGrade } from "@sports-alliance/sports-lib/lib/data/data.grade";
 import { EventLibError } from "@sports-alliance/sports-lib/lib/errors/event-lib.error";
-import UserSettingsModel = UserSettings.UserSettingsModel;
+import { FileSystemConnectorConfig } from "../connector-config.model";
+import { inject, singleton } from "tsyringe";
+import { IpcMessagesSender } from "../../messages/ipc-messages.sender";
 
 export enum ActivityFileType {
   GPX = "gpx",
@@ -63,16 +62,17 @@ export enum ActivityFileType {
  */
 export class ActivityFile {
   public type: ActivityFileType;
-  public location: { onMachineId: string; path: string };
+  public location: { path: string };
   public lastModificationDate: string;
 
-  constructor(type: ActivityFileType, absolutePath: string, machineId: string, lastModificationDate: Date) {
+  constructor(type: ActivityFileType, absolutePath: string, lastModificationDate: Date) {
     this.type = type;
-    this.location = { onMachineId: machineId, path: absolutePath };
+    this.location = { path: absolutePath };
     this.lastModificationDate = _.isDate(lastModificationDate) ? lastModificationDate.toISOString() : null;
   }
 }
 
+@singleton()
 export class FileSystemConnector extends BaseConnector {
   private static HumanizedDayMoment = class {
     private static readonly SPLIT_AFTERNOON_AT = 12;
@@ -208,41 +208,16 @@ export class FileSystemConnector extends BaseConnector {
     { from: ActivityTypes.YogaPilates, to: ElevateSport.Yoga }
   ];
   private static unPackerInstance: { unpack: (path: string, options: any, callback: (err: any) => void) => void };
-  public inputDirectory: string;
-  public scanSubDirectories: boolean;
-  public deleteActivityFilesAfterSync: boolean;
-  public extractArchiveFiles: boolean;
-  public deleteArchivesAfterExtract: boolean;
-  public detectSportTypeWhenUnknown: boolean;
-  public athleteMachineId: string;
+
+  private fileSystemConnectorConfig: FileSystemConnectorConfig;
 
   constructor(
-    priority: number,
-    athleteModel: AthleteModel,
-    userSettingsModel: UserSettingsModel,
-    connectorSyncDateTime: ConnectorSyncDateTime,
-    inputDirectory: string,
-    scanSubDirectories: boolean,
-    deleteActivityFilesAfterSync: boolean,
-    extractArchiveFiles: boolean,
-    deleteArchivesAfterExtract: boolean,
-    detectSportTypeWhenUnknown: boolean
+    @inject(AppService) protected readonly appService: AppService,
+    @inject(IpcMessagesSender) protected readonly ipcMessagesSender: IpcMessagesSender
   ) {
-    super(
-      ConnectorType.FILE_SYSTEM,
-      athleteModel,
-      userSettingsModel,
-      connectorSyncDateTime,
-      priority,
-      FileSystemConnector.ENABLED
-    );
-    this.inputDirectory = inputDirectory;
-    this.scanSubDirectories = scanSubDirectories;
-    this.deleteActivityFilesAfterSync = deleteActivityFilesAfterSync;
-    this.extractArchiveFiles = extractArchiveFiles;
-    this.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
-    this.detectSportTypeWhenUnknown = detectSportTypeWhenUnknown;
-    this.athleteMachineId = Service.instance().getRuntimeInfo().athleteMachineId;
+    super(appService, ipcMessagesSender);
+    this.type = ConnectorType.FILE_SYSTEM;
+    this.enabled = FileSystemConnector.ENABLED;
   }
 
   public static getAllUnPacker(): { unpack: (path: string, options: any, callback: (err: any) => void) => void } {
@@ -252,29 +227,10 @@ export class FileSystemConnector extends BaseConnector {
     return this.unPackerInstance;
   }
 
-  public static create(
-    athleteModel: AthleteModel,
-    userSettingsModel: UserSettings.UserSettingsModel,
-    connectorSyncDateTime: ConnectorSyncDateTime,
-    inputDirectory: string,
-    scanSubDirectories: boolean = false,
-    deleteActivityFilesAfterSync: boolean = false,
-    extractArchiveFiles: boolean = false,
-    deleteArchivesAfterExtract: boolean = false,
-    detectSportTypeWhenUnknown: boolean = false
-  ) {
-    return new FileSystemConnector(
-      null,
-      athleteModel,
-      userSettingsModel,
-      connectorSyncDateTime,
-      inputDirectory,
-      scanSubDirectories,
-      deleteActivityFilesAfterSync,
-      extractArchiveFiles,
-      deleteArchivesAfterExtract,
-      detectSportTypeWhenUnknown
-    );
+  public configure(fileSystemConnectorConfig: FileSystemConnectorConfig): this {
+    super.configure(fileSystemConnectorConfig);
+    this.fileSystemConnectorConfig = fileSystemConnectorConfig;
+    return this;
   }
 
   public sync(): Subject<SyncEvent> {
@@ -309,15 +265,17 @@ export class FileSystemConnector extends BaseConnector {
   }
 
   public syncFiles(syncEvents$: Subject<SyncEvent>): Promise<void> {
-    if (!this.getFs().existsSync(this.inputDirectory)) {
-      return Promise.reject(ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(this.inputDirectory));
+    if (!this.getFs().existsSync(this.fileSystemConnectorConfig.info.sourceDirectory)) {
+      return Promise.reject(
+        ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(this.fileSystemConnectorConfig.info.sourceDirectory)
+      );
     }
 
     const afterDate = this.syncDateTime ? new Date(this.syncDateTime * 1000) : null;
 
     let prepareScanDirectory: Promise<void> = Promise.resolve();
 
-    if (!afterDate && this.extractArchiveFiles) {
+    if (!afterDate && this.fileSystemConnectorConfig.info.extractArchiveFiles) {
       const deflateNotifier$ = new Subject<string>();
       deflateNotifier$.subscribe(extractedArchivePath => {
         const extractedArchiveFileName = path.basename(extractedArchivePath);
@@ -326,10 +284,10 @@ export class FileSystemConnector extends BaseConnector {
         logger.info(evtDesc);
       });
       prepareScanDirectory = this.scanDeflateActivitiesFromArchives(
-        this.inputDirectory,
-        this.deleteArchivesAfterExtract,
+        this.fileSystemConnectorConfig.info.sourceDirectory,
+        this.fileSystemConnectorConfig.info.deleteArchivesAfterExtract,
         deflateNotifier$,
-        this.scanSubDirectories
+        this.fileSystemConnectorConfig.info.scanSubDirectories
       );
     }
 
@@ -337,9 +295,9 @@ export class FileSystemConnector extends BaseConnector {
       .then(() => {
         syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE_SYSTEM, "Scanning for activities..."));
         const activityFiles: ActivityFile[] = this.scanForActivities(
-          this.inputDirectory,
+          this.fileSystemConnectorConfig.info.sourceDirectory,
           afterDate,
-          this.scanSubDirectories
+          this.fileSystemConnectorConfig.info.scanSubDirectories
         );
         return Promise.resolve(activityFiles);
       })
@@ -429,7 +387,7 @@ export class FileSystemConnector extends BaseConnector {
                             syncedActivityModel.extendedStats = this.computeExtendedStats(
                               syncedActivityModel,
                               syncedActivityModel.athleteSnapshot,
-                              this.userSettingsModel,
+                              this.fileSystemConnectorConfig.userSettingsModel,
                               activityStreamsModel
                             );
 
@@ -594,7 +552,7 @@ export class FileSystemConnector extends BaseConnector {
     if (entryFound) {
       return { type: entryFound.to, autoDetected: false };
     } else {
-      if (this.detectSportTypeWhenUnknown) {
+      if (this.fileSystemConnectorConfig.info.detectSportTypeWhenUnknown) {
         const stats = sportsLibActivity.getStats();
 
         const distance = stats.get(DataDistance.type)?.getValue() as number;
@@ -622,7 +580,7 @@ export class FileSystemConnector extends BaseConnector {
     const MAX_RUNNING_SPEED_THRESHOLD = 40 / 3.6; // 40kph
 
     /**
-     * Modelize the max possible running average speed to perform the given distance
+     * Models the max possible running average speed to perform the given distance
      *
      * Data:
      * meters, avg kph
@@ -843,7 +801,7 @@ export class FileSystemConnector extends BaseConnector {
     const files = this.getFs().readdirSync(directory);
 
     const trackFile = (absolutePath: string, type: ActivityFileType, lastModificationDate: Date): void => {
-      pathsList.push(new ActivityFile(type, absolutePath, this.athleteMachineId, lastModificationDate));
+      pathsList.push(new ActivityFile(type, absolutePath, lastModificationDate));
     };
 
     files.forEach(file => {
@@ -903,8 +861,8 @@ export class FileSystemConnector extends BaseConnector {
       };
 
       // Append resources path to unar exec (unarchiver) if app is packaged
-      if (Service.instance().isPackaged && !Service.instance().isLinux()) {
-        options.unar = Service.instance().getResourceFolder() + "/app.asar.unpacked/node_modules/all-unpacker/unar";
+      if (this.appService.isPackaged && !this.appService.isLinux()) {
+        options.unar = this.appService.getResourceFolder() + "/app.asar.unpacked/node_modules/all-unpacker/unar";
       }
 
       FileSystemConnector.getAllUnPacker().unpack(archiveFilePath, options, err => {

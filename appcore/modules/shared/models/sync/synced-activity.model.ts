@@ -6,7 +6,7 @@ import { ConnectorType } from "../../sync/connectors";
 
 interface Extras {
   strava_activity_id?: number;
-  fs_activity_location?: { onMachineId: string; path: string };
+  fs_activity_location?: { path: string };
 }
 
 export class SyncedActivityModel extends BareActivityModel {

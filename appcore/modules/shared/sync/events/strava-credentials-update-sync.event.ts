@@ -1,7 +1,6 @@
 import { SyncEventType } from "./sync-event-type";
-import { ConnectorType } from "../connectors";
+import { ConnectorType, StravaConnectorInfo } from "../connectors";
 import { SyncEvent } from "./sync.event";
-import { StravaConnectorInfo } from "../strava";
 
 export class StravaCredentialsUpdateSyncEvent extends SyncEvent {
   public stravaConnectorInfo: StravaConnectorInfo;

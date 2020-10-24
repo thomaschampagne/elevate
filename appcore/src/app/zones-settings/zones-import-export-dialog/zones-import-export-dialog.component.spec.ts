@@ -10,7 +10,7 @@ import { Mode } from "./mode.enum";
 import { UserSettings, UserZonesModel } from "@elevate/shared/models";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
-import { TargetModule } from "../../shared/modules/desktop-target.module";
+import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ZonesImportExportDialogComponent", () => {

@@ -1,5 +1,4 @@
-import { IpcMainMessagesService } from "./ipc-main-messages-service";
-import { FlaggedIpcMessage, MessageFlag, RuntimeInfo } from "@elevate/shared/electron";
+import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import {
   ActivityComputer,
   CompleteSyncEvent,
@@ -9,156 +8,70 @@ import {
   GenericSyncEvent,
   SyncEvent
 } from "@elevate/shared/sync";
-import { StravaConnector } from "../connectors/strava/strava.connector";
 import { Subject } from "rxjs";
-import { FileSystemConnector } from "../connectors/filesystem/file-system.connector";
-import { Service } from "../service";
+import { IpcMessagesSender } from "../messages/ipc-messages.sender";
+import { container } from "tsyringe";
+import { ConnectorSyncService } from "./connector-sync.service";
+import { FileSystemConnector } from "./filesystem/file-system.connector";
+import { StravaConnector } from "./strava/strava.connector";
+import { StravaConnectorConfig } from "./connector-config.model";
 import {
   ActivityStreamsModel,
   AnalysisDataModel,
   AthleteSettingsModel,
   AthleteSnapshotModel,
   Gender,
-  SyncedActivityModel,
-  UserSettings
+  SyncedActivityModel
 } from "@elevate/shared/models";
-import _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import _ from "lodash";
 
-describe("IpcMainMessagesService", () => {
-  let ipcMainMessagesService: IpcMainMessagesService;
+describe("ConnectorSyncService", () => {
+  const currentConnectorSyncDateTime = null;
+  const athleteModel = null;
+  const connectorInfo = null;
+  const userSettingsModel = null;
+
+  let connectorSyncService: ConnectorSyncService;
+  let ipcMessagesSender: IpcMessagesSender;
+  let stravaConnector: StravaConnector;
+  let fileSystemConnector: FileSystemConnector;
 
   beforeEach(done => {
-    const ipcMain = {} as Electron.IpcMain;
-    const webContents = {} as Electron.WebContents;
-    ipcMainMessagesService = new IpcMainMessagesService(ipcMain, webContents);
-    ipcMainMessagesService.service = new Service(); // Ensure Service instance is new between tests
+    connectorSyncService = container.resolve(ConnectorSyncService);
+    ipcMessagesSender = container.resolve(IpcMessagesSender);
+    stravaConnector = container.resolve(StravaConnector);
+    fileSystemConnector = container.resolve(FileSystemConnector);
+
+    const stravaConnectorConfig: StravaConnectorConfig = {
+      connectorSyncDateTime: currentConnectorSyncDateTime,
+      athleteModel: athleteModel,
+      userSettingsModel: userSettingsModel,
+      info: connectorInfo
+    };
+    stravaConnector = stravaConnector.configure(stravaConnectorConfig);
+
+    const fileSystemConnectorConfig = {
+      connectorSyncDateTime: currentConnectorSyncDateTime,
+      athleteModel: athleteModel,
+      userSettingsModel: userSettingsModel,
+      athleteMachineId: null,
+      info: connectorInfo
+    };
+
+    fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
 
     done();
-  });
-
-  describe("Forward received messages from IpcRenderer", () => {
-    it("should start sync when a MessageFlag.START_SYNC is received", done => {
-      // Given
-      const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.START_SYNC, ConnectorType.STRAVA); // No need to provide extra payload to test forwardMessagesFromIpcRenderer
-      const replyWith = () => {};
-
-      const handleStartSyncSpy = spyOn(ipcMainMessagesService, "handleStartSync").and.stub();
-
-      // When
-      ipcMainMessagesService.forwardReceivedMessagesFromIpcRenderer(flaggedIpcMessage, replyWith);
-
-      // Then
-      expect(handleStartSyncSpy).toHaveBeenCalledTimes(1);
-      done();
-    });
-
-    it("should link strava account when a MessageFlag.LINK_STRAVA_CONNECTOR is received", done => {
-      // Given
-      const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.LINK_STRAVA_CONNECTOR, ConnectorType.STRAVA); // No need to provide extra payload to test forwardMessagesFromIpcRenderer
-      const replyWith = () => {};
-
-      const handleLinkWithStravaSpy = spyOn(ipcMainMessagesService, "handleLinkWithStrava").and.stub();
-
-      // When
-      ipcMainMessagesService.forwardReceivedMessagesFromIpcRenderer(flaggedIpcMessage, replyWith);
-
-      // Then
-      expect(handleLinkWithStravaSpy).toHaveBeenCalledTimes(1);
-      done();
-    });
-
-    it("should stop sync when MessageFlag.CANCEL_SYNC is received", done => {
-      // Given
-      const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.STOP_SYNC);
-      const replyWith = () => {};
-
-      const handleLinkWithStravaSpy = spyOn(ipcMainMessagesService, "handleStopSync").and.stub();
-
-      // When
-      ipcMainMessagesService.forwardReceivedMessagesFromIpcRenderer(flaggedIpcMessage, replyWith);
-
-      // Then
-      expect(handleLinkWithStravaSpy).toHaveBeenCalledTimes(1);
-      done();
-    });
-
-    it("should provide when a MessageFlag.GET_RUNTIME_INFO is received", done => {
-      // Given
-      const runtimeInfo = new RuntimeInfo(null, null, null, null, null, null, null);
-      const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.GET_RUNTIME_INFO, runtimeInfo);
-      const replyWith = () => {};
-
-      const handleGetRuntimeInfoSpy = spyOn(ipcMainMessagesService, "handleGetRuntimeInfo").and.stub();
-
-      // When
-      ipcMainMessagesService.forwardReceivedMessagesFromIpcRenderer(flaggedIpcMessage, replyWith);
-
-      // Then
-      expect(handleGetRuntimeInfoSpy).toHaveBeenCalledTimes(1);
-      done();
-    });
-
-    it("should compute activity when a MessageFlag.COMPUTE_ACTIVITY is received", done => {
-      // Given
-      const syncedActivityModel = new SyncedActivityModel();
-      const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
-      const userSettingsModel = new DesktopUserSettingsModel();
-      const streams = new ActivityStreamsModel();
-      const flaggedIpcMessage = new FlaggedIpcMessage(
-        MessageFlag.COMPUTE_ACTIVITY,
-        syncedActivityModel,
-        athleteSnapshotModel,
-        userSettingsModel,
-        streams
-      );
-      const replyWith = () => {};
-
-      const handleComputeActivitySpy = spyOn(ipcMainMessagesService, "handleComputeActivity").and.stub();
-
-      // When
-      ipcMainMessagesService.forwardReceivedMessagesFromIpcRenderer(flaggedIpcMessage, replyWith);
-
-      // Then
-      expect(handleComputeActivitySpy).toHaveBeenCalledTimes(1);
-      done();
-    });
-
-    it("should handle unknown MessageFlag received", done => {
-      // Given
-      const fakeFlag = -1;
-      const flaggedIpcMessage = new FlaggedIpcMessage(fakeFlag);
-      const replyWith = {
-        callback: () => {},
-        args: {
-          success: null,
-          error: "Unknown message received by IpcMain. FlaggedIpcMessage: " + JSON.stringify(flaggedIpcMessage)
-        }
-      };
-      const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
-
-      // When
-      ipcMainMessagesService.forwardReceivedMessagesFromIpcRenderer(flaggedIpcMessage, replyWith.callback);
-
-      // Then
-      expect(replyWithCallbackSpy).toBeCalledWith(replyWith.args);
-      done();
-    });
   });
 
   describe("Handle start sync", () => {
     it("should start strava connector sync", done => {
       // Given
-      const athleteModel = null;
-      const stravaConnectorInfo = null;
-      const userSettingsModel = null;
-      const currentConnectorSyncDateTime = null;
       const flaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.START_SYNC,
         ConnectorType.STRAVA,
         currentConnectorSyncDateTime,
-        stravaConnectorInfo,
+        connectorInfo,
         athleteModel,
         userSettingsModel
       );
@@ -171,22 +84,16 @@ describe("IpcMainMessagesService", () => {
       };
       const stravaConnectorSyncCalls = 1;
 
-      const stravaConnectorMock = StravaConnector.create(
-        athleteModel,
-        userSettingsModel,
-        currentConnectorSyncDateTime,
-        stravaConnectorInfo
-      );
-      const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
-      const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(new Subject<SyncEvent>());
+      const configureStravaConnectorSpy = spyOn(stravaConnector, "configure").and.callThrough();
+      const stravaConnectorSyncSpy = spyOn(stravaConnector, "sync").and.returnValue(new Subject<SyncEvent>());
       const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 
       // When
-      ipcMainMessagesService.handleStartSync(flaggedIpcMessage, replyWith.callback);
+      connectorSyncService.sync(flaggedIpcMessage, replyWith.callback);
 
       // Then
-      expect(createStravaConnectorSpy).toBeCalledTimes(1);
-      expect(ipcMainMessagesService.service.currentConnector).not.toBeNull();
+      expect(configureStravaConnectorSpy).toBeCalledTimes(1);
+      expect(connectorSyncService.currentConnector).not.toBeNull();
       expect(stravaConnectorSyncSpy).toBeCalledTimes(stravaConnectorSyncCalls);
       expect(replyWithCallbackSpy).toBeCalledWith(replyWith.args);
 
@@ -195,9 +102,6 @@ describe("IpcMainMessagesService", () => {
 
     it("should start file system connector sync", done => {
       // Given
-      const athleteModel = null;
-      const userSettingsModel = null;
-      const currentConnectorSyncDateTime = null;
       const expectedFileSystemConnectorInfo = new FileSystemConnectorInfo("/path/to/dir/");
       const flaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.START_SYNC,
@@ -216,27 +120,16 @@ describe("IpcMainMessagesService", () => {
       };
       const fsConnectorSyncCalls = 1;
 
-      const fileSystemConnectorMock = FileSystemConnector.create(
-        athleteModel,
-        userSettingsModel,
-        currentConnectorSyncDateTime,
-        expectedFileSystemConnectorInfo.sourceDirectory,
-        expectedFileSystemConnectorInfo.scanSubDirectories
-      );
-      const createFileSystemConnectorSpy = spyOn(FileSystemConnector, "create").and.returnValue(
-        fileSystemConnectorMock
-      );
-      const fileSystemConnectorSyncSpy = spyOn(fileSystemConnectorMock, "sync").and.returnValue(
-        new Subject<SyncEvent>()
-      );
+      const configureFileSystemConnectorSpy = spyOn(fileSystemConnector, "configure").and.callThrough();
+      const fileSystemConnectorSyncSpy = spyOn(fileSystemConnector, "sync").and.returnValue(new Subject<SyncEvent>());
       const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 
       // When
-      ipcMainMessagesService.handleStartSync(flaggedIpcMessage, replyWith.callback);
+      connectorSyncService.sync(flaggedIpcMessage, replyWith.callback);
 
       // Then
-      expect(createFileSystemConnectorSpy).toBeCalled();
-      expect(ipcMainMessagesService.service.currentConnector).not.toBeNull();
+      expect(configureFileSystemConnectorSpy).toBeCalled();
+      expect(connectorSyncService.currentConnector).not.toBeNull();
       expect(fileSystemConnectorSyncSpy).toBeCalledTimes(fsConnectorSyncCalls);
       expect(replyWithCallbackSpy).toBeCalledWith(replyWith.args);
 
@@ -245,9 +138,9 @@ describe("IpcMainMessagesService", () => {
 
     it("should not start a sync already running", done => {
       // Given
-      ipcMainMessagesService.service.currentConnector = FileSystemConnector.create(null, null, null, null);
-      ipcMainMessagesService.service.currentConnector.isSyncing = true;
-      const syncSpy = spyOn(ipcMainMessagesService.service.currentConnector, "sync").and.stub();
+      connectorSyncService.currentConnector = fileSystemConnector;
+      connectorSyncService.currentConnector.isSyncing = true;
+      const syncSpy = spyOn(connectorSyncService.currentConnector, "sync").and.stub();
 
       const replyWith = {
         callback: () => {},
@@ -269,10 +162,10 @@ describe("IpcMainMessagesService", () => {
       );
 
       // When
-      ipcMainMessagesService.handleStartSync(flaggedIpcMessage, replyWith.callback);
+      connectorSyncService.sync(flaggedIpcMessage, replyWith.callback);
 
       // Then
-      expect(ipcMainMessagesService.service.currentConnector).not.toBeNull();
+      expect(connectorSyncService.currentConnector).not.toBeNull();
       expect(replyWithCallbackSpy).toBeCalledWith(replyWith.args);
       expect(syncSpy).not.toBeCalled();
 
@@ -281,16 +174,12 @@ describe("IpcMainMessagesService", () => {
 
     it("should send sync events (inc sync 'non-stop' errors) to IpcRenderer", done => {
       // Given
-      const athleteModel = null;
-      const stravaConnectorInfo = null;
-      const userSettingsModel = null;
-      const connectorSyncDateTime = null;
       const flaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.START_SYNC,
         ConnectorType.STRAVA,
         athleteModel,
         userSettingsModel,
-        stravaConnectorInfo
+        connectorInfo
       );
 
       const syncEvent$ = new Subject<SyncEvent>();
@@ -304,26 +193,20 @@ describe("IpcMainMessagesService", () => {
         }
       };
       const stravaConnectorSyncCalls = 1;
-      const stravaConnectorMock = StravaConnector.create(
-        athleteModel,
-        userSettingsModel,
-        connectorSyncDateTime,
-        stravaConnectorInfo
-      );
-      const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
-      const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(syncEvent$);
-      const sendMessageSpy = spyOn(ipcMainMessagesService, "send").and.returnValue(
+      const configureStravaConnectorSpy = spyOn(stravaConnector, "configure").and.returnValue(stravaConnector);
+      const stravaConnectorSyncSpy = spyOn(stravaConnector, "sync").and.returnValue(syncEvent$);
+      const sendMessageSpy = spyOn(ipcMessagesSender, "send").and.returnValue(
         Promise.resolve("Message received by IpcMain")
       );
       const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 
       // When
-      ipcMainMessagesService.handleStartSync(flaggedIpcMessage, replyWith.callback);
+      connectorSyncService.sync(flaggedIpcMessage, replyWith.callback);
       syncEvent$.next(fakeGenericSyncEvent);
 
       // Then
-      expect(createStravaConnectorSpy).toBeCalled();
-      expect(ipcMainMessagesService.service.currentConnector).not.toBeNull();
+      expect(configureStravaConnectorSpy).toBeCalled();
+      expect(connectorSyncService.currentConnector).not.toBeNull();
       expect(stravaConnectorSyncSpy).toBeCalledTimes(stravaConnectorSyncCalls);
       expect(replyWithCallbackSpy).toBeCalledWith(replyWith.args);
       expect(sendMessageSpy).toBeCalledWith(expectedFlaggedMessageSent);
@@ -332,16 +215,12 @@ describe("IpcMainMessagesService", () => {
 
     it("should send error sync events raised (sync 'stop' errors) to IpcRenderer", done => {
       // Given
-      const athleteModel = null;
-      const stravaConnectorInfo = null;
-      const userSettingsModel = null;
-      const connectorSyncDateTime = null;
       const flaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.START_SYNC,
         ConnectorType.STRAVA,
         athleteModel,
         userSettingsModel,
-        stravaConnectorInfo
+        connectorInfo
       );
 
       const syncEvent$ = new Subject<SyncEvent>();
@@ -359,25 +238,19 @@ describe("IpcMainMessagesService", () => {
         }
       };
       const stravaConnectorSyncCalls = 1;
-      const stravaConnectorMock = StravaConnector.create(
-        athleteModel,
-        userSettingsModel,
-        connectorSyncDateTime,
-        stravaConnectorInfo
-      );
-      const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
-      const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(syncEvent$);
-      const sendMessageSpy = spyOn(ipcMainMessagesService, "send").and.returnValue(
+      const configureStravaConnectorSpy = spyOn(stravaConnector, "configure").and.callThrough();
+      const stravaConnectorSyncSpy = spyOn(stravaConnector, "sync").and.returnValue(syncEvent$);
+      const sendMessageSpy = spyOn(ipcMessagesSender, "send").and.returnValue(
         Promise.resolve("Message received by IpcMain")
       );
       const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 
       // When
-      ipcMainMessagesService.handleStartSync(flaggedIpcMessage, replyWith.callback);
+      connectorSyncService.sync(flaggedIpcMessage, replyWith.callback);
       syncEvent$.error(fakeErrorSyncEvent);
 
       // Then
-      expect(createStravaConnectorSpy).toBeCalled();
+      expect(configureStravaConnectorSpy).toBeCalled();
       expect(stravaConnectorSyncSpy).toBeCalledTimes(stravaConnectorSyncCalls);
       expect(replyWithCallbackSpy).toBeCalledWith(replyWith.args);
       expect(sendMessageSpy).toBeCalledWith(expectedFlaggedMessageSent);
@@ -388,7 +261,7 @@ describe("IpcMainMessagesService", () => {
         },
         error => {
           expect(error).toEqual(fakeErrorSyncEvent);
-          expect(ipcMainMessagesService.service.currentConnector).toBeNull();
+          expect(connectorSyncService.currentConnector).toBeNull();
           done();
         },
         () => {
@@ -399,17 +272,13 @@ describe("IpcMainMessagesService", () => {
 
     it("should send complete sync events to IpcRenderer", done => {
       // Given
-      const athleteModel = null;
       const updateSyncedActivitiesNameAndType = true;
-      const stravaConnectorInfo = null;
-      const connectorSyncDateTime = null;
-      const userSettingsModel = null;
       const flaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.START_SYNC,
         ConnectorType.STRAVA,
         athleteModel,
         userSettingsModel,
-        stravaConnectorInfo,
+        connectorInfo,
         updateSyncedActivitiesNameAndType
       );
 
@@ -424,25 +293,19 @@ describe("IpcMainMessagesService", () => {
         }
       };
       const stravaConnectorSyncCalls = 1;
-      const stravaConnectorMock = StravaConnector.create(
-        athleteModel,
-        userSettingsModel,
-        connectorSyncDateTime,
-        stravaConnectorInfo
-      );
-      const createStravaConnectorSpy = spyOn(StravaConnector, "create").and.returnValue(stravaConnectorMock);
-      const stravaConnectorSyncSpy = spyOn(stravaConnectorMock, "sync").and.returnValue(syncEvent$);
-      const sendMessageSpy = spyOn(ipcMainMessagesService, "send").and.returnValue(
+      const configureStravaConnectorSpy = spyOn(stravaConnector, "configure").and.callThrough();
+      const stravaConnectorSyncSpy = spyOn(stravaConnector, "sync").and.returnValue(syncEvent$);
+      const sendMessageSpy = spyOn(ipcMessagesSender, "send").and.returnValue(
         Promise.resolve("Message received by IpcMain")
       );
       const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 
       // When
-      ipcMainMessagesService.handleStartSync(flaggedIpcMessage, replyWith.callback);
+      connectorSyncService.sync(flaggedIpcMessage, replyWith.callback);
       syncEvent$.complete();
 
       // Then
-      expect(createStravaConnectorSpy).toBeCalled();
+      expect(configureStravaConnectorSpy).toBeCalled();
       expect(stravaConnectorSyncSpy).toBeCalledTimes(stravaConnectorSyncCalls);
       expect(replyWithCallbackSpy).toBeCalledWith(replyWith.args);
       expect(sendMessageSpy).toBeCalledWith(expectedFlaggedMessageSent);
@@ -455,7 +318,7 @@ describe("IpcMainMessagesService", () => {
           throw new Error("Test fail!");
         },
         () => {
-          expect(ipcMainMessagesService.service.currentConnector).toBeNull();
+          expect(connectorSyncService.currentConnector).toBeNull();
           done();
         }
       );
@@ -467,12 +330,12 @@ describe("IpcMainMessagesService", () => {
       // Given
       const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.STOP_SYNC, ConnectorType.STRAVA);
       const replyWith = () => {};
-      const connector = StravaConnector.create(null, null, null, null);
-      jest.spyOn(ipcMainMessagesService.service, "currentConnector", "get").mockReturnValue(connector);
-      const stopConnectorSyncSpy = spyOn(connector, "stop").and.returnValue(Promise.resolve());
+      connectorSyncService.currentConnector = stravaConnector;
+
+      const stopConnectorSyncSpy = spyOn(stravaConnector, "stop").and.returnValue(Promise.resolve());
 
       // When
-      ipcMainMessagesService.handleStopSync(flaggedIpcMessage, replyWith);
+      connectorSyncService.stop(flaggedIpcMessage, replyWith);
 
       // Then
       expect(stopConnectorSyncSpy).toBeCalledTimes(1);
@@ -490,13 +353,13 @@ describe("IpcMainMessagesService", () => {
         }
       };
 
-      const connector = StravaConnector.create(null, null, null, null);
-      jest.spyOn(ipcMainMessagesService.service, "currentConnector", "get").mockReturnValue(null);
-      const stopConnectorSyncSpy = spyOn(connector, "stop").and.stub();
+      connectorSyncService.currentConnector = null;
+
+      const stopConnectorSyncSpy = spyOn(stravaConnector, "stop").and.stub();
       const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 
       // When
-      ipcMainMessagesService.handleStopSync(flaggedIpcMessage, replyWith.callback);
+      connectorSyncService.stop(flaggedIpcMessage, replyWith.callback);
 
       // Then
       expect(stopConnectorSyncSpy).not.toBeCalled();
@@ -517,13 +380,12 @@ describe("IpcMainMessagesService", () => {
         }
       };
 
-      const connector = FileSystemConnector.create(null, null, null, null);
-      jest.spyOn(ipcMainMessagesService.service, "currentConnector", "get").mockReturnValue(connector);
-      const stopConnectorSyncSpy = spyOn(connector, "stop").and.stub();
+      connectorSyncService.currentConnector = fileSystemConnector;
+      const stopConnectorSyncSpy = spyOn(fileSystemConnector, "stop").and.callThrough();
       const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 
       // When
-      ipcMainMessagesService.handleStopSync(flaggedIpcMessage, replyWith.callback);
+      connectorSyncService.stop(flaggedIpcMessage, replyWith.callback);
 
       // Then
       expect(stopConnectorSyncSpy).not.toBeCalled();
@@ -556,7 +418,7 @@ describe("IpcMainMessagesService", () => {
       const replyWithSpy = spyOn(replyWrapper, "replyWith");
 
       // When
-      ipcMainMessagesService.handleComputeActivity(flaggedIpcMessage, replyWrapper.replyWith);
+      connectorSyncService.computeActivity(flaggedIpcMessage, replyWrapper.replyWith);
 
       // Then
       expect(calculateSpy).toBeCalledTimes(1);
@@ -588,7 +450,7 @@ describe("IpcMainMessagesService", () => {
       const replyWithSpy = spyOn(replyWrapper, "replyWith");
 
       // When
-      ipcMainMessagesService.handleComputeActivity(flaggedIpcMessage, replyWrapper.replyWith);
+      connectorSyncService.computeActivity(flaggedIpcMessage, replyWrapper.replyWith);
 
       // Then
       expect(calculateSpy).toBeCalledTimes(1);
@@ -626,31 +488,11 @@ describe("IpcMainMessagesService", () => {
       const replyWithSpy = spyOn(replyWrapper, "replyWith");
 
       // When
-      ipcMainMessagesService.handleComputeActivity(flaggedIpcMessage, replyWrapper.replyWith);
+      connectorSyncService.computeActivity(flaggedIpcMessage, replyWrapper.replyWith);
 
       // Then
       expect(calculateSpy).toBeCalledTimes(1);
       expect(replyWithSpy).toBeCalledWith({ success: null, error: expectedElevateException });
-      done();
-    });
-  });
-
-  describe("Handle get machine id", () => {
-    it("should get runtime info", done => {
-      // Given
-      const replyWrapper = {
-        replyWith: () => {}
-      };
-      const fakeRuntimeInfo = new RuntimeInfo(null, null, null, null, null, null, null);
-      const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.GET_RUNTIME_INFO, fakeRuntimeInfo);
-      jest.spyOn(Service.instance(), "getRuntimeInfo").mockReturnValue(fakeRuntimeInfo);
-      const replyWithSpy = jest.spyOn(replyWrapper, "replyWith");
-
-      // When
-      ipcMainMessagesService.handleGetRuntimeInfo(flaggedIpcMessage, replyWrapper.replyWith);
-
-      // Then
-      expect(replyWithSpy).toBeCalledWith({ success: fakeRuntimeInfo, error: null });
       done();
     });
   });

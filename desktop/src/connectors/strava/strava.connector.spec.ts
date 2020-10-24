@@ -5,9 +5,7 @@ import {
   ErrorSyncEvent,
   StartedSyncEvent,
   StoppedSyncEvent,
-  StravaAccount,
   StravaConnectorInfo,
-  StravaCredentialsUpdateSyncEvent,
   SyncEvent,
   SyncEventType
 } from "@elevate/shared/sync";
@@ -18,7 +16,6 @@ import {
   AthleteModel,
   BareActivityModel,
   ConnectorSyncDateTime,
-  Gender,
   SyncedActivityModel,
   UserSettings
 } from "@elevate/shared/models";
@@ -27,10 +24,13 @@ import { Subject } from "rxjs";
 import { filter } from "rxjs/operators";
 import { IHttpClientResponse } from "typed-rest-client/Interfaces";
 import http, { IncomingHttpHeaders } from "http";
-import { HttpClient, HttpCodes } from "typed-rest-client/HttpClient";
-import { Service } from "../../service";
+import { HttpCodes } from "typed-rest-client/HttpClient";
+import { AppService } from "../../app-service";
 import { BaseConnector } from "../base.connector";
 import { BuildTarget, ElevateSport } from "@elevate/shared/enums";
+import { StravaConnectorConfig } from "../connector-config.model";
+import { container } from "tsyringe";
+import { StravaApiClient } from "../../clients/strava-api.client";
 
 const getActivitiesFixture = (page: number, perPage: number, activities: Array<BareActivityModel[]>) => {
   const from = page > 1 ? (page - 1) * perPage : 0;
@@ -38,40 +38,41 @@ const getActivitiesFixture = (page: number, perPage: number, activities: Array<B
   return _.cloneDeep(activities[0].slice(from, to));
 };
 
+const createSuccessResponse = (
+  dataResponse: object,
+  statusCode: number = HttpCodes.OK,
+  statusMessage: string = null,
+  headers: IncomingHttpHeaders = {}
+): IHttpClientResponse => {
+  headers[StravaApiClient.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
+  headers[StravaApiClient.STRAVA_RATELIMIT_USAGE_HEADER] = "0,0";
+
+  const message: Partial<http.IncomingMessage> = {
+    statusCode: statusCode,
+    statusMessage: statusMessage,
+    headers: headers
+  };
+
+  return {
+    message: message as http.IncomingMessage,
+    readBody: () => {
+      return Promise.resolve(dataResponse ? JSON.stringify(dataResponse) : null);
+    }
+  };
+};
+
+const createErrorResponse = (statusCode: number, statusMessage: string = null, headers: IncomingHttpHeaders = {}) => {
+  return createSuccessResponse(null, statusCode, statusMessage, headers);
+};
+
 describe("StravaConnector", () => {
-  const createSuccessResponse = (
-    dataResponse: object,
-    statusCode: number = HttpCodes.OK,
-    statusMessage: string = null,
-    headers: IncomingHttpHeaders = {}
-  ): IHttpClientResponse => {
-    headers[StravaConnector.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
-    headers[StravaConnector.STRAVA_RATELIMIT_USAGE_HEADER] = "0,0";
-
-    const message: Partial<http.IncomingMessage> = {
-      statusCode: statusCode,
-      statusMessage: statusMessage,
-      headers: headers
-    };
-
-    return {
-      message: message as http.IncomingMessage,
-      readBody: () => {
-        return Promise.resolve(dataResponse ? JSON.stringify(dataResponse) : null);
-      }
-    };
-  };
-
-  const createErrorResponse = (statusCode: number, statusMessage: string = null, headers: IncomingHttpHeaders = {}) => {
-    return createSuccessResponse(null, statusCode, statusMessage, headers);
-  };
-
-  const priority = 1;
   const clientId = 9999;
   const clientSecret = "9999";
   const accessToken = "fakeToken";
 
   let stravaConnector: StravaConnector;
+  let appService: AppService;
+
   let fetchRemoteStravaBareActivityModelsSpy: jasmine.Spy;
   let processBareActivitiesSpy: jasmine.Spy;
   let findSyncedActivityModelsSpy: jasmine.Spy;
@@ -85,14 +86,17 @@ describe("StravaConnector", () => {
     fakeActivitiesFixture = jsonFakeActivitiesFixture as any;
     fakeStreamsFixture = jsonFakeStreamsFixture as StravaApiStreamType[];
 
-    const connectorSyncDateTime = null;
-    stravaConnector = new StravaConnector(
-      priority,
-      AthleteModel.DEFAULT_MODEL,
-      UserSettings.getDefaultsByBuildTarget(BuildTarget.DESKTOP),
-      connectorSyncDateTime,
-      new StravaConnectorInfo(clientId, clientSecret, accessToken)
-    );
+    appService = container.resolve(AppService);
+    stravaConnector = container.resolve(StravaConnector);
+
+    const stravaConnectorConfig: StravaConnectorConfig = {
+      connectorSyncDateTime: null,
+      athleteModel: AthleteModel.DEFAULT_MODEL,
+      userSettingsModel: UserSettings.getDefaultsByBuildTarget(BuildTarget.DESKTOP),
+      info: new StravaConnectorInfo(clientId, clientSecret, accessToken)
+    };
+
+    stravaConnector = stravaConnector.configure(stravaConnectorConfig);
 
     // Simulate strava pages
     fetchRemoteStravaBareActivityModelsSpy = spyOn(stravaConnector, "fetchRemoteStravaBareActivityModels");
@@ -113,51 +117,44 @@ describe("StravaConnector", () => {
     getStravaActivityStreamsSpy = spyOn(stravaConnector, "getStravaActivityStreams");
     getStravaActivityStreamsSpy.and.callThrough();
 
-    Service.instance().httpClient = new HttpClient("vsts-node-api");
-
     done();
   });
 
-  describe("Create connector", () => {
-    it("should create strava connector without sync date time", done => {
+  describe("Configure connector", () => {
+    it("should configure strava connector without sync date time", done => {
       // Given
-      const athleteModel = null;
-      const stravaConnectorInfo = null;
-      const userSettingsModel = null;
-      const currentConnectorSyncDateTime = null;
+      const stravaConnectorConfig: StravaConnectorConfig = {
+        connectorSyncDateTime: null,
+        athleteModel: null,
+        userSettingsModel: null,
+        info: null
+      };
 
       // When
-      const connector = StravaConnector.create(
-        athleteModel,
-        userSettingsModel,
-        currentConnectorSyncDateTime,
-        stravaConnectorInfo
-      );
+      stravaConnector = stravaConnector.configure(stravaConnectorConfig);
 
       // Then
-      expect(connector.syncDateTime).toBeNull();
+      expect(stravaConnector.syncDateTime).toBeNull();
       done();
     });
 
-    it("should create strava connector with sync date time", done => {
+    it("should configure strava connector with sync date time", done => {
       // Given
-      const athleteModel = null;
-      const stravaConnectorInfo = null;
-      const userSettingsModel = null;
       const syncDateTime = Date.now();
       const expectedSyncDateTime = Math.floor(syncDateTime / 1000);
-      const currentConnectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.STRAVA, syncDateTime);
+
+      const stravaConnectorConfig: StravaConnectorConfig = {
+        connectorSyncDateTime: new ConnectorSyncDateTime(ConnectorType.STRAVA, syncDateTime),
+        athleteModel: null,
+        userSettingsModel: null,
+        info: null
+      };
 
       // When
-      const connector = StravaConnector.create(
-        athleteModel,
-        userSettingsModel,
-        currentConnectorSyncDateTime,
-        stravaConnectorInfo
-      );
+      stravaConnector = stravaConnector.configure(stravaConnectorConfig);
 
       // Then
-      expect(connector.syncDateTime).toEqual(expectedSyncDateTime);
+      expect(stravaConnector.syncDateTime).toEqual(expectedSyncDateTime);
       done();
     });
   });
@@ -419,255 +416,6 @@ describe("StravaConnector", () => {
     });
   });
 
-  describe("Ensure strava authentication", () => {
-    const stravaAthlete = {
-      id: 99999,
-      username: "johndoo",
-      firstname: "John",
-      lastname: "Doo",
-      city: "Grenoble",
-      state: "Isere",
-      country: "France",
-      sex: "M"
-    };
-
-    const expectedStravaAccount: StravaAccount = {
-      id: stravaAthlete.id,
-      username: stravaAthlete.username,
-      firstname: stravaAthlete.firstname,
-      lastname: stravaAthlete.lastname,
-      city: stravaAthlete.city,
-      state: stravaAthlete.state,
-      country: stravaAthlete.country,
-      gender: stravaAthlete.sex === "M" ? Gender.MEN : Gender.WOMEN
-    };
-
-    it("should successfully authenticate to strava when no access token exists", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const stravaConnectorInfo = new StravaConnectorInfo(666, "secret");
-      const authorizeResponse = {
-        accessToken: "fakeAccessToken",
-        refreshToken: "fakeRefreshToken",
-        expiresAt: 11111,
-        athlete: stravaAthlete
-      };
-      const authorizeSpy = spyOn(stravaConnector.stravaAuthenticator, "authorize").and.returnValue(
-        Promise.resolve(authorizeResponse)
-      );
-
-      const syncEventNextSpy = spyOn(syncEvents$, "next").and.callThrough();
-      const expectedStravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(
-        _.cloneDeep(stravaConnectorInfo)
-      );
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.accessToken = authorizeResponse.accessToken;
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.refreshToken = authorizeResponse.refreshToken;
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.expiresAt = authorizeResponse.expiresAt;
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.stravaAccount = expectedStravaAccount;
-
-      // When
-      const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaConnectorInfo));
-
-      // Then
-      promise.then(
-        () => {
-          expect(authorizeSpy).toBeCalledWith(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret);
-          expect(syncEventNextSpy).toBeCalledWith(expectedStravaCredentialsUpdateSyncEvent);
-          done();
-        },
-        () => {
-          throw new Error("Whoops! I should not be here!");
-        }
-      );
-    });
-
-    it("should successfully authenticate to strava when no refresh token exists", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const stravaConnectorInfo = new StravaConnectorInfo(666, "secret", "oldAccessToken");
-      const authorizeResponse = {
-        accessToken: "fakeAccessToken",
-        refreshToken: "fakeRefreshToken",
-        expiresAt: 11111,
-        athlete: stravaAthlete
-      };
-      const authorizeSpy = spyOn(stravaConnector.stravaAuthenticator, "authorize").and.returnValue(
-        Promise.resolve(authorizeResponse)
-      );
-
-      const syncEventNextSpy = spyOn(syncEvents$, "next").and.callThrough();
-      const expectedStravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(
-        _.cloneDeep(stravaConnectorInfo)
-      );
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.accessToken = authorizeResponse.accessToken;
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.refreshToken = authorizeResponse.refreshToken;
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.expiresAt = authorizeResponse.expiresAt;
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.stravaAccount = expectedStravaAccount;
-
-      // When
-      const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaConnectorInfo));
-
-      // Then
-      promise.then(
-        () => {
-          expect(authorizeSpy).toBeCalledWith(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret);
-          expect(syncEventNextSpy).toBeCalledWith(expectedStravaCredentialsUpdateSyncEvent);
-          done();
-        },
-        () => {
-          throw new Error("Whoops! I should not be here!");
-        }
-      );
-    });
-
-    it("should successfully authenticate to strava when the access token is expired & a refresh token exists", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const stravaConnectorInfo = new StravaConnectorInfo(666, "secret", "oldAccessToken", "oldRefreshToken");
-      stravaConnectorInfo.expiresAt = 0; // Access token expired
-      const refreshResponse = {
-        accessToken: "fakeAccessToken",
-        refreshToken: "fakeRefreshToken",
-        expiresAt: 11111,
-        athlete: stravaAthlete
-      };
-      const refreshSpy = spyOn(stravaConnector.stravaAuthenticator, "refresh").and.returnValue(
-        Promise.resolve(refreshResponse)
-      );
-
-      const syncEventNextSpy = spyOn(syncEvents$, "next").and.callThrough();
-      const expectedStravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(
-        _.cloneDeep(stravaConnectorInfo)
-      );
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.accessToken = refreshResponse.accessToken;
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.refreshToken = refreshResponse.refreshToken;
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.expiresAt = refreshResponse.expiresAt;
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.stravaAccount = expectedStravaAccount;
-
-      // When
-      const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaConnectorInfo));
-
-      // Then
-      promise.then(
-        () => {
-          expect(refreshSpy).toBeCalledWith(
-            stravaConnectorInfo.clientId,
-            stravaConnectorInfo.clientSecret,
-            stravaConnectorInfo.refreshToken
-          );
-          expect(syncEventNextSpy).toBeCalledWith(expectedStravaCredentialsUpdateSyncEvent);
-          done();
-        },
-        () => {
-          throw new Error("Whoops! I should not be here!");
-        }
-      );
-    });
-
-    it("should successfully authenticate to strava when the access token is expired & no refresh token exists", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const stravaConnectorInfo = new StravaConnectorInfo(666, "secret", "oldAccessToken");
-      stravaConnectorInfo.expiresAt = 0; // Access token expired
-      const authorizeResponse = {
-        accessToken: "fakeAccessToken",
-        refreshToken: "fakeRefreshToken",
-        expiresAt: 11111,
-        athlete: stravaAthlete
-      };
-      const authorizeSpy = spyOn(stravaConnector.stravaAuthenticator, "authorize").and.returnValue(
-        Promise.resolve(authorizeResponse)
-      );
-
-      const syncEventNextSpy = spyOn(syncEvents$, "next").and.callThrough();
-      const expectedStravaCredentialsUpdateSyncEvent = new StravaCredentialsUpdateSyncEvent(
-        _.cloneDeep(stravaConnectorInfo)
-      );
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.accessToken = authorizeResponse.accessToken;
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.refreshToken = authorizeResponse.refreshToken;
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.expiresAt = authorizeResponse.expiresAt;
-      expectedStravaCredentialsUpdateSyncEvent.stravaConnectorInfo.stravaAccount = expectedStravaAccount;
-
-      // When
-      const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaConnectorInfo));
-
-      // Then
-      promise.then(
-        () => {
-          expect(authorizeSpy).toBeCalledWith(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret);
-          expect(syncEventNextSpy).toBeCalledWith(expectedStravaCredentialsUpdateSyncEvent);
-          done();
-        },
-        () => {
-          throw new Error("Whoops! I should not be here!");
-        }
-      );
-    });
-
-    it("should not authenticate to strava when access token is valid (not expired)", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const stravaConnectorInfo = new StravaConnectorInfo(666, "secret", "oldAccessToken", "oldRefreshToken");
-      stravaConnectorInfo.expiresAt = new Date().getTime();
-      const authorizeResponse = {
-        accessToken: "fakeAccessToken",
-        refreshToken: "fakeRefreshToken",
-        expiresAt: 11111,
-        athlete: stravaAthlete
-      };
-      const refreshSpy = spyOn(stravaConnector.stravaAuthenticator, "refresh").and.returnValue(
-        Promise.resolve(authorizeResponse)
-      );
-      const authorizeSpy = spyOn(stravaConnector.stravaAuthenticator, "authorize").and.returnValue(
-        Promise.resolve(authorizeResponse)
-      );
-      const syncEventNextSpy = spyOn(syncEvents$, "next").and.callThrough();
-
-      spyOn(stravaConnector, "getCurrentTime").and.returnValue(stravaConnectorInfo.expiresAt - 10000); // Access token not expired
-
-      // When
-      const promise = stravaConnector.stravaTokensUpdater(syncEvents$, stravaConnectorInfo);
-
-      // Then
-      promise.then(
-        () => {
-          expect(authorizeSpy).not.toBeCalled();
-          expect(refreshSpy).not.toBeCalled();
-          expect(syncEventNextSpy).not.toBeCalled();
-          done();
-        },
-        () => {
-          throw new Error("Whoops! I should not be here!");
-        }
-      );
-    });
-
-    it("should reject when authentication to strava fails", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const stravaConnectorInfo = new StravaConnectorInfo(666, "secret");
-      const authorizeSpy = spyOn(stravaConnector.stravaAuthenticator, "authorize").and.returnValue(Promise.reject());
-
-      const syncEventNextSpy = spyOn(syncEvents$, "next").and.callThrough();
-
-      // When
-      const promise = stravaConnector.stravaTokensUpdater(syncEvents$, _.cloneDeep(stravaConnectorInfo));
-
-      // Then
-      promise.then(
-        () => {
-          throw new Error("Whoops! I should not be here!");
-        },
-        () => {
-          expect(authorizeSpy).toBeCalledWith(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret);
-          expect(syncEventNextSpy).not.toBeCalled();
-
-          done();
-        }
-      );
-    });
-  });
-
   describe("Stop sync", () => {
     it("should stop a processing sync", done => {
       // Given
@@ -722,492 +470,6 @@ describe("StravaConnector", () => {
           done();
         }
       );
-    });
-  });
-
-  describe("Perform strava api calls", () => {
-    describe("Wait time before retry", () => {
-      it("should retry 2 minutes later when 1st try failed", done => {
-        // Given
-        const expectedMinutes = 2 * 60 * 1000;
-
-        // When
-        const result = stravaConnector.calculateRetryInTime(1);
-
-        // Then
-        expect(result).toEqual(expectedMinutes);
-        done();
-      });
-
-      it("should retry 5 minutes later when 2nd try failed", done => {
-        // Given
-        const expectedMinutes = 5 * 60 * 1000;
-
-        // When
-        const result = stravaConnector.calculateRetryInTime(2);
-
-        // Then
-        expect(result).toEqual(expectedMinutes);
-        done();
-      });
-    });
-
-    it("should perform a successful strava api request", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const url = "http://api.strava.com/v3/fake";
-      const expectedResult = [];
-      spyOn(Service.instance().httpClient, "get").and.returnValue(
-        Promise.resolve(createSuccessResponse(expectedResult))
-      );
-      const stravaTokensUpdaterSpy = spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-      const computeNextCallWaitTimeSpy = spyOn(StravaConnector, "computeNextCallWaitTime").and.callThrough();
-
-      // When
-      const promise = stravaConnector.stravaApiCall(syncEvents$, url);
-
-      // Then
-      promise.then(
-        result => {
-          expect(stravaTokensUpdaterSpy).toHaveBeenCalledTimes(1);
-          expect(stravaTokensUpdaterSpy).toHaveBeenCalledWith(syncEvents$, stravaConnector.stravaConnectorInfo);
-          expect(computeNextCallWaitTimeSpy).toHaveBeenCalledTimes(1);
-          expect(result).toEqual(expectedResult);
-          done();
-        },
-        error => {
-          expect(error).toBeNull();
-          done();
-        }
-      );
-    });
-
-    it("should reject with STRAVA_API_UNAUTHORIZED if clientId or clientSecret do not exist.", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const url = "http://api.strava.com/v3/fake";
-      stravaConnector.stravaConnectorInfo.clientId = null;
-      stravaConnector.stravaConnectorInfo.clientSecret = null;
-      const expectedErrorDetails = ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create();
-
-      // When
-      const promise = stravaConnector.stravaApiCall(syncEvents$, url);
-
-      // Then
-      promise.then(
-        () => {
-          throw new Error("Should not be here!");
-        },
-        error => {
-          expect(error).not.toBeNull();
-          expect(error).toEqual(new ErrorSyncEvent(ConnectorType.STRAVA, expectedErrorDetails));
-          done();
-        }
-      );
-    });
-
-    it("should reject if strava api replied with HTTP error (401 unauthorized)", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const url = "http://api.strava.com/v3/fake";
-      spyOn(Service.instance().httpClient, "get").and.returnValue(
-        Promise.resolve(createErrorResponse(HttpCodes.Unauthorized))
-      );
-      const expectedErrorDetails = ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create();
-      spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-
-      // When
-      const promise = stravaConnector.stravaApiCall(syncEvents$, url);
-
-      // Then
-      promise.then(
-        () => {
-          throw new Error("Should not be here!");
-        },
-        error => {
-          expect(error).not.toBeNull();
-
-          expect(error).toEqual(new ErrorSyncEvent(ConnectorType.STRAVA, expectedErrorDetails));
-          done();
-        }
-      );
-    });
-
-    it("should reject if strava api replied with HTTP error (403 Forbidden)", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const url = "http://api.strava.com/v3/fake";
-      const httpClientResponse = createErrorResponse(HttpCodes.Forbidden);
-      spyOn(Service.instance().httpClient, "get").and.returnValue(Promise.resolve(httpClientResponse));
-      spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-      const expectedErrorDetails = ErrorSyncEvent.STRAVA_API_FORBIDDEN.create();
-
-      // When
-      const promise = stravaConnector.stravaApiCall(syncEvents$, url);
-
-      // Then
-      promise.then(
-        () => {
-          throw new Error("Should not be here!");
-        },
-        error => {
-          expect(error).not.toBeNull();
-
-          expect(error).toEqual(new ErrorSyncEvent(ConnectorType.STRAVA, expectedErrorDetails));
-          done();
-        }
-      );
-    });
-
-    it("should retry later & 3 times in total before failing when instant quota reached", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const url = "http://api.strava.com/v3/fake";
-      const httpClientResponse = createErrorResponse(HttpCodes.TooManyRequests);
-      httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
-      httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_USAGE_HEADER] = "666,3000"; // Quarter hour usage reached !
-      spyOn(Service.instance().httpClient, "get").and.returnValue(Promise.resolve(httpClientResponse));
-      spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-      const stravaApiCallSpy = spyOn(stravaConnector, "stravaApiCall").and.callThrough();
-      spyOn(stravaConnector, "calculateRetryInTime").and.returnValue(1000);
-      const expectedErrorDetails = ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.create(666, 600);
-
-      // When
-      const promise = stravaConnector.stravaApiCall(syncEvents$, url);
-
-      // Then
-      promise.then(
-        () => {
-          throw new Error("Should not be here!");
-        },
-        error => {
-          expect(stravaApiCallSpy).toHaveBeenCalledTimes(3);
-          expect(error).toEqual(expectedErrorDetails);
-          done();
-        }
-      );
-    });
-
-    it("should retry later & 3 times in total before failing when daily quota reached", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const url = "http://api.strava.com/v3/fake";
-      const httpClientResponse = createErrorResponse(HttpCodes.TooManyRequests);
-      httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
-      httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_USAGE_HEADER] = "30,31000"; // Daily usage reached !
-      spyOn(Service.instance().httpClient, "get").and.returnValue(Promise.resolve(httpClientResponse));
-      spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-      const stravaApiCallSpy = spyOn(stravaConnector, "stravaApiCall").and.callThrough();
-      spyOn(stravaConnector, "calculateRetryInTime").and.returnValue(1000);
-      const expectedErrorDetails = ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED.create(31000, 30000);
-
-      // When
-      const promise = stravaConnector.stravaApiCall(syncEvents$, url);
-
-      // Then
-      promise.then(
-        () => {
-          throw new Error("Should not be here!");
-        },
-        error => {
-          expect(stravaApiCallSpy).toHaveBeenCalledTimes(3);
-          expect(error).toEqual(expectedErrorDetails);
-          done();
-        }
-      );
-    });
-
-    it("should reject if strava api replied with HTTP error (timeout)", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const url = "http://api.strava.com/v3/fake";
-      spyOn(Service.instance().httpClient, "get").and.returnValue(
-        Promise.resolve(createErrorResponse(HttpCodes.RequestTimeout))
-      );
-      const expectedErrorDetails = ErrorSyncEvent.STRAVA_API_TIMEOUT.create(url);
-      spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-
-      // When
-      const promise = stravaConnector.stravaApiCall(syncEvents$, url);
-
-      // Then
-      promise.then(
-        () => {
-          throw new Error("Should not be here!");
-        },
-        error => {
-          expect(error).not.toBeNull();
-
-          expect(error).toEqual(new ErrorSyncEvent(ConnectorType.STRAVA, expectedErrorDetails));
-          done();
-        }
-      );
-    });
-
-    it("should reject if strava api replied with HTTP error (resource not found)", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const url = "http://api.strava.com/v3/fake";
-      spyOn(Service.instance().httpClient, "get").and.returnValue(
-        Promise.resolve(createErrorResponse(HttpCodes.NotFound))
-      );
-      const expectedErrorDetails = ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.create(url);
-      spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-
-      // When
-      const promise = stravaConnector.stravaApiCall(syncEvents$, url);
-
-      // Then
-      promise.then(
-        () => {
-          throw new Error("Should not be here!");
-        },
-        error => {
-          expect(error).not.toBeNull();
-          expect(error).toEqual(new ErrorSyncEvent(ConnectorType.STRAVA, expectedErrorDetails));
-          done();
-        }
-      );
-    });
-
-    it("should fetch a remote activities page from strava api", done => {
-      // Given
-      const page = 1;
-      const perPage = 20;
-      const expectedResult = [];
-      const afterTimestamp = null;
-      const stravaApiCallSpy = spyOn(stravaConnector, "stravaApiCall").and.callThrough();
-      spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-      const httpGetSpy = spyOn(Service.instance().httpClient, "get").and.returnValue(
-        Promise.resolve(createSuccessResponse(expectedResult))
-      );
-      fetchRemoteStravaBareActivityModelsSpy.and.callThrough();
-      const expectedCallsTimes = 1;
-
-      // When
-      const promise = stravaConnector.fetchRemoteStravaBareActivityModels(page, perPage, afterTimestamp);
-
-      // Then
-      promise.then(
-        result => {
-          expect(result).toEqual(expectedResult);
-          expect(stravaApiCallSpy).toHaveBeenCalledTimes(expectedCallsTimes);
-          expect(httpGetSpy).toHaveBeenCalledTimes(expectedCallsTimes);
-          done();
-        },
-        () => {
-          throw new Error("Should not be here!");
-        }
-      );
-    });
-
-    it("should reject a fetch of a remote activities page from strava api (Unauthorized)", done => {
-      // Given
-      const page = 1;
-      const perPage = 20;
-      const afterTimestamp = null;
-      const stravaApiCallSpy = spyOn(stravaConnector, "stravaApiCall").and.callThrough();
-      spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-      const httpGetSpy = spyOn(Service.instance().httpClient, "get").and.returnValue(
-        Promise.resolve(createErrorResponse(HttpCodes.Unauthorized))
-      );
-      fetchRemoteStravaBareActivityModelsSpy.and.callThrough();
-      const expectedCallsTimes = 1;
-      const expectedErrorSync = ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create();
-
-      // When
-      const promise = stravaConnector.fetchRemoteStravaBareActivityModels(page, perPage, afterTimestamp);
-
-      // Then
-      promise.then(
-        () => {
-          throw new Error("Should not be here!");
-        },
-        error => {
-          expect(error).toEqual(expectedErrorSync);
-          expect(stravaApiCallSpy).toHaveBeenCalledTimes(expectedCallsTimes);
-          expect(httpGetSpy).toHaveBeenCalledTimes(expectedCallsTimes);
-
-          done();
-        }
-      );
-    });
-
-    it("should fetch a remote activity stream from strava api", done => {
-      // Given
-      const activityId = 666;
-      const expectedResult = [];
-      const stravaApiCallSpy = spyOn(stravaConnector, "stravaApiCall").and.callThrough();
-      spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-      const httpGetSpy = spyOn(Service.instance().httpClient, "get").and.returnValue(
-        Promise.resolve(createSuccessResponse(expectedResult))
-      );
-      fetchRemoteStravaActivityStreamsSpy.and.callThrough();
-      const expectedCallsTimes = 1;
-
-      // When
-      const promise = stravaConnector.fetchRemoteStravaActivityStreams(activityId);
-
-      // Then
-      promise.then(
-        result => {
-          expect(result).toEqual(expectedResult);
-          expect(stravaApiCallSpy).toHaveBeenCalledTimes(expectedCallsTimes);
-          expect(httpGetSpy).toHaveBeenCalledTimes(expectedCallsTimes);
-          done();
-        },
-        () => {
-          throw new Error("Should not be here!");
-        }
-      );
-    });
-
-    it("should reject a fetch of a remote activity stream from strava api (Not found)", done => {
-      // Given
-      const activityId = 666;
-      const stravaApiCallSpy = spyOn(stravaConnector, "stravaApiCall").and.callThrough();
-      spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-      const httpGetSpy = spyOn(Service.instance().httpClient, "get").and.returnValue(
-        Promise.resolve(createErrorResponse(HttpCodes.NotFound))
-      );
-      fetchRemoteStravaActivityStreamsSpy.and.callThrough();
-      const expectedCallsTimes = 1;
-      const expectedErrorSync = ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.create(
-        StravaConnector.generateFetchStreamsEndpoint(activityId)
-      );
-
-      // When
-      const promise = stravaConnector.fetchRemoteStravaActivityStreams(activityId);
-
-      // Then
-      promise.then(
-        () => {
-          throw new Error("Should not be here!");
-        },
-        error => {
-          expect(error).toEqual(expectedErrorSync);
-          expect(stravaApiCallSpy).toHaveBeenCalledTimes(expectedCallsTimes);
-          expect(httpGetSpy).toHaveBeenCalledTimes(expectedCallsTimes);
-
-          done();
-        }
-      );
-    });
-
-    it("should perform a successful strava api request and compute next call wait time properly", done => {
-      // Given
-      const syncEvents$ = new Subject<SyncEvent>();
-      const url = "http://api.strava.com/v3/fake";
-      const expectedResult = [];
-
-      const httpClientResponse = createSuccessResponse(expectedResult);
-      httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
-      httpClientResponse.message.headers[StravaConnector.STRAVA_RATELIMIT_USAGE_HEADER] = "300,300"; // Override Ratelimit usage (50% of limit reached on time interval
-
-      spyOn(Service.instance().httpClient, "get").and.returnValue(Promise.resolve(httpClientResponse));
-      const stravaTokensUpdaterSpy = spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-      const computeNextCallWaitTimeSpy = spyOn(StravaConnector, "computeNextCallWaitTime").and.callThrough();
-      const expectedNextCallWaitTime = 1.5;
-
-      // When
-      const promise = stravaConnector.stravaApiCall(syncEvents$, url);
-
-      // Then
-      promise.then(
-        result => {
-          expect(stravaTokensUpdaterSpy).toHaveBeenCalledTimes(1);
-          expect(stravaTokensUpdaterSpy).toHaveBeenCalledWith(syncEvents$, stravaConnector.stravaConnectorInfo);
-          expect(computeNextCallWaitTimeSpy).toHaveBeenCalledTimes(1);
-          expect(stravaConnector.nextCallWaitTime).toEqual(expectedNextCallWaitTime);
-          expect(result).toEqual(expectedResult);
-          done();
-        },
-        error => {
-          expect(error).toBeNull();
-          done();
-        }
-      );
-    });
-  });
-
-  describe("Postpone next strava api calls depending on rate limits", () => {
-    it("should compute next call wait time (0% of available calls under 15min)", done => {
-      // Given
-      const currentCallsCount = 0;
-      const thresholdCount = 600;
-      const timeIntervalSeconds = 15 * 60; // 15 minutes
-      const expectedTimeResult = 0;
-
-      // When
-      const result = StravaConnector.computeNextCallWaitTime(currentCallsCount, thresholdCount, timeIntervalSeconds);
-
-      // Then
-      expect(result).toEqual(expectedTimeResult);
-      done();
-    });
-
-    it("should compute next call wait time (50% of available calls under 15min)", done => {
-      // Given
-      const currentCallsCount = 300;
-      const thresholdCount = 600;
-      const timeIntervalSeconds = 15 * 60; // 15 minutes
-      const expectedTimeResult = 1.5;
-
-      // When
-      const result = StravaConnector.computeNextCallWaitTime(currentCallsCount, thresholdCount, timeIntervalSeconds);
-
-      // Then
-      expect(result).toEqual(expectedTimeResult);
-      done();
-    });
-
-    it("should compute next call wait time (100% of available calls under 15min)", done => {
-      // Given
-      const currentCallsCount = 600;
-      const thresholdCount = 600;
-      const timeIntervalSeconds = 15 * 60; // 15 minutes
-      const expectedTimeResult = 3;
-
-      // When
-      const result = StravaConnector.computeNextCallWaitTime(currentCallsCount, thresholdCount, timeIntervalSeconds);
-
-      // Then
-      expect(result).toEqual(expectedTimeResult);
-      done();
-    });
-
-    it("should throw when computing next call wait time with invalid params (negative numbers)", done => {
-      // Given
-      const currentCallsCount = -1000;
-      const thresholdCount = -1000;
-      const timeIntervalSeconds = -1000; // 15 minutes
-      const expectedErrorMessage = "Params must be numbers and positive while computing strava next call wait time";
-
-      // When
-      const call = () => {
-        StravaConnector.computeNextCallWaitTime(currentCallsCount, thresholdCount, timeIntervalSeconds);
-      };
-
-      // Then
-      expect(call).toThrowError(expectedErrorMessage);
-      done();
-    });
-
-    it("should throw when computing next call wait time with invalid params (not numbers)", done => {
-      // Given
-      const currentCallsCount = null;
-      const thresholdCount = 1000;
-      const timeIntervalSeconds = 1000; // 15 minutes
-      const expectedErrorMessage = "Params must be numbers and positive while computing strava next call wait time";
-
-      // When
-      const call = () => {
-        StravaConnector.computeNextCallWaitTime(currentCallsCount, thresholdCount, timeIntervalSeconds);
-      };
-
-      // Then
-      expect(call).toThrowError(expectedErrorMessage);
-      done();
     });
   });
 
@@ -1348,7 +610,7 @@ describe("StravaConnector", () => {
       const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
       const trackCallId = 1; // the 2nd one
 
-      stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = true;
+      stravaConnector.stravaConnectorConfig.info.updateSyncedActivitiesNameAndType = true;
 
       const expectedSyncedActivityModelUpdate = _.cloneDeep(
         _.cloneDeep(bareActivities[trackCallId]) as SyncedActivityModel
@@ -1403,7 +665,7 @@ describe("StravaConnector", () => {
       const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
       const trackCallId = 1; // the 2nd one
 
-      stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = false;
+      stravaConnector.stravaConnectorConfig.info.updateSyncedActivitiesNameAndType = false;
 
       const expectedSyncedActivityModelUpdate = _.cloneDeep(
         _.cloneDeep(bareActivities[trackCallId]) as SyncedActivityModel
@@ -1451,7 +713,7 @@ describe("StravaConnector", () => {
       const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
       const trackCallId = 1; // the 2nd one
 
-      stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = true;
+      stravaConnector.stravaConnectorConfig.info.updateSyncedActivitiesNameAndType = true;
 
       const expectedSyncedActivityModelUpdate = _.cloneDeep(
         _.cloneDeep(bareActivities[trackCallId]) as SyncedActivityModel
@@ -1506,7 +768,7 @@ describe("StravaConnector", () => {
       const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
       const trackCallId = 1; // the 2nd one
 
-      stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = true;
+      stravaConnector.stravaConnectorConfig.info.updateSyncedActivitiesNameAndType = true;
 
       const expectedSyncedActivityModelUpdate = _.cloneDeep(
         _.cloneDeep(bareActivities[trackCallId]) as SyncedActivityModel
@@ -1564,7 +826,7 @@ describe("StravaConnector", () => {
       const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
       const trackCallId = 1; // the 2nd one
 
-      stravaConnector.stravaConnectorInfo.updateSyncedActivitiesNameAndType = true;
+      stravaConnector.stravaConnectorConfig.info.updateSyncedActivitiesNameAndType = true;
 
       const expectedSyncedActivityModelUpdate = _.cloneDeep(
         _.cloneDeep(bareActivities[trackCallId]) as SyncedActivityModel
@@ -1643,9 +905,9 @@ describe("StravaConnector", () => {
       // Given
       const activityId = 666;
       fetchRemoteStravaActivityStreamsSpy.and.callThrough();
-      spyOn(stravaConnector, "stravaApiCall").and.callThrough();
-      spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-      spyOn(Service.instance().httpClient, "get").and.returnValue(
+      spyOn(stravaConnector.stravaApiClient, "get").and.callThrough();
+      spyOn(stravaConnector.stravaApiClient, "stravaTokensUpdater").and.returnValue(Promise.resolve());
+      spyOn(stravaConnector.stravaApiClient.httpClient, "get").and.returnValue(
         Promise.resolve(createErrorResponse(HttpCodes.NotFound))
       );
 
@@ -1669,9 +931,9 @@ describe("StravaConnector", () => {
       // Given
       const activityId = 666;
       fetchRemoteStravaActivityStreamsSpy.and.callThrough();
-      spyOn(stravaConnector, "stravaApiCall").and.callThrough();
-      spyOn(stravaConnector, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-      spyOn(Service.instance().httpClient, "get").and.returnValue(
+      spyOn(stravaConnector.stravaApiClient, "get").and.callThrough();
+      spyOn(stravaConnector.stravaApiClient, "stravaTokensUpdater").and.returnValue(Promise.resolve());
+      spyOn(stravaConnector.stravaApiClient.httpClient, "get").and.returnValue(
         Promise.resolve(createErrorResponse(HttpCodes.Forbidden))
       );
 
@@ -1688,6 +950,132 @@ describe("StravaConnector", () => {
         error => {
           expect(error).not.toBeNull();
           expect(error).toEqual(expectedErrorSync);
+          done();
+        }
+      );
+    });
+  });
+
+  describe("Fetch remote bare activity models", () => {
+    it("should fetch a remote activities page from strava api", done => {
+      // Given
+      const page = 1;
+      const perPage = 20;
+      const expectedResult = [];
+      const afterTimestamp = null;
+      const stravaApiCallSpy = spyOn(stravaConnector.stravaApiClient, "get").and.callThrough();
+      spyOn(stravaConnector.stravaApiClient, "stravaTokensUpdater").and.returnValue(Promise.resolve());
+      const httpGetSpy = spyOn(stravaConnector.stravaApiClient.httpClient, "get").and.returnValue(
+        Promise.resolve(createSuccessResponse(expectedResult))
+      );
+      fetchRemoteStravaBareActivityModelsSpy.and.callThrough();
+      const expectedCallsTimes = 1;
+
+      // When
+      const promise = stravaConnector.fetchRemoteStravaBareActivityModels(page, perPage, afterTimestamp);
+
+      // Then
+      promise.then(
+        result => {
+          expect(result).toEqual(expectedResult);
+          expect(stravaApiCallSpy).toHaveBeenCalledTimes(expectedCallsTimes);
+          expect(httpGetSpy).toHaveBeenCalledTimes(expectedCallsTimes);
+          done();
+        },
+        () => {
+          throw new Error("Should not be here!");
+        }
+      );
+    });
+
+    it("should reject a fetch of a remote activities page from strava api (Unauthorized)", done => {
+      // Given
+      const page = 1;
+      const perPage = 20;
+      const afterTimestamp = null;
+      const stravaApiCallSpy = spyOn(stravaConnector.stravaApiClient, "get").and.callThrough();
+      spyOn(stravaConnector.stravaApiClient, "stravaTokensUpdater").and.returnValue(Promise.resolve());
+      const httpGetSpy = spyOn(stravaConnector.stravaApiClient.httpClient, "get").and.returnValue(
+        Promise.resolve(createErrorResponse(HttpCodes.Unauthorized))
+      );
+      fetchRemoteStravaBareActivityModelsSpy.and.callThrough();
+      const expectedCallsTimes = 1;
+      const expectedErrorSync = ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create();
+
+      // When
+      const promise = stravaConnector.fetchRemoteStravaBareActivityModels(page, perPage, afterTimestamp);
+
+      // Then
+      promise.then(
+        () => {
+          throw new Error("Should not be here!");
+        },
+        error => {
+          expect(error).toEqual(expectedErrorSync);
+          expect(stravaApiCallSpy).toHaveBeenCalledTimes(expectedCallsTimes);
+          expect(httpGetSpy).toHaveBeenCalledTimes(expectedCallsTimes);
+
+          done();
+        }
+      );
+    });
+
+    it("should fetch a remote activity stream from strava api", done => {
+      // Given
+      const activityId = 666;
+      const expectedResult = [];
+      const stravaApiCallSpy = spyOn(stravaConnector.stravaApiClient, "get").and.callThrough();
+      spyOn(stravaConnector.stravaApiClient, "stravaTokensUpdater").and.returnValue(Promise.resolve());
+      const httpGetSpy = spyOn(stravaConnector.stravaApiClient.httpClient, "get").and.returnValue(
+        Promise.resolve(createSuccessResponse(expectedResult))
+      );
+      fetchRemoteStravaActivityStreamsSpy.and.callThrough();
+      const expectedCallsTimes = 1;
+
+      // When
+      const promise = stravaConnector.fetchRemoteStravaActivityStreams(activityId);
+
+      // Then
+      promise.then(
+        result => {
+          expect(result).toEqual(expectedResult);
+          expect(stravaApiCallSpy).toHaveBeenCalledTimes(expectedCallsTimes);
+          expect(httpGetSpy).toHaveBeenCalledTimes(expectedCallsTimes);
+          done();
+        },
+        () => {
+          throw new Error("Should not be here!");
+        }
+      );
+    });
+
+    it("should reject a fetch of a remote activity stream from strava api (Not found)", done => {
+      // Given
+      const activityId = 666;
+      const stravaApiCallSpy = spyOn(stravaConnector.stravaApiClient, "get").and.callThrough();
+      spyOn(stravaConnector.stravaApiClient, "stravaTokensUpdater").and.returnValue(Promise.resolve());
+      const httpGetSpy = spyOn(stravaConnector.stravaApiClient.httpClient, "get").and.returnValue(
+        Promise.resolve(createErrorResponse(HttpCodes.NotFound))
+      );
+      fetchRemoteStravaActivityStreamsSpy.and.callThrough();
+      const expectedCallsTimes = 1;
+      const expectedErrorSync = ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.create(
+        StravaConnector.generateFetchStreamsEndpoint(activityId)
+      );
+
+      // When
+      const promise = stravaConnector.fetchRemoteStravaActivityStreams(activityId);
+
+      // Then
+      promise.then(
+        () => {
+          throw new Error("Should not be here!");
+        },
+        error => {
+          expect(error).toEqual(expectedErrorSync);
+          expect(stravaApiCallSpy).toHaveBeenCalledTimes(expectedCallsTimes);
+          expect(httpGetSpy).toHaveBeenCalledTimes(expectedCallsTimes);
+
           done();
         }
       );

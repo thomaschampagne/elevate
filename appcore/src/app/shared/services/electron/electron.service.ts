@@ -58,8 +58,7 @@ export class ElectronService {
   }
 
   public openLogsFolder(): void {
-    const logPath = this.getAppDataPath() + "/logs/";
-    this.openItem(logPath);
+    this.openItem(this.getLogsPath());
   }
 
   public openAppDataFolder(): void {
@@ -135,8 +134,16 @@ export class ElectronService {
     return this.require("fs");
   }
 
+  public getPath(name: string): string {
+    return this.electron.remote.app.getPath(name);
+  }
+
   public getAppDataPath(): string {
-    return this.electron.remote.app.getPath("appData") + "/" + this.electron.remote.app.name + "/";
+    return this.getPath("appData") + "/" + this.electron.remote.app.name + "/";
+  }
+
+  public getLogsPath(): string {
+    return this.getPath("logs");
   }
 
   public readDirSync(folderPath): string[] {

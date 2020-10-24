@@ -20,6 +20,7 @@ import {
   ActivitySyncEvent,
   ConnectorType,
   ErrorSyncEvent,
+  FileSystemConnectorInfo,
   StartedSyncEvent,
   StoppedSyncEvent,
   SyncEvent,
@@ -37,6 +38,8 @@ import { DataHeartRate } from "@sports-alliance/sports-lib/lib/data/data.heart-r
 import { Creator } from "@sports-alliance/sports-lib/lib/creators/creator";
 import { ActivityTypes } from "@sports-alliance/sports-lib/lib/activities/activity.types";
 import { DataPower } from "@sports-alliance/sports-lib/lib/data/data.power";
+import { FileSystemConnectorConfig } from "../connector-config.model";
+import { container } from "tsyringe";
 
 /**
  * Test activities in "fixtures/activities-02" sorted by date ascent.
@@ -105,23 +108,27 @@ import { DataPower } from "@sports-alliance/sports-lib/lib/data/data.power";
  ]*/
 
 describe("FileSystemConnector", () => {
-  const defaultsByBuildTarget = UserSettings.getDefaultsByBuildTarget(BuildTarget.DESKTOP);
   const activitiesLocalPath01 = __dirname + "/fixtures/activities-01/";
   const activitiesLocalPath02 = __dirname + "/fixtures/activities-02/";
   const compressedActivitiesPath = __dirname + "/fixtures/compressed-activities/";
-  const connectorSyncDateTime = null;
 
+  let fileSystemConnectorConfig: FileSystemConnectorConfig;
   let fileSystemConnector: FileSystemConnector;
   let syncFilesSpy: jasmine.Spy;
 
   beforeEach(done => {
-    fileSystemConnector = FileSystemConnector.create(
-      AthleteModel.DEFAULT_MODEL,
-      defaultsByBuildTarget,
-      connectorSyncDateTime,
-      activitiesLocalPath01
-    );
+    fileSystemConnector = container.resolve(FileSystemConnector);
+
+    fileSystemConnectorConfig = {
+      connectorSyncDateTime: null,
+      athleteModel: AthleteModel.DEFAULT_MODEL,
+      userSettingsModel: UserSettings.getDefaultsByBuildTarget(BuildTarget.DESKTOP),
+      info: new FileSystemConnectorInfo(activitiesLocalPath01)
+    };
+
+    fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
     syncFilesSpy = spyOn(fileSystemConnector, "syncFiles").and.callThrough();
+
     done();
   });
 
@@ -329,12 +336,7 @@ describe("FileSystemConnector", () => {
 
     it("should provide a list of compatible activities files (gpx, tcx, fit) from a given directory (no sub-directories scan)", done => {
       // Given
-      fileSystemConnector = FileSystemConnector.create(
-        AthleteModel.DEFAULT_MODEL,
-        defaultsByBuildTarget,
-        connectorSyncDateTime,
-        activitiesLocalPath01
-      );
+      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
       const expectedLength = 2;
 
       // When
@@ -346,7 +348,6 @@ describe("FileSystemConnector", () => {
       const rideGpx = _.find(activityFiles, { type: ActivityFileType.GPX });
       expect(rideGpx).toBeDefined();
       expect(fs.existsSync(rideGpx.location.path)).toBeTruthy();
-      expect(rideGpx.location.onMachineId).not.toBeNull();
       expect(_.isString(rideGpx.lastModificationDate)).toBeTruthy();
 
       const virtualRideGpx = _.find(activityFiles, { type: ActivityFileType.FIT });
@@ -363,12 +364,6 @@ describe("FileSystemConnector", () => {
 
     it("should provide a list of compatible activities files (gpx, tcx, fit) from a given directory (with sub-directories scan)", done => {
       // Given
-      fileSystemConnector = FileSystemConnector.create(
-        AthleteModel.DEFAULT_MODEL,
-        defaultsByBuildTarget,
-        connectorSyncDateTime,
-        activitiesLocalPath01
-      );
       const recursive = true;
       const expectedLength = 3;
 
@@ -384,7 +379,6 @@ describe("FileSystemConnector", () => {
 
       const rideGpx = _.find(activityFiles, { type: ActivityFileType.GPX });
       expect(rideGpx).toBeDefined();
-      expect(rideGpx.location.onMachineId).not.toBeNull();
       expect(fs.existsSync(rideGpx.location.path)).toBeTruthy();
 
       const virtualRideGpx = _.find(activityFiles, { type: ActivityFileType.FIT });
@@ -402,12 +396,6 @@ describe("FileSystemConnector", () => {
 
     it("should provide a list of compatible activities files (gpx, tcx, fit) after a given date", done => {
       // Given
-      fileSystemConnector = FileSystemConnector.create(
-        AthleteModel.DEFAULT_MODEL,
-        defaultsByBuildTarget,
-        connectorSyncDateTime,
-        activitiesLocalPath01
-      );
       const expectedLength = 2;
       const afterDate = new Date("2020-01-10T09:00:00.000Z");
       const filesDate = new Date("2020-01-10T10:00:00.000Z");
@@ -611,18 +599,18 @@ describe("FileSystemConnector", () => {
       const syncDateTime = null; // Never synced before !!
       const syncEvents$ = new Subject<SyncEvent>();
       const scanSubDirectories = true;
-      const extractArchiveFiles = true;
       const deleteArchivesAfterExtract = false;
-      fileSystemConnector = FileSystemConnector.create(
-        AthleteModel.DEFAULT_MODEL,
-        defaultsByBuildTarget,
-        new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
-        activitiesLocalPath02,
-        scanSubDirectories,
-        false,
-        extractArchiveFiles,
-        deleteArchivesAfterExtract
+
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
+        ConnectorType.FILE_SYSTEM,
+        syncDateTime
       );
+      fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
+      fileSystemConnectorConfig.info.scanSubDirectories = scanSubDirectories;
+      fileSystemConnectorConfig.info.extractArchiveFiles = true;
+      fileSystemConnectorConfig.info.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
+
+      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
 
       const scanDeflateActivitiesFromArchivesSpy = spyOn(
         fileSystemConnector,
@@ -694,7 +682,6 @@ describe("FileSystemConnector", () => {
           expect(activitySyncEvent.activity.elapsed_time_raw).toEqual(10514);
           expect(activitySyncEvent.activity.elevation_gain_raw).toEqual(685);
           expect(activitySyncEvent.activity.sourceConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
-          expect(activitySyncEvent.activity.extras.fs_activity_location.onMachineId).toBeDefined();
           expect(activitySyncEvent.activity.extras.fs_activity_location.path).toContain(expectedActivityFilePathMatch);
           expect(activitySyncEvent.activity.athleteSnapshot).toEqual(
             fileSystemConnector.athleteSnapshotResolver.getCurrent()
@@ -717,18 +704,18 @@ describe("FileSystemConnector", () => {
       const syncDateTime = null; // Force sync on all scanned files
       const syncEvents$ = new Subject<SyncEvent>();
       const scanSubDirectories = true;
-      const extractArchiveFiles = true;
       const deleteArchivesAfterExtract = false;
-      fileSystemConnector = FileSystemConnector.create(
-        AthleteModel.DEFAULT_MODEL,
-        defaultsByBuildTarget,
-        new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
-        activitiesLocalPath02,
-        scanSubDirectories,
-        false,
-        extractArchiveFiles,
-        deleteArchivesAfterExtract
+
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
+        ConnectorType.FILE_SYSTEM,
+        syncDateTime
       );
+      fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
+      fileSystemConnectorConfig.info.scanSubDirectories = scanSubDirectories;
+      fileSystemConnectorConfig.info.extractArchiveFiles = true;
+      fileSystemConnectorConfig.info.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
+
+      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
 
       const scanDeflateActivitiesFromArchivesSpy = spyOn(
         fileSystemConnector,
@@ -799,18 +786,17 @@ describe("FileSystemConnector", () => {
       const syncDateTime = syncDate.getTime(); // Force sync on all scanned files
       const syncEvents$ = new Subject<SyncEvent>();
       const scanSubDirectories = true;
-      const extractArchiveFiles = true;
-      const deleteArchivesAfterExtract = false;
-      fileSystemConnector = FileSystemConnector.create(
-        AthleteModel.DEFAULT_MODEL,
-        defaultsByBuildTarget,
-        new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
-        activitiesLocalPath02,
-        scanSubDirectories,
-        false,
-        extractArchiveFiles,
-        deleteArchivesAfterExtract
+
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
+        ConnectorType.FILE_SYSTEM,
+        syncDateTime
       );
+      fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
+      fileSystemConnectorConfig.info.scanSubDirectories = scanSubDirectories;
+      fileSystemConnectorConfig.info.extractArchiveFiles = true;
+      fileSystemConnectorConfig.info.deleteArchivesAfterExtract = false;
+
+      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
 
       const scanDeflateActivitiesFromArchivesSpy = spyOn(
         fileSystemConnector,
@@ -879,19 +865,20 @@ describe("FileSystemConnector", () => {
       // Given
       const syncDateTime = null; // Force sync on all scanned files
       const syncEvents$ = new Subject<SyncEvent>();
+
       const scanSubDirectories = true;
-      const extractArchiveFiles = true;
       const deleteArchivesAfterExtract = false;
-      fileSystemConnector = FileSystemConnector.create(
-        AthleteModel.DEFAULT_MODEL,
-        defaultsByBuildTarget,
-        new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
-        activitiesLocalPath02,
-        scanSubDirectories,
-        false,
-        extractArchiveFiles,
-        deleteArchivesAfterExtract
+
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
+        ConnectorType.FILE_SYSTEM,
+        syncDateTime
       );
+      fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
+      fileSystemConnectorConfig.info.scanSubDirectories = scanSubDirectories;
+      fileSystemConnectorConfig.info.extractArchiveFiles = true;
+      fileSystemConnectorConfig.info.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
+
+      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
 
       const scanDeflateActivitiesFromArchivesSpy = spyOn(
         fileSystemConnector,
@@ -968,20 +955,18 @@ describe("FileSystemConnector", () => {
       // Given
       const syncDateTime = null; // Force sync on all scanned files
       const syncEvents$ = new Subject<SyncEvent>();
-      const scanSubDirectories = true;
-      const extractArchiveFiles = false;
-      const deleteArchivesAfterExtract = false;
       const errorMessage = "Unable to create bare activity";
-      fileSystemConnector = FileSystemConnector.create(
-        AthleteModel.DEFAULT_MODEL,
-        defaultsByBuildTarget,
-        new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
-        activitiesLocalPath02,
-        scanSubDirectories,
-        false,
-        extractArchiveFiles,
-        deleteArchivesAfterExtract
+
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
+        ConnectorType.FILE_SYSTEM,
+        syncDateTime
       );
+      fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
+      fileSystemConnectorConfig.info.scanSubDirectories = true;
+      fileSystemConnectorConfig.info.extractArchiveFiles = true;
+      fileSystemConnectorConfig.info.deleteArchivesAfterExtract = false;
+
+      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
 
       spyOn(fileSystemConnector, "findSyncedActivityModels").and.returnValue(Promise.resolve(null));
       spyOn(fileSystemConnector, "scanDeflateActivitiesFromArchives").and.callThrough();
@@ -1016,20 +1001,18 @@ describe("FileSystemConnector", () => {
       // Given
       const syncDateTime = null; // Force sync on all scanned files
       const syncEvents$ = new Subject<SyncEvent>();
-      const scanSubDirectories = true;
-      const extractArchiveFiles = false;
-      const deleteArchivesAfterExtract = false;
-      fileSystemConnector = FileSystemConnector.create(
-        AthleteModel.DEFAULT_MODEL,
-        defaultsByBuildTarget,
-        new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
-        activitiesLocalPath02,
-        scanSubDirectories,
-        false,
-        extractArchiveFiles,
-        deleteArchivesAfterExtract
-      );
       const errorMessage = "Unable to parse fit file";
+
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
+        ConnectorType.FILE_SYSTEM,
+        syncDateTime
+      );
+      fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
+      fileSystemConnectorConfig.info.scanSubDirectories = true;
+      fileSystemConnectorConfig.info.extractArchiveFiles = false;
+      fileSystemConnectorConfig.info.deleteArchivesAfterExtract = false;
+
+      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
 
       spyOn(fileSystemConnector, "findSyncedActivityModels").and.returnValue(Promise.resolve(null));
       spyOn(fileSystemConnector, "scanDeflateActivitiesFromArchives").and.callThrough();
@@ -1060,12 +1043,13 @@ describe("FileSystemConnector", () => {
       const syncEvents$ = new Subject<SyncEvent>();
       const fakeSourceDir = "/fake/dir/path";
       const expectedErrorSyncEvent = ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(fakeSourceDir);
-      fileSystemConnector = FileSystemConnector.create(
-        AthleteModel.DEFAULT_MODEL,
-        defaultsByBuildTarget,
-        new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, syncDateTime),
-        fakeSourceDir
+
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
+        ConnectorType.FILE_SYSTEM,
+        syncDateTime
       );
+      fileSystemConnectorConfig.info.sourceDirectory = fakeSourceDir;
+      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
 
       // When
       const promise = fileSystemConnector.syncFiles(syncEvents$);
@@ -1134,7 +1118,9 @@ describe("FileSystemConnector", () => {
 
       it("should convert unknown 'sports-lib' type to ElevateSport other type", done => {
         // Given
-        fileSystemConnector.detectSportTypeWhenUnknown = true;
+        fileSystemConnectorConfig.info.detectSportTypeWhenUnknown = true;
+        fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
+
         const sportsLibActivity: ActivityInterface = {
           type: "FakeSport" as ActivityTypes,
           getStats: () => {}

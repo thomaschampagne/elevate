@@ -2,11 +2,14 @@ import http from "http";
 import queryString from "querystring";
 import { BrowserWindow } from "electron";
 import logger from "electron-log";
-import { Service } from "../../service";
 import { HttpCodes } from "typed-rest-client/HttpClient";
+import { inject, singleton } from "tsyringe";
+import { HttpClient } from "../../clients/http.client";
+import _ from "lodash";
 
+@singleton()
 export class StravaAuthenticator {
-  public static WEB_SERVER_HTTP_PORT = 53445;
+  public static WEB_SERVER_HTTP_PORT = _.random(49152, 65535);
   public static AUTH_WINDOW_HEIGHT = 800;
   public static AUTH_WINDOW_WIDTH = 500;
   public static REDIRECT_HTTP_BASE = "http://127.0.0.1";
@@ -22,7 +25,7 @@ export class StravaAuthenticator {
   private authenticationWindow: Electron.BrowserWindow;
   private server: http.Server;
 
-  constructor() {}
+  constructor(@inject(HttpClient) private readonly httpClient: HttpClient) {}
 
   public onAuthorizeRedirectRequest(
     handleAuthorizeCode,
@@ -133,8 +136,8 @@ export class StravaAuthenticator {
   }
 
   public exchangeForTokens(body: any, callback: (error, body: any) => void): void {
-    Service.instance()
-      .httpClient.post(StravaAuthenticator.TOKEN_URL, queryString.stringify(body))
+    this.httpClient
+      .post(StravaAuthenticator.TOKEN_URL, queryString.stringify(body))
       .then(response => {
         return response.message.statusCode === HttpCodes.OK ? response.readBody() : Promise.reject(response.message);
       })

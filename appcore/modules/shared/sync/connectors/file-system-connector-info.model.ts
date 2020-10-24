@@ -1,4 +1,6 @@
-export class FileSystemConnectorInfo {
+import { ConnectorInfo } from "./connector-info.model";
+
+export class FileSystemConnectorInfo extends ConnectorInfo {
   public static readonly DEFAULT_MODEL: FileSystemConnectorInfo = new FileSystemConnectorInfo(null);
 
   public sourceDirectory: string;
@@ -16,6 +18,7 @@ export class FileSystemConnectorInfo {
     deleteArchivesAfterExtract: boolean = false,
     detectSportTypeWhenUnknown: boolean = false
   ) {
+    super();
     this.sourceDirectory = sourceDirectory;
     this.scanSubDirectories = scanSubDirectories;
     this.deleteActivityFilesAfterSync = deleteActivityFilesAfterSync;

@@ -6,7 +6,7 @@
     <span *ngIf="!fileSystemConnectorInfo.sourceDirectory">Not configured. </span>
     <span *ngIf="fileSystemConnectorInfo.sourceDirectory">Configured. </span>
     <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
-    <br/>
+    <br />
     <span class="note">Formats supported: gpx, tcx & fit</span>
   </mat-card-subtitle>
   <mat-card-content>
@@ -59,7 +59,7 @@
                         [(ngModel)]="fileSystemConnectorInfo.deleteArchivesAfterExtract"
                         [disabled]="!fileSystemConnectorInfo.extractArchiveFiles"
                         matTooltip="Once activities have been extracted from a 'zip, rar, 7z, tar, gz, bz2, zipx or xz' file, the archive file will be removed from scan directory">
-            Delete archives when activities have been extracted (recommended) *
+            Delete archives when activities have been extracted from them (recommended) *
           </mat-checkbox>
         </div>
         <div>
