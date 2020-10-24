@@ -18,7 +18,7 @@
       "../desktop/node_modules/"
     ],
     "lib": [
-      "esnext",
+      "es2015",
       "dom"
     ]
   },
