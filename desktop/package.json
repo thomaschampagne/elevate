@@ -55,6 +55,7 @@
     "ini": "^1.3.5",
     "lodash": "^4.17.20",
     "node-machine-id": "^1.1.12",
+    "p-retry": "^4.2.0",
     "pako": "^1.0.11",
     "promise-tron": "^10.0.0",
     "querystring": "^0.2.0",

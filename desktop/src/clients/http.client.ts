@@ -1,6 +1,8 @@
 import { HttpClient as TypedRestClient } from "typed-rest-client/HttpClient";
 import { singleton } from "tsyringe";
 import logger from "electron-log";
+import pRetry from "p-retry";
+import { IHeaders, IHttpClientResponse } from "typed-rest-client/Interfaces";
 
 @singleton()
 export class HttpClient extends TypedRestClient {
@@ -29,6 +31,33 @@ export class HttpClient extends TypedRestClient {
           proxy !== HttpClient.DIRECT_PROXY_TEST_URL ? "http://" + proxy.replace("PROXY", "").trim() : null;
         resolve(httpProxy);
       });
+    });
+  }
+
+  public getRetryTimeout(
+    requestUrl: string,
+    additionalHeaders?: IHeaders,
+    retries: number = 5,
+    minTimeout: number = 1000,
+    maxTimeout: number = Infinity
+  ): Promise<IHttpClientResponse> {
+    const exec: () => Promise<IHttpClientResponse> = () => {
+      return this.get(requestUrl, additionalHeaders).catch(err => {
+        if (err && err.code === "ETIMEDOUT") {
+          throw new Error(JSON.stringify(err));
+        }
+      }) as Promise<IHttpClientResponse>;
+    };
+    return pRetry(exec, {
+      retries: retries,
+      minTimeout: minTimeout,
+      maxTimeout: maxTimeout,
+      onFailedAttempt: error => {
+        logger.error(
+          `Attempt ${error.attemptNumber} failed on url ${requestUrl}. There are ${error.retriesLeft} retries left. Cause:`,
+          error
+        );
+      }
     });
   }
 }
