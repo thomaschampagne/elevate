@@ -78,8 +78,6 @@ export class StravaApiClient {
 
     return this.stravaTokensUpdater(stravaConnectorInfo, onStravaConnectorInfoUpdate)
       .then(() => {
-        logger.debug(`Waiting ${this.nextCallWaitTime} seconds before calling strava api`);
-
         // Wait during next call wait time
         return sleep(this.nextCallWaitTime).then(() => {
           return this.httpClient.getRetryTimeout(
@@ -96,6 +94,10 @@ export class StravaApiClient {
         // Update time to wait for the next call to avoid the rate limit threshold
         const rateLimits = StravaApiClient.parseRateLimits(response.message.headers);
         this.updateNextCallWaitTime(rateLimits.instant, StravaApiClient.QUARTER_HOUR_TIME_INTERVAL);
+        logger.debug(
+          `Waiting ${this.nextCallWaitTime} for next strava api call. Current Rate limits:`,
+          JSON.stringify(rateLimits)
+        );
 
         return response.message.statusCode === HttpCodes.OK ? response.readBody() : Promise.reject(response.message);
       })

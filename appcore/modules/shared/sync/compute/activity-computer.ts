@@ -583,7 +583,7 @@ export class ActivityComputer {
     hasPowerMeter: boolean,
     userFTP: number
   ) {
-    if (_.isEmpty(activityStream.distance)) {
+    if (_.isEmpty(activityStream) || _.isEmpty(activityStream.distance)) {
       // return null if activityStream is basically empty (i.e. a manual run activity)
       return null;
     }

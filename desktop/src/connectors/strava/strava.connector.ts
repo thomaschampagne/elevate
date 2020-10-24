@@ -128,7 +128,6 @@ export class StravaConnector extends BaseConnector {
   }
 
   public sync(): Subject<SyncEvent> {
-    this.stravaApiClient.nextCallWaitTime = 0;
     if (this.isSyncing) {
       this.syncEvents$.next(ErrorSyncEvent.SYNC_ALREADY_STARTED.create(ConnectorType.STRAVA));
     } else {
@@ -460,13 +459,17 @@ export class StravaConnector extends BaseConnector {
       takeWhile(x => x >= 0)
     );
 
-    countDown.subscribe(remainingSec => {
-      this.syncEvents$.next(
-        new GenericSyncEvent(
-          ConnectorType.STRAVA,
-          `Strava wants you to slow down...🐌 Resuming sync in ${remainingSec} seconds...`
-        )
-      );
+    const subscription = countDown.subscribe(remainingSec => {
+      if (!this.isSyncing) {
+        subscription.unsubscribe();
+      } else {
+        this.syncEvents$.next(
+          new GenericSyncEvent(
+            ConnectorType.STRAVA,
+            `Strava wants you to slow down...🐌 Resuming sync in ${remainingSec} seconds...`
+          )
+        );
+      }
     });
   }
 }

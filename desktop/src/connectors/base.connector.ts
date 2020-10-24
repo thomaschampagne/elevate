@@ -1,5 +1,5 @@
-import { ReplaySubject, Subject } from "rxjs";
-import { ActivityComputer, ConnectorType, SyncEvent, SyncEventType } from "@elevate/shared/sync";
+import { of, ReplaySubject, Subject } from "rxjs";
+import { ActivityComputer, ConnectorType, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import {
   ActivityStreamsModel,
   AnalysisDataModel,
@@ -9,7 +9,7 @@ import {
   UserSettings
 } from "@elevate/shared/models";
 import { AppService } from "../app-service";
-import { filter } from "rxjs/operators";
+import { catchError, filter, timeout } from "rxjs/operators";
 import crypto, { BinaryLike } from "crypto";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { ElevateSport } from "@elevate/shared/enums";
@@ -20,6 +20,7 @@ import { CaloriesEstimator } from "../estimators/calories-estimator/calories-est
 import { ConnectorConfig } from "./connector-config.model";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { IpcMessagesSender } from "../messages/ipc-messages.sender";
+import logger from "electron-log";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 /**
@@ -40,6 +41,13 @@ export class PrimitiveSourceData {
 }
 
 export abstract class BaseConnector {
+  protected constructor(
+    protected readonly appService: AppService,
+    protected readonly ipcMessagesSender: IpcMessagesSender
+  ) {}
+
+  private static readonly WAIT_FOR_SYNC_STOP_EVENT_TIMEOUT: number = 2000;
+
   public type: ConnectorType;
   public enabled: boolean;
   public connectorConfig: ConnectorConfig;
@@ -48,11 +56,6 @@ export abstract class BaseConnector {
   public stopRequested: boolean;
   public syncDateTime: number;
   public syncEvents$: ReplaySubject<SyncEvent>;
-
-  protected constructor(
-    protected readonly appService: AppService,
-    protected readonly ipcMessagesSender: IpcMessagesSender
-  ) {}
 
   /**
    * Hash data
@@ -150,6 +153,17 @@ export abstract class BaseConnector {
       if (this.isSyncing) {
         const stopSubscription = this.syncEvents$
           .pipe(filter(syncEvent => syncEvent.type === SyncEventType.STOPPED))
+          .pipe(
+            timeout(BaseConnector.WAIT_FOR_SYNC_STOP_EVENT_TIMEOUT),
+            catchError(() => {
+              // Timeout for waiting a stop event reached, we have to emulated it...
+              logger.warn("Request timed out after waiting for stop event from connector. Emulating one");
+              this.isSyncing = false;
+              this.syncEvents$.next(new StoppedSyncEvent(ConnectorType.STRAVA));
+              resolve();
+              return of();
+            })
+          )
           .subscribe(() => {
             stopSubscription.unsubscribe();
             this.stopRequested = false;

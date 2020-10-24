@@ -41,7 +41,10 @@ class CurrentActivitySynced {
           >
             {{ eventErrors.length }} warning{{ eventErrors.length > 1 ? "s" : "" }}
           </button>
-          <button *ngIf="isSyncing" mat-flat-button color="accent" (click)="onActionStop()">Stop</button>
+          <button *ngIf="isSyncing" mat-flat-button color="accent" (click)="onActionStop()" [disabled]="stopInProgress">
+            <span *ngIf="!stopInProgress">Stop</span>
+            <span *ngIf="stopInProgress">Please wait...</span>
+          </button>
           <button *ngIf="!hiddenCloseButton" mat-icon-button (click)="onActionClose()">
             <mat-icon fontSet="material-icons-outlined">close</mat-icon>
           </button>
@@ -70,6 +73,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
   public currentActivitySynced: CurrentActivitySynced;
   public activityCounter: number;
   public eventErrors: ErrorSyncEvent[];
+  public stopInProgress: boolean;
 
   constructor(
     @Inject(DesktopSyncService) private readonly desktopSyncService: DesktopSyncService,
@@ -84,6 +88,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     this.currentActivitySynced = null;
     this.resetCounter();
     this.eventErrors = [];
+    this.stopInProgress = false;
   }
 
   public ngOnInit(): void {
@@ -95,9 +100,16 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
   }
 
   public onActionStop(): Promise<void> {
-    return this.desktopSyncService.stop().catch(error => {
-      throw new SyncException(error); // Should be caught by Error Handler
-    });
+    this.stopInProgress = true;
+    return this.desktopSyncService
+      .stop()
+      .then(() => {
+        this.stopInProgress = false;
+      })
+      .catch(error => {
+        this.stopInProgress = false;
+        throw new SyncException(error); // Should be caught by Error Handler
+      });
   }
 
   public onActionClose(): void {

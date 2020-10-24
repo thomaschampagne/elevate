@@ -31,6 +31,7 @@ import { BuildTarget, ElevateSport } from "@elevate/shared/enums";
 import { StravaConnectorConfig } from "../connector-config.model";
 import { container } from "tsyringe";
 import { StravaApiClient } from "../../clients/strava-api.client";
+import { sleep } from "@elevate/shared/tools";
 
 const getActivitiesFixture = (page: number, perPage: number, activities: Array<BareActivityModel[]>) => {
   const from = page > 1 ? (page - 1) * perPage : 0;
@@ -441,6 +442,44 @@ describe("StravaConnector", () => {
           expect(stopSyncEventReceived.length).toEqual(expectedStoppedSyncEventReceived);
           expect(stopSyncEventReceived[0]).toEqual(expectedStoppedSyncEvent);
           expect(stravaConnector.stopRequested).toBeFalsy();
+          expect(stravaConnector.isSyncing).toBeFalsy();
+          done();
+        },
+        () => {
+          throw new Error("Whoops! I should not be here!");
+        }
+      );
+    });
+
+    it("should stop a processing sync even if sync is 'pending' in background (cover case: Strava wants you to slow down...)", done => {
+      // Given
+      const stopSyncEventReceived = [];
+      const expectedStoppedSyncEvent = new StoppedSyncEvent(ConnectorType.STRAVA);
+      const expectedStoppedSyncEventReceived = 1;
+
+      // Emulate very long inactive sync in background (case Strava wants you to slow down...)
+      spyOn(stravaConnector, "syncPages").and.callFake(() => {
+        return sleep(60 * 60 * 1000); // 1 hour
+      });
+
+      const syncEvent$ = stravaConnector.sync();
+      syncEvent$
+        .pipe(filter(syncEvent => syncEvent.type === SyncEventType.STOPPED))
+        .subscribe((syncEvent: StoppedSyncEvent) => {
+          stopSyncEventReceived.push(syncEvent);
+        });
+
+      // When
+      const promise = stravaConnector.stop();
+
+      // Then
+      expect(stravaConnector.stopRequested).toBeTruthy();
+      expect(stravaConnector.isSyncing).toBeTruthy();
+      promise.then(
+        () => {
+          expect(stopSyncEventReceived.length).toEqual(expectedStoppedSyncEventReceived);
+          expect(stopSyncEventReceived[0]).toEqual(expectedStoppedSyncEvent);
+          expect(stravaConnector.stopRequested).toBeTruthy();
           expect(stravaConnector.isSyncing).toBeFalsy();
           done();
         },
