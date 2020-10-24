@@ -432,7 +432,7 @@ export class StravaConnector extends BaseConnector {
       this.stravaConnectorConfig.info,
       StravaConnector.generateFetchStreamsEndpoint(activityId),
       stravaConnectorInfo => this.onStravaConnectorInfoUpdate(stravaConnectorInfo),
-      retryMillis => this.onRetry(retryMillis)
+      retryMillis => this.onQuotaReachedRetry(retryMillis)
     );
   }
 
@@ -445,7 +445,7 @@ export class StravaConnector extends BaseConnector {
       this.stravaConnectorConfig.info,
       StravaConnector.generateFetchBareActivitiesPageEndpoint(page, perPage, after),
       stravaConnectorInfo => this.onStravaConnectorInfoUpdate(stravaConnectorInfo),
-      retryMillis => this.onRetry(retryMillis)
+      retryMillis => this.onQuotaReachedRetry(retryMillis)
     );
   }
 
@@ -453,7 +453,7 @@ export class StravaConnector extends BaseConnector {
     this.syncEvents$.next(new StravaCredentialsUpdateSyncEvent(stravaConnectorInfo));
   }
 
-  public onRetry(retryMillis: number): void {
+  public onQuotaReachedRetry(retryMillis: number): void {
     const retrySeconds = retryMillis / 1000;
     const countDown = timer(0, 1000).pipe(
       scan(acc => --acc, retrySeconds),

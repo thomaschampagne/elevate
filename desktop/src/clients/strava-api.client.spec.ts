@@ -326,7 +326,7 @@ describe("StravaApiClient", () => {
 
     let stravaConnectorInfo;
     const onStravaConnectorInfoUpdate = _.noop;
-    const onRetry = _.noop;
+    const onQuotaReachedRetry = _.noop;
 
     beforeEach(done => {
       stravaConnectorInfo = new StravaConnectorInfo(666, "secret", "oldAccessToken", "oldRefreshToken");
@@ -342,7 +342,7 @@ describe("StravaApiClient", () => {
       const computeNextCallWaitTimeSpy = spyOn(stravaApiClient, "updateNextCallWaitTime").and.stub();
 
       // When
-      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onRetry);
+      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onQuotaReachedRetry);
 
       // Then
       promise.then(
@@ -350,6 +350,40 @@ describe("StravaApiClient", () => {
           expect(stravaTokensUpdaterSpy).toHaveBeenCalledTimes(1);
           expect(stravaTokensUpdaterSpy).toHaveBeenCalledWith(stravaConnectorInfo, onStravaConnectorInfoUpdate);
           expect(computeNextCallWaitTimeSpy).toHaveBeenCalledTimes(1);
+          expect(result).toEqual(expectedResult);
+          done();
+        },
+        error => {
+          expect(error).toBeNull();
+          done();
+        }
+      );
+    });
+
+    it("should perform a successful strava api request and compute next call wait time properly", done => {
+      // Given
+      const url = "http://api.strava.com/v3/fake";
+      const expectedResult = [];
+
+      const httpClientResponse = createSuccessResponse(expectedResult);
+      httpClientResponse.message.headers[StravaApiClient.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
+      httpClientResponse.message.headers[StravaApiClient.STRAVA_RATELIMIT_USAGE_HEADER] = "300,300"; // Override Ratelimit usage (50% of limit reached on time interval
+
+      spyOn(stravaApiClient.httpClient, "get").and.returnValue(Promise.resolve(httpClientResponse));
+      const stravaTokensUpdaterSpy = spyOn(stravaApiClient, "stravaTokensUpdater").and.returnValue(Promise.resolve());
+      const computeNextCallWaitTimeSpy = spyOn(stravaApiClient, "updateNextCallWaitTime").and.callThrough();
+      const expectedNextCallWaitTime = 1.5;
+
+      // When
+      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onQuotaReachedRetry);
+
+      // Then
+      promise.then(
+        result => {
+          expect(stravaTokensUpdaterSpy).toHaveBeenCalledTimes(1);
+          expect(stravaTokensUpdaterSpy).toHaveBeenCalledWith(stravaConnectorInfo, onStravaConnectorInfoUpdate);
+          expect(computeNextCallWaitTimeSpy).toHaveBeenCalledTimes(1);
+          expect(stravaApiClient.nextCallWaitTime).toEqual(expectedNextCallWaitTime);
           expect(result).toEqual(expectedResult);
           done();
         },
@@ -368,7 +402,7 @@ describe("StravaApiClient", () => {
       const expectedErrorDetails = ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create();
 
       // When
-      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onRetry);
+      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onQuotaReachedRetry);
 
       // Then
       promise.then(
@@ -393,7 +427,7 @@ describe("StravaApiClient", () => {
       spyOn(stravaApiClient, "stravaTokensUpdater").and.returnValue(Promise.resolve());
 
       // When
-      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onRetry);
+      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onQuotaReachedRetry);
 
       // Then
       promise.then(
@@ -418,7 +452,7 @@ describe("StravaApiClient", () => {
       const expectedErrorDetails = ErrorSyncEvent.STRAVA_API_FORBIDDEN.create();
 
       // When
-      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onRetry);
+      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onQuotaReachedRetry);
 
       // Then
       promise.then(
@@ -447,7 +481,7 @@ describe("StravaApiClient", () => {
       const expectedErrorDetails = ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.create(666, 600);
 
       // When
-      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onRetry);
+      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onQuotaReachedRetry);
 
       // Then
       promise.then(
@@ -475,7 +509,7 @@ describe("StravaApiClient", () => {
       const expectedErrorDetails = ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED.create(31000, 30000);
 
       // When
-      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onRetry);
+      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onQuotaReachedRetry);
 
       // Then
       promise.then(
@@ -500,7 +534,7 @@ describe("StravaApiClient", () => {
       spyOn(stravaApiClient, "stravaTokensUpdater").and.returnValue(Promise.resolve());
 
       // When
-      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onRetry);
+      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onQuotaReachedRetry);
 
       // Then
       promise.then(
@@ -526,7 +560,7 @@ describe("StravaApiClient", () => {
       spyOn(stravaApiClient, "stravaTokensUpdater").and.returnValue(Promise.resolve());
 
       // When
-      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onRetry);
+      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onQuotaReachedRetry);
 
       // Then
       promise.then(
@@ -536,40 +570,6 @@ describe("StravaApiClient", () => {
         error => {
           expect(error).not.toBeNull();
           expect(error).toEqual(new ErrorSyncEvent(ConnectorType.STRAVA, expectedErrorDetails));
-          done();
-        }
-      );
-    });
-
-    it("should perform a successful strava api request and compute next call wait time properly", done => {
-      // Given
-      const url = "http://api.strava.com/v3/fake";
-      const expectedResult = [];
-
-      const httpClientResponse = createSuccessResponse(expectedResult);
-      httpClientResponse.message.headers[StravaApiClient.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
-      httpClientResponse.message.headers[StravaApiClient.STRAVA_RATELIMIT_USAGE_HEADER] = "300,300"; // Override Ratelimit usage (50% of limit reached on time interval
-
-      spyOn(stravaApiClient.httpClient, "get").and.returnValue(Promise.resolve(httpClientResponse));
-      const stravaTokensUpdaterSpy = spyOn(stravaApiClient, "stravaTokensUpdater").and.returnValue(Promise.resolve());
-      const computeNextCallWaitTimeSpy = spyOn(stravaApiClient, "updateNextCallWaitTime").and.callThrough();
-      const expectedNextCallWaitTime = 1.5;
-
-      // When
-      const promise = stravaApiClient.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onRetry);
-
-      // Then
-      promise.then(
-        result => {
-          expect(stravaTokensUpdaterSpy).toHaveBeenCalledTimes(1);
-          expect(stravaTokensUpdaterSpy).toHaveBeenCalledWith(stravaConnectorInfo, onStravaConnectorInfoUpdate);
-          expect(computeNextCallWaitTimeSpy).toHaveBeenCalledTimes(1);
-          expect(stravaApiClient.nextCallWaitTime).toEqual(expectedNextCallWaitTime);
-          expect(result).toEqual(expectedResult);
-          done();
-        },
-        error => {
-          expect(error).toBeNull();
           done();
         }
       );

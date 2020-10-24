@@ -68,8 +68,8 @@ export class StravaApiClient {
     stravaConnectorInfo: StravaConnectorInfo,
     url: string,
     onStravaConnectorInfoUpdate: (stravaConnectorInfo: StravaConnectorInfo) => void,
-    onRetry: (retryMillis: number) => void,
-    tries: number = 1
+    onQuotaReachedRetry: (retryMillis: number) => void,
+    quotaReachedTries: number = 1
   ): Promise<T> {
     if (!_.isNumber(stravaConnectorInfo.clientId) || _.isEmpty(stravaConnectorInfo.clientSecret)) {
       return Promise.reject(ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create());
@@ -116,8 +116,8 @@ export class StravaApiClient {
             const isInstantQuotaReached = parseRateLimits.instant.usage > parseRateLimits.instant.limit;
             const isDailyQuotaReached = parseRateLimits.daily.usage > parseRateLimits.daily.limit;
 
-            const maxTriesReached = tries >= StravaApiClient.QUOTA_REACHED_RETRY_COUNT + 1;
-            if (maxTriesReached) {
+            const maxTriesQuotaReached = quotaReachedTries >= StravaApiClient.QUOTA_REACHED_RETRY_COUNT + 1;
+            if (maxTriesQuotaReached) {
               if (isInstantQuotaReached) {
                 return Promise.reject(
                   ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.create(
@@ -142,10 +142,10 @@ export class StravaApiClient {
             }
 
             // Retry call later
-            const retryMillis = this.retryInMillis(tries);
+            const retryMillis = this.retryInMillis(quotaReachedTries);
 
             // Notify
-            onRetry(retryMillis);
+            onQuotaReachedRetry(retryMillis);
 
             const logMessage = `${
               isInstantQuotaReached ? "Instant quota reached" : isDailyQuotaReached ? "Daily quota reached" : ""
@@ -153,8 +153,14 @@ export class StravaApiClient {
             logger.info(logMessage, JSON.stringify(parseRateLimits));
 
             return sleep(retryMillis).then(() => {
-              tries++;
-              return this.get(stravaConnectorInfo, url, onStravaConnectorInfoUpdate, onRetry, tries);
+              quotaReachedTries++;
+              return this.get(
+                stravaConnectorInfo,
+                url,
+                onStravaConnectorInfoUpdate,
+                onQuotaReachedRetry,
+                quotaReachedTries
+              );
             });
           case HttpCodes.NotFound:
             return Promise.reject(ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.create(url));
