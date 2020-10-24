@@ -53,6 +53,10 @@ export class ElevateErrorHandler implements ErrorHandler {
     if (error) {
       let errorMessage: string;
 
+      if (typeof error === "string") {
+        error = new Error(error);
+      }
+
       if (error instanceof ElevateException) {
         if (error instanceof SyncException) {
           errorMessage = "Sync error";
