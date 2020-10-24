@@ -165,10 +165,13 @@ export class StravaConnector extends BaseConnector {
   ): Promise<void> {
     // Check for stop request and stop sync
     if (this.stopRequested) {
-      return Promise.reject(new StoppedSyncEvent(ConnectorType.STRAVA));
+      return Promise.reject(new StoppedSyncEvent(this.type));
     }
 
     return new Promise((resolve, reject) => {
+      this.syncEvents$.next(
+        new GenericSyncEvent(this.type, `Scanning ${stravaPageId * StravaConnector.ACTIVITIES_PER_PAGES} activities...`)
+      );
       this.getStravaBareActivityModels(stravaPageId, perPage, this.syncDateTime).then(
         (bareActivities: BareActivityModel[]) => {
           if (bareActivities.length > 0) {
@@ -198,7 +201,7 @@ export class StravaConnector extends BaseConnector {
       return previousPromise.then(() => {
         // Check for stop request and stop sync
         if (this.stopRequested) {
-          return Promise.reject(new StoppedSyncEvent(ConnectorType.STRAVA));
+          return Promise.reject(new StoppedSyncEvent(this.type));
         }
 
         bareActivity = this.prepareBareActivity(bareActivity);
@@ -253,7 +256,7 @@ export class StravaConnector extends BaseConnector {
                     );
 
                     // Track connector type
-                    syncedActivityModel.sourceConnectorType = ConnectorType.STRAVA;
+                    syncedActivityModel.sourceConnectorType = this.type;
 
                     // Check if user missed some athlete settings. Goal: avoid missing stress scores because of missing settings.
                     syncedActivityModel.settingsLack = ActivityComputer.hasAthleteSettingsLacks(
@@ -274,7 +277,7 @@ export class StravaConnector extends BaseConnector {
                     // Notify the new SyncedActivityModel
                     syncEvents$.next(
                       new ActivitySyncEvent(
-                        ConnectorType.STRAVA,
+                        this.type,
                         null,
                         syncedActivityModel as SyncedActivityModel,
                         true,
@@ -284,17 +287,8 @@ export class StravaConnector extends BaseConnector {
                   } catch (error) {
                     const errorSyncEvent =
                       error instanceof Error
-                        ? ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(
-                            ConnectorType.STRAVA,
-                            error.message,
-                            bareActivity,
-                            error.stack
-                          )
-                        : ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(
-                            ConnectorType.STRAVA,
-                            error.toString(),
-                            bareActivity
-                          );
+                        ? ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(this.type, error.message, bareActivity, error.stack)
+                        : ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(this.type, error.toString(), bareActivity);
 
                     syncEvents$.next(errorSyncEvent); // Notify error
                   }
@@ -314,7 +308,7 @@ export class StravaConnector extends BaseConnector {
                   const syncedActivityModel = syncedActivityModels[0];
                   syncedActivityModel.name = bareActivity.name;
                   syncedActivityModel.type = bareActivity.type;
-                  syncEvents$.next(new ActivitySyncEvent(ConnectorType.STRAVA, null, syncedActivityModel, false));
+                  syncEvents$.next(new ActivitySyncEvent(this.type, null, syncedActivityModel, false));
                 }
               } else {
                 // More than 1 activity found, trigger ErrorSyncEvent...
@@ -325,9 +319,9 @@ export class StravaConnector extends BaseConnector {
                 });
 
                 const errorSyncEvent = new ErrorSyncEvent(
-                  ConnectorType.STRAVA,
+                  this.type,
                   ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.create(
-                    ConnectorType.STRAVA,
+                    this.type,
                     bareActivity.name,
                     new Date(bareActivity.start_time),
                     activitiesFound
@@ -465,7 +459,7 @@ export class StravaConnector extends BaseConnector {
       } else {
         this.syncEvents$.next(
           new GenericSyncEvent(
-            ConnectorType.STRAVA,
+            this.type,
             `Strava wants you to slow down...🐌 Resuming sync in ${remainingSec} seconds...`
           )
         );

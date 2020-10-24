@@ -174,7 +174,7 @@ describe("StravaConnector", () => {
       const syncEvents$CompleteSpy = spyOn(syncEvent$, "complete").and.callThrough();
 
       // Then
-      syncEvent$.subscribe(
+      syncEvent$.pipe(filter(evt => evt.type !== SyncEventType.GENERIC)).subscribe(
         (syncEvent: SyncEvent) => {
           if (syncEvent.type === SyncEventType.STARTED) {
             startedSyncEventToBeCaught = syncEvent;
@@ -221,7 +221,7 @@ describe("StravaConnector", () => {
       const syncEvents$CompleteSpy = spyOn(syncEvent$, "complete").and.callThrough();
 
       // Then
-      syncEvent$.subscribe(
+      syncEvent$.pipe(filter(evt => evt.type !== SyncEventType.GENERIC)).subscribe(
         (syncEvent: SyncEvent) => {
           if (syncEvent.type !== SyncEventType.STARTED) {
             expect(syncEvent.type).toEqual(SyncEventType.ACTIVITY);
@@ -248,7 +248,8 @@ describe("StravaConnector", () => {
     it("should not stop sync and notify errors when multiple errors are provided by syncPages()", done => {
       // Given
       const syncPagesSpy = spyOn(stravaConnector, "syncPages").and.callThrough();
-      const expectedNextCalls = fakeActivitiesFixture[0].length;
+      const expectedScanActivitiesSyncEvents = 3; // GenericSyncEvent: `Scanning X activities...`
+      const expectedNextCalls = fakeActivitiesFixture[0].length + expectedScanActivitiesSyncEvents;
       const expectedSyncPagesCalls = 4;
       const computationError = new Error("Computation error!");
       spyOn(stravaConnector, "computeExtendedStats").and.callFake(() => {
@@ -269,7 +270,7 @@ describe("StravaConnector", () => {
       const syncEvents$CompleteSpy = spyOn(syncEvent$, "complete").and.callThrough();
 
       // Then
-      syncEvent$.subscribe(
+      syncEvent$.pipe(filter(evt => evt.type !== SyncEventType.GENERIC)).subscribe(
         (syncEvent: SyncEvent) => {
           if (syncEvent.type !== SyncEventType.STARTED) {
             expect(syncEvent.type).toEqual(SyncEventType.ERROR);
