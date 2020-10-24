@@ -57,7 +57,7 @@ import { DesktopImportBackupDialogComponent } from "../../shared/dialogs/import-
             Go to connectors
           </button>
         </ng-container>
-        <button mat-menu-item (click)="onSyncedBackupExport()" *ngIf="syncState === SyncState.SYNCED">
+        <button mat-menu-item (click)="onSyncedBackupExport()">
           <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
           Backup profile
         </button>

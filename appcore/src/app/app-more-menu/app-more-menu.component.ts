@@ -8,7 +8,7 @@ import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services
 export const APP_MORE_MENU_COMPONENT = new InjectionToken<AppMoreMenuComponent>("APP_MORE_MENU_COMPONENT");
 
 @Component({ template: "" })
-export class AppMoreMenuComponent implements OnInit {
+export abstract class AppMoreMenuComponent implements OnInit {
   constructor(
     @Inject(Router) protected readonly router: Router,
     @Inject(MatDialog) protected readonly dialog: MatDialog,

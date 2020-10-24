@@ -16,14 +16,14 @@ import { Subscription } from "rxjs";
 export const SYNC_MENU_COMPONENT = new InjectionToken<SyncMenuComponent>("SYNC_MENU_COMPONENT");
 
 @Component({ template: "" })
-export class SyncMenuComponent implements OnInit, OnDestroy {
+export abstract class SyncMenuComponent implements OnInit, OnDestroy {
   private static readonly UPDATE_SYNC_DATE_STATUS_EVERY: number = 1000 * 60;
   public SyncState = SyncState;
   public syncState: SyncState;
   public syncDateMessage: string;
   public syncDoneSub: Subscription;
 
-  constructor(
+  protected constructor(
     @Inject(Router) protected readonly router: Router,
     @Inject(SyncService) protected readonly syncService: SyncService<any>,
     @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,

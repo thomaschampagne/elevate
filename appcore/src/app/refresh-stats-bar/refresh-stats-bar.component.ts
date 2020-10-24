@@ -13,7 +13,7 @@ import { sleep } from "@elevate/shared/tools";
 export const REFRESH_STATS_BAR_COMPONENT = new InjectionToken<RefreshStatsBarComponent>("REFRESH_STATS_BAR_COMPONENT");
 
 @Component({ template: "" })
-export class RefreshStatsBarComponent implements OnInit {
+export abstract class RefreshStatsBarComponent implements OnInit {
   public static readonly VERIFY_SETTINGS_LACKS_TIMEOUT: number = 20;
   public static readonly VERIFY_ATHLETE_SETTINGS_CONSISTENCY_TIMEOUT: number = 30;
 
@@ -24,7 +24,7 @@ export class RefreshStatsBarComponent implements OnInit {
   public hideSettingsConsistencyWarning: boolean;
   public hideSettingsLacksWarning: boolean;
 
-  constructor(
+  protected constructor(
     @Inject(Router) protected readonly router: Router,
     @Inject(ActivityService) protected readonly activityService: ActivityService,
     @Inject(MatDialog) protected readonly dialog: MatDialog
