@@ -14,7 +14,6 @@ import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dia
 import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 import { Parser as Json2CsvParser } from "json2csv";
 import moment from "moment";
-import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
@@ -24,6 +23,7 @@ import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm
 import { Subject, Subscription, timer } from "rxjs";
 import { debounce } from "rxjs/operators";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
+import { AppService } from "../shared/services/app-service/app.service";
 import NumberColumn = ActivityColumns.NumberColumn;
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
@@ -54,13 +54,13 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   public hasActivities: boolean;
   public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
   public initialized: boolean;
-  public syncDoneSub: Subscription;
+  public historyChangesSub: Subscription;
 
   constructor(
+    @Inject(AppService) private readonly appService: AppService,
     @Inject(SyncService) private readonly syncService: SyncService<any>,
     @Inject(ActivityService) private readonly activityService: ActivityService,
     @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
-    @Inject(AppEventsService) private readonly appEventsService: AppEventsService,
     @Inject(OPEN_RESOURCE_RESOLVER) private readonly openResourceResolver: OpenResourceResolver,
     @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
     @Inject(MatDialog) private readonly dialog: MatDialog,
@@ -174,12 +174,10 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       });
 
     // Listen for syncFinished update then table if necessary.
-    this.syncDoneSub = this.appEventsService.syncDone$.subscribe((changes: boolean) => {
-      if (changes) {
-        this.initialized = false;
-        this.ngOnDestroy();
-        this.ngOnInit();
-      }
+    this.historyChangesSub = this.appService.historyChanges$.subscribe(() => {
+      this.initialized = false;
+      this.ngOnDestroy();
+      this.ngOnInit();
     });
   }
 
@@ -439,6 +437,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.syncDoneSub.unsubscribe();
+    this.historyChangesSub.unsubscribe();
   }
 }

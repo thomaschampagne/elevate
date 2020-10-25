@@ -11,8 +11,11 @@ import { LoggerService } from "../logging/logger.service";
 import { ActivityService } from "../activity/activity.service";
 import { DumpModel } from "../../models/dumps/dump.model";
 import { environment } from "../../../../environments/environment";
+import { Subject } from "rxjs";
 
 export abstract class SyncService<T> {
+  public syncDone$: Subject<void>;
+
   constructor(
     @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
     @Inject(DataStore) public readonly dataStore: DataStore<object>,
@@ -21,7 +24,9 @@ export abstract class SyncService<T> {
     @Inject(AthleteService) public readonly athleteService: AthleteService,
     @Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService,
     @Inject(LoggerService) public readonly logger: LoggerService
-  ) {}
+  ) {
+    this.syncDone$ = new Subject<void>();
+  }
 
   /**
    * Promise of sync start

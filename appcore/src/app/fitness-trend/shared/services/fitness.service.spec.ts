@@ -18,6 +18,7 @@ import { ElevateSport } from "@elevate/shared/enums";
 import { DataStore } from "../../../shared/data-store/data-store";
 import { TestingDataStore } from "../../../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../../../shared/modules/target/desktop-target.module";
+import { TargetBootModule } from "../../../boot/desktop-boot.module";
 
 describe("FitnessService", () => {
   const todayDate = "2015-12-01 12:00";
@@ -35,7 +36,7 @@ describe("FitnessService", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, TargetModule, FitnessTrendModule],
+      imports: [CoreModule, SharedModule, TargetBootModule, TargetModule, FitnessTrendModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     });
 

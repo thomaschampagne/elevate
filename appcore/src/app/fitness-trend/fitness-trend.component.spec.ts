@@ -11,7 +11,7 @@ import _ from "lodash";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { Injectable } from "@angular/core";
-import { AppEventsService } from "../shared/services/external-updates/app-events-service";
+import { AppService } from "../shared/services/app-service/app.service";
 import { UserSettings } from "@elevate/shared/models";
 import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
@@ -26,13 +26,13 @@ describe("FitnessTrendComponent", () => {
   let fixture: ComponentFixture<FitnessTrendComponent>;
 
   @Injectable()
-  class MockEventsService extends AppEventsService {}
+  class MockAppService extends AppService {}
 
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, TargetModule, FitnessTrendModule],
       providers: [
-        { provide: AppEventsService, useClass: MockEventsService },
+        { provide: AppService, useClass: MockAppService },
         { provide: DataStore, useClass: TestingDataStore }
       ]
     }).compileComponents();

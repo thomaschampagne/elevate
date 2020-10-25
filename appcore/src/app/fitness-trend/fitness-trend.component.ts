@@ -16,9 +16,9 @@ import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.mo
 import { FitnessTrendInputsComponent } from "./fitness-trend-inputs/fitness-trend-inputs.component";
 import { FitnessTrendConfigDialogData } from "./shared/models/fitness-trend-config-dialog-data.model";
 import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog/fitness-trend-config-dialog.component";
-import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { Subscription } from "rxjs";
+import { AppService } from "../shared/services/app-service/app.service";
 
 @Component({
   selector: "app-fitness-trend",
@@ -68,12 +68,12 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
   public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
   public areSyncedActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
   public isReSyncRequired: boolean = null; // Can be null: don't know yet true/false status on load
-  public syncDoneSub: Subscription;
+  public historyChangesSub: Subscription;
 
   constructor(
+    @Inject(AppService) private readonly appService: AppService,
     @Inject(SyncService) private readonly syncService: SyncService<any>,
     @Inject(FitnessService) private readonly fitnessService: FitnessService,
-    @Inject(AppEventsService) private readonly appEventsService: AppEventsService,
     @Inject(MatDialog) private readonly dialog: MatDialog,
     @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
     @Inject(LoggerService) private readonly logger: LoggerService
@@ -188,11 +188,9 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
     });
 
     // Listen for sync done to reload component
-    this.syncDoneSub = this.appEventsService.syncDone$.subscribe((changes: boolean) => {
-      if (changes) {
-        this.ngOnDestroy();
-        this.ngOnInit();
-      }
+    this.historyChangesSub = this.appService.historyChanges$.subscribe(() => {
+      this.ngOnDestroy();
+      this.ngOnInit();
     });
   }
 
@@ -453,6 +451,6 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.syncDoneSub.unsubscribe();
+    this.historyChangesSub.unsubscribe();
   }
 }

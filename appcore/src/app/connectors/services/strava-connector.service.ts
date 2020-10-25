@@ -15,6 +15,7 @@ import { filter } from "rxjs/operators";
 import { Gender } from "@elevate/shared/models";
 import { IpcMessagesSender } from "../../desktop/ipc-messages/ipc-messages-sender.service";
 import _ from "lodash";
+import { SyncService } from "../../shared/services/sync/sync.service";
 
 @Injectable()
 export class StravaConnectorService {
@@ -24,7 +25,7 @@ export class StravaConnectorService {
   constructor(
     @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(IpcMessagesSender) private readonly ipcMessagesSender: IpcMessagesSender,
-    @Inject(DesktopSyncService) private readonly syncService: DesktopSyncService,
+    @Inject(SyncService) private readonly desktopSyncService: DesktopSyncService,
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     this.stravaConnectorInfo$ = new Subject<StravaConnectorInfo>();
@@ -84,7 +85,7 @@ export class StravaConnectorService {
    *
    */
   public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
-    const desktopSyncService = this.syncService as DesktopSyncService;
+    const desktopSyncService = this.desktopSyncService as DesktopSyncService;
 
     // Subscribe to listen for StravaCredentialsUpdate (case where refresh token is performed)
     desktopSyncService.syncEvents$

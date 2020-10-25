@@ -15,10 +15,13 @@ import { RefreshStatsBarComponent } from "./refresh-stats-bar.component";
   template: `
     <div class="app-refresh-stats-bar">
       <!--Missing stress scores detected on some activities-->
-      <div *ngIf="!hideSettingsLacksWarning" fxLayout="row" fxLayoutAlign="space-between center">
+      <div *ngIf="!hideSettingsLacksWarning" fxLayout="row" fxLayoutAlign="space-between center" class="ribbon">
         <div fxLayout="column" fxLayoutAlign="center start">
-          Missing stress scores detected on some activities. You probably forgot some functional thresholds in dated
-          athlete settings.
+          <span>
+            <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'">looks_one</mat-icon>
+            Missing stress scores detected on some activities. You probably forgot some functional thresholds in dated
+            athlete settings.
+          </span>
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between center">
           <button mat-flat-button color="accent" (click)="onShowActivitiesWithSettingsLacks()">Details</button>
@@ -37,9 +40,14 @@ import { RefreshStatsBarComponent } from "./refresh-stats-bar.component";
       </div>
 
       <!--Non consistent warning message-->
-      <div *ngIf="!hideSettingsConsistencyWarning" fxLayout="row" fxLayoutAlign="space-between center">
+      <div *ngIf="!hideSettingsConsistencyWarning" fxLayout="row" fxLayoutAlign="space-between center" class="ribbon">
         <div fxLayout="column" fxLayoutAlign="center start">
-          Some of your activities need to be recalculated according to athlete settings changes.
+          <span>
+            <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'">{{
+              hideSettingsLacksWarning ? "looks_one" : "looks_two"
+            }}</mat-icon>
+            Some of your activities need to be recalculated according to athlete settings changes.
+          </span>
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between center">
           <button mat-flat-button color="accent" (click)="onFixActivities()">Recalculate</button>
@@ -52,8 +60,9 @@ import { RefreshStatsBarComponent } from "./refresh-stats-bar.component";
   `,
   styles: [
     `
-      .app-refresh-stats-bar {
+      .ribbon {
         padding: 10px 20px;
+        border-bottom: 1px solid #bfbfbf;
       }
 
       button {

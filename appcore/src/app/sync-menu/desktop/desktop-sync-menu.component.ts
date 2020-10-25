@@ -9,7 +9,6 @@ import {
 } from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { DesktopDumpModel } from "../../shared/models/dumps/desktop-dump.model";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
-import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { AppRoutesModel } from "../../shared/models/app-routes.model";
 import moment from "moment";
@@ -19,6 +18,9 @@ import { ConnectorType } from "@elevate/shared/sync";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { ElectronService } from "../../shared/services/electron/electron.service";
 import { DesktopImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/desktop-import-backup-dialog.component";
+import { SyncService } from "../../shared/services/sync/sync.service";
+import { AppService } from "../../shared/services/app-service/app.service";
+import { DesktopAppService } from "../../shared/services/app-service/impl/desktop-app.service";
 
 @Component({
   selector: "app-desktop-sync-menu",
@@ -74,14 +76,14 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
   public mostRecentConnectorSyncedType: ConnectorType;
 
   constructor(
+    @Inject(AppService) private readonly desktopAppService: DesktopAppService,
     @Inject(Router) protected readonly router: Router,
-    @Inject(DesktopSyncService) protected readonly desktopSyncService: DesktopSyncService,
-    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
+    @Inject(SyncService) protected readonly desktopSyncService: DesktopSyncService,
     @Inject(MatDialog) protected readonly dialog: MatDialog,
     @Inject(ElectronService) protected readonly electronService: ElectronService,
     @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar
   ) {
-    super(router, desktopSyncService, appEventsService, dialog, snackBar);
+    super(desktopAppService, router, desktopSyncService, dialog, snackBar);
     this.mostRecentConnectorSyncedType = null;
   }
 

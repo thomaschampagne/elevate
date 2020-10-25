@@ -11,8 +11,9 @@ import {
   OPEN_RESOURCE_RESOLVER,
   OpenResourceResolver
 } from "../../shared/services/links-opener/open-resource-resolver";
-import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
 import { Subscription } from "rxjs";
+import { SyncService } from "../../shared/services/sync/sync.service";
+import { AppService } from "../../shared/services/app-service/app.service";
 
 @Component({
   selector: "app-file-system-connector",
@@ -22,12 +23,12 @@ import { Subscription } from "rxjs";
 export class FileSystemConnectorComponent extends ConnectorsComponent implements OnInit, OnDestroy {
   public showConfigure: boolean;
   public fileSystemConnectorInfo: FileSystemConnectorInfo;
-  public syncDoneSub: Subscription;
+  public historyChangesSub: Subscription;
 
   constructor(
+    @Inject(AppService) private readonly appService: AppService,
     @Inject(FileSystemConnectorInfoService) protected readonly fsConnectorInfoService: FileSystemConnectorInfoService,
-    @Inject(DesktopSyncService) protected readonly desktopSyncService: DesktopSyncService,
-    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
+    @Inject(SyncService) protected readonly desktopSyncService: DesktopSyncService,
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
     @Inject(ElectronService) protected readonly electronService: ElectronService,
     @Inject(Router) protected readonly router: Router,
@@ -50,11 +51,9 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
       this.saveChanges();
     }
 
-    this.syncDoneSub = this.appEventsService.syncDone$.subscribe((changes: boolean) => {
-      if (changes) {
-        this.ngOnDestroy();
-        this.ngOnInit();
-      }
+    this.historyChangesSub = this.appService.historyChanges$.subscribe(() => {
+      this.ngOnDestroy();
+      this.ngOnInit();
     });
   }
 
@@ -96,7 +95,7 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
   }
 
   public ngOnDestroy(): void {
-    this.syncDoneSub.unsubscribe();
+    this.historyChangesSub.unsubscribe();
   }
 
   private isExistingFolder(path: string) {

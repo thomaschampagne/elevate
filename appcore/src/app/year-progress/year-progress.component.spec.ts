@@ -15,11 +15,12 @@ import { SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { YearProgressModule } from "./year-progress.module";
 import { YearToDateProgressPresetModel } from "./shared/models/year-to-date-progress-preset.model";
 import { ProgressType } from "./shared/enums/progress-type.enum";
-import { ExtensionEventsService } from "../shared/services/external-updates/impl/extension-events.service";
+import { ExtensionAppService } from "../shared/services/app-service/impl/extension-app.service";
 import { ElevateSport } from "@elevate/shared/enums";
 import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../shared/modules/target/desktop-target.module";
+import { TargetBootModule } from "../boot/desktop-boot.module";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("YearProgressComponent", () => {
@@ -39,15 +40,14 @@ describe("YearProgressComponent", () => {
   let TEST_SYNCED_ACTIVITIES: SyncedActivityModel[];
 
   beforeEach(done => {
-    spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
-      // @ts-ignore
-      addListener: (message: any, sender: any, sendResponse: any) => {}
+    spyOn(ExtensionAppService, "getBrowserExternalMessages").and.returnValue({
+      addListener: () => {}
     });
 
-    spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
+    spyOn(ExtensionAppService, "getBrowserPluginId").and.returnValue(pluginId);
 
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, TargetModule, YearProgressModule],
+      imports: [CoreModule, SharedModule, TargetBootModule, TargetModule, YearProgressModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 

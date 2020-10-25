@@ -18,8 +18,9 @@ import {
 import { IClipboardResponse } from "ngx-clipboard";
 import jdenticon from "jdenticon/standalone";
 import { StatusCodes } from "http-status-codes";
-import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
 import { Subscription } from "rxjs";
+import { SyncService } from "../../shared/services/sync/sync.service";
+import { AppService } from "../../shared/services/app-service/app.service";
 
 class GeneratedStravaApiApplication {
   public appName: string;
@@ -40,12 +41,12 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
   public showConfigure: boolean;
   public showHowTo: boolean;
 
-  public syncDoneSub: Subscription;
+  public historyChangesSub: Subscription;
 
   constructor(
+    @Inject(AppService) private readonly appService: AppService,
     @Inject(StravaConnectorService) protected readonly stravaConnectorService: StravaConnectorService,
-    @Inject(DesktopSyncService) protected readonly desktopSyncService: DesktopSyncService,
-    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
+    @Inject(SyncService) protected readonly desktopSyncService: DesktopSyncService,
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
     @Inject(ElectronService) protected readonly electronService: ElectronService,
     @Inject(Router) protected readonly router: Router,
@@ -70,11 +71,9 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
       this.handleCredentialsChanges(stravaConnectorInfo);
     });
 
-    this.syncDoneSub = this.appEventsService.syncDone$.subscribe((changes: boolean) => {
-      if (changes) {
-        this.ngOnDestroy();
-        this.ngOnInit();
-      }
+    this.historyChangesSub = this.appService.historyChanges$.subscribe(() => {
+      this.ngOnDestroy();
+      this.ngOnInit();
     });
   }
 
@@ -228,6 +227,6 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
   }
 
   public ngOnDestroy(): void {
-    this.syncDoneSub.unsubscribe();
+    this.historyChangesSub.unsubscribe();
   }
 }

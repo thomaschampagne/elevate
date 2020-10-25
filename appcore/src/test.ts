@@ -50,3 +50,6 @@ Object.defineProperty(window, "require", {
     return {};
   }
 });
+
+// Mock/bypass desktop boot for all test (to be removed)
+jest.mock("./app/app-load/desktop/desktop-boot", () => null);

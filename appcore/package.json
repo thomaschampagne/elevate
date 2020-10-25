@@ -19,6 +19,10 @@
   "browser": {
     "fs": false
   },
+  "engines": {
+    "node": ">=12"
+  },
+  "engineStrict": true,
   "private": true,
   "dependencies": {
     "@angular/animations": "~10.2.0",

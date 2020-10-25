@@ -16,8 +16,6 @@ import { PROMISE_TRON } from "../../../desktop/ipc-messages/promise-tron.interfa
 import { PromiseTronService } from "../../../desktop/ipc-messages/promise-tron.service";
 import { ActivityService } from "../../services/activity/activity.service";
 import { DesktopActivityService } from "../../services/activity/impl/desktop-activity.service";
-import { AppEventsService } from "../../services/external-updates/app-events-service";
-import { DesktopEventsService } from "../../services/external-updates/impl/desktop-events.service";
 import { VersionsProvider } from "../../services/versions/versions-provider";
 import { DesktopVersionsProvider } from "../../services/versions/impl/desktop-versions-provider.service";
 import { OPEN_RESOURCE_RESOLVER } from "../../services/links-opener/open-resource-resolver";
@@ -48,7 +46,6 @@ import { DesktopRoutingModule } from "../routing/desktop-routing.module";
     { provide: DataStore, useClass: DesktopDataStore },
     { provide: PROMISE_TRON, useClass: PromiseTronService },
     { provide: ActivityService, useClass: DesktopActivityService },
-    { provide: AppEventsService, useClass: DesktopEventsService },
     { provide: VersionsProvider, useClass: DesktopVersionsProvider },
     { provide: OPEN_RESOURCE_RESOLVER, useClass: DesktopOpenResourceResolver },
     { provide: SyncService, useClass: DesktopSyncService }

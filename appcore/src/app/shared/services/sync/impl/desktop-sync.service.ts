@@ -27,7 +27,6 @@ import moment from "moment";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync";
 import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-time.dao";
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
-import { AppEventsService } from "../../external-updates/app-events-service";
 import { StreamsService } from "../../streams/streams.service";
 import { FileSystemConnectorInfoService } from "../../file-system-connector-info/file-system-connector-info.service";
 import { IpcMessagesSender } from "../../../../desktop/ipc-messages/ipc-messages-sender.service";
@@ -56,7 +55,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   public syncEvents$: Subject<SyncEvent>;
   public syncSubscription: Subscription;
   public currentConnectorType: ConnectorType;
-  public activityUpsertDetected: boolean;
 
   constructor(
     @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
@@ -71,7 +69,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     @Inject(FileSystemConnectorInfoService) public readonly fsConnectorInfoService: FileSystemConnectorInfoService,
     @Inject(LoggerService) public readonly logger: LoggerService,
     @Inject(ConnectorSyncDateTimeDao) public readonly connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
-    @Inject(AppEventsService) public readonly appEventsService: AppEventsService,
     @Inject(ElectronService) public readonly electronService: ElectronService
   ) {
     super(
@@ -86,7 +83,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     this.syncSubscription = null;
     this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync // TODO ReplaySubject to get old values?! I think no
     this.currentConnectorType = null;
-    this.activityUpsertDetected = false;
   }
 
   public static transformErrorToSyncException(error: Error | Error[] | string | string[]): SyncException {
@@ -192,7 +188,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   public handleSyncEvents(syncEvents$: Subject<SyncEvent>, syncEvent: SyncEvent): void {
     switch (syncEvent.type) {
       case SyncEventType.STARTED:
-        this.resetActivityTrackingUpsert();
         syncEvents$.next(syncEvent); // Forward for upward UI use.
         this.logger.info(syncEvent);
         break;
@@ -202,7 +197,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         break;
 
       case SyncEventType.STOPPED:
-        this.resetActivityTrackingUpsert();
         syncEvents$.next(syncEvent); // Forward for upward UI use.
         this.logger.info(syncEvent);
         break;
@@ -233,8 +227,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   }
 
   public handleErrorSyncEvents(syncEvents$: Subject<SyncEvent>, errorSyncEvent: ErrorSyncEvent): void {
-    this.resetActivityTrackingUpsert();
-
     this.logger.error(errorSyncEvent);
 
     if (!errorSyncEvent.code) {
@@ -292,8 +284,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       })
       .then(() => {
         this.logger.info(completeSyncEvent);
-        this.appEventsService.syncDone$.next(this.activityUpsertDetected);
-        this.resetActivityTrackingUpsert();
+        this.syncDone$.next();
         syncEvents$.next(completeSyncEvent); // Forward for upward UI use.
       });
   }
@@ -339,7 +330,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       .put(activitySyncEvent.activity)
       .then((syncedActivityModel: SyncedActivityModel) => {
         this.logger.info(`Activity "${syncedActivityModel.name}" saved`);
-        this.trackActivityUpsert();
 
         const promiseHandlePutStreams: Promise<void | CompressedStreamModel> = activitySyncEvent.compressedStream
           ? this.streamsService.put(
@@ -480,14 +470,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
   public clearSyncTime(): Promise<void> {
     return this.connectorSyncDateTimeDao.clear(true);
-  }
-
-  public trackActivityUpsert(): void {
-    this.activityUpsertDetected = true;
-  }
-
-  public resetActivityTrackingUpsert(): void {
-    this.activityUpsertDetected = false;
   }
 
   public ngOnDestroy(): void {

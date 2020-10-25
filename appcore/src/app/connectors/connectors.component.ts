@@ -10,6 +10,7 @@ import { ConnectorSyncDateTime } from "@elevate/shared/models/sync/index";
 import { ConnectorType } from "@elevate/shared/sync";
 import moment from "moment";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
+import { SyncService } from "../shared/services/sync/sync.service";
 
 @Component({
   selector: "app-connectors",
@@ -18,7 +19,7 @@ import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services
 })
 export class ConnectorsComponent implements OnInit {
   constructor(
-    @Inject(DesktopSyncService) protected readonly desktopSyncService: DesktopSyncService,
+    @Inject(SyncService) protected readonly desktopSyncService: DesktopSyncService,
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
     @Inject(Router) protected readonly router: Router,
     @Inject(MatDialog) protected readonly dialog: MatDialog

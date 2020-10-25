@@ -1,8 +1,9 @@
 import { DataStore, DbEvent } from "../shared/data-store/data-store";
 import { filter, take } from "rxjs/operators";
+import { Inject } from "@angular/core";
 
 export abstract class AppLoadService {
-  protected constructor(protected readonly dataStore: DataStore<object>) {}
+  protected constructor(@Inject(DataStore) protected readonly dataStore: DataStore<object>) {}
 
   public loadApp(): Promise<void> {
     return new Promise<void>(resolve => {

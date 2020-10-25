@@ -8,15 +8,11 @@ import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dia
 import { ActivitiesSettingsLacksDialogComponent } from "./activities-settings-lacks-dialog.component";
 import { LoadingDialogComponent } from "../shared/dialogs/loading-dialog/loading-dialog.component";
 import { filter } from "rxjs/operators";
-import { sleep } from "@elevate/shared/tools";
 
 export const REFRESH_STATS_BAR_COMPONENT = new InjectionToken<RefreshStatsBarComponent>("REFRESH_STATS_BAR_COMPONENT");
 
 @Component({ template: "" })
 export abstract class RefreshStatsBarComponent implements OnInit {
-  public static readonly VERIFY_SETTINGS_LACKS_TIMEOUT: number = 20;
-  public static readonly VERIFY_ATHLETE_SETTINGS_CONSISTENCY_TIMEOUT: number = 30;
-
   @HostBinding("hidden")
   public hideRefreshStatsBar: boolean;
 
@@ -36,9 +32,6 @@ export abstract class RefreshStatsBarComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    // Delayed check of settings lacks and athlete settings consistency
-    this.verifyHistoryCompliance();
-
     // Listen for url change to display or not the "Go to athlete settings" button
     this.handleAthleteSettingButton();
 
@@ -102,16 +95,6 @@ export abstract class RefreshStatsBarComponent implements OnInit {
   public onFixActivities(): void {
     this.onCloseSettingsConsistencyWarning();
     this.onCloseSettingsLacksWarning();
-  }
-
-  private verifyHistoryCompliance(): void {
-    sleep(RefreshStatsBarComponent.VERIFY_SETTINGS_LACKS_TIMEOUT * 1000).then(() => {
-      this.activityService.verifyActivitiesWithSettingsLacking();
-    });
-
-    sleep(RefreshStatsBarComponent.VERIFY_ATHLETE_SETTINGS_CONSISTENCY_TIMEOUT * 1000).then(() => {
-      this.activityService.verifyConsistencyWithAthleteSettings();
-    });
   }
 
   private handleAthleteSettingButton(): void {

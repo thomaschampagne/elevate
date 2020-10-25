@@ -45,6 +45,10 @@
   "author": "Thomas Champagne",
   "license": "MIT",
   "readme": "README.md",
+  "engines": {
+    "node": ">=12"
+  },
+  "engineStrict": true,
   "dependencies": {
     "@elevate/shared": "file:../appcore/modules/shared/",
     "chart.js": "^2.9.4",

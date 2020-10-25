@@ -7,13 +7,14 @@ import { ActivityService } from "../shared/services/activity/activity.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import _ from "lodash";
 import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fixture";
-import { ExtensionEventsService } from "../shared/services/external-updates/impl/extension-events.service";
+import { ExtensionAppService } from "../shared/services/app-service/impl/extension-app.service";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { UserSettings } from "@elevate/shared/models";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../shared/modules/target/desktop-target.module";
+import { TargetBootModule } from "../boot/desktop-boot.module";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ActivitiesComponent", () => {
@@ -27,15 +28,15 @@ describe("ActivitiesComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, TargetModule],
+      imports: [CoreModule, SharedModule, TargetBootModule, TargetModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 
-    spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
+    spyOn(ExtensionAppService, "getBrowserExternalMessages").and.returnValue({
       addListener: () => {}
     });
 
-    spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
+    spyOn(ExtensionAppService, "getBrowserPluginId").and.returnValue(pluginId);
 
     activityService = TestBed.inject(ActivityService);
     userSettingsService = TestBed.inject(UserSettingsService);

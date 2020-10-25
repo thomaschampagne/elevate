@@ -5,7 +5,6 @@ import { SyncMenuComponent } from "../sync-menu.component";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { AppEventsService } from "../../shared/services/external-updates/app-events-service";
 import { ImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { ExtensionSyncService } from "../../shared/services/sync/impl/extension-sync.service";
@@ -15,6 +14,9 @@ import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/conf
 import { AppRoutesModel } from "../../shared/models/app-routes.model";
 import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
 import { ExtensionImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/extension-import-backup-dialog.component";
+import { SyncService } from "../../shared/services/sync/sync.service";
+import { AppService } from "../../shared/services/app-service/app.service";
+import { ExtensionAppService } from "../../shared/services/app-service/impl/extension-app.service";
 
 @Component({
   selector: "app-extension-sync-menu",
@@ -67,13 +69,13 @@ import { ExtensionImportBackupDialogComponent } from "../../shared/dialogs/impor
 })
 export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnInit {
   constructor(
+    @Inject(AppService) private readonly extensionAppService: ExtensionAppService,
     @Inject(Router) protected readonly router: Router,
-    @Inject(ExtensionSyncService) protected readonly extensionSyncService: ExtensionSyncService,
-    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
+    @Inject(SyncService) protected readonly extensionSyncService: ExtensionSyncService,
     @Inject(MatDialog) protected readonly dialog: MatDialog,
     @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar
   ) {
-    super(router, extensionSyncService, appEventsService, dialog, snackBar);
+    super(extensionAppService, router, extensionSyncService, dialog, snackBar);
   }
 
   public ngOnInit() {

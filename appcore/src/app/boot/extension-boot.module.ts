@@ -15,6 +15,8 @@ import { SYNC_MENU_COMPONENT } from "../sync-menu/sync-menu.component";
 import { ExtensionSyncMenuComponent } from "../sync-menu/extension/extension-sync-menu.component";
 import { ExtensionRoutingModule } from "../shared/modules/routing/extension-routing.module";
 import { CoreModule } from "../core/core.module";
+import { AppService } from "../shared/services/app-service/app.service";
+import { ExtensionAppService } from "../shared/services/app-service/impl/extension-app.service";
 
 @NgModule({
   imports: [CoreModule, ExtensionRoutingModule],
@@ -28,6 +30,7 @@ import { CoreModule } from "../core/core.module";
   ],
   providers: [
     { provide: AppLoadService, useClass: ExtensionLoadService },
+    { provide: AppService, useClass: ExtensionAppService },
     { provide: MENU_ITEMS_PROVIDER, useClass: ExtensionMenuItemsProvider },
     { provide: SYNC_BAR_COMPONENT, useValue: ExtensionSyncBarComponent },
     { provide: REFRESH_STATS_BAR_COMPONENT, useValue: ExtensionRefreshStatsBarComponent },

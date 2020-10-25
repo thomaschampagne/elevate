@@ -1,46 +1,49 @@
 import { TestBed } from "@angular/core/testing";
-import { ExtensionEventsService } from "./extension-events.service";
+import { ExtensionAppService } from "./extension-app.service";
 import { CoreMessages, SyncResultModel } from "@elevate/shared/models";
 import { DataStore } from "../../../data-store/data-store";
 import { TestingDataStore } from "../../../data-store/testing-datastore.service";
 import { LoggerService } from "../../logging/logger.service";
 import { ConsoleLoggerService } from "../../logging/console-logger.service";
+import { TargetModule } from "../../../modules/target/extension-target.module";
+import { TargetBootModule } from "../../../../boot/extension-boot.module";
+import { SharedModule } from "../../../shared.module";
 
-describe("ExtensionEventsService", () => {
+describe("ExtensionAppService", () => {
   const pluginId = "c061d18abea0";
-  let service: ExtensionEventsService;
+  let service: ExtensionAppService;
 
   beforeEach(done => {
-    spyOn(ExtensionEventsService, "getBrowserExternalMessages").and.returnValue({
-      // @ts-ignore
-      addListener: (message: any, sender: any, sendResponse: any) => {}
+    spyOn(ExtensionAppService, "getBrowserExternalMessages").and.returnValue({
+      addListener: () => {}
     });
 
-    spyOn(ExtensionEventsService, "getBrowserPluginId").and.returnValue(pluginId);
+    spyOn(ExtensionAppService, "getBrowserPluginId").and.returnValue(pluginId);
 
     TestBed.configureTestingModule({
+      imports: [SharedModule, TargetModule, TargetBootModule],
       providers: [
-        ExtensionEventsService,
+        ExtensionAppService,
         { provide: DataStore, useClass: TestingDataStore },
         { provide: LoggerService, useClass: ConsoleLoggerService }
       ]
     });
 
-    service = TestBed.inject(ExtensionEventsService);
+    service = TestBed.inject(ExtensionAppService);
 
     done();
   });
 
   it("should be created", done => {
     expect(service).toBeTruthy();
-    expect(service.syncDone$).not.toBeNull();
+    expect(service.extensionSyncService.syncDone$).not.toBeNull();
     done();
   });
 
   it("should handle a sync done WITH changes from external messages", done => {
     // Given
     const expectedCallCount = 1;
-    const spy = spyOn(service.syncDone$, "next");
+    const spy = spyOn(service.extensionSyncService.syncDone$, "next");
     const expectedChangesFromSync = true;
     const message: any = {
       message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
@@ -67,7 +70,7 @@ describe("ExtensionEventsService", () => {
   it("should not handle a sync done WITHOUT changes from external messages", done => {
     // Given
     const expectedCallCount = 1;
-    const spy = spyOn(service.syncDone$, "next");
+    const spy = spyOn(service.extensionSyncService.syncDone$, "next");
     const expectedChangesFromSync = false;
     const message: any = {
       message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
@@ -93,7 +96,7 @@ describe("ExtensionEventsService", () => {
 
   it("should bypass handle external messages receive if sender is not the plugin it self", done => {
     // Given
-    const spy = spyOn(service.syncDone$, "next");
+    const spy = spyOn(service.extensionSyncService.syncDone$, "next");
     const message: any = {
       message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
       results: {}

@@ -20,10 +20,13 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
   template: `
     <div class="app-refresh-stats-bar">
       <!--Missing stress scores detected on some activities-->
-      <div *ngIf="!hideSettingsLacksWarning" fxLayout="row" fxLayoutAlign="space-between center">
+      <div *ngIf="!hideSettingsLacksWarning" fxLayout="row" fxLayoutAlign="space-between center" class="ribbon">
         <div fxLayout="column" fxLayoutAlign="center start">
-          Missing stress scores detected on some activities. You probably forgot some functional thresholds in dated
-          athlete settings.
+          <span>
+            <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'">looks_one</mat-icon>
+            Missing stress scores detected on some activities. You probably forgot some functional thresholds in dated
+            athlete settings.
+          </span>
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between center">
           <button mat-flat-button color="accent" (click)="onShowActivitiesWithSettingsLacks()">Details</button>
@@ -42,9 +45,14 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
       </div>
 
       <!--Non consistent warning message-->
-      <div *ngIf="!hideSettingsConsistencyWarning" fxLayout="row" fxLayoutAlign="space-between center">
+      <div *ngIf="!hideSettingsConsistencyWarning" fxLayout="row" fxLayoutAlign="space-between center" class="ribbon">
         <div fxLayout="column" fxLayoutAlign="center start">
-          Some of your activities need to be recalculated according to athlete settings changes.
+          <span>
+            <mat-icon fontSet="material-icons-outlined" [style.vertical-align]="'bottom'">{{
+              hideSettingsLacksWarning ? "looks_one" : "looks_two"
+            }}</mat-icon>
+            Some of your activities need to be recalculated according to athlete settings changes.
+          </span>
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between center">
           <button mat-flat-button color="accent" (click)="onFixActivities()">Recalculate</button>
@@ -55,7 +63,7 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
       </div>
 
       <!--Recalculate activities section-->
-      <div *ngIf="!hideRecalculation" fxLayout="row" fxLayoutAlign="space-between center">
+      <div *ngIf="!hideRecalculation" fxLayout="row" fxLayoutAlign="space-between center" class="ribbon">
         <div fxLayout="column" fxLayoutAlign="center start">
           <span fxFlex class="mat-body-1" *ngIf="statusText">{{ statusText }}</span>
           <span fxFlex class="mat-caption">{{ processed }}/{{ toBeProcessed }} activities recalculated.</span>
@@ -70,8 +78,9 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
   `,
   styles: [
     `
-      .app-refresh-stats-bar {
+      .ribbon {
         padding: 10px 20px;
+        border-bottom: 1px solid #bfbfbf;
       }
 
       button {

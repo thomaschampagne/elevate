@@ -7,11 +7,11 @@ import { SyncService } from "../shared/services/sync/sync.service";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
-import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { ImportExportProgressDialogComponent } from "../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { Subscription } from "rxjs";
+import { AppService } from "../shared/services/app-service/app.service";
 
 export const SYNC_MENU_COMPONENT = new InjectionToken<SyncMenuComponent>("SYNC_MENU_COMPONENT");
 
@@ -21,12 +21,12 @@ export abstract class SyncMenuComponent implements OnInit, OnDestroy {
   public SyncState = SyncState;
   public syncState: SyncState;
   public syncDateMessage: string;
-  public syncDoneSub: Subscription;
+  public historyChangesSub: Subscription;
 
   protected constructor(
+    @Inject(AppService) private readonly appService: AppService,
     @Inject(Router) protected readonly router: Router,
     @Inject(SyncService) protected readonly syncService: SyncService<any>,
-    @Inject(AppEventsService) protected readonly appEventsService: AppEventsService,
     @Inject(MatDialog) protected readonly dialog: MatDialog,
     @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar
   ) {
@@ -41,7 +41,7 @@ export abstract class SyncMenuComponent implements OnInit, OnDestroy {
       this.updateSyncDateStatus();
     }, SyncMenuComponent.UPDATE_SYNC_DATE_STATUS_EVERY);
 
-    this.syncDoneSub = this.appEventsService.syncDone$.subscribe(() => {
+    this.historyChangesSub = this.appService.historyChanges$.subscribe(() => {
       this.updateSyncDateStatus();
     });
   }
@@ -118,6 +118,6 @@ export abstract class SyncMenuComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.syncDoneSub.unsubscribe();
+    this.historyChangesSub.unsubscribe();
   }
 }

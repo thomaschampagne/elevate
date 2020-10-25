@@ -17,6 +17,8 @@ import { DesktopErrorsSyncDetailsDialogComponent } from "../sync-bar/desktop-err
 import { DesktopUnauthorizedMachineIdDialogComponent } from "../app-load/desktop/desktop-unauthorized-machine-id-dialog/desktop-unauthorized-machine-id-dialog.component";
 import { CoreModule } from "../core/core.module";
 import { DesktopRoutingModule } from "../shared/modules/routing/desktop-routing.module";
+import { AppService } from "../shared/services/app-service/app.service";
+import { DesktopAppService } from "../shared/services/app-service/impl/desktop-app.service";
 
 @NgModule({
   imports: [CoreModule, DesktopRoutingModule],
@@ -32,6 +34,7 @@ import { DesktopRoutingModule } from "../shared/modules/routing/desktop-routing.
   ],
   providers: [
     { provide: AppLoadService, useClass: DesktopLoadService },
+    { provide: AppService, useClass: DesktopAppService },
     { provide: MENU_ITEMS_PROVIDER, useClass: DesktopMenuItemsProvider },
     { provide: SYNC_BAR_COMPONENT, useValue: DesktopSyncBarComponent },
     { provide: REFRESH_STATS_BAR_COMPONENT, useValue: DesktopRefreshStatsBarComponent },

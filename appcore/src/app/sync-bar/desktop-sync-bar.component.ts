@@ -6,6 +6,7 @@ import { SyncException } from "@elevate/shared/exceptions";
 import { DesktopErrorsSyncDetailsDialogComponent } from "./desktop-errors-sync-details-dialog.component";
 import moment from "moment";
 import { SyncBarComponent } from "./sync-bar.component";
+import { SyncService } from "../shared/services/sync/sync.service";
 
 class CurrentActivitySynced {
   public date: string;
@@ -17,7 +18,7 @@ class CurrentActivitySynced {
   selector: "app-desktop-sync-bar",
   template: `
     <div class="app-sync-bar">
-      <div fxLayout="row" fxLayoutAlign="space-between center">
+      <div fxLayout="row" fxLayoutAlign="space-between center" class="ribbon">
         <div fxLayout="column" fxLayoutAlign="center start">
           <span fxFlex class="mat-body-1">
             <span *ngIf="currentActivitySynced">
@@ -54,8 +55,9 @@ class CurrentActivitySynced {
   `,
   styles: [
     `
-      .app-sync-bar {
+      .ribbon {
         padding: 10px 20px;
+        border-bottom: 1px solid #bfbfbf;
       }
 
       button {
@@ -76,7 +78,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
   public stopInProgress: boolean;
 
   constructor(
-    @Inject(DesktopSyncService) private readonly desktopSyncService: DesktopSyncService,
+    @Inject(SyncService) private readonly desktopSyncService: DesktopSyncService,
     @Inject(MatDialog) private readonly dialog: MatDialog,
     @Inject(ChangeDetectorRef) private readonly changeDetectorRef: ChangeDetectorRef
   ) {

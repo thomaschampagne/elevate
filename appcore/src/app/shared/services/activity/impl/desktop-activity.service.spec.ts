@@ -296,7 +296,7 @@ describe("DesktopActivityService", () => {
         }
       );
 
-      const syncDoneSpy = spyOn(desktopActivityService.appEventsService.syncDone$, "next").and.stub();
+      const recalculatedDoneSpy = spyOn(desktopActivityService.recalculatedDone$, "next").and.stub();
       const verifyActivitiesWithSettingsLackingSpy = spyOn(
         desktopActivityService,
         "verifyActivitiesWithSettingsLacking"
@@ -314,7 +314,7 @@ describe("DesktopActivityService", () => {
           if (notification.isLast) {
             expect(refreshStatsSpy).toHaveBeenCalledTimes(3);
             setTimeout(() => {
-              expect(syncDoneSpy).toHaveBeenCalledWith(true);
+              expect(recalculatedDoneSpy).toHaveBeenCalledWith();
               expect(verifyActivitiesWithSettingsLackingSpy).toHaveBeenCalledTimes(1);
               expect(desktopActivityService.isProcessing).toBeFalsy();
               done();
@@ -347,7 +347,7 @@ describe("DesktopActivityService", () => {
         }
       );
 
-      const syncDoneSpy = spyOn(desktopActivityService.appEventsService.syncDone$, "next").and.stub();
+      const recalculatedDoneSpy = spyOn(desktopActivityService.recalculatedDone$, "next").and.stub();
       const verifyActivitiesWithSettingsLackingSpy = spyOn(
         desktopActivityService,
         "verifyActivitiesWithSettingsLacking"
@@ -366,7 +366,7 @@ describe("DesktopActivityService", () => {
             expect(getByIdSpy).toHaveBeenCalledTimes(3);
             expect(refreshStatsSpy).toHaveBeenCalledTimes(3);
             setTimeout(() => {
-              expect(syncDoneSpy).toHaveBeenCalledWith(true);
+              expect(recalculatedDoneSpy).toHaveBeenCalledWith();
               expect(verifyActivitiesWithSettingsLackingSpy).toHaveBeenCalledTimes(1);
               expect(desktopActivityService.isProcessing).toBeFalsy();
               done();
@@ -405,7 +405,7 @@ describe("DesktopActivityService", () => {
 
       const fetchSpy = spyOn(desktopActivityService, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
 
-      const syncDoneSpy = spyOn(desktopActivityService.appEventsService.syncDone$, "next").and.stub();
+      const recalculatedDoneSpy = spyOn(desktopActivityService.recalculatedDone$, "next").and.stub();
       const verifyActivitiesWithSettingsLackingSpy = spyOn(
         desktopActivityService,
         "verifyActivitiesWithSettingsLacking"
@@ -424,7 +424,7 @@ describe("DesktopActivityService", () => {
             expect(fetchSpy).toHaveBeenCalledTimes(1);
             expect(refreshStatsSpy).toHaveBeenCalledTimes(3);
             setTimeout(() => {
-              expect(syncDoneSpy).toHaveBeenCalledWith(true);
+              expect(recalculatedDoneSpy).toHaveBeenCalledWith();
               expect(verifyActivitiesWithSettingsLackingSpy).toHaveBeenCalledTimes(1);
               expect(desktopActivityService.isProcessing).toBeFalsy();
               done();

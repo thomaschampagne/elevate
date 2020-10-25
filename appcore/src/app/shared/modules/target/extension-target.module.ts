@@ -6,8 +6,6 @@ import { DataStore } from "../../data-store/data-store";
 import { ExtensionDataStore } from "../../data-store/impl/extension-data-store.service";
 import { ActivityService } from "../../services/activity/activity.service";
 import { ExtensionActivityService } from "../../services/activity/impl/extension-activity.service";
-import { AppEventsService } from "../../services/external-updates/app-events-service";
-import { ExtensionEventsService } from "../../services/external-updates/impl/extension-events.service";
 import { VersionsProvider } from "../../services/versions/versions-provider";
 import { ExtensionVersionsProvider } from "../../services/versions/impl/extension-versions-provider.service";
 import { OPEN_RESOURCE_RESOLVER } from "../../services/links-opener/open-resource-resolver";
@@ -26,7 +24,6 @@ import { ExtensionRoutingModule } from "../routing/extension-routing.module";
     ExtensionSyncService,
     { provide: DataStore, useClass: ExtensionDataStore },
     { provide: ActivityService, useClass: ExtensionActivityService },
-    { provide: AppEventsService, useClass: ExtensionEventsService },
     { provide: VersionsProvider, useClass: ExtensionVersionsProvider },
     { provide: OPEN_RESOURCE_RESOLVER, useClass: ExtensionOpenResourceResolver },
     { provide: SyncService, useClass: ExtensionSyncService }

@@ -1,23 +1,28 @@
 import { Inject, Injectable } from "@angular/core";
-import { CoreMessages, SyncResultModel } from "@elevate/shared/models";
-import { AppEventsService } from "../app-events-service";
+import { CoreMessages } from "@elevate/shared/models";
+import { AppService } from "../app.service";
 import { DataStore } from "../../../data-store/data-store";
 import { LoggerService } from "../../logging/logger.service";
+import { ActivityService } from "../../activity/activity.service";
+import { ExtensionSyncService } from "../../sync/impl/extension-sync.service";
+import { SyncService } from "../../sync/sync.service";
 
 @Injectable()
-export class ExtensionEventsService extends AppEventsService {
+export class ExtensionAppService extends AppService {
   public pluginId: string;
 
   constructor(
+    @Inject(ActivityService) protected readonly activityService: ActivityService,
     @Inject(DataStore) private readonly dataStore: DataStore<object>,
+    @Inject(SyncService) public readonly extensionSyncService: ExtensionSyncService,
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {
-    super();
+    super(activityService, extensionSyncService);
 
-    this.pluginId = ExtensionEventsService.getBrowserPluginId();
+    this.pluginId = ExtensionAppService.getBrowserPluginId();
 
     // Listen for external messages
-    ExtensionEventsService.getBrowserExternalMessages().addListener(
+    ExtensionAppService.getBrowserExternalMessages().addListener(
       (request: any, sender: chrome.runtime.MessageSender) => {
         this.onBrowserRequestReceived(request, sender.id);
       }
@@ -43,12 +48,7 @@ export class ExtensionEventsService extends AppEventsService {
     }
 
     if (request.message === CoreMessages.ON_EXTERNAL_SYNC_DONE) {
-      const syncResult = request.results as SyncResultModel;
-      const hasChanges =
-        syncResult.activitiesChangesModel.added.length > 0 ||
-        syncResult.activitiesChangesModel.edited.length > 0 ||
-        syncResult.activitiesChangesModel.deleted.length > 0;
-      this.syncDone$.next(hasChanges);
+      this.extensionSyncService.syncDone$.next();
     }
   }
 }

@@ -32,10 +32,10 @@ import { AddYearToDateProgressPresetDialogData } from "./shared/models/add-year-
 import { AddRollingProgressPresetDialogData } from "./shared/models/add-rolling-progress-preset-dialog-data";
 import { RollingProgressPresetModel } from "./shared/models/rolling-progress-preset.model";
 import { YearProgressWelcomeDialogComponent } from "./year-progress-welcome-dialog/year-progress-welcome-dialog.component";
-import { AppEventsService } from "../shared/services/external-updates/app-events-service";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { ElevateSport } from "@elevate/shared/enums";
 import { Subscription } from "rxjs";
+import { AppService } from "../shared/services/app-service/app.service";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 /* Legacy tasks */
@@ -178,14 +178,14 @@ export class YearProgressComponent implements OnInit, OnDestroy {
   public isProgressionInitialized;
   public isGraphExpanded: boolean;
 
-  public syncDoneSub: Subscription;
+  public historyChangesSub: Subscription;
 
   constructor(
+    @Inject(AppService) private readonly appService: AppService,
     @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
     @Inject(SyncService) private readonly syncService: SyncService<any>,
     @Inject(ActivityService) private readonly activityService: ActivityService,
     @Inject(YearProgressService) public readonly yearProgressService: YearProgressService,
-    @Inject(AppEventsService) private readonly appEventsService: AppEventsService,
     @Inject(MatDialog) private readonly dialog: MatDialog,
     @Inject(MediaObserver) public readonly mediaObserver: MediaObserver,
     @Inject(LoggerService) private readonly logger: LoggerService
@@ -223,11 +223,9 @@ export class YearProgressComponent implements OnInit, OnDestroy {
     this.initialize();
 
     // Listen for sync done to reload component
-    this.syncDoneSub = this.appEventsService.syncDone$.subscribe((changes: boolean) => {
-      if (changes) {
-        this.ngOnDestroy();
-        this.ngOnInit();
-      }
+    this.historyChangesSub = this.appService.historyChanges$.subscribe(() => {
+      this.ngOnDestroy();
+      this.ngOnInit();
     });
   }
 
@@ -704,6 +702,6 @@ export class YearProgressComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.syncDoneSub.unsubscribe();
+    this.historyChangesSub.unsubscribe();
   }
 }
