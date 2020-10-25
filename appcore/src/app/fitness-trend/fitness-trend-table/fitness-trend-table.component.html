@@ -1,8 +1,5 @@
 <div class="mat-subheading-2" fxLayout="row" fxLayoutAlign="center center">
   <mat-form-field fxFlex="50">
-			<span matPrefix>
-				<mat-icon fontSet="material-icons-outlined">search</mat-icon><span>&nbsp;&nbsp;&nbsp;</span>
-			</span>
     <input (keyup)="applyFilter($event.target.value)" [(ngModel)]="searchText" fxFill matInput
            placeholder="Filter by type or activities name">
     <button (click)="searchText=''; applyFilter(searchText);" *ngIf="searchText" aria-label="Clear" mat-icon-button
