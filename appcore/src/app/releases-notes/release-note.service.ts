@@ -6,19 +6,20 @@ import MarkDownIt from "markdown-it";
 
 // Github release markdown pattern sample to retrieve proper releases note by platforms:
 /*
-# All platforms
+# Release notes
+## All platforms
 <!--ALL-->
 - Fixed bug #1
 - Fixed bug #2
 <!--/ALL-->
 
-# Desktop
+## Desktop
 <!--DESKTOP-->
 - Desktop feat 01
 - Desktop feat 02
 <!--/DESKTOP-->
 
-# Web Extension
+## Web Extension
 <!--EXTENSION-->
 - Extension feat 01
 - Extension feat 02
