@@ -23,8 +23,8 @@
 </mat-card>
 
 <mat-card [fxHide]="!isSynced || !hasActivities">
-  <div class="mat-subheading-2" fxLayout="row" fxLayoutAlign="center center">
-    <mat-form-field fxFlex="50">
+  <div class="mat-body-1" fxLayout="row" fxLayoutAlign="start center">
+    <mat-form-field fxFlex="25">
       <input (keyup)="requestFilterFor($event.target.value)" [(ngModel)]="searchText" fxFill matInput
              placeholder="Filter by type or activities name"
              type="search">
@@ -33,28 +33,30 @@
         <mat-icon fontSet="material-icons-outlined">close</mat-icon>
       </button>
     </mat-form-field>
+    <span fxFlex="1"></span>
+    <mat-form-field fxFlex="75">
+      <mat-select (selectionChange)="onSelectedColumns()"
+                  [(ngModel)]="selectedColumns"
+                  multiple placeholder="Columns displayed selection">
+        <mat-optgroup *ngFor="let columnCategory of columnsCategories;"
+                      [label]="columnCategory.label">
+          <mat-option *ngFor="let column of columnCategory.columns"
+                      [disabled]="(selectedColumns.length === 1 && column.id === selectedColumns[0].id)"
+                      [matTooltip]="(column.description ? column.description : '')"
+                      [value]="column">
+            {{column.header}}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+      <button (click)="reset(); $event.stopPropagation();" color="primary"
+              mat-icon-button
+              matSuffix
+              matTooltip="Reset to default">
+        <mat-icon fontSet="material-icons-outlined">settings_backup_restore</mat-icon>
+      </button>
+    </mat-form-field>
   </div>
-  <mat-form-field fxFill>
-    <mat-select (selectionChange)="onSelectedColumns()"
-                [(ngModel)]="selectedColumns"
-                multiple placeholder="Columns displayed selection">
-      <mat-optgroup *ngFor="let columnCategory of columnsCategories;"
-                    [label]="columnCategory.label">
-        <mat-option *ngFor="let column of columnCategory.columns"
-                    [disabled]="(selectedColumns.length === 1 && column.id === selectedColumns[0].id)"
-                    [matTooltip]="(column.description ? column.description : '')"
-                    [value]="column">
-          {{column.header}}
-        </mat-option>
-      </mat-optgroup>
-    </mat-select>
-    <button (click)="reset(); $event.stopPropagation();" color="primary"
-            mat-icon-button
-            matSuffix
-            matTooltip="Reset to default">
-      <mat-icon fontSet="material-icons-outlined">settings_backup_restore</mat-icon>
-    </button>
-  </mat-form-field>
+
 
   <div class="table-container">
     <table [dataSource]="dataSource" mat-table matSort>
@@ -98,9 +100,14 @@
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </table>
   </div>
-  <mat-paginator (page)="onPageSizeChanged()"
-                 [pageSizeOptions]="[5, 10, 15]"
-                 [pageSize]="5" showFirstLastButtons>
-  </mat-paginator>
-  <button (click)="onSpreadSheetExport()" color="primary" mat-stroked-button>Export to spreadsheet</button>
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <button (click)="onSpreadSheetExport()" color="primary" mat-stroked-button
+            matTooltip="Download spreadsheet export">
+      <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
+    </button>
+    <mat-paginator (page)="onPageSizeChanged()"
+                   [pageSizeOptions]="[5, 10, 15]"
+                   [pageSize]="5" showFirstLastButtons>
+    </mat-paginator>
+  </div>
 </mat-card>
