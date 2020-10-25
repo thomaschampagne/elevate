@@ -17,12 +17,6 @@ import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services
   styleUrls: ["./connectors.component.scss"]
 })
 export class ConnectorsComponent implements OnInit {
-  public static readonly ATHLETE_CHECKING_FIRST_SYNC_MESSAGE: string = "ATHLETE_CHECKING_FIRST_SYNC";
-
-  public connectorType: ConnectorType;
-  public syncDateTime: Date;
-  public humanSyncDateTime: string;
-
   constructor(
     @Inject(DesktopSyncService) protected readonly desktopSyncService: DesktopSyncService,
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
@@ -33,6 +27,13 @@ export class ConnectorsComponent implements OnInit {
     this.syncDateTime = null;
     this.humanSyncDateTime = null;
   }
+
+  public static readonly ATHLETE_CHECKING_FIRST_SYNC_MESSAGE: string = "ATHLETE_CHECKING_FIRST_SYNC";
+  private static readonly SESSION_FIRST_SYNC_MESSAGE_SEEN = "SESSION_FIRST_SYNC_MESSAGE_SEEN";
+
+  public connectorType: ConnectorType;
+  public syncDateTime: Date;
+  public humanSyncDateTime: string;
 
   public ngOnInit(): void {}
 
@@ -51,20 +52,28 @@ export class ConnectorsComponent implements OnInit {
 
   public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
     return this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
-      if (syncState === SyncState.NOT_SYNCED) {
+      if (
+        syncState === SyncState.NOT_SYNCED &&
+        !sessionStorage.getItem(ConnectorsComponent.SESSION_FIRST_SYNC_MESSAGE_SEEN)
+      ) {
         const data: ConfirmDialogDataModel = {
           title: "Important: check your athlete settings before",
           content:
-            "No activities were synced before. First make sure you have properly configured your dated athlete settings including functional thresholds before. " +
-            "A lack of athlete settings configuration can result in empty stats/charts (e.g. flat fitness trend).",
+            "No activities were synced before. First make sure you have properly configured your dated athlete settings with <strong>Functional Thresholds</strong> before (even if not accurate on first sync).<br /><br />" +
+            "<strong>A lack of athlete settings can result in empty stats/charts (e.g. flat fitness trend).</strong>",
           confirmText: "Sync",
-          cancelText: "Configure athlete settings"
+          cancelText: "Configure athlete settings",
+          confirmTimeout: 5,
+          confirmTimeoutEnded: () => {
+            sessionStorage.setItem(ConnectorsComponent.SESSION_FIRST_SYNC_MESSAGE_SEEN, "true");
+          }
         };
 
         const dialogRef = this.dialog.open(ConfirmDialogComponent, {
           minWidth: ConfirmDialogComponent.MIN_WIDTH,
           maxWidth: "50%",
-          data: data
+          data: data,
+          disableClose: false
         });
 
         return dialogRef

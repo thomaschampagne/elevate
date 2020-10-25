@@ -7,7 +7,10 @@
   </button>
   <span fxFlex="1"></span>
   <button *ngIf="dialogData.confirmText !== false" (click)="onConfirm()" color="primary" mat-dialog-close
-          mat-stroked-button>
+          mat-stroked-button [disabled]="dialogData.confirmTimeout > 0 && (this.confirmCountdown$ | async) > 0">
     {{(dialogData.confirmText) ? dialogData.confirmText : "Confirm"}}
+    <span *ngIf="dialogData.confirmTimeout > 0 && (this.confirmCountdown$ | async) > 0">
+      ({{this.confirmCountdown$ | async | number:'2.0'}})
+    </span>
   </button>
 </mat-dialog-actions>

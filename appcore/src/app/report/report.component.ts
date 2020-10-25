@@ -5,10 +5,10 @@ import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm
 import { Constant } from "@elevate/shared/constants";
 import { AppRoutesModel } from "../shared/models/app-routes.model";
 import { Router } from "@angular/router";
-import { Observable, timer } from "rxjs";
-import { scan, takeWhile } from "rxjs/operators";
+import { Observable } from "rxjs";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 import { repository } from "../../../../package.json";
+import { countdown } from "@elevate/shared/tools";
 
 @Component({
   selector: "app-report",
@@ -27,10 +27,7 @@ export class ReportComponent implements OnInit {
   public allowReportCountdown$: Observable<number>;
 
   public ngOnInit(): void {
-    this.allowReportCountdown$ = timer(0, 1000).pipe(
-      scan(acc => --acc, ReportComponent.REPORT_COUNTDOWN_SECONDS + 1),
-      takeWhile(x => x >= 0)
-    );
+    this.allowReportCountdown$ = countdown(ReportComponent.REPORT_COUNTDOWN_SECONDS);
 
     const hasCheckedHelperBefore = sessionStorage.getItem(Constant.SESSION_HELPER_OPENED);
     if (!hasCheckedHelperBefore) {
@@ -44,8 +41,7 @@ export class ReportComponent implements OnInit {
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         minWidth: ConfirmDialogComponent.MIN_WIDTH,
         maxWidth: ConfirmDialogComponent.MAX_WIDTH,
-        data: data,
-        disableClose: true
+        data: data
       });
 
       dialogRef.afterClosed().subscribe((confirm: boolean) => {

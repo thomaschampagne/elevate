@@ -1,5 +1,5 @@
 import { BaseConnector, PrimitiveSourceData } from "../base.connector";
-import { ReplaySubject, Subject, timer } from "rxjs";
+import { ReplaySubject, Subject } from "rxjs";
 import {
   ActivityComputer,
   ActivitySyncEvent,
@@ -22,7 +22,7 @@ import { inject, singleton } from "tsyringe";
 import { ConnectorConfig, StravaConnectorConfig } from "../connector-config.model";
 import { IpcMessagesSender } from "../../messages/ipc-messages.sender";
 import { StravaApiClient } from "../../clients/strava-api.client";
-import { scan, takeWhile } from "rxjs/operators";
+import { countdown } from "@elevate/shared/tools";
 
 export interface StravaApiStreamType {
   type:
@@ -448,12 +448,7 @@ export class StravaConnector extends BaseConnector {
 
   public onQuotaReachedRetry(retryMillis: number): void {
     const retrySeconds = retryMillis / 1000;
-    const countDown = timer(0, 1000).pipe(
-      scan(acc => --acc, retrySeconds),
-      takeWhile(x => x >= 0)
-    );
-
-    const subscription = countDown.subscribe(remainingSec => {
+    const subscription = countdown(retrySeconds).subscribe(remainingSec => {
       if (!this.isSyncing) {
         subscription.unsubscribe();
       } else {

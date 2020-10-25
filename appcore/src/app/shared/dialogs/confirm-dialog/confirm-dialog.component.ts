@@ -2,6 +2,8 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { ConfirmDialogDataModel } from "./confirm-dialog-data.model";
 import { DomSanitizer } from "@angular/platform-browser";
+import { Observable } from "rxjs";
+import { countdown } from "@elevate/shared/tools";
 
 @Component({
   selector: "app-confirm-dialog",
@@ -13,6 +15,7 @@ export class ConfirmDialogComponent implements OnInit {
   public static readonly MIN_WIDTH: string = "40%";
 
   public html: string;
+  public confirmCountdown$: Observable<number>;
 
   constructor(
     @Inject(MatDialogRef) private readonly dialogRef: MatDialogRef<ConfirmDialogComponent>,
@@ -22,6 +25,17 @@ export class ConfirmDialogComponent implements OnInit {
 
   public ngOnInit() {
     this.html = this.domSanitizer.bypassSecurityTrustHtml(this.dialogData.content) as string;
+
+    if (this.dialogData.confirmTimeout > 0) {
+      this.dialogRef.disableClose = this.dialogRef.disableClose !== undefined ? this.dialogRef.disableClose : true;
+      this.confirmCountdown$ = countdown(this.dialogData.confirmTimeout);
+
+      if (this.dialogData.confirmTimeoutEnded) {
+        this.confirmCountdown$.toPromise().then(() => {
+          this.dialogData.confirmTimeoutEnded();
+        });
+      }
+    }
   }
 
   public onConfirm() {

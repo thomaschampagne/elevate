@@ -46,7 +46,7 @@ export abstract class BaseConnector {
     protected readonly ipcMessagesSender: IpcMessagesSender
   ) {}
 
-  private static readonly WAIT_FOR_SYNC_STOP_EVENT_TIMEOUT: number = 2000;
+  private static readonly WAIT_FOR_SYNC_STOP_EVENT_TIMEOUT: number = 3000;
 
   public type: ConnectorType;
   public enabled: boolean;
