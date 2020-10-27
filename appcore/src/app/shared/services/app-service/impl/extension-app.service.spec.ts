@@ -44,7 +44,6 @@ describe("ExtensionAppService", () => {
     // Given
     const expectedCallCount = 1;
     const spy = spyOn(service.extensionSyncService.syncDone$, "next");
-    const expectedChangesFromSync = true;
     const message: any = {
       message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
       results: {
@@ -62,7 +61,7 @@ describe("ExtensionAppService", () => {
 
     // Then
     expect(spy).toHaveBeenCalledTimes(expectedCallCount);
-    expect(spy).toHaveBeenCalledWith(expectedChangesFromSync);
+    expect(spy).toHaveBeenCalledWith();
 
     done();
   });
@@ -71,7 +70,6 @@ describe("ExtensionAppService", () => {
     // Given
     const expectedCallCount = 1;
     const spy = spyOn(service.extensionSyncService.syncDone$, "next");
-    const expectedChangesFromSync = false;
     const message: any = {
       message: CoreMessages.ON_EXTERNAL_SYNC_DONE,
       results: {
@@ -89,7 +87,7 @@ describe("ExtensionAppService", () => {
 
     // Then
     expect(spy).toHaveBeenCalledTimes(expectedCallCount);
-    expect(spy).toHaveBeenCalledWith(expectedChangesFromSync);
+    expect(spy).toHaveBeenCalledWith();
 
     done();
   });
