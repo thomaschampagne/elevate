@@ -21,6 +21,7 @@ import { StatusCodes } from "http-status-codes";
 import { Subscription } from "rxjs";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
+import { AppRoutes } from "../../shared/models/app-routes";
 
 class GeneratedStravaApiApplication {
   public appName: string;
@@ -215,9 +216,13 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
     this.showConfigure = true;
   }
 
-  public onHowToClicked(): void {
+  public onHowToLinkAccount(): void {
     this.showHowTo = true;
     this.refreshRandomStravaApiApplication();
+  }
+
+  public onHowToSpeedUpSync(): void {
+    this.router.navigate([`/${AppRoutes.help}`], { queryParams: { show: "id:strava-connector-faster-first-sync" } });
   }
 
   public onClipBoardSaved($event: IClipboardResponse): void {

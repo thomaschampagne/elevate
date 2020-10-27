@@ -4,7 +4,7 @@ import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm
 import { MatDialog } from "@angular/material/dialog";
 import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.service";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
-import { AppRoutesModel } from "../shared/models/app-routes.model";
+import { AppRoutes } from "../shared/models/app-routes";
 import { Router } from "@angular/router";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync/index";
 import { ConnectorType } from "@elevate/shared/sync";
@@ -83,7 +83,7 @@ export class ConnectorsComponent implements OnInit {
           .then((confirm: boolean) => {
             const checkAthleteSettings = !confirm;
             if (checkAthleteSettings) {
-              this.router.navigate([AppRoutesModel.athleteSettings]);
+              this.router.navigate([AppRoutes.athleteSettings]);
               return Promise.reject(ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE);
             } else {
               return Promise.resolve();

@@ -4,7 +4,7 @@ import _ from "lodash";
 import { ZONE_DEFINITIONS } from "./zone-definitions";
 import { ZonesService } from "./shared/zones.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { AppRoutesModel } from "../shared/models/app-routes.model";
+import { AppRoutes } from "../shared/models/app-routes";
 import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
 import { Subscription } from "rxjs";
@@ -66,7 +66,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
             }
           );
           const subscription = snackBarRef.onAction().subscribe(() => {
-            this.router.navigate([AppRoutesModel.advancedMenu]);
+            this.router.navigate([AppRoutes.advancedMenu]);
             subscription.unsubscribe();
           });
         }
@@ -116,7 +116,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
   }
 
   private navigateToZone(zoneValue: string) {
-    const selectedZoneUrl = AppRoutesModel.zonesSettings + "/" + zoneValue;
+    const selectedZoneUrl = AppRoutes.zonesSettings + "/" + zoneValue;
     this.router.navigate([selectedZoneUrl]);
   }
 }

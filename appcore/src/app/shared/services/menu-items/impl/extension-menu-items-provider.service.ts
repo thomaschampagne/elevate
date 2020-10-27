@@ -1,48 +1,48 @@
 import { Injectable } from "@angular/core";
 import { MenuItemModel, MenuItemsProvider } from "../menu-items-provider.interface";
-import { AppRoutesModel } from "../../../models/app-routes.model";
+import { AppRoutes } from "../../../models/app-routes";
 
 @Injectable()
 export class ExtensionMenuItemsProvider implements MenuItemsProvider {
   public readonly mainMenuItems: MenuItemModel[] = [
     {
       icon: "view_list",
-      routerLink: AppRoutesModel.activities,
+      routerLink: AppRoutes.activities,
       routerLinkActive: true
     },
     {
       icon: "timeline",
-      routerLink: AppRoutesModel.fitnessTrend,
+      routerLink: AppRoutes.fitnessTrend,
       routerLinkActive: true
     },
     {
       icon: "date_range",
-      routerLink: AppRoutesModel.yearProgressions,
+      routerLink: AppRoutes.yearProgressions,
       routerLinkActive: true
     },
     {
       icon: "settings",
-      routerLink: AppRoutesModel.globalSettings,
+      routerLink: AppRoutes.globalSettings,
       routerLinkActive: true
     },
     {
       icon: "portrait",
-      routerLink: AppRoutesModel.athleteSettings,
+      routerLink: AppRoutes.athleteSettings,
       routerLinkActive: true
     },
     {
       icon: "format_line_spacing",
-      routerLink: AppRoutesModel.zonesSettings,
+      routerLink: AppRoutes.zonesSettings,
       routerLinkActive: true
     },
     {
       icon: "support",
-      routerLink: AppRoutesModel.help,
+      routerLink: AppRoutes.help,
       routerLinkActive: true
     },
     {
       icon: "favorite_border",
-      routerLink: AppRoutesModel.donate,
+      routerLink: AppRoutes.donate,
       routerLinkActive: true
     }
   ];

@@ -5,8 +5,8 @@
 <div *ngIf="(isFaqLoaded === true)">
   <div class="search mat-subheading-2" fxLayout="row" fxLayoutAlign="center center">
     <mat-form-field fxFlex="50">
-      <input [(ngModel)]="searchText" matInput placeholder="Enter keywords..." type="search">
-      <button (click)="searchText=''" *ngIf="searchText" aria-label="Clear" mat-button mat-icon-button
+      <input [(ngModel)]="keywords" matInput placeholder="Enter keywords..." type="search">
+      <button *ngIf="keywords" (click)="keywords=''" aria-label="keywords" mat-button mat-icon-button
               matSuffix>
         <mat-icon fontSet="material-icons-outlined">close</mat-icon>
       </button>
@@ -15,7 +15,7 @@
 
   <mat-accordion [multi]="true">
     <mat-expansion-panel
-      *ngFor="let faqEntry of faqEntries | filterBy: ['question', 'answer']: searchText; count as size;"
+      *ngFor="let faqEntry of faqEntries | filterBy: ['question', 'answer']: keywords; count as size;"
       [expanded]="size === 1">
       <mat-expansion-panel-header>
         <mat-panel-title class="mat-h4" [innerHtml]="faqEntry.question"></mat-panel-title>

@@ -10,7 +10,7 @@ import {
 import { DesktopDumpModel } from "../../shared/models/dumps/desktop-dump.model";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
-import { AppRoutesModel } from "../../shared/models/app-routes.model";
+import { AppRoutes } from "../../shared/models/app-routes";
 import moment from "moment";
 import _ from "lodash";
 import { ConnectorSyncDateTime } from "@elevate/shared/models";
@@ -163,6 +163,6 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
   }
 
   public goToConnectors(): void {
-    this.router.navigate([AppRoutesModel.connectors]);
+    this.router.navigate([AppRoutes.connectors]);
   }
 }

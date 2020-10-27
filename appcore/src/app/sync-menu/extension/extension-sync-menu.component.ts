@@ -11,7 +11,7 @@ import { ExtensionSyncService } from "../../shared/services/sync/impl/extension-
 import { ExtensionDumpModel } from "../../shared/models/dumps/extension-dump.model";
 import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
-import { AppRoutesModel } from "../../shared/models/app-routes.model";
+import { AppRoutes } from "../../shared/models/app-routes";
 import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
 import { ExtensionImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/extension-import-backup-dialog.component";
 import { SyncService } from "../../shared/services/sync/sync.service";
@@ -138,7 +138,7 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
         if (confirm) {
           this.syncService.sync(fastSync, forceSync);
         } else {
-          this.router.navigate([AppRoutesModel.athleteSettings]);
+          this.router.navigate([AppRoutes.athleteSettings]);
         }
         afterClosedSubscription.unsubscribe();
       });

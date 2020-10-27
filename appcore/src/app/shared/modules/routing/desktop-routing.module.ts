@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { AppRoutesModel } from "../../models/app-routes.model";
+import { AppRoutes } from "../../models/app-routes";
 import { ActivitiesComponent } from "../../../activities/activities.component";
 import { GlobalSettingsComponent } from "../../../global-settings/global-settings.component";
 import { DonateComponent } from "../../../donate/donate.component";
@@ -16,60 +16,60 @@ import { HelpComponent } from "../../../help/help.component";
 export class DesktopRoutingModule {
   public static routes: Routes = [
     {
-      path: AppRoutesModel.activities,
+      path: AppRoutes.activities,
       component: ActivitiesComponent
     },
     {
-      path: AppRoutesModel.fitnessTrend,
+      path: AppRoutes.fitnessTrend,
       loadChildren: () =>
         import("../../../fitness-trend/fitness-trend.module").then(module => module.FitnessTrendModule)
     },
     {
-      path: AppRoutesModel.yearProgressions,
+      path: AppRoutes.yearProgressions,
       loadChildren: () =>
         import("../../../year-progress/year-progress.module").then(module => module.YearProgressModule)
     },
     {
-      path: AppRoutesModel.globalSettings,
+      path: AppRoutes.globalSettings,
       component: GlobalSettingsComponent
     },
     {
-      path: AppRoutesModel.athleteSettings,
+      path: AppRoutes.athleteSettings,
       loadChildren: () =>
         import("../../../athlete-settings/athlete-settings.module").then(module => module.AthleteSettingsModule)
     },
     {
-      path: AppRoutesModel.connectors,
+      path: AppRoutes.connectors,
       loadChildren: () => import("../../../connectors/connectors.module").then(module => module.ConnectorsModule)
     },
     {
-      path: AppRoutesModel.donate,
+      path: AppRoutes.donate,
       component: DonateComponent
     },
     {
-      path: AppRoutesModel.releasesNotes,
+      path: AppRoutes.releasesNotes,
       loadChildren: () =>
         import("../../../releases-notes/releases-notes.module").then(module => module.ReleasesNotesModule)
     },
     {
-      path: AppRoutesModel.share,
+      path: AppRoutes.share,
       component: ShareComponent
     },
     {
-      path: AppRoutesModel.report,
+      path: AppRoutes.report,
       component: ReportComponent
     },
     {
-      path: AppRoutesModel.advancedMenu,
+      path: AppRoutes.advancedMenu,
       component: DesktopAdvancedMenuComponent
     },
     {
-      path: AppRoutesModel.help,
+      path: AppRoutes.help,
       component: HelpComponent
     },
     {
       path: "",
-      redirectTo: AppRoutesModel.activities,
+      redirectTo: AppRoutes.activities,
       pathMatch: "full"
     }
   ];

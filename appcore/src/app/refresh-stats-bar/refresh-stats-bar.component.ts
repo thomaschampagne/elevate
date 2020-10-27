@@ -1,6 +1,6 @@
 import { Component, HostBinding, Inject, InjectionToken, OnInit } from "@angular/core";
 import { ActivityService } from "../shared/services/activity/activity.service";
-import { AppRoutesModel } from "../shared/models/app-routes.model";
+import { AppRoutes } from "../shared/models/app-routes";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
@@ -83,12 +83,12 @@ export abstract class RefreshStatsBarComponent implements OnInit {
   }
 
   public onEditAthleteSettingsFromSettingsLacksIssue(): void {
-    if (this.router.isActive(AppRoutesModel.athleteSettings, true)) {
+    if (this.router.isActive(AppRoutes.athleteSettings, true)) {
       this.dialog.open(GotItDialogComponent, {
         data: { content: "You're already on athlete settings section 😉" } as GotItDialogDataModel
       });
     } else {
-      this.router.navigate([AppRoutesModel.athleteSettings]);
+      this.router.navigate([AppRoutes.athleteSettings]);
     }
   }
 
@@ -98,7 +98,7 @@ export abstract class RefreshStatsBarComponent implements OnInit {
   }
 
   private handleAthleteSettingButton(): void {
-    const athleteSettingsPath = "/" + AppRoutesModel.athleteSettings;
+    const athleteSettingsPath = "/" + AppRoutes.athleteSettings;
     this.hideGoToAthleteSettingsButton = this.router.url !== athleteSettingsPath;
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: RouterEvent) => {
       this.hideGoToAthleteSettingsButton = event.url !== athleteSettingsPath;

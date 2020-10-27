@@ -233,10 +233,10 @@
           </mat-checkbox>
         </div>
         <div>
-          <button (click)="onHowToClicked()" *ngIf="!showHowTo"
+          <button (click)="onHowToLinkAccount()" *ngIf="!showHowTo"
                   color="primary"
                   mat-stroked-button>
-            <mat-icon fontSet="material-icons-outlined">support</mat-icon>&nbsp;How to get your client
+            <mat-icon fontSet="material-icons-outlined">help</mat-icon>&nbsp;How to get your client
             id & secret
           </button>
           <button (click)="stravaAuthentication()" *ngIf="!stravaConnectorInfo.accessToken"
@@ -247,6 +247,12 @@
             <span>Connect to Strava</span>
           </button>
         </div>
+      </div>
+      <div class="tip">
+        <button (click)="onHowToSpeedUpSync()" color="accent" mat-stroked-button>
+          <mat-icon fontSet="material-icons-outlined" style="transform: rotate(180deg)">wb_incandescent</mat-icon>
+          &nbsp;How to speed up your 1st synchronization
+        </button>
       </div>
     </div>
   </mat-card-content>

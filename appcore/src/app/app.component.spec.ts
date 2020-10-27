@@ -53,6 +53,19 @@ describe("AppComponent", () => {
     done();
   });
 
+  it("should update tool bar title (5)", done => {
+    // Given
+    const expected = "Help";
+    const route = "help;queryParams=%5Bobject%20Object%5D";
+
+    // When
+    const actual = AppComponent.convertRouteToTitle(route);
+
+    // Then
+    expect(actual).toBe(expected);
+    done();
+  });
+
   it("should not update tool bar title", done => {
     // Given
     const route = null;

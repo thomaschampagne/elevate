@@ -3,7 +3,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { Constant } from "@elevate/shared/constants";
-import { AppRoutesModel } from "../shared/models/app-routes.model";
+import { AppRoutes } from "../shared/models/app-routes";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
@@ -46,7 +46,7 @@ export class ReportComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe((confirm: boolean) => {
         if (confirm) {
-          this.router.navigate([AppRoutesModel.help]);
+          this.router.navigate([AppRoutes.help]);
         }
       });
     }

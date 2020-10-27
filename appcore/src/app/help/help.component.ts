@@ -8,6 +8,7 @@ import { environment } from "../../environments/environment";
 import { BuildTarget } from "@elevate/shared/enums";
 import _ from "lodash";
 import { Constant } from "@elevate/shared/constants";
+import { ActivatedRoute } from "@angular/router";
 
 interface FaqEntry {
   question: string | SafeHtml;
@@ -27,11 +28,12 @@ export class HelpComponent implements OnInit {
   public markDownParser: MarkDownIt;
   public isFaqLoaded: boolean = null;
   public faqEntries: FaqEntry[];
-  public searchText = null;
+  public keywords = null;
 
   constructor(
     @Inject(HttpClient) private readonly httpClient: HttpClient,
     @Inject(DomSanitizer) private readonly domSanitizer: DomSanitizer,
+    @Inject(ActivatedRoute) private readonly route: ActivatedRoute,
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     this.markDownParser = new MarkDownIt();
@@ -44,6 +46,12 @@ export class HelpComponent implements OnInit {
         this.faqEntries = _.flatten([this.faqEntries, this.convertMarkdownToFaqEntries(mdFaq)]);
       });
       this.isFaqLoaded = true;
+    });
+
+    this.route.queryParams.subscribe(param => {
+      if (param.show) {
+        this.keywords = param.show;
+      }
     });
 
     // Indicates user checked helper at least once in this session
@@ -61,7 +69,7 @@ export class HelpComponent implements OnInit {
     const registerEntry = (entry: FaqEntry) => {
       // Remove markdown title pattern (we will use mat-card-title directly)
       entry.question =
-        "➔ " +
+        "**+** " +
         (entry.question as string).slice(
           HelpComponent.MARKDOWN_QUESTION_START_PATTERN.length,
           (entry.question as string).length

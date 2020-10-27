@@ -102,18 +102,15 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   public static convertRouteToTitle(route: string): string {
-    if (_.isEmpty(route)) {
+    if (!route) {
       return null;
     }
 
-    const routeAsArray: string[] = _.split(route, "/");
+    // Remove first element if empty (occurs when first char is "/")
+    route = route.replace(/^\//, "");
 
-    if (_.isEmpty(_.first(routeAsArray))) {
-      routeAsArray.shift(); // Remove first element if empty (occurs when first char is "/")
-    }
-
-    let title = _.first(routeAsArray);
-    title = _.first(title.split("?")); // Remove GET Params from route
+    // Remove query params from route on first part before first "/"
+    const title = route.split("/")[0].split(new RegExp(/;|\?/g))[0]; // Remove query params from route
 
     return _.startCase(_.upperFirst(title));
   }

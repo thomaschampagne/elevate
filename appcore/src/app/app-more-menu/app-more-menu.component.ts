@@ -1,5 +1,5 @@
 import { Component, Inject, InjectionToken, OnInit } from "@angular/core";
-import { AppRoutesModel } from "../shared/models/app-routes.model";
+import { AppRoutes } from "../shared/models/app-routes";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
@@ -18,15 +18,15 @@ export abstract class AppMoreMenuComponent implements OnInit {
   public ngOnInit(): void {}
 
   public onShowReleaseNotes(): void {
-    this.router.navigate([AppRoutesModel.releasesNotes]);
+    this.router.navigate([AppRoutes.releasesNotes]);
   }
 
   public onShowShare(): void {
-    this.router.navigate([AppRoutesModel.share]);
+    this.router.navigate([AppRoutes.share]);
   }
 
   public onShowReport(): void {
-    this.router.navigate([AppRoutesModel.report]);
+    this.router.navigate([AppRoutes.report]);
   }
 
   public onShowAbout(): void {
@@ -37,7 +37,7 @@ export abstract class AppMoreMenuComponent implements OnInit {
   }
 
   public onAdvanceMenu(): void {
-    this.router.navigate([AppRoutesModel.advancedMenu]);
+    this.router.navigate([AppRoutes.advancedMenu]);
   }
 
   public onOpenLink(url: string) {
