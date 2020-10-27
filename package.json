@@ -28,9 +28,7 @@
     "type:check": "cd ./appcore/ && npm run type:check && cd ../desktop/ && npm run type:check && cd ../webextension/ && npm run type:check",
     "wipe": "npm run clean && npm run wipe:package-locks && npm run wipe:node-modules",
     "wipe:node-modules": "node ./node_modules/del-cli/cli.js ./node_modules/ ./appcore/node_modules/ ./desktop/node_modules/ ./webextension/node_modules/",
-    "wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json ./appcore/package-lock.json ./desktop/package-lock.json ./webextension/package-lock.json",
-    "upgrade:check:all": "npx ncu && cd ./appcore/ && npx ncu && cd ../desktop/ && npx ncu && cd ../webextension/ && npx ncu",
-    "upgrade:apply:all": "npx ncu -u && cd ./appcore/ && npx ncu -u && cd ../desktop/ && npx ncu -u && cd ../webextension/ && npx ncu -u"
+    "wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json ./appcore/package-lock.json ./desktop/package-lock.json ./webextension/package-lock.json"
   },
   "config": {
     "unsafe-perm": true
@@ -47,16 +45,17 @@
   "license": "MIT",
   "readme": "README.md",
   "engines": {
-    "node": ">=12"
+    "node": ">=15"
   },
   "engineStrict": true,
   "devDependencies": {
     "cpy-cli": "^3.1.1",
     "del-cli": "^3.0.1",
-    "run-sequence": "^2.2.1",
-    "prettier": "^2.1.2",
     "husky": "^4.3.0",
-    "pretty-quick": "^3.1.0"
+    "npm-check-updates": "^9.2.3",
+    "prettier": "^2.1.2",
+    "pretty-quick": "^3.1.0",
+    "run-sequence": "^2.2.1"
   },
   "husky": {
     "hooks": {
