@@ -18,7 +18,7 @@ export class StravaConnectorInfo extends ConnectorInfo {
     accessToken: string = null,
     refreshToken: string = null,
     expiresAt: number = null,
-    updateSyncedActivitiesNameAndType: boolean = false,
+    updateSyncedActivitiesNameAndType: boolean = true,
     stravaAccount: StravaAccount = null
   ) {
     super();

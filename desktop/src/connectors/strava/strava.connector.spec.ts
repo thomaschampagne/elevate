@@ -649,6 +649,7 @@ describe("StravaConnector", () => {
       const perPage = 20;
       const bareActivities = getActivitiesFixture(page, perPage, fakeActivitiesFixture);
       const trackCallId = 1; // the 2nd one
+      const expectedStravaId = 2204692225;
 
       stravaConnector.stravaConnectorConfig.info.updateSyncedActivitiesNameAndType = true;
 
@@ -685,6 +686,7 @@ describe("StravaConnector", () => {
           expect(activitySyncEventSent.compressedStream).toBeNull();
           expect(activitySyncEventSent.activity.name).toEqual(expectedActivitySyncEvent.activity.name);
           expect(activitySyncEventSent.activity.type).toEqual(expectedActivitySyncEvent.activity.type);
+          expect(activitySyncEventSent.activity.extras.strava_activity_id).toEqual(expectedStravaId);
           expect(syncEventsSpy).toBeCalledTimes(perPage);
 
           done();

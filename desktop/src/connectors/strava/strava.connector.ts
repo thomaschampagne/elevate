@@ -308,6 +308,9 @@ export class StravaConnector extends BaseConnector {
                   const syncedActivityModel = syncedActivityModels[0];
                   syncedActivityModel.name = bareActivity.name;
                   syncedActivityModel.type = bareActivity.type;
+                  syncedActivityModel.extras = {
+                    strava_activity_id: bareActivity.id as number
+                  };
                   syncEvents$.next(new ActivitySyncEvent(this.type, null, syncedActivityModel, false));
                 }
               } else {
