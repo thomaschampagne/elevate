@@ -391,6 +391,9 @@ export class FileSystemConnector extends BaseConnector {
                               activityStreamsModel
                             );
 
+                            // Compute bary center from lat/lng stream
+                            syncedActivityModel.latLngCenter = BaseConnector.geoBaryCenter(activityStreamsModel);
+
                             // Try to use primitive data from computation. Else use primitive data from source (activity files) if exists
                             const primitiveSourceData = this.extractPrimitiveSourceData(sportsLibActivity);
                             syncedActivityModel = BaseConnector.updatePrimitiveStatsFromComputation(
@@ -400,7 +403,7 @@ export class FileSystemConnector extends BaseConnector {
                             );
 
                             // Track connector type
-                            syncedActivityModel.sourceConnectorType = ConnectorType.FILE_SYSTEM;
+                            syncedActivityModel.sourceConnectorType = this.type;
 
                             // Check if user missed some athlete settings. Goal: avoid missing stress scores because of missing settings.
                             syncedActivityModel.settingsLack = ActivityComputer.hasAthleteSettingsLacks(
@@ -412,6 +415,9 @@ export class FileSystemConnector extends BaseConnector {
                               syncedActivityModel.athleteSnapshot.athleteSettings,
                               activityStreamsModel
                             );
+
+                            // Compute activity hash
+                            syncedActivityModel.hash = BaseConnector.activityHash(syncedActivityModel);
 
                             // Gunzip stream as base64
                             const compressedStream = activityStreamsModel

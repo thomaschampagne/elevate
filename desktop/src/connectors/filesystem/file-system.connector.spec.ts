@@ -1857,4 +1857,159 @@ describe("FileSystemConnector", () => {
       });
     });
   });
+
+  describe("Provide activity hash", () => {
+    it("should compute hash of an activity", done => {
+      // Given
+      const activity: Partial<SyncedActivityModel> = {
+        id: "fakeId",
+        name: "Fake name",
+        type: ElevateSport.Ride,
+        display_type: "Cycling",
+        start_time: "2020-10-28T20:46:48.547Z",
+        end_time: "2020-10-28T22:46:48.547Z",
+        distance_raw: 61000,
+        moving_time_raw: 7100,
+        elapsed_time_raw: 7200,
+        hasPowerMeter: false,
+        trainer: false,
+        commute: false,
+        elevation_gain_raw: 780,
+        calories: 1456,
+        start_timestamp: 11111111111,
+        extendedStats: { cadenceData: null } as any,
+        athleteSnapshot: new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL),
+        sourceConnectorType: ConnectorType.FILE_SYSTEM,
+        latLngCenter: [111, 222]
+      };
+
+      // When
+      const hash = BaseConnector.activityHash(activity);
+
+      // Then
+      expect(hash).toBeDefined();
+      expect(hash.length).toEqual(20);
+
+      done();
+    });
+
+    it("should compute constant hash of an activity", done => {
+      // Given
+      const activity: Partial<SyncedActivityModel> = {
+        id: "fakeId",
+        name: "Fake name",
+        type: ElevateSport.Ride,
+        display_type: "Cycling",
+        start_time: "2020-10-28T20:46:48.547Z",
+        end_time: "2020-10-28T22:46:48.547Z",
+        distance_raw: 61000,
+        moving_time_raw: 7100,
+        elapsed_time_raw: 7200,
+        hasPowerMeter: false,
+        trainer: false,
+        commute: false,
+        elevation_gain_raw: 780,
+        calories: 1456,
+        start_timestamp: 11111111111,
+        extendedStats: { cadenceData: null } as any,
+        athleteSnapshot: new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL),
+        sourceConnectorType: ConnectorType.FILE_SYSTEM,
+        latLngCenter: [111, 222]
+      };
+
+      const activityShuffled: Partial<SyncedActivityModel> = {
+        type: activity.type,
+        start_time: activity.start_time,
+        end_time: activity.end_time,
+        latLngCenter: activity.latLngCenter,
+        elevation_gain_raw: activity.elevation_gain_raw,
+        distance_raw: activity.distance_raw,
+        athleteSnapshot: activity.athleteSnapshot,
+        moving_time_raw: activity.moving_time_raw,
+        elapsed_time_raw: activity.elapsed_time_raw,
+        hasPowerMeter: activity.hasPowerMeter,
+        trainer: activity.trainer,
+        id: activity.id,
+        commute: activity.commute,
+        calories: activity.calories,
+        display_type: activity.display_type,
+        start_timestamp: activity.start_timestamp,
+        name: activity.name,
+        extendedStats: activity.extendedStats,
+        sourceConnectorType: activity.sourceConnectorType
+      };
+
+      // When
+      const hash = BaseConnector.activityHash(activity);
+      const hashFromShuffled = BaseConnector.activityHash(activityShuffled);
+
+      // Then
+      expect(hash).toEqual(hashFromShuffled);
+      done();
+    });
+  });
+
+  describe("Provide activity geo barycenter ", () => {
+    it("should find bary center of a geo stream", done => {
+      // Given
+      const streams: Partial<ActivityStreamsModel> = {
+        latlng: [
+          [0, 0],
+          [10, 20],
+          [20, 0]
+        ]
+      };
+
+      // When
+      const latLngCenter: number[] = BaseConnector.geoBaryCenter(streams);
+
+      // Then
+      expect(latLngCenter).toEqual([10, 10]);
+
+      done();
+    });
+
+    it("should not find bary center of a geo stream (1)", done => {
+      // Given
+      const streams: Partial<ActivityStreamsModel> = {
+        latlng: []
+      };
+
+      // When
+      const latLngCenter: number[] = BaseConnector.geoBaryCenter(streams);
+
+      // Then
+      expect(latLngCenter).toBeNull();
+
+      done();
+    });
+
+    it("should not find bary center of a geo stream (2)", done => {
+      // Given
+      const streams: Partial<ActivityStreamsModel> = {
+        latlng: undefined
+      };
+
+      // When
+      const latLngCenter: number[] = BaseConnector.geoBaryCenter(streams);
+
+      // Then
+      expect(latLngCenter).toBeNull();
+
+      done();
+    });
+
+    it("should not find bary center of a geo stream (3)", done => {
+      // Given
+      const streams = undefined;
+
+      // When
+      const latLngCenter: number[] = BaseConnector.geoBaryCenter(streams);
+
+      // Then
+      expect(latLngCenter).toBeNull();
+
+      done();
+    });
+  });
 });

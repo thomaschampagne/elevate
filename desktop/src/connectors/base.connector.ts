@@ -132,6 +132,42 @@ export abstract class BaseConnector {
     return syncedActivityModel;
   }
 
+  public static geoBaryCenter(streams: Partial<ActivityStreamsModel>): number[] {
+    if (!streams) {
+      return null;
+    }
+
+    const latLngStream: number[][] = streams.latlng;
+    if (!latLngStream || !Array.isArray(latLngStream) || latLngStream.length === 0) {
+      return null;
+    }
+
+    const lat = latLngStream.map(latLng => latLng[0]);
+    const lng = latLngStream.map(latLng => latLng[1]);
+    const cLat = (Math.min(...lat) + Math.max(...lat)) / 2;
+    const cLng = (Math.min(...lng) + Math.max(...lng)) / 2;
+    return [cLat, cLng];
+  }
+
+  public static activityHash(activity: Partial<SyncedActivityModel>): string {
+    const activityUniqueRepresentation = _.pick(activity, [
+      "id",
+      "type",
+      "start_time",
+      "end_time",
+      "distance_raw",
+      "elapsed_time_raw",
+      "moving_time_raw",
+      "hasPowerMeter",
+      "trainer",
+      "elevation_gain_raw",
+      "calories",
+      "latLngCenter"
+    ]);
+
+    return BaseConnector.hashData(JSON.stringify(activityUniqueRepresentation), 2);
+  }
+
   public configure(connectorConfig: ConnectorConfig): this {
     this.connectorConfig = connectorConfig;
     this.athleteSnapshotResolver = new AthleteSnapshotResolver(this.connectorConfig.athleteModel);

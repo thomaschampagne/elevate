@@ -175,6 +175,9 @@ export class ConnectorSyncService {
         streams
       );
 
+      // Compute bary center from lat/lng stream
+      syncedActivityModel.latLngCenter = BaseConnector.geoBaryCenter(streams);
+
       // Update synced activity with new AthleteSnapshotModel & stats results
       syncedActivityModel.athleteSnapshot = athleteSnapshotModel;
       syncedActivityModel.extendedStats = analysisDataModel;
@@ -190,6 +193,9 @@ export class ConnectorSyncService {
         syncedActivityModel.athleteSnapshot.athleteSettings,
         streams
       );
+
+      // Compute activity hash
+      syncedActivityModel.hash = BaseConnector.activityHash(syncedActivityModel);
 
       replyWith({
         success: syncedActivityModel,

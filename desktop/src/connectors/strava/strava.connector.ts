@@ -229,18 +229,23 @@ export class StravaConnector extends BaseConnector {
                       syncedActivityModel.start_time
                     );
 
-                    // Compute activity
+                    // Prepare streams
                     activityStreamsModel = this.appendPowerStream(
                       bareActivity,
                       activityStreamsModel,
                       syncedActivityModel.athleteSnapshot.athleteSettings.weight
                     );
+
+                    // Compute activity
                     syncedActivityModel.extendedStats = this.computeExtendedStats(
                       syncedActivityModel,
                       syncedActivityModel.athleteSnapshot,
                       this.connectorConfig.userSettingsModel,
                       activityStreamsModel
                     );
+
+                    // Compute bary center from lat/lng stream
+                    syncedActivityModel.latLngCenter = BaseConnector.geoBaryCenter(activityStreamsModel);
 
                     // Try to use primitive data from computation. Else use primitive data from source (strava) if exists
                     const primitiveSourceData = new PrimitiveSourceData(
@@ -268,6 +273,9 @@ export class StravaConnector extends BaseConnector {
                       syncedActivityModel.athleteSnapshot.athleteSettings,
                       activityStreamsModel
                     );
+
+                    // Compute activity hash
+                    syncedActivityModel.hash = BaseConnector.activityHash(syncedActivityModel);
 
                     // Gunzip stream as base64
                     const compressedStream = activityStreamsModel

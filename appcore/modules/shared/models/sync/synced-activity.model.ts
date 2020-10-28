@@ -14,6 +14,8 @@ export class SyncedActivityModel extends BareActivityModel {
   public extendedStats: AnalysisDataModel;
   public athleteSnapshot: AthleteSnapshotModel;
   public sourceConnectorType: ConnectorType;
+  public latLngCenter?: number[];
+  public hash?: string;
   public settingsLack?: boolean;
   public extras?: Extras = {};
 }
