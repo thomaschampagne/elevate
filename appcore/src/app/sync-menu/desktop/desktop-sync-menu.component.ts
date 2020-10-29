@@ -125,6 +125,12 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
         reader.onload = (event: Event) => {
           const serializedDumpModel = (event.target as IDBRequest).result;
           if (serializedDumpModel) {
+            if (serializedDumpModel.match(/pluginVersion/g)) {
+              importingDialog.close();
+              this.snackBar.open("Web extension backups are not compatible with desktop app.", "Close");
+              return;
+            }
+
             const desktopDumpModel: DesktopDumpModel = DesktopDumpModel.deserialize(serializedDumpModel);
             this.desktopSyncService.import(desktopDumpModel).then(
               () => {
