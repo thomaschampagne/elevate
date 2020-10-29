@@ -45,7 +45,7 @@
   "license": "MIT",
   "readme": "README.md",
   "engines": {
-    "node": ">=15"
+    "node": ">=14"
   },
   "engineStrict": true,
   "devDependencies": {

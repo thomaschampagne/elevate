@@ -20,7 +20,7 @@
     "fs": false
   },
   "engines": {
-    "node": ">=15"
+    "node": ">=14"
   },
   "engineStrict": true,
   "private": true,
