@@ -7,6 +7,8 @@ export class CadenceDataModel {
   public averageCadenceMoving: number;
   public standardDeviationCadence: number;
   public totalOccurrences: number;
+  public maxCadence: number;
+  public minCadence: number;
   public lowerQuartileCadence: number;
   public medianCadence: number;
   public upperQuartileCadence: number;

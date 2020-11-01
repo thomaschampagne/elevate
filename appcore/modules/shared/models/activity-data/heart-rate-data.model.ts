@@ -12,6 +12,7 @@ export class HeartRateDataModel {
   public upperQuartileHeartRate: number;
   public averageHeartRate: number;
   public maxHeartRate: number;
+  public minHeartRate: number;
   public activityHeartRateReserve: number;
   public activityHeartRateReserveMax: number;
   public heartRateZones: ZoneModel[];

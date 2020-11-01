@@ -692,6 +692,8 @@ export class ActivityComputer {
     const speedData: SpeedDataModel = {
       genuineAvgSpeed: averageSpeed,
       totalAvgSpeed: averageSpeed,
+      maxSpeed: null,
+      minSpeed: null,
       best20min: null,
       avgPace: averagePace, // send in seconds
       lowerQuartileSpeed: null,
@@ -715,6 +717,8 @@ export class ActivityComputer {
     const paceData: PaceDataModel = {
       avgPace: averagePace, // send in seconds
       best20min: null,
+      minPace: null,
+      maxPace: null,
       lowerQuartilePace: null,
       medianPace: null,
       upperQuartilePace: null,
@@ -743,8 +747,8 @@ export class ActivityComputer {
       gradeAdjustedSpeedArray = velocityArray;
     }
 
-    let genuineAvgSpeedSum = 0,
-      genuineAvgSpeedSecondsSum = 0;
+    let genuineAvgSpeedSum = 0;
+    let genuineAvgSpeedSecondsSum = 0;
     const speedsNonZero: number[] = [];
     const speedsNonZeroDuration: number[] = [];
     const gradeAdjustedSpeedsNonZero: number[] = [];
@@ -881,6 +885,8 @@ export class ActivityComputer {
     const speedData: SpeedDataModel = {
       genuineAvgSpeed: genuineAvgSpeed,
       totalAvgSpeed: (genuineAvgSpeed * genuineAvgSpeedSecondsSum) / elapsedSeconds,
+      maxSpeed: _.max(velocityArray) * 3.6,
+      minSpeed: _.min(speedsNonZero) * 3.6,
       best20min: best20min,
       avgPace: Math.floor(ActivityComputer.convertSpeedToPace(genuineAvgSpeed)), // send in seconds
       lowerQuartileSpeed: percentiles[0],
@@ -911,6 +917,8 @@ export class ActivityComputer {
     const paceData: PaceDataModel = {
       avgPace: Math.floor(ActivityComputer.convertSpeedToPace(genuineAvgSpeed)), // send in seconds
       best20min: best20min ? Math.floor(ActivityComputer.convertSpeedToPace(best20min)) : null,
+      minPace: Math.floor(ActivityComputer.convertSpeedToPace(speedData.minSpeed)),
+      maxPace: Math.floor(ActivityComputer.convertSpeedToPace(speedData.maxSpeed)),
       lowerQuartilePace: ActivityComputer.convertSpeedToPace(percentiles[0]),
       medianPace: ActivityComputer.convertSpeedToPace(percentiles[1]),
       upperQuartilePace: ActivityComputer.convertSpeedToPace(percentiles[2]),
@@ -1058,6 +1066,8 @@ export class ActivityComputer {
     const powerData: PowerDataModel = {
       hasPowerMeter: hasPowerMeter,
       avgWatts: avgWatts,
+      maxPower: _.max(powerArray),
+      minPower: _.minBy(powerArray, power => (power > 0 ? power : null)),
       avgWattsPerKg: avgWattsPerKg,
       weightedPower: weightedPower,
       best20min: best20min,
@@ -1198,6 +1208,8 @@ export class ActivityComputer {
       HRSSPerHour: HRSSPerHour,
       TRIMP: trainingImpulse,
       TRIMPPerHour: TRIMPPerHour,
+      maxHeartRate: maxHeartRate,
+      minHeartRate: _.min(heartRateArray),
       best20min: best20min,
       best60min: best60min,
       heartRateZones: this.returnZones ? heartRateZones : null,
@@ -1205,7 +1217,6 @@ export class ActivityComputer {
       medianHeartRate: percentiles[1],
       upperQuartileHeartRate: percentiles[2],
       averageHeartRate: averageHeartRate,
-      maxHeartRate: maxHeartRate,
       activityHeartRateReserve:
         ActivityComputer.heartRateReserveFromHeartrate(
           averageHeartRate,
@@ -1354,6 +1365,8 @@ export class ActivityComputer {
       cadenceTimeMoving: cadenceSumDurationOnMoving,
       averageCadenceMoving: averageCadenceOnMovingTime,
       standardDeviationCadence: parseFloat(standardDeviationCadence.toFixed(1)),
+      maxCadence: _.max(cadenceArray),
+      minCadence: _.minBy(cadenceArray, cadence => (cadence > 0 ? cadence : null)),
       totalOccurrences: totalOccurrences,
       lowerQuartileCadence: cadencesPercentiles[0],
       medianCadence: cadencesPercentiles[1],
@@ -1383,8 +1396,8 @@ export class ActivityComputer {
       return;
     }
 
-    let gradeSum = 0,
-      gradeCount = 0;
+    let gradeSum = 0;
+    let gradeCount = 0;
 
     let gradeZones: ZoneModel[] = this.prepareZonesForDistributionComputation(
       this.userSettings.zones.get(UserZonesModel.TYPE_GRADE)
@@ -1418,8 +1431,8 @@ export class ActivityComputer {
       countDown: 0
     };
 
-    let durationInSeconds: number,
-      durationCount = 0;
+    let durationInSeconds: number;
+    let durationCount = 0;
     let distance = 0;
     let currentSpeed: number;
     let avgMinGrade = 0;
@@ -1712,6 +1725,8 @@ export class ActivityComputer {
       avgElevation: parseFloat(avgElevation.toFixed(0)),
       accumulatedElevationAscent: accumulatedElevationAscent,
       accumulatedElevationDescent: accumulatedElevationDescent,
+      maxElevation: _.max(altitudeArray),
+      minElevation: _.min(altitudeArray),
       lowerQuartileElevation: parseFloat(percentilesElevation[0].toFixed(0)),
       medianElevation: parseFloat(percentilesElevation[1].toFixed(0)),
       upperQuartileElevation: parseFloat(percentilesElevation[2].toFixed(0)),

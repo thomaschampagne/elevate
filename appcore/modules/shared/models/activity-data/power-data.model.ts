@@ -2,6 +2,8 @@ import { ZoneModel } from "../zone.model";
 import { PowerBestSplitModel } from "../power-best-split.model";
 
 export class PowerDataModel {
+  public maxPower: number;
+  public minPower: number;
   public hasPowerMeter: boolean;
   public avgWatts: number;
   public avgWattsPerKg: number;

@@ -3,6 +3,8 @@ import { AscentSpeedDataModel } from "./ascent-speed-data.model";
 
 export class ElevationDataModel {
   public avgElevation: number;
+  public maxElevation: number;
+  public minElevation: number;
   public accumulatedElevationAscent: number;
   public accumulatedElevationDescent: number;
   public lowerQuartileElevation: number;
