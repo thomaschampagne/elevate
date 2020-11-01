@@ -62,8 +62,8 @@ export abstract class BaseConnector {
     return sha1.slice(0, divide ? sha1.length / divide : sha1.length);
   }
 
-  public static shortHash(data: BinaryLike): string {
-    return BaseConnector.hash(data).slice(0, 8);
+  public static hashCut(data: BinaryLike, cut: number = 8): string {
+    return BaseConnector.hash(data).slice(0, cut);
   }
 
   public static updatePrimitiveStatsFromComputation(
@@ -162,9 +162,21 @@ export abstract class BaseConnector {
       "trainer",
       "elevation_gain_raw",
       "latLngCenter"
-    ]);
+    ]) as any;
 
-    return BaseConnector.shortHash(JSON.stringify(activityUniqueRepresentation));
+    if (activity.extendedStats?.speedData?.maxSpeed) {
+      activityUniqueRepresentation.maxSpeed = activity.extendedStats.speedData.maxSpeed;
+    }
+
+    if (activity.extendedStats?.heartRateData?.maxHeartRate) {
+      activityUniqueRepresentation.maxHr = activity.extendedStats.heartRateData.maxHeartRate;
+    }
+
+    if (activity.extendedStats?.cadenceData?.maxCadence) {
+      activityUniqueRepresentation.maxCadence = activity.extendedStats.cadenceData.maxCadence;
+    }
+
+    return BaseConnector.hashCut(JSON.stringify(activityUniqueRepresentation), 24);
   }
 
   public configure(connectorConfig: ConnectorConfig): this {

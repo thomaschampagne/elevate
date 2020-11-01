@@ -1888,7 +1888,7 @@ describe("FileSystemConnector", () => {
 
       // Then
       expect(hash).toBeDefined();
-      expect(hash.length).toEqual(8);
+      expect(hash.length).toEqual(24);
 
       done();
     });
