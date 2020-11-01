@@ -222,7 +222,7 @@ export class StravaConnector extends BaseConnector {
                       strava_activity_id: syncedActivityModel.id as number
                     }; // Keep tracking  of activity id
                     syncedActivityModel.id =
-                      syncedActivityModel.id + "-" + BaseConnector.hashData(syncedActivityModel.start_time, 8);
+                      syncedActivityModel.id + "-" + BaseConnector.hash(syncedActivityModel.start_time, 8);
 
                     // Resolve athlete snapshot for current activity date
                     syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(

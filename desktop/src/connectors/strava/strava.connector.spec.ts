@@ -819,7 +819,7 @@ describe("StravaConnector", () => {
       const expectedStartTimeStamp = new Date(expectedStartTime).getTime() / 1000;
       const expectedEndTime = "2019-03-10T16:49:23.000Z";
       const expectedStravaId = 2204692225;
-      const expectedActivityId = expectedStravaId + "-" + BaseConnector.hashData(expectedStartTime, 8);
+      const expectedActivityId = expectedStravaId + "-" + BaseConnector.hash(expectedStartTime, 8);
       const expectedActivitySyncEvent = new ActivitySyncEvent(
         ConnectorType.STRAVA,
         null,

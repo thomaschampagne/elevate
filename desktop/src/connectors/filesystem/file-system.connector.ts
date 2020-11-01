@@ -367,9 +367,9 @@ export class FileSystemConnector extends BaseConnector {
 
                             // Keep tracking  of activity id
                             syncedActivityModel.id =
-                              BaseConnector.hashData(syncedActivityModel.start_time, 6) +
+                              BaseConnector.hash(syncedActivityModel.start_time, 6) +
                               "-" +
-                              BaseConnector.hashData(syncedActivityModel.end_time, 6);
+                              BaseConnector.hash(syncedActivityModel.end_time, 6);
 
                             // Resolve athlete snapshot for current activity date
                             syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(
@@ -534,7 +534,7 @@ export class FileSystemConnector extends BaseConnector {
 
   public createBareActivity(sportsLibActivity: ActivityInterface): BareActivityModel {
     const bareActivityModel: BareActivityModel = new SyncedActivityModel() as BareActivityModel;
-    bareActivityModel.id = BaseConnector.hashData(sportsLibActivity.startDate.toISOString());
+    bareActivityModel.id = BaseConnector.hash(sportsLibActivity.startDate.toISOString());
     const elevateSportResult = this.convertToElevateSport(sportsLibActivity);
     bareActivityModel.type = elevateSportResult.type;
     bareActivityModel.display_type = bareActivityModel.type;
@@ -851,7 +851,7 @@ export class FileSystemConnector extends BaseConnector {
     return new Promise((resolve, reject) => {
       const fileName = path.basename(archiveFilePath);
       const currentArchiveDir = path.dirname(archiveFilePath);
-      const archiveFileNameFingerPrint = BaseConnector.hashData(fileName, 6);
+      const archiveFileNameFingerPrint = BaseConnector.hash(fileName, 6);
       const extractDir = currentArchiveDir + "/" + archiveFileNameFingerPrint;
 
       // Create extract directory
@@ -890,7 +890,7 @@ export class FileSystemConnector extends BaseConnector {
                 currentArchiveDir +
                 "/" +
                 archiveFileNameFingerPrint +
-                (relativeExtractedDirName ? "-" + BaseConnector.hashData(relativeExtractedDirName, 6) : "") +
+                (relativeExtractedDirName ? "-" + BaseConnector.hash(relativeExtractedDirName, 6) : "") +
                 "-" +
                 extractedFileName;
               this.getFs().renameSync(extractedActivityFile.location.path, newActivityPath);

@@ -57,12 +57,13 @@ export abstract class BaseConnector {
   public syncDateTime: number;
   public syncEvents$: ReplaySubject<SyncEvent>;
 
-  /**
-   * Hash data
-   */
-  public static hashData(data: BinaryLike, divide: number = null): string {
+  public static hash(data: BinaryLike, divide: number = null): string {
     const sha1 = crypto.createHash("sha1").update(data).digest("hex");
     return sha1.slice(0, divide ? sha1.length / divide : sha1.length);
+  }
+
+  public static shortHash(data: BinaryLike): string {
+    return BaseConnector.hash(data).slice(0, 8);
   }
 
   public static updatePrimitiveStatsFromComputation(
@@ -156,16 +157,14 @@ export abstract class BaseConnector {
       "start_time",
       "end_time",
       "distance_raw",
-      "elapsed_time_raw",
       "moving_time_raw",
       "hasPowerMeter",
       "trainer",
       "elevation_gain_raw",
-      "calories",
       "latLngCenter"
     ]);
 
-    return BaseConnector.hashData(JSON.stringify(activityUniqueRepresentation), 2);
+    return BaseConnector.shortHash(JSON.stringify(activityUniqueRepresentation));
   }
 
   public configure(connectorConfig: ConnectorConfig): this {
