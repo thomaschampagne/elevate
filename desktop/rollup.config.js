@@ -50,7 +50,9 @@ module.exports = [
       "tty",
       "child_process",
       "stream",
-      "zlib"
+      "zlib",
+      "dgram",
+      "buffer"
     ],
     plugins: plugins
   },

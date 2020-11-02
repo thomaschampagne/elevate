@@ -1,20 +1,14 @@
-import os from "os";
-import { machineIdSync } from "node-machine-id";
-import crypto from "crypto";
+import logger from "electron-log";
 import { app } from "electron";
 import path from "path";
-import { singleton } from "tsyringe";
-import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
 import { Arch } from "@elevate/shared/enums/arch";
 import { Platform } from "@elevate/shared/enums/platform.enum";
+import { inject, singleton } from "tsyringe";
+import { RuntimeInfoService } from "./runtime-info/RuntimeInfoService";
 
 @singleton()
 export class AppService {
-  private _runtimeInfo: RuntimeInfo;
-
-  constructor() {
-    this._runtimeInfo = null;
-  }
+  constructor(@inject(RuntimeInfoService) private readonly runtimeInfoService: RuntimeInfoService) {}
 
   private _isPackaged: boolean;
 
@@ -39,49 +33,29 @@ export class AppService {
   }
 
   public isWindows(): boolean {
-    return this.getRuntimeInfo().osPlatform.name === Platform.WINDOWS;
+    return this.runtimeInfoService.getOsPlatform().name === Platform.WINDOWS;
   }
 
   public isLinux(): boolean {
-    return this.getRuntimeInfo().osPlatform.name === Platform.LINUX;
+    return this.runtimeInfoService.getOsPlatform().name === Platform.LINUX;
   }
 
   public isMacOS(): boolean {
-    return this.getRuntimeInfo().osPlatform.name === Platform.MACOS;
+    return this.runtimeInfoService.getOsPlatform().name === Platform.MACOS;
   }
 
-  public getRuntimeInfo(): RuntimeInfo {
-    if (!this._runtimeInfo) {
-      const osPlatform = { name: os.platform(), arch: os.arch() };
-      const osHostname = os.hostname().trim();
-      const osUsername = os.userInfo().username.trim();
-      const osMachineId = machineIdSync();
-      const athleteMachineId = crypto
-        .createHash("sha1")
-        .update(osMachineId + ":" + osUsername)
-        .digest("hex");
-      const cpuInfo = os.cpus()[0];
-      const cpuName = { name: cpuInfo ? cpuInfo.model.trim() : "Unknown", threads: os.cpus().length };
-      const memorySize = Math.round(os.totalmem() / 1024 / 1024 / 1024);
-      this._runtimeInfo = new RuntimeInfo(
-        osPlatform,
-        osHostname,
-        osUsername,
-        osMachineId,
-        athleteMachineId,
-        cpuName,
-        memorySize
-      );
-    }
-    return this._runtimeInfo;
+  public printRuntimeInfo(): void {
+    this.runtimeInfoService.getInfo().then(runtimeInfo => {
+      const infoStr = `Hostname ${runtimeInfo.osHostname}; Platform ${runtimeInfo.osPlatform.name} ${runtimeInfo.osPlatform.arch}; Cpu ${runtimeInfo.cpu.name}; Memory ${runtimeInfo.memorySizeGb}GB; athleteMachineId ${runtimeInfo.athleteMachineId}; Node v${process.versions.node}`;
+      logger.info(`System details: ${infoStr}`);
+    });
   }
 
   public getUnpackedNodeModules(): string {
     return `${this.getResourceFolder()}/app.asar.unpacked/node_modules/`;
   }
 
-  public printRuntimeInfo(): string {
-    const runtimeInfo = this.getRuntimeInfo();
-    return `Hostname ${runtimeInfo.osHostname}; Platform ${runtimeInfo.osPlatform.name} ${runtimeInfo.osPlatform.arch}; Cpu ${runtimeInfo.cpu.name}; Memory ${runtimeInfo.memorySizeGb}GB; athleteMachineId ${runtimeInfo.athleteMachineId}; Node v${process.versions.node}`;
+  public getRuntimeInfo(): Promise<RuntimeInfo> {
+    return this.runtimeInfoService.getInfo();
   }
 }

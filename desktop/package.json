@@ -72,6 +72,7 @@
     "node-7z": "^3.0.0",
     "node-machine-id": "^1.1.12",
     "p-defer": "^3.0.0",
+    "public-ip": "^4.0.4",
     "querystring": "^0.2.1",
     "reflect-metadata": "^0.1.13",
     "retry-axios": "^2.6.0",

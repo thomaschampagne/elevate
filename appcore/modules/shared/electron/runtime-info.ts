@@ -1,3 +1,5 @@
+import { GeoIp } from "./geo-ip";
+
 export class RuntimeInfo {
   public osPlatform: { name: string; arch: string };
   public osHostname: string;
@@ -13,22 +15,25 @@ export class RuntimeInfo {
 
   public cpu: { name: string; threads: number };
   public memorySizeGb: number;
+  public geoIp: GeoIp | null;
 
   constructor(
+    osMachineId: string,
     osPlatform: { name: string; arch: string },
     osHostname: string,
     osUsername: string,
-    osMachineId: string,
     athleteMachineId: string,
     cpu: { name: string; threads: number },
-    memorySizeGb: number
+    memorySizeGb: number,
+    geoIp: GeoIp = null
   ) {
+    this.osMachineId = osMachineId;
     this.osPlatform = osPlatform;
     this.osHostname = osHostname;
     this.osUsername = osUsername;
-    this.osMachineId = osMachineId;
     this.athleteMachineId = athleteMachineId;
     this.cpu = cpu;
     this.memorySizeGb = memorySizeGb;
+    this.geoIp = geoIp;
   }
 }

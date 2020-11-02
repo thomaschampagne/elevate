@@ -106,8 +106,6 @@ class Main {
     this.app = electronApp;
     this.ipcMain = electronIpcMain;
 
-    this.logger.info("System details:", this.appService.printRuntimeInfo());
-
     this.appService.isPackaged = this.app.isPackaged;
 
     if (this.appService.isPackaged) {
