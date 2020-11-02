@@ -26,12 +26,12 @@ import { IHttpClientResponse } from "typed-rest-client/Interfaces";
 import http, { IncomingHttpHeaders } from "http";
 import { HttpCodes } from "typed-rest-client/HttpClient";
 import { AppService } from "../../app-service";
-import { BaseConnector } from "../base.connector";
 import { BuildTarget, ElevateSport } from "@elevate/shared/enums";
 import { StravaConnectorConfig } from "../connector-config.model";
 import { container } from "tsyringe";
 import { StravaApiClient } from "../../clients/strava-api.client";
 import { sleep } from "@elevate/shared/tools";
+import { Hash } from "../../tools/hash";
 
 const getActivitiesFixture = (page: number, perPage: number, activities: Array<BareActivityModel[]>) => {
   const from = page > 1 ? (page - 1) * perPage : 0;
@@ -819,7 +819,7 @@ describe("StravaConnector", () => {
       const expectedStartTimeStamp = new Date(expectedStartTime).getTime() / 1000;
       const expectedEndTime = "2019-03-10T16:49:23.000Z";
       const expectedStravaId = 2204692225;
-      const expectedActivityId = expectedStravaId + "-" + BaseConnector.hash(expectedStartTime, 8);
+      const expectedActivityId = expectedStravaId + "-" + Hash.apply(expectedStartTime, Hash.SHA1, { divide: 8 });
       const expectedActivitySyncEvent = new ActivitySyncEvent(
         ConnectorType.STRAVA,
         null,

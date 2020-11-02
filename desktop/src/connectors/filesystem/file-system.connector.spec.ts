@@ -40,6 +40,7 @@ import { ActivityTypes } from "@sports-alliance/sports-lib/lib/activities/activi
 import { DataPower } from "@sports-alliance/sports-lib/lib/data/data.power";
 import { FileSystemConnectorConfig } from "../connector-config.model";
 import { container } from "tsyringe";
+import { Hash } from "../../tools/hash";
 
 /**
  * Test activities in "fixtures/activities-02" sorted by date ascent.
@@ -137,11 +138,15 @@ describe("FileSystemConnector", () => {
       // Given
       const archiveFileName = "samples.zip";
       const archiveFilePath = compressedActivitiesPath + archiveFileName;
-      const archiveFileNameFP = BaseConnector.hash(archiveFileName, 6);
+      const archiveFileNameFP = Hash.apply(archiveFileName, Hash.SHA1, { divide: 6 });
       const expectedDecompressedFiles = [
         compressedActivitiesPath + archiveFileNameFP + "-11111.fit",
         compressedActivitiesPath + archiveFileNameFP + "-22222.fit",
-        compressedActivitiesPath + archiveFileNameFP + "-" + BaseConnector.hash("/subfolder", 6) + "-33333.fit"
+        compressedActivitiesPath +
+          archiveFileNameFP +
+          "-" +
+          Hash.apply("/subfolder", Hash.SHA1, { divide: 6 }) +
+          "-33333.fit"
       ];
       const unlinkSyncSpy = spyOn(fileSystemConnector.getFs(), "unlinkSync").and.callThrough();
       const deleteArchive = false;
@@ -327,7 +332,7 @@ describe("FileSystemConnector", () => {
       const data = "john doo";
 
       // When
-      const hashResult = BaseConnector.hash(data);
+      const hashResult = Hash.apply(data);
 
       // Then
       expect(hashResult).toEqual(sha1);
@@ -636,7 +641,9 @@ describe("FileSystemConnector", () => {
       const expectedStartTimeStamp = new Date(expectedStartTime).getTime() / 1000;
       const expectedEndTime = "2019-08-15T14:06:03.000Z";
       const expectedActivityId =
-        BaseConnector.hash(expectedStartTime, 6) + "-" + BaseConnector.hash(expectedEndTime, 6);
+        Hash.apply(expectedStartTime, Hash.SHA1, { divide: 6 }) +
+        "-" +
+        Hash.apply(expectedEndTime, Hash.SHA1, { divide: 6 });
       const expectedActivityFilePathMatch = "20190815_ride_3953195468.tcx";
 
       // When
@@ -1072,7 +1079,7 @@ describe("FileSystemConnector", () => {
       // Given
       const startISODate = "2019-08-15T11:10:49.000Z";
       const endISODate = "2019-08-15T14:06:03.000Z";
-      const expectedId = BaseConnector.hash(startISODate);
+      const expectedId = Hash.apply(startISODate);
       const expectedName = "Afternoon Ride";
       const filePath = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
 

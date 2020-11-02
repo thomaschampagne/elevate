@@ -23,6 +23,7 @@ import { ConnectorConfig, StravaConnectorConfig } from "../connector-config.mode
 import { IpcMessagesSender } from "../../messages/ipc-messages.sender";
 import { StravaApiClient } from "../../clients/strava-api.client";
 import { countdown } from "@elevate/shared/tools";
+import { Hash } from "../../tools/hash";
 
 export interface StravaApiStreamType {
   type:
@@ -222,7 +223,9 @@ export class StravaConnector extends BaseConnector {
                       strava_activity_id: syncedActivityModel.id as number
                     }; // Keep tracking  of activity id
                     syncedActivityModel.id =
-                      syncedActivityModel.id + "-" + BaseConnector.hash(syncedActivityModel.start_time, 8);
+                      syncedActivityModel.id +
+                      "-" +
+                      Hash.apply(syncedActivityModel.start_time, Hash.SHA1, { divide: 8 });
 
                     // Resolve athlete snapshot for current activity date
                     syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(

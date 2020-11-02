@@ -50,6 +50,7 @@ import { EventLibError } from "@sports-alliance/sports-lib/lib/errors/event-lib.
 import { FileSystemConnectorConfig } from "../connector-config.model";
 import { inject, singleton } from "tsyringe";
 import { IpcMessagesSender } from "../../messages/ipc-messages.sender";
+import { Hash } from "../../tools/hash";
 
 export enum ActivityFileType {
   GPX = "gpx",
@@ -367,9 +368,9 @@ export class FileSystemConnector extends BaseConnector {
 
                             // Keep tracking  of activity id
                             syncedActivityModel.id =
-                              BaseConnector.hash(syncedActivityModel.start_time, 6) +
+                              Hash.apply(syncedActivityModel.start_time, Hash.SHA1, { divide: 6 }) +
                               "-" +
-                              BaseConnector.hash(syncedActivityModel.end_time, 6);
+                              Hash.apply(syncedActivityModel.end_time, Hash.SHA1, { divide: 6 });
 
                             // Resolve athlete snapshot for current activity date
                             syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(
@@ -534,7 +535,7 @@ export class FileSystemConnector extends BaseConnector {
 
   public createBareActivity(sportsLibActivity: ActivityInterface): BareActivityModel {
     const bareActivityModel: BareActivityModel = new SyncedActivityModel() as BareActivityModel;
-    bareActivityModel.id = BaseConnector.hash(sportsLibActivity.startDate.toISOString());
+    bareActivityModel.id = Hash.apply(sportsLibActivity.startDate.toISOString());
     const elevateSportResult = this.convertToElevateSport(sportsLibActivity);
     bareActivityModel.type = elevateSportResult.type;
     bareActivityModel.display_type = bareActivityModel.type;
@@ -851,7 +852,7 @@ export class FileSystemConnector extends BaseConnector {
     return new Promise((resolve, reject) => {
       const fileName = path.basename(archiveFilePath);
       const currentArchiveDir = path.dirname(archiveFilePath);
-      const archiveFileNameFingerPrint = BaseConnector.hash(fileName, 6);
+      const archiveFileNameFingerPrint = Hash.apply(fileName, Hash.SHA1, { divide: 6 });
       const extractDir = currentArchiveDir + "/" + archiveFileNameFingerPrint;
 
       // Create extract directory
@@ -890,7 +891,7 @@ export class FileSystemConnector extends BaseConnector {
                 currentArchiveDir +
                 "/" +
                 archiveFileNameFingerPrint +
-                (relativeExtractedDirName ? "-" + BaseConnector.hash(relativeExtractedDirName, 6) : "") +
+                (relativeExtractedDirName ? "-" + Hash.apply(relativeExtractedDirName, Hash.SHA1, { divide: 6 }) : "") +
                 "-" +
                 extractedFileName;
               this.getFs().renameSync(extractedActivityFile.location.path, newActivityPath);

@@ -10,7 +10,6 @@ import {
 } from "@elevate/shared/models";
 import { AppService } from "../app-service";
 import { catchError, filter, timeout } from "rxjs/operators";
-import crypto, { BinaryLike } from "crypto";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { ElevateSport } from "@elevate/shared/enums";
 import _ from "lodash";
@@ -21,6 +20,7 @@ import { ConnectorConfig } from "./connector-config.model";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { IpcMessagesSender } from "../messages/ipc-messages.sender";
 import logger from "electron-log";
+import { Hash } from "../tools/hash";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 /**
@@ -56,15 +56,6 @@ export abstract class BaseConnector {
   public stopRequested: boolean;
   public syncDateTime: number;
   public syncEvents$: ReplaySubject<SyncEvent>;
-
-  public static hash(data: BinaryLike, divide: number = null): string {
-    const sha1 = crypto.createHash("sha1").update(data).digest("hex");
-    return sha1.slice(0, divide ? sha1.length / divide : sha1.length);
-  }
-
-  public static hashCut(data: BinaryLike, cut: number = 8): string {
-    return BaseConnector.hash(data).slice(0, cut);
-  }
 
   public static updatePrimitiveStatsFromComputation(
     syncedActivityModel: SyncedActivityModel,
@@ -176,7 +167,7 @@ export abstract class BaseConnector {
       activityUniqueRepresentation.maxCadence = activity.extendedStats.cadenceData.maxCadence;
     }
 
-    return BaseConnector.hashCut(JSON.stringify(activityUniqueRepresentation), 24);
+    return Hash.asObjectId(JSON.stringify(activityUniqueRepresentation));
   }
 
   public configure(connectorConfig: ConnectorConfig): this {
