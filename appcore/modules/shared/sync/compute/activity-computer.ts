@@ -880,7 +880,8 @@ export class ActivityComputer {
       console.warn("No best 20min speed/pace available for this range");
     }
 
-    const genuineGradeAdjustedAvgSpeed = _.mean(gradeAdjustedSpeedsNonZero);
+    const genuineGradeAdjustedAvgSpeed =
+      gradeAdjustedSpeedsNonZero.length > 0 ? _.mean(gradeAdjustedSpeedsNonZero) : null;
 
     const speedData: SpeedDataModel = {
       genuineAvgSpeed: genuineAvgSpeed,

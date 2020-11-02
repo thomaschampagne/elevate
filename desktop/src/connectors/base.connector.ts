@@ -148,7 +148,6 @@ export abstract class BaseConnector {
       "start_time",
       "end_time",
       "distance_raw",
-      "moving_time_raw",
       "hasPowerMeter",
       "trainer",
       "elevation_gain_raw",

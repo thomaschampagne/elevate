@@ -17,6 +17,7 @@ import path from "path";
 import _ from "lodash";
 import xmldom from "xmldom";
 import {
+  ActivityComputer,
   ActivitySyncEvent,
   ConnectorType,
   ErrorSyncEvent,
@@ -41,6 +42,11 @@ import { DataPower } from "@sports-alliance/sports-lib/lib/data/data.power";
 import { FileSystemConnectorConfig } from "../connector-config.model";
 import { container } from "tsyringe";
 import { Hash } from "../../tools/hash";
+import streamsRideJson from "../../estimators/fixtures/723224273/stream.json";
+import expectedRideResultJson from "../../estimators/fixtures/723224273/expected-results.json";
+import streamsRunJson from "../../estimators/fixtures/888821043/stream.json";
+import expectedRunResultJson from "../../estimators/fixtures/888821043/expected-results.json";
+import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 /**
  * Test activities in "fixtures/activities-02" sorted by date ascent.
@@ -1896,6 +1902,82 @@ describe("FileSystemConnector", () => {
       // Then
       expect(hash).toBeDefined();
       expect(hash.length).toEqual(24);
+
+      done();
+    });
+
+    it("should compute hash of REAL RIDE activity", done => {
+      // Given
+      const activityStreams = _.cloneDeep(streamsRideJson) as ActivityStreamsModel;
+      const expectedRideResult = _.cloneDeep(expectedRideResultJson) as SyncedActivityModel;
+      const userSettings = DesktopUserSettingsModel.DEFAULT_MODEL;
+
+      const activityComputer: ActivityComputer = new ActivityComputer(
+        expectedRideResult.type,
+        expectedRideResult.trainer,
+        userSettings,
+        expectedRideResult.athleteSnapshot,
+        true,
+        expectedRideResult.hasPowerMeter,
+        activityStreams,
+        null,
+        false,
+        false,
+        {
+          distance: expectedRideResult.distance_raw,
+          elevation: expectedRideResult.elevation_gain_raw,
+          movingTime: expectedRideResult.moving_time_raw
+        }
+      );
+
+      // Re-compute stats to ensure calculation do not affect hash
+      expectedRideResult.extendedStats = activityComputer.compute();
+
+      // When
+      const hash = BaseConnector.activityHash(expectedRideResult);
+
+      // Then
+      expect(hash).toBeDefined();
+      expect(hash.length).toEqual(24);
+      expect(hash).toEqual(expectedRideResult.hash);
+
+      done();
+    });
+
+    it("should compute hash of REAL RUN activity", done => {
+      // Given
+      const activityStreams = _.cloneDeep(streamsRunJson) as ActivityStreamsModel;
+      const expectedRunResult = _.cloneDeep(expectedRunResultJson) as SyncedActivityModel;
+      const userSettings = DesktopUserSettingsModel.DEFAULT_MODEL;
+
+      const activityComputer: ActivityComputer = new ActivityComputer(
+        expectedRunResult.type,
+        expectedRunResult.trainer,
+        userSettings,
+        expectedRunResult.athleteSnapshot,
+        true,
+        expectedRunResult.hasPowerMeter,
+        activityStreams,
+        null,
+        false,
+        false,
+        {
+          distance: expectedRunResult.distance_raw,
+          elevation: expectedRunResult.elevation_gain_raw,
+          movingTime: expectedRunResult.moving_time_raw
+        }
+      );
+
+      // Re-compute stats to ensure calculation do not affect hash
+      expectedRunResult.extendedStats = activityComputer.compute();
+
+      // When
+      const hash = BaseConnector.activityHash(expectedRunResult);
+
+      // Then
+      expect(hash).toBeDefined();
+      expect(hash.length).toEqual(24);
+      expect(hash).toEqual(expectedRunResult.hash);
 
       done();
     });
