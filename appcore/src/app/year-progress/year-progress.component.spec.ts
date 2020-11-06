@@ -15,7 +15,6 @@ import { SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { YearProgressModule } from "./year-progress.module";
 import { YearToDateProgressPresetModel } from "./shared/models/year-to-date-progress-preset.model";
 import { ProgressType } from "./shared/enums/progress-type.enum";
-import { ExtensionAppService } from "../shared/services/app-service/impl/extension-app.service";
 import { ElevateSport } from "@elevate/shared/enums";
 import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
@@ -40,12 +39,6 @@ describe("YearProgressComponent", () => {
   let TEST_SYNCED_ACTIVITIES: SyncedActivityModel[];
 
   beforeEach(done => {
-    spyOn(ExtensionAppService, "getBrowserExternalMessages").and.returnValue({
-      addListener: () => {}
-    });
-
-    spyOn(ExtensionAppService, "getBrowserPluginId").and.returnValue(pluginId);
-
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, TargetBootModule, TargetModule, YearProgressModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]

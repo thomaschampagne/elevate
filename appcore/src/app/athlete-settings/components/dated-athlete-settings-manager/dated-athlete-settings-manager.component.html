@@ -41,19 +41,19 @@
   <mat-card-content>
 
     <div fxFill fxLayoutAlign="end center">
-      <button (click)="onAdd()" color="primary" mat-stroked-button>
+      <button [disabled]="appService.isSyncing" (click)="onAdd()" color="primary" mat-stroked-button>
         <mat-icon fontSet="material-icons-outlined">add</mat-icon>
         Add
       </button>
-      <button (click)="onReset()" color="primary" mat-stroked-button>
+      <button [disabled]="appService.isSyncing" (click)="onReset()" color="primary" mat-stroked-button>
         <mat-icon fontSet="material-icons-outlined">settings_backup_restore</mat-icon>
         Reset
       </button>
-      <button (click)="onShowExport()" color="primary" mat-stroked-button
+      <button [disabled]="appService.isSyncing" (click)="onShowExport()" color="primary" mat-stroked-button
               matTooltip="Save dated athlete settings">
         <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
       </button>
-      <button (click)="onShowImport()" color="primary" mat-stroked-button
+      <button [disabled]="appService.isSyncing" (click)="onShowImport()" color="primary" mat-stroked-button
               matTooltip="Upload dated athlete settings">
         <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
       </button>
@@ -62,7 +62,8 @@
       <mat-label>
         <span>Exported dated athlete settings to copy ({{getOsCopyShortCut()}})</span>
       </mat-label>
-      <input #exportInput (click)="exportInput.select()" [ngModel]="exportedSettings" matInput readonly>
+      <input #exportInput [disabled]="appService.isSyncing" (click)="exportInput.select()"
+             [ngModel]="exportedSettings" matInput readonly>
       <button (cbOnSuccess)="onSettingsClipBoardSaved($event)" [cbContent]="exportedSettings"
               mat-icon-button matSuffix matTooltip="Click to copy content to clipboard"
               ngxClipboard>
@@ -74,8 +75,8 @@
       <mat-label>
         <span>Paste previously copied dated athlete settings here ({{getOsPasteShortCut()}})</span>
       </mat-label>
-      <input #importInput (paste)="onImport()" matInput>
-      <button (click)="onImport(importInput.value);" mat-icon-button
+      <input #importInput [disabled]="appService.isSyncing" (paste)="onImport()" matInput>
+      <button [disabled]="appService.isSyncing" (click)="onImport(importInput.value);" mat-icon-button
               matSuffix matTooltip="Click to paste clipboard content here">
         <mat-icon color="primary" fontSet="material-icons-outlined">file_copy</mat-icon>
       </button>
@@ -147,9 +148,10 @@
       <ng-container matColumnDef="edit">
         <mat-header-cell *matHeaderCellDef [ngClass]="'editColumn'"></mat-header-cell>
         <mat-cell *matCellDef="let datedSettings" [ngClass]="'editColumn'">
-          <button (click)="onEdit(datedSettings.since)" mat-icon-button
+          <button [disabled]="appService.isSyncing" color="primary" (click)="onEdit(datedSettings.since)"
+                  mat-icon-button
                   matTooltip="Edit dated settings">
-            <mat-icon color="primary" fontSet="material-icons-outlined">edit</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
           </button>
         </mat-cell>
       </ng-container>
@@ -157,10 +159,10 @@
       <ng-container matColumnDef="delete">
         <mat-header-cell *matHeaderCellDef [ngClass]="'deleteColumn'"></mat-header-cell>
         <mat-cell *matCellDef="let datedSettings" [ngClass]="'deleteColumn'">
-          <button (click)="onRemove(datedSettings.since)" *ngIf="!datedSettings.isForever()"
-                  mat-icon-button
-                  matTooltip="Delete dated settings">
-            <mat-icon color="primary" fontSet="material-icons-outlined">delete</mat-icon>
+          <button [disabled]="appService.isSyncing" color="primary" (click)="onRemove(datedSettings.since)"
+                  *ngIf="!datedSettings.isForever()"
+                  mat-icon-button matTooltip="Delete dated settings">
+            <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
           </button>
         </mat-cell>
       </ng-container>

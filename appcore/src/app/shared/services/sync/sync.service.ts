@@ -14,7 +14,7 @@ import { environment } from "../../../../environments/environment";
 import { Subject } from "rxjs";
 
 export abstract class SyncService<T> {
-  public syncDone$: Subject<void>;
+  public isSyncing$: Subject<boolean>;
 
   constructor(
     @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
@@ -25,7 +25,7 @@ export abstract class SyncService<T> {
     @Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService,
     @Inject(LoggerService) public readonly logger: LoggerService
   ) {
-    this.syncDone$ = new Subject<void>();
+    this.isSyncing$ = new Subject<boolean>();
   }
 
   /**

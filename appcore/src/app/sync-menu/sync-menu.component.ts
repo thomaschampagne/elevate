@@ -24,7 +24,7 @@ export abstract class SyncMenuComponent implements OnInit, OnDestroy {
   public historyChangesSub: Subscription;
 
   protected constructor(
-    @Inject(AppService) private readonly appService: AppService,
+    @Inject(AppService) public readonly appService: AppService,
     @Inject(Router) protected readonly router: Router,
     @Inject(SyncService) protected readonly syncService: SyncService<any>,
     @Inject(MatDialog) protected readonly dialog: MatDialog,

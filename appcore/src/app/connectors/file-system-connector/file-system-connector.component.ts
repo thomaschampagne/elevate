@@ -26,7 +26,7 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
   public historyChangesSub: Subscription;
 
   constructor(
-    @Inject(AppService) private readonly appService: AppService,
+    @Inject(AppService) public readonly appService: AppService,
     @Inject(FileSystemConnectorInfoService) protected readonly fsConnectorInfoService: FileSystemConnectorInfoService,
     @Inject(SyncService) protected readonly desktopSyncService: DesktopSyncService,
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,

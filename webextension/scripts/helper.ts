@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { CoreMessages, SpeedUnitDataModel } from "@elevate/shared/models";
+import { SpeedUnitDataModel } from "@elevate/shared/models";
 import { Constant } from "@elevate/shared/constants";
 
 export class Helper {
@@ -8,12 +8,11 @@ export class Helper {
     const speedUnitPerHour: string = measurementPreference === "meters" ? "km/h" : "mi/h";
     const speedUnitFactor: number = speedUnitPerHour === "km/h" ? 1 : Constant.KM_TO_MILE_FACTOR;
 
-    const speedUnitData: SpeedUnitDataModel = {
+    return {
       speedUnitPerHour,
       speedUnitFactor,
       units
     };
-    return speedUnitData;
   }
 
   public static HHMMSStoSeconds(str: string): number {
@@ -85,21 +84,6 @@ export class Helper {
 
   public static heartRateReserveFromHeartrate(hr: number, maxHr: number, restHr: number): number {
     return (hr - restHr) / (maxHr - restHr);
-  }
-
-  public static reloadBrowserTab(extensionId: string, sourceTabId: number) {
-    chrome.runtime.sendMessage(
-      extensionId,
-      {
-        method: CoreMessages.ON_RELOAD_BROWSER_TAB,
-        params: {
-          sourceTabId
-        }
-      },
-      (response: any) => {
-        console.log(response);
-      }
-    );
   }
 
   public static formatNumber(n: any, c?: any, d?: any, t?: any): string {

@@ -16,6 +16,48 @@ import { DataStore } from "../../../data-store/data-store";
 import { TestingDataStore } from "../../../data-store/testing-datastore.service";
 import { VersionsProvider } from "../../versions/versions-provider";
 import { TargetModule } from "../../../modules/target/extension-target.module";
+import { TargetBootModule } from "../../../../boot/extension-boot.module";
+import { ChromiumService } from "../../../../extension/chromium.service";
+import { LoggerService } from "../../logging/logger.service";
+import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
+
+@Injectable()
+class ChromiumServiceMock extends ChromiumService {
+  public pluginId: string;
+  public externalMessages$: Subject<string>;
+
+  constructor(logger: LoggerService) {
+    super(logger);
+  }
+
+  public getCurrentTab(): Promise<chrome.tabs.Tab> {
+    return Promise.resolve(null);
+  }
+
+  public getTabs(): typeof chrome.tabs {
+    return {
+      getCurrent: () => {},
+      onRemoved: {
+        addListener: () => {}
+      }
+    } as any;
+  }
+
+  public createTab(url: string): Promise<chrome.tabs.Tab> {
+    return super.createTab(url);
+  }
+
+  public getBrowserPluginId(): string {
+    return null;
+  }
+
+  public getBrowserExternalMessages(): chrome.runtime.ExtensionMessageEvent {
+    return {
+      addListener(): void {}
+    } as any;
+  }
+}
 
 describe("ExtensionSyncService", () => {
   const installedVersion = "2.0.0";
@@ -25,11 +67,12 @@ describe("ExtensionSyncService", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, TargetModule],
+      imports: [CoreModule, SharedModule, TargetBootModule, TargetModule],
       providers: [
         { provide: SyncService, useClass: ExtensionSyncService },
         { provide: VersionsProvider, useClass: MockedVersionsProvider },
-        { provide: DataStore, useClass: TestingDataStore }
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: ChromiumService, useClass: ChromiumServiceMock }
       ]
     });
 

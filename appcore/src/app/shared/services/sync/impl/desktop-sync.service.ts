@@ -174,6 +174,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       return this.ipcMessagesSender.send<string>(startSyncMessage).then(
         (response: string) => {
           this.logger.info("Message received by ipcMain. Response:", response);
+          this.isSyncing$.next(true);
           return Promise.resolve();
         },
         error => {
@@ -284,7 +285,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       })
       .then(() => {
         this.logger.info(completeSyncEvent);
-        this.syncDone$.next();
+        this.isSyncing$.next(false);
         syncEvents$.next(completeSyncEvent); // Forward for upward UI use.
       });
   }
@@ -304,6 +305,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         (response: string) => {
           this.logger.info("Sync stopped. Response from main:", response);
           resolve();
+          this.isSyncing$.next(false);
         },
         error => {
           const errorMessage = `Unable to stop sync on connector: ${
@@ -311,6 +313,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
           }. Connector replied with ${JSON.stringify(error)}`;
           this.logger.error(errorMessage);
           reject(errorMessage);
+          this.isSyncing$.next(false);
         }
       );
     });

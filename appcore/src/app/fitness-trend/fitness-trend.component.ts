@@ -198,7 +198,7 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
     return this.syncService
       .getSyncState()
       .then((syncState: SyncState) => {
-        this.isSynced = syncState === SyncState.SYNCED;
+        this.isSynced = syncState >= SyncState.PARTIALLY_SYNCED;
         return this.isSynced
           ? Promise.resolve()
           : Promise.reject(

@@ -14,8 +14,8 @@ export class FileSystemConnectorInfo extends ConnectorInfo {
     sourceDirectory: string,
     scanSubDirectories: boolean = true,
     deleteActivityFilesAfterSync: boolean = false,
-    extractArchiveFiles: boolean = false,
-    deleteArchivesAfterExtract: boolean = false,
+    extractArchiveFiles: boolean = true,
+    deleteArchivesAfterExtract: boolean = true,
     detectSportTypeWhenUnknown: boolean = false
   ) {
     super();

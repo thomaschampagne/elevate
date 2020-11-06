@@ -129,35 +129,33 @@
 
     <div *ngIf="stravaConnectorInfo" class="connector">
 
-      <button
-        (click)="sync(true)"
-        *ngIf="syncDateTime && (stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
-        color="primary"
-        mat-stroked-button
-        matTooltip="Activities performed after date '{{syncDateTime | date:'medium'}}' will be synced">
+      <button [disabled]="appService.isSyncing" (click)="sync(true)"
+              *ngIf="syncDateTime && (stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
+              color="primary"
+              mat-stroked-button
+              matTooltip="Activities performed after date '{{syncDateTime | date:'medium'}}' will be synced">
         <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
         Sync recent activities
       </button>
 
-      <button
-        (click)="sync()"
-        *ngIf="(stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
-        color="primary"
-        mat-stroked-button
-        matTooltip="All Strava activities will be synced">
+      <button [disabled]="appService.isSyncing" (click)="sync()"
+              *ngIf="(stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
+              color="primary"
+              mat-stroked-button
+              matTooltip="All Strava activities will be synced">
         <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
         Sync all activities
       </button>
 
-      <button (click)="onConfigure()" *ngIf="!showConfigure" color="primary" mat-stroked-button>
+      <button [disabled]="appService.isSyncing" (click)="onConfigure()" *ngIf="!showConfigure"
+              color="primary" mat-stroked-button>
         <mat-icon fontSet="material-icons-outlined">build</mat-icon>
         Configure
       </button>
-      <button
-        (click)="disconnect()"
-        *ngIf="(stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
-        color="primary"
-        mat-stroked-button>
+      <button [disabled]="appService.isSyncing" (click)="disconnect()"
+              *ngIf="(stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
+              color="primary"
+              mat-stroked-button>
         <mat-icon fontSet="material-icons-outlined">power_off</mat-icon>
         Disconnect
       </button>

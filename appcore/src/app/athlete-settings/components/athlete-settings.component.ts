@@ -5,6 +5,7 @@ import { GenderModel } from "../models/gender.model";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { AthleteService } from "../../shared/services/athlete/athlete.service";
+import { AppService } from "../../shared/services/app-service/app.service";
 
 // TODO Give a helper guide to find dated settings (how to?)
 // TODO Show athleteSnapshot used on strava activities
@@ -15,8 +16,6 @@ import { AthleteService } from "../../shared/services/athlete/athlete.service";
   styleUrls: ["./athlete-settings.component.scss"]
 })
 export class AthleteSettingsComponent implements OnInit {
-  public static readonly SYNCED_ATHLETE_MODEL_SETTING_GENDER_KEY = "gender";
-
   public readonly GENDER_LIST: GenderModel[] = [
     {
       type: Gender.MEN,
@@ -31,6 +30,7 @@ export class AthleteSettingsComponent implements OnInit {
   public athleteModel: AthleteModel;
 
   constructor(
+    @Inject(AppService) public readonly appService: AppService,
     @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
     @Inject(AthleteService) private readonly athleteService: AthleteService,
     @Inject(ActivityService) private readonly activityService: ActivityService,

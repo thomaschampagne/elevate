@@ -68,6 +68,18 @@ export class ActivitiesSynchronize {
     return this._activitiesChanges;
   }
 
+  public static notifyBackgroundSyncStarted(extensionId: string): void {
+    chrome.runtime.sendMessage(
+      extensionId,
+      {
+        method: CoreMessages.ON_EXTERNAL_SYNC_START
+      },
+      (response: any) => {
+        console.log(response);
+      }
+    );
+  }
+
   public static notifyBackgroundSyncDone(extensionId: string, syncResult: SyncResultModel): void {
     chrome.runtime.sendMessage(
       extensionId,

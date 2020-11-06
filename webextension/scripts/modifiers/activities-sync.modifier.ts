@@ -4,7 +4,6 @@ import { ActivitiesSynchronize } from "../processors/activities-synchronize";
 import { SyncResultModel } from "@elevate/shared/models";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { AbstractModifier } from "./abstract.modifier";
-import _ from "lodash";
 import { AppStorageUsage } from "../models/app-storage-usage.model";
 import { BrowserStorageType } from "../models/browser-storage-type.enum";
 import { DistributedEndpointsResolver } from "@elevate/shared/resolvers";
@@ -14,7 +13,6 @@ export class ActivitiesSyncModifier extends AbstractModifier {
   public closeWindowIntervalId = -1;
   protected activitiesSynchronize: ActivitiesSynchronize;
   protected extensionId: string;
-  protected sourceTabId: number;
   protected forceSync: boolean;
   protected fastSync: boolean;
 
@@ -22,13 +20,11 @@ export class ActivitiesSyncModifier extends AbstractModifier {
     extensionId: string,
     activitiesSynchronize: ActivitiesSynchronize,
     fastSync: boolean,
-    forceSync: boolean,
-    sourceTabId?: number
+    forceSync: boolean
   ) {
     super();
     this.activitiesSynchronize = activitiesSynchronize;
     this.extensionId = extensionId;
-    this.sourceTabId = sourceTabId;
     this.forceSync = forceSync;
     this.fastSync = fastSync;
   }
@@ -109,6 +105,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
   protected sync(): void {
     // Start sync..
     const syncStart = performance.now();
+    ActivitiesSynchronize.notifyBackgroundSyncStarted.call(this, this.extensionId); // Notify background page that sync is started
     this.activitiesSynchronize.sync(this.fastSync).then(
       (syncResult: SyncResultModel) => {
         console.log("Sync finished", syncResult);
@@ -117,42 +114,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
         $("#syncProgressBar").val(100);
         $("#totalProgressText").html("100%");
 
-        if (this.fastSync) {
-          ActivitiesSynchronize.notifyBackgroundSyncDone.call(this, this.extensionId, syncResult);
-          setTimeout(() => {
-            window.close();
-          }, 200);
-        } else {
-          // Reloading source tab if exist
-          if (_.isNumber(this.sourceTabId) && this.sourceTabId !== -1) {
-            console.log("Reloading source tab with id " + this.sourceTabId);
-            Helper.reloadBrowserTab(this.extensionId, this.sourceTabId); // Sending message to reload source tab which asked for a sync
-          } else {
-            console.log("no source tab id given: no reload of source.");
-          }
-
-          // Register instance on the bridge
-          window.__elevate_bridge__.activitiesSyncModifierInstance = this;
-
-          let timer: number = 5 * 1000; // 5s for debug...
-          this.closeWindowIntervalId = window.setInterval(() => {
-            $("#autoClose").html(
-              '<div style="background: #fff969; padding: 5px;"><span>Sync done. Added: ' +
-                syncResult.activitiesChangesModel.added.length +
-                ", Edited: " +
-                syncResult.activitiesChangesModel.edited.length +
-                ", Deleted: " +
-                syncResult.activitiesChangesModel.deleted.length +
-                ". Closing in " +
-                timer / 1000 +
-                's</span> <a href="#" onclick="window.__elevate_bridge__.activitiesSyncModifierInstance.cancelAutoClose()">Cancel auto close<a></div>'
-            );
-            if (timer <= 0) {
-              window.close();
-            }
-            timer = timer - 1000; // 1s countdown
-          });
-        }
+        ActivitiesSynchronize.notifyBackgroundSyncDone.call(this, this.extensionId, syncResult);
       },
       (error: any) => {
         console.error("Sync error", error);
@@ -185,50 +147,54 @@ export class ActivitiesSyncModifier extends AbstractModifier {
         }
       },
       (progress: SyncNotifyModel) => {
-        // Global progress
-        $("#syncProgressBar").val((progress.browsedActivitiesCount / progress.totalActivities) * 100);
-        $("#totalProgressText").html(
-          ((progress.browsedActivitiesCount / progress.totalActivities) * 100).toFixed(0) + "%"
-        );
+        try {
+          // Global progress
+          $("#syncProgressBar").val((progress.browsedActivitiesCount / progress.totalActivities) * 100);
+          $("#totalProgressText").html(
+            ((progress.browsedActivitiesCount / progress.totalActivities) * 100).toFixed(0) + "%"
+          );
 
-        // Step
-        let stepMessage = "";
+          // Step
+          let stepMessage = "";
 
-        switch (progress.step) {
-          case "fetchActivitiesPercentage":
-            stepMessage = "Batch fetching...";
-            break;
-          case "fetchedStreamsPercentage":
-            stepMessage = "Fetching streams...";
-            break;
-          case "syncedActivitiesPercentage":
-            stepMessage = "Computing extended statistics...";
-            break;
-          case "savedSyncedActivities":
-            stepMessage = "Saving results to local extension storage...";
-            this.updateStorageUsage();
-            break;
-          case "updatingSyncDateTime":
-            stepMessage = "Updating your last synchronization date... And you're done.";
-            const totalSec = (performance.now() - syncStart) / 1000;
-            console.log("Sync time: " + Helper.secondsToHHMMSS(totalSec) + " (" + Math.round(totalSec) + "s)");
-            break;
+          switch (progress.step) {
+            case "fetchActivitiesPercentage":
+              stepMessage = "Batch fetching...";
+              break;
+            case "fetchedStreamsPercentage":
+              stepMessage = "Fetching streams...";
+              break;
+            case "syncedActivitiesPercentage":
+              stepMessage = "Computing extended statistics...";
+              break;
+            case "savedSyncedActivities":
+              stepMessage = "Saving results to local extension storage...";
+              this.updateStorageUsage();
+              break;
+            case "updatingSyncDateTime":
+              stepMessage = "Updating your last synchronization date... And you're done.";
+              const totalSec = (performance.now() - syncStart) / 1000;
+              console.log("Sync time: " + Helper.secondsToHHMMSS(totalSec) + " (" + Math.round(totalSec) + "s)");
+              break;
+          }
+
+          $("#syncStep").html("Activity group <strong>" + progress.pageGroupId + "</strong> &#10141; " + stepMessage);
+          $("#syncStepProgressBar").val(progress.progress);
+          $("#syncStepProgressText").html(progress.progress.toFixed(0) + "%");
+
+          document.title =
+            "History synchronization @ " +
+            ((progress.browsedActivitiesCount / progress.totalActivities) * 100).toFixed(0) +
+            "%";
+
+          // Infos
+          $("#totalActivities").html("Total activities found <strong>" + progress.totalActivities + "</strong>");
+          $("#browsedActivitiesCount").html(
+            "Total activities processed <strong>" + progress.browsedActivitiesCount + "</strong>"
+          );
+        } catch (err) {
+          console.warn("SyncNotify Warn", err);
         }
-
-        $("#syncStep").html("Activity group <strong>" + progress.pageGroupId + "</strong> &#10141; " + stepMessage);
-        $("#syncStepProgressBar").val(progress.progress);
-        $("#syncStepProgressText").html(progress.progress.toFixed(0) + "%");
-
-        document.title =
-          "History synchronization @ " +
-          ((progress.browsedActivitiesCount / progress.totalActivities) * 100).toFixed(0) +
-          "%";
-
-        // Infos
-        $("#totalActivities").html("Total activities found <strong>" + progress.totalActivities + "</strong>");
-        $("#browsedActivitiesCount").html(
-          "Total activities processed <strong>" + progress.browsedActivitiesCount + "</strong>"
-        );
       }
     );
   }

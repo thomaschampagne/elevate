@@ -22,7 +22,7 @@ import { ExtensionAppService } from "../../shared/services/app-service/impl/exte
   selector: "app-extension-sync-menu",
   template: `
     <div *ngIf="syncState !== null">
-      <button mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
+      <button [disabled]="appService.isSyncing" mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
         <mat-icon fontSet="material-icons-outlined" *ngIf="syncState === SyncState.NOT_SYNCED">
           sync_disabled
         </mat-icon>

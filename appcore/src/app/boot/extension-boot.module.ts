@@ -17,6 +17,7 @@ import { ExtensionRoutingModule } from "../shared/modules/routing/extension-rout
 import { CoreModule } from "../core/core.module";
 import { AppService } from "../shared/services/app-service/app.service";
 import { ExtensionAppService } from "../shared/services/app-service/impl/extension-app.service";
+import { ChromiumService } from "../extension/chromium.service";
 
 @NgModule({
   imports: [CoreModule, ExtensionRoutingModule],
@@ -29,6 +30,7 @@ import { ExtensionAppService } from "../shared/services/app-service/impl/extensi
     ExtensionSyncMenuComponent
   ],
   providers: [
+    ChromiumService,
     { provide: AppLoadService, useClass: ExtensionLoadService },
     { provide: AppService, useClass: ExtensionAppService },
     { provide: MENU_ITEMS_PROVIDER, useClass: ExtensionMenuItemsProvider },

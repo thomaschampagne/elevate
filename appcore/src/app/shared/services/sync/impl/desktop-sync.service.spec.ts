@@ -72,6 +72,7 @@ describe("DesktopSyncService", () => {
         const sendStartSyncSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(
           Promise.resolve("Started")
         );
+        const isSyncingSpy = spyOn(desktopSyncService.isSyncing$, "next");
 
         // When
         const promiseStart = desktopSyncService.sync(false, false, connectorType);
@@ -87,6 +88,7 @@ describe("DesktopSyncService", () => {
             expect(findConnectorSyncDateTimeSpy).not.toHaveBeenCalled();
             expect(fetchStravaConnectorInfoSpy).toHaveBeenCalledTimes(1);
             expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
+            expect(isSyncingSpy).toHaveBeenCalledWith(true);
 
             const flaggedStartSyncIpcMessage: FlaggedIpcMessage = sendStartSyncSpy.calls.mostRecent()
               .args[0] as FlaggedIpcMessage;
@@ -255,6 +257,7 @@ describe("DesktopSyncService", () => {
         const sendStartSyncSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(
           Promise.resolve("Started")
         );
+        const isSyncingSpy = spyOn(desktopSyncService.isSyncing$, "next");
 
         // When
         const promiseStart = desktopSyncService.sync(false, false, connectorType);
@@ -270,6 +273,7 @@ describe("DesktopSyncService", () => {
             expect(fileSystemConnectorInfoServiceSpy).toHaveBeenCalledTimes(1);
             expect(findConnectorSyncDateTimeSpy).not.toHaveBeenCalled();
             expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
+            expect(isSyncingSpy).toHaveBeenCalledWith(true);
 
             const flaggedStartSyncIpcMessage: FlaggedIpcMessage = sendStartSyncSpy.calls.mostRecent()
               .args[0] as FlaggedIpcMessage;
@@ -452,7 +456,7 @@ describe("DesktopSyncService", () => {
       const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(
         Promise.resolve([connectorSyncDateTime])
       );
-      const syncEventDoneSpy = spyOn(desktopSyncService.syncDone$, "next").and.stub();
+      const isSyncingSpy = spyOn(desktopSyncService.isSyncing$, "next").and.stub();
 
       // When
       desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent);
@@ -465,7 +469,7 @@ describe("DesktopSyncService", () => {
             .args[0][0];
           expect(createdConnectorSyncDateTime.connectorType).toEqual(connectorType);
           expect(getSyncStateSpy).toHaveBeenCalledTimes(1);
-          expect(syncEventDoneSpy).toHaveBeenCalledTimes(1);
+          expect(isSyncingSpy).toHaveBeenCalledTimes(1);
           done();
         },
         error => {
@@ -491,7 +495,7 @@ describe("DesktopSyncService", () => {
       const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(
         Promise.resolve([connectorSyncDateTime])
       );
-      const syncEventDoneSpy = spyOn(desktopSyncService.syncDone$, "next").and.stub();
+      const isSyncingSpy = spyOn(desktopSyncService.isSyncing$, "next").and.stub();
 
       // When
       desktopSyncService.handleSyncCompleteEvents(syncEvent$, completeSyncEvent);
@@ -503,7 +507,7 @@ describe("DesktopSyncService", () => {
           expect(getConnectorSyncDateTimeByIdSpy).toHaveBeenCalledWith(connectorType);
           expect(upsertSyncDateTimesSpy).toHaveBeenCalledWith([connectorSyncDateTime]);
           expect(getSyncStateSpy).toHaveBeenCalledTimes(1);
-          expect(syncEventDoneSpy).toHaveBeenCalledTimes(1);
+          expect(isSyncingSpy).toHaveBeenCalledTimes(1);
           done();
         },
         error => {
@@ -522,6 +526,7 @@ describe("DesktopSyncService", () => {
       const connectorType = ConnectorType.FILE_SYSTEM;
       desktopSyncService.currentConnectorType = connectorType;
       const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.STOP_SYNC, connectorType);
+      const isSyncingSpy = spyOn(desktopSyncService.isSyncing$, "next");
 
       // When
       const promise = desktopSyncService.stop();
@@ -531,6 +536,8 @@ describe("DesktopSyncService", () => {
         () => {
           expect(sendSpy).toHaveBeenCalledTimes(1);
           expect(sendSpy).toHaveBeenCalledWith(flaggedIpcMessage);
+          expect(isSyncingSpy).toHaveBeenCalledWith(false);
+
           done();
         },
         () => {
@@ -547,6 +554,7 @@ describe("DesktopSyncService", () => {
       const connectorType = ConnectorType.FILE_SYSTEM;
       desktopSyncService.currentConnectorType = connectorType;
       const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.STOP_SYNC, connectorType);
+      const isSyncingSpy = spyOn(desktopSyncService.isSyncing$, "next");
 
       // When
       const promise = desktopSyncService.stop();
@@ -559,6 +567,7 @@ describe("DesktopSyncService", () => {
         () => {
           expect(sendSpy).toHaveBeenCalledTimes(1);
           expect(sendSpy).toHaveBeenCalledWith(flaggedIpcMessage);
+          expect(isSyncingSpy).toHaveBeenCalledWith(false);
           done();
         }
       );
@@ -677,7 +686,7 @@ describe("DesktopSyncService", () => {
       spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(
         Promise.resolve([connectorSyncDateTime])
       );
-      const onSyncDoneSpy = spyOn(desktopSyncService.syncDone$, "next");
+      const isSyncingSpy = spyOn(desktopSyncService.isSyncing$, "next");
       const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
       // When
@@ -688,7 +697,7 @@ describe("DesktopSyncService", () => {
         () => {
           expect(handleSyncCompleteEventsSpy).toHaveBeenCalledWith(syncEvent$, completeSyncEvent);
           expect(syncEventNextSpy).toHaveBeenCalledWith(completeSyncEvent);
-          expect(onSyncDoneSpy).toHaveBeenCalledWith();
+          expect(isSyncingSpy).toHaveBeenCalledWith(false);
           done();
         },
         error => {

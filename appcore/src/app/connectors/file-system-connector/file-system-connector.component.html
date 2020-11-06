@@ -11,21 +11,22 @@
   </mat-card-subtitle>
   <mat-card-content>
     <div>
-      <button
-        (click)="sync(true)" *ngIf="syncDateTime && fileSystemConnectorInfo.sourceDirectory" color="primary"
-        mat-stroked-button
-        matTooltip="Activity files added or modified after date '{{syncDateTime | date:'medium'}}' will be synced">
+      <button [disabled]="appService.isSyncing"
+              (click)="sync(true)" *ngIf="syncDateTime && fileSystemConnectorInfo.sourceDirectory" color="primary"
+              mat-stroked-button
+              matTooltip="Activity files added or modified after date '{{syncDateTime | date:'medium'}}' will be synced">
         <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
         Sync recent activities
       </button>
-      <button
-        (click)="sync(false)" *ngIf="fileSystemConnectorInfo.sourceDirectory" color="primary"
-        mat-stroked-button
-        matTooltip="All activity files will be synced.">
+      <button [disabled]="appService.isSyncing" (click)="sync(false)"
+              *ngIf="fileSystemConnectorInfo.sourceDirectory" color="primary"
+              mat-stroked-button
+              matTooltip="All activity files will be synced.">
         <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
         Sync all activities
       </button>
-      <button (click)="showConfigure = !showConfigure" *ngIf="!showConfigure" color="primary" mat-stroked-button>
+      <button [disabled]="appService.isSyncing" (click)="showConfigure = !showConfigure"
+              *ngIf="!showConfigure" color="primary" mat-stroked-button>
         <mat-icon fontSet="material-icons-outlined">build</mat-icon>
         Configure
       </button>

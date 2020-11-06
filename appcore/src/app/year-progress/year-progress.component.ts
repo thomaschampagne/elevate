@@ -233,7 +233,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
     this.syncService
       .getSyncState()
       .then((syncState: SyncState) => {
-        if (syncState !== SyncState.SYNCED) {
+        if (syncState < SyncState.PARTIALLY_SYNCED) {
           this.hasActivityModels = false;
           return Promise.reject(
             new AppError(AppError.SYNC_NOT_SYNCED, "Not synced. SyncState is: " + SyncState[syncState].toString())

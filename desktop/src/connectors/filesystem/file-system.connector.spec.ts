@@ -136,6 +136,8 @@ describe("FileSystemConnector", () => {
     fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
     syncFilesSpy = spyOn(fileSystemConnector, "syncFiles").and.callThrough();
 
+    spyOn(fileSystemConnector, "wait").and.returnValue(Promise.resolve());
+
     done();
   });
 

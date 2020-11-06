@@ -10,11 +10,6 @@ export class Background {
     this.setBrowserActionBehaviour();
   }
 
-  private reloadBrowserTab(tabId: number): void {
-    console.log("Now reloading tab id " + tabId);
-    chrome.tabs.reload(tabId);
-  }
-
   /**
    * Forward syncResult to * non url tabs
    */
@@ -41,16 +36,15 @@ export class Background {
   private listenForExternalMessages(): void {
     chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
       switch (request.method) {
+        case CoreMessages.ON_EXTERNAL_SYNC_START:
+          this.forwardMessageToApp(CoreMessages.ON_EXTERNAL_SYNC_START);
+          break;
         case CoreMessages.ON_EXTERNAL_SYNC_DONE:
           this.forwardOnExternalSyncFinished(request.params.syncResult);
           break;
 
         case CoreMessages.ON_EXTERNAL_DB_CHANGE:
           this.forwardMessageToApp(CoreMessages.ON_EXTERNAL_DB_CHANGE);
-          break;
-
-        case CoreMessages.ON_RELOAD_BROWSER_TAB:
-          this.reloadBrowserTab(request.params.sourceTabId);
           break;
 
         case LegacyBrowserStorage.ON_GET_MESSAGE:

@@ -17,6 +17,10 @@ import { StreamsService } from "../../streams/streams.service";
 import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
 import { DataStore } from "../../../data-store/data-store";
 import { ExtensionDataStore } from "../../../data-store/impl/extension-data-store.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { filter } from "rxjs/operators";
+import { CoreMessages } from "@elevate/shared/models";
+import { ChromiumService } from "../../../../extension/chromium.service";
 
 @Injectable()
 export class ExtensionSyncService extends SyncService<SyncDateTime> {
@@ -29,6 +33,9 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
   public static readonly SYNC_WINDOW_WIDTH: number = 690;
   public static readonly SYNC_WINDOW_HEIGHT: number = 720;
 
+  public trackedSyncTabId: number;
+  public isSyncing: boolean;
+
   constructor(
     @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
     @Inject(DataStore) public readonly extensionDataStore: ExtensionDataStore<object>,
@@ -37,7 +44,9 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
     @Inject(AthleteService) public readonly athleteService: AthleteService,
     @Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService,
     @Inject(LoggerService) public readonly logger: LoggerService,
-    @Inject(SyncDateTimeDao) public readonly syncDateTimeDao: SyncDateTimeDao
+    @Inject(SyncDateTimeDao) public readonly syncDateTimeDao: SyncDateTimeDao,
+    @Inject(ChromiumService) public readonly chromiumService: ChromiumService,
+    @Inject(MatSnackBar) public readonly snackBar: MatSnackBar
   ) {
     super(
       versionsProvider,
@@ -48,28 +57,62 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
       userSettingsService,
       logger
     );
+
+    // Self listening syncing status
+    this.isSyncing = false;
+    this.isSyncing$.subscribe(isSyncing => {
+      this.isSyncing = isSyncing;
+    });
+
+    // Detect if sync window has been closed
+    this.chromiumService.getTabs().onRemoved.addListener(tabId => {
+      if (this.isSyncing && tabId === this.trackedSyncTabId) {
+        this.isSyncing$.next(false);
+      }
+    });
+
+    // Listen for external sync start/done
+    this.chromiumService.externalMessages$
+      .pipe(
+        filter(
+          message => message === CoreMessages.ON_EXTERNAL_SYNC_START || message === CoreMessages.ON_EXTERNAL_SYNC_DONE
+        )
+      )
+      .subscribe(message => {
+        if (message === CoreMessages.ON_EXTERNAL_SYNC_START) {
+          this.isSyncing$.next(true);
+        }
+
+        if (message === CoreMessages.ON_EXTERNAL_SYNC_DONE) {
+          this.isSyncing$.next(false);
+          this.chromiumService.getTabs().remove(this.trackedSyncTabId);
+          window.location.reload();
+        }
+      });
   }
 
   public sync(fastSync: boolean, forceSync: boolean): Promise<void> {
-    this.getCurrentTab((tab: chrome.tabs.Tab) => {
-      const params = "?elevateSync=true&fastSync=" + fastSync + "&forceSync=" + forceSync + "&sourceTabId=" + tab.id;
+    const params = "?elevateSync=true&fastSync=" + fastSync + "&forceSync=" + forceSync;
 
-      const features =
-        "width=" +
-        ExtensionSyncService.SYNC_WINDOW_WIDTH +
-        ", height=" +
-        ExtensionSyncService.SYNC_WINDOW_HEIGHT +
-        ", location=0";
+    // Create tab for sync
+    const url = ExtensionSyncService.SYNC_URL_BASE + params;
 
-      window.open(ExtensionSyncService.SYNC_URL_BASE + params, "_blank", features);
+    this.chromiumService.createTab(url).then(createdTab => {
+      this.trackedSyncTabId = createdTab.id;
+
+      const snackBarRef = this.snackBar.open(
+        "Sync just started in a new tab. Login to Strava if necessary.",
+        "View tab",
+        {
+          duration: 10000
+        }
+      );
+      snackBarRef.onAction().subscribe(() => {
+        this.chromiumService.getTabs().update(createdTab.id, { selected: true });
+      });
     });
+
     return Promise.resolve();
-  }
-
-  public getCurrentTab(callback: (tab: chrome.tabs.Tab) => void): void {
-    chrome.tabs.getCurrent((tab: chrome.tabs.Tab) => {
-      callback(tab);
-    });
   }
 
   public getSyncState(): Promise<SyncState> {

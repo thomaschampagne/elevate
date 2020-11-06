@@ -51,6 +51,7 @@ import { FileSystemConnectorConfig } from "../connector-config.model";
 import { inject, singleton } from "tsyringe";
 import { IpcMessagesSender } from "../../messages/ipc-messages.sender";
 import { Hash } from "../../tools/hash";
+import { sleep } from "@elevate/shared/tools";
 
 export enum ActivityFileType {
   GPX = "gpx",
@@ -75,6 +76,8 @@ export class ActivityFile {
 
 @singleton()
 export class FileSystemConnector extends BaseConnector {
+  private static readonly SLEEP_TIME_BETWEEN_FILE_PARSED: number = 50;
+
   private static HumanizedDayMoment = class {
     private static readonly SPLIT_AFTERNOON_AT = 12;
     private static readonly SPLIT_EVENING_AT = 17;
@@ -459,7 +462,7 @@ export class FileSystemConnector extends BaseConnector {
                             return Promise.reject(errorSyncEvent);
                           }
 
-                          return Promise.resolve();
+                          return this.wait();
                         } else {
                           if (_.isArray(syncedActivityModels) && syncedActivityModels.length === 1) {
                             // One activity found
@@ -498,7 +501,7 @@ export class FileSystemConnector extends BaseConnector {
                             syncEvents$.next(errorSyncEvent);
                           }
 
-                          return Promise.resolve();
+                          return this.wait();
                         }
                       });
                     });
@@ -526,7 +529,7 @@ export class FileSystemConnector extends BaseConnector {
                 };
 
                 syncEvents$.next(errorSyncEvent);
-                return Promise.resolve();
+                return this.wait();
               });
           });
         }, Promise.resolve());
@@ -812,16 +815,14 @@ export class FileSystemConnector extends BaseConnector {
     };
 
     files.forEach(file => {
-      const isDirectory = this.getFs()
-        .statSync(directory + "/" + file)
-        .isDirectory();
+      const isDirectory = this.getFs().statSync(`${directory}/${file}`, { bigint: true }).isDirectory();
 
       if (recursive && isDirectory) {
         pathsList.push(this.scanForActivities(directory + "/" + file, afterDate, recursive, []));
       }
 
       if (!isDirectory) {
-        const fileExtension = path.extname(file).slice(1);
+        const fileExtension = path.extname(file).slice(1) as ActivityFileType;
         if (
           fileExtension === ActivityFileType.GPX ||
           fileExtension === ActivityFileType.TCX ||
@@ -844,7 +845,7 @@ export class FileSystemConnector extends BaseConnector {
   }
 
   public getLastAccessDate(absolutePath: string): Date {
-    const stats = this.getFs().statSync(absolutePath);
+    const stats = this.getFs().statSync(absolutePath, { bigint: true });
     return stats.mtime > stats.birthtime ? stats.mtime : stats.birthtime;
   }
 
@@ -859,7 +860,7 @@ export class FileSystemConnector extends BaseConnector {
       if (this.getFs().existsSync(extractDir)) {
         this.getFs().rmdirSync(extractDir, { recursive: true });
       }
-      this.getFs().mkdirSync(extractDir);
+      this.getFs().mkdirSync(extractDir, { recursive: true });
 
       const options: any = {
         targetDir: extractDir,
@@ -931,7 +932,7 @@ export class FileSystemConnector extends BaseConnector {
       .reduce((previousPromise: Promise<void>, file: string) => {
         return previousPromise.then(() => {
           const isDirectory = this.getFs()
-            .statSync(sourceDir + "/" + file)
+            .statSync(sourceDir + "/" + file, { bigint: true })
             .isDirectory();
 
           if (recursive && isDirectory) {
@@ -966,6 +967,10 @@ export class FileSystemConnector extends BaseConnector {
         }
         return Promise.resolve();
       });
+  }
+
+  public wait(): Promise<void> {
+    return sleep(FileSystemConnector.SLEEP_TIME_BETWEEN_FILE_PARSED);
   }
 
   public getFs(): typeof fs {

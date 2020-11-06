@@ -4,21 +4,35 @@ import { SyncService } from "../sync/sync.service";
 import { SyncState } from "../sync/sync-state.enum";
 import { sleep } from "@elevate/shared/tools";
 import { merge, Observable } from "rxjs";
+import { filter, map } from "rxjs/operators";
 
 export abstract class AppService {
   public static readonly VERIFY_ATHLETE_HISTORY_COMPLIANCE_TIMEOUT: number = 1500;
+  public isSyncing: boolean;
   public historyChanges$: Observable<void>;
   private _isAppLoaded: boolean;
 
   protected constructor(
     @Inject(ActivityService) protected readonly activityService: ActivityService,
-    @Inject(SyncService) public readonly syncService: SyncService<any>
+    @Inject(SyncService) private readonly syncService: SyncService<any>
   ) {
     this._isAppLoaded = false;
 
-    this.historyChanges$ = merge(this.syncService.syncDone$, this.activityService.recalculatedDone$);
+    // Forward isSyncing$ from syncService to local observable
+    this.syncService.isSyncing$.subscribe(isSyncing => {
+      this.isSyncing = isSyncing;
+    });
 
-    this.historyChanges$.subscribe(changes => {
+    // Merge syncing and recalculation done as "history has changed"
+    this.historyChanges$ = merge(
+      this.syncService.isSyncing$.pipe(
+        filter(isSyncing => isSyncing === false),
+        map(() => {})
+      ),
+      this.activityService.recalculatedDone$
+    );
+
+    this.historyChanges$.subscribe(() => {
       this.verifyHistoryCompliance();
     });
   }

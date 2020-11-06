@@ -45,7 +45,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
   public historyChangesSub: Subscription;
 
   constructor(
-    @Inject(AppService) private readonly appService: AppService,
+    @Inject(AppService) public readonly appService: AppService,
     @Inject(StravaConnectorService) protected readonly stravaConnectorService: StravaConnectorService,
     @Inject(SyncService) protected readonly desktopSyncService: DesktopSyncService,
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,

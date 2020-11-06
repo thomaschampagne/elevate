@@ -140,7 +140,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     this.syncService
       .getSyncState()
       .then((syncState: SyncState) => {
-        this.isSynced = syncState === SyncState.SYNCED;
+        this.isSynced = syncState >= SyncState.PARTIALLY_SYNCED;
 
         if (!this.isSynced) {
           this.initialized = true;

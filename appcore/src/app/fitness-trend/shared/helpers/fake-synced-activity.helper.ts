@@ -56,6 +56,7 @@ export class FakeSyncedActivityHelper {
         heartRateZones: null,
         lowerQuartileHeartRate: avgHr / 4,
         maxHeartRate: avgHr * 1.5,
+        minHeartRate: avgHr * 0.5,
         medianHeartRate: avgHr / 2,
         upperQuartileHeartRate: (avgHr / 4) * 3
       };
@@ -79,13 +80,17 @@ export class FakeSyncedActivityHelper {
         best20min: avgWatts * 1.5,
         bestEightyPercent: avgWatts,
         weightedWattsPerKg: (avgWatts * 1.25) / 70,
-        powerCurve: []
+        powerCurve: [],
+        maxPower: avgWatts * 4,
+        minPower: avgWatts * 0.5
       };
     }
 
     if (_.isNumber(avgPace)) {
       fakeActivity.extendedStats.paceData = {
         avgPace: avgPace * 100,
+        maxPace: avgPace * 100,
+        minPace: avgPace / 2,
         best20min: avgPace * 150,
         lowerQuartilePace: null,
         medianPace: null,

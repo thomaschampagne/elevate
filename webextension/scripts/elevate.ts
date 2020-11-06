@@ -1048,6 +1048,7 @@ export class Elevate {
             console.log("A previous sync exists on " + new Date(result.syncDateTime).toString());
 
             // At first perform a fast sync to get the "just uploaded ride/run" ready
+            ActivitiesSynchronize.notifyBackgroundSyncStarted.call(this, this.extensionId); // Notify background page that sync is started
             const fastSync = true;
             const fastSyncPromise: Q.Promise<SyncResultModel> = this.activitiesSynchronize.sync(fastSync);
             fastSyncPromise
@@ -1080,14 +1081,12 @@ export class Elevate {
 
     const forceSync = urlParams.forceSync === "true";
     const fastSync = urlParams.fastSync === "true" && !forceSync;
-    const sourceTabId = urlParams.sourceTabId ? parseInt(urlParams.sourceTabId, 10) : -1;
 
     const activitiesSyncModifier: ActivitiesSyncModifier = new ActivitiesSyncModifier(
       this.extensionId,
       this.activitiesSynchronize,
       fastSync,
-      forceSync,
-      sourceTabId
+      forceSync
     );
     activitiesSyncModifier.modify();
   }

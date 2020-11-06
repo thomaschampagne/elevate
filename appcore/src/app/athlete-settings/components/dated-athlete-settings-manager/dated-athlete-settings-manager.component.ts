@@ -14,6 +14,7 @@ import { ConfirmDialogDataModel } from "../../../shared/dialogs/confirm-dialog/c
 import { AppError } from "../../../shared/models/app-error.model";
 import { LoggerService } from "../../../shared/services/logging/logger.service";
 import { ClipboardService, IClipboardResponse } from "ngx-clipboard";
+import { AppService } from "../../../shared/services/app-service/app.service";
 
 @Component({
   selector: "app-dated-athlete-settings-manager",
@@ -63,6 +64,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
   public datedAthleteSettingsModelsChange: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
+    @Inject(AppService) public readonly appService: AppService,
     @Inject(AthleteService) private readonly athleteService: AthleteService,
     @Inject(ClipboardService) private readonly clipboardService: ClipboardService,
     @Inject(MatDialog) private readonly dialog: MatDialog,
@@ -356,7 +358,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
     return datedAthleteSettingsTableModels;
   }
 
-  private handleErrors(error: any) {
+  private handleErrors(error: any): void {
     this.logger.error(error);
 
     if (error instanceof AppError) {

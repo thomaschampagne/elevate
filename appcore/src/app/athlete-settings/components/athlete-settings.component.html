@@ -5,10 +5,10 @@
   </mat-card-title>
   <mat-card-content>
     <mat-form-field fxFill>
-      <mat-select
-        (selectionChange)="onGenderChanged()"
-        [(ngModel)]="athleteModel.gender"
-        aria-label="Gender">
+      <mat-select [disabled]="appService.isSyncing"
+                  (selectionChange)="onGenderChanged()"
+                  [(ngModel)]="athleteModel.gender"
+                  aria-label="Gender">
         <mat-option
           *ngFor="let gender of GENDER_LIST;"
           [value]="gender.type">
