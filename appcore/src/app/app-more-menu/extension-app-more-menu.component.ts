@@ -8,29 +8,9 @@ import { AppMoreMenuComponent } from "./app-more-menu.component";
       <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
     </button>
     <mat-menu #moreMenu="matMenu">
-      <button mat-menu-item (click)="onOpenLink('https://twitter.com/champagnethomas')">
-        <mat-icon fontSet="material-icons-outlined">announcement</mat-icon>
-        Plugin updates
-      </button>
-
       <button mat-menu-item (click)="onShowReleaseNotes()">
         <mat-icon fontSet="material-icons-outlined">system_update</mat-icon>
         Release notes
-      </button>
-
-      <button mat-menu-item (click)="onShowShare()">
-        <mat-icon fontSet="material-icons-outlined">share</mat-icon>
-        Share plugin
-      </button>
-
-      <button mat-menu-item (click)="onOpenLink('https://www.strava.com/clubs/elevatestrava')">
-        <mat-icon fontSet="material-icons-outlined">group</mat-icon>
-        Strava club
-      </button>
-
-      <button mat-menu-item (click)="onOpenLink('https://thomaschampagne.github.io/elevate/')">
-        <mat-icon fontSet="material-icons-outlined">public</mat-icon>
-        Plugin page
       </button>
 
       <button mat-menu-item (click)="onShowReport()">

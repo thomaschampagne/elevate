@@ -49,10 +49,11 @@ import { VersionsProvider } from "./shared/services/versions/versions-provider";
   styleUrls: ["./app.component.scss"]
 })
 export class AppComponent implements OnInit, OnDestroy {
-  public static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
+  private static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
   public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
   public static readonly LS_USER_THEME_PREF: string = "theme";
-  public buildTarget: BuildTarget = environment.buildTarget;
+  private readonly CUSTOM_ICONS: string[] = ["strava", "twitter", "github"];
+  public readonly buildTarget: BuildTarget = environment.buildTarget;
   public BuildTarget = BuildTarget;
   public Theme = Theme;
   public currentTheme: Theme;
@@ -224,7 +225,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   public registerCustomIcons(): void {
-    this.iconRegistry.addSvgIcon("strava", this.sanitizer.bypassSecurityTrustResourceUrl("./assets/icons/strava.svg"));
+    for (const icon of this.CUSTOM_ICONS) {
+      this.iconRegistry.addSvgIcon(icon, this.sanitizer.bypassSecurityTrustResourceUrl(`./assets/icons/${icon}.svg`));
+    }
   }
 
   public ngOnDestroy(): void {

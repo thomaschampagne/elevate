@@ -1,65 +1,69 @@
-<h2 *ngIf="(buildTarget === BuildTarget.EXTENSION)" mat-dialog-title>About this plugin</h2>
-<h2 *ngIf="(buildTarget === BuildTarget.DESKTOP)" mat-dialog-title>About this app</h2>
+<div mat-dialog-title>About</div>
 <mat-dialog-content class="mat-body-1">
+  <div>
+    <div *ngIf="remoteVersion && remoteVersion === installedVersion" class="space-under">
+      Version <strong>{{installedVersion}}</strong>&nbsp;/&nbsp;<span
+      class="mat-caption">Build {{buildMetadata.date + '.' + buildMetadata.commit.slice(0, 8)}}</span>
+    </div>
+    <div class="warn-color" *ngIf="remoteVersion && remoteVersion !== installedVersion" class="space-under">
+      New version <strong>{{remoteVersion}}</strong>
+      available. {{(buildTarget === BuildTarget.DESKTOP) ? 'Restart app to trigger update.' : 'Restarting browser may trigger the update.'}}
+    </div>
+    <mat-divider></mat-divider>
+  </div>
+  <div *ngIf="appUsageDetails">
+    History size <strong>{{appUsageDetails.megaBytesInUse.toFixed(2)}} MB</strong>.
+    <mat-divider></mat-divider>
+  </div>
 
   <ng-container *ngIf="(buildTarget === BuildTarget.EXTENSION)">
-    <div>
-      Elevate extension is just adding some features that riders and runners would like to see in their Strava
-      web.
-      If these features could be added by default in Strava... It could be cool! Consider getting Strava Premium.
+    <div class="space-under">
+      Web extension made with ❤️ by <a href="https://twitter.com/champagnethomas" target="_blank">Thomas Champagne</a>.
+    </div>
+    <div class="space-under">
+      Elevate is a free and open-source project under MIT license.
+    </div>
+    <div class="space-under">
+      This extension is adds some features that riders and runners would like to see in their Strava
+      web. If these features could be added by default in Strava... It could be cool! Consider getting Strava Premium.
       There are a ton of features that you will love. Remember, this extension has for ambition to enhance the
       experience of all users (Free and Premium) and tends to keep users loyal in Strava.
     </div>
-    <mat-divider></mat-divider>
-  </ng-container>
-
-  <ng-container *ngIf="(buildTarget === BuildTarget.EXTENSION)">
-    <div class="stravaNotes">
-      Strava logos, product and service names are the exclusive trademarks of, and are owned by, Strava, Inc. This
-      extension is not approved by Strava. Do not ask them for support.
+    <div>
+      You like it?! Then just share <a href="https://thomaschampagne.github.io/elevate/" target="_blank">thomaschampagne.github.io/elevate</a> to your sport mates. Thanks!
     </div>
     <mat-divider></mat-divider>
   </ng-container>
 
-  <div *ngIf="appUsageDetails">
-    <div>
-      Data size: {{appUsageDetails.megaBytesInUse.toFixed(2)}} MB
+  <ng-container *ngIf="(buildTarget === BuildTarget.DESKTOP)">
+    <div class="space-under">
+      Application made with ❤️ by <a href="https://twitter.com/champagnethomas" target="_blank">Thomas Champagne</a>.
     </div>
-    <div>
-      Quota used: {{appUsageDetails.percentUsage.toFixed(2)}} %
+    <div class="space-under">
+      Elevate is a free and open-source project under MIT license.
     </div>
-  </div>
+    <mat-divider></mat-divider>
+  </ng-container>
 
-  <mat-divider></mat-divider>
-
-  <div class="versions">
-    <div *ngIf="buildMetadata && buildMetadata.commit && buildMetadata.date">
-      App version: {{installedVersion}}+{{buildMetadata.date}}.{{buildMetadata.commit.slice(0, 8)}}
-    </div>
-    <div>
-      Angular Core version: {{angularCoreVersion}}
-    </div>
-    <div>
-      Angular Material version: {{angularMaterialVersion}}
-    </div>
-    <div>
-      D3js version: {{d3Version}}
-    </div>
-    <div>
-      Wrapper version: {{wrapperVersion}}
-    </div>
+  <div class="links" fxLayout="row" fxLayoutAlign="space-evenly center">
+    <button (click)="openSocial('https://twitter.com/champagnethomas')" mat-icon-button
+            matTooltip="Stay tuned for updates on twitter">
+      <mat-icon fontSet="material-icons-outlined" svgIcon="twitter"></mat-icon>
+    </button>
+    <button (click)="openSocial('https://github.com/thomaschampagne/elevate')" mat-icon-button
+            matTooltip="View source code on github">
+      <mat-icon fontSet="material-icons-outlined" svgIcon="github"></mat-icon>
+    </button>
+    <button (click)="openSocial('https://www.strava.com/clubs/elevatestrava')" mat-icon-button
+            matTooltip="Join strava club">
+      <mat-icon fontSet="material-icons-outlined" svgIcon="strava"></mat-icon>
+    </button>
   </div>
-  <mat-divider></mat-divider>
-  <div *ngIf="remoteVersion">
-    <span *ngIf="remoteVersion === installedVersion">You are running the latest version</span>
-    <span *ngIf="remoteVersion !== installedVersion">
-      You are not running the latest version.<br/>
-      Latest version is <strong>{{remoteVersion}}</strong>.<br/>
-      {{(buildTarget === BuildTarget.DESKTOP) ? 'Restarting app' : 'Restarting browser'}} may trigger the update process.
+  <div fxLayout="row" fxLayoutAlign="space-evenly center">
+    <span>
+      <mat-icon fontSet="material-icons-outlined" [inline]="true">public</mat-icon>
+      <a class="mat-caption" href="https://thomaschampagne.github.io/elevate/" target="_blank" style="margin-left: 2px;vertical-align: text-bottom;">thomaschampagne.github.io/elevate</a>
     </span>
   </div>
 </mat-dialog-content>
-<mat-dialog-actions>
-  <button color="primary" mat-dialog-close mat-stroked-button>Close</button>
-</mat-dialog-actions>
 

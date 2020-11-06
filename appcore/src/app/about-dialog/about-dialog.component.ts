@@ -7,6 +7,7 @@ import { environment } from "../../environments/environment";
 import { BuildTarget } from "@elevate/shared/enums";
 import { DataStore } from "../shared/data-store/data-store";
 import { LoggerService } from "../shared/services/logging/logger.service";
+import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 
 @Component({
   selector: "app-about-dialog",
@@ -30,6 +31,7 @@ export class AboutDialogComponent implements OnInit {
   public wrapperVersion: string;
 
   constructor(
+    @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
     @Inject(DataStore) private readonly dataStore: DataStore<object>,
     @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
     @Inject(LoggerService) private readonly logger: LoggerService
@@ -60,5 +62,9 @@ export class AboutDialogComponent implements OnInit {
     this.angularMaterialVersion = angularMaterialVersion.full;
     this.d3Version = d3.version;
     this.wrapperVersion = this.versionsProvider.getWrapperVersion();
+  }
+
+  public openSocial(url: string): void {
+    this.openResourceResolver.openLink(url);
   }
 }
