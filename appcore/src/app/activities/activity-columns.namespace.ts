@@ -364,6 +364,7 @@ export namespace ActivityColumns {
     public static readonly LONG_PACE_SYSTEM_UNITS: SystemUnits = new SystemUnits("/km", "/mi");
     public static readonly SHORT_DISTANCE_SYSTEM_UNITS: SystemUnits = new SystemUnits("m", "ft");
     public static readonly ELEVATION_SYSTEM_UNITS: SystemUnits = new SystemUnits("m", "ft");
+    public static readonly VERTICAL_ASCENT_SYSTEM_UNITS: SystemUnits = new SystemUnits("vm/h", "vft/h");
     public static readonly SPEED_SYSTEM_UNITS: SystemUnits = new SystemUnits("kph", "mph");
     public static readonly CADENCE_UNITS: CadenceUnits = new CadenceUnits("rpm", "spm");
 
@@ -798,6 +799,16 @@ export namespace ActivityColumns {
         1,
         Constant.METER_TO_FEET_FACTOR,
         "Upper Quartile Elevation"
+      ),
+      new NumberColumn(
+        Category.ELEVATION,
+        "extendedStats.elevationData.ascentSpeed.avg",
+        Definition.VERTICAL_ASCENT_SYSTEM_UNITS,
+        "Avg Ascent Speed",
+        Print.number,
+        0,
+        1,
+        Constant.METER_TO_FEET_FACTOR
       ),
 
       /**
