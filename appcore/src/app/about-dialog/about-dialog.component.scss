@@ -9,9 +9,11 @@ a:focus {
 
 .links {
   margin-top: 25px;
-  margin-left: 25%;
-  margin-right: 25%;
   padding: 10px;
+  button {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
 }
 
 .space-under {
