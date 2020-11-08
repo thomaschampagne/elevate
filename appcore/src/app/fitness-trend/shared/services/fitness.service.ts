@@ -102,13 +102,13 @@ export class FitnessService {
 
             const hasSwimmingData: boolean =
               swimEnable &&
-              _.isNumber(activity.athleteSnapshot.athleteSettings.swimFtp) &&
-              activity.athleteSnapshot.athleteSettings.swimFtp > 0 &&
               activity.type === ElevateSport.Swim &&
               fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP &&
-              _.isNumber(activity.distance_raw) &&
-              _.isNumber(activity.moving_time_raw) &&
-              activity.moving_time_raw > 0;
+              _.isNumber(activity.athleteSnapshot.athleteSettings.swimFtp) &&
+              activity.athleteSnapshot.athleteSettings.swimFtp > 0 &&
+              activity.extendedStats &&
+              activity.extendedStats.paceData &&
+              _.isNumber(activity.extendedStats.paceData.swimStressScore);
 
             const momentStartTime: Moment = moment(activity.start_time);
 
@@ -144,12 +144,7 @@ export class FitnessService {
             }
 
             if (hasSwimmingData) {
-              fitnessReadyActivity.swimStressScore = this.computeSwimStressScore(
-                activity.distance_raw,
-                activity.moving_time_raw,
-                activity.elapsed_time_raw,
-                activity.athleteSnapshot.athleteSettings.swimFtp
-              );
+              fitnessReadyActivity.swimStressScore = activity.extendedStats.paceData.swimStressScore;
             }
 
             fitnessPreparedActivities.push(fitnessReadyActivity);
@@ -207,12 +202,6 @@ export class FitnessService {
         error => reject(error)
       );
     });
-  }
-
-  public computeSwimStressScore(distance: number, movingTime: number, elapsedTime: number, swimFtp: number) {
-    const normalizedSwimSpeed = distance / (movingTime / 60); // Normalized_Swim_Speed (m/min) = distance(m) / timeInMinutesNoRest
-    const swimIntensity = normalizedSwimSpeed / swimFtp; // Intensity = Normalized_Swim_Speed / Swim FTP
-    return Math.pow(swimIntensity, 3) * (elapsedTime / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
   }
 
   /**

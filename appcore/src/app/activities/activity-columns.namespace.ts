@@ -554,6 +554,10 @@ export namespace ActivityColumns {
       new NumberColumn(Category.PACE, "extendedStats.paceData.runningStressScorePerHour").setHeader(
         "Running Stress Score / h"
       ),
+      new NumberColumn(Category.PACE, "extendedStats.paceData.swimStressScore").setHeader("Swimming Stress Score"),
+      new NumberColumn(Category.PACE, "extendedStats.paceData.swimStressScorePerHour").setHeader(
+        "Swimming Stress Score / h"
+      ),
 
       /**
        * Heart rate

@@ -30,7 +30,7 @@ export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
     // Speed view
     if (this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData) {
       const measurementPreference: string = window.currentAthlete.get("measurement_preference");
-      const units: string = measurementPreference == "meters" ? "kph" : "mph";
+      const units: string = measurementPreference === "meters" ? "kph" : "mph";
       const speedDataView: SpeedDataView = new SpeedDataView(this.analysisData.speedData, units);
       speedDataView.setAppResources(this.appResources);
       speedDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
@@ -41,7 +41,7 @@ export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
 
     if (this.analysisData.paceData && this.userSettings.displayAdvancedSpeedData) {
       const measurementPreference: string = window.currentAthlete.get("measurement_preference");
-      const units: string = measurementPreference == "meters" ? "/km" : "/mi";
+      const units: string = measurementPreference === "meters" ? "/km" : "/mi";
 
       const paceDataView: PaceDataView = new PaceDataView(this.analysisData.paceData, units);
       paceDataView.setAppResources(this.appResources);

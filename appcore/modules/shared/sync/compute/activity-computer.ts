@@ -244,6 +244,17 @@ export class ActivityComputer {
     return ((movingTime * gradeAdjustedAvgSpeed * intensityFactor) / (runningThresholdSpeed * 3600)) * 100;
   }
 
+  public static computeSwimStressScore(
+    distance: number,
+    movingTime: number,
+    elapsedTime: number,
+    swimFtp: number
+  ): number {
+    const normalizedSwimSpeed = distance / (movingTime / 60); // Normalized_Swim_Speed (m/min) = distance(m) / timeInMinutesNoRest
+    const swimIntensity = normalizedSwimSpeed / swimFtp; // Intensity = Normalized_Swim_Speed / Swim FTP
+    return Math.pow(swimIntensity, 3) * (elapsedTime / 3600) * 100; // Swim Stress Score = Intensity^3 * TotalTimeInHours * 100
+  }
+
   public static resolveLTHR(activityType: ElevateSport, athleteSettingsModel: AthleteSettingsModel): number {
     if (athleteSettingsModel.lthr) {
       if (
@@ -426,16 +437,11 @@ export class ActivityComputer {
       );
     }
 
-    if (
-      this.activityStream &&
-      !this.activityStream.velocity_smooth &&
-      this.activitySourceData &&
-      this.activityType === ElevateSport.Run
-    ) {
-      // Allow to estimate running move data if no stream available (goal is to get RSS computation for manual activities)
-      if (this.activitySourceData) {
-        moveDataModel = this.moveDataEstimate(this.activitySourceData.movingTime, this.activitySourceData.distance);
-      }
+    const missingVelocityStream = !this.activityStream || !this.activityStream.velocity_smooth;
+
+    // Try to estimate some move data if no streams or velocity stream available
+    if (missingVelocityStream && this.activitySourceData) {
+      moveDataModel = this.moveDataEstimate(this.activitySourceData.movingTime, this.activitySourceData.distance);
     }
 
     // Assign moving time
@@ -457,6 +463,26 @@ export class ActivityComputer {
       moveRatio = movingTime / elapsedTime;
     }
 
+    // If no velocity stream available, try to estimate running stress score  (goal is to get RSS computation for manual activities)
+    if (
+      missingVelocityStream &&
+      (this.activityType === ElevateSport.Run || this.activityType === ElevateSport.VirtualRun) &&
+      movingTime &&
+      moveDataModel?.pace?.genuineGradeAdjustedAvgPace &&
+      this.athleteSnapshot.athleteSettings.runningFtp
+    ) {
+      const runningStressScore = ActivityComputer.computeRunningStressScore(
+        movingTime,
+        moveDataModel.pace.genuineGradeAdjustedAvgPace,
+        this.athleteSnapshot.athleteSettings.runningFtp
+      );
+
+      moveDataModel.pace.runningStressScore = runningStressScore;
+      moveDataModel.pace.runningStressScorePerHour = runningStressScore
+        ? (runningStressScore / movingTime) * 60 * 60
+        : null;
+    }
+
     // Q1 Speed
     // Median Speed
     // Q3 Speed
@@ -468,6 +494,35 @@ export class ActivityComputer {
     // Q3 Pace
     // Standard deviation Pace
     const paceData: PaceDataModel = moveDataModel && moveDataModel.pace ? moveDataModel.pace : null;
+
+    // Find total distance
+    let distance;
+    if (this.activityStream && this.activityStream.distance && this.activityStream.distance.length > 0) {
+      distance = _.last(this.activityStream.distance);
+    } else if (this.activitySourceData && this.activitySourceData.distance > 0) {
+      distance = this.activitySourceData.distance;
+    } else {
+      distance = null;
+    }
+
+    // If real/manual swimming activity, compute swimming stress score
+    if (
+      this.activityType === ElevateSport.Swim &&
+      distance &&
+      movingTime &&
+      this.athleteSnapshot.athleteSettings.swimFtp &&
+      moveDataModel?.pace
+    ) {
+      const swimStressScore = ActivityComputer.computeSwimStressScore(
+        distance,
+        movingTime,
+        elapsedTime,
+        this.athleteSnapshot.athleteSettings.swimFtp
+      );
+
+      moveDataModel.pace.swimStressScore = swimStressScore;
+      moveDataModel.pace.swimStressScorePerHour = swimStressScore ? (swimStressScore / movingTime) * 60 * 60 : null;
+    }
 
     // Estimated Normalized power
     // Estimated Variability index
@@ -545,16 +600,6 @@ export class ActivityComputer {
 
     // Calculating running index (https://github.com/thomaschampagne/elevate/issues/704)
     const isRunningActivity = this.activityType.toString().match(/Run|VirtualRun/g) !== null;
-
-    // Find total distance
-    let distance;
-    if (this.activityStream && this.activityStream.distance && this.activityStream.distance.length > 0) {
-      distance = _.last(this.activityStream.distance);
-    } else if (this.activitySourceData && this.activitySourceData.distance > 0) {
-      distance = this.activitySourceData.distance;
-    } else {
-      distance = null;
-    }
 
     const runningPerformanceIndex: number =
       isRunningActivity && distance && movingTime && !_.isEmpty(elevationData) && !_.isEmpty(heartRateData)
@@ -672,8 +717,8 @@ export class ActivityComputer {
 
   /**
    *
-   * @param currentValue
-   * @param previousValue
+   * @param current value
+   * @param previous value
    * @param delta between current & previous values
    * @returns the discrete value
    */
@@ -705,15 +750,6 @@ export class ActivityComputer {
       speedZones: null
     };
 
-    const runningStressScore =
-      this.activityType === ElevateSport.Run && averagePace && this.athleteSnapshot.athleteSettings.runningFtp
-        ? ActivityComputer.computeRunningStressScore(
-            movingTime,
-            averagePace,
-            this.athleteSnapshot.athleteSettings.runningFtp
-          )
-        : null;
-
     const paceData: PaceDataModel = {
       avgPace: averagePace, // send in seconds
       best20min: null,
@@ -726,8 +762,10 @@ export class ActivityComputer {
       genuineGradeAdjustedAvgPace: averagePace,
       paceZones: null,
       gradeAdjustedPaceZones: null,
-      runningStressScore: runningStressScore,
-      runningStressScorePerHour: runningStressScore ? (runningStressScore / movingTime) * 60 * 60 : null
+      runningStressScore: null,
+      runningStressScorePerHour: null,
+      swimStressScore: null,
+      swimStressScorePerHour: null
     };
 
     return {
@@ -928,7 +966,9 @@ export class ActivityComputer {
       paceZones: this.returnZones ? paceZones : null,
       gradeAdjustedPaceZones: this.returnZones && hasGradeAdjustedSpeed ? gradeAdjustedPaceZones : null,
       runningStressScore: runningStressScore,
-      runningStressScorePerHour: runningStressScore ? (runningStressScore / genuineAvgSpeedSecondsSum) * 60 * 60 : null
+      runningStressScorePerHour: runningStressScore ? (runningStressScore / genuineAvgSpeedSecondsSum) * 60 * 60 : null,
+      swimStressScore: null, // Will be set later if activity type is swimming
+      swimStressScorePerHour: null // Will be set later if activity type is swimming
     };
 
     return {

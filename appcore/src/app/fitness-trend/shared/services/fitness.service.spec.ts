@@ -383,7 +383,8 @@ describe("FitnessService", () => {
           "2018-02-09",
           null,
           null,
-          false
+          false,
+          419
         )
       );
 
@@ -557,7 +558,8 @@ describe("FitnessService", () => {
           "2018-02-09",
           null,
           null,
-          false
+          false,
+          419
         )
       );
 
@@ -718,7 +720,8 @@ describe("FitnessService", () => {
           "2018-02-09",
           null,
           null,
-          false
+          false,
+          419
         )
       );
 
@@ -879,7 +882,8 @@ describe("FitnessService", () => {
           "2018-02-09",
           null,
           null,
-          false
+          false,
+          419
         )
       );
 
@@ -1041,7 +1045,8 @@ describe("FitnessService", () => {
           "2018-02-09",
           null,
           null,
-          false
+          false,
+          419
         )
       );
 
@@ -1150,7 +1155,8 @@ describe("FitnessService", () => {
           "2018-02-09",
           null,
           null,
-          false
+          false,
+          419
         )
       );
 
@@ -1405,7 +1411,8 @@ describe("FitnessService", () => {
           "2018-02-09",
           null,
           null,
-          false
+          false,
+          419
         )
       );
 
@@ -1507,7 +1514,8 @@ describe("FitnessService", () => {
           "2018-02-09",
           null,
           null,
-          false
+          false,
+          419
         )
       );
 
@@ -1650,7 +1658,8 @@ describe("FitnessService", () => {
           "2018-02-09",
           null,
           null,
-          false
+          false,
+          419
         )
       );
 
@@ -1870,7 +1879,8 @@ describe("FitnessService", () => {
           "2018-02-09",
           null,
           null,
-          false
+          false,
+          419
         )
       );
 
@@ -1883,7 +1893,8 @@ describe("FitnessService", () => {
         "2018-02-10",
         null,
         null,
-        false
+        false,
+        419
       );
       syncedActivityModel05.athleteSnapshot.athleteSettings.swimFtp = null;
       syncedActivityModels.push(syncedActivityModel05);
@@ -2064,7 +2075,8 @@ describe("FitnessService", () => {
           "2018-02-09",
           null,
           null,
-          false
+          false,
+          419
         )
       );
 
@@ -2077,7 +2089,8 @@ describe("FitnessService", () => {
         "2018-02-10",
         null,
         null,
-        false
+        false,
+        419
       );
       syncedActivityModel05.athleteSnapshot.athleteSettings.swimFtp = null;
       syncedActivityModels.push(syncedActivityModel05);
@@ -3073,7 +3086,8 @@ describe("FitnessService", () => {
           "2018-02-09",
           null,
           null,
-          false
+          false,
+          419
         )
       );
 
@@ -3183,7 +3197,8 @@ describe("FitnessService", () => {
         "2018-02-14",
         null,
         null,
-        false
+        false,
+        419
       );
       swimActivity.distance_raw = 3000; // SSS => 419 (priority)
       syncedActivityModels.push(swimActivity);
@@ -3529,7 +3544,8 @@ describe("FitnessService", () => {
         "2018-02-09",
         null,
         null,
-        false
+        false,
+        419
       );
       swimActivity1.distance_raw = 3000; // SSS => 419 (priority)
       syncedActivityModels.push(swimActivity1);
@@ -3640,7 +3656,8 @@ describe("FitnessService", () => {
         "2018-02-14",
         null,
         null,
-        false
+        false,
+        419
       );
       swimActivity2.distance_raw = 3000; // SSS => 419 (priority)
       syncedActivityModels.push(swimActivity2);
@@ -3695,9 +3712,9 @@ describe("FitnessService", () => {
           expect(_.floor(dayTrend.tsb, 2)).toEqual(-50.59);
 
           dayTrend = _.find(fitnessTrend, { ids: [9, 10] });
-          expect(_.floor(dayTrend.atl, 2)).toEqual(145.81);
-          expect(_.floor(dayTrend.ctl, 2)).toEqual(45.46);
-          expect(_.floor(dayTrend.tsb, 2)).toEqual(-72.46);
+          expect(_.floor(dayTrend.atl, 2)).toEqual(145.76);
+          expect(_.floor(dayTrend.ctl, 2)).toEqual(45.44);
+          expect(_.floor(dayTrend.tsb, 2)).toEqual(-72.42);
 
           done();
         },

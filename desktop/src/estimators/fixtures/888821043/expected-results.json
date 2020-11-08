@@ -59,7 +59,9 @@
       "paceZones": null,
       "gradeAdjustedPaceZones": null,
       "runningStressScore": 2.991946527777777,
-      "runningStressScorePerHour": 4.202499999999999
+      "runningStressScorePerHour": 4.202499999999999,
+      "swimStressScore": null,
+      "swimStressScorePerHour": null
     },
     "powerData": {
       "hasPowerMeter": false,
