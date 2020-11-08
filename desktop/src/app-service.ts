@@ -46,7 +46,7 @@ export class AppService {
 
   public printRuntimeInfo(): void {
     this.runtimeInfoService.getInfo().then(runtimeInfo => {
-      const infoStr = `Hostname ${runtimeInfo.osHostname}; Platform ${runtimeInfo.osPlatform.name} ${runtimeInfo.osPlatform.arch}; Cpu ${runtimeInfo.cpu.name}; Memory ${runtimeInfo.memorySizeGb}GB; athleteMachineId ${runtimeInfo.athleteMachineId}; Node v${process.versions.node}`;
+      const infoStr = `Hostname ${runtimeInfo.osHostname}; Platform ${runtimeInfo.osPlatform.name} ${runtimeInfo.osPlatform.arch}; Cpu ${runtimeInfo.cpu.name}; Memory ${runtimeInfo.memorySizeGb}GB; athleteMachineId ${runtimeInfo.machineId}; Node v${process.versions.node}`;
       logger.info(`System details: ${infoStr}`);
     });
   }

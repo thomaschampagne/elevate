@@ -5,13 +5,13 @@ export class StravaConnectorInfo extends ConnectorInfo {
   public static readonly DEFAULT_MODEL: StravaConnectorInfo = new StravaConnectorInfo(null, null);
 
   constructor(
-    public clientId: number,
-    public clientSecret: string,
-    public accessToken: string = null,
-    public refreshToken: string = null,
-    public expiresAt: number = null,
+    public clientId: number | null,
+    public clientSecret: string | null,
+    public accessToken: string | null = null,
+    public refreshToken: string | null = null,
+    public expiresAt: number | null = null,
     public updateExistingNamesTypesCommutes: boolean = true,
-    public stravaAccount: StravaAccount = null
+    public stravaAccount: StravaAccount | null = null
   ) {
     super();
     this.clientId = clientId;
