@@ -14,7 +14,6 @@ import { RECALCULATE_ACTIVITIES_BAR_COMPONENT } from "../recalculate-activities-
 import { SYNC_MENU_COMPONENT } from "../sync-menu/sync-menu.component";
 import { DesktopSyncMenuComponent } from "../sync-menu/desktop/desktop-sync-menu.component";
 import { DesktopErrorsSyncDetailsDialogComponent } from "../sync-bar/desktop-errors-sync-details-dialog.component";
-import { DesktopUnauthorizedMachineIdDialogComponent } from "../app-load/desktop/desktop-unauthorized-machine-id-dialog/desktop-unauthorized-machine-id-dialog.component";
 import { CoreModule } from "../core/core.module";
 import { DesktopRoutingModule } from "../shared/modules/routing/desktop-routing.module";
 import { AppService } from "../shared/services/app-service/app.service";
@@ -36,8 +35,7 @@ import { DesktopElevateErrorHandler } from "../errors-handler/desktop-elevate-er
     DesktopTopBarComponent,
     DesktopAppMoreMenuComponent,
     DesktopSyncMenuComponent,
-    DesktopErrorsSyncDetailsDialogComponent,
-    DesktopUnauthorizedMachineIdDialogComponent
+    DesktopErrorsSyncDetailsDialogComponent
   ],
   providers: [
     { provide: ErrorHandler, useClass: DesktopElevateErrorHandler },

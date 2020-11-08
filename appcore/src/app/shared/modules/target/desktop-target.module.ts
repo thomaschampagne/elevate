@@ -29,6 +29,7 @@ import { UserSettingsService } from "../../services/user-settings/user-settings.
 import { DesktopUserSettingsService } from "../../services/user-settings/desktop/desktop-user-settings.service";
 import { AthleteService } from "../../services/athlete/athlete.service";
 import { DesktopAthleteService } from "../../services/athlete/desktop/desktop-athlete.service";
+import { DesktopInsightsService } from "../../../desktop/insights/desktop-insights.service";
 import { IpcSyncMessageSender } from "../../../desktop/ipc/ipc-sync-messages-sender.service";
 import { DesktopRestoreDialogComponent } from "../../dialogs/backups/desktop/desktop-restore-dialog.component";
 import { DesktopBackupService } from "../../../desktop/backup/desktop-backup.service";
@@ -56,6 +57,7 @@ import { DesktopWindowService } from "../../services/window/desktop-window.servi
     PropertiesDao,
     StravaConnectorInfoDao,
     FileConnectorInfoService,
+    DesktopInsightsService,
     { provide: WindowService, useClass: DesktopWindowService },
     { provide: AthleteService, useClass: DesktopAthleteService },
     { provide: UserSettingsService, useClass: DesktopUserSettingsService },
