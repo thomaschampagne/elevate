@@ -18,6 +18,8 @@ import expectedRunResultJson from "../fixtures/888821043/expected-results.json";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("ActivityComputer", () => {
+  const smoothAltitude = true;
+
   it("should compute RIDE activity https://www.strava.com/activities/723224273", done => {
     const activityStreams = _.cloneDeep(streamsRideJson) as ActivityStreamsModel;
     const expectedRideResult = _.cloneDeep(expectedRideResultJson) as SyncedActivityModel;
@@ -43,7 +45,7 @@ describe("ActivityComputer", () => {
       activitySourceData
     );
 
-    const computedStatsResult: AnalysisDataModel = activityComputer.compute();
+    const computedStatsResult: AnalysisDataModel = activityComputer.compute(smoothAltitude);
     expect(computedStatsResult).toEqual(expectedRideResult.extendedStats);
 
     done();
@@ -74,7 +76,7 @@ describe("ActivityComputer", () => {
       activitySourceData
     );
 
-    const computedStatsResult: AnalysisDataModel = activityComputer.compute();
+    const computedStatsResult: AnalysisDataModel = activityComputer.compute(smoothAltitude);
     expect(computedStatsResult).toEqual(expectedRunResult.extendedStats);
 
     done();

@@ -54,6 +54,7 @@ describe("ActivityComputer Cycling Power", () => {
   const bounds: number[] = null;
   const returnZones = false;
   const returnPowerCurve = true;
+  const smoothAltitude = true;
   const userSettingsMock: UserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
   const athleteSnapshot = new AthleteSnapshotModel(
     Gender.MEN,
@@ -93,7 +94,7 @@ describe("ActivityComputer Cycling Power", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expectBetween(result.powerData.avgWatts, 180, TOLERANCE);
@@ -123,7 +124,7 @@ describe("ActivityComputer Cycling Power", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expectBetween(result.powerData.avgWatts, 208, TOLERANCE);
@@ -156,7 +157,7 @@ describe("ActivityComputer Cycling Power", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expectBetween(_.floor(result.powerData.avgWatts), 175, TOLERANCE);
@@ -186,7 +187,7 @@ describe("ActivityComputer Cycling Power", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expectBetween(_.floor(result.powerData.avgWatts), 178, TOLERANCE);
@@ -215,7 +216,7 @@ describe("ActivityComputer Cycling Power", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expectBetween(_.floor(result.powerData.avgWatts), 142, TOLERANCE);
@@ -246,7 +247,7 @@ describe("ActivityComputer Cycling Power", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expectBetween(_.floor(result.powerData.avgWatts), 118, TOLERANCE);
@@ -275,7 +276,7 @@ describe("ActivityComputer Cycling Power", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expectBetween(_.floor(result.powerData.avgWatts), 200, TOLERANCE);
@@ -305,7 +306,7 @@ describe("ActivityComputer Cycling Power", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expectBetween(_.floor(result.powerData.avgWatts), 134, TOLERANCE);

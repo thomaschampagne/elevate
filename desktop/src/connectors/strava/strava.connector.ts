@@ -244,7 +244,8 @@ export class StravaConnector extends BaseConnector {
                       syncedActivityModel,
                       syncedActivityModel.athleteSnapshot,
                       this.connectorConfig.userSettingsModel,
-                      activityStreamsModel
+                      activityStreamsModel,
+                      true
                     );
 
                     // Compute bary center from lat/lng stream

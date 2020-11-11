@@ -392,7 +392,8 @@ export class FileSystemConnector extends BaseConnector {
                               syncedActivityModel,
                               syncedActivityModel.athleteSnapshot,
                               this.fileSystemConnectorConfig.userSettingsModel,
-                              activityStreamsModel
+                              activityStreamsModel,
+                              true
                             );
 
                             // Compute bary center from lat/lng stream

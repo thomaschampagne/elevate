@@ -93,6 +93,7 @@ describe("ActivityComputer Paces", () => {
   const bounds: number[] = null;
   const returnZones = false;
   const returnPowerCurve = true;
+  const smoothAltitude = true;
   const userSettingsMock: UserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
   const athleteSnapshot = new AthleteSnapshotModel(
     Gender.MEN,
@@ -124,7 +125,7 @@ describe("ActivityComputer Paces", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
@@ -151,7 +152,7 @@ describe("ActivityComputer Paces", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
@@ -178,7 +179,7 @@ describe("ActivityComputer Paces", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
@@ -205,7 +206,7 @@ describe("ActivityComputer Paces", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
@@ -232,7 +233,7 @@ describe("ActivityComputer Paces", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
@@ -259,7 +260,7 @@ describe("ActivityComputer Paces", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
@@ -286,7 +287,7 @@ describe("ActivityComputer Paces", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
@@ -313,7 +314,7 @@ describe("ActivityComputer Paces", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
@@ -340,7 +341,7 @@ describe("ActivityComputer Paces", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
@@ -367,7 +368,7 @@ describe("ActivityComputer Paces", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();
@@ -394,7 +395,7 @@ describe("ActivityComputer Paces", () => {
       returnPowerCurve,
       activitySourceData
     );
-    const result: AnalysisDataModel = activityComputer.compute();
+    const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
     // Then
     expect(result.paceData.genuineGradeAdjustedAvgPace).not.toBeNull();

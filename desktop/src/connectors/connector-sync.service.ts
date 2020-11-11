@@ -166,13 +166,20 @@ export class ConnectorSyncService {
     const streams = (computeActivityMessage.payload[3]
       ? computeActivityMessage.payload[3]
       : null) as ActivityStreamsModel;
+    const smoothAltitude = computeActivityMessage.payload[4] as boolean;
 
     try {
       const analysisDataModel = ActivityComputer.calculate(
         syncedActivityModel,
         athleteSnapshotModel,
         userSettingsModel,
-        streams
+        streams,
+        false,
+        false,
+        null,
+        true,
+        null,
+        smoothAltitude
       );
 
       // Compute bary center from lat/lng stream

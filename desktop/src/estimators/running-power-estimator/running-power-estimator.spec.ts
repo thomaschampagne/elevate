@@ -300,6 +300,7 @@ describe("RunningPowerEstimator", () => {
         Gender.MEN,
         new AthleteSettingsModel(200, 45, null, 240, null, null, 71.9)
       );
+      const smoothAltitude = true;
 
       // When
       const activityComputer: ActivityComputer = new ActivityComputer(
@@ -316,7 +317,7 @@ describe("RunningPowerEstimator", () => {
         activitySourceData
       );
 
-      const result: AnalysisDataModel = activityComputer.compute();
+      const result: AnalysisDataModel = activityComputer.compute(smoothAltitude);
 
       // Then
       expect(result.powerData).not.toBeNull();

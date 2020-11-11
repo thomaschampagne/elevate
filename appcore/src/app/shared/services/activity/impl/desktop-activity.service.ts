@@ -81,18 +81,23 @@ export class DesktopActivityService extends ActivityService {
     this.isProcessing = false;
   }
 
+  /**
+   * Single compute of an activity
+   */
   public compute(
     syncedActivityModel: SyncedActivityModel,
     userSettingsModel: DesktopUserSettingsModel,
     athleteSnapshotModel: AthleteSnapshotModel,
-    streams: ActivityStreamsModel
+    streams: ActivityStreamsModel,
+    smoothAltitude: boolean = false // By default we don't "re-smooth" altitude already smoothed when syncing through connectors
   ): Promise<SyncedActivityModel> {
     const computeActivityMessage = new FlaggedIpcMessage(
       MessageFlag.COMPUTE_ACTIVITY,
       syncedActivityModel,
       athleteSnapshotModel,
       userSettingsModel,
-      streams
+      streams,
+      smoothAltitude
     );
     return this.ipcMessagesSender.send<SyncedActivityModel>(computeActivityMessage);
   }

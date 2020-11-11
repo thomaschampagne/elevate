@@ -231,13 +231,20 @@ export abstract class BaseConnector {
     syncedActivityModel: Partial<SyncedActivityModel>,
     athleteSnapshotModel: AthleteSnapshotModel,
     userSettingsModel: UserSettingsModel,
-    streams: ActivityStreamsModel
+    streams: ActivityStreamsModel,
+    smoothAltitude: boolean
   ): AnalysisDataModel {
     return ActivityComputer.calculate(
       syncedActivityModel as BareActivityModel,
       athleteSnapshotModel,
       userSettingsModel,
-      streams
+      streams,
+      false,
+      false,
+      null,
+      true,
+      null,
+      smoothAltitude
     );
   }
 

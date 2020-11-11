@@ -89,7 +89,8 @@ export class ActivityComputer {
     returnPowerCurve: boolean = false,
     bounds: number[] = null,
     isOwner: boolean = true,
-    activitySourceData: ActivitySourceDataModel = null
+    activitySourceData: ActivitySourceDataModel = null,
+    smoothAltitude: boolean = true
   ): AnalysisDataModel {
     return new ActivityComputer(
       bareActivityModel.type,
@@ -103,7 +104,7 @@ export class ActivityComputer {
       returnZones,
       returnPowerCurve,
       activitySourceData
-    ).compute();
+    ).compute(smoothAltitude);
   }
 
   /**
@@ -337,12 +338,12 @@ export class ActivityComputer {
     return false;
   }
 
-  public compute(): AnalysisDataModel {
+  public compute(smoothAltitude: boolean): AnalysisDataModel {
     const hasActivityStream = !_.isEmpty(this.activityStream);
 
     if (hasActivityStream) {
       // Append altitude_smooth to fetched strava activity stream before compute analysis data
-      if (this.activityStream.altitude && this.activityStream.altitude.length > 0) {
+      if (smoothAltitude && this.activityStream.altitude && this.activityStream.altitude.length > 0) {
         this.activityStream.altitude = this.smoothAltitudeStream(this.activityStream.altitude);
       }
 

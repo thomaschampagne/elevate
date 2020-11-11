@@ -1910,6 +1910,7 @@ describe("FileSystemConnector", () => {
 
     it("should compute hash of REAL RIDE activity", done => {
       // Given
+      const smoothAltitude = true;
       const activityStreams = _.cloneDeep(streamsRideJson) as ActivityStreamsModel;
       const expectedRideResult = _.cloneDeep(expectedRideResultJson) as SyncedActivityModel;
       const userSettings = DesktopUserSettingsModel.DEFAULT_MODEL;
@@ -1933,7 +1934,7 @@ describe("FileSystemConnector", () => {
       );
 
       // Re-compute stats to ensure calculation do not affect hash
-      expectedRideResult.extendedStats = activityComputer.compute();
+      expectedRideResult.extendedStats = activityComputer.compute(smoothAltitude);
 
       // When
       const hash = BaseConnector.activityHash(expectedRideResult);
@@ -1948,6 +1949,7 @@ describe("FileSystemConnector", () => {
 
     it("should compute hash of REAL RUN activity", done => {
       // Given
+      const smoothAltitude = true;
       const activityStreams = _.cloneDeep(streamsRunJson) as ActivityStreamsModel;
       const expectedRunResult = _.cloneDeep(expectedRunResultJson) as SyncedActivityModel;
       const userSettings = DesktopUserSettingsModel.DEFAULT_MODEL;
@@ -1971,7 +1973,7 @@ describe("FileSystemConnector", () => {
       );
 
       // Re-compute stats to ensure calculation do not affect hash
-      expectedRunResult.extendedStats = activityComputer.compute();
+      expectedRunResult.extendedStats = activityComputer.compute(smoothAltitude);
 
       // When
       const hash = BaseConnector.activityHash(expectedRunResult);
