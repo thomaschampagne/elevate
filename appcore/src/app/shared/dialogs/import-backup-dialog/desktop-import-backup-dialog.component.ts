@@ -8,6 +8,8 @@ import { ImportBackupDialogComponent } from "./import-backup-dialog.component";
   styleUrls: ["./import-backup-dialog.component.scss"]
 })
 export class DesktopImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
+  public readonly fileExt: string = ".elv";
+
   constructor(@Inject(MatDialogRef) protected readonly dialogRef: MatDialogRef<DesktopImportBackupDialogComponent>) {
     super(dialogRef);
   }

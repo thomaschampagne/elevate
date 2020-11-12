@@ -4,15 +4,18 @@ import _ from "lodash";
 import { ElevateException } from "@elevate/shared/exceptions";
 
 @Component({ template: "" })
-export class ImportBackupDialogComponent implements OnInit {
+export abstract class ImportBackupDialogComponent implements OnInit {
   public static readonly MAX_WIDTH: string = "80%";
   public static readonly MIN_WIDTH: string = "40%";
 
+  public abstract readonly fileExt: string;
   public file: File;
   public displayName: string;
   public displaySize: string;
 
-  constructor(@Inject(MatDialogRef) protected readonly dialogRef: MatDialogRef<ImportBackupDialogComponent>) {}
+  protected constructor(
+    @Inject(MatDialogRef) protected readonly dialogRef: MatDialogRef<ImportBackupDialogComponent>
+  ) {}
 
   public ngOnInit(): void {
     this.file = null;

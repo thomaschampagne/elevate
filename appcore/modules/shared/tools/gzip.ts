@@ -17,17 +17,17 @@ export class Gzip {
   }
 
   /**
-   * Gzip compress an object to binary
+   * Gzip compress an object to bytes array
    */
-  public static pack(object: string): string {
-    return gzip(object, { to: "string" });
+  public static packAsBytes<T>(object: T): Uint8Array {
+    return gzip(JSON.stringify(object));
   }
 
   /**
-   * Gzip decompress binary to an object
+   * Gzip decompress an object to bytes array
    */
-  public static unpack(binary: string): string {
-    return ungzip(binary, { to: "string" });
+  public static unpackFromBytes<T>(bytes: Uint8Array): T {
+    return JSON.parse(ungzip(bytes, { to: "string" }));
   }
 
   /**

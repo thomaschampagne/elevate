@@ -51,7 +51,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   /**
    * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
    */
-  public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "7.0.0-0.alpha";
+  public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "7.0.0-3.alpha";
   public syncEvents$: Subject<SyncEvent>;
   public syncSubscription: Subscription;
   public currentConnectorType: ConnectorType;

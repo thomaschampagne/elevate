@@ -4,7 +4,6 @@ import LokiIndexedAdapter from "lokijs/src/loki-indexed-adapter";
 import { DesktopDumpModel } from "../../models/dumps/desktop-dump.model";
 import { LoggerService } from "../../services/logging/logger.service";
 import { Inject, Injectable } from "@angular/core";
-import { Gzip } from "@elevate/shared/tools";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
 import { AppUsage } from "../../models/app-usage.model";
 
@@ -27,12 +26,8 @@ export class DesktopDataStore<T extends {}> extends DataStore<T> {
       return collection;
     });
 
-    const databaseSerialized = JSON.stringify(cleanedDump);
-
-    const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel(versionFlag, Gzip.pack(databaseSerialized));
-
-    const blob = new Blob([desktopDumpModel.serialize()], { type: "application/gzip" });
-
+    const desktopDumpModel: DesktopDumpModel = new DesktopDumpModel(versionFlag, cleanedDump);
+    const blob = new Blob([desktopDumpModel.zip()], { type: "application/gzip" });
     return Promise.resolve(blob);
   }
 
@@ -42,8 +37,7 @@ export class DesktopDataStore<T extends {}> extends DataStore<T> {
     });
 
     return this.saveDataStore().then(() => {
-      const inflatedDatabases = Gzip.unpack(dump.gzipData);
-      const dumpedCollections: Collection<any>[] = JSON.parse(inflatedDatabases);
+      const dumpedCollections: Collection<any>[] = dump.databaseDump as Collection<any>[];
 
       dumpedCollections.forEach(collectionDump => {
         const collection = this.db.getCollection(collectionDump.name) || this.db.addCollection(collectionDump.name);

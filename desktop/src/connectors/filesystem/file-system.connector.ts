@@ -426,7 +426,7 @@ export class FileSystemConnector extends BaseConnector {
 
                             // Gunzip stream as base64
                             const compressedStream = activityStreamsModel
-                              ? ActivityStreamsModel.inflate(activityStreamsModel)
+                              ? ActivityStreamsModel.deflate(activityStreamsModel)
                               : null;
 
                             // Notify the new SyncedActivityModel

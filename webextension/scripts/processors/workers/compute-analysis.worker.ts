@@ -19,6 +19,6 @@ onmessage = (mainThreadEvent: MessageEvent) => {
     threadMessage.activitySourceData
   );
 
-  const result: AnalysisDataModel = analysisComputer.compute();
+  const result: AnalysisDataModel = analysisComputer.compute(true);
   postMessage(result);
 };

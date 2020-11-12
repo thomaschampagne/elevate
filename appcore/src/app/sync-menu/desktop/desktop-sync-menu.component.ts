@@ -21,6 +21,7 @@ import { DesktopImportBackupDialogComponent } from "../../shared/dialogs/import-
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
 import { DesktopAppService } from "../../shared/services/app-service/impl/desktop-app.service";
+import { LoggerService } from "../../shared/services/logging/logger.service";
 
 @Component({
   selector: "app-desktop-sync-menu",
@@ -81,7 +82,8 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
     @Inject(SyncService) protected readonly desktopSyncService: DesktopSyncService,
     @Inject(MatDialog) protected readonly dialog: MatDialog,
     @Inject(ElectronService) protected readonly electronService: ElectronService,
-    @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar
+    @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     super(desktopAppService, router, desktopSyncService, dialog, snackBar);
     this.mostRecentConnectorSyncedType = null;
@@ -121,27 +123,25 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
         });
 
         const reader = new FileReader(); // Reading file, when load, import it
-        reader.readAsText(file);
+        reader.readAsArrayBuffer(file);
         reader.onload = (event: Event) => {
-          const serializedDumpModel = (event.target as IDBRequest).result;
-          if (serializedDumpModel) {
-            if (serializedDumpModel.match(/pluginVersion/g)) {
-              importingDialog.close();
-              this.snackBar.open("Web extension backups are not compatible with desktop app.", "Close");
-              return;
+          const dump = (event.target as IDBRequest).result;
+          if (dump) {
+            try {
+              const desktopDumpModel: DesktopDumpModel = DesktopDumpModel.unzip(dump);
+              this.desktopSyncService.import(desktopDumpModel).then(
+                () => {
+                  importingDialog.close();
+                  window.location.reload();
+                },
+                error => {
+                  importingDialog.close();
+                  this.snackBar.open(error, "Close");
+                }
+              );
+            } catch (err) {
+              this.snackBar.open("Backup format is not compatible with desktop app", "Close");
             }
-
-            const desktopDumpModel: DesktopDumpModel = DesktopDumpModel.deserialize(serializedDumpModel);
-            this.desktopSyncService.import(desktopDumpModel).then(
-              () => {
-                importingDialog.close();
-                window.location.reload();
-              },
-              error => {
-                importingDialog.close();
-                this.snackBar.open(error, "Close");
-              }
-            );
           }
         };
       }

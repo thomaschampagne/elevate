@@ -3,7 +3,7 @@
   <div *ngIf="!file">
     <button (click)="fileInput.click()" color="primary" mat-stroked-button>
       Choose backup file
-      <input #fileInput (change)="onFileSelected($event.target.files[0])" [hidden]="true" type="file"/>
+      <input #fileInput (change)="onFileSelected($event.target.files[0])" [hidden]="true" type="file" accept="{{fileExt}}"/>
     </button>
   </div>
 

@@ -9,6 +9,8 @@ import { ImportBackupDialogComponent } from "./import-backup-dialog.component";
   styleUrls: ["./import-backup-dialog.component.scss"]
 })
 export class ExtensionImportBackupDialogComponent extends ImportBackupDialogComponent implements OnInit {
+  public readonly fileExt: string = ".json";
+
   constructor(@Inject(MatDialogRef) protected readonly dialogRef: MatDialogRef<ExtensionImportBackupDialogComponent>) {
     super(dialogRef);
   }

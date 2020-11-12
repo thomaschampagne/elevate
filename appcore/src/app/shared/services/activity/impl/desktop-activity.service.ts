@@ -120,7 +120,7 @@ export class DesktopActivityService extends ActivityService {
       })
       .then(compressedStreamModel => {
         if (compressedStreamModel) {
-          streams = ActivityStreamsModel.deflate(compressedStreamModel.data);
+          streams = ActivityStreamsModel.inflate(compressedStreamModel.data);
         }
         return this.compute(syncedActivityModel, userSettingsModel, athleteSnapshot, streams).then(
           newSyncedActivityModel => {

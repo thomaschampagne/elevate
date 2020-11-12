@@ -167,7 +167,7 @@ describe("DesktopActivityService", () => {
       const streamGetByIdSpy = spyOn(desktopActivityService.streamsDao, "getById").and.returnValue(
         Promise.resolve(compressedStreamModel)
       );
-      const deflateCompressedStreamSpy = spyOn(ActivityStreamsModel, "deflate").and.returnValue(streams);
+      const inflateCompressedStreamSpy = spyOn(ActivityStreamsModel, "inflate").and.returnValue(streams);
       const selfComputeSpy = spyOn(desktopActivityService, "compute").and.callThrough();
       const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(
         Promise.resolve(expectedSyncedActivityModel)
@@ -190,8 +190,8 @@ describe("DesktopActivityService", () => {
           expect(athleteSnapshotResolveSpy).toHaveBeenCalledWith(new Date(expectedSyncedActivityModel.start_time));
           expect(streamGetByIdSpy).toHaveBeenCalledTimes(1);
           expect(streamGetByIdSpy).toHaveBeenCalledWith(expectedSyncedActivityModel.id);
-          expect(deflateCompressedStreamSpy).toHaveBeenCalledTimes(1);
-          expect(deflateCompressedStreamSpy).toHaveBeenCalledWith(compressedStreamModel.data);
+          expect(inflateCompressedStreamSpy).toHaveBeenCalledTimes(1);
+          expect(inflateCompressedStreamSpy).toHaveBeenCalledWith(compressedStreamModel.data);
           expect(selfComputeSpy).toHaveBeenCalledTimes(1);
           expect(sendMessageSpy).toHaveBeenCalledTimes(1);
           expect(sendMessageSpy).toHaveBeenCalledWith(expectedFlaggedIpcMessage);
@@ -244,7 +244,7 @@ describe("DesktopActivityService", () => {
       const streamGetByIdSpy = spyOn(desktopActivityService.streamsDao, "getById").and.returnValue(
         Promise.resolve(compressedStreamModel)
       );
-      const deflateCompressedStreamSpy = spyOn(ActivityStreamsModel, "deflate").and.returnValue(streams);
+      const inflateCompressedStreamSpy = spyOn(ActivityStreamsModel, "inflate").and.returnValue(streams);
       const selfComputeSpy = spyOn(desktopActivityService, "compute").and.callThrough();
       const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(
         Promise.resolve(expectedSyncedActivityModel)
@@ -267,7 +267,7 @@ describe("DesktopActivityService", () => {
           expect(athleteSnapshotResolveSpy).toHaveBeenCalledWith(new Date(expectedSyncedActivityModel.start_time));
           expect(streamGetByIdSpy).toHaveBeenCalledTimes(1);
           expect(streamGetByIdSpy).toHaveBeenCalledWith(expectedSyncedActivityModel.id);
-          expect(deflateCompressedStreamSpy).not.toHaveBeenCalled();
+          expect(inflateCompressedStreamSpy).not.toHaveBeenCalled();
           expect(selfComputeSpy).toHaveBeenCalledTimes(1);
           expect(sendMessageSpy).toHaveBeenCalledTimes(1);
           expect(sendMessageSpy).toHaveBeenCalledWith(expectedFlaggedIpcMessage);
