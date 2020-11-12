@@ -6,7 +6,7 @@ import { ConnectorsComponent } from "../connectors.component";
 import { StravaConnectorService } from "../services/strava-connector.service";
 import moment from "moment";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
-import { ElectronService } from "../../shared/services/electron/electron.service";
+import { ElectronService } from "../../desktop/electron/electron.service";
 import { adjectives, animals, colors, names, uniqueNamesGenerator } from "unique-names-generator";
 import _ from "lodash";
 import { MatDialog } from "@angular/material/dialog";

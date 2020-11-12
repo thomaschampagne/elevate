@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@angular/core";
 import _ from "lodash";
 import { ChildProcess } from "child_process";
-import { LoggerService } from "../logging/logger.service";
+import { LoggerService } from "../../shared/services/logging/logger.service";
 import { Platform } from "@elevate/shared/enums";
 
 declare let window: ElectronWindow;

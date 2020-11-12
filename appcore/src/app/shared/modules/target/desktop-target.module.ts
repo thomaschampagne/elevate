@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { ElectronService } from "../../services/electron/electron.service";
+import { ElectronService } from "../../../desktop/electron/electron.service";
 import { IpcMessagesReceiver } from "../../../desktop/ipc-messages/ipc-messages-receiver.service";
 import { IpcMessagesSender } from "../../../desktop/ipc-messages/ipc-messages-sender.service";
 import { DesktopMigrationService } from "../../../desktop/migration/desktop-migration.service";

@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { ConnectorsComponent } from "../connectors.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { ElectronService } from "../../shared/services/electron/electron.service";
+import { ElectronService } from "../../desktop/electron/electron.service";
 import { ConnectorType, FileSystemConnectorInfo } from "@elevate/shared/sync";
 import { FileSystemConnectorInfoService } from "../../shared/services/file-system-connector-info/file-system-connector-info.service";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";

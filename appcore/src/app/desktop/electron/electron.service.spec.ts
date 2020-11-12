@@ -2,12 +2,12 @@ import { TestBed } from "@angular/core/testing";
 
 import { ElectronService } from "./electron.service";
 import { noop } from "rxjs";
-import { CoreModule } from "../../../core/core.module";
-import { SharedModule } from "../../shared.module";
-import { DataStore } from "../../data-store/data-store";
-import { TestingDataStore } from "../../data-store/testing-datastore.service";
+import { CoreModule } from "../../core/core.module";
+import { SharedModule } from "../../shared/shared.module";
+import { DataStore } from "../../shared/data-store/data-store";
+import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import { Platform } from "@elevate/shared/enums";
-import { TargetModule } from "../../modules/target/desktop-target.module";
+import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 
 describe("ElectronService", () => {
   let service: ElectronService;

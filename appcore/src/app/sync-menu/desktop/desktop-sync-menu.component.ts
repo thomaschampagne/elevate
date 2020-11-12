@@ -16,7 +16,7 @@ import _ from "lodash";
 import { ConnectorSyncDateTime } from "@elevate/shared/models";
 import { ConnectorType } from "@elevate/shared/sync";
 import { ElevateException } from "@elevate/shared/exceptions";
-import { ElectronService } from "../../shared/services/electron/electron.service";
+import { ElectronService } from "../../desktop/electron/electron.service";
 import { DesktopImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/desktop-import-backup-dialog.component";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";

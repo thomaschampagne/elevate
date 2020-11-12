@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { VersionsProvider } from "../shared/services/versions/versions-provider";
-import { ElectronService } from "../shared/services/electron/electron.service";
+import { ElectronService } from "../desktop/electron/electron.service";
 import { TopBarComponent } from "./top-bar.component";
 
 @Component({

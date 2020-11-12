@@ -32,7 +32,7 @@ import { FileSystemConnectorInfoService } from "../../file-system-connector-info
 import { IpcMessagesSender } from "../../../../desktop/ipc-messages/ipc-messages-sender.service";
 import { DataStore } from "../../../data-store/data-store";
 import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.service";
-import { ElectronService } from "../../electron/electron.service";
+import { ElectronService } from "../../../../desktop/electron/electron.service";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 // TODO Handle errors cases (continue or not the sync...)

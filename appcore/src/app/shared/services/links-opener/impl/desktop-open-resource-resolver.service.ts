@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
 import { OpenResourceResolver } from "../open-resource-resolver";
-import { ElectronService } from "../../electron/electron.service";
+import { ElectronService } from "../../../../desktop/electron/electron.service";
 import { ActivityService } from "../../activity/activity.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";

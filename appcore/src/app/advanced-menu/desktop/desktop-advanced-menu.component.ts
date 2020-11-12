@@ -7,7 +7,7 @@ import { AthleteService } from "../../shared/services/athlete/athlete.service";
 import { AdvancedMenuComponent } from "../advanced-menu.component";
 import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
-import { ElectronService } from "../../shared/services/electron/electron.service";
+import { ElectronService } from "../../desktop/electron/electron.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
 import { UserSettings } from "@elevate/shared/models";

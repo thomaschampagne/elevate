@@ -2,7 +2,7 @@ import { Component, Inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
-import { ElectronService } from "../shared/services/electron/electron.service";
+import { ElectronService } from "../desktop/electron/electron.service";
 import { AppMoreMenuComponent } from "./app-more-menu.component";
 
 @Component({

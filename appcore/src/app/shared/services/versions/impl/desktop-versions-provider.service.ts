@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { PropertiesDao } from "../../../dao/properties/properties.dao";
-import { ElectronService } from "../../electron/electron.service";
+import { ElectronService } from "../../../../desktop/electron/electron.service";
 import { VersionsProvider } from "../versions-provider";
 import { GhRelease } from "../gh-release.model";
 import { MatDialog } from "@angular/material/dialog";

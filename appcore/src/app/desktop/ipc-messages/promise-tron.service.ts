@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@angular/core";
-import { ElectronService } from "../../shared/services/electron/electron.service";
+import { ElectronService } from "../electron/electron.service";
 import { IpcRequest, PromiseTron, PromiseTronReply } from "promise-tron";
 import { IPromiseTron } from "./promise-tron.interface";
 

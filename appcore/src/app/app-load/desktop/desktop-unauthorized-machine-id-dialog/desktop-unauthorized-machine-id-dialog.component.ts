@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { ElectronService } from "../../../shared/services/electron/electron.service";
+import { ElectronService } from "../../../desktop/electron/electron.service";
 import { VersionsProvider } from "../../../shared/services/versions/versions-provider";
 
 @Component({
