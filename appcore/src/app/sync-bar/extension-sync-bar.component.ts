@@ -9,7 +9,9 @@ import { ExtensionSyncService } from "../shared/services/sync/impl/extension-syn
     <div class="app-sync-bar">
       <div fxLayout="row" fxLayoutAlign="space-between center" class="ribbon">
         <div fxLayout="column" fxLayoutAlign="center start">
-          <span fxFlex class="mat-body-1">A synchronization is currently running into the next browser tab.</span>
+          <span fxFlex class="mat-body-1">
+            A sync is running on next tab (don't close it). You may need to reload this app once sync is done.
+          </span>
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between center">
           <button mat-icon-button (click)="onActionClose()">
