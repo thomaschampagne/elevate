@@ -45,7 +45,6 @@ describe("ActivitiesSynchronize", () => {
     expect(foundBack).toBeDefined();
     expect(foundBack.name).toEqual("New_Name");
     expect(foundBack.type).toEqual("Ride");
-    expect(foundBack.display_type).toEqual("Ride");
     expect(rawPageOfActivities.length).toEqual(sourceCount);
     done();
   });
@@ -86,11 +85,9 @@ describe("ActivitiesSynchronize", () => {
     let findWhere: any = _.find(changes.edited, { id: 799672885 });
     expect(findWhere.name).toEqual("Run comeback");
     expect(findWhere.type).toEqual("Run");
-    expect(findWhere.display_type).toEqual("Run");
     findWhere = _.find(changes.edited, { id: 708752345 });
     expect(findWhere.name).toEqual("MTB @ Bastille");
     expect(findWhere.type).toEqual("Ride");
-    expect(findWhere.display_type).toEqual("Ride");
 
     expect(ActivitiesSynchronize.findAddedAndEditedActivities(null, null)).not.toBeNull();
 
@@ -121,7 +118,7 @@ describe("ActivitiesSynchronize", () => {
     activitiesSynchronize.appendGlobalActivitiesChanges({
       added: [4, 5],
       deleted: [],
-      edited: [{ id: 6, name: "rideName", type: ElevateSport.Ride, display_type: "Ride" }]
+      edited: [{ id: 6, name: "rideName", type: ElevateSport.Ride }]
     });
     expect(activitiesSynchronize.activitiesChanges).not.toBeNull();
     expect(activitiesSynchronize.activitiesChanges.added.length).toEqual(4);
@@ -133,12 +130,11 @@ describe("ActivitiesSynchronize", () => {
       added: [5, 10, 11],
       deleted: [15, 16],
       edited: [
-        { id: 6, name: "rideName", type: ElevateSport.Ride, display_type: "Ride" },
+        { id: 6, name: "rideName", type: ElevateSport.Ride },
         {
           id: 22,
           name: "Run...",
-          type: ElevateSport.Run,
-          display_type: "Run"
+          type: ElevateSport.Run
         }
       ]
     });

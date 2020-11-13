@@ -184,7 +184,6 @@ describe("YearProgressService", () => {
       fakeWalkActivity.id = 99;
       fakeWalkActivity.name = "Walking";
       fakeWalkActivity.type = ElevateSport.Walk;
-      fakeWalkActivity.display_type = "Walk";
       fakeWalkActivity.start_time = moment("2016-06-06", "YYYY-MM-DD").toISOString();
       fakeWalkActivity.distance_raw = 3000;
       fakeWalkActivity.moving_time_raw = 3600;

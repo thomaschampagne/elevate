@@ -17,7 +17,6 @@ export class MultipleActivityProcessor {
     "id",
     "name",
     "type",
-    "display_type",
     "private",
     "bike_id",
     "start_time",

@@ -85,7 +85,7 @@ export class ActivitiesSummaryModifier extends AbstractModifier {
           movingTime: number = data.moving_time_raw,
           elevation: number = data.elevation_gain_raw * elevationUnitRatio,
           calories: number = data.calories || 0,
-          type: number = data.display_type,
+          type: number = data.type,
           summary: any;
 
         if (!(summary = activityTypes[type])) {

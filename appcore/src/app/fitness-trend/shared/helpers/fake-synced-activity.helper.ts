@@ -20,7 +20,6 @@ export class FakeSyncedActivityHelper {
     fakeActivity.athleteSnapshot = athleteSnapshot;
     fakeActivity.name = name;
     fakeActivity.type = type;
-    fakeActivity.display_type = type;
     fakeActivity.start_time = moment(dateStr, "YYYY-MM-DD").toISOString();
     fakeActivity.distance_raw = 30000;
     fakeActivity.moving_time_raw = 3600;

@@ -1102,7 +1102,6 @@ describe("FileSystemConnector", () => {
         // Then
         expect(bareActivity.id).toEqual(expectedId);
         expect(bareActivity.type).toEqual(ElevateSport.Ride);
-        expect(bareActivity.display_type).toEqual(ElevateSport.Ride);
         expect(bareActivity.name).toEqual(expectedName);
         expect(bareActivity.start_time).toEqual(startISODate);
         expect(bareActivity.end_time).toEqual(endISODate);
@@ -1880,7 +1879,6 @@ describe("FileSystemConnector", () => {
         id: "fakeId",
         name: "Fake name",
         type: ElevateSport.Ride,
-        display_type: "Cycling",
         start_time: "2020-10-28T20:46:48.547Z",
         end_time: "2020-10-28T22:46:48.547Z",
         distance_raw: 61000,
@@ -1992,7 +1990,6 @@ describe("FileSystemConnector", () => {
         id: "fakeId",
         name: "Fake name",
         type: ElevateSport.Ride,
-        display_type: "Cycling",
         start_time: "2020-10-28T20:46:48.547Z",
         end_time: "2020-10-28T22:46:48.547Z",
         distance_raw: 61000,
@@ -2025,7 +2022,6 @@ describe("FileSystemConnector", () => {
         id: activity.id,
         commute: activity.commute,
         calories: activity.calories,
-        display_type: activity.display_type,
         start_timestamp: activity.start_timestamp,
         name: activity.name,
         extendedStats: activity.extendedStats,

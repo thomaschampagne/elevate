@@ -109,7 +109,7 @@ export class ActivitiesSynchronize {
   ): ActivitiesChangesModel {
     const added: number[] = [];
     const deleted: number[] = [];
-    const edited: Array<{ id: number; name: string; type: ElevateSport; display_type: string }> = [];
+    const edited: Array<{ id: number; name: string; type: ElevateSport }> = [];
 
     if (_.isNull(syncedActivities) || _.isUndefined(syncedActivities) || !syncedActivities) {
       syncedActivities = [];
@@ -129,8 +129,7 @@ export class ActivitiesSynchronize {
             edited.push({
               id: foundSyncedActivity.id as number,
               name: rawActivity.name,
-              type: rawActivity.type as ElevateSport,
-              display_type: rawActivity.display_type
+              type: rawActivity.type as ElevateSport
             });
           }
         } else {
@@ -173,7 +172,7 @@ export class ActivitiesSynchronize {
   ): ActivitiesChangesModel {
     const added: number[] = [];
     const deleted: number[] = [];
-    const edited: Array<{ id: number; name: string; type: ElevateSport; display_type: string }> = [];
+    const edited: Array<{ id: number; name: string; type: ElevateSport }> = [];
 
     _.forEach(syncedActivities, (syncedActivityModel: SyncedActivityModel) => {
       // Seek for activity in just interrogated pages
@@ -949,13 +948,13 @@ export class ActivitiesSynchronize {
 
   public applyEditedActivitiesChanges(
     syncedActivitiesStored: SyncedActivityModel[],
-    edited: Array<{ id: number; name: string; type: ElevateSport; display_type: string }>
+    edited: Array<{ id: number; name: string; type: ElevateSport }>
   ): SyncedActivityModel[] {
     _.forEach(edited, editData => {
       const activityToEdit: SyncedActivityModel = _.find(syncedActivitiesStored, { id: editData.id });
       activityToEdit.name = editData.name;
       activityToEdit.type = editData.type;
-      activityToEdit.display_type = editData.display_type;
+      activityToEdit.type = editData.type;
     });
     return syncedActivitiesStored;
   }

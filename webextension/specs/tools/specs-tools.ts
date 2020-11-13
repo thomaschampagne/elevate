@@ -21,6 +21,5 @@ export let editActivityFromArray = (
   const a: any = _.find(fromArray, predicate);
   a.name = newName;
   a.type = newType;
-  a.display_type = newType;
   return fromArray;
 };

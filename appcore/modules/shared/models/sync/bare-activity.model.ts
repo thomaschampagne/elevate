@@ -5,7 +5,6 @@ export class BareActivityModel {
   public id: number | string;
   public name: string;
   public type: ElevateSport;
-  public display_type: string;
   public start_time: string;
   public end_time: string;
   public distance_raw: number;

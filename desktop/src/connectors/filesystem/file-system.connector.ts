@@ -542,7 +542,6 @@ export class FileSystemConnector extends BaseConnector {
     bareActivityModel.id = Hash.apply(sportsLibActivity.startDate.toISOString());
     const elevateSportResult = this.convertToElevateSport(sportsLibActivity);
     bareActivityModel.type = elevateSportResult.type;
-    bareActivityModel.display_type = bareActivityModel.type;
     bareActivityModel.name =
       FileSystemConnector.HumanizedDayMoment.resolve(sportsLibActivity.startDate) + " " + bareActivityModel.type;
 

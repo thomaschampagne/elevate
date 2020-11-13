@@ -74,7 +74,6 @@ export class YearProgressActivitiesFixture {
         syncedActivityModel.id = parseInt(currentMoment.year() + "" + currentMoment.dayOfYear(), 10);
         syncedActivityModel.name = type + " activity" + (commute ? " (commute)" : "");
         syncedActivityModel.type = type;
-        syncedActivityModel.display_type = type;
         syncedActivityModel.start_time = currentMoment.toISOString();
         syncedActivityModel.distance_raw = distanceRaw;
         syncedActivityModel.moving_time_raw = time;

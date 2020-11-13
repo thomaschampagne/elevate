@@ -625,23 +625,19 @@ describe("ActivitiesSynchronize", () => {
           let ride: SyncedActivityModel = _.find(syncResult.syncedActivities, { id: 707356065 }); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
           expect(ride.name).toEqual("Prends donc un velo!");
           expect(ride.type).toEqual("Ride");
-          expect(ride.display_type).toEqual("Ride");
 
           let virtualRide: SyncedActivityModel = _.find(syncResult.syncedActivities, { id: 427606185 }); // Page 1, "First Zwift", old "1st zwift ride"
           expect(virtualRide.name).toEqual("First Zwift");
           expect(virtualRide.type).toEqual("VirtualRide");
-          expect(virtualRide.display_type).toEqual("VirtualRide");
 
           // Check in stub
           ride = _.find(CHROME_STORAGE_STUB.syncedActivities, { id: 707356065 }); // Page 1, "Prends donc un velo!", old "Je suis un gros lent !"
           expect(ride.name).toEqual("Prends donc un velo!");
           expect(ride.type).toEqual("Ride");
-          expect(ride.display_type).toEqual("Ride");
 
           virtualRide = _.find(CHROME_STORAGE_STUB.syncedActivities, { id: 427606185 }); // Page 1, "First Zwift", old "1st zwift ride"
           expect(virtualRide.name).toEqual("First Zwift");
           expect(virtualRide.type).toEqual("VirtualRide");
-          expect(virtualRide.display_type).toEqual("VirtualRide");
 
           done();
         },
@@ -796,12 +792,10 @@ describe("ActivitiesSynchronize", () => {
         let activity: SyncedActivityModel = _.find(CHROME_STORAGE_STUB.syncedActivities, { id: 707356065 });
         expect(activity.name).toEqual("Prends donc un velo!");
         expect(activity.type).toEqual("Ride");
-        expect(activity.display_type).toEqual("Ride");
 
         activity = _.find(CHROME_STORAGE_STUB.syncedActivities, { id: 372761597 });
         expect(activity.name).toEqual("Rodage plaquettes new name");
         expect(activity.type).toEqual("EBike");
-        expect(activity.display_type).toEqual("EBike");
 
         // Check some added
         activity = _.find(CHROME_STORAGE_STUB.syncedActivities, { id: 723224273 });
@@ -1038,7 +1032,6 @@ describe("ActivitiesSynchronize", () => {
       });
       expect(activity.name).toEqual(newName);
       expect(activity.type).toEqual(newType);
-      expect(activity.display_type).toEqual(newType);
 
       done();
     });
@@ -1113,12 +1106,10 @@ describe("ActivitiesSynchronize", () => {
       let activity: SyncedActivityModel = _.find(CHROME_STORAGE_STUB.syncedActivities, { id: editedActivityId });
       expect(activity.name).toEqual(newName);
       expect(activity.type).toEqual(newType);
-      expect(activity.display_type).toEqual(newType);
 
       activity = _.find(CHROME_STORAGE_STUB.syncedActivities, { id: editedActivityId2 });
       expect(activity.name).toEqual(newName2);
       expect(activity.type).toEqual(newType2);
-      expect(activity.display_type).toEqual(newType2);
 
       activity = _.find(CHROME_STORAGE_STUB.syncedActivities, { id: addedActivityId });
       expect(activity).not.toBeNull();
