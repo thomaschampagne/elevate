@@ -52,14 +52,14 @@
         </div>
         <div fxLayout="row" fxLayoutAlign="start start">
           <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileConnectorInfo.extractArchiveFiles"
-                        matTooltip="Activities found in 'zip, rar, 7z, tar, gz, bz2, zipx or xz' files will be extracted into the scan directory. Use case: Strava.com activities backup.">
+                        matTooltip="Activities found in 'zip, 7z, tar, gz, bz2, zipx or xz' files will be extracted into the scan directory. Use case: Strava.com activities backup.">
             Extract activities from archives files *
           </mat-checkbox>
           <div fxFlex="3"></div>
           <mat-checkbox (change)="saveChanges()"
                         [(ngModel)]="fileConnectorInfo.deleteArchivesAfterExtract"
                         [disabled]="!fileConnectorInfo.extractArchiveFiles"
-                        matTooltip="Once activities have been extracted from a 'zip, rar, 7z, tar, gz, bz2, zipx or xz' file, the archive file will be removed from scan directory">
+                        matTooltip="Once activities have been extracted from a 'zip, 7z, tar, gz, bz2, zipx or xz' file, the archive file will be removed from scan directory">
             Delete archives when activities have been extracted from them (recommended) *
           </mat-checkbox>
         </div>

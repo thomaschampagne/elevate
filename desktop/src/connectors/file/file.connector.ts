@@ -52,6 +52,7 @@ import { inject, singleton } from "tsyringe";
 import { IpcMessagesSender } from "../../messages/ipc-messages.sender";
 import { Hash } from "../../tools/hash";
 import { sleep } from "@elevate/shared/tools";
+import { UnArchiver } from "./un-archiver";
 
 export enum ActivityFileType {
   GPX = "gpx",
@@ -211,24 +212,17 @@ export class FileConnector extends BaseConnector {
     { from: ActivityTypes.Yoga, to: ElevateSport.Yoga },
     { from: ActivityTypes.YogaPilates, to: ElevateSport.Yoga }
   ];
-  private static unPackerInstance: { unpack: (path: string, options: any, callback: (err: any) => void) => void };
 
   private fileConnectorConfig: FileConnectorConfig;
 
   constructor(
     @inject(AppService) protected readonly appService: AppService,
-    @inject(IpcMessagesSender) protected readonly ipcMessagesSender: IpcMessagesSender
+    @inject(IpcMessagesSender) protected readonly ipcMessagesSender: IpcMessagesSender,
+    @inject(UnArchiver) public readonly unArchiver: UnArchiver
   ) {
     super(appService, ipcMessagesSender);
     this.type = ConnectorType.FILE;
     this.enabled = FileConnector.ENABLED;
-  }
-
-  public static getAllUnPacker(): { unpack: (path: string, options: any, callback: (err: any) => void) => void } {
-    if (!this.unPackerInstance) {
-      this.unPackerInstance = require("all-unpacker");
-    }
-    return this.unPackerInstance;
   }
 
   public configure(fileConnectorConfig: FileConnectorConfig): this {
@@ -287,7 +281,7 @@ export class FileConnector extends BaseConnector {
         syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE, evtDesc));
         logger.info(evtDesc);
       });
-      prepareScanDirectory = this.scanDeflateActivitiesFromArchives(
+      prepareScanDirectory = this.scanInflateActivitiesFromArchives(
         this.fileConnectorConfig.info.sourceDirectory,
         this.fileConnectorConfig.info.deleteArchivesAfterExtract,
         deflateNotifier$,
@@ -850,77 +844,65 @@ export class FileConnector extends BaseConnector {
   }
 
   public deflateActivitiesFromArchive(archiveFilePath: string, deleteArchive: boolean = false): Promise<string[]> {
-    return new Promise((resolve, reject) => {
-      const fileName = path.basename(archiveFilePath);
-      const currentArchiveDir = path.dirname(archiveFilePath);
-      const archiveFileNameFingerPrint = Hash.apply(fileName, Hash.SHA1, { divide: 6 });
-      const extractDir = currentArchiveDir + "/" + archiveFileNameFingerPrint;
+    const fileName = path.basename(archiveFilePath);
+    const currentArchiveDir = path.dirname(archiveFilePath);
+    const archiveFileNameFingerPrint = Hash.apply(fileName, Hash.SHA1, { divide: 6 });
+    const extractDir = currentArchiveDir + "/" + archiveFileNameFingerPrint;
 
-      // Create extract directory
-      if (this.getFs().existsSync(extractDir)) {
-        this.getFs().rmdirSync(extractDir, { recursive: true });
-      }
-      this.getFs().mkdirSync(extractDir, { recursive: true });
+    // Create extract directory
+    if (this.getFs().existsSync(extractDir)) {
+      this.getFs().rmdirSync(extractDir, { recursive: true });
+    }
+    this.getFs().mkdirSync(extractDir, { recursive: true });
 
-      const options: any = {
-        targetDir: extractDir,
-        noDirectory: true,
-        quiet: true
-      };
+    return this.unArchiver
+      .unpack(archiveFilePath, extractDir)
+      .then(() => {
+        // When archive un-packaged
+        try {
+          const extractedActivityFiles = this.scanForActivities(extractDir, null, true);
+          const trackedNewPaths = [];
+          extractedActivityFiles.forEach(extractedActivityFile => {
+            const extractedFileName = path.basename(extractedActivityFile.location.path);
+            const extractedDirName = path.dirname(extractedActivityFile.location.path);
+            const relativeExtractedDirName = extractedDirName
+              .slice(currentArchiveDir.length + archiveFileNameFingerPrint.length + 1)
+              .replace(/\\/gm, "/");
+            const newActivityPath =
+              currentArchiveDir +
+              "/" +
+              archiveFileNameFingerPrint +
+              (relativeExtractedDirName ? "-" + Hash.apply(relativeExtractedDirName, Hash.SHA1, { divide: 6 }) : "") +
+              "-" +
+              extractedFileName;
+            this.getFs().renameSync(extractedActivityFile.location.path, newActivityPath);
+            trackedNewPaths.push(newActivityPath);
+          });
 
-      // Append resources path to unar exec (unarchiver) if app is packaged
-      if (this.appService.isPackaged && !this.appService.isLinux()) {
-        options.unar = this.appService.getResourceFolder() + "/app.asar.unpacked/node_modules/all-unpacker/unar";
-      }
-
-      FileConnector.getAllUnPacker().unpack(archiveFilePath, options, err => {
-        if (err) {
+          // Remove extract directory
           this.getFs().rmdirSync(extractDir, { recursive: true });
-          reject(err);
-        } else {
-          // When archive un-packaged
-          try {
-            const extractedActivityFiles = this.scanForActivities(extractDir, null, true);
-            const trackedNewPaths = [];
-            extractedActivityFiles.forEach(extractedActivityFile => {
-              const extractedFileName = path.basename(extractedActivityFile.location.path);
-              const extractedDirName = path.dirname(extractedActivityFile.location.path);
-              const relativeExtractedDirName = extractedDirName
-                .slice(currentArchiveDir.length + archiveFileNameFingerPrint.length + 1)
-                .replace(/\\/gm, "/");
-              const newActivityPath =
-                currentArchiveDir +
-                "/" +
-                archiveFileNameFingerPrint +
-                (relativeExtractedDirName ? "-" + Hash.apply(relativeExtractedDirName, Hash.SHA1, { divide: 6 }) : "") +
-                "-" +
-                extractedFileName;
-              this.getFs().renameSync(extractedActivityFile.location.path, newActivityPath);
-              trackedNewPaths.push(newActivityPath);
-            });
 
-            // Remove extract directory
-            this.getFs().rmdirSync(extractDir, { recursive: true });
-
-            if (deleteArchive) {
-              this.getFs().unlinkSync(archiveFilePath);
-            }
-
-            resolve(trackedNewPaths);
-          } catch (err) {
-            this.getFs().rmdirSync(extractDir, { recursive: true });
-            reject(err);
+          if (deleteArchive) {
+            this.getFs().unlinkSync(archiveFilePath);
           }
+
+          return Promise.resolve(trackedNewPaths);
+        } catch (err) {
+          this.getFs().rmdirSync(extractDir, { recursive: true });
+          return Promise.reject(err);
         }
+      })
+      .catch(err => {
+        this.getFs().rmdirSync(extractDir, { recursive: true });
+        return Promise.reject(err);
       });
-    });
   }
 
   /**
    *
-   * @return Observable of archive paths being deflated.
+   * @return Promise of archive paths being deflated.
    */
-  public scanDeflateActivitiesFromArchives(
+  public scanInflateActivitiesFromArchives(
     sourceDir: string,
     deleteArchives: boolean,
     deflateNotifier: Subject<string> = new Subject<string>(),
@@ -936,7 +918,7 @@ export class FileConnector extends BaseConnector {
             .isDirectory();
 
           if (recursive && isDirectory) {
-            return this.scanDeflateActivitiesFromArchives(
+            return this.scanInflateActivitiesFromArchives(
               sourceDir + "/" + file,
               deleteArchives,
               deflateNotifier,
@@ -946,9 +928,7 @@ export class FileConnector extends BaseConnector {
 
           if (!isDirectory) {
             const absolutePath = path.join(sourceDir, file);
-            const fileExtension = path.extname(file).slice(1);
-            const isArchiveFile = ["zip", "rar", "gz", "tar", "7z", "bz2", "zipx", "xz"].indexOf(fileExtension) !== -1;
-            if (isArchiveFile) {
+            if (UnArchiver.isArchiveFile(file)) {
               return this.deflateActivitiesFromArchive(absolutePath, deleteArchives).then(() => {
                 if (deflateNotifier) {
                   deflateNotifier.next(absolutePath);

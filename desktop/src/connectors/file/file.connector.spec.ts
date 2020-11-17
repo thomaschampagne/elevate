@@ -181,50 +181,12 @@ describe("FileConnector", () => {
       );
     });
 
-    it("should extract a compressed activity (delete archive = true)", done => {
-      // Given
-      const archiveFileName = "samples.tar.xz";
-      const archiveFileNameCopy = "samples-copy.tar.xz";
-      const archiveFilePath = compressedActivitiesPath + archiveFileName;
-      const archiveFilePathCopy = compressedActivitiesPath + archiveFileNameCopy;
-
-      // Create a copy
-      fs.copyFileSync(archiveFilePath, archiveFilePathCopy);
-      const unlinkSyncSpy = spyOn(fileConnector.getFs(), "unlinkSync").and.callThrough();
-      const deleteArchive = true;
-
-      // When
-      const promise: Promise<string[]> = fileConnector.deflateActivitiesFromArchive(archiveFilePathCopy, deleteArchive);
-
-      // Then
-      promise.then(
-        results => {
-          expect(results.length).toEqual(3);
-          expect(unlinkSyncSpy).toHaveBeenCalledWith(archiveFilePathCopy);
-          expect(fs.existsSync(archiveFilePathCopy)).toBeFalsy();
-          results.forEach(filePath => {
-            expect(fs.existsSync(filePath)).toBeTruthy();
-            fs.unlinkSync(filePath);
-            expect(fs.existsSync(filePath)).toBeFalsy();
-          });
-
-          done();
-        },
-        err => {
-          fs.unlinkSync(archiveFilePathCopy);
-          throw new Error(err);
-        }
-      );
-    });
-
     it("should reject on extraction error", done => {
       // Given
       const archiveFileName = "samples.zip";
       const archiveFilePath = compressedActivitiesPath + archiveFileName;
       const expectedErrorMessage = "Whoops an extraction error";
-      spyOn(FileConnector.getAllUnPacker(), "unpack").and.callFake((filePath, options, callback) => {
-        callback(expectedErrorMessage);
-      });
+      spyOn(fileConnector.unArchiver, "unpack").and.returnValue(Promise.reject(expectedErrorMessage));
       const deleteArchive = false;
 
       const rmdirSyncSpy = spyOn(fileConnector.getFs(), "rmdirSync").and.callThrough();
@@ -282,7 +244,7 @@ describe("FileConnector", () => {
       const deflateActivitiesInArchiveSpy = spyOn(fileConnector, "deflateActivitiesFromArchive").and.callThrough();
 
       // When
-      const promise: Promise<void> = fileConnector.scanDeflateActivitiesFromArchives(
+      const promise: Promise<void> = fileConnector.scanInflateActivitiesFromArchives(
         compressedActivitiesPath,
         deleteArchives,
         deflateNotifier,
@@ -296,12 +258,12 @@ describe("FileConnector", () => {
 
       promise.then(
         () => {
-          expect(deflateActivitiesInArchiveSpy).toHaveBeenCalledTimes(4); // 4 archives
-          expect(notifierNextSpy).toHaveBeenCalledTimes(4); // 4 archives
-          expect(unlinkSyncSpy).toHaveBeenCalledTimes(4); // 4 archives
+          expect(deflateActivitiesInArchiveSpy).toHaveBeenCalledTimes(3); // 3 archives
+          expect(notifierNextSpy).toHaveBeenCalledTimes(3); // 3 archives
+          expect(unlinkSyncSpy).toHaveBeenCalledTimes(3); // 3 archives
 
           const activityFiles = fileConnector.scanForActivities(compressedActivitiesPath, null, true);
-          expect(activityFiles.length).toEqual(12);
+          expect(activityFiles.length).toEqual(9);
           activityFiles.forEach(activityFile => {
             expect(fs.existsSync(activityFile.location.path)).toBeTruthy();
             unlinkSyncSpy.and.callThrough();
@@ -600,9 +562,9 @@ describe("FileConnector", () => {
 
       fileConnector = fileConnector.configure(fileConnectorConfig);
 
-      const scanDeflateActivitiesFromArchivesSpy = spyOn(
+      const scanInflateActivitiesFromArchivesSpy = spyOn(
         fileConnector,
-        "scanDeflateActivitiesFromArchives"
+        "scanInflateActivitiesFromArchives"
       ).and.callThrough();
       const scanForActivitiesSpy = spyOn(fileConnector, "scanForActivities").and.callThrough();
       const importFromGPXSpy = spyOn(SportsLib, "importFromGPX").and.callThrough();
@@ -635,7 +597,7 @@ describe("FileConnector", () => {
       // Then
       promise.then(
         () => {
-          expect(scanDeflateActivitiesFromArchivesSpy).toHaveBeenCalledWith(
+          expect(scanInflateActivitiesFromArchivesSpy).toHaveBeenCalledWith(
             activitiesLocalPath02,
             deleteArchivesAfterExtract,
             jasmine.any(Subject),
@@ -704,9 +666,9 @@ describe("FileConnector", () => {
 
       fileConnector = fileConnector.configure(fileConnectorConfig);
 
-      const scanDeflateActivitiesFromArchivesSpy = spyOn(
+      const scanInflateActivitiesFromArchivesSpy = spyOn(
         fileConnector,
-        "scanDeflateActivitiesFromArchives"
+        "scanInflateActivitiesFromArchives"
       ).and.callThrough();
       const scanForActivitiesSpy = spyOn(fileConnector, "scanForActivities").and.callThrough();
       const importFromGPXSpy = spyOn(SportsLib, "importFromGPX").and.callThrough();
@@ -739,7 +701,7 @@ describe("FileConnector", () => {
       // Then
       promise.then(
         () => {
-          expect(scanDeflateActivitiesFromArchivesSpy).toHaveBeenCalledWith(
+          expect(scanInflateActivitiesFromArchivesSpy).toHaveBeenCalledWith(
             activitiesLocalPath02,
             deleteArchivesAfterExtract,
             jasmine.any(Subject),
@@ -782,9 +744,9 @@ describe("FileConnector", () => {
 
       fileConnector = fileConnector.configure(fileConnectorConfig);
 
-      const scanDeflateActivitiesFromArchivesSpy = spyOn(
+      const scanInflateActivitiesFromArchivesSpy = spyOn(
         fileConnector,
-        "scanDeflateActivitiesFromArchives"
+        "scanInflateActivitiesFromArchives"
       ).and.callThrough();
       const scanForActivitiesSpy = spyOn(fileConnector, "scanForActivities").and.callThrough();
 
@@ -816,7 +778,7 @@ describe("FileConnector", () => {
       // Then
       promise.then(
         () => {
-          expect(scanDeflateActivitiesFromArchivesSpy).not.toBeCalled();
+          expect(scanInflateActivitiesFromArchivesSpy).not.toBeCalled();
           expect(scanForActivitiesSpy).toHaveBeenCalledWith(activitiesLocalPath02, syncDate, scanSubDirectories);
           expect(importFromGPXSpy).toHaveBeenCalledTimes(2);
           expect(importFromTCXSpy).toHaveBeenCalledTimes(1);
@@ -861,9 +823,9 @@ describe("FileConnector", () => {
 
       fileConnector = fileConnector.configure(fileConnectorConfig);
 
-      const scanDeflateActivitiesFromArchivesSpy = spyOn(
+      const scanInflateActivitiesFromArchivesSpy = spyOn(
         fileConnector,
-        "scanDeflateActivitiesFromArchives"
+        "scanInflateActivitiesFromArchives"
       ).and.callThrough();
       const scanForActivitiesSpy = spyOn(fileConnector, "scanForActivities").and.callThrough();
       const importFromGPXSpy = spyOn(SportsLib, "importFromGPX").and.callThrough();
@@ -897,7 +859,7 @@ describe("FileConnector", () => {
       // Then
       promise.then(
         () => {
-          expect(scanDeflateActivitiesFromArchivesSpy).toHaveBeenCalledWith(
+          expect(scanInflateActivitiesFromArchivesSpy).toHaveBeenCalledWith(
             activitiesLocalPath02,
             deleteArchivesAfterExtract,
             jasmine.any(Subject),
@@ -947,7 +909,7 @@ describe("FileConnector", () => {
       fileConnector = fileConnector.configure(fileConnectorConfig);
 
       spyOn(fileConnector, "findSyncedActivityModels").and.returnValue(Promise.resolve(null));
-      spyOn(fileConnector, "scanDeflateActivitiesFromArchives").and.callThrough();
+      spyOn(fileConnector, "scanInflateActivitiesFromArchives").and.callThrough();
       spyOn(fileConnector, "scanForActivities").and.callThrough();
       spyOn(SportsLib, "importFromGPX").and.callThrough();
       spyOn(SportsLib, "importFromTCX").and.callThrough();
@@ -990,7 +952,7 @@ describe("FileConnector", () => {
       fileConnector = fileConnector.configure(fileConnectorConfig);
 
       spyOn(fileConnector, "findSyncedActivityModels").and.returnValue(Promise.resolve(null));
-      spyOn(fileConnector, "scanDeflateActivitiesFromArchives").and.callThrough();
+      spyOn(fileConnector, "scanInflateActivitiesFromArchives").and.callThrough();
       spyOn(fileConnector, "scanForActivities").and.callThrough();
       spyOn(SportsLib, "importFromGPX").and.callThrough();
       spyOn(SportsLib, "importFromTCX").and.callThrough();
@@ -1471,7 +1433,7 @@ describe("FileConnector", () => {
         ].map(testData => prepareTestData(testData));
 
         // When, Then
-        activitiesTestData.forEach((testData, index) => {
+        activitiesTestData.forEach(testData => {
           const elevateSport = fileConnector.attemptDetectCommonSport(
             testData.distance,
             testData.duration,

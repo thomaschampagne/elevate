@@ -11,6 +11,7 @@ import { ConnectorType } from "@elevate/shared/sync";
 import moment from "moment";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 import { SyncService } from "../shared/services/sync/sync.service";
+import { environment } from "../../environments/environment";
 
 @Component({
   selector: "app-connectors",
@@ -55,7 +56,8 @@ export class ConnectorsComponent implements OnInit {
     return this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
       if (
         syncState === SyncState.NOT_SYNCED &&
-        !sessionStorage.getItem(ConnectorsComponent.SESSION_FIRST_SYNC_MESSAGE_SEEN)
+        !sessionStorage.getItem(ConnectorsComponent.SESSION_FIRST_SYNC_MESSAGE_SEEN) &&
+        environment.production
       ) {
         const data: ConfirmDialogDataModel = {
           title: "Important: check your athlete settings before",
