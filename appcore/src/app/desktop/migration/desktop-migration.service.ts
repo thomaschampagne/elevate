@@ -6,8 +6,9 @@ import { MatDialog } from "@angular/material/dialog";
 import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 import { DataStore } from "../../shared/data-store/data-store";
-import { DESKTOP_MIGRATIONS, DesktopMigration } from "./desktop-migrations";
 import { VersionsProvider } from "../../shared/services/versions/versions-provider";
+import { DesktopMigration } from "./desktop-migrations.model";
+import { DesktopRegisteredMigrations } from "./desktop-registered-migrations";
 
 @Injectable()
 export class DesktopMigrationService {
@@ -114,19 +115,22 @@ export class DesktopMigrationService {
   public applyUpgrades(fromVersion: string, toVersion: string): Promise<void> {
     this.logger.info(`Applying upgrade(s) from ${fromVersion} to ${toVersion}`);
 
-    return this.getMigrations().reduce((previousMigrationDone: Promise<void>, migration: DesktopMigration) => {
-      return previousMigrationDone.then(() => {
-        if (semver.lt(fromVersion, migration.version)) {
-          this.logger.info(`Migrating to ${migration.version}: ${migration.description}`);
-          return migration.upgrade(this.db);
-        }
+    return this.getDesktopRegisteredMigrations().reduce(
+      (previousMigrationDone: Promise<void>, migration: DesktopMigration) => {
+        return previousMigrationDone.then(() => {
+          if (semver.lt(fromVersion, migration.version)) {
+            this.logger.info(`Migrating to ${migration.version}: ${migration.description}`);
+            return migration.upgrade(this.db);
+          }
 
-        return Promise.resolve();
-      });
-    }, Promise.resolve());
+          return Promise.resolve();
+        });
+      },
+      Promise.resolve()
+    );
   }
 
-  public getMigrations(): DesktopMigration[] {
-    return DESKTOP_MIGRATIONS;
+  public getDesktopRegisteredMigrations(): DesktopMigration[] {
+    return DesktopRegisteredMigrations.LIST;
   }
 }

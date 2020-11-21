@@ -27,6 +27,7 @@
       "app",
       "camelCase"
     ],
+    "class-name": false,
     "component-selector": [
       true,
       "element",

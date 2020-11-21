@@ -774,6 +774,39 @@ class Installer {
     return Promise.resolve();
   }
 
+  protected migrate_to_7_0_0_3(): Promise<void> {
+    if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "7.0.0-3")) {
+      console.log("Migrate to 7.0.0-3");
+      return new Promise<void>(resolve => {
+        chrome.storage.local.get(null, result => {
+          if (result && result.athlete && result.athlete.data && result.athlete.data[0]) {
+            const athlete = result.athlete.data[0];
+            if (athlete) {
+              athlete.firstName = null;
+              athlete.lastName = null;
+              athlete.birthYear = null;
+              athlete.practiceLevel = null;
+              athlete.sports = [];
+
+              result.athlete.data[0] = athlete;
+
+              // Update
+              chrome.storage.local.set(result, resolve);
+            } else {
+              resolve();
+            }
+          } else {
+            resolve();
+          }
+        });
+      });
+    } else {
+      console.log("Skip migrate to 7.0.0-3");
+    }
+
+    return Promise.resolve();
+  }
+
   protected handleUpdate(): Promise<void> {
     console.log("Updated from " + this.previousVersion + " to " + this.currentVersion);
 
@@ -825,6 +858,9 @@ class Installer {
       })
       .then(() => {
         return this.migrate_to_7_0_0_0();
+      })
+      .then(() => {
+        return this.migrate_to_7_0_0_3();
       })
       .catch(error => console.error(error));
   }

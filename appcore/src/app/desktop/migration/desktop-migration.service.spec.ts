@@ -3,7 +3,7 @@ import { TestBed } from "@angular/core/testing";
 import { DesktopMigrationService } from "./desktop-migration.service";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
-import { DesktopMigration } from "./desktop-migrations";
+import { DesktopMigration } from "./desktop-migrations.model";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import { VersionsProvider } from "../../shared/services/versions/versions-provider";
