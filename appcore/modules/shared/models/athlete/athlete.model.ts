@@ -1,18 +1,25 @@
 import { Gender } from "./gender.enum";
 import { AthleteSettingsModel, DatedAthleteSettingsModel } from "./athlete-settings";
 import { AbstractAthleteModel } from "./abstract-athlete.model";
+import { PracticeLevel } from "./athlete-level.enum";
+import { ElevateSport } from "../../enums";
 
 export class AthleteModel extends AbstractAthleteModel {
   public static readonly DEFAULT_MODEL: AthleteModel = new AthleteModel(
     Gender.MEN,
     AthleteModel.getDefaultDatedAthleteSettings()
   );
-  public gender: Gender;
-  public datedAthleteSettings: DatedAthleteSettingsModel[];
 
-  constructor(gender: Gender, datedAthleteSettings: DatedAthleteSettingsModel[]) {
+  constructor(
+    public gender: Gender,
+    public datedAthleteSettings: DatedAthleteSettingsModel[],
+    public firstName: string | null = null,
+    public lastName: string | null = null,
+    public birthYear: number | null = null,
+    public practiceLevel: PracticeLevel | null = null,
+    public sports: ElevateSport[] = []
+  ) {
     super();
-    this.gender = gender;
     this.datedAthleteSettings =
       !datedAthleteSettings || datedAthleteSettings.length === 0
         ? [DatedAthleteSettingsModel.DEFAULT_MODEL]

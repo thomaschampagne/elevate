@@ -24,10 +24,12 @@ import { MatTableModule } from "@angular/material/table";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
 
 @NgModule({
   imports: [
     MatButtonModule,
+    MatButtonToggleModule,
     MatSnackBarModule,
     MatCheckboxModule,
     MatSelectModule,
@@ -56,6 +58,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
   ],
   exports: [
     MatButtonModule,
+    MatButtonToggleModule,
     MatSnackBarModule,
     MatCheckboxModule,
     MatSelectModule,

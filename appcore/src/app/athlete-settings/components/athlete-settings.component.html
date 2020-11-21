@@ -1,21 +1,88 @@
 <!--Gender-->
 <mat-card *ngIf="(athleteModel && athleteModel.gender)" class="gender-card">
   <mat-card-title>
-    Gender
+    About You
   </mat-card-title>
   <mat-card-content>
-    <mat-form-field fxFill>
-      <mat-select [disabled]="appService.isSyncing"
-                  (selectionChange)="onGenderChanged()"
-                  [(ngModel)]="athleteModel.gender"
-                  aria-label="Gender">
-        <mat-option
-          *ngFor="let gender of GENDER_LIST;"
-          [value]="gender.type">
-          {{gender.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <form *ngIf="athleteModel" #athleteForm="ngForm">
+      <div fxLayout="row" fxLayoutAlign="start-between start">
+        <mat-form-field fxFlex="10">
+          <mat-select [disabled]="appService.isSyncing"
+                      (selectionChange)="onAthleteChanged()"
+                      [(ngModel)]="athleteModel.gender"
+                      placeholder="Gender"
+                      aria-label="Gender"
+                      name="gender"
+                      required>
+            <mat-option
+              *ngFor="let gender of GENDERS;"
+              [value]="gender.type">
+              {{gender.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div fxFlex="1"></div>
+        <mat-form-field fxFlex="10">
+          <mat-label>Birth Year</mat-label>
+          <mat-select (selectionChange)="onAthleteChanged()"
+                      [(ngModel)]="athleteModel.birthYear"
+                      placeholder="Birth Year"
+                      aria-label="Birth Year"
+                      name="birthYear"
+                      required>
+            <mat-option *ngFor="let year of generateBirthYears(120)" [value]="year">
+              {{year}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start-between start">
+        <mat-form-field fxFlex="21">
+          <mat-label>First Name</mat-label>
+          <input matInput [(ngModel)]="athleteModel.firstName" (change)="onAthleteChanged()" name="firstName" required>
+        </mat-form-field>
+        <div fxFlex="1"></div>
+        <mat-form-field fxFlex="30">
+          <mat-label>Last Name</mat-label>
+          <input matInput [(ngModel)]="athleteModel.lastName" (change)="onAthleteChanged()" name="lastName" required>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start-between start">
+        <mat-form-field fxFlex="21">
+          <mat-select (selectionChange)="onAthleteChanged()"
+                      [(ngModel)]="athleteModel.practiceLevel"
+                      placeholder="Practice Level"
+                      aria-label="Practice Level"
+                      name="practiceLevel"
+                      required>
+            <mat-option
+              *ngFor="let level of PRACTICE_LEVELS;"
+              [value]="level">
+              {{startCase(PracticeLevel[level].toLowerCase())}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div fxFlex="1"></div>
+        <mat-form-field fxFlex="30">
+          <mat-select multiple (selectionChange)="onAthleteChanged()"
+                      [(ngModel)]="athleteModel.sports"
+                      placeholder="Preferred Sports (up to {{MAX_SPORTS}})"
+                      aria-label="Preferred Sports (up to {{MAX_SPORTS}})"
+                      name="sports"
+                      required>
+            <mat-optgroup *ngFor="let sportCategory of elevateSportCategories;"
+                          [label]="sportCategory.label">
+              <mat-option
+                *ngFor="let sportKey of sportCategory.sportKeys;"
+                [value]="sportKey"
+                [disabled]="athleteModel.sports.length >= MAX_SPORTS && athleteModel.sports.indexOf(sportKey) === -1">
+                {{startCase(sportKey)}}
+              </mat-option>
+            </mat-optgroup>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
   </mat-card-content>
 </mat-card>
 
