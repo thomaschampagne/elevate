@@ -1,6 +1,6 @@
 @import "../styles/constant";
 
-.no-data div {
+.no-data {
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -9,8 +9,8 @@ mat-divider {
   margin: $default-margin;
 }
 
-#inputsSelection {
-  margin-bottom: 30px;
+.graph-table-card {
+  margin-top: 20px;
 }
 
 .expanded-button {
