@@ -253,7 +253,7 @@ describe("DesktopMigrationService", () => {
 
     const DESKTOP_MIGRATIONS: DesktopMigration[] = [fakeMigration01, fakeMigration02];
 
-    spyOn(service, "getMigrations").and.returnValue(DESKTOP_MIGRATIONS);
+    spyOn(service, "getDesktopRegisteredMigrations").and.returnValue(DESKTOP_MIGRATIONS);
 
     // When
     const promise = service.applyUpgrades(existingVersion, packageVersion);
