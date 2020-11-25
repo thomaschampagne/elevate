@@ -1,5 +1,3 @@
-import _ from "lodash";
-import moment from "moment";
 import { Component, Inject, OnInit } from "@angular/core";
 import { SyncMenuComponent } from "../sync-menu.component";
 import { Router } from "@angular/router";
@@ -12,7 +10,6 @@ import { ExtensionDumpModel } from "../../shared/models/dumps/extension-dump.mod
 import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { AppRoutes } from "../../shared/models/app-routes";
-import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
 import { ExtensionImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/extension-import-backup-dialog.component";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
@@ -22,45 +19,24 @@ import { ExtensionAppService } from "../../shared/services/app-service/impl/exte
   selector: "app-extension-sync-menu",
   template: `
     <div *ngIf="syncState !== null">
-      <button [disabled]="appService.isSyncing" mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
-        <mat-icon fontSet="material-icons-outlined" *ngIf="syncState === SyncState.NOT_SYNCED">
-          sync_disabled
-        </mat-icon>
-        <mat-icon fontSet="material-icons-outlined" *ngIf="syncState === SyncState.PARTIALLY_SYNCED">
-          sync_problem
-        </mat-icon>
-        <mat-icon fontSet="material-icons-outlined" *ngIf="syncState === SyncState.SYNCED"> sync</mat-icon>
-        <span *ngIf="syncState === SyncState.NOT_SYNCED"> Activities not synced </span>
-        <span *ngIf="syncState === SyncState.PARTIALLY_SYNCED"> Activities partially synced </span>
-        <span *ngIf="syncState === SyncState.SYNCED && syncDateMessage"> Synced {{ syncDateMessage }} </span>
-      </button>
+      <div class="dual-split-button">
+        <button
+          mat-button
+          color="primary"
+          (click)="syncMenuActions[0].action()"
+          matTooltip="{{ syncMenuActions[0]?.tooltip }}"
+        >
+          <mat-icon fontSet="material-icons-outlined">{{ syncMenuActions[0].icon }}</mat-icon>
+          {{ syncMenuActions[0].text }}
+        </button>
+        <button mat-icon-button color="primary" [matMenuTriggerFor]="syncMenu">
+          <mat-icon fontSet="material-icons-outlined">expand_more</mat-icon>
+        </button>
+      </div>
       <mat-menu #syncMenu="matMenu">
-        <!--Force full re-sync even of not first synced (to clean up any old history still stored)-->
-        <button mat-menu-item (click)="onSync(true, false)" *ngIf="syncState === SyncState.SYNCED">
-          <mat-icon fontSet="material-icons-outlined">update</mat-icon>
-          Sync recent activities
-        </button>
-        <button mat-menu-item (click)="onSync(false, syncState === SyncState.NOT_SYNCED)">
-          <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
-          <span *ngIf="syncState === SyncState.NOT_SYNCED">Sync</span>
-          <span *ngIf="syncState === SyncState.SYNCED">Sync all activities</span>
-          <span *ngIf="syncState === SyncState.PARTIALLY_SYNCED">Continue sync</span>
-        </button>
-        <button mat-menu-item (click)="onSync(false, true)" *ngIf="syncState !== SyncState.NOT_SYNCED">
-          <mat-icon fontSet="material-icons-outlined">redo</mat-icon>
-          Clear and re-sync activities
-        </button>
-        <button mat-menu-item (click)="onClearSyncedData()" *ngIf="syncState !== SyncState.NOT_SYNCED">
-          <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
-          Clear synced activities
-        </button>
-        <button mat-menu-item (click)="onSyncedBackupExport()" *ngIf="syncState === SyncState.SYNCED">
-          <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
-          Backup profile
-        </button>
-        <button mat-menu-item (click)="onSyncedBackupImport()">
-          <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
-          Restore profile
+        <button *ngFor="let menuAction of syncMenuActions.slice(1)" mat-menu-item (click)="menuAction.action()">
+          <mat-icon fontSet="material-icons-outlined">{{ menuAction.icon }}</mat-icon>
+          {{ menuAction.text }}
         </button>
       </mat-menu>
     </div>
@@ -78,18 +54,75 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
     super(extensionAppService, router, extensionSyncService, dialog, snackBar);
   }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     super.ngOnInit();
   }
 
-  public updateSyncDateStatus(): void {
+  protected updateSyncMenu(): void {
+    super.updateSyncMenu();
+
+    if (this.syncState === SyncState.SYNCED) {
+      this.syncMenuActions.push({
+        icon: "update",
+        text: "Sync recent activities",
+        action: () => this.onSync(true, false)
+      });
+
+      this.syncMenuActions.push({
+        icon: "sync",
+        text: "Sync all activities",
+        action: () => this.onSync(false, false)
+      });
+    }
+
+    if (this.syncState === SyncState.PARTIALLY_SYNCED) {
+      this.syncMenuActions.push({
+        icon: "sync_problem",
+        text: "Continue sync",
+        tooltip: "Warning: Sync isn't finished. Click to continue.",
+        action: () => this.onSync(false, false)
+      });
+    }
+
+    if (this.syncState === SyncState.PARTIALLY_SYNCED || this.syncState === SyncState.SYNCED) {
+      this.syncMenuActions.push({
+        icon: "redo",
+        text: "Clear and re-sync activities",
+        action: () => this.onSync(false, true)
+      });
+
+      this.syncMenuActions.push({
+        icon: "clear",
+        text: "Clear synced activities",
+        action: () => this.onClearSyncedData()
+      });
+    }
+
+    if (this.syncState === SyncState.NOT_SYNCED) {
+      this.syncMenuActions.push({
+        icon: "sync_disabled",
+        text: "Sync your activities",
+        action: () => this.onSync(false, false)
+      });
+    }
+
+    this.syncMenuActions.push({
+      icon: "vertical_align_bottom",
+      text: "Backup profile",
+      action: () => this.onSyncedBackupExport()
+    });
+
+    this.syncMenuActions.push({
+      icon: "vertical_align_top",
+      text: "Restore profile",
+      action: () => this.onSyncedBackupImport()
+    });
+  }
+
+  protected updateSyncStatus(): void {
     this.extensionSyncService.getSyncState().then((syncState: SyncState) => {
       this.syncState = syncState;
-      this.extensionSyncService.getSyncDateTime().then((syncDateTime: SyncDateTime) => {
-        if (_.isNumber(syncDateTime.syncDateTime)) {
-          this.syncDateMessage = moment(syncDateTime.syncDateTime).fromNow();
-        }
-      });
+      this.updateSyncMenu();
     });
   }
 

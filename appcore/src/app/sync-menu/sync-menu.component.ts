@@ -12,15 +12,15 @@ import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { ImportExportProgressDialogComponent } from "../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { Subscription } from "rxjs";
 import { AppService } from "../shared/services/app-service/app.service";
+import { SyncMenuAction } from "./sync-menu-action.model";
 
 export const SYNC_MENU_COMPONENT = new InjectionToken<SyncMenuComponent>("SYNC_MENU_COMPONENT");
 
 @Component({ template: "" })
 export abstract class SyncMenuComponent implements OnInit, OnDestroy {
-  private static readonly UPDATE_SYNC_DATE_STATUS_EVERY: number = 1000 * 60;
   public SyncState = SyncState;
   public syncState: SyncState;
-  public syncDateMessage: string;
+  public syncMenuActions: SyncMenuAction[];
   public historyChangesSub: Subscription;
 
   protected constructor(
@@ -31,23 +31,19 @@ export abstract class SyncMenuComponent implements OnInit, OnDestroy {
     @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar
   ) {
     this.syncState = null;
-    this.syncDateMessage = null;
+  }
+
+  protected abstract updateSyncStatus(): void;
+
+  protected updateSyncMenu(): void {
+    this.syncMenuActions = [];
   }
 
   public ngOnInit(): void {
-    // Update sync status in toolbar and Refresh SyncDate displayed every minutes
-    this.updateSyncDateStatus();
-    setInterval(() => {
-      this.updateSyncDateStatus();
-    }, SyncMenuComponent.UPDATE_SYNC_DATE_STATUS_EVERY);
-
+    this.updateSyncStatus();
     this.historyChangesSub = this.appService.historyChanges$.subscribe(() => {
-      this.updateSyncDateStatus();
+      this.updateSyncStatus();
     });
-  }
-
-  public updateSyncDateStatus(): void {
-    throw new ElevateException("updateSyncDateStatus must be implemented in a child class");
   }
 
   public onSyncedBackupImport(): void {

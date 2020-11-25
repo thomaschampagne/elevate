@@ -15,7 +15,7 @@
   "scripts": {
     "archive": "node -e \"const bestzip = require('bestzip');const manifest = require('./dist/manifest.json');const fs = require('fs');const cwd = process.cwd() + '/dist/';const target = 'package/';const filename = `web-extension_v${manifest.version_name}.zip`;const output = '../' + target + filename;if (!fs.existsSync(target)) fs.mkdirSync(target);bestzip.nodeZip({ source: '*', cwd: cwd, destination: output }).then(() => {console.log('Generated archive ' + filename);process.exit(0);}).catch((err) => {console.error(err.stack);process.exit(1);});\"",
     "build@prod": "npm-run-all clean extension-res-copy:* build:extension@prod build:appcore@prod",
-    "build:metadata": "node -e \"console.log('{\\\"commit\\\": \\\"' + require('child_process').execSync('git rev-parse HEAD').toString().trim() + '\\\", \\\"date\\\": \\\"' + (new Date()).toISOString() + '\\\"}')\" > build_metadata.json",
+    "build:metadata": "node -e \"console.log(JSON.stringify({commit: require('child_process').execSync('git rev-parse HEAD').toString().trim(), date: new Date().toISOString()}))\" > build_metadata.json",
     "build:appcore@dev": "npm run build:metadata && cd ../appcore/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build --configuration=extension --outputPath=../webextension/dist/app/",
     "build:appcore@prod": "npm run build:appcore@dev -- --configuration=extension-prod",
     "build:extension@dev": "node ./node_modules/webpack/bin/webpack.js --config ./extension.webpack.config.js",

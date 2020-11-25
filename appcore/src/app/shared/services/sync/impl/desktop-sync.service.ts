@@ -98,7 +98,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   }
 
   public static niceConnectorPrint(fromConnectorType: ConnectorType): string {
-    return _.startCase(_.replace(fromConnectorType.toString().toLowerCase(), "_", " "));
+    return _.startCase(fromConnectorType.toString().toLowerCase());
   }
 
   public sync(fastSync: boolean = null, forceSync: boolean = null, connectorType: ConnectorType = null): Promise<void> {

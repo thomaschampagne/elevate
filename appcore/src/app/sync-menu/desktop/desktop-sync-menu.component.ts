@@ -11,9 +11,6 @@ import { DesktopDumpModel } from "../../shared/models/dumps/desktop-dump.model";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { AppRoutes } from "../../shared/models/app-routes";
-import moment from "moment";
-import _ from "lodash";
-import { ConnectorSyncDateTime } from "@elevate/shared/models";
 import { ConnectorType } from "@elevate/shared/sync";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { ElectronService } from "../../desktop/electron/electron.service";
@@ -22,51 +19,30 @@ import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
 import { DesktopAppService } from "../../shared/services/app-service/impl/desktop-app.service";
 import { LoggerService } from "../../shared/services/logging/logger.service";
+import { ConnectorSyncDateTime } from "@elevate/shared/models";
 
 @Component({
   selector: "app-desktop-sync-menu",
   template: `
     <div *ngIf="syncState !== null">
-      <button [disabled]="appService.isSyncing" mat-stroked-button color="primary" [matMenuTriggerFor]="syncMenu">
-        <mat-icon fontSet="material-icons-outlined" *ngIf="syncState === SyncState.NOT_SYNCED">
-          sync_disabled
-        </mat-icon>
-        <mat-icon fontSet="material-icons-outlined" *ngIf="syncState === SyncState.PARTIALLY_SYNCED">
-          sync_problem
-        </mat-icon>
-        <mat-icon fontSet="material-icons-outlined" *ngIf="syncState === SyncState.SYNCED"> sync</mat-icon>
-        <span *ngIf="syncState === SyncState.NOT_SYNCED"> Activities not synced </span>
-        <span *ngIf="syncState === SyncState.PARTIALLY_SYNCED"> Activities partially synced </span>
-        <span *ngIf="syncState === SyncState.SYNCED && syncDateMessage">
-          {{ syncDateMessage }}
-        </span>
-      </button>
+      <div class="dual-split-button">
+        <button
+          mat-button
+          color="primary"
+          (click)="syncMenuActions[0].action()"
+          matTooltip="{{ syncMenuActions[0]?.tooltip }}"
+        >
+          <mat-icon fontSet="material-icons-outlined">{{ syncMenuActions[0].icon }}</mat-icon>
+          {{ syncMenuActions[0].text }}
+        </button>
+        <button mat-icon-button color="primary" [matMenuTriggerFor]="syncMenu">
+          <mat-icon fontSet="material-icons-outlined">expand_more</mat-icon>
+        </button>
+      </div>
       <mat-menu #syncMenu="matMenu">
-        <button mat-menu-item *ngIf="syncState === SyncState.NOT_SYNCED" (click)="goToConnectors()">
-          <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
-          Sync via connectors
-        </button>
-        <button mat-menu-item *ngIf="syncState === SyncState.PARTIALLY_SYNCED" (click)="goToConnectors()">
-          <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
-          Continue sync via connectors
-        </button>
-        <ng-container *ngIf="syncState === SyncState.SYNCED">
-          <button mat-menu-item (click)="onSync(true)">
-            <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
-            Sync "{{ printMostRecentConnectorSynced() }}" recent activities
-          </button>
-          <button mat-menu-item (click)="goToConnectors()">
-            <mat-icon fontSet="material-icons-outlined">power</mat-icon>
-            Go to connectors
-          </button>
-        </ng-container>
-        <button mat-menu-item (click)="onSyncedBackupExport()">
-          <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
-          Backup profile
-        </button>
-        <button mat-menu-item (click)="onSyncedBackupImport()">
-          <mat-icon fontSet="material-icons-outlined">vertical_align_top</mat-icon>
-          Restore profile
+        <button *ngFor="let menuAction of syncMenuActions.slice(1)" mat-menu-item (click)="menuAction.action()">
+          <mat-icon fontSet="material-icons-outlined">{{ menuAction.icon }}</mat-icon>
+          {{ menuAction.text }}
         </button>
       </mat-menu>
     </div>
@@ -89,22 +65,68 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
     this.mostRecentConnectorSyncedType = null;
   }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     super.ngOnInit();
   }
 
-  public updateSyncDateStatus(): void {
+  protected updateSyncMenu(): void {
+    super.updateSyncMenu();
+
+    if (this.syncState === SyncState.SYNCED) {
+      this.syncMenuActions.push({
+        icon: "update",
+        text: "Sync recent activities",
+        tooltip: `Sync recent activities from "${DesktopSyncService.niceConnectorPrint(
+          this.mostRecentConnectorSyncedType
+        )}" connector`,
+        action: () => this.onSync(true)
+      });
+
+      this.syncMenuActions.push({
+        icon: "sync",
+        text: "Sync all activities",
+        tooltip: `Sync all activities from "${DesktopSyncService.niceConnectorPrint(
+          this.mostRecentConnectorSyncedType
+        )}" connector`,
+        action: () => this.onSync(false)
+      });
+    }
+
+    this.syncMenuActions.push({
+      icon: this.syncState === SyncState.PARTIALLY_SYNCED ? "sync_problem" : "power",
+      text: this.syncState === SyncState.SYNCED ? "Go to connectors" : "Sync with connectors",
+      tooltip:
+        this.syncState === SyncState.PARTIALLY_SYNCED
+          ? "Warning: 1 connector must be synced completely. Click to configure connectors."
+          : null,
+      action: () => this.goToConnectors()
+    });
+
+    this.syncMenuActions.push({
+      icon: "vertical_align_bottom",
+      text: "Backup profile",
+      action: () => this.onSyncedBackupExport()
+    });
+
+    this.syncMenuActions.push({
+      icon: "vertical_align_top",
+      text: "Restore profile",
+      action: () => this.onSyncedBackupImport()
+    });
+  }
+
+  protected updateSyncStatus(): void {
     this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
       this.syncState = syncState;
       if (this.syncState === SyncState.SYNCED) {
         this.desktopSyncService.getMostRecentSyncedConnector().then((connectorSyncDateTime: ConnectorSyncDateTime) => {
           if (connectorSyncDateTime) {
             this.mostRecentConnectorSyncedType = connectorSyncDateTime.connectorType;
-            if (_.isNumber(connectorSyncDateTime.syncDateTime)) {
-              this.syncDateMessage = "Synced " + moment(connectorSyncDateTime.syncDateTime).fromNow();
-            }
           }
+          this.updateSyncMenu();
         });
+      } else {
+        this.updateSyncMenu();
       }
     });
   }
@@ -154,12 +176,6 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
     this.onSyncMostRecentConnectorSynced(fastSync);
   }
 
-  public printMostRecentConnectorSynced(): string {
-    return this.mostRecentConnectorSyncedType
-      ? DesktopSyncService.niceConnectorPrint(this.mostRecentConnectorSyncedType)
-      : null;
-  }
-
   public onSyncMostRecentConnectorSynced(fastSync: boolean = null): void {
     if (this.mostRecentConnectorSyncedType) {
       this.desktopSyncService.sync(fastSync, null, this.mostRecentConnectorSyncedType);
@@ -169,6 +185,10 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
   }
 
   public goToConnectors(): void {
+    if (this.router.isActive(AppRoutes.connectors, false)) {
+      this.snackBar.open("You are already on connectors section 😉", "Ok", { duration: 4000 });
+      return;
+    }
     this.router.navigate([AppRoutes.connectors]);
   }
 }

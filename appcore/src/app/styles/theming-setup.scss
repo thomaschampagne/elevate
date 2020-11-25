@@ -3,7 +3,7 @@
 @import "themes/dark";
 
 // Import Mixins
-@import "theme-color-classes-setter";
+@import "app-classes.theme";
 @import "native-elements.theme";
 @import "../app.component.theme";
 @import "../fitness-trend/fitness-trend.component.theme";
@@ -11,7 +11,7 @@
 @import "../refresh-stats-bar/refresh-stats-bar.component.theme";
 
 @mixin elevate-custom-theme($theme) {
-  @include create-theme-classes($theme);
+  @include app-classes($theme);
   @include native-web-elements($theme);
   @include app-theming($theme);
   @include app-sync-bar-theming($theme);

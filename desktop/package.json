@@ -4,7 +4,7 @@
   "version": "7.0.0-3.alpha",
   "scripts": {
     "assert-app-exists": "node -e \"if ((require('fs').existsSync('./dist/app/')) === false) {console.log('Please run & wait for \\'npm start\\' task before.\\n\\n\\n\\n');process.exit(1);}\";",
-    "build:metadata": "node -e \"console.log('{\\\"commit\\\": \\\"' + require('child_process').execSync('git rev-parse HEAD').toString().trim() + '\\\", \\\"date\\\": \\\"' + (new Date()).toISOString() + '\\\"}')\" > build_metadata.json",
+    "build:metadata": "node -e \"console.log(JSON.stringify({commit: require('child_process').execSync('git rev-parse HEAD').toString().trim(), date: new Date().toISOString()}))\" > build_metadata.json",
     "build:appcore@dev": "npm run build:metadata && cd ../appcore/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build --outputPath=../desktop/dist/app/ --base-href --configuration=desktop",
     "build:appcore@prod": "npm run build:appcore@dev -- --base-href --configuration=desktop-prod",
     "build:updater@dev": "node ../node_modules/cpy-cli/cli.js ./src/updater/window/index.html ./dist/updater/ && rollup --config rollup-updater.config.js",

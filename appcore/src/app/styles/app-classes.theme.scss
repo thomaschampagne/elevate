@@ -1,11 +1,13 @@
 @import "~@angular/material/theming";
 
-@mixin create-theme-classes($theme) {
+@mixin app-classes($theme) {
 
   // Parse the theme and create variables for each color in the palette
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
 
   // Create theme specific styles
   .primary-color {
@@ -29,6 +31,19 @@
   .warn {
     background-color: mat-color($warn);
     color: mat-color($warn, default-contrast);
+  }
+
+  // Style of custom dual-split-button
+  $border-color: mat-color($foreground, divider);
+
+  .dual-split-button {
+    border: 1px solid $border-color;
+    border-radius: 4px;
+  }
+
+  .dual-split-button > button:first-of-type {
+    border-right: 1px solid $border-color;
+    border-radius: 0;
   }
 
 }
