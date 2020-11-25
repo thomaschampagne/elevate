@@ -20,6 +20,10 @@
     color: mat-color($warn);
   }
 
+  .default-contrast-color {
+    color: mat-color($primary, default-contrast);
+  }
+
   .primary {
     background-color: mat-color($primary);
     color: mat-color($primary, default-contrast);
