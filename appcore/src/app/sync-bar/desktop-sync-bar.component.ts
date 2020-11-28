@@ -7,6 +7,7 @@ import { DesktopErrorsSyncDetailsDialogComponent } from "./desktop-errors-sync-d
 import moment from "moment";
 import { SyncBarComponent } from "./sync-bar.component";
 import { SyncService } from "../shared/services/sync/sync.service";
+import { ConnectorService } from "../connectors/connector.service";
 
 class CurrentActivitySynced {
   public date: string;
@@ -164,9 +165,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     this.hideCloseButton();
     this.isSyncing = true;
     this.resetCounter();
-    this.syncStatusText = `Sync started on connector "${DesktopSyncService.niceConnectorPrint(
-      syncEvent.fromConnectorType
-    )}"`;
+    this.syncStatusText = `Sync started on connector "${ConnectorService.printType(syncEvent.fromConnectorType)}"`;
   }
 
   private onActivitySyncEvent(syncEvent: SyncEvent): void {
@@ -188,14 +187,13 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
   }
 
   private onStoppedSyncEvent(syncEvent: SyncEvent): void {
-    this.syncStatusText =
-      'Sync stopped on connector "' + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + '"';
+    this.syncStatusText = 'Sync stopped on connector "' + ConnectorService.printType(syncEvent.fromConnectorType) + '"';
     this.onSyncEnded();
   }
 
   private onCompleteSyncEvent(syncEvent: SyncEvent): void {
     this.syncStatusText =
-      'Sync completed on connector "' + DesktopSyncService.niceConnectorPrint(syncEvent.fromConnectorType) + '"';
+      'Sync completed on connector "' + ConnectorService.printType(syncEvent.fromConnectorType) + '"';
     this.onSyncEnded();
 
     if (!this.activityCounter) {

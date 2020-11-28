@@ -20,6 +20,7 @@ import { AppService } from "../../shared/services/app-service/app.service";
 import { DesktopAppService } from "../../shared/services/app-service/impl/desktop-app.service";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { ConnectorSyncDateTime } from "@elevate/shared/models";
+import { ConnectorService } from "../../connectors/connector.service";
 
 @Component({
   selector: "app-desktop-sync-menu",
@@ -75,13 +76,13 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
     if (this.syncState === SyncState.SYNCED) {
       this.syncMenuActions.push({
         icon: "update",
-        text: `Sync new ${DesktopSyncService.niceConnectorPrint(this.mostRecentConnectorSyncedType)} activities`,
+        text: `Sync new ${ConnectorService.printType(this.mostRecentConnectorSyncedType)} activities`,
         action: () => this.onSync(true)
       });
 
       this.syncMenuActions.push({
         icon: "sync",
-        text: `Sync all ${DesktopSyncService.niceConnectorPrint(this.mostRecentConnectorSyncedType)} activities`,
+        text: `Sync all ${ConnectorService.printType(this.mostRecentConnectorSyncedType)} activities`,
         action: () => this.onSync(false)
       });
     }

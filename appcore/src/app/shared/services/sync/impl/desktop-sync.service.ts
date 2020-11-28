@@ -101,10 +101,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     }
   }
 
-  public static niceConnectorPrint(fromConnectorType: ConnectorType): string {
-    return fromConnectorType.toLowerCase();
-  }
-
   public sync(fastSync: boolean = null, forceSync: boolean = null, connectorType: ConnectorType = null): Promise<void> {
     if (!connectorType) {
       throw new SyncException("ConnectorType param must be given");

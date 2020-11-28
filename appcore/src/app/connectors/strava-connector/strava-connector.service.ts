@@ -6,14 +6,17 @@ import { StravaConnectorInfoService } from "../../shared/services/strava-connect
 import { Gender } from "@elevate/shared/models";
 import { IpcMessagesSender } from "../../desktop/ipc-messages/ipc-messages-sender.service";
 import { SyncService } from "../../shared/services/sync/sync.service";
+import { ConnectorService } from "../connector.service";
 
 @Injectable()
-export class StravaConnectorService {
+export class StravaConnectorService extends ConnectorService {
   constructor(
     @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(IpcMessagesSender) private readonly ipcMessagesSender: IpcMessagesSender,
     @Inject(SyncService) private readonly desktopSyncService: DesktopSyncService
-  ) {}
+  ) {
+    super();
+  }
 
   public fetch(): Promise<StravaConnectorInfo> {
     return this.stravaConnectorInfoService.fetch();
