@@ -16,7 +16,7 @@ import { DesktopUnauthorizedMachineIdDialogComponent } from "./desktop-unauthori
 import { IpcMessagesSender } from "../../desktop/ipc-messages/ipc-messages-sender.service";
 import { DesktopMigrationService } from "../../desktop/migration/desktop-migration.service";
 import { DataStore } from "../../shared/data-store/data-store";
-import { FileSystemConnectorInfoService } from "../../shared/services/file-system-connector-info/file-system-connector-info.service";
+import { FileConnectorInfoService } from "../../shared/services/file-connector-info/file-connector-info.service";
 
 @Injectable()
 export class DesktopLoadService extends AppLoadService {
@@ -33,7 +33,7 @@ export class DesktopLoadService extends AppLoadService {
     @Inject(HttpClient) private readonly httpClient: HttpClient,
     @Inject(StravaConnectorInfoService) private readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(DesktopMigrationService) private readonly desktopMigrationService: DesktopMigrationService,
-    @Inject(FileSystemConnectorInfoService) private readonly fsConnectorInfoService: FileSystemConnectorInfoService,
+    @Inject(FileConnectorInfoService) private readonly fsConnectorInfoService: FileConnectorInfoService,
     @Inject(Router) private readonly router: Router,
     @Inject(MatDialog) private readonly dialog: MatDialog,
     @Inject(LoggerService) private readonly logger: LoggerService

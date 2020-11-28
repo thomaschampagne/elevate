@@ -4,7 +4,7 @@ import {
   CompleteSyncEvent,
   ConnectorType,
   ErrorSyncEvent,
-  FileSystemConnectorInfo,
+  FileConnectorInfo,
   GenericSyncEvent,
   SyncEvent
 } from "@elevate/shared/sync";
@@ -12,7 +12,7 @@ import { Subject } from "rxjs";
 import { IpcMessagesSender } from "../messages/ipc-messages.sender";
 import { container } from "tsyringe";
 import { ConnectorSyncService } from "./connector-sync.service";
-import { FileSystemConnector } from "./filesystem/file-system.connector";
+import { FileConnector } from "./file/file.connector";
 import { StravaConnector } from "./strava/strava.connector";
 import { StravaConnectorConfig } from "./connector-config.model";
 import {
@@ -35,13 +35,13 @@ describe("ConnectorSyncService", () => {
   let connectorSyncService: ConnectorSyncService;
   let ipcMessagesSender: IpcMessagesSender;
   let stravaConnector: StravaConnector;
-  let fileSystemConnector: FileSystemConnector;
+  let fileConnector: FileConnector;
 
   beforeEach(done => {
     connectorSyncService = container.resolve(ConnectorSyncService);
     ipcMessagesSender = container.resolve(IpcMessagesSender);
     stravaConnector = container.resolve(StravaConnector);
-    fileSystemConnector = container.resolve(FileSystemConnector);
+    fileConnector = container.resolve(FileConnector);
 
     const stravaConnectorConfig: StravaConnectorConfig = {
       connectorSyncDateTime: currentConnectorSyncDateTime,
@@ -51,7 +51,7 @@ describe("ConnectorSyncService", () => {
     };
     stravaConnector = stravaConnector.configure(stravaConnectorConfig);
 
-    const fileSystemConnectorConfig = {
+    const fileConnectorConfig = {
       connectorSyncDateTime: currentConnectorSyncDateTime,
       athleteModel: athleteModel,
       userSettingsModel: userSettingsModel,
@@ -59,7 +59,7 @@ describe("ConnectorSyncService", () => {
       info: connectorInfo
     };
 
-    fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
+    fileConnector = fileConnector.configure(fileConnectorConfig);
 
     done();
   });
@@ -100,14 +100,14 @@ describe("ConnectorSyncService", () => {
       done();
     });
 
-    it("should start file system connector sync", done => {
+    it("should start file connector sync", done => {
       // Given
-      const expectedFileSystemConnectorInfo = new FileSystemConnectorInfo("/path/to/dir/");
+      const expectedFileConnectorInfo = new FileConnectorInfo("/path/to/dir/");
       const flaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.START_SYNC,
         ConnectorType.FILE,
         currentConnectorSyncDateTime,
-        expectedFileSystemConnectorInfo,
+        expectedFileConnectorInfo,
         athleteModel,
         userSettingsModel
       );
@@ -120,17 +120,17 @@ describe("ConnectorSyncService", () => {
       };
       const fsConnectorSyncCalls = 1;
 
-      const configureFileSystemConnectorSpy = spyOn(fileSystemConnector, "configure").and.callThrough();
-      const fileSystemConnectorSyncSpy = spyOn(fileSystemConnector, "sync").and.returnValue(new Subject<SyncEvent>());
+      const configureFileConnectorSpy = spyOn(fileConnector, "configure").and.callThrough();
+      const fileConnectorSyncSpy = spyOn(fileConnector, "sync").and.returnValue(new Subject<SyncEvent>());
       const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 
       // When
       connectorSyncService.sync(flaggedIpcMessage, replyWith.callback);
 
       // Then
-      expect(configureFileSystemConnectorSpy).toBeCalled();
+      expect(configureFileConnectorSpy).toBeCalled();
       expect(connectorSyncService.currentConnector).not.toBeNull();
-      expect(fileSystemConnectorSyncSpy).toBeCalledTimes(fsConnectorSyncCalls);
+      expect(fileConnectorSyncSpy).toBeCalledTimes(fsConnectorSyncCalls);
       expect(replyWithCallbackSpy).toBeCalledWith(replyWith.args);
 
       done();
@@ -138,7 +138,7 @@ describe("ConnectorSyncService", () => {
 
     it("should not start a sync already running", done => {
       // Given
-      connectorSyncService.currentConnector = fileSystemConnector;
+      connectorSyncService.currentConnector = fileConnector;
       connectorSyncService.currentConnector.isSyncing = true;
       const syncSpy = spyOn(connectorSyncService.currentConnector, "sync").and.stub();
 
@@ -379,8 +379,8 @@ describe("ConnectorSyncService", () => {
         }
       };
 
-      connectorSyncService.currentConnector = fileSystemConnector;
-      const stopConnectorSyncSpy = spyOn(fileSystemConnector, "stop").and.callThrough();
+      connectorSyncService.currentConnector = fileConnector;
+      const stopConnectorSyncSpy = spyOn(fileConnector, "stop").and.callThrough();
       const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
 
       // When

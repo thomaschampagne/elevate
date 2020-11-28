@@ -47,7 +47,7 @@ import { DataCadence } from "@sports-alliance/sports-lib/lib/data/data.cadence";
 import { DataLongitudeDegrees } from "@sports-alliance/sports-lib/lib/data/data.longitude-degrees";
 import { DataGrade } from "@sports-alliance/sports-lib/lib/data/data.grade";
 import { EventLibError } from "@sports-alliance/sports-lib/lib/errors/event-lib.error";
-import { FileSystemConnectorConfig } from "../connector-config.model";
+import { FileConnectorConfig } from "../connector-config.model";
 import { inject, singleton } from "tsyringe";
 import { IpcMessagesSender } from "../../messages/ipc-messages.sender";
 import { Hash } from "../../tools/hash";
@@ -60,7 +60,7 @@ export enum ActivityFileType {
 }
 
 /**
- * Model associated to FileSystem synced activities
+ * Model associated to File synced activities
  */
 export class ActivityFile {
   public type: ActivityFileType;
@@ -75,7 +75,7 @@ export class ActivityFile {
 }
 
 @singleton()
-export class FileSystemConnector extends BaseConnector {
+export class FileConnector extends BaseConnector {
   private static readonly SLEEP_TIME_BETWEEN_FILE_PARSED: number = 50;
 
   private static HumanizedDayMoment = class {
@@ -88,15 +88,15 @@ export class FileSystemConnector extends BaseConnector {
     public static resolve(date: Date): string {
       const currentHour = date.getHours();
       if (
-        currentHour >= FileSystemConnector.HumanizedDayMoment.SPLIT_AFTERNOON_AT &&
-        currentHour <= FileSystemConnector.HumanizedDayMoment.SPLIT_EVENING_AT
+        currentHour >= FileConnector.HumanizedDayMoment.SPLIT_AFTERNOON_AT &&
+        currentHour <= FileConnector.HumanizedDayMoment.SPLIT_EVENING_AT
       ) {
         // Between 12 PM and 5PM
-        return FileSystemConnector.HumanizedDayMoment.AFTERNOON;
-      } else if (currentHour >= FileSystemConnector.HumanizedDayMoment.SPLIT_EVENING_AT) {
-        return FileSystemConnector.HumanizedDayMoment.EVENING;
+        return FileConnector.HumanizedDayMoment.AFTERNOON;
+      } else if (currentHour >= FileConnector.HumanizedDayMoment.SPLIT_EVENING_AT) {
+        return FileConnector.HumanizedDayMoment.EVENING;
       }
-      return FileSystemConnector.HumanizedDayMoment.MORNING;
+      return FileConnector.HumanizedDayMoment.MORNING;
     }
   };
   private static readonly ENABLED: boolean = true;
@@ -213,7 +213,7 @@ export class FileSystemConnector extends BaseConnector {
   ];
   private static unPackerInstance: { unpack: (path: string, options: any, callback: (err: any) => void) => void };
 
-  private fileSystemConnectorConfig: FileSystemConnectorConfig;
+  private fileConnectorConfig: FileConnectorConfig;
 
   constructor(
     @inject(AppService) protected readonly appService: AppService,
@@ -221,7 +221,7 @@ export class FileSystemConnector extends BaseConnector {
   ) {
     super(appService, ipcMessagesSender);
     this.type = ConnectorType.FILE;
-    this.enabled = FileSystemConnector.ENABLED;
+    this.enabled = FileConnector.ENABLED;
   }
 
   public static getAllUnPacker(): { unpack: (path: string, options: any, callback: (err: any) => void) => void } {
@@ -231,9 +231,9 @@ export class FileSystemConnector extends BaseConnector {
     return this.unPackerInstance;
   }
 
-  public configure(fileSystemConnectorConfig: FileSystemConnectorConfig): this {
-    super.configure(fileSystemConnectorConfig);
-    this.fileSystemConnectorConfig = fileSystemConnectorConfig;
+  public configure(fileConnectorConfig: FileConnectorConfig): this {
+    super.configure(fileConnectorConfig);
+    this.fileConnectorConfig = fileConnectorConfig;
     return this;
   }
 
@@ -269,9 +269,9 @@ export class FileSystemConnector extends BaseConnector {
   }
 
   public syncFiles(syncEvents$: Subject<SyncEvent>): Promise<void> {
-    if (!this.getFs().existsSync(this.fileSystemConnectorConfig.info.sourceDirectory)) {
+    if (!this.getFs().existsSync(this.fileConnectorConfig.info.sourceDirectory)) {
       return Promise.reject(
-        ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(this.fileSystemConnectorConfig.info.sourceDirectory)
+        ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(this.fileConnectorConfig.info.sourceDirectory)
       );
     }
 
@@ -279,7 +279,7 @@ export class FileSystemConnector extends BaseConnector {
 
     let prepareScanDirectory: Promise<void> = Promise.resolve();
 
-    if (!afterDate && this.fileSystemConnectorConfig.info.extractArchiveFiles) {
+    if (!afterDate && this.fileConnectorConfig.info.extractArchiveFiles) {
       const deflateNotifier$ = new Subject<string>();
       deflateNotifier$.subscribe(extractedArchivePath => {
         const extractedArchiveFileName = path.basename(extractedArchivePath);
@@ -288,10 +288,10 @@ export class FileSystemConnector extends BaseConnector {
         logger.info(evtDesc);
       });
       prepareScanDirectory = this.scanDeflateActivitiesFromArchives(
-        this.fileSystemConnectorConfig.info.sourceDirectory,
-        this.fileSystemConnectorConfig.info.deleteArchivesAfterExtract,
+        this.fileConnectorConfig.info.sourceDirectory,
+        this.fileConnectorConfig.info.deleteArchivesAfterExtract,
         deflateNotifier$,
-        this.fileSystemConnectorConfig.info.scanSubDirectories
+        this.fileConnectorConfig.info.scanSubDirectories
       );
     }
 
@@ -299,9 +299,9 @@ export class FileSystemConnector extends BaseConnector {
       .then(() => {
         syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE, "Scanning for activities..."));
         const activityFiles: ActivityFile[] = this.scanForActivities(
-          this.fileSystemConnectorConfig.info.sourceDirectory,
+          this.fileConnectorConfig.info.sourceDirectory,
           afterDate,
-          this.fileSystemConnectorConfig.info.scanSubDirectories
+          this.fileConnectorConfig.info.scanSubDirectories
         );
         return Promise.resolve(activityFiles);
       })
@@ -391,7 +391,7 @@ export class FileSystemConnector extends BaseConnector {
                             syncedActivityModel.extendedStats = this.computeExtendedStats(
                               syncedActivityModel,
                               syncedActivityModel.athleteSnapshot,
-                              this.fileSystemConnectorConfig.userSettingsModel,
+                              this.fileConnectorConfig.userSettingsModel,
                               activityStreamsModel,
                               true
                             );
@@ -485,7 +485,7 @@ export class FileSystemConnector extends BaseConnector {
                               );
                             });
                             const elevateSportResult = this.convertToElevateSport(sportsLibActivity);
-                            const activityName = `${FileSystemConnector.HumanizedDayMoment.resolve(
+                            const activityName = `${FileConnector.HumanizedDayMoment.resolve(
                               sportsLibActivity.startDate
                             )} ${elevateSportResult.type}`;
 
@@ -543,7 +543,7 @@ export class FileSystemConnector extends BaseConnector {
     const elevateSportResult = this.convertToElevateSport(sportsLibActivity);
     bareActivityModel.type = elevateSportResult.type;
     bareActivityModel.name =
-      FileSystemConnector.HumanizedDayMoment.resolve(sportsLibActivity.startDate) + " " + bareActivityModel.type;
+      FileConnector.HumanizedDayMoment.resolve(sportsLibActivity.startDate) + " " + bareActivityModel.type;
 
     if (elevateSportResult.autoDetected) {
       bareActivityModel.name += " #detected";
@@ -558,11 +558,11 @@ export class FileSystemConnector extends BaseConnector {
   }
 
   public convertToElevateSport(sportsLibActivity: ActivityInterface): { type: ElevateSport; autoDetected: boolean } {
-    const entryFound = _.find(FileSystemConnector.SPORTS_LIB_TYPES_MAP, { from: sportsLibActivity.type });
+    const entryFound = _.find(FileConnector.SPORTS_LIB_TYPES_MAP, { from: sportsLibActivity.type });
     if (entryFound) {
       return { type: entryFound.to, autoDetected: false };
     } else {
-      if (this.fileSystemConnectorConfig.info.detectSportTypeWhenUnknown) {
+      if (this.fileConnectorConfig.info.detectSportTypeWhenUnknown) {
         const stats = sportsLibActivity.getStats();
 
         const distance = stats.get(DataDistance.type)?.getValue() as number;
@@ -873,7 +873,7 @@ export class FileSystemConnector extends BaseConnector {
         options.unar = this.appService.getResourceFolder() + "/app.asar.unpacked/node_modules/all-unpacker/unar";
       }
 
-      FileSystemConnector.getAllUnPacker().unpack(archiveFilePath, options, err => {
+      FileConnector.getAllUnPacker().unpack(archiveFilePath, options, err => {
         if (err) {
           this.getFs().rmdirSync(extractDir, { recursive: true });
           reject(err);
@@ -970,7 +970,7 @@ export class FileSystemConnector extends BaseConnector {
   }
 
   public wait(): Promise<void> {
-    return sleep(FileSystemConnector.SLEEP_TIME_BETWEEN_FILE_PARSED);
+    return sleep(FileConnector.SLEEP_TIME_BETWEEN_FILE_PARSED);
   }
 
   public getFs(): typeof fs {

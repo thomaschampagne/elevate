@@ -2,8 +2,8 @@ import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { ConnectorsComponent } from "../connectors.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ElectronService } from "../../desktop/electron/electron.service";
-import { ConnectorType, FileSystemConnectorInfo } from "@elevate/shared/sync";
-import { FileSystemConnectorInfoService } from "../../shared/services/file-system-connector-info/file-system-connector-info.service";
+import { ConnectorType, FileConnectorInfo } from "@elevate/shared/sync";
+import { FileConnectorInfoService } from "../../shared/services/file-connector-info/file-connector-info.service";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
@@ -17,18 +17,18 @@ import { AppService } from "../../shared/services/app-service/app.service";
 import { FileConnectorService } from "./file-connector.service";
 
 @Component({
-  selector: "app-file-system-connector",
-  templateUrl: "./file-system-connector.component.html",
-  styleUrls: ["./file-system-connector.component.scss"]
+  selector: "app-file-connector",
+  templateUrl: "./file-connector.component.html",
+  styleUrls: ["./file-connector.component.scss"]
 })
-export class FileSystemConnectorComponent extends ConnectorsComponent implements OnInit, OnDestroy {
+export class FileConnectorComponent extends ConnectorsComponent implements OnInit, OnDestroy {
   public showConfigure: boolean;
-  public fileSystemConnectorInfo: FileSystemConnectorInfo;
+  public fileConnectorInfo: FileConnectorInfo;
   public historyChangesSub: Subscription;
 
   constructor(
     @Inject(AppService) public readonly appService: AppService,
-    @Inject(FileSystemConnectorInfoService) protected readonly fsConnectorInfoService: FileSystemConnectorInfoService,
+    @Inject(FileConnectorInfoService) protected readonly fsConnectorInfoService: FileConnectorInfoService,
     @Inject(SyncService) protected readonly desktopSyncService: DesktopSyncService,
     @Inject(FileConnectorService) protected readonly fileConnectorService: FileConnectorService,
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
@@ -40,16 +40,16 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
     super(desktopSyncService, openResourceResolver, router, dialog);
     this.connectorType = ConnectorType.FILE;
     this.showConfigure = false;
-    this.fileSystemConnectorInfo = null;
+    this.fileConnectorInfo = null;
   }
 
   public ngOnInit(): void {
-    this.fileSystemConnectorInfo = this.fsConnectorInfoService.fetch();
+    this.fileConnectorInfo = this.fsConnectorInfoService.fetch();
     this.updateSyncDateTimeText();
 
     // Test if source directory folder exists on app load
-    if (!this.isExistingFolder(this.fileSystemConnectorInfo.sourceDirectory)) {
-      this.fileSystemConnectorInfo.sourceDirectory = null;
+    if (!this.isExistingFolder(this.fileConnectorInfo.sourceDirectory)) {
+      this.fileConnectorInfo.sourceDirectory = null;
       this.saveChanges();
     }
 
@@ -66,7 +66,7 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
   public configureSourceDirectory(path: string): void {
     const isExistingFolder = this.isExistingFolder(path);
     if (isExistingFolder) {
-      this.fileSystemConnectorInfo.sourceDirectory = path;
+      this.fileConnectorInfo.sourceDirectory = path;
       this.saveChanges();
     } else {
       if (path) {
@@ -76,10 +76,10 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
   }
 
   public saveChanges(): void {
-    if (!this.fileSystemConnectorInfo.extractArchiveFiles) {
-      this.fileSystemConnectorInfo.deleteArchivesAfterExtract = false;
+    if (!this.fileConnectorInfo.extractArchiveFiles) {
+      this.fileConnectorInfo.deleteArchivesAfterExtract = false;
     }
-    this.fsConnectorInfoService.save(this.fileSystemConnectorInfo);
+    this.fsConnectorInfoService.save(this.fileConnectorInfo);
   }
 
   public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {

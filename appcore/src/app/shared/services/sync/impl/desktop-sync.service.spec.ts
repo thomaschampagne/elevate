@@ -7,7 +7,7 @@ import {
   CompleteSyncEvent,
   ConnectorType,
   ErrorSyncEvent,
-  FileSystemConnectorInfo,
+  FileConnectorInfo,
   GenericSyncEvent,
   StartedSyncEvent,
   StoppedSyncEvent,
@@ -232,8 +232,8 @@ describe("DesktopSyncService", () => {
       });
     });
 
-    describe("File system connector", () => {
-      it("should start a full file system sync", done => {
+    describe("File connector", () => {
+      it("should start a full file connector sync", done => {
         // Given
         const connectorType = ConnectorType.FILE;
         const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
@@ -249,11 +249,10 @@ describe("DesktopSyncService", () => {
           Promise.resolve(connectorSyncDateTimes)
         );
 
-        const expectedFileSystemConnectorInfo = new FileSystemConnectorInfo("/path/to/dir/");
-        const fileSystemConnectorInfoServiceSpy = spyOn(
-          desktopSyncService.fsConnectorInfoService,
-          "fetch"
-        ).and.returnValue(expectedFileSystemConnectorInfo);
+        const expectedFileConnectorInfo = new FileConnectorInfo("/path/to/dir/");
+        const fileConnectorInfoServiceSpy = spyOn(desktopSyncService.fsConnectorInfoService, "fetch").and.returnValue(
+          expectedFileConnectorInfo
+        );
         spyOn(desktopSyncService.fsConnectorInfoService, "isSourceDirectoryValid").and.returnValue(true);
         const sendStartSyncSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(
           Promise.resolve("Started")
@@ -271,7 +270,7 @@ describe("DesktopSyncService", () => {
             expect(listenSyncEventsSpy).toHaveBeenCalledTimes(1);
             expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
             expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
-            expect(fileSystemConnectorInfoServiceSpy).toHaveBeenCalledTimes(1);
+            expect(fileConnectorInfoServiceSpy).toHaveBeenCalledTimes(1);
             expect(findConnectorSyncDateTimeSpy).not.toHaveBeenCalled();
             expect(sendStartSyncSpy).toHaveBeenCalledTimes(1);
             expect(isSyncingSpy).toHaveBeenCalledWith(true);
@@ -280,8 +279,8 @@ describe("DesktopSyncService", () => {
               .args[0] as FlaggedIpcMessage;
             const currentConnectorSyncDateTime = flaggedStartSyncIpcMessage.payload[1] as ConnectorSyncDateTime;
             expect(currentConnectorSyncDateTime).toBeNull();
-            const fileSystemConnectorInfo = flaggedStartSyncIpcMessage.payload[2] as FileSystemConnectorInfo;
-            expect(fileSystemConnectorInfo).toEqual(expectedFileSystemConnectorInfo);
+            const fileConnectorInfo = flaggedStartSyncIpcMessage.payload[2] as FileConnectorInfo;
+            expect(fileConnectorInfo).toEqual(expectedFileConnectorInfo);
 
             done();
           },

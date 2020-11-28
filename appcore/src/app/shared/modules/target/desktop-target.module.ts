@@ -9,7 +9,7 @@ import { PropertiesDao } from "../../dao/properties/properties.dao";
 import { StravaConnectorInfoService } from "../../services/strava-connector-info/strava-connector-info.service";
 import { StravaConnectorInfoDao } from "../../dao/strava-connector-info/strava-connector-info.dao";
 import { StravaConnectorService } from "../../../connectors/strava-connector/strava-connector.service";
-import { FileSystemConnectorInfoService } from "../../services/file-system-connector-info/file-system-connector-info.service";
+import { FileConnectorInfoService } from "../../services/file-connector-info/file-connector-info.service";
 import { DataStore } from "../../data-store/data-store";
 import { DesktopDataStore } from "../../data-store/impl/desktop-data-store.service";
 import { PROMISE_TRON } from "../../../desktop/ipc-messages/promise-tron.interface";
@@ -42,7 +42,7 @@ import { DesktopRoutingModule } from "../routing/desktop-routing.module";
     ConnectorSyncDateTimeDao,
     PropertiesDao,
     StravaConnectorInfoDao,
-    FileSystemConnectorInfoService,
+    FileConnectorInfoService,
     { provide: DataStore, useClass: DesktopDataStore },
     { provide: PROMISE_TRON, useClass: PromiseTronService },
     { provide: ActivityService, useClass: DesktopActivityService },

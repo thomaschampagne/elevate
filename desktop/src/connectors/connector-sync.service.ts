@@ -10,7 +10,7 @@ import {
 } from "@elevate/shared/sync";
 import { BaseConnector } from "./base.connector";
 import { StravaConnector } from "./strava/strava.connector";
-import { FileSystemConnector } from "./filesystem/file-system.connector";
+import { FileConnector } from "./file/file.connector";
 import { IpcMessagesSender } from "../messages/ipc-messages.sender";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { ConnectorConfig } from "./connector-config.model";
@@ -32,7 +32,7 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 export class ConnectorSyncService {
   private static readonly TOKENS_MAP = new Map<ConnectorType, InjectionToken<BaseConnector>>([
     [ConnectorType.STRAVA, StravaConnector],
-    [ConnectorType.FILE, FileSystemConnector]
+    [ConnectorType.FILE, FileConnector]
   ]);
 
   public currentConnector: BaseConnector;

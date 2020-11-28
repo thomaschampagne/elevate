@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FileSystemConnectorComponent } from "./file-system-connector.component";
+import { FileConnectorComponent } from "./file-connector.component";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { DataStore } from "../../shared/data-store/data-store";
@@ -8,9 +8,9 @@ import { TestingDataStore } from "../../shared/data-store/testing-datastore.serv
 import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 import { TargetBootModule } from "../../boot/desktop-boot.module";
 
-describe("FileSystemConnectorComponent", () => {
-  let component: FileSystemConnectorComponent;
-  let fixture: ComponentFixture<FileSystemConnectorComponent>;
+describe("FileConnectorComponent", () => {
+  let component: FileConnectorComponent;
+  let fixture: ComponentFixture<FileConnectorComponent>;
 
   beforeEach(done => {
     TestBed.configureTestingModule({
@@ -21,7 +21,7 @@ describe("FileSystemConnectorComponent", () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FileSystemConnectorComponent);
+    fixture = TestBed.createComponent(FileConnectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

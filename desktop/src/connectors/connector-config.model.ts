@@ -1,4 +1,4 @@
-import { ConnectorInfo, FileSystemConnectorInfo, StravaConnectorInfo } from "@elevate/shared/sync";
+import { ConnectorInfo, FileConnectorInfo, StravaConnectorInfo } from "@elevate/shared/sync";
 import { AthleteModel, ConnectorSyncDateTime, UserSettings } from "@elevate/shared/models";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
@@ -13,6 +13,6 @@ export interface StravaConnectorConfig extends ConnectorConfig {
   info: StravaConnectorInfo;
 }
 
-export interface FileSystemConnectorConfig extends ConnectorConfig {
-  info: FileSystemConnectorInfo;
+export interface FileConnectorConfig extends ConnectorConfig {
+  info: FileConnectorInfo;
 }

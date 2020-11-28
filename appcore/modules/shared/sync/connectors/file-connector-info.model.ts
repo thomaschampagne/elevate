@@ -1,7 +1,7 @@
 import { ConnectorInfo } from "./connector-info.model";
 
-export class FileSystemConnectorInfo extends ConnectorInfo {
-  public static readonly DEFAULT_MODEL: FileSystemConnectorInfo = new FileSystemConnectorInfo(null);
+export class FileConnectorInfo extends ConnectorInfo {
+  public static readonly DEFAULT_MODEL: FileConnectorInfo = new FileConnectorInfo(null);
 
   public sourceDirectory: string;
   public scanSubDirectories: boolean;

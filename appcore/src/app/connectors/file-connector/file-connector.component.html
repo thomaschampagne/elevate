@@ -1,10 +1,10 @@
 <mat-card>
   <mat-card-title>
-    File system
+    Files
   </mat-card-title>
-  <mat-card-subtitle *ngIf="fileSystemConnectorInfo">
-    <span *ngIf="!fileSystemConnectorInfo.sourceDirectory">Not configured. </span>
-    <span *ngIf="fileSystemConnectorInfo.sourceDirectory">Configured. </span>
+  <mat-card-subtitle *ngIf="fileConnectorInfo">
+    <span *ngIf="!fileConnectorInfo.sourceDirectory">Not configured. </span>
+    <span *ngIf="fileConnectorInfo.sourceDirectory">Configured. </span>
     <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
     <br />
     <span class="note">Formats supported: gpx, tcx & fit</span>
@@ -12,14 +12,14 @@
   <mat-card-content>
     <div>
       <button [disabled]="appService.isSyncing"
-              (click)="sync(true)" *ngIf="syncDateTime && fileSystemConnectorInfo.sourceDirectory" color="primary"
+              (click)="sync(true)" *ngIf="syncDateTime && fileConnectorInfo.sourceDirectory" color="primary"
               mat-stroked-button
               matTooltip="Activity files added or modified after date '{{syncDateTime | date:'medium'}}' will be synced">
         <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
         Sync new activities
       </button>
       <button [disabled]="appService.isSyncing" (click)="sync(false)"
-              *ngIf="fileSystemConnectorInfo.sourceDirectory" color="primary"
+              *ngIf="fileConnectorInfo.sourceDirectory" color="primary"
               mat-stroked-button
               matTooltip="All activity files will be synced.">
         <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
@@ -31,11 +31,11 @@
         Configure
       </button>
     </div>
-    <div *ngIf="showConfigure && fileSystemConnectorInfo" class="configureView" fxFill>
+    <div *ngIf="showConfigure && fileConnectorInfo" class="configureView" fxFill>
       <div>
         <mat-form-field fxFill>
-          <input [(ngModel)]="fileSystemConnectorInfo.sourceDirectory" [disabled]="true" matInput
-                 placeholder="{{ (!fileSystemConnectorInfo.sourceDirectory) ? 'Browse for a directory to scan...' : 'Scan directory' }}"
+          <input [(ngModel)]="fileConnectorInfo.sourceDirectory" [disabled]="true" matInput
+                 placeholder="{{ (!fileConnectorInfo.sourceDirectory) ? 'Browse for a directory to scan...' : 'Scan directory' }}"
                  type="text">
           <button (click)="onUserDirectorySelection()" color="primary" mat-button
                   matSuffix>
@@ -44,28 +44,28 @@
         </mat-form-field>
       </div>
 
-      <div *ngIf="fileSystemConnectorInfo.sourceDirectory">
+      <div *ngIf="fileConnectorInfo.sourceDirectory">
         <div>
-          <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileSystemConnectorInfo.scanSubDirectories">
+          <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileConnectorInfo.scanSubDirectories">
             Scan subdirectories
           </mat-checkbox>
         </div>
         <div fxLayout="row" fxLayoutAlign="start start">
-          <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileSystemConnectorInfo.extractArchiveFiles"
+          <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileConnectorInfo.extractArchiveFiles"
                         matTooltip="Activities found in 'zip, rar, 7z, tar, gz, bz2, zipx or xz' files will be extracted into the scan directory. Use case: Strava.com activities backup.">
             Extract activities from archives files *
           </mat-checkbox>
           <div fxFlex="3"></div>
           <mat-checkbox (change)="saveChanges()"
-                        [(ngModel)]="fileSystemConnectorInfo.deleteArchivesAfterExtract"
-                        [disabled]="!fileSystemConnectorInfo.extractArchiveFiles"
+                        [(ngModel)]="fileConnectorInfo.deleteArchivesAfterExtract"
+                        [disabled]="!fileConnectorInfo.extractArchiveFiles"
                         matTooltip="Once activities have been extracted from a 'zip, rar, 7z, tar, gz, bz2, zipx or xz' file, the archive file will be removed from scan directory">
             Delete archives when activities have been extracted from them (recommended) *
           </mat-checkbox>
         </div>
         <div>
           <mat-checkbox (change)="saveChanges()"
-                        [(ngModel)]="fileSystemConnectorInfo.detectSportTypeWhenUnknown"
+                        [(ngModel)]="fileConnectorInfo.detectSportTypeWhenUnknown"
                         matTooltip="This case often occurs on GPX files. Note that this may introduce errors (e.g.: Inline skating gpx activity without sport type could be detected as 'Ride')">
             <strong>Experimental:</strong> Try to set when possible the activity type to <i>Ride or Run</i>
             if sport type is unknown <i>(adds a "#detected" in activities names)</i>

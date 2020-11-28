@@ -25,4 +25,13 @@ node_modules
 .prettierignore
 
 # Project specific
+*.gpx
+*.tcx
+*.fit
+*.7z
+*.zip
+*.tar
+*.tar.gz
+*.fake
 desktop-boot.js
+

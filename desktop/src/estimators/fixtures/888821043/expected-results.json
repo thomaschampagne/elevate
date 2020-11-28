@@ -156,7 +156,7 @@
   "distance_raw": 12538.900000000023,
   "elevation_gain_raw": 90,
   "calories": 21.9,
-  "sourceConnectorType": "FILE_SYSTEM",
+  "sourceConnectorType": "FILE",
   "settingsLack": false,
   "hash": "df53184e935ab2c927507719"
 }

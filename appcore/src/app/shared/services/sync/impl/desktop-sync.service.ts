@@ -10,7 +10,7 @@ import {
   CompleteSyncEvent,
   ConnectorType,
   ErrorSyncEvent,
-  FileSystemConnectorInfo,
+  FileConnectorInfo,
   StravaConnectorInfo,
   SyncEvent,
   SyncEventType
@@ -28,7 +28,7 @@ import { ConnectorSyncDateTime } from "@elevate/shared/models/sync";
 import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-time.dao";
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 import { StreamsService } from "../../streams/streams.service";
-import { FileSystemConnectorInfoService } from "../../file-system-connector-info/file-system-connector-info.service";
+import { FileConnectorInfoService } from "../../file-connector-info/file-connector-info.service";
 import { IpcMessagesSender } from "../../../../desktop/ipc-messages/ipc-messages-sender.service";
 import { DataStore } from "../../../data-store/data-store";
 import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.service";
@@ -68,7 +68,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     @Inject(IpcMessagesReceiver) public readonly ipcMessagesReceiver: IpcMessagesReceiver,
     @Inject(IpcMessagesSender) public readonly ipcMessagesSender: IpcMessagesSender,
     @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
-    @Inject(FileSystemConnectorInfoService) public readonly fsConnectorInfoService: FileSystemConnectorInfoService,
+    @Inject(FileConnectorInfoService) public readonly fsConnectorInfoService: FileConnectorInfoService,
     @Inject(LoggerService) public readonly logger: LoggerService,
     @Inject(ConnectorSyncDateTimeDao) public readonly connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
     @Inject(ElectronService) public readonly electronService: ElectronService,
@@ -163,12 +163,12 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
           userSettingsModel
         );
       } else if (this.currentConnectorType === ConnectorType.FILE) {
-        const fileSystemConnectorInfo: FileSystemConnectorInfo = result[3] as FileSystemConnectorInfo;
+        const fileConnectorInfo: FileConnectorInfo = result[3] as FileConnectorInfo;
 
         // If source directory is missing or path is invalid then a throw warning
         if (
-          !fileSystemConnectorInfo.sourceDirectory ||
-          !this.fsConnectorInfoService.isSourceDirectoryValid(fileSystemConnectorInfo.sourceDirectory)
+          !fileConnectorInfo.sourceDirectory ||
+          !this.fsConnectorInfoService.isSourceDirectoryValid(fileConnectorInfo.sourceDirectory)
         ) {
           return this.fsConnectorInfoService.ensureSourceDirectoryCompliance().then(() => {
             return Promise.reject(
@@ -183,7 +183,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
           MessageFlag.START_SYNC,
           ConnectorType.FILE,
           currentConnectorSyncDateTime,
-          fileSystemConnectorInfo,
+          fileConnectorInfo,
           athleteModel,
           userSettingsModel
         );

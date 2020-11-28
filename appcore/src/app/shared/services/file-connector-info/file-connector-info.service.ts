@@ -1,28 +1,28 @@
 import { Inject, Injectable } from "@angular/core";
-import { ConnectorType, FileSystemConnectorInfo } from "@elevate/shared/sync";
+import { ConnectorType, FileConnectorInfo } from "@elevate/shared/sync";
 import { CollectionDef } from "../../data-store/collection-def";
 import { ElectronService } from "../../../desktop/electron/electron.service";
 import { ConnectorSyncDateTimeDao } from "../../dao/sync/connector-sync-date-time.dao";
 
 @Injectable()
-export class FileSystemConnectorInfoService {
+export class FileConnectorInfoService {
   /**
    * Embedded DAO. No need to extend from BaseDao. We store in local storage instead of indexed db which might be synced in future
    */
-  private static FileSystemConnectorInfoDao = class {
-    private static readonly COLLECTION_DEF: CollectionDef<FileSystemConnectorInfo> = new CollectionDef(
-      "FILE_SYSTEM_CONNECTOR_INFO",
+  private static FileConnectorInfoDao = class {
+    private static readonly COLLECTION_DEF: CollectionDef<FileConnectorInfo> = new CollectionDef(
+      "FILE_CONNECTOR_INFO",
       null
     );
-    private static readonly DEFAULT_STORAGE_VALUE: FileSystemConnectorInfo = FileSystemConnectorInfo.DEFAULT_MODEL;
+    private static readonly DEFAULT_STORAGE_VALUE: FileConnectorInfo = FileConnectorInfo.DEFAULT_MODEL;
 
-    public static fetch(): FileSystemConnectorInfo {
+    public static fetch(): FileConnectorInfo {
       const storedConnectorInfo = localStorage.getItem(
-        FileSystemConnectorInfoService.FileSystemConnectorInfoDao.COLLECTION_DEF.name
+        FileConnectorInfoService.FileConnectorInfoDao.COLLECTION_DEF.name
       );
-      const connectorInfo: FileSystemConnectorInfo = storedConnectorInfo ? JSON.parse(storedConnectorInfo) : null;
+      const connectorInfo: FileConnectorInfo = storedConnectorInfo ? JSON.parse(storedConnectorInfo) : null;
       if (connectorInfo) {
-        return new FileSystemConnectorInfo(
+        return new FileConnectorInfo(
           connectorInfo.sourceDirectory,
           connectorInfo.scanSubDirectories,
           connectorInfo.deleteActivityFilesAfterSync,
@@ -31,16 +31,16 @@ export class FileSystemConnectorInfoService {
           connectorInfo.detectSportTypeWhenUnknown
         );
       } else {
-        return FileSystemConnectorInfoService.FileSystemConnectorInfoDao.DEFAULT_STORAGE_VALUE;
+        return FileConnectorInfoService.FileConnectorInfoDao.DEFAULT_STORAGE_VALUE;
       }
     }
 
-    public static save(fileSystemConnectorInfo: FileSystemConnectorInfo): FileSystemConnectorInfo {
+    public static save(fileConnectorInfo: FileConnectorInfo): FileConnectorInfo {
       localStorage.setItem(
-        FileSystemConnectorInfoService.FileSystemConnectorInfoDao.COLLECTION_DEF.name,
-        JSON.stringify(fileSystemConnectorInfo)
+        FileConnectorInfoService.FileConnectorInfoDao.COLLECTION_DEF.name,
+        JSON.stringify(fileConnectorInfo)
       );
-      return FileSystemConnectorInfoService.FileSystemConnectorInfoDao.fetch();
+      return FileConnectorInfoService.FileConnectorInfoDao.fetch();
     }
   };
 
@@ -49,19 +49,17 @@ export class FileSystemConnectorInfoService {
     @Inject(ElectronService) private readonly electronService: ElectronService
   ) {}
 
-  public fetch(): FileSystemConnectorInfo {
-    return FileSystemConnectorInfoService.FileSystemConnectorInfoDao.fetch();
+  public fetch(): FileConnectorInfo {
+    return FileConnectorInfoService.FileConnectorInfoDao.fetch();
   }
 
-  public save(fileSystemConnectorInfo: FileSystemConnectorInfo): FileSystemConnectorInfo {
-    return FileSystemConnectorInfoService.FileSystemConnectorInfoDao.save(fileSystemConnectorInfo);
+  public save(fileConnectorInfo: FileConnectorInfo): FileConnectorInfo {
+    return FileConnectorInfoService.FileConnectorInfoDao.save(fileConnectorInfo);
   }
 
   public getSourceDirectory(): string | null {
-    const fileSystemConnectorInfo = this.fetch();
-    return fileSystemConnectorInfo && fileSystemConnectorInfo.sourceDirectory
-      ? fileSystemConnectorInfo.sourceDirectory
-      : null;
+    const fileConnectorInfo = this.fetch();
+    return fileConnectorInfo && fileConnectorInfo.sourceDirectory ? fileConnectorInfo.sourceDirectory : null;
   }
 
   public isSourceDirectoryValid(sourceDirectoryParam: string = null): boolean {
@@ -73,9 +71,9 @@ export class FileSystemConnectorInfoService {
   public ensureSourceDirectoryCompliance(): Promise<void> {
     if (!this.isSourceDirectoryValid()) {
       // Remove wrong source directory path from config
-      const fileSystemConnectorInfo = this.fetch();
-      fileSystemConnectorInfo.sourceDirectory = null;
-      this.save(fileSystemConnectorInfo);
+      const fileConnectorInfo = this.fetch();
+      fileConnectorInfo.sourceDirectory = null;
+      this.save(fileConnectorInfo);
 
       // Now remove connector sync date time
       return this.connectorSyncDateTimeDao.removeByConnectorType(ConnectorType.FILE);

@@ -1,5 +1,5 @@
 // tslint:disable:jsdoc-format
-import { ActivityFile, ActivityFileType, FileSystemConnector } from "./file-system.connector";
+import { ActivityFile, ActivityFileType, FileConnector } from "./file.connector";
 import {
   ActivityStreamsModel,
   AnalysisDataModel,
@@ -21,7 +21,7 @@ import {
   ActivitySyncEvent,
   ConnectorType,
   ErrorSyncEvent,
-  FileSystemConnectorInfo,
+  FileConnectorInfo,
   StartedSyncEvent,
   StoppedSyncEvent,
   SyncEvent,
@@ -39,7 +39,7 @@ import { DataHeartRate } from "@sports-alliance/sports-lib/lib/data/data.heart-r
 import { Creator } from "@sports-alliance/sports-lib/lib/creators/creator";
 import { ActivityTypes } from "@sports-alliance/sports-lib/lib/activities/activity.types";
 import { DataPower } from "@sports-alliance/sports-lib/lib/data/data.power";
-import { FileSystemConnectorConfig } from "../connector-config.model";
+import { FileConnectorConfig } from "../connector-config.model";
 import { container } from "tsyringe";
 import { Hash } from "../../tools/hash";
 import streamsRideJson from "../../estimators/fixtures/723224273/stream.json";
@@ -114,29 +114,29 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 	}
  ]*/
 
-describe("FileSystemConnector", () => {
+describe("FileConnector", () => {
   const activitiesLocalPath01 = __dirname + "/fixtures/activities-01/";
   const activitiesLocalPath02 = __dirname + "/fixtures/activities-02/";
   const compressedActivitiesPath = __dirname + "/fixtures/compressed-activities/";
 
-  let fileSystemConnectorConfig: FileSystemConnectorConfig;
-  let fileSystemConnector: FileSystemConnector;
+  let fileConnectorConfig: FileConnectorConfig;
+  let fileConnector: FileConnector;
   let syncFilesSpy: jasmine.Spy;
 
   beforeEach(done => {
-    fileSystemConnector = container.resolve(FileSystemConnector);
+    fileConnector = container.resolve(FileConnector);
 
-    fileSystemConnectorConfig = {
+    fileConnectorConfig = {
       connectorSyncDateTime: null,
       athleteModel: AthleteModel.DEFAULT_MODEL,
       userSettingsModel: UserSettings.getDefaultsByBuildTarget(BuildTarget.DESKTOP),
-      info: new FileSystemConnectorInfo(activitiesLocalPath01)
+      info: new FileConnectorInfo(activitiesLocalPath01)
     };
 
-    fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
-    syncFilesSpy = spyOn(fileSystemConnector, "syncFiles").and.callThrough();
+    fileConnector = fileConnector.configure(fileConnectorConfig);
+    syncFilesSpy = spyOn(fileConnector, "syncFiles").and.callThrough();
 
-    spyOn(fileSystemConnector, "wait").and.returnValue(Promise.resolve());
+    spyOn(fileConnector, "wait").and.returnValue(Promise.resolve());
 
     done();
   });
@@ -156,14 +156,11 @@ describe("FileSystemConnector", () => {
           Hash.apply("/subfolder", Hash.SHA1, { divide: 6 }) +
           "-33333.fit"
       ];
-      const unlinkSyncSpy = spyOn(fileSystemConnector.getFs(), "unlinkSync").and.callThrough();
+      const unlinkSyncSpy = spyOn(fileConnector.getFs(), "unlinkSync").and.callThrough();
       const deleteArchive = false;
 
       // When
-      const promise: Promise<string[]> = fileSystemConnector.deflateActivitiesFromArchive(
-        archiveFilePath,
-        deleteArchive
-      );
+      const promise: Promise<string[]> = fileConnector.deflateActivitiesFromArchive(archiveFilePath, deleteArchive);
 
       // Then
       promise.then(
@@ -193,14 +190,11 @@ describe("FileSystemConnector", () => {
 
       // Create a copy
       fs.copyFileSync(archiveFilePath, archiveFilePathCopy);
-      const unlinkSyncSpy = spyOn(fileSystemConnector.getFs(), "unlinkSync").and.callThrough();
+      const unlinkSyncSpy = spyOn(fileConnector.getFs(), "unlinkSync").and.callThrough();
       const deleteArchive = true;
 
       // When
-      const promise: Promise<string[]> = fileSystemConnector.deflateActivitiesFromArchive(
-        archiveFilePathCopy,
-        deleteArchive
-      );
+      const promise: Promise<string[]> = fileConnector.deflateActivitiesFromArchive(archiveFilePathCopy, deleteArchive);
 
       // Then
       promise.then(
@@ -228,18 +222,15 @@ describe("FileSystemConnector", () => {
       const archiveFileName = "samples.zip";
       const archiveFilePath = compressedActivitiesPath + archiveFileName;
       const expectedErrorMessage = "Whoops an extraction error";
-      spyOn(FileSystemConnector.getAllUnPacker(), "unpack").and.callFake((filePath, options, callback) => {
+      spyOn(FileConnector.getAllUnPacker(), "unpack").and.callFake((filePath, options, callback) => {
         callback(expectedErrorMessage);
       });
       const deleteArchive = false;
 
-      const rmdirSyncSpy = spyOn(fileSystemConnector.getFs(), "rmdirSync").and.callThrough();
+      const rmdirSyncSpy = spyOn(fileConnector.getFs(), "rmdirSync").and.callThrough();
 
       // When
-      const promise: Promise<string[]> = fileSystemConnector.deflateActivitiesFromArchive(
-        archiveFilePath,
-        deleteArchive
-      );
+      const promise: Promise<string[]> = fileConnector.deflateActivitiesFromArchive(archiveFilePath, deleteArchive);
 
       // Then
       promise.then(
@@ -259,17 +250,14 @@ describe("FileSystemConnector", () => {
       const archiveFileName = "samples.zip";
       const archiveFilePath = compressedActivitiesPath + archiveFileName;
       const expectedErrorMessage = "Whoops a move error";
-      spyOn(fileSystemConnector.getFs(), "renameSync").and.callFake(() => {
+      spyOn(fileConnector.getFs(), "renameSync").and.callFake(() => {
         throw new Error(expectedErrorMessage);
       });
-      const rmdirSyncSpy = spyOn(fileSystemConnector.getFs(), "rmdirSync").and.callThrough();
+      const rmdirSyncSpy = spyOn(fileConnector.getFs(), "rmdirSync").and.callThrough();
       const deleteArchive = false;
 
       // When
-      const promise: Promise<string[]> = fileSystemConnector.deflateActivitiesFromArchive(
-        archiveFilePath,
-        deleteArchive
-      );
+      const promise: Promise<string[]> = fileConnector.deflateActivitiesFromArchive(archiveFilePath, deleteArchive);
 
       // Then
       promise.then(
@@ -290,14 +278,11 @@ describe("FileSystemConnector", () => {
       const deflateNotifier = new Subject<string>();
       const recursive = true;
       const notifierNextSpy = spyOn(deflateNotifier, "next").and.callThrough();
-      const unlinkSyncSpy = spyOn(fileSystemConnector.getFs(), "unlinkSync").and.stub(); // Avoid remove test archive files with stubbing
-      const deflateActivitiesInArchiveSpy = spyOn(
-        fileSystemConnector,
-        "deflateActivitiesFromArchive"
-      ).and.callThrough();
+      const unlinkSyncSpy = spyOn(fileConnector.getFs(), "unlinkSync").and.stub(); // Avoid remove test archive files with stubbing
+      const deflateActivitiesInArchiveSpy = spyOn(fileConnector, "deflateActivitiesFromArchive").and.callThrough();
 
       // When
-      const promise: Promise<void> = fileSystemConnector.scanDeflateActivitiesFromArchives(
+      const promise: Promise<void> = fileConnector.scanDeflateActivitiesFromArchives(
         compressedActivitiesPath,
         deleteArchives,
         deflateNotifier,
@@ -315,7 +300,7 @@ describe("FileSystemConnector", () => {
           expect(notifierNextSpy).toHaveBeenCalledTimes(4); // 4 archives
           expect(unlinkSyncSpy).toHaveBeenCalledTimes(4); // 4 archives
 
-          const activityFiles = fileSystemConnector.scanForActivities(compressedActivitiesPath, null, true);
+          const activityFiles = fileConnector.scanForActivities(compressedActivitiesPath, null, true);
           expect(activityFiles.length).toEqual(12);
           activityFiles.forEach(activityFile => {
             expect(fs.existsSync(activityFile.location.path)).toBeTruthy();
@@ -349,11 +334,11 @@ describe("FileSystemConnector", () => {
 
     it("should provide a list of compatible activities files (gpx, tcx, fit) from a given directory (no sub-directories scan)", done => {
       // Given
-      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
+      fileConnector = fileConnector.configure(fileConnectorConfig);
       const expectedLength = 2;
 
       // When
-      const activityFiles: ActivityFile[] = fileSystemConnector.scanForActivities(activitiesLocalPath01);
+      const activityFiles: ActivityFile[] = fileConnector.scanForActivities(activitiesLocalPath01);
 
       // Then
       expect(activityFiles.length).toEqual(expectedLength);
@@ -381,11 +366,7 @@ describe("FileSystemConnector", () => {
       const expectedLength = 3;
 
       // When
-      const activityFiles: ActivityFile[] = fileSystemConnector.scanForActivities(
-        activitiesLocalPath01,
-        null,
-        recursive
-      );
+      const activityFiles: ActivityFile[] = fileConnector.scanForActivities(activitiesLocalPath01, null, recursive);
 
       // Then
       expect(activityFiles.length).toEqual(expectedLength);
@@ -415,7 +396,7 @@ describe("FileSystemConnector", () => {
       const oldDate = new Date("2020-01-05T09:00:00.000Z");
       const recursive = true;
 
-      const getLastAccessDateSpy = spyOn(fileSystemConnector, "getLastAccessDate").and.callFake(absolutePath => {
+      const getLastAccessDateSpy = spyOn(fileConnector, "getLastAccessDate").and.callFake(absolutePath => {
         if (path.basename(absolutePath) === "virtual_ride.fit") {
           // This file should not be returned
           return oldDate;
@@ -424,7 +405,7 @@ describe("FileSystemConnector", () => {
       });
 
       // When
-      const activityFiles: ActivityFile[] = fileSystemConnector.scanForActivities(
+      const activityFiles: ActivityFile[] = fileConnector.scanForActivities(
         activitiesLocalPath01,
         afterDate,
         recursive
@@ -451,7 +432,7 @@ describe("FileSystemConnector", () => {
 
   describe("Root sync", () => {
     beforeEach(done => {
-      spyOn(fileSystemConnector, "findSyncedActivityModels").and.returnValue(Promise.resolve(null));
+      spyOn(fileConnector, "findSyncedActivityModels").and.returnValue(Promise.resolve(null));
       done();
     });
 
@@ -462,7 +443,7 @@ describe("FileSystemConnector", () => {
       let startedSyncEventToBeCaught = null;
 
       // When
-      const syncEvent$ = fileSystemConnector.sync();
+      const syncEvent$ = fileConnector.sync();
       const syncEvents$CompleteSpy = spyOn(syncEvent$, "complete").and.callThrough();
 
       // Then
@@ -472,7 +453,7 @@ describe("FileSystemConnector", () => {
             startedSyncEventToBeCaught = syncEvent;
           }
 
-          expect(fileSystemConnector.isSyncing).toBeTruthy();
+          expect(fileConnector.isSyncing).toBeTruthy();
         },
         error => {
           expect(error).not.toBeDefined();
@@ -480,7 +461,7 @@ describe("FileSystemConnector", () => {
         },
         () => {
           expect(startedSyncEventToBeCaught).toEqual(expectedStartedSyncEvent);
-          expect(fileSystemConnector.isSyncing).toBeFalsy();
+          expect(fileConnector.isSyncing).toBeFalsy();
           expect(syncFilesSpy).toBeCalledTimes(1);
           expect(syncEvents$CompleteSpy).toBeCalledTimes(expectedCompleteCalls);
           done();
@@ -494,21 +475,21 @@ describe("FileSystemConnector", () => {
       syncFilesSpy.and.returnValue(Promise.reject(expectedErrorSync));
 
       // When
-      const syncEvent$ = fileSystemConnector.sync();
+      const syncEvent$ = fileConnector.sync();
       const syncEvents$ErrorsSpy = spyOn(syncEvent$, "error").and.callThrough();
       const syncEvents$CompleteSpy = spyOn(syncEvent$, "complete").and.callThrough();
 
       // Then
       syncEvent$.subscribe(
         () => {
-          expect(fileSystemConnector.isSyncing).toBeTruthy();
+          expect(fileConnector.isSyncing).toBeTruthy();
         },
         error => {
           expect(error).toBeDefined();
           expect(syncFilesSpy).toBeCalledTimes(1);
           expect(syncEvents$CompleteSpy).not.toBeCalled();
           expect(syncEvents$ErrorsSpy).toBeCalledTimes(1);
-          expect(fileSystemConnector.isSyncing).toBeFalsy();
+          expect(fileConnector.isSyncing).toBeFalsy();
 
           done();
         },
@@ -521,11 +502,11 @@ describe("FileSystemConnector", () => {
     it("should reject sync if connector is already syncing", done => {
       // Given
       const expectedErrorSyncEvent = ErrorSyncEvent.SYNC_ALREADY_STARTED.create(ConnectorType.FILE);
-      const syncEvent$01 = fileSystemConnector.sync(); // Start a first sync
+      const syncEvent$01 = fileConnector.sync(); // Start a first sync
 
       // When
       const syncEvents$NextSpy = spyOn(syncEvent$01, "next").and.callThrough();
-      const syncEvent$02 = fileSystemConnector.sync(); // Start a 2nd one.
+      const syncEvent$02 = fileConnector.sync(); // Start a 2nd one.
 
       // Then
       syncEvent$01.subscribe(
@@ -553,7 +534,7 @@ describe("FileSystemConnector", () => {
       const expectedStoppedSyncEvent = new StoppedSyncEvent(ConnectorType.FILE);
       const expectedStoppedSyncEventReceived = 1;
 
-      const syncEvent$ = fileSystemConnector.sync();
+      const syncEvent$ = fileConnector.sync();
       syncEvent$
         .pipe(filter(syncEvent => syncEvent.type === SyncEventType.STOPPED))
         .subscribe((syncEvent: StoppedSyncEvent) => {
@@ -561,17 +542,17 @@ describe("FileSystemConnector", () => {
         });
 
       // When
-      const promise = fileSystemConnector.stop();
+      const promise = fileConnector.stop();
 
       // Then
-      expect(fileSystemConnector.stopRequested).toBeTruthy();
-      expect(fileSystemConnector.isSyncing).toBeTruthy();
+      expect(fileConnector.stopRequested).toBeTruthy();
+      expect(fileConnector.isSyncing).toBeTruthy();
       promise.then(
         () => {
           expect(stopSyncEventReceived.length).toEqual(expectedStoppedSyncEventReceived);
           expect(stopSyncEventReceived[0]).toEqual(expectedStoppedSyncEvent);
-          expect(fileSystemConnector.stopRequested).toBeFalsy();
-          expect(fileSystemConnector.isSyncing).toBeFalsy();
+          expect(fileConnector.stopRequested).toBeFalsy();
+          expect(fileConnector.isSyncing).toBeFalsy();
           done();
         },
         () => {
@@ -582,21 +563,21 @@ describe("FileSystemConnector", () => {
 
     it("should reject a stop request when no sync is processed", done => {
       // Given
-      fileSystemConnector.isSyncing = false;
+      fileConnector.isSyncing = false;
 
       // When
-      const promise = fileSystemConnector.stop();
+      const promise = fileConnector.stop();
 
       // Then
-      expect(fileSystemConnector.stopRequested).toBeTruthy();
-      expect(fileSystemConnector.isSyncing).toBeFalsy();
+      expect(fileConnector.stopRequested).toBeTruthy();
+      expect(fileConnector.isSyncing).toBeFalsy();
       promise.then(
         () => {
           throw new Error("Whoops! I should not be here!");
         },
         () => {
-          expect(fileSystemConnector.isSyncing).toBeFalsy();
-          expect(fileSystemConnector.stopRequested).toBeFalsy();
+          expect(fileConnector.isSyncing).toBeFalsy();
+          expect(fileConnector.stopRequested).toBeFalsy();
           done();
         }
       );
@@ -611,27 +592,27 @@ describe("FileSystemConnector", () => {
       const scanSubDirectories = true;
       const deleteArchivesAfterExtract = false;
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
-      fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
-      fileSystemConnectorConfig.info.scanSubDirectories = scanSubDirectories;
-      fileSystemConnectorConfig.info.extractArchiveFiles = true;
-      fileSystemConnectorConfig.info.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
+      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
+      fileConnectorConfig.info.scanSubDirectories = scanSubDirectories;
+      fileConnectorConfig.info.extractArchiveFiles = true;
+      fileConnectorConfig.info.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
 
-      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
+      fileConnector = fileConnector.configure(fileConnectorConfig);
 
       const scanDeflateActivitiesFromArchivesSpy = spyOn(
-        fileSystemConnector,
+        fileConnector,
         "scanDeflateActivitiesFromArchives"
       ).and.callThrough();
-      const scanForActivitiesSpy = spyOn(fileSystemConnector, "scanForActivities").and.callThrough();
+      const scanForActivitiesSpy = spyOn(fileConnector, "scanForActivities").and.callThrough();
       const importFromGPXSpy = spyOn(SportsLib, "importFromGPX").and.callThrough();
       const importFromTCXSpy = spyOn(SportsLib, "importFromTCX").and.callThrough();
       const importFromFITSpy = spyOn(SportsLib, "importFromFit").and.callThrough();
-      const findSyncedActivityModelsSpy = spyOn(fileSystemConnector, "findSyncedActivityModels").and.returnValue(
+      const findSyncedActivityModelsSpy = spyOn(fileConnector, "findSyncedActivityModels").and.returnValue(
         Promise.resolve(null)
       );
-      const extractActivityStreamsSpy = spyOn(fileSystemConnector, "extractActivityStreams").and.callThrough();
-      const computeAdditionalStreamsSpy = spyOn(fileSystemConnector, "computeAdditionalStreams").and.callThrough();
+      const extractActivityStreamsSpy = spyOn(fileConnector, "extractActivityStreams").and.callThrough();
+      const computeAdditionalStreamsSpy = spyOn(fileConnector, "computeAdditionalStreams").and.callThrough();
       const updatePrimitiveStatsFromComputationSpy = spyOn(
         BaseConnector,
         "updatePrimitiveStatsFromComputation"
@@ -649,7 +630,7 @@ describe("FileSystemConnector", () => {
       const expectedActivityFilePathMatch = "20190815_ride_3953195468.tcx";
 
       // When
-      const promise = fileSystemConnector.syncFiles(syncEvents$);
+      const promise = fileConnector.syncFiles(syncEvents$);
 
       // Then
       promise.then(
@@ -693,7 +674,7 @@ describe("FileSystemConnector", () => {
           expect(activitySyncEvent.activity.sourceConnectorType).toEqual(ConnectorType.FILE);
           expect(activitySyncEvent.activity.extras.fs_activity_location.path).toContain(expectedActivityFilePathMatch);
           expect(activitySyncEvent.activity.athleteSnapshot).toEqual(
-            fileSystemConnector.athleteSnapshotResolver.getCurrent()
+            fileConnector.athleteSnapshotResolver.getCurrent()
           );
           expect(activitySyncEvent.activity.extendedStats).not.toBeNull();
 
@@ -715,19 +696,19 @@ describe("FileSystemConnector", () => {
       const scanSubDirectories = true;
       const deleteArchivesAfterExtract = false;
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
-      fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
-      fileSystemConnectorConfig.info.scanSubDirectories = scanSubDirectories;
-      fileSystemConnectorConfig.info.extractArchiveFiles = true;
-      fileSystemConnectorConfig.info.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
+      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
+      fileConnectorConfig.info.scanSubDirectories = scanSubDirectories;
+      fileConnectorConfig.info.extractArchiveFiles = true;
+      fileConnectorConfig.info.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
 
-      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
+      fileConnector = fileConnector.configure(fileConnectorConfig);
 
       const scanDeflateActivitiesFromArchivesSpy = spyOn(
-        fileSystemConnector,
+        fileConnector,
         "scanDeflateActivitiesFromArchives"
       ).and.callThrough();
-      const scanForActivitiesSpy = spyOn(fileSystemConnector, "scanForActivities").and.callThrough();
+      const scanForActivitiesSpy = spyOn(fileConnector, "scanForActivities").and.callThrough();
       const importFromGPXSpy = spyOn(SportsLib, "importFromGPX").and.callThrough();
       const importFromTCXSpy = spyOn(SportsLib, "importFromTCX").and.callThrough();
       const importFromFITSpy = spyOn(SportsLib, "importFromFit").and.callThrough();
@@ -741,19 +722,19 @@ describe("FileSystemConnector", () => {
         expectedExistingSyncedActivity,
         false
       );
-      const findSyncedActivityModelsSpy = spyOn(fileSystemConnector, "findSyncedActivityModels").and.callFake(
+      const findSyncedActivityModelsSpy = spyOn(fileConnector, "findSyncedActivityModels").and.callFake(
         (activityStartDate: string) => {
           expectedExistingSyncedActivity.start_time = activityStartDate;
           return Promise.resolve([expectedExistingSyncedActivity]);
         }
       );
-      const createBareActivitySpy = spyOn(fileSystemConnector, "createBareActivity").and.callThrough();
-      const extractActivityStreamsSpy = spyOn(fileSystemConnector, "extractActivityStreams").and.callThrough();
-      const computeAdditionalStreamsSpy = spyOn(fileSystemConnector, "computeAdditionalStreams").and.callThrough();
+      const createBareActivitySpy = spyOn(fileConnector, "createBareActivity").and.callThrough();
+      const extractActivityStreamsSpy = spyOn(fileConnector, "extractActivityStreams").and.callThrough();
+      const computeAdditionalStreamsSpy = spyOn(fileConnector, "computeAdditionalStreams").and.callThrough();
       const syncEventNextSpy = spyOn(syncEvents$, "next").and.stub();
 
       // When
-      const promise = fileSystemConnector.syncFiles(syncEvents$);
+      const promise = fileConnector.syncFiles(syncEvents$);
 
       // Then
       promise.then(
@@ -793,22 +774,22 @@ describe("FileSystemConnector", () => {
       const syncEvents$ = new Subject<SyncEvent>();
       const scanSubDirectories = true;
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
-      fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
-      fileSystemConnectorConfig.info.scanSubDirectories = scanSubDirectories;
-      fileSystemConnectorConfig.info.extractArchiveFiles = true;
-      fileSystemConnectorConfig.info.deleteArchivesAfterExtract = false;
+      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
+      fileConnectorConfig.info.scanSubDirectories = scanSubDirectories;
+      fileConnectorConfig.info.extractArchiveFiles = true;
+      fileConnectorConfig.info.deleteArchivesAfterExtract = false;
 
-      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
+      fileConnector = fileConnector.configure(fileConnectorConfig);
 
       const scanDeflateActivitiesFromArchivesSpy = spyOn(
-        fileSystemConnector,
+        fileConnector,
         "scanDeflateActivitiesFromArchives"
       ).and.callThrough();
-      const scanForActivitiesSpy = spyOn(fileSystemConnector, "scanForActivities").and.callThrough();
+      const scanForActivitiesSpy = spyOn(fileConnector, "scanForActivities").and.callThrough();
 
       // Return lastModificationDate greater than syncDateTime when file name contains "2019"
-      spyOn(fileSystemConnector, "getLastAccessDate").and.callFake((absolutePath: string) => {
+      spyOn(fileConnector, "getLastAccessDate").and.callFake((absolutePath: string) => {
         return absolutePath.match(/2019/gm)
           ? new Date("2019-06-01T12:00:00.000Z") // Fake 2019 date
           : new Date("2018-06-01T12:00:00.000Z"); // Fake 2018 date
@@ -821,16 +802,16 @@ describe("FileSystemConnector", () => {
       const expectedExistingSyncedActivity = new SyncedActivityModel();
       expectedExistingSyncedActivity.name = "Existing activity";
       expectedExistingSyncedActivity.type = ElevateSport.Ride;
-      const findSyncedActivityModelsSpy = spyOn(fileSystemConnector, "findSyncedActivityModels").and.returnValue(
+      const findSyncedActivityModelsSpy = spyOn(fileConnector, "findSyncedActivityModels").and.returnValue(
         Promise.resolve(null)
       );
-      const createBareActivitySpy = spyOn(fileSystemConnector, "createBareActivity").and.callThrough();
-      const extractActivityStreamsSpy = spyOn(fileSystemConnector, "extractActivityStreams").and.callThrough();
-      const computeAdditionalStreamsSpy = spyOn(fileSystemConnector, "computeAdditionalStreams").and.callThrough();
+      const createBareActivitySpy = spyOn(fileConnector, "createBareActivity").and.callThrough();
+      const extractActivityStreamsSpy = spyOn(fileConnector, "extractActivityStreams").and.callThrough();
+      const computeAdditionalStreamsSpy = spyOn(fileConnector, "computeAdditionalStreams").and.callThrough();
       const syncEventNextSpy = spyOn(syncEvents$, "next").and.stub();
 
       // When
-      const promise = fileSystemConnector.syncFiles(syncEvents$);
+      const promise = fileConnector.syncFiles(syncEvents$);
 
       // Then
       promise.then(
@@ -872,19 +853,19 @@ describe("FileSystemConnector", () => {
       const scanSubDirectories = true;
       const deleteArchivesAfterExtract = false;
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
-      fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
-      fileSystemConnectorConfig.info.scanSubDirectories = scanSubDirectories;
-      fileSystemConnectorConfig.info.extractArchiveFiles = true;
-      fileSystemConnectorConfig.info.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
+      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
+      fileConnectorConfig.info.scanSubDirectories = scanSubDirectories;
+      fileConnectorConfig.info.extractArchiveFiles = true;
+      fileConnectorConfig.info.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
 
-      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
+      fileConnector = fileConnector.configure(fileConnectorConfig);
 
       const scanDeflateActivitiesFromArchivesSpy = spyOn(
-        fileSystemConnector,
+        fileConnector,
         "scanDeflateActivitiesFromArchives"
       ).and.callThrough();
-      const scanForActivitiesSpy = spyOn(fileSystemConnector, "scanForActivities").and.callThrough();
+      const scanForActivitiesSpy = spyOn(fileConnector, "scanForActivities").and.callThrough();
       const importFromGPXSpy = spyOn(SportsLib, "importFromGPX").and.callThrough();
       const importFromTCXSpy = spyOn(SportsLib, "importFromTCX").and.callThrough();
       const importFromFITSpy = spyOn(SportsLib, "importFromFit").and.callThrough();
@@ -896,13 +877,13 @@ describe("FileSystemConnector", () => {
       expectedExistingSyncedActivity.start_time = new Date().toISOString();
 
       // Emulate 1 existing activity
-      const findSyncedActivityModelsSpy = spyOn(fileSystemConnector, "findSyncedActivityModels").and.callFake(() => {
+      const findSyncedActivityModelsSpy = spyOn(fileConnector, "findSyncedActivityModels").and.callFake(() => {
         return Promise.resolve([expectedExistingSyncedActivity, expectedExistingSyncedActivity]);
       });
 
-      const createBareActivitySpy = spyOn(fileSystemConnector, "createBareActivity").and.callThrough();
-      const extractActivityStreamsSpy = spyOn(fileSystemConnector, "extractActivityStreams").and.callThrough();
-      const computeAdditionalStreamsSpy = spyOn(fileSystemConnector, "computeAdditionalStreams").and.callThrough();
+      const createBareActivitySpy = spyOn(fileConnector, "createBareActivity").and.callThrough();
+      const extractActivityStreamsSpy = spyOn(fileConnector, "extractActivityStreams").and.callThrough();
+      const computeAdditionalStreamsSpy = spyOn(fileConnector, "computeAdditionalStreams").and.callThrough();
       const syncEventNextSpy = spyOn(syncEvents$, "next").and.stub();
       const expectedActivitiesFound =
         expectedExistingSyncedActivity.name +
@@ -911,7 +892,7 @@ describe("FileSystemConnector", () => {
         ")";
 
       // When
-      const promise = fileSystemConnector.syncFiles(syncEvents$);
+      const promise = fileConnector.syncFiles(syncEvents$);
 
       // Then
       promise.then(
@@ -957,22 +938,22 @@ describe("FileSystemConnector", () => {
       const syncEvents$ = new Subject<SyncEvent>();
       const errorMessage = "Unable to create bare activity";
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
-      fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
-      fileSystemConnectorConfig.info.scanSubDirectories = true;
-      fileSystemConnectorConfig.info.extractArchiveFiles = true;
-      fileSystemConnectorConfig.info.deleteArchivesAfterExtract = false;
+      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
+      fileConnectorConfig.info.scanSubDirectories = true;
+      fileConnectorConfig.info.extractArchiveFiles = true;
+      fileConnectorConfig.info.deleteArchivesAfterExtract = false;
 
-      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
+      fileConnector = fileConnector.configure(fileConnectorConfig);
 
-      spyOn(fileSystemConnector, "findSyncedActivityModels").and.returnValue(Promise.resolve(null));
-      spyOn(fileSystemConnector, "scanDeflateActivitiesFromArchives").and.callThrough();
-      spyOn(fileSystemConnector, "scanForActivities").and.callThrough();
+      spyOn(fileConnector, "findSyncedActivityModels").and.returnValue(Promise.resolve(null));
+      spyOn(fileConnector, "scanDeflateActivitiesFromArchives").and.callThrough();
+      spyOn(fileConnector, "scanForActivities").and.callThrough();
       spyOn(SportsLib, "importFromGPX").and.callThrough();
       spyOn(SportsLib, "importFromTCX").and.callThrough();
       spyOn(SportsLib, "importFromFit").and.callThrough();
 
-      spyOn(fileSystemConnector, "createBareActivity").and.callFake((sportsLibActivity: ActivityInterface) => {
+      spyOn(fileConnector, "createBareActivity").and.callFake((sportsLibActivity: ActivityInterface) => {
         if (sportsLibActivity.startDate.toISOString() === "2019-08-11T12:52:20.000Z") {
           throw new Error(errorMessage);
         }
@@ -981,7 +962,7 @@ describe("FileSystemConnector", () => {
       spyOn(syncEvents$, "next").and.stub();
 
       // When
-      const promise = fileSystemConnector.syncFiles(syncEvents$);
+      const promise = fileConnector.syncFiles(syncEvents$);
 
       // Then
       promise.then(
@@ -1000,25 +981,25 @@ describe("FileSystemConnector", () => {
       const syncEvents$ = new Subject<SyncEvent>();
       const errorMessage = "Unable to parse fit file";
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
-      fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
-      fileSystemConnectorConfig.info.scanSubDirectories = true;
-      fileSystemConnectorConfig.info.extractArchiveFiles = false;
-      fileSystemConnectorConfig.info.deleteArchivesAfterExtract = false;
+      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
+      fileConnectorConfig.info.scanSubDirectories = true;
+      fileConnectorConfig.info.extractArchiveFiles = false;
+      fileConnectorConfig.info.deleteArchivesAfterExtract = false;
 
-      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
+      fileConnector = fileConnector.configure(fileConnectorConfig);
 
-      spyOn(fileSystemConnector, "findSyncedActivityModels").and.returnValue(Promise.resolve(null));
-      spyOn(fileSystemConnector, "scanDeflateActivitiesFromArchives").and.callThrough();
-      spyOn(fileSystemConnector, "scanForActivities").and.callThrough();
+      spyOn(fileConnector, "findSyncedActivityModels").and.returnValue(Promise.resolve(null));
+      spyOn(fileConnector, "scanDeflateActivitiesFromArchives").and.callThrough();
+      spyOn(fileConnector, "scanForActivities").and.callThrough();
       spyOn(SportsLib, "importFromGPX").and.callThrough();
       spyOn(SportsLib, "importFromTCX").and.callThrough();
       spyOn(SportsLib, "importFromFit").and.returnValue(Promise.reject(errorMessage));
-      spyOn(fileSystemConnector, "createBareActivity").and.callThrough();
+      spyOn(fileConnector, "createBareActivity").and.callThrough();
       spyOn(syncEvents$, "next").and.stub();
 
       // When
-      const promise = fileSystemConnector.syncFiles(syncEvents$);
+      const promise = fileConnector.syncFiles(syncEvents$);
 
       // Then
       promise.then(
@@ -1038,12 +1019,12 @@ describe("FileSystemConnector", () => {
       const fakeSourceDir = "/fake/dir/path";
       const expectedErrorSyncEvent = ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(fakeSourceDir);
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
-      fileSystemConnectorConfig.info.sourceDirectory = fakeSourceDir;
-      fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
+      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.info.sourceDirectory = fakeSourceDir;
+      fileConnector = fileConnector.configure(fileConnectorConfig);
 
       // When
-      const promise = fileSystemConnector.syncFiles(syncEvents$);
+      const promise = fileConnector.syncFiles(syncEvents$);
 
       // Then
       promise.then(
@@ -1073,7 +1054,7 @@ describe("FileSystemConnector", () => {
         const sportsLibActivity = event.getFirstActivity();
 
         // When
-        const bareActivity = fileSystemConnector.createBareActivity(sportsLibActivity);
+        const bareActivity = fileConnector.createBareActivity(sportsLibActivity);
 
         // Then
         expect(bareActivity.id).toEqual(expectedId);
@@ -1098,7 +1079,7 @@ describe("FileSystemConnector", () => {
         const elevateSportResult: {
           type: ElevateSport;
           autoDetected: boolean;
-        } = fileSystemConnector.convertToElevateSport(sportsLibActivity);
+        } = fileConnector.convertToElevateSport(sportsLibActivity);
 
         // Then
         expect(elevateSportResult.type).toEqual(expectedElevateSport);
@@ -1108,8 +1089,8 @@ describe("FileSystemConnector", () => {
 
       it("should convert unknown 'sports-lib' type to ElevateSport other type", done => {
         // Given
-        fileSystemConnectorConfig.info.detectSportTypeWhenUnknown = true;
-        fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
+        fileConnectorConfig.info.detectSportTypeWhenUnknown = true;
+        fileConnector = fileConnector.configure(fileConnectorConfig);
 
         const sportsLibActivity: ActivityInterface = {
           type: "FakeSport" as ActivityTypes,
@@ -1125,12 +1106,12 @@ describe("FileSystemConnector", () => {
             };
           }
         });
-        const attemptDetectCommonSportSpy = spyOn(fileSystemConnector, "attemptDetectCommonSport").and.returnValue(
+        const attemptDetectCommonSportSpy = spyOn(fileConnector, "attemptDetectCommonSport").and.returnValue(
           ElevateSport.Other
         );
 
         // When
-        fileSystemConnector.convertToElevateSport(sportsLibActivity);
+        fileConnector.convertToElevateSport(sportsLibActivity);
 
         // Then
         expect(attemptDetectCommonSportSpy).toHaveBeenCalledTimes(1);
@@ -1491,7 +1472,7 @@ describe("FileSystemConnector", () => {
 
         // When, Then
         activitiesTestData.forEach((testData, index) => {
-          const elevateSport = fileSystemConnector.attemptDetectCommonSport(
+          const elevateSport = fileConnector.attemptDetectCommonSport(
             testData.distance,
             testData.duration,
             testData.ascent,
@@ -1665,12 +1646,12 @@ describe("FileSystemConnector", () => {
         const promise = SportsLib.importFromTCX(
           new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")
         ).then(event => {
-          return Promise.resolve(fileSystemConnector.extractActivityStreams(event.getFirstActivity()));
+          return Promise.resolve(fileConnector.extractActivityStreams(event.getFirstActivity()));
         });
 
         // When
         promise.then((activityStreamsModel: ActivityStreamsModel) => {
-          const powerEstimatedStream = fileSystemConnector.estimateCyclingPowerStream(
+          const powerEstimatedStream = fileConnector.estimateCyclingPowerStream(
             ElevateSport.Ride,
             activityStreamsModel.velocity_smooth,
             activityStreamsModel.grade_smooth,
@@ -1687,14 +1668,9 @@ describe("FileSystemConnector", () => {
         // Given, When
         const riderWeight = 80;
         const runCall = () =>
-          fileSystemConnector.estimateCyclingPowerStream(ElevateSport.Run, [1, 2, 3, 5], [1, 2, 3, 5], riderWeight);
+          fileConnector.estimateCyclingPowerStream(ElevateSport.Run, [1, 2, 3, 5], [1, 2, 3, 5], riderWeight);
         const alpineSkiCall = () =>
-          fileSystemConnector.estimateCyclingPowerStream(
-            ElevateSport.AlpineSki,
-            [1, 2, 3, 5],
-            [1, 2, 3, 5],
-            riderWeight
-          );
+          fileConnector.estimateCyclingPowerStream(ElevateSport.AlpineSki, [1, 2, 3, 5], [1, 2, 3, 5], riderWeight);
 
         // Then
         expect(runCall).toThrowError();
@@ -1707,11 +1683,11 @@ describe("FileSystemConnector", () => {
         // Given, When
         const riderWeight = 80;
         const noVelocityCall = () =>
-          fileSystemConnector.estimateCyclingPowerStream(ElevateSport.Ride, [], [1, 2, 3, 5], riderWeight);
+          fileConnector.estimateCyclingPowerStream(ElevateSport.Ride, [], [1, 2, 3, 5], riderWeight);
         const noGradeCall = () =>
-          fileSystemConnector.estimateCyclingPowerStream(ElevateSport.VirtualRide, [1, 2, 3, 5], [], riderWeight);
+          fileConnector.estimateCyclingPowerStream(ElevateSport.VirtualRide, [1, 2, 3, 5], [], riderWeight);
         const noWeightCall = () =>
-          fileSystemConnector.estimateCyclingPowerStream(ElevateSport.VirtualRide, [1, 2, 3, 5], [1, 2, 3, 5], null);
+          fileConnector.estimateCyclingPowerStream(ElevateSport.VirtualRide, [1, 2, 3, 5], [1, 2, 3, 5], null);
 
         // Then
         expect(noVelocityCall).toThrowError();
@@ -1738,9 +1714,7 @@ describe("FileSystemConnector", () => {
         });
 
         // When
-        const activityStreamsModel: ActivityStreamsModel = fileSystemConnector.extractActivityStreams(
-          sportsLibActivity
-        );
+        const activityStreamsModel: ActivityStreamsModel = fileConnector.extractActivityStreams(sportsLibActivity);
 
         // Then
         expect(activityStreamsModel.time[0]).toBeDefined();
@@ -1768,9 +1742,7 @@ describe("FileSystemConnector", () => {
           const sportsLibActivity = event.getFirstActivity();
 
           // When
-          const activityStreamsModel: ActivityStreamsModel = fileSystemConnector.extractActivityStreams(
-            sportsLibActivity
-          );
+          const activityStreamsModel: ActivityStreamsModel = fileConnector.extractActivityStreams(sportsLibActivity);
 
           // Then
           expect(activityStreamsModel.time.length).toEqual(expectedSamplesLength);
@@ -1800,18 +1772,15 @@ describe("FileSystemConnector", () => {
           new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")
         ).then(event => {
           const sportsLibActivity = event.getFirstActivity();
-          bareActivityModel = fileSystemConnector.createBareActivity(sportsLibActivity);
-          return Promise.resolve(fileSystemConnector.extractActivityStreams(sportsLibActivity));
+          bareActivityModel = fileConnector.createBareActivity(sportsLibActivity);
+          return Promise.resolve(fileConnector.extractActivityStreams(sportsLibActivity));
         });
         const athleteSettingsModel = AthleteSettingsModel.DEFAULT_MODEL;
-        const estimateCyclingPowerStreamSpy = spyOn(
-          fileSystemConnector,
-          "estimateCyclingPowerStream"
-        ).and.callThrough();
+        const estimateCyclingPowerStreamSpy = spyOn(fileConnector, "estimateCyclingPowerStream").and.callThrough();
 
         // When
         promise.then((activityStreamsModel: ActivityStreamsModel) => {
-          const activityStreamsFullModel: ActivityStreamsModel = fileSystemConnector.computeAdditionalStreams(
+          const activityStreamsFullModel: ActivityStreamsModel = fileConnector.computeAdditionalStreams(
             bareActivityModel,
             activityStreamsModel,
             athleteSettingsModel
@@ -1833,13 +1802,10 @@ describe("FileSystemConnector", () => {
         bareActivityModel.type = ElevateSport.VirtualRide;
         const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
         activityStreamsModel.grade_smooth = [];
-        const estimateCyclingPowerStreamSpy = spyOn(
-          fileSystemConnector,
-          "estimateCyclingPowerStream"
-        ).and.callThrough();
+        const estimateCyclingPowerStreamSpy = spyOn(fileConnector, "estimateCyclingPowerStream").and.callThrough();
 
         // When
-        fileSystemConnector.computeAdditionalStreams(bareActivityModel, activityStreamsModel, athleteSettingsModel);
+        fileConnector.computeAdditionalStreams(bareActivityModel, activityStreamsModel, athleteSettingsModel);
 
         // Then
         expect(estimateCyclingPowerStreamSpy).not.toHaveBeenCalled();
