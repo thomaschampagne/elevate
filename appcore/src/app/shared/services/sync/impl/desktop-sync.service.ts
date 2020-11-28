@@ -20,7 +20,7 @@ import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { StravaConnectorInfoService } from "../../strava-connector-info/strava-connector-info.service";
 import { AthleteModel, CompressedStreamModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { ActivityService } from "../../activity/activity.service";
-import { ElevateException, SyncException } from "@elevate/shared/exceptions";
+import { ElevateException, SyncException, WarningException } from "@elevate/shared/exceptions";
 import _ from "lodash";
 import { SyncState } from "../sync-state.enum";
 import moment from "moment";
@@ -33,6 +33,8 @@ import { IpcMessagesSender } from "../../../../desktop/ipc-messages/ipc-messages
 import { DataStore } from "../../../data-store/data-store";
 import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.service";
 import { ElectronService } from "../../../../desktop/electron/electron.service";
+import { Router } from "@angular/router";
+import { AppRoutes } from "../../../models/app-routes";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 // TODO Handle errors cases (continue or not the sync...)
@@ -69,7 +71,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     @Inject(FileSystemConnectorInfoService) public readonly fsConnectorInfoService: FileSystemConnectorInfoService,
     @Inject(LoggerService) public readonly logger: LoggerService,
     @Inject(ConnectorSyncDateTimeDao) public readonly connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
-    @Inject(ElectronService) public readonly electronService: ElectronService
+    @Inject(ElectronService) public readonly electronService: ElectronService,
+    @Inject(Router) public readonly router: Router
   ) {
     super(
       versionsProvider,
@@ -81,8 +84,9 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       logger
     );
     this.syncSubscription = null;
-    this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync // TODO ReplaySubject to get old values?! I think no
     this.currentConnectorType = null;
+    this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync // TODO ReplaySubject to get old values?! I think no
+    this.stravaConnectorInfoService.listenForCredentialsUpdates(this.syncEvents$);
   }
 
   public static transformErrorToSyncException(error: Error | Error[] | string | string[]): SyncException {
@@ -98,7 +102,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   }
 
   public static niceConnectorPrint(fromConnectorType: ConnectorType): string {
-    return _.startCase(fromConnectorType.toString().toLowerCase());
+    return fromConnectorType.toLowerCase();
   }
 
   public sync(fastSync: boolean = null, forceSync: boolean = null, connectorType: ConnectorType = null): Promise<void> {
@@ -113,12 +117,12 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     const promisedDataToSync: Promise<any>[] = [
       this.athleteService.fetch(),
       this.userSettingsService.fetch(),
-      fastSync ? this.getConnectorSyncDateTime() : Promise.resolve(null)
+      fastSync ? this.getConnectorSyncDateTimeDesc() : Promise.resolve(null)
     ];
 
     if (this.currentConnectorType === ConnectorType.STRAVA) {
       promisedDataToSync.push(this.stravaConnectorInfoService.fetch());
-    } else if (this.currentConnectorType === ConnectorType.FILE_SYSTEM) {
+    } else if (this.currentConnectorType === ConnectorType.FILE) {
       promisedDataToSync.push(Promise.resolve(this.fsConnectorInfoService.fetch()));
     } else {
       const errorMessage = "Unknown connector type to sync";
@@ -158,11 +162,26 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
           athleteModel,
           userSettingsModel
         );
-      } else if (this.currentConnectorType === ConnectorType.FILE_SYSTEM) {
+      } else if (this.currentConnectorType === ConnectorType.FILE) {
         const fileSystemConnectorInfo: FileSystemConnectorInfo = result[3] as FileSystemConnectorInfo;
+
+        // If source directory is missing or path is invalid then a throw warning
+        if (
+          !fileSystemConnectorInfo.sourceDirectory ||
+          !this.fsConnectorInfoService.isSourceDirectoryValid(fileSystemConnectorInfo.sourceDirectory)
+        ) {
+          return this.fsConnectorInfoService.ensureSourceDirectoryCompliance().then(() => {
+            return Promise.reject(
+              new WarningException("File connector scan folder don't exists", null, "Go to connectors", () => {
+                this.router.navigate([AppRoutes.connectors]);
+              })
+            );
+          });
+        }
+
         startSyncMessage = new FlaggedIpcMessage(
           MessageFlag.START_SYNC,
-          ConnectorType.FILE_SYSTEM,
+          ConnectorType.FILE,
           currentConnectorSyncDateTime,
           fileSystemConnectorInfo,
           athleteModel,
@@ -432,9 +451,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   }
 
   public getMostRecentSyncedConnector(): Promise<ConnectorSyncDateTime> {
-    return this.getConnectorSyncDateTime().then((connectorSyncDateTimes: ConnectorSyncDateTime[]) => {
-      const connectorSyncDateTime: ConnectorSyncDateTime = _.last(_.sortBy(connectorSyncDateTimes, "dateTime"));
-      return Promise.resolve(connectorSyncDateTime);
+    return this.getConnectorSyncDateTimeDesc().then((connectorSyncDateTimes: ConnectorSyncDateTime[]) => {
+      return Promise.resolve(connectorSyncDateTimes[0]); // Get first connectorSyncDateTime (because sorted DESC)
     });
   }
 
@@ -442,12 +460,13 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     return this.connectorSyncDateTimeDao.getById(connectorType);
   }
 
-  public getConnectorSyncDateTime(): Promise<ConnectorSyncDateTime[]> {
+  public getConnectorSyncDateTimeDesc(): Promise<ConnectorSyncDateTime[]> {
     return this.getSyncDateTime();
   }
 
   public getSyncDateTime(): Promise<ConnectorSyncDateTime[]> {
-    return this.connectorSyncDateTimeDao.find();
+    // For desktop sort by syncDateTime DESC (recent first)
+    return this.connectorSyncDateTimeDao.find(null, { options: { desc: true }, propName: "syncDateTime" });
   }
 
   public upsertConnectorsSyncDateTimes(

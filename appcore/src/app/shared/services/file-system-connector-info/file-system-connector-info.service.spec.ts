@@ -4,11 +4,14 @@ import { FileSystemConnectorInfoService } from "./file-system-connector-info.ser
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import { TargetModule } from "../../modules/target/desktop-target.module";
+import { DataStore } from "../../data-store/data-store";
+import { TestingDataStore } from "../../data-store/testing-datastore.service";
 
 describe("FileSystemConnectorInfoService", () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, TargetModule]
+      imports: [CoreModule, SharedModule, TargetModule],
+      providers: [{ provide: DataStore, useClass: TestingDataStore }]
     })
   );
 

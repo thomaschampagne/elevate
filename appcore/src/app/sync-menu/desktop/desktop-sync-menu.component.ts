@@ -75,19 +75,13 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
     if (this.syncState === SyncState.SYNCED) {
       this.syncMenuActions.push({
         icon: "update",
-        text: "Sync recent activities",
-        tooltip: `Sync recent activities from "${DesktopSyncService.niceConnectorPrint(
-          this.mostRecentConnectorSyncedType
-        )}" connector`,
+        text: `Sync new ${DesktopSyncService.niceConnectorPrint(this.mostRecentConnectorSyncedType)} activities`,
         action: () => this.onSync(true)
       });
 
       this.syncMenuActions.push({
         icon: "sync",
-        text: "Sync all activities",
-        tooltip: `Sync all activities from "${DesktopSyncService.niceConnectorPrint(
-          this.mostRecentConnectorSyncedType
-        )}" connector`,
+        text: `Sync all ${DesktopSyncService.niceConnectorPrint(this.mostRecentConnectorSyncedType)} activities`,
         action: () => this.onSync(false)
       });
     }

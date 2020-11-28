@@ -32,7 +32,7 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 export class ConnectorSyncService {
   private static readonly TOKENS_MAP = new Map<ConnectorType, InjectionToken<BaseConnector>>([
     [ConnectorType.STRAVA, StravaConnector],
-    [ConnectorType.FILE_SYSTEM, FileSystemConnector]
+    [ConnectorType.FILE, FileSystemConnector]
   ]);
 
   public currentConnector: BaseConnector;

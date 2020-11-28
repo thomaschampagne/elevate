@@ -135,7 +135,7 @@
               mat-stroked-button
               matTooltip="Activities performed after date '{{syncDateTime | date:'medium'}}' will be synced">
         <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
-        Sync recent activities
+        Sync new activities
       </button>
 
       <button [disabled]="appService.isSyncing" (click)="sync()"

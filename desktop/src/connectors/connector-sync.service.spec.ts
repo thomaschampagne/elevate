@@ -105,7 +105,7 @@ describe("ConnectorSyncService", () => {
       const expectedFileSystemConnectorInfo = new FileSystemConnectorInfo("/path/to/dir/");
       const flaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.START_SYNC,
-        ConnectorType.FILE_SYSTEM,
+        ConnectorType.FILE,
         currentConnectorSyncDateTime,
         expectedFileSystemConnectorInfo,
         athleteModel,
@@ -114,7 +114,7 @@ describe("ConnectorSyncService", () => {
       const replyWith = {
         callback: () => {},
         args: {
-          success: "Started sync of connector " + ConnectorType.FILE_SYSTEM,
+          success: "Started sync of connector " + ConnectorType.FILE,
           error: null
         }
       };
@@ -146,8 +146,7 @@ describe("ConnectorSyncService", () => {
         callback: () => {},
         args: {
           success: null,
-          error:
-            "Impossible to start a new sync. Another sync is already running on connector " + ConnectorType.FILE_SYSTEM
+          error: "Impossible to start a new sync. Another sync is already running on connector " + ConnectorType.FILE
         }
       };
       const replyWithCallbackSpy = spyOn(replyWith, "callback").and.stub();
@@ -376,7 +375,7 @@ describe("ConnectorSyncService", () => {
         callback: () => {},
         args: {
           success: null,
-          error: `Trying to stop a sync on ${requestConnectorType} connector but current connector synced type is: ${ConnectorType.FILE_SYSTEM}`
+          error: `Trying to stop a sync on ${requestConnectorType} connector but current connector synced type is: ${ConnectorType.FILE}`
         }
       };
 

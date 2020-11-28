@@ -16,6 +16,7 @@ import { DesktopUnauthorizedMachineIdDialogComponent } from "./desktop-unauthori
 import { IpcMessagesSender } from "../../desktop/ipc-messages/ipc-messages-sender.service";
 import { DesktopMigrationService } from "../../desktop/migration/desktop-migration.service";
 import { DataStore } from "../../shared/data-store/data-store";
+import { FileSystemConnectorInfoService } from "../../shared/services/file-system-connector-info/file-system-connector-info.service";
 
 @Injectable()
 export class DesktopLoadService extends AppLoadService {
@@ -32,6 +33,7 @@ export class DesktopLoadService extends AppLoadService {
     @Inject(HttpClient) private readonly httpClient: HttpClient,
     @Inject(StravaConnectorInfoService) private readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(DesktopMigrationService) private readonly desktopMigrationService: DesktopMigrationService,
+    @Inject(FileSystemConnectorInfoService) private readonly fsConnectorInfoService: FileSystemConnectorInfoService,
     @Inject(Router) private readonly router: Router,
     @Inject(MatDialog) private readonly dialog: MatDialog,
     @Inject(LoggerService) private readonly logger: LoggerService
@@ -48,8 +50,6 @@ export class DesktopLoadService extends AppLoadService {
           return this.getRuntimeInfo()
             .then(runtimeInfo => {
               this.runtimeInfo = runtimeInfo;
-            })
-            .then(() => {
               return this.desktopBoot(this.runtimeInfo);
             })
             .then(accessAuthorized => {
@@ -70,6 +70,10 @@ export class DesktopLoadService extends AppLoadService {
                 return Promise.reject(`Access non-authorized for machine: ${this.runtimeInfo.athleteMachineId}`);
               }
 
+              // Make sure local file connector source directory exists
+              return this.fsConnectorInfoService.ensureSourceDirectoryCompliance();
+            })
+            .then(() => {
               return Promise.resolve(hasBeenUpgradedTo);
             })
             .catch(error => {

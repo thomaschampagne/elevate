@@ -457,7 +457,7 @@ describe("FileSystemConnector", () => {
 
     it("should complete the sync", done => {
       // Given
-      const expectedStartedSyncEvent = new StartedSyncEvent(ConnectorType.FILE_SYSTEM);
+      const expectedStartedSyncEvent = new StartedSyncEvent(ConnectorType.FILE);
       const expectedCompleteCalls = 1;
       let startedSyncEventToBeCaught = null;
 
@@ -490,10 +490,7 @@ describe("FileSystemConnector", () => {
 
     it("should stop sync and notify error when syncFiles() reject an 'Unhandled error'", done => {
       // Given
-      const expectedErrorSync = ErrorSyncEvent.UNHANDLED_ERROR_SYNC.create(
-        ConnectorType.FILE_SYSTEM,
-        "Unhandled error"
-      );
+      const expectedErrorSync = ErrorSyncEvent.UNHANDLED_ERROR_SYNC.create(ConnectorType.FILE, "Unhandled error");
       syncFilesSpy.and.returnValue(Promise.reject(expectedErrorSync));
 
       // When
@@ -523,7 +520,7 @@ describe("FileSystemConnector", () => {
 
     it("should reject sync if connector is already syncing", done => {
       // Given
-      const expectedErrorSyncEvent = ErrorSyncEvent.SYNC_ALREADY_STARTED.create(ConnectorType.FILE_SYSTEM);
+      const expectedErrorSyncEvent = ErrorSyncEvent.SYNC_ALREADY_STARTED.create(ConnectorType.FILE);
       const syncEvent$01 = fileSystemConnector.sync(); // Start a first sync
 
       // When
@@ -553,7 +550,7 @@ describe("FileSystemConnector", () => {
     it("should stop a processing sync", done => {
       // Given
       const stopSyncEventReceived = [];
-      const expectedStoppedSyncEvent = new StoppedSyncEvent(ConnectorType.FILE_SYSTEM);
+      const expectedStoppedSyncEvent = new StoppedSyncEvent(ConnectorType.FILE);
       const expectedStoppedSyncEventReceived = 1;
 
       const syncEvent$ = fileSystemConnector.sync();
@@ -614,10 +611,7 @@ describe("FileSystemConnector", () => {
       const scanSubDirectories = true;
       const deleteArchivesAfterExtract = false;
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
-        ConnectorType.FILE_SYSTEM,
-        syncDateTime
-      );
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
       fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
       fileSystemConnectorConfig.info.scanSubDirectories = scanSubDirectories;
       fileSystemConnectorConfig.info.extractArchiveFiles = true;
@@ -680,7 +674,7 @@ describe("FileSystemConnector", () => {
 
           const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(2)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
           expect(activitySyncEvent).not.toBeNull();
-          expect(activitySyncEvent.fromConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
+          expect(activitySyncEvent.fromConnectorType).toEqual(ConnectorType.FILE);
           expect(activitySyncEvent.compressedStream).toBeDefined();
           expect(activitySyncEvent.isNew).toBeTruthy();
 
@@ -696,7 +690,7 @@ describe("FileSystemConnector", () => {
           expect(activitySyncEvent.activity.moving_time_raw).toEqual(9958);
           expect(activitySyncEvent.activity.elapsed_time_raw).toEqual(10514);
           expect(activitySyncEvent.activity.elevation_gain_raw).toEqual(685);
-          expect(activitySyncEvent.activity.sourceConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
+          expect(activitySyncEvent.activity.sourceConnectorType).toEqual(ConnectorType.FILE);
           expect(activitySyncEvent.activity.extras.fs_activity_location.path).toContain(expectedActivityFilePathMatch);
           expect(activitySyncEvent.activity.athleteSnapshot).toEqual(
             fileSystemConnector.athleteSnapshotResolver.getCurrent()
@@ -721,10 +715,7 @@ describe("FileSystemConnector", () => {
       const scanSubDirectories = true;
       const deleteArchivesAfterExtract = false;
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
-        ConnectorType.FILE_SYSTEM,
-        syncDateTime
-      );
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
       fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
       fileSystemConnectorConfig.info.scanSubDirectories = scanSubDirectories;
       fileSystemConnectorConfig.info.extractArchiveFiles = true;
@@ -745,7 +736,7 @@ describe("FileSystemConnector", () => {
       expectedExistingSyncedActivity.name = "Existing activity";
       expectedExistingSyncedActivity.type = ElevateSport.Ride;
       const expectedActivitySyncEvent = new ActivitySyncEvent(
-        ConnectorType.FILE_SYSTEM,
+        ConnectorType.FILE,
         null,
         expectedExistingSyncedActivity,
         false
@@ -802,10 +793,7 @@ describe("FileSystemConnector", () => {
       const syncEvents$ = new Subject<SyncEvent>();
       const scanSubDirectories = true;
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
-        ConnectorType.FILE_SYSTEM,
-        syncDateTime
-      );
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
       fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
       fileSystemConnectorConfig.info.scanSubDirectories = scanSubDirectories;
       fileSystemConnectorConfig.info.extractArchiveFiles = true;
@@ -861,7 +849,7 @@ describe("FileSystemConnector", () => {
 
           const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(2)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
           expect(activitySyncEvent).not.toBeNull();
-          expect(activitySyncEvent.fromConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
+          expect(activitySyncEvent.fromConnectorType).toEqual(ConnectorType.FILE);
           expect(activitySyncEvent.compressedStream).toBeDefined();
           expect(activitySyncEvent.isNew).toBeTruthy();
           expect(activitySyncEvent.activity.type).toEqual(ElevateSport.Ride);
@@ -884,10 +872,7 @@ describe("FileSystemConnector", () => {
       const scanSubDirectories = true;
       const deleteArchivesAfterExtract = false;
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
-        ConnectorType.FILE_SYSTEM,
-        syncDateTime
-      );
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
       fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
       fileSystemConnectorConfig.info.scanSubDirectories = scanSubDirectories;
       fileSystemConnectorConfig.info.extractArchiveFiles = true;
@@ -951,7 +936,7 @@ describe("FileSystemConnector", () => {
 
           syncEventNextSpy.calls.argsFor(1).forEach((errorSyncEvent: ErrorSyncEvent) => {
             expect(errorSyncEvent.code).toEqual(ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.code);
-            expect(errorSyncEvent.fromConnectorType).toEqual(ConnectorType.FILE_SYSTEM);
+            expect(errorSyncEvent.fromConnectorType).toEqual(ConnectorType.FILE);
             expect(errorSyncEvent.description).toContain(expectedActivityNameToCreate);
             expect(errorSyncEvent.description).toContain(expectedExistingSyncedActivity.type);
             expect(errorSyncEvent.description).toContain(expectedActivitiesFound);
@@ -972,10 +957,7 @@ describe("FileSystemConnector", () => {
       const syncEvents$ = new Subject<SyncEvent>();
       const errorMessage = "Unable to create bare activity";
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
-        ConnectorType.FILE_SYSTEM,
-        syncDateTime
-      );
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
       fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
       fileSystemConnectorConfig.info.scanSubDirectories = true;
       fileSystemConnectorConfig.info.extractArchiveFiles = true;
@@ -1018,10 +1000,7 @@ describe("FileSystemConnector", () => {
       const syncEvents$ = new Subject<SyncEvent>();
       const errorMessage = "Unable to parse fit file";
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
-        ConnectorType.FILE_SYSTEM,
-        syncDateTime
-      );
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
       fileSystemConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
       fileSystemConnectorConfig.info.scanSubDirectories = true;
       fileSystemConnectorConfig.info.extractArchiveFiles = false;
@@ -1059,10 +1038,7 @@ describe("FileSystemConnector", () => {
       const fakeSourceDir = "/fake/dir/path";
       const expectedErrorSyncEvent = ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(fakeSourceDir);
 
-      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(
-        ConnectorType.FILE_SYSTEM,
-        syncDateTime
-      );
+      fileSystemConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
       fileSystemConnectorConfig.info.sourceDirectory = fakeSourceDir;
       fileSystemConnector = fileSystemConnector.configure(fileSystemConnectorConfig);
 
@@ -1892,7 +1868,7 @@ describe("FileSystemConnector", () => {
         start_timestamp: 11111111111,
         extendedStats: { cadenceData: null } as any,
         athleteSnapshot: new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL),
-        sourceConnectorType: ConnectorType.FILE_SYSTEM,
+        sourceConnectorType: ConnectorType.FILE,
         latLngCenter: [111, 222]
       };
 
@@ -2003,7 +1979,7 @@ describe("FileSystemConnector", () => {
         start_timestamp: 11111111111,
         extendedStats: { cadenceData: null } as any,
         athleteSnapshot: new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL),
-        sourceConnectorType: ConnectorType.FILE_SYSTEM,
+        sourceConnectorType: ConnectorType.FILE,
         latLngCenter: [111, 222]
       };
 

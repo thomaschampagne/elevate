@@ -14,6 +14,7 @@ import {
 import { Subscription } from "rxjs";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
+import { FileConnectorService } from "./file-connector.service";
 
 @Component({
   selector: "app-file-system-connector",
@@ -29,6 +30,7 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
     @Inject(AppService) public readonly appService: AppService,
     @Inject(FileSystemConnectorInfoService) protected readonly fsConnectorInfoService: FileSystemConnectorInfoService,
     @Inject(SyncService) protected readonly desktopSyncService: DesktopSyncService,
+    @Inject(FileConnectorService) protected readonly fileConnectorService: FileConnectorService,
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
     @Inject(ElectronService) protected readonly electronService: ElectronService,
     @Inject(Router) protected readonly router: Router,
@@ -36,7 +38,7 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
     @Inject(MatDialog) protected readonly dialog: MatDialog
   ) {
     super(desktopSyncService, openResourceResolver, router, dialog);
-    this.connectorType = ConnectorType.FILE_SYSTEM;
+    this.connectorType = ConnectorType.FILE;
     this.showConfigure = false;
     this.fileSystemConnectorInfo = null;
   }
@@ -84,7 +86,7 @@ export class FileSystemConnectorComponent extends ConnectorsComponent implements
     return super
       .sync()
       .then(() => {
-        return this.desktopSyncService.sync(fastSync, forceSync, ConnectorType.FILE_SYSTEM);
+        return this.fileConnectorService.sync(fastSync, forceSync);
       })
       .catch(err => {
         if (err !== ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE) {

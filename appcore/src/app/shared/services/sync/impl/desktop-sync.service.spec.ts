@@ -54,7 +54,7 @@ describe("DesktopSyncService", () => {
         const connectorType = ConnectorType.STRAVA;
         const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
           new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-          new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+          new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
         ];
         const listenSyncEventsSpy = spyOn(desktopSyncService.ipcMessagesReceiver, "listen").and.stub();
         const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch").and.returnValue(
@@ -109,7 +109,7 @@ describe("DesktopSyncService", () => {
         const expectedConnectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111);
         const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
           expectedConnectorSyncDateTime,
-          new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+          new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
         ];
         const listenSyncEventsSpy = spyOn(desktopSyncService.ipcMessagesReceiver, "listen").and.stub();
         const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch").and.returnValue(
@@ -235,10 +235,10 @@ describe("DesktopSyncService", () => {
     describe("File system connector", () => {
       it("should start a full file system sync", done => {
         // Given
-        const connectorType = ConnectorType.FILE_SYSTEM;
+        const connectorType = ConnectorType.FILE;
         const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
           new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-          new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+          new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
         ];
         const listenSyncEventsSpy = spyOn(desktopSyncService.ipcMessagesReceiver, "listen").and.stub();
         const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch").and.returnValue(
@@ -254,6 +254,7 @@ describe("DesktopSyncService", () => {
           desktopSyncService.fsConnectorInfoService,
           "fetch"
         ).and.returnValue(expectedFileSystemConnectorInfo);
+        spyOn(desktopSyncService.fsConnectorInfoService, "isSourceDirectoryValid").and.returnValue(true);
         const sendStartSyncSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(
           Promise.resolve("Started")
         );
@@ -294,7 +295,7 @@ describe("DesktopSyncService", () => {
 
   describe("Handle activity upsert", () => {
     beforeEach(done => {
-      desktopSyncService.currentConnectorType = ConnectorType.FILE_SYSTEM;
+      desktopSyncService.currentConnectorType = ConnectorType.FILE;
       done();
     });
 
@@ -308,13 +309,7 @@ describe("DesktopSyncService", () => {
       activity.start_time = new Date().toISOString();
       const compressedStream = "fakeCompressedData";
       const expectedStreamModel = new CompressedStreamModel(activity.id, compressedStream);
-      const activitySyncEvent = new ActivitySyncEvent(
-        ConnectorType.FILE_SYSTEM,
-        null,
-        activity,
-        isNew,
-        compressedStream
-      );
+      const activitySyncEvent = new ActivitySyncEvent(ConnectorType.FILE, null, activity, isNew, compressedStream);
       const activityServicePutSpy = spyOn(desktopSyncService.activityService, "put").and.returnValue(
         Promise.resolve(activity)
       );
@@ -351,7 +346,7 @@ describe("DesktopSyncService", () => {
         ConnectorType.STRAVA,
         activity
       );
-      const activitySyncEvent = new ActivitySyncEvent(ConnectorType.FILE_SYSTEM, null, activity, isNew);
+      const activitySyncEvent = new ActivitySyncEvent(ConnectorType.FILE, null, activity, isNew);
       const expectedPutError = "Database put error";
       const activityServicePutSpy = spyOn(desktopSyncService.activityService, "put").and.returnValue(
         Promise.reject(expectedPutError)
@@ -397,7 +392,7 @@ describe("DesktopSyncService", () => {
         ConnectorType.STRAVA,
         activity
       );
-      const activitySyncEvent = new ActivitySyncEvent(ConnectorType.FILE_SYSTEM, null, activity, isNew);
+      const activitySyncEvent = new ActivitySyncEvent(ConnectorType.FILE, null, activity, isNew);
       const expectedPutError = "Database put error";
       const activityServicePutSpy = spyOn(desktopSyncService.activityService, "put").and.returnValue(
         Promise.reject(expectedPutError)
@@ -523,7 +518,7 @@ describe("DesktopSyncService", () => {
       const sendSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(
         Promise.resolve("Stopped from main")
       );
-      const connectorType = ConnectorType.FILE_SYSTEM;
+      const connectorType = ConnectorType.FILE;
       desktopSyncService.currentConnectorType = connectorType;
       const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.STOP_SYNC, connectorType);
       const isSyncingSpy = spyOn(desktopSyncService.isSyncing$, "next");
@@ -551,7 +546,7 @@ describe("DesktopSyncService", () => {
       const sendSpy = spyOn(desktopSyncService.ipcMessagesSender, "send").and.returnValue(
         Promise.reject("Unable to stop sync")
       );
-      const connectorType = ConnectorType.FILE_SYSTEM;
+      const connectorType = ConnectorType.FILE;
       desktopSyncService.currentConnectorType = connectorType;
       const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.STOP_SYNC, connectorType);
       const isSyncingSpy = spyOn(desktopSyncService.isSyncing$, "next");
@@ -1088,7 +1083,7 @@ describe("DesktopSyncService", () => {
     it("should handle FS_SOURCE_DIRECTORY_DONT_EXISTS events and stop sync", done => {
       // Given
       const syncEvent$ = new Subject<SyncEvent>();
-      desktopSyncService.currentConnectorType = ConnectorType.FILE_SYSTEM;
+      desktopSyncService.currentConnectorType = ConnectorType.FILE;
       const fakseSourceDirectory = "/fake/source/dir/path";
       const errorSyncEvent = ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(fakseSourceDirectory, null);
       const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
@@ -1204,7 +1199,7 @@ describe("DesktopSyncService", () => {
       const expectedState = SyncState.SYNCED;
       const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
         new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-        new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+        new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
       ];
 
       const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find").and.returnValue(
@@ -1269,7 +1264,7 @@ describe("DesktopSyncService", () => {
       const expectedState = SyncState.SYNCED;
       const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
         new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-        new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+        new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
       ];
 
       const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find").and.returnValue(
@@ -1359,7 +1354,7 @@ describe("DesktopSyncService", () => {
       // Given
       const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
         new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-        new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+        new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
       ];
 
       const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find").and.returnValue(
@@ -1367,7 +1362,7 @@ describe("DesktopSyncService", () => {
       );
 
       // When
-      const promise = desktopSyncService.getConnectorSyncDateTime();
+      const promise = desktopSyncService.getConnectorSyncDateTimeDesc();
 
       // Then
       promise.then(
@@ -1383,10 +1378,10 @@ describe("DesktopSyncService", () => {
 
     it("should get the most recent connector synced", done => {
       // Given
-      const expectedConnector = new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222);
+      const expectedConnector = new ConnectorSyncDateTime(ConnectorType.FILE, 22222);
       const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
-        new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-        expectedConnector
+        expectedConnector,
+        new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111)
       ];
 
       const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find").and.returnValue(
@@ -1413,7 +1408,7 @@ describe("DesktopSyncService", () => {
       // Given
       const connectorSyncDateTimesToSave: ConnectorSyncDateTime[] = [
         new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-        new ConnectorSyncDateTime(ConnectorType.FILE_SYSTEM, 22222)
+        new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
       ];
 
       spyOn(desktopSyncService.connectorSyncDateTimeDao, "find").and.returnValue(

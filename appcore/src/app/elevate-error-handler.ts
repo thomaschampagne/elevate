@@ -8,7 +8,7 @@ import { ConfirmDialogComponent } from "./shared/dialogs/confirm-dialog/confirm-
 import { ConfirmDialogDataModel } from "./shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { VersionsProvider } from "./shared/services/versions/versions-provider";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { ElevateException, SyncException } from "@elevate/shared/exceptions";
+import { ElevateException, SyncException, WarningException } from "@elevate/shared/exceptions";
 import { GotItDialogComponent } from "./shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "./shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 
@@ -58,6 +58,24 @@ export class ElevateErrorHandler implements ErrorHandler {
       }
 
       if (error instanceof ElevateException) {
+        if (error instanceof WarningException) {
+          const warningException = error as WarningException;
+          this.snackBar
+            .open(
+              warningException.message,
+              warningException.actionName || "Ok",
+              warningException.duration ? { duration: warningException.duration } : {}
+            )
+            .onAction()
+            .toPromise()
+            .then(() => {
+              if (warningException.onAction) {
+                warningException.onAction();
+              }
+            });
+          return;
+        }
+
         if (error instanceof SyncException) {
           errorMessage = "Sync error";
         } else {

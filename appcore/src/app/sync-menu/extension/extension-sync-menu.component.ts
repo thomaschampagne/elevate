@@ -64,7 +64,7 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
     if (this.syncState === SyncState.SYNCED) {
       this.syncMenuActions.push({
         icon: "update",
-        text: "Sync recent activities",
+        text: "Sync new activities",
         action: () => this.onSync(true, false)
       });
 

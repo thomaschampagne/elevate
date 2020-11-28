@@ -220,7 +220,7 @@ export class FileSystemConnector extends BaseConnector {
     @inject(IpcMessagesSender) protected readonly ipcMessagesSender: IpcMessagesSender
   ) {
     super(appService, ipcMessagesSender);
-    this.type = ConnectorType.FILE_SYSTEM;
+    this.type = ConnectorType.FILE;
     this.enabled = FileSystemConnector.ENABLED;
   }
 
@@ -239,11 +239,11 @@ export class FileSystemConnector extends BaseConnector {
 
   public sync(): Subject<SyncEvent> {
     if (this.isSyncing) {
-      this.syncEvents$.next(ErrorSyncEvent.SYNC_ALREADY_STARTED.create(ConnectorType.FILE_SYSTEM));
+      this.syncEvents$.next(ErrorSyncEvent.SYNC_ALREADY_STARTED.create(ConnectorType.FILE));
     } else {
       // Start a new sync
       this.syncEvents$ = new ReplaySubject<SyncEvent>();
-      this.syncEvents$.next(new StartedSyncEvent(ConnectorType.FILE_SYSTEM));
+      this.syncEvents$.next(new StartedSyncEvent(ConnectorType.FILE));
       this.isSyncing = true;
 
       this.syncFiles(this.syncEvents$).then(
@@ -284,7 +284,7 @@ export class FileSystemConnector extends BaseConnector {
       deflateNotifier$.subscribe(extractedArchivePath => {
         const extractedArchiveFileName = path.basename(extractedArchivePath);
         const evtDesc = `Activities in "${extractedArchiveFileName}" file have been extracted.`;
-        syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE_SYSTEM, evtDesc));
+        syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE, evtDesc));
         logger.info(evtDesc);
       });
       prepareScanDirectory = this.scanDeflateActivitiesFromArchives(
@@ -297,7 +297,7 @@ export class FileSystemConnector extends BaseConnector {
 
     return prepareScanDirectory
       .then(() => {
-        syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE_SYSTEM, "Scanning for activities..."));
+        syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE, "Scanning for activities..."));
         const activityFiles: ActivityFile[] = this.scanForActivities(
           this.fileSystemConnectorConfig.info.sourceDirectory,
           afterDate,
@@ -311,7 +311,7 @@ export class FileSystemConnector extends BaseConnector {
         return activityFiles.reduce((previousPromise: Promise<void>, activityFile: ActivityFile) => {
           return previousPromise.then(() => {
             if (this.stopRequested) {
-              return Promise.reject(new StoppedSyncEvent(ConnectorType.FILE_SYSTEM));
+              return Promise.reject(new StoppedSyncEvent(ConnectorType.FILE));
             }
 
             const activityFileBuffer = this.getFs().readFileSync(activityFile.location.path);
@@ -432,7 +432,7 @@ export class FileSystemConnector extends BaseConnector {
                             // Notify the new SyncedActivityModel
                             syncEvents$.next(
                               new ActivitySyncEvent(
-                                ConnectorType.FILE_SYSTEM,
+                                ConnectorType.FILE,
                                 null,
                                 syncedActivityModel as SyncedActivityModel,
                                 true,
@@ -454,7 +454,7 @@ export class FileSystemConnector extends BaseConnector {
                               fs_activity_location: activityFile.location
                             }; // Keep tracking  of activity id
                             const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(
-                              ConnectorType.FILE_SYSTEM,
+                              ConnectorType.FILE,
                               errorMessage,
                               activityInError,
                               error.stack ? error.stack : null
@@ -471,7 +471,7 @@ export class FileSystemConnector extends BaseConnector {
                             // Notify the new SyncedActivityModel
                             syncEvents$.next(
                               new ActivitySyncEvent(
-                                ConnectorType.FILE_SYSTEM,
+                                ConnectorType.FILE,
                                 null,
                                 syncedActivityModels[0] as SyncedActivityModel,
                                 false
@@ -490,9 +490,9 @@ export class FileSystemConnector extends BaseConnector {
                             )} ${elevateSportResult.type}`;
 
                             const errorSyncEvent = new ErrorSyncEvent(
-                              ConnectorType.FILE_SYSTEM,
+                              ConnectorType.FILE,
                               ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.create(
-                                ConnectorType.FILE_SYSTEM,
+                                ConnectorType.FILE,
                                 activityName,
                                 sportsLibActivity.startDate,
                                 activitiesFound
@@ -518,7 +518,7 @@ export class FileSystemConnector extends BaseConnector {
                 const errorMessage =
                   "Activity file parsing error: " + (error.message ? error.message : error.toString());
                 const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(
-                  ConnectorType.FILE_SYSTEM,
+                  ConnectorType.FILE,
                   errorMessage,
                   error.stack ? error.stack : null
                 );

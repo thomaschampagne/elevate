@@ -45,7 +45,7 @@ export class DesktopOpenResourceResolver extends OpenResourceResolver {
           case ConnectorType.STRAVA:
             this.openLink("https://www.strava.com/activities/" + activity.extras.strava_activity_id);
             break;
-          case ConnectorType.FILE_SYSTEM:
+          case ConnectorType.FILE:
             this.openLink(activity.extras.fs_activity_location.path);
             break;
           default:

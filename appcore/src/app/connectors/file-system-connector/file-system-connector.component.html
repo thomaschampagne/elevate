@@ -16,7 +16,7 @@
               mat-stroked-button
               matTooltip="Activity files added or modified after date '{{syncDateTime | date:'medium'}}' will be synced">
         <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
-        Sync recent activities
+        Sync new activities
       </button>
       <button [disabled]="appService.isSyncing" (click)="sync(false)"
               *ngIf="fileSystemConnectorInfo.sourceDirectory" color="primary"

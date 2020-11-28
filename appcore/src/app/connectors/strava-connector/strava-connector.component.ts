@@ -3,7 +3,7 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ConnectorType, StravaConnectorInfo } from "@elevate/shared/sync";
 import { ConnectorsComponent } from "../connectors.component";
-import { StravaConnectorService } from "../services/strava-connector.service";
+import { StravaConnectorService } from "./strava-connector.service";
 import moment from "moment";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { ElectronService } from "../../desktop/electron/electron.service";
@@ -22,6 +22,7 @@ import { Subscription } from "rxjs";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
 import { AppRoutes } from "../../shared/models/app-routes";
+import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
 
 class GeneratedStravaApiApplication {
   public appName: string;
@@ -47,6 +48,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
   constructor(
     @Inject(AppService) public readonly appService: AppService,
     @Inject(StravaConnectorService) protected readonly stravaConnectorService: StravaConnectorService,
+    @Inject(StravaConnectorInfoService) protected readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(SyncService) protected readonly desktopSyncService: DesktopSyncService,
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
     @Inject(ElectronService) protected readonly electronService: ElectronService,
@@ -68,7 +70,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
       this.handleCredentialsChanges(stravaConnectorInfo);
     });
 
-    this.stravaConnectorService.stravaConnectorInfo$.subscribe((stravaConnectorInfo: StravaConnectorInfo) => {
+    this.stravaConnectorInfoService.info$.subscribe((stravaConnectorInfo: StravaConnectorInfo) => {
       this.handleCredentialsChanges(stravaConnectorInfo);
     });
 
@@ -116,7 +118,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
         stravaConnectorInfo.accessToken = null;
         stravaConnectorInfo.refreshToken = null;
         stravaConnectorInfo.expiresAt = null;
-        return this.stravaConnectorService.stravaConnectorInfoService.update(stravaConnectorInfo);
+        return this.stravaConnectorInfoService.update(stravaConnectorInfo);
       })
       .then((stravaConnectorInfo: StravaConnectorInfo) => {
         this.stravaConnectorInfo = stravaConnectorInfo;
@@ -128,7 +130,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
   }
 
   public onUpdateActivitiesNameAndTypeChanged(): void {
-    this.stravaConnectorService.stravaConnectorInfoService
+    this.stravaConnectorInfoService
       .update(this.stravaConnectorInfo)
       .then((stravaConnectorInfo: StravaConnectorInfo) => {
         this.stravaConnectorInfo = stravaConnectorInfo;
