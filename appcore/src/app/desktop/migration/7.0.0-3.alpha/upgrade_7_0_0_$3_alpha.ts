@@ -11,14 +11,14 @@ export class Upgrade_7_0_0_$3_alpha extends DesktopMigration {
     const athleteCollection = db.getCollection("athlete");
 
     if (athleteCollection) {
-      const athleteSaved = athleteCollection.findOne();
-
-      if (athleteSaved) {
-        athleteSaved.firstName = null;
-        athleteSaved.lastName = null;
-        athleteSaved.birthYear = null;
-        athleteSaved.practiceLevel = null;
-        athleteSaved.sports = [];
+      const athlete = athleteCollection.findOne();
+      if (athlete) {
+        athlete.firstName = null;
+        athlete.lastName = null;
+        athlete.birthYear = null;
+        athlete.practiceLevel = null;
+        athlete.sports = [];
+        athleteCollection.update(athlete);
       }
     }
 

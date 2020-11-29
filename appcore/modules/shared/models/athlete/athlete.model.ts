@@ -7,7 +7,12 @@ import { ElevateSport } from "../../enums";
 export class AthleteModel extends AbstractAthleteModel {
   public static readonly DEFAULT_MODEL: AthleteModel = new AthleteModel(
     Gender.MEN,
-    AthleteModel.getDefaultDatedAthleteSettings()
+    AthleteModel.getDefaultDatedAthleteSettings(),
+    null,
+    null,
+    null,
+    null,
+    []
   );
 
   constructor(
