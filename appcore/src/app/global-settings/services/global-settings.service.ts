@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
-import { BuildTarget } from "@elevate/shared/enums";
+import { BuildTarget, MeasureSystem, Temperature } from "@elevate/shared/enums";
 import { ListItemModel } from "../models/list-item.model";
 import _ from "lodash";
-import { UserSettings } from "@elevate/shared/models";
 
 @Injectable()
 export class GlobalSettingsService {
@@ -21,12 +20,12 @@ export class GlobalSettingsService {
           labels: ["All"],
           list: [
             {
-              key: UserSettings.SYSTEM_UNIT_METRIC_KEY,
-              name: "Metric"
+              key: MeasureSystem.METRIC,
+              name: _.startCase(MeasureSystem.METRIC)
             },
             {
-              key: UserSettings.SYSTEM_UNIT_IMPERIAL_KEY,
-              name: "Imperial"
+              key: MeasureSystem.IMPERIAL,
+              name: _.startCase(MeasureSystem.IMPERIAL)
             }
           ] as ListItemModel[],
           title: "App system units"
@@ -37,15 +36,35 @@ export class GlobalSettingsService {
           labels: ["All"],
           list: [
             {
-              key: "F",
+              key: Temperature.FAHRENHEIT,
               name: "Fahrenheit"
             },
             {
-              key: "C",
+              key: Temperature.CELSIUS,
               name: "Celsius"
             }
           ] as ListItemModel[],
           title: "Temperature"
+        }
+      ]
+    },
+    {
+      title: "History consistency warnings",
+      options: [
+        {
+          key: "disableMissingStressScoresWarning",
+          type: "checkbox",
+          title: 'Disable <i>"Missing stress scores detected..."</i> warnings <strong>(not recommended)</strong>',
+          labels: ["All"],
+          disableHelper: true
+        },
+        {
+          key: "disableActivitiesNeedRecalculationWarning",
+          type: "checkbox",
+          title:
+            'Disable <i>"Some of your activities need to be recalculated..."</i> warnings <strong>(not recommended)</strong>',
+          labels: ["All"],
+          disableHelper: true
         }
       ]
     },

@@ -38,6 +38,13 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
           >
             Fix settings
           </button>
+          <button
+            mat-icon-button
+            (click)="onHideActivitiesWithSettingsLacks()"
+            matTooltip="Don't remind me this warning"
+          >
+            <mat-icon fontSet="material-icons-outlined">notifications_off</mat-icon>
+          </button>
           <button mat-icon-button (click)="onCloseSettingsLacksWarning()">
             <mat-icon fontSet="material-icons-outlined">close</mat-icon>
           </button>
@@ -56,6 +63,9 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between center">
           <button mat-flat-button color="accent" (click)="onFixActivities()">Recalculate</button>
+          <button mat-icon-button (click)="onHideActivitiesRecalculation()" matTooltip="Don't remind me this warning">
+            <mat-icon fontSet="material-icons-outlined">notifications_off</mat-icon>
+          </button>
           <button mat-icon-button (click)="onCloseSettingsConsistencyWarning()">
             <mat-icon fontSet="material-icons-outlined">close</mat-icon>
           </button>
@@ -103,7 +113,7 @@ export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent im
     @Inject(MatDialog) protected readonly dialog: MatDialog,
     @Inject(LoggerService) protected readonly logger: LoggerService
   ) {
-    super(router, activityService, dialog);
+    super(router, activityService, userSettingsService, dialog);
     this.hideRecalculation = true;
   }
 

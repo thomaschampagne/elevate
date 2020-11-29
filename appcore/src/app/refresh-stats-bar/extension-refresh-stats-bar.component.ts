@@ -9,6 +9,7 @@ import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm
 import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 import { RefreshStatsBarComponent } from "./refresh-stats-bar.component";
+import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 
 @Component({
   selector: "app-extension-refresh-stats-bar",
@@ -33,6 +34,13 @@ import { RefreshStatsBarComponent } from "./refresh-stats-bar.component";
           >
             Fix settings
           </button>
+          <button
+            mat-icon-button
+            (click)="onHideActivitiesWithSettingsLacks()"
+            matTooltip="Don't remind me this warning"
+          >
+            <mat-icon fontSet="material-icons-outlined">notifications_off</mat-icon>
+          </button>
           <button mat-icon-button (click)="onCloseSettingsLacksWarning()">
             <mat-icon fontSet="material-icons-outlined">close</mat-icon>
           </button>
@@ -51,6 +59,9 @@ import { RefreshStatsBarComponent } from "./refresh-stats-bar.component";
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between center">
           <button mat-flat-button color="accent" (click)="onFixActivities()">Recalculate</button>
+          <button mat-icon-button (click)="onHideActivitiesRecalculation()" matTooltip="Don't remind me this warning">
+            <mat-icon fontSet="material-icons-outlined">notifications_off</mat-icon>
+          </button>
           <button mat-icon-button (click)="onCloseSettingsConsistencyWarning()">
             <mat-icon fontSet="material-icons-outlined">close</mat-icon>
           </button>
@@ -76,10 +87,11 @@ export class ExtensionRefreshStatsBarComponent extends RefreshStatsBarComponent 
     @Inject(Router) protected readonly router: Router,
     @Inject(ActivityService) protected readonly activityService: ActivityService,
     @Inject(SyncService) protected readonly syncService: SyncService<any>,
+    @Inject(UserSettingsService) protected readonly userSettingsService: UserSettingsService,
     @Inject(MatDialog) protected readonly dialog: MatDialog,
     @Inject(LoggerService) protected readonly logger: LoggerService
   ) {
-    super(router, activityService, dialog);
+    super(router, activityService, userSettingsService, dialog);
   }
 
   public ngOnInit(): void {

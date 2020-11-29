@@ -17,14 +17,14 @@
     <mat-list>
       <ng-container *ngFor="let option of section.options | filterBy: ['title']: searchText">
         <mat-list-item *ngIf="!option.hidden">
-          <p matLine>
-            {{option.title}}
-            <sup>
+          <span matLine>
+            <span [innerHTML]="option.title"></span>
+            <sup *ngIf="!option.disableHelper">
               <button (click)="showOptionHelperDialog(option.key)" mat-icon-button>
                 <mat-icon fontSet="material-icons-outlined">info</mat-icon>
               </button>
             </sup>
-          </p>
+          </span>
 
           <!-- Display new line only if option is not for 'All' -->
           <p *ngIf="option.labels.indexOf('All') == -1" matLine>
@@ -38,8 +38,7 @@
           <mat-slide-toggle
             (change)="onOptionChange(option)"
             *ngIf="option.type == 'checkbox'"
-            [(ngModel)]="option.active"
-            aria-label="option.title">
+            [(ngModel)]="option.active">
           </mat-slide-toggle>
 
           <!--is list?-->

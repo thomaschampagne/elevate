@@ -24,6 +24,7 @@ import { Subject, Subscription, timer } from "rxjs";
 import { debounce } from "rxjs/operators";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 import { AppService } from "../shared/services/app-service/app.service";
+import { MeasureSystem } from "@elevate/shared/enums";
 import NumberColumn = ActivityColumns.NumberColumn;
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
@@ -153,7 +154,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
             );
       })
       .then((userSettings: UserSettingsModel) => {
-        this.isImperial = userSettings.systemUnit === UserSettings.SYSTEM_UNIT_IMPERIAL_KEY;
+        this.isImperial = userSettings.systemUnit === MeasureSystem.IMPERIAL;
       })
       .then(() => {
         // Filter displayed columns

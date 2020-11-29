@@ -1,11 +1,11 @@
 import { UserZonesModel } from "./user-zones.model";
-import { BuildTarget } from "../../enums";
+import { BuildTarget, MeasureSystem, Temperature } from "../../enums";
 import _ from "lodash";
 
 export namespace UserSettings {
-  export const SYSTEM_UNIT_METRIC_KEY = "metric";
-  export const SYSTEM_UNIT_IMPERIAL_KEY = "imperial";
-  export const DEFAULT_TEMP_KEY = "C"; // TODO use Enum "C" or "F"
+  export const DEFAULT_TEMPERATURE = Temperature.CELSIUS;
+  export const DISABLE_MISSING_STRESS_SCORES_WARNING = false;
+  export const DISABLE_ACTIVITIES_NEED_RECALCULATION_WARNING = false;
 
   export const getDefaultsByBuildTarget = (buildTarget: BuildTarget): UserSettingsModel => {
     if (buildTarget === BuildTarget.DESKTOP) {
@@ -21,15 +21,19 @@ export namespace UserSettings {
     public abstract readonly buildTarget: BuildTarget;
     public systemUnit: string;
     public temperatureUnit: string;
+    public disableMissingStressScoresWarning: boolean;
+    public disableActivitiesNeedRecalculationWarning: boolean;
     public zones: UserZonesModel;
   }
 
   export class DesktopUserSettingsModel extends UserSettingsModel {
     public static readonly DEFAULT_MODEL: DesktopUserSettingsModel = {
       buildTarget: BuildTarget.DESKTOP,
-      systemUnit: UserSettings.SYSTEM_UNIT_METRIC_KEY,
-      zones: UserZonesModel.DEFAULT_MODEL,
-      temperatureUnit: UserSettings.DEFAULT_TEMP_KEY
+      systemUnit: MeasureSystem.METRIC,
+      temperatureUnit: UserSettings.DEFAULT_TEMPERATURE,
+      disableMissingStressScoresWarning: DISABLE_MISSING_STRESS_SCORES_WARNING,
+      disableActivitiesNeedRecalculationWarning: DISABLE_ACTIVITIES_NEED_RECALCULATION_WARNING,
+      zones: UserZonesModel.DEFAULT_MODEL
     };
 
     public buildTarget: BuildTarget = BuildTarget.DESKTOP;
@@ -39,7 +43,9 @@ export namespace UserSettings {
     public static readonly DEFAULT_MODEL: ExtensionUserSettingsModel = {
       buildTarget: BuildTarget.EXTENSION,
       localStorageMustBeCleared: false,
-      systemUnit: UserSettings.SYSTEM_UNIT_METRIC_KEY,
+      systemUnit: MeasureSystem.METRIC,
+      disableMissingStressScoresWarning: DISABLE_MISSING_STRESS_SCORES_WARNING,
+      disableActivitiesNeedRecalculationWarning: DISABLE_ACTIVITIES_NEED_RECALCULATION_WARNING,
       zones: UserZonesModel.DEFAULT_MODEL,
       remoteLinks: true,
       defaultLeaderBoardFilter: "overall",
@@ -77,7 +83,7 @@ export namespace UserSettings {
       displayRunningPowerEstimation: true,
       reviveGoogleMapsLayerType: "terrain",
       displayActivityBestSplits: true,
-      temperatureUnit: UserSettings.DEFAULT_TEMP_KEY,
+      temperatureUnit: UserSettings.DEFAULT_TEMPERATURE,
       showHiddenBetaFeatures: false,
       displayReliveCCLink: true,
       displayWindyOverlay: false

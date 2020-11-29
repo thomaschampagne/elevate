@@ -33,7 +33,7 @@ import { AddRollingProgressPresetDialogData } from "./shared/models/add-rolling-
 import { RollingProgressPresetModel } from "./shared/models/rolling-progress-preset.model";
 import { YearProgressWelcomeDialogComponent } from "./year-progress-welcome-dialog/year-progress-welcome-dialog.component";
 import { LoggerService } from "../shared/services/logging/logger.service";
-import { ElevateSport } from "@elevate/shared/enums";
+import { ElevateSport, MeasureSystem } from "@elevate/shared/enums";
 import { Subscription } from "rxjs";
 import { AppService } from "../shared/services/app-service/app.service";
 import UserSettingsModel = UserSettings.UserSettingsModel;
@@ -249,7 +249,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 
           if (this.hasActivityModels) {
             const userSettingsModel = _.first(results) as UserSettingsModel;
-            this.isMetric = userSettingsModel.systemUnit === UserSettings.SYSTEM_UNIT_METRIC_KEY;
+            this.isMetric = userSettingsModel.systemUnit === MeasureSystem.METRIC;
             this.setup();
           }
 

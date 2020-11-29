@@ -2,9 +2,10 @@ import _ from "lodash";
 import { Component, ElementRef, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { FitnessService } from "../../../fitness-trend/shared/services/fitness.service";
-import { AthleteSettingsModel, UserSettings } from "@elevate/shared/models";
+import { AthleteSettingsModel } from "@elevate/shared/models";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
 import { Constant } from "@elevate/shared/constants";
+import { MeasureSystem } from "@elevate/shared/enums";
 
 @Component({
   selector: "app-athlete-settings-form",
@@ -167,9 +168,9 @@ export class AthleteSettingsFormComponent implements OnInit {
   public convertToPace(systemUnit: string): string {
     let speedFactor: number;
 
-    if (systemUnit === UserSettings.SYSTEM_UNIT_METRIC_KEY) {
+    if (systemUnit === MeasureSystem.METRIC) {
       speedFactor = 1;
-    } else if (systemUnit === UserSettings.SYSTEM_UNIT_IMPERIAL_KEY) {
+    } else if (systemUnit === MeasureSystem.IMPERIAL) {
       speedFactor = Constant.KM_TO_MILE_FACTOR;
     } else {
       throw new Error("System unit unknown");
@@ -177,7 +178,7 @@ export class AthleteSettingsFormComponent implements OnInit {
 
     return _.isNumber(this.athleteSettingsModel.runningFtp) && this.athleteSettingsModel.runningFtp > 0
       ? this.secondsToHHMMSS(this.athleteSettingsModel.runningFtp / speedFactor) +
-          (systemUnit === "metric" ? "/km" : "/mi")
+          (systemUnit === MeasureSystem.METRIC ? "/km" : "/mi")
       : null;
   }
 

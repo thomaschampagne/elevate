@@ -13,5 +13,6 @@ export class OptionModel {
   public min?: number; // For input number type only
   public max?: number; // For input number type only
   public step?: number; // For input number type only
+  public disableHelper?: boolean;
   public disableTooltip?: boolean; // For input number type only
 }

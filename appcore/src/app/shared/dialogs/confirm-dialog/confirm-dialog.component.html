@@ -1,5 +1,5 @@
-<h2 *ngIf="dialogData.title" mat-dialog-title>{{dialogData.title}}</h2>
-<mat-dialog-content [innerHtml]="html" class="mat-body-1"></mat-dialog-content>
+<h2 *ngIf="dialogData.title" mat-dialog-title [innerHtml]="dialogData.title"></h2>
+<mat-dialog-content [innerHtml]="dialogData.content" class="mat-body-1"></mat-dialog-content>
 <mat-dialog-actions>
   <button *ngIf="dialogData.cancelText !== false" (click)="onCancel()" color="primary" mat-dialog-close
           mat-stroked-button>

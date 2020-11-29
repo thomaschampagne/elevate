@@ -9,6 +9,7 @@ import { UserSettingsService } from "../../../shared/services/user-settings/user
 import { DataStore } from "../../../shared/data-store/data-store";
 import { TestingDataStore } from "../../../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../../../shared/modules/target/desktop-target.module";
+import { MeasureSystem } from "@elevate/shared/enums";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("AthleteSettingsFormComponent", () => {
@@ -50,7 +51,7 @@ describe("AthleteSettingsFormComponent", () => {
     const expectedPace = "00:08:03/mi";
 
     // When
-    const pace = component.convertToPace("imperial");
+    const pace = component.convertToPace(MeasureSystem.IMPERIAL);
 
     // Then
     expect(pace).toEqual(expectedPace);
@@ -63,7 +64,7 @@ describe("AthleteSettingsFormComponent", () => {
     const expectedPace = "00:05:00/km";
 
     // When
-    const pace = component.convertToPace("metric");
+    const pace = component.convertToPace(MeasureSystem.METRIC);
 
     // Then
     expect(pace).toEqual(expectedPace);

@@ -19,19 +19,21 @@ export class UserSettingsService {
     return this.userSettingsDao.findOne();
   }
 
-  public updateOption(optionKey: string, optionValue: any): Promise<UserSettingsModel> {
+  public updateOption(optionKey: keyof UserSettingsModel, optionValue: any): Promise<UserSettingsModel> {
     return this.fetch().then(userSettings => {
-      userSettings[optionKey] = optionValue;
+      userSettings[optionKey as string] = optionValue;
       return this.updateUserSettings(userSettings);
     });
   }
 
   /**
    * Clear local storage on next reload
+   * TODO Should be only for extension, not for desktop
    */
   public clearLocalStorageOnNextLoad(): Promise<void> {
-    // TODO Should be only for extension, not for desktop.
-    return this.updateOption(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR, true).then(() => Promise.resolve());
+    return this.updateOption(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR as keyof UserSettingsModel, true).then(() =>
+      Promise.resolve()
+    );
   }
 
   public updateZones(zoneDefinition: ZoneDefinitionModel, zones: ZoneModel[]): Promise<ZoneModel[]> {
