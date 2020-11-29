@@ -37,6 +37,7 @@ import { NewRemoteVersionNoticeDialogComponent } from "./services/versions/new-r
 import { ReleaseNoteService } from "../releases-notes/release-note.service";
 import { NewInstalledVersionNoticeDialogComponent } from "./services/versions/new-installed-version-notice-dialog.component";
 import { TargetModule } from "./modules/target/target.module";
+import { ComponentsFactoryService } from "./services/components-factory.service";
 
 @NgModule({
   imports: [CoreModule, BrowserModule, BrowserAnimationsModule, TargetModule],
@@ -65,6 +66,7 @@ import { TargetModule } from "./modules/target/target.module";
     NewInstalledVersionNoticeDialogComponent
   ],
   providers: [
+    ComponentsFactoryService,
     UserSettingsService,
     UserSettingsDao,
     AthleteService,

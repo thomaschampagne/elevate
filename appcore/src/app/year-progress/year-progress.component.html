@@ -3,24 +3,7 @@
   <mat-progress-bar mode="buffer"></mat-progress-bar>
 </div>
 
-<mat-card *ngIf="(hasActivityModels === false)" class="no-data">
-  <mat-card-title>
-    Synchronise your activities
-  </mat-card-title>
-  <mat-card-content>
-
-    <div>
-      Please synchronize your activities to turn on the feature.
-    </div>
-
-    <div>
-      You can synchronize by clicking on
-      <mat-icon color="primary" fontSet="material-icons-outlined">sync_disabled</mat-icon>
-      icon in the upper toolbar. The activities will be locally saved.
-    </div>
-
-  </mat-card-content>
-</mat-card>
+<app-sync-required></app-sync-required>
 
 <mat-card *ngIf="hasActivityModels">
   <mat-card-content>

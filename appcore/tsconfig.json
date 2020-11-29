@@ -18,7 +18,7 @@
       "../desktop/node_modules/"
     ],
     "lib": [
-      "es2015",
+      "es2020",
       "dom"
     ]
   },

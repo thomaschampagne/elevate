@@ -1,16 +1,5 @@
 import _ from "lodash";
-import {
-  Component,
-  ComponentFactoryResolver,
-  HostListener,
-  Inject,
-  OnDestroy,
-  OnInit,
-  Renderer2,
-  Type,
-  ViewChild,
-  ViewContainerRef
-} from "@angular/core";
+import { Component, HostListener, Inject, OnDestroy, OnInit, Renderer2, Type, ViewChild } from "@angular/core";
 import { NavigationEnd, Router, RouterEvent } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { MatIconRegistry } from "@angular/material/icon";
@@ -42,6 +31,7 @@ import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
 import { REFRESH_STATS_BAR_COMPONENT, RefreshStatsBarComponent } from "./refresh-stats-bar/refresh-stats-bar.component";
 import { RefreshStatsBarDirective } from "./refresh-stats-bar/refresh-stats-bar.directive";
 import { VersionsProvider } from "./shared/services/versions/versions-provider";
+import { ComponentsFactoryService } from "./shared/services/components-factory.service";
 
 @Component({
   selector: "app-root",
@@ -89,7 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
     @Inject(Renderer2) private readonly renderer: Renderer2,
     @Inject(MatIconRegistry) private readonly iconRegistry: MatIconRegistry,
     @Inject(DomSanitizer) private readonly sanitizer: DomSanitizer,
-    @Inject(ComponentFactoryResolver) private readonly componentFactoryResolver: ComponentFactoryResolver,
+    @Inject(ComponentsFactoryService) private readonly componentsFactoryService: ComponentsFactoryService,
     @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
     @Inject(LoggerService) private readonly logger: LoggerService,
     @Inject(MENU_ITEMS_PROVIDER) private readonly menuItemsProvider: MenuItemsProvider,
@@ -131,14 +121,27 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public initApp(): void {
     // Inject top bar, sync bar, sync menu
-    this.injectHotComponent<TopBarComponent>(this.topBarComponentType, this.topBarDirective.viewContainerRef);
-    this.injectHotComponent<SyncBarComponent>(this.syncBarComponentType, this.syncBarDirective.viewContainerRef);
-    this.injectHotComponent<RefreshStatsBarComponent>(
+    this.componentsFactoryService.create<TopBarComponent>(
+      this.topBarComponentType,
+      this.topBarDirective.viewContainerRef
+    );
+
+    this.componentsFactoryService.create<SyncBarComponent>(
+      this.syncBarComponentType,
+      this.syncBarDirective.viewContainerRef
+    );
+
+    this.componentsFactoryService.create<RefreshStatsBarComponent>(
       this.refreshStatsBarComponentType,
       this.refreshStatsBarDirective.viewContainerRef
     );
-    this.injectHotComponent<SyncMenuComponent>(this.syncMenuComponentType, this.syncMenuDirective.viewContainerRef);
-    this.injectHotComponent<AppMoreMenuComponent>(
+
+    this.componentsFactoryService.create<SyncMenuComponent>(
+      this.syncMenuComponentType,
+      this.syncMenuDirective.viewContainerRef
+    );
+
+    this.componentsFactoryService.create<AppMoreMenuComponent>(
       this.appMoreMenuComponentType,
       this.appMoreMenuDirective.viewContainerRef
     );
@@ -156,11 +159,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.versionsProvider.checkForUpdates();
 
     this.logger.info("App initialized.");
-  }
-
-  public injectHotComponent<C>(component: Type<C>, targetViewRef: ViewContainerRef): C {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
-    return targetViewRef.createComponent(componentFactory).instance as C;
   }
 
   public sideNavSetup(): void {

@@ -49,6 +49,8 @@ export abstract class SyncService<T> {
 
   public abstract getCompatibleBackupVersionThreshold(): string;
 
+  public abstract redirect(): void;
+
   public clearSyncedActivities(): Promise<void> {
     return this.clearSyncTime()
       .then(() => {

@@ -41,4 +41,6 @@ export class MockSyncService extends SyncService<any> {
   public getCompatibleBackupVersionThreshold(): string {
     throw new NotImplementedException("MockSyncService.getCompatibleBackupVersionThreshold() to be implemented");
   }
+
+  public redirect(): void {}
 }

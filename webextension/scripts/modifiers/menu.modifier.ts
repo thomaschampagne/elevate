@@ -17,7 +17,7 @@ export class MenuModifier extends AbstractModifier {
   public heatmapClick(): void {
     if (window.navigator.geolocation) {
       window.navigator.geolocation.getCurrentPosition(
-        (position: Position) => {
+        (position: any) => {
           window.open(
             "http://labs.strava.com/heatmap/#12/" +
               position.coords.longitude +
@@ -27,7 +27,7 @@ export class MenuModifier extends AbstractModifier {
             "_blank"
           );
         },
-        (error: PositionError) => {
+        (error: any) => {
           console.error(error);
           alert(
             "Some Elevate functions will not work without your location position. Please make sure you have allowed location tracking on this site. Click on the location icon placed on the right inside the chrome web address bar => Clear tracking setting => Refresh page > Allow tracking."

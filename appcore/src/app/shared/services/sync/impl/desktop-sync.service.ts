@@ -499,4 +499,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       this.syncSubscription.unsubscribe();
     }
   }
+
+  public redirect(): void {
+    this.router.navigate([AppRoutes.connectors]);
+  }
 }

@@ -3,53 +3,7 @@
   <mat-progress-bar mode="buffer"></mat-progress-bar>
 </div>
 
-<!--History not synced-->
-<mat-card *ngIf="(isSynced === false)" class="no-data">
-  <mat-card-title>
-    Synchronise your activities
-  </mat-card-title>
-  <mat-card-content>
-    <div>
-      Please synchronize your activities to turn on "Fitness Trend" feature.
-    </div>
-
-    <div>
-      You can synchronize by clicking on
-      <mat-icon fontSet="material-icons-outlined">sync_disabled</mat-icon>
-      icon in the upper toolbar. The activities will be locally saved.
-    </div>
-
-    <div>
-      This fitness trend is "Multi-sports" oriented. Whatever the sport, it's strongly recommended that you hold a
-      <i>heart rate monitor</i>, and/or a <i>power meter</i> for cycling. These sensors will provide accurate
-      stress scores and thus an accurate fitness trend.
-    </div>
-
-    <div>
-      What if you don't have sensors? If you don't have sensors (e.g. smart-phone only) or you forgot them for
-      some activities, your fitness trend can still be approximated from estimated running and cycling stress
-      scores. For this you have to setup your own <strong>Running Functional Threshold Pace</strong> as a runner
-      in athlete settings. And as a cyclist, your <strong>Cycling Functional Threshold Power</strong> (always in
-      athlete settings).
-    </div>
-
-    <div>
-      This fitness trend is an improved feature of the Strava™ premium one, not a duplicate!
-    </div>
-
-    <div>The fitness trend is based on an impulse-response model by <i>Dr. Eric W. Banister</i>
-      in 1975 and <i>Andrew R. Coggan</i> later. The following references has been used:
-      <a href="http://fellrnr.com/wiki/Modeling_Human_Performance" target="_blank">Modeling Human
-        Performance, fellrnr.com</a>
-    </div>
-
-    <div>
-      Please read <a href="https://github.com/thomaschampagne/elevate/wiki/Frequently-Asked-Questions"
-                     target="_blank">Help</a> menu.
-    </div>
-
-  </mat-card-content>
-</mat-card>
+<app-sync-required></app-sync-required>
 
 <!--History not compliant with the feature-->
 <mat-card *ngIf="(areSyncedActivitiesCompliant === false && isSynced !== false)" class="no-data">

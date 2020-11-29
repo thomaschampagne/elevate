@@ -237,4 +237,8 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
   public clearSyncTime(): Promise<void> {
     return this.syncDateTimeDao.clear(true);
   }
+
+  public redirect(): void {
+    this.sync(false, false);
+  }
 }
