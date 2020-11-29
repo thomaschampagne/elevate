@@ -71,7 +71,7 @@ describe("UserSettingsService", () => {
     );
 
     // When
-    const promiseUpdate: Promise<ExtensionUserSettingsModel> = userSettingsService.updateOption(
+    const promiseUpdate: Promise<ExtensionUserSettingsModel> = userSettingsService.updateOption<ExtensionUserSettingsModel>(
       key,
       displayAdvancedHrData
     ) as Promise<ExtensionUserSettingsModel>;

@@ -5,11 +5,10 @@ import { ZoneDefinitionModel } from "../../models/zone-definition.model";
 import { LoggerService } from "../logging/logger.service";
 import { environment } from "../../../../environments/environment";
 import UserSettingsModel = UserSettings.UserSettingsModel;
+import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 
 @Injectable()
 export class UserSettingsService {
-  public static readonly MARK_LOCAL_STORAGE_CLEAR: string = "localStorageMustBeCleared";
-
   constructor(
     @Inject(UserSettingsDao) public readonly userSettingsDao: UserSettingsDao,
     @Inject(LoggerService) public readonly logger: LoggerService
@@ -19,7 +18,7 @@ export class UserSettingsService {
     return this.userSettingsDao.findOne();
   }
 
-  public updateOption(optionKey: keyof UserSettingsModel, optionValue: any): Promise<UserSettingsModel> {
+  public updateOption<T extends UserSettingsModel>(optionKey: keyof T, optionValue: any): Promise<UserSettingsModel> {
     return this.fetch().then(userSettings => {
       userSettings[optionKey as string] = optionValue;
       return this.updateUserSettings(userSettings);
@@ -31,7 +30,7 @@ export class UserSettingsService {
    * TODO Should be only for extension, not for desktop
    */
   public clearLocalStorageOnNextLoad(): Promise<void> {
-    return this.updateOption(UserSettingsService.MARK_LOCAL_STORAGE_CLEAR as keyof UserSettingsModel, true).then(() =>
+    return this.updateOption<ExtensionUserSettingsModel>("localStorageMustBeCleared", true).then(() =>
       Promise.resolve()
     );
   }

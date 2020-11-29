@@ -137,7 +137,7 @@ export abstract class RefreshStatsBarComponent implements OnInit {
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
-        this.userSettingsService.updateOption(optionKey, true).then(onCloseAction);
+        this.userSettingsService.updateOption<UserSettingsModel>(optionKey, true).then(onCloseAction);
         afterClosedSubscription.unsubscribe();
       }
     });

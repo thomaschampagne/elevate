@@ -417,7 +417,11 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
   public import(desktopDumpModel: DesktopDumpModel): Promise<void> {
     return this.isDumpCompatible(desktopDumpModel.version, this.getCompatibleBackupVersionThreshold()).then(() => {
-      return this.desktopDataStore.loadDump(desktopDumpModel);
+      this.isSyncing$.next(true);
+      return this.desktopDataStore.loadDump(desktopDumpModel).then(() => {
+        this.isSyncing$.next(false);
+        return Promise.resolve();
+      });
     });
   }
 

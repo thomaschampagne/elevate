@@ -36,16 +36,17 @@ export class DesktopDataStore<T extends {}> extends DataStore<T> {
       collection.clear({ removeIndices: true });
     });
 
-    return this.saveDataStore().then(() => {
-      const dumpedCollections: Collection<any>[] = dump.databaseDump as Collection<any>[];
+    const dumpedCollections: Collection<any>[] = dump.databaseDump as Collection<any>[];
 
-      dumpedCollections.forEach(collectionDump => {
-        const collection = this.db.getCollection(collectionDump.name) || this.db.addCollection(collectionDump.name);
-        collection.insert(collectionDump.data);
-      });
-
-      return this.saveDataStore();
+    dumpedCollections.forEach(collectionDump => {
+      const collection = this.db.getCollection(collectionDump.name) || this.db.addCollection(collectionDump.name);
+      const insertedDocs = collection.insert(collectionDump.data);
+      if (insertedDocs) {
+        this.logger.info(`Insertion in collection "${collection.name}" done.`);
+      }
     });
+
+    return this.saveDataStore();
   }
 
   public getAppUsageDetails(): Promise<AppUsageDetails> {

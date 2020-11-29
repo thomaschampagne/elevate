@@ -65,9 +65,9 @@ export class ElectronService {
     this.openItem(appPath.substring(0, Math.max(appPath.lastIndexOf("/"), appPath.lastIndexOf("\\"))));
   }
 
-  public clearAppDataAndRestart(): void {
+  public clearAppData(): Promise<void> {
     const session = this.getSession();
-    session
+    return session
       .clearStorageData()
       .then(() => {
         return session.clearCache();
@@ -77,10 +77,13 @@ export class ElectronService {
       })
       .then(() => {
         return session.clearHostResolverCache();
-      })
-      .then(() => {
-        this.restartApp();
       });
+  }
+
+  public clearAppDataAndRestart(): void {
+    this.clearAppData().then(() => {
+      this.restartApp();
+    });
   }
 
   public rmDirSync(path: string): void {

@@ -141,7 +141,7 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
 
         const reader = new FileReader(); // Reading file, when load, import it
         reader.readAsArrayBuffer(file);
-        reader.onload = (event: Event) => {
+        reader.onloadend = (event: Event) => {
           const dump = (event.target as IDBRequest).result;
           if (dump) {
             try {
@@ -149,7 +149,7 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
               this.desktopSyncService.import(desktopDumpModel).then(
                 () => {
                   importingDialog.close();
-                  window.location.reload();
+                  this.snackBar.open("Backup profile has been restored", "Ok", { duration: 2500 });
                 },
                 error => {
                   importingDialog.close();
@@ -157,7 +157,8 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
                 }
               );
             } catch (err) {
-              this.snackBar.open("Backup format is not compatible with desktop app", "Close");
+              this.snackBar.open("Incompatible or deprecated backup format", "Close");
+              importingDialog.close();
             }
           }
         };

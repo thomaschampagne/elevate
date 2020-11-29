@@ -24,10 +24,12 @@ export class Upgrade_7_0_0_$3_alpha extends DesktopMigration {
 
     // Rename FILE_SYSTEM connector to FILE enum value
     const connectorSyncDateTimeCollection = db.getCollection("connectorSyncDateTime");
-    const existingFileConnector = connectorSyncDateTimeCollection.findOne({ connectorType: "FILE_SYSTEM" });
-    if (existingFileConnector) {
-      existingFileConnector.connectorType = "FILE";
-      connectorSyncDateTimeCollection.update(existingFileConnector);
+    if (connectorSyncDateTimeCollection) {
+      const existingFileConnector = connectorSyncDateTimeCollection.findOne({ connectorType: "FILE_SYSTEM" });
+      if (existingFileConnector) {
+        existingFileConnector.connectorType = "FILE";
+        connectorSyncDateTimeCollection.update(existingFileConnector);
+      }
     }
 
     return this.saveDatabase(db);
