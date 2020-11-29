@@ -3,12 +3,7 @@ import _ from "lodash";
 import { ChildProcess } from "child_process";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { Platform } from "@elevate/shared/enums";
-
-declare let window: ElectronWindow;
-
-export interface ElectronWindow extends Window {
-  require(module: string): any;
-}
+import { BrowserWindow, Remote, Session } from "electron";
 
 @Injectable()
 export class ElectronService {
@@ -20,12 +15,12 @@ export class ElectronService {
 
   public get electron(): any {
     if (!this.instance) {
-      this.instance = window.require("electron");
+      this.instance = (window as any).require("electron");
     }
     return this.instance;
   }
 
-  public get remote(): Electron.Remote {
+  public get remote(): Remote {
     return this.instance ? this.instance.remote : null;
   }
 
@@ -45,7 +40,7 @@ export class ElectronService {
     return paths && paths.length > 0 ? paths[0] : null;
   }
 
-  public getMainBrowserWindow(): Electron.BrowserWindow {
+  public getMainBrowserWindow(): BrowserWindow {
     return this.electron.remote.getCurrentWindow();
   }
 
@@ -134,16 +129,35 @@ export class ElectronService {
     return this.require("fs");
   }
 
-  public getPath(name: string): string {
+  public getPath(
+    name:
+      | "home"
+      | "appData"
+      | "userData"
+      | "cache"
+      | "temp"
+      | "exe"
+      | "module"
+      | "desktop"
+      | "documents"
+      | "downloads"
+      | "music"
+      | "pictures"
+      | "videos"
+      | "recent"
+      | "logs"
+      | "pepperFlashSystemPlugin"
+      | "crashDumps"
+  ): string {
     return this.electron.remote.app.getPath(name);
   }
 
   public getAppDataPath(): string {
-    return this.getPath("appData") + "/" + this.electron.remote.app.name + "/";
+    return `${this.getPath("appData")}/${this.electron.remote.app.name}`;
   }
 
   public getLogsPath(): string {
-    return this.getPath("logs");
+    return `${this.getAppDataPath()}/logs`;
   }
 
   public readDirSync(folderPath): string[] {
@@ -210,7 +224,7 @@ export class ElectronService {
     return this.instance.remote.process.platform === Platform.MACOS;
   }
 
-  private getSession(): Electron.Session {
+  private getSession(): Session {
     return this.electron.remote.getCurrentWindow().webContents.session;
   }
 }
