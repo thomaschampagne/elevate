@@ -5,7 +5,6 @@ import { ActivitiesComponent } from "../../../activities/activities.component";
 import { GlobalSettingsComponent } from "../../../global-settings/global-settings.component";
 import { ZonesSettingsComponent } from "../../../zones-settings/zones-settings.component";
 import { DonateComponent } from "../../../donate/donate.component";
-import { ShareComponent } from "../../../share/share.component";
 import { ReportComponent } from "../../../report/report.component";
 import { HelpComponent } from "../../../help/help.component";
 import { ExtensionAdvancedMenuComponent } from "../../../advanced-menu/extension/extension-advanced-menu.component";
@@ -55,10 +54,6 @@ export class ExtensionRoutingModule {
       path: AppRoutes.releasesNotes,
       loadChildren: () =>
         import("../../../releases-notes/releases-notes.module").then(module => module.ReleasesNotesModule)
-    },
-    {
-      path: AppRoutes.share,
-      component: ShareComponent
     },
     {
       path: AppRoutes.report,

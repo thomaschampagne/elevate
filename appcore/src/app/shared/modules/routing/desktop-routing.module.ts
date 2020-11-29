@@ -4,7 +4,6 @@ import { AppRoutes } from "../../models/app-routes";
 import { ActivitiesComponent } from "../../../activities/activities.component";
 import { GlobalSettingsComponent } from "../../../global-settings/global-settings.component";
 import { DonateComponent } from "../../../donate/donate.component";
-import { ShareComponent } from "../../../share/share.component";
 import { ReportComponent } from "../../../report/report.component";
 import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/desktop-advanced-menu.component";
 import { HelpComponent } from "../../../help/help.component";
@@ -50,10 +49,6 @@ export class DesktopRoutingModule {
       path: AppRoutes.releasesNotes,
       loadChildren: () =>
         import("../../../releases-notes/releases-notes.module").then(module => module.ReleasesNotesModule)
-    },
-    {
-      path: AppRoutes.share,
-      component: ShareComponent
     },
     {
       path: AppRoutes.report,

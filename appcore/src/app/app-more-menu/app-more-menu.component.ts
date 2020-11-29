@@ -21,10 +21,6 @@ export abstract class AppMoreMenuComponent implements OnInit {
     this.router.navigate([AppRoutes.releasesNotes]);
   }
 
-  public onShowShare(): void {
-    this.router.navigate([AppRoutes.share]);
-  }
-
   public onShowReport(): void {
     this.router.navigate([AppRoutes.report]);
   }

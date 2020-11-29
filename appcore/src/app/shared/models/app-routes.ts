@@ -8,7 +8,6 @@ export class AppRoutes {
   public static readonly connectors: string = "connectors";
   public static readonly donate: string = "donate";
   public static readonly releasesNotes: string = "releasesNotes";
-  public static readonly share: string = "share";
   public static readonly report: string = "report";
   public static readonly advancedMenu: string = "advancedMenu";
   public static readonly help: string = "help";
