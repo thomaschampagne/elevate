@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import MarkDownIt from "markdown-it";
 import katex from "@iktakahiro/markdown-it-katex";
 import _ from "lodash";
-import { DomSanitizer } from "@angular/platform-browser";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { OptionHelperDataModel } from "./option-helper-data.model";
 
 /**
@@ -22,10 +22,13 @@ export class OptionHelperDialogComponent implements OnInit {
   public static readonly MAX_WIDTH: string = "80%";
   public static readonly MIN_WIDTH: string = "40%";
 
-  public html: string;
+  public html: SafeHtml;
   public markDownParser: MarkDownIt;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public dialogData: OptionHelperDataModel, public domSanitizer: DomSanitizer) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public readonly dialogData: OptionHelperDataModel,
+    @Inject(DomSanitizer) private readonly domSanitizer: DomSanitizer
+  ) {
     this.markDownParser = new MarkDownIt();
     this.markDownParser.use(katex, { throwOnError: false, errorColor: " #cc0000" });
   }
@@ -35,7 +38,7 @@ export class OptionHelperDialogComponent implements OnInit {
       throw new Error("No markdown data provided. File is empty?!");
     } else {
       const html = this.markDownParser.render(this.dialogData.markdownData);
-      this.html = this.domSanitizer.bypassSecurityTrustHtml(html) as string;
+      this.html = this.domSanitizer.bypassSecurityTrustHtml(html);
     }
   }
 }

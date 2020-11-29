@@ -14,6 +14,7 @@ import { LoggerService } from "../shared/services/logging/logger.service";
 import { environment } from "../../environments/environment";
 import { UserSettings } from "@elevate/shared/models";
 import { ElevateException } from "@elevate/shared/exceptions";
+import { DomSanitizer } from "@angular/platform-browser";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Component({
@@ -31,6 +32,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
     @Inject(GlobalSettingsService) private readonly globalSettingsService: GlobalSettingsService,
     @Inject(OptionHelperReaderService) private readonly optionHelperReaderService: OptionHelperReaderService,
+    @Inject(DomSanitizer) public readonly domSanitizer: DomSanitizer,
     @Inject(ActivatedRoute) private readonly route: ActivatedRoute,
     @Inject(MatDialog) private readonly dialog: MatDialog,
     @Inject(LoggerService) private readonly logger: LoggerService
