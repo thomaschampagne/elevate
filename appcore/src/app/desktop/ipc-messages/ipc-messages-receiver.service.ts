@@ -8,6 +8,7 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MessageFlag } from "@elevate/shared/electron/message-flag.enum";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { IPromiseTron, PROMISE_TRON } from "./promise-tron.interface";
+import { StreamsService } from "../../shared/services/streams/streams.service";
 
 @Injectable()
 export class IpcMessagesReceiver {
@@ -17,6 +18,7 @@ export class IpcMessagesReceiver {
   constructor(
     @Inject(PROMISE_TRON) public promiseTron: IPromiseTron,
     @Inject(ActivityService) private readonly activityService: ActivityService,
+    @Inject(StreamsService) private readonly streamsService: StreamsService,
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     this.syncEvents$ = new Subject<SyncEvent>();
@@ -61,6 +63,10 @@ export class IpcMessagesReceiver {
         this.handleFindActivityMessages(message, replyWith);
         break;
 
+      case MessageFlag.FIND_ACTIVITY_STREAMS:
+        this.handleFindStreamsMessages(message, replyWith);
+        break;
+
       default:
         this.handleUnknownMessage(message, replyWith);
         break;
@@ -83,6 +89,28 @@ export class IpcMessagesReceiver {
       activities => {
         replyWith({
           success: activities,
+          error: null
+        });
+      },
+      error => {
+        replyWith({
+          success: null,
+          error: error
+        });
+      }
+    );
+  }
+
+  public handleFindStreamsMessages(
+    flaggedIpcMessage: FlaggedIpcMessage,
+    replyWith: (promiseTronReply: PromiseTronReply) => void
+  ): void {
+    const activityId = flaggedIpcMessage.payload[0] as number | string;
+
+    this.streamsService.getInflatedById(activityId).then(
+      streams => {
+        replyWith({
+          success: streams,
           error: null
         });
       },

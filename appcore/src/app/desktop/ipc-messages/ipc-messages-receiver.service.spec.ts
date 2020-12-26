@@ -103,6 +103,21 @@ describe("IpcMessagesReceiver", () => {
       done();
     });
 
+    it("should forward 'find stream' messages", done => {
+      // Given
+      const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.FIND_ACTIVITY_STREAMS);
+      const replyWith = () => {};
+      const handleFindStreamsMessagesSpy = spyOn(ipcMessagesReceiver, "handleFindStreamsMessages").and.stub();
+
+      // When
+      ipcMessagesReceiver.forwardMessagesFromIpcMain(flaggedIpcMessage, replyWith);
+
+      // Then
+      expect(handleFindStreamsMessagesSpy).toHaveBeenCalledWith(flaggedIpcMessage, replyWith);
+
+      done();
+    });
+
     it("should handle unknown Messages received", done => {
       // Given
       const fakeFlag = -1;

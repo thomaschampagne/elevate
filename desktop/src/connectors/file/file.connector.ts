@@ -125,7 +125,7 @@ export class FileConnector extends BaseConnector {
     { from: ActivityTypes.DownhillSkiing, to: ElevateSport.AlpineSki },
     { from: ActivityTypes.Driving, to: ElevateSport.Drive },
     { from: ActivityTypes.Duathlon, to: ElevateSport.Duathlon },
-    { from: ActivityTypes.EBikeRide, to: ElevateSport.EBikeRide },
+    { from: ActivityTypes.EBiking, to: ElevateSport.EBikeRide },
     { from: ActivityTypes.EllipticalTrainer, to: ElevateSport.Elliptical },
     { from: ActivityTypes.Fishing, to: ElevateSport.Fishing },
     { from: ActivityTypes.FitnessEquipment, to: ElevateSport.Workout },

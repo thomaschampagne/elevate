@@ -52,7 +52,7 @@
   "engineStrict": true,
   "dependencies": {
     "@rollup/plugin-json": "^4.1.0",
-    "@sports-alliance/sports-lib": "^5.4.8",
+    "@sports-alliance/sports-lib": "file:../../sports-lib/",
     "7zip-bin": "^5.0.3",
     "electron-log": "^4.2.4",
     "electron-updater": "^4.3.5",

@@ -227,6 +227,11 @@ export abstract class BaseConnector {
     return this.ipcMessagesSender.send<SyncedActivityModel[]>(flaggedIpcMessage);
   }
 
+  public findActivityStreams(activityId: number | string): Promise<ActivityStreamsModel> {
+    const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.FIND_ACTIVITY_STREAMS, activityId);
+    return this.ipcMessagesSender.send<ActivityStreamsModel>(flaggedIpcMessage);
+  }
+
   public computeExtendedStats(
     syncedActivityModel: Partial<SyncedActivityModel>,
     athleteSnapshotModel: AthleteSnapshotModel,

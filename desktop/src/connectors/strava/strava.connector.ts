@@ -313,20 +313,48 @@ export class StravaConnector extends BaseConnector {
               );
             } else {
               // Activities exists
-
               if (_.isArray(syncedActivityModels) && syncedActivityModels.length === 1) {
                 // One activity found
                 if (this.stravaConnectorConfig.info.updateSyncedActivitiesNameAndType) {
                   const syncedActivityModel = syncedActivityModels[0];
+
                   syncedActivityModel.name = bareActivity.name;
-                  syncedActivityModel.type = bareActivity.type;
                   syncedActivityModel.extras = {
                     strava_activity_id: bareActivity.id as number
                   };
 
-                  // Update hash (type might change)
-                  syncedActivityModel.hash = BaseConnector.activityHash(syncedActivityModel);
+                  // Does type change?
+                  const hasTypeChanged = bareActivity.type !== syncedActivityModel.type;
 
+                  if (hasTypeChanged) {
+                    syncedActivityModel.type = bareActivity.type;
+
+                    return this.findActivityStreams(syncedActivityModel.id).then(activityStreamsModel => {
+                      if (activityStreamsModel) {
+                        // Re-compute activity because of type change
+                        syncedActivityModel.extendedStats = this.computeExtendedStats(
+                          syncedActivityModel,
+                          syncedActivityModel.athleteSnapshot,
+                          this.connectorConfig.userSettingsModel,
+                          activityStreamsModel,
+                          true
+                        );
+                        logger.info(
+                          `Recalculated activity ${syncedActivityModel.id} after type change to ${syncedActivityModel.type}`
+                        );
+                      }
+
+                      // Update hash (type has changed)
+                      syncedActivityModel.hash = BaseConnector.activityHash(syncedActivityModel);
+
+                      // Notify synced model updated
+                      syncEvents$.next(new ActivitySyncEvent(this.type, null, syncedActivityModel, false));
+
+                      return Promise.resolve(); // Continue to next activity
+                    });
+                  }
+
+                  // Notify synced model updated
                   syncEvents$.next(new ActivitySyncEvent(this.type, null, syncedActivityModel, false));
                 }
               } else {

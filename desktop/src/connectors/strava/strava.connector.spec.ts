@@ -13,6 +13,7 @@ import jsonFakeActivitiesFixture from "./fixtures/sample_activities.fixture.json
 import jsonFakeStreamsFixture from "./fixtures/sample_streams.fixture.json";
 import {
   ActivityStreamsModel,
+  AnalysisDataModel,
   AthleteModel,
   BareActivityModel,
   ConnectorSyncDateTime,
@@ -641,7 +642,7 @@ describe("StravaConnector", () => {
       );
     });
 
-    it("should send activity sync event when processing 1 bare activity that already exists (updateSyncedActivitiesNameAndType = true)", done => {
+    it("should send activity sync event and recalculate activity when processing 1 bare activity that already exists with a type change (updateSyncedActivitiesNameAndType = true)", done => {
       // Given
       const syncEvents$ = new Subject<SyncEvent>();
       const syncEventsSpy = spyOn(syncEvents$, "next");
@@ -663,6 +664,14 @@ describe("StravaConnector", () => {
         null,
         expectedSyncedActivityModelUpdate,
         false
+      );
+
+      const findActivityStreamsSpy = spyOn(stravaConnector, "findActivityStreams").and.returnValue(
+        Promise.resolve(new ActivityStreamsModel())
+      );
+
+      const computeExtendedStatsSpy = spyOn(stravaConnector, "computeExtendedStats").and.returnValue(
+        Promise.resolve(new AnalysisDataModel())
       );
 
       // Emulate 1 existing activity
@@ -688,6 +697,9 @@ describe("StravaConnector", () => {
           expect(activitySyncEventSent.activity.type).toEqual(expectedActivitySyncEvent.activity.type);
           expect(activitySyncEventSent.activity.extras.strava_activity_id).toEqual(expectedStravaId);
           expect(syncEventsSpy).toBeCalledTimes(perPage);
+          expect(findActivityStreamsSpy).toBeCalledWith(expectedSyncedActivityModelUpdate.id);
+          expect(findActivityStreamsSpy).toBeCalledTimes(1);
+          expect(computeExtendedStatsSpy).toHaveBeenCalledTimes(perPage);
 
           done();
         },
