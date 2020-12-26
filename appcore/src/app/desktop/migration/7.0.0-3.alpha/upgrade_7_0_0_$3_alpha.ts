@@ -32,6 +32,21 @@ export class Upgrade_7_0_0_$3_alpha extends DesktopMigration {
       }
     }
 
+    // Update activities with wrong sourceConnectorType type FILE_SYSTEM
+    const syncedActivitiesCollection = db.getCollection("syncedActivities");
+    if (syncedActivitiesCollection) {
+      const existingActivities = syncedActivitiesCollection.find();
+      if (existingActivities) {
+        const toBeUpdatedActivities = existingActivities.filter(activity => {
+          if (activity.sourceConnectorType === "FILE_SYSTEM") {
+            activity.sourceConnectorType = "FILE";
+            return activity;
+          }
+        });
+        syncedActivitiesCollection.update(toBeUpdatedActivities);
+      }
+    }
+
     return this.saveDatabase(db);
   }
 }
