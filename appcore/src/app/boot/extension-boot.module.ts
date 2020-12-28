@@ -9,8 +9,8 @@ import { APP_MORE_MENU_COMPONENT } from "../app-more-menu/app-more-menu.componen
 import { ExtensionAppMoreMenuComponent } from "../app-more-menu/extension-app-more-menu.component";
 import { SYNC_BAR_COMPONENT } from "../sync-bar/sync-bar.component";
 import { ExtensionSyncBarComponent } from "../sync-bar/extension-sync-bar.component";
-import { ExtensionRefreshStatsBarComponent } from "../refresh-stats-bar/extension-refresh-stats-bar.component";
-import { REFRESH_STATS_BAR_COMPONENT } from "../refresh-stats-bar/refresh-stats-bar.component";
+import { ExtensionRecalculateActivitiesBarComponent } from "../recalculate-activities-bar/extension-recalculate-activities-bar.component";
+import { RECALCULATE_ACTIVITIES_BAR_COMPONENT } from "../recalculate-activities-bar/recalculate-activities-bar.component";
 import { SYNC_MENU_COMPONENT } from "../sync-menu/sync-menu.component";
 import { ExtensionSyncMenuComponent } from "../sync-menu/extension/extension-sync-menu.component";
 import { ExtensionRoutingModule } from "../shared/modules/routing/extension-routing.module";
@@ -23,7 +23,7 @@ import { ChromiumService } from "../extension/chromium.service";
   imports: [CoreModule, ExtensionRoutingModule],
   exports: [CoreModule, ExtensionRoutingModule],
   declarations: [
-    ExtensionRefreshStatsBarComponent,
+    ExtensionRecalculateActivitiesBarComponent,
     ExtensionSyncBarComponent,
     ExtensionTopBarComponent,
     ExtensionAppMoreMenuComponent,
@@ -35,7 +35,7 @@ import { ChromiumService } from "../extension/chromium.service";
     { provide: AppService, useClass: ExtensionAppService },
     { provide: MENU_ITEMS_PROVIDER, useClass: ExtensionMenuItemsProvider },
     { provide: SYNC_BAR_COMPONENT, useValue: ExtensionSyncBarComponent },
-    { provide: REFRESH_STATS_BAR_COMPONENT, useValue: ExtensionRefreshStatsBarComponent },
+    { provide: RECALCULATE_ACTIVITIES_BAR_COMPONENT, useValue: ExtensionRecalculateActivitiesBarComponent },
     { provide: TOP_BAR_COMPONENT, useValue: ExtensionTopBarComponent },
     { provide: APP_MORE_MENU_COMPONENT, useValue: ExtensionAppMoreMenuComponent },
     { provide: SYNC_MENU_COMPONENT, useValue: ExtensionSyncMenuComponent }

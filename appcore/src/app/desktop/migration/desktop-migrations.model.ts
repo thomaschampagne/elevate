@@ -1,6 +1,7 @@
 export abstract class DesktopMigration {
   abstract version: string;
   abstract description: string;
+  abstract requiresRecalculation: boolean;
 
   constructor() {}
 

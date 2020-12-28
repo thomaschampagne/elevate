@@ -35,6 +35,8 @@ import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.se
 import { ElectronService } from "../../../../desktop/electron/electron.service";
 import { Router } from "@angular/router";
 import { AppRoutes } from "../../../models/app-routes";
+import { DesktopMigrationService } from "../../../../desktop/migration/desktop-migration.service";
+import { ActivityRecalculateNotification, DesktopActivityService } from "../../activity/impl/desktop-activity.service";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 // TODO Handle errors cases (continue or not the sync...)
@@ -61,10 +63,11 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   constructor(
     @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
     @Inject(DataStore) public readonly desktopDataStore: DesktopDataStore<object>,
-    @Inject(ActivityService) public readonly activityService: ActivityService,
+    @Inject(ActivityService) public readonly activityService: DesktopActivityService,
     @Inject(StreamsService) public readonly streamsService: StreamsService,
     @Inject(AthleteService) public readonly athleteService: AthleteService,
     @Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService,
+    @Inject(DesktopMigrationService) private readonly desktopMigrationService: DesktopMigrationService,
     @Inject(IpcMessagesReceiver) public readonly ipcMessagesReceiver: IpcMessagesReceiver,
     @Inject(IpcMessagesSender) public readonly ipcMessagesSender: IpcMessagesSender,
     @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
@@ -87,6 +90,17 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     this.currentConnectorType = null;
     this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync // TODO ReplaySubject to get old values?! I think no
     this.stravaConnectorInfoService.listenForCredentialsUpdates(this.syncEvents$);
+
+    // Emulate a sync on activities recalculation (goal: disable UI actions which could compromise data integrity during recalculation)
+    this.activityService.recalculate$.subscribe((notification: ActivityRecalculateNotification) => {
+      if (notification.started) {
+        this.isSyncing$.next(true);
+      }
+
+      if (notification.ended) {
+        this.isSyncing$.next(false);
+      }
+    });
   }
 
   public static transformErrorToSyncException(error: Error | Error[] | string | string[]): SyncException {
@@ -419,6 +433,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     return this.isDumpCompatible(desktopDumpModel.version, this.getCompatibleBackupVersionThreshold()).then(() => {
       this.isSyncing$.next(true);
       return this.desktopDataStore.loadDump(desktopDumpModel).then(() => {
+        // Clear any recalculation requirements with the new imported  backup. Indeed new backup might not require recalculation...
+        this.desktopMigrationService.clearRequiredRecalculation();
         this.isSyncing$.next(false);
         return Promise.resolve();
       });

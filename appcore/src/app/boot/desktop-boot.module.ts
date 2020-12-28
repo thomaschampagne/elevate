@@ -9,8 +9,8 @@ import { APP_MORE_MENU_COMPONENT } from "../app-more-menu/app-more-menu.componen
 import { DesktopAppMoreMenuComponent } from "../app-more-menu/desktop-app-more-menu.component";
 import { DesktopSyncBarComponent } from "../sync-bar/desktop-sync-bar.component";
 import { SYNC_BAR_COMPONENT } from "../sync-bar/sync-bar.component";
-import { DesktopRefreshStatsBarComponent } from "../refresh-stats-bar/desktop-refresh-stats-bar.component";
-import { REFRESH_STATS_BAR_COMPONENT } from "../refresh-stats-bar/refresh-stats-bar.component";
+import { DesktopRecalculateActivitiesBarComponent } from "../recalculate-activities-bar/desktop-recalculate-activities-bar.component";
+import { RECALCULATE_ACTIVITIES_BAR_COMPONENT } from "../recalculate-activities-bar/recalculate-activities-bar.component";
 import { SYNC_MENU_COMPONENT } from "../sync-menu/sync-menu.component";
 import { DesktopSyncMenuComponent } from "../sync-menu/desktop/desktop-sync-menu.component";
 import { DesktopErrorsSyncDetailsDialogComponent } from "../sync-bar/desktop-errors-sync-details-dialog.component";
@@ -24,7 +24,7 @@ import { DesktopAppService } from "../shared/services/app-service/impl/desktop-a
   imports: [CoreModule, DesktopRoutingModule],
   exports: [CoreModule, DesktopRoutingModule],
   declarations: [
-    DesktopRefreshStatsBarComponent,
+    DesktopRecalculateActivitiesBarComponent,
     DesktopSyncBarComponent,
     DesktopTopBarComponent,
     DesktopAppMoreMenuComponent,
@@ -37,7 +37,7 @@ import { DesktopAppService } from "../shared/services/app-service/impl/desktop-a
     { provide: AppService, useClass: DesktopAppService },
     { provide: MENU_ITEMS_PROVIDER, useClass: DesktopMenuItemsProvider },
     { provide: SYNC_BAR_COMPONENT, useValue: DesktopSyncBarComponent },
-    { provide: REFRESH_STATS_BAR_COMPONENT, useValue: DesktopRefreshStatsBarComponent },
+    { provide: RECALCULATE_ACTIVITIES_BAR_COMPONENT, useValue: DesktopRecalculateActivitiesBarComponent },
     { provide: TOP_BAR_COMPONENT, useValue: DesktopTopBarComponent },
     { provide: APP_MORE_MENU_COMPONENT, useValue: DesktopAppMoreMenuComponent },
     { provide: SYNC_MENU_COMPONENT, useValue: DesktopSyncMenuComponent }

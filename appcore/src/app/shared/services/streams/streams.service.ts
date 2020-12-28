@@ -12,12 +12,20 @@ export class StreamsService {
 
   public getInflatedById(id: number | string): Promise<ActivityStreamsModel> {
     return this.getById(id).then(compressed => {
-      return Promise.resolve(ActivityStreamsModel.inflate(compressed.data));
+      if (compressed) {
+        return Promise.resolve(ActivityStreamsModel.inflate(compressed.data));
+      } else {
+        return Promise.resolve(null);
+      }
     });
   }
 
   public put(compressedStreamModel: CompressedStreamModel): Promise<CompressedStreamModel> {
     return this.streamsDao.put(compressedStreamModel);
+  }
+
+  public removeById(id: number | string): Promise<void> {
+    return this.streamsDao.removeById(id, true);
   }
 
   public removeByManyIds(activitiesToDelete: (string | number)[]): Promise<void> {

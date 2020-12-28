@@ -9,19 +9,23 @@ import { DataStore } from "../../shared/data-store/data-store";
 import { VersionsProvider } from "../../shared/services/versions/versions-provider";
 import { DesktopMigration } from "./desktop-migrations.model";
 import { DesktopRegisteredMigrations } from "./desktop-registered-migrations";
+import { ActivityService } from "../../shared/services/activity/activity.service";
+import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
 
 @Injectable()
 export class DesktopMigrationService {
-  private readonly db: LokiConstructor;
-
   constructor(
-    @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
+    @Inject(VersionsProvider) public readonly versionsProvider: DesktopVersionsProvider,
     @Inject(DataStore) public readonly dataStore: DataStore<object>,
+    @Inject(ActivityService) public readonly activityService: DesktopActivityService,
     @Inject(MatDialog) private readonly dialog: MatDialog,
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     this.db = this.dataStore.db;
   }
+
+  public static readonly RECALCULATE_REQUIRED_LS_KEY: string = "recalculateRequiredByVersion";
+  private readonly db: LokiConstructor;
 
   /**
    * Perform required upgrades to a newly version installed.
@@ -69,39 +73,38 @@ export class DesktopMigrationService {
   }
 
   public detectUpgrade(): Promise<{ fromVersion: string; toVersion: string }> {
-    return Promise.all([
-      (this.versionsProvider as DesktopVersionsProvider).getExistingVersion(),
-      this.versionsProvider.getPackageVersion()
-    ]).then((results: string[]) => {
-      const existingVersion = results[0];
-      const packageVersion = results[1];
+    return Promise.all([this.versionsProvider.getExistingVersion(), this.versionsProvider.getPackageVersion()]).then(
+      (results: string[]) => {
+        const existingVersion = results[0];
+        const packageVersion = results[1];
 
-      if (!existingVersion) {
-        this.logger.info(`First install detected.`);
-        return Promise.resolve(null);
+        if (!existingVersion) {
+          this.logger.info(`First install detected.`);
+          return Promise.resolve(null);
+        }
+
+        if (semver.eq(existingVersion, packageVersion)) {
+          return Promise.resolve(null);
+        }
+
+        if (semver.eq(existingVersion, packageVersion)) {
+          return Promise.resolve({ fromVersion: existingVersion, toVersion: packageVersion });
+        }
+
+        if (semver.lt(existingVersion, packageVersion)) {
+          return Promise.resolve({ fromVersion: existingVersion, toVersion: packageVersion });
+        }
+
+        if (semver.gt(existingVersion, packageVersion)) {
+          const errorMessage = `Downgrade detected from ${existingVersion} to ${packageVersion}. You might encounter some issues. Consider uninstall this version and reinstall latest version to avoid issues.`;
+          return Promise.reject({ reason: "DOWNGRADE", message: errorMessage });
+        }
+
+        return Promise.reject(
+          `Upgrade detection error with existing version: ${existingVersion}; packageVersion: ${packageVersion}`
+        );
       }
-
-      if (semver.eq(existingVersion, packageVersion)) {
-        return Promise.resolve(null);
-      }
-
-      if (semver.eq(existingVersion, packageVersion)) {
-        return Promise.resolve({ fromVersion: existingVersion, toVersion: packageVersion });
-      }
-
-      if (semver.lt(existingVersion, packageVersion)) {
-        return Promise.resolve({ fromVersion: existingVersion, toVersion: packageVersion });
-      }
-
-      if (semver.gt(existingVersion, packageVersion)) {
-        const errorMessage = `Downgrade detected from ${existingVersion} to ${packageVersion}. You might encounter some issues. Consider uninstall this version and reinstall latest version to avoid issues.`;
-        return Promise.reject({ reason: "DOWNGRADE", message: errorMessage });
-      }
-
-      return Promise.reject(
-        `Upgrade detection error with existing version: ${existingVersion}; packageVersion: ${packageVersion}`
-      );
-    });
+    );
   }
 
   /**
@@ -109,28 +112,57 @@ export class DesktopMigrationService {
    */
   public trackPackageVersion(): Promise<void> {
     const packageVersion = this.versionsProvider.getPackageVersion();
-    return (this.versionsProvider as DesktopVersionsProvider).setExistingVersion(packageVersion);
+    return this.versionsProvider.setExistingVersion(packageVersion);
   }
 
   public applyUpgrades(fromVersion: string, toVersion: string): Promise<void> {
     this.logger.info(`Applying upgrade(s) from ${fromVersion} to ${toVersion}`);
 
-    return this.getDesktopRegisteredMigrations().reduce(
-      (previousMigrationDone: Promise<void>, migration: DesktopMigration) => {
+    let upgradeRequiresRecalculationByVersion: string = null;
+
+    return this.getDesktopRegisteredMigrations()
+      .reduce((previousMigrationDone: Promise<void>, migration: DesktopMigration) => {
         return previousMigrationDone.then(() => {
           if (semver.lt(fromVersion, migration.version)) {
             this.logger.info(`Migrating to ${migration.version}: ${migration.description}`);
-            return migration.upgrade(this.db);
+            return migration.upgrade(this.db).then(() => {
+              // Check if migration requires a recalculation
+              if (migration.requiresRecalculation) {
+                upgradeRequiresRecalculationByVersion = migration.version;
+              }
+              return Promise.resolve();
+            });
           }
-
           return Promise.resolve();
         });
-      },
-      Promise.resolve()
-    );
+      }, Promise.resolve())
+      .then(() => {
+        // Flag required recalculation if any migration played ask for it and current app has activities
+        if (upgradeRequiresRecalculationByVersion) {
+          return this.activityService.count().then(count => {
+            if (count > 0) {
+              this.flagRequiresRecalculationByVersion(upgradeRequiresRecalculationByVersion);
+            }
+            return Promise.resolve();
+          });
+        }
+        return Promise.resolve();
+      });
   }
 
   public getDesktopRegisteredMigrations(): DesktopMigration[] {
     return DesktopRegisteredMigrations.LIST;
+  }
+
+  public recalculateRequiredByVersion(): string {
+    return localStorage.getItem(DesktopMigrationService.RECALCULATE_REQUIRED_LS_KEY);
+  }
+
+  public clearRequiredRecalculation(): void {
+    return localStorage.removeItem(DesktopMigrationService.RECALCULATE_REQUIRED_LS_KEY);
+  }
+
+  public flagRequiresRecalculationByVersion(version: string): void {
+    localStorage.setItem(DesktopMigrationService.RECALCULATE_REQUIRED_LS_KEY, version);
   }
 }

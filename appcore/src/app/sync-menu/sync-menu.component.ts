@@ -1,4 +1,4 @@
-import { Component, Inject, InjectionToken, OnDestroy, OnInit } from "@angular/core";
+import { Component, InjectionToken, OnDestroy, OnInit } from "@angular/core";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
@@ -24,11 +24,11 @@ export abstract class SyncMenuComponent implements OnInit, OnDestroy {
   public historyChangesSub: Subscription;
 
   protected constructor(
-    @Inject(AppService) public readonly appService: AppService,
-    @Inject(Router) protected readonly router: Router,
-    @Inject(SyncService) protected readonly syncService: SyncService<any>,
-    @Inject(MatDialog) protected readonly dialog: MatDialog,
-    @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar
+    public readonly appService: AppService,
+    protected readonly router: Router,
+    protected readonly syncService: SyncService<any>,
+    protected readonly dialog: MatDialog,
+    protected readonly snackBar: MatSnackBar
   ) {
     this.syncState = null;
   }

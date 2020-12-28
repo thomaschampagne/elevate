@@ -12,6 +12,6 @@ export class PropertiesDao extends BaseDao<PropertiesModel> {
   }
 
   public getDefaultStorageValue(): PropertiesModel {
-    return { existingVersion: null };
+    return new PropertiesModel(null);
   }
 }

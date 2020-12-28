@@ -9,7 +9,6 @@ import { Inject } from "@angular/core";
 export abstract class ActivityService {
   public athleteSettingsConsistency$: Subject<boolean>;
   public activitiesWithSettingsLacks$: Subject<boolean>;
-  public recalculatedDone$: Subject<void>;
 
   protected constructor(
     @Inject(ActivityDao) public readonly activityDao: ActivityDao,
@@ -18,7 +17,6 @@ export abstract class ActivityService {
   ) {
     this.athleteSettingsConsistency$ = new Subject<boolean>();
     this.activitiesWithSettingsLacks$ = new Subject<boolean>();
-    this.recalculatedDone$ = new Subject<void>();
   }
 
   public fetch(): Promise<SyncedActivityModel[]> {

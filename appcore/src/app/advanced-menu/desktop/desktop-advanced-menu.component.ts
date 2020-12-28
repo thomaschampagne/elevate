@@ -82,7 +82,7 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
     @Inject(MatDialog) protected readonly dialog: MatDialog,
     @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar,
     @Inject(UserSettingsService) protected readonly userSettingsService: UserSettingsService,
-    @Inject(ActivityService) protected readonly activityService: ActivityService,
+    @Inject(ActivityService) protected readonly activityService: DesktopActivityService,
     @Inject(AthleteService) protected readonly athleteService: AthleteService,
     @Inject(ElectronService) protected readonly electronService: ElectronService
   ) {
@@ -128,7 +128,7 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
     dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
         this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
-          (this.activityService as DesktopActivityService).bulkRefreshStatsAll(userSettingsModel);
+          this.activityService.recalculateAll(userSettingsModel);
         });
       }
     });

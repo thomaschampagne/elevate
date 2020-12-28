@@ -3,7 +3,7 @@ import { ActivityService } from "../activity/activity.service";
 import { SyncService } from "../sync/sync.service";
 import { SyncState } from "../sync/sync-state.enum";
 import { sleep } from "@elevate/shared/tools";
-import { merge, Observable } from "rxjs";
+import { Observable } from "rxjs";
 import { filter, map } from "rxjs/operators";
 
 export abstract class AppService {
@@ -23,13 +23,10 @@ export abstract class AppService {
       this.isSyncing = isSyncing;
     });
 
-    // Merge syncing and recalculation done as "history has changed"
-    this.historyChanges$ = merge(
-      this.syncService.isSyncing$.pipe(
-        filter(isSyncing => isSyncing === false),
-        map(() => {})
-      ),
-      this.activityService.recalculatedDone$
+    // End of syncing (including recalculation done) is seen as "history has changed"
+    this.historyChanges$ = this.syncService.isSyncing$.pipe(
+      filter(isSyncing => isSyncing === false),
+      map(() => {})
     );
 
     this.historyChanges$.subscribe(() => {

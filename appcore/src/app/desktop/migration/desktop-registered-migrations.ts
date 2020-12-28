@@ -11,7 +11,7 @@ function downgradeTo(version) {
     db.getCollection("properties").update(properties);
     db.save()
 }
-downgradeTo("7.0.0");
+downgradeTo("7.0.0-2.alpha");
 */
 
 /**

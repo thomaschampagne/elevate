@@ -28,8 +28,11 @@ import {
 } from "./shared/services/menu-items/menu-items-provider.interface";
 import { APP_MORE_MENU_COMPONENT, AppMoreMenuComponent } from "./app-more-menu/app-more-menu.component";
 import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
-import { REFRESH_STATS_BAR_COMPONENT, RefreshStatsBarComponent } from "./refresh-stats-bar/refresh-stats-bar.component";
-import { RefreshStatsBarDirective } from "./refresh-stats-bar/refresh-stats-bar.directive";
+import {
+  RECALCULATE_ACTIVITIES_BAR_COMPONENT,
+  RecalculateActivitiesBarComponent
+} from "./recalculate-activities-bar/recalculate-activities-bar.component";
+import { RecalculateActivitiesBarDirective } from "./recalculate-activities-bar/recalculate-activities-bar.directive";
 import { VersionsProvider } from "./shared/services/versions/versions-provider";
 import { ComponentsFactoryService } from "./shared/services/components-factory.service";
 
@@ -57,8 +60,8 @@ export class AppComponent implements OnInit, OnDestroy {
   @ViewChild(SyncBarDirective, { static: true })
   public syncBarDirective: SyncBarDirective;
 
-  @ViewChild(RefreshStatsBarDirective, { static: true })
-  public refreshStatsBarDirective: RefreshStatsBarDirective;
+  @ViewChild(RecalculateActivitiesBarDirective, { static: true })
+  public recalculateActivitiesBarDirective: RecalculateActivitiesBarDirective;
 
   @ViewChild(SyncMenuDirective, { static: true })
   public syncMenuDirective: SyncMenuDirective;
@@ -85,7 +88,8 @@ export class AppComponent implements OnInit, OnDestroy {
     @Inject(MENU_ITEMS_PROVIDER) private readonly menuItemsProvider: MenuItemsProvider,
     @Inject(TOP_BAR_COMPONENT) private readonly topBarComponentType: Type<TopBarComponent>,
     @Inject(SYNC_BAR_COMPONENT) private readonly syncBarComponentType: Type<SyncBarComponent>,
-    @Inject(REFRESH_STATS_BAR_COMPONENT) private readonly refreshStatsBarComponentType: Type<RefreshStatsBarComponent>,
+    @Inject(RECALCULATE_ACTIVITIES_BAR_COMPONENT)
+    private readonly recalculateActivitiesBarComponentType: Type<RecalculateActivitiesBarComponent>,
     @Inject(SYNC_MENU_COMPONENT) private readonly syncMenuComponentType: Type<SyncMenuComponent>,
     @Inject(APP_MORE_MENU_COMPONENT) private readonly appMoreMenuComponentType: Type<AppMoreMenuComponent>
   ) {
@@ -131,9 +135,9 @@ export class AppComponent implements OnInit, OnDestroy {
       this.syncBarDirective.viewContainerRef
     );
 
-    this.componentsFactoryService.create<RefreshStatsBarComponent>(
-      this.refreshStatsBarComponentType,
-      this.refreshStatsBarDirective.viewContainerRef
+    this.componentsFactoryService.create<RecalculateActivitiesBarComponent>(
+      this.recalculateActivitiesBarComponentType,
+      this.recalculateActivitiesBarDirective.viewContainerRef
     );
 
     this.componentsFactoryService.create<SyncMenuComponent>(

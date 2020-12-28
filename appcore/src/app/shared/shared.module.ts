@@ -31,7 +31,7 @@ import { LoggerService } from "./services/logging/logger.service";
 import { ConsoleLoggerService } from "./services/logging/console-logger.service";
 import { StreamsDao } from "./dao/streams/streams.dao";
 import { StreamsService } from "./services/streams/streams.service";
-import { ActivitiesSettingsLacksDialogComponent } from "../refresh-stats-bar/activities-settings-lacks-dialog.component";
+import { ActivitiesSettingsLacksDialogComponent } from "../recalculate-activities-bar/activities-settings-lacks-dialog.component";
 import { LoadingDialogComponent } from "./dialogs/loading-dialog/loading-dialog.component";
 import { NewRemoteVersionNoticeDialogComponent } from "./services/versions/new-remote-version-notice-dialog.component";
 import { ReleaseNoteService } from "../releases-notes/release-note.service";

@@ -1,8 +1,8 @@
 import { Directive, Inject, ViewContainerRef } from "@angular/core";
 
 @Directive({
-  selector: "[appRefreshStatsBar]"
+  selector: "[appRecalculateActivitiesBar]"
 })
-export class RefreshStatsBarDirective {
+export class RecalculateActivitiesBarDirective {
   constructor(@Inject(ViewContainerRef) public readonly viewContainerRef: ViewContainerRef) {}
 }

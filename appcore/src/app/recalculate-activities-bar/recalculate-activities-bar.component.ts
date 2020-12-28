@@ -14,12 +14,14 @@ import { UserSettingsService } from "../shared/services/user-settings/user-setti
 import { UserSettings } from "@elevate/shared/models";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
-export const REFRESH_STATS_BAR_COMPONENT = new InjectionToken<RefreshStatsBarComponent>("REFRESH_STATS_BAR_COMPONENT");
+export const RECALCULATE_ACTIVITIES_BAR_COMPONENT = new InjectionToken<RecalculateActivitiesBarComponent>(
+  "RECALCULATE_ACTIVITIES_BAR_COMPONENT"
+);
 
 @Component({ template: "" })
-export abstract class RefreshStatsBarComponent implements OnInit {
+export abstract class RecalculateActivitiesBarComponent implements OnInit {
   @HostBinding("hidden")
-  public hideRefreshStatsBar: boolean;
+  public hideRecalculationBar: boolean;
 
   public hideGoToAthleteSettingsButton: boolean;
   public hideSettingsConsistencyWarning: boolean;
@@ -33,7 +35,7 @@ export abstract class RefreshStatsBarComponent implements OnInit {
     @Inject(MatDialog) protected readonly dialog: MatDialog
   ) {
     this.hideGoToAthleteSettingsButton = false;
-    this.hideRefreshStatsBar = true;
+    this.hideRecalculationBar = true;
     this.hideSettingsConsistencyWarning = true;
     this.hideSettingsLacksWarning = true;
     this.userWarningsDisabled = {
@@ -68,22 +70,22 @@ export abstract class RefreshStatsBarComponent implements OnInit {
 
   public showSettingsLacks(): void {
     this.hideSettingsLacksWarning = false;
-    this.hideRefreshStatsBar = false;
+    this.hideRecalculationBar = false;
   }
 
   public showConsistencyWarning(): void {
     this.hideSettingsConsistencyWarning = false;
-    this.hideRefreshStatsBar = false;
+    this.hideRecalculationBar = false;
   }
 
   public onCloseSettingsLacksWarning(): void {
     this.hideSettingsLacksWarning = true;
-    this.hideRefreshStatsBar = this.hideSettingsConsistencyWarning;
+    this.hideRecalculationBar = this.hideSettingsConsistencyWarning;
   }
 
   public onCloseSettingsConsistencyWarning(): void {
     this.hideSettingsConsistencyWarning = true;
-    this.hideRefreshStatsBar = this.hideSettingsLacksWarning;
+    this.hideRecalculationBar = this.hideSettingsLacksWarning;
   }
 
   public onShowActivitiesWithSettingsLacks(): void {

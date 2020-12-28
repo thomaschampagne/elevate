@@ -18,9 +18,10 @@ import { DesktopImportBackupDialogComponent } from "../../shared/dialogs/import-
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
 import { DesktopAppService } from "../../shared/services/app-service/impl/desktop-app.service";
-import { LoggerService } from "../../shared/services/logging/logger.service";
 import { ConnectorSyncDateTime } from "@elevate/shared/models";
 import { ConnectorService } from "../../connectors/connector.service";
+import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
+import { ActivityService } from "../../shared/services/activity/activity.service";
 
 @Component({
   selector: "app-desktop-sync-menu",
@@ -29,6 +30,7 @@ import { ConnectorService } from "../../connectors/connector.service";
       <div class="dual-split-button">
         <button
           mat-button
+          [disabled]="desktopAppService.isSyncing"
           color="primary"
           (click)="syncMenuActions[0].action()"
           matTooltip="{{ syncMenuActions[0]?.tooltip }}"
@@ -36,7 +38,7 @@ import { ConnectorService } from "../../connectors/connector.service";
           <mat-icon fontSet="material-icons-outlined">{{ syncMenuActions[0].icon }}</mat-icon>
           {{ syncMenuActions[0].text }}
         </button>
-        <button mat-icon-button color="primary" [matMenuTriggerFor]="syncMenu">
+        <button mat-icon-button color="primary" [disabled]="desktopAppService.isSyncing" [matMenuTriggerFor]="syncMenu">
           <mat-icon fontSet="material-icons-outlined">expand_more</mat-icon>
         </button>
       </div>
@@ -54,13 +56,13 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
   public mostRecentConnectorSyncedType: ConnectorType;
 
   constructor(
-    @Inject(AppService) private readonly desktopAppService: DesktopAppService,
+    @Inject(AppService) public readonly desktopAppService: DesktopAppService,
     @Inject(Router) protected readonly router: Router,
     @Inject(SyncService) protected readonly desktopSyncService: DesktopSyncService,
     @Inject(MatDialog) protected readonly dialog: MatDialog,
     @Inject(ElectronService) protected readonly electronService: ElectronService,
     @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar,
-    @Inject(LoggerService) private readonly logger: LoggerService
+    @Inject(ActivityService) public readonly desktopActivityService: DesktopActivityService
   ) {
     super(desktopAppService, router, desktopSyncService, dialog, snackBar);
     this.mostRecentConnectorSyncedType = null;
@@ -149,7 +151,7 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
               this.desktopSyncService.import(desktopDumpModel).then(
                 () => {
                   importingDialog.close();
-                  this.snackBar.open("Backup profile has been restored", "Ok", { duration: 2500 });
+                  location.reload();
                 },
                 error => {
                   importingDialog.close();

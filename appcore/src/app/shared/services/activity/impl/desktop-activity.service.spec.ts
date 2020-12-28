@@ -1,6 +1,6 @@
 import { TestBed } from "@angular/core/testing";
 
-import { BulkRefreshStatsNotification, DesktopActivityService } from "./desktop-activity.service";
+import { ActivityRecalculateNotification, DesktopActivityService } from "./desktop-activity.service";
 import { CoreModule } from "../../../../core/core.module";
 import { SharedModule } from "../../../shared.module";
 import {
@@ -15,7 +15,6 @@ import {
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { PROMISE_TRON } from "../../../../desktop/ipc-messages/promise-tron.interface";
 import { PromiseTronServiceMock } from "../../../../desktop/ipc-messages/promise-tron.service.mock";
-import { CompressedStreamModel } from "@elevate/shared/models/sync";
 import _ from "lodash";
 import { DataStore } from "../../../data-store/data-store";
 import { TestingDataStore } from "../../../data-store/testing-datastore.service";
@@ -128,8 +127,8 @@ describe("DesktopActivityService", () => {
     });
   });
 
-  describe("Refresh stats", () => {
-    it("should refresh stats of a synced activity along user settings given", done => {
+  describe("Recalculate stats", () => {
+    it("should recalculate of a synced activity along user settings given", done => {
       // Given
       const activityId = "1111";
       const syncedActivityModel: SyncedActivityModel = new SyncedActivityModel();
@@ -155,7 +154,6 @@ describe("DesktopActivityService", () => {
         streams,
         smoothAltitude
       );
-      const compressedStreamModel = new CompressedStreamModel(activityId, "streamData");
 
       const athleteSnapshotUpdateSpy = spyOn(desktopActivityService.athleteSnapshotResolver, "update").and.returnValue(
         Promise.resolve()
@@ -164,10 +162,9 @@ describe("DesktopActivityService", () => {
         desktopActivityService.athleteSnapshotResolver,
         "resolve"
       ).and.returnValue(athleteSnapshotModel);
-      const streamGetByIdSpy = spyOn(desktopActivityService.streamsDao, "getById").and.returnValue(
-        Promise.resolve(compressedStreamModel)
+      const streamGetByIdSpy = spyOn(desktopActivityService.streamsService, "getInflatedById").and.returnValue(
+        Promise.resolve(streams)
       );
-      const inflateCompressedStreamSpy = spyOn(ActivityStreamsModel, "inflate").and.returnValue(streams);
       const selfComputeSpy = spyOn(desktopActivityService, "compute").and.callThrough();
       const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(
         Promise.resolve(expectedSyncedActivityModel)
@@ -177,7 +174,7 @@ describe("DesktopActivityService", () => {
       );
 
       // When
-      const promise: Promise<SyncedActivityModel> = desktopActivityService.refreshStats(
+      const promise: Promise<SyncedActivityModel> = desktopActivityService.recalculateSingle(
         syncedActivityModel,
         userSettingsModel
       );
@@ -190,8 +187,6 @@ describe("DesktopActivityService", () => {
           expect(athleteSnapshotResolveSpy).toHaveBeenCalledWith(new Date(expectedSyncedActivityModel.start_time));
           expect(streamGetByIdSpy).toHaveBeenCalledTimes(1);
           expect(streamGetByIdSpy).toHaveBeenCalledWith(expectedSyncedActivityModel.id);
-          expect(inflateCompressedStreamSpy).toHaveBeenCalledTimes(1);
-          expect(inflateCompressedStreamSpy).toHaveBeenCalledWith(compressedStreamModel.data);
           expect(selfComputeSpy).toHaveBeenCalledTimes(1);
           expect(sendMessageSpy).toHaveBeenCalledTimes(1);
           expect(sendMessageSpy).toHaveBeenCalledWith(expectedFlaggedIpcMessage);
@@ -206,7 +201,7 @@ describe("DesktopActivityService", () => {
       );
     });
 
-    it("should refresh stats of a synced activity which has NO stream (AthleteSnapshotModel has to be updated)", done => {
+    it("should recalculate a synced activity which has NO stream (AthleteSnapshotModel has to be updated)", done => {
       // Given
       const activityId = "1111";
       const syncedActivityModel: SyncedActivityModel = new SyncedActivityModel();
@@ -223,7 +218,7 @@ describe("DesktopActivityService", () => {
 
       const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
       const streams: ActivityStreamsModel = null;
-      const compressedStreamModel = null;
+      // const compressedStreamModel = null;
       const smoothAltitude = false;
       const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.COMPUTE_ACTIVITY,
@@ -241,10 +236,9 @@ describe("DesktopActivityService", () => {
         desktopActivityService.athleteSnapshotResolver,
         "resolve"
       ).and.returnValue(athleteSnapshotModel);
-      const streamGetByIdSpy = spyOn(desktopActivityService.streamsDao, "getById").and.returnValue(
-        Promise.resolve(compressedStreamModel)
+      const streamGetByIdSpy = spyOn(desktopActivityService.streamsService, "getInflatedById").and.returnValue(
+        Promise.resolve(streams)
       );
-      const inflateCompressedStreamSpy = spyOn(ActivityStreamsModel, "inflate").and.returnValue(streams);
       const selfComputeSpy = spyOn(desktopActivityService, "compute").and.callThrough();
       const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(
         Promise.resolve(expectedSyncedActivityModel)
@@ -254,7 +248,7 @@ describe("DesktopActivityService", () => {
       );
 
       // When
-      const promise: Promise<SyncedActivityModel> = desktopActivityService.refreshStats(
+      const promise: Promise<SyncedActivityModel> = desktopActivityService.recalculateSingle(
         syncedActivityModel,
         userSettingsModel
       );
@@ -267,7 +261,6 @@ describe("DesktopActivityService", () => {
           expect(athleteSnapshotResolveSpy).toHaveBeenCalledWith(new Date(expectedSyncedActivityModel.start_time));
           expect(streamGetByIdSpy).toHaveBeenCalledTimes(1);
           expect(streamGetByIdSpy).toHaveBeenCalledWith(expectedSyncedActivityModel.id);
-          expect(inflateCompressedStreamSpy).not.toHaveBeenCalled();
           expect(selfComputeSpy).toHaveBeenCalledTimes(1);
           expect(sendMessageSpy).toHaveBeenCalledTimes(1);
           expect(sendMessageSpy).toHaveBeenCalledWith(expectedFlaggedIpcMessage);
@@ -283,7 +276,7 @@ describe("DesktopActivityService", () => {
     });
   });
 
-  describe("Bulk refresh stats", () => {
+  describe("Bulk recalculate", () => {
     it("should bulk compute a set of synced activities", done => {
       const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
 
@@ -298,33 +291,31 @@ describe("DesktopActivityService", () => {
 
       const syncedActivityModels = [syncedActivityModel01, syncedActivityModel02, syncedActivityModel03];
 
-      const refreshStatsSpy = spyOn(desktopActivityService, "refreshStats").and.callFake(
+      const recalculateSpy = spyOn(desktopActivityService, "recalculateSingle").and.callFake(
         (syncedActivityModel: SyncedActivityModel) => {
-          return Promise.resolve(syncedActivityModel); // Bypass refresh stats of an activity. Already tested.
+          return Promise.resolve(syncedActivityModel); // Bypass recalculation of an activity. Already tested.
         }
       );
 
-      const recalculatedDoneSpy = spyOn(desktopActivityService.recalculatedDone$, "next").and.stub();
       const verifyActivitiesWithSettingsLackingSpy = spyOn(
         desktopActivityService,
         "verifyActivitiesWithSettingsLacking"
       ).and.stub();
 
       // When
-      desktopActivityService.bulkRefreshStats(syncedActivityModels, userSettingsModel);
+      desktopActivityService.recalculate(syncedActivityModels, userSettingsModel);
 
       // Then
-      desktopActivityService.refreshStats$.subscribe(
-        (notification: BulkRefreshStatsNotification) => {
-          expect(desktopActivityService.isProcessing).toBeTruthy();
+      desktopActivityService.recalculate$.subscribe(
+        (notification: ActivityRecalculateNotification) => {
+          expect(desktopActivityService.isRecalculating).toBeTruthy();
           expect(notification).toBeDefined();
           expect(notification.toProcessCount).toEqual(syncedActivityModels.length);
-          if (notification.isLast) {
-            expect(refreshStatsSpy).toHaveBeenCalledTimes(3);
+          if (notification.ended) {
+            expect(recalculateSpy).toHaveBeenCalledTimes(3);
             setTimeout(() => {
-              expect(recalculatedDoneSpy).toHaveBeenCalledWith();
               expect(verifyActivitiesWithSettingsLackingSpy).toHaveBeenCalledTimes(1);
-              expect(desktopActivityService.isProcessing).toBeFalsy();
+              expect(desktopActivityService.isRecalculating).toBeFalsy();
               done();
             });
           }
@@ -349,34 +340,32 @@ describe("DesktopActivityService", () => {
         return Promise.resolve(syncedActivityModel);
       });
 
-      const refreshStatsSpy = spyOn(desktopActivityService, "refreshStats").and.callFake(
+      const recalculateSpy = spyOn(desktopActivityService, "recalculateSingle").and.callFake(
         (syncedActivityModel: SyncedActivityModel) => {
-          return Promise.resolve(syncedActivityModel); // Bypass refresh stats of an activity. Already tested.
+          return Promise.resolve(syncedActivityModel); // Bypass recalculation of an activity. Already tested.
         }
       );
 
-      const recalculatedDoneSpy = spyOn(desktopActivityService.recalculatedDone$, "next").and.stub();
       const verifyActivitiesWithSettingsLackingSpy = spyOn(
         desktopActivityService,
         "verifyActivitiesWithSettingsLacking"
       ).and.stub();
 
       // When
-      desktopActivityService.bulkRefreshStatsFromIds(activityIds, userSettingsModel);
+      desktopActivityService.recalculateFromIds(activityIds, userSettingsModel);
 
       // Then
-      desktopActivityService.refreshStats$.subscribe(
-        (notification: BulkRefreshStatsNotification) => {
-          expect(desktopActivityService.isProcessing).toBeTruthy();
+      desktopActivityService.recalculate$.subscribe(
+        (notification: ActivityRecalculateNotification) => {
+          expect(desktopActivityService.isRecalculating).toBeTruthy();
           expect(notification).toBeDefined();
           expect(notification.toProcessCount).toEqual(activityIds.length);
-          if (notification.isLast) {
+          if (notification.ended) {
             expect(getByIdSpy).toHaveBeenCalledTimes(3);
-            expect(refreshStatsSpy).toHaveBeenCalledTimes(3);
+            expect(recalculateSpy).toHaveBeenCalledTimes(3);
             setTimeout(() => {
-              expect(recalculatedDoneSpy).toHaveBeenCalledWith();
               expect(verifyActivitiesWithSettingsLackingSpy).toHaveBeenCalledTimes(1);
-              expect(desktopActivityService.isProcessing).toBeFalsy();
+              expect(desktopActivityService.isRecalculating).toBeFalsy();
               done();
             });
           }
@@ -405,36 +394,34 @@ describe("DesktopActivityService", () => {
 
       const syncedActivityModels = [syncedActivityModel01, syncedActivityModel02, syncedActivityModel03];
 
-      const refreshStatsSpy = spyOn(desktopActivityService, "refreshStats").and.callFake(
+      const recalculateSpy = spyOn(desktopActivityService, "recalculateSingle").and.callFake(
         (syncedActivityModel: SyncedActivityModel) => {
-          return Promise.resolve(syncedActivityModel); // Bypass refresh stats of an activity. Already tested.
+          return Promise.resolve(syncedActivityModel); // Bypass recalculation of an activity. Already tested.
         }
       );
 
       const fetchSpy = spyOn(desktopActivityService, "fetch").and.returnValue(Promise.resolve(syncedActivityModels));
 
-      const recalculatedDoneSpy = spyOn(desktopActivityService.recalculatedDone$, "next").and.stub();
       const verifyActivitiesWithSettingsLackingSpy = spyOn(
         desktopActivityService,
         "verifyActivitiesWithSettingsLacking"
       ).and.stub();
 
       // When
-      desktopActivityService.bulkRefreshStatsAll(userSettingsModel);
+      desktopActivityService.recalculateAll(userSettingsModel);
 
       // Then
-      desktopActivityService.refreshStats$.subscribe(
-        (notification: BulkRefreshStatsNotification) => {
-          expect(desktopActivityService.isProcessing).toBeTruthy();
+      desktopActivityService.recalculate$.subscribe(
+        (notification: ActivityRecalculateNotification) => {
+          expect(desktopActivityService.isRecalculating).toBeTruthy();
           expect(notification).toBeDefined();
           expect(notification.toProcessCount).toEqual(syncedActivityModels.length);
-          if (notification.isLast) {
+          if (notification.ended) {
             expect(fetchSpy).toHaveBeenCalledTimes(1);
-            expect(refreshStatsSpy).toHaveBeenCalledTimes(3);
+            expect(recalculateSpy).toHaveBeenCalledTimes(3);
             setTimeout(() => {
-              expect(recalculatedDoneSpy).toHaveBeenCalledWith();
               expect(verifyActivitiesWithSettingsLackingSpy).toHaveBeenCalledTimes(1);
-              expect(desktopActivityService.isProcessing).toBeFalsy();
+              expect(desktopActivityService.isRecalculating).toBeFalsy();
               done();
             });
           }

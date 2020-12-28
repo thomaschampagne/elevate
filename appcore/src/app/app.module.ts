@@ -6,7 +6,7 @@ import { TopBarDirective } from "./top-bar/top-bar.directive";
 import { ElevateErrorHandler } from "./elevate-error-handler";
 import { SyncBarDirective } from "./sync-bar/sync-bar.directive";
 import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
-import { RefreshStatsBarDirective } from "./refresh-stats-bar/refresh-stats-bar.directive";
+import { RecalculateActivitiesBarDirective } from "./recalculate-activities-bar/recalculate-activities-bar.directive";
 import { AppLoadComponent } from "./app-load/app-load.component";
 import { TargetBootModule } from "./boot/target-boot.module";
 
@@ -16,7 +16,7 @@ import { TargetBootModule } from "./boot/target-boot.module";
     AppComponent,
     TopBarDirective,
     SyncBarDirective,
-    RefreshStatsBarDirective,
+    RecalculateActivitiesBarDirective,
     SyncMenuDirective,
     AppMoreMenuDirective
   ],

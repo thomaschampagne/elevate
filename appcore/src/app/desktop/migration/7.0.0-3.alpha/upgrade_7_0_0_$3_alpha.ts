@@ -6,6 +6,8 @@ export class Upgrade_7_0_0_$3_alpha extends DesktopMigration {
   public description =
     "Add athlete first name, last name, birth year & sports properties; Rename FILE_SYSTEM connector to FILE enum value";
 
+  public requiresRecalculation = true;
+
   public upgrade(db: LokiConstructor): Promise<void> {
     // Add athlete first name, last name, birth year & sports properties
     const athleteCollection = db.getCollection("athlete");

@@ -1,24 +1,20 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ActivityService } from "../shared/services/activity/activity.service";
-import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
+import { SyncService } from "../shared/services/sync/sync.service";
 import { MatDialog } from "@angular/material/dialog";
 import { LoggerService } from "../shared/services/logging/logger.service";
-import {
-  BulkRefreshStatsNotification,
-  DesktopActivityService
-} from "../shared/services/activity/impl/desktop-activity.service";
+import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
+import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
-import moment from "moment";
-import { RefreshStatsBarComponent } from "./refresh-stats-bar.component";
-import { UserSettings } from "@elevate/shared/models";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { RecalculateActivitiesBarComponent } from "./recalculate-activities-bar.component";
+import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 
 @Component({
-  selector: "app-desktop-refresh-stats-bar",
+  selector: "app-extension-recalculate-activities-bar",
   template: `
-    <div class="app-refresh-stats-bar">
+    <div class="app-recalculate-activities-bar">
       <!--Missing stress scores detected on some activities-->
       <div *ngIf="!hideSettingsLacksWarning" fxLayout="row" fxLayoutAlign="space-between center" class="ribbon">
         <div fxLayout="column" fxLayoutAlign="center start">
@@ -71,19 +67,6 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
           </button>
         </div>
       </div>
-
-      <!--Recalculate activities section-->
-      <div *ngIf="!hideRecalculation" fxLayout="row" fxLayoutAlign="space-between center" class="ribbon">
-        <div fxLayout="column" fxLayoutAlign="center start">
-          <span fxFlex class="mat-body-1" *ngIf="statusText">{{ statusText }}</span>
-          <span fxFlex class="mat-caption">{{ processed }}/{{ toBeProcessed }} activities recalculated.</span>
-        </div>
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-          <button mat-icon-button (click)="onCloseRecalculation()">
-            <mat-icon fontSet="material-icons-outlined">close</mat-icon>
-          </button>
-        </div>
-      </div>
     </div>
   `,
   styles: [
@@ -99,75 +82,71 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
     `
   ]
 })
-export class DesktopRefreshStatsBarComponent extends RefreshStatsBarComponent implements OnInit {
-  public hideRecalculation: boolean;
-
-  public statusText: string;
-  public processed: number;
-  public toBeProcessed: number;
-
+export class ExtensionRecalculateActivitiesBarComponent extends RecalculateActivitiesBarComponent implements OnInit {
   constructor(
     @Inject(Router) protected readonly router: Router,
     @Inject(ActivityService) protected readonly activityService: ActivityService,
+    @Inject(SyncService) protected readonly syncService: SyncService<any>,
     @Inject(UserSettingsService) protected readonly userSettingsService: UserSettingsService,
     @Inject(MatDialog) protected readonly dialog: MatDialog,
     @Inject(LoggerService) protected readonly logger: LoggerService
   ) {
     super(router, activityService, userSettingsService, dialog);
-    this.hideRecalculation = true;
   }
 
   public ngOnInit(): void {
     super.ngOnInit();
-
-    const desktopActivityService = this.activityService as DesktopActivityService;
-    desktopActivityService.refreshStats$.subscribe(
-      (notification: BulkRefreshStatsNotification) => {
-        if (notification.error) {
-          this.logger.error(notification);
-          this.dialog.open(GotItDialogComponent, {
-            data: { content: notification.error.message } as GotItDialogDataModel
-          });
-          return;
-        }
-
-        this.showRecalculation();
-
-        this.statusText =
-          moment(notification.syncedActivityModel.start_time).format("ll") +
-          ": " +
-          notification.syncedActivityModel.name;
-
-        if (notification.isLast) {
-          this.statusText = "Recalculation done.";
-        }
-
-        this.processed = notification.currentlyProcessed;
-        this.toBeProcessed = notification.toProcessCount;
-      },
-      err => {
-        this.logger.error(err);
-        throw err;
-      }
-    );
   }
 
   public onFixActivities(): void {
     super.onFixActivities();
-    this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
-      const desktopActivityService = this.activityService as DesktopActivityService;
-      desktopActivityService.nonConsistentActivitiesWithAthleteSettings().then((activitiesIds: number[]) => {
-        desktopActivityService.bulkRefreshStatsFromIds(activitiesIds, userSettingsModel);
-      });
+
+    const data: ConfirmDialogDataModel = {
+      title: "Recalculate synced activities affected by athlete settings changes",
+      content:
+        "Synced activities affected by athlete settings changes will be deleted to be synced again with " +
+        'new athlete settings (equivalent to a "Sync all activities")',
+      confirmText: "Proceed to the recalculation"
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      minWidth: ConfirmDialogComponent.MIN_WIDTH,
+      maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+      data: data
     });
-  }
 
-  public showRecalculation(): void {
-    this.hideRefreshStatsBar = false; // We have to force the display back of bar
-    this.hideRecalculation = false; // Show calculation
-  }
+    const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+      if (confirm) {
+        let nonConsistentIds: number[];
 
-  public onCloseRecalculation(): void {
-    this.hideRecalculation = true;
+        this.activityService
+          .nonConsistentActivitiesWithAthleteSettings()
+          .then((result: number[]) => {
+            nonConsistentIds = result;
+            return this.activityService.removeByManyIds(nonConsistentIds);
+          })
+          .then(() => {
+            this.dialog.open(GotItDialogComponent, {
+              data: {
+                content:
+                  nonConsistentIds.length +
+                  " activities have been deleted and are synced back now. " +
+                  'You can sync back these activities manually by yourself by triggering a "Sync all activities"'
+              } as GotItDialogDataModel
+            });
+
+            // Start Sync all activities
+            this.syncService.sync(false, false);
+          })
+          .catch(error => {
+            this.logger.error(error);
+            this.dialog.open(GotItDialogComponent, {
+              data: { content: error } as GotItDialogDataModel
+            });
+          });
+      }
+
+      afterClosedSubscription.unsubscribe();
+    });
   }
 }

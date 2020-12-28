@@ -226,6 +226,8 @@ describe("DesktopMigrationService", () => {
     class FakeMigration01 extends DesktopMigration {
       public version = "7.1.0";
 
+      public requiresRecalculation = false;
+
       public description = "Fake migration to " + this.version;
 
       public upgrade(db: LokiConstructor): Promise<void> {
@@ -236,6 +238,8 @@ describe("DesktopMigrationService", () => {
 
     class FakeMigration02 extends DesktopMigration {
       public version = "7.2.0";
+
+      public requiresRecalculation = false;
 
       public description = "Fake migration to " + this.version;
 
@@ -266,6 +270,66 @@ describe("DesktopMigrationService", () => {
 
         const collection = service.dataStore.db.getCollection(fakeColName);
         expect(collection.count()).toEqual(2);
+        done();
+      },
+      () => {
+        throw new Error("Should not be here");
+      }
+    );
+  });
+
+  it("should apply upgrades with recalculation programmed", done => {
+    // Given
+    const activitiesCount = 1;
+    const packageVersion = "7.2.0";
+    const existingVersion = "7.0.0";
+    const fakeColName = "fakeCollection";
+    service.dataStore.db.addCollection(fakeColName);
+
+    class FakeMigration01 extends DesktopMigration {
+      public version = "7.1.0";
+
+      public requiresRecalculation = true; // REQUIRES_RECALCULATION !!!!
+
+      public description = "Fake migration to " + this.version;
+
+      public upgrade(db: LokiConstructor): Promise<void> {
+        return Promise.resolve();
+      }
+    }
+
+    class FakeMigration02 extends DesktopMigration {
+      public version = "7.2.0";
+
+      public requiresRecalculation = false;
+
+      public description = "Fake migration to " + this.version;
+
+      public upgrade(db: LokiConstructor): Promise<void> {
+        return Promise.resolve();
+      }
+    }
+
+    const fakeMigration01 = new FakeMigration01();
+    const fakeMigration02 = new FakeMigration02();
+
+    const DESKTOP_MIGRATIONS: DesktopMigration[] = [fakeMigration01, fakeMigration02];
+
+    spyOn(service, "getDesktopRegisteredMigrations").and.returnValue(DESKTOP_MIGRATIONS);
+    spyOn(service.activityService, "count").and.returnValue(Promise.resolve(activitiesCount));
+
+    const localStorageSetSpy = spyOn(localStorage, "setItem").and.stub();
+
+    // When
+    const promise = service.applyUpgrades(existingVersion, packageVersion);
+
+    // Then
+    promise.then(
+      () => {
+        expect(localStorageSetSpy).toHaveBeenCalledWith(
+          DesktopMigrationService.RECALCULATE_REQUIRED_LS_KEY,
+          fakeMigration01.version
+        );
         done();
       },
       () => {

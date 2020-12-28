@@ -1,12 +1,12 @@
 @import "~@angular/material/theming";
 
-@mixin app-refresh-stats-bar-theming($theme) {
+@mixin app-recalculate-activities-bar-theming($theme) {
 
   $primary: map-get($theme, primary);
   $background: map-get($theme, background);
   $text-color: mat-color($background, background);
 
-  .app-refresh-stats-bar {
+  .app-recalculate-activities-bar {
     color: $text-color;
     background: mat-color($primary);
   }
