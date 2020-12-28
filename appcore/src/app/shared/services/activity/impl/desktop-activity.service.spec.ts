@@ -218,7 +218,6 @@ describe("DesktopActivityService", () => {
 
       const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
       const streams: ActivityStreamsModel = null;
-      // const compressedStreamModel = null;
       const smoothAltitude = false;
       const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.COMPUTE_ACTIVITY,
