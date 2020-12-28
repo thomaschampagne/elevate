@@ -3,7 +3,7 @@
 **Compatible with:**
 - Chrome & Chrome Canary
 - Chromium
-- Edge (New version)
+- Edge (from 2020)
 - Opera
 - Vivaldi
 - Brave

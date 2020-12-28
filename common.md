@@ -1,6 +1,6 @@
 ### How to backup my profile?
 
-Click the _[Sync {time} ago]_ button in top right and corner, then click _[Backup profile]_.
+Click on the _[Sync...]_ dropdown button in top right and corner, then click _[Backup profile]_.
 
 _Note: A complete sync is required in order to perform a backup._
 
@@ -8,7 +8,7 @@ _Note: A complete sync is required in order to perform a backup._
 
 ### How to restore my profile?
 
-Click the  _[Sync {time} ago]_ button or _[Activities not synced]_ button in top right and corner, then click _[Restore profile]_.
+Click on the  _[Sync...]_ dropdown button in top right and corner, then click _[Restore profile]_.
 
 [](id:profile-upload-restore-import-save-history-activity-activities)
 

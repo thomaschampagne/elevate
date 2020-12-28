@@ -20,7 +20,7 @@ This means that your 1st Strava sync can take many hours to finish. Upcoming syn
 
 ### How to speed up the 1st Strava sync?
 
-The 1st sync can take hours to complete if you have a large history (see _"Why 1st Strava sync takes so much time?"_ in this helper). To bypass this, here is what you can do:
+The 1st sync can take hours to complete if you have a large history (Enter _"id:strava-connector-slow-first-sync"_ in the help search bar for more info). To bypass this, here is what you can do:
 
 1. First [request a download of your activities **(in step 2)**](https://www.strava.com/athlete/delete_your_account).
 
