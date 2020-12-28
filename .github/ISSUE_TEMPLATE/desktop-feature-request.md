@@ -9,7 +9,7 @@ assignees: ''
 
 **⚠ BEFORE ANYTHING: Are you in the right place?**
 
-Before creating any useless or duplicate issues, you HAVE TO:
+Before creating a relevant issue you HAVE TO check if issue already exists:
 
 * Check for answer in Frequently Asked Questions here: https://github.com/thomaschampagne/elevate/tree/faq/
 * Check for already existing issues matching with yours: https://github.com/thomaschampagne/elevate/issues
