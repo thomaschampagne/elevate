@@ -366,7 +366,7 @@ export namespace ActivityColumns {
        * Common
        */
       new DateColumn(Category.COMMON, "start_time", "Date").setWidth("150px").setDefault(true),
-      new ActivityLinkColumn(Category.COMMON, "name").setWidth("270px").setDefault(true),
+      new ActivityLinkColumn(Category.COMMON, "name").setWidth("285px").setDefault(true),
       new TextColumn(Category.COMMON, "type").setDefault(true),
       new TextColumn(Category.COMMON, "moving_time_raw", Print.movingTime, "Moving Time").setDefault(true),
       new TextColumn(Category.COMMON, "elapsed_time_raw", Print.elapsedTime, "Total Time"),
