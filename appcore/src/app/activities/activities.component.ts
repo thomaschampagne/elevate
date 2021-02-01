@@ -36,7 +36,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 export class ActivitiesComponent implements OnInit, OnDestroy {
   private static readonly LS_SELECTED_COLUMNS: string = "activities_selectedColumns";
   private static readonly LS_PAGE_SIZE_PREFERENCE: string = "activities_pageSize";
-  private static readonly DEGRADED_PERFORMANCE_COLUMNS_COUNT: number = 21;
+  private static readonly DEGRADED_PERFORMANCE_COLUMNS_COUNT: number = 35;
   public readonly ColumnType = ActivityColumns.ColumnType;
 
   @ViewChild(MatPaginator, { static: true })
