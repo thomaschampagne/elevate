@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { DayFitnessTrendModel } from "../shared/models/day-fitness-trend.model";
 import {
   OPEN_RESOURCE_RESOLVER,
@@ -16,6 +16,7 @@ export class FitnessTrendActivitiesLinksDialogComponent implements OnInit {
   public static readonly MIN_WIDTH: string = "40%";
 
   constructor(
+    @Inject(MatDialogRef) private readonly dialogRef: MatDialogRef<FitnessTrendActivitiesLinksDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public readonly dayFitnessTrendModel: DayFitnessTrendModel,
     @Inject(OPEN_RESOURCE_RESOLVER) private readonly openResourceResolver: OpenResourceResolver
   ) {}
@@ -24,9 +25,6 @@ export class FitnessTrendActivitiesLinksDialogComponent implements OnInit {
 
   public openActivity(activityId: number): void {
     this.openResourceResolver.openActivity(activityId);
-  }
-
-  public openAllActivities(): void {
-    this.openResourceResolver.openActivities(this.dayFitnessTrendModel.ids as number[]);
+    this.dialogRef.close();
   }
 }

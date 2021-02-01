@@ -9,13 +9,24 @@
   </mat-form-field>
 </div>
 <mat-table [dataSource]="dataSource" matSort>
-  <ng-container *ngFor="let column of columns" [matColumnDef]="column.id">
-    <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="{{column.description}}">
+  <ng-container *ngFor="let column of columns" [matColumnDef]="column.id" >
+    <mat-header-cell [fxFlex]="column.width" *matHeaderCellDef mat-sort-header matTooltip="{{column.description}}">
       {{column.header}}
     </mat-header-cell>
-    <mat-cell *matCellDef="let dayFitnessTrend">
+    <mat-cell [fxFlex]="column.width" *matCellDef="let dayFitnessTrend">
       <ng-container *ngIf="column.type === FitnessTrendColumnType.TEXT">
         {{column.printText(dayFitnessTrend)}}
+      </ng-container>
+      <ng-container *ngIf="column.type === FitnessTrendColumnType.ACTIVITY_NAME">
+        <ng-container *ngIf="dayFitnessTrend.ids.length">
+          <button (click)="onActivitiesClicked(dayFitnessTrend)" *ngIf="dayFitnessTrend.ids.length" color="primary"
+                  mat-button>
+            {{column.printText(dayFitnessTrend)}}
+          </button>
+        </ng-container>
+        <ng-container *ngIf="!dayFitnessTrend.ids.length">
+          {{column.printText(dayFitnessTrend)}}
+        </ng-container>
       </ng-container>
       <ng-container *ngIf="column.type === FitnessTrendColumnType.ATHLETE_SETTINGS">
         <button (click)="onViewAthleteSettings(dayFitnessTrend)" *ngIf="dayFitnessTrend.ids.length"
@@ -24,20 +35,13 @@
           <mat-icon fontSet="material-icons-outlined">portrait</mat-icon>
         </button>
       </ng-container>
-      <ng-container *ngIf="column.type === FitnessTrendColumnType.STRAVA_LINK">
-        <button (click)="onLinkClicked(dayFitnessTrend)" *ngIf="dayFitnessTrend.ids.length" color="primary"
-                mat-icon-button>
-          <mat-icon fontSet="material-icons-outlined">link</mat-icon>
-        </button>
-      </ng-container>
     </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
-<mat-paginator #paginator
-               [pageSizeOptions]="[5, 10, 15, 25, 50]"
+<mat-paginator [pageSizeOptions]="[5, 10, 15, 25, 50]"
                [pageSize]="10">
 </mat-paginator>
 
