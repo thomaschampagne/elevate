@@ -237,7 +237,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     _.defer(() => {
       if (FitnessTrendGraphComponent.getGraphHtmlElement()) {
         MG.data_graphic(this.graphConfig);
-        this.logger.info("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
+        this.logger.debug("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
       } else {
         throw new ElevateException("Fitness trend graph crashed. You may restart the app.");
       }

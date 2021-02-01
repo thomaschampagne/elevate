@@ -330,7 +330,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
 
     this.isProgressionInitialized = true;
 
-    this.logger.info("Setup done");
+    this.logger.debug("Setup done");
   }
 
   /**
