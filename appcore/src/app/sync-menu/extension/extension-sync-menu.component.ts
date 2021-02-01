@@ -50,6 +50,8 @@ import { ExtensionAppService } from "../../shared/services/app-service/extension
   styleUrls: ["./extension-sync-menu.component.scss"]
 })
 export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnInit {
+  protected readonly backupDoneMessage = "Profile backup has been saved in downloads";
+
   constructor(
     @Inject(AppService) public readonly extensionAppService: ExtensionAppService,
     @Inject(Router) protected readonly router: Router,

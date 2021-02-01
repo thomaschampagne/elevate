@@ -1,8 +1,6 @@
 import { Component, InjectionToken, OnDestroy, OnInit } from "@angular/core";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
-import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
-import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -22,6 +20,8 @@ export abstract class SyncMenuComponent implements OnInit, OnDestroy {
   public syncState: SyncState;
   public syncMenuActions: SyncMenuAction[];
   public historyChangesSub: Subscription;
+
+  protected abstract readonly backupDoneMessage;
 
   protected constructor(
     public readonly appService: AppService,
@@ -104,12 +104,8 @@ export abstract class SyncMenuComponent implements OnInit, OnDestroy {
     progressDialogRef
       .afterClosed()
       .toPromise()
-      .then(result => {
-        this.dialog.open(GotItDialogComponent, {
-          minWidth: GotItDialogComponent.MIN_WIDTH,
-          maxWidth: GotItDialogComponent.MAX_WIDTH,
-          data: new GotItDialogDataModel(null, 'File "' + result.filename + '" is ready to be saved.')
-        });
+      .then(() => {
+        this.snackBar.open(this.backupDoneMessage, "Ok", { duration: 15000 });
       });
   }
 

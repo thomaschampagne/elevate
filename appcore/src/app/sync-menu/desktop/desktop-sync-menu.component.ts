@@ -53,6 +53,8 @@ import { DesktopAppService } from "../../shared/services/app-service/desktop/des
   styleUrls: ["./desktop-sync-menu.component.scss"]
 })
 export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnInit {
+  protected readonly backupDoneMessage = "Profile backup has been crafted";
+
   public mostRecentConnectorSyncedType: ConnectorType;
 
   constructor(
