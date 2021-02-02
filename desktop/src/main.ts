@@ -40,18 +40,15 @@ class Main {
   private app: Electron.App;
   private appWindow: BrowserWindow;
 
-  private static getWorkingAreaSize(screenSize: Electron.Size): Electron.Size {
-    let widthRatio = Main.DEFAULT_SCREEN_RATIO;
-    let heightRatio = Main.DEFAULT_SCREEN_RATIO;
+  private static getWorkingAreaSize(display: Electron.Display): Electron.Size {
+    const screenWidth = display.size.width * display.scaleFactor;
+    const screenHeight = display.size.height * display.scaleFactor;
 
-    if (screenSize.width > 1920 && screenSize.height > 1080) {
-      widthRatio = Main.LARGE_SCREEN_RATIO;
-      heightRatio = Main.LARGE_SCREEN_RATIO;
-    }
+    const windowRatio = screenWidth > 1920 && screenHeight > 1080 ? Main.LARGE_SCREEN_RATIO : Main.DEFAULT_SCREEN_RATIO;
 
     return {
-      width: screenSize.width * widthRatio,
-      height: screenSize.height * heightRatio
+      width: Math.round(display.workAreaSize.width * windowRatio),
+      height: Math.round(display.workAreaSize.height * windowRatio)
     };
   }
 
@@ -139,20 +136,23 @@ class Main {
 
   private startElevate(onReady: () => void = null): void {
     // Create the browser window.
-    const workAreaSize: Electron.Size = Main.getWorkingAreaSize(Electron.screen.getPrimaryDisplay().workAreaSize);
+    const workAreaSize: Electron.Size = Main.getWorkingAreaSize(Electron.screen.getPrimaryDisplay());
     const windowOptions: Electron.BrowserWindowConstructorOptions = {
       title: "App",
       width: workAreaSize.width,
       height: workAreaSize.height,
-      center: true,
+      // center: true,
       frame: false,
-      show: false,
+
+      // show: false,
       autoHideMenuBar: true,
       webPreferences: {
         nodeIntegration: true,
         enableRemoteModule: true
       }
     };
+
+    console.log(windowOptions);
 
     this.appWindow = new BrowserWindow(windowOptions);
 
