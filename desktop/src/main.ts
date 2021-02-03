@@ -152,8 +152,6 @@ class Main {
       }
     };
 
-    console.log(windowOptions);
-
     this.appWindow = new BrowserWindow(windowOptions);
 
     // Create the request listener to listen renderer request events
