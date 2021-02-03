@@ -1,6 +1,6 @@
 {
   "name": "elevate-app",
-  "license": "MIT",
+  "license": "MPL-2.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

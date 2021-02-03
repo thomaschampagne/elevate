@@ -43,7 +43,7 @@
     "unsafe-perm": true
   },
   "author": "Thomas Champagne",
-  "license": "MIT",
+  "license": "MPL-2.0",
   "readme": "README.md",
   "engines": {
     "node": ">=14"
