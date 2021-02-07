@@ -36,3 +36,17 @@ Only the activities names and types previously synced by the file connector will
 And voilà 😉! Your 1st Strava sync has been done at speed of light. You can now use the Strava connector on your regular daily or weekly basis using the _Sync new activities_ button.
 
 [](id:strava-connector-faster-first-sync)
+
+### How to use Elevate with multiple users on same computer?
+
+To use Elevate on same computer with multiple users, you have to create dedicated users accounts into your operating system. Then each user has to install Elevate into their own isolated environment. 
+
+>📝 Independently of Elevate, creating multiple users in your operating system is actually a best practice if several people use the same computer. Although convenient, one shared account between users on same computer is NOT recommended.
+
+Here is how to create a new local user on:
+
+- [Windows](https://support.microsoft.com/en-us/windows/create-a-local-user-or-administrator-account-in-windows-10-20de74e0-ac7f-3502-a866-32915af2a34d) | [additional help](https://duckduckgo.com/?q=site%3Amicrosoft.com+create+windows+user)
+- [Mac OS](https://support.apple.com/guide/mac-help/set-up-other-users-on-your-mac-mtusr001/mac) | [additional help](https://duckduckgo.com/?q=site%3Aapple.com+create+mac+user)
+- [Linux (Ubuntu distrib)](https://help.ubuntu.com/stable/ubuntu-help/user-add.html.en) | [additional help](https://duckduckgo.com/?q=site%3Aubuntu.com+create+new+user)
+
+[](id:multiple-accounts-users-same-computer)
