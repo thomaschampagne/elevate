@@ -5,6 +5,8 @@ import { Platform } from "@elevate/shared/enums";
 import { ReleaseNoteService } from "../../../releases-notes/release-note.service";
 import { environment } from "../../../../environments/environment";
 import { SafeHtml } from "@angular/platform-browser";
+import { Router } from "@angular/router";
+import { AppRoutes } from "../../models/app-routes";
 
 @Component({
   selector: "app-new-installed-version-notice-dialog",
@@ -19,6 +21,9 @@ import { SafeHtml } from "@angular/platform-browser";
 
     <mat-dialog-actions>
       <button color="primary" mat-dialog-close mat-stroked-button>Got it</button>
+      <button color="primary" mat-dialog-close mat-stroked-button (click)="onViewAllReleaseNotes()">
+        All release notes
+      </button>
     </mat-dialog-actions>
   `,
   styles: [
@@ -38,7 +43,8 @@ export class NewInstalledVersionNoticeDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public readonly data: { ghRelease: GhRelease; platform: Platform },
-    @Inject(ReleaseNoteService) private readonly releaseNoteService: ReleaseNoteService
+    @Inject(ReleaseNoteService) private readonly releaseNoteService: ReleaseNoteService,
+    @Inject(Router) protected readonly router: Router
   ) {}
 
   public ngOnInit(): void {
@@ -46,5 +52,9 @@ export class NewInstalledVersionNoticeDialogComponent implements OnInit {
       this.data.ghRelease,
       environment.buildTarget
     );
+  }
+
+  public onViewAllReleaseNotes(): void {
+    this.router.navigate([AppRoutes.releasesNotes]);
   }
 }
