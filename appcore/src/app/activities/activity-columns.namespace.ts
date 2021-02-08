@@ -294,7 +294,7 @@ export namespace ActivityColumns {
     }
 
     public static boolean(activity: SyncedActivityModel, path: string): string {
-      return _.first(_.at(activity as any, path)) ? "Yes" : "No";
+      return _.get(activity as any, path) ? "Yes" : "No";
     }
 
     public static field(activity: SyncedActivityModel, path: string): string {
