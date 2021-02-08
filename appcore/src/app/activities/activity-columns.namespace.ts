@@ -4,6 +4,7 @@ import { SyncedActivityModel } from "@elevate/shared/models";
 import _ from "lodash";
 import moment from "moment";
 import { Constant } from "@elevate/shared/constants";
+import { Time } from "@elevate/shared/tools";
 
 export namespace ActivityColumns {
   export interface SpecificUnits {}
@@ -209,6 +210,7 @@ export namespace ActivityColumns {
     public static readonly HEART_RATE: string = "Heart rate";
     public static readonly CADENCE: string = "Cadence";
     public static readonly POWER: string = "Power";
+    public static readonly GRADE: string = "Grade";
     public static readonly OTHERS: string = "Others";
     // public static readonly STRESS_SCORES: string = "Stress Scores";
 
@@ -273,7 +275,7 @@ export namespace ActivityColumns {
       }
 
       return _.isNumber(value) && !_.isNaN(value)
-        ? moment().startOf("day").seconds(value).format("mm:ss") + (units ? " " + units : "")
+        ? Time.secToMilitary(value) + (units ? " " + units : "")
         : Print.NO_DATA;
     }
 
@@ -288,9 +290,7 @@ export namespace ActivityColumns {
     ): string {
       const value = Print.getConvertValueAtPath(path, activity, precision, factor, isImperial, imperialFactor);
 
-      return _.isNumber(value) && !_.isNaN(value)
-        ? moment().startOf("day").seconds(value).format("HH:mm:ss")
-        : Print.NO_DATA;
+      return _.isNumber(value) && !_.isNaN(value) ? Time.secToMilitary(value) : Print.NO_DATA;
     }
 
     public static boolean(activity: SyncedActivityModel, path: string): string {
@@ -298,7 +298,7 @@ export namespace ActivityColumns {
     }
 
     public static field(activity: SyncedActivityModel, path: string): string {
-      return _.first(_.at(activity as any, path));
+      return _.get(activity, path);
     }
 
     public static startDate(activity: SyncedActivityModel): string {
@@ -306,15 +306,11 @@ export namespace ActivityColumns {
     }
 
     public static movingTime(activity: SyncedActivityModel): string {
-      return _.isNumber(activity.moving_time_raw)
-        ? moment.utc(activity.moving_time_raw * 1000).format("HH:mm:ss")
-        : Print.NO_DATA;
+      return _.isNumber(activity.moving_time_raw) ? Time.secToMilitary(activity.moving_time_raw) : Print.NO_DATA;
     }
 
     public static elapsedTime(activity: SyncedActivityModel): string {
-      return _.isNumber(activity.elapsed_time_raw)
-        ? moment.utc(activity.elapsed_time_raw * 1000).format("HH:mm:ss")
-        : Print.NO_DATA;
+      return _.isNumber(activity.elapsed_time_raw) ? Time.secToMilitary(activity.elapsed_time_raw) : Print.NO_DATA;
     }
 
     private static getConvertValueAtPath(
@@ -360,6 +356,7 @@ export namespace ActivityColumns {
     public static readonly VERTICAL_ASCENT_SYSTEM_UNITS: SystemUnits = new SystemUnits("vm/h", "vft/h");
     public static readonly SPEED_SYSTEM_UNITS: SystemUnits = new SystemUnits("kph", "mph");
     public static readonly CADENCE_UNITS: CadenceUnits = new CadenceUnits("rpm", "spm", "spm");
+    public static readonly GRADE_UNITS = "%";
 
     public static readonly ALL: Column<SyncedActivityModel>[] = [
       /**
@@ -421,6 +418,57 @@ export namespace ActivityColumns {
       new NumberColumn(Category.COMMON, "extendedStats.calories", null, "Calories", Print.number),
       new NumberColumn(Category.COMMON, "extendedStats.caloriesPerHour", null, "Calories / Hour", Print.number),
       new NumberColumn(Category.COMMON, "extendedStats.moveRatio", null, "Move Ratio", Print.number, 2),
+      new NumberColumn(
+        Category.COMMON,
+        "extendedStats.gradeData.upFlatDownInSeconds.up",
+        Definition.GRADE_UNITS,
+        "Climbing Time",
+        Print.time
+      ),
+      new NumberColumn(
+        Category.COMMON,
+        "extendedStats.gradeData.upFlatDownInSeconds.flat",
+        Definition.GRADE_UNITS,
+        "Flat Time",
+        Print.time
+      ),
+      new NumberColumn(
+        Category.COMMON,
+        "extendedStats.gradeData.upFlatDownInSeconds.down",
+        Definition.GRADE_UNITS,
+        "Downhill Time",
+        Print.time
+      ),
+      new NumberColumn(
+        Category.COMMON,
+        "extendedStats.gradeData.upFlatDownDistanceData.up",
+        Definition.LONG_DISTANCE_SYSTEM_UNITS,
+        "Climbing Distance",
+        Print.number,
+        1,
+        0.001,
+        Constant.KM_TO_MILE_FACTOR
+      ),
+      new NumberColumn(
+        Category.COMMON,
+        "extendedStats.gradeData.upFlatDownDistanceData.flat",
+        Definition.LONG_DISTANCE_SYSTEM_UNITS,
+        "Flat Distance",
+        Print.number,
+        1,
+        0.001,
+        Constant.KM_TO_MILE_FACTOR
+      ),
+      new NumberColumn(
+        Category.COMMON,
+        "extendedStats.gradeData.upFlatDownDistanceData.down",
+        Definition.LONG_DISTANCE_SYSTEM_UNITS,
+        "Downhill Distance",
+        Print.number,
+        1,
+        0.001,
+        Constant.KM_TO_MILE_FACTOR
+      ),
 
       /**
        * Speed
@@ -455,7 +503,36 @@ export namespace ActivityColumns {
         1,
         Constant.KM_TO_MILE_FACTOR
       ),
-      // new NumberColumn(Category.SPEED, "extendedStats.speedData.avgPace", Definition.LONG_PACE_SYSTEM_UNITS, "", Print.number, 1, 1, Constant.KM_TO_MILE_FACTOR),
+      new NumberColumn(
+        Category.SPEED,
+        "extendedStats.gradeData.upFlatDownMoveData.up",
+        Definition.SPEED_SYSTEM_UNITS,
+        "Climbing Speed",
+        Print.number,
+        1,
+        1,
+        Constant.KM_TO_MILE_FACTOR
+      ),
+      new NumberColumn(
+        Category.SPEED,
+        "extendedStats.gradeData.upFlatDownMoveData.flat",
+        Definition.SPEED_SYSTEM_UNITS,
+        "Flat Speed",
+        Print.number,
+        1,
+        1,
+        Constant.KM_TO_MILE_FACTOR
+      ),
+      new NumberColumn(
+        Category.SPEED,
+        "extendedStats.gradeData.upFlatDownMoveData.down",
+        Definition.SPEED_SYSTEM_UNITS,
+        "Downhill Speed",
+        Print.number,
+        1,
+        1,
+        Constant.KM_TO_MILE_FACTOR
+      ),
       new NumberColumn(
         Category.SPEED,
         "extendedStats.speedData.lowerQuartileSpeed",
@@ -651,6 +728,24 @@ export namespace ActivityColumns {
       ).setDescription("Active cadence time"),
       new NumberColumn(
         Category.CADENCE,
+        "extendedStats.gradeData.upFlatDownCadencePaceData.up",
+        Definition.CADENCE_UNITS,
+        "Climbing Cadence"
+      ),
+      new NumberColumn(
+        Category.CADENCE,
+        "extendedStats.gradeData.upFlatDownCadencePaceData.flat",
+        Definition.CADENCE_UNITS,
+        "Flat Cadence"
+      ),
+      new NumberColumn(
+        Category.CADENCE,
+        "extendedStats.gradeData.upFlatDownCadencePaceData.down",
+        Definition.CADENCE_UNITS,
+        "Downhill Cadence"
+      ),
+      new NumberColumn(
+        Category.CADENCE,
         "extendedStats.cadenceData.standardDeviationCadence",
         Definition.CADENCE_UNITS,
         "σ Cadence"
@@ -727,8 +822,14 @@ export namespace ActivityColumns {
         Print.number,
         2
       ),
+      new NumberColumn(Category.POWER, "extendedStats.powerData.maxPower", "w", "Max Power"),
       new NumberColumn(Category.POWER, "extendedStats.powerData.best20min", "w", "Best 20min Power"),
-      // new NumberColumn(Category.POWER, "extendedStats.powerData.bestEightyPercent", "w", "bestEightyPercent"),
+      new NumberColumn(
+        Category.POWER,
+        "extendedStats.powerData.bestEightyPercent",
+        "w",
+        "Best 80% Power"
+      ).setDescription("Best power held during 80% of moving time"),
       new NumberColumn(
         Category.POWER,
         "extendedStats.powerData.variabilityIndex",
@@ -825,6 +926,62 @@ export namespace ActivityColumns {
         0,
         1,
         Constant.METER_TO_FEET_FACTOR
+      ),
+
+      /**
+       * Grade
+       */
+      new NumberColumn(
+        Category.GRADE,
+        "extendedStats.gradeData.avgGrade",
+        Definition.GRADE_UNITS,
+        "Avg Grade",
+        Print.number,
+        1,
+        1
+      ),
+      new NumberColumn(
+        Category.GRADE,
+        "extendedStats.gradeData.avgMaxGrade",
+        Definition.GRADE_UNITS,
+        "Max Grade",
+        Print.number,
+        1,
+        1
+      ),
+      new NumberColumn(
+        Category.GRADE,
+        "extendedStats.gradeData.avgMinGrade",
+        Definition.GRADE_UNITS,
+        "Min Grade",
+        Print.number,
+        1,
+        1
+      ),
+      new TextColumn(Category.GRADE, "extendedStats.gradeData.gradeProfile", Print.field, "Grade Profile"),
+      new NumberColumn(
+        Category.GRADE,
+        "extendedStats.gradeData.lowerQuartileGrade",
+        Definition.GRADE_UNITS,
+        "25% Grade",
+        Print.number,
+        1,
+        1
+      ),
+      new NumberColumn(
+        Category.GRADE,
+        "extendedStats.gradeData.medianGrade",
+        Definition.GRADE_UNITS,
+        "50% Grade",
+        Print.number,
+        1,
+        1
+      ),
+      new NumberColumn(
+        Category.GRADE,
+        "extendedStats.gradeData.upperQuartileGrade",
+        Definition.GRADE_UNITS,
+        "75% Grade"
       ),
 
       /**

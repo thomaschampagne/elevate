@@ -66,7 +66,7 @@ export class LowPassFilter {
     for (let i = 1; i < values.length; i++) {
       const currentValue = values[i];
       value += (currentValue - value) * this._smoothing;
-      values[i] = Math.round(value * 10) / 10;
+      values[i] = Math.round(value * 1000) / 1000;
     }
     return values;
   }

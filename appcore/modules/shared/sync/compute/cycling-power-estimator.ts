@@ -16,23 +16,6 @@ export namespace CyclingPower {
       gradePercentage: 0
     };
 
-    public static csvPowerAnalysisData(
-      csvOutputPath: string = __dirname + "/power_analysis_data.csv",
-      endSpeed: number = 50,
-      maxGrade: number = 25,
-      params: Partial<CyclingPower.Params> = Estimator.DEFAULT_PARAMS
-    ): void {
-      let data = "grade,speed,watts";
-      for (let grade = -maxGrade; grade < maxGrade; grade++) {
-        params.gradePercentage = grade;
-        for (let speed = 0; speed < endSpeed; speed++) {
-          const watts = Estimator.calc(speed, params);
-          data += `${grade},${speed},${watts}\r\n`;
-        }
-      }
-      require("fs").writeFileSync(csvOutputPath, data);
-    }
-
     /**
      * Get power estimation from speed and CyclingPower.Params
      */

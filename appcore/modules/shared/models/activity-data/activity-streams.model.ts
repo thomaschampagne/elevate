@@ -13,7 +13,8 @@ export class ActivityStreamsModel {
     public watts_calc: number[] = [],
     public latlng: number[][] = [],
     public grade_smooth: number[] = [],
-    public grade_adjusted_speed: number[] = []
+    public grade_adjusted_speed: number[] = [],
+    public temp: number[] = []
   ) {}
 
   public static deflate(activityStreamsModel: ActivityStreamsModel): string {

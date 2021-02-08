@@ -123,9 +123,11 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
       "displayAdvancedGradeData"
     );
 
-    const distanceUp: number = this.gradeData.upFlatDownDistanceData.up * this.speedUnitsData.speedUnitFactor;
-    const distanceFlat: number = this.gradeData.upFlatDownDistanceData.flat * this.speedUnitsData.speedUnitFactor;
-    const distanceDown: number = this.gradeData.upFlatDownDistanceData.down * this.speedUnitsData.speedUnitFactor;
+    const distanceUp: number = (this.gradeData.upFlatDownDistanceData.up / 1000) * this.speedUnitsData.speedUnitFactor;
+    const distanceFlat: number =
+      (this.gradeData.upFlatDownDistanceData.flat / 1000) * this.speedUnitsData.speedUnitFactor;
+    const distanceDown: number =
+      (this.gradeData.upFlatDownDistanceData.down / 1000) * this.speedUnitsData.speedUnitFactor;
 
     this.insertContentAtGridPosition(
       0,

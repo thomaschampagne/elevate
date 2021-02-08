@@ -865,6 +865,49 @@ class Installer {
     return Promise.resolve();
   }
 
+  protected migrate_to_7_0_0_5(): Promise<void> {
+    if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "7.0.0-5")) {
+      console.log("Migrate to 7.0.0-5");
+      return new Promise<void>(resolve => {
+        chrome.storage.local.get(null, result => {
+          if (
+            result &&
+            result.syncedActivities &&
+            result.syncedActivities.data &&
+            result.syncedActivities.data.length > 0
+          ) {
+            for (const activity of result.syncedActivities.data) {
+              if (activity.extendedStats?.gradeData?.upFlatDownDistanceData) {
+                if (Number.isFinite(activity.extendedStats.gradeData.upFlatDownDistanceData.up)) {
+                  activity.extendedStats.gradeData.upFlatDownDistanceData.up =
+                    activity.extendedStats.gradeData.upFlatDownDistanceData.up * 1000;
+                }
+
+                if (Number.isFinite(activity.extendedStats.gradeData.upFlatDownDistanceData.flat)) {
+                  activity.extendedStats.gradeData.upFlatDownDistanceData.flat =
+                    activity.extendedStats.gradeData.upFlatDownDistanceData.flat * 1000;
+                }
+
+                if (Number.isFinite(activity.extendedStats.gradeData.upFlatDownDistanceData.down)) {
+                  activity.extendedStats.gradeData.upFlatDownDistanceData.down =
+                    activity.extendedStats.gradeData.upFlatDownDistanceData.down * 1000;
+                }
+              }
+            }
+            // Update
+            chrome.storage.local.set(result, resolve);
+          } else {
+            resolve();
+          }
+        });
+      });
+    } else {
+      console.log("Skip migrate to 7.0.0-5");
+    }
+
+    return Promise.resolve();
+  }
+
   protected handleUpdate(): Promise<void> {
     console.log("Updated from " + this.previousVersion + " to " + this.currentVersion);
 
@@ -922,6 +965,9 @@ class Installer {
       })
       .then(() => {
         return this.migrate_to_7_0_0_4();
+      })
+      .then(() => {
+        return this.migrate_to_7_0_0_5();
       })
       .catch(error => console.error(error));
   }

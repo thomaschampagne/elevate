@@ -8,7 +8,7 @@ export abstract class PowerSensor extends Sensor {
 
   public defaultRoundDecimals = 0;
   public name: string = PowerSensor.NAME;
-  public color = "#808080";
+  public color = "#ffa620";
   public streamKey: keyof ActivityStreamsModel = "watts";
 
   public displayUnit: { short: string; full: string } | Map<MeasureSystem, { short: string; full: string }> = {

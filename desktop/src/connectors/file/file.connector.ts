@@ -11,12 +11,7 @@ import {
   SyncEventType
 } from "@elevate/shared/sync";
 import { ReplaySubject, Subject } from "rxjs";
-import {
-  ActivityStreamsModel,
-  AthleteSettingsModel,
-  BareActivityModel,
-  SyncedActivityModel
-} from "@elevate/shared/models";
+import { ActivityStreamsModel, BareActivityModel, SyncedActivityModel } from "@elevate/shared/models";
 import fs from "fs";
 import path from "path";
 import _ from "lodash";
@@ -53,6 +48,7 @@ import { IpcMessagesSender } from "../../messages/ipc-messages.sender";
 import { Hash } from "../../tools/hash";
 import { sleep } from "@elevate/shared/tools";
 import { UnArchiver } from "./un-archiver";
+import { DataTemperature } from "@sports-alliance/sports-lib/lib/data/data.temperature";
 
 export enum ActivityFileType {
   GPX = "gpx",
@@ -376,12 +372,8 @@ export class FileConnector extends BaseConnector {
                               syncedActivityModel.start_time
                             );
 
-                            // Prepare streams
-                            const activityStreamsModel = this.computeAdditionalStreams(
-                              bareActivity,
-                              this.extractActivityStreams(sportsLibActivity),
-                              syncedActivityModel.athleteSnapshot.athleteSettings
-                            );
+                            // Extract streams
+                            const activityStreamsModel = this.extractActivityStreams(sportsLibActivity);
 
                             // Compute activity
                             syncedActivityModel.extendedStats = this.computeExtendedStats(
@@ -742,7 +734,9 @@ export class FileConnector extends BaseConnector {
 
     // Watts
     try {
-      activityStreamsModel.watts = sportsLibActivity.getSquashedStreamData(DataPower.type);
+      if (sportsLibActivity.hasPowerMeter()) {
+        activityStreamsModel.watts = sportsLibActivity.getSquashedStreamData(DataPower.type);
+      }
     } catch (err) {
       logger.info("No power stream found for activity starting at " + sportsLibActivity.startDate);
     }
@@ -765,31 +759,10 @@ export class FileConnector extends BaseConnector {
       logger.info("No grade adjusted speed stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
-    return activityStreamsModel;
-  }
-
-  public computeAdditionalStreams(
-    bareActivityModel: BareActivityModel,
-    activityStreamsModel: ActivityStreamsModel,
-    athleteSettingsModel: AthleteSettingsModel
-  ): ActivityStreamsModel {
-    if (!_.isEmpty(activityStreamsModel.grade_smooth)) {
-      // Estimated power
-      try {
-        if (!bareActivityModel.hasPowerMeter && SyncedActivityModel.isRide(bareActivityModel.type)) {
-          activityStreamsModel.watts = this.estimateCyclingPowerStream(
-            bareActivityModel.type,
-            activityStreamsModel.velocity_smooth,
-            activityStreamsModel.grade_smooth,
-            athleteSettingsModel.weight
-          );
-        } else {
-        }
-        delete activityStreamsModel.watts_calc;
-      } catch (err) {
-        logger.warn(err.message, err);
-        delete activityStreamsModel.watts_calc;
-      }
+    try {
+      activityStreamsModel.temp = sportsLibActivity.getSquashedStreamData(DataTemperature.type);
+    } catch (err) {
+      logger.info("No temperature stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     return activityStreamsModel;

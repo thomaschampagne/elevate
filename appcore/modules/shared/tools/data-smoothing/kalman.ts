@@ -1,3 +1,11 @@
+interface KalmanParams {
+  R?: number;
+  Q?: number;
+  A?: number;
+  B?: number;
+  C?: number;
+}
+
 export class KalmanFilter {
   private R: number;
   private Q: number;
@@ -7,10 +15,27 @@ export class KalmanFilter {
   private readonly C: number;
   private readonly A: number;
 
+  public static apply(array: number[], kalmanParams: KalmanParams) {
+    const output = [];
+    const kalmanFilter = new KalmanFilter({
+      R: kalmanParams.R,
+      Q: kalmanParams.Q,
+      A: kalmanParams.A,
+      B: kalmanParams.B,
+      C: kalmanParams.C
+    });
+    array.forEach(alt => {
+      output.push(kalmanFilter.filter(alt));
+    });
+    return output;
+  }
+
   /**
    * Create 1-dimensional kalman filter
-   * @param options.R Process noise
-   * @param options.Q Measurement noise
+   * See https://www.wouterbulten.nl/blog/tech/lightweight-javascript-library-for-noise-filtering/
+   * Demo https://benwinding.github.io/kalmanjs-examples/examples/demo2-vue.html
+   * @param options.R Process noise: models the process noise and describes how noisy our system internally is.
+   * @param options.Q Measurement noise: how much noise is caused in measurements.
    * @param options.A State vector
    * @param options.B Control vector
    * @param options.C Measurement vector
@@ -32,7 +57,7 @@ export class KalmanFilter {
    * @param z Measurement
    * @param u Control
    */
-  public filter(z, u = 0): number {
+  public filter(z: number, u: number = 0): number {
     if (isNaN(this.x)) {
       this.x = (1 / this.C) * z;
       this.cov = (1 / this.C) * this.Q * (1 / this.C);

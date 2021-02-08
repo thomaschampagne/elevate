@@ -6,7 +6,6 @@ import {
   AthleteModel,
   AthleteSettingsModel,
   AthleteSnapshotModel,
-  BareActivityModel,
   CadenceDataModel,
   ConnectorSyncDateTime,
   Gender,
@@ -571,7 +570,6 @@ describe("FileConnector", () => {
         Promise.resolve(null)
       );
       const extractActivityStreamsSpy = spyOn(fileConnector, "extractActivityStreams").and.callThrough();
-      const computeAdditionalStreamsSpy = spyOn(fileConnector, "computeAdditionalStreams").and.callThrough();
       const updatePrimitiveStatsFromComputationSpy = spyOn(
         BaseConnector,
         "updatePrimitiveStatsFromComputation"
@@ -609,7 +607,6 @@ describe("FileConnector", () => {
           expect(findSyncedActivityModelsSpy).toHaveBeenNthCalledWith(1, "2019-08-11T12:52:20.000Z", 7263.962);
 
           expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(15);
-          expect(computeAdditionalStreamsSpy).toHaveBeenCalledTimes(15);
           expect(updatePrimitiveStatsFromComputationSpy).toHaveBeenCalledTimes(15);
 
           const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(2)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
@@ -629,7 +626,7 @@ describe("FileConnector", () => {
           expect(Math.floor(activitySyncEvent.activity.distance_raw)).toEqual(59853);
           expect(activitySyncEvent.activity.moving_time_raw).toEqual(10078);
           expect(activitySyncEvent.activity.elapsed_time_raw).toEqual(10514);
-          expect(activitySyncEvent.activity.elevation_gain_raw).toEqual(700);
+          expect(activitySyncEvent.activity.elevation_gain_raw).toEqual(698);
           expect(activitySyncEvent.activity.sourceConnectorType).toEqual(ConnectorType.FILE);
           expect(activitySyncEvent.activity.extras.fs_activity_location.path).toContain(expectedActivityFilePathMatch);
           expect(activitySyncEvent.activity.athleteSnapshot).toEqual(
@@ -689,7 +686,6 @@ describe("FileConnector", () => {
       );
       const createBareActivitySpy = spyOn(fileConnector, "createBareActivity").and.callThrough();
       const extractActivityStreamsSpy = spyOn(fileConnector, "extractActivityStreams").and.callThrough();
-      const computeAdditionalStreamsSpy = spyOn(fileConnector, "computeAdditionalStreams").and.callThrough();
       const syncEventNextSpy = spyOn(syncEvents$, "next").and.stub();
 
       // When
@@ -712,7 +708,6 @@ describe("FileConnector", () => {
           expect(findSyncedActivityModelsSpy).toHaveBeenCalledTimes(15);
           expect(createBareActivitySpy).toHaveBeenCalledTimes(0);
           expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(0);
-          expect(computeAdditionalStreamsSpy).toHaveBeenCalledTimes(0);
 
           expect(syncEventNextSpy).toHaveBeenCalledTimes(16);
           expect(syncEventNextSpy).toHaveBeenCalledWith(expectedActivitySyncEvent);
@@ -766,7 +761,6 @@ describe("FileConnector", () => {
       );
       const createBareActivitySpy = spyOn(fileConnector, "createBareActivity").and.callThrough();
       const extractActivityStreamsSpy = spyOn(fileConnector, "extractActivityStreams").and.callThrough();
-      const computeAdditionalStreamsSpy = spyOn(fileConnector, "computeAdditionalStreams").and.callThrough();
       const syncEventNextSpy = spyOn(syncEvents$, "next").and.stub();
 
       // When
@@ -784,7 +778,6 @@ describe("FileConnector", () => {
           expect(findSyncedActivityModelsSpy).toHaveBeenCalledTimes(4);
           expect(createBareActivitySpy).toHaveBeenCalledTimes(4);
           expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(4);
-          expect(computeAdditionalStreamsSpy).toHaveBeenCalledTimes(4);
           expect(syncEventNextSpy).toHaveBeenCalledTimes(5);
 
           const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(2)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
@@ -842,7 +835,6 @@ describe("FileConnector", () => {
 
       const createBareActivitySpy = spyOn(fileConnector, "createBareActivity").and.callThrough();
       const extractActivityStreamsSpy = spyOn(fileConnector, "extractActivityStreams").and.callThrough();
-      const computeAdditionalStreamsSpy = spyOn(fileConnector, "computeAdditionalStreams").and.callThrough();
       const syncEventNextSpy = spyOn(syncEvents$, "next").and.stub();
       const expectedActivitiesFound =
         expectedExistingSyncedActivity.name +
@@ -870,7 +862,6 @@ describe("FileConnector", () => {
           expect(findSyncedActivityModelsSpy).toHaveBeenCalledTimes(15);
           expect(createBareActivitySpy).toHaveBeenCalledTimes(0);
           expect(extractActivityStreamsSpy).toHaveBeenCalledTimes(0);
-          expect(computeAdditionalStreamsSpy).toHaveBeenCalledTimes(0);
 
           expect(syncEventNextSpy).toHaveBeenCalledTimes(16);
 
@@ -1596,67 +1587,6 @@ describe("FileConnector", () => {
   });
 
   describe("Activity streams", () => {
-    describe("Estimated power streams calculation", () => {
-      it("should add estimated power data stream to a cycling activities having speed and grade stream data & performed without power meter", done => {
-        // Given
-        const riderWeight = 75;
-        const filePath = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
-        const expectedSamplesLength = 3179;
-        const promise = SportsLib.importFromTCX(
-          new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")
-        ).then(event => {
-          return Promise.resolve(fileConnector.extractActivityStreams(event.getFirstActivity()));
-        });
-
-        // When
-        promise.then((activityStreamsModel: ActivityStreamsModel) => {
-          const powerEstimatedStream = fileConnector.estimateCyclingPowerStream(
-            ElevateSport.Ride,
-            activityStreamsModel.velocity_smooth,
-            activityStreamsModel.grade_smooth,
-            riderWeight
-          );
-
-          // Then
-          expect(powerEstimatedStream.length).toEqual(expectedSamplesLength);
-          done();
-        });
-      });
-
-      it("should throw error when sport type is different of Ride & VirtualRide", done => {
-        // Given, When
-        const riderWeight = 80;
-        const runCall = () =>
-          fileConnector.estimateCyclingPowerStream(ElevateSport.Run, [1, 2, 3, 5], [1, 2, 3, 5], riderWeight);
-        const alpineSkiCall = () =>
-          fileConnector.estimateCyclingPowerStream(ElevateSport.AlpineSki, [1, 2, 3, 5], [1, 2, 3, 5], riderWeight);
-
-        // Then
-        expect(runCall).toThrowError();
-        expect(alpineSkiCall).toThrowError();
-
-        done();
-      });
-
-      it("should throw error when no velocity or grade stream or no weight", done => {
-        // Given, When
-        const riderWeight = 80;
-        const noVelocityCall = () =>
-          fileConnector.estimateCyclingPowerStream(ElevateSport.Ride, [], [1, 2, 3, 5], riderWeight);
-        const noGradeCall = () =>
-          fileConnector.estimateCyclingPowerStream(ElevateSport.VirtualRide, [1, 2, 3, 5], [], riderWeight);
-        const noWeightCall = () =>
-          fileConnector.estimateCyclingPowerStream(ElevateSport.VirtualRide, [1, 2, 3, 5], [1, 2, 3, 5], null);
-
-        // Then
-        expect(noVelocityCall).toThrowError();
-        expect(noGradeCall).toThrowError();
-        expect(noWeightCall).toThrowError();
-
-        done();
-      });
-    });
-
     describe("Extract streams form sport-libs", () => {
       it("should convert sports-lib streams to ActivityStreamsModel", done => {
         // Given
@@ -1713,62 +1643,11 @@ describe("FileConnector", () => {
           expect(activityStreamsModel.grade_smooth.length).toEqual(expectedSamplesLength);
           expect(activityStreamsModel.heartrate.length).toEqual(expectedSamplesLength);
           expect(activityStreamsModel.cadence.length).toEqual(expectedSamplesLength);
-          expect(activityStreamsModel.watts).toEqual([]); // calculated in computeAdditionalStreams
+          expect(activityStreamsModel.watts).toEqual([]);
           expect(activityStreamsModel.grade_adjusted_speed).toEqual([]);
 
           done();
         });
-      });
-    });
-
-    describe("Calculate additional streams", () => {
-      it("should estimated power streams on cycling activity without power meter", done => {
-        // Given
-        let bareActivityModel: BareActivityModel;
-        const filePath = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
-        const expectedSamplesLength = 3179;
-        const promise = SportsLib.importFromTCX(
-          new xmldom.DOMParser().parseFromString(fs.readFileSync(filePath).toString(), "application/xml")
-        ).then(event => {
-          const sportsLibActivity = event.getFirstActivity();
-          bareActivityModel = fileConnector.createBareActivity(sportsLibActivity);
-          return Promise.resolve(fileConnector.extractActivityStreams(sportsLibActivity));
-        });
-        const athleteSettingsModel = AthleteSettingsModel.DEFAULT_MODEL;
-        const estimateCyclingPowerStreamSpy = spyOn(fileConnector, "estimateCyclingPowerStream").and.callThrough();
-
-        // When
-        promise.then((activityStreamsModel: ActivityStreamsModel) => {
-          const activityStreamsFullModel: ActivityStreamsModel = fileConnector.computeAdditionalStreams(
-            bareActivityModel,
-            activityStreamsModel,
-            athleteSettingsModel
-          );
-
-          // Then
-          expect(activityStreamsFullModel.grade_smooth.length).toEqual(expectedSamplesLength);
-          expect(activityStreamsFullModel.watts.length).toEqual(expectedSamplesLength);
-          expect(activityStreamsFullModel.watts_calc).toBeUndefined();
-          expect(estimateCyclingPowerStreamSpy).toHaveBeenCalledTimes(1);
-          done();
-        });
-      });
-
-      it("should not calculate estimated power streams on cycling activity without grade stream", done => {
-        // Given
-        const athleteSettingsModel = AthleteSettingsModel.DEFAULT_MODEL;
-        const bareActivityModel: BareActivityModel = new BareActivityModel();
-        bareActivityModel.type = ElevateSport.VirtualRide;
-        const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
-        activityStreamsModel.grade_smooth = [];
-        const estimateCyclingPowerStreamSpy = spyOn(fileConnector, "estimateCyclingPowerStream").and.callThrough();
-
-        // When
-        fileConnector.computeAdditionalStreams(bareActivityModel, activityStreamsModel, athleteSettingsModel);
-
-        // Then
-        expect(estimateCyclingPowerStreamSpy).not.toHaveBeenCalled();
-        done();
       });
     });
   });

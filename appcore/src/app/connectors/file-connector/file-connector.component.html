@@ -3,9 +3,10 @@
     Files <span class="mat-body-1">(Gpx, Tcx & Fit formats)</span>
   </mat-card-title>
   <mat-card-subtitle *ngIf="fileConnectorInfo">
+    <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}} </span>
     <span *ngIf="!fileConnectorInfo.sourceDirectory">Not configured. </span>
-    <span *ngIf="fileConnectorInfo.sourceDirectory">Configured. </span>
-    <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
+    <span
+      *ngIf="fileConnectorInfo.sourceDirectory">Configured&nbsp;➔&nbsp;<i>{{fileConnectorInfo.sourceDirectory | shorten: 90: '...'}}</i></span>
   </mat-card-subtitle>
   <mat-card-content>
     <div>

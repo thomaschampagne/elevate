@@ -8,6 +8,7 @@ import { HeartRateSensor } from "./models/sensors/heart-rate.sensor";
 import { CyclingPowerSensor, RunningPowerSensor } from "./models/sensors/power.sensor";
 import { CyclingCadenceSensor, RunningCadenceSensor, SwimmingCadenceSensor } from "./models/sensors/cadence.sensor";
 import _ from "lodash";
+import { GradeSensor } from "./models/sensors/grade.sensor";
 
 @Injectable()
 export class ActivitySensorsService {
@@ -20,7 +21,7 @@ export class ActivitySensorsService {
   ]);
 
   private defaultSensors(): Sensor[] {
-    return [ElevationSensor.DEFAULT, SpeedSensor.DEFAULT, HeartRateSensor.DEFAULT];
+    return [ElevationSensor.DEFAULT, SpeedSensor.DEFAULT, HeartRateSensor.DEFAULT, GradeSensor.DEFAULT];
   }
 
   private cyclingSensors(activity: SyncedActivityModel): Sensor[] {
@@ -29,7 +30,8 @@ export class ActivitySensorsService {
       SpeedSensor.DEFAULT,
       HeartRateSensor.DEFAULT,
       CyclingPowerSensor.getDefault(activity),
-      CyclingCadenceSensor.DEFAULT
+      CyclingCadenceSensor.DEFAULT,
+      GradeSensor.DEFAULT
     ];
   }
 
@@ -39,7 +41,8 @@ export class ActivitySensorsService {
       PaceSensor.DEFAULT,
       HeartRateSensor.DEFAULT,
       RunningPowerSensor.getDefault(activity),
-      RunningCadenceSensor.DEFAULT
+      RunningCadenceSensor.DEFAULT,
+      GradeSensor.DEFAULT
     ];
   }
 

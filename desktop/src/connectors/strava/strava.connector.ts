@@ -113,7 +113,7 @@ export class StravaConnector extends BaseConnector {
   }
 
   public static generateFetchStreamsEndpoint(activityId: number): string {
-    return `https://www.strava.com/api/v3/activities/${activityId}/streams?keys=time,distance,latlng,altitude,velocity_smooth,heartrate,cadence,watts,watts_calc,grade_smooth,grade_adjusted_speed`;
+    return `https://www.strava.com/api/v3/activities/${activityId}/streams?keys=time,distance,latlng,altitude,velocity_smooth,heartrate,cadence,watts,watts_calc,grade_smooth,grade_adjusted_speed,temp`;
   }
 
   public static generateFetchBareActivitiesPageEndpoint(page: number, perPage: number, afterTimestamp: number): string {
@@ -229,13 +229,6 @@ export class StravaConnector extends BaseConnector {
                     // Resolve athlete snapshot for current activity date
                     syncedActivityModel.athleteSnapshot = this.athleteSnapshotResolver.resolve(
                       syncedActivityModel.start_time
-                    );
-
-                    // Prepare streams
-                    activityStreamsModel = this.appendPowerStream(
-                      bareActivity,
-                      activityStreamsModel,
-                      syncedActivityModel.athleteSnapshot.athleteSettings.weight
                     );
 
                     // Compute activity
@@ -399,40 +392,6 @@ export class StravaConnector extends BaseConnector {
 
     // Bare activity cleaning
     return _.omit(bareActivity, StravaConnector.STRAVA_OMIT_FIELDS) as BareActivityModel;
-  }
-
-  public appendPowerStream(
-    bareActivityModel: BareActivityModel,
-    activityStreamsModel: ActivityStreamsModel,
-    weight: number
-  ): ActivityStreamsModel {
-    if (!activityStreamsModel) {
-      return null;
-    }
-
-    if (!bareActivityModel.hasPowerMeter) {
-      if (!_.isEmpty(activityStreamsModel.watts_calc)) {
-        activityStreamsModel.watts = activityStreamsModel.watts_calc;
-      } else {
-        // No power at all. Trying to estimated it on elevate side
-        if (SyncedActivityModel.isRide(bareActivityModel.type)) {
-          try {
-            activityStreamsModel.watts = this.estimateCyclingPowerStream(
-              bareActivityModel.type,
-              activityStreamsModel.velocity_smooth,
-              activityStreamsModel.grade_smooth,
-              weight
-            );
-          } catch (err) {
-            logger.error("Unable to estimated power on activity started at: " + bareActivityModel.start_time, err);
-            delete activityStreamsModel.watts;
-          }
-        }
-      }
-    }
-
-    delete activityStreamsModel.watts_calc;
-    return activityStreamsModel;
   }
 
   public getStravaBareActivityModels(page: number, perPage: number, after: number): Promise<BareActivityModel[]> {

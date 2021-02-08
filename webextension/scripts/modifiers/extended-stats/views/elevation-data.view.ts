@@ -64,7 +64,7 @@ export class ElevationDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       1,
-      this.elevationData.lowerQuartileElevation,
+      this.printNumber(this.elevationData.lowerQuartileElevation),
       "25% Quartile Elevation",
       "m",
       "displayAdvancedElevationData"
@@ -72,7 +72,7 @@ export class ElevationDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       1,
-      this.elevationData.medianElevation,
+      this.printNumber(this.elevationData.medianElevation),
       "50% Quartile Elevation",
       "m",
       "displayAdvancedElevationData"
@@ -80,7 +80,7 @@ export class ElevationDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       2,
       1,
-      this.elevationData.upperQuartileElevation,
+      this.printNumber(this.elevationData.upperQuartileElevation),
       "75% Quartile Elevation",
       "m",
       "displayAdvancedElevationData"

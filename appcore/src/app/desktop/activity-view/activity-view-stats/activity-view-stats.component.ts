@@ -13,6 +13,7 @@ import { MediaObserver } from "@angular/flex-layout";
 export class ActivityViewStatsComponent implements OnInit {
   public readonly MD_ROW_COUNT: number = 6;
   public readonly LG_ROW_COUNT: number = 8;
+  public readonly XL_ROW_COUNT: number = 12;
   public readonly ROW_HEIGHT: string = "80px";
 
   public statsGroupDisplays: StatGroupsDisplay[];

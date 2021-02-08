@@ -34,7 +34,7 @@ export class ActivityViewComponent implements OnInit {
   public typeDisplay: string;
   public startDateDisplay: string;
   public athleteSnapshotDisplay: string;
-  public shapedStreams: ActivityStreamsModel;
+  public streams: ActivityStreamsModel;
   public userSettings: DesktopUserSettingsModel;
   public hasMapData: boolean;
 
@@ -52,7 +52,7 @@ export class ActivityViewComponent implements OnInit {
     this.typeDisplay = null;
     this.startDateDisplay = null;
     this.athleteSnapshotDisplay = null;
-    this.shapedStreams = null;
+    this.streams = null;
     this.userSettings = null;
     this.hasMapData = false;
   }
@@ -79,15 +79,15 @@ export class ActivityViewComponent implements OnInit {
         this.athleteSnapshotDisplay = this.formatAthleteSnapshot(this.activity, this.userSettings.systemUnit);
 
         // Fetch associated stream if exists
-        return this.streamsService.getShapedById(
-          this.activity.id,
-          SyncedActivityModel.isPaced(this.activity.type),
-          this.activity.hasPowerMeter
-        );
+        return this.streamsService.getProcessedById(this.activity.id, {
+          type: this.activity.type,
+          hasPowerMeter: this.activity.hasPowerMeter,
+          athleteSnapshot: this.activity.athleteSnapshot
+        });
       })
-      .then((shapedStreams: ActivityStreamsModel) => {
-        this.shapedStreams = shapedStreams;
-        this.hasMapData = shapedStreams?.latlng?.length > 0;
+      .then((streams: ActivityStreamsModel) => {
+        this.streams = streams;
+        this.hasMapData = streams?.latlng?.length > 0;
       })
       .catch(err => {
         if (!(err instanceof WarningException)) {

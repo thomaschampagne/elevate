@@ -3,12 +3,11 @@
     Strava
   </mat-card-title>
   <mat-card-subtitle>
+    <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
     <span *ngIf="!stravaConnectorInfo || !stravaConnectorInfo.accessToken">Not configured. </span>
     <span *ngIf="stravaConnectorInfo && stravaConnectorInfo.accessToken">
-			Connected as {{stravaConnectorInfo.stravaAccount.firstname}} {{stravaConnectorInfo.stravaAccount.lastname}}
-      (id: {{stravaConnectorInfo.stravaAccount.id}}).
+			Connected as {{stravaConnectorInfo.stravaAccount.firstname}} {{stravaConnectorInfo.stravaAccount.lastname}}.
 		</span>
-    <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
   </mat-card-subtitle>
   <mat-card-content>
     <div *ngIf="showHowTo">

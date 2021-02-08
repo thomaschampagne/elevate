@@ -8,10 +8,10 @@ export class RunningPowerEstimator {
    */
   public static createRunningPowerEstimationStream(
     athleteWeight: number,
-    distanceArray: Array<number>,
-    timeArray: Array<number>,
-    altitudeArray: Array<number>
-  ): Array<number> {
+    distanceArray: number[],
+    timeArray: number[],
+    altitudeArray: number[]
+  ): number[] {
     if (!_.isNumber(athleteWeight)) {
       throw new InconsistentParametersException("athleteWeight required as number");
     }
@@ -24,7 +24,7 @@ export class RunningPowerEstimator {
       throw new InconsistentParametersException("timeArray required as array");
     }
 
-    const powerStream: Array<number> = [];
+    const powerStream: number[] = [];
     for (let i = 0; i < timeArray.length; i++) {
       let power = 0;
       if (i > 0) {

@@ -1,7 +1,7 @@
 /**
  * Smooth a vector stream using average next vector values in the window
  */
-export const meanWindowSmoothing = (array: number[], windowSize: number, roundDecimals: number = 2): number[] => {
+export const meanWindowSmoothing = (array: number[], windowSize: number, roundDecimals: number = 3): number[] => {
   const roundDecimalsFactor = 10 ** roundDecimals;
   return array.map((value: number, index: number) => {
     const window = array.slice(index, index + windowSize); // Get window

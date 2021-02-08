@@ -24,6 +24,11 @@ import {
   SwimmingEssentialStatsGroup
 } from "./models/stats/groups/essential-stats-group";
 import { DefaultSummaryStatsGroup } from "./models/stats/groups/summary/default-summary-stats-group";
+import {
+  CyclingGradeStatsGroup,
+  GradeStatsGroup,
+  RunningGradeStatsGroup
+} from "./models/stats/groups/grade-stats-group";
 
 @Injectable()
 export class ActivityStatsService {
@@ -60,7 +65,8 @@ export class ActivityStatsService {
       HearRateStatsGroup.DEFAULT,
       CyclingPowerStatsGroup.getDefault(activity),
       CyclingCadenceStatsGroup.DEFAULT,
-      ElevationStatsGroup.DEFAULT
+      ElevationStatsGroup.DEFAULT,
+      CyclingGradeStatsGroup.DEFAULT
     ];
   }
 
@@ -71,7 +77,8 @@ export class ActivityStatsService {
       HearRateStatsGroup.DEFAULT,
       RunningPowerStatsGroup.getDefault(activity),
       RunningCadenceStatsGroup.DEFAULT,
-      ElevationStatsGroup.DEFAULT
+      ElevationStatsGroup.DEFAULT,
+      RunningGradeStatsGroup.DEFAULT
     ];
   }
 
@@ -89,7 +96,8 @@ export class ActivityStatsService {
       EssentialStatsGroup.DEFAULT,
       SpeedStatsGroup.DEFAULT,
       HearRateStatsGroup.DEFAULT,
-      ElevationStatsGroup.DEFAULT
+      ElevationStatsGroup.DEFAULT,
+      GradeStatsGroup.DEFAULT
     ];
   }
 
@@ -118,7 +126,8 @@ export class ActivityStatsService {
     const statDisplays: StatDisplay[] = [];
     for (const stat of statsGroup.stats) {
       const statValue: number | string = stat ? _.get(activity, stat.path) : null;
-      const statExists = Number.isFinite(statValue);
+
+      const statExists = Number.isFinite(statValue) || typeof statValue === "string";
       if (statExists) {
         emptyStatsGroup = false;
       }

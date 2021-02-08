@@ -1,8 +1,10 @@
+// tslint:disable:no-shadowed-variable
 import { Stat } from "./stat.model";
 import {
   AnalysisDataModel,
   CadenceDataModel,
   ElevationDataModel,
+  GradeDataModel,
   HeartRateDataModel,
   PaceDataModel,
   PowerDataModel,
@@ -18,6 +20,8 @@ import { CyclingCadenceSensor, RunningCadenceSensor, SwimmingCadenceSensor } fro
 import { PowerSensor } from "../sensors/power.sensor";
 import moment from "moment";
 import { Time } from "@elevate/shared/tools";
+import { GradeSensor } from "../sensors/grade.sensor";
+import { ActivityComputer } from "@elevate/shared/sync";
 
 export namespace StatsDef {
   const emptyThreshold20MinMessage = "Empty because activity under 20 min";
@@ -845,5 +849,180 @@ export namespace StatsDef {
       "elevationData",
       "upperQuartileElevation"
     ]);
+  }
+
+  export namespace Grade {
+    export const profile = Stat.create<GradeDataModel>(GradeSensor.DEFAULT, "Profile", [
+      "extendedStats",
+      "gradeData",
+      "gradeProfile"
+    ]).asEmptyUnit();
+
+    export const avg = Stat.create<GradeDataModel>(GradeSensor.DEFAULT, "Average", [
+      "extendedStats",
+      "gradeData",
+      "avgGrade"
+    ]);
+
+    export const max = Stat.create<GradeDataModel>(GradeSensor.DEFAULT, "Max", [
+      "extendedStats",
+      "gradeData",
+      "avgMaxGrade"
+    ]);
+
+    export const min = Stat.create<GradeDataModel>(GradeSensor.DEFAULT, "Min", [
+      "extendedStats",
+      "gradeData",
+      "avgMinGrade"
+    ]);
+
+    export const timeUp = Stat.create<GradeDataModel>(
+      TimeSensor.DEFAULT,
+      "Climbing Time",
+      ["extendedStats", "gradeData", "upFlatDownInSeconds", "up"],
+      `Climbing time over ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
+    );
+
+    export const timeFlat = Stat.create<GradeDataModel>(
+      TimeSensor.DEFAULT,
+      "Flat Time",
+      ["extendedStats", "gradeData", "upFlatDownInSeconds", "flat"],
+      `Time on flat between ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% and ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
+    );
+
+    export const timeDown = Stat.create<GradeDataModel>(
+      TimeSensor.DEFAULT,
+      "Downhill Time",
+      ["extendedStats", "gradeData", "upFlatDownInSeconds", "down"],
+      `Time in downhills under ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% grade`
+    );
+
+    export const distUp = Stat.create<GradeDataModel>(
+      DistanceSensor.DEFAULT,
+      "Climbing Distance",
+      ["extendedStats", "gradeData", "upFlatDownDistanceData", "up"],
+      `Climbing distance over ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
+    );
+
+    export const distFlat = Stat.create<GradeDataModel>(
+      DistanceSensor.DEFAULT,
+      "Flat Distance",
+      ["extendedStats", "gradeData", "upFlatDownDistanceData", "flat"],
+      `Distance on flat between ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% and ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
+    );
+
+    export const distDown = Stat.create<GradeDataModel>(
+      DistanceSensor.DEFAULT,
+      "Downhill Distance",
+      ["extendedStats", "gradeData", "upFlatDownDistanceData", "down"],
+      `Distance in downhills under ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% grade`
+    );
+
+    export const speedUp = Stat.create<GradeDataModel>(
+      SpeedSensor.DEFAULT,
+      "Climbing Speed",
+      ["extendedStats", "gradeData", "upFlatDownMoveData", "up"],
+      `Climbing speed over ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
+    );
+
+    export const speedFlat = Stat.create<GradeDataModel>(
+      SpeedSensor.DEFAULT,
+      "Flat Speed",
+      ["extendedStats", "gradeData", "upFlatDownMoveData", "flat"],
+      `Speed on flat between ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% and ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
+    );
+
+    export const speedDown = Stat.create<GradeDataModel>(
+      SpeedSensor.DEFAULT,
+      "Downhill Speed",
+      ["extendedStats", "gradeData", "upFlatDownMoveData", "down"],
+      `Speed in downhills under ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% grade`
+    );
+
+    export const cadenceUp = Stat.create<GradeDataModel>(
+      CyclingCadenceSensor.DEFAULT,
+      "Climbing Cadence",
+      ["extendedStats", "gradeData", "upFlatDownCadencePaceData", "up"],
+      `Climbing cadence over ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
+    );
+
+    export const cadenceFlat = Stat.create<GradeDataModel>(
+      CyclingCadenceSensor.DEFAULT,
+      "Flat Cadence",
+      ["extendedStats", "gradeData", "upFlatDownCadencePaceData", "flat"],
+      `Cadence on flat between ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% and ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
+    );
+
+    export const cadenceDown = Stat.create<GradeDataModel>(
+      CyclingCadenceSensor.DEFAULT,
+      "Downhill Cadence",
+      ["extendedStats", "gradeData", "upFlatDownCadencePaceData", "down"],
+      `Cadence in downhills under ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% grade`
+    );
+
+    export const q25 = Stat.create<GradeDataModel>(
+      GradeSensor.DEFAULT,
+      "25% Quartile",
+      ["extendedStats", "gradeData", "lowerQuartileGrade"],
+      "25% quartile"
+    );
+
+    export const q50 = Stat.create<GradeDataModel>(
+      GradeSensor.DEFAULT,
+      "50% Quartile",
+      ["extendedStats", "gradeData", "medianGrade"],
+      "50% quartile or median"
+    );
+
+    export const q75 = Stat.create<GradeDataModel>(
+      GradeSensor.DEFAULT,
+      "75% Quartile",
+      ["extendedStats", "gradeData", "upperQuartileGrade"],
+      "75% quartile"
+    );
+
+    export namespace Running {
+      export const paceUp = Stat.create<GradeDataModel>(
+        PaceSensor.DEFAULT,
+        "Climbing Pace",
+        ["extendedStats", "gradeData", "upFlatDownMoveData", "up"],
+        `Climbing pace over ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
+      );
+
+      export const paceFlat = Stat.create<GradeDataModel>(
+        PaceSensor.DEFAULT,
+        "Flat Pace",
+        ["extendedStats", "gradeData", "upFlatDownMoveData", "flat"],
+        `Pace on flat between ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% and ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
+      );
+
+      export const paceDown = Stat.create<GradeDataModel>(
+        PaceSensor.DEFAULT,
+        "Downhill Pace",
+        ["extendedStats", "gradeData", "upFlatDownMoveData", "down"],
+        `Pace in downhills under ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% grade`
+      );
+
+      export const cadenceUp = Stat.create<GradeDataModel>(
+        RunningCadenceSensor.DEFAULT,
+        "Climbing Cadence",
+        ["extendedStats", "gradeData", "upFlatDownCadencePaceData", "up"],
+        `Climbing cadence over ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
+      );
+
+      export const cadenceFlat = Stat.create<GradeDataModel>(
+        RunningCadenceSensor.DEFAULT,
+        "Flat Cadence",
+        ["extendedStats", "gradeData", "upFlatDownCadencePaceData", "flat"],
+        `Cadence on flat between ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% and ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
+      );
+
+      export const cadenceDown = Stat.create<GradeDataModel>(
+        RunningCadenceSensor.DEFAULT,
+        "Downhill Cadence",
+        ["extendedStats", "gradeData", "upFlatDownCadencePaceData", "down"],
+        `Cadence in downhills under ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% grade`
+      );
+    }
   }
 }

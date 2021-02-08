@@ -23,9 +23,21 @@ export const medianFilter = (array: number[], window: number = 3) => {
   let i;
   w.push(array[0]);
   for (i = 0; i < array.length; i++) {
-    if (array.length - 1 >= i + Math.floor(window / 2)) w.push(array[i + Math.floor(window / 2)]);
+    const midWindowIndex = Math.floor(window / 2);
+    if (array.length - 1 >= i + midWindowIndex) {
+      w.push(array[i + midWindowIndex]);
+    }
     f.push(median(w));
-    if (i >= Math.floor(window / 2)) w.shift();
+    if (i >= midWindowIndex) {
+      w.shift();
+    }
   }
   return f;
+};
+
+export const medianSelfFilter = (array: number[], windowPercentage: number = 1) => {
+  let window = Math.floor((array.length * windowPercentage) / 100);
+  // Ensure window is odd
+  window = window % 2 === 0 ? window + 1 : window;
+  return medianFilter(array, window);
 };

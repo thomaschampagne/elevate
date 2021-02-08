@@ -34,8 +34,10 @@ import { PeaksCalculator } from "./peaks-calculator";
 import { WarningException } from "../../exceptions";
 import { Constant } from "../../constants";
 import { CaloriesEstimator } from "./calories-estimator";
-import { StreamShaper } from "./stream-shaper";
+import { StreamProcessor } from "./stream-processor";
 import UserSettingsModel = UserSettings.UserSettingsModel;
+
+const DEFAULT_RND = 3;
 
 export class ActivityComputer {
   private constructor(
@@ -90,14 +92,15 @@ export class ActivityComputer {
   private static readonly RUNNING_THRESHOLD_KPH: number = 2.75; // Kph
   private static readonly SWIMMING_THRESHOLD_KPH: number = 1.75; // Kph
   private static readonly MOVING_DETECTION_SAMPLES_BUFFER: number = 12;
+  private static readonly DISTANCE_SAMPLES_BUFFER: number = 5;
 
   private static readonly DEFAULT_CADENCE_THRESHOLD: number = 1;
   private static readonly CYCLING_CADENCE_THRESHOLD: number = 45; // revolutions per min
   private static readonly RUNNING_CADENCE_THRESHOLD: number = 50; // strides per min (1 leg)
   private static readonly SWIMMING_CADENCE_THRESHOLD: number = 10; // strokes per min
 
-  private static readonly GRADE_CLIMBING_LIMIT: number = 1.5;
-  private static readonly GRADE_DOWNHILL_LIMIT: number = -1 * ActivityComputer.GRADE_CLIMBING_LIMIT;
+  public static readonly GRADE_CLIMBING_LIMIT: number = 1.5;
+  public static readonly GRADE_DOWNHILL_LIMIT: number = -1 * ActivityComputer.GRADE_CLIMBING_LIMIT;
   private static readonly GRADE_FLAT_PROFILE_THRESHOLD: number = 60;
   private static readonly WEIGHTED_WATTS_TIME_BUFFER: number = 30; // Seconds
   private static readonly SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
@@ -379,10 +382,18 @@ export class ActivityComputer {
 
   private compute(): AnalysisDataModel {
     if (!_.isEmpty(this.activityStream)) {
-      this.activityStream = StreamShaper.sculpt(
+      this.activityStream = StreamProcessor.handle(
+        {
+          type: this.activityType,
+          hasPowerMeter: this.hasPowerMeter,
+          athleteSnapshot: this.athleteSnapshot
+        },
         this.activityStream,
-        SyncedActivityModel.isPaced(this.activityType),
-        this.hasPowerMeter
+        err => {
+          if (!(err instanceof WarningException)) {
+            throw err;
+          }
+        }
       );
 
       // Slices array stream if activity bounds are given.
@@ -471,13 +482,24 @@ export class ActivityComputer {
       elapsedTime = _.last(this.activityStream.time) - _.first(this.activityStream.time);
     }
 
+    // Grade
+    const gradeData: GradeDataModel = !_.isEmpty(this.activityStream)
+      ? this.gradeData(
+          this.activityStream.time,
+          this.activityStream.grade_smooth,
+          this.activityStream.velocity_smooth,
+          this.activityStream.cadence
+        )
+      : null;
+
     // Prepare move data model along stream or activitySourceData
     let moveDataModel = this.activityStream
       ? this.moveData(
           this.activityStream.time,
           this.activityStream.distance,
           this.activityStream.velocity_smooth,
-          this.activityStream.altitude
+          this.activityStream.altitude,
+          gradeData
         )
       : null;
 
@@ -609,17 +631,6 @@ export class ActivityComputer {
       ? this.heartRateData(this.activityStream.time, this.activityStream.heartrate, this.athleteSnapshot)
       : null;
 
-    // Grade
-    const gradeData: GradeDataModel = !_.isEmpty(this.activityStream)
-      ? this.gradeData(
-          this.activityStream.time,
-          this.activityStream.distance,
-          this.activityStream.altitude,
-          this.activityStream.grade_smooth,
-          this.activityStream.cadence
-        )
-      : null;
-
     // Cadence
     let cadenceData: CadenceDataModel = null;
     if (this.activityStream && !_.isEmpty(this.activityStream.cadence)) {
@@ -670,12 +681,12 @@ export class ActivityComputer {
     const caloriesPerHour = calories !== null ? (calories / elapsedTime) * Constant.SEC_HOUR_FACTOR : null;
 
     const analysisResult: AnalysisDataModel = {
-      moveRatio: moveRatio,
+      moveRatio: _.round(moveRatio, DEFAULT_RND),
       elapsedTime: elapsedTime,
       movingTime: movingTime,
       pauseTime: pauseTime,
-      calories: calories,
-      caloriesPerHour: caloriesPerHour,
+      calories: _.round(calories),
+      caloriesPerHour: _.round(caloriesPerHour, DEFAULT_RND),
       speedData: speedData,
       paceData: paceData,
       powerData: powerData,
@@ -749,8 +760,10 @@ export class ActivityComputer {
     heartRateData: HeartRateDataModel
   ): number {
     const averageHeartRate: number = heartRateData.averageHeartRate;
-    const runIntensity: number =
-      Math.round(((averageHeartRate / athleteSnapshot.athleteSettings.maxHr) * 1.45 - 0.3) * 100) / 100; // Calculate the run intensity; this is rounded to 2 decimal points
+    const runIntensity: number = _.round(
+      (averageHeartRate / athleteSnapshot.athleteSettings.maxHr) * 1.45 - 0.3,
+      DEFAULT_RND
+    );
     const gradeAdjustedDistance =
       distance + elevationData.accumulatedElevationAscent * 6 - elevationData.accumulatedElevationDescent * 4;
     const distanceRate: number = (213.9 / (movingSeconds / 60)) * (gradeAdjustedDistance / 1000) ** 1.06 + 3.5;
@@ -807,7 +820,8 @@ export class ActivityComputer {
     timeArray: number[],
     distanceArray: number[],
     velocityArray: number[],
-    altitudeArray: number[]
+    altitudeArray: number[],
+    gradeData: GradeDataModel
   ): MoveDataModel {
     if (_.isEmpty(timeArray) || _.isEmpty(distanceArray) || _.isEmpty(velocityArray)) {
       return null;
@@ -839,7 +853,9 @@ export class ActivityComputer {
         movingSpeeds.push(speed);
         movingDurations.push(seconds);
 
-        if (isRunning) runningGradeAdjSpeed.push(speed * ActivityComputer.runningGradeAdjustedSpeedFactor(grade));
+        if (isRunning) {
+          runningGradeAdjSpeed.push(speed * ActivityComputer.runningGradeAdjustedSpeedFactor(grade));
+        }
       }
 
       index = index + SAMPLES_TIME_BUFFER;
@@ -863,15 +879,15 @@ export class ActivityComputer {
 
     // Prepare SpeedDataModel
     const speedData: SpeedDataModel = {
-      genuineAvgSpeed: movingAvgSpeed,
-      totalAvgSpeed: totalAvgSpeed,
-      maxSpeed: _.max(velocityArray) * Constant.MPS_KPH_FACTOR,
-      best20min: best20min,
-      avgPace: Math.floor(avgPace), // send in seconds
-      lowerQuartileSpeed: q25,
-      medianSpeed: q50,
-      upperQuartileSpeed: q75,
-      standardDeviationSpeed: standardDeviationSpeed,
+      genuineAvgSpeed: _.round(movingAvgSpeed, DEFAULT_RND),
+      totalAvgSpeed: _.round(totalAvgSpeed, DEFAULT_RND),
+      maxSpeed: _.round(_.max(velocityArray) * Constant.MPS_KPH_FACTOR, DEFAULT_RND),
+      best20min: _.round(best20min, DEFAULT_RND),
+      avgPace: avgPace ? _.round(avgPace, DEFAULT_RND) : null, // send in seconds
+      lowerQuartileSpeed: _.round(q25, DEFAULT_RND),
+      medianSpeed: _.round(q50, DEFAULT_RND),
+      upperQuartileSpeed: _.round(q75, DEFAULT_RND),
+      standardDeviationSpeed: _.round(standardDeviationSpeed, DEFAULT_RND),
       speedZones: this.returnZones
         ? this.computeZones(velocityKphArray, timeArray, this.userSettings.zones, ZoneType.SPEED)
         : null,
@@ -881,7 +897,16 @@ export class ActivityComputer {
     // Calculate pace data
     const totalAvgPace = Movement.speedToPace(totalAvgSpeed);
     const standardDeviationPace = Movement.speedToPace(standardDeviationSpeed);
-    const runningGradeAdjustedPace = isRunning ? Movement.speedToPace(_.mean(runningGradeAdjSpeed)) : null;
+
+    // Compute running grade adjusted pace
+    let runningGradeAdjustedPace = null;
+    if (isRunning && gradeData && gradeData.gradeProfile) {
+      runningGradeAdjustedPace = _.round(Movement.speedToPace(_.mean(runningGradeAdjSpeed)));
+      runningGradeAdjustedPace =
+        runningGradeAdjustedPace > avgPace && gradeData.gradeProfile === GradeProfile.FLAT
+          ? avgPace
+          : runningGradeAdjustedPace;
+    }
 
     const runningStressScore =
       runningGradeAdjustedPace && this.athleteSnapshot.athleteSettings.runningFtp
@@ -893,15 +918,15 @@ export class ActivityComputer {
         : null;
 
     const paceData: PaceDataModel = {
-      avgPace: Math.floor(avgPace), // send in seconds
-      totalAvgPace: totalAvgPace, // send in seconds
-      best20min: best20min ? Math.floor(Movement.speedToPace(best20min)) : null,
-      maxPace: Math.floor(Movement.speedToPace(speedData.maxSpeed)),
-      lowerQuartilePace: Movement.speedToPace(speedData.lowerQuartileSpeed),
-      medianPace: Movement.speedToPace(speedData.medianSpeed),
-      upperQuartilePace: Movement.speedToPace(speedData.upperQuartileSpeed),
-      standardDeviationPace: standardDeviationPace !== -1 ? standardDeviationPace : null,
-      genuineGradeAdjustedAvgPace: runningGradeAdjustedPace,
+      avgPace: _.round(avgPace), // send in seconds
+      totalAvgPace: _.round(totalAvgPace), // send in seconds
+      best20min: best20min ? _.round(Movement.speedToPace(best20min)) : null,
+      maxPace: _.round(Movement.speedToPace(speedData.maxSpeed)),
+      lowerQuartilePace: _.round(Movement.speedToPace(speedData.lowerQuartileSpeed)),
+      medianPace: _.round(Movement.speedToPace(speedData.medianSpeed)),
+      upperQuartilePace: _.round(Movement.speedToPace(speedData.upperQuartileSpeed)),
+      standardDeviationPace: standardDeviationPace ? _.round(standardDeviationPace) : null,
+      genuineGradeAdjustedAvgPace: runningGradeAdjustedPace ? _.round(runningGradeAdjustedPace) : null,
       paceZones: this.returnZones
         ? this.computeZones(
             velocityKphArray.map(speed => Movement.speedToPace(speed)),
@@ -910,8 +935,10 @@ export class ActivityComputer {
             ZoneType.PACE
           )
         : null,
-      runningStressScore: runningStressScore,
-      runningStressScorePerHour: runningStressScore ? (runningStressScore / movingTime) * 60 * 60 : null,
+      runningStressScore: _.round(runningStressScore, DEFAULT_RND),
+      runningStressScorePerHour: runningStressScore
+        ? _.round((runningStressScore / movingTime) * 60 * 60, DEFAULT_RND)
+        : null,
       swimStressScore: null, // Will be set later if activity type is swimming
       swimStressScorePerHour: null // Will be set later if activity type is swimming,
     };
@@ -953,26 +980,26 @@ export class ActivityComputer {
 
     return {
       hasPowerMeter: hasPowerMeter,
-      avgWatts: avgWatts,
-      maxPower: maxWatts,
-      avgWattsPerKg: avgWattsPerKg,
-      weightedPower: weightedPower,
-      weightedWattsPerKg: weightedWattsPerKg,
+      avgWatts: _.round(avgWatts, DEFAULT_RND),
+      maxPower: _.round(maxWatts, DEFAULT_RND),
+      avgWattsPerKg: _.round(avgWattsPerKg, DEFAULT_RND),
+      weightedPower: _.round(weightedPower, DEFAULT_RND),
+      weightedWattsPerKg: _.round(weightedWattsPerKg, DEFAULT_RND),
       best20min: this.computeSplit(powerArray, timeArray, 60 * 20),
       bestEightyPercent: this.computeSplit(powerArray, timeArray, _.floor(totalTime * 0.8)),
-      variabilityIndex: variabilityIndex,
-      punchFactor: intensity,
-      powerStressScore: powerStressScore,
-      powerStressScorePerHour: powerStressScorePerHour,
-      lowerQuartileWatts: q25,
-      medianWatts: q50,
-      upperQuartileWatts: q75,
+      variabilityIndex: _.round(variabilityIndex, DEFAULT_RND),
+      punchFactor: intensity ? _.round(intensity, DEFAULT_RND) : null,
+      powerStressScore: powerStressScore ? _.round(powerStressScore, DEFAULT_RND) : null,
+      powerStressScorePerHour: powerStressScorePerHour ? _.round(powerStressScorePerHour, DEFAULT_RND) : null,
+      lowerQuartileWatts: _.round(q25, DEFAULT_RND),
+      medianWatts: _.round(q50, DEFAULT_RND),
+      upperQuartileWatts: _.round(q75, DEFAULT_RND),
       powerZones:
         this.returnZones && powerZoneType
           ? this.computeZones(powerArray, timeArray, this.userSettings.zones, powerZoneType)
           : null,
       peaks: this.computePeaks(powerArray, timeArray)
-    };
+    } as PowerDataModel;
   }
 
   private cyclingPowerData(
@@ -1022,9 +1049,9 @@ export class ActivityComputer {
       return null;
     }
 
-    const totalTime = _.last(timeArray);
-    const avgHeartRate = _.mean(heartRateArray);
-    const maxHeartRate = _.max(heartRateArray);
+    const totalTime: number = _.last(timeArray);
+    const avgHeartRate: number = _.mean(heartRateArray);
+    const maxHeartRate: number = _.max(heartRateArray);
 
     const activityHeartRateReserve = ActivityComputer.heartRateReserveFromHeartRate(
       avgHeartRate,
@@ -1061,24 +1088,24 @@ export class ActivityComputer {
     const heartRateStressScorePerHour = (heartRateStressScore / totalTime) * Constant.SEC_HOUR_FACTOR;
 
     return {
-      averageHeartRate: avgHeartRate,
+      averageHeartRate: _.round(avgHeartRate, DEFAULT_RND),
       maxHeartRate: maxHeartRate,
-      activityHeartRateReserve: activityHeartRateReserve * 100,
-      activityHeartRateReserveMax: activityHeartRateReserveMax * 100,
-      lowerQuartileHeartRate: q25,
-      medianHeartRate: q50,
-      upperQuartileHeartRate: q75,
+      activityHeartRateReserve: _.round(activityHeartRateReserve * 100, DEFAULT_RND),
+      activityHeartRateReserveMax: _.round(activityHeartRateReserveMax * 100, DEFAULT_RND),
+      lowerQuartileHeartRate: _.round(q25, DEFAULT_RND),
+      medianHeartRate: _.round(q50, DEFAULT_RND),
+      upperQuartileHeartRate: _.round(q75, DEFAULT_RND),
       best20min: this.computeSplit(heartRateArray, timeArray, 60 * 20),
       best60min: this.computeSplit(heartRateArray, timeArray, 60 * 60),
-      TRIMP: trainingImpulse,
-      TRIMPPerHour: trainingImpulsePerHour,
-      HRSS: heartRateStressScore,
-      HRSSPerHour: heartRateStressScorePerHour,
+      TRIMP: _.round(trainingImpulse, DEFAULT_RND),
+      TRIMPPerHour: _.round(trainingImpulsePerHour, DEFAULT_RND),
+      HRSS: _.round(heartRateStressScore, DEFAULT_RND),
+      HRSSPerHour: _.round(heartRateStressScorePerHour, DEFAULT_RND),
       peaks: this.computePeaks(heartRateArray, timeArray),
       heartRateZones: this.returnZones
         ? this.computeZones(heartRateArray, timeArray, this.userSettings.zones, ZoneType.HEART_RATE)
         : null
-    };
+    } as HeartRateDataModel;
   }
 
   private cadenceData(
@@ -1126,64 +1153,53 @@ export class ActivityComputer {
 
     return {
       maxCadence: maxCadence,
-      averageCadence: avgCadence,
-      averageActiveCadence: averageActiveCadence,
-      cadenceActiveTime: activeCadenceDuration,
-      cadenceActivePercentage: activeCadenceRatio * 100,
-      standardDeviationCadence: _.round(standardDeviationCadence, 2),
-      totalOccurrences: totalOccurrences,
-      lowerQuartileCadence: q25,
-      medianCadence: q50,
-      upperQuartileCadence: q75,
-      averageDistancePerOccurrence: averageDistancePerOccurrence,
+      averageCadence: _.round(avgCadence, DEFAULT_RND),
+      averageActiveCadence: _.round(averageActiveCadence, DEFAULT_RND),
+      cadenceActiveTime: _.round(activeCadenceDuration, DEFAULT_RND),
+      cadenceActivePercentage: _.round(activeCadenceRatio * 100),
+      standardDeviationCadence: _.round(standardDeviationCadence, DEFAULT_RND),
+      totalOccurrences: _.round(totalOccurrences),
+      lowerQuartileCadence: _.round(q25, DEFAULT_RND),
+      medianCadence: _.round(q50, DEFAULT_RND),
+      upperQuartileCadence: _.round(q75, DEFAULT_RND),
+      averageDistancePerOccurrence: _.round(averageDistancePerOccurrence, DEFAULT_RND),
       peaks: this.computePeaks(cadenceArray, timeArray),
       cadenceZones: this.returnZones
         ? this.computeZones(cadenceArray, timeArray, this.userSettings.zones, cadenceZoneType)
         : null
-    };
+    } as CadenceDataModel;
   }
 
   private gradeData(
     timeArray: number[],
-    distanceArray: number[],
-    altitudeArray: number[],
     gradeArray: number[],
+    velocityArray: number[],
     cadenceArray: number[]
   ): GradeDataModel {
-    if (_.isEmpty(timeArray) || _.isEmpty(distanceArray) || _.isEmpty(altitudeArray)) {
+    if (_.isEmpty(timeArray) || _.isEmpty(gradeArray) || _.isEmpty(velocityArray)) {
       return null;
     }
-
-    const hasGradeData = !_.isEmpty(gradeArray);
-    const hasCadenceData = !_.isEmpty(cadenceArray);
 
     const slopeProfileDurations = new SlopeProfileDurations();
     const slopeProfileDistances = new SlopeProfileDistances();
     const slopeProfileSpeeds = new SlopeProfileSpeeds();
     const slopeProfileCadences = new SlopeProfileCadences();
 
-    const grades = [];
-    const SAMPLES_TIME_BUFFER = ActivityComputer.MOVING_DETECTION_SAMPLES_BUFFER;
+    const hasCadenceData = !_.isEmpty(cadenceArray);
 
-    let index = SAMPLES_TIME_BUFFER;
-    do {
-      const { seconds, meters, speed, grade } = this.getBufferAnalytics(
-        SAMPLES_TIME_BUFFER,
-        index,
-        timeArray,
-        distanceArray,
-        altitudeArray
-      );
+    for (const [index, grade] of gradeArray.entries()) {
+      if (index === 0) {
+        continue;
+      }
 
-      grades.push(grade);
+      const seconds = timeArray[index] - timeArray[index - 1];
+      const speedMps = velocityArray[index];
+      const speedKph = speedMps * Constant.MPS_KPH_FACTOR;
+      const meters = speedMps * seconds;
 
-      const avgCadence = hasCadenceData
-        ? _.mean(cadenceArray.slice(index - SAMPLES_TIME_BUFFER, index).filter(cad => this.isActiveCadence(cad)))
-        : null;
+      const cadence = hasCadenceData ? cadenceArray[index] : null;
+      const isActiveCadence = Number.isFinite(cadence) && this.isActiveCadence(cadence);
 
-      const isActiveCadence = Number.isFinite(avgCadence) && this.isActiveCadence(avgCadence);
-
-      // Compute slope profile data
       if (grade > ActivityComputer.GRADE_CLIMBING_LIMIT) {
         // UPHILL
         slopeProfileDurations.up.push(seconds);
@@ -1192,12 +1208,12 @@ export class ActivityComputer {
           slopeProfileDistances.up.push(meters);
         }
 
-        if (Number.isFinite(speed)) {
-          slopeProfileSpeeds.up.push(speed);
+        if (Number.isFinite(speedKph)) {
+          slopeProfileSpeeds.up.push(speedKph);
         }
 
         if (isActiveCadence) {
-          slopeProfileCadences.up.push(avgCadence);
+          slopeProfileCadences.up.push(cadence);
         }
       } else if (grade < ActivityComputer.GRADE_DOWNHILL_LIMIT) {
         // DOWNHILL
@@ -1207,12 +1223,12 @@ export class ActivityComputer {
           slopeProfileDistances.down.push(meters);
         }
 
-        if (Number.isFinite(speed)) {
-          slopeProfileSpeeds.down.push(speed);
+        if (Number.isFinite(speedKph)) {
+          slopeProfileSpeeds.down.push(speedKph);
         }
 
         if (isActiveCadence) {
-          slopeProfileCadences.down.push(avgCadence);
+          slopeProfileCadences.down.push(cadence);
         }
       } else {
         // FLAT
@@ -1222,47 +1238,46 @@ export class ActivityComputer {
           slopeProfileDistances.flat.push(meters);
         }
 
-        if (Number.isFinite(speed)) {
-          slopeProfileSpeeds.flat.push(speed);
+        if (Number.isFinite(speedKph)) {
+          slopeProfileSpeeds.flat.push(speedKph);
         }
 
         if (isActiveCadence) {
-          slopeProfileCadences.flat.push(avgCadence);
+          slopeProfileCadences.flat.push(cadence);
         }
       }
-      index = index + SAMPLES_TIME_BUFFER;
-    } while (index <= timeArray.length - 1);
+    }
 
-    const totalTime = _.last(timeArray);
-    const avgMaxGrade = _.max(grades);
-    const avgMinGrade = _.min(grades);
-    const avgGrade = _.mean(grades);
+    const totalTime: number = _.last(timeArray);
+    const avgMaxGrade: number = _.max(gradeArray);
+    const avgMinGrade: number = _.min(gradeArray);
+    const avgGrade: number = _.mean(gradeArray);
 
-    const [q25, q50, q75] = this.quartiles(grades);
+    const [q25, q50, q75] = this.quartiles(gradeArray);
 
     const upFlatDownSeconds: UpFlatDownModel = {
-      up: _.sum(slopeProfileDurations.up),
-      flat: _.sum(slopeProfileDurations.flat),
-      down: _.sum(slopeProfileDurations.down),
+      up: _.round(_.sum(slopeProfileDurations.up), DEFAULT_RND),
+      flat: _.round(_.sum(slopeProfileDurations.flat), DEFAULT_RND),
+      down: _.round(_.sum(slopeProfileDurations.down), DEFAULT_RND),
       total: totalTime
     };
 
     const upFlatDownDistance: UpFlatDownModel = {
-      up: !_.isEmpty(slopeProfileDistances.up) ? _.sum(slopeProfileDistances.up) / 1000 : null,
-      flat: !_.isEmpty(slopeProfileDistances.flat) ? _.sum(slopeProfileDistances.flat) / 1000 : null,
-      down: !_.isEmpty(slopeProfileDistances.down) ? _.sum(slopeProfileDistances.down) / 1000 : null
+      up: !_.isEmpty(slopeProfileDistances.up) ? _.round(_.sum(slopeProfileDistances.up), DEFAULT_RND) : null,
+      flat: !_.isEmpty(slopeProfileDistances.flat) ? _.round(_.sum(slopeProfileDistances.flat), DEFAULT_RND) : null,
+      down: !_.isEmpty(slopeProfileDistances.down) ? _.round(_.sum(slopeProfileDistances.down), DEFAULT_RND) : null
     };
 
     const upFlatDownMoveData: UpFlatDownModel = {
-      up: _.mean(slopeProfileSpeeds.up),
-      flat: _.mean(slopeProfileSpeeds.flat),
-      down: _.mean(slopeProfileSpeeds.down)
+      up: _.round(_.mean(slopeProfileSpeeds.up), DEFAULT_RND),
+      flat: _.round(_.mean(slopeProfileSpeeds.flat), DEFAULT_RND),
+      down: _.round(_.mean(slopeProfileSpeeds.down), DEFAULT_RND)
     };
 
     const upFlatDownCadence: UpFlatDownModel = {
-      up: !_.isEmpty(slopeProfileCadences.up) ? _.mean(slopeProfileCadences.up) : null,
-      flat: !_.isEmpty(slopeProfileCadences.flat) ? _.mean(slopeProfileCadences.flat) : null,
-      down: !_.isEmpty(slopeProfileCadences.down) ? _.mean(slopeProfileCadences.down) : null
+      up: !_.isEmpty(slopeProfileCadences.up) ? _.round(_.mean(slopeProfileCadences.up), DEFAULT_RND) : null,
+      flat: !_.isEmpty(slopeProfileCadences.flat) ? _.round(_.mean(slopeProfileCadences.flat), DEFAULT_RND) : null,
+      down: !_.isEmpty(slopeProfileCadences.down) ? _.round(_.mean(slopeProfileCadences.down), DEFAULT_RND) : null
     };
 
     const gradeProfile =
@@ -1271,22 +1286,22 @@ export class ActivityComputer {
         : GradeProfile.HILLY;
 
     return {
-      avgGrade: avgGrade,
+      avgGrade: _.round(avgGrade, DEFAULT_RND),
       avgMaxGrade: avgMaxGrade,
       avgMinGrade: avgMinGrade,
-      lowerQuartileGrade: _.round(q25, 2),
-      medianGrade: _.round(q50, 2),
-      upperQuartileGrade: _.round(q75, 2),
+      lowerQuartileGrade: _.round(q25, DEFAULT_RND),
+      medianGrade: _.round(q50, DEFAULT_RND),
+      upperQuartileGrade: _.round(q75, DEFAULT_RND),
       upFlatDownInSeconds: upFlatDownSeconds,
       upFlatDownDistanceData: upFlatDownDistance,
       upFlatDownMoveData: upFlatDownMoveData,
       upFlatDownCadencePaceData: upFlatDownCadence,
       gradeProfile: gradeProfile,
-      gradeZones:
-        this.returnZones && hasGradeData
-          ? this.computeZones(gradeArray, timeArray, this.userSettings.zones, ZoneType.GRADE)
-          : null
-    };
+      peaks: this.computePeaks(gradeArray, timeArray),
+      gradeZones: this.returnZones
+        ? this.computeZones(gradeArray, timeArray, this.userSettings.zones, ZoneType.GRADE)
+        : null
+    } as GradeDataModel;
   }
 
   private elevationData(timeArray: number[], distanceArray: number[], altitudeArray: number[]): ElevationDataModel {
@@ -1298,7 +1313,7 @@ export class ActivityComputer {
     const descentElevations = [];
     const ascentData = { time: [], speeds: [] };
 
-    const SAMPLES_DISTANCE_BUFFER = 5;
+    const SAMPLES_DISTANCE_BUFFER = ActivityComputer.DISTANCE_SAMPLES_BUFFER;
 
     let index = SAMPLES_DISTANCE_BUFFER;
     do {
@@ -1336,14 +1351,14 @@ export class ActivityComputer {
     const [ascentSpeedQ25, ascentSpeedQ50, ascentSpeedQ75] = this.quartiles(ascentData.speeds);
 
     return {
-      avgElevation: Math.round(avgElevation),
-      minElevation: minElevation,
-      maxElevation: maxElevation,
-      accumulatedElevationAscent: _.sum(ascentElevations),
-      accumulatedElevationDescent: Math.abs(_.sum(descentElevations)),
-      lowerQuartileElevation: q25,
-      medianElevation: q50,
-      upperQuartileElevation: q75,
+      avgElevation: _.round(avgElevation),
+      minElevation: _.round(minElevation, DEFAULT_RND),
+      maxElevation: _.round(maxElevation, DEFAULT_RND),
+      accumulatedElevationAscent: _.round(_.sum(ascentElevations), DEFAULT_RND),
+      accumulatedElevationDescent: _.round(Math.abs(_.sum(descentElevations)), DEFAULT_RND),
+      lowerQuartileElevation: _.round(q25, DEFAULT_RND),
+      medianElevation: _.round(q50, DEFAULT_RND),
+      upperQuartileElevation: _.round(q75, DEFAULT_RND),
       elevationZones: this.returnZones
         ? this.computeZones(altitudeArray, timeArray, this.userSettings.zones, ZoneType.ELEVATION)
         : null,
@@ -1351,12 +1366,12 @@ export class ActivityComputer {
         ? this.computeZones(ascentData.speeds, ascentData.time, this.userSettings.zones, ZoneType.ASCENT)
         : null,
       ascentSpeed: {
-        avg: Number.isFinite(avgAscentSpeed) ? Math.round(avgAscentSpeed) : null,
-        lowerQuartile: Number.isFinite(ascentSpeedQ25) ? Math.round(ascentSpeedQ25) : null,
-        median: Number.isFinite(ascentSpeedQ50) ? Math.round(ascentSpeedQ50) : null,
-        upperQuartile: Number.isFinite(ascentSpeedQ75) ? Math.round(ascentSpeedQ75) : null
+        avg: Number.isFinite(avgAscentSpeed) ? _.round(avgAscentSpeed) : null,
+        lowerQuartile: Number.isFinite(ascentSpeedQ25) ? _.round(ascentSpeedQ25) : null,
+        median: Number.isFinite(ascentSpeedQ50) ? _.round(ascentSpeedQ50) : null,
+        upperQuartile: Number.isFinite(ascentSpeedQ75) ? _.round(ascentSpeedQ75) : null
       }
-    };
+    } as ElevationDataModel;
   }
 
   private getBufferAnalytics(
@@ -1394,7 +1409,7 @@ export class ActivityComputer {
         values,
         ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD
       );
-      bestSplitResult = splitCalculator.getBestSplit(rangeSeconds);
+      bestSplitResult = _.round(splitCalculator.getBestSplit(rangeSeconds), DEFAULT_RND);
     } catch (err) {
       if (!(err instanceof WarningException)) {
         throw err;

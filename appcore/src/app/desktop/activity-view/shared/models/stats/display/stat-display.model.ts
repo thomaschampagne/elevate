@@ -27,17 +27,20 @@ export class StatDisplay {
       color = stat.baseSensor.color;
     }
 
-    const isValueMissing = !Number.isFinite(statValue);
-
     let convertedValue: number | string;
-    if (isValueMissing) {
-      convertedValue = StatDisplay.MISSING_VALUE_DISPLAY;
-    } else {
+    let isValueMissing = false;
+
+    if (Number.isFinite(statValue)) {
       convertedValue = stat.baseSensor.fromStatsConvert(
         statValue,
         measureSystem,
         stat.roundDecimals || stat.baseSensor.defaultRoundDecimals
       );
+    } else if (typeof statValue === "string") {
+      convertedValue = statValue;
+    } else {
+      convertedValue = StatDisplay.MISSING_VALUE_DISPLAY;
+      isValueMissing = true;
     }
 
     return {

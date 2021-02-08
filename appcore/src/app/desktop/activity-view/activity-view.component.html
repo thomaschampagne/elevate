@@ -53,7 +53,7 @@
 
     <div fxLayout="row" fxLayoutAlign="space-between start">
       <div *ngIf="hasMapData" fxFlex="67">
-        <app-activity-view-map [latLng]="shapedStreams.latlng">
+        <app-activity-view-map [latLng]="streams.latlng">
         </app-activity-view-map>
       </div>
       <div *ngIf="hasMapData" fxFlex="1"></div>
@@ -66,9 +66,9 @@
       </div>
     </div>
 
-    <app-activity-graph-chart *ngIf="shapedStreams" [measureSystem]="userSettings.systemUnit"
+    <app-activity-graph-chart *ngIf="streams" [measureSystem]="userSettings.systemUnit"
                               [activity]="activity"
-                              [shapedStreams]="shapedStreams">
+                              [streams]="streams">
     </app-activity-graph-chart>
 
     <mat-tab-group mat-stretch-tabs>
@@ -89,21 +89,21 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Time in Zones" *ngIf="shapedStreams">
+      <mat-tab label="Time in Zones" *ngIf="streams">
         <ng-template matTabContent>
           <app-activity-view-time-in-zones [measureSystem]="userSettings.systemUnit"
                                            [activity]="activity"
-                                           [shapedStreams]="shapedStreams"></app-activity-view-time-in-zones>
+                                           [streams]="streams"></app-activity-view-time-in-zones>
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Intervals" *ngIf="shapedStreams">
+      <mat-tab label="Intervals" *ngIf="streams">
         <ng-template matTabContent>
           <app-activity-view-intervals></app-activity-view-intervals>
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Best Splits" *ngIf="shapedStreams">
+      <mat-tab label="Best Splits" *ngIf="streams">
         <ng-template matTabContent>
           <app-activity-view-best-splits></app-activity-view-best-splits>
         </ng-template>

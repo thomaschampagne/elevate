@@ -17,14 +17,15 @@ export class ActivityViewTimeInZonesComponent implements OnInit {
     "watts",
     "velocity_smooth",
     "cadence",
-    "altitude"
+    "altitude",
+    "grade_smooth"
   ];
 
   @Input()
   public activity: SyncedActivityModel;
 
   @Input()
-  public shapedStreams: ActivityStreamsModel;
+  public streams: ActivityStreamsModel;
 
   @Input()
   public measureSystem: MeasureSystem;
@@ -44,7 +45,7 @@ export class ActivityViewTimeInZonesComponent implements OnInit {
     );
 
     // Looping on each sensor definitions to get peaks if available
-    this.timeInZonesService.calculate(sensors, this.shapedStreams).then((timeInZonesResults: SensorTimeInZones[]) => {
+    this.timeInZonesService.calculate(sensors, this.streams).then((timeInZonesResults: SensorTimeInZones[]) => {
       this.sensorTimeInZones = timeInZonesResults;
     });
   }

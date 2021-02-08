@@ -26,6 +26,14 @@ enum ScaleMode {
   styleUrls: ["./activity-graph-chart.component.scss"]
 })
 export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart> implements OnInit {
+  private static readonly CHERRY_PICKED_STREAMS: (keyof ActivityStreamsModel)[] = [
+    "altitude",
+    "velocity_smooth",
+    "heartrate",
+    "watts",
+    "cadence"
+  ];
+
   private static readonly PER_SENSOR_LAYOUT_SPECIFICS = new Map<string, Partial<Layout>>([
     [
       PaceSensor.NAME,
@@ -55,7 +63,7 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
   public activity: SyncedActivityModel;
 
   @Input()
-  public shapedStreams: ActivityStreamsModel;
+  public streams: ActivityStreamsModel;
 
   @Input()
   public measureSystem: MeasureSystem;
@@ -86,7 +94,10 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
 
   public ngOnInit(): void {
     // Filter available sensors for current activity base on his streams content
-    this.availableSensors = this.filterAvailableSensors(this.shapedStreams);
+    this.availableSensors = this.filterAvailableSensors(
+      this.streams,
+      ActivityGraphChartComponent.CHERRY_PICKED_STREAMS
+    );
 
     this.updateActivityGraph();
   }
@@ -102,9 +113,9 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
     let scaleStream = this.getActiveScaleStream();
 
     // Switch to time stream if distance stream is not available
-    if (this.scaleMode === ScaleMode.DISTANCE && _.isEmpty(this.shapedStreams.distance)) {
+    if (this.scaleMode === ScaleMode.DISTANCE && _.isEmpty(this.streams.distance)) {
       this.scaleMode = ScaleMode.TIME;
-      scaleStream = this.shapedStreams.time;
+      scaleStream = this.streams.time;
     }
 
     // Inject every sensor data in scatter chart
@@ -115,14 +126,17 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
   }
 
   private getActiveScaleStream(): number[] {
-    return this.scaleMode === ScaleMode.TIME ? this.shapedStreams.time : this.shapedStreams.distance;
+    return this.scaleMode === ScaleMode.TIME ? this.streams.time : this.streams.distance;
   }
 
   /**
    * Filter available sensors for current activity base on his streams content
    */
-  private filterAvailableSensors(streams: ActivityStreamsModel): Sensor[] {
-    const sensors = this.activitySensorsService.provideSensors(this.activity);
+  private filterAvailableSensors(
+    streams: ActivityStreamsModel,
+    cherryPickStreams: (keyof ActivityStreamsModel)[]
+  ): Sensor[] {
+    const sensors = this.activitySensorsService.provideSensors(this.activity, cherryPickStreams);
 
     const availableSensors = [];
     // Looping on each sensor definitions
@@ -189,7 +203,7 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
         (traceData.x as (Datum | number)[]).push(xValue);
 
         // Foreach sensor add y axis value
-        const sensorStream = this.shapedStreams[sensor.streamKey] as number[];
+        const sensorStream = this.streams[sensor.streamKey] as number[];
         const yValue = sensor.fromStreamConvert(sensorStream[index], this.measureSystem, lastConvertedYValue);
 
         // Track last value to use it in case of invalid number (NaN, Infinity) in chart
@@ -257,7 +271,7 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
       const yAxisPosition = index % 2 ? 1 - index * yAxisPadding : index * yAxisPadding;
 
       // Find the y-axis range for the current stream (base on min & max)
-      const currentStream = this.shapedStreams[sensor.streamKey] as number[];
+      const currentStream = this.streams[sensor.streamKey] as number[];
       const minStreamValue = sensor.fromStreamConvert(_.min(currentStream), this.measureSystem);
       const maxStreamValue = sensor.fromStreamConvert(_.max(currentStream), this.measureSystem);
       const yAxisRange = [

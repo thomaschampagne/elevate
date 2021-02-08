@@ -1,4 +1,4 @@
-import { CyclingPower } from "./cycling-power-estimator";
+import { CyclingPower } from "@elevate/shared/sync";
 
 describe("CyclingPowerEstimator", () => {
   it("should calculate cycling power of a rider climbing a 6% hill", done => {
