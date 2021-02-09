@@ -498,8 +498,7 @@ export class ActivityComputer {
           this.activityStream.time,
           this.activityStream.distance,
           this.activityStream.velocity_smooth,
-          this.activityStream.altitude,
-          gradeData
+          this.activityStream.altitude
         )
       : null;
 
@@ -820,8 +819,7 @@ export class ActivityComputer {
     timeArray: number[],
     distanceArray: number[],
     velocityArray: number[],
-    altitudeArray: number[],
-    gradeData: GradeDataModel
+    altitudeArray: number[]
   ): MoveDataModel {
     if (_.isEmpty(timeArray) || _.isEmpty(distanceArray) || _.isEmpty(velocityArray)) {
       return null;
@@ -900,12 +898,9 @@ export class ActivityComputer {
 
     // Compute running grade adjusted pace
     let runningGradeAdjustedPace = null;
-    if (isRunning && gradeData && gradeData.gradeProfile) {
+    if (isRunning) {
       runningGradeAdjustedPace = _.round(Movement.speedToPace(_.mean(runningGradeAdjSpeed)));
-      runningGradeAdjustedPace =
-        runningGradeAdjustedPace > avgPace && gradeData.gradeProfile === GradeProfile.FLAT
-          ? avgPace
-          : runningGradeAdjustedPace;
+      runningGradeAdjustedPace = runningGradeAdjustedPace > avgPace ? avgPace : runningGradeAdjustedPace;
     }
 
     const runningStressScore =
