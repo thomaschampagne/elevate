@@ -103,7 +103,7 @@ describe("Activity compute integration tests through file connector", () => {
 
         // Common
         expect(activity.type).toEqual(ElevateSport.Ride);
-        expect(activity.hash).toEqual("7700ac5e10030e87e96ee099");
+        expect(activity.hash).toEqual("1b5706ea0df79ee9e6768078");
         expect(activity.start_time).toEqual("2015-07-10T08:58:32.000Z");
         expect(activity.end_time).toEqual("2015-07-10T15:05:48.000Z");
         expect(activity.trainer).toBeFalsy();
@@ -374,7 +374,7 @@ describe("Activity compute integration tests through file connector", () => {
         // Heart-rate: No heart-rate data
 
         // Power
-        SpecUtils.assertNearEqual(activity.extendedStats.powerData.maxPower, 458);
+        SpecUtils.assertNearEqual(activity.extendedStats.powerData.maxPower, 465);
         SpecUtils.assertNearEqual(activity.extendedStats.powerData.avgWatts, 202);
         SpecUtils.assertNearEqual(activity.extendedStats.powerData.avgWattsPerKg, 2.69, 2);
         SpecUtils.assertNearEqual(activity.extendedStats.powerData.weightedPower, 230);
@@ -666,7 +666,7 @@ describe("Activity compute integration tests through file connector", () => {
         SpecUtils.startTrackAssertFailed();
 
         expect(activity.type).toEqual(ElevateSport.Swim);
-        expect(activity.hash).toEqual("c51fbe28e38c60ba74625dbd");
+        expect(activity.hash).toEqual("9592c24f4e49e9cb3faa8590");
         SpecUtils.assertNearEqual(activity.distance_raw, 780);
         SpecUtils.assertNearEqual(activity.extendedStats.calories, 224);
         SpecUtils.assertNearEqual(activity.extendedStats.caloriesPerHour, 600);

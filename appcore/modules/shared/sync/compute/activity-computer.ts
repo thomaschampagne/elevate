@@ -878,7 +878,7 @@ export class ActivityComputer {
     // Prepare SpeedDataModel
     const speedData: SpeedDataModel = {
       genuineAvgSpeed: _.round(movingAvgSpeed, DEFAULT_RND),
-      totalAvgSpeed: _.round(totalAvgSpeed, DEFAULT_RND),
+      totalAvgSpeed: totalAvgSpeed ? _.round(totalAvgSpeed, DEFAULT_RND) : null,
       maxSpeed: _.round(_.max(velocityArray) * Constant.MPS_KPH_FACTOR, DEFAULT_RND),
       best20min: _.round(best20min, DEFAULT_RND),
       avgPace: avgPace ? _.round(avgPace, DEFAULT_RND) : null, // send in seconds

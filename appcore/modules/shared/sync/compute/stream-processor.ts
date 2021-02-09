@@ -7,7 +7,7 @@ import { RunningPowerEstimator } from "./running-power-estimator";
 import { CyclingPower } from "./cycling-power-estimator";
 
 export class StreamProcessor {
-  private static readonly DEFAULT_MEAN_FILTER_WINDOW = 7;
+  private static readonly DEFAULT_MEAN_FILTER_WINDOW = 5;
   private static readonly ALTITUDE_MEAN_FILTER_WINDOW = 7;
   private static readonly GRADE_MEAN_FILTER_WINDOW = 7;
   private static readonly DEFAULT_MEDIAN_PERCENTAGE_WINDOW = 0.15;
