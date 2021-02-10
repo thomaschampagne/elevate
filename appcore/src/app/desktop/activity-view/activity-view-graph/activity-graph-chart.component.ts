@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnInit } from "@angular/core";
-import { ActivityStreamsModel, SyncedActivityModel } from "@elevate/shared/models";
+import { Streams, SyncedActivityModel } from "@elevate/shared/models";
 import { AxisType, Datum, Layout, LayoutAxis, PlotMouseEvent, PlotRelayoutEvent } from "plotly.js";
 import _ from "lodash";
 import moment from "moment";
@@ -26,7 +26,7 @@ enum ScaleMode {
   styleUrls: ["./activity-graph-chart.component.scss"]
 })
 export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart> implements OnInit {
-  private static readonly CHERRY_PICKED_STREAMS: (keyof ActivityStreamsModel)[] = [
+  private static readonly CHERRY_PICKED_STREAMS: (keyof Streams)[] = [
     "altitude",
     "velocity_smooth",
     "heartrate",
@@ -63,7 +63,7 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
   public activity: SyncedActivityModel;
 
   @Input()
-  public streams: ActivityStreamsModel;
+  public streams: Streams;
 
   @Input()
   public measureSystem: MeasureSystem;
@@ -132,10 +132,7 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
   /**
    * Filter available sensors for current activity base on his streams content
    */
-  private filterAvailableSensors(
-    streams: ActivityStreamsModel,
-    cherryPickStreams: (keyof ActivityStreamsModel)[]
-  ): Sensor[] {
+  private filterAvailableSensors(streams: Streams, cherryPickStreams: (keyof Streams)[]): Sensor[] {
     const sensors = this.activitySensorsService.provideSensors(this.activity, cherryPickStreams);
 
     const availableSensors = [];

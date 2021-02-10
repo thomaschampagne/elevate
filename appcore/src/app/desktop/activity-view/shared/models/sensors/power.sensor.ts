@@ -1,6 +1,6 @@
 import { Sensor } from "./sensor.model";
 import { MeasureSystem, ZoneType } from "@elevate/shared/enums";
-import { ActivityStreamsModel, AnalysisDataModel, PeaksData, SyncedActivityModel } from "@elevate/shared/models";
+import { AnalysisDataModel, PeaksData, Streams, SyncedActivityModel } from "@elevate/shared/models";
 import _ from "lodash";
 
 export abstract class PowerSensor extends Sensor {
@@ -9,7 +9,7 @@ export abstract class PowerSensor extends Sensor {
   public defaultRoundDecimals = 0;
   public name: string = PowerSensor.NAME;
   public color = "#ffa620";
-  public streamKey: keyof ActivityStreamsModel = "watts";
+  public streamKey: keyof Streams = "watts";
 
   public displayUnit: { short: string; full: string } | Map<MeasureSystem, { short: string; full: string }> = {
     short: "w",

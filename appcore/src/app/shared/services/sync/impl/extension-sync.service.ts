@@ -28,7 +28,6 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
   /**
    * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
    */
-  public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "7.0.0-0.alpha";
 
   public static readonly SYNC_URL_BASE: string = "https://www.strava.com/dashboard";
   public trackedSyncTabId: number;
@@ -218,10 +217,6 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
       .then(() => {
         return Promise.resolve();
       });
-  }
-
-  public getCompatibleBackupVersionThreshold(): string {
-    return ExtensionSyncService.COMPATIBLE_DUMP_VERSION_THRESHOLD;
   }
 
   public getSyncDateTime(): Promise<SyncDateTime> {

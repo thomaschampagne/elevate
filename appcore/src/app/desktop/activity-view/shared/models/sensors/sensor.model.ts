@@ -1,10 +1,10 @@
-import { ActivityStreamsModel, AnalysisDataModel, PeaksData } from "@elevate/shared/models";
+import { AnalysisDataModel, PeaksData, Streams } from "@elevate/shared/models";
 import { MeasureSystem, ZoneType } from "@elevate/shared/enums";
 import { BaseSensor } from "./base.sensor";
 import { PlottableSensor } from "./interfaces/plottable-sensor.interface";
 
 export abstract class Sensor extends BaseSensor implements PlottableSensor {
-  public abstract streamKey: keyof ActivityStreamsModel;
+  public abstract streamKey: keyof Streams;
 
   public abstract peaksPath: [keyof AnalysisDataModel, keyof PeaksData];
   public abstract zoneType: ZoneType;

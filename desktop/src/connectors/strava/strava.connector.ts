@@ -13,7 +13,7 @@ import {
   SyncEvent,
   SyncEventType
 } from "@elevate/shared/sync";
-import { ActivityStreamsModel, BareActivityModel, SyncedActivityModel } from "@elevate/shared/models";
+import { BareActivityModel, Streams, SyncedActivityModel } from "@elevate/shared/models";
 import logger from "electron-log";
 import { AppService } from "../../app-service";
 import _ from "lodash";
@@ -211,8 +211,8 @@ export class StravaConnector extends BaseConnector {
           (syncedActivityModels: SyncedActivityModel[]) => {
             if (_.isEmpty(syncedActivityModels)) {
               // Fetch stream of the activity
-              return this.getStravaActivityStreams(bareActivity.id as number).then(
-                (activityStreamsModel: ActivityStreamsModel) => {
+              return this.getStravaStreams(bareActivity.id as number).then(
+                (streams: Streams) => {
                   try {
                     let syncedActivityModel: Partial<SyncedActivityModel> = bareActivity;
                     syncedActivityModel.start_timestamp = new Date(bareActivity.start_time).getTime() / 1000;
@@ -236,11 +236,11 @@ export class StravaConnector extends BaseConnector {
                       syncedActivityModel,
                       syncedActivityModel.athleteSnapshot,
                       this.connectorConfig.userSettingsModel,
-                      activityStreamsModel
+                      streams
                     );
 
                     // Compute bary center from lat/lng stream
-                    syncedActivityModel.latLngCenter = BaseConnector.geoBaryCenter(activityStreamsModel);
+                    syncedActivityModel.latLngCenter = BaseConnector.geoBaryCenter(streams);
 
                     // Try to use primitive data from computation. Else use primitive data from source (strava) if exists
                     const primitiveSourceData = new PrimitiveSourceData(
@@ -251,7 +251,7 @@ export class StravaConnector extends BaseConnector {
                     );
                     syncedActivityModel = BaseConnector.updatePrimitiveStatsFromComputation(
                       syncedActivityModel as SyncedActivityModel,
-                      activityStreamsModel,
+                      streams,
                       primitiveSourceData
                     );
 
@@ -266,16 +266,14 @@ export class StravaConnector extends BaseConnector {
                       syncedActivityModel.type,
                       syncedActivityModel.extendedStats,
                       syncedActivityModel.athleteSnapshot.athleteSettings,
-                      activityStreamsModel
+                      streams
                     );
 
                     // Compute activity hash
                     syncedActivityModel.hash = BaseConnector.activityHash(syncedActivityModel);
 
-                    // Gunzip stream as base64
-                    const compressedStream = activityStreamsModel
-                      ? ActivityStreamsModel.deflate(activityStreamsModel)
-                      : null;
+                    // Deflate streams for storage
+                    const deflatedStreams = streams ? Streams.deflate(streams) : null;
 
                     // Notify the new SyncedActivityModel
                     syncEvents$.next(
@@ -284,7 +282,7 @@ export class StravaConnector extends BaseConnector {
                         null,
                         syncedActivityModel as SyncedActivityModel,
                         true,
-                        compressedStream
+                        deflatedStreams
                       )
                     );
                   } catch (error) {
@@ -320,14 +318,14 @@ export class StravaConnector extends BaseConnector {
                   if (hasTypeChanged) {
                     syncedActivityModel.type = bareActivity.type;
 
-                    return this.findActivityStreams(syncedActivityModel.id).then(activityStreamsModel => {
-                      if (activityStreamsModel) {
+                    return this.findStreams(syncedActivityModel.id).then(streams => {
+                      if (streams) {
                         // Re-compute activity because of type change
                         syncedActivityModel.extendedStats = this.computeExtendedStats(
                           syncedActivityModel,
                           syncedActivityModel.athleteSnapshot,
                           this.connectorConfig.userSettingsModel,
-                          activityStreamsModel
+                          streams
                         );
                         logger.info(
                           `Recalculated activity ${syncedActivityModel.id} after type change to ${syncedActivityModel.type}`
@@ -398,16 +396,16 @@ export class StravaConnector extends BaseConnector {
     return this.fetchRemoteStravaBareActivityModels(page, perPage, after);
   }
 
-  public getStravaActivityStreams(activityId: number): Promise<ActivityStreamsModel> {
-    return new Promise<ActivityStreamsModel>((resolve, reject) => {
-      this.fetchRemoteStravaActivityStreams(activityId).then(
+  public getStravaStreams(activityId: number): Promise<Streams> {
+    return new Promise<Streams>((resolve, reject) => {
+      this.fetchRemoteStravaStreams(activityId).then(
         (stravaApiStreamTypes: StravaApiStreamType[]) => {
-          const activityStreamsModel: Partial<ActivityStreamsModel> = {};
+          const streams: Partial<Streams> = {};
           _.forEach(stravaApiStreamTypes, (stravaApiStreamType: StravaApiStreamType) => {
-            (activityStreamsModel[stravaApiStreamType.type] as number[]) = stravaApiStreamType.data;
+            (streams[stravaApiStreamType.type] as number[]) = stravaApiStreamType.data;
           });
 
-          resolve(activityStreamsModel as ActivityStreamsModel);
+          resolve(streams as Streams);
         },
         (errorSyncEvent: ErrorSyncEvent) => {
           if (errorSyncEvent) {
@@ -423,7 +421,7 @@ export class StravaConnector extends BaseConnector {
     });
   }
 
-  public fetchRemoteStravaActivityStreams(activityId: number): Promise<StravaApiStreamType[]> {
+  public fetchRemoteStravaStreams(activityId: number): Promise<StravaApiStreamType[]> {
     return this.stravaApiClient.get(
       this.stravaConnectorConfig.info,
       StravaConnector.generateFetchStreamsEndpoint(activityId),

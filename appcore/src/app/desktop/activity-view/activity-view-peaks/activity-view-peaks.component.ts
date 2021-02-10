@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit } from "@angular/core";
-import { ActivityStreamsModel, AnalysisDataModel, PeakModel, SyncedActivityModel } from "@elevate/shared/models";
+import { AnalysisDataModel, PeakModel, Streams, SyncedActivityModel } from "@elevate/shared/models";
 import _ from "lodash";
 import { Sensor } from "../shared/models/sensors/sensor.model";
 import { MeasureSystem } from "@elevate/shared/enums";
@@ -17,7 +17,7 @@ interface PeaksResult {
   styleUrls: ["./activity-view-peaks.component.scss"]
 })
 export class ActivityViewPeaksComponent implements OnInit {
-  private static readonly CHERRY_PICKED_STREAMS_ORDER: (keyof ActivityStreamsModel)[] = [
+  private static readonly CHERRY_PICKED_STREAMS_ORDER: (keyof Streams)[] = [
     "watts",
     "heartrate",
     "velocity_smooth",

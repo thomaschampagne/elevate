@@ -1,13 +1,13 @@
 import { Sensor } from "./sensor.model";
 import { MeasureSystem, ZoneType } from "@elevate/shared/enums";
-import { ActivityStreamsModel, AnalysisDataModel, PeaksData } from "@elevate/shared/models";
+import { AnalysisDataModel, PeaksData, Streams } from "@elevate/shared/models";
 
 export class GradeSensor extends Sensor {
   public static readonly NAME: string = "Grade";
 
   public static readonly DEFAULT: GradeSensor = new GradeSensor();
 
-  public streamKey: keyof ActivityStreamsModel = "grade_smooth";
+  public streamKey: keyof Streams = "grade_smooth";
   public color = "#00efd3";
   public name: string = GradeSensor.NAME;
   public defaultRoundDecimals = 1;

@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import Electron, { app, BrowserWindow, globalShortcut, ipcMain } from "electron";
 import path from "path";
-import url from "url";
 import logger from "electron-log";
 import { AppService } from "./app-service";
 import pkg from "../package.json";
@@ -34,6 +33,7 @@ class Main {
     @inject(IpcMessagesReceiver) private readonly messagesService: IpcMessagesReceiver,
     @inject(HttpClient) private readonly httpClient: HttpClient
   ) {}
+
   private static readonly DEFAULT_SCREEN_RATIO: number = 0.95;
   private static readonly LARGE_SCREEN_RATIO: number = 0.85;
 
@@ -158,13 +158,9 @@ class Main {
     this.ipcMessagesSender.configure(ipcMain, this.appWindow.webContents);
     this.messagesService.listen();
 
-    this.appWindow.loadURL(
-      url.format({
-        pathname: path.join(__dirname, "app", "index.html"),
-        protocol: "file:",
-        slashes: true
-      })
-    );
+    // Load app
+    const url = new URL(`file:${path.join(__dirname, "app", "index.html")}`);
+    this.appWindow.loadURL(url.href);
 
     this.appWindow.once("ready-to-show", () => {
       this.appWindow.show();

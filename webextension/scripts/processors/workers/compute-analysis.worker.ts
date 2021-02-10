@@ -13,7 +13,7 @@ onmessage = (mainThreadEvent: MessageEvent) => {
     },
     threadMessage.athleteSnapshot,
     threadMessage.userSettings,
-    threadMessage.activityStream,
+    threadMessage.streams,
     threadMessage.returnZones,
     threadMessage.bounds,
     threadMessage.isOwner,

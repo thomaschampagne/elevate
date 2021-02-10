@@ -1,7 +1,6 @@
 import { AppUpdater } from "electron-updater/out/AppUpdater";
 import Electron, { app, BrowserWindow } from "electron";
 import logger, { ElectronLog } from "electron-log";
-import url from "url";
 import path from "path";
 import fs from "fs";
 import ini from "ini";
@@ -64,17 +63,11 @@ export class Updater {
       updateWindow.show();
     });
 
-    return updateWindow
-      .loadURL(
-        url.format({
-          pathname: path.join(__dirname, "/updater/index.html"),
-          protocol: "file:",
-          slashes: true
-        })
-      )
-      .then(() => {
-        return Promise.resolve(updateWindow);
-      });
+    // Load updater
+    const url = new URL(`file:${path.join(__dirname, "updater", "index.html")}`);
+    return updateWindow.loadURL(url.href).then(() => {
+      return Promise.resolve(updateWindow);
+    });
   }
 
   public update(): Promise<UpdateInfo> {

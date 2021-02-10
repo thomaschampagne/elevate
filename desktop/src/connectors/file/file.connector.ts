@@ -11,7 +11,7 @@ import {
   SyncEventType
 } from "@elevate/shared/sync";
 import { ReplaySubject, Subject } from "rxjs";
-import { ActivityStreamsModel, BareActivityModel, SyncedActivityModel } from "@elevate/shared/models";
+import { BareActivityModel, Streams, SyncedActivityModel } from "@elevate/shared/models";
 import fs from "fs";
 import path from "path";
 import _ from "lodash";
@@ -73,7 +73,7 @@ export class ActivityFile {
 
 @singleton()
 export class FileConnector extends BaseConnector {
-  private static readonly SLEEP_TIME_BETWEEN_FILE_PARSED: number = 50;
+  private static readonly SLEEP_TIME_BETWEEN_FILE_PARSED: number = 100;
 
   private static HumanizedDayMoment = class {
     private static readonly SPLIT_AFTERNOON_AT = 12;
@@ -373,24 +373,24 @@ export class FileConnector extends BaseConnector {
                             );
 
                             // Extract streams
-                            const activityStreamsModel = this.extractActivityStreams(sportsLibActivity);
+                            const streams = this.extractStreams(sportsLibActivity);
 
                             // Compute activity
                             syncedActivityModel.extendedStats = this.computeExtendedStats(
                               syncedActivityModel,
                               syncedActivityModel.athleteSnapshot,
                               this.fileConnectorConfig.userSettingsModel,
-                              activityStreamsModel
+                              streams
                             );
 
                             // Compute bary center from lat/lng stream
-                            syncedActivityModel.latLngCenter = BaseConnector.geoBaryCenter(activityStreamsModel);
+                            syncedActivityModel.latLngCenter = BaseConnector.geoBaryCenter(streams);
 
                             // Try to use primitive data from computation. Else use primitive data from source (activity files) if exists
                             const primitiveSourceData = this.extractPrimitiveSourceData(sportsLibActivity);
                             syncedActivityModel = BaseConnector.updatePrimitiveStatsFromComputation(
                               syncedActivityModel as SyncedActivityModel,
-                              activityStreamsModel,
+                              streams,
                               primitiveSourceData
                             );
 
@@ -405,16 +405,14 @@ export class FileConnector extends BaseConnector {
                               syncedActivityModel.type,
                               syncedActivityModel.extendedStats,
                               syncedActivityModel.athleteSnapshot.athleteSettings,
-                              activityStreamsModel
+                              streams
                             );
 
                             // Compute activity hash
                             syncedActivityModel.hash = BaseConnector.activityHash(syncedActivityModel);
 
-                            // Gunzip stream as base64
-                            const compressedStream = activityStreamsModel
-                              ? ActivityStreamsModel.deflate(activityStreamsModel)
-                              : null;
+                            // Deflate streams for storage
+                            const deflatedStreams = streams ? Streams.deflate(streams) : null;
 
                             // Notify the new SyncedActivityModel
                             syncEvents$.next(
@@ -423,7 +421,7 @@ export class FileConnector extends BaseConnector {
                                 null,
                                 syncedActivityModel as SyncedActivityModel,
                                 true,
-                                compressedStream
+                                deflatedStreams
                               )
                             );
                           } catch (error) {
@@ -676,12 +674,12 @@ export class FileConnector extends BaseConnector {
     return new PrimitiveSourceData(elapsedTimeRaw, movingTimeRaw, distanceRaw, elevationGainRaw);
   }
 
-  public extractActivityStreams(sportsLibActivity: ActivityInterface): ActivityStreamsModel {
-    const activityStreamsModel: ActivityStreamsModel = new ActivityStreamsModel();
+  public extractStreams(sportsLibActivity: ActivityInterface): Streams {
+    const streams: Streams = new Streams();
 
     // Time via distance stream
     try {
-      activityStreamsModel.time = sportsLibActivity.generateTimeStream([DataDistance.type]).getData(true, true);
+      streams.time = sportsLibActivity.generateTimeStream([DataDistance.type]).getData(true, true);
     } catch (err) {
       logger.info("No distance stream found for activity starting at " + sportsLibActivity.startDate);
     }
@@ -690,7 +688,7 @@ export class FileConnector extends BaseConnector {
     try {
       const longitudes = sportsLibActivity.getSquashedStreamData(DataLongitudeDegrees.type);
       const latitudes = sportsLibActivity.getSquashedStreamData(DataLatitudeDegrees.type);
-      activityStreamsModel.latlng = latitudes.map((latitude, index) => {
+      streams.latlng = latitudes.map((latitude, index) => {
         return [_.floor(latitude, 8), _.floor(longitudes[index], 8)];
       });
     } catch (err) {
@@ -699,35 +697,35 @@ export class FileConnector extends BaseConnector {
 
     // Distance
     try {
-      activityStreamsModel.distance = sportsLibActivity.getSquashedStreamData(DataDistance.type);
+      streams.distance = sportsLibActivity.getSquashedStreamData(DataDistance.type);
     } catch (err) {
       logger.info("No distance stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     // Speed
     try {
-      activityStreamsModel.velocity_smooth = sportsLibActivity.getSquashedStreamData(DataSpeed.type);
+      streams.velocity_smooth = sportsLibActivity.getSquashedStreamData(DataSpeed.type);
     } catch (err) {
       logger.info("No speed stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     // HeartRate
     try {
-      activityStreamsModel.heartrate = sportsLibActivity.getSquashedStreamData(DataHeartRate.type);
+      streams.heartrate = sportsLibActivity.getSquashedStreamData(DataHeartRate.type);
     } catch (err) {
       logger.info("No heartrate stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     // Altitude
     try {
-      activityStreamsModel.altitude = sportsLibActivity.getSquashedStreamData(DataAltitude.type);
+      streams.altitude = sportsLibActivity.getSquashedStreamData(DataAltitude.type);
     } catch (err) {
       logger.info("No altitude stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     // Cadence
     try {
-      activityStreamsModel.cadence = sportsLibActivity.getSquashedStreamData(DataCadence.type);
+      streams.cadence = sportsLibActivity.getSquashedStreamData(DataCadence.type);
     } catch (err) {
       logger.info("No cadence stream found for activity starting at " + sportsLibActivity.startDate);
     }
@@ -735,7 +733,7 @@ export class FileConnector extends BaseConnector {
     // Watts
     try {
       if (sportsLibActivity.hasPowerMeter()) {
-        activityStreamsModel.watts = sportsLibActivity.getSquashedStreamData(DataPower.type);
+        streams.watts = sportsLibActivity.getSquashedStreamData(DataPower.type);
       }
     } catch (err) {
       logger.info("No power stream found for activity starting at " + sportsLibActivity.startDate);
@@ -743,7 +741,7 @@ export class FileConnector extends BaseConnector {
 
     // Grade
     try {
-      activityStreamsModel.grade_smooth = sportsLibActivity.getSquashedStreamData(DataGrade.type);
+      streams.grade_smooth = sportsLibActivity.getSquashedStreamData(DataGrade.type);
     } catch (err) {
       logger.info("No grade stream found for activity starting at " + sportsLibActivity.startDate);
     }
@@ -751,21 +749,19 @@ export class FileConnector extends BaseConnector {
     // Grade adjusted speed
     try {
       if (ActivityTypesHelper.getActivityGroupForActivityType(sportsLibActivity.type) === ActivityTypeGroups.Running) {
-        activityStreamsModel.grade_adjusted_speed = sportsLibActivity.getSquashedStreamData(
-          DataGradeAdjustedSpeed.type
-        );
+        streams.grade_adjusted_speed = sportsLibActivity.getSquashedStreamData(DataGradeAdjustedSpeed.type);
       }
     } catch (err) {
       logger.info("No grade adjusted speed stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     try {
-      activityStreamsModel.temp = sportsLibActivity.getSquashedStreamData(DataTemperature.type);
+      streams.temp = sportsLibActivity.getSquashedStreamData(DataTemperature.type);
     } catch (err) {
       logger.info("No temperature stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
-    return activityStreamsModel;
+    return streams;
   }
 
   public scanForActivities(

@@ -17,8 +17,8 @@ import {
 } from "@elevate/shared/sync";
 import {
   AthleteModel,
-  CompressedStreamModel,
   ConnectorSyncDateTime,
+  DeflatedActivityStreams,
   SyncedActivityModel
 } from "@elevate/shared/models";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
@@ -306,14 +306,14 @@ describe("DesktopSyncService", () => {
       activity.id = "7dsa12ads8d";
       activity.name = "No pain no gain";
       activity.start_time = new Date().toISOString();
-      const compressedStream = "fakeCompressedData";
-      const expectedStreamModel = new CompressedStreamModel(activity.id, compressedStream);
-      const activitySyncEvent = new ActivitySyncEvent(ConnectorType.FILE, null, activity, isNew, compressedStream);
+      const deflatedStream = "fakeCompressedData";
+      const expectedDeflatedActivityStreams = new DeflatedActivityStreams(activity.id, deflatedStream);
+      const activitySyncEvent = new ActivitySyncEvent(ConnectorType.FILE, null, activity, isNew, deflatedStream);
       const activityServicePutSpy = spyOn(desktopSyncService.activityService, "put").and.returnValue(
         Promise.resolve(activity)
       );
       const streamsServicePutSpy = spyOn(desktopSyncService.streamsService, "put").and.returnValue(
-        Promise.resolve(expectedStreamModel)
+        Promise.resolve(expectedDeflatedActivityStreams)
       );
       const stopSpy = spyOn(desktopSyncService, "stop").and.returnValue(Promise.resolve());
 
@@ -324,7 +324,7 @@ describe("DesktopSyncService", () => {
       syncEvent$.subscribe(
         () => {
           expect(activityServicePutSpy).toHaveBeenCalledWith(activity);
-          expect(streamsServicePutSpy).toHaveBeenCalledWith(expectedStreamModel);
+          expect(streamsServicePutSpy).toHaveBeenCalledWith(expectedDeflatedActivityStreams);
           expect(stopSpy).not.toHaveBeenCalled();
           done();
         },
@@ -1426,8 +1426,8 @@ describe("DesktopSyncService", () => {
       promise.then(
         () => {
           expect(putSpy).toHaveBeenCalledTimes(2);
-          expect(putSpy).toHaveBeenCalledWith(connectorSyncDateTimesToSave[0]);
-          expect(putSpy).toHaveBeenCalledWith(connectorSyncDateTimesToSave[1]);
+          expect(putSpy).toHaveBeenCalledWith(connectorSyncDateTimesToSave[0], true);
+          expect(putSpy).toHaveBeenCalledWith(connectorSyncDateTimesToSave[1], true);
           done();
         },
         () => {

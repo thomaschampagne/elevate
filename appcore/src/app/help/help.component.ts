@@ -74,7 +74,7 @@ export class HelpComponent implements OnInit {
     const registerEntry = (entry: FaqEntry) => {
       // Remove markdown title pattern (we will use mat-card-title directly)
       entry.question =
-        "◼️ " +
+        "➔️ " +
         (entry.question as string).slice(
           HelpComponent.MARKDOWN_QUESTION_START_PATTERN.length,
           (entry.question as string).length

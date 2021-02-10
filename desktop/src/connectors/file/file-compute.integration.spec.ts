@@ -1,11 +1,11 @@
 import { ActivityFile, ActivityFileType, FileConnector } from "./file.connector";
 import {
-  ActivityStreamsModel,
   AthleteModel,
   AthleteSettingsModel,
   AthleteSnapshotModel,
   DatedAthleteSettingsModel,
   Gender,
+  Streams,
   SyncedActivityModel,
   UserSettings
 } from "@elevate/shared/models";
@@ -32,8 +32,8 @@ describe("Activity compute integration tests through file connector", () => {
     return syncEventsSpy.calls.mostRecent().args[0].activity;
   }
 
-  function extractResultStream(): ActivityStreamsModel {
-    return ActivityStreamsModel.inflate(syncEventsSpy.calls.mostRecent().args[0].compressedStream);
+  function extractResultStream(): Streams {
+    return Streams.inflate(syncEventsSpy.calls.mostRecent().args[0].deflatedStream);
   }
 
   let fileConnectorConfig: FileConnectorConfig;

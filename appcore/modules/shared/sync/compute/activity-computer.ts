@@ -1,7 +1,6 @@
 import _ from "lodash";
 import {
   ActivitySourceDataModel,
-  ActivityStreamsModel,
   AnalysisDataModel,
   AthleteSettingsModel,
   AthleteSnapshotModel,
@@ -20,6 +19,7 @@ import {
   SlopeProfileDurations,
   SlopeProfileSpeeds,
   SpeedDataModel,
+  Streams,
   SyncedActivityModel,
   UpFlatDownModel,
   UserSettings,
@@ -47,7 +47,7 @@ export class ActivityComputer {
     private readonly athleteSnapshot: AthleteSnapshotModel,
     private readonly isOwner: boolean,
     private readonly hasPowerMeter: boolean,
-    private activityStream: ActivityStreamsModel,
+    private streams: Streams,
     private readonly bounds: number[],
     private readonly returnZones: boolean,
     private readonly activitySourceData: ActivitySourceDataModel
@@ -61,7 +61,7 @@ export class ActivityComputer {
 
     // We work on a streams copy to avoid integrity changes from the given source
     // Indeed some shaping will be applied (e.g. data smoothing)
-    this.activityStream = _.cloneDeep(activityStream);
+    this.streams = _.cloneDeep(streams);
     this.bounds = bounds;
     this.returnZones = returnZones;
     this.activitySourceData = activitySourceData;
@@ -173,7 +173,7 @@ export class ActivityComputer {
     bareActivityModel: Partial<BareActivityModel>,
     athleteSnapshotModel: AthleteSnapshotModel,
     userSettingsModel: UserSettingsModel,
-    streams: ActivityStreamsModel,
+    streams: Streams,
     returnZones: boolean = false,
     bounds: number[] = null,
     isOwner: boolean = true,
@@ -334,7 +334,7 @@ export class ActivityComputer {
     sportType: ElevateSport,
     analysisDataModel: AnalysisDataModel,
     athleteSettingsModel: AthleteSettingsModel,
-    activityStreamsModel: ActivityStreamsModel
+    streams: Streams
   ): boolean {
     const isCycling = SyncedActivityModel.isRide(sportType);
     const isRunning = SyncedActivityModel.isRun(sportType);
@@ -353,21 +353,15 @@ export class ActivityComputer {
       return false;
     }
 
-    if (
-      isCycling &&
-      activityStreamsModel &&
-      activityStreamsModel.watts &&
-      activityStreamsModel.watts.length > 0 &&
-      !(athleteSettingsModel.cyclingFtp > 0)
-    ) {
+    if (isCycling && streams && streams.watts && streams.watts.length > 0 && !(athleteSettingsModel.cyclingFtp > 0)) {
       return true;
     }
 
     if (
       isRunning &&
-      activityStreamsModel &&
-      activityStreamsModel.grade_adjusted_speed &&
-      activityStreamsModel.grade_adjusted_speed.length > 0 &&
+      streams &&
+      streams.grade_adjusted_speed &&
+      streams.grade_adjusted_speed.length > 0 &&
       (!(movingTime > 0) || !(athleteSettingsModel.runningFtp > 0))
     ) {
       return true;
@@ -381,14 +375,14 @@ export class ActivityComputer {
   }
 
   private compute(): AnalysisDataModel {
-    if (!_.isEmpty(this.activityStream)) {
-      this.activityStream = StreamProcessor.handle(
+    if (!_.isEmpty(this.streams)) {
+      this.streams = StreamProcessor.handle(
         {
           type: this.activityType,
           hasPowerMeter: this.hasPowerMeter,
           athleteSnapshot: this.athleteSnapshot
         },
-        this.activityStream,
+        this.streams,
         err => {
           if (!(err instanceof WarningException)) {
             throw err;
@@ -398,7 +392,7 @@ export class ActivityComputer {
 
       // Slices array stream if activity bounds are given.
       // It's mainly used for segment effort extended stats
-      this.sliceStreamFromBounds(this.activityStream, this.bounds);
+      this.sliceStreamFromBounds(this.streams, this.bounds);
     }
 
     const analysisDataModel = this.computeAnalysisData();
@@ -418,51 +412,51 @@ export class ActivityComputer {
     return analysisDataModel;
   }
 
-  private sliceStreamFromBounds(activityStream: ActivityStreamsModel, bounds: number[]): void {
+  private sliceStreamFromBounds(streams: Streams, bounds: number[]): void {
     // Slices array if activity bounds given. It's mainly used for segment effort extended stats
     if (bounds && bounds[0] && bounds[1]) {
-      if (!_.isEmpty(activityStream.velocity_smooth)) {
-        activityStream.velocity_smooth = activityStream.velocity_smooth.slice(bounds[0], bounds[1]);
+      if (!_.isEmpty(streams.velocity_smooth)) {
+        streams.velocity_smooth = streams.velocity_smooth.slice(bounds[0], bounds[1]);
       }
 
-      if (!_.isEmpty(activityStream.time)) {
-        activityStream.time = activityStream.time.slice(bounds[0], bounds[1]);
+      if (!_.isEmpty(streams.time)) {
+        streams.time = streams.time.slice(bounds[0], bounds[1]);
       }
 
-      if (!_.isEmpty(activityStream.latlng)) {
-        activityStream.latlng = activityStream.latlng.slice(bounds[0], bounds[1]);
+      if (!_.isEmpty(streams.latlng)) {
+        streams.latlng = streams.latlng.slice(bounds[0], bounds[1]);
       }
 
-      if (!_.isEmpty(activityStream.heartrate)) {
-        activityStream.heartrate = activityStream.heartrate.slice(bounds[0], bounds[1]);
+      if (!_.isEmpty(streams.heartrate)) {
+        streams.heartrate = streams.heartrate.slice(bounds[0], bounds[1]);
       }
 
-      if (!_.isEmpty(activityStream.watts)) {
-        activityStream.watts = activityStream.watts.slice(bounds[0], bounds[1]);
+      if (!_.isEmpty(streams.watts)) {
+        streams.watts = streams.watts.slice(bounds[0], bounds[1]);
       }
 
-      if (!_.isEmpty(activityStream.watts_calc)) {
-        activityStream.watts_calc = activityStream.watts_calc.slice(bounds[0], bounds[1]);
+      if (!_.isEmpty(streams.watts_calc)) {
+        streams.watts_calc = streams.watts_calc.slice(bounds[0], bounds[1]);
       }
 
-      if (!_.isEmpty(activityStream.cadence)) {
-        activityStream.cadence = activityStream.cadence.slice(bounds[0], bounds[1]);
+      if (!_.isEmpty(streams.cadence)) {
+        streams.cadence = streams.cadence.slice(bounds[0], bounds[1]);
       }
 
-      if (!_.isEmpty(activityStream.grade_smooth)) {
-        activityStream.grade_smooth = activityStream.grade_smooth.slice(bounds[0], bounds[1]);
+      if (!_.isEmpty(streams.grade_smooth)) {
+        streams.grade_smooth = streams.grade_smooth.slice(bounds[0], bounds[1]);
       }
 
-      if (!_.isEmpty(activityStream.altitude)) {
-        activityStream.altitude = activityStream.altitude.slice(bounds[0], bounds[1]);
+      if (!_.isEmpty(streams.altitude)) {
+        streams.altitude = streams.altitude.slice(bounds[0], bounds[1]);
       }
 
-      if (!_.isEmpty(activityStream.distance)) {
-        activityStream.distance = activityStream.distance.slice(bounds[0], bounds[1]);
+      if (!_.isEmpty(streams.distance)) {
+        streams.distance = streams.distance.slice(bounds[0], bounds[1]);
       }
 
-      if (!_.isEmpty(activityStream.grade_adjusted_speed)) {
-        activityStream.grade_adjusted_speed = activityStream.grade_adjusted_speed.slice(bounds[0], bounds[1]);
+      if (!_.isEmpty(streams.grade_adjusted_speed)) {
+        streams.grade_adjusted_speed = streams.grade_adjusted_speed.slice(bounds[0], bounds[1]);
       }
     }
   }
@@ -478,27 +472,22 @@ export class ActivityComputer {
     const isSwimming = SyncedActivityModel.isSwim(this.activityType);
 
     // Include speed and pace
-    if (this.activityStream && this.activityStream.time && this.activityStream.time.length > 0) {
-      elapsedTime = _.last(this.activityStream.time) - _.first(this.activityStream.time);
+    if (this.streams && this.streams.time && this.streams.time.length > 0) {
+      elapsedTime = _.last(this.streams.time) - _.first(this.streams.time);
     }
 
     // Grade
-    const gradeData: GradeDataModel = !_.isEmpty(this.activityStream)
-      ? this.gradeData(
-          this.activityStream.time,
-          this.activityStream.grade_smooth,
-          this.activityStream.velocity_smooth,
-          this.activityStream.cadence
-        )
+    const gradeData: GradeDataModel = !_.isEmpty(this.streams)
+      ? this.gradeData(this.streams.time, this.streams.grade_smooth, this.streams.velocity_smooth, this.streams.cadence)
       : null;
 
     // Prepare move data model along stream or activitySourceData
-    let moveDataModel = this.activityStream
+    let moveDataModel = this.streams
       ? this.moveData(
-          this.activityStream.time,
-          this.activityStream.distance,
-          this.activityStream.velocity_smooth,
-          this.activityStream.altitude
+          this.streams.time,
+          this.streams.distance,
+          this.streams.velocity_smooth,
+          this.streams.altitude
         )
       : null;
 
@@ -556,8 +545,8 @@ export class ActivityComputer {
 
     // Find total distance
     let totalDistance;
-    if (this.activityStream && !_.isEmpty(this.activityStream.distance)) {
-      totalDistance = _.last(this.activityStream.distance);
+    if (this.streams && !_.isEmpty(this.streams.distance)) {
+      totalDistance = _.last(this.streams.distance);
     } else if (this.activitySourceData && this.activitySourceData.distance > 0) {
       totalDistance = this.activitySourceData.distance;
     } else {
@@ -585,12 +574,12 @@ export class ActivityComputer {
 
     // Power
     let powerData: PowerDataModel = null;
-    if (this.activityStream) {
-      const hasWattsStream = !_.isEmpty(this.activityStream.watts);
+    if (this.streams) {
+      const hasWattsStream = !_.isEmpty(this.streams.watts);
       if (isCycling) {
         powerData = this.cyclingPowerData(
-          this.activityStream.time,
-          this.activityStream.watts,
+          this.streams.time,
+          this.streams.watts,
           movingTime,
           this.hasPowerMeter,
           this.athleteSnapshot.athleteSettings.weight,
@@ -598,8 +587,8 @@ export class ActivityComputer {
         );
       } else if (isRunning && hasWattsStream) {
         powerData = this.runningPowerData(
-          this.activityStream.time,
-          this.activityStream.watts,
+          this.streams.time,
+          this.streams.watts,
           movingTime,
           this.hasPowerMeter,
           this.athleteSnapshot.athleteSettings.weight,
@@ -607,15 +596,15 @@ export class ActivityComputer {
         );
       } else if (isRunning && !hasWattsStream && this.isOwner) {
         powerData = this.estimatedRunningPower(
-          this.activityStream,
+          this.streams,
           movingTime,
           this.athleteSnapshot.athleteSettings.weight,
           null // No running power threshold yet
         );
       } else {
         powerData = this.powerData(
-          this.activityStream.time,
-          this.activityStream.watts,
+          this.streams.time,
+          this.streams.watts,
           movingTime,
           this.hasPowerMeter,
           this.athleteSnapshot.athleteSettings.weight,
@@ -626,34 +615,34 @@ export class ActivityComputer {
     }
 
     // Heart-rate
-    const heartRateData: HeartRateDataModel = !_.isEmpty(this.activityStream)
-      ? this.heartRateData(this.activityStream.time, this.activityStream.heartrate, this.athleteSnapshot)
+    const heartRateData: HeartRateDataModel = !_.isEmpty(this.streams)
+      ? this.heartRateData(this.streams.time, this.streams.heartrate, this.athleteSnapshot)
       : null;
 
     // Cadence
     let cadenceData: CadenceDataModel = null;
-    if (this.activityStream && !_.isEmpty(this.activityStream.cadence)) {
+    if (this.streams && !_.isEmpty(this.streams.cadence)) {
       if (isCycling) {
         cadenceData = this.cadenceData(
-          this.activityStream.time,
-          this.activityStream.distance,
-          this.activityStream.cadence,
+          this.streams.time,
+          this.streams.distance,
+          this.streams.cadence,
           movingTime,
           ZoneType.CYCLING_CADENCE
         );
       } else if (isRunning) {
         cadenceData = this.cadenceData(
-          this.activityStream.time,
-          this.activityStream.distance,
-          this.activityStream.cadence,
+          this.streams.time,
+          this.streams.distance,
+          this.streams.cadence,
           movingTime,
           ZoneType.RUNNING_CADENCE
         );
       } else {
         cadenceData = this.cadenceData(
-          this.activityStream.time,
-          this.activityStream.distance,
-          this.activityStream.cadence,
+          this.streams.time,
+          this.streams.distance,
+          this.streams.cadence,
           movingTime,
           null
         );
@@ -667,12 +656,8 @@ export class ActivityComputer {
 
     // Elevation
     let elevationData: ElevationDataModel = null;
-    if (this.activityStream) {
-      elevationData = this.elevationData(
-        this.activityStream.time,
-        this.activityStream.distance,
-        this.activityStream.altitude
-      );
+    if (this.streams) {
+      elevationData = this.elevationData(this.streams.time, this.streams.distance, this.streams.altitude);
     }
 
     // Compute calories
@@ -717,30 +702,30 @@ export class ActivityComputer {
   }
 
   private estimatedRunningPower(
-    activityStream: ActivityStreamsModel,
+    streams: Streams,
     movingSeconds: number,
     athleteWeight: number,
     runningFtp: number
   ): PowerDataModel {
-    if (_.isEmpty(activityStream) || _.isEmpty(activityStream.distance)) {
-      // return null if activityStream is basically empty (i.e. a manual run activity)
+    if (_.isEmpty(streams) || _.isEmpty(streams.distance)) {
+      // return null if streams is basically empty (i.e. a manual run activity)
       return null;
     }
 
     try {
-      activityStream.watts = RunningPowerEstimator.createRunningPowerEstimationStream(
+      streams.watts = RunningPowerEstimator.createRunningPowerEstimationStream(
         athleteWeight,
-        activityStream.distance,
-        activityStream.time,
-        activityStream.altitude
+        streams.distance,
+        streams.time,
+        streams.altitude
       );
     } catch (err) {
       console.error(err);
     }
 
     return this.runningPowerData(
-      activityStream.time,
-      activityStream.watts,
+      streams.time,
+      streams.watts,
       movingSeconds,
       false, // Estimated !
       athleteWeight,

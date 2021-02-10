@@ -107,7 +107,7 @@ export class IpcMessagesReceiver {
   ): void {
     const activityId = flaggedIpcMessage.payload[0] as number | string;
 
-    this.streamsService.getInflatedById(activityId).then(
+    this.streamsService.getById(activityId).then(
       streams => {
         replyWith({
           success: streams,

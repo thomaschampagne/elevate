@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
 import { StreamsDao } from "../../dao/streams/streams.dao";
-import { ActivityStreamsModel, AthleteSnapshotModel, CompressedStreamModel } from "@elevate/shared/models";
+import { AthleteSnapshotModel, DeflatedActivityStreams, Streams } from "@elevate/shared/models";
 import { StreamProcessor } from "@elevate/shared/sync";
 import { ElevateSport } from "@elevate/shared/enums";
 import { WarningException } from "@elevate/shared/exceptions";
@@ -9,14 +9,14 @@ import { WarningException } from "@elevate/shared/exceptions";
 export class StreamsService {
   constructor(@Inject(StreamsDao) private readonly streamsDao: StreamsDao) {}
 
-  public getById(id: number | string): Promise<CompressedStreamModel> {
+  public getById(id: number | string): Promise<DeflatedActivityStreams> {
     return this.streamsDao.getById(id);
   }
 
-  public getInflatedById(id: number | string): Promise<ActivityStreamsModel> {
-    return this.getById(id).then(compressed => {
-      if (compressed) {
-        return Promise.resolve(ActivityStreamsModel.inflate(compressed.data));
+  public getInflatedById(id: number | string): Promise<Streams> {
+    return this.getById(id).then(deflated => {
+      if (deflated) {
+        return Promise.resolve(Streams.inflate(deflated.deflatedStreams));
       } else {
         return Promise.resolve(null);
       }
@@ -26,7 +26,7 @@ export class StreamsService {
   public getProcessedById(
     id: number | string,
     activityParams: { type: ElevateSport; hasPowerMeter: boolean; athleteSnapshot: AthleteSnapshotModel }
-  ): Promise<ActivityStreamsModel> {
+  ): Promise<Streams> {
     const errorCallback = err => {
       if (!(err instanceof WarningException)) {
         throw err;
@@ -38,8 +38,8 @@ export class StreamsService {
     });
   }
 
-  public put(compressedStreamModel: CompressedStreamModel): Promise<CompressedStreamModel> {
-    return this.streamsDao.put(compressedStreamModel);
+  public put(streamsModel: DeflatedActivityStreams): Promise<DeflatedActivityStreams> {
+    return this.streamsDao.put(streamsModel);
   }
 
   public removeById(id: number | string): Promise<void> {

@@ -18,7 +18,7 @@ import {
 import { IpcMessagesReceiver } from "../../../../desktop/ipc-messages/ipc-messages-receiver.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { StravaConnectorInfoService } from "../../strava-connector-info/strava-connector-info.service";
-import { AthleteModel, CompressedStreamModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import { AthleteModel, DeflatedActivityStreams, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { ActivityService } from "../../activity/activity.service";
 import { ElevateException, SyncException, WarningException } from "@elevate/shared/exceptions";
 import _ from "lodash";
@@ -55,7 +55,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   /**
    * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
    */
-  public static readonly COMPATIBLE_DUMP_VERSION_THRESHOLD: string = "7.0.0-3.alpha";
   public syncEvents$: Subject<SyncEvent>;
   public syncSubscription: Subscription;
   public currentConnectorType: ConnectorType;
@@ -363,9 +362,9 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       .then((syncedActivityModel: SyncedActivityModel) => {
         this.logger.debug(`Activity "${syncedActivityModel.name}" saved`);
 
-        const promiseHandlePutStreams: Promise<void | CompressedStreamModel> = activitySyncEvent.compressedStream
+        const promiseHandlePutStreams: Promise<void | DeflatedActivityStreams> = activitySyncEvent.deflatedStreams
           ? this.streamsService.put(
-              new CompressedStreamModel(`${activitySyncEvent.activity.id}`, activitySyncEvent.compressedStream)
+              new DeflatedActivityStreams(`${activitySyncEvent.activity.id}`, activitySyncEvent.deflatedStreams)
             )
           : Promise.resolve();
 
@@ -441,10 +440,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     });
   }
 
-  public getCompatibleBackupVersionThreshold(): string {
-    return DesktopSyncService.COMPATIBLE_DUMP_VERSION_THRESHOLD;
-  }
-
   public getSyncState(): Promise<SyncState> {
     return Promise.all([this.getSyncDateTime(), this.activityService.count()]).then((result: any[]) => {
       const connectorSyncDateTimes: ConnectorSyncDateTime[] = result[0] as ConnectorSyncDateTime[];
@@ -492,14 +487,15 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       throw new Error("connectorSyncDateTimes param must be an array");
     }
 
-    const putPromises = [];
-    _.forEach(connectorSyncDateTimes, (connectorSyncDateTime: ConnectorSyncDateTime) => {
-      putPromises.push(this.connectorSyncDateTimeDao.put(connectorSyncDateTime));
-    });
-
-    return Promise.all(putPromises).then(() => {
-      return this.connectorSyncDateTimeDao.find();
-    });
+    return connectorSyncDateTimes
+      .reduce((previousPromise: Promise<void>, connectorSyncDateTime: ConnectorSyncDateTime) => {
+        return previousPromise.then(() => {
+          return this.connectorSyncDateTimeDao.put(connectorSyncDateTime, true).then(() => Promise.resolve());
+        });
+      }, Promise.resolve())
+      .then(() => {
+        return this.connectorSyncDateTimeDao.find();
+      });
   }
 
   public updateSyncDateTime(connectorSyncDateTimes: ConnectorSyncDateTime[]): Promise<ConnectorSyncDateTime[]> {

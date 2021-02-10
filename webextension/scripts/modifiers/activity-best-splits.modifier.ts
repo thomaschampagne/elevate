@@ -1,12 +1,6 @@
 import _ from "lodash";
 import { Helper } from "../helper";
-import {
-  ActivityInfoModel,
-  ActivitySourceDataModel,
-  ActivityStreamsModel,
-  Gender,
-  UserSettings
-} from "@elevate/shared/models";
+import { ActivityInfoModel, ActivitySourceDataModel, Gender, Streams, UserSettings } from "@elevate/shared/models";
 import { AbstractModifier } from "./abstract.modifier";
 import { VacuumProcessor } from "../processors/vacuum-processor";
 import { Time } from "@elevate/shared/tools";
@@ -417,7 +411,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
     }
   };
 
-  private activityStreams: ActivityStreamsModel;
+  private streams: Streams;
   private vacuumProcessor: VacuumProcessor;
   private activityInfo: ActivityInfoModel;
   private userSettings: ExtensionUserSettingsModel;
@@ -513,21 +507,17 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
         this.activityInfo,
         (
           activitySourceData: ActivitySourceDataModel,
-          activityStream: ActivityStreamsModel,
+          streams: Streams,
           athleteWeight: number,
           athleteGender: Gender,
           hasPowerMeter: boolean
         ) => {
           // Get stream on page
 
-          this.activityStreams = activityStream;
-          this.activityStreams.altitude = this.filterData(
-            this.activityStreams.altitude,
-            this.activityStreams.distance,
-            22
-          ); // fixed smoothing 200 way way too high!
+          this.streams = streams;
+          this.streams.altitude = this.filterData(this.streams.altitude, this.streams.distance, 22); // fixed smoothing 200 way way too high!
           this.distanceUnit =
-            measurementPreference == "meters"
+            measurementPreference === "meters"
               ? ActivityBestSplitsModifier.Units.Kilometers
               : ActivityBestSplitsModifier.Units.Miles;
 
@@ -592,7 +582,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
               });
 
               for (let i: number = start; i <= stop; i++) {
-                splitPolyLine.addLatLng(L.latLng(this.activityStreams.latlng[i][0], this.activityStreams.latlng[i][1]));
+                splitPolyLine.addLatLng(L.latLng(this.streams.latlng[i][0], this.streams.latlng[i][1]));
               }
 
               splitPolyLine.addTo(map);
@@ -605,7 +595,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
                 height: number = parseInt(chartRect.attr("height"));
               const xScale = d3.scale
                 .linear()
-                .domain([0, this.activityStreams.distance[this.activityStreams.distance.length - 1]])
+                .domain([0, this.streams.distance[this.streams.distance.length - 1]])
                 .range([0, width]);
               if (!splitAltitude) {
                 splitAltitude = d3
@@ -616,12 +606,9 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
                   .attr("data-split", "true");
               }
 
-              splitAltitude.attr("x", xScale(this.activityStreams.distance[start]));
+              splitAltitude.attr("x", xScale(this.streams.distance[start]));
               splitAltitude.attr("height", height);
-              splitAltitude.attr(
-                "width",
-                xScale(this.activityStreams.distance[stop] - this.activityStreams.distance[start])
-              );
+              splitAltitude.attr("width", xScale(this.streams.distance[stop] - this.streams.distance[start]));
               splitAltitude.attr("style", "fill: " + splitColor + "; opacity: 0.3");
 
               selectedSplitId = $(eventObject.currentTarget).data("split-id");
@@ -740,10 +727,8 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
             }
           });
 
-          const activityDistanceInMeters: number = this.activityStreams.distance[
-              this.activityStreams.distance.length - 1
-            ],
-            activityDurationInSeconds: number = this.activityStreams.time[this.activityStreams.time.length - 1];
+          const activityDistanceInMeters: number = this.streams.distance[this.streams.distance.length - 1],
+            activityDurationInSeconds: number = this.streams.time[this.streams.time.length - 1];
 
           splitsArray.forEach((split: any) => {
             this.addSplitToTable(split, splitsTableBody, activityDistanceInMeters, activityDurationInSeconds);
@@ -954,7 +939,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
               },
               speedLabel = this.distanceUnit === ActivityBestSplitsModifier.Units.Miles ? "mph" : "km/h";
 
-            computeSplit(split, this.activityStreams).done((value: any) => {
+            computeSplit(split, this.streams).done((value: any) => {
               setValue(
                 splitId + "-time",
                 value.time,

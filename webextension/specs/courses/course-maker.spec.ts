@@ -1,16 +1,16 @@
 import _ from "lodash";
 import { CourseMaker, ExportTypes, ICourseBounds } from "../../scripts/processors/course-marker";
-import { ActivityStreamsModel } from "@elevate/shared/models";
+import { Streams } from "@elevate/shared/models";
 
-const activityStreamObject = require("../fixtures/activities/829770999/stream.json");
+const streamFixture = require("../fixtures/activities/829770999/stream.json");
 
 describe("CourseMaker", () => {
   const courseMaker: CourseMaker = new CourseMaker();
   const xmlParser: DOMParser = new DOMParser();
-  let activityStream: ActivityStreamsModel;
+  let streams: Streams;
 
   beforeEach(() => {
-    activityStream = _.cloneDeep(activityStreamObject);
+    streams = _.cloneDeep(streamFixture);
   });
 
   it("should export GPX stream with consistency data", done => {
@@ -18,7 +18,7 @@ describe("CourseMaker", () => {
     const courseName = "MyCourse";
 
     // When
-    const gpxStream: string = courseMaker.create(ExportTypes.GPX, courseName, activityStream);
+    const gpxStream: string = courseMaker.create(ExportTypes.GPX, courseName, streams);
     const xmlStream = xmlParser.parseFromString(gpxStream, "text/xml");
 
     // Then ...
@@ -36,7 +36,7 @@ describe("CourseMaker", () => {
 
     // ... Check points length
     const trackPointsLength = xmlStream.getElementsByTagName("trkpt").length;
-    expect(trackPointsLength).toBe(activityStream.time.length);
+    expect(trackPointsLength).toBe(streams.time.length);
 
     // ... Check first sample point data
     const firstTrackPointsLength = xmlStream.getElementsByTagName("trkpt")[0];
@@ -65,18 +65,12 @@ describe("CourseMaker", () => {
   it("should export GPX with no HRM, Cadence, altimeter & Power sensor", done => {
     // Given
     const courseName = "MyCourse";
-    activityStream = _.omit(activityStream, [
-      "heartrate",
-      "cadence",
-      "watts",
-      "watts_calc",
-      "altitude"
-    ]) as ActivityStreamsModel;
+    streams = _.omit(streams, ["heartrate", "cadence", "watts", "watts_calc", "altitude"]) as Streams;
     let errorCatched = null;
 
     // When
     try {
-      courseMaker.create(ExportTypes.GPX, courseName, activityStream);
+      courseMaker.create(ExportTypes.GPX, courseName, streams);
     } catch (err) {
       errorCatched = err;
     }
@@ -92,7 +86,7 @@ describe("CourseMaker", () => {
     const courseName = "MyCourse";
 
     // When
-    const tcxStream: string = courseMaker.create(ExportTypes.TCX, courseName, activityStream);
+    const tcxStream: string = courseMaker.create(ExportTypes.TCX, courseName, streams);
     const xmlStream = xmlParser.parseFromString(tcxStream, "text/xml");
 
     // Then
@@ -114,7 +108,7 @@ describe("CourseMaker", () => {
 
     // ... Check points length
     const trackPointsLength = CourseNode.getElementsByTagName("Track")[0].getElementsByTagName("Trackpoint").length;
-    expect(trackPointsLength).toBe(activityStream.time.length);
+    expect(trackPointsLength).toBe(streams.time.length);
 
     // ... First track point
     const firstTrackPoint = CourseNode.getElementsByTagName("Track")[0].getElementsByTagName("Trackpoint")[0];
@@ -145,18 +139,12 @@ describe("CourseMaker", () => {
   it("should export TCX with no HRM, Cadence, altimeter & Power sensor", done => {
     // Given
     const courseName = "MyCourse";
-    activityStream = _.omit(activityStream, [
-      "heartrate",
-      "cadence",
-      "watts",
-      "watts_calc",
-      "altitude"
-    ]) as ActivityStreamsModel;
+    streams = _.omit(streams, ["heartrate", "cadence", "watts", "watts_calc", "altitude"]) as Streams;
     let errorCatched = null;
 
     // When
     try {
-      courseMaker.create(ExportTypes.TCX, courseName, activityStream);
+      courseMaker.create(ExportTypes.TCX, courseName, streams);
     } catch (err) {
       errorCatched = err;
     }
@@ -172,7 +160,7 @@ describe("CourseMaker", () => {
     const bounds: ICourseBounds = { start: 200, end: 300 };
 
     // When
-    const gpxStream: string = courseMaker.create(ExportTypes.GPX, courseName, activityStream, bounds);
+    const gpxStream: string = courseMaker.create(ExportTypes.GPX, courseName, streams, bounds);
     const xmlStream = xmlParser.parseFromString(gpxStream, "text/xml");
 
     // Then
@@ -187,7 +175,7 @@ describe("CourseMaker", () => {
     const bounds: ICourseBounds = { start: 300, end: 400 };
 
     // When
-    const tcxStream: string = courseMaker.create(ExportTypes.TCX, courseName, activityStream, bounds);
+    const tcxStream: string = courseMaker.create(ExportTypes.TCX, courseName, streams, bounds);
     const xmlStream = xmlParser.parseFromString(tcxStream, "text/xml");
 
     // Then
@@ -207,7 +195,7 @@ describe("CourseMaker", () => {
     const courseName = "MyCourse";
 
     expect(() => {
-      courseMaker.create(-1, courseName, activityStream); // When
+      courseMaker.create(-1, courseName, streams); // When
     }).toThrowError("Export type do not exist"); // Then
 
     done();

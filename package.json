@@ -51,9 +51,9 @@
   "devDependencies": {
     "cpy-cli": "^3.1.1",
     "del-cli": "^3.0.1",
-    "husky": "^4.3.0",
-    "npm-check-updates": "^9.2.3",
-    "prettier": "^2.1.2",
+    "husky": "^4.3.8",
+    "npm-check-updates": "^11.1.1",
+    "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
     "run-sequence": "^2.2.1"
   },

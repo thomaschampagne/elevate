@@ -6,7 +6,7 @@ import { CoreModule } from "../../../../core/core.module";
 import { TargetModule } from "../../../../shared/modules/target/desktop-target.module";
 import { DataStore } from "../../../../shared/data-store/data-store";
 import { TestingDataStore } from "../../../../shared/data-store/testing-datastore.service";
-import { ActivityStreamsModel, UserSettings } from "@elevate/shared/models";
+import { Streams, UserSettings } from "@elevate/shared/models";
 import _ from "lodash";
 import { UserSettingsService } from "../../../../shared/services/user-settings/user-settings.service";
 import { ZoneType } from "@elevate/shared/enums";
@@ -39,13 +39,13 @@ describe("TimeInZonesService", () => {
 
     expectedSettings.zones.heartRate = [130, 150, 170, 190];
 
-    const activityStreams = new ActivityStreamsModel();
-    activityStreams.time = [0, 5, 10, 15, 20];
-    activityStreams.distance = [0, 5, 10, 15, 20];
-    activityStreams.heartrate = [130, 145, 161, 162, 175];
-    activityStreams.velocity_smooth = [0, 23, 34, 26, 20];
-    activityStreams.cadence = [70, 75, 90, 85, 50];
-    activityStreams.watts = [170, 175, 190, 185, 150];
+    const streams = new Streams();
+    streams.time = [0, 5, 10, 15, 20];
+    streams.distance = [0, 5, 10, 15, 20];
+    streams.heartrate = [130, 145, 161, 162, 175];
+    streams.velocity_smooth = [0, 23, 34, 26, 20];
+    streams.cadence = [70, 75, 90, 85, 50];
+    streams.watts = [170, 175, 190, 185, 150];
 
     const sensors: Sensor[] = [
       new HeartRateSensor(),
@@ -55,7 +55,7 @@ describe("TimeInZonesService", () => {
     ];
 
     // When
-    const promise: Promise<SensorTimeInZones[]> = timeInZonesService.calculate(sensors, activityStreams);
+    const promise: Promise<SensorTimeInZones[]> = timeInZonesService.calculate(sensors, streams);
 
     // Then
     promise.then(
@@ -109,13 +109,13 @@ describe("TimeInZonesService", () => {
     const expectedSettings = _.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL);
     spyOn(userSettingsService.userSettingsDao, "findOne").and.returnValue(Promise.resolve(expectedSettings));
 
-    const activityStreams = new ActivityStreamsModel();
-    activityStreams.time = [0, 5, 10, 15, 20];
-    activityStreams.distance = [0, 5, 10, 15, 20];
-    activityStreams.heartrate = [130, 145, 161, 162, 175];
-    activityStreams.velocity_smooth = [0, 23, 34, 26, 20];
-    activityStreams.cadence = [70, 75, 90, 85, 50];
-    activityStreams.watts = [170, 175, 190, 185, 150];
+    const streams = new Streams();
+    streams.time = [0, 5, 10, 15, 20];
+    streams.distance = [0, 5, 10, 15, 20];
+    streams.heartrate = [130, 145, 161, 162, 175];
+    streams.velocity_smooth = [0, 23, 34, 26, 20];
+    streams.cadence = [70, 75, 90, 85, 50];
+    streams.watts = [170, 175, 190, 185, 150];
 
     const sensors: Sensor[] = [
       new HeartRateSensor(),
@@ -125,7 +125,7 @@ describe("TimeInZonesService", () => {
     ];
 
     // When
-    const promise: Promise<SensorTimeInZones[]> = timeInZonesService.calculate(sensors, activityStreams);
+    const promise: Promise<SensorTimeInZones[]> = timeInZonesService.calculate(sensors, streams);
 
     // Then
     promise.then(

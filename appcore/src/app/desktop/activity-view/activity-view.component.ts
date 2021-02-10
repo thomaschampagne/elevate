@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { StreamsService } from "../../shared/services/streams/streams.service";
-import { ActivityStreamsModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import { Streams, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import moment from "moment";
 import _ from "lodash";
@@ -34,7 +34,7 @@ export class ActivityViewComponent implements OnInit {
   public typeDisplay: string;
   public startDateDisplay: string;
   public athleteSnapshotDisplay: string;
-  public streams: ActivityStreamsModel;
+  public streams: Streams;
   public userSettings: DesktopUserSettingsModel;
   public hasMapData: boolean;
 
@@ -85,7 +85,7 @@ export class ActivityViewComponent implements OnInit {
           athleteSnapshot: this.activity.athleteSnapshot
         });
       })
-      .then((streams: ActivityStreamsModel) => {
+      .then((streams: Streams) => {
         this.streams = streams;
         this.hasMapData = streams?.latlng?.length > 0;
       })

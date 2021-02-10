@@ -1,10 +1,4 @@
-import {
-  ActivityStreamsModel,
-  AnalysisDataModel,
-  AthleteSettingsModel,
-  AthleteSnapshotModel,
-  Gender
-} from "@elevate/shared/models";
+import { AnalysisDataModel, AthleteSettingsModel, AthleteSnapshotModel, Gender, Streams } from "@elevate/shared/models";
 import { ElevateSport } from "@elevate/shared/enums";
 import { ActivityComputer } from "@elevate/shared/sync";
 import { Time } from "@elevate/shared/tools";
@@ -390,12 +384,12 @@ describe("ActivityComputer", () => {
 
     let analysisDataModel: AnalysisDataModel;
     let athleteSettingsModel: AthleteSettingsModel;
-    let activityStreamsModel: ActivityStreamsModel;
+    let streams: Streams;
 
     beforeEach(done => {
       analysisDataModel = new AnalysisDataModel();
       athleteSettingsModel = AthleteSettingsModel.DEFAULT_MODEL;
-      activityStreamsModel = new ActivityStreamsModel();
+      streams = new Streams();
       done();
     });
 
@@ -405,7 +399,7 @@ describe("ActivityComputer", () => {
           [ElevateSport.Ride, ElevateSport.VirtualRide].forEach(cyclingType => {
             // Given
             athleteSettingsModel.cyclingFtp = null;
-            activityStreamsModel.watts = [10, 10, 10];
+            streams.watts = [10, 10, 10];
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -415,7 +409,7 @@ describe("ActivityComputer", () => {
               cyclingType,
               analysisDataModel,
               athleteSettingsModel,
-              activityStreamsModel
+              streams
             );
 
             // Then
@@ -428,7 +422,7 @@ describe("ActivityComputer", () => {
           [ElevateSport.Ride, ElevateSport.VirtualRide].forEach(cyclingType => {
             // Given
             athleteSettingsModel.cyclingFtp = null;
-            activityStreamsModel.watts = [];
+            streams.watts = [];
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -438,7 +432,7 @@ describe("ActivityComputer", () => {
               cyclingType,
               analysisDataModel,
               athleteSettingsModel,
-              activityStreamsModel
+              streams
             );
 
             // Then
@@ -451,7 +445,7 @@ describe("ActivityComputer", () => {
           [ElevateSport.Ride, ElevateSport.VirtualRide].forEach(cyclingType => {
             // Given
             athleteSettingsModel.cyclingFtp = 150;
-            activityStreamsModel.watts = [10, 10, 10];
+            streams.watts = [10, 10, 10];
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -461,7 +455,7 @@ describe("ActivityComputer", () => {
               cyclingType,
               analysisDataModel,
               athleteSettingsModel,
-              activityStreamsModel
+              streams
             );
 
             // Then
@@ -474,7 +468,7 @@ describe("ActivityComputer", () => {
           [ElevateSport.Ride, ElevateSport.VirtualRide].forEach(cyclingType => {
             // Given
             athleteSettingsModel.cyclingFtp = 150;
-            activityStreamsModel.watts = [];
+            streams.watts = [];
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -484,7 +478,7 @@ describe("ActivityComputer", () => {
               cyclingType,
               analysisDataModel,
               athleteSettingsModel,
-              activityStreamsModel
+              streams
             );
 
             // Then
@@ -499,7 +493,7 @@ describe("ActivityComputer", () => {
           [ElevateSport.Run, ElevateSport.VirtualRun].forEach(runningType => {
             // Given
             athleteSettingsModel.runningFtp = null;
-            activityStreamsModel.grade_adjusted_speed = [10, 10, 10];
+            streams.grade_adjusted_speed = [10, 10, 10];
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -509,7 +503,7 @@ describe("ActivityComputer", () => {
               runningType,
               analysisDataModel,
               athleteSettingsModel,
-              activityStreamsModel
+              streams
             );
 
             // Then
@@ -522,7 +516,7 @@ describe("ActivityComputer", () => {
           [ElevateSport.Run, ElevateSport.VirtualRun].forEach(runningType => {
             // Given
             athleteSettingsModel.runningFtp = null;
-            activityStreamsModel.grade_adjusted_speed = [];
+            streams.grade_adjusted_speed = [];
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -532,7 +526,7 @@ describe("ActivityComputer", () => {
               runningType,
               analysisDataModel,
               athleteSettingsModel,
-              activityStreamsModel
+              streams
             );
 
             // Then
@@ -545,7 +539,7 @@ describe("ActivityComputer", () => {
           [ElevateSport.Run, ElevateSport.VirtualRun].forEach(runningType => {
             // Given
             athleteSettingsModel.runningFtp = 150;
-            activityStreamsModel.grade_adjusted_speed = [10, 10, 10];
+            streams.grade_adjusted_speed = [10, 10, 10];
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -555,7 +549,7 @@ describe("ActivityComputer", () => {
               runningType,
               analysisDataModel,
               athleteSettingsModel,
-              activityStreamsModel
+              streams
             );
 
             // Then
@@ -568,7 +562,7 @@ describe("ActivityComputer", () => {
           [ElevateSport.Run, ElevateSport.VirtualRun].forEach(runningType => {
             // Given
             athleteSettingsModel.runningFtp = 150;
-            activityStreamsModel.grade_adjusted_speed = [];
+            streams.grade_adjusted_speed = [];
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -578,7 +572,7 @@ describe("ActivityComputer", () => {
               runningType,
               analysisDataModel,
               athleteSettingsModel,
-              activityStreamsModel
+              streams
             );
 
             // Then
@@ -602,7 +596,7 @@ describe("ActivityComputer", () => {
             type,
             analysisDataModel,
             athleteSettingsModel,
-            activityStreamsModel
+            streams
           );
 
           // Then
@@ -627,7 +621,7 @@ describe("ActivityComputer", () => {
             type,
             analysisDataModel,
             athleteSettingsModel,
-            activityStreamsModel
+            streams
           );
 
           // Then
@@ -647,7 +641,7 @@ describe("ActivityComputer", () => {
               type,
               analysisDataModel,
               athleteSettingsModel,
-              activityStreamsModel
+              streams
             );
 
             // Then
@@ -687,7 +681,7 @@ describe("ActivityComputer", () => {
             type,
             analysisDataModel,
             athleteSettingsModel,
-            activityStreamsModel
+            streams
           );
 
           // Then

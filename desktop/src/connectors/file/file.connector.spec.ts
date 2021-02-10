@@ -1,7 +1,6 @@
 // tslint:disable:jsdoc-format
 import { ActivityFile, ActivityFileType, FileConnector } from "./file.connector";
 import {
-  ActivityStreamsModel,
   AnalysisDataModel,
   AthleteModel,
   AthleteSettingsModel,
@@ -11,6 +10,7 @@ import {
   Gender,
   HeartRateDataModel,
   SpeedDataModel,
+  Streams,
   SyncedActivityModel,
   UserSettings
 } from "@elevate/shared/models";
@@ -569,7 +569,7 @@ describe("FileConnector", () => {
       const findSyncedActivityModelsSpy = spyOn(fileConnector, "findSyncedActivityModels").and.returnValue(
         Promise.resolve(null)
       );
-      const extractActivityStreamsSpy = spyOn(fileConnector, "extractActivityStreams").and.callThrough();
+      const extractActivityStreamsSpy = spyOn(fileConnector, "extractStreams").and.callThrough();
       const updatePrimitiveStatsFromComputationSpy = spyOn(
         BaseConnector,
         "updatePrimitiveStatsFromComputation"
@@ -612,7 +612,7 @@ describe("FileConnector", () => {
           const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(2)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
           expect(activitySyncEvent).not.toBeNull();
           expect(activitySyncEvent.fromConnectorType).toEqual(ConnectorType.FILE);
-          expect(activitySyncEvent.compressedStream).toBeDefined();
+          expect(activitySyncEvent.deflatedStreams).toBeDefined();
           expect(activitySyncEvent.isNew).toBeTruthy();
 
           expect(activitySyncEvent.activity.start_time).toEqual(expectedStartTime);
@@ -634,7 +634,7 @@ describe("FileConnector", () => {
           );
           expect(activitySyncEvent.activity.extendedStats).not.toBeNull();
 
-          expect(activitySyncEvent.compressedStream).not.toBeNull();
+          expect(activitySyncEvent.deflatedStreams).not.toBeNull();
 
           done();
         },
@@ -685,7 +685,7 @@ describe("FileConnector", () => {
         }
       );
       const createBareActivitySpy = spyOn(fileConnector, "createBareActivity").and.callThrough();
-      const extractActivityStreamsSpy = spyOn(fileConnector, "extractActivityStreams").and.callThrough();
+      const extractActivityStreamsSpy = spyOn(fileConnector, "extractStreams").and.callThrough();
       const syncEventNextSpy = spyOn(syncEvents$, "next").and.stub();
 
       // When
@@ -760,7 +760,7 @@ describe("FileConnector", () => {
         Promise.resolve(null)
       );
       const createBareActivitySpy = spyOn(fileConnector, "createBareActivity").and.callThrough();
-      const extractActivityStreamsSpy = spyOn(fileConnector, "extractActivityStreams").and.callThrough();
+      const extractActivityStreamsSpy = spyOn(fileConnector, "extractStreams").and.callThrough();
       const syncEventNextSpy = spyOn(syncEvents$, "next").and.stub();
 
       // When
@@ -783,7 +783,7 @@ describe("FileConnector", () => {
           const activitySyncEvent: ActivitySyncEvent = syncEventNextSpy.calls.argsFor(2)[0]; // => fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx
           expect(activitySyncEvent).not.toBeNull();
           expect(activitySyncEvent.fromConnectorType).toEqual(ConnectorType.FILE);
-          expect(activitySyncEvent.compressedStream).toBeDefined();
+          expect(activitySyncEvent.deflatedStreams).toBeDefined();
           expect(activitySyncEvent.isNew).toBeTruthy();
           expect(activitySyncEvent.activity.type).toEqual(ElevateSport.Ride);
           expect(activitySyncEvent.activity.start_time).toEqual("2019-08-15T11:10:49.000Z");
@@ -834,7 +834,7 @@ describe("FileConnector", () => {
       });
 
       const createBareActivitySpy = spyOn(fileConnector, "createBareActivity").and.callThrough();
-      const extractActivityStreamsSpy = spyOn(fileConnector, "extractActivityStreams").and.callThrough();
+      const extractActivityStreamsSpy = spyOn(fileConnector, "extractStreams").and.callThrough();
       const syncEventNextSpy = spyOn(syncEvents$, "next").and.stub();
       const expectedActivitiesFound =
         expectedExistingSyncedActivity.name +
@@ -1438,7 +1438,7 @@ describe("FileConnector", () => {
 
     describe("Update primitive data from computation or input source", () => {
       let syncedActivityModel: SyncedActivityModel = null;
-      let activityStreamsModel: ActivityStreamsModel = null;
+      let streams: Streams = null;
       const defaultMovingTime = 900;
       const defaultElapsedTime = 1000;
       const startDistance = 5;
@@ -1457,8 +1457,8 @@ describe("FileConnector", () => {
         } as AnalysisDataModel;
         syncedActivityModel.athleteSnapshot = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
 
-        activityStreamsModel = new ActivityStreamsModel();
-        activityStreamsModel.distance = [startDistance, 10, 100, endDistance];
+        streams = new Streams();
+        streams.distance = [startDistance, 10, 100, endDistance];
 
         done();
       });
@@ -1475,7 +1475,7 @@ describe("FileConnector", () => {
         // When
         const result = BaseConnector.updatePrimitiveStatsFromComputation(
           syncedActivityModel,
-          activityStreamsModel,
+          streams,
           primitiveSourceData
         );
 
@@ -1498,12 +1498,12 @@ describe("FileConnector", () => {
         };
 
         syncedActivityModel.extendedStats = null;
-        activityStreamsModel.distance = [];
+        streams.distance = [];
 
         // When
         const result = BaseConnector.updatePrimitiveStatsFromComputation(
           syncedActivityModel,
-          activityStreamsModel,
+          streams,
           primitiveSourceData
         );
 
@@ -1532,12 +1532,12 @@ describe("FileConnector", () => {
             accumulatedElevationAscent: null
           }
         } as AnalysisDataModel;
-        activityStreamsModel.distance = [];
+        streams.distance = [];
 
         // When
         const result = BaseConnector.updatePrimitiveStatsFromComputation(
           syncedActivityModel,
-          activityStreamsModel,
+          streams,
           primitiveSourceData
         );
 
@@ -1567,12 +1567,12 @@ describe("FileConnector", () => {
           }
         } as AnalysisDataModel;
 
-        activityStreamsModel.distance = [];
+        streams.distance = [];
 
         // When
         const result = BaseConnector.updatePrimitiveStatsFromComputation(
           syncedActivityModel,
-          activityStreamsModel,
+          streams,
           primitiveSourceData
         );
 
@@ -1588,7 +1588,7 @@ describe("FileConnector", () => {
 
   describe("Activity streams", () => {
     describe("Extract streams form sport-libs", () => {
-      it("should convert sports-lib streams to ActivityStreamsModel", done => {
+      it("should convert sports-lib streams to Streams", done => {
         // Given
         const sportsLibActivity = new Activity(new Date(), new Date(), ActivityTypes.Running, new Creator("John Doo"));
 
@@ -1603,24 +1603,24 @@ describe("FileConnector", () => {
         });
 
         // When
-        const activityStreamsModel: ActivityStreamsModel = fileConnector.extractActivityStreams(sportsLibActivity);
+        const streams: Streams = fileConnector.extractStreams(sportsLibActivity);
 
         // Then
-        expect(activityStreamsModel.time[0]).toBeDefined();
-        expect(activityStreamsModel.latlng[0]).toBeDefined();
-        expect(activityStreamsModel.distance[0]).toBeDefined();
-        expect(activityStreamsModel.velocity_smooth[0]).toBeDefined();
-        expect(activityStreamsModel.altitude[0]).toBeDefined();
-        expect(activityStreamsModel.grade_smooth[0]).toBeDefined();
-        expect(activityStreamsModel.grade_adjusted_speed[0]).toBeDefined();
-        expect(activityStreamsModel.heartrate).toEqual([]);
-        expect(activityStreamsModel.cadence).toEqual([]);
-        expect(activityStreamsModel.watts).toEqual([]);
+        expect(streams.time[0]).toBeDefined();
+        expect(streams.latlng[0]).toBeDefined();
+        expect(streams.distance[0]).toBeDefined();
+        expect(streams.velocity_smooth[0]).toBeDefined();
+        expect(streams.altitude[0]).toBeDefined();
+        expect(streams.grade_smooth[0]).toBeDefined();
+        expect(streams.grade_adjusted_speed[0]).toBeDefined();
+        expect(streams.heartrate).toEqual([]);
+        expect(streams.cadence).toEqual([]);
+        expect(streams.watts).toEqual([]);
 
         done();
       });
 
-      it("should convert sports-lib cycling streams (with cadence, power, heartrate) to ActivityStreamsModel", done => {
+      it("should convert sports-lib cycling streams (with cadence, power, heartrate) to Streams", done => {
         // Given
         const filePath = __dirname + "/fixtures/activities-02/rides/garmin_export/20190815_ride_3953195468.tcx";
         const expectedSamplesLength = 3179;
@@ -1631,20 +1631,20 @@ describe("FileConnector", () => {
           const sportsLibActivity = event.getFirstActivity();
 
           // When
-          const activityStreamsModel: ActivityStreamsModel = fileConnector.extractActivityStreams(sportsLibActivity);
+          const streams: Streams = fileConnector.extractStreams(sportsLibActivity);
 
           // Then
-          expect(activityStreamsModel.time.length).toEqual(expectedSamplesLength);
-          expect(activityStreamsModel.latlng.length).toEqual(expectedSamplesLength);
-          expect(activityStreamsModel.latlng[0]).toEqual([45.21027219, 5.78329785]);
-          expect(activityStreamsModel.distance.length).toEqual(expectedSamplesLength);
-          expect(activityStreamsModel.altitude.length).toEqual(expectedSamplesLength);
-          expect(activityStreamsModel.velocity_smooth.length).toEqual(expectedSamplesLength);
-          expect(activityStreamsModel.grade_smooth.length).toEqual(expectedSamplesLength);
-          expect(activityStreamsModel.heartrate.length).toEqual(expectedSamplesLength);
-          expect(activityStreamsModel.cadence.length).toEqual(expectedSamplesLength);
-          expect(activityStreamsModel.watts).toEqual([]);
-          expect(activityStreamsModel.grade_adjusted_speed).toEqual([]);
+          expect(streams.time.length).toEqual(expectedSamplesLength);
+          expect(streams.latlng.length).toEqual(expectedSamplesLength);
+          expect(streams.latlng[0]).toEqual([45.21027219, 5.78329785]);
+          expect(streams.distance.length).toEqual(expectedSamplesLength);
+          expect(streams.altitude.length).toEqual(expectedSamplesLength);
+          expect(streams.velocity_smooth.length).toEqual(expectedSamplesLength);
+          expect(streams.grade_smooth.length).toEqual(expectedSamplesLength);
+          expect(streams.heartrate.length).toEqual(expectedSamplesLength);
+          expect(streams.cadence.length).toEqual(expectedSamplesLength);
+          expect(streams.watts).toEqual([]);
+          expect(streams.grade_adjusted_speed).toEqual([]);
 
           done();
         });
@@ -1806,7 +1806,7 @@ describe("FileConnector", () => {
   describe("Provide activity geo barycenter", () => {
     it("should find bary center of a geo stream", done => {
       // Given
-      const streams: Partial<ActivityStreamsModel> = {
+      const streams: Partial<Streams> = {
         latlng: [
           [0, 0],
           [10, 20],
@@ -1825,7 +1825,7 @@ describe("FileConnector", () => {
 
     it("should not find bary center of a geo stream (1)", done => {
       // Given
-      const streams: Partial<ActivityStreamsModel> = {
+      const streams: Partial<Streams> = {
         latlng: []
       };
 
@@ -1840,7 +1840,7 @@ describe("FileConnector", () => {
 
     it("should not find bary center of a geo stream (2)", done => {
       // Given
-      const streams: Partial<ActivityStreamsModel> = {
+      const streams: Partial<Streams> = {
         latlng: undefined
       };
 

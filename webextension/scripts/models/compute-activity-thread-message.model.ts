@@ -1,9 +1,4 @@
-import {
-  ActivitySourceDataModel,
-  ActivityStreamsModel,
-  AthleteSnapshotModel,
-  UserSettings
-} from "@elevate/shared/models";
+import { ActivitySourceDataModel, AthleteSnapshotModel, Streams, UserSettings } from "@elevate/shared/models";
 import { AppResourcesModel } from "./app-resources.model";
 import { ElevateSport } from "@elevate/shared/enums";
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
@@ -18,7 +13,7 @@ export class ComputeActivityThreadMessageModel {
   public athleteSnapshot: AthleteSnapshotModel;
   public hasPowerMeter: boolean; // TODO Should be moved in ActivitySourceDataModel?!
   public activitySourceData: ActivitySourceDataModel;
-  public activityStream: ActivityStreamsModel;
+  public streams: Streams;
   public bounds: number[];
   public returnZones: boolean;
 }

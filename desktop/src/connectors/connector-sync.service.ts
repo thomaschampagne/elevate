@@ -15,10 +15,10 @@ import { IpcMessagesSender } from "../messages/ipc-messages.sender";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { ConnectorConfig } from "./connector-config.model";
 import {
-  ActivityStreamsModel,
   AthleteModel,
   AthleteSnapshotModel,
   ConnectorSyncDateTime,
+  Streams,
   SyncedActivityModel,
   UserSettings
 } from "@elevate/shared/models";
@@ -163,9 +163,7 @@ export class ConnectorSyncService {
     let syncedActivityModel = computeActivityMessage.payload[0] as SyncedActivityModel;
     const athleteSnapshotModel = computeActivityMessage.payload[1] as AthleteSnapshotModel;
     const userSettingsModel = computeActivityMessage.payload[2] as DesktopUserSettingsModel;
-    const streams = (computeActivityMessage.payload[3]
-      ? computeActivityMessage.payload[3]
-      : null) as ActivityStreamsModel;
+    const streams = (computeActivityMessage.payload[3] ? computeActivityMessage.payload[3] : null) as Streams;
 
     try {
       const analysisDataModel = ActivityComputer.calculate(

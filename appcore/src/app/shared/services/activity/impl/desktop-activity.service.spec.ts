@@ -4,11 +4,11 @@ import { ActivityRecalculateNotification, DesktopActivityService } from "./deskt
 import { CoreModule } from "../../../../core/core.module";
 import { SharedModule } from "../../../shared.module";
 import {
-  ActivityStreamsModel,
   AnalysisDataModel,
   AthleteSettingsModel,
   AthleteSnapshotModel,
   Gender,
+  Streams,
   SyncedActivityModel,
   UserSettings
 } from "@elevate/shared/models";
@@ -46,7 +46,7 @@ describe("DesktopActivityService", () => {
         Gender.MEN,
         AthleteSettingsModel.DEFAULT_MODEL
       );
-      const streams: ActivityStreamsModel = new ActivityStreamsModel([0, 1], [0, 1], [0, 1]);
+      const streams: Streams = new Streams([0, 1], [0, 1], [0, 1]);
       const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.COMPUTE_ACTIVITY,
         syncedActivityModel,
@@ -87,7 +87,7 @@ describe("DesktopActivityService", () => {
         Gender.MEN,
         AthleteSettingsModel.DEFAULT_MODEL
       );
-      const streams: ActivityStreamsModel = new ActivityStreamsModel([0, 1], [0, 1], [0, 1]);
+      const streams: Streams = new Streams([0, 1], [0, 1], [0, 1]);
       const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.COMPUTE_ACTIVITY,
         syncedActivityModel,
@@ -140,7 +140,7 @@ describe("DesktopActivityService", () => {
       expectedSyncedActivityModel.athleteSnapshot = athleteSnapshotModel;
 
       const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
-      const streams: ActivityStreamsModel = new ActivityStreamsModel([0, 1], [0, 1], [0, 1]);
+      const streams: Streams = new Streams([0, 1], [0, 1], [0, 1]);
       const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.COMPUTE_ACTIVITY,
         syncedActivityModel,
@@ -211,7 +211,7 @@ describe("DesktopActivityService", () => {
       expectedSyncedActivityModel.athleteSnapshot = athleteSnapshotModel;
 
       const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
-      const streams: ActivityStreamsModel = null;
+      const streams: Streams = null;
       const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.COMPUTE_ACTIVITY,
         syncedActivityModel,

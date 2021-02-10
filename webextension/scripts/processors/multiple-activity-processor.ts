@@ -172,7 +172,7 @@ export class MultipleActivityProcessor {
       athleteSnapshot: activityWithStream.athleteSnapshot,
       hasPowerMeter: activityWithStream.hasPowerMeter,
       activitySourceData: activitySourceData,
-      activityStream: activityWithStream.stream,
+      streams: activityWithStream.stream,
       bounds: null,
       returnZones: false
     };

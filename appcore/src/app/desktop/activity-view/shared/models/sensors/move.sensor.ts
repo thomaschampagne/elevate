@@ -1,6 +1,6 @@
 import { MeasureSystem, ZoneType } from "@elevate/shared/enums";
 import { Sensor } from "./sensor.model";
-import { ActivityStreamsModel, AnalysisDataModel, PeaksData } from "@elevate/shared/models";
+import { AnalysisDataModel, PeaksData, Streams } from "@elevate/shared/models";
 import { Constant } from "@elevate/shared/constants";
 import _ from "lodash";
 import { Movement, Time } from "@elevate/shared/tools";
@@ -8,7 +8,7 @@ import { Movement, Time } from "@elevate/shared/tools";
 export abstract class MoveSensor extends Sensor {
   public defaultRoundDecimals = 1;
   public color = "#52bdff";
-  public streamKey: keyof ActivityStreamsModel = "velocity_smooth";
+  public streamKey: keyof Streams = "velocity_smooth";
   public peaksPath: [keyof AnalysisDataModel, keyof PeaksData] = ["speedData", "peaks"];
 }
 

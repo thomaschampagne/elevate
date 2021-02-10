@@ -12,11 +12,11 @@ import {
 import jsonFakeActivitiesFixture from "./fixtures/sample_activities.fixture.json";
 import jsonFakeStreamsFixture from "./fixtures/sample_streams.fixture.json";
 import {
-  ActivityStreamsModel,
   AnalysisDataModel,
   AthleteModel,
   BareActivityModel,
   ConnectorSyncDateTime,
+  Streams,
   SyncedActivityModel,
   UserSettings
 } from "@elevate/shared/models";
@@ -79,7 +79,7 @@ describe("StravaConnector", () => {
   let processBareActivitiesSpy: jasmine.Spy;
   let findSyncedActivityModelsSpy: jasmine.Spy;
   let getStravaActivityStreamsSpy: jasmine.Spy;
-  let fetchRemoteStravaActivityStreamsSpy: jasmine.Spy;
+  let fetchRemoteStravaStreamsSpy: jasmine.Spy;
 
   let fakeActivitiesFixture: Array<BareActivityModel[]>;
   let fakeStreamsFixture: StravaApiStreamType[];
@@ -113,10 +113,10 @@ describe("StravaConnector", () => {
     findSyncedActivityModelsSpy.and.returnValue(Promise.resolve(null));
 
     // Return a fake stream
-    fetchRemoteStravaActivityStreamsSpy = spyOn(stravaConnector, "fetchRemoteStravaActivityStreams");
-    fetchRemoteStravaActivityStreamsSpy.and.returnValue(Promise.resolve(_.cloneDeep(fakeStreamsFixture)));
+    fetchRemoteStravaStreamsSpy = spyOn(stravaConnector, "fetchRemoteStravaStreams");
+    fetchRemoteStravaStreamsSpy.and.returnValue(Promise.resolve(_.cloneDeep(fakeStreamsFixture)));
 
-    getStravaActivityStreamsSpy = spyOn(stravaConnector, "getStravaActivityStreams");
+    getStravaActivityStreamsSpy = spyOn(stravaConnector, "getStravaStreams");
     getStravaActivityStreamsSpy.and.callThrough();
 
     done();
@@ -182,7 +182,7 @@ describe("StravaConnector", () => {
           } else {
             expect(syncEvent.type).toEqual(SyncEventType.ACTIVITY);
             expect((syncEvent as ActivitySyncEvent).activity).toBeDefined();
-            expect((syncEvent as ActivitySyncEvent).compressedStream).toBeDefined();
+            expect((syncEvent as ActivitySyncEvent).deflatedStreams).toBeDefined();
           }
 
           expect(stravaConnector.isSyncing).toBeTruthy();
@@ -563,9 +563,7 @@ describe("StravaConnector", () => {
         false
       );
 
-      const findActivityStreamsSpy = spyOn(stravaConnector, "findActivityStreams").and.returnValue(
-        Promise.resolve(new ActivityStreamsModel())
-      );
+      const findStreamsSpy = spyOn(stravaConnector, "findStreams").and.returnValue(Promise.resolve(new Streams()));
 
       const computeExtendedStatsSpy = spyOn(stravaConnector, "computeExtendedStats").and.returnValue(
         Promise.resolve(new AnalysisDataModel())
@@ -589,13 +587,13 @@ describe("StravaConnector", () => {
           expect(activitySyncEventSent.fromConnectorType).toEqual(expectedActivitySyncEvent.fromConnectorType);
           expect(activitySyncEventSent.description).toEqual(expectedActivitySyncEvent.description);
           expect(activitySyncEventSent.isNew).toEqual(expectedActivitySyncEvent.isNew);
-          expect(activitySyncEventSent.compressedStream).toBeNull();
+          expect(activitySyncEventSent.deflatedStreams).toBeNull();
           expect(activitySyncEventSent.activity.name).toEqual(expectedActivitySyncEvent.activity.name);
           expect(activitySyncEventSent.activity.type).toEqual(expectedActivitySyncEvent.activity.type);
           expect(activitySyncEventSent.activity.extras.strava_activity_id).toEqual(expectedStravaId);
           expect(syncEventsSpy).toBeCalledTimes(perPage);
-          expect(findActivityStreamsSpy).toBeCalledWith(expectedSyncedActivityModelUpdate.id);
-          expect(findActivityStreamsSpy).toBeCalledTimes(1);
+          expect(findStreamsSpy).toBeCalledWith(expectedSyncedActivityModelUpdate.id);
+          expect(findStreamsSpy).toBeCalledTimes(1);
           expect(computeExtendedStatsSpy).toHaveBeenCalledTimes(perPage);
 
           done();
@@ -643,7 +641,7 @@ describe("StravaConnector", () => {
           _.forEach(syncEventsSpy.calls.all(), call => {
             const activitySyncEventSent = call.args[0] as ActivitySyncEvent;
             expect(activitySyncEventSent.isNew).toEqual(true); // Call is always a new activity
-            expect(activitySyncEventSent.compressedStream).not.toBeNull();
+            expect(activitySyncEventSent.deflatedStreams).not.toBeNull();
           });
 
           done();
@@ -753,7 +751,7 @@ describe("StravaConnector", () => {
           expect(activitySyncEventSent.activity.name).toEqual(expectedActivitySyncEvent.activity.name);
           expect(activitySyncEventSent.activity.type).toEqual(expectedActivitySyncEvent.activity.type);
           expect(activitySyncEventSent.activity.sourceConnectorType).toEqual(ConnectorType.STRAVA);
-          expect(activitySyncEventSent.compressedStream).not.toBeNull();
+          expect(activitySyncEventSent.deflatedStreams).not.toBeNull();
           expect(activitySyncEventSent.activity.extras.strava_activity_id).toEqual(expectedStravaId);
           expect(activitySyncEventSent.activity.athleteSnapshot).toEqual(
             stravaConnector.athleteSnapshotResolver.getCurrent()
@@ -787,8 +785,8 @@ describe("StravaConnector", () => {
       const expectedErrorSyncEvent = ErrorSyncEvent.UNHANDLED_ERROR_SYNC.create(ConnectorType.STRAVA, "Whoops :/");
 
       // Emulate 1 existing activity
-      fetchRemoteStravaActivityStreamsSpy.and.callFake(() => {
-        if (fetchRemoteStravaActivityStreamsSpy.calls.count() === trackCallId + 1) {
+      fetchRemoteStravaStreamsSpy.and.callFake(() => {
+        if (fetchRemoteStravaStreamsSpy.calls.count() === trackCallId + 1) {
           return Promise.reject(expectedErrorSyncEvent);
         }
         return Promise.resolve(_.cloneDeep(fakeStreamsFixture));
@@ -804,7 +802,7 @@ describe("StravaConnector", () => {
         },
         error => {
           expect(error).toEqual(expectedErrorSyncEvent);
-          expect(fetchRemoteStravaActivityStreamsSpy).toBeCalledTimes(2);
+          expect(fetchRemoteStravaStreamsSpy).toBeCalledTimes(2);
           expect(syncEventsSpy).toBeCalledTimes(1);
 
           done();
@@ -819,27 +817,25 @@ describe("StravaConnector", () => {
       const activityId = 666;
 
       // When
-      const promise = stravaConnector.getStravaActivityStreams(activityId);
+      const promise = stravaConnector.getStravaStreams(activityId);
 
       // Then
       promise.then(
-        (activityStreamsModel: ActivityStreamsModel) => {
-          expect(fetchRemoteStravaActivityStreamsSpy).toBeCalledTimes(1);
+        (streams: Streams) => {
+          expect(fetchRemoteStravaStreamsSpy).toBeCalledTimes(1);
 
-          expect(activityStreamsModel).not.toBeNull();
-          expect(activityStreamsModel.time).toEqual(_.find(fakeStreamsFixture, { type: "time" }).data);
-          expect(activityStreamsModel.distance).toEqual(_.find(fakeStreamsFixture, { type: "distance" }).data);
-          expect(activityStreamsModel.latlng).toEqual(_.find(fakeStreamsFixture, { type: "latlng" }).data);
-          expect(activityStreamsModel.altitude).toEqual(_.find(fakeStreamsFixture, { type: "altitude" }).data);
-          expect(activityStreamsModel.velocity_smooth).toEqual(
-            _.find(fakeStreamsFixture, { type: "velocity_smooth" }).data
-          );
-          expect(activityStreamsModel.heartrate).toEqual(_.find(fakeStreamsFixture, { type: "heartrate" }).data);
-          expect(activityStreamsModel.cadence).toEqual(_.find(fakeStreamsFixture, { type: "cadence" }).data);
-          expect(activityStreamsModel.watts).toEqual(_.find(fakeStreamsFixture, { type: "watts" }).data);
-          expect(activityStreamsModel.watts_calc).toEqual(_.find(fakeStreamsFixture, { type: "watts_calc" }).data);
-          expect(activityStreamsModel.grade_smooth).toEqual(_.find(fakeStreamsFixture, { type: "grade_smooth" }).data);
-          expect(activityStreamsModel.grade_adjusted_speed).toEqual(
+          expect(streams).not.toBeNull();
+          expect(streams.time).toEqual(_.find(fakeStreamsFixture, { type: "time" }).data);
+          expect(streams.distance).toEqual(_.find(fakeStreamsFixture, { type: "distance" }).data);
+          expect(streams.latlng).toEqual(_.find(fakeStreamsFixture, { type: "latlng" }).data);
+          expect(streams.altitude).toEqual(_.find(fakeStreamsFixture, { type: "altitude" }).data);
+          expect(streams.velocity_smooth).toEqual(_.find(fakeStreamsFixture, { type: "velocity_smooth" }).data);
+          expect(streams.heartrate).toEqual(_.find(fakeStreamsFixture, { type: "heartrate" }).data);
+          expect(streams.cadence).toEqual(_.find(fakeStreamsFixture, { type: "cadence" }).data);
+          expect(streams.watts).toEqual(_.find(fakeStreamsFixture, { type: "watts" }).data);
+          expect(streams.watts_calc).toEqual(_.find(fakeStreamsFixture, { type: "watts_calc" }).data);
+          expect(streams.grade_smooth).toEqual(_.find(fakeStreamsFixture, { type: "grade_smooth" }).data);
+          expect(streams.grade_adjusted_speed).toEqual(
             _.find(fakeStreamsFixture, { type: "grade_adjusted_speed" }).data
           );
 
@@ -855,7 +851,7 @@ describe("StravaConnector", () => {
     it("should get empty streams when an activity has no streams (404 not found)", done => {
       // Given
       const activityId = 666;
-      fetchRemoteStravaActivityStreamsSpy.and.callThrough();
+      fetchRemoteStravaStreamsSpy.and.callThrough();
       spyOn(stravaConnector.stravaApiClient, "get").and.callThrough();
       spyOn(stravaConnector.stravaApiClient, "stravaTokensUpdater").and.returnValue(Promise.resolve());
       spyOn(stravaConnector.stravaApiClient.httpClient, "get").and.returnValue(
@@ -863,12 +859,12 @@ describe("StravaConnector", () => {
       );
 
       // When
-      const promise = stravaConnector.getStravaActivityStreams(activityId);
+      const promise = stravaConnector.getStravaStreams(activityId);
 
       // Then
       promise.then(
-        (activityStreamsModel: ActivityStreamsModel) => {
-          expect(activityStreamsModel).toBeNull();
+        (streams: Streams) => {
+          expect(streams).toBeNull();
           done();
         },
         error => {
@@ -881,7 +877,7 @@ describe("StravaConnector", () => {
     it("should reject when an error occurs while getting streams (UNHANDLED HTTP GET ERROR)", done => {
       // Given
       const activityId = 666;
-      fetchRemoteStravaActivityStreamsSpy.and.callThrough();
+      fetchRemoteStravaStreamsSpy.and.callThrough();
       spyOn(stravaConnector.stravaApiClient, "get").and.callThrough();
       spyOn(stravaConnector.stravaApiClient, "stravaTokensUpdater").and.returnValue(Promise.resolve());
       spyOn(stravaConnector.stravaApiClient.httpClient, "get").and.returnValue(
@@ -891,7 +887,7 @@ describe("StravaConnector", () => {
       const expectedErrorSync = ErrorSyncEvent.STRAVA_API_FORBIDDEN.create();
 
       // When
-      const promise = stravaConnector.getStravaActivityStreams(activityId);
+      const promise = stravaConnector.getStravaStreams(activityId);
 
       // Then
       promise.then(
@@ -980,11 +976,11 @@ describe("StravaConnector", () => {
       const httpGetSpy = spyOn(stravaConnector.stravaApiClient.httpClient, "get").and.returnValue(
         Promise.resolve(createSuccessResponse(expectedResult))
       );
-      fetchRemoteStravaActivityStreamsSpy.and.callThrough();
+      fetchRemoteStravaStreamsSpy.and.callThrough();
       const expectedCallsTimes = 1;
 
       // When
-      const promise = stravaConnector.fetchRemoteStravaActivityStreams(activityId);
+      const promise = stravaConnector.fetchRemoteStravaStreams(activityId);
 
       // Then
       promise.then(
@@ -1008,14 +1004,14 @@ describe("StravaConnector", () => {
       const httpGetSpy = spyOn(stravaConnector.stravaApiClient.httpClient, "get").and.returnValue(
         Promise.resolve(createErrorResponse(HttpCodes.NotFound))
       );
-      fetchRemoteStravaActivityStreamsSpy.and.callThrough();
+      fetchRemoteStravaStreamsSpy.and.callThrough();
       const expectedCallsTimes = 1;
       const expectedErrorSync = ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.create(
         StravaConnector.generateFetchStreamsEndpoint(activityId)
       );
 
       // When
-      const promise = stravaConnector.fetchRemoteStravaActivityStreams(activityId);
+      const promise = stravaConnector.fetchRemoteStravaStreams(activityId);
 
       // Then
       promise.then(

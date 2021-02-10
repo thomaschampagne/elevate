@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { ActivityStreamsModel } from "@elevate/shared/models";
+import { Streams } from "@elevate/shared/models";
 import { Constant } from "@elevate/shared/constants";
 
 export interface ICourseBounds {
@@ -13,21 +13,16 @@ export enum ExportTypes {
 }
 
 export class CourseMaker {
-  public create(
-    exportType: ExportTypes,
-    courseName: string,
-    activityStream: ActivityStreamsModel,
-    bounds?: ICourseBounds
-  ): string {
+  public create(exportType: ExportTypes, courseName: string, streams: Streams, bounds?: ICourseBounds): string {
     let courseData: string = null;
 
     switch (exportType) {
       case ExportTypes.GPX:
-        courseData = this.createGpx(courseName, activityStream, bounds);
+        courseData = this.createGpx(courseName, streams, bounds);
         break;
 
       case ExportTypes.TCX:
-        courseData = this.createTcx(courseName, activityStream, bounds);
+        courseData = this.createTcx(courseName, streams, bounds);
         break;
 
       default:
@@ -37,57 +32,57 @@ export class CourseMaker {
     return courseData;
   }
 
-  protected cutStreamsAlongBounds(activityStream: ActivityStreamsModel, bounds: ICourseBounds): ActivityStreamsModel {
-    if (!_.isEmpty(activityStream.velocity_smooth)) {
-      activityStream.velocity_smooth = activityStream.velocity_smooth.slice(bounds.start, bounds.end);
+  protected cutStreamsAlongBounds(streams: Streams, bounds: ICourseBounds): Streams {
+    if (!_.isEmpty(streams.velocity_smooth)) {
+      streams.velocity_smooth = streams.velocity_smooth.slice(bounds.start, bounds.end);
     }
 
-    if (!_.isEmpty(activityStream.time)) {
-      activityStream.time = activityStream.time.slice(bounds.start, bounds.end);
+    if (!_.isEmpty(streams.time)) {
+      streams.time = streams.time.slice(bounds.start, bounds.end);
     }
 
-    if (!_.isEmpty(activityStream.latlng)) {
-      activityStream.latlng = activityStream.latlng.slice(bounds.start, bounds.end);
+    if (!_.isEmpty(streams.latlng)) {
+      streams.latlng = streams.latlng.slice(bounds.start, bounds.end);
     }
 
-    if (!_.isEmpty(activityStream.heartrate)) {
-      activityStream.heartrate = activityStream.heartrate.slice(bounds.start, bounds.end);
+    if (!_.isEmpty(streams.heartrate)) {
+      streams.heartrate = streams.heartrate.slice(bounds.start, bounds.end);
     }
 
-    if (!_.isEmpty(activityStream.watts)) {
-      activityStream.watts = activityStream.watts.slice(bounds.start, bounds.end);
+    if (!_.isEmpty(streams.watts)) {
+      streams.watts = streams.watts.slice(bounds.start, bounds.end);
     }
 
-    if (!_.isEmpty(activityStream.watts_calc)) {
-      activityStream.watts_calc = activityStream.watts_calc.slice(bounds.start, bounds.end);
+    if (!_.isEmpty(streams.watts_calc)) {
+      streams.watts_calc = streams.watts_calc.slice(bounds.start, bounds.end);
     }
 
-    if (!_.isEmpty(activityStream.cadence)) {
-      activityStream.cadence = activityStream.cadence.slice(bounds.start, bounds.end);
+    if (!_.isEmpty(streams.cadence)) {
+      streams.cadence = streams.cadence.slice(bounds.start, bounds.end);
     }
 
-    if (!_.isEmpty(activityStream.grade_smooth)) {
-      activityStream.grade_smooth = activityStream.grade_smooth.slice(bounds.start, bounds.end);
+    if (!_.isEmpty(streams.grade_smooth)) {
+      streams.grade_smooth = streams.grade_smooth.slice(bounds.start, bounds.end);
     }
 
-    if (!_.isEmpty(activityStream.altitude)) {
-      activityStream.altitude = activityStream.altitude.slice(bounds.start, bounds.end);
+    if (!_.isEmpty(streams.altitude)) {
+      streams.altitude = streams.altitude.slice(bounds.start, bounds.end);
     }
 
-    if (!_.isEmpty(activityStream.distance)) {
-      activityStream.distance = activityStream.distance.slice(bounds.start, bounds.end);
+    if (!_.isEmpty(streams.distance)) {
+      streams.distance = streams.distance.slice(bounds.start, bounds.end);
     }
 
-    if (!_.isEmpty(activityStream.grade_adjusted_speed)) {
-      activityStream.grade_adjusted_speed = activityStream.grade_adjusted_speed.slice(bounds.start, bounds.end);
+    if (!_.isEmpty(streams.grade_adjusted_speed)) {
+      streams.grade_adjusted_speed = streams.grade_adjusted_speed.slice(bounds.start, bounds.end);
     }
 
-    return activityStream;
+    return streams;
   }
 
-  private createGpx(courseName: string, activityStream: ActivityStreamsModel, bounds?: ICourseBounds): string {
+  private createGpx(courseName: string, streams: Streams, bounds?: ICourseBounds): string {
     if (bounds) {
-      activityStream = this.cutStreamsAlongBounds(activityStream, bounds);
+      streams = this.cutStreamsAlongBounds(streams, bounds);
     }
 
     let gpxString: string =
@@ -107,32 +102,32 @@ export class CourseMaker {
       "</name>\n" +
       "<trkseg>\n";
 
-    for (let i = 0; i < activityStream.latlng.length; i++) {
+    for (let i = 0; i < streams.latlng.length; i++) {
       // Position
-      gpxString += '<trkpt lat="' + activityStream.latlng[i][0] + '" lon="' + activityStream.latlng[i][1] + '">\n';
+      gpxString += '<trkpt lat="' + streams.latlng[i][0] + '" lon="' + streams.latlng[i][1] + '">\n';
 
       // Altitude
-      if (activityStream.altitude && _.isNumber(activityStream.altitude[i])) {
-        gpxString += "<ele>" + activityStream.altitude[i] + "</ele>\n";
+      if (streams.altitude && _.isNumber(streams.altitude[i])) {
+        gpxString += "<ele>" + streams.altitude[i] + "</ele>\n";
       }
 
       // Time
-      gpxString += "<time>" + new Date(activityStream.time[i] * 1000).toISOString() + "</time>\n";
+      gpxString += "<time>" + new Date(streams.time[i] * 1000).toISOString() + "</time>\n";
 
-      if (activityStream.heartrate || activityStream.cadence) {
+      if (streams.heartrate || streams.cadence) {
         gpxString += "<extensions>\n";
 
-        if (activityStream.watts && _.isNumber(activityStream.watts[i])) {
-          gpxString += "<power>" + activityStream.watts[i] + "</power>\n";
+        if (streams.watts && _.isNumber(streams.watts[i])) {
+          gpxString += "<power>" + streams.watts[i] + "</power>\n";
         }
 
         gpxString += "<gpxtpx:TrackPointExtension>\n";
 
-        if (activityStream.heartrate && _.isNumber(activityStream.heartrate[i])) {
-          gpxString += "<gpxtpx:hr>" + activityStream.heartrate[i] + "</gpxtpx:hr>\n";
+        if (streams.heartrate && _.isNumber(streams.heartrate[i])) {
+          gpxString += "<gpxtpx:hr>" + streams.heartrate[i] + "</gpxtpx:hr>\n";
         }
-        if (activityStream.cadence && _.isNumber(activityStream.cadence[i])) {
-          gpxString += "<gpxtpx:cad>" + activityStream.cadence[i] + "</gpxtpx:cad>\n";
+        if (streams.cadence && _.isNumber(streams.cadence[i])) {
+          gpxString += "<gpxtpx:cad>" + streams.cadence[i] + "</gpxtpx:cad>\n";
         }
 
         gpxString += "</gpxtpx:TrackPointExtension>\n";
@@ -149,19 +144,19 @@ export class CourseMaker {
     return gpxString;
   }
 
-  private createTcx(courseName: string, activityStream: ActivityStreamsModel, bounds?: ICourseBounds): string {
+  private createTcx(courseName: string, streams: Streams, bounds?: ICourseBounds): string {
     if (bounds) {
-      activityStream = this.cutStreamsAlongBounds(activityStream, bounds);
+      streams = this.cutStreamsAlongBounds(streams, bounds);
     }
 
-    const startTime: number = activityStream.time[0];
-    const startDistance: number = activityStream.distance[0];
+    const startTime: number = streams.time[0];
+    const startDistance: number = streams.distance[0];
 
     let TotalTimeSeconds = 0;
     let DistanceMeters = 0;
-    if (activityStream.latlng.length > 0) {
-      TotalTimeSeconds += activityStream.time[activityStream.latlng.length - 1] - startTime;
-      DistanceMeters += activityStream.distance[activityStream.latlng.length - 1] - startDistance;
+    if (streams.latlng.length > 0) {
+      TotalTimeSeconds += streams.time[streams.latlng.length - 1] - startTime;
+      DistanceMeters += streams.distance[streams.latlng.length - 1] - startDistance;
     }
 
     // Keep Name field to 15 characters or fewer
@@ -189,24 +184,24 @@ export class CourseMaker {
     tcxString += "</Lap>\n";
     tcxString += "<Track>\n";
 
-    for (let i = 0; i < activityStream.latlng.length; i++) {
+    for (let i = 0; i < streams.latlng.length; i++) {
       tcxString += "<Trackpoint>\n";
-      tcxString += "<Time>" + new Date((activityStream.time[i] - startTime) * 1000).toISOString() + "</Time>\n";
+      tcxString += "<Time>" + new Date((streams.time[i] - startTime) * 1000).toISOString() + "</Time>\n";
       tcxString += "<Position>\n";
-      tcxString += "<LatitudeDegrees>" + activityStream.latlng[i][0] + "</LatitudeDegrees>\n";
-      tcxString += "<LongitudeDegrees>" + activityStream.latlng[i][1] + "</LongitudeDegrees>\n";
+      tcxString += "<LatitudeDegrees>" + streams.latlng[i][0] + "</LatitudeDegrees>\n";
+      tcxString += "<LongitudeDegrees>" + streams.latlng[i][1] + "</LongitudeDegrees>\n";
       tcxString += "</Position>\n";
-      if (activityStream.altitude && _.isNumber(activityStream.altitude[i])) {
-        tcxString += "<AltitudeMeters>" + activityStream.altitude[i] + "</AltitudeMeters>\n";
+      if (streams.altitude && _.isNumber(streams.altitude[i])) {
+        tcxString += "<AltitudeMeters>" + streams.altitude[i] + "</AltitudeMeters>\n";
       }
-      tcxString += "<DistanceMeters>" + (activityStream.distance[i] - startDistance) + "</DistanceMeters>\n";
+      tcxString += "<DistanceMeters>" + (streams.distance[i] - startDistance) + "</DistanceMeters>\n";
 
-      if (activityStream.heartrate && _.isNumber(activityStream.heartrate[i])) {
-        tcxString += "<HeartRateBpm><Value>" + activityStream.heartrate[i] + "</Value></HeartRateBpm>\n";
+      if (streams.heartrate && _.isNumber(streams.heartrate[i])) {
+        tcxString += "<HeartRateBpm><Value>" + streams.heartrate[i] + "</Value></HeartRateBpm>\n";
       }
 
-      if (activityStream.cadence && _.isNumber(activityStream.cadence[i])) {
-        tcxString += "<Cadence>" + activityStream.cadence[i] + "</Cadence>\n";
+      if (streams.cadence && _.isNumber(streams.cadence[i])) {
+        tcxString += "<Cadence>" + streams.cadence[i] + "</Cadence>\n";
       }
 
       tcxString += "</Trackpoint>\n";

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
 import { UserSettingsService } from "../../../../shared/services/user-settings/user-settings.service";
-import { ActivityStreamsModel, UserZonesModel, ZoneModel } from "@elevate/shared/models";
+import { Streams, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import _ from "lodash";
 import { SensorTimeInZones } from "../models/sensor-time-in-zones.model";
 import { Sensor } from "../../shared/models/sensors/sensor.model";
@@ -10,14 +10,14 @@ import { MeasureSystem } from "@elevate/shared/enums";
 export class TimeInZonesService {
   constructor(@Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService) {}
 
-  public calculate(sensors: Sensor[], activityStreams: ActivityStreamsModel): Promise<SensorTimeInZones[]> {
+  public calculate(sensors: Sensor[], streams: Streams): Promise<SensorTimeInZones[]> {
     return this.userSettingsService.fetch().then(userSettings => {
       // Detect available sensors first
       const availableSensorZones: SensorTimeInZones[] = [];
 
       for (const sensor of sensors) {
         // Check if zone type exists with associated stream
-        if (sensor.zoneType && activityStreams[sensor.streamKey] && activityStreams[sensor.streamKey].length > 0) {
+        if (sensor.zoneType && streams[sensor.streamKey] && streams[sensor.streamKey].length > 0) {
           // If stream exists, find and store the associated user zones settings
           // Init time in zone to 0 seconds
           const userZones = UserZonesModel.fromZoneType(userSettings.zones, sensor.zoneType).map((zone: ZoneModel) => {
@@ -30,16 +30,16 @@ export class TimeInZonesService {
       }
 
       // Loop over time
-      for (const [index, current] of activityStreams.time.entries()) {
+      for (const [index, current] of streams.time.entries()) {
         if (index === 0) {
           continue;
         }
 
-        const duration = current - activityStreams.time[index - 1];
+        const duration = current - streams.time[index - 1];
 
         for (const sensorZones of availableSensorZones) {
           // Access stream
-          const curStream = activityStreams[sensorZones.sensor.streamKey] as number[];
+          const curStream = streams[sensorZones.sensor.streamKey] as number[];
 
           // Get the value in current stream
           const value = curStream[index];
@@ -58,7 +58,7 @@ export class TimeInZonesService {
       const timeInZonesResults: SensorTimeInZones[] = [];
 
       // Compute percentage distribution
-      const totalSec = _.last(activityStreams.time);
+      const totalSec = _.last(streams.time);
 
       for (const sensorZones of availableSensorZones) {
         const userZones = sensorZones.zones;

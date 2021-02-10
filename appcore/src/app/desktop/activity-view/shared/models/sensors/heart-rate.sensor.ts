@@ -1,13 +1,13 @@
 import { Sensor } from "./sensor.model";
 import { MeasureSystem, ZoneType } from "@elevate/shared/enums";
-import { ActivityStreamsModel, AnalysisDataModel, PeaksData } from "@elevate/shared/models";
+import { AnalysisDataModel, PeaksData, Streams } from "@elevate/shared/models";
 
 export class HeartRateSensor extends Sensor {
   public static readonly NAME: string = "Heart Rate";
 
   public static readonly DEFAULT: HeartRateSensor = new HeartRateSensor();
 
-  public streamKey: keyof ActivityStreamsModel = "heartrate";
+  public streamKey: keyof Streams = "heartrate";
   public color = "#ff5f4b";
   public name: string = HeartRateSensor.NAME;
   public defaultRoundDecimals = 0;

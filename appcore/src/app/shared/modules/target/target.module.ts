@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 
 @NgModule({
-  imports: [RouterModule.forRoot([])],
+  imports: [RouterModule.forRoot([], { relativeLinkResolution: "legacy" })],
   exports: [RouterModule]
 })
 export class TargetModule {}

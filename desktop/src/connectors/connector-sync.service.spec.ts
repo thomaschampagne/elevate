@@ -16,11 +16,11 @@ import { FileConnector } from "./file/file.connector";
 import { StravaConnector } from "./strava/strava.connector";
 import { StravaConnectorConfig } from "./connector-config.model";
 import {
-  ActivityStreamsModel,
   AnalysisDataModel,
   AthleteSettingsModel,
   AthleteSnapshotModel,
   Gender,
+  Streams,
   SyncedActivityModel
 } from "@elevate/shared/models";
 import { ElevateException } from "@elevate/shared/exceptions";
@@ -401,7 +401,7 @@ describe("ConnectorSyncService", () => {
       syncedActivityModel.name = "My activity";
       syncedActivityModel.start_time = new Date().toISOString();
       const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
-      const streams = new ActivityStreamsModel();
+      const streams = new Streams();
       const flaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.COMPUTE_ACTIVITY,
         syncedActivityModel,
@@ -464,7 +464,7 @@ describe("ConnectorSyncService", () => {
       syncedActivityModel.name = "My activity";
       syncedActivityModel.start_time = new Date().toISOString();
       const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
-      const streams = new ActivityStreamsModel();
+      const streams = new Streams();
       const flaggedIpcMessage = new FlaggedIpcMessage(
         MessageFlag.COMPUTE_ACTIVITY,
         syncedActivityModel,

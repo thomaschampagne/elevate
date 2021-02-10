@@ -36,13 +36,14 @@
           <input [(ngModel)]="fileConnectorInfo.sourceDirectory" [disabled]="true" matInput
                  placeholder="{{ (!fileConnectorInfo.sourceDirectory) ? 'Browse for a directory to scan...' : 'Scan directory' }}"
                  type="text">
-          <button *ngIf="fileConnectorInfo.sourceDirectory" (click)="onUserDirectoryOpen()" color="primary" mat-button
+          <button *ngIf="fileConnectorInfo.sourceDirectory" (click)="onUserDirectoryOpen()" color="primary" matTooltip="Locate configured directory"
+                  mat-icon-button
                   matSuffix>
-            Open
+            <mat-icon fontSet="material-icons-outlined">gps_fixed</mat-icon>
           </button>
-          <button (click)="onUserDirectorySelection()" color="primary" mat-button
+          <button (click)="onUserDirectorySelection()" color="primary" mat-icon-button matTooltip="Browse directory"
                   matSuffix>
-            Browse
+            <mat-icon fontSet="material-icons-outlined">folder_open</mat-icon>
           </button>
         </mat-form-field>
       </div>

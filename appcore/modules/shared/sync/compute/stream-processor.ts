@@ -1,4 +1,4 @@
-import { ActivityStreamsModel, AthleteSnapshotModel, SyncedActivityModel } from "../../models";
+import { AthleteSnapshotModel, Streams, SyncedActivityModel } from "../../models";
 import { meanWindowSmoothing, medianFilter, medianSelfFilter, percentile } from "../../tools";
 import _ from "lodash";
 import { ElevateSport } from "../../enums";
@@ -22,9 +22,9 @@ export class StreamProcessor {
       hasPowerMeter: boolean;
       athleteSnapshot: AthleteSnapshotModel;
     },
-    streams: ActivityStreamsModel,
+    streams: Streams,
     errorCallback: (err: Error) => void
-  ): ActivityStreamsModel {
+  ): Streams {
     if (!streams) {
       return null;
     }
@@ -47,9 +47,9 @@ export class StreamProcessor {
   }
 
   private static smoothStreams(
-    streams: ActivityStreamsModel,
+    streams: Streams,
     activityParams: { type: ElevateSport; hasPowerMeter: boolean; athleteSnapshot: AthleteSnapshotModel }
-  ): ActivityStreamsModel {
+  ): Streams {
     // Smooth altitude
     if (streams.altitude?.length > 0) {
       streams.altitude = medianSelfFilter(streams.altitude, StreamProcessor.DEFAULT_MEDIAN_PERCENTAGE_WINDOW);
@@ -120,7 +120,7 @@ export class StreamProcessor {
 
   private static estimatedPowerStream(
     activityParams: { type: ElevateSport; hasPowerMeter: boolean; athleteSnapshot: AthleteSnapshotModel },
-    streams: ActivityStreamsModel,
+    streams: Streams,
     errorCallback: (err: Error) => void
   ): number[] {
     let powerStream = null;

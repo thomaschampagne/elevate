@@ -7,11 +7,11 @@ export class DesktopDumpModel extends DumpModel {
   }
 
   public static unzip(zipped: Uint8Array): DesktopDumpModel {
-    const unPacked: { version: string; database: object } = Gzip.unpackFromBytes(zipped);
+    const unPacked: { version: string; database: object } = Gzip.unpack(zipped);
     return new DesktopDumpModel(unPacked.version, unPacked.database);
   }
 
   public zip(): Uint8Array {
-    return Gzip.packAsBytes({ version: this.version, database: this.databaseDump });
+    return Gzip.pack({ version: this.version, database: this.databaseDump });
   }
 }

@@ -1,13 +1,13 @@
 import { Sensor } from "./sensor.model";
 import { MeasureSystem, ZoneType } from "@elevate/shared/enums";
 import { Constant } from "@elevate/shared/constants";
-import { ActivityStreamsModel, AnalysisDataModel, PeaksData } from "@elevate/shared/models";
+import { AnalysisDataModel, PeaksData, Streams } from "@elevate/shared/models";
 import _ from "lodash";
 
 export class ElevationSensor extends Sensor {
   public static readonly NAME: string = "Elevation";
   public static readonly DEFAULT: ElevationSensor = new ElevationSensor();
-  public streamKey: keyof ActivityStreamsModel = "altitude";
+  public streamKey: keyof Streams = "altitude";
   public name = ElevationSensor.NAME;
   public color = "#29b13d";
   public defaultRoundDecimals = 0;

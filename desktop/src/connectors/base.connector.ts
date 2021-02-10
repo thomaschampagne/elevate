@@ -1,10 +1,10 @@
 import { of, ReplaySubject, Subject } from "rxjs";
 import { ActivityComputer, ConnectorType, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import {
-  ActivityStreamsModel,
   AnalysisDataModel,
   AthleteSnapshotModel,
   BareActivityModel,
+  Streams,
   SyncedActivityModel,
   UserSettings
 } from "@elevate/shared/models";
@@ -55,7 +55,7 @@ export abstract class BaseConnector {
 
   public static updatePrimitiveStatsFromComputation(
     syncedActivityModel: SyncedActivityModel,
-    activityStreamsModel: ActivityStreamsModel,
+    streams: Streams,
     primitiveSourceData: PrimitiveSourceData = null
   ): SyncedActivityModel {
     if (syncedActivityModel.extendedStats) {
@@ -68,8 +68,8 @@ export abstract class BaseConnector {
         : null;
 
       // Distance
-      if (activityStreamsModel && activityStreamsModel.distance && activityStreamsModel.distance.length > 0) {
-        syncedActivityModel.distance_raw = _.last(activityStreamsModel.distance);
+      if (streams && streams.distance && streams.distance.length > 0) {
+        syncedActivityModel.distance_raw = _.last(streams.distance);
       } else {
         syncedActivityModel.distance_raw = null;
       }
@@ -125,7 +125,7 @@ export abstract class BaseConnector {
     return syncedActivityModel;
   }
 
-  public static geoBaryCenter(streams: Partial<ActivityStreamsModel>): number[] {
+  public static geoBaryCenter(streams: Partial<Streams>): number[] {
     if (!streams) {
       return null;
     }
@@ -228,16 +228,16 @@ export abstract class BaseConnector {
     return this.ipcMessagesSender.send<SyncedActivityModel[]>(flaggedIpcMessage);
   }
 
-  public findActivityStreams(activityId: number | string): Promise<ActivityStreamsModel> {
+  public findStreams(activityId: number | string): Promise<Streams> {
     const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.FIND_ACTIVITY_STREAMS, activityId);
-    return this.ipcMessagesSender.send<ActivityStreamsModel>(flaggedIpcMessage);
+    return this.ipcMessagesSender.send<Streams>(flaggedIpcMessage);
   }
 
   public computeExtendedStats(
     syncedActivityModel: Partial<SyncedActivityModel>,
     athleteSnapshotModel: AthleteSnapshotModel,
     userSettingsModel: UserSettingsModel,
-    streams: ActivityStreamsModel
+    streams: Streams
   ): AnalysisDataModel {
     return ActivityComputer.calculate(
       syncedActivityModel as BareActivityModel,

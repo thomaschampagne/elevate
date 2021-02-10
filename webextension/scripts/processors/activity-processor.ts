@@ -1,10 +1,10 @@
 import {
   ActivityInfoModel,
   ActivitySourceDataModel,
-  ActivityStreamsModel,
   AnalysisDataModel,
   AthleteSnapshotModel,
   Gender,
+  Streams,
   UserSettings
 } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
@@ -54,7 +54,7 @@ export class ActivityProcessor {
         this.activityInfo,
         (
           activitySourceData: ActivitySourceDataModel,
-          activityStream: ActivityStreamsModel,
+          streams: Streams,
           athleteWeight: number,
           athleteGender: Gender,
           hasPowerMeter: boolean
@@ -77,7 +77,7 @@ export class ActivityProcessor {
             hasPowerMeter,
             athleteSnapshot,
             activitySourceData,
-            activityStream,
+            streams,
             bounds,
             (resultFromThread: AnalysisDataModel) => {
               callback(athleteSnapshot, resultFromThread);
@@ -92,7 +92,7 @@ export class ActivityProcessor {
     hasPowerMeter: boolean,
     athleteSnapshot: AthleteSnapshotModel,
     activitySourceData: ActivitySourceDataModel,
-    activityStream: ActivityStreamsModel,
+    streams: Streams,
     bounds: number[],
     callback: (analysisData: AnalysisDataModel) => void
   ): void {
@@ -111,7 +111,7 @@ export class ActivityProcessor {
       athleteSnapshot: athleteSnapshot,
       hasPowerMeter: hasPowerMeter,
       activitySourceData: activitySourceData,
-      activityStream: activityStream,
+      streams: streams,
       bounds: bounds,
       returnZones: true
     };

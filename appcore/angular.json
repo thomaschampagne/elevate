@@ -34,6 +34,7 @@
             "allowedCommonJsDependencies": [
               "lokijs",
               "lodash",
+              "lz-string",
               "metrics-graphics",
               "markdown-it",
               "@iktakahiro/markdown-it-katex",
@@ -66,7 +67,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -137,7 +137,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,

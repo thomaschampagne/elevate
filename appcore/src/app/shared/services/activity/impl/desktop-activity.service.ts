@@ -3,7 +3,7 @@ import { ActivityService } from "../activity.service";
 import { ActivityDao } from "../../../dao/activity/activity.dao";
 import { AthleteSnapshotResolverService } from "../../athlete-snapshot-resolver/athlete-snapshot-resolver.service";
 import { LoggerService } from "../../logging/logger.service";
-import { ActivityStreamsModel, AthleteSnapshotModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import { AthleteSnapshotModel, Streams, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { IpcMessagesSender } from "../../../../desktop/ipc-messages/ipc-messages-sender.service";
 import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
@@ -58,7 +58,7 @@ export class DesktopActivityService extends ActivityService {
     syncedActivityModel: SyncedActivityModel,
     userSettingsModel: DesktopUserSettingsModel,
     athleteSnapshotModel: AthleteSnapshotModel,
-    streams: ActivityStreamsModel
+    streams: Streams
   ): Promise<SyncedActivityModel> {
     const computeActivityMessage = new FlaggedIpcMessage(
       MessageFlag.COMPUTE_ACTIVITY,
@@ -86,8 +86,8 @@ export class DesktopActivityService extends ActivityService {
         athleteSnapshot = athleteSnapshotModel;
         return this.streamsService.getInflatedById(syncedActivityModel.id);
       })
-      .then(activityStreamsModel => {
-        return this.compute(syncedActivityModel, userSettingsModel, athleteSnapshot, activityStreamsModel).then(
+      .then(streams => {
+        return this.compute(syncedActivityModel, userSettingsModel, athleteSnapshot, streams).then(
           newSyncedActivityModel => {
             return this.put(newSyncedActivityModel, persistImmediately);
           }

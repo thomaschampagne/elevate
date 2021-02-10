@@ -46,7 +46,9 @@ export abstract class SyncService<T> {
 
   public abstract import(dumpModel: DumpModel): Promise<void>;
 
-  public abstract getCompatibleBackupVersionThreshold(): string;
+  public getCompatibleBackupVersionThreshold(): string {
+    return environment.minBackupVersion;
+  }
 
   public abstract redirect(): void;
 

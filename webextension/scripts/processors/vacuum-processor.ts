@@ -1,11 +1,10 @@
 import _ from "lodash";
 import { ExtensionEnv } from "../../config/extension-env";
-import { ActivityInfoModel, ActivitySourceDataModel, ActivityStreamsModel, Gender } from "@elevate/shared/models";
+import { ActivityInfoModel, ActivitySourceDataModel, Gender, Streams } from "@elevate/shared/models";
 import { BikeGearModel } from "../models/gear/bike-gear.model";
 import { GearType } from "../models/gear/gear-type.enum";
 import { ShoesGearModel } from "../models/gear/shoes-gear.model";
 import { GearModel } from "../models/gear/gear.model";
-import { Gzip } from "@elevate/shared/tools";
 import { Helper } from "../helper";
 
 export class VacuumProcessor {
@@ -113,27 +112,15 @@ export class VacuumProcessor {
     return proStatus;
   }
 
-  /**
-   *  ...
-   *  @returns ...
-   */
   public getActivityId(): number {
     return _.isUndefined(window.pageView) ? null : window.pageView.activity().id;
   }
 
-  /**
-   * @returns activity stream in callback
-   */
-  /**
-   *
-   * @param activityInfo
-   * @param callback
-   */
   public getActivityStream(
     activityInfo: ActivityInfoModel,
     callback: (
       activityCommonStats: ActivitySourceDataModel,
-      activityStream: ActivityStreamsModel, // TODO Improve with Promise of Structure
+      streams: Streams, // TODO Improve with Promise of Structure
       athleteWeight: number,
       athleteGender: Gender,
       hasPowerMeter: boolean
@@ -143,7 +130,7 @@ export class VacuumProcessor {
       let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + activityInfo.id);
 
       if (cache) {
-        cache = Gzip.unpack64(cache);
+        cache = JSON.parse(atob(cache));
         callback(
           cache.activityCommonStats,
           cache.stream,
@@ -158,7 +145,7 @@ export class VacuumProcessor {
 
     let hasPowerMeter = true;
 
-    let activityStream: ActivityStreamsModel;
+    let streams: Streams;
 
     const hasLocalStreamData =
       window.pageView &&
@@ -167,9 +154,7 @@ export class VacuumProcessor {
       window.pageView.streamsRequest.streams.streamData &&
       window.pageView.streamsRequest.streams.streamData.data;
 
-    const localStreamData: ActivityStreamsModel = hasLocalStreamData
-      ? window.pageView.streamsRequest.streams.streamData.data
-      : {};
+    const localStreamData: Streams = hasLocalStreamData ? window.pageView.streamsRequest.streams.streamData.data : {};
 
     let streamUrl: string = "/activities/" + this.getActivityId() + "/streams?";
     let missingStream = false;
@@ -233,22 +218,22 @@ export class VacuumProcessor {
       missingStream = true;
     }
 
-    let activityStreamPromise: Promise<ActivityStreamsModel>;
+    let streamsPromise: Promise<Streams>;
 
     if (missingStream) {
-      activityStreamPromise = new Promise(resolve => {
-        $.ajax(streamUrl).done((activityStream: ActivityStreamsModel) => {
-          resolve(activityStream);
+      streamsPromise = new Promise(resolve => {
+        $.ajax(streamUrl).done((streams: Streams) => {
+          resolve(streams);
         });
       });
     } else {
-      activityStreamPromise = Promise.resolve(localStreamData);
+      streamsPromise = Promise.resolve(localStreamData);
     }
 
     // We have a complete stream for all sensors
-    activityStreamPromise.then(
-      (completeStream: ActivityStreamsModel) => {
-        activityStream = new ActivityStreamsModel(
+    streamsPromise.then(
+      (completeStream: Streams) => {
+        streams = new Streams(
           localStreamData.time ? localStreamData.time : completeStream.time,
           localStreamData.distance ? localStreamData.distance : completeStream.distance,
           localStreamData.velocity_smooth ? localStreamData.velocity_smooth : completeStream.velocity_smooth,
@@ -264,8 +249,8 @@ export class VacuumProcessor {
             : completeStream.grade_adjusted_speed
         );
 
-        if (_.isEmpty(activityStream.watts)) {
-          activityStream.watts = activityStream.watts_calc;
+        if (_.isEmpty(streams.watts)) {
+          streams.watts = streams.watts_calc;
           hasPowerMeter = false;
         }
 
@@ -273,12 +258,12 @@ export class VacuumProcessor {
         try {
           const cache = {
             activityCommonStats: this.getActivityStatsMap(),
-            stream: activityStream,
+            stream: streams,
             athleteWeight: this.getAthleteWeight(),
             hasPowerMeter
           };
 
-          localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), Gzip.pack64(cache));
+          localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), btoa(JSON.stringify(cache)));
         } catch (err) {
           console.warn(err);
           localStorage.clear();
@@ -286,7 +271,7 @@ export class VacuumProcessor {
 
         callback(
           this.getActivityStatsMap(),
-          activityStream,
+          streams,
           this.getAthleteWeight(),
           this.getActivityAthleteGender(),
           hasPowerMeter
@@ -296,7 +281,7 @@ export class VacuumProcessor {
         console.error(error);
         callback(
           this.getActivityStatsMap(),
-          new ActivityStreamsModel(),
+          new Streams(),
           this.getAthleteWeight(),
           this.getActivityAthleteGender(),
           hasPowerMeter
@@ -305,9 +290,6 @@ export class VacuumProcessor {
     );
   }
 
-  /**
-   * @returns
-   */
   public getSegmentsFromBounds(vectorA: string, vectorB: string, callback: (segmentsUnify: any) => void): void {
     const segmentsUnify: any = {
       cycling: null,
@@ -357,10 +339,7 @@ export class VacuumProcessor {
     });
   }
 
-  /**
-   * @returns
-   */
-  public getSegmentStream(segmentId: number, callback: Function): void {
+  public getSegmentStream(segmentId: number, callback: (xhrResponseText: any) => void): void {
     $.ajax({
       url: "/stream/segments/" + segmentId,
       dataType: "json",

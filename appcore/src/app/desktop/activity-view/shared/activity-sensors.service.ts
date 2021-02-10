@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ElevateSport } from "@elevate/shared/enums";
-import { ActivityStreamsModel, SyncedActivityModel } from "@elevate/shared/models";
+import { Streams, SyncedActivityModel } from "@elevate/shared/models";
 import { Sensor } from "./models/sensors/sensor.model";
 import { ElevationSensor } from "./models/sensors/elevation.sensor";
 import { PaceSensor, SpeedSensor, SwimmingPaceSensor } from "./models/sensors/move.sensor";
@@ -50,10 +50,7 @@ export class ActivitySensorsService {
     return [SwimmingPaceSensor.DEFAULT, HeartRateSensor.DEFAULT, SwimmingCadenceSensor.DEFAULT];
   }
 
-  public provideSensors(
-    activity: SyncedActivityModel,
-    cherryPickStreams: (keyof ActivityStreamsModel)[] = null
-  ): Sensor[] {
+  public provideSensors(activity: SyncedActivityModel, cherryPickStreams: (keyof Streams)[] = null): Sensor[] {
     // Get function which return sensors per sport type
     const sportSensorsFunction = this.SPORT_SENSORS_MAP.get(activity.type);
     let sensors = sportSensorsFunction ? sportSensorsFunction(activity) : this.defaultSensors();

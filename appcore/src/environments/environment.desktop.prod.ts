@@ -10,6 +10,7 @@ export const environment = {
   buildTarget: BuildTarget.DESKTOP,
   production: true,
   logLevel: LoggerService.LEVEL_INFO,
+  minBackupVersion: "7.0.0-5.alpha",
   skipRestoreSyncedBackupCheck: false,
   bypassAthleteAccessCheck: false
 };

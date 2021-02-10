@@ -5,5 +5,6 @@ export const environment = {
   buildTarget: BuildTarget.EXTENSION,
   production: true,
   logLevel: LoggerService.LEVEL_INFO,
+  minBackupVersion: "7.0.0-0.alpha",
   skipRestoreSyncedBackupCheck: false
 };

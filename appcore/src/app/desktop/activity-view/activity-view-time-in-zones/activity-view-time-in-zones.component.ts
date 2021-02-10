@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit } from "@angular/core";
-import { ActivityStreamsModel, SyncedActivityModel } from "@elevate/shared/models";
+import { Streams, SyncedActivityModel } from "@elevate/shared/models";
 import { TimeInZonesService } from "./services/time-in-zones.service";
 import { MeasureSystem } from "@elevate/shared/enums";
 import { SensorTimeInZones } from "./models/sensor-time-in-zones.model";
@@ -12,7 +12,7 @@ import { ActivitySensorsService } from "../shared/activity-sensors.service";
   styleUrls: ["./activity-view-time-in-zones.component.scss"]
 })
 export class ActivityViewTimeInZonesComponent implements OnInit {
-  private static readonly CHERRY_PICKED_STREAMS_ORDER: (keyof ActivityStreamsModel)[] = [
+  private static readonly CHERRY_PICKED_STREAMS_ORDER: (keyof Streams)[] = [
     "heartrate",
     "watts",
     "velocity_smooth",
@@ -25,7 +25,7 @@ export class ActivityViewTimeInZonesComponent implements OnInit {
   public activity: SyncedActivityModel;
 
   @Input()
-  public streams: ActivityStreamsModel;
+  public streams: Streams;
 
   @Input()
   public measureSystem: MeasureSystem;

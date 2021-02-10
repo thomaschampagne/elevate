@@ -1,11 +1,11 @@
 import { SyncEventType } from "./sync-event-type";
 import { ConnectorType } from "../connectors";
 import { SyncEvent } from "./sync.event";
-import { SyncedActivityModel } from "../../models/sync";
+import { SyncedActivityModel } from "../../models";
 
 export class ActivitySyncEvent extends SyncEvent {
   public activity: SyncedActivityModel;
-  public compressedStream: string;
+  public deflatedStreams: string;
   public isNew: boolean;
 
   constructor(
@@ -13,11 +13,11 @@ export class ActivitySyncEvent extends SyncEvent {
     description: string,
     activity: SyncedActivityModel,
     isNew: boolean,
-    compressedStream: string = null
+    deflatedStreams: string = null
   ) {
     super(SyncEventType.ACTIVITY, fromConnectorType, description);
     this.activity = activity;
-    this.compressedStream = compressedStream ? compressedStream : null;
+    this.deflatedStreams = deflatedStreams ? deflatedStreams : null;
     this.isNew = isNew;
   }
 }

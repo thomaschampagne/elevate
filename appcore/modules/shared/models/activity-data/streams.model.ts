@@ -1,7 +1,7 @@
-import { Gzip } from "../../tools";
-
 // tslint:disable:variable-name
-export class ActivityStreamsModel {
+import LZString from "lz-string";
+
+export class Streams {
   constructor(
     public time: number[] = [],
     public distance: number[] = [],
@@ -17,11 +17,11 @@ export class ActivityStreamsModel {
     public temp: number[] = []
   ) {}
 
-  public static deflate(activityStreamsModel: ActivityStreamsModel): string {
-    return Gzip.pack64(activityStreamsModel);
+  public static deflate(streams: Streams): string {
+    return LZString.compress(JSON.stringify(streams));
   }
 
-  public static inflate(inflatedStream: string): ActivityStreamsModel {
-    return Gzip.unpack64(inflatedStream);
+  public static inflate(deflated: string): Streams {
+    return JSON.parse(LZString.decompress(deflated));
   }
 }

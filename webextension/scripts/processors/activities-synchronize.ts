@@ -518,11 +518,11 @@ export class ActivitiesSynchronize {
   public fetchStreamByActivityId(activityId: number): Q.Promise<StreamActivityModel> {
     const deferred = Q.defer<StreamActivityModel>();
 
-    const activityStreamUrl: string =
+    const streamsUrl: string =
       "/activities/" +
       activityId +
       "/streams?stream_types[]=watts_calc&stream_types[]=watts&stream_types[]=velocity_smooth&stream_types[]=time&stream_types[]=distance&stream_types[]=cadence&stream_types[]=heartrate&stream_types[]=grade_smooth&stream_types[]=altitude&stream_types[]=latlng&stream_types[]=grade_adjusted_speed";
-    const promiseActivityStream = $.ajax(activityStreamUrl);
+    const promiseActivityStream = $.ajax(streamsUrl);
 
     promiseActivityStream.then(
       (data: any, textStatus: string, jqXHR: JQueryXHR) => {
