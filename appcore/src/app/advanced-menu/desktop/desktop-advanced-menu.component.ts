@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -11,7 +11,6 @@ import { ElectronService } from "../../desktop/electron/electron.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
 import { UserSettings } from "@elevate/shared/models";
-import { devToolsPinCodeGenerator } from "./dev-tools-pin-code-genenator";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 @Component({
@@ -117,12 +116,7 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
     @Inject(ElectronService) protected readonly electronService: ElectronService
   ) {
     super(syncService, dialog, snackBar);
-    this.expectedDevToolsPin = devToolsPinCodeGenerator();
-    this.userDevToolsPin = null;
   }
-
-  public userDevToolsPin: string;
-  public expectedDevToolsPin: string;
 
   public onGlobalAndZonesSettingsReset(): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -222,29 +216,5 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 
   public onRestart(): void {
     this.electronService.restartApp();
-  }
-
-  @HostListener("window:keyup", ["$event"])
-  public listenForValidDevToolsPin(event: KeyboardEvent): void {
-    if (!this.userDevToolsPin) {
-      this.userDevToolsPin = "";
-    }
-
-    if (!this.userDevToolsPin) {
-      this.userDevToolsPin = "";
-    }
-
-    this.userDevToolsPin += event.code.slice(-1);
-
-    if (!this.expectedDevToolsPin.startsWith(this.userDevToolsPin)) {
-      this.userDevToolsPin = null;
-      return;
-    }
-
-    if (this.userDevToolsPin === this.expectedDevToolsPin) {
-      this.userDevToolsPin = null;
-      this.electronService.openDevTools();
-      this.snackBar.open("Access granted to developer tools", "Close", { duration: 4000 });
-    }
   }
 }

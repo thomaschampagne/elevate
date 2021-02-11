@@ -198,6 +198,11 @@ class Main {
       globalShortcut.register("CommandOrControl+R" as Electron.Accelerator, _.noop);
       globalShortcut.register("CommandOrControl+Shift+R" as Electron.Accelerator, _.noop);
     }
+
+    // Toggle dev tool shortcut
+    globalShortcut.register("Alt+Shift+D+E+V" as Electron.Accelerator, () => {
+      this.appWindow.webContents.toggleDevTools();
+    });
   }
 }
 
