@@ -12,7 +12,7 @@
 		"clean": "npm-run-all clean:*",
 		"clean:dist": "node ./node_modules/del-cli/cli.js ./dist/",
 		"clean:package": "node ./node_modules/del-cli/cli.js ./package/",
-		"audit:fix": "npm audit fix && cd ./plugin/app/ && npm audit fix --force && cd ../core/ && npm audit fix --force",
+		"audit:fix": "npm audit fix --force && cd ./plugin/app/ && npm audit fix --force && cd ../core/ && npm audit fix --force",
 		"package": "npm-run-all clean build:prod archive",
 		"postinstall": "cd ./plugin/core/ && npm install && cd ../app/ && npm install",
 		"res-copy:manifest": "node ./node_modules/cpy-cli/cli.js ./plugin/manifest.json ./dist/",
@@ -57,7 +57,7 @@
 	"readme": "README.md",
 	"devDependencies": {
 		"bestzip": "^2.1.7",
-		"cpy-cli": "^2.0.0",
+		"cpy-cli": "^3.1.1",
 		"del-cli": "^1.1.0",
 		"npm-run-all": "^4.1.5",
 		"run-sequence": "^2.2.1"
