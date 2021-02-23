@@ -3,12 +3,14 @@
 @import "./themes/dark";
 
 // Import Mixins
+@import "app-classes.theme";
 @import "native-elements.theme";
 @import "../app.component.theme";
 @import "../fitness-trend/fitness-trend.component.theme";
 @import "../athlete-settings-consistency-ribbon/athlete-settings-consistency-ribbon.component.theme";
 
 @mixin elevate-custom-theme($theme) {
+	@include app-classes($theme);
 	@include native-web-elements($theme);
 	@include app-theming($theme);
 	@include athlete-settings-consistency-ribbon-theming($theme);

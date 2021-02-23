@@ -1,5 +1,5 @@
 export class AppRoutesModel {
-	public static readonly newAppInProgress: string = "newAppInProgress";
+	public static readonly desktopAppUpdate: string = "newApp2021Update";
 	public static readonly activities: string = "activities";
 	public static readonly fitnessTrend: string = "fitnessTrend";
 	public static readonly yearProgressions: string = "yearProgressions";

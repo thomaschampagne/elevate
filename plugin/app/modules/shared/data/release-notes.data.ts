@@ -2,6 +2,17 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.16.3",
+		date: "2021-02-23",
+		message: "Security patch update. Also added a 2021 status of the new \"Elevate Desktop App\" (open extension app to see the article).",
+		hotFixes: [],
+		features: [],
+		isPatch: true,
+		fixes: [
+			"Fix potential vulnerabilities with npm libraries update",
+		]
+	},
+	{
 		version: "6.16.2",
 		date: "2020-06-23",
 		message: "At a glance: Fixed GPS virtual partner export & extended stats panel not working on activities segments efforts. Update also includes other fixes and improvements.",

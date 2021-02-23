@@ -29,6 +29,7 @@ class MenuItemModel {
 	public icon: string;
 	public routerLink: string;
 	public routerLinkActive: boolean;
+	public color?: string;
 }
 
 @Component({
@@ -59,8 +60,9 @@ export class AppComponent implements OnInit, OnDestroy {
 	public readonly mainMenuItems: Partial<MenuItemModel>[] = [
 		{
 			icon: "desktop_windows",
-			routerLink: AppRoutesModel.newAppInProgress,
-			routerLinkActive: true
+			routerLink: AppRoutesModel.desktopAppUpdate,
+			routerLinkActive: true,
+			color: "warn"
 		},
 		{
 			icon: "view_list",

@@ -11,11 +11,11 @@ import { FaqComponent } from "../../faq/faq.component";
 import { ActivitiesComponent } from "../../activities/activities.component";
 import { PromoteDesktopComponent } from "../../promote-desktop/promote-desktop.component";
 
-const redirectTo = (localStorage.getItem(PromoteDesktopComponent.NO_PROMOTE_DESKTOP_MENU_LC_KEY)) ? AppRoutesModel.activities : AppRoutesModel.newAppInProgress;
+const redirectTo = (localStorage.getItem(PromoteDesktopComponent.NO_PROMOTE_DESKTOP_MENU_LC_KEY)) ? AppRoutesModel.activities : AppRoutesModel.desktopAppUpdate;
 
 const routes: Routes = [
 	{
-		path: AppRoutesModel.newAppInProgress,
+		path: AppRoutesModel.desktopAppUpdate,
 		component: PromoteDesktopComponent
 	},
 	{

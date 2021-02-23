@@ -9,7 +9,7 @@
 				<mat-list-item *ngFor="let item of mainMenuItems" routerLink="/{{item.routerLink}}"
 							   routerLinkActive="{{item.routerLinkActive}}">
 					<mat-icon>{{item.icon}}</mat-icon>
-					<span class="mat-body-1">{{item.name}}</span>
+					<span class="mat-body-1" [ngClass]="item.color ? item.color : ''">{{item.name}}</span>
 				</mat-list-item>
 				<mat-list-item (click)="onOpenLink('https://www.strava.com/dashboard')">
 					<mat-icon svgIcon="strava"></mat-icon>

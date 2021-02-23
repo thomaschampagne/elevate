@@ -12,7 +12,7 @@ import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm
 })
 export class PromoteDesktopComponent implements OnInit {
 
-	public static readonly NO_PROMOTE_DESKTOP_MENU_LC_KEY = "NO_PROMOTE_DESKTOP_MENU";
+	public static readonly NO_PROMOTE_DESKTOP_MENU_LC_KEY = "NO_PROMOTE_DESKTOP_MENU_2";
 
 	constructor(public router: Router,
 				public dialog: MatDialog) {
@@ -26,7 +26,7 @@ export class PromoteDesktopComponent implements OnInit {
 	}
 
 	public onReadStory(): void {
-		window.open("https://medium.com/@champagnethomas/elevate-for-strava-is-jumping-the-strava-fence-to-become-an-independent-desktop-training-app-1f644c2af824", "_blank");
+		window.open("https://champagnethomas.medium.com/elevate-desktop-app-2021-update-9155fd74bb85", "_blank");
 	}
 
 	public onHideMenu(): void {
