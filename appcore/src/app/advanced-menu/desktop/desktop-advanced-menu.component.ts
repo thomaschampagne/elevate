@@ -47,12 +47,6 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
             </div>
           </div>
           <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
-            <div>Open application install folder</div>
-            <div>
-              <button mat-stroked-button color="primary" (click)="openAppExecFolder()">Open install folder</button>
-            </div>
-          </div>
-          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
             <div>Restart the application</div>
             <div>
               <button mat-stroked-button color="primary" (click)="onRestart()">Restart now</button>
@@ -193,7 +187,7 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 
     dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
-        this.electronService.clearAppDataAndRestart();
+        this.electronService.resetApp();
       }
     });
   }
@@ -204,10 +198,6 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 
   public openAppDataFolder(): void {
     this.electronService.openAppDataFolder();
-  }
-
-  public openAppExecFolder(): void {
-    this.electronService.openAppExecFolder();
   }
 
   public onZoneSettingsReset(): void {

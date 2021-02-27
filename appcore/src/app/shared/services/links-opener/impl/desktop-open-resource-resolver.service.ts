@@ -19,13 +19,16 @@ export class DesktopOpenResourceResolver extends OpenResourceResolver {
   }
 
   public openLink(path: string): void {
-    // Check if not a web url and verify file exists on file system
-    if (!path.startsWith("http") && !this.electronService.existsSync(path)) {
-      this.snackBar.open(`Path to file "${path}" do not exists`, "Close");
+    if (path.startsWith("http")) {
+      this.electronService.openExternalUrl(path);
       return;
     }
 
-    this.electronService.openExternalUrl(path);
+    this.electronService.existsSync(path).then(exists => {
+      if (exists) {
+        this.snackBar.open(`Path to file "${path}" do not exists`, "Close");
+      }
+    });
   }
 
   public openActivity(id: number | string): void {

@@ -3,6 +3,7 @@ import {
   ActivityComputer,
   ActivitySyncEvent,
   CompleteSyncEvent,
+  ConnectorInfo,
   ConnectorType,
   ErrorSyncEvent,
   SyncEvent,
@@ -11,8 +12,6 @@ import {
 import { BaseConnector } from "./base.connector";
 import { StravaConnector } from "./strava/strava.connector";
 import { FileConnector } from "./file/file.connector";
-import { IpcMessagesSender } from "../messages/ipc-messages.sender";
-import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { ConnectorConfig } from "./connector-config.model";
 import {
   AthleteModel,
@@ -22,9 +21,9 @@ import {
   SyncedActivityModel,
   UserSettings
 } from "@elevate/shared/models";
-import { PromiseTronReply } from "promise-tron";
 import logger from "electron-log";
 import _ from "lodash";
+import { IpcSyncMessageSender } from "../senders/ipc-sync-message.sender";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
@@ -37,25 +36,35 @@ export class ConnectorSyncService {
 
   public currentConnector: BaseConnector;
 
-  constructor(@inject(IpcMessagesSender) private readonly ipcMessagesSender: IpcMessagesSender) {}
+  constructor(@inject(IpcSyncMessageSender) private readonly ipcSyncMessageSender: IpcSyncMessageSender) {}
 
-  public sync(startSyncMessage: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
+  /**
+   * Start connector sync
+   * @return Promise started
+   */
+  public sync(
+    connectorType: ConnectorType,
+    connectorSyncDateTime: ConnectorSyncDateTime,
+    connectorInfo: ConnectorInfo,
+    athleteModel: AthleteModel,
+    userSettingsModel: UserSettingsModel
+  ): Promise<string> {
     if (this.currentConnector && this.currentConnector.isSyncing) {
-      replyWith({
-        success: null,
-        error: `Impossible to start a new sync. Another sync is already running on connector ${this.currentConnector.type}`
-      });
-      return;
+      return Promise.reject(
+        `Impossible to start a new sync. Another sync is already running on connector ${this.currentConnector.type}`
+      );
     }
-
-    // Extract connector type
-    const connectorType: ConnectorType = startSyncMessage.payload[0] as ConnectorType;
 
     // Find out which connector token to inject
     const connectorToken = ConnectorSyncService.TOKENS_MAP.get(connectorType);
 
     // Build connector config from startSyncMessage
-    const connectorConfig: ConnectorConfig = this.buildConnectorConfig(startSyncMessage);
+    const connectorConfig: ConnectorConfig = {
+      athleteModel: athleteModel,
+      userSettingsModel: userSettingsModel,
+      connectorSyncDateTime: connectorSyncDateTime,
+      info: connectorInfo
+    };
 
     // Resolve connector instance
     this.currentConnector = container.resolve(connectorToken);
@@ -66,10 +75,7 @@ export class ConnectorSyncService {
     // Sync !!
     this.currentConnector.sync().subscribe(
       (syncEvent: SyncEvent) => {
-        const syncEventMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, syncEvent);
-        this.ipcMessagesSender.send(syncEventMessage).then((renderedResponse: string) => {
-          logger.debug(renderedResponse);
-        });
+        this.ipcSyncMessageSender.forwardSyncEvent(syncEvent);
 
         if (syncEvent.type === SyncEventType.ACTIVITY) {
           const activitySyncEvent = syncEvent as ActivitySyncEvent;
@@ -88,83 +94,53 @@ export class ConnectorSyncService {
 
         this.currentConnector = null;
 
-        const errorSyncEventMessage: FlaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.SYNC_EVENT, errorSyncEvent);
-        this.ipcMessagesSender.send(errorSyncEventMessage).then((renderedResponse: string) => {
-          logger.debug(renderedResponse);
-        });
+        this.ipcSyncMessageSender.forwardSyncEvent(errorSyncEvent);
       },
       () => {
         logger.info("[Connector (" + connectorType + ")]", "Sync done");
 
         this.currentConnector = null;
 
-        const completeSyncEventMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
-          MessageFlag.SYNC_EVENT,
-          new CompleteSyncEvent(connectorType, "Sync done")
-        );
-        this.ipcMessagesSender.send(completeSyncEventMessage).then((renderedResponse: string) => {
-          logger.debug(renderedResponse);
-        });
+        const completeSyncEvent = new CompleteSyncEvent(connectorType, "Sync done");
+        this.ipcSyncMessageSender.forwardSyncEvent(completeSyncEvent);
       }
     );
 
-    replyWith({
-      success: "Started sync of connector " + connectorType,
-      error: null
-    });
+    return Promise.resolve(`Started sync of connector ${connectorType}`);
   }
 
-  public stop(stopSyncMessage: FlaggedIpcMessage, replyWith: (promiseTronReply: PromiseTronReply) => void): void {
-    const requestConnectorType = stopSyncMessage.payload[0] as ConnectorType;
-
+  public stop(requestConnectorType: ConnectorType): Promise<string> {
     if (_.isEmpty(this.currentConnector)) {
       const errorMessage = "No existing connector found to stop sync";
-
-      replyWith({
-        success: null,
-        error: errorMessage
-      });
-
       logger.error(errorMessage);
+      return Promise.reject(errorMessage);
     } else {
       if (this.currentConnector.type === requestConnectorType) {
-        this.currentConnector.stop().then(
+        return this.currentConnector.stop().then(
           () => {
             const successMessage = "Sync of connector '" + requestConnectorType + "' has been cancelled";
-            replyWith({
-              success: successMessage,
-              error: null
-            });
-
             logger.info(successMessage);
+            return Promise.resolve(successMessage);
           },
           error => {
-            replyWith({
-              success: null,
-              error: error
-            });
-
             logger.error(error);
+            return Promise.reject(error);
           }
         );
       } else {
-        replyWith({
-          success: null,
-          error: `Trying to stop a sync on ${requestConnectorType} connector but current connector synced type is: ${this.currentConnector.type}`
-        });
+        return Promise.reject(
+          `Trying to stop a sync on ${requestConnectorType} connector but current connector synced type is: ${this.currentConnector.type}`
+        );
       }
     }
   }
 
   public computeActivity(
-    computeActivityMessage: FlaggedIpcMessage,
-    replyWith: (promiseTronReply: PromiseTronReply) => void
-  ): void {
-    let syncedActivityModel = computeActivityMessage.payload[0] as SyncedActivityModel;
-    const athleteSnapshotModel = computeActivityMessage.payload[1] as AthleteSnapshotModel;
-    const userSettingsModel = computeActivityMessage.payload[2] as DesktopUserSettingsModel;
-    const streams = (computeActivityMessage.payload[3] ? computeActivityMessage.payload[3] : null) as Streams;
-
+    syncedActivityModel: SyncedActivityModel,
+    userSettingsModel: DesktopUserSettingsModel,
+    athleteSnapshotModel: AthleteSnapshotModel,
+    streams: Streams
+  ): Promise<SyncedActivityModel> {
     try {
       const analysisDataModel = ActivityComputer.calculate(
         syncedActivityModel,
@@ -199,25 +175,10 @@ export class ConnectorSyncService {
       // Compute activity hash
       syncedActivityModel.hash = BaseConnector.activityHash(syncedActivityModel);
 
-      replyWith({
-        success: syncedActivityModel,
-        error: null
-      });
+      return Promise.resolve(syncedActivityModel);
     } catch (error) {
-      replyWith({
-        success: null,
-        error: error
-      });
       logger.error(error);
+      return Promise.reject(error);
     }
-  }
-
-  private buildConnectorConfig(startSyncMessage: FlaggedIpcMessage): ConnectorConfig {
-    return {
-      connectorSyncDateTime: startSyncMessage.payload[1] as ConnectorSyncDateTime,
-      info: startSyncMessage.payload[2],
-      athleteModel: startSyncMessage.payload[3] as AthleteModel,
-      userSettingsModel: startSyncMessage.payload[4] as UserSettingsModel
-    };
   }
 }

@@ -4,22 +4,14 @@ import { ConnectorInfo } from "./connector-info.model";
 export class StravaConnectorInfo extends ConnectorInfo {
   public static readonly DEFAULT_MODEL: StravaConnectorInfo = new StravaConnectorInfo(null, null);
 
-  public clientId: number;
-  public clientSecret: string;
-  public accessToken: string;
-  public refreshToken: string;
-  public expiresAt: number;
-  public updateSyncedActivitiesNameAndType: boolean;
-  public stravaAccount: StravaAccount;
-
   constructor(
-    clientId: number,
-    clientSecret: string,
-    accessToken: string = null,
-    refreshToken: string = null,
-    expiresAt: number = null,
-    updateSyncedActivitiesNameAndType: boolean = true,
-    stravaAccount: StravaAccount = null
+    public clientId: number,
+    public clientSecret: string,
+    public accessToken: string = null,
+    public refreshToken: string = null,
+    public expiresAt: number = null,
+    public updateSyncedActivitiesNameAndType: boolean = true,
+    public stravaAccount: StravaAccount = null
   ) {
     super();
     this.clientId = clientId;

@@ -60,7 +60,7 @@ export class FileConnectorComponent extends ConnectorsComponent implements OnIni
   }
 
   public onUserDirectorySelection(): void {
-    this.configureSourceDirectory(this.electronService.userDirectorySelection());
+    this.electronService.userDirectorySelection().then(directory => this.configureSourceDirectory(directory));
   }
 
   public onUserDirectoryOpen(): void {
@@ -68,15 +68,16 @@ export class FileConnectorComponent extends ConnectorsComponent implements OnIni
   }
 
   public configureSourceDirectory(path: string): void {
-    const isExistingFolder = this.isExistingFolder(path);
-    if (isExistingFolder) {
-      this.fileConnectorInfo.sourceDirectory = path;
-      this.saveChanges();
-    } else {
-      if (path) {
-        this.snackBar.open(`Directory ${path} is invalid`);
+    this.isExistingFolder(path).then(isExistingFolder => {
+      if (isExistingFolder) {
+        this.fileConnectorInfo.sourceDirectory = path;
+        this.saveChanges();
+      } else {
+        if (path) {
+          this.snackBar.open(`Directory ${path} is invalid`);
+        }
       }
-    }
+    });
   }
 
   public saveChanges(): void {
@@ -104,7 +105,7 @@ export class FileConnectorComponent extends ConnectorsComponent implements OnIni
     this.historyChangesSub.unsubscribe();
   }
 
-  private isExistingFolder(path: string) {
+  private isExistingFolder(path: string): Promise<boolean> {
     return path && this.electronService.isDirectory(path);
   }
 }

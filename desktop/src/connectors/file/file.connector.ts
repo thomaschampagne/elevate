@@ -44,11 +44,11 @@ import { DataGrade } from "@sports-alliance/sports-lib/lib/data/data.grade";
 import { EventLibError } from "@sports-alliance/sports-lib/lib/errors/event-lib.error";
 import { FileConnectorConfig } from "../connector-config.model";
 import { inject, singleton } from "tsyringe";
-import { IpcMessagesSender } from "../../messages/ipc-messages.sender";
 import { Hash } from "../../tools/hash";
 import { sleep } from "@elevate/shared/tools";
 import { UnArchiver } from "./un-archiver";
 import { DataTemperature } from "@sports-alliance/sports-lib/lib/data/data.temperature";
+import { IpcSyncMessageSender } from "../../senders/ipc-sync-message.sender";
 
 export enum ActivityFileType {
   GPX = "gpx",
@@ -215,10 +215,10 @@ export class FileConnector extends BaseConnector {
 
   constructor(
     @inject(AppService) protected readonly appService: AppService,
-    @inject(IpcMessagesSender) protected readonly ipcMessagesSender: IpcMessagesSender,
+    @inject(IpcSyncMessageSender) protected readonly ipcSyncMessageSender: IpcSyncMessageSender,
     @inject(UnArchiver) public readonly unArchiver: UnArchiver
   ) {
-    super(appService, ipcMessagesSender);
+    super(appService, ipcSyncMessageSender);
     this.type = ConnectorType.FILE;
     this.enabled = FileConnector.ENABLED;
   }

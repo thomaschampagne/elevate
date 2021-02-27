@@ -20,6 +20,8 @@ import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../shared/modules/target/desktop-target.module";
 import { TargetBootModule } from "../boot/desktop-boot.module";
+import { IpcRendererTunnelServiceMock } from "../desktop/ipc/ipc-renderer-tunnel-service.mock";
+import { IPC_TUNNEL_SERVICE } from "../desktop/ipc/ipc-tunnel-service.token";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("YearProgressComponent", () => {
@@ -41,7 +43,10 @@ describe("YearProgressComponent", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, TargetBootModule, TargetModule, YearProgressModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }]
+      providers: [
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock }
+      ]
     }).compileComponents();
 
     TEST_SYNCED_ACTIVITIES = YearProgressActivitiesFixture.provide();

@@ -1,28 +1,18 @@
 import { Inject, Injectable } from "@angular/core";
-import _ from "lodash";
-import { ChildProcess } from "child_process";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { Platform } from "@elevate/shared/enums";
-import { BrowserWindow, Remote, Session } from "electron";
 import { ElevateException } from "@elevate/shared/exceptions";
+import { OpenDialogSyncOptions } from "electron";
+import { name as appName } from "../../../../../desktop/package.json";
+import { BridgeApi } from "@elevate/shared/electron";
 
 @Injectable()
 export class ElectronService {
-  public instance: any;
+  public readonly api: BridgeApi;
 
   constructor(@Inject(LoggerService) private readonly logger: LoggerService) {
     this.forwardHtmlLinkClicksToDefaultBrowser();
-  }
-
-  public get electron(): any {
-    if (!this.instance) {
-      this.instance = (window as any).require("electron");
-    }
-    return this.instance;
-  }
-
-  public get remote(): Remote {
-    return this.instance ? this.instance.remote : null;
+    this.api = (window as any).api as BridgeApi;
   }
 
   public forwardHtmlLinkClicksToDefaultBrowser(): void {
@@ -34,110 +24,69 @@ export class ElectronService {
     });
   }
 
-  public userDirectorySelection(): string {
-    const paths = this.electron.remote.dialog.showOpenDialogSync(this.getMainBrowserWindow(), {
+  public userDirectorySelection(): Promise<string> {
+    const options: OpenDialogSyncOptions = {
       properties: ["openDirectory", "showHiddenFiles"]
+    };
+    return this.api.showOpenDialogSync(options).then(paths => {
+      return paths && paths.length > 0 ? paths[0] : null;
     });
-    return paths && paths.length > 0 ? paths[0] : null;
-  }
-
-  public getMainBrowserWindow(): BrowserWindow {
-    return this.electron.remote.getCurrentWindow();
   }
 
   public openExternalUrl(url: string): void {
-    this.electron.shell.openExternal(url);
+    this.api.shell.openExternal(url);
   }
 
   public openItem(path: string): void {
-    this.electron.shell.openPath(path);
+    this.api.shell.openPath(path);
   }
 
   public showItemInFolder(itemPath: string): void {
-    if (!this.existsSync(itemPath)) {
-      throw new ElevateException("Item path do not exists");
-    }
-    this.electron.shell.showItemInFolder(itemPath);
+    this.existsSync(itemPath).then(exists => {
+      if (!exists) {
+        throw new ElevateException("Item path do not exists");
+      }
+      this.api.shell.showItemInFolder(itemPath);
+    });
   }
 
   public openLogsFolder(): void {
-    this.openItem(this.getLogsPath());
+    this.getLogsPath().then(path => {
+      this.openItem(path);
+    });
   }
 
   public openAppDataFolder(): void {
-    this.openItem(this.getAppDataPath());
-  }
-
-  public openAppExecFolder(): void {
-    const appPath = this.electron.remote.app.getAppPath();
-    this.openItem(appPath.substring(0, Math.max(appPath.lastIndexOf("/"), appPath.lastIndexOf("\\"))));
-  }
-
-  public clearAppData(): Promise<void> {
-    const session = this.getSession();
-    return session
-      .clearStorageData()
-      .then(() => {
-        return session.clearCache();
-      })
-      .then(() => {
-        return session.clearAuthCache();
-      })
-      .then(() => {
-        return session.clearHostResolverCache();
-      });
-  }
-
-  public clearAppDataAndRestart(): void {
-    this.clearAppData().then(() => {
-      this.restartApp();
+    this.getAppDataPath().then(path => {
+      this.openItem(path);
     });
   }
 
-  public rmDirSync(path: string): void {
-    const fs = this.getNodeFsModule();
-    if (fs.existsSync(path)) {
-      fs.readdirSync(path).forEach(file => {
-        const curPath = path + "/" + file;
-        if (fs.lstatSync(curPath).isDirectory()) {
-          // recurse
-          this.rmDirSync(curPath);
-        } else {
-          // delete file
-          fs.unlinkSync(curPath);
-        }
-      });
-      fs.rmdirSync(path);
-    }
+  public minimizeApp(): void {
+    this.api.minimizeApp().then(() => this.logger.debug("Minimize handled"));
+  }
+
+  public enableFullscreen(): Promise<void> {
+    return this.api.enableFullscreen().then(() => this.logger.debug("Fullscreen enabled"));
+  }
+  public disableFullscreen(): Promise<void> {
+    return this.api.disableFullscreen().then(() => this.logger.debug("Fullscreen disabled"));
+  }
+
+  public isFullscreen(): Promise<boolean> {
+    return this.api.isFullscreen();
+  }
+
+  public closeApp(): void {
+    this.api.closeApp().then(() => this.logger.debug("Close handled"));
   }
 
   public restartApp(): void {
-    this.electron.remote.app.relaunch();
-    this.electron.remote.app.exit(0);
+    this.api.restartApp().then(() => this.logger.debug("Restart handled"));
   }
 
-  public filesIn(folderPath: string, ext: string | RegExp): string[] {
-    let files: string[] = this.readDirSync(folderPath);
-
-    files = _.remove(files, file => {
-      if (_.isRegExp(ext)) {
-        return file.match(ext);
-      }
-      return file.endsWith(ext);
-    });
-
-    return files;
-  }
-
-  public exec(command: string, callback: (err: string, stdout: string, stderr: string) => void): ChildProcess {
-    return this.require("child_process").exec(command, callback);
-  }
-
-  /**
-   * @return fs node module
-   */
-  public getNodeFsModule(): any {
-    return this.require("fs");
+  public resetApp(): void {
+    this.api.resetApp().then(() => this.logger.debug("Reset handled"));
   }
 
   public getPath(
@@ -159,87 +108,59 @@ export class ElectronService {
       | "logs"
       | "pepperFlashSystemPlugin"
       | "crashDumps"
-  ): string {
-    return this.electron.remote.app.getPath(name);
+  ): Promise<string> {
+    return this.api.getPath(name);
   }
 
-  public getAppDataPath(): string {
-    return `${this.getPath("appData")}/${this.electron.remote.app.name}`;
+  public getAppDataPath(): Promise<string> {
+    return this.getPath("appData").then(pathResult => {
+      return `${pathResult}/${appName}`;
+    });
   }
 
-  public getLogsPath(): string {
-    return `${this.getAppDataPath()}/logs`;
+  public getLogsPath(): Promise<string> {
+    return this.getAppDataPath().then(path => {
+      return Promise.resolve(`${path}/logs`);
+    });
   }
 
-  public readDirSync(folderPath): string[] {
-    return this.getNodeFsModule().readdirSync(folderPath);
+  public existsSync(path: string): Promise<boolean> {
+    return this.api.existsSync(path);
   }
 
-  public readFileSync(filePath: string): string {
-    return this.getNodeFsModule().readFileSync(filePath);
+  public isDirectory(path: string): Promise<boolean> {
+    return this.existsSync(path).then(exists => {
+      if (!exists) {
+        return Promise.resolve(false);
+      } else {
+        return this.api.isDirectory(path);
+      }
+    });
   }
 
-  public existsSync(filePath: string): boolean {
-    return this.getNodeFsModule().existsSync(filePath);
-  }
-
-  public statSync(path: string): any {
-    return this.getNodeFsModule().statSync(path);
-  }
-
-  public isDirectory(path: string): boolean {
-    if (!this.existsSync(path)) {
-      return false;
-    }
-
-    try {
-      return this.statSync(path).isDirectory();
-    } catch (e) {
-      return false;
-    }
-  }
-
-  public isFile(path: string): boolean {
-    if (!this.existsSync(path)) {
-      return false;
-    }
-
-    try {
-      return this.statSync(path).isFile();
-    } catch (e) {
-      return false;
-    }
-  }
-
-  public openDevTools(): void {
-    this.electron.remote.getCurrentWindow().webContents.openDevTools();
-  }
-
-  public require(module: string): any {
-    return this.remote.require(module);
-  }
-
-  public isPackaged(): boolean {
-    return this.electron.remote.app.isPackaged;
+  public isFile(path: string): Promise<boolean> {
+    return this.existsSync(path).then(exists => {
+      if (!exists) {
+        return Promise.resolve(false);
+      } else {
+        return this.api.isFile(path);
+      }
+    });
   }
 
   public getPlatform(): Platform {
-    return this.instance.remote.process.platform as Platform;
+    return this.api.nodePlatform as Platform;
   }
 
   public isWindows(): boolean {
-    return this.instance.remote.process.platform === Platform.WINDOWS;
+    return this.api.nodePlatform === Platform.WINDOWS;
   }
 
   public isLinux(): boolean {
-    return this.instance.remote.process.platform === Platform.LINUX;
+    return this.api.nodePlatform === Platform.LINUX;
   }
 
   public isMacOS(): boolean {
-    return this.instance.remote.process.platform === Platform.MACOS;
-  }
-
-  private getSession(): Session {
-    return this.electron.remote.getCurrentWindow().webContents.session;
+    return this.api.nodePlatform === Platform.MACOS;
   }
 }

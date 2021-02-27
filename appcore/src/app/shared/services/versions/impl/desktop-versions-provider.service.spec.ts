@@ -10,6 +10,8 @@ import { DesktopVersionsProvider } from "./desktop-versions-provider.service";
 import { GhAsset, GhRelease } from "../gh-release.model";
 import _ from "lodash";
 import { TargetModule } from "../../../modules/target/desktop-target.module";
+import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
+import { IpcRendererTunnelServiceMock } from "../../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
 
 describe("DesktopVersionsProvider", () => {
   let service: DesktopVersionsProvider;
@@ -17,7 +19,11 @@ describe("DesktopVersionsProvider", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, TargetModule],
-      providers: [DesktopVersionsProvider, { provide: DataStore, useClass: TestingDataStore }]
+      providers: [
+        DesktopVersionsProvider,
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock }
+      ]
     });
 
     // Retrieve injected preferencesService

@@ -8,6 +8,8 @@ import { TestingDataStore } from "../../data-store/testing-datastore.service";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import { TargetModule } from "../../modules/target/desktop-target.module";
+import { IpcRendererTunnelServiceMock } from "../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
+import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
 
 describe("AthleteService", () => {
   let service: AthleteService = null;
@@ -26,7 +28,10 @@ describe("AthleteService", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, TargetModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }]
+      providers: [
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock }
+      ]
     });
 
     // Retrieve injected service

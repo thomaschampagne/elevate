@@ -8,6 +8,8 @@ import { SharedModule } from "../../shared.module";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
 import { TargetModule } from "../../modules/target/desktop-target.module";
+import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
+import { IpcRendererTunnelServiceMock } from "../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
 
 describe("ActivityDao", () => {
   let activityDao: ActivityDao;
@@ -21,7 +23,10 @@ describe("ActivityDao", () => {
 
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, TargetModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }]
+      providers: [
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock }
+      ]
     });
 
     // Retrieve injected service

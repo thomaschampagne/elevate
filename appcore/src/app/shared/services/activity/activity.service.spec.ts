@@ -17,6 +17,8 @@ import { ElevateSport } from "@elevate/shared/enums";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
 import { TargetModule } from "../../modules/target/desktop-target.module";
+import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
+import { IpcRendererTunnelServiceMock } from "../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
 
 describe("ActivityService", () => {
   let activityService: ActivityService = null;
@@ -26,7 +28,10 @@ describe("ActivityService", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, TargetModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }]
+      providers: [
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock }
+      ]
     });
 
     _TEST_SYNCED_ACTIVITIES_ = _.cloneDeep(TEST_SYNCED_ACTIVITIES);

@@ -12,6 +12,8 @@ import { ElevateSport } from "@elevate/shared/enums";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../../shared/modules/target/desktop-target.module";
+import { IpcRendererTunnelServiceMock } from "../../desktop/ipc/ipc-renderer-tunnel-service.mock";
+import { IPC_TUNNEL_SERVICE } from "../../desktop/ipc/ipc-tunnel-service.token";
 
 describe("AddYearProgressPresetDialogComponent", () => {
   let component: AddYearProgressPresetDialogComponent;
@@ -30,6 +32,7 @@ describe("AddYearProgressPresetDialogComponent", () => {
       imports: [CoreModule, SharedModule, TargetModule, YearProgressModule],
       providers: [
         { provide: DataStore, useClass: TestingDataStore },
+        { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock },
         { provide: MAT_DIALOG_DATA, useValue: addYearProgressPresetsDialogData },
         { provide: MatDialogRef, useValue: {} }
       ]

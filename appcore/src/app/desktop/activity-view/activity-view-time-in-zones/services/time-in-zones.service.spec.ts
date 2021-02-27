@@ -16,6 +16,8 @@ import { HeartRateSensor } from "../../shared/models/sensors/heart-rate.sensor";
 import { PaceSensor, SpeedSensor } from "../../shared/models/sensors/move.sensor";
 import { CyclingCadenceSensor, RunningCadenceSensor } from "../../shared/models/sensors/cadence.sensor";
 import { CyclingPowerSensor, RunningPowerSensor } from "../../shared/models/sensors/power.sensor";
+import { IPC_TUNNEL_SERVICE } from "../../../ipc/ipc-tunnel-service.token";
+import { IpcRendererTunnelServiceMock } from "../../../ipc/ipc-renderer-tunnel-service.mock";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 describe("TimeInZonesService", () => {
@@ -25,7 +27,11 @@ describe("TimeInZonesService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, TargetModule],
-      providers: [TimeInZonesService, { provide: DataStore, useClass: TestingDataStore }]
+      providers: [
+        TimeInZonesService,
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock }
+      ]
     }).compileComponents();
 
     timeInZonesService = TestBed.inject(TimeInZonesService);

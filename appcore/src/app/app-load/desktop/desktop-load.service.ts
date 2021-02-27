@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { FlaggedIpcMessage, MessageFlag, RuntimeInfo } from "@elevate/shared/electron";
+import { Channel, IpcMessage, IpcTunnelService, RuntimeInfo } from "@elevate/shared/electron";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
 import { VersionsProvider } from "../../shared/services/versions/versions-provider";
@@ -12,11 +12,11 @@ import { of, throwError } from "rxjs";
 import { DesktopBoot } from "./desktop-boot";
 import { StatusCodes } from "http-status-codes";
 import { StravaConnectorInfo } from "@elevate/shared/sync";
-import { DesktopUnauthorizedMachineIdDialogComponent } from "./desktop-unauthorized-machine-id-dialog/desktop-unauthorized-machine-id-dialog.component";
-import { IpcMessagesSender } from "../../desktop/ipc-messages/ipc-messages-sender.service";
 import { DesktopMigrationService } from "../../desktop/migration/desktop-migration.service";
 import { DataStore } from "../../shared/data-store/data-store";
 import { FileConnectorInfoService } from "../../shared/services/file-connector-info/file-connector-info.service";
+import { DesktopUnauthorizedMachineIdDialogComponent } from "./desktop-unauthorized-machine-id-dialog/desktop-unauthorized-machine-id-dialog.component";
+import { IPC_TUNNEL_SERVICE } from "../../desktop/ipc/ipc-tunnel-service.token";
 
 @Injectable()
 export class DesktopLoadService extends AppLoadService {
@@ -29,7 +29,7 @@ export class DesktopLoadService extends AppLoadService {
   constructor(
     @Inject(DataStore) protected readonly dataStore: DataStore<object>,
     @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
-    @Inject(IpcMessagesSender) private readonly ipcMessagesSender: IpcMessagesSender,
+    @Inject(IPC_TUNNEL_SERVICE) public ipcTunnelService: IpcTunnelService,
     @Inject(HttpClient) private readonly httpClient: HttpClient,
     @Inject(StravaConnectorInfoService) private readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(DesktopMigrationService) private readonly desktopMigrationService: DesktopMigrationService,
@@ -90,7 +90,7 @@ export class DesktopLoadService extends AppLoadService {
   }
 
   public getRuntimeInfo(): Promise<RuntimeInfo> {
-    return this.ipcMessagesSender.send<RuntimeInfo>(new FlaggedIpcMessage(MessageFlag.GET_RUNTIME_INFO));
+    return this.ipcTunnelService.send<void, RuntimeInfo>(new IpcMessage(Channel.runtimeInfo));
   }
 
   public desktopBoot(runtimeInfo: RuntimeInfo, authRetry: boolean = false): Promise<boolean> {

@@ -9,6 +9,8 @@ import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 import { VersionsProvider } from "../shared/services/versions/versions-provider";
 import { TargetModule } from "../shared/modules/target/desktop-target.module";
+import { IPC_TUNNEL_SERVICE } from "../desktop/ipc/ipc-tunnel-service.token";
+import { IpcRendererTunnelServiceMock } from "../desktop/ipc/ipc-renderer-tunnel-service.mock";
 
 describe("AboutDialogComponent", () => {
   let component: AboutDialogComponent;
@@ -23,7 +25,8 @@ describe("AboutDialogComponent", () => {
           useValue: {}
         },
         { provide: DataStore, useClass: TestingDataStore },
-        { provide: VersionsProvider, useClass: MockedVersionsProvider }
+        { provide: VersionsProvider, useClass: MockedVersionsProvider },
+        { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock }
       ]
     }).compileComponents();
     done();

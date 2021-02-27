@@ -77,7 +77,7 @@ export class DesktopVersionsProvider extends VersionsProvider {
   }
 
   public getWrapperVersion(): string {
-    return "Electron " + process.versions.electron;
+    return "Electron " + this.electronService.api.electronVersion;
   }
 
   public checkForNewGithubRelease(acceptPreReleases: boolean = false): void {

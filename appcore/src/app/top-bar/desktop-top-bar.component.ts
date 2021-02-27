@@ -90,30 +90,32 @@ export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
       this.buildMetadata.date = this.buildMetadata.date.slice(0, 10).replace(/-/g, "");
     });
 
-    this.electronService.remote.getCurrentWindow().on("enter-full-screen", event => {
-      this.isFullscreen = this.electronService.remote.getCurrentWindow().isFullScreen();
-    });
-
-    this.electronService.remote.getCurrentWindow().addListener("leave-full-screen", event => {
-      this.isFullscreen = this.electronService.remote.getCurrentWindow().isFullScreen();
-    });
-
-    this.isFullscreen = this.electronService.remote.getCurrentWindow().isFullScreen();
+    this.electronService.isFullscreen().then(fullscreen => (this.isFullscreen = fullscreen));
   }
 
   public onMinimizeAppClicked() {
-    this.electronService.remote.getCurrentWindow().minimize();
+    this.electronService.minimizeApp();
   }
 
   public onCloseAppClicked() {
-    this.electronService.remote.getCurrentWindow().close();
+    this.electronService.closeApp();
   }
 
   public onFullscreenAppClicked() {
-    this.electronService.remote.getCurrentWindow().setFullScreen(true);
+    this.electronService
+      .enableFullscreen()
+      .then(() => {
+        return this.electronService.isFullscreen();
+      })
+      .then(fullscreen => (this.isFullscreen = fullscreen));
   }
 
   public onNormalScreenAppClicked() {
-    this.electronService.remote.getCurrentWindow().setFullScreen(false);
+    this.electronService
+      .disableFullscreen()
+      .then(() => {
+        return this.electronService.isFullscreen();
+      })
+      .then(fullscreen => (this.isFullscreen = fullscreen));
   }
 }

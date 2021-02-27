@@ -31,7 +31,6 @@ import { BuildTarget, ElevateSport } from "@elevate/shared/enums";
 import { StravaConnectorConfig } from "../connector-config.model";
 import { container } from "tsyringe";
 import { StravaApiClient } from "../../clients/strava-api.client";
-import { sleep } from "@elevate/shared/tools";
 import { Hash } from "../../tools/hash";
 
 const getActivitiesFixture = (page: number, perPage: number, activities: Array<BareActivityModel[]>) => {
@@ -458,12 +457,6 @@ describe("StravaConnector", () => {
       const stopSyncEventReceived = [];
       const expectedStoppedSyncEvent = new StoppedSyncEvent(ConnectorType.STRAVA);
       const expectedStoppedSyncEventReceived = 1;
-
-      // Emulate very long inactive sync in background (case Strava wants you to slow down...)
-      spyOn(stravaConnector, "syncPages").and.callFake(() => {
-        return sleep(60 * 60 * 1000); // 1 hour
-      });
-
       const syncEvent$ = stravaConnector.sync();
       syncEvent$
         .pipe(filter(syncEvent => syncEvent.type === SyncEventType.STOPPED))
@@ -471,21 +464,21 @@ describe("StravaConnector", () => {
           stopSyncEventReceived.push(syncEvent);
         });
 
-      // When
+      // When, Then
       const promise = stravaConnector.stop();
+      expect(stravaConnector.isSyncing).toBeTruthy(); // Should be still to true until stop is detected
+      expect(stravaConnector.stopRequested).toBeTruthy(); // Should be still to true until stop is detected
 
-      // Then
-      expect(stravaConnector.stopRequested).toBeTruthy();
-      expect(stravaConnector.isSyncing).toBeTruthy();
       promise.then(
         () => {
           expect(stopSyncEventReceived.length).toEqual(expectedStoppedSyncEventReceived);
           expect(stopSyncEventReceived[0]).toEqual(expectedStoppedSyncEvent);
-          expect(stravaConnector.stopRequested).toBeTruthy();
+          expect(stravaConnector.stopRequested).toBeFalsy();
           expect(stravaConnector.isSyncing).toBeFalsy();
           done();
         },
-        () => {
+        err => {
+          console.error(err);
           throw new Error("Whoops! I should not be here!");
         }
       );

@@ -27,29 +27,43 @@ const IS_ELECTRON_PROD = process.env.ELECTRON_ENV && process.env.ELECTRON_ENV ==
 
 console.info('Building desktop bundle in "' + (IS_ELECTRON_PROD ? "production" : "development") + '" mode.');
 
-module.exports = {
-  input: "./src/main.ts",
-  output: [
-    {
-      file: "./dist/desktop.bundle.js",
-      format: "cjs"
-    }
-  ],
-  watch: {
-    chokidar: false
+const tsPlugin = typescript({
+  tsconfig: "./tsconfig.json",
+  include: ["./src/**/*.ts", "!./src/**/*.spec.ts", "./../appcore/modules/**/*.ts"]
+});
+
+module.exports = [
+  {
+    input: "./src/main.ts",
+    output: [
+      {
+        file: "./dist/desktop.bundle.js",
+        format: "cjs"
+      }
+    ],
+    watch: {
+      chokidar: false
+    },
+    external: EXTERNALS,
+    plugins: [
+      tsPlugin,
+      resolve({ preferBuiltins: true }),
+      commonjs({
+        ignore: ["assert"],
+        sourceMap: false
+      }),
+      json(),
+      IS_ELECTRON_PROD ? terser() : null
+    ]
   },
-  external: EXTERNALS,
-  plugins: [
-    typescript({
-      tsconfig: "./tsconfig.json",
-      include: ["./src/**/*.ts", "!./src/**/*.spec.ts", "./../appcore/modules/**/*.ts"]
-    }),
-    resolve({ preferBuiltins: true }),
-    commonjs({
-      ignore: ["assert"],
-      sourceMap: false
-    }),
-    json(),
-    IS_ELECTRON_PROD ? terser() : null
-  ]
-};
+  {
+    input: "./src/pre-loading/pre-loader.ts",
+    output: [
+      {
+        file: "./dist/pre-loader.js",
+        format: "cjs"
+      }
+    ],
+    plugins: [tsPlugin, IS_ELECTRON_PROD ? terser() : null]
+  }
+];

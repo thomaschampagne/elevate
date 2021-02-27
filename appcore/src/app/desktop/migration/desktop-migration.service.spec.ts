@@ -9,6 +9,8 @@ import { TestingDataStore } from "../../shared/data-store/testing-datastore.serv
 import { VersionsProvider } from "../../shared/services/versions/versions-provider";
 import { DesktopVersionsProvider } from "../../shared/services/versions/impl/desktop-versions-provider.service";
 import { TargetModule } from "../../shared/modules/target/desktop-target.module";
+import { IPC_TUNNEL_SERVICE } from "../ipc/ipc-tunnel-service.token";
+import { IpcRendererTunnelServiceMock } from "../ipc/ipc-renderer-tunnel-service.mock";
 
 describe("DesktopMigrationService", () => {
   let service: DesktopMigrationService;
@@ -17,7 +19,8 @@ describe("DesktopMigrationService", () => {
       imports: [CoreModule, SharedModule, TargetModule],
       providers: [
         { provide: DataStore, useClass: TestingDataStore },
-        { provide: VersionsProvider, useClass: DesktopVersionsProvider }
+        { provide: VersionsProvider, useClass: DesktopVersionsProvider },
+        { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock }
       ]
     });
 

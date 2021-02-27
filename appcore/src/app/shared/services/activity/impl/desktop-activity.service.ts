@@ -4,11 +4,11 @@ import { ActivityDao } from "../../../dao/activity/activity.dao";
 import { AthleteSnapshotResolverService } from "../../athlete-snapshot-resolver/athlete-snapshot-resolver.service";
 import { LoggerService } from "../../logging/logger.service";
 import { AthleteSnapshotModel, Streams, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
-import { IpcMessagesSender } from "../../../../desktop/ipc-messages/ipc-messages-sender.service";
-import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
 import { ElevateException, WarningException } from "@elevate/shared/exceptions";
 import { StreamsService } from "../../streams/streams.service";
+import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
+import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 export class ActivityRecalculateNotification {
@@ -33,14 +33,8 @@ export class ActivityRecalculateNotification {
 
 @Injectable()
 export class DesktopActivityService extends ActivityService {
-  public static readonly JOB_ALREADY_RUNNING_MESSAGE: string =
-    "A recalculation job is already running. Please wait for the end of the previous one to start a new one.";
-
-  public recalculate$: Subject<ActivityRecalculateNotification>;
-  public isRecalculating: boolean;
-
   constructor(
-    @Inject(IpcMessagesSender) public readonly ipcMessagesSender: IpcMessagesSender,
+    @Inject(IPC_TUNNEL_SERVICE) public ipcTunnelService: IpcTunnelService,
     @Inject(ActivityDao) public readonly activityDao: ActivityDao,
     @Inject(AthleteSnapshotResolverService) public readonly athleteSnapshotResolver: AthleteSnapshotResolverService,
     @Inject(StreamsService) public readonly streamsService: StreamsService,
@@ -50,24 +44,30 @@ export class DesktopActivityService extends ActivityService {
     this.recalculate$ = new Subject<ActivityRecalculateNotification>();
     this.isRecalculating = false;
   }
+  public static readonly JOB_ALREADY_RUNNING_MESSAGE: string =
+    "A recalculation job is already running. Please wait for the end of the previous one to start a new one.";
 
+  public recalculate$: Subject<ActivityRecalculateNotification>;
+
+  public isRecalculating: boolean;
   /**
    * Single compute of an activity
    */
   public compute(
     syncedActivityModel: SyncedActivityModel,
-    userSettingsModel: DesktopUserSettingsModel,
     athleteSnapshotModel: AthleteSnapshotModel,
-    streams: Streams
+    streams: Streams,
+    userSettingsModel: DesktopUserSettingsModel
   ): Promise<SyncedActivityModel> {
-    const computeActivityMessage = new FlaggedIpcMessage(
-      MessageFlag.COMPUTE_ACTIVITY,
+    const computeActivityMessage = new IpcMessage(
+      Channel.computeActivity,
       syncedActivityModel,
       athleteSnapshotModel,
-      userSettingsModel,
-      streams
+      streams,
+      userSettingsModel
     );
-    return this.ipcMessagesSender.send<SyncedActivityModel>(computeActivityMessage);
+
+    return this.ipcTunnelService.send<IpcMessage, SyncedActivityModel>(computeActivityMessage);
   }
 
   public recalculateSingle(
@@ -87,7 +87,7 @@ export class DesktopActivityService extends ActivityService {
         return this.streamsService.getInflatedById(syncedActivityModel.id);
       })
       .then(streams => {
-        return this.compute(syncedActivityModel, userSettingsModel, athleteSnapshot, streams).then(
+        return this.compute(syncedActivityModel, athleteSnapshot, streams, userSettingsModel).then(
           newSyncedActivityModel => {
             return this.put(newSyncedActivityModel, persistImmediately);
           }

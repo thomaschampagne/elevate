@@ -19,10 +19,10 @@ import { AppService } from "../../app-service";
 import _ from "lodash";
 import { inject, singleton } from "tsyringe";
 import { ConnectorConfig, StravaConnectorConfig } from "../connector-config.model";
-import { IpcMessagesSender } from "../../messages/ipc-messages.sender";
 import { StravaApiClient } from "../../clients/strava-api.client";
 import { countdown } from "@elevate/shared/tools";
 import { Hash } from "../../tools/hash";
+import { IpcSyncMessageSender } from "../../senders/ipc-sync-message.sender";
 
 export interface StravaApiStreamType {
   type:
@@ -104,10 +104,10 @@ export class StravaConnector extends BaseConnector {
 
   constructor(
     @inject(AppService) protected readonly appService: AppService,
-    @inject(IpcMessagesSender) protected readonly ipcMessagesSender: IpcMessagesSender,
+    @inject(IpcSyncMessageSender) protected readonly ipcSyncMessageSender: IpcSyncMessageSender,
     @inject(StravaApiClient) public readonly stravaApiClient: StravaApiClient
   ) {
-    super(appService, ipcMessagesSender);
+    super(appService, ipcSyncMessageSender);
     this.type = ConnectorType.STRAVA;
     this.enabled = StravaConnector.ENABLED;
   }

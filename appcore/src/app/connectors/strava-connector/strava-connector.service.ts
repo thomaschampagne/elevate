@@ -1,18 +1,18 @@
 import { Inject, Injectable } from "@angular/core";
 import { ConnectorType, StravaAccount, StravaConnectorInfo } from "@elevate/shared/sync";
-import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
-import { Gender } from "@elevate/shared/models";
-import { IpcMessagesSender } from "../../desktop/ipc-messages/ipc-messages-sender.service";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { ConnectorService } from "../connector.service";
+import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
+import { Gender } from "@elevate/shared/models";
+import { IPC_TUNNEL_SERVICE } from "../../desktop/ipc/ipc-tunnel-service.token";
 
 @Injectable()
 export class StravaConnectorService extends ConnectorService {
   constructor(
+    @Inject(IPC_TUNNEL_SERVICE) public ipcTunnelService: IpcTunnelService,
     @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
-    @Inject(IpcMessagesSender) private readonly ipcMessagesSender: IpcMessagesSender,
     @Inject(SyncService) private readonly desktopSyncService: DesktopSyncService
   ) {
     super();
@@ -32,19 +32,17 @@ export class StravaConnectorService extends ConnectorService {
       .then((stravaConnectorInfoFetched: StravaConnectorInfo) => {
         stravaConnectorInfo = stravaConnectorInfoFetched;
 
-        const flaggedIpcMessage = new FlaggedIpcMessage(
-          MessageFlag.LINK_STRAVA_CONNECTOR,
+        const ipcMessage = new IpcMessage(
+          Channel.stravaLink,
           stravaConnectorInfo.clientId,
           stravaConnectorInfo.clientSecret,
           stravaConnectorInfo.refreshToken
         );
 
-        return this.ipcMessagesSender.send<{
-          accessToken: string;
-          refreshToken: string;
-          expiresAt: number;
-          athlete: any;
-        }>(flaggedIpcMessage);
+        return this.ipcTunnelService.send<
+          IpcMessage,
+          { accessToken: string; refreshToken: string; expiresAt: number; athlete: any }
+        >(ipcMessage);
       })
       .then(result => {
         stravaConnectorInfo.accessToken = result.accessToken;

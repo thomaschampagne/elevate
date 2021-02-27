@@ -12,9 +12,9 @@ import {
   SyncedActivityModel,
   UserSettings
 } from "@elevate/shared/models";
-import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
-import { PROMISE_TRON } from "../../../../desktop/ipc-messages/promise-tron.interface";
-import { PromiseTronServiceMock } from "../../../../desktop/ipc-messages/promise-tron.service.mock";
+import { Channel, IpcMessage } from "@elevate/shared/electron";
+import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
+import { IpcRendererTunnelServiceMock } from "../../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
 import _ from "lodash";
 import { DataStore } from "../../../data-store/data-store";
 import { TestingDataStore } from "../../../data-store/testing-datastore.service";
@@ -29,7 +29,7 @@ describe("DesktopActivityService", () => {
       imports: [CoreModule, SharedModule, TargetModule],
       providers: [
         DesktopActivityService,
-        { provide: PROMISE_TRON, useClass: PromiseTronServiceMock },
+        { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock },
         { provide: DataStore, useClass: TestingDataStore }
       ]
     });
@@ -47,30 +47,30 @@ describe("DesktopActivityService", () => {
         AthleteSettingsModel.DEFAULT_MODEL
       );
       const streams: Streams = new Streams([0, 1], [0, 1], [0, 1]);
-      const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
-        MessageFlag.COMPUTE_ACTIVITY,
+      const expectedIpcMessage = new IpcMessage(
+        Channel.computeActivity,
         syncedActivityModel,
         athleteSnapshotModel,
-        userSettingsModel,
-        streams
+        streams,
+        userSettingsModel
       );
-      const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(
+      const sendMessageSpy = spyOn(desktopActivityService.ipcTunnelService, "send").and.returnValue(
         Promise.resolve(syncedActivityModel)
       );
 
       // When
       const promise: Promise<SyncedActivityModel> = desktopActivityService.compute(
         syncedActivityModel,
-        userSettingsModel,
         athleteSnapshotModel,
-        streams
+        streams,
+        userSettingsModel
       );
 
       // Then
       promise.then(
         () => {
           expect(sendMessageSpy).toHaveBeenCalledTimes(1);
-          expect(sendMessageSpy).toHaveBeenCalledWith(expectedFlaggedIpcMessage);
+          expect(sendMessageSpy).toHaveBeenCalledWith(expectedIpcMessage);
           done();
         },
         err => {
@@ -88,24 +88,25 @@ describe("DesktopActivityService", () => {
         AthleteSettingsModel.DEFAULT_MODEL
       );
       const streams: Streams = new Streams([0, 1], [0, 1], [0, 1]);
-      const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
-        MessageFlag.COMPUTE_ACTIVITY,
+      const expectedIpcMessage = new IpcMessage(
+        Channel.computeActivity,
         syncedActivityModel,
         athleteSnapshotModel,
-        userSettingsModel,
-        streams
+        streams,
+        userSettingsModel
       );
+
       const expectedErrorMessage = "Computation error";
-      const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(
+      const sendMessageSpy = spyOn(desktopActivityService.ipcTunnelService, "send").and.returnValue(
         Promise.reject(expectedErrorMessage)
       );
 
       // When
       const promise: Promise<SyncedActivityModel> = desktopActivityService.compute(
         syncedActivityModel,
-        userSettingsModel,
         athleteSnapshotModel,
-        streams
+        streams,
+        userSettingsModel
       );
 
       // Then
@@ -116,7 +117,7 @@ describe("DesktopActivityService", () => {
         err => {
           expect(err).toEqual(expectedErrorMessage);
           expect(sendMessageSpy).toHaveBeenCalledTimes(1);
-          expect(sendMessageSpy).toHaveBeenCalledWith(expectedFlaggedIpcMessage);
+          expect(sendMessageSpy).toHaveBeenCalledWith(expectedIpcMessage);
           done();
         }
       );
@@ -141,12 +142,12 @@ describe("DesktopActivityService", () => {
 
       const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
       const streams: Streams = new Streams([0, 1], [0, 1], [0, 1]);
-      const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
-        MessageFlag.COMPUTE_ACTIVITY,
+      const expectedIpcMessage = new IpcMessage(
+        Channel.computeActivity,
         syncedActivityModel,
         athleteSnapshotModel,
-        userSettingsModel,
-        streams
+        streams,
+        userSettingsModel
       );
 
       const athleteSnapshotUpdateSpy = spyOn(desktopActivityService.athleteSnapshotResolver, "update").and.returnValue(
@@ -160,7 +161,7 @@ describe("DesktopActivityService", () => {
         Promise.resolve(streams)
       );
       const selfComputeSpy = spyOn(desktopActivityService, "compute").and.callThrough();
-      const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(
+      const sendMessageSpy = spyOn(desktopActivityService.ipcTunnelService, "send").and.returnValue(
         Promise.resolve(expectedSyncedActivityModel)
       );
       const updateDbSpy = spyOn(desktopActivityService.activityDao, "put").and.returnValue(
@@ -183,7 +184,7 @@ describe("DesktopActivityService", () => {
           expect(streamGetByIdSpy).toHaveBeenCalledWith(expectedSyncedActivityModel.id);
           expect(selfComputeSpy).toHaveBeenCalledTimes(1);
           expect(sendMessageSpy).toHaveBeenCalledTimes(1);
-          expect(sendMessageSpy).toHaveBeenCalledWith(expectedFlaggedIpcMessage);
+          expect(sendMessageSpy).toHaveBeenCalledWith(expectedIpcMessage);
           expect(updateDbSpy).toHaveBeenCalledTimes(1);
           expect(result).toEqual(expectedSyncedActivityModel);
 
@@ -212,12 +213,12 @@ describe("DesktopActivityService", () => {
 
       const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
       const streams: Streams = null;
-      const expectedFlaggedIpcMessage: FlaggedIpcMessage = new FlaggedIpcMessage(
-        MessageFlag.COMPUTE_ACTIVITY,
+      const expectedIpcMessage = new IpcMessage(
+        Channel.computeActivity,
         syncedActivityModel,
         athleteSnapshotModel,
-        userSettingsModel,
-        streams
+        streams,
+        userSettingsModel
       );
 
       const athleteSnapshotUpdateSpy = spyOn(desktopActivityService.athleteSnapshotResolver, "update").and.returnValue(
@@ -231,7 +232,7 @@ describe("DesktopActivityService", () => {
         Promise.resolve(streams)
       );
       const selfComputeSpy = spyOn(desktopActivityService, "compute").and.callThrough();
-      const sendMessageSpy = spyOn(desktopActivityService.ipcMessagesSender, "send").and.returnValue(
+      const sendMessageSpy = spyOn(desktopActivityService.ipcTunnelService, "send").and.returnValue(
         Promise.resolve(expectedSyncedActivityModel)
       );
       const updateDbSpy = spyOn(desktopActivityService.activityDao, "put").and.returnValue(
@@ -254,7 +255,7 @@ describe("DesktopActivityService", () => {
           expect(streamGetByIdSpy).toHaveBeenCalledWith(expectedSyncedActivityModel.id);
           expect(selfComputeSpy).toHaveBeenCalledTimes(1);
           expect(sendMessageSpy).toHaveBeenCalledTimes(1);
-          expect(sendMessageSpy).toHaveBeenCalledWith(expectedFlaggedIpcMessage);
+          expect(sendMessageSpy).toHaveBeenCalledWith(expectedIpcMessage);
           expect(updateDbSpy).toHaveBeenCalledTimes(1);
           expect(result).toEqual(expectedSyncedActivityModel);
 

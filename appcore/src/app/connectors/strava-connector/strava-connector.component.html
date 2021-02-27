@@ -151,7 +151,7 @@
         <mat-icon fontSet="material-icons-outlined">build</mat-icon>
         Configure
       </button>
-      <button [disabled]="appService.isSyncing" (click)="disconnect()"
+      <button [disabled]="appService.isSyncing" (click)="onDisconnect()"
               *ngIf="(stravaConnectorInfo.clientId > 0 && stravaConnectorInfo.clientSecret && stravaConnectorInfo.accessToken)"
               color="primary"
               mat-stroked-button>

@@ -4,6 +4,8 @@ import { DataStore } from "./data-store";
 import { ConsoleLoggerService } from "../services/logging/console-logger.service";
 import { TestingDataStore } from "./testing-datastore.service";
 import { LoggerService } from "../services/logging/logger.service";
+import { IPC_TUNNEL_SERVICE } from "../../desktop/ipc/ipc-tunnel-service.token";
+import { IpcRendererTunnelServiceMock } from "../../desktop/ipc/ipc-renderer-tunnel-service.mock";
 
 class FakeDoc {
   id: string;
@@ -21,6 +23,7 @@ describe("DataStore", () => {
       providers: [
         TestingDataStore,
         { provide: DataStore, useClass: TestingDataStore },
+        { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock },
         { provide: LoggerService, useClass: ConsoleLoggerService }
       ]
     });

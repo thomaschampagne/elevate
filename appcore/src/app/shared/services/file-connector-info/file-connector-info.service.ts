@@ -62,23 +62,28 @@ export class FileConnectorInfoService {
     return fileConnectorInfo && fileConnectorInfo.sourceDirectory ? fileConnectorInfo.sourceDirectory : null;
   }
 
-  public isSourceDirectoryValid(sourceDirectoryParam: string = null): boolean {
+  public isSourceDirectoryValid(sourceDirectoryParam: string = null): Promise<boolean> {
     // Test the scan folder validity if exists
     const sourceDirectory = sourceDirectoryParam || this.getSourceDirectory();
-    return !sourceDirectory || this.electronService.isDirectory(sourceDirectory);
+    if (!sourceDirectory) {
+      return Promise.resolve(false);
+    } else {
+      return this.electronService.isDirectory(sourceDirectory);
+    }
   }
 
   public ensureSourceDirectoryCompliance(): Promise<void> {
-    if (!this.isSourceDirectoryValid()) {
-      // Remove wrong source directory path from config
-      const fileConnectorInfo = this.fetch();
-      fileConnectorInfo.sourceDirectory = null;
-      this.save(fileConnectorInfo);
+    return this.isSourceDirectoryValid().then(valid => {
+      if (!valid) {
+        // Remove wrong source directory path from config
+        const fileConnectorInfo = this.fetch();
+        fileConnectorInfo.sourceDirectory = null;
+        this.save(fileConnectorInfo);
 
-      // Now remove connector sync date time
-      return this.connectorSyncDateTimeDao.removeByConnectorType(ConnectorType.FILE);
-    }
-
-    return Promise.resolve();
+        // Now remove connector sync date time
+        return this.connectorSyncDateTimeDao.removeByConnectorType(ConnectorType.FILE);
+      }
+      return Promise.resolve();
+    });
   }
 }

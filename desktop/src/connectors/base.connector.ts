@@ -13,10 +13,9 @@ import { catchError, filter, timeout } from "rxjs/operators";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import _ from "lodash";
 import { ConnectorConfig } from "./connector-config.model";
-import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
-import { IpcMessagesSender } from "../messages/ipc-messages.sender";
 import logger from "electron-log";
 import { Hash } from "../tools/hash";
+import { IpcSyncMessageSender } from "../senders/ipc-sync-message.sender";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 /**
@@ -39,7 +38,7 @@ export class PrimitiveSourceData {
 export abstract class BaseConnector {
   protected constructor(
     protected readonly appService: AppService,
-    protected readonly ipcMessagesSender: IpcMessagesSender
+    protected readonly ipcSyncMessageSender: IpcSyncMessageSender
   ) {}
 
   private static readonly WAIT_FOR_SYNC_STOP_EVENT_TIMEOUT: number = 3000;
@@ -220,17 +219,11 @@ export abstract class BaseConnector {
     activityStartDate: string,
     activityDurationSeconds: number
   ): Promise<SyncedActivityModel[]> {
-    const flaggedIpcMessage = new FlaggedIpcMessage(
-      MessageFlag.FIND_ACTIVITY,
-      activityStartDate,
-      activityDurationSeconds
-    );
-    return this.ipcMessagesSender.send<SyncedActivityModel[]>(flaggedIpcMessage);
+    return this.ipcSyncMessageSender.findSyncedActivityModels(activityStartDate, activityDurationSeconds);
   }
 
   public findStreams(activityId: number | string): Promise<Streams> {
-    const flaggedIpcMessage = new FlaggedIpcMessage(MessageFlag.FIND_ACTIVITY_STREAMS, activityId);
-    return this.ipcMessagesSender.send<Streams>(flaggedIpcMessage);
+    return this.ipcSyncMessageSender.findStreams(activityId);
   }
 
   public computeExtendedStats(

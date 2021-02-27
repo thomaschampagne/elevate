@@ -9,6 +9,8 @@ import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
 import { BuildTarget, ZoneType } from "@elevate/shared/enums";
 import { TargetModule } from "../../modules/target/desktop-target.module";
+import { IpcRendererTunnelServiceMock } from "../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
+import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
@@ -19,7 +21,10 @@ describe("UserSettingsService", () => {
   beforeEach(done => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, TargetModule],
-      providers: [{ provide: DataStore, useClass: TestingDataStore }]
+      providers: [
+        { provide: DataStore, useClass: TestingDataStore },
+        { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock }
+      ]
     });
 
     // Retrieve injected service

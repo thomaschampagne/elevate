@@ -24,6 +24,6 @@ export class DesktopUnauthorizedMachineIdDialogComponent implements OnInit {
   }
 
   public closeApp(): void {
-    this.electronService.remote.getCurrentWindow().close();
+    this.electronService.closeApp();
   }
 }

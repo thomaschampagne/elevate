@@ -8,6 +8,7 @@ import { Subject, Subscription } from "rxjs";
 import {
   ActivitySyncEvent,
   CompleteSyncEvent,
+  ConnectorInfo,
   ConnectorType,
   ErrorSyncEvent,
   FileConnectorInfo,
@@ -15,8 +16,7 @@ import {
   SyncEvent,
   SyncEventType
 } from "@elevate/shared/sync";
-import { IpcMessagesReceiver } from "../../../../desktop/ipc-messages/ipc-messages-receiver.service";
-import { FlaggedIpcMessage, MessageFlag } from "@elevate/shared/electron";
+import { IpcSyncMessagesListener } from "../../../../desktop/ipc/ipc-sync-messages-listener.service";
 import { StravaConnectorInfoService } from "../../strava-connector-info/strava-connector-info.service";
 import { AthleteModel, DeflatedActivityStreams, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { ActivityService } from "../../activity/activity.service";
@@ -29,7 +29,6 @@ import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-
 import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 import { StreamsService } from "../../streams/streams.service";
 import { FileConnectorInfoService } from "../../file-connector-info/file-connector-info.service";
-import { IpcMessagesSender } from "../../../../desktop/ipc-messages/ipc-messages-sender.service";
 import { DataStore } from "../../../data-store/data-store";
 import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.service";
 import { ElectronService } from "../../../../desktop/electron/electron.service";
@@ -37,6 +36,7 @@ import { Router } from "@angular/router";
 import { AppRoutes } from "../../../models/app-routes";
 import { DesktopMigrationService } from "../../../../desktop/migration/desktop-migration.service";
 import { ActivityRecalculateNotification, DesktopActivityService } from "../../activity/impl/desktop-activity.service";
+import { IpcSyncMessageSender } from "../../../../desktop/ipc/ipc-sync-messages-sender.service";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 // TODO Handle errors cases (continue or not the sync...)
@@ -67,8 +67,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     @Inject(AthleteService) public readonly athleteService: AthleteService,
     @Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService,
     @Inject(DesktopMigrationService) private readonly desktopMigrationService: DesktopMigrationService,
-    @Inject(IpcMessagesReceiver) public readonly ipcMessagesReceiver: IpcMessagesReceiver,
-    @Inject(IpcMessagesSender) public readonly ipcMessagesSender: IpcMessagesSender,
+    @Inject(IpcSyncMessagesListener) public readonly ipcSyncMessagesListener: IpcSyncMessagesListener,
+    @Inject(IpcSyncMessageSender) public readonly ipcSyncMessageSender: IpcSyncMessageSender,
     @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(FileConnectorInfoService) public readonly fsConnectorInfoService: FileConnectorInfoService,
     @Inject(LoggerService) public readonly logger: LoggerService,
@@ -121,8 +121,6 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
     this.currentConnectorType = connectorType;
 
-    this.ipcMessagesReceiver.listen();
-
     const promisedDataToSync: Promise<any>[] = [
       this.athleteService.fetch(),
       this.userSettingsService.fetch(),
@@ -144,81 +142,97 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     }
 
     // Subscribe for sync events
-    this.syncSubscription = this.ipcMessagesReceiver.syncEvents$.subscribe((syncEvent: SyncEvent) => {
+    this.syncSubscription = this.ipcSyncMessagesListener.syncEvents$.subscribe((syncEvent: SyncEvent) => {
       this.handleSyncEvents(this.syncEvents$, syncEvent);
     });
 
-    return Promise.all(promisedDataToSync).then(result => {
-      const athleteModel: AthleteModel = result[0] as AthleteModel;
-      const userSettingsModel: UserSettingsModel = result[1] as UserSettingsModel;
-      const allConnectorsSyncDateTime: ConnectorSyncDateTime[] = result[2] as ConnectorSyncDateTime[];
+    return Promise.all(promisedDataToSync)
+      .then(result => {
+        const athleteModel: AthleteModel = result[0] as AthleteModel;
+        const userSettingsModel: UserSettingsModel = result[1] as UserSettingsModel;
+        const allConnectorsSyncDateTime: ConnectorSyncDateTime[] = result[2] as ConnectorSyncDateTime[];
 
-      let startSyncMessage: FlaggedIpcMessage;
+        let startSyncParamPromise: Promise<{
+          connectorType: ConnectorType;
+          connectorSyncDateTime: ConnectorSyncDateTime;
+          connectorInfo: ConnectorInfo;
+          athleteModel: AthleteModel;
+          userSettingsModel: UserSettingsModel;
+        }>;
 
-      const currentConnectorSyncDateTime = allConnectorsSyncDateTime
-        ? _.find(allConnectorsSyncDateTime, { connectorType: this.currentConnectorType })
-        : null;
+        const currentConnectorSyncDateTime = allConnectorsSyncDateTime
+          ? _.find(allConnectorsSyncDateTime, { connectorType: this.currentConnectorType })
+          : null;
 
-      if (this.currentConnectorType === ConnectorType.STRAVA) {
-        const stravaConnectorInfo: StravaConnectorInfo = result[3] as StravaConnectorInfo;
+        if (this.currentConnectorType === ConnectorType.STRAVA) {
+          const stravaConnectorInfo: StravaConnectorInfo = result[3] as StravaConnectorInfo;
 
-        // Create message to start sync on connector!
-        startSyncMessage = new FlaggedIpcMessage(
-          MessageFlag.START_SYNC,
-          ConnectorType.STRAVA,
-          currentConnectorSyncDateTime,
-          stravaConnectorInfo,
-          athleteModel,
-          userSettingsModel
-        );
-      } else if (this.currentConnectorType === ConnectorType.FILE) {
-        const fileConnectorInfo: FileConnectorInfo = result[3] as FileConnectorInfo;
-
-        // If source directory is missing or path is invalid then a throw warning
-        if (
-          !fileConnectorInfo.sourceDirectory ||
-          !this.fsConnectorInfoService.isSourceDirectoryValid(fileConnectorInfo.sourceDirectory)
-        ) {
-          return this.fsConnectorInfoService.ensureSourceDirectoryCompliance().then(() => {
-            return Promise.reject(
-              new WarningException("File connector scan folder don't exists", null, "Go to connectors", () => {
-                this.router.navigate([AppRoutes.connectors]);
-              })
-            );
+          // Create message to start sync on connector!
+          startSyncParamPromise = Promise.resolve({
+            connectorType: this.currentConnectorType,
+            connectorSyncDateTime: currentConnectorSyncDateTime,
+            connectorInfo: stravaConnectorInfo,
+            athleteModel: athleteModel,
+            userSettingsModel: userSettingsModel
           });
+        } else if (this.currentConnectorType === ConnectorType.FILE) {
+          const fileConnectorInfo: FileConnectorInfo = result[3] as FileConnectorInfo;
+
+          // If source directory is missing or path is invalid then a throw warning
+          startSyncParamPromise = this.fsConnectorInfoService
+            .isSourceDirectoryValid(fileConnectorInfo.sourceDirectory)
+            .then(valid => {
+              if (valid) {
+                return Promise.resolve({
+                  connectorType: this.currentConnectorType,
+                  connectorSyncDateTime: currentConnectorSyncDateTime,
+                  connectorInfo: fileConnectorInfo,
+                  athleteModel: athleteModel,
+                  userSettingsModel: userSettingsModel
+                });
+              } else {
+                return this.fsConnectorInfoService.ensureSourceDirectoryCompliance().then(() => {
+                  return Promise.reject(
+                    new WarningException("File connector scan folder don't exists", null, "Go to connectors", () => {
+                      this.router.navigate([AppRoutes.connectors]);
+                    })
+                  );
+                });
+              }
+            });
         }
 
-        startSyncMessage = new FlaggedIpcMessage(
-          MessageFlag.START_SYNC,
-          ConnectorType.FILE,
-          currentConnectorSyncDateTime,
-          fileConnectorInfo,
-          athleteModel,
-          userSettingsModel
-        );
-      }
-
-      // Trigger sync start
-      return this.ipcMessagesSender.send<string>(startSyncMessage).then(
-        (response: string) => {
-          this.logger.debug("Message received by ipcMain. Response:", response);
-          this.isSyncing$.next(true);
-          return Promise.resolve();
-        },
-        error => {
-          // e.g. Impossible to start a new sync. Another sync is already running on connector ...
-          this.logger.error(error);
-          return Promise.reject(error);
-        }
-      );
-    });
+        // Trigger sync start
+        return startSyncParamPromise;
+      })
+      .then(startSyncParams => {
+        return this.ipcSyncMessageSender
+          .startSync(
+            startSyncParams.connectorType,
+            startSyncParams.connectorSyncDateTime,
+            startSyncParams.connectorInfo,
+            startSyncParams.athleteModel,
+            startSyncParams.userSettingsModel
+          )
+          .then(
+            (response: string) => {
+              this.logger.debug("[Renderer] StartSync Main Response:", response);
+              this.isSyncing$.next(true);
+              return Promise.resolve();
+            },
+            error => {
+              // e.g. Impossible to start a new sync. Another sync is already running on connector ...
+              this.logger.error(error);
+              return Promise.reject(error);
+            }
+          );
+      });
   }
 
   public handleSyncEvents(syncEvents$: Subject<SyncEvent>, syncEvent: SyncEvent): void {
     switch (syncEvent.type) {
       case SyncEventType.STARTED:
         syncEvents$.next(syncEvent); // Forward for upward UI use.
-        this.logger.debug(syncEvent);
         break;
 
       case SyncEventType.ACTIVITY:
@@ -227,17 +241,14 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
       case SyncEventType.STOPPED:
         syncEvents$.next(syncEvent); // Forward for upward UI use.
-        this.logger.debug(syncEvent);
         break;
 
       case SyncEventType.GENERIC:
         syncEvents$.next(syncEvent); // Forward for upward UI use.
-        this.logger.debug(syncEvent);
         break;
 
       case SyncEventType.STRAVA_CREDENTIALS_UPDATE:
         syncEvents$.next(syncEvent); // Forward for upward UI use.
-        this.logger.debug(syncEvent);
         break;
 
       case SyncEventType.COMPLETE:
@@ -327,9 +338,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         return;
       }
 
-      const stopSyncMessage = new FlaggedIpcMessage(MessageFlag.STOP_SYNC, this.currentConnectorType);
-
-      this.ipcMessagesSender.send<string>(stopSyncMessage).then(
+      this.ipcSyncMessageSender.stopSync(this.currentConnectorType).then(
         (response: string) => {
           this.logger.debug("Sync stopped. Response from main:", response);
           resolve();

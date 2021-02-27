@@ -123,9 +123,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
       .then((stravaConnectorInfo: StravaConnectorInfo) => {
         this.stravaConnectorInfo = stravaConnectorInfo;
         // Force clear cookie to allow connection with another strava account
-        this.electronService.electron.remote
-          .getCurrentWindow()
-          .webContents.session.clearStorageData({ storages: ["cookies"] });
+        return this.electronService.api.clearStorageData({ storages: ["cookies"] });
       });
   }
 
@@ -176,7 +174,7 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
       });
   }
 
-  public disconnect(): void {
+  public onDisconnect(): void {
     this.resetTokens();
   }
 
