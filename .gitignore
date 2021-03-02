@@ -6,3 +6,6 @@
 
 # local workspace folders
 .vscode/
+
+# OS
+.DS_Store
