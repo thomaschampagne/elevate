@@ -10,6 +10,7 @@ export const environment = {
   buildTarget: BuildTarget.DESKTOP,
   production: false,
   logLevel: LoggerService.LEVEL_DEBUG,
+  // Backup version threshold at which a "greater or equal" imported backup version is compatible with current code.
   minBackupVersion: "7.0.0-6.alpha",
   skipRestoreSyncedBackupCheck: false
 };

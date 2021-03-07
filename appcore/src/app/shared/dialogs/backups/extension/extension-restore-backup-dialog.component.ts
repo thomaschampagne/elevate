@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import _ from "lodash";
-import { ExtensionDumpModel } from "../../../models/extension-dump.model";
+import { ExtensionBackupModel } from "../../../models/extension-backup.model";
 
 @Component({
   selector: "app-import-backup-dialog",
@@ -38,27 +38,19 @@ import { ExtensionDumpModel } from "../../../models/extension-dump.model";
   `,
   styles: [``]
 })
-export class ExtensionImportBackupDialogComponent implements OnInit {
+export class ExtensionRestoreBackupDialogComponent implements OnInit {
   constructor(
-    @Inject(MatDialogRef) protected readonly dialogRef: MatDialogRef<ExtensionImportBackupDialogComponent>,
+    @Inject(MatDialogRef) protected readonly dialogRef: MatDialogRef<ExtensionRestoreBackupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public mode: string
-  ) {
-    this.isImportMode = mode === ExtensionImportBackupDialogComponent.MODE_IMPORT;
-    this.isExportMode = !this.isImportMode;
-  }
+  ) {}
 
   public static readonly MAX_WIDTH: string = "80%";
   public static readonly MIN_WIDTH: string = "40%";
-  public static readonly MODE_IMPORT: string = "MODE_IMPORT";
-  public static readonly MODE_EXPORT: string = "MODE_EXPORT";
 
   public file: File;
   public displayName: string;
   public displaySize: string;
   public readonly fileExt: string = ".json";
-
-  public isImportMode: boolean;
-  public isExportMode: boolean;
 
   public ngOnInit(): void {
     this.file = null;
@@ -80,10 +72,10 @@ export class ExtensionImportBackupDialogComponent implements OnInit {
       const reader = new FileReader();
       reader.readAsText(this.file);
       reader.onload = (event: Event) => {
-        const extensionDumpModel: ExtensionDumpModel = JSON.parse(
+        const extensionBackupModel: ExtensionBackupModel = JSON.parse(
           (event.target as IDBRequest).result
-        ) as ExtensionDumpModel;
-        this.dialogRef.close(extensionDumpModel);
+        ) as ExtensionBackupModel;
+        this.dialogRef.close(extensionBackupModel);
       };
     }
   }

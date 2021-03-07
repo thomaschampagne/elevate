@@ -49,8 +49,6 @@ import { DesktopRestoreDialogComponent } from "../../shared/dialogs/backups/desk
   styleUrls: ["./desktop-sync-menu.component.scss"]
 })
 export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnInit {
-  protected readonly backupDoneMessage = "Profile backup has been crafted";
-
   public mostRecentConnectorSyncedType: ConnectorType;
 
   constructor(

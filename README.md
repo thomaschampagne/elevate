@@ -240,14 +240,14 @@ Register your new migration in below file
 **Tip:** to emulate a version upgrade, you may downgrade the current version by running below code in developer console:
 
 ```javascript
-function downgradeTo(version) {
+(version => {
   const properties = db.getCollection("properties").findOne();
   properties.existingVersion = version;
   db.getCollection("properties").update(properties);
   db.save();
-}
-downgradeTo("YOUR_DOWNGRADE_TARGET_VERSION"); // e.g. "7.0.0"
-location.reload()
+  alert(`Fake downgraded to ${version}. Click 'Ok' to reload app.`)
+  location.reload()
+})("YOUR_DOWNGRADE_TARGET_VERSION") // e.g. "7.0.0"
 ```
 
 ## Sign application

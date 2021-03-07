@@ -47,9 +47,6 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Injectable()
 export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> implements OnDestroy {
-  /**
-   * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
-   */
   public syncEvents$: Subject<SyncEvent>;
   public syncSubscription: Subscription;
   public currentConnectorType: ConnectorType;

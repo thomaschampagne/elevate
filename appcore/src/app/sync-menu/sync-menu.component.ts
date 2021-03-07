@@ -20,8 +20,6 @@ export abstract class SyncMenuComponent implements OnInit, OnDestroy {
   public syncMenuActions: SyncMenuAction[];
   public historyChangesSub: Subscription;
 
-  protected abstract readonly backupDoneMessage;
-
   public abstract onBackup(): void;
 
   protected constructor(

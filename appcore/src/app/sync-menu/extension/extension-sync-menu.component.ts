@@ -11,8 +11,8 @@ import { AppRoutes } from "../../shared/models/app-routes";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
 import { ExtensionAppService } from "../../shared/services/app-service/extension/extension-app.service";
-import { ExtensionImportBackupDialogComponent } from "../../shared/dialogs/backups/extension/extension-import-backup-dialog.component";
-import { ExtensionDumpModel } from "../../shared/models/extension-dump.model";
+import { ExtensionRestoreBackupDialogComponent } from "../../shared/dialogs/backups/extension/extension-restore-backup-dialog.component";
+import { ExtensionBackupModel } from "../../shared/models/extension-backup.model";
 
 @Component({
   selector: "app-extension-sync-menu",
@@ -49,8 +49,6 @@ import { ExtensionDumpModel } from "../../shared/models/extension-dump.model";
   styleUrls: ["./extension-sync-menu.component.scss"]
 })
 export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnInit {
-  protected readonly backupDoneMessage = "Profile backup has been saved in downloads";
-
   constructor(
     @Inject(AppService) public readonly extensionAppService: ExtensionAppService,
     @Inject(Router) protected readonly router: Router,
@@ -134,42 +132,25 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
   }
 
   public onBackup(): void {
-    const progressDialogRef = this.dialog.open(ExtensionImportBackupDialogComponent, {
-      disableClose: true,
-      data: ExtensionImportBackupDialogComponent.MODE_EXPORT
-    });
-
-    progressDialogRef
-      .afterOpened()
-      .toPromise()
-      .then(() => {
-        this.extensionSyncService.backup().then(
-          result => {
-            progressDialogRef.close(result);
-          },
-          error => {
-            this.snackBar.open(error, "Close");
-          }
-        );
-      });
-
-    progressDialogRef
-      .afterClosed()
-      .toPromise()
-      .then(() => {
-        this.snackBar.open(this.backupDoneMessage, "Ok", { duration: 15000 });
-      });
+    this.extensionSyncService.backup().then(
+      () => {
+        this.snackBar.open("Backup is saved in downloads folder", "Ok", { duration: 15000 });
+      },
+      error => {
+        this.snackBar.open(error, "Close");
+      }
+    );
   }
 
   public onRestore(): void {
-    const dialogRef = this.dialog.open(ExtensionImportBackupDialogComponent, {
-      minWidth: ExtensionImportBackupDialogComponent.MIN_WIDTH,
-      maxWidth: ExtensionImportBackupDialogComponent.MAX_WIDTH
+    const dialogRef = this.dialog.open(ExtensionRestoreBackupDialogComponent, {
+      minWidth: ExtensionRestoreBackupDialogComponent.MIN_WIDTH,
+      maxWidth: ExtensionRestoreBackupDialogComponent.MAX_WIDTH
     });
 
-    const afterClosedSubscription = dialogRef.afterClosed().subscribe((dumpModel: ExtensionDumpModel) => {
-      if (dumpModel) {
-        this.extensionSyncService.restore(dumpModel).then(
+    const afterClosedSubscription = dialogRef.afterClosed().subscribe((backupModel: ExtensionBackupModel) => {
+      if (backupModel) {
+        this.extensionSyncService.restore(backupModel).then(
           () => {
             location.reload();
           },

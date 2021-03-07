@@ -17,12 +17,12 @@ import { UserSettingsService } from "../../services/user-settings/user-settings.
 import { ExtensionUserSettingsService } from "../../services/user-settings/extension/extension-user-settings.service";
 import { AthleteService } from "../../services/athlete/athlete.service";
 import { ExtensionAthleteService } from "../../services/athlete/extension/extension-athlete.service";
-import { ExtensionImportBackupDialogComponent } from "../../dialogs/backups/extension/extension-import-backup-dialog.component";
+import { ExtensionRestoreBackupDialogComponent } from "../../dialogs/backups/extension/extension-restore-backup-dialog.component";
 
 @NgModule({
   imports: [CoreModule, ExtensionRoutingModule],
   exports: [CoreModule, ExtensionRoutingModule],
-  declarations: [ExtensionAdvancedMenuComponent, ExtensionImportBackupDialogComponent],
+  declarations: [ExtensionAdvancedMenuComponent, ExtensionRestoreBackupDialogComponent],
   providers: [
     SyncDateTimeDao,
     ExtensionSyncService,

@@ -20,14 +20,10 @@ import { filter } from "rxjs/operators";
 import { CoreMessages } from "@elevate/shared/models";
 import { ChromiumService } from "../../../../extension/chromium.service";
 import { ExtensionUserSettingsService } from "../../user-settings/extension/extension-user-settings.service";
-import { ExtensionDumpModel } from "../../../models/extension-dump.model";
+import { ExtensionBackupModel } from "../../../models/extension-backup.model";
 
 @Injectable()
 export class ExtensionSyncService extends SyncService<SyncDateTime> {
-  /**
-   * Dump version threshold at which a "greater or equal" imported backup version is compatible with current code.
-   */
-
   public static readonly SYNC_URL_BASE: string = "https://www.strava.com/dashboard";
   public trackedSyncTabId: number;
   public isSyncing: boolean;
@@ -138,7 +134,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
 
   public backup(): Promise<{ filename: string; size: number }> {
     return this.prepareForExport().then(
-      (backupModel: ExtensionDumpModel) => {
+      (backupModel: ExtensionBackupModel) => {
         const blob = new Blob([JSON.stringify(backupModel)], { type: "application/json; charset=utf-8" });
         const filename = moment().format("Y.M.D-H.mm") + "_v" + backupModel.pluginVersion + ".history.json";
         this.saveAs(blob, filename);
@@ -150,7 +146,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
     );
   }
 
-  public prepareForExport(): Promise<ExtensionDumpModel> {
+  public prepareForExport(): Promise<ExtensionBackupModel> {
     return Promise.all([
       this.syncDateTimeDao.findOne(),
       this.activityService.fetch(),
@@ -166,7 +162,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
         return Promise.reject("Cannot export. No last synchronization date found.");
       }
 
-      const backupModel: ExtensionDumpModel = {
+      const backupModel: ExtensionBackupModel = {
         syncDateTime: DataStore.cleanDbObject<SyncDateTime>(syncDateTime),
         syncedActivities: DataStore.cleanDbCollection<SyncedActivityModel>(syncedActivityModels),
         athleteModel: DataStore.cleanDbObject<AthleteModel>(athleteModel),
@@ -177,22 +173,22 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
     });
   }
 
-  public restore(importedBackupModel: ExtensionDumpModel): Promise<void> {
-    if (_.isEmpty(importedBackupModel.syncedActivities)) {
+  public restore(extensionBackupModel: ExtensionBackupModel): Promise<void> {
+    if (_.isEmpty(extensionBackupModel.syncedActivities)) {
       return Promise.reject(
         "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync."
       );
     }
 
-    if (_.isEmpty(importedBackupModel.pluginVersion)) {
+    if (_.isEmpty(extensionBackupModel.pluginVersion)) {
       return Promise.reject(
         "Plugin version is not defined in provided backup file. Try to perform a clean full re-sync."
       );
     }
 
-    if (!DataStore.isBackupCompatible(importedBackupModel.pluginVersion)) {
+    if (!DataStore.isBackupCompatible(extensionBackupModel.pluginVersion)) {
       return Promise.reject(
-        `Imported backup version ${importedBackupModel.pluginVersion} is not compatible with current installed version.`
+        `Imported backup version ${extensionBackupModel.pluginVersion} is not compatible with current installed version.`
       );
     }
 
@@ -203,15 +199,15 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
       .then(() => {
         let promiseImportDatedAthleteSettings;
         // If no dated athlete settings provided in backup then reset dated athlete settings
-        if (_.isEmpty(importedBackupModel.athleteModel)) {
+        if (_.isEmpty(extensionBackupModel.athleteModel)) {
           promiseImportDatedAthleteSettings = this.athleteService.resetSettings();
         } else {
-          promiseImportDatedAthleteSettings = this.athleteService.validateInsert(importedBackupModel.athleteModel);
+          promiseImportDatedAthleteSettings = this.athleteService.validateInsert(extensionBackupModel.athleteModel);
         }
 
         return Promise.all([
-          this.updateSyncDateTime(importedBackupModel.syncDateTime),
-          this.activityService.insertMany(importedBackupModel.syncedActivities, true),
+          this.updateSyncDateTime(extensionBackupModel.syncDateTime),
+          this.activityService.insertMany(extensionBackupModel.syncedActivities, true),
           promiseImportDatedAthleteSettings,
           this.userSettingsService.clearLocalStorageOnNextLoad()
         ]);
