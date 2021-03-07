@@ -247,6 +247,7 @@ function downgradeTo(version) {
   db.save();
 }
 downgradeTo("YOUR_DOWNGRADE_TARGET_VERSION"); // e.g. "7.0.0"
+location.reload()
 ```
 
 ## Sign application
