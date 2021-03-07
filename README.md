@@ -245,8 +245,8 @@ Register your new migration in below file
   properties.existingVersion = version;
   db.getCollection("properties").update(properties);
   db.save();
-  alert(`Fake downgraded to ${version}. Click 'Ok' to reload app.`)
-  location.reload()
+  console.log(`Fake downgraded to ${version}. Reloading app.`)
+  setTimeout(() => location.reload(), 1000);
 })("YOUR_DOWNGRADE_TARGET_VERSION") // e.g. "7.0.0"
 ```
 

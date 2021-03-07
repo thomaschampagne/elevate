@@ -101,7 +101,11 @@ export class DesktopRestoreDialogComponent implements OnInit {
   public onUserFileSelection(): void {
     this.electronService
       .userFileSelection(DesktopBackupService.BACKUP_EXT, DesktopRestoreDialogComponent.BACKUP_TYPE_NAME)
-      .then(file => this.configureBackupFile(file));
+      .then(file => {
+        if (file) {
+          this.configureBackupFile(file);
+        }
+      });
   }
 
   private configureBackupFile(filePath: string): void {

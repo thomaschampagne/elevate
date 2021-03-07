@@ -51,10 +51,7 @@ export class Updater {
       show: false,
       autoHideMenuBar: true,
       resizable: false,
-      movable: false,
-      webPreferences: {
-        nodeIntegration: true
-      }
+      movable: false
     };
 
     const updateWindow = new BrowserWindow(windowOptions);

@@ -1,6 +1,6 @@
 {
   "name": "elevate-app",
-  "version": "7.0.0-5.alpha",
+  "version": "7.0.0-6.alpha",
   "license": "MPL-2.0",
   "scripts": {
     "ng": "ng",
