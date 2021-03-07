@@ -7,7 +7,7 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Injectable()
 export class IpcSyncMessageSender {
-  constructor(@Inject(IPC_TUNNEL_SERVICE) public ipcTunnelService: IpcTunnelService) {}
+  constructor(@Inject(IPC_TUNNEL_SERVICE) public readonly ipcTunnelService: IpcTunnelService) {}
 
   public startSync(
     connectorType: ConnectorType,

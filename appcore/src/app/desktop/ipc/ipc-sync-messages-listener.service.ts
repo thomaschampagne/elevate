@@ -5,7 +5,7 @@ import { Subject } from "rxjs";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { StreamsService } from "../../shared/services/streams/streams.service";
-import { DeflatedActivityStreams, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import { DeflatedActivityStreams, SyncedActivityModel } from "@elevate/shared/models";
 import { IPC_TUNNEL_SERVICE } from "./ipc-tunnel-service.token";
 
 /**
@@ -16,7 +16,7 @@ export class IpcSyncMessagesListener {
   public syncEvents$: Subject<SyncEvent>;
 
   constructor(
-    @Inject(IPC_TUNNEL_SERVICE) public ipcTunnelService: IpcTunnelService,
+    @Inject(IPC_TUNNEL_SERVICE) public readonly ipcTunnelService: IpcTunnelService,
     @Inject(ActivityService) private readonly activityService: ActivityService,
     @Inject(StreamsService) private readonly streamsService: StreamsService,
     @Inject(LoggerService) private readonly logger: LoggerService

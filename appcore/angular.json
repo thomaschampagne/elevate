@@ -46,6 +46,9 @@
           },
           "configurations": {
             "extension": {
+              "aot": false,
+              "buildOptimizer": false,
+              "sourceMap": true,
               "budgets": [
                 {
                   "type": "anyComponentStyle",
@@ -98,6 +101,9 @@
               ]
             },
             "desktop": {
+              "aot": false,
+              "buildOptimizer": false,
+              "sourceMap": true,
               "budgets": [
                 {
                   "type": "anyComponentStyle",

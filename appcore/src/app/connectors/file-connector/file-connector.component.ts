@@ -106,6 +106,6 @@ export class FileConnectorComponent extends ConnectorsComponent implements OnIni
   }
 
   private isExistingFolder(path: string): Promise<boolean> {
-    return path && this.electronService.isDirectory(path);
+    return this.electronService.isDirectory(path);
   }
 }

@@ -18,15 +18,20 @@ import {
 } from "@elevate/shared/sync";
 import { IpcSyncMessagesListener } from "../../../../desktop/ipc/ipc-sync-messages-listener.service";
 import { StravaConnectorInfoService } from "../../strava-connector-info/strava-connector-info.service";
-import { AthleteModel, DeflatedActivityStreams, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
+import {
+  AthleteModel,
+  BackupEvent,
+  DeflatedActivityStreams,
+  RestoreEvent,
+  SyncedActivityModel,
+  UserSettings
+} from "@elevate/shared/models";
 import { ActivityService } from "../../activity/activity.service";
 import { ElevateException, SyncException, WarningException } from "@elevate/shared/exceptions";
 import _ from "lodash";
 import { SyncState } from "../sync-state.enum";
-import moment from "moment";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync";
 import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-time.dao";
-import { DesktopDumpModel } from "../../../models/dumps/desktop-dump.model";
 import { StreamsService } from "../../streams/streams.service";
 import { FileConnectorInfoService } from "../../file-connector-info/file-connector-info.service";
 import { DataStore } from "../../../data-store/data-store";
@@ -428,25 +433,33 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     }
   }
 
-  public export(): Promise<{ filename: string; size: number }> {
-    const appVersion = this.versionsProvider.getPackageVersion();
-    return this.desktopDataStore.createDump(appVersion).then(blob => {
-      const gzippedFilename = moment().format("Y.MM.DD-H.mm") + "_v" + appVersion + ".elv";
-      this.saveAs(blob, gzippedFilename);
-      return Promise.resolve({ filename: gzippedFilename, size: blob.size });
-    });
+  public export(outputDirectory: string): Subject<BackupEvent> {
+    const backupVersion = this.versionsProvider.getPackageVersion();
+    return this.desktopDataStore.backup(outputDirectory, backupVersion);
   }
 
-  public import(desktopDumpModel: DesktopDumpModel): Promise<void> {
-    return this.isDumpCompatible(desktopDumpModel.version, this.getCompatibleBackupVersionThreshold()).then(() => {
-      this.isSyncing$.next(true);
-      return this.desktopDataStore.loadDump(desktopDumpModel).then(() => {
-        // Clear any recalculation requirements with the new imported  backup. Indeed new backup might not require recalculation...
+  public import(path: string): Subject<RestoreEvent> {
+    const restoreEvent$ = this.desktopDataStore.restore(path);
+
+    // Notify syncing we restore started
+    this.isSyncing$.next(true);
+
+    // Notify not synced state on restore error or complete
+    restoreEvent$.subscribe(
+      () => {},
+      () => this.isSyncing$.next(false),
+      () => {
+        // Clear any recalculation requirements with the new imported backup. Indeed new backup might not require recalculation...
         this.desktopMigrationService.clearRequiredRecalculation();
+
         this.isSyncing$.next(false);
-        return Promise.resolve();
-      });
-    });
+
+        // Force app reload
+        setTimeout(() => location.reload());
+      }
+    );
+
+    return restoreEvent$;
   }
 
   public getSyncState(): Promise<SyncState> {

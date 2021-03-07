@@ -11,7 +11,7 @@ import { IPC_TUNNEL_SERVICE } from "../../desktop/ipc/ipc-tunnel-service.token";
 @Injectable()
 export class StravaConnectorService extends ConnectorService {
   constructor(
-    @Inject(IPC_TUNNEL_SERVICE) public ipcTunnelService: IpcTunnelService,
+    @Inject(IPC_TUNNEL_SERVICE) public readonly ipcTunnelService: IpcTunnelService,
     @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(SyncService) private readonly desktopSyncService: DesktopSyncService
   ) {

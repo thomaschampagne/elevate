@@ -15,7 +15,6 @@ import { DonateComponent } from "../donate/donate.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
-import { ImportExportProgressDialogComponent } from "./dialogs/import-backup-dialog/import-backup-dialog.component";
 import { ReportComponent } from "../report/report.component";
 import { CoreModule } from "../core/core.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -58,7 +57,6 @@ import { ComponentsFactoryService } from "./services/components-factory.service"
     OptionHelperDialogComponent,
     ZonesImportExportDialogComponent,
     AboutDialogComponent,
-    ImportExportProgressDialogComponent,
     ActivitiesSettingsLacksDialogComponent,
     NewRemoteVersionNoticeDialogComponent,
     NewInstalledVersionNoticeDialogComponent

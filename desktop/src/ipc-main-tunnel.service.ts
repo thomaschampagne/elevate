@@ -1,5 +1,5 @@
 import { singleton } from "tsyringe";
-import { Channel, IpcMessage, IpcTunnel, IpcTunnelService } from "@elevate/shared/electron";
+import { Channel, IpcChannelSub, IpcMessage, IpcTunnel, IpcTunnelService } from "@elevate/shared/electron";
 import { BrowserWindow, IpcMain } from "electron";
 
 @singleton()
@@ -14,7 +14,11 @@ export class IpcMainTunnelService implements IpcTunnelService {
     return this.ipcTunnel.send(ipcMessage.channel, ipcMessage.payload);
   }
 
-  public on<T, R>(channel: Channel, request: (param: T) => R | Promise<R> | void | Error): void {
-    this.ipcTunnel.on(channel, request);
+  public fwd<T, R>(ipcMessage: IpcMessage): void {
+    this.ipcTunnel.fwd(ipcMessage.channel, ipcMessage.payload);
+  }
+
+  public on<T, R>(channel: Channel, request: (param: T) => R | Promise<R> | void | Error): IpcChannelSub {
+    return this.ipcTunnel.on(channel, request);
   }
 }

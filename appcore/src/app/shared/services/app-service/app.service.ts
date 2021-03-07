@@ -15,7 +15,7 @@ export abstract class AppService {
   public isSyncing: boolean;
   public historyChanges$: Observable<void>;
   public themeChanges$: Subject<Theme>;
-  private _isAppLoaded: boolean;
+  public isAppLoaded: boolean;
 
   protected constructor(
     @Inject(ActivityService) protected readonly activityService: ActivityService,
@@ -23,7 +23,7 @@ export abstract class AppService {
   ) {
     this.themeChanges$ = new Subject<Theme>();
 
-    this._isAppLoaded = false;
+    this.isAppLoaded = false;
 
     // Forward isSyncing$ from syncService to local observable
     this.syncService.isSyncing$.subscribe(isSyncing => {
@@ -44,7 +44,7 @@ export abstract class AppService {
   public init(): void {
     this.loadTheme();
 
-    this._isAppLoaded = true;
+    this.isAppLoaded = true;
 
     this.syncService.getSyncState().then(syncState => {
       if (syncState >= SyncState.PARTIALLY_SYNCED) {
@@ -58,10 +58,6 @@ export abstract class AppService {
   public verifyHistoryCompliance(): void {
     this.activityService.verifyActivitiesWithSettingsLacking();
     this.activityService.verifyConsistencyWithAthleteSettings();
-  }
-
-  public get isAppLoaded(): boolean {
-    return this._isAppLoaded;
   }
 
   public loadTheme(): void {

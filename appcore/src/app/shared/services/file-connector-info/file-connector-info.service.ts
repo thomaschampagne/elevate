@@ -65,11 +65,12 @@ export class FileConnectorInfoService {
   public isSourceDirectoryValid(sourceDirectoryParam: string = null): Promise<boolean> {
     // Test the scan folder validity if exists
     const sourceDirectory = sourceDirectoryParam || this.getSourceDirectory();
-    if (!sourceDirectory) {
-      return Promise.resolve(false);
-    } else {
+    if (sourceDirectory) {
       return this.electronService.isDirectory(sourceDirectory);
     }
+
+    // Empty means directory without errors
+    return Promise.resolve(true);
   }
 
   public ensureSourceDirectoryCompliance(): Promise<void> {

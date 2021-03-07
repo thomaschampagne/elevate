@@ -34,7 +34,7 @@ export class ActivityRecalculateNotification {
 @Injectable()
 export class DesktopActivityService extends ActivityService {
   constructor(
-    @Inject(IPC_TUNNEL_SERVICE) public ipcTunnelService: IpcTunnelService,
+    @Inject(IPC_TUNNEL_SERVICE) public readonly ipcTunnelService: IpcTunnelService,
     @Inject(ActivityDao) public readonly activityDao: ActivityDao,
     @Inject(AthleteSnapshotResolverService) public readonly athleteSnapshotResolver: AthleteSnapshotResolverService,
     @Inject(StreamsService) public readonly streamsService: StreamsService,

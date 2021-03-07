@@ -20,10 +20,10 @@
     "launch:dev:app": "npm run assert-app-exists && run-electron ./dist/desktop.bundle.js",
     "package:windows": "npm run build:prod && electron-builder build --windows --x64 --publish onTagOrDraft",
     "package:linux": "npm run build:prod && electron-builder build --linux --x64 --publish onTagOrDraft",
-    "package:mac": "npm run build:prod && electron-builder build --mac --x64",
+    "package:macos": "npm run build:prod && electron-builder build --mac --publish onTagOrDraft",
     "start:desktop": "npm run watch",
     "start": "npm run start:desktop",
-    "test": "npm run build:metadata && jest --silent --coverage",
+    "test": "npm run build:metadata && node ./node_modules/jest/bin/jest.js --silent --coverage",
     "type:check": "tsc --noEmit --project tsconfig.json",
     "tslint": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./src/**/*.ts --fix",
     "watch": "npm run clean && node ../node_modules/cpy-cli/cli.js ./dev-app-update.yml ./dist && npm-run-all --print-label --race --parallel watch:electron watch:appcore",
@@ -63,6 +63,7 @@
     "minizlib": "^2.1.2",
     "node-7z": "^2.1.2",
     "node-machine-id": "^1.1.12",
+    "p-defer": "^3.0.0",
     "p-retry": "^4.3.0",
     "querystring": "^0.2.0",
     "reflect-metadata": "^0.1.13",
@@ -79,12 +80,12 @@
     "@rollup/plugin-typescript": "^8.1.1",
     "@types/jest": "^26.0.20",
     "@types/lodash": "^4.14.168",
-    "@types/node": "^14",
+    "@types/node": "^14.14.31",
     "@types/node-7z": "^2.1.0",
     "@types/xmldom": "^0.1.30",
     "devtron": "^1.4.0",
-    "electron": "^11.2.3",
-    "electron-builder": "^22.9.1",
+    "electron": "^12.0.0",
+    "electron-builder": "^22.10.5",
     "jest": "^26.6.3",
     "jest-config": "^26.6.3",
     "npm-run-all": "^4.1.5",
@@ -118,6 +119,7 @@
     "win": {
       "publisherName": "Thomas Champagne",
       "verifyUpdateCodeSignature": false,
+      "artifactName": "elevate-installer.${ext}",
       "target": [
         {
           "target": "nsis",
@@ -128,24 +130,28 @@
       ]
     },
     "mac": {
-      "target": [
-        "dmg"
-      ]
+      "artifactName": "elevate-installer.${arch}.${ext}",
+      "target": {
+        "target": "dmg",
+        "arch": [
+          "arm64",
+          "x64"
+        ]
+      }
     },
     "linux": {
       "category": "Sports",
+      "artifactName": "elevate-installer.${ext}",
       "target": [
         "deb"
       ]
     },
     "nsis": {
-      "deleteAppDataOnUninstall": true,
-      "artifactName": "elevate_installer.${ext}"
+      "deleteAppDataOnUninstall": true
     },
     "deb": {
       "maintainer": "Thomas Champagne",
-      "category": "Sports",
-      "artifactName": "elevate_installer.${ext}"
+      "category": "Sports"
     }
   },
   "main": "./dist/desktop.bundle.js"

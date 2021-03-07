@@ -51,7 +51,8 @@ export class AppService {
         .createHash("sha1")
         .update(osMachineId + ":" + osUsername)
         .digest("hex");
-      const cpuName = { name: os.cpus()[0].model.trim(), threads: os.cpus().length };
+      const cpuInfo = os.cpus()[0];
+      const cpuName = { name: cpuInfo ? cpuInfo.model.trim() : "Unknown", threads: os.cpus().length };
       const memorySize = Math.round(os.totalmem() / 1024 / 1024 / 1024);
       this._runtimeInfo = new RuntimeInfo(
         osPlatform,

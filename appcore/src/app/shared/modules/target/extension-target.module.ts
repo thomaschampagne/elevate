@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CoreModule } from "../../../core/core.module";
 import { ExtensionAdvancedMenuComponent } from "../../../advanced-menu/extension/extension-advanced-menu.component";
-import { ExtensionImportBackupDialogComponent } from "../../dialogs/import-backup-dialog/extension-import-backup-dialog.component";
 import { DataStore } from "../../data-store/data-store";
 import { ExtensionDataStore } from "../../data-store/impl/extension-data-store.service";
 import { ActivityService } from "../../services/activity/activity.service";
@@ -18,6 +17,7 @@ import { UserSettingsService } from "../../services/user-settings/user-settings.
 import { ExtensionUserSettingsService } from "../../services/user-settings/extension/extension-user-settings.service";
 import { AthleteService } from "../../services/athlete/athlete.service";
 import { ExtensionAthleteService } from "../../services/athlete/extension/extension-athlete.service";
+import { ExtensionImportBackupDialogComponent } from "../../dialogs/backups/extension/extension-import-backup-dialog.component";
 
 @NgModule({
   imports: [CoreModule, ExtensionRoutingModule],

@@ -9,72 +9,66 @@ import { ReportComponent } from "../../../report/report.component";
 import { HelpComponent } from "../../../help/help.component";
 import { ExtensionAdvancedMenuComponent } from "../../../advanced-menu/extension/extension-advanced-menu.component";
 
+const routes: Routes = [
+  {
+    path: AppRoutes.activities,
+    component: ActivitiesComponent
+  },
+  {
+    path: AppRoutes.fitnessTrend,
+    loadChildren: () => import("../../../fitness-trend/fitness-trend.module").then(module => module.FitnessTrendModule)
+  },
+  {
+    path: AppRoutes.yearProgressions,
+    loadChildren: () => import("../../../year-progress/year-progress.module").then(module => module.YearProgressModule)
+  },
+  {
+    path: AppRoutes.globalSettings,
+    component: GlobalSettingsComponent
+  },
+  {
+    path: AppRoutes.athleteSettings,
+    loadChildren: () =>
+      import("../../../athlete-settings/athlete-settings.module").then(module => module.AthleteSettingsModule)
+  },
+  {
+    path: AppRoutes.zonesSettings,
+    component: ZonesSettingsComponent
+  },
+  {
+    path: AppRoutes.zonesSettings + "/:zoneValue",
+    component: ZonesSettingsComponent
+  },
+  {
+    path: AppRoutes.donate,
+    component: DonateComponent
+  },
+  {
+    path: AppRoutes.releasesNotes,
+    loadChildren: () =>
+      import("../../../releases-notes/releases-notes.module").then(module => module.ReleasesNotesModule)
+  },
+  {
+    path: AppRoutes.report,
+    component: ReportComponent
+  },
+  {
+    path: AppRoutes.advancedMenu,
+    component: ExtensionAdvancedMenuComponent
+  },
+  {
+    path: AppRoutes.help,
+    component: HelpComponent
+  },
+  {
+    path: "",
+    redirectTo: AppRoutes.activities,
+    pathMatch: "full"
+  }
+];
+
 @NgModule({
-  imports: [RouterModule.forRoot(ExtensionRoutingModule.provideRoutes(), { enableTracing: false, useHash: true })],
+  imports: [RouterModule.forRoot(routes, { enableTracing: false, useHash: true })],
   exports: [RouterModule]
 })
-export class ExtensionRoutingModule {
-  public static routes: Routes = [
-    {
-      path: AppRoutes.activities,
-      component: ActivitiesComponent
-    },
-    {
-      path: AppRoutes.fitnessTrend,
-      loadChildren: () =>
-        import("../../../fitness-trend/fitness-trend.module").then(module => module.FitnessTrendModule)
-    },
-    {
-      path: AppRoutes.yearProgressions,
-      loadChildren: () =>
-        import("../../../year-progress/year-progress.module").then(module => module.YearProgressModule)
-    },
-    {
-      path: AppRoutes.globalSettings,
-      component: GlobalSettingsComponent
-    },
-    {
-      path: AppRoutes.athleteSettings,
-      loadChildren: () =>
-        import("../../../athlete-settings/athlete-settings.module").then(module => module.AthleteSettingsModule)
-    },
-    {
-      path: AppRoutes.zonesSettings,
-      component: ZonesSettingsComponent
-    },
-    {
-      path: AppRoutes.zonesSettings + "/:zoneValue",
-      component: ZonesSettingsComponent
-    },
-    {
-      path: AppRoutes.donate,
-      component: DonateComponent
-    },
-    {
-      path: AppRoutes.releasesNotes,
-      loadChildren: () =>
-        import("../../../releases-notes/releases-notes.module").then(module => module.ReleasesNotesModule)
-    },
-    {
-      path: AppRoutes.report,
-      component: ReportComponent
-    },
-    {
-      path: AppRoutes.advancedMenu,
-      component: ExtensionAdvancedMenuComponent
-    },
-    {
-      path: AppRoutes.help,
-      component: HelpComponent
-    },
-    {
-      path: "",
-      redirectTo: AppRoutes.activities,
-      pathMatch: "full"
-    }
-  ];
-
-  public static provideRoutes(): Routes {
-    return ExtensionRoutingModule.routes;
-  }
-}
+export class ExtensionRoutingModule {}

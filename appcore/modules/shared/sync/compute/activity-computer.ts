@@ -483,12 +483,7 @@ export class ActivityComputer {
 
     // Prepare move data model along stream or activitySourceData
     let moveDataModel = this.streams
-      ? this.moveData(
-          this.streams.time,
-          this.streams.distance,
-          this.streams.velocity_smooth,
-          this.streams.altitude
-        )
+      ? this.moveData(this.streams.time, this.streams.distance, this.streams.velocity_smooth, this.streams.altitude)
       : null;
 
     const isMoveDataComputed = !!moveDataModel;

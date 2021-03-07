@@ -18,10 +18,10 @@ export class Streams {
   ) {}
 
   public static deflate(streams: Streams): string {
-    return LZString.compress(JSON.stringify(streams));
+    return LZString.compressToBase64(JSON.stringify(streams));
   }
 
   public static inflate(deflated: string): Streams {
-    return JSON.parse(LZString.decompress(deflated));
+    return JSON.parse(LZString.decompressFromBase64(deflated));
   }
 }

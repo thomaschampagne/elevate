@@ -1,7 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { Platform } from "@elevate/shared/enums";
-import { ElevateException } from "@elevate/shared/exceptions";
 import { OpenDialogSyncOptions } from "electron";
 import { name as appName } from "../../../../../desktop/package.json";
 import { BridgeApi } from "@elevate/shared/electron";
@@ -24,6 +23,16 @@ export class ElectronService {
     });
   }
 
+  public userFileSelection(extension: string, name: string): Promise<string> {
+    const options: OpenDialogSyncOptions = {
+      properties: ["openFile", "showHiddenFiles"],
+      filters: [{ extensions: [extension], name: name }]
+    };
+    return this.api.showOpenDialogSync(options).then(paths => {
+      return paths && paths.length > 0 ? paths[0] : null;
+    });
+  }
+
   public userDirectorySelection(): Promise<string> {
     const options: OpenDialogSyncOptions = {
       properties: ["openDirectory", "showHiddenFiles"]
@@ -33,32 +42,33 @@ export class ElectronService {
     });
   }
 
-  public openExternalUrl(url: string): void {
-    this.api.shell.openExternal(url);
+  public openExternalUrl(url: string): Promise<void> {
+    return this.api.openExternal(url);
   }
 
-  public openItem(path: string): void {
-    this.api.shell.openPath(path);
+  public openItem(path: string): Promise<string> {
+    return this.api.openPath(path);
   }
 
-  public showItemInFolder(itemPath: string): void {
-    this.existsSync(itemPath).then(exists => {
+  public showItemInFolder(itemPath: string): Promise<void> {
+    return this.existsSync(itemPath).then(exists => {
       if (!exists) {
-        throw new ElevateException("Item path do not exists");
+        return Promise.reject("Item path do not exists");
       }
-      this.api.shell.showItemInFolder(itemPath);
+
+      return this.api.showItemInFolder(itemPath);
     });
   }
 
-  public openLogsFolder(): void {
-    this.getLogsPath().then(path => {
-      this.openItem(path);
+  public openLogsFolder(): Promise<string> {
+    return this.getLogsPath().then(path => {
+      return this.openItem(path);
     });
   }
 
-  public openAppDataFolder(): void {
-    this.getAppDataPath().then(path => {
-      this.openItem(path);
+  public openAppDataFolder(): Promise<string> {
+    return this.getAppDataPath().then(path => {
+      return this.openItem(path);
     });
   }
 
@@ -106,7 +116,6 @@ export class ElectronService {
       | "videos"
       | "recent"
       | "logs"
-      | "pepperFlashSystemPlugin"
       | "crashDumps"
   ): Promise<string> {
     return this.api.getPath(name);

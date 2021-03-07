@@ -9,9 +9,31 @@ enum IpcType {
   RENDERER
 }
 
+export interface IpcChannelSub {
+  unsubscribe: () => void;
+}
+
 export interface IpcTunnelService {
-  on<T, R>(channel: Channel, request: (param: T) => R | Promise<R> | void | Error): void;
+  /**
+   * Receive request from opposite Electron Ipc and respond to her with result
+   * @param channel The channel enum value on which param has to transit
+   * @param request The callback which return the result or error
+   * @return Channel subscription. It includes the ability to unsubscribe (meaning removing channel listeners)
+   */
+  on<T, R>(channel: Channel, request: (param: T) => R | Promise<R> | void | Error): IpcChannelSub;
+
+  /**
+   * Send param in a given channel to the opposite Electron Ipc
+   * @param ipcMessage The channel enum value on which payload has to transit
+   * @return Result promise
+   */
   send<T, R>(ipcMessage: IpcMessage): Promise<R>;
+
+  /**
+   * Forward message without acknowledgement and response expectation
+   * @param ipcMessage The channel enum value on which payload has to transit
+   */
+  fwd<T, R>(ipcMessage: IpcMessage): void;
 }
 
 export class IpcTunnel {
@@ -61,15 +83,35 @@ export class IpcTunnel {
   }
 
   /**
+   * Forward message without acknowledgement and response expectation
+   * @param channel The channel enum value on which param has to transit
+   * @param param The param value to send
+   */
+  public fwd<T, R>(channel: Channel, param: T): void {
+    if (this.ipcType === IpcType.MAIN) {
+      this.webContents.send(channel, param);
+    } else if (this.ipcType === IpcType.RENDERER) {
+      this.bridgeApi.invoke(channel, param).then(() => {});
+    }
+  }
+
+  /**
    * Receive request from opposite Electron Ipc and respond to her with result
    * @param channel The channel enum value on which param has to transit
    * @param request The callback which return the result or error
+   * @return Channel subscription. It includes the ability to unsubscribe (meaning removing channel listeners)
    */
-  public on<T, R>(channel: Channel, request: (param: T) => R | Promise<R> | void | Error): void {
+  public on<T, R>(channel: Channel, request: (param: T) => R | Promise<R> | void | Error): IpcChannelSub {
     if (this.ipcType === IpcType.MAIN) {
       this.ipcMain.handle(channel, (event: IpcMainInvokeEvent, ...args: any[]) => {
         return request(args[0]);
       });
+
+      return {
+        unsubscribe: () => {
+          this.ipcMain.removeHandler(channel);
+        }
+      };
     } else if (this.ipcType === IpcType.RENDERER) {
       this.bridgeApi.receive(channel, (event: IpcRendererEvent, ...args: any[]) => {
         const response = request(args[0]);
@@ -87,44 +129,12 @@ export class IpcTunnel {
           event.sender.send(responseChannel, response);
         }
       });
+
+      return {
+        unsubscribe: () => {
+          this.bridgeApi.unsubscribe(channel);
+        }
+      };
     }
   }
-
-  /*  /!**
-   * To be added to work: public senders: Map<string, { send: (...sendArgs: any[]) => void }>;
-   *!/
-  public askFromMainChannel(channel: string, response: (...args: any[]) => void): void {
-    if (!this.ipcMain) {
-      throw new ElevateException("Required ipcMain");
-    }
-
-    if (this.senders.has(channel)) {
-      throw new ElevateException(`Duplicate channel "${channel}"`);
-    }
-
-    this.ipcMain.on(`${channel}-response`, (event: IpcMainEvent, ...rendererArgs: any[]) => {
-      response(rendererArgs);
-    });
-
-    this.senders.set(channel, {
-      send: (...sendArgs: any[]): void => {
-        this.webContents.send(channel, sendArgs);
-      }
-    });
-  }
-
-  public replyToMainChannel(channel: string, request: (...args: any[]) => any): void {
-    if (!this.bridgeApi) {
-      throw new ElevateException("Required bridgeApi");
-    }
-
-    if (this.senders.has(channel)) {
-      throw new ElevateException(`Duplicate channel "${channel}"`);
-    }
-
-    this.bridgeApi.receive(channel, (event: IpcRendererEvent, ...args: any[]) => {
-      const response = request(args);
-      event.sender.send(`${channel}-response`, response);
-    });
-  }*/
 }

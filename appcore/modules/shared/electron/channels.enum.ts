@@ -10,6 +10,9 @@ export enum Channel {
   getPath = "getPath",
   clearStorageData = "clearStorageData",
   showOpenDialogSync = "showOpenDialogSync",
+  openExternal = "openExternal",
+  openPath = "openPath",
+  showItemInFolder = "showItemInFolder",
 
   // Fs
   existsSync = "existsSync",
@@ -25,6 +28,12 @@ export enum Channel {
   computeActivity = "computeActivity",
   findActivity = "findActivity",
   findStreams = "findStreams",
+
+  // Profiles
+  backupInit = "backupInit",
+  backupWriteObj = "backupWriteObj",
+  restoreInit = "restoreInit",
+  restoreReadObj = "restoreReadObj",
 
   // Other
   stravaLink = "stravaLink",

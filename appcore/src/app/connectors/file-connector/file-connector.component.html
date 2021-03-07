@@ -33,9 +33,9 @@
     <div *ngIf="showConfigure && fileConnectorInfo" class="configureView" fxFill>
       <div>
         <mat-form-field fxFill>
-          <input [(ngModel)]="fileConnectorInfo.sourceDirectory" [disabled]="true" matInput
+          <input [(ngModel)]="fileConnectorInfo.sourceDirectory" (click)="onUserDirectorySelection()" class="clickable" matInput
                  placeholder="{{ (!fileConnectorInfo.sourceDirectory) ? 'Browse for a directory to scan...' : 'Scan directory' }}"
-                 type="text">
+                 type="text" readonly>
           <button *ngIf="fileConnectorInfo.sourceDirectory" (click)="onUserDirectoryOpen()" color="primary" matTooltip="Locate configured directory"
                   mat-icon-button
                   matSuffix>

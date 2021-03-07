@@ -3,18 +3,12 @@ import { SyncMenuComponent } from "../sync-menu.component";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import {
-  ImportBackupDialogComponent,
-  ImportExportProgressDialogComponent
-} from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
-import { DesktopDumpModel } from "../../shared/models/dumps/desktop-dump.model";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { AppRoutes } from "../../shared/models/app-routes";
 import { ConnectorType } from "@elevate/shared/sync";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { ElectronService } from "../../desktop/electron/electron.service";
-import { DesktopImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/desktop-import-backup-dialog.component";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
 import { ConnectorSyncDateTime } from "@elevate/shared/models";
@@ -22,6 +16,8 @@ import { ConnectorService } from "../../connectors/connector.service";
 import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { DesktopAppService } from "../../shared/services/app-service/desktop/desktop-app.service";
+import { DesktopBackupDialogComponent } from "../../shared/dialogs/backups/desktop/desktop-backup-dialog.component";
+import { DesktopRestoreDialogComponent } from "../../shared/dialogs/backups/desktop/desktop-restore-dialog.component";
 
 @Component({
   selector: "app-desktop-sync-menu",
@@ -104,13 +100,13 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
     this.syncMenuActions.push({
       icon: "vertical_align_bottom",
       text: "Backup profile",
-      action: () => this.onSyncedBackupExport()
+      action: () => this.onBackup()
     });
 
     this.syncMenuActions.push({
       icon: "vertical_align_top",
       text: "Restore profile",
-      action: () => this.onSyncedBackupImport()
+      action: () => this.onRestore()
     });
   }
 
@@ -130,45 +126,36 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
     });
   }
 
-  public onSyncedBackupImport(): void {
-    const dialogRef = this.dialog.open(DesktopImportBackupDialogComponent, {
-      minWidth: ImportBackupDialogComponent.MIN_WIDTH,
-      maxWidth: ImportBackupDialogComponent.MAX_WIDTH
+  public onBackup(): void {
+    const dialogRef = this.dialog.open(DesktopBackupDialogComponent, {
+      minWidth: DesktopBackupDialogComponent.MIN_WIDTH,
+      maxWidth: DesktopBackupDialogComponent.MAX_WIDTH,
+      closeOnNavigation: false,
+      disableClose: true
     });
 
-    const afterClosedSubscription = dialogRef.afterClosed().subscribe((file: File) => {
-      if (file) {
-        const importingDialog = this.dialog.open(ImportExportProgressDialogComponent, {
-          disableClose: true,
-          data: ImportExportProgressDialogComponent.MODE_IMPORT
-        });
+    dialogRef
+      .afterClosed()
+      .toPromise()
+      .then(backupFilePath => {
+        if (backupFilePath) {
+          this.snackBar
+            .open("Backup file ready", "Show in folder")
+            .onAction()
+            .toPromise()
+            .then(() => {
+              this.electronService.showItemInFolder(backupFilePath);
+            });
+        }
+      });
+  }
 
-        const reader = new FileReader(); // Reading file, when load, import it
-        reader.readAsArrayBuffer(file);
-        reader.onloadend = (event: Event) => {
-          const dump = (event.target as IDBRequest).result;
-          if (dump) {
-            try {
-              const desktopDumpModel: DesktopDumpModel = DesktopDumpModel.unzip(dump);
-              this.desktopSyncService.import(desktopDumpModel).then(
-                () => {
-                  importingDialog.close();
-                  location.reload();
-                },
-                error => {
-                  importingDialog.close();
-                  this.snackBar.open(error, "Close");
-                }
-              );
-            } catch (err) {
-              this.snackBar.open("Incompatible or deprecated backup format", "Close");
-              importingDialog.close();
-            }
-          }
-        };
-      }
-
-      afterClosedSubscription.unsubscribe();
+  public onRestore(): void {
+    this.dialog.open(DesktopRestoreDialogComponent, {
+      minWidth: DesktopRestoreDialogComponent.MIN_WIDTH,
+      maxWidth: DesktopRestoreDialogComponent.MAX_WIDTH,
+      closeOnNavigation: false,
+      disableClose: true
     });
   }
 

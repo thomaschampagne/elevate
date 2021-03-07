@@ -29,7 +29,7 @@ export class DesktopLoadService extends AppLoadService {
   constructor(
     @Inject(DataStore) protected readonly dataStore: DataStore<object>,
     @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
-    @Inject(IPC_TUNNEL_SERVICE) public ipcTunnelService: IpcTunnelService,
+    @Inject(IPC_TUNNEL_SERVICE) public readonly ipcTunnelService: IpcTunnelService,
     @Inject(HttpClient) private readonly httpClient: HttpClient,
     @Inject(StravaConnectorInfoService) private readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(DesktopMigrationService) private readonly desktopMigrationService: DesktopMigrationService,

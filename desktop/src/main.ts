@@ -7,7 +7,8 @@ import Electron, {
   globalShortcut,
   IpcMain,
   ipcMain,
-  OpenDialogSyncOptions
+  OpenDialogSyncOptions,
+  shell
 } from "electron";
 import path from "path";
 import logger from "electron-log";
@@ -25,6 +26,7 @@ import { IpcMainTunnelService } from "./ipc-main-tunnel.service";
 import { IpcSyncMessageListener } from "./listeners/ipc-sync-message.listener";
 import { IpcComputeActivityListener } from "./listeners/ipc-compute-activity.listener";
 import { IpcStravaLinkListener } from "./listeners/ipc-strava-link.listener";
+import { IpcProfileBackupListener } from "./listeners/ipc-profile-backup.listener";
 
 const IS_ELECTRON_DEV = !app.isPackaged;
 logger.transports.file.level = IS_ELECTRON_DEV ? "debug" : "info";
@@ -46,6 +48,7 @@ class Main {
     @inject(IpcSyncMessageListener) private readonly ipcSyncMessageListener: IpcSyncMessageListener,
     @inject(IpcComputeActivityListener) private readonly ipcComputeActivityListener: IpcComputeActivityListener,
     @inject(IpcStravaLinkListener) private readonly ipcStravaLinkListener: IpcStravaLinkListener,
+    @inject(IpcProfileBackupListener) private readonly ipcProfileBackupListener: IpcProfileBackupListener,
     @inject(HttpClient) private readonly httpClient: HttpClient
   ) {}
 
@@ -244,6 +247,18 @@ class Main {
       }
     );
 
+    this.ipcTunnelService.on<string, void>(Channel.openExternal, (pPath: string) => {
+      return pPath ? shell.openExternal(path.normalize(pPath)) : Promise.reject(`Given path is empty`);
+    });
+
+    this.ipcTunnelService.on<string, string>(Channel.openPath, (pPath: string) => {
+      return pPath ? shell.openPath(path.normalize(pPath)) : Promise.reject(`Given path is empty`);
+    });
+
+    this.ipcTunnelService.on<string, void>(Channel.showItemInFolder, (pPath: string) => {
+      return pPath ? shell.showItemInFolder(path.normalize(pPath)) : Promise.reject(`Given path is empty`);
+    });
+
     this.ipcTunnelService.on<string, string>(
       Channel.getPath,
       (
@@ -263,7 +278,6 @@ class Main {
           | "videos"
           | "recent"
           | "logs"
-          | "pepperFlashSystemPlugin"
           | "crashDumps"
       ) => {
         return this.app.getPath(name);
@@ -272,15 +286,15 @@ class Main {
 
     // File system
     this.ipcTunnelService.on<string, boolean>(Channel.existsSync, (pPath: string) => {
-      return fs.existsSync(pPath);
+      return pPath ? fs.existsSync(path.normalize(pPath)) : false;
     });
 
     this.ipcTunnelService.on<string, boolean>(Channel.isDirectory, (pPath: string) => {
-      return fs.statSync(pPath).isDirectory();
+      return pPath ? fs.statSync(path.normalize(pPath)).isDirectory() : false;
     });
 
     this.ipcTunnelService.on<string, boolean>(Channel.isFile, (pPath: string) => {
-      return fs.statSync(pPath).isFile();
+      return pPath ? fs.statSync(path.normalize(pPath)).isFile() : false;
     });
 
     // Runtime info
@@ -371,6 +385,9 @@ class Main {
 
     // Listen for strava account linking
     this.ipcStravaLinkListener.startListening(this.ipcTunnelService);
+
+    // Listen for backup profile requests
+    this.ipcProfileBackupListener.startListening(this.ipcTunnelService);
   }
 }
 

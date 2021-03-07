@@ -1,8 +1,8 @@
 import { Channel } from "./channels.enum";
 
 export class IpcMessage {
-  public channel: Channel;
-  public payload: unknown[];
+  public readonly channel: Channel;
+  public readonly payload: unknown[];
 
   constructor(channel: Channel, ...payload: any[]) {
     this.channel = channel;

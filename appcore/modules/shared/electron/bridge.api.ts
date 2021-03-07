@@ -1,4 +1,4 @@
-import { ClearStorageDataOptions, IpcRendererEvent, OpenDialogSyncOptions, Shell } from "electron";
+import { ClearStorageDataOptions, IpcRendererEvent, OpenDialogSyncOptions } from "electron";
 import { Channel } from "./channels.enum";
 
 export interface BridgeApi {
@@ -12,6 +12,10 @@ export interface BridgeApi {
   resetApp: () => Promise<void>;
   invoke: (channel: Channel, ...args: any[]) => Promise<any>;
   receive: (channel: Channel, listener: (event: IpcRendererEvent, ...args: any[]) => void) => void;
+  unsubscribe: (channel: Channel) => void;
+  openExternal: (path: string) => Promise<void>;
+  openPath: (path: string) => Promise<string>;
+  showItemInFolder: (path: string) => Promise<void>;
 
   // File operations
   existsSync: (path: string | URL) => Promise<boolean>;
@@ -21,7 +25,6 @@ export interface BridgeApi {
   // Remote electron stuff
   electronVersion: string;
   nodePlatform: string;
-  shell: Shell;
   showOpenDialogSync: (options: OpenDialogSyncOptions) => Promise<string[] | undefined>;
   clearStorageData: (options?: ClearStorageDataOptions) => Promise<void>;
   getPath: (
@@ -41,7 +44,6 @@ export interface BridgeApi {
       | "videos"
       | "recent"
       | "logs"
-      | "pepperFlashSystemPlugin"
       | "crashDumps"
   ) => Promise<string>;
 }

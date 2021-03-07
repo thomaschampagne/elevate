@@ -1,4 +1,4 @@
-import { Config, Data, Layout, PlotData, PlotMarker, PlotType, ScatterLine } from "plotly.js";
+import { Config, Layout, PlotData, PlotMarker, PlotType, ScatterLine } from "plotly.js";
 import _ from "lodash";
 import { Identifier } from "@elevate/shared/tools";
 import { Theme } from "../../../../shared/enums/theme.enum";
@@ -37,7 +37,7 @@ export abstract class PlotChart {
   private static readonly DEFAULT_RESIZE_HANDLER = true;
 
   public id: string;
-  public data: Partial<Data>[];
+  public data: Partial<PlotData>[];
   public layout: Partial<Layout>;
   public config: Partial<Config>;
   public useResizeHandler: boolean;

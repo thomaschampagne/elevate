@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer, IpcRendererEvent, OpenDialogSyncOptions, shell } from "electron";
+import { contextBridge, ipcRenderer, IpcRendererEvent, OpenDialogSyncOptions } from "electron";
 import { BridgeApi, Channel } from "@elevate/shared/electron";
 
 const api: BridgeApi = {
@@ -13,6 +13,10 @@ const api: BridgeApi = {
   invoke: (channel: Channel, ...args: any[]) => ipcRenderer.invoke(channel, args),
   receive: (channel: Channel, listener: (event: IpcRendererEvent, ...args: any[]) => void) =>
     ipcRenderer.on(channel, listener),
+  unsubscribe: (channel: Channel) => ipcRenderer.removeAllListeners(channel),
+  openExternal: (path: string) => ipcRenderer.invoke(Channel.openExternal, path),
+  openPath: (path: string) => ipcRenderer.invoke(Channel.openPath, path),
+  showItemInFolder: (path: string) => ipcRenderer.invoke(Channel.showItemInFolder, path),
 
   // File operations
   existsSync: (path: string | URL) => ipcRenderer.invoke(Channel.existsSync, path),
@@ -22,7 +26,6 @@ const api: BridgeApi = {
   // Remote electron stuff
   electronVersion: process.versions.electron,
   nodePlatform: process.platform,
-  shell: shell,
   showOpenDialogSync: (options: OpenDialogSyncOptions) => ipcRenderer.invoke(Channel.showOpenDialogSync, options),
   clearStorageData: (options?: Electron.ClearStorageDataOptions) =>
     ipcRenderer.invoke(Channel.clearStorageData, options),
@@ -43,7 +46,6 @@ const api: BridgeApi = {
       | "videos"
       | "recent"
       | "logs"
-      | "pepperFlashSystemPlugin"
       | "crashDumps"
   ) => ipcRenderer.invoke(Channel.getPath, name)
 };

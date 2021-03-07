@@ -284,9 +284,7 @@ describe("ExtensionSyncService", () => {
       new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78))
     ];
 
-    spyOn(extensionSyncService, "getCompatibleBackupVersionThreshold").and.returnValue(
-      compatibleBackupVersionThreshold
-    );
+    spyOn(DataStore, "getMinBackupVersion").and.returnValue(compatibleBackupVersionThreshold);
 
     const importedSyncedBackupModel: ExtensionDumpModel = {
       syncedActivities: TEST_SYNCED_ACTIVITIES,
@@ -350,9 +348,7 @@ describe("ExtensionSyncService", () => {
     const syncDateTime = new SyncDateTime(99);
     const importedBackupVersion = "1.5.1";
     const compatibleBackupVersionThreshold = "1.2.3";
-    spyOn(extensionSyncService, "getCompatibleBackupVersionThreshold").and.returnValue(
-      compatibleBackupVersionThreshold
-    );
+    spyOn(DataStore, "getMinBackupVersion").and.returnValue(compatibleBackupVersionThreshold);
 
     athleteModel = null;
 
@@ -424,15 +420,9 @@ describe("ExtensionSyncService", () => {
     const syncDateTime = new SyncDateTime(99);
     const importedBackupVersion = "1.4.7";
     const compatibleBackupVersionThreshold = "1.5.0";
-    spyOn(extensionSyncService, "getCompatibleBackupVersionThreshold").and.returnValue(
-      compatibleBackupVersionThreshold
-    );
+    spyOn(DataStore, "getMinBackupVersion").and.returnValue(compatibleBackupVersionThreshold);
     const expectedErrorMessage =
-      "Imported backup version " +
-      importedBackupVersion +
-      " is not compatible with current installed version " +
-      installedVersion +
-      ".";
+      "Imported backup version " + importedBackupVersion + " is not compatible with current installed version.";
 
     athleteModel.datedAthleteSettings = [];
 

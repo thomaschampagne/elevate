@@ -3,17 +3,16 @@ import { SyncMenuComponent } from "../sync-menu.component";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { ImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { ExtensionSyncService } from "../../shared/services/sync/impl/extension-sync.service";
 import { ExtensionDumpModel } from "../../shared/models/dumps/extension-dump.model";
 import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { AppRoutes } from "../../shared/models/app-routes";
-import { ExtensionImportBackupDialogComponent } from "../../shared/dialogs/import-backup-dialog/extension-import-backup-dialog.component";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
 import { ExtensionAppService } from "../../shared/services/app-service/extension/extension-app.service";
+import { ExtensionImportBackupDialogComponent } from "../../shared/dialogs/backups/extension/extension-import-backup-dialog.component";
 
 @Component({
   selector: "app-extension-sync-menu",
@@ -117,13 +116,13 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
     this.syncMenuActions.push({
       icon: "vertical_align_bottom",
       text: "Backup profile",
-      action: () => this.onSyncedBackupExport()
+      action: () => this.onBackup()
     });
 
     this.syncMenuActions.push({
       icon: "vertical_align_top",
       text: "Restore profile",
-      action: () => this.onSyncedBackupImport()
+      action: () => this.onRestore()
     });
   }
 
@@ -134,10 +133,38 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
     });
   }
 
-  public onSyncedBackupImport(): void {
+  public onBackup(): void {
+    const progressDialogRef = this.dialog.open(ExtensionImportBackupDialogComponent, {
+      disableClose: true,
+      data: ExtensionImportBackupDialogComponent.MODE_EXPORT
+    });
+
+    progressDialogRef
+      .afterOpened()
+      .toPromise()
+      .then(() => {
+        this.extensionSyncService.export().then(
+          result => {
+            progressDialogRef.close(result);
+          },
+          error => {
+            this.snackBar.open(error, "Close");
+          }
+        );
+      });
+
+    progressDialogRef
+      .afterClosed()
+      .toPromise()
+      .then(() => {
+        this.snackBar.open(this.backupDoneMessage, "Ok", { duration: 15000 });
+      });
+  }
+
+  public onRestore(): void {
     const dialogRef = this.dialog.open(ExtensionImportBackupDialogComponent, {
-      minWidth: ImportBackupDialogComponent.MIN_WIDTH,
-      maxWidth: ImportBackupDialogComponent.MAX_WIDTH
+      minWidth: ExtensionImportBackupDialogComponent.MIN_WIDTH,
+      maxWidth: ExtensionImportBackupDialogComponent.MAX_WIDTH
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((dumpModel: ExtensionDumpModel) => {
@@ -177,14 +204,14 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
 
       const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
         if (confirm) {
-          this.syncService.sync(fastSync, forceSync);
+          this.extensionSyncService.sync(fastSync, forceSync);
         } else {
           this.router.navigate([AppRoutes.athleteSettings]);
         }
         afterClosedSubscription.unsubscribe();
       });
     } else {
-      this.syncService.sync(fastSync, forceSync);
+      this.extensionSyncService.sync(fastSync, forceSync);
     }
   }
 }

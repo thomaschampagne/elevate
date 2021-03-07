@@ -191,10 +191,13 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
       );
     }
 
-    return this.isDumpCompatible(importedBackupModel.pluginVersion, this.getCompatibleBackupVersionThreshold())
-      .then(() => {
-        return this.clearSyncedActivities();
-      })
+    if (!DataStore.isBackupCompatible(importedBackupModel.pluginVersion)) {
+      return Promise.reject(
+        `Imported backup version ${importedBackupModel.pluginVersion} is not compatible with current installed version.`
+      );
+    }
+
+    return this.clearSyncedActivities()
       .then(() => {
         return this.athleteService.clear(true);
       })

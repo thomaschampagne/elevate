@@ -5,6 +5,8 @@ import _ from "lodash";
 import { LoggerService } from "../services/logging/logger.service";
 import Loki from "lokijs";
 import { Inject } from "@angular/core";
+import semver from "semver/preload";
+import { environment } from "../../../environments/environment";
 
 export enum DbEvent {
   AUTO_LOADED,
@@ -12,6 +14,9 @@ export enum DbEvent {
 }
 
 export abstract class DataStore<T extends {}> {
+  protected constructor(@Inject(LoggerService) protected readonly logger: LoggerService) {
+    this.initDatabase();
+  }
   private static readonly DATABASE_NAME = "elevate";
   private static readonly DEFAULT_LOKI_ID_FIELD = "$loki";
   private static readonly DEFAULT_LOKI_META_FIELD = "meta";
@@ -19,10 +24,12 @@ export abstract class DataStore<T extends {}> {
   public dbEvent$: ReplaySubject<DbEvent>;
   private COLLECTIONS_MAP: Map<string, Collection<T>>;
 
-  protected constructor(@Inject(LoggerService) protected readonly logger: LoggerService) {
-    this.dbEvent$ = new ReplaySubject<DbEvent>();
-    this.db = new Loki(DataStore.DATABASE_NAME, this.getDbOptions());
-    this.COLLECTIONS_MAP = new Map<string, Collection<T>>();
+  public static isBackupCompatible(dumpVersion): boolean {
+    return semver.gte(dumpVersion, this.getMinBackupVersion()) || environment.skipRestoreSyncedBackupCheck;
+  }
+
+  public static getMinBackupVersion(): string {
+    return environment.minBackupVersion;
   }
 
   public static cleanDbObject<T>(dbObj: LokiQuery<T & LokiObj>): T {
@@ -37,6 +44,12 @@ export abstract class DataStore<T extends {}> {
     });
   }
 
+  protected initDatabase(): void {
+    this.dbEvent$ = new ReplaySubject<DbEvent>();
+    this.db = new Loki(DataStore.DATABASE_NAME, this.getDbOptions());
+    this.COLLECTIONS_MAP = new Map<string, Collection<T>>();
+  }
+
   public abstract getPersistenceAdapter(): LokiPersistenceAdapter;
 
   public abstract getAppUsageDetails(): Promise<AppUsageDetails>;
@@ -47,7 +60,7 @@ export abstract class DataStore<T extends {}> {
     return {
       adapter: this.getPersistenceAdapter(),
       env: "BROWSER",
-      autosave: true,
+      autosave: false,
       autoload: true,
       autoloadCallback: err => this.onAutoLoadDone(err),
       autosaveCallback: () => this.onAutoSaveDone()

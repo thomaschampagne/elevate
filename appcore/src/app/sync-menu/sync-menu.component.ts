@@ -7,7 +7,6 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { ElevateException } from "@elevate/shared/exceptions";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
-import { ImportExportProgressDialogComponent } from "../shared/dialogs/import-backup-dialog/import-backup-dialog.component";
 import { Subscription } from "rxjs";
 import { AppService } from "../shared/services/app-service/app.service";
 import { SyncMenuAction } from "./sync-menu-action.model";
@@ -22,6 +21,8 @@ export abstract class SyncMenuComponent implements OnInit, OnDestroy {
   public historyChangesSub: Subscription;
 
   protected abstract readonly backupDoneMessage;
+
+  public abstract onBackup(): void;
 
   protected constructor(
     public readonly appService: AppService,
@@ -46,8 +47,8 @@ export abstract class SyncMenuComponent implements OnInit, OnDestroy {
     });
   }
 
-  public onSyncedBackupImport(): void {
-    throw new ElevateException("onSyncedBackupImport must be implemented in a child class");
+  public onRestore(): void {
+    throw new ElevateException("onRestore must be implemented in a child class");
   }
 
   public onSync(fastSync: boolean = null, forceSync: boolean = null): void {}
@@ -79,34 +80,6 @@ export abstract class SyncMenuComponent implements OnInit, OnDestroy {
       }
       afterClosedSubscription.unsubscribe();
     });
-  }
-
-  public onSyncedBackupExport(): void {
-    const progressDialogRef = this.dialog.open(ImportExportProgressDialogComponent, {
-      disableClose: true,
-      data: ImportExportProgressDialogComponent.MODE_EXPORT
-    });
-
-    progressDialogRef
-      .afterOpened()
-      .toPromise()
-      .then(() => {
-        this.syncService.export().then(
-          result => {
-            progressDialogRef.close(result);
-          },
-          error => {
-            this.snackBar.open(error, "Close");
-          }
-        );
-      });
-
-    progressDialogRef
-      .afterClosed()
-      .toPromise()
-      .then(() => {
-        this.snackBar.open(this.backupDoneMessage, "Ok", { duration: 15000 });
-      });
   }
 
   public ngOnDestroy(): void {

@@ -1,6 +1,7 @@
 export * from "./activity-data";
 export * from "./athlete";
 export * from "./sync";
+export * from "./backups";
 export * from "./user-settings";
 export * from "./properties.model";
 export * from "./core-messages";
