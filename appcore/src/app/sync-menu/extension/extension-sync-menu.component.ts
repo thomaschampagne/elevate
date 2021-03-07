@@ -143,7 +143,7 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
       .afterOpened()
       .toPromise()
       .then(() => {
-        this.extensionSyncService.export().then(
+        this.extensionSyncService.backup().then(
           result => {
             progressDialogRef.close(result);
           },
@@ -169,7 +169,7 @@ export class ExtensionSyncMenuComponent extends SyncMenuComponent implements OnI
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((dumpModel: ExtensionDumpModel) => {
       if (dumpModel) {
-        this.extensionSyncService.import(dumpModel).then(
+        this.extensionSyncService.restore(dumpModel).then(
           () => {
             location.reload();
           },

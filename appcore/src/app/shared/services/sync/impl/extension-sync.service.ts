@@ -136,7 +136,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
     throw new Error("ExtensionSyncService do not support sync stop");
   }
 
-  public export(): Promise<{ filename: string; size: number }> {
+  public backup(): Promise<{ filename: string; size: number }> {
     return this.prepareForExport().then(
       (backupModel: ExtensionDumpModel) => {
         const blob = new Blob([JSON.stringify(backupModel)], { type: "application/json; charset=utf-8" });
@@ -177,7 +177,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
     });
   }
 
-  public import(importedBackupModel: ExtensionDumpModel): Promise<void> {
+  public restore(importedBackupModel: ExtensionDumpModel): Promise<void> {
     if (_.isEmpty(importedBackupModel.syncedActivities)) {
       return Promise.reject(
         "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync."

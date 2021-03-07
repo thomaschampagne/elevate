@@ -16,7 +16,7 @@ export class MockSyncService extends SyncService<any> {
     return null;
   }
 
-  public export(): Promise<{ filename: string; size: number }> {
+  public backup(): Promise<{ filename: string; size: number }> {
     return null;
   }
 
@@ -28,7 +28,7 @@ export class MockSyncService extends SyncService<any> {
     return null;
   }
 
-  public import(importedBackupModel: any): Promise<void> {
+  public restore(importedBackupModel: any): Promise<void> {
     return null;
   }
 

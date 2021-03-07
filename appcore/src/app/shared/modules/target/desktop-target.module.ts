@@ -31,6 +31,7 @@ import { AthleteService } from "../../services/athlete/athlete.service";
 import { DesktopAthleteService } from "../../services/athlete/desktop/desktop-athlete.service";
 import { IpcSyncMessageSender } from "../../../desktop/ipc/ipc-sync-messages-sender.service";
 import { DesktopRestoreDialogComponent } from "../../dialogs/backups/desktop/desktop-restore-dialog.component";
+import { DesktopBackupService } from "../../../desktop/backup/desktop-backup.service";
 
 @NgModule({
   imports: [CoreModule, DesktopRoutingModule, ConnectorsModule],
@@ -42,6 +43,7 @@ import { DesktopRestoreDialogComponent } from "../../dialogs/backups/desktop/des
     IpcSyncMessageSender,
     DesktopMigrationService,
     DesktopSyncService,
+    DesktopBackupService,
     StravaConnectorInfoService,
     StravaConnectorService,
     ConnectorSyncDateTimeDao,

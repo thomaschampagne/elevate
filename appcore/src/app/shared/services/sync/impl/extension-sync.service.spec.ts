@@ -216,7 +216,7 @@ describe("ExtensionSyncService", () => {
     );
   });
 
-  it("should export athlete activities", done => {
+  it("should backup athlete activities", done => {
     // Given
     const syncDateTime = new SyncDateTime(99);
 
@@ -228,7 +228,7 @@ describe("ExtensionSyncService", () => {
     const saveAsSpy = spyOn(extensionSyncService, "saveAs").and.stub();
 
     // When
-    const promise: Promise<{ filename: string; size: number }> = extensionSyncService.export();
+    const promise: Promise<{ filename: string; size: number }> = extensionSyncService.backup();
 
     // Then
     promise.then(
@@ -254,7 +254,7 @@ describe("ExtensionSyncService", () => {
     const saveAsSpy = spyOn(extensionSyncService, "saveAs").and.stub();
 
     // When
-    const promise: Promise<any> = extensionSyncService.export();
+    const promise: Promise<any> = extensionSyncService.backup();
 
     // Then
     promise.then(
@@ -319,7 +319,7 @@ describe("ExtensionSyncService", () => {
     ).and.returnValue(Promise.resolve());
 
     // When
-    const promise: Promise<void> = extensionSyncService.import(importedSyncedBackupModel);
+    const promise: Promise<void> = extensionSyncService.restore(importedSyncedBackupModel);
 
     // Then
     promise.then(
@@ -390,7 +390,7 @@ describe("ExtensionSyncService", () => {
     ).and.returnValue(Promise.resolve());
 
     // When
-    const promise: Promise<void> = extensionSyncService.import(importedSyncedBackupModel);
+    const promise: Promise<void> = extensionSyncService.restore(importedSyncedBackupModel);
 
     // Then
     promise.then(
@@ -438,7 +438,7 @@ describe("ExtensionSyncService", () => {
     spyOn(extensionSyncService.activityService, "insertMany").and.returnValue(Promise.resolve());
 
     // When
-    const promise: Promise<void> = extensionSyncService.import(importedSyncedBackupModel);
+    const promise: Promise<void> = extensionSyncService.restore(importedSyncedBackupModel);
 
     // Then
     promise.then(
@@ -475,7 +475,7 @@ describe("ExtensionSyncService", () => {
     spyOn(extensionSyncService.activityService, "insertMany").and.returnValue(Promise.resolve());
 
     // When
-    const promise: Promise<void> = extensionSyncService.import(importedSyncedBackupModel);
+    const promise: Promise<void> = extensionSyncService.restore(importedSyncedBackupModel);
 
     // Then
     promise.then(
@@ -507,7 +507,7 @@ describe("ExtensionSyncService", () => {
     spyOn(extensionSyncService.activityService, "insertMany").and.returnValue(Promise.resolve());
 
     // When
-    const promise: Promise<void> = extensionSyncService.import(syncedBackupModelPartial as ExtensionDumpModel);
+    const promise: Promise<void> = extensionSyncService.restore(syncedBackupModelPartial as ExtensionDumpModel);
 
     // Then
     promise.then(
@@ -544,7 +544,7 @@ describe("ExtensionSyncService", () => {
     spyOn(extensionSyncService.activityService, "insertMany").and.returnValue(Promise.resolve());
 
     // When
-    const promise: Promise<void> = extensionSyncService.import(importedSyncedBackupModel);
+    const promise: Promise<void> = extensionSyncService.restore(importedSyncedBackupModel);
 
     // Then
     promise.then(
@@ -576,7 +576,7 @@ describe("ExtensionSyncService", () => {
     );
 
     // When
-    const promise: Promise<void> = extensionSyncService.import(importedSyncedBackupModelPartial as ExtensionDumpModel);
+    const promise: Promise<void> = extensionSyncService.restore(importedSyncedBackupModelPartial as ExtensionDumpModel);
 
     // Then
     promise.then(
@@ -613,7 +613,7 @@ describe("ExtensionSyncService", () => {
     spyOn(extensionSyncService.activityService, "insertMany").and.returnValue(Promise.resolve());
 
     // When
-    const promise: Promise<void> = extensionSyncService.import(importedSyncedBackupModel);
+    const promise: Promise<void> = extensionSyncService.restore(importedSyncedBackupModel);
 
     // Then
     promise.then(

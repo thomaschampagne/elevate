@@ -42,18 +42,8 @@ import { AppRoutes } from "../../../models/app-routes";
 import { DesktopMigrationService } from "../../../../desktop/migration/desktop-migration.service";
 import { ActivityRecalculateNotification, DesktopActivityService } from "../../activity/impl/desktop-activity.service";
 import { IpcSyncMessageSender } from "../../../../desktop/ipc/ipc-sync-messages-sender.service";
+import { DesktopBackupService } from "../../../../desktop/backup/desktop-backup.service";
 import UserSettingsModel = UserSettings.UserSettingsModel;
-
-// TODO Handle errors cases (continue or not the sync...)
-// TODO Sync ribbon displayed on startup? Allow user to see the sync log view
-/* TODO Handle connector priority?! Consider not syncing all connector
-    but allow user to mark a connector as "Primary" which will be synced when starting the app.
-	Also allow user to sync connector he wants manually on connectors page
- */
-
-// TODO Forward toolbar sync button to Connectors
-// TODO Test in a current sync is running on Service.currentConnector(setter)
-// TODO Add unit add with try/catch on StravaConnector.prepareBareActivity() call ?! => 'bareActivity = this.prepareBareActivity(bareActivity);'
 
 @Injectable()
 export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> implements OnDestroy {
@@ -67,6 +57,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   constructor(
     @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
     @Inject(DataStore) public readonly desktopDataStore: DesktopDataStore<object>,
+    @Inject(DesktopBackupService) public readonly desktopBackupService: DesktopBackupService,
     @Inject(ActivityService) public readonly activityService: DesktopActivityService,
     @Inject(StreamsService) public readonly streamsService: StreamsService,
     @Inject(AthleteService) public readonly athleteService: AthleteService,
@@ -92,7 +83,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     );
     this.syncSubscription = null;
     this.currentConnectorType = null;
-    this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync // TODO ReplaySubject to get old values?! I think no
+    this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync
     this.stravaConnectorInfoService.listenForCredentialsUpdates(this.syncEvents$);
 
     // Emulate a sync on activities recalculation (goal: disable UI actions which could compromise data integrity during recalculation)
@@ -433,13 +424,13 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     }
   }
 
-  public export(outputDirectory: string): Subject<BackupEvent> {
+  public backup(outputDirectory: string): Subject<BackupEvent> {
     const backupVersion = this.versionsProvider.getPackageVersion();
-    return this.desktopDataStore.backup(outputDirectory, backupVersion);
+    return this.desktopBackupService.backup(outputDirectory, backupVersion);
   }
 
-  public import(path: string): Subject<RestoreEvent> {
-    const restoreEvent$ = this.desktopDataStore.restore(path);
+  public restore(path: string): Subject<RestoreEvent> {
+    const restoreEvent$ = this.desktopBackupService.restore(path);
 
     // Notify syncing we restore started
     this.isSyncing$.next(true);

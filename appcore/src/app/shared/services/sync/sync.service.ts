@@ -39,9 +39,9 @@ export abstract class SyncService<T> {
 
   public abstract getSyncState(): Promise<SyncState>;
 
-  public abstract export(...args): any; // TODO RN backup
+  public abstract backup(...args): any;
 
-  public abstract import(...arg): any; // TODO RN restore
+  public abstract restore(...arg): any;
 
   public abstract redirect(): void;
 

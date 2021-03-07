@@ -145,7 +145,7 @@ export class DesktopBackupDialogComponent implements OnInit {
     if (this.outputDirectory) {
       this.isBackupProcessing = true;
       this.backupProgress = 0;
-      this.desktopSyncService.export(this.outputDirectory).subscribe(
+      this.desktopSyncService.backup(this.outputDirectory).subscribe(
         (backupEvent: BackupEvent) => {
           this.backupProgress = Math.floor((backupEvent.savedDocs / backupEvent.totalDocs) * 100);
 

@@ -2,9 +2,9 @@ import { ChangeDetectorRef, Component, Inject, OnInit } from "@angular/core";
 import { ElectronService } from "../../../../desktop/electron/electron.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatDialogRef } from "@angular/material/dialog";
-import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.service";
 import { SyncService } from "../../../services/sync/sync.service";
 import { DesktopSyncService } from "../../../services/sync/impl/desktop-sync.service";
+import { DesktopBackupService } from "../../../../desktop/backup/desktop-backup.service";
 
 @Component({
   selector: "app-desktop-restore-dialog",
@@ -100,7 +100,7 @@ export class DesktopRestoreDialogComponent implements OnInit {
 
   public onUserFileSelection(): void {
     this.electronService
-      .userFileSelection(DesktopDataStore.BACKUP_EXT, DesktopRestoreDialogComponent.BACKUP_TYPE_NAME)
+      .userFileSelection(DesktopBackupService.BACKUP_EXT, DesktopRestoreDialogComponent.BACKUP_TYPE_NAME)
       .then(file => this.configureBackupFile(file));
   }
 
@@ -122,7 +122,7 @@ export class DesktopRestoreDialogComponent implements OnInit {
     if (this.backupFilePath) {
       this.isRestoreProcessing = true;
       this.restoreProgress = 0;
-      this.desktopSyncService.import(this.backupFilePath).subscribe(
+      this.desktopSyncService.restore(this.backupFilePath).subscribe(
         restoreEvent => {
           this.restoreProgress = Math.floor((restoreEvent.restoredDocs / restoreEvent.totalDocs) * 100);
           this.changeDetectorRef.detectChanges();
