@@ -5,7 +5,6 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { ExtensionSyncService } from "../../shared/services/sync/impl/extension-sync.service";
-import { ExtensionDumpModel } from "../../shared/models/dumps/extension-dump.model";
 import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { AppRoutes } from "../../shared/models/app-routes";
@@ -13,6 +12,7 @@ import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
 import { ExtensionAppService } from "../../shared/services/app-service/extension/extension-app.service";
 import { ExtensionImportBackupDialogComponent } from "../../shared/dialogs/backups/extension/extension-import-backup-dialog.component";
+import { ExtensionDumpModel } from "../../shared/models/extension-dump.model";
 
 @Component({
   selector: "app-extension-sync-menu",

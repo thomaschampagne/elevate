@@ -11,8 +11,6 @@ import _ from "lodash";
 import moment from "moment";
 import { SyncService } from "../sync.service";
 import { SyncState } from "../sync-state.enum";
-import { ExtensionDumpModel } from "../../../models/dumps/extension-dump.model";
-import { DumpModel } from "../../../models/dumps/dump.model";
 import { StreamsService } from "../../streams/streams.service";
 import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
 import { DataStore } from "../../../data-store/data-store";
@@ -22,6 +20,7 @@ import { filter } from "rxjs/operators";
 import { CoreMessages } from "@elevate/shared/models";
 import { ChromiumService } from "../../../../extension/chromium.service";
 import { ExtensionUserSettingsService } from "../../user-settings/extension/extension-user-settings.service";
+import { ExtensionDumpModel } from "../../../models/extension-dump.model";
 
 @Injectable()
 export class ExtensionSyncService extends SyncService<SyncDateTime> {
@@ -151,7 +150,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
     );
   }
 
-  public prepareForExport(): Promise<DumpModel> {
+  public prepareForExport(): Promise<ExtensionDumpModel> {
     return Promise.all([
       this.syncDateTimeDao.findOne(),
       this.activityService.fetch(),
@@ -167,7 +166,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
         return Promise.reject("Cannot export. No last synchronization date found.");
       }
 
-      const backupModel: DumpModel = {
+      const backupModel: ExtensionDumpModel = {
         syncDateTime: DataStore.cleanDbObject<SyncDateTime>(syncDateTime),
         syncedActivities: DataStore.cleanDbCollection<SyncedActivityModel>(syncedActivityModels),
         athleteModel: DataStore.cleanDbObject<AthleteModel>(athleteModel),

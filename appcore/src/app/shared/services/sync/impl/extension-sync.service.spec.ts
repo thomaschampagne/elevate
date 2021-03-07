@@ -3,12 +3,10 @@ import { SyncDateTimeDao } from "../../../dao/sync/sync-date-time.dao";
 import { TestBed } from "@angular/core/testing";
 import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { SyncService } from "../sync.service";
-import { ExtensionDumpModel } from "../../../models/dumps/extension-dump.model";
 import { SharedModule } from "../../../shared.module";
 import { SyncState } from "../sync-state.enum";
 import { MockedVersionsProvider } from "../../versions/impl/mock/mocked-versions-provider";
 import { TEST_SYNCED_ACTIVITIES } from "../../../../../shared-fixtures/activities-2015.fixture";
-import { DumpModel } from "../../../models/dumps/dump.model";
 import { CoreModule } from "../../../../core/core.module";
 import _ from "lodash";
 import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
@@ -21,6 +19,7 @@ import { ChromiumService } from "../../../../extension/chromium.service";
 import { LoggerService } from "../../logging/logger.service";
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
+import { ExtensionDumpModel } from "../../../models/extension-dump.model";
 
 @Injectable()
 class ChromiumServiceMock extends ChromiumService {
@@ -198,7 +197,7 @@ describe("ExtensionSyncService", () => {
     spyOn(extensionSyncService.athleteService, "fetch").and.returnValue(Promise.resolve(athleteModel));
 
     // When
-    const promise: Promise<DumpModel> = extensionSyncService.prepareForExport();
+    const promise: Promise<ExtensionDumpModel> = extensionSyncService.prepareForExport();
 
     // Then
     promise.then(

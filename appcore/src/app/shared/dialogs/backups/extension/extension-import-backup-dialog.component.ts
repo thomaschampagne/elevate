@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import _ from "lodash";
-import { ExtensionDumpModel } from "../../../models/dumps/extension-dump.model";
+import { ExtensionDumpModel } from "../../../models/extension-dump.model";
 
 @Component({
   selector: "app-import-backup-dialog",

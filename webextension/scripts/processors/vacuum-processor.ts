@@ -6,6 +6,7 @@ import { GearType } from "../models/gear/gear-type.enum";
 import { ShoesGearModel } from "../models/gear/shoes-gear.model";
 import { GearModel } from "../models/gear/gear.model";
 import { Helper } from "../helper";
+import LZString from "lz-string";
 
 export class VacuumProcessor {
   public static cachePrefix = "elevate_stream_";
@@ -130,7 +131,7 @@ export class VacuumProcessor {
       let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + activityInfo.id);
 
       if (cache) {
-        cache = JSON.parse(atob(cache));
+        cache = JSON.parse(LZString.decompressFromBase64(cache));
         callback(
           cache.activityCommonStats,
           cache.stream,
@@ -263,7 +264,10 @@ export class VacuumProcessor {
             hasPowerMeter
           };
 
-          localStorage.setItem(VacuumProcessor.cachePrefix + this.getActivityId(), btoa(JSON.stringify(cache)));
+          localStorage.setItem(
+            VacuumProcessor.cachePrefix + this.getActivityId(),
+            LZString.compressToBase64(JSON.stringify(cache))
+          );
         } catch (err) {
           console.warn(err);
           localStorage.clear();

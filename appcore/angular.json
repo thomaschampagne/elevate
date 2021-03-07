@@ -38,7 +38,6 @@
               "metrics-graphics",
               "markdown-it",
               "@iktakahiro/markdown-it-katex",
-              "pako",
               "semver",
               "file-saver",
               "jdenticon"
