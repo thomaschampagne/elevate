@@ -3,11 +3,14 @@ import { IpcMainTunnelService } from "../ipc-main-tunnel.service";
 import { Streams, SyncedActivityModel } from "@elevate/shared/models";
 import { SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
-import logger from "electron-log";
+import { Logger } from "../logger";
 
 @singleton()
 export class IpcSyncMessageSender {
-  constructor(@inject(IpcMainTunnelService) protected readonly ipcTunnelService: IpcTunnelService) {}
+  constructor(
+    @inject(IpcMainTunnelService) protected readonly ipcTunnelService: IpcTunnelService,
+    @inject(Logger) private readonly logger: Logger
+  ) {}
 
   public findSyncedActivityModels(
     activityStartDate: string,
@@ -25,7 +28,7 @@ export class IpcSyncMessageSender {
   public forwardSyncEvent(syncEvent: SyncEvent): void {
     const syncEventMessage: IpcMessage = new IpcMessage(Channel.syncEvent, syncEvent);
     this.ipcTunnelService.send<IpcMessage, SyncEventType>(syncEventMessage).then(syncEventType => {
-      logger.debug(`Rendered received: ${SyncEventType[syncEventType]}`);
+      this.logger.debug(`Rendered received: ${SyncEventType[syncEventType]}`);
     });
   }
 }

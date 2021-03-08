@@ -1,6 +1,5 @@
 import { ConnectorType, ErrorSyncEvent, StravaAccount, StravaConnectorInfo } from "@elevate/shared/sync";
 import _ from "lodash";
-import logger from "electron-log";
 import { fibonacci, sleep } from "@elevate/shared/tools";
 import { IHttpClientResponse } from "typed-rest-client/Interfaces";
 import { HttpCodes } from "typed-rest-client/HttpClient";
@@ -9,6 +8,7 @@ import { Gender } from "@elevate/shared/models";
 import { inject, singleton } from "tsyringe";
 import { StravaAuthenticator } from "../connectors/strava/strava-authenticator";
 import { HttpClient } from "./http.client";
+import { Logger } from "../logger";
 
 export interface RateLimit {
   usage: number;
@@ -26,7 +26,8 @@ export class StravaApiClient {
 
   constructor(
     @inject(StravaAuthenticator) public readonly stravaAuthenticator: StravaAuthenticator,
-    @inject(HttpClient) public readonly httpClient: HttpClient
+    @inject(HttpClient) public readonly httpClient: HttpClient,
+    @inject(Logger) private readonly logger: Logger
   ) {
     this.nextCallWaitTime = 0;
   }
@@ -94,7 +95,7 @@ export class StravaApiClient {
         // Update time to wait for the next call to avoid the rate limit threshold
         const rateLimits = StravaApiClient.parseRateLimits(response.message.headers);
         this.updateNextCallWaitTime(rateLimits.instant, StravaApiClient.QUARTER_HOUR_TIME_INTERVAL);
-        logger.debug(
+        this.logger.debug(
           `Waiting ${this.nextCallWaitTime} for next strava api call. Current Rate limits:`,
           JSON.stringify(rateLimits)
         );
@@ -105,7 +106,7 @@ export class StravaApiClient {
         return Promise.resolve(JSON.parse(body));
       })
       .catch((error: http.IncomingMessage) => {
-        logger.error(
+        this.logger.error(
           "strava api http.IncomingMessage",
           "statusCode: " + error.statusCode,
           "headers: " + JSON.stringify(error.headers)
@@ -157,7 +158,7 @@ export class StravaApiClient {
             const logMessage = `${
               isInstantQuotaReached ? "Instant quota reached" : isDailyQuotaReached ? "Daily quota reached" : ""
             }. Waiting ${retryMillis} before continue.`;
-            logger.info(logMessage, JSON.stringify(parseRateLimits));
+            this.logger.info(logMessage, JSON.stringify(parseRateLimits));
 
             return sleep(retryMillis).then(() => {
               quotaReachedTries++;
@@ -206,16 +207,16 @@ export class StravaApiClient {
 
     if (!stravaConnectorInfo.accessToken || !stravaConnectorInfo.refreshToken) {
       authPromise = this.stravaAuthenticator.authorize(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret);
-      logger.info("No accessToken or refreshToken found. Now authenticating to strava");
+      this.logger.info("No accessToken or refreshToken found. Now authenticating to strava");
     } else if (!isAccessTokenValid && stravaConnectorInfo.refreshToken) {
       authPromise = this.stravaAuthenticator.refresh(
         stravaConnectorInfo.clientId,
         stravaConnectorInfo.clientSecret,
         stravaConnectorInfo.refreshToken
       );
-      logger.info("Access token is expired, Refreshing token");
+      this.logger.info("Access token is expired, Refreshing token");
     } else if (isAccessTokenValid) {
-      logger.debug("Access token is still valid, we keep current access token, no authorize and no refresh token");
+      this.logger.debug("Access token is still valid, we keep current access token, no authorize and no refresh token");
       return Promise.resolve();
     } else {
       return Promise.reject(

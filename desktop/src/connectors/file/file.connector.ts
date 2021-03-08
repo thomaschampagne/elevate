@@ -18,7 +18,6 @@ import _ from "lodash";
 import { AppService } from "../../app-service";
 import xmldom from "xmldom";
 import { ElevateSport } from "@elevate/shared/enums";
-import logger from "electron-log";
 import {
   ActivityTypeGroups,
   ActivityTypes,
@@ -49,6 +48,7 @@ import { sleep } from "@elevate/shared/tools";
 import { UnArchiver } from "./un-archiver";
 import { DataTemperature } from "@sports-alliance/sports-lib/lib/data/data.temperature";
 import { IpcSyncMessageSender } from "../../senders/ipc-sync-message.sender";
+import { Logger } from "../../logger";
 
 export enum ActivityFileType {
   GPX = "gpx",
@@ -216,9 +216,10 @@ export class FileConnector extends BaseConnector {
   constructor(
     @inject(AppService) protected readonly appService: AppService,
     @inject(IpcSyncMessageSender) protected readonly ipcSyncMessageSender: IpcSyncMessageSender,
-    @inject(UnArchiver) public readonly unArchiver: UnArchiver
+    @inject(UnArchiver) public readonly unArchiver: UnArchiver,
+    @inject(Logger) protected readonly logger: Logger
   ) {
-    super(appService, ipcSyncMessageSender);
+    super(appService, ipcSyncMessageSender, logger);
     this.type = ConnectorType.FILE;
     this.enabled = FileConnector.ENABLED;
   }
@@ -250,7 +251,7 @@ export class FileConnector extends BaseConnector {
           if (isCancelEvent) {
             this.syncEvents$.next(syncEvent);
           } else {
-            logger.error(syncEvent);
+            this.logger.error(syncEvent);
             this.syncEvents$.error(syncEvent);
           }
         }
@@ -277,7 +278,7 @@ export class FileConnector extends BaseConnector {
         const extractedArchiveFileName = path.basename(extractedArchivePath);
         const evtDesc = `Activities in "${extractedArchiveFileName}" file have been extracted.`;
         syncEvents$.next(new GenericSyncEvent(ConnectorType.FILE, evtDesc));
-        logger.debug(evtDesc);
+        this.logger.debug(evtDesc);
       });
       prepareScanDirectory = this.scanInflateActivitiesFromArchives(
         this.fileConnectorConfig.info.sourceDirectory,
@@ -298,7 +299,7 @@ export class FileConnector extends BaseConnector {
         return Promise.resolve(activityFiles);
       })
       .then(activityFiles => {
-        logger.info("Parsing " + activityFiles.length + " activity files.");
+        this.logger.info("Parsing " + activityFiles.length + " activity files.");
 
         return activityFiles.reduce((previousPromise: Promise<void>, activityFile: ActivityFile) => {
           return previousPromise.then(() => {
@@ -310,7 +311,7 @@ export class FileConnector extends BaseConnector {
 
             let parseSportsLibActivity: Promise<EventInterface> = null;
 
-            logger.debug("Parsing activity file: " + activityFile.location.path);
+            this.logger.debug("Parsing activity file: " + activityFile.location.path);
 
             switch (activityFile.type) {
               case ActivityFileType.GPX:
@@ -328,7 +329,7 @@ export class FileConnector extends BaseConnector {
 
               default:
                 const errorMessage = `Type ${activityFile.type} not supported. Failed to parse ${activityFile.location.path}`;
-                logger.error(errorMessage);
+                this.logger.error(errorMessage);
                 return Promise.reject(errorMessage);
             }
 
@@ -425,7 +426,7 @@ export class FileConnector extends BaseConnector {
                               )
                             );
                           } catch (error) {
-                            logger.error(error);
+                            this.logger.error(error);
                             const errorMessage =
                               "Unable to compute activity started '" +
                               sportsLibActivity.startDate.toISOString() +
@@ -496,7 +497,7 @@ export class FileConnector extends BaseConnector {
               .catch(error => {
                 if ((error as EventLibError).event === null) {
                   // No event available from sports-lib
-                  logger.warn("No sports-lib event available. Skip " + activityFile.location.path);
+                  this.logger.warn("No sports-lib event available. Skip " + activityFile.location.path);
                   return Promise.resolve();
                 }
 
@@ -681,7 +682,7 @@ export class FileConnector extends BaseConnector {
     try {
       streams.time = sportsLibActivity.generateTimeStream([DataDistance.type]).getData(true, true);
     } catch (err) {
-      logger.info("No distance stream found for activity starting at " + sportsLibActivity.startDate);
+      this.logger.info("No distance stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     // Lat long
@@ -692,42 +693,42 @@ export class FileConnector extends BaseConnector {
         return [_.floor(latitude, 8), _.floor(longitudes[index], 8)];
       });
     } catch (err) {
-      logger.info("No lat or lon streams found for activity starting at " + sportsLibActivity.startDate);
+      this.logger.info("No lat or lon streams found for activity starting at " + sportsLibActivity.startDate);
     }
 
     // Distance
     try {
       streams.distance = sportsLibActivity.getSquashedStreamData(DataDistance.type);
     } catch (err) {
-      logger.info("No distance stream found for activity starting at " + sportsLibActivity.startDate);
+      this.logger.info("No distance stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     // Speed
     try {
       streams.velocity_smooth = sportsLibActivity.getSquashedStreamData(DataSpeed.type);
     } catch (err) {
-      logger.info("No speed stream found for activity starting at " + sportsLibActivity.startDate);
+      this.logger.info("No speed stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     // HeartRate
     try {
       streams.heartrate = sportsLibActivity.getSquashedStreamData(DataHeartRate.type);
     } catch (err) {
-      logger.info("No heartrate stream found for activity starting at " + sportsLibActivity.startDate);
+      this.logger.info("No heartrate stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     // Altitude
     try {
       streams.altitude = sportsLibActivity.getSquashedStreamData(DataAltitude.type);
     } catch (err) {
-      logger.info("No altitude stream found for activity starting at " + sportsLibActivity.startDate);
+      this.logger.info("No altitude stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     // Cadence
     try {
       streams.cadence = sportsLibActivity.getSquashedStreamData(DataCadence.type);
     } catch (err) {
-      logger.info("No cadence stream found for activity starting at " + sportsLibActivity.startDate);
+      this.logger.info("No cadence stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     // Watts
@@ -736,14 +737,14 @@ export class FileConnector extends BaseConnector {
         streams.watts = sportsLibActivity.getSquashedStreamData(DataPower.type);
       }
     } catch (err) {
-      logger.info("No power stream found for activity starting at " + sportsLibActivity.startDate);
+      this.logger.info("No power stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     // Grade
     try {
       streams.grade_smooth = sportsLibActivity.getSquashedStreamData(DataGrade.type);
     } catch (err) {
-      logger.info("No grade stream found for activity starting at " + sportsLibActivity.startDate);
+      this.logger.info("No grade stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     // Grade adjusted speed
@@ -752,13 +753,13 @@ export class FileConnector extends BaseConnector {
         streams.grade_adjusted_speed = sportsLibActivity.getSquashedStreamData(DataGradeAdjustedSpeed.type);
       }
     } catch (err) {
-      logger.info("No grade adjusted speed stream found for activity starting at " + sportsLibActivity.startDate);
+      this.logger.info("No grade adjusted speed stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     try {
       streams.temp = sportsLibActivity.getSquashedStreamData(DataTemperature.type);
     } catch (err) {
-      logger.info("No temperature stream found for activity starting at " + sportsLibActivity.startDate);
+      this.logger.info("No temperature stream found for activity starting at " + sportsLibActivity.startDate);
     }
 
     return streams;

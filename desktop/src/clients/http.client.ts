@@ -1,21 +1,21 @@
 import { HttpClient as TypedRestClient } from "typed-rest-client/HttpClient";
-import { singleton } from "tsyringe";
-import logger from "electron-log";
+import { inject, singleton } from "tsyringe";
 import pRetry from "p-retry";
 import { IHeaders, IHttpClientResponse } from "typed-rest-client/Interfaces";
+import { Logger } from "../logger";
 
 @singleton()
 export class HttpClient extends TypedRestClient {
   private static RESOLVE_PROXY_TEST_URL = "https://no.where";
   private static DIRECT_PROXY_TEST_URL = "DIRECT";
 
-  constructor() {
+  constructor(@inject(Logger) private readonly logger: Logger) {
     super("vsts-node-api", null, {});
   }
 
   public detectProxy(rootBrowserWindow: Electron.BrowserWindow) {
     this.resolveProxy(rootBrowserWindow).then(httpProxy => {
-      logger.info("Using proxy value: " + httpProxy);
+      this.logger.info("Using proxy value: " + httpProxy);
       this.setProxy(httpProxy);
     });
   }
@@ -53,7 +53,7 @@ export class HttpClient extends TypedRestClient {
       minTimeout: minTimeout,
       maxTimeout: maxTimeout,
       onFailedAttempt: error => {
-        logger.error(
+        this.logger.error(
           `Attempt ${error.attemptNumber} failed on url ${requestUrl}. There are ${error.retriesLeft} retries left. Cause:`,
           error
         );

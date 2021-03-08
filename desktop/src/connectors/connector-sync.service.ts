@@ -21,9 +21,9 @@ import {
   SyncedActivityModel,
   UserSettings
 } from "@elevate/shared/models";
-import logger from "electron-log";
 import _ from "lodash";
 import { IpcSyncMessageSender } from "../senders/ipc-sync-message.sender";
+import { Logger } from "../logger";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
@@ -36,7 +36,10 @@ export class ConnectorSyncService {
 
   public currentConnector: BaseConnector;
 
-  constructor(@inject(IpcSyncMessageSender) private readonly ipcSyncMessageSender: IpcSyncMessageSender) {}
+  constructor(
+    @inject(IpcSyncMessageSender) private readonly ipcSyncMessageSender: IpcSyncMessageSender,
+    @inject(Logger) private readonly logger: Logger
+  ) {}
 
   /**
    * Start connector sync
@@ -79,25 +82,25 @@ export class ConnectorSyncService {
 
         if (syncEvent.type === SyncEventType.ACTIVITY) {
           const activitySyncEvent = syncEvent as ActivitySyncEvent;
-          logger.debug(
+          this.logger.debug(
             "[Connector (" + connectorType + ")]",
             `Notify to insert or update activity name: "${activitySyncEvent.activity.name}", started on "${activitySyncEvent.activity.start_time}", isNew: "${activitySyncEvent.isNew}"`
           );
         } else if (syncEvent.type === SyncEventType.ERROR) {
-          logger.error("[Connector (" + connectorType + ")]", syncEvent);
+          this.logger.error("[Connector (" + connectorType + ")]", syncEvent);
         } else {
-          logger.debug("[Connector (" + connectorType + ")]", syncEvent);
+          this.logger.debug("[Connector (" + connectorType + ")]", syncEvent);
         }
       },
       (errorSyncEvent: ErrorSyncEvent) => {
-        logger.error("[Connector (" + connectorType + ")]", errorSyncEvent);
+        this.logger.error("[Connector (" + connectorType + ")]", errorSyncEvent);
 
         this.currentConnector = null;
 
         this.ipcSyncMessageSender.forwardSyncEvent(errorSyncEvent);
       },
       () => {
-        logger.info("[Connector (" + connectorType + ")]", "Sync done");
+        this.logger.info("[Connector (" + connectorType + ")]", "Sync done");
 
         this.currentConnector = null;
 
@@ -112,18 +115,18 @@ export class ConnectorSyncService {
   public stop(requestConnectorType: ConnectorType): Promise<string> {
     if (_.isEmpty(this.currentConnector)) {
       const errorMessage = "No existing connector found to stop sync";
-      logger.error(errorMessage);
+      this.logger.error(errorMessage);
       return Promise.reject(errorMessage);
     } else {
       if (this.currentConnector.type === requestConnectorType) {
         return this.currentConnector.stop().then(
           () => {
             const successMessage = "Sync of connector '" + requestConnectorType + "' has been cancelled";
-            logger.info(successMessage);
+            this.logger.info(successMessage);
             return Promise.resolve(successMessage);
           },
           error => {
-            logger.error(error);
+            this.logger.error(error);
             return Promise.reject(error);
           }
         );
@@ -177,7 +180,7 @@ export class ConnectorSyncService {
 
       return Promise.resolve(syncedActivityModel);
     } catch (error) {
-      logger.error(error);
+      this.logger.error(error);
       return Promise.reject(error);
     }
   }

@@ -1,11 +1,11 @@
 import http from "http";
 import queryString from "querystring";
 import { BrowserWindow } from "electron";
-import logger from "electron-log";
 import { HttpCodes } from "typed-rest-client/HttpClient";
 import { inject, singleton } from "tsyringe";
 import { HttpClient } from "../../clients/http.client";
 import _ from "lodash";
+import { Logger } from "../../logger";
 
 @singleton()
 export class StravaAuthenticator {
@@ -25,7 +25,10 @@ export class StravaAuthenticator {
   private authenticationWindow: Electron.BrowserWindow;
   private server: http.Server;
 
-  constructor(@inject(HttpClient) private readonly httpClient: HttpClient) {}
+  constructor(
+    @inject(HttpClient) private readonly httpClient: HttpClient,
+    @inject(Logger) private readonly logger: Logger
+  ) {}
 
   public onAuthorizeRedirectRequest(
     handleAuthorizeCode,
@@ -34,7 +37,7 @@ export class StravaAuthenticator {
   ): void {
     const url = new URL(request.url, StravaAuthenticator.REDIRECT_HTTP_BASE);
     if (url.pathname !== "/code") {
-      logger.info(`Ignoring request to ${request.url}`);
+      this.logger.info(`Ignoring request to ${request.url}`);
       return;
     }
 
@@ -68,7 +71,7 @@ export class StravaAuthenticator {
     const isRefreshTokenGrantType = !code && refreshToken;
 
     if (isAuthCodeGrantType) {
-      logger.info("Getting tokens with grant_type=authorization_code");
+      this.logger.info("Getting tokens with grant_type=authorization_code");
       payload = {
         client_id: clientId,
         client_secret: clientSecret,
@@ -76,7 +79,7 @@ export class StravaAuthenticator {
         code: code
       };
     } else if (isRefreshTokenGrantType) {
-      logger.info("Getting tokens with grant_type=refresh_token");
+      this.logger.info("Getting tokens with grant_type=refresh_token");
 
       payload = {
         client_id: clientId,
@@ -197,7 +200,7 @@ export class StravaAuthenticator {
           athlete: object
         ) => {
           if (error) {
-            logger.error(error);
+            this.logger.error(error);
             reject(error);
           } else {
             resolve({
@@ -234,7 +237,7 @@ export class StravaAuthenticator {
           refreshToken,
           (error: any, accessTokenUpdate: string, refreshTokenUpdate: string, expiresAt: number, athlete: object) => {
             if (error) {
-              logger.error(error);
+              this.logger.error(error);
               reject(error);
             } else {
               resolve({

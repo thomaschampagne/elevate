@@ -4,10 +4,10 @@ import JSONStream from "JSONStream";
 import miniZlib from "minizlib";
 import stream from "stream";
 import { Subject } from "rxjs";
-import { singleton } from "tsyringe";
+import { inject, singleton } from "tsyringe";
 import { ElevateException } from "@elevate/shared/exceptions";
-import logger from "electron-log";
 import pDefer from "p-defer";
+import { Logger } from "../logger";
 
 @singleton()
 export class ObjectsStreamCompressor {
@@ -23,7 +23,7 @@ export class ObjectsStreamCompressor {
 
   private writeStartedPromise: pDefer.DeferredPromise<string>;
 
-  constructor() {
+  constructor(@inject(Logger) private readonly logger: Logger) {
     this._isDeflating = false;
   }
 
@@ -46,7 +46,7 @@ export class ObjectsStreamCompressor {
       throw new ElevateException("Missing target archive file");
     }
 
-    logger.debug(`Writing objects to ${this.targetArchivePath} archive.`);
+    this.logger.debug(`Writing objects to ${this.targetArchivePath} archive.`);
     this.archiveWriteStream = fs.createWriteStream(this.targetArchivePath);
     this.passStream = new MiniPass();
     this.compressorStream = new miniZlib.Gzip(); // Or new miniZlib.BrotliCompress();
@@ -85,7 +85,7 @@ export class ObjectsStreamCompressor {
 
     return writePromise.catch(err => {
       this._isDeflating = false;
-      logger.error("Write error occurred in ObjectsStreamCompressor", err);
+      this.logger.error("Write error occurred in ObjectsStreamCompressor", err);
       return Promise.reject(err);
     });
   }
@@ -155,7 +155,7 @@ export class ObjectsStreamCompressor {
         .catch(clientErr => {
           // Client got an error on his side by with this rejection
           // Dont resume stream reading => close streams instead
-          logger.error("Stop reading because of client error:", clientErr);
+          this.logger.error("Stop reading because of client error:", clientErr);
           closeStreams();
         });
 
@@ -171,7 +171,7 @@ export class ObjectsStreamCompressor {
     decompressedJsonStream.on("end", () => {
       closeStreams();
       receiverHandler(null, objectIndex, null, true).then(() => {
-        logger.debug(`Client acknowledged end of reading`);
+        this.logger.debug(`Client acknowledged end of reading`);
       });
     });
   }

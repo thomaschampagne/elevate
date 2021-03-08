@@ -14,7 +14,6 @@ import {
   SyncEventType
 } from "@elevate/shared/sync";
 import { BareActivityModel, Streams, SyncedActivityModel } from "@elevate/shared/models";
-import logger from "electron-log";
 import { AppService } from "../../app-service";
 import _ from "lodash";
 import { inject, singleton } from "tsyringe";
@@ -23,6 +22,7 @@ import { StravaApiClient } from "../../clients/strava-api.client";
 import { countdown } from "@elevate/shared/tools";
 import { Hash } from "../../tools/hash";
 import { IpcSyncMessageSender } from "../../senders/ipc-sync-message.sender";
+import { Logger } from "../../logger";
 
 export interface StravaApiStreamType {
   type:
@@ -105,9 +105,10 @@ export class StravaConnector extends BaseConnector {
   constructor(
     @inject(AppService) protected readonly appService: AppService,
     @inject(IpcSyncMessageSender) protected readonly ipcSyncMessageSender: IpcSyncMessageSender,
-    @inject(StravaApiClient) public readonly stravaApiClient: StravaApiClient
+    @inject(StravaApiClient) public readonly stravaApiClient: StravaApiClient,
+    @inject(Logger) protected readonly logger: Logger
   ) {
-    super(appService, ipcSyncMessageSender);
+    super(appService, ipcSyncMessageSender, logger);
     this.type = ConnectorType.STRAVA;
     this.enabled = StravaConnector.ENABLED;
   }
@@ -327,7 +328,7 @@ export class StravaConnector extends BaseConnector {
                           this.connectorConfig.userSettingsModel,
                           streams
                         );
-                        logger.info(
+                        this.logger.info(
                           `Recalculated activity ${syncedActivityModel.id} after type change to ${syncedActivityModel.type}`
                         );
                       }
@@ -410,7 +411,7 @@ export class StravaConnector extends BaseConnector {
         (errorSyncEvent: ErrorSyncEvent) => {
           if (errorSyncEvent) {
             if (errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.code) {
-              logger.warn(`No streams found for activity "${activityId}". ${errorSyncEvent.description}`);
+              this.logger.warn(`No streams found for activity "${activityId}". ${errorSyncEvent.description}`);
               resolve(null);
             } else {
               reject(errorSyncEvent);

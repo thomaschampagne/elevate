@@ -13,9 +13,9 @@ import { catchError, filter, timeout } from "rxjs/operators";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import _ from "lodash";
 import { ConnectorConfig } from "./connector-config.model";
-import logger from "electron-log";
 import { Hash } from "../tools/hash";
 import { IpcSyncMessageSender } from "../senders/ipc-sync-message.sender";
+import { Logger } from "../logger";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 /**
@@ -38,7 +38,8 @@ export class PrimitiveSourceData {
 export abstract class BaseConnector {
   protected constructor(
     protected readonly appService: AppService,
-    protected readonly ipcSyncMessageSender: IpcSyncMessageSender
+    protected readonly ipcSyncMessageSender: IpcSyncMessageSender,
+    protected readonly logger: Logger
   ) {}
 
   private static readonly WAIT_FOR_SYNC_STOP_EVENT_TIMEOUT: number = 3000;
@@ -194,7 +195,7 @@ export abstract class BaseConnector {
             timeout(BaseConnector.WAIT_FOR_SYNC_STOP_EVENT_TIMEOUT),
             catchError(() => {
               // Timeout for waiting a stop event reached, we have to emulated it...
-              logger.warn("Request timed out after waiting for stop event from connector. Emulating one");
+              this.logger.warn("Request timed out after waiting for stop event from connector. Emulating one");
               this.isSyncing = false;
               this.syncEvents$.next(new StoppedSyncEvent(ConnectorType.STRAVA));
               resolve();

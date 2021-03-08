@@ -11,7 +11,6 @@ import Electron, {
   shell
 } from "electron";
 import path from "path";
-import logger from "electron-log";
 import { AppService } from "./app-service";
 import pkg from "../package.json";
 import { Updater } from "./updater/updater";
@@ -27,11 +26,7 @@ import { IpcSyncMessageListener } from "./listeners/ipc-sync-message.listener";
 import { IpcComputeActivityListener } from "./listeners/ipc-compute-activity.listener";
 import { IpcStravaLinkListener } from "./listeners/ipc-strava-link.listener";
 import { IpcProfileBackupListener } from "./listeners/ipc-profile-backup.listener";
-
-const IS_ELECTRON_DEV = !app.isPackaged;
-logger.transports.file.level = IS_ELECTRON_DEV ? "debug" : "info";
-logger.transports.console.level = IS_ELECTRON_DEV ? "debug" : "info";
-logger.transports.file.maxSize = 1048576 * 2; // 2MB
+import { Logger } from "./logger";
 
 /*
 TODO: Fix electron-updater not fully integrated with rollup:
@@ -49,7 +44,8 @@ class Main {
     @inject(IpcComputeActivityListener) private readonly ipcComputeActivityListener: IpcComputeActivityListener,
     @inject(IpcStravaLinkListener) private readonly ipcStravaLinkListener: IpcStravaLinkListener,
     @inject(IpcProfileBackupListener) private readonly ipcProfileBackupListener: IpcProfileBackupListener,
-    @inject(HttpClient) private readonly httpClient: HttpClient
+    @inject(HttpClient) private readonly httpClient: HttpClient,
+    @inject(Logger) private readonly logger: Logger
   ) {}
 
   private static readonly DEFAULT_SCREEN_RATIO: number = 0.95;
@@ -77,7 +73,7 @@ class Main {
     // If failed to obtain the lock, another instance of application is already running with the lock => exit immediately.
     // @see https://github.com/electron/electron/blob/master/docs/api/app.md#apprequestsingleinstancelock
     if (!gotTheLock) {
-      logger.info("We failed to obtain application the lock. Exit now"); // TODO Inject logger with DI
+      this.logger.info("We failed to obtain application the lock. Exit now");
       this.app.quit();
     } else {
       this.app.on("second-instance", () => {
@@ -95,16 +91,16 @@ class Main {
         return;
       }
 
-      const elevateUpdater = new Updater(autoUpdater, logger);
+      const elevateUpdater = new Updater(autoUpdater, this.logger.base);
       elevateUpdater.update().then(
         (updateInfo: UpdateInfo) => {
-          logger.info(`Updated to ${updateInfo.version} or already up to date.`);
+          this.logger.info(`Updated to ${updateInfo.version} or already up to date.`);
           this.startElevate(() => {
             elevateUpdater.close();
           });
         },
         error => {
-          logger.warn("Update failed", error);
+          this.logger.warn("Update failed", error);
           this.startElevate(() => {
             elevateUpdater.close();
           });
@@ -117,17 +113,17 @@ class Main {
     this.app = electronApp;
     this.ipcMain = electronIpcMain;
 
-    logger.info("System details:", this.appService.printRuntimeInfo());
+    this.logger.info("System details:", this.appService.printRuntimeInfo());
 
     this.appService.isPackaged = this.app.isPackaged;
 
     if (this.appService.isPackaged) {
-      logger.log("Running in production");
+      this.logger.info("Running in production");
     } else {
-      logger.log("Running in development");
+      this.logger.info("Running in development");
     }
 
-    logger.log("App running into: " + this.app.getAppPath());
+    this.logger.info("App running into: " + this.app.getAppPath());
 
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
@@ -391,13 +387,19 @@ class Main {
   }
 }
 
+const IS_ELECTRON_DEV = !app.isPackaged;
+const loggerInstance = container.resolve(Logger);
+loggerInstance.base.transports.file.level = IS_ELECTRON_DEV ? "debug" : "info";
+loggerInstance.base.transports.console.level = IS_ELECTRON_DEV ? "debug" : "info";
+loggerInstance.base.transports.file.maxSize = 1048576 * 2; // 2MB
+
 try {
   if (IS_ELECTRON_DEV) {
-    logger.debug("Electron is in DEV mode");
+    loggerInstance.debug("Electron is in DEV mode");
   }
 
-  logger.info("Version: " + pkg.version);
+  loggerInstance.info("Version: " + pkg.version);
   container.resolve(Main).run(app, ipcMain); // Run app
 } catch (err) {
-  logger.error(err);
+  loggerInstance.error(err);
 }
