@@ -7,10 +7,14 @@ import { ShoesGearModel } from "../models/gear/shoes-gear.model";
 import { GearModel } from "../models/gear/gear.model";
 import { Gzip } from "../utils/gzip";
 import { Helper } from "../helper";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 
 export class VacuumProcessor {
 
 	public static cachePrefix = "elevate_stream_";
+
+	constructor(private readonly athleteModelResolver: AthleteSnapshotResolver) {
+	}
 
 	/**
 	 *  Get the strava athlete id connected
@@ -132,7 +136,8 @@ export class VacuumProcessor {
 	 */
 
 	protected getAthleteWeight(): number {
-		return (_.isUndefined(window.pageView)) ? null : window.pageView.activityAthleteWeight();
+		const datedAthleteSettingsModel = this.athleteModelResolver.resolve(this.getActivityStartDate());
+		return datedAthleteSettingsModel.athleteSettings.weight;
 	}
 
 	/**
