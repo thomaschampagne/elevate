@@ -2,6 +2,17 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.16.4",
+		date: "2021-03-09",
+		message: "Fixed broken Elevate activity stats after recent strava website update.",
+		hotFixes: [
+			"Fixed broken Elevate activity stats after strava website update (single activity page).",
+		],
+		features: [],
+		isPatch: true,
+		fixes: []
+	},
+	{
 		version: "6.16.3",
 		date: "2021-02-23",
 		message: "Security patch update. Also added a 2021 status of the new \"Elevate Desktop App\" (open extension app to see the article).",
