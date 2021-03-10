@@ -171,7 +171,7 @@ export class Elevate {
     }
 
     return this.initAthleteModelResolver().then(() => {
-      this.vacuumProcessor = new VacuumProcessor();
+      this.vacuumProcessor = new VacuumProcessor(this.athleteModelResolver);
       this.athleteId = this.vacuumProcessor.getAthleteId();
       this.athleteName = this.vacuumProcessor.getAthleteName();
       this.activityAthleteId = this.vacuumProcessor.getActivityAthleteId();

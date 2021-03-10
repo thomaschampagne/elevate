@@ -3,7 +3,7 @@ import { VacuumProcessor } from "../../scripts/processors/vacuum-processor";
 
 describe("VacuumProcessor", () => {
   it("should be a pro", done => {
-    const vacuumProcessor: VacuumProcessor = new VacuumProcessor();
+    const vacuumProcessor: VacuumProcessor = new VacuumProcessor(null);
 
     const getCurrentAthleteSpy: Spy = spyOn(vacuumProcessor, "getCurrentAthlete"); // Mocking getCurrentAthlete
 
