@@ -54,6 +54,7 @@ export class AthleteSnapshotResolver {
 
 			const foreverDatedAthleteSettings = _.last(this.athleteModel.datedAthleteSettings);
 			datedAthleteSettingsModel = (foreverDatedAthleteSettings) ? foreverDatedAthleteSettings : DatedAthleteSettingsModel.DEFAULT_MODEL;
+			datedAthleteSettingsModel = DatedAthleteSettingsModel.asInstance(datedAthleteSettingsModel);
 		} else {
 			// Find the AthleteSnapshotModel for the given date
 			datedAthleteSettingsModel = this.resolveDatedAthleteSettingsAtDate(onDateString);
