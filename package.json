@@ -25,6 +25,8 @@
     "validate:desktop": "npm run type:check:desktop && npm run clean && cd ./appcore/ && npm test && cd ../desktop/ && npm test && npm run build:prod",
     "postinstall": "cd webextension/ && npm install && cd ../appcore/ && npm install && cd ../desktop/ && npm install",
     "prettier": "prettier --write .",
+    "upgrade:check": "ncu",
+    "upgrade:apply": "npm run upgrade:check -- -u",
     "test": "npm run clean && cd ./desktop/ && npm test && cd ../appcore/ && npm test && cd ../webextension/ && npm test",
     "type:check:desktop": "cd ./appcore/ && npm run type:check && cd ../desktop/ && npm run type:check",
     "type:check:extension": "cd ./appcore/ && npm run type:check && cd ../webextension/ && npm run type:check",
@@ -54,7 +56,7 @@
     "cpy-cli": "^3.1.1",
     "del-cli": "^3.0.1",
     "husky": "^4.3.8",
-    "npm-check-updates": "^11.1.1",
+    "npm-check-updates": "^11.2.1",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
     "run-sequence": "^2.2.1"
