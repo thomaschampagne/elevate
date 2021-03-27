@@ -1,6 +1,6 @@
 import http from "http";
 import queryString from "querystring";
-import { BrowserWindow } from "electron";
+import { app, BrowserWindow } from "electron";
 import { HttpCodes } from "typed-rest-client/HttpClient";
 import { inject, singleton } from "tsyringe";
 import { HttpClient } from "../../clients/http.client";
@@ -181,7 +181,9 @@ export class StravaAuthenticator {
         authUrl.searchParams.append("scope", StravaAuthenticator.STRAVA_SCOPE);
         authUrl.searchParams.append("approval_prompt", "auto");
 
-        this.authenticationWindow.loadURL(authUrl.href);
+        this.authenticationWindow.loadURL(authUrl.href, {
+          userAgent: app.userAgentFallback.replace(`Chrome/${process.versions.chrome}`, "Chrome")
+        });
 
         this.authenticationWindow.webContents.on("did-finish-load", () => {
           this.authenticationWindow.show();

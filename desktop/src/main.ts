@@ -123,6 +123,9 @@ class Main {
         this.createMainBrowserWindow();
       }
     });
+
+    // Setup user agent fallback without Electron pattern
+    this.app.userAgentFallback = this.app.userAgentFallback.replace(" Electron/" + process.versions.electron, "");
   }
 
   private minimizeApp(): void {
