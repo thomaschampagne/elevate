@@ -19,12 +19,18 @@ import { CoreModule } from "../core/core.module";
 import { DesktopRoutingModule } from "../shared/modules/routing/desktop-routing.module";
 import { AppService } from "../shared/services/app-service/app.service";
 import { DesktopAppService } from "../shared/services/app-service/desktop/desktop-app.service";
+import { UPDATE_BAR_COMPONENT } from "../update-bar/update-bar.component";
+import { DesktopUpdateBarComponent } from "../update-bar/desktop-update-bar.component";
+import { DesktopSplashScreenComponent } from "../app-load/desktop/desktop-splash-screen.component";
+import { SPLASH_SCREEN_COMPONENT } from "../app-load/splash-screen.component";
 
 @NgModule({
   imports: [CoreModule, DesktopRoutingModule],
   exports: [CoreModule, DesktopRoutingModule],
   declarations: [
+    DesktopSplashScreenComponent,
     DesktopRecalculateActivitiesBarComponent,
+    DesktopUpdateBarComponent,
     DesktopSyncBarComponent,
     DesktopTopBarComponent,
     DesktopAppMoreMenuComponent,
@@ -35,7 +41,9 @@ import { DesktopAppService } from "../shared/services/app-service/desktop/deskto
   providers: [
     { provide: AppLoadService, useClass: DesktopLoadService },
     { provide: AppService, useClass: DesktopAppService },
+    { provide: SPLASH_SCREEN_COMPONENT, useValue: DesktopSplashScreenComponent },
     { provide: MENU_ITEMS_PROVIDER, useClass: DesktopMenuItemsProvider },
+    { provide: UPDATE_BAR_COMPONENT, useValue: DesktopUpdateBarComponent },
     { provide: SYNC_BAR_COMPONENT, useValue: DesktopSyncBarComponent },
     { provide: RECALCULATE_ACTIVITIES_BAR_COMPONENT, useValue: DesktopRecalculateActivitiesBarComponent },
     { provide: TOP_BAR_COMPONENT, useValue: DesktopTopBarComponent },

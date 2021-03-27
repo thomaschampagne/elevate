@@ -1,121 +1,133 @@
-import { Component, HostListener, Inject, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, Inject, OnInit } from "@angular/core";
 import { VersionsProvider } from "../shared/services/versions/versions-provider";
 import { ElectronService } from "../desktop/electron/electron.service";
 import { TopBarComponent } from "./top-bar.component";
+import { Platform } from "@elevate/shared/enums";
+import { WindowService } from "../shared/services/window/window.service";
+import { DesktopWindowService } from "../shared/services/window/desktop-window.service";
 
 @Component({
   selector: "app-desktop-top-bar",
   template: `
-    <div class="top-bar">
-      <div *ngIf="!isFullScreen" class="draggable"></div>
-      <span class="top-bar-title mat-body-strong" *ngIf="buildMetadata && buildMetadata.commit && buildMetadata.date">
-        Elevate v{{ currentVersion }}
-      </span>
-      <span class="toolbar-spacer"></span>
-      <button mat-icon-button (click)="onMinimizeAppClicked()">
-        <mat-icon fontSet="material-icons-outlined" inline="true">minimize</mat-icon>
-      </button>
-      <button *ngIf="!isFullscreen" mat-icon-button (click)="onFullscreenAppClicked()">
-        <mat-icon fontSet="material-icons-outlined" inline="true">fullscreen</mat-icon>
-      </button>
-      <button *ngIf="isFullscreen" mat-icon-button (click)="onNormalScreenAppClicked()">
-        <mat-icon fontSet="material-icons-outlined" inline="true">fullscreen_exit</mat-icon>
-      </button>
-      <button mat-icon-button (click)="onCloseAppClicked()">
-        <mat-icon fontSet="material-icons-outlined" inline="true">close</mat-icon>
-      </button>
+    <div *ngIf="!isFullScreen" class="top-bar-wrapper top-bar-h">
+      <div class="top-bar-draggable top-bar-h"></div>
+      <div class="top-bar-traffic-light-zone"><!-- Empty div used for flex space between behavior --></div>
+      <span class="top-bar-title mat-caption">Elevate Training App</span>
+      <div class="top-bar-traffic-light-zone">
+        <ng-container *ngIf="!isMacOs">
+          <button mat-icon-button (click)="onMinimizeAppClicked()">
+            <mat-icon fontSet="material-icons-outlined" inline="true">remove</mat-icon>
+          </button>
+          <button *ngIf="!isMaximized" mat-icon-button (click)="onMaximizeAppClicked()">
+            <mat-icon fontSet="material-icons-outlined" inline="true">fullscreen</mat-icon>
+          </button>
+          <button *ngIf="isMaximized" mat-icon-button (click)="onRestoreAppClicked()">
+            <mat-icon fontSet="material-icons-outlined" inline="true">fullscreen_exit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="onCloseAppClicked()">
+            <mat-icon fontSet="material-icons-outlined" inline="true">clear</mat-icon>
+          </button>
+        </ng-container>
+      </div>
     </div>
   `,
   styles: [
     `
-      .top-bar {
+      .top-bar-h {
+        height: 34px;
+      }
+
+      .top-bar-wrapper {
         background-color: #303030;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         color: white;
       }
 
-      .draggable {
+      .top-bar-draggable {
         -webkit-app-region: drag;
         position: absolute;
         left: 3px;
         right: 3px;
         top: 3px;
-        height: 35px;
+        bottom: 3px;
       }
 
-      .top-bar-title {
-        margin: 0 0 0 16px;
+      .top-bar-traffic-light-zone {
+        width: 120px;
       }
 
-      .toolbar-spacer {
-        flex: 1 1 auto;
-      }
-
+      /*No drag on every buttons*/
       button {
         -webkit-app-region: no-drag;
+        border-radius: 0;
+      }
+
+      button:hover {
+        /* Set close bg red and full squared */
+        background-color: #5a5a5a;
       }
 
       button:last-child:hover {
-        /* Set close icon red */
-        color: #ff4643;
+        /* Set close bg red and full squared */
+        background-color: #ff4643;
       }
     `
   ]
 })
 export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
-  public isFullscreen: boolean = null;
   public currentVersion: string;
   public buildMetadata: { commit: string; date: string };
   public isFullScreen: boolean;
+  public isMaximized: boolean;
+
+  public readonly isMacOs;
 
   constructor(
     @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
-    @Inject(ElectronService) private readonly electronService: ElectronService
+    @Inject(ElectronService) private readonly electronService: ElectronService,
+    @Inject(WindowService) private readonly desktopWindowService: DesktopWindowService,
+    @Inject(ChangeDetectorRef) private readonly changeDetectorRef: ChangeDetectorRef
   ) {
     super();
     this.isFullScreen = false;
-  }
-
-  @HostListener("document:fullscreenchange")
-  public fullScreenListener(): void {
-    this.isFullScreen = !window.screenTop && !window.screenY;
+    this.isMaximized = false;
+    this.isMacOs = this.electronService.getPlatform() === Platform.MACOS;
   }
 
   public ngOnInit() {
+    // Listen for fullscreen/maximize events
+    this.desktopWindowService.isMaximized$.subscribe(isMaximized => {
+      this.isMaximized = isMaximized;
+      this.changeDetectorRef.detectChanges();
+    });
+    this.desktopWindowService.isFullScreen$.subscribe(isFullScreen => {
+      this.isFullScreen = isFullScreen;
+      this.changeDetectorRef.detectChanges();
+    });
+
     this.currentVersion = this.versionsProvider.getPackageVersion();
 
     this.versionsProvider.getBuildMetadata().then((buildMetadata: { commit: string; date: string }) => {
       this.buildMetadata = buildMetadata;
       this.buildMetadata.date = this.buildMetadata.date.slice(0, 10).replace(/-/g, "");
     });
-
-    this.electronService.isFullscreen().then(fullscreen => (this.isFullscreen = fullscreen));
   }
 
   public onMinimizeAppClicked() {
     this.electronService.minimizeApp();
   }
 
+  public onMaximizeAppClicked() {
+    this.electronService.maximizeApp();
+  }
+
+  public onRestoreAppClicked() {
+    this.electronService.restoreApp();
+  }
+
   public onCloseAppClicked() {
     this.electronService.closeApp();
-  }
-
-  public onFullscreenAppClicked() {
-    this.electronService
-      .enableFullscreen()
-      .then(() => {
-        return this.electronService.isFullscreen();
-      })
-      .then(fullscreen => (this.isFullscreen = fullscreen));
-  }
-
-  public onNormalScreenAppClicked() {
-    this.electronService
-      .disableFullscreen()
-      .then(() => {
-        return this.electronService.isFullscreen();
-      })
-      .then(fullscreen => (this.isFullscreen = fullscreen));
   }
 }

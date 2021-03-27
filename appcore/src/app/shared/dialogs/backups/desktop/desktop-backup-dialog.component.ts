@@ -58,13 +58,13 @@ import { ElevateException } from "@elevate/shared/exceptions";
       </div>
       <!-- Backup processing: display progress -->
       <div class="progress" *ngIf="isBackupProcessing">
+        <div>
+          <i>Backup in progress. Don't close the application.</i>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="backupProgress"></mat-progress-bar>
         <div class="mat-title">
           <strong>{{ backupProgress }}</strong
           >%
-        </div>
-        <mat-progress-bar mode="determinate" [value]="backupProgress"></mat-progress-bar>
-        <div>
-          <i>Backup in progress. Don't close the application.</i>
         </div>
       </div>
     </mat-dialog-content>

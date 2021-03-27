@@ -13,7 +13,6 @@ import { OptionHelperReaderService } from "../global-settings/services/option-he
 import { ZonesService } from "../zones-settings/shared/zones.service";
 import { DonateComponent } from "../donate/donate.component";
 import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
-import { WindowService } from "./services/window/window.service";
 import { SideNavService } from "./services/side-nav/side-nav.service";
 import { ReportComponent } from "../report/report.component";
 import { CoreModule } from "../core/core.module";
@@ -30,7 +29,6 @@ import { StreamsDao } from "./dao/streams/streams.dao";
 import { StreamsService } from "./services/streams/streams.service";
 import { ActivitiesSettingsLacksDialogComponent } from "../recalculate-activities-bar/activities-settings-lacks-dialog.component";
 import { LoadingDialogComponent } from "./dialogs/loading-dialog/loading-dialog.component";
-import { NewRemoteVersionNoticeDialogComponent } from "./services/versions/new-remote-version-notice-dialog.component";
 import { ReleaseNoteService } from "../releases-notes/release-note.service";
 import { NewInstalledVersionNoticeDialogComponent } from "./services/versions/new-installed-version-notice-dialog.component";
 import { TargetModule } from "./modules/target/target.module";
@@ -58,7 +56,6 @@ import { ComponentsFactoryService } from "./services/components-factory.service"
     ZonesImportExportDialogComponent,
     AboutDialogComponent,
     ActivitiesSettingsLacksDialogComponent,
-    NewRemoteVersionNoticeDialogComponent,
     NewInstalledVersionNoticeDialogComponent
   ],
   providers: [
@@ -73,7 +70,6 @@ import { ComponentsFactoryService } from "./services/components-factory.service"
     OptionHelperReaderService,
     ZonesService,
     SideNavService,
-    WindowService,
     ReleaseNoteService,
     { provide: LoggerService, useClass: ConsoleLoggerService }
   ]

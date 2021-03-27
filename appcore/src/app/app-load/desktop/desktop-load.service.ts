@@ -17,6 +17,7 @@ import { DataStore } from "../../shared/data-store/data-store";
 import { FileConnectorInfoService } from "../../shared/services/file-connector-info/file-connector-info.service";
 import { DesktopUnauthorizedMachineIdDialogComponent } from "./desktop-unauthorized-machine-id-dialog/desktop-unauthorized-machine-id-dialog.component";
 import { IPC_TUNNEL_SERVICE } from "../../desktop/ipc/ipc-tunnel-service.token";
+import { DesktopUpdateService } from "../../desktop/app-update/desktop-update.service";
 
 @Injectable()
 export class DesktopLoadService extends AppLoadService {
@@ -32,6 +33,7 @@ export class DesktopLoadService extends AppLoadService {
     @Inject(IPC_TUNNEL_SERVICE) public readonly ipcTunnelService: IpcTunnelService,
     @Inject(HttpClient) private readonly httpClient: HttpClient,
     @Inject(StravaConnectorInfoService) private readonly stravaConnectorInfoService: StravaConnectorInfoService,
+    @Inject(DesktopUpdateService) private readonly desktopUpdateService: DesktopUpdateService,
     @Inject(DesktopMigrationService) private readonly desktopMigrationService: DesktopMigrationService,
     @Inject(FileConnectorInfoService) private readonly fsConnectorInfoService: FileConnectorInfoService,
     @Inject(Router) private readonly router: Router,
@@ -44,9 +46,15 @@ export class DesktopLoadService extends AppLoadService {
 
   public loadApp(): Promise<void> {
     return super.loadApp().then(() => {
+      let hasBeenUpgradedToVersion = null;
+
       return this.desktopMigrationService
         .upgrade()
-        .then((hasBeenUpgradedTo: string) => {
+        .then((upgradedToVersion: string) => {
+          hasBeenUpgradedToVersion = upgradedToVersion;
+          return this.desktopUpdateService.handleUpdate();
+        })
+        .then(() => {
           return this.getRuntimeInfo()
             .then(runtimeInfo => {
               this.runtimeInfo = runtimeInfo;
@@ -74,16 +82,17 @@ export class DesktopLoadService extends AppLoadService {
               return this.fsConnectorInfoService.ensureSourceDirectoryCompliance();
             })
             .then(() => {
-              return Promise.resolve(hasBeenUpgradedTo);
+              return Promise.resolve(hasBeenUpgradedToVersion);
             })
             .catch(error => {
               this.logger.error(error);
               return Promise.reject(error);
             });
         })
-        .then((hasBeenUpgradedToVersion: string) => {
-          if (hasBeenUpgradedToVersion) {
-            this.versionsProvider.notifyInstalledVersion(hasBeenUpgradedToVersion);
+        .then((hasBeenUpgradedToVersionVersion: string) => {
+          // Check if a version has been installed. If so show release note popup
+          if (hasBeenUpgradedToVersionVersion) {
+            this.versionsProvider.notifyInstalledVersion(hasBeenUpgradedToVersionVersion);
           }
         });
     });

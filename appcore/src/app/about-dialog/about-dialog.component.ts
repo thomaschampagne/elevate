@@ -6,9 +6,7 @@ import { VersionsProvider } from "../shared/services/versions/versions-provider"
 import { environment } from "../../environments/environment";
 import { BuildTarget } from "@elevate/shared/enums";
 import { DataStore } from "../shared/data-store/data-store";
-import { LoggerService } from "../shared/services/logging/logger.service";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
-import semver from "semver/preload";
 
 @Component({
   selector: "app-about-dialog",
@@ -28,18 +26,14 @@ export class AboutDialogComponent implements OnInit {
   public appUsageDetails: AppUsageDetails;
   public installedVersion: string;
   public remoteVersion: string;
-  public updateAvailable: boolean;
   public buildMetadata: { commit: string; date: string };
   public wrapperVersion: string;
 
   constructor(
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
     @Inject(DataStore) private readonly dataStore: DataStore<object>,
-    @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
-    @Inject(LoggerService) private readonly logger: LoggerService
-  ) {
-    this.updateAvailable = false;
-  }
+    @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider
+  ) {}
 
   public ngOnInit(): void {
     this.dataStore.getAppUsageDetails().then((appUsageDetails: AppUsageDetails) => {
@@ -47,16 +41,6 @@ export class AboutDialogComponent implements OnInit {
     });
 
     this.installedVersion = this.versionsProvider.getPackageVersion();
-
-    this.versionsProvider
-      .getLatestRemoteVersion()
-      .then(version => {
-        this.remoteVersion = version;
-        this.updateAvailable = semver.gt(this.remoteVersion, this.installedVersion);
-      })
-      .catch(err => {
-        this.logger.warn(err);
-      });
 
     this.versionsProvider.getBuildMetadata().then((buildMetadata: { commit: string; date: string }) => {
       this.buildMetadata = buildMetadata;

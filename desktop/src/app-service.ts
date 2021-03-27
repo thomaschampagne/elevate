@@ -6,6 +6,7 @@ import { app } from "electron";
 import path from "path";
 import { singleton } from "tsyringe";
 import { Platform } from "@elevate/shared/enums";
+import { Arch } from "../../appcore/modules/shared/enums/arch";
 
 @singleton()
 export class AppService {
@@ -27,6 +28,14 @@ export class AppService {
 
   public getResourceFolder(): string {
     return path.dirname(app.getAppPath());
+  }
+
+  public getArch(): Arch {
+    return this.getRuntimeInfo().osPlatform.arch as Arch;
+  }
+
+  public getPlatform(): Platform {
+    return this.getRuntimeInfo().osPlatform.name as Platform;
   }
 
   public isWindows(): boolean {

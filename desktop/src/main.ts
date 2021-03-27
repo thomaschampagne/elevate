@@ -13,13 +13,11 @@ import Electron, {
 import path from "path";
 import { AppService } from "./app-service";
 import pkg from "../package.json";
-import { Updater } from "./updater/updater";
-import { UpdateInfo } from "electron-updater";
 import { Platform } from "@elevate/shared/enums";
 import { container, inject, singleton } from "tsyringe";
 import { HttpClient } from "./clients/http.client";
 import _ from "lodash";
-import { Channel, IpcTunnelService, RuntimeInfo } from "@elevate/shared/electron";
+import { Channel, IpcMessage, IpcTunnelService, RuntimeInfo } from "@elevate/shared/electron";
 import fs from "fs";
 import { IpcMainTunnelService } from "./ipc-main-tunnel.service";
 import { IpcSyncMessageListener } from "./listeners/ipc-sync-message.listener";
@@ -27,23 +25,20 @@ import { IpcComputeActivityListener } from "./listeners/ipc-compute-activity.lis
 import { IpcStravaLinkListener } from "./listeners/ipc-strava-link.listener";
 import { IpcProfileBackupListener } from "./listeners/ipc-profile-backup.listener";
 import { Logger } from "./logger";
-
-/*
-TODO: Fix electron-updater not fully integrated with rollup:
-The current workaround to import electron-updater is: package.json > build > files > "./node_modules/%%/%"
-*/
-
-const { autoUpdater } = require("electron-updater"); // Import should remains w/ "require"
+import { UpdateHandler } from "./updates/update-handler";
+import { IpcSharedStorageListener } from "./listeners/ipc-shared-storage.listener";
 
 @singleton()
 class Main {
   constructor(
     @inject(AppService) private readonly appService: AppService,
+    @inject(UpdateHandler) private readonly updateHandler: UpdateHandler,
     @inject(IpcMainTunnelService) private readonly ipcTunnelService: IpcTunnelService,
     @inject(IpcSyncMessageListener) private readonly ipcSyncMessageListener: IpcSyncMessageListener,
     @inject(IpcComputeActivityListener) private readonly ipcComputeActivityListener: IpcComputeActivityListener,
     @inject(IpcStravaLinkListener) private readonly ipcStravaLinkListener: IpcStravaLinkListener,
     @inject(IpcProfileBackupListener) private readonly ipcProfileBackupListener: IpcProfileBackupListener,
+    @inject(IpcSharedStorageListener) private readonly ipcSharedStorageListener: IpcSharedStorageListener,
     @inject(HttpClient) private readonly httpClient: HttpClient,
     @inject(Logger) private readonly logger: Logger
   ) {}
@@ -86,26 +81,10 @@ class Main {
         }
       });
 
-      if (this.appService.isLinux() || !this.appService.isPackaged) {
-        this.startElevate();
-        return;
-      }
-
-      const elevateUpdater = new Updater(autoUpdater, this.logger.base);
-      elevateUpdater.update().then(
-        (updateInfo: UpdateInfo) => {
-          this.logger.info(`Updated to ${updateInfo.version} or already up to date.`);
-          this.startElevate(() => {
-            elevateUpdater.close();
-          });
-        },
-        error => {
-          this.logger.warn("Update failed", error);
-          this.startElevate(() => {
-            elevateUpdater.close();
-          });
-        }
-      );
+      this.startElevate(() => {
+        // Main browser window is ready
+        this.logger.debug("Main browser window is ready");
+      });
     }
   }
 
@@ -134,14 +113,14 @@ class Main {
 
     // Quit when all windows are closed.
     this.app.on("window-all-closed", () => {
-      this.closeApp();
+      this.closeApp(false);
     });
 
     this.app.on("activate", () => {
-      // On OS X it"s common to re-create a window in the app when the
+      // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (!this.mainWindow) {
-        this.onElectronReady();
+        this.createMainBrowserWindow();
       }
     });
   }
@@ -150,26 +129,33 @@ class Main {
     this.mainWindow.minimize();
   }
 
+  private maximizeApp(): void {
+    this.mainWindow.maximize();
+  }
+
+  private restoreApp(): void {
+    this.mainWindow.restore();
+  }
+
   private enableFullscreen(): void {
-    this.mainWindow.setFullScreen(true);
-    // return this.isFullscreen();
+    return this.mainWindow.setFullScreen(true);
   }
 
   private disableFullscreen(): void {
-    this.mainWindow.setFullScreen(false);
-    // return this.isFullscreen();
+    return this.mainWindow.setFullScreen(false);
   }
 
-  private isFullscreen(): boolean {
-    return this.mainWindow.isFullScreen();
-  }
+  private closeApp(force: boolean): void {
+    if (force) {
+      this.app.quit();
+      return;
+    }
 
-  private closeApp(): void {
     // On OS X it is common for this.applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== Platform.MACOS) {
-      this.app.quit();
-    }
+    // if (process.platform !== Platform.MACOS) {
+    this.app.quit();
+    // }
   }
 
   private restartApp(): void {
@@ -205,6 +191,14 @@ class Main {
       return this.minimizeApp();
     });
 
+    this.ipcTunnelService.on<void, void>(Channel.maximizeApp, () => {
+      return this.maximizeApp();
+    });
+
+    this.ipcTunnelService.on<void, void>(Channel.restoreApp, () => {
+      return this.restoreApp();
+    });
+
     this.ipcTunnelService.on<void, void>(Channel.enableFullscreen, () => {
       return this.enableFullscreen();
     });
@@ -213,12 +207,8 @@ class Main {
       return this.disableFullscreen();
     });
 
-    this.ipcTunnelService.on<void, boolean>(Channel.isFullscreen, () => {
-      return this.isFullscreen();
-    });
-
-    this.ipcTunnelService.on<void, void>(Channel.closeApp, () => {
-      return this.closeApp();
+    this.ipcTunnelService.on<boolean, void>(Channel.closeApp, force => {
+      return this.closeApp(force);
     });
 
     this.ipcTunnelService.on<void, void>(Channel.restartApp, () => {
@@ -249,6 +239,10 @@ class Main {
 
     this.ipcTunnelService.on<string, string>(Channel.openPath, (pPath: string) => {
       return pPath ? shell.openPath(path.normalize(pPath)) : Promise.reject(`Given path is empty`);
+    });
+
+    this.ipcTunnelService.on<void, string>(Channel.getLogFilePath, () => {
+      return path.normalize(this.logger.base.transports.file.getFile().path);
     });
 
     this.ipcTunnelService.on<string, void>(Channel.showItemInFolder, (pPath: string) => {
@@ -301,25 +295,7 @@ class Main {
 
   private startElevate(onReady: () => void = null): void {
     // Create the browser window.
-    const workAreaSize: Electron.Size = Main.getWorkingAreaSize(Electron.screen.getPrimaryDisplay());
-    const windowOptions: Electron.BrowserWindowConstructorOptions = {
-      title: "App",
-      width: workAreaSize.width,
-      height: workAreaSize.height,
-      center: true,
-      frame: false,
-
-      // show: false,
-      autoHideMenuBar: true,
-      webPreferences: {
-        contextIsolation: true, // Force for security purposes
-        nodeIntegration: false, // Force for security purposes
-        enableRemoteModule: false, // Force for security purposes
-        preload: path.join(__dirname, "pre-loader.js")
-      }
-    };
-
-    this.mainWindow = new BrowserWindow(windowOptions);
+    this.createMainBrowserWindow();
 
     // Configure tunnel service to receive and send message from Renderer
     (this.ipcTunnelService as IpcMainTunnelService).configure(this.ipcMain, this.mainWindow);
@@ -339,6 +315,23 @@ class Main {
 
     // Detect a proxy on the system before listening for message from renderer
     this.httpClient.detectProxy(this.mainWindow);
+
+    // Emit window events
+    this.mainWindow.on("maximize", () => {
+      this.ipcTunnelService.fwd(new IpcMessage(Channel.isMaximized, true));
+    });
+
+    this.mainWindow.on("unmaximize", () => {
+      this.ipcTunnelService.fwd(new IpcMessage(Channel.isMaximized, false));
+    });
+
+    this.mainWindow.on("enter-full-screen", () => {
+      this.ipcTunnelService.fwd(new IpcMessage(Channel.isFullscreen, true));
+    });
+
+    this.mainWindow.on("leave-full-screen", () => {
+      this.ipcTunnelService.fwd(new IpcMessage(Channel.isFullscreen, false));
+    });
 
     // Emitted when the window is closed.
     this.mainWindow.on("closed", () => {
@@ -369,6 +362,28 @@ class Main {
     });
   }
 
+  private createMainBrowserWindow(): void {
+    const workAreaSize: Electron.Size = Main.getWorkingAreaSize(Electron.screen.getPrimaryDisplay());
+    const windowOptions: Electron.BrowserWindowConstructorOptions = {
+      title: "App",
+      width: workAreaSize.width,
+      height: workAreaSize.height,
+      center: true,
+      frame: this.appService.getPlatform() === Platform.MACOS,
+      trafficLightPosition: { x: 15, y: 17 },
+      titleBarStyle: "hidden",
+      autoHideMenuBar: true,
+      webPreferences: {
+        contextIsolation: true,
+        nodeIntegration: false,
+        enableRemoteModule: false,
+        preload: path.join(__dirname, "pre-loader.js")
+      }
+    };
+
+    this.mainWindow = new BrowserWindow(windowOptions);
+  }
+
   private setupListeners(): void {
     // Listen for standard app messages (close, restart, ...)
     this.standardChannelsListening();
@@ -384,6 +399,12 @@ class Main {
 
     // Listen for backup profile requests
     this.ipcProfileBackupListener.startListening(this.ipcTunnelService);
+
+    // Listen for shared storage requests
+    this.ipcSharedStorageListener.startListening(this.ipcTunnelService);
+
+    // Listen for check remote update requests
+    this.updateHandler.startListening(this.ipcTunnelService);
   }
 }
 

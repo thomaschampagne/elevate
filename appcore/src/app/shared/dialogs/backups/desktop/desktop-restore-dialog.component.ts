@@ -37,13 +37,13 @@ import { DesktopBackupService } from "../../../../desktop/backup/desktop-backup.
       </div>
       <!-- Restore processing: display progress -->
       <div class="progress" *ngIf="isRestoreProcessing">
+        <div>
+          <i>Restore in progress. App will be reloaded when done.</i>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="restoreProgress"></mat-progress-bar>
         <div class="mat-title">
           <strong>{{ restoreProgress }}</strong
           >%
-        </div>
-        <mat-progress-bar mode="determinate" [value]="restoreProgress"></mat-progress-bar>
-        <div>
-          <i>Restore in progress. App will be reloaded when done.</i>
         </div>
       </div>
     </mat-dialog-content>

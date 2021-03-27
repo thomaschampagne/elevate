@@ -7,27 +7,24 @@
     "build:metadata": "node -e \"require('fs').writeFileSync('build_metadata.json', JSON.stringify({commit: require('child_process').execSync('git rev-parse HEAD').toString().trim(), date: new Date().toISOString()}));\"",
     "build:appcore@dev": "npm run build:metadata && cd ../appcore/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build --outputPath=../desktop/dist/app/ --base-href --configuration=desktop",
     "build:appcore@prod": "npm run build:appcore@dev -- --base-href --configuration=desktop-prod",
-    "build:updater@dev": "node ../node_modules/cpy-cli/cli.js ./src/updater/window/index.html ./dist/updater/ && rollup --config rollup-updater.config.js",
-    "build:updater@prod": "npm run build:updater@dev -- --environment ELECTRON_ENV:prod",
-    "build:electron@base": "rollup --config rollup-app.config.js",
-    "build:electron@dev": "npm run build:updater@dev && npm run build:electron@base",
-    "build:electron@prod": "npm run build:updater@prod && npm run build:electron@base -- --environment ELECTRON_ENV:prod",
+    "build:electron@dev": "rollup --config rollup-app.config.js",
+    "build:electron@prod": "npm run build:electron@dev -- --environment ELECTRON_ENV:prod",
     "build:prod": "npm-run-all clean build:electron@prod build:appcore@prod",
     "clean": "npm-run-all clean:*",
     "clean:dist": "node ../node_modules/del-cli/cli.js ./dist/",
     "clean:package": "node ../node_modules/del-cli/cli.js ./package/",
     "clean:metadata": "node ../node_modules/del-cli/cli.js ./build_metadata.json",
     "launch:dev:app": "npm run assert-app-exists && run-electron ./dist/desktop.bundle.js",
-    "package:windows": "npm run build:prod && electron-builder build --windows --x64 --publish onTagOrDraft",
-    "package:linux": "npm run build:prod && electron-builder build --linux --x64 --publish onTagOrDraft",
-    "package:macos": "npm run build:prod && electron-builder build --mac --publish onTagOrDraft",
+    "package:windows": "electron-builder build --windows --publish onTagOrDraft",
+    "package:linux": "electron-builder build --linux --publish onTagOrDraft",
+    "package:macos": "electron-builder build --mac --universal --publish onTagOrDraft",
     "start:desktop": "npm run watch",
     "start": "npm run start:desktop",
     "test": "npm run build:metadata && node ./node_modules/jest/bin/jest.js --silent --coverage",
     "type:check": "tsc --noEmit --project tsconfig.json",
     "tslint": "node ./node_modules/tslint/bin/tslint -c ./tslint.json ./src/**/*.ts --fix",
-    "watch": "npm run clean && node ../node_modules/cpy-cli/cli.js ./dev-app-update.yml ./dist && npm-run-all --print-label --race --parallel watch:electron watch:appcore",
-    "watch:electron": "npm run build:electron@dev -- -- --watch",
+    "watch": "npm run clean && npm-run-all --print-label --race --parallel watch:electron watch:appcore",
+    "watch:electron": "npm run build:electron@dev -- --watch",
     "watch:appcore": "npm run build:appcore@dev -- --watch",
     "upgrade:check": "ncu",
     "upgrade:apply": "npm run upgrade:check -- -u"
@@ -52,11 +49,10 @@
   "engineStrict": true,
   "dependencies": {
     "@sports-alliance/sports-lib": "^5.4.22",
-    "7zip-bin": "^5.1.0",
+    "7zip-bin": "^5.1.1",
     "electron-log": "^4.3.2",
     "electron-updater": "^4.3.8",
     "https-proxy-agent": "^5.0.0",
-    "ini": "^2.0.0",
     "JSONStream": "^1.3.5",
     "lodash": "^4.17.21",
     "lz-string": "github:pieroxy/lz-string",
@@ -68,31 +64,33 @@
     "querystring": "^0.2.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.6",
-    "tsyringe": "^4.4.0",
+    "semver": "^7.3.5",
+    "tsyringe": "^4.5.0",
     "typed-rest-client": "^1.8.3",
     "vue": "^2.6.12",
     "xmldom": "^0.5.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^11.2.0",
-    "@rollup/plugin-typescript": "^8.2.0",
-    "@types/jest": "^26.0.20",
+    "@rollup/plugin-node-resolve": "^11.2.1",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "@types/jest": "^26.0.22",
     "@types/lodash": "^4.14.168",
-    "@types/node": "^14.14.33",
+    "@types/node": "^14.14.37",
     "@types/node-7z": "^2.1.0",
+    "@types/semver": "^7.3.4",
     "@types/xmldom": "^0.1.30",
-    "electron": "^12.0.0",
+    "electron": "^12.0.2",
     "electron-builder": "^22.10.5",
     "jest": "^26.6.3",
     "jest-config": "^26.6.3",
     "npm-run-all": "^4.1.5",
-    "rollup": "^2.41.0",
+    "rollup": "^2.43.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
     "run-electron": "^1.0.0",
-    "ts-jest": "^26.5.3",
+    "ts-jest": "^26.5.4",
     "tslib": "^2.1.0",
     "tslint": "^6.1.3",
     "typescript": "^4.2.3"
@@ -118,7 +116,6 @@
     "win": {
       "publisherName": "Thomas Champagne",
       "verifyUpdateCodeSignature": false,
-      "artifactName": "elevate-installer.${ext}",
       "target": [
         {
           "target": "nsis",
@@ -129,20 +126,18 @@
       ]
     },
     "mac": {
-      "artifactName": "elevate-installer.${arch}.${ext}",
-      "target": {
-        "target": "dmg",
-        "arch": [
-          "arm64",
-          "x64"
-        ]
-      }
+      "category": "public.app-category.healthcare-fitness",
+      "target": "dmg"
     },
     "linux": {
       "category": "Sports",
-      "artifactName": "elevate-installer.${ext}",
       "target": [
-        "deb"
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
       ]
     },
     "nsis": {

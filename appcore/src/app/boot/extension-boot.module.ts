@@ -18,12 +18,18 @@ import { CoreModule } from "../core/core.module";
 import { AppService } from "../shared/services/app-service/app.service";
 import { ChromiumService } from "../extension/chromium.service";
 import { ExtensionAppService } from "../shared/services/app-service/extension/extension-app.service";
+import { UPDATE_BAR_COMPONENT } from "../update-bar/update-bar.component";
+import { ExtensionUpdateBarComponent } from "../update-bar/extension-update-bar.component";
+import { ExtensionSplashScreenComponent } from "../app-load/extension/extension-splash-screen.component";
+import { SPLASH_SCREEN_COMPONENT } from "../app-load/splash-screen.component";
 
 @NgModule({
   imports: [CoreModule, ExtensionRoutingModule],
   exports: [CoreModule, ExtensionRoutingModule],
   declarations: [
+    ExtensionSplashScreenComponent,
     ExtensionRecalculateActivitiesBarComponent,
+    ExtensionUpdateBarComponent,
     ExtensionSyncBarComponent,
     ExtensionTopBarComponent,
     ExtensionAppMoreMenuComponent,
@@ -31,9 +37,11 @@ import { ExtensionAppService } from "../shared/services/app-service/extension/ex
   ],
   providers: [
     ChromiumService,
+    { provide: SPLASH_SCREEN_COMPONENT, useValue: ExtensionSplashScreenComponent },
     { provide: AppLoadService, useClass: ExtensionLoadService },
     { provide: AppService, useClass: ExtensionAppService },
     { provide: MENU_ITEMS_PROVIDER, useClass: ExtensionMenuItemsProvider },
+    { provide: UPDATE_BAR_COMPONENT, useValue: ExtensionUpdateBarComponent },
     { provide: SYNC_BAR_COMPONENT, useValue: ExtensionSyncBarComponent },
     { provide: RECALCULATE_ACTIVITIES_BAR_COMPONENT, useValue: ExtensionRecalculateActivitiesBarComponent },
     { provide: TOP_BAR_COMPONENT, useValue: ExtensionTopBarComponent },

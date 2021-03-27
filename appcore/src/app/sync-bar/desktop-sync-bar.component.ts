@@ -69,7 +69,7 @@ class CurrentActivitySynced {
 })
 export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit {
   @HostBinding("hidden")
-  public hiddenSyncBar: boolean;
+  public hiddenBar: boolean;
   public hiddenCloseButton: boolean;
   public isSyncing: boolean;
   public syncStatusText: string;
@@ -210,11 +210,11 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
   }
 
   private showSyncBar(): void {
-    this.hiddenSyncBar = false;
+    this.hiddenBar = false;
   }
 
   private hideSyncBar(): void {
-    this.hiddenSyncBar = true;
+    this.hiddenBar = true;
   }
 
   private showCloseButton(): void {

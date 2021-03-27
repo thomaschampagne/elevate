@@ -18,6 +18,8 @@ import { ExtensionUserSettingsService } from "../../services/user-settings/exten
 import { AthleteService } from "../../services/athlete/athlete.service";
 import { ExtensionAthleteService } from "../../services/athlete/extension/extension-athlete.service";
 import { ExtensionRestoreBackupDialogComponent } from "../../dialogs/backups/extension/extension-restore-backup-dialog.component";
+import { WindowService } from "../../services/window/window.service";
+import { ExtensionWindowService } from "../../services/window/extension-window.service";
 
 @NgModule({
   imports: [CoreModule, ExtensionRoutingModule],
@@ -26,6 +28,7 @@ import { ExtensionRestoreBackupDialogComponent } from "../../dialogs/backups/ext
   providers: [
     SyncDateTimeDao,
     ExtensionSyncService,
+    { provide: WindowService, useClass: ExtensionWindowService },
     { provide: AthleteService, useClass: ExtensionAthleteService },
     { provide: UserSettingsService, useClass: ExtensionUserSettingsService },
     { provide: DataStore, useClass: ExtensionDataStore },

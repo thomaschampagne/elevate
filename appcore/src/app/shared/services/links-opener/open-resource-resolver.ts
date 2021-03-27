@@ -6,12 +6,12 @@ export const OPEN_RESOURCE_RESOLVER = new InjectionToken<OpenResourceResolver>("
 export abstract class OpenResourceResolver {
   protected constructor(@Inject(MatSnackBar) protected readonly snackBar: MatSnackBar) {}
 
-  public abstract openLink(url: string): void;
+  public abstract openLink(url: string): Promise<void>;
 
-  public abstract openActivity(id: number | string): void;
+  public abstract openActivity(id: number | string): Promise<boolean>;
 
-  public openStravaActivity(id: number): void {
-    this.openLink("https://www.strava.com/activities/" + id);
+  public openStravaActivity(id: number): Promise<void> {
+    return this.openLink("https://www.strava.com/activities/" + id);
   }
 
   public openActivities(ids: (number | string)[]): void {

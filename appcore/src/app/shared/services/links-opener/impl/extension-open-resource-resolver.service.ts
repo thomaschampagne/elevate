@@ -8,11 +8,12 @@ export class ExtensionOpenResourceResolver extends OpenResourceResolver {
     super(snackBar);
   }
 
-  public openActivity(id: number): void {
-    this.openStravaActivity(id);
+  public openActivity(id: number): Promise<boolean> {
+    return this.openStravaActivity(id).then(() => Promise.resolve(true));
   }
 
-  public openLink(url: string): void {
+  public openLink(url: string): Promise<void> {
     window.open(url, "_blank");
+    return Promise.resolve();
   }
 }

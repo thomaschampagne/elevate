@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { GhRelease } from "./gh-release.model";
 import { Platform } from "@elevate/shared/enums";
 import { ReleaseNoteService } from "../../../releases-notes/release-note.service";
 import { environment } from "../../../../environments/environment";
 import { SafeHtml } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { AppRoutes } from "../../models/app-routes";
+import { GhRelease } from "@elevate/shared/models";
 
 @Component({
   selector: "app-new-installed-version-notice-dialog",

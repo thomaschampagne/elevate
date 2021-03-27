@@ -6,3 +6,4 @@ export * from "./zone-type.enum";
 export * from "./platform.enum";
 export * from "./grade-profile.enum";
 export * from "./leaflet-map-type.enum";
+export * from "./arch";

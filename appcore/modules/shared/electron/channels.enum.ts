@@ -3,7 +3,10 @@ export enum Channel {
   enableFullscreen = "enableFullscreen",
   disableFullscreen = "disableFullscreen",
   isFullscreen = "isFullscreen",
+  isMaximized = "isMaximized",
   minimizeApp = "minimizeApp",
+  maximizeApp = "maximizeApp",
+  restoreApp = "restoreApp",
   restartApp = "restartApp",
   closeApp = "closeApp",
   resetApp = "resetApp",
@@ -13,6 +16,7 @@ export enum Channel {
   openExternal = "openExternal",
   openPath = "openPath",
   showItemInFolder = "showItemInFolder",
+  getLogFilePath = "getLogFilePath",
 
   // Fs
   existsSync = "existsSync",
@@ -35,7 +39,14 @@ export enum Channel {
   restoreInit = "restoreInit",
   restoreReadObj = "restoreReadObj",
 
-  // Other
+  // Updates
+  listUpdates = "listUpdates",
+  checkForUpdate = "checkForUpdate",
+  updateApp = "updateApp",
+  updateDownloadProgress = "updateDownloadProgress",
+
+  // Others
+  ipcStorage = "ipcStorage",
   stravaLink = "stravaLink",
   runtimeInfo = "runtimeInfo"
 }

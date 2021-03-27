@@ -18,21 +18,22 @@ export class DesktopOpenResourceResolver extends OpenResourceResolver {
     super(snackBar);
   }
 
-  public openLink(path: string): void {
+  public openLink(path: string): Promise<void> {
     if (path.startsWith("http")) {
-      this.electronService.openExternalUrl(path);
-      return;
+      return this.electronService.openExternalUrl(path);
     }
 
-    this.electronService.existsSync(path).then(exists => {
+    return this.electronService.existsSync(path).then(exists => {
       if (exists) {
-        this.snackBar.open(`Path to file "${path}" do not exists`, "Close");
+        return this.electronService.openItem(path).then(() => Promise.resolve());
+      } else {
+        return Promise.reject(`Path to file "${path}" do not exists`);
       }
     });
   }
 
-  public openActivity(id: number | string): void {
-    this.router.navigate([`${AppRoutes.activity}/${id}`]);
+  public openActivity(id: number | string): Promise<boolean> {
+    return this.router.navigate([`${AppRoutes.activity}/${id}`]);
   }
 
   public openSourceActivity(id: number | string, sourceType: ConnectorType): void {

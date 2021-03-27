@@ -8,12 +8,14 @@
 @import "~src/app/app.component.theme";
 @import "~src/app/fitness-trend/fitness-trend.component.theme";
 @import "~src/app/sync-bar/sync-bar.component.theme";
+@import "~src/app/update-bar/update-bar.component.theme";
 @import "~src/app/recalculate-activities-bar/recalculate-activities-bar.component.theme";
 
 @mixin elevate-custom-theme($theme) {
   @include app-classes($theme);
   @include native-web-elements($theme);
   @include app-theming($theme);
+  @include app-update-bar-theming($theme);
   @include app-sync-bar-theming($theme);
   @include app-recalculate-activities-bar-theming($theme);
   @include fitness-trend-theming($theme);

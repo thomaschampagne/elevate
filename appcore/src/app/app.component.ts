@@ -36,6 +36,8 @@ import { RecalculateActivitiesBarDirective } from "./recalculate-activities-bar/
 import { VersionsProvider } from "./shared/services/versions/versions-provider";
 import { ComponentsFactoryService } from "./shared/services/components-factory.service";
 import { AppService } from "./shared/services/app-service/app.service";
+import { UPDATE_BAR_COMPONENT, UpdateBarComponent } from "./update-bar/update-bar.component";
+import { UpdateBarDirective } from "./update-bar/update-bar.directive";
 
 @Component({
   selector: "app-root",
@@ -55,6 +57,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   @ViewChild(TopBarDirective, { static: true })
   public topBarDirective: TopBarDirective;
+
+  @ViewChild(UpdateBarDirective, { static: true })
+  public updateBarDirective: UpdateBarDirective;
 
   @ViewChild(SyncBarDirective, { static: true })
   public syncBarDirective: SyncBarDirective;
@@ -88,6 +93,7 @@ export class AppComponent implements OnInit, OnDestroy {
     @Inject(MENU_ITEMS_PROVIDER) private readonly menuItemsProvider: MenuItemsProvider,
     @Inject(TOP_BAR_COMPONENT) private readonly topBarComponentType: Type<TopBarComponent>,
     @Inject(SYNC_BAR_COMPONENT) private readonly syncBarComponentType: Type<SyncBarComponent>,
+    @Inject(UPDATE_BAR_COMPONENT) private readonly updateBarComponentType: Type<UpdateBarComponent>,
     @Inject(RECALCULATE_ACTIVITIES_BAR_COMPONENT)
     private readonly recalculateActivitiesBarComponentType: Type<RecalculateActivitiesBarComponent>,
     @Inject(SYNC_MENU_COMPONENT) private readonly syncMenuComponentType: Type<SyncMenuComponent>,
@@ -130,6 +136,11 @@ export class AppComponent implements OnInit, OnDestroy {
       this.topBarDirective.viewContainerRef
     );
 
+    this.componentsFactoryService.create<UpdateBarComponent>(
+      this.updateBarComponentType,
+      this.updateBarDirective.viewContainerRef
+    );
+
     this.componentsFactoryService.create<SyncBarComponent>(
       this.syncBarComponentType,
       this.syncBarDirective.viewContainerRef
@@ -163,8 +174,6 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     this.sideNavSetup();
-
-    this.versionsProvider.checkForUpdates();
 
     this.logger.debug("App initialized.");
   }

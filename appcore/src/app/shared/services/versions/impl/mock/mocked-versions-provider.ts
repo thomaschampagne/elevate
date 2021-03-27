@@ -1,9 +1,9 @@
 import { VersionsProvider } from "../../versions-provider";
 import { Inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { GhRelease } from "../../gh-release.model";
 import { MatDialog } from "@angular/material/dialog";
 import { Platform } from "@elevate/shared/enums";
+import { GhRelease } from "@elevate/shared/models";
 
 @Injectable()
 export class MockedVersionsProvider extends VersionsProvider {
@@ -22,10 +22,6 @@ export class MockedVersionsProvider extends VersionsProvider {
     return Promise.resolve(null);
   }
 
-  public getLatestRemoteVersion(): Promise<string> {
-    return Promise.resolve("2.0.0");
-  }
-
   public getPackageVersion(): string {
     return "2.0.0";
   }
@@ -40,8 +36,6 @@ export class MockedVersionsProvider extends VersionsProvider {
       date: new Date().toISOString()
     });
   }
-
-  public checkForUpdates(): void {}
 
   public getWrapperVersion(): string {
     return "1.0.0";

@@ -32,6 +32,10 @@ import { DesktopAthleteService } from "../../services/athlete/desktop/desktop-at
 import { IpcSyncMessageSender } from "../../../desktop/ipc/ipc-sync-messages-sender.service";
 import { DesktopRestoreDialogComponent } from "../../dialogs/backups/desktop/desktop-restore-dialog.component";
 import { DesktopBackupService } from "../../../desktop/backup/desktop-backup.service";
+import { DesktopUpdateService } from "../../../desktop/app-update/desktop-update.service";
+import { IpcStorageService } from "../../../desktop/ipc/ipc-storage.service";
+import { WindowService } from "../../services/window/window.service";
+import { DesktopWindowService } from "../../services/window/desktop-window.service";
 
 @NgModule({
   imports: [CoreModule, DesktopRoutingModule, ConnectorsModule],
@@ -39,6 +43,8 @@ import { DesktopBackupService } from "../../../desktop/backup/desktop-backup.ser
   declarations: [DesktopAdvancedMenuComponent, DesktopBackupDialogComponent, DesktopRestoreDialogComponent],
   providers: [
     ElectronService,
+    IpcStorageService,
+    DesktopUpdateService,
     IpcSyncMessagesListener,
     IpcSyncMessageSender,
     DesktopMigrationService,
@@ -50,6 +56,7 @@ import { DesktopBackupService } from "../../../desktop/backup/desktop-backup.ser
     PropertiesDao,
     StravaConnectorInfoDao,
     FileConnectorInfoService,
+    { provide: WindowService, useClass: DesktopWindowService },
     { provide: AthleteService, useClass: DesktopAthleteService },
     { provide: UserSettingsService, useClass: DesktopUserSettingsService },
     { provide: DataStore, useClass: DesktopDataStore },

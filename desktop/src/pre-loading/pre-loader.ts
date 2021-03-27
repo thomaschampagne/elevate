@@ -4,11 +4,12 @@ import { BridgeApi, Channel } from "@elevate/shared/electron";
 const api: BridgeApi = {
   // App actions
   minimizeApp: () => ipcRenderer.invoke(Channel.minimizeApp),
+  maximizeApp: () => ipcRenderer.invoke(Channel.maximizeApp),
+  restoreApp: () => ipcRenderer.invoke(Channel.restoreApp),
   enableFullscreen: () => ipcRenderer.invoke(Channel.enableFullscreen),
   disableFullscreen: () => ipcRenderer.invoke(Channel.disableFullscreen),
-  isFullscreen: () => ipcRenderer.invoke(Channel.isFullscreen),
   restartApp: () => ipcRenderer.invoke(Channel.restartApp),
-  closeApp: () => ipcRenderer.invoke(Channel.closeApp),
+  closeApp: (force: boolean) => ipcRenderer.invoke(Channel.closeApp, force),
   resetApp: () => ipcRenderer.invoke(Channel.resetApp),
   invoke: (channel: Channel, ...args: any[]) => ipcRenderer.invoke(channel, args),
   receive: (channel: Channel, listener: (event: IpcRendererEvent, ...args: any[]) => void) =>
@@ -27,6 +28,7 @@ const api: BridgeApi = {
   electronVersion: process.versions.electron,
   nodePlatform: process.platform,
   showOpenDialogSync: (options: OpenDialogSyncOptions) => ipcRenderer.invoke(Channel.showOpenDialogSync, options),
+  getLogFilePath: () => ipcRenderer.invoke(Channel.getLogFilePath),
   clearStorageData: (options?: Electron.ClearStorageDataOptions) =>
     ipcRenderer.invoke(Channel.clearStorageData, options),
   getPath: (

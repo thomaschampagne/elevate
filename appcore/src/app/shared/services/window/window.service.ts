@@ -1,21 +1,17 @@
 import { MediaObserver } from "@angular/flex-layout";
-import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 
-@Injectable({
-  providedIn: "root"
-})
-export class WindowService {
+export abstract class WindowService {
   public static readonly SCREEN_MD: string = "md";
 
   public resizing$: Subject<void>;
 
-  constructor(public media: MediaObserver) {
+  protected constructor(public mediaObserver: MediaObserver) {
     this.resizing$ = new Subject<void>();
   }
 
   public isScreenMediaActive(query: string): boolean {
-    return this.media.isActive(query);
+    return this.mediaObserver.isActive(query);
   }
 
   public onResize(): void {

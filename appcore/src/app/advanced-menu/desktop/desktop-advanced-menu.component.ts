@@ -37,13 +37,13 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
           <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
             <div>Open logs folder of the application</div>
             <div>
-              <button mat-stroked-button color="primary" (click)="openLogsFolder()">Open logs folder</button>
+              <button mat-stroked-button color="primary" (click)="showLogFile()">View log file</button>
             </div>
           </div>
           <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
             <div>Open user application data folder</div>
             <div>
-              <button mat-stroked-button color="primary" (click)="openAppDataFolder()">Open user data folder</button>
+              <button mat-stroked-button color="primary" (click)="openUserDataFolder()">Open user data folder</button>
             </div>
           </div>
           <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
@@ -192,12 +192,12 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
     });
   }
 
-  public openLogsFolder(): void {
-    this.electronService.openLogsFolder();
+  public showLogFile(): void {
+    this.electronService.showLogFile();
   }
 
-  public openAppDataFolder(): void {
-    this.electronService.openAppDataFolder();
+  public openUserDataFolder(): void {
+    this.electronService.openUserDataFolder();
   }
 
   public onZoneSettingsReset(): void {

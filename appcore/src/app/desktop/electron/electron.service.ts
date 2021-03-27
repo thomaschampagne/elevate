@@ -2,7 +2,6 @@ import { Inject, Injectable } from "@angular/core";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { Platform } from "@elevate/shared/enums";
 import { OpenDialogSyncOptions } from "electron";
-import { name as appName } from "../../../../../desktop/package.json";
 import { BridgeApi } from "@elevate/shared/electron";
 
 @Injectable()
@@ -60,14 +59,14 @@ export class ElectronService {
     });
   }
 
-  public openLogsFolder(): Promise<string> {
-    return this.getLogsPath().then(path => {
-      return this.openItem(path);
+  public showLogFile(): Promise<void> {
+    return this.getLogFilePath().then(path => {
+      return this.showItemInFolder(path);
     });
   }
 
-  public openAppDataFolder(): Promise<string> {
-    return this.getAppDataPath().then(path => {
+  public openUserDataFolder(): Promise<string> {
+    return this.getUserDataPath().then(path => {
       return this.openItem(path);
     });
   }
@@ -76,19 +75,24 @@ export class ElectronService {
     this.api.minimizeApp().then(() => this.logger.debug("Minimize handled"));
   }
 
+  public maximizeApp(): void {
+    this.api.maximizeApp().then(() => this.logger.debug("Maximize handled"));
+  }
+
+  public restoreApp(): void {
+    this.api.restoreApp().then(() => this.logger.debug("Restore handled"));
+  }
+
   public enableFullscreen(): Promise<void> {
     return this.api.enableFullscreen().then(() => this.logger.debug("Fullscreen enabled"));
   }
+
   public disableFullscreen(): Promise<void> {
     return this.api.disableFullscreen().then(() => this.logger.debug("Fullscreen disabled"));
   }
 
-  public isFullscreen(): Promise<boolean> {
-    return this.api.isFullscreen();
-  }
-
-  public closeApp(): void {
-    this.api.closeApp().then(() => this.logger.debug("Close handled"));
+  public closeApp(force: boolean = false): void {
+    this.api.closeApp(force).then(() => this.logger.debug("Close handled"));
   }
 
   public restartApp(): void {
@@ -121,16 +125,12 @@ export class ElectronService {
     return this.api.getPath(name);
   }
 
-  public getAppDataPath(): Promise<string> {
-    return this.getPath("appData").then(pathResult => {
-      return `${pathResult}/${appName}`;
-    });
+  public getUserDataPath(): Promise<string> {
+    return this.getPath("userData");
   }
 
-  public getLogsPath(): Promise<string> {
-    return this.getAppDataPath().then(path => {
-      return Promise.resolve(`${path}/logs`);
-    });
+  public getLogFilePath(): Promise<string> {
+    return this.api.getLogFilePath();
   }
 
   public existsSync(path: string): Promise<boolean> {

@@ -9,12 +9,16 @@ import { AppMoreMenuDirective } from "./app-more-menu/app-more-menu.directive";
 import { RecalculateActivitiesBarDirective } from "./recalculate-activities-bar/recalculate-activities-bar.directive";
 import { AppLoadComponent } from "./app-load/app-load.component";
 import { TargetBootModule } from "./boot/target-boot.module";
+import { UpdateBarDirective } from "./update-bar/update-bar.directive";
+import { SplashScreenDirective } from "./app-load/splash-screen.directive";
 
 @NgModule({
   declarations: [
     AppLoadComponent,
     AppComponent,
+    SplashScreenDirective,
     TopBarDirective,
+    UpdateBarDirective,
     SyncBarDirective,
     RecalculateActivitiesBarDirective,
     SyncMenuDirective,

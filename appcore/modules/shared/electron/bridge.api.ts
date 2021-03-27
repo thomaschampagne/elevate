@@ -4,10 +4,11 @@ import { Channel } from "./channels.enum";
 export interface BridgeApi {
   // App actions
   minimizeApp: () => Promise<void>;
+  maximizeApp: () => Promise<void>;
+  restoreApp: () => Promise<void>;
   enableFullscreen: () => Promise<void>;
   disableFullscreen: () => Promise<void>;
-  isFullscreen: () => Promise<boolean>;
-  closeApp: () => Promise<void>;
+  closeApp: (force: boolean) => Promise<void>;
   restartApp: () => Promise<void>;
   resetApp: () => Promise<void>;
   invoke: (channel: Channel, ...args: any[]) => Promise<any>;
@@ -26,6 +27,7 @@ export interface BridgeApi {
   electronVersion: string;
   nodePlatform: string;
   showOpenDialogSync: (options: OpenDialogSyncOptions) => Promise<string[] | undefined>;
+  getLogFilePath: () => Promise<string>;
   clearStorageData: (options?: ClearStorageDataOptions) => Promise<void>;
   getPath: (
     name:
