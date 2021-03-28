@@ -76,6 +76,9 @@ export class AppComponent implements OnInit, OnDestroy {
   @ViewChild(MatSidenav, { static: true })
   public sideNav: MatSidenav;
 
+  public currentRoute: string;
+  public showRouteUrl: boolean;
+
   constructor(
     @Inject(AppService) public readonly appService: AppService,
     @Inject(Router) private readonly router: Router,
@@ -99,6 +102,8 @@ export class AppComponent implements OnInit, OnDestroy {
     @Inject(SYNC_MENU_COMPONENT) private readonly syncMenuComponentType: Type<SyncMenuComponent>,
     @Inject(APP_MORE_MENU_COMPONENT) private readonly appMoreMenuComponentType: Type<AppMoreMenuComponent>
   ) {
+    this.currentRoute = this.router.url;
+    this.showRouteUrl = environment.showRouteUrl;
     this.registerCustomIcons();
   }
 
@@ -121,8 +126,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.routerEventsSubscription = this.router.events.subscribe((routerEvent: RouterEvent) => {
       if (routerEvent instanceof NavigationEnd) {
-        const route: string = (routerEvent as NavigationEnd).urlAfterRedirects;
-        this.toolBarTitle = AppComponent.convertRouteToTitle(route);
+        this.currentRoute = (routerEvent as NavigationEnd).urlAfterRedirects;
+        this.toolBarTitle = AppComponent.convertRouteToTitle(this.currentRoute);
       }
     });
 

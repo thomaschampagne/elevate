@@ -64,7 +64,7 @@ export class AthleteSettingsComponent implements OnInit {
   ];
 
   public athleteModel: AthleteModel;
-  public elevateSportCategories: { label: string; sportKeys: ElevateSport[] }[];
+  public sportsCategories: { label: string; sportKeys: ElevateSport[] }[];
 
   @ViewChild("athleteForm") athleteForm: NgForm;
 
@@ -120,7 +120,7 @@ export class AthleteSettingsComponent implements OnInit {
   }
 
   private setupSportsCategories(): void {
-    this.elevateSportCategories = [
+    this.sportsCategories = [
       {
         label: "Usual Sports",
         sportKeys: AthleteSettingsComponent.USUAL_SPORTS_CATEGORY

@@ -17,3 +17,11 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.no-activities-found {
+  div {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  text-align: center;
+}

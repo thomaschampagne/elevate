@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Location } from "@angular/common";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { StreamsService } from "../../shared/services/streams/streams.service";
 import { Streams, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
@@ -46,6 +47,7 @@ export class ActivityViewComponent implements OnInit {
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: DesktopOpenResourceResolver,
     @Inject(Router) protected readonly router: Router,
     @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar,
+    @Inject(Location) private location: Location,
     @Inject(MatDialog) private readonly dialog: MatDialog
   ) {
     this.activity = null;
@@ -64,7 +66,7 @@ export class ActivityViewComponent implements OnInit {
       .getById(activityId)
       .then((activity: SyncedActivityModel) => {
         if (!activity) {
-          this.onBackToActivities();
+          this.onBack();
           return Promise.reject(new WarningException("Unknown activity"));
         }
 
@@ -212,8 +214,8 @@ export class ActivityViewComponent implements OnInit {
     return !!this.activity?.extras?.fs_activity_location?.path;
   }
 
-  public onBackToActivities(): void {
-    this.router.navigate([`${AppRoutes.activities}`]);
+  public onBack(): void {
+    this.location.back();
   }
 
   public onConfigureAthleteSettings(): void {

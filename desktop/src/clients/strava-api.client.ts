@@ -109,7 +109,7 @@ export class StravaApiClient {
         this.logger.error(
           "strava api http.IncomingMessage",
           "statusCode: " + error.statusCode,
-          "headers: " + JSON.stringify(error.headers)
+          "message: " + error.statusMessage
         );
 
         switch (error.statusCode) {

@@ -52,4 +52,7 @@
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-container>
+  <div *ngIf="showRouteUrl" class="showRouteUrl primary-bg primary-color">
+    <strong>{{ currentRoute }}</strong>
+  </div>
 </div>

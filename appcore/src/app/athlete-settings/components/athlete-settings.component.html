@@ -70,7 +70,7 @@
                         placeholder="Preferred Sports (up to {{MAX_SPORTS}})"
                         aria-label="Preferred Sports (up to {{MAX_SPORTS}})"
                         name="sports">
-              <mat-optgroup *ngFor="let sportCategory of elevateSportCategories;"
+              <mat-optgroup *ngFor="let sportCategory of sportsCategories;"
                             [label]="sportCategory.label">
                 <mat-option
                   *ngFor="let sportKey of sportCategory.sportKeys;"

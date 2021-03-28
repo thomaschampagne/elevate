@@ -23,6 +23,13 @@ export abstract class ActivityService {
     return this.activityDao.findSortStartDate(false);
   }
 
+  public find(
+    query?: LokiQuery<SyncedActivityModel & LokiObj>,
+    sort?: { propName: keyof SyncedActivityModel; options: Partial<SimplesortOptions> }
+  ): Promise<SyncedActivityModel[]> {
+    return this.activityDao.find(query, sort);
+  }
+
   public findSortStartDate(descending: boolean): Promise<SyncedActivityModel[]> {
     return this.activityDao.findSortStartDate(descending);
   }

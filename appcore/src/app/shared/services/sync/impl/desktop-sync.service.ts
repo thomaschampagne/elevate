@@ -360,7 +360,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     );
 
     this.activityService
-      .put(activitySyncEvent.activity)
+      .put(activitySyncEvent.activity, true)
       .then((syncedActivityModel: SyncedActivityModel) => {
         this.logger.debug(`Activity "${syncedActivityModel.name}" saved`);
 

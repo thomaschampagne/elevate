@@ -12,7 +12,7 @@ import { ActivityColumns } from "./activity-columns.namespace";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
-import { Parser as Json2CsvParser } from "json2csv";
+import json2csv, { Parser as Json2CsvParser } from "json2csv";
 import moment from "moment";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { SyncService } from "../shared/services/sync/sync.service";
@@ -24,9 +24,16 @@ import { Subject, Subscription, timer } from "rxjs";
 import { debounce } from "rxjs/operators";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 import { AppService } from "../shared/services/app-service/app.service";
-import { MeasureSystem } from "@elevate/shared/enums";
+import { ElevateSport, MeasureSystem } from "@elevate/shared/enums";
+import { ActivatedRoute, Router } from "@angular/router";
+import { AppRoutes } from "../shared/models/app-routes";
 import NumberColumn = ActivityColumns.NumberColumn;
 import UserSettingsModel = UserSettings.UserSettingsModel;
+import FieldInfo = json2csv.FieldInfo;
+
+class ActivityFilters {
+  constructor(public name: string = "", public sports: ElevateSport[] = []) {}
+}
 
 @Component({
   selector: "app-activities",
@@ -37,6 +44,20 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   private static readonly LS_SELECTED_COLUMNS: string = "activities_selectedColumns";
   private static readonly LS_PAGE_SIZE_PREFERENCE: string = "activities_pageSize";
   private static readonly DEGRADED_PERFORMANCE_COLUMNS_COUNT: number = 35;
+  private static readonly ACTIVITY_SEARCH_DEBOUNCE_TIME: number = 500;
+
+  private static readonly USUAL_SPORTS_CATEGORY: ElevateSport[] = [
+    ElevateSport.Ride,
+    ElevateSport.VirtualRide,
+    ElevateSport.Run,
+    ElevateSport.VirtualRun,
+    ElevateSport.Swim,
+    ElevateSport.Rowing,
+    ElevateSport.NordicSki,
+    ElevateSport.SkiTouring,
+    ElevateSport.Hike
+  ];
+
   public readonly ColumnType = ActivityColumns.ColumnType;
 
   @ViewChild(MatPaginator, { static: true })
@@ -51,16 +72,20 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   public columnsCategories: ActivityColumns.Category[];
   public displayedColumns: string[];
   public isImperial: boolean;
-  public searchText: string;
-  public searchText$: Subject<string>;
   public hasActivities: boolean;
   public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
   public initialized: boolean;
   public isPerformanceDegraded: boolean;
   public historyChangesSub: Subscription;
 
+  public sportsCategories: { label: string; sportKeys: ElevateSport[] }[];
+  public activityNameSearch$: Subject<string>;
+  public filters: ActivityFilters;
+
   constructor(
     @Inject(AppService) private readonly appService: AppService,
+    @Inject(ActivatedRoute) private readonly route: ActivatedRoute,
+    @Inject(Router) private readonly router: Router,
     @Inject(SyncService) private readonly syncService: SyncService<any>,
     @Inject(ActivityService) private readonly activityService: ActivityService,
     @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
@@ -72,7 +97,11 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     this.hasActivities = null; // Can be null: don't know yet true/false status
     this.initialized = false;
     this.isPerformanceDegraded = false;
-    this.searchText$ = new Subject();
+
+    this.activityNameSearch$ = new Subject();
+    this.filters = new ActivityFilters();
+
+    this.setupSportsCategories();
   }
 
   public static printAthleteSettings(activity: SyncedActivityModel, isImperial: boolean): string {
@@ -141,6 +170,11 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    // Listen for activity name search changes and re-fetch data from.
+    this.activityNameSearch$
+      .pipe(debounce(() => timer(ActivitiesComponent.ACTIVITY_SEARCH_DEBOUNCE_TIME)))
+      .subscribe(activityName => this.onActivityFilterNameChange(activityName));
+
     this.syncService
       .getSyncState()
       .then((syncState: SyncState) => {
@@ -166,8 +200,19 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
         // Data source setup
         this.dataSourceSetup();
 
+        // Check if filters have been provided from url then apply if exists
+        if (this.route.snapshot.queryParams.filters) {
+          try {
+            this.filters = JSON.parse(this.route.snapshot.queryParams.filters);
+            this.logger.debug("Applying found filters: ", this.filters);
+          } catch (e) {
+            this.logger.error("Failed to parse url filters provided");
+            this.filters = new ActivityFilters();
+          }
+        }
+
         // Get and apply data
-        this.fetchApplyData();
+        this.findAndDisplayActivities();
       })
       .catch(error => {
         if (error instanceof AppError && error.code === AppError.SYNC_NOT_SYNCED) {
@@ -201,7 +246,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   public dataSourceSetup(): void {
-    this.dataSource = new MatTableDataSource<SyncedActivityModel>();
+    this.dataSource = new MatTableDataSource();
     this.dataSource.paginator = this.matPaginator;
 
     const pageSizePreference = parseInt(localStorage.getItem(ActivitiesComponent.LS_PAGE_SIZE_PREFERENCE), 10);
@@ -228,22 +273,33 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     };
   }
 
-  public fetchApplyData(): void {
+  public findAndDisplayActivities(): void {
+    // Build the query
+    // Apply default activity name regex search
+    const query: LokiQuery<SyncedActivityModel & LokiObj> = {
+      name: { $regex: [_.escapeRegExp(this.filters.name), "gim"] }
+    };
+
+    // Apply sports filter if provided
+    if (this.filters.sports.length) {
+      query.type = { $in: this.filters.sports };
+    }
+
+    // Setup default sort on descending start time
+    const sort: { propName: keyof SyncedActivityModel; options: Partial<SimplesortOptions> } = {
+      propName: "start_time",
+      options: { desc: true }
+    };
+
     this.activityService
-      .findSortStartDate(true)
+      .find(query, sort)
       .then((syncedActivityModels: SyncedActivityModel[]) => {
         this.hasActivities = syncedActivityModels.length > 0;
-
         this.dataSource.data = syncedActivityModels;
-
-        this.searchText$.pipe(debounce(() => timer(750))).subscribe(filterValue => {
-          filterValue = filterValue.trim(); // Remove whitespace
-          filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-          this.dataSource.filter = filterValue;
-        });
       })
       .catch(error => {
-        const message = error.toString() + ". Press (F12) to see a more detailed error message in browser console.";
+        const message =
+          error.toString() + ". Press (Alt+Shift+D+E+V) to see a more detailed error message in browser console.";
         this.snackBar.open(message, "Close");
         this.logger.error(message);
       })
@@ -312,8 +368,35 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     );
   }
 
-  public requestFilterFor(filterValue: string): void {
-    this.searchText$.next(filterValue);
+  public activityFilterNameUpdate(activityNamePattern: string): void {
+    this.activityNameSearch$.next(activityNamePattern);
+  }
+
+  public onActivityFilterNameChange(activityName: string): void {
+    // Update activity filters with clean-up name
+    this.filters.name = activityName.trim();
+    this.applyFilters();
+  }
+
+  public onActivityFilterSportsChange(): void {
+    // this.filters.sports model has changed, apply filters
+    this.applyFilters();
+  }
+
+  public onResetFilters(): void {
+    this.filters = new ActivityFilters();
+    this.applyFilters();
+  }
+
+  private applyFilters(): void {
+    // Update url filters
+    this.router.navigate([AppRoutes.activities], {
+      queryParams: { filters: JSON.stringify(this.filters) },
+      queryParamsHandling: "merge"
+    });
+
+    // Find and display activities from new filters
+    this.findAndDisplayActivities();
   }
 
   public openActivity(id: number | string) {
@@ -348,7 +431,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       if (confirm) {
         this.activityService.removeById(activity.id).then(
           () => {
-            this.fetchApplyData();
+            this.findAndDisplayActivities();
           },
           error => {
             this.snackBar.open(error, "Close");
@@ -359,7 +442,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     });
   }
 
-  public reset(): void {
+  public resetColumns(): void {
     this.selectedColumns = this.getDefaultsColumns();
     this.onSelectedColumns();
   }
@@ -403,72 +486,75 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
 
   public onSpreadSheetExport(): void {
     try {
-      const fields = _.map(this.selectedColumns, (column: ActivityColumns.Column<SyncedActivityModel>) => {
-        let columnLabel = column.header;
+      const fields: FieldInfo<SyncedActivityModel>[] = _.map(
+        this.selectedColumns,
+        (column: ActivityColumns.Column<SyncedActivityModel>) => {
+          let columnLabel = column.header;
 
-        if (ActivityColumns.ColumnType.NUMBER) {
-          const numberColumn = column as NumberColumn<SyncedActivityModel>;
+          if (ActivityColumns.ColumnType.NUMBER) {
+            const numberColumn = column as NumberColumn<SyncedActivityModel>;
 
-          if (numberColumn.units) {
-            let unitsColumn = numberColumn.units;
+            if (numberColumn.units) {
+              let unitsColumn = numberColumn.units;
 
-            if (unitsColumn instanceof ActivityColumns.SystemUnits) {
-              unitsColumn = this.isImperial ? unitsColumn.imperial : unitsColumn.metric;
+              if (unitsColumn instanceof ActivityColumns.SystemUnits) {
+                unitsColumn = this.isImperial ? unitsColumn.imperial : unitsColumn.metric;
+              }
+
+              if (unitsColumn instanceof ActivityColumns.CadenceUnits) {
+                unitsColumn = unitsColumn.cycling + " or " + unitsColumn.running;
+              }
+
+              columnLabel += unitsColumn ? " (" + unitsColumn + ")" : "";
             }
-
-            if (unitsColumn instanceof ActivityColumns.CadenceUnits) {
-              unitsColumn = unitsColumn.cycling + " or " + unitsColumn.running;
-            }
-
-            columnLabel += unitsColumn ? " (" + unitsColumn + ")" : "";
           }
+
+          return {
+            label: columnLabel,
+            default: "",
+            value: (activity: SyncedActivityModel) => {
+              let cellValue;
+
+              switch (column.type) {
+                case ActivityColumns.ColumnType.DATE:
+                  cellValue = moment(activity.start_time).format();
+                  break;
+
+                case ActivityColumns.ColumnType.TEXT:
+                  cellValue = column.print(activity, column.id);
+                  break;
+
+                case ActivityColumns.ColumnType.ACTIVITY_LINK:
+                  cellValue = column.print(activity, column.id);
+                  break;
+
+                case ActivityColumns.ColumnType.NUMBER:
+                  const numberColumn = column as NumberColumn<SyncedActivityModel>;
+                  cellValue = numberColumn.print(
+                    activity,
+                    null,
+                    numberColumn.precision,
+                    numberColumn.factor,
+                    this.isImperial,
+                    numberColumn.imperialFactor,
+                    numberColumn.id
+                  );
+                  break;
+
+                case ActivityColumns.ColumnType.ATHLETE_SETTINGS:
+                  cellValue = ActivitiesComponent.printAthleteSettings(activity, this.isImperial);
+                  break;
+
+                default:
+                  cellValue = "";
+                  break;
+              }
+
+              return cellValue;
+            }
+          };
         }
-
-        return {
-          label: columnLabel,
-          default: "",
-          value: (activity: SyncedActivityModel) => {
-            let cellValue;
-
-            switch (column.type) {
-              case ActivityColumns.ColumnType.DATE:
-                cellValue = moment(activity.start_time).format();
-                break;
-
-              case ActivityColumns.ColumnType.TEXT:
-                cellValue = column.print(activity, column.id);
-                break;
-
-              case ActivityColumns.ColumnType.ACTIVITY_LINK:
-                cellValue = column.print(activity, column.id);
-                break;
-
-              case ActivityColumns.ColumnType.NUMBER:
-                const numberColumn = column as NumberColumn<SyncedActivityModel>;
-                cellValue = numberColumn.print(
-                  activity,
-                  null,
-                  numberColumn.precision,
-                  numberColumn.factor,
-                  this.isImperial,
-                  numberColumn.imperialFactor,
-                  numberColumn.id
-                );
-                break;
-
-              case ActivityColumns.ColumnType.ATHLETE_SETTINGS:
-                cellValue = ActivitiesComponent.printAthleteSettings(activity, this.isImperial);
-                break;
-
-              default:
-                cellValue = "";
-                break;
-            }
-
-            return cellValue;
-          }
-        };
-      });
+      );
 
       const parser = new Json2CsvParser({ fields: fields });
       const csvData = parser.parse(this.dataSource.filteredData);
@@ -478,6 +564,23 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     } catch (err) {
       this.logger.error(err);
     }
+  }
+
+  private setupSportsCategories(): void {
+    this.sportsCategories = [
+      {
+        label: "Usual Sports",
+        sportKeys: ActivitiesComponent.USUAL_SPORTS_CATEGORY
+      },
+      {
+        label: "Others Sports",
+        sportKeys: _.difference(_.keys(ElevateSport) as ElevateSport[], ActivitiesComponent.USUAL_SPORTS_CATEGORY)
+      }
+    ];
+  }
+
+  public startCase(sport: string): string {
+    return _.startCase(sport);
   }
 
   public ngOnDestroy(): void {
