@@ -11,9 +11,25 @@
 
 ### Download installer (Windows, MacOS, Linux)
 
-_TBD_
+#### Windows 
+_TODO_
+  
+#### MacOS
+_TODO_
 
-<!-- TODO ### From continuous integration -->
+> ⚠️ You will get a "Unidentified developer" warning message when running app the first time. Of course, there is no malwares or virus in app. This message is displayed because the app is not yet signed with a Apple developer certificate.
+>
+> See: [Open a Mac app from an unidentified developer](https://support.apple.com/en-gb/guide/mac-help/mh40616/mac)
+> 
+> **How-to open (first launch)**:
+> 
+> 1. In the Finder on your Mac, locate the "Elevate" app (Don't use Launchpad to do this. Launchpad doesn't allow you to access the shortcut menu)
+> 1. Right-click the "Elevate" app icon, then choose `Open` from the shortcut menu.
+> 1. Click also `Open` in the prompted dialog.
+> 1. You're done. You will not get the message again for the version installed.
+
+#### Linux
+_TODO_
 
 ### Build from sources
 
@@ -132,19 +148,21 @@ npm run launch:dev:app
 npm test
 ```
 
-* Generate production installers per platforms:
+* Generate production installers and publish them per platforms:
+
+First switch to desktop directory with `cd desktop/`
 
     - Build `Windows` `x64` `.exe`:
     ```bash
-    npm run package:windows
+    npm run build:publish:windows
     ```
     - Build `Linux` `x64` `.deb`:
     ```bash
-    npm run package:linux
+    npm run build:publish:linux
     ```
     - Build `MacOS` `x64` `.dmg` :
     ```bash
-    npm run package:mac
+    npm run build:publish:macos
     ```
 > Output installers will be located in `./desktop/package/`
 
