@@ -12,7 +12,7 @@ import { DesktopWindowService } from "../shared/services/window/desktop-window.s
     <div *ngIf="!isFullScreen" class="top-bar-wrapper top-bar-h">
       <div class="top-bar-draggable top-bar-h"></div>
       <div class="top-bar-traffic-light-zone"><!-- Empty div used for flex space between behavior --></div>
-      <span class="top-bar-title mat-caption">Elevate Training App</span>
+      <span class="top-bar-title mat-caption">Elevate Training App (alpha)</span>
       <div class="top-bar-traffic-light-zone">
         <ng-container *ngIf="!isMacOs">
           <button mat-icon-button (click)="onMinimizeAppClicked()">
