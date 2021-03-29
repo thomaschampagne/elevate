@@ -7,7 +7,7 @@
 
 <mat-card [fxHide]="!isSynced">
   <div class="mat-body-1" fxLayout="row" fxLayoutAlign="start center">
-    <mat-form-field fxFlex="15">
+    <mat-form-field fxFlex="20">
       <input (keyup)="activityFilterNameUpdate($event.target.value)" [(ngModel)]="filters.name" fxFill matInput
              [placeholder]="filters.name ? 'Activity name' : 'Search by activity name'"
              type="search"
@@ -20,7 +20,7 @@
       </button>
     </mat-form-field>
     <span fxFlex="1"></span>
-    <mat-form-field fxFlex="25">
+    <mat-form-field fxFlex="20">
       <mat-select multiple (selectionChange)="onActivityFilterSportsChange()"
                   [(ngModel)]="filters.sports"
                   placeholder="Filter by sports"

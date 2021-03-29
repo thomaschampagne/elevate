@@ -173,7 +173,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     // Listen for activity name search changes and re-fetch data from.
     this.activityNameSearch$
       .pipe(debounce(() => timer(ActivitiesComponent.ACTIVITY_SEARCH_DEBOUNCE_TIME)))
-      .subscribe(activityName => this.onActivityFilterNameChange(activityName));
+      .subscribe(() => this.onActivityFilterNameChange());
 
     this.syncService
       .getSyncState()
@@ -276,8 +276,12 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   public findAndDisplayActivities(): void {
     // Build the query
     // Apply default activity name regex search
+    let nameRegexPattern = _.escapeRegExp(this.filters.name.trim());
+    nameRegexPattern = _.replace(nameRegexPattern, " ", ".*");
+    nameRegexPattern = `.*${nameRegexPattern}.*`;
+
     const query: LokiQuery<SyncedActivityModel & LokiObj> = {
-      name: { $regex: [_.escapeRegExp(this.filters.name), "gim"] }
+      name: { $regex: [nameRegexPattern, "i"] }
     };
 
     // Apply sports filter if provided
@@ -372,9 +376,8 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     this.activityNameSearch$.next(activityNamePattern);
   }
 
-  public onActivityFilterNameChange(activityName: string): void {
-    // Update activity filters with clean-up name
-    this.filters.name = activityName.trim();
+  public onActivityFilterNameChange(): void {
+    // Update activity filters
     this.applyFilters();
   }
 
