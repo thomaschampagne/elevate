@@ -8,11 +8,11 @@
 <mat-card [fxHide]="!isSynced">
   <div class="mat-body-1" fxLayout="row" fxLayoutAlign="start center">
     <mat-form-field fxFlex="20">
-      <input (keyup)="activityFilterNameUpdate($event.target.value)" [(ngModel)]="preferences.activityName" fxFill matInput
+      <input (keyup)="activityPrefNameUpdate($event.target.value)" [(ngModel)]="preferences.activityName" fxFill matInput
              [placeholder]="preferences.activityName ? 'Activity name' : 'Search by activity name'"
              type="search"
              matTooltip="Search by activity name.">
-      <button *ngIf="preferences.activityName" (click)="preferences.activityName=''; activityFilterNameUpdate(preferences.activityName);" color="primary"
+      <button *ngIf="preferences.activityName" (click)="preferences.activityName=''; activityPrefNameUpdate(preferences.activityName);" color="primary"
               aria-label="Clear"
               mat-icon-button matSuffix
               matTooltip="Remove filter">
@@ -21,7 +21,7 @@
     </mat-form-field>
     <span fxFlex="1"></span>
     <mat-form-field fxFlex="20">
-      <mat-select multiple (selectionChange)="onActivityFilterSportsChange()"
+      <mat-select multiple (selectionChange)="onActivityPrefSportsChange()"
                   [(ngModel)]="preferences.sports"
                   placeholder="Filter by sports"
                   aria-label="Filter by sports"
@@ -36,7 +36,7 @@
         </mat-optgroup>
       </mat-select>
       <button *ngIf="preferences.sports.length"
-              (click)="preferences.sports=[]; onActivityFilterSportsChange(); $event.stopPropagation();" color="primary"
+              (click)="preferences.sports=[]; onActivityPrefSportsChange(); $event.stopPropagation();" color="primary"
               aria-label="Clear"
               mat-icon-button matSuffix
               matTooltip="Remove filter">
@@ -86,7 +86,7 @@
 
   <div [fxHide]="!hasActivities">
     <div class="table-container">
-      <table [dataSource]="dataSource" mat-table matSort>
+      <table [dataSource]="dataSource" mat-table matSort (matSortChange)="onSortEvent($event)">
         <ng-container *ngFor="let column of columns" [matColumnDef]="column.id">
           <mat-header-cell *matHeaderCellDef [fxFlex]="column.width" mat-sort-header
                            matTooltip="{{column.description}}">
@@ -141,7 +141,7 @@
   <div *ngIf="!hasActivities" class="no-activities-found">
     <div>No activities are matching criteria.</div>
     <div>
-      <button (click)="onResetFilters()" color="primary" mat-stroked-button>
+      <button (click)="onResetPreferences()" color="primary" mat-stroked-button>
         Reset filters
       </button>
     </div>

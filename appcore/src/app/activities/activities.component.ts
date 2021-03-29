@@ -4,7 +4,7 @@ import { ActivityService } from "../shared/services/activity/activity.service";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatSort } from "@angular/material/sort";
+import { MatSort, Sort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import _ from "lodash";
@@ -36,6 +36,7 @@ class Preferences {
   constructor(
     public activityName: string = "",
     public sports: ElevateSport[] = [],
+    public sort: Sort = { active: null, direction: null },
     public pageIndex: number = 0,
     public pageSize: number = 10
   ) {}
@@ -179,7 +180,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     // Listen for activity name search changes and re-fetch data from.
     this.activityNameSearch$
       .pipe(debounce(() => timer(ActivitiesComponent.ACTIVITY_SEARCH_DEBOUNCE_TIME)))
-      .subscribe(() => this.onActivityFilterNameChange());
+      .subscribe(() => this.onActivityPrefNameChange());
 
     this.syncService
       .getSyncState()
@@ -284,7 +285,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       name: { $regex: [nameRegexPattern, "i"] }
     };
 
-    // Apply sports filter if provided
+    // Apply sports preferences if provided
     if (this.preferences.sports.length) {
       query.type = { $in: this.preferences.sports };
     }
@@ -299,8 +300,22 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       .find(query, sort)
       .then((syncedActivityModels: SyncedActivityModel[]) => {
         this.hasActivities = syncedActivityModels.length > 0;
+
+        // Apply paging
         this.dataSource.paginator.pageIndex = this.preferences.pageIndex;
         this.dataSource.paginator.pageSize = this.preferences.pageSize;
+
+        // Apply sort
+        if (this.preferences.sort.active) {
+          this.dataSource.sort.active = this.preferences.sort.active;
+        }
+
+        // ...and sort direction
+        if (this.preferences.sort.direction) {
+          this.dataSource.sort.direction = this.preferences.sort.direction;
+        }
+
+        // Apply data
         this.dataSource.data = syncedActivityModels;
       })
       .catch(error => {
@@ -374,23 +389,23 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     );
   }
 
-  public activityFilterNameUpdate(activityNamePattern: string): void {
+  public activityPrefNameUpdate(activityNamePattern: string): void {
     this.activityNameSearch$.next(activityNamePattern);
   }
 
-  public onActivityFilterNameChange(): void {
+  public onActivityPrefNameChange(): void {
     this.resetPageIndexPreference();
     this.persistPreferencesInUrl();
     this.findAndDisplayActivities();
   }
 
-  public onActivityFilterSportsChange(): void {
+  public onActivityPrefSportsChange(): void {
     this.resetPageIndexPreference();
     this.persistPreferencesInUrl();
     this.findAndDisplayActivities();
   }
 
-  public onResetFilters(): void {
+  public onResetPreferences(): void {
     this.preferences = new Preferences();
     this.persistPreferencesInUrl();
     this.findAndDisplayActivities();
@@ -491,7 +506,11 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   public onPageEvent(pageEvent: PageEvent): void {
     this.preferences.pageIndex = pageEvent.pageIndex;
     this.preferences.pageSize = pageEvent.pageSize;
+    this.persistPreferencesInUrl();
+  }
 
+  public onSortEvent(sort: Sort): void {
+    this.preferences.sort = sort;
     this.persistPreferencesInUrl();
   }
 
