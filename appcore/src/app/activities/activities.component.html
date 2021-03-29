@@ -8,11 +8,11 @@
 <mat-card [fxHide]="!isSynced">
   <div class="mat-body-1" fxLayout="row" fxLayoutAlign="start center">
     <mat-form-field fxFlex="20">
-      <input (keyup)="activityFilterNameUpdate($event.target.value)" [(ngModel)]="filters.name" fxFill matInput
-             [placeholder]="filters.name ? 'Activity name' : 'Search by activity name'"
+      <input (keyup)="activityFilterNameUpdate($event.target.value)" [(ngModel)]="preferences.activityName" fxFill matInput
+             [placeholder]="preferences.activityName ? 'Activity name' : 'Search by activity name'"
              type="search"
              matTooltip="Search by activity name.">
-      <button *ngIf="filters.name" (click)="filters.name=''; activityFilterNameUpdate(filters.name);" color="primary"
+      <button *ngIf="preferences.activityName" (click)="preferences.activityName=''; activityFilterNameUpdate(preferences.activityName);" color="primary"
               aria-label="Clear"
               mat-icon-button matSuffix
               matTooltip="Remove filter">
@@ -22,7 +22,7 @@
     <span fxFlex="1"></span>
     <mat-form-field fxFlex="20">
       <mat-select multiple (selectionChange)="onActivityFilterSportsChange()"
-                  [(ngModel)]="filters.sports"
+                  [(ngModel)]="preferences.sports"
                   placeholder="Filter by sports"
                   aria-label="Filter by sports"
                   name="sports">
@@ -35,8 +35,8 @@
           </mat-option>
         </mat-optgroup>
       </mat-select>
-      <button *ngIf="filters.sports.length"
-              (click)="filters.sports=[]; onActivityFilterSportsChange(); $event.stopPropagation();" color="primary"
+      <button *ngIf="preferences.sports.length"
+              (click)="preferences.sports=[]; onActivityFilterSportsChange(); $event.stopPropagation();" color="primary"
               aria-label="Clear"
               mat-icon-button matSuffix
               matTooltip="Remove filter">
@@ -132,7 +132,7 @@
               matTooltip="Download spreadsheet export">
         <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
       </button>
-      <mat-paginator (page)="onPageSizeChanged()"
+      <mat-paginator (page)="onPageEvent($event)"
                      [pageSizeOptions]="[5, 10, 15]"
                      [pageSize]="10" showFirstLastButtons>
       </mat-paginator>

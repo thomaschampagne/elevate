@@ -27,12 +27,18 @@ import { AppService } from "../shared/services/app-service/app.service";
 import { ElevateSport, MeasureSystem } from "@elevate/shared/enums";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AppRoutes } from "../shared/models/app-routes";
+import { PageEvent } from "@angular/material/paginator/paginator";
 import NumberColumn = ActivityColumns.NumberColumn;
 import UserSettingsModel = UserSettings.UserSettingsModel;
 import FieldInfo = json2csv.FieldInfo;
 
-class ActivityFilters {
-  constructor(public name: string = "", public sports: ElevateSport[] = []) {}
+class Preferences {
+  constructor(
+    public activityName: string = "",
+    public sports: ElevateSport[] = [],
+    public pageIndex: number = 0,
+    public pageSize: number = 10
+  ) {}
 }
 
 @Component({
@@ -42,7 +48,6 @@ class ActivityFilters {
 })
 export class ActivitiesComponent implements OnInit, OnDestroy {
   private static readonly LS_SELECTED_COLUMNS: string = "activities_selectedColumns";
-  private static readonly LS_PAGE_SIZE_PREFERENCE: string = "activities_pageSize";
   private static readonly DEGRADED_PERFORMANCE_COLUMNS_COUNT: number = 35;
   private static readonly ACTIVITY_SEARCH_DEBOUNCE_TIME: number = 500;
 
@@ -80,7 +85,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
 
   public sportsCategories: { label: string; sportKeys: ElevateSport[] }[];
   public activityNameSearch$: Subject<string>;
-  public filters: ActivityFilters;
+  public preferences: Preferences;
 
   constructor(
     @Inject(AppService) private readonly appService: AppService,
@@ -99,8 +104,9 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     this.isPerformanceDegraded = false;
 
     this.activityNameSearch$ = new Subject();
-    this.filters = new ActivityFilters();
+    this.preferences = new Preferences();
 
+    this.resetPageIndexPreference();
     this.setupSportsCategories();
   }
 
@@ -200,14 +206,14 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
         // Data source setup
         this.dataSourceSetup();
 
-        // Check if filters have been provided from url then apply if exists
-        if (this.route.snapshot.queryParams.filters) {
+        // Check if preferences have been provided from url then apply if exists
+        if (this.route.snapshot.queryParams.preferences) {
           try {
-            this.filters = JSON.parse(this.route.snapshot.queryParams.filters);
-            this.logger.debug("Applying found filters: ", this.filters);
+            this.preferences = JSON.parse(this.route.snapshot.queryParams.preferences);
+            this.logger.debug("Applying found preferences: ", this.preferences);
           } catch (e) {
-            this.logger.error("Failed to parse url filters provided");
-            this.filters = new ActivityFilters();
+            this.logger.error("Failed to parse url preferences provided");
+            this.preferences = new Preferences();
           }
         }
 
@@ -248,12 +254,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   public dataSourceSetup(): void {
     this.dataSource = new MatTableDataSource();
     this.dataSource.paginator = this.matPaginator;
-
-    const pageSizePreference = parseInt(localStorage.getItem(ActivitiesComponent.LS_PAGE_SIZE_PREFERENCE), 10);
-    if (!_.isNaN(pageSizePreference)) {
-      this.dataSource.paginator.pageSize = pageSizePreference;
-    }
-
     this.dataSource.sort = this.matSort;
 
     this.dataSource.sortingDataAccessor = (activity: SyncedActivityModel, sortHeaderId: string) => {
@@ -276,7 +276,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   public findAndDisplayActivities(): void {
     // Build the query
     // Apply default activity name regex search
-    let nameRegexPattern = _.escapeRegExp(this.filters.name.trim());
+    let nameRegexPattern = _.escapeRegExp(this.preferences.activityName.trim());
     nameRegexPattern = _.replace(nameRegexPattern, " ", ".*");
     nameRegexPattern = `.*${nameRegexPattern}.*`;
 
@@ -285,8 +285,8 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     };
 
     // Apply sports filter if provided
-    if (this.filters.sports.length) {
-      query.type = { $in: this.filters.sports };
+    if (this.preferences.sports.length) {
+      query.type = { $in: this.preferences.sports };
     }
 
     // Setup default sort on descending start time
@@ -299,6 +299,8 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       .find(query, sort)
       .then((syncedActivityModels: SyncedActivityModel[]) => {
         this.hasActivities = syncedActivityModels.length > 0;
+        this.dataSource.paginator.pageIndex = this.preferences.pageIndex;
+        this.dataSource.paginator.pageSize = this.preferences.pageSize;
         this.dataSource.data = syncedActivityModels;
       })
       .catch(error => {
@@ -377,29 +379,32 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   public onActivityFilterNameChange(): void {
-    // Update activity filters
-    this.applyFilters();
+    this.resetPageIndexPreference();
+    this.persistPreferencesInUrl();
+    this.findAndDisplayActivities();
   }
 
   public onActivityFilterSportsChange(): void {
-    // this.filters.sports model has changed, apply filters
-    this.applyFilters();
+    this.resetPageIndexPreference();
+    this.persistPreferencesInUrl();
+    this.findAndDisplayActivities();
   }
 
   public onResetFilters(): void {
-    this.filters = new ActivityFilters();
-    this.applyFilters();
+    this.preferences = new Preferences();
+    this.persistPreferencesInUrl();
+    this.findAndDisplayActivities();
   }
 
-  private applyFilters(): void {
-    // Update url filters
+  private resetPageIndexPreference(): void {
+    this.preferences.pageIndex = 0;
+  }
+
+  private persistPreferencesInUrl(): void {
     this.router.navigate([AppRoutes.activities], {
-      queryParams: { filters: JSON.stringify(this.filters) },
+      queryParams: { preferences: JSON.stringify(this.preferences) },
       queryParamsHandling: "merge"
     });
-
-    // Find and display activities from new filters
-    this.findAndDisplayActivities();
   }
 
   public openActivity(id: number | string) {
@@ -483,8 +488,11 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     this.onSelectedColumns();
   }
 
-  public onPageSizeChanged(): void {
-    localStorage.setItem(ActivitiesComponent.LS_PAGE_SIZE_PREFERENCE, this.dataSource.paginator.pageSize.toString());
+  public onPageEvent(pageEvent: PageEvent): void {
+    this.preferences.pageIndex = pageEvent.pageIndex;
+    this.preferences.pageSize = pageEvent.pageSize;
+
+    this.persistPreferencesInUrl();
   }
 
   public onSpreadSheetExport(): void {
