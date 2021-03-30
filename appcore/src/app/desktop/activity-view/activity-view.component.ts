@@ -173,7 +173,7 @@ export class ActivityViewComponent implements OnInit {
   }
 
   private reloadActivityView(): Promise<boolean> {
-    return this.router.navigate([`${AppRoutes.activity}`]).then(() => {
+    return this.router.navigate([`${AppRoutes.activity}`], { skipLocationChange: true }).then(() => {
       return this.router.navigate([`${AppRoutes.activity}/${this.activity.id}`]);
     });
   }
