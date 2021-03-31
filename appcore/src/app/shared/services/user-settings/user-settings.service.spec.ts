@@ -159,7 +159,7 @@ describe("UserSettingsService", () => {
     );
 
     // When
-    const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.reset();
+    const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.resetGlobalSettings();
 
     // Then
     promiseUpdate.then(
@@ -190,7 +190,7 @@ describe("UserSettingsService", () => {
     );
 
     // When
-    const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.resetZones();
+    const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.resetZonesSettings();
 
     // Then
     promiseUpdate.then(

@@ -33,20 +33,28 @@ export abstract class UserSettingsService {
       });
   }
 
-  public reset(): Promise<UserSettingsModel> {
-    return this.userSettingsDao.clear(true).then(() => {
-      const defaultUserSettingsModel = UserSettings.getDefaultsByBuildTarget(environment.buildTarget);
-      return this.userSettingsDao.insert(defaultUserSettingsModel, true);
-    });
+  public resetGlobalSettings(): Promise<UserSettingsModel> {
+    let oldUserZones;
+    return this.fetch()
+      .then(userSettings => {
+        oldUserZones = userSettings.zones;
+        return this.userSettingsDao.clear(true);
+      })
+      .then(() => {
+        const defaultUserSettingsModel = UserSettings.getDefaultsByBuildTarget(environment.buildTarget);
+
+        if (oldUserZones) {
+          defaultUserSettingsModel.zones = oldUserZones;
+        }
+
+        return this.userSettingsDao.insert(defaultUserSettingsModel, true);
+      });
   }
 
-  public resetZones(): Promise<UserSettingsModel> {
+  public resetZonesSettings(): Promise<UserSettingsModel> {
     return this.fetch().then(userSettings => {
-      // Get default zones
-      const defaultZones = this.userSettingsDao.getDefaultStorageValue().zones;
-
       // Replace with default zones
-      userSettings.zones = defaultZones;
+      userSettings.zones = this.userSettingsDao.getDefaultStorageValue().zones;
 
       // Update new user settings
       return this.updateUserSettings(userSettings);

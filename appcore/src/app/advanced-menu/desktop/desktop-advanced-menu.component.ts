@@ -64,11 +64,15 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
             </div>
           </div>
           <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
-            <div>Reset global and zones settings to defaults</div>
+            <div>Reset global settings to defaults</div>
             <div>
-              <button mat-stroked-button color="warn" (click)="onGlobalAndZonesSettingsReset()">
-                Reset global settings
-              </button>
+              <button mat-stroked-button color="warn" (click)="onGlobalSettingsReset()">Reset global settings</button>
+            </div>
+          </div>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Reset zones settings to defaults</div>
+            <div>
+              <button mat-stroked-button color="warn" (click)="onZonesSettingsReset()">Reset zones settings</button>
             </div>
           </div>
           <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
@@ -112,20 +116,40 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
     super(syncService, dialog, snackBar);
   }
 
-  public onGlobalAndZonesSettingsReset(): void {
+  public onGlobalSettingsReset(): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       minWidth: ConfirmDialogComponent.MIN_WIDTH,
       maxWidth: ConfirmDialogComponent.MAX_WIDTH,
       data: {
-        title: "Reset global and zones settings",
-        content: "This will reset your global and zones settings to defaults. Are you sure to perform this action?"
+        title: "Reset global settings",
+        content: "This will reset your global settings to defaults. Are you sure to perform this action?"
       } as ConfirmDialogDataModel
     });
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
-        Promise.all([this.userSettingsService.reset()]).then(() => {
+        this.userSettingsService.resetGlobalSettings().then(() => {
           this.snackBar.open("Settings have been reset", "Close");
+          afterClosedSubscription.unsubscribe();
+        });
+      }
+    });
+  }
+
+  public onZonesSettingsReset(): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      minWidth: ConfirmDialogComponent.MIN_WIDTH,
+      maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+      data: {
+        title: "Reset zones settings",
+        content: "This will reset your zones settings to defaults. Are you sure to perform this action?"
+      } as ConfirmDialogDataModel
+    });
+
+    const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+      if (confirm) {
+        this.userSettingsService.resetZonesSettings().then(() => {
+          this.snackBar.open("Zones have been reset", "Close");
           afterClosedSubscription.unsubscribe();
         });
       }
@@ -144,7 +168,7 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
-        Promise.all([this.userSettingsService.reset(), this.athleteService.resetSettings()]).then(() => {
+        this.athleteService.resetSettings().then(() => {
           this.snackBar.open("Athlete settings have been reset", "Close");
           afterClosedSubscription.unsubscribe();
         });

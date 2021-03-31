@@ -106,7 +106,8 @@ export class ExtensionAdvancedMenuComponent extends AdvancedMenuComponent {
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
         Promise.all([
-          this.extensionUserSettingsService.reset(),
+          this.extensionUserSettingsService.resetGlobalSettings(),
+          this.extensionUserSettingsService.resetZonesSettings(),
           this.athleteService.resetSettings(),
           this.extensionUserSettingsService.clearLocalStorageOnNextLoad()
         ]).then(() => {
@@ -132,7 +133,7 @@ export class ExtensionAdvancedMenuComponent extends AdvancedMenuComponent {
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
         Promise.all([
-          this.extensionUserSettingsService.reset(),
+          this.extensionUserSettingsService.resetZonesSettings(),
           this.extensionUserSettingsService.clearLocalStorageOnNextLoad()
         ]).then(() => {
           this.snackBar.open("Zones settings have been reset", "Close");
