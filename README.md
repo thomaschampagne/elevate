@@ -87,7 +87,7 @@ Contains the web extension behaviour that acts directly on _strava.com_ website.
 
 ### Install requirements
 
-You will need to install [NodeJS](https://nodejs.org) (version 12 minimum) to build both desktop and chrome web extension.
+You will need to install [NodeJS](https://nodejs.org) (v15+) to build both desktop and chrome web extension.
 
 ### Clone the [git-flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) based project.
 
