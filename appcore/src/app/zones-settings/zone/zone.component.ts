@@ -16,6 +16,8 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
   styleUrls: ["./zone.component.scss"]
 })
 export class ZoneComponent implements OnInit, OnDestroy {
+  private static readonly WHITE_LISTED_KEYS = ["ArrowUp", "ArrowDown", "Shift", "Tab"];
+
   @Input()
   public zone: ZoneModel;
 
@@ -121,6 +123,12 @@ export class ZoneComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.zoneChangeOrderSubscription.unsubscribe();
     this.stepUpdatesSubscription.unsubscribe();
+  }
+
+  public onFilterKeys(event: KeyboardEvent): void {
+    if (_.indexOf(ZoneComponent.WHITE_LISTED_KEYS, event.key) === -1) {
+      event.preventDefault();
+    }
   }
 
   private applyChangeOrder(instruction: ZoneChangeOrderModel): void {

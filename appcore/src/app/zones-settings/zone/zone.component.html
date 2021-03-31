@@ -14,6 +14,7 @@
         <!-- IS FIRST ZONE -->
         <input
           (change)="onZoneChange({from: true, to: false})"
+          (keydown)="onFilterKeys($event)"
           [(ngModel)]="zone.from"
           matInput
           matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
@@ -28,6 +29,7 @@
         <!-- IS NOT FIRST ZONE -->
         <input
           (change)="onZoneChange({from: true, to: false})"
+          (keydown)="onFilterKeys($event)"
           [(ngModel)]="zone.from"
           matInput
           matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
@@ -54,6 +56,7 @@
         <!-- IS LAST ZONE -->
         <input
           (change)="onZoneChange({from: false, to: true})"
+          (keydown)="onFilterKeys($event)"
           [(ngModel)]="zone.to"
           matInput
           matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
@@ -68,6 +71,7 @@
         <!-- IS NOT LAST ZONE -->
         <input
           (change)="onZoneChange({from: false, to: true})"
+          (keydown)="onFilterKeys($event)"
           [(ngModel)]="zone.to"
           matInput
           matTooltip="Use arrows &#8645; to set {{zoneDefinition.units}} value."
