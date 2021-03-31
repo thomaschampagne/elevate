@@ -315,7 +315,7 @@ describe("DesktopSyncService", () => {
       // Then
       syncEvent$.subscribe(
         () => {
-          expect(activityServicePutSpy).toHaveBeenCalledWith(activity);
+          expect(activityServicePutSpy).toHaveBeenCalledWith(activity, true);
           expect(streamsServicePutSpy).toHaveBeenCalledWith(expectedDeflatedActivityStreams);
           expect(stopSpy).not.toHaveBeenCalled();
           done();
@@ -352,7 +352,7 @@ describe("DesktopSyncService", () => {
       // Then
       syncEvent$.subscribe(
         (syncEvent: ErrorSyncEvent) => {
-          expect(activityServicePutSpy).toHaveBeenCalledWith(activity);
+          expect(activityServicePutSpy).toHaveBeenCalledWith(activity, true);
           expect(syncEventNextSpy).toHaveBeenCalledTimes(1);
           expect(syncEvent.type).toEqual(expectedErrorSyncEvent.type);
           expect(syncEvent.code).toEqual(expectedErrorSyncEvent.code);
@@ -399,7 +399,7 @@ describe("DesktopSyncService", () => {
       // Then
       syncEvent$.subscribe(
         (syncEvent: ErrorSyncEvent) => {
-          expect(activityServicePutSpy).toHaveBeenCalledWith(activity);
+          expect(activityServicePutSpy).toHaveBeenCalledWith(activity, true);
           expect(syncEventNextSpy).toHaveBeenCalledTimes(1);
           expect(syncEvent.type).toEqual(expectedErrorSyncEvent.type);
           expect(syncEvent.code).toEqual(expectedErrorSyncEvent.code);
@@ -598,7 +598,7 @@ describe("DesktopSyncService", () => {
       // Then
       syncEvent$.subscribe(
         () => {
-          expect(activityServicePutSpy).toHaveBeenCalledWith(activity);
+          expect(activityServicePutSpy).toHaveBeenCalledWith(activity, true);
           expect(syncEventNextSpy).toHaveBeenCalledWith(activitySyncEvent);
           done();
         },
