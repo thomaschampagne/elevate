@@ -21,7 +21,6 @@ export class StravaApiClient {
   public static readonly STRAVA_RATELIMIT_USAGE_HEADER: string = "x-ratelimit-usage";
   public static readonly QUARTER_HOUR_TIME_INTERVAL: number = 15 * 60;
   public static readonly QUOTA_REACHED_RETRY_COUNT: number = 14;
-  public static readonly TIMEOUT_RETRY_COUNT: number = 10;
   public nextCallWaitTime: number;
 
   constructor(
@@ -81,14 +80,10 @@ export class StravaApiClient {
       .then(() => {
         // Wait during next call wait time
         return sleep(this.nextCallWaitTime).then(() => {
-          return this.httpClient.getRetryTimeout(
-            url,
-            {
-              Authorization: `Bearer ${stravaConnectorInfo.accessToken}`,
-              "Content-Type": "application/json"
-            },
-            StravaApiClient.TIMEOUT_RETRY_COUNT
-          );
+          return this.httpClient.getRetryTimeout(url, {
+            Authorization: `Bearer ${stravaConnectorInfo.accessToken}`,
+            "Content-Type": "application/json"
+          });
         });
       })
       .then((response: IHttpClientResponse) => {

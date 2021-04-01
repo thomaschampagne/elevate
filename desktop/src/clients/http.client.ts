@@ -37,16 +37,12 @@ export class HttpClient extends TypedRestClient {
   public getRetryTimeout(
     requestUrl: string,
     additionalHeaders?: IHeaders,
-    retries: number = 5,
+    retries: number = 45,
     minTimeout: number = 1000,
-    maxTimeout: number = Infinity
+    maxTimeout: number = 5000
   ): Promise<IHttpClientResponse> {
     const exec: () => Promise<IHttpClientResponse> = () => {
-      return this.get(requestUrl, additionalHeaders).catch(err => {
-        if (err && err.code === "ETIMEDOUT") {
-          throw new Error(JSON.stringify(err));
-        }
-      }) as Promise<IHttpClientResponse>;
+      return this.get(requestUrl, additionalHeaders);
     };
     return pRetry(exec, {
       retries: retries,
