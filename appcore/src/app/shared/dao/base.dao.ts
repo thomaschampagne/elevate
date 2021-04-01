@@ -9,11 +9,8 @@ export abstract class BaseDao<T> {
 
   public collectionDef: CollectionDef<T> = null;
 
-  private collection: Collection<T & {}>;
-
   constructor(@Inject(DataStore) public dataStore: DataStore<T>) {
     this.init();
-    this.collection = this.dataStore.resolveCollection(this.collectionDef);
   }
 
   public abstract getCollectionDef(): CollectionDef<T>;
@@ -102,6 +99,6 @@ export abstract class BaseDao<T> {
   }
 
   public chain(): Resultset<T & LokiObj> {
-    return this.collection.chain();
+    return this.dataStore.resolveCollection(this.collectionDef).chain();
   }
 }

@@ -5,6 +5,8 @@ import { AthleteSnapshotResolverService } from "../athlete-snapshot-resolver/ath
 import { Subject } from "rxjs";
 import { LoggerService } from "../logging/logger.service";
 import { Inject } from "@angular/core";
+import { ElevateSport } from "@elevate/shared/enums";
+import { ActivityCountByType } from "../../models/activity/activity-count-by-type.model";
 
 export abstract class ActivityService {
   public athleteSettingsConsistency$: Subject<boolean>;
@@ -66,6 +68,28 @@ export abstract class ActivityService {
 
   public count(): Promise<number> {
     return this.activityDao.count();
+  }
+
+  public countByType(): ActivityCountByType[] {
+    return this.activityDao
+      .chain()
+      .find()
+      .mapReduce(
+        activity => activity.type,
+        sports => {
+          const countBy = sports.reduce<{}>((results, sport: ElevateSport) => {
+            results[sport] ? results[sport]++ : (results[sport] = 1);
+            return results;
+          }, {});
+          return _.chain(countBy)
+            .toPairs()
+            .map(x => {
+              return { type: x[0], count: x[1] } as ActivityCountByType;
+            })
+            .orderBy("count", "desc")
+            .value();
+        }
+      );
   }
 
   public findByDatedSession(startTime: string, activityDurationSeconds: number): Promise<SyncedActivityModel[]> {

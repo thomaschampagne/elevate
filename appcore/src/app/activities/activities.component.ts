@@ -52,18 +52,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   private static readonly DEGRADED_PERFORMANCE_COLUMNS_COUNT: number = 35;
   private static readonly ACTIVITY_SEARCH_DEBOUNCE_TIME: number = 500;
 
-  private static readonly USUAL_SPORTS_CATEGORY: ElevateSport[] = [
-    ElevateSport.Ride,
-    ElevateSport.VirtualRide,
-    ElevateSport.Run,
-    ElevateSport.VirtualRun,
-    ElevateSport.Swim,
-    ElevateSport.Rowing,
-    ElevateSport.NordicSki,
-    ElevateSport.SkiTouring,
-    ElevateSport.Hike
-  ];
-
   public readonly ColumnType = ActivityColumns.ColumnType;
 
   @ViewChild(MatPaginator, { static: true })
@@ -84,7 +72,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   public isPerformanceDegraded: boolean;
   public historyChangesSub: Subscription;
 
-  public sportsCategories: { label: string; sportKeys: ElevateSport[] }[];
+  public athleteSports: ElevateSport[];
   public activityNameSearch$: Subject<string>;
   public preferences: Preferences;
 
@@ -108,7 +96,9 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     this.preferences = new Preferences();
 
     this.resetPageIndexPreference();
-    this.setupSportsCategories();
+
+    // Setup a list of the most practiced sport by the athlete for the sport filter
+    this.athleteSports = _.map(this.activityService.countByType(), "type");
   }
 
   public static printAthleteSettings(activity: SyncedActivityModel, isImperial: boolean): string {
@@ -594,19 +584,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     } catch (err) {
       this.logger.error(err);
     }
-  }
-
-  private setupSportsCategories(): void {
-    this.sportsCategories = [
-      {
-        label: "Usual Sports",
-        sportKeys: ActivitiesComponent.USUAL_SPORTS_CATEGORY
-      },
-      {
-        label: "Others Sports",
-        sportKeys: _.difference(_.keys(ElevateSport) as ElevateSport[], ActivitiesComponent.USUAL_SPORTS_CATEGORY)
-      }
-    ];
   }
 
   public startCase(sport: string): string {

@@ -8,11 +8,13 @@
 <mat-card [fxHide]="!isSynced">
   <div class="mat-body-1" fxLayout="row" fxLayoutAlign="start center">
     <mat-form-field fxFlex="20">
-      <input (keyup)="activityPrefNameUpdate($event.target.value)" [(ngModel)]="preferences.activityName" fxFill matInput
+      <input (keyup)="activityPrefNameUpdate($event.target.value)" [(ngModel)]="preferences.activityName" fxFill
+             matInput
              [placeholder]="preferences.activityName ? 'Activity name' : 'Search by activity name'"
              type="search"
              matTooltip="Search by activity name.">
-      <button *ngIf="preferences.activityName" (click)="preferences.activityName=''; activityPrefNameUpdate(preferences.activityName);" color="primary"
+      <button *ngIf="preferences.activityName"
+              (click)="preferences.activityName=''; activityPrefNameUpdate(preferences.activityName);" color="primary"
               aria-label="Clear"
               mat-icon-button matSuffix
               matTooltip="Remove filter">
@@ -26,14 +28,11 @@
                   placeholder="Filter by sports"
                   aria-label="Filter by sports"
                   name="sports">
-        <mat-optgroup *ngFor="let sportCategory of sportsCategories;"
-                      [label]="sportCategory.label">
-          <mat-option
-            *ngFor="let sportKey of sportCategory.sportKeys;"
-            [value]="sportKey">
-            {{startCase(sportKey)}}
-          </mat-option>
-        </mat-optgroup>
+        <mat-option
+          *ngFor="let sportKey of athleteSports;"
+          [value]="sportKey">
+          {{startCase(sportKey)}}
+        </mat-option>
       </mat-select>
       <button *ngIf="preferences.sports.length"
               (click)="preferences.sports=[]; onActivityPrefSportsChange(); $event.stopPropagation();" color="primary"

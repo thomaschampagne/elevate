@@ -4,7 +4,6 @@ import _ from "lodash";
 import moment, { Moment } from "moment";
 import { YearProgressActivityModel } from "../models/year-progress-activity.model";
 import { ProgressModel } from "../models/progress.model";
-import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model";
 import { ProgressAtDayModel } from "../models/progress-at-date.model";
 import { ProgressType } from "../enums/progress-type.enum";
 import { Subject } from "rxjs";
@@ -20,7 +19,6 @@ import { ProgressConfig } from "../interfaces/progress-config";
 import { YearToDateProgressConfigModel } from "../models/year-to-date-progress-config.model";
 import { RollingProgressConfigModel } from "../models/rolling-progress-config.model";
 import { RollingProgressPresetModel } from "../models/rolling-progress-preset.model";
-import { ElevateSport } from "@elevate/shared/enums";
 
 @Injectable()
 export class YearProgressService {
@@ -342,24 +340,6 @@ export class YearProgressService {
       });
     }
     return targetProgressModels;
-  }
-
-  /**
-   * Return activity count for each type of sport. Order by count desc
-   */
-  public activitiesByTypes(syncedActivityModels: SyncedActivityModel[]): ActivityCountByTypeModel[] {
-    const activitiesCountByTypes: ActivityCountByTypeModel[] = [];
-
-    _.forIn(_.countBy(_.map(syncedActivityModels, "type")), (count: number, type: ElevateSport) => {
-      activitiesCountByTypes.push({
-        type: type,
-        count: count
-      });
-    });
-
-    return _.orderBy(activitiesCountByTypes, (activityCountByTypeModel: ActivityCountByTypeModel) => {
-      return activityCountByTypeModel.count * -1;
-    });
   }
 
   public availableYears(syncedActivityModels: SyncedActivityModel[]): number[] {

@@ -62,7 +62,7 @@
             <mat-option *ngFor="let type of availableActivityTypes"
                         [disabled]="(progressConfig.activityTypes.length === 1 && type === progressConfig.activityTypes[0])"
                         [value]="type">
-              {{type}}
+              {{startCase(type)}}
             </mat-option>
           </mat-select>
           <button (click)="$event.stopPropagation(); onTickAllActivityTypes()" color="primary"

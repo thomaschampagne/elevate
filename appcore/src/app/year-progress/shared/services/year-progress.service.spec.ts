@@ -4,7 +4,6 @@ import { YearProgressService } from "./year-progress.service";
 import { YearProgressActivitiesFixture } from "./year-progress-activities.fixture";
 import { YearProgressModel } from "../models/year-progress.model";
 import _ from "lodash";
-import { ActivityCountByTypeModel } from "../models/activity-count-by-type.model";
 import { ProgressModel } from "../models/progress.model";
 import moment, { Moment } from "moment";
 import { ProgressAtDayModel } from "../models/progress-at-date.model";
@@ -61,29 +60,6 @@ describe("YearProgressService", () => {
 
   it("should be created", done => {
     expect(service).toBeTruthy();
-    done();
-  });
-
-  it("should provide activities count by types", done => {
-    // Given
-    const expectedResult: ActivityCountByTypeModel[] = [
-      { type: ElevateSport.Ride, count: 352 },
-      { type: ElevateSport.Run, count: 178 },
-      { type: ElevateSport.VirtualRide, count: 177 }
-    ];
-
-    // When
-    const result: ActivityCountByTypeModel[] = service.activitiesByTypes(TEST_SYNCED_MODELS);
-
-    // Then
-    expect(result).not.toBeNull();
-    expect(result).toEqual(expectedResult);
-
-    // Check order
-    expect(_.first(result).type).toEqual(ElevateSport.Ride);
-    expect(result[1].type).toEqual(ElevateSport.Run);
-    expect(_.last(result).type).toEqual(ElevateSport.VirtualRide);
-
     done();
   });
 

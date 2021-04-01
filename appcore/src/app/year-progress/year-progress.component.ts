@@ -2,7 +2,7 @@ import _ from "lodash";
 import moment, { Moment } from "moment";
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { YearProgressService } from "./shared/services/year-progress.service";
-import { ActivityCountByTypeModel } from "./shared/models/activity-count-by-type.model";
+import { ActivityCountByType } from "../shared/models/activity/activity-count-by-type.model";
 import { YearProgressModel } from "./shared/models/year-progress.model";
 import { YearProgressTypeModel } from "./shared/models/year-progress-type.model";
 import { ProgressType } from "./shared/enums/progress-type.enum";
@@ -208,8 +208,8 @@ export class YearProgressComponent implements OnInit, OnDestroy {
     ];
   }
 
-  public static findMostPerformedActivityType(activitiesCountByTypeModels: ActivityCountByTypeModel[]): ElevateSport {
-    return _.maxBy(activitiesCountByTypeModels, "count").type;
+  public static findMostPerformedActivityType(activityCountByTypes: ActivityCountByType[]): ElevateSport {
+    return _.maxBy(activityCountByTypes, "count").type;
   }
 
   /**
@@ -274,7 +274,8 @@ export class YearProgressComponent implements OnInit, OnDestroy {
    */
   public setup(): void {
     // Find all unique sport types
-    const activityCountByTypeModels = this.yearProgressService.activitiesByTypes(this.syncedActivityModels);
+    const activityCountByTypeModels = this.activityService.countByType();
+
     this.availableActivityTypes = _.map(activityCountByTypeModels, "type");
 
     // Fetch saved config
@@ -699,6 +700,10 @@ export class YearProgressComponent implements OnInit, OnDestroy {
         1000
       );
     }
+  }
+
+  public startCase(sport: string): string {
+    return _.startCase(sport);
   }
 
   public ngOnDestroy(): void {

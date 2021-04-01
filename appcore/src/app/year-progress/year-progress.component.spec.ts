@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { YearProgressComponent } from "./year-progress.component";
 import { SharedModule } from "../shared/shared.module";
-import { ActivityCountByTypeModel } from "./shared/models/activity-count-by-type.model";
+import { ActivityCountByType } from "../shared/models/activity/activity-count-by-type.model";
 import { CoreModule } from "../core/core.module";
 import { YearProgressStyleModel } from "./year-progress-graph/models/year-progress-style.model";
 import { YearProgressModel } from "./shared/models/year-progress.model";
@@ -78,7 +78,7 @@ describe("YearProgressComponent", () => {
   it("should determine most performed activity type", done => {
     // Given
     const expected = ElevateSport.Ride;
-    const activitiesCountByTypeModels: ActivityCountByTypeModel[] = [
+    const activitiesCountByTypeModels: ActivityCountByType[] = [
       { type: ElevateSport.AlpineSki, count: 12 },
       { type: ElevateSport.Ride, count: 522 },
       { type: ElevateSport.Run, count: 25 },
