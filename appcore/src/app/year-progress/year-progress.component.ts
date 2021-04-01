@@ -2,7 +2,6 @@ import _ from "lodash";
 import moment, { Moment } from "moment";
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { YearProgressService } from "./shared/services/year-progress.service";
-import { ActivityCountByType } from "../shared/models/activity/activity-count-by-type.model";
 import { YearProgressModel } from "./shared/models/year-progress.model";
 import { YearProgressTypeModel } from "./shared/models/year-progress-type.model";
 import { ProgressType } from "./shared/enums/progress-type.enum";
@@ -36,6 +35,7 @@ import { LoggerService } from "../shared/services/logging/logger.service";
 import { ElevateSport, MeasureSystem } from "@elevate/shared/enums";
 import { Subscription } from "rxjs";
 import { AppService } from "../shared/services/app-service/app.service";
+import { ActivityCountByType } from "../shared/models/activity/activity-count-by-type.model";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 /* Legacy tasks */
