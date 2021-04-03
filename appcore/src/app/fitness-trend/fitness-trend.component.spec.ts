@@ -51,7 +51,6 @@ describe("FitnessTrendComponent", () => {
       Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
     );
 
-    spyOn(syncService, "getSyncDateTime").and.returnValue(Promise.resolve(Date.now()));
     spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
 
     fixture = TestBed.createComponent(FitnessTrendComponent);

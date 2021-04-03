@@ -6,12 +6,12 @@ import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.se
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { AppRoutes } from "../shared/models/app-routes";
 import { Router } from "@angular/router";
-import { ConnectorSyncDateTime } from "@elevate/shared/models/sync/index";
 import { ConnectorType } from "@elevate/shared/sync";
 import moment from "moment";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { environment } from "../../environments/environment";
+import { ConnectorSyncDateTime } from "@elevate/shared/models";
 
 @Component({
   selector: "app-connectors",

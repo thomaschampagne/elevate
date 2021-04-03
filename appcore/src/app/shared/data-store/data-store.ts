@@ -338,6 +338,14 @@ export abstract class DataStore<T extends {}> {
 
       // Allow access to database directly from window for debugging
       (window as any).db = this.db;
+
+      // Allow access to collection data directly from window for debugging
+      if (!environment.production) {
+        (window as any).data = {};
+        this.db.collections.forEach(collection => {
+          (window as any).data[collection.name] = collection.data;
+        });
+      }
     }
   }
 

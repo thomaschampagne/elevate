@@ -165,7 +165,7 @@ export class ActivityViewComponent implements OnInit {
   }
 
   public onRecalculateActivity(): void {
-    this.activityService.recalculateSingle(this.activity, this.userSettings, true).then(() => {
+    this.activityService.recalculateSingle(this.activity, this.userSettings).then(() => {
       this.reloadActivityView().then(() => {
         this.snackBar.open("Activity has been recalculated", "Ok", { duration: 5000 });
       });

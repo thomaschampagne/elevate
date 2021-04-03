@@ -268,7 +268,7 @@ export class FileConnector extends BaseConnector {
       );
     }
 
-    const afterDate = this.syncDateTime ? new Date(this.syncDateTime * 1000) : null;
+    const afterDate = this.syncFromDateTime ? new Date(this.syncFromDateTime) : null;
 
     let prepareScanDirectory: Promise<void> = Promise.resolve();
 

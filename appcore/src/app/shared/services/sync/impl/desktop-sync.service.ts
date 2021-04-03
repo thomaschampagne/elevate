@@ -27,7 +27,7 @@ import {
   UserSettings
 } from "@elevate/shared/models";
 import { ActivityService } from "../../activity/activity.service";
-import { ElevateException, SyncException, WarningException } from "@elevate/shared/exceptions";
+import { SyncException, WarningException } from "@elevate/shared/exceptions";
 import _ from "lodash";
 import { SyncState } from "../sync-state.enum";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync";
@@ -117,7 +117,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     const promisedDataToSync: Promise<any>[] = [
       this.athleteService.fetch(),
       this.userSettingsService.fetch(),
-      fastSync ? this.getConnectorSyncDateTimeDesc() : Promise.resolve(null)
+      fastSync ? this.activityService.findMostRecent() : Promise.resolve(null)
     ];
 
     if (this.currentConnectorType === ConnectorType.STRAVA) {
@@ -143,19 +143,19 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       .then(result => {
         const athleteModel: AthleteModel = result[0] as AthleteModel;
         const userSettingsModel: UserSettingsModel = result[1] as UserSettingsModel;
-        const allConnectorsSyncDateTime: ConnectorSyncDateTime[] = result[2] as ConnectorSyncDateTime[];
+        const mostRecentActivity: SyncedActivityModel = result[2] as SyncedActivityModel;
+
+        // Get timestamp on which we have to sync if an activity exists and fast sync is enabled.
+        // We use the mose recent activity start time for all the connectors
+        const syncFromDateTime = mostRecentActivity && fastSync ? mostRecentActivity.start_timestamp * 1000 : null;
 
         let startSyncParamPromise: Promise<{
           connectorType: ConnectorType;
-          connectorSyncDateTime: ConnectorSyncDateTime;
           connectorInfo: ConnectorInfo;
           athleteModel: AthleteModel;
           userSettingsModel: UserSettingsModel;
+          syncFromDateTime: number;
         }>;
-
-        const currentConnectorSyncDateTime = allConnectorsSyncDateTime
-          ? _.find(allConnectorsSyncDateTime, { connectorType: this.currentConnectorType })
-          : null;
 
         if (this.currentConnectorType === ConnectorType.STRAVA) {
           const stravaConnectorInfo: StravaConnectorInfo = result[3] as StravaConnectorInfo;
@@ -163,10 +163,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
           // Create message to start sync on connector!
           startSyncParamPromise = Promise.resolve({
             connectorType: this.currentConnectorType,
-            connectorSyncDateTime: currentConnectorSyncDateTime,
             connectorInfo: stravaConnectorInfo,
             athleteModel: athleteModel,
-            userSettingsModel: userSettingsModel
+            userSettingsModel: userSettingsModel,
+            syncFromDateTime: syncFromDateTime
           });
         } else if (this.currentConnectorType === ConnectorType.FILE) {
           const fileConnectorInfo: FileConnectorInfo = result[3] as FileConnectorInfo;
@@ -178,10 +178,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
               if (valid) {
                 return Promise.resolve({
                   connectorType: this.currentConnectorType,
-                  connectorSyncDateTime: currentConnectorSyncDateTime,
                   connectorInfo: fileConnectorInfo,
                   athleteModel: athleteModel,
-                  userSettingsModel: userSettingsModel
+                  userSettingsModel: userSettingsModel,
+                  syncFromDateTime: syncFromDateTime
                 });
               } else {
                 return this.fsConnectorInfoService.ensureSourceDirectoryCompliance().then(() => {
@@ -202,10 +202,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         return this.ipcSyncMessageSender
           .startSync(
             startSyncParams.connectorType,
-            startSyncParams.connectorSyncDateTime,
             startSyncParams.connectorInfo,
             startSyncParams.athleteModel,
-            startSyncParams.userSettingsModel
+            startSyncParams.userSettingsModel,
+            startSyncParams.syncFromDateTime
           )
           .then(
             (response: string) => {
@@ -451,7 +451,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   }
 
   public getSyncState(): Promise<SyncState> {
-    return Promise.all([this.getSyncDateTime(), this.activityService.count()]).then((result: any[]) => {
+    return Promise.all([this.getConnectorSyncDateTimeDesc(), this.activityService.count()]).then((result: any[]) => {
       const connectorSyncDateTimes: ConnectorSyncDateTime[] = result[0] as ConnectorSyncDateTime[];
       const syncedActivitiesCount: number = result[1] as number;
 
@@ -482,16 +482,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   }
 
   public getConnectorSyncDateTimeDesc(): Promise<ConnectorSyncDateTime[]> {
-    return this.getSyncDateTime();
-  }
-
-  public getSyncDateTime(): Promise<ConnectorSyncDateTime[]> {
-    // For desktop sort by syncDateTime DESC (recent first)
     return this.connectorSyncDateTimeDao.find(null, { options: { desc: true }, propName: "syncDateTime" });
-  }
-
-  public updateSyncDateTime(connectorSyncDateTimes: ConnectorSyncDateTime[]): Promise<ConnectorSyncDateTime[]> {
-    throw new ElevateException("Please use upsertConnectorsSyncDateTimes() method when using DesktopSyncService");
   }
 
   public clearSyncTime(): Promise<void> {

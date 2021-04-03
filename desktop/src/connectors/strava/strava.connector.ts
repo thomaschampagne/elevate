@@ -118,7 +118,7 @@ export class StravaConnector extends BaseConnector {
   }
 
   public static generateFetchBareActivitiesPageEndpoint(page: number, perPage: number, afterTimestamp: number): string {
-    const after = _.isNumber(afterTimestamp) ? "after=" + afterTimestamp : "";
+    const after = _.isNumber(afterTimestamp) ? "after=" + Math.floor(afterTimestamp / 1000) : "";
     return `https://www.strava.com/api/v3/athlete/activities?before&${after}&page=${page}&per_page=${perPage}`;
   }
 
@@ -173,7 +173,8 @@ export class StravaConnector extends BaseConnector {
       this.syncEvents$.next(
         new GenericSyncEvent(this.type, `Scanning ${stravaPageId * StravaConnector.ACTIVITIES_PER_PAGES} activities...`)
       );
-      this.getStravaBareActivityModels(stravaPageId, perPage, this.syncDateTime).then(
+
+      this.getStravaBareActivityModels(stravaPageId, perPage, this.syncFromDateTime).then(
         (bareActivities: BareActivityModel[]) => {
           if (bareActivities.length > 0) {
             this.processBareActivities(syncEvents$, bareActivities).then(

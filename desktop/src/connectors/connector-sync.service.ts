@@ -13,14 +13,7 @@ import { BaseConnector } from "./base.connector";
 import { StravaConnector } from "./strava/strava.connector";
 import { FileConnector } from "./file/file.connector";
 import { ConnectorConfig } from "./connector-config.model";
-import {
-  AthleteModel,
-  AthleteSnapshotModel,
-  ConnectorSyncDateTime,
-  Streams,
-  SyncedActivityModel,
-  UserSettings
-} from "@elevate/shared/models";
+import { AthleteModel, AthleteSnapshotModel, Streams, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import _ from "lodash";
 import { IpcSyncMessageSender } from "../senders/ipc-sync-message.sender";
 import { Logger } from "../logger";
@@ -47,10 +40,10 @@ export class ConnectorSyncService {
    */
   public sync(
     connectorType: ConnectorType,
-    connectorSyncDateTime: ConnectorSyncDateTime,
     connectorInfo: ConnectorInfo,
     athleteModel: AthleteModel,
-    userSettingsModel: UserSettingsModel
+    userSettingsModel: UserSettingsModel,
+    syncFromDateTime: number
   ): Promise<string> {
     if (this.currentConnector && this.currentConnector.isSyncing) {
       return Promise.reject(
@@ -65,7 +58,7 @@ export class ConnectorSyncService {
     const connectorConfig: ConnectorConfig = {
       athleteModel: athleteModel,
       userSettingsModel: userSettingsModel,
-      connectorSyncDateTime: connectorSyncDateTime,
+      syncFromDateTime: syncFromDateTime,
       info: connectorInfo
     };
 

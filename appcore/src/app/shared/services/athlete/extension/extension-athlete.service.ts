@@ -30,8 +30,8 @@ export class ExtensionAthleteService extends AthleteService {
     });
   }
 
-  public clear(persistImmediately: boolean = false): Promise<void> {
-    return super.clear(persistImmediately).then(() => {
+  public clear(): Promise<void> {
+    return super.clear().then(() => {
       return this.extensionUserSettingsService.clearLocalStorageOnNextLoad();
     });
   }

@@ -50,7 +50,7 @@ export abstract class BaseConnector {
   public athleteSnapshotResolver: AthleteSnapshotResolver;
   public isSyncing: boolean;
   public stopRequested: boolean;
-  public syncDateTime: number;
+  public syncFromDateTime: number;
   public syncEvents$: ReplaySubject<SyncEvent>;
 
   public static updatePrimitiveStatsFromComputation(
@@ -173,10 +173,9 @@ export abstract class BaseConnector {
   public configure(connectorConfig: ConnectorConfig): this {
     this.connectorConfig = connectorConfig;
     this.athleteSnapshotResolver = new AthleteSnapshotResolver(this.connectorConfig.athleteModel);
-    this.syncDateTime =
-      this.connectorConfig.connectorSyncDateTime && this.connectorConfig.connectorSyncDateTime.syncDateTime >= 0
-        ? Math.floor(this.connectorConfig.connectorSyncDateTime.syncDateTime / 1000)
-        : null; // Convert timestamp to seconds instead of millis
+    this.syncFromDateTime = Number.isFinite(this.connectorConfig.syncFromDateTime)
+      ? this.connectorConfig.syncFromDateTime
+      : null;
     this.isSyncing = false;
     this.stopRequested = false;
     return this;

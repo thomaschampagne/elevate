@@ -194,7 +194,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
 
     return this.clearSyncedActivities()
       .then(() => {
-        return this.athleteService.clear(true);
+        return this.athleteService.clear();
       })
       .then(() => {
         let promiseImportDatedAthleteSettings;
@@ -207,7 +207,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
 
         return Promise.all([
           this.updateSyncDateTime(extensionBackupModel.syncDateTime),
-          this.activityService.insertMany(extensionBackupModel.syncedActivities, true),
+          this.activityService.insertMany(extensionBackupModel.syncedActivities),
           promiseImportDatedAthleteSettings,
           this.userSettingsService.clearLocalStorageOnNextLoad()
         ]);

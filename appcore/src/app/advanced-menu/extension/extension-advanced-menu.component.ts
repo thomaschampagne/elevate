@@ -25,7 +25,7 @@ import { ExtensionUserSettingsService } from "../../shared/services/user-setting
           <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
             <div>Wipe synced activities</div>
             <div>
-              <button mat-stroked-button color="warn" (click)="onSyncedBackupClear()">Wipe activities</button>
+              <button mat-stroked-button color="warn" (click)="onWipeActivities()">Wipe activities</button>
             </div>
           </div>
           <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">

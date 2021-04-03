@@ -17,7 +17,7 @@ export abstract class AdvancedMenuComponent implements OnInit {
 
   public abstract onZoneSettingsReset(): void;
 
-  public onSyncedBackupClear(): void {
+  public onWipeActivities(): void {
     const data: ConfirmDialogDataModel = {
       title: "Wipe synced activities",
       content: "It will remove all your synced activities. Are you sure to perform this action?"

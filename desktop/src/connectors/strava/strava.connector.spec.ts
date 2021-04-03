@@ -15,7 +15,6 @@ import {
   AnalysisDataModel,
   AthleteModel,
   BareActivityModel,
-  ConnectorSyncDateTime,
   Streams,
   SyncedActivityModel,
   UserSettings
@@ -91,7 +90,7 @@ describe("StravaConnector", () => {
     stravaConnector = container.resolve(StravaConnector);
 
     const stravaConnectorConfig: StravaConnectorConfig = {
-      connectorSyncDateTime: null,
+      syncFromDateTime: null,
       athleteModel: AthleteModel.DEFAULT_MODEL,
       userSettingsModel: UserSettings.getDefaultsByBuildTarget(BuildTarget.DESKTOP),
       info: new StravaConnectorInfo(clientId, clientSecret, accessToken)
@@ -122,10 +121,10 @@ describe("StravaConnector", () => {
   });
 
   describe("Configure connector", () => {
-    it("should configure strava connector without sync date time", done => {
+    it("should configure strava connector without sync from date time", done => {
       // Given
       const stravaConnectorConfig: StravaConnectorConfig = {
-        connectorSyncDateTime: null,
+        syncFromDateTime: null,
         athleteModel: null,
         userSettingsModel: null,
         info: null
@@ -135,17 +134,17 @@ describe("StravaConnector", () => {
       stravaConnector = stravaConnector.configure(stravaConnectorConfig);
 
       // Then
-      expect(stravaConnector.syncDateTime).toBeNull();
+      expect(stravaConnector.syncFromDateTime).toBeNull();
       done();
     });
 
-    it("should configure strava connector with sync date time", done => {
+    it("should configure strava connector with sync from date time", done => {
       // Given
-      const syncDateTime = Date.now();
-      const expectedSyncDateTime = Math.floor(syncDateTime / 1000);
+      const syncFromDateTime = Date.now();
+      const expectedSyncDateTime = syncFromDateTime;
 
       const stravaConnectorConfig: StravaConnectorConfig = {
-        connectorSyncDateTime: new ConnectorSyncDateTime(ConnectorType.STRAVA, syncDateTime),
+        syncFromDateTime: syncFromDateTime,
         athleteModel: null,
         userSettingsModel: null,
         info: null
@@ -155,7 +154,7 @@ describe("StravaConnector", () => {
       stravaConnector = stravaConnector.configure(stravaConnectorConfig);
 
       // Then
-      expect(stravaConnector.syncDateTime).toEqual(expectedSyncDateTime);
+      expect(stravaConnector.syncFromDateTime).toEqual(expectedSyncDateTime);
       done();
     });
   });

@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@angular/core";
 import { IPC_TUNNEL_SERVICE } from "./ipc-tunnel-service.token";
 import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
 import { ConnectorInfo, ConnectorType } from "@elevate/shared/sync";
-import { AthleteModel, ConnectorSyncDateTime, UserSettings } from "@elevate/shared/models";
+import { AthleteModel, UserSettings } from "@elevate/shared/models";
 import UserSettingsModel = UserSettings.UserSettingsModel;
 
 @Injectable()
@@ -11,18 +11,18 @@ export class IpcSyncMessageSender {
 
   public startSync(
     connectorType: ConnectorType,
-    connectorSyncDateTime: ConnectorSyncDateTime,
     connectorInfo: ConnectorInfo,
     athleteModel: AthleteModel,
-    userSettingsModel: UserSettingsModel
+    userSettingsModel: UserSettingsModel,
+    syncFromDateTime: number
   ): Promise<string> {
     const startSyncMessage = new IpcMessage(
       Channel.startSync,
       connectorType,
-      connectorSyncDateTime,
       connectorInfo,
       athleteModel,
-      userSettingsModel
+      userSettingsModel,
+      syncFromDateTime
     );
 
     return this.ipcTunnelService.send<IpcMessage, string>(startSyncMessage);

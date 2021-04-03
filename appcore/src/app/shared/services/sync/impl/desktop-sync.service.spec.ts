@@ -107,20 +107,18 @@ describe("DesktopSyncService", () => {
         );
       });
 
-      it("should start a recent strava sync (from last sync date time)", done => {
+      it("should start a recent strava sync (from last activity start time)", done => {
         // Given
         const connectorType = ConnectorType.STRAVA;
-        const expectedConnectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111);
-        const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
-          expectedConnectorSyncDateTime,
-          new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
-        ];
+        const mostRecentActivity = new SyncedActivityModel();
+        mostRecentActivity.start_timestamp = 22222;
+
         const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch").and.returnValue(
           Promise.resolve(AthleteModel.DEFAULT_MODEL)
         );
         const fetchUserSettingsSpy = spyOn(desktopSyncService.userSettingsService, "fetch").and.returnValue(null);
-        const findConnectorSyncDateTimeSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find").and.returnValue(
-          Promise.resolve(connectorSyncDateTimes)
+        const findMostRecentActivitySpy = spyOn(desktopSyncService.activityService, "findMostRecent").and.returnValue(
+          Promise.resolve(mostRecentActivity)
         );
 
         const fetchStravaConnectorInfoSpy = spyOn(
@@ -141,15 +139,21 @@ describe("DesktopSyncService", () => {
             expect(desktopSyncService.syncSubscription).toBeDefined();
             expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
             expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
-            expect(findConnectorSyncDateTimeSpy).toHaveBeenCalledTimes(1);
+            expect(findMostRecentActivitySpy).toHaveBeenCalledTimes(1);
             expect(fetchStravaConnectorInfoSpy).toHaveBeenCalledTimes(1);
             expect(startSyncSpy).toHaveBeenCalledTimes(1);
 
-            const [connectorTypeParam, connectorSyncDateTimeParam] = startSyncSpy.calls.mostRecent().args;
+            const [
+              connectorTypeParam,
+              connectorInfoParam,
+              athleteModelParam,
+              userSettingsModelParam,
+              syncFromDateTimeParam
+            ] = startSyncSpy.calls.mostRecent().args;
 
             expect(connectorTypeParam).toEqual(connectorType);
-            expect(connectorSyncDateTimeParam).toBeDefined();
-            expect(connectorSyncDateTimeParam).toEqual(expectedConnectorSyncDateTime);
+            expect(syncFromDateTimeParam).toBeDefined();
+            expect(syncFromDateTimeParam).toEqual(mostRecentActivity.start_timestamp * 1000);
 
             done();
           },

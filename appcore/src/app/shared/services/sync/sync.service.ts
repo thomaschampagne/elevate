@@ -31,10 +31,6 @@ export abstract class SyncService<T> {
 
   public abstract stop(): Promise<void>;
 
-  public abstract getSyncDateTime(): Promise<T>;
-
-  public abstract updateSyncDateTime(value: T): Promise<T>;
-
   public abstract clearSyncTime(): Promise<void>;
 
   public abstract getSyncState(): Promise<SyncState>;

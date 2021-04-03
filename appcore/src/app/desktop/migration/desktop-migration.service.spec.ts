@@ -142,7 +142,7 @@ describe("DesktopMigrationService", () => {
       service.versionsProvider as DesktopVersionsProvider,
       "setExistingVersion"
     ).and.returnValue(Promise.resolve());
-    const saveDataStoreSpy = spyOn(service.dataStore, "persist").and.returnValue(Promise.resolve());
+    const persistSpy = spyOn(service.dataStore, "persist").and.returnValue(Promise.resolve());
 
     // When
     const promise = service.upgrade();
@@ -153,7 +153,7 @@ describe("DesktopMigrationService", () => {
         expect(hasBeenUpgradedTo).toEqual(packageVersion);
         expect(detectUpgradeSpy).toHaveBeenCalledTimes(1);
         expect(setExistingVersionSpy).toHaveBeenCalledTimes(1);
-        expect(saveDataStoreSpy).toHaveBeenCalledTimes(1);
+        expect(persistSpy).toHaveBeenCalledTimes(1);
         done();
       },
       () => {
@@ -175,7 +175,7 @@ describe("DesktopMigrationService", () => {
       service.versionsProvider as DesktopVersionsProvider,
       "setExistingVersion"
     ).and.returnValue(Promise.resolve());
-    const saveDataStoreSpy = spyOn(service.dataStore, "persist").and.returnValue(Promise.resolve());
+    const persistSpy = spyOn(service.dataStore, "persist").and.returnValue(Promise.resolve());
 
     // When
     const promise = service.upgrade();
@@ -186,7 +186,7 @@ describe("DesktopMigrationService", () => {
         expect(hasBeenUpgradedTo).toBeNull();
         expect(detectUpgradeSpy).toHaveBeenCalledTimes(1);
         expect(setExistingVersionSpy).toHaveBeenCalledTimes(1);
-        expect(saveDataStoreSpy).not.toHaveBeenCalled();
+        expect(persistSpy).not.toHaveBeenCalled();
         done();
       },
       () => {

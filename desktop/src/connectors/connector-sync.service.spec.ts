@@ -27,7 +27,7 @@ import { ElevateException } from "@elevate/shared/exceptions";
 import _ from "lodash";
 
 describe("ConnectorSyncService", () => {
-  const currentConnectorSyncDateTime = null;
+  const syncFromDateTime = null;
   const athleteModel = null;
   const connectorInfo = null;
   const userSettingsModel = null;
@@ -44,7 +44,7 @@ describe("ConnectorSyncService", () => {
     fileConnector = container.resolve(FileConnector);
 
     const stravaConnectorConfig: StravaConnectorConfig = {
-      connectorSyncDateTime: currentConnectorSyncDateTime,
+      syncFromDateTime: syncFromDateTime,
       athleteModel: athleteModel,
       userSettingsModel: userSettingsModel,
       info: connectorInfo
@@ -52,7 +52,7 @@ describe("ConnectorSyncService", () => {
     stravaConnector = stravaConnector.configure(stravaConnectorConfig);
 
     const fileConnectorConfig = {
-      connectorSyncDateTime: currentConnectorSyncDateTime,
+      syncFromDateTime: syncFromDateTime,
       athleteModel: athleteModel,
       userSettingsModel: userSettingsModel,
       athleteMachineId: null,
@@ -76,7 +76,7 @@ describe("ConnectorSyncService", () => {
       // When
       const promise = connectorSyncService.sync(
         connectorType,
-        currentConnectorSyncDateTime,
+        syncFromDateTime,
         connectorInfo,
         athleteModel,
         userSettingsModel
@@ -104,10 +104,10 @@ describe("ConnectorSyncService", () => {
       // When
       const promise = connectorSyncService.sync(
         connectorType,
-        currentConnectorSyncDateTime,
         fileConnectorInfo,
         athleteModel,
-        userSettingsModel
+        userSettingsModel,
+        syncFromDateTime
       );
 
       // Then

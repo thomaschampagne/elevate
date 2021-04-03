@@ -6,7 +6,6 @@ import {
   AthleteSettingsModel,
   AthleteSnapshotModel,
   CadenceDataModel,
-  ConnectorSyncDateTime,
   Gender,
   HeartRateDataModel,
   SpeedDataModel,
@@ -123,7 +122,7 @@ describe("FileConnector", () => {
     fileConnector = container.resolve(FileConnector);
 
     fileConnectorConfig = {
-      connectorSyncDateTime: null,
+      syncFromDateTime: null,
       athleteModel: AthleteModel.DEFAULT_MODEL,
       userSettingsModel: UserSettings.getDefaultsByBuildTarget(BuildTarget.DESKTOP),
       info: new FileConnectorInfo(activitiesLocalPath01)
@@ -545,12 +544,12 @@ describe("FileConnector", () => {
   describe("Sync files", () => {
     it("should sync fully an input folder never synced before", done => {
       // Given
-      const syncDateTime = null; // Never synced before !!
+      const syncFromDateTime = null; // Never synced before !!
       const syncEvents$ = new Subject<SyncEvent>();
       const scanSubDirectories = true;
       const deleteArchivesAfterExtract = false;
 
-      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.syncFromDateTime = syncFromDateTime;
       fileConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
       fileConnectorConfig.info.scanSubDirectories = scanSubDirectories;
       fileConnectorConfig.info.extractArchiveFiles = true;
@@ -598,7 +597,11 @@ describe("FileConnector", () => {
             jasmine.any(Subject),
             scanSubDirectories
           );
-          expect(scanForActivitiesSpy).toHaveBeenCalledWith(activitiesLocalPath02, syncDateTime, scanSubDirectories);
+          expect(scanForActivitiesSpy).toHaveBeenCalledWith(
+            activitiesLocalPath02,
+            syncFromDateTime,
+            scanSubDirectories
+          );
           expect(importFromGPXSpy).toHaveBeenCalledTimes(6);
           expect(importFromTCXSpy).toHaveBeenCalledTimes(6);
           expect(importFromFITSpy).toHaveBeenCalledTimes(3);
@@ -647,12 +650,12 @@ describe("FileConnector", () => {
 
     it("should sync fully activities of an input folder already synced (no recent activities => syncDateTime = null)", done => {
       // Given
-      const syncDateTime = null; // Force sync on all scanned files
+      const syncFromDateTime = null; // Force sync on all scanned files
       const syncEvents$ = new Subject<SyncEvent>();
       const scanSubDirectories = true;
       const deleteArchivesAfterExtract = false;
 
-      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.syncFromDateTime = syncFromDateTime;
       fileConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
       fileConnectorConfig.info.scanSubDirectories = scanSubDirectories;
       fileConnectorConfig.info.extractArchiveFiles = true;
@@ -700,7 +703,11 @@ describe("FileConnector", () => {
             jasmine.any(Subject),
             scanSubDirectories
           );
-          expect(scanForActivitiesSpy).toHaveBeenCalledWith(activitiesLocalPath02, syncDateTime, scanSubDirectories);
+          expect(scanForActivitiesSpy).toHaveBeenCalledWith(
+            activitiesLocalPath02,
+            syncFromDateTime,
+            scanSubDirectories
+          );
           expect(importFromGPXSpy).toHaveBeenCalledTimes(6);
           expect(importFromTCXSpy).toHaveBeenCalledTimes(6);
           expect(importFromFITSpy).toHaveBeenCalledTimes(3);
@@ -724,11 +731,10 @@ describe("FileConnector", () => {
     it("should sync recent activities of an input folder already synced (no recent activities => syncDateTime = Date)", done => {
       // Given
       const syncDate = new Date("2019-01-01T12:00:00.000Z");
-      const syncDateTime = syncDate.getTime(); // Force sync on all scanned files
       const syncEvents$ = new Subject<SyncEvent>();
       const scanSubDirectories = true;
 
-      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.syncFromDateTime = syncDate.getTime(); // Force sync on all scanned files
       fileConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
       fileConnectorConfig.info.scanSubDirectories = scanSubDirectories;
       fileConnectorConfig.info.extractArchiveFiles = true;
@@ -799,13 +805,13 @@ describe("FileConnector", () => {
 
     it("should send sync error when multiple activities are found", done => {
       // Given
-      const syncDateTime = null; // Force sync on all scanned files
+      const syncFromDateTime = null; // Force sync on all scanned files
       const syncEvents$ = new Subject<SyncEvent>();
 
       const scanSubDirectories = true;
       const deleteArchivesAfterExtract = false;
 
-      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.syncFromDateTime = syncFromDateTime;
       fileConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
       fileConnectorConfig.info.scanSubDirectories = scanSubDirectories;
       fileConnectorConfig.info.extractArchiveFiles = true;
@@ -854,7 +860,11 @@ describe("FileConnector", () => {
             jasmine.any(Subject),
             scanSubDirectories
           );
-          expect(scanForActivitiesSpy).toHaveBeenCalledWith(activitiesLocalPath02, syncDateTime, scanSubDirectories);
+          expect(scanForActivitiesSpy).toHaveBeenCalledWith(
+            activitiesLocalPath02,
+            syncFromDateTime,
+            scanSubDirectories
+          );
           expect(importFromGPXSpy).toHaveBeenCalledTimes(6);
           expect(importFromTCXSpy).toHaveBeenCalledTimes(6);
           expect(importFromFITSpy).toHaveBeenCalledTimes(3);
@@ -884,11 +894,11 @@ describe("FileConnector", () => {
 
     it("should continue sync on compute error", done => {
       // Given
-      const syncDateTime = null; // Force sync on all scanned files
+      const syncFromDateTime = null; // Force sync on all scanned files
       const syncEvents$ = new Subject<SyncEvent>();
       const errorMessage = "Unable to create bare activity";
 
-      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.syncFromDateTime = syncFromDateTime;
       fileConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
       fileConnectorConfig.info.scanSubDirectories = true;
       fileConnectorConfig.info.extractArchiveFiles = true;
@@ -927,11 +937,11 @@ describe("FileConnector", () => {
 
     it("should continue sync on parsing error", done => {
       // Given
-      const syncDateTime = null; // Force sync on all scanned files
+      const syncFromDateTime = null; // Force sync on all scanned files
       const syncEvents$ = new Subject<SyncEvent>();
       const errorMessage = "Unable to parse fit file";
 
-      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.syncFromDateTime = syncFromDateTime;
       fileConnectorConfig.info.sourceDirectory = activitiesLocalPath02;
       fileConnectorConfig.info.scanSubDirectories = true;
       fileConnectorConfig.info.extractArchiveFiles = false;
@@ -969,7 +979,7 @@ describe("FileConnector", () => {
       const fakeSourceDir = "/fake/dir/path";
       const expectedErrorSyncEvent = ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.create(fakeSourceDir);
 
-      fileConnectorConfig.connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.FILE, syncDateTime);
+      fileConnectorConfig.syncFromDateTime = syncDateTime;
       fileConnectorConfig.info.sourceDirectory = fakeSourceDir;
       fileConnector = fileConnector.configure(fileConnectorConfig);
 

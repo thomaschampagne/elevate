@@ -72,8 +72,7 @@ export class DesktopActivityService extends ActivityService {
 
   public recalculateSingle(
     syncedActivityModel: SyncedActivityModel,
-    userSettingsModel: UserSettings.DesktopUserSettingsModel,
-    persistImmediately: boolean = false
+    userSettingsModel: UserSettings.DesktopUserSettingsModel
   ): Promise<SyncedActivityModel> {
     let athleteSnapshot: AthleteSnapshotModel = null;
 

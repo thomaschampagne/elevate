@@ -32,6 +32,12 @@ export abstract class ActivityService {
     return this.activityDao.find(query, sort);
   }
 
+  public findMostRecent(): Promise<SyncedActivityModel> {
+    return this.findSortStartDate(true).then(activities => {
+      return activities && activities.length ? Promise.resolve(activities[0]) : Promise.resolve(null);
+    });
+  }
+
   public findSortStartDate(descending: boolean): Promise<SyncedActivityModel[]> {
     return this.activityDao.findSortStartDate(descending);
   }

@@ -57,7 +57,7 @@ describe("Activity compute integration tests through file connector", () => {
     const athleteModel = new AthleteModel(Gender.MEN, [new DatedAthleteSettingsModel(null, athleteSettingsModel)]);
 
     fileConnectorConfig = {
-      connectorSyncDateTime: null,
+      syncFromDateTime: null,
       athleteModel: athleteModel,
       userSettingsModel: UserSettings.getDefaultsByBuildTarget(BuildTarget.DESKTOP),
       info: { sourceDirectory: null } as any

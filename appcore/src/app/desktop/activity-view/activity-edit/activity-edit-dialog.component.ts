@@ -56,7 +56,7 @@ export class ActivityEditDialogComponent implements OnInit {
     this.userSettingsService
       .fetch()
       .then((userSettings: DesktopUserSettingsModel) => {
-        return this.activityService.recalculateSingle(this.activity, userSettings, true);
+        return this.activityService.recalculateSingle(this.activity, userSettings);
       })
       .then(() => {
         this.dialogRef.close(true);
