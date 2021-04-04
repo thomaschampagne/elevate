@@ -138,11 +138,11 @@ export class HelpComponent implements OnInit {
 
   private getRawFaqMarkdownUrl(target: string): string {
     const shortRepoName = this.getRepositoryUrl().split("/").slice(3, 5).join("/"); // Find out the short repo name from repo url
-    return `https://raw.githubusercontent.com/${shortRepoName}/faq/${target}.md`;
+    return `https://raw.githubusercontent.com/${shortRepoName}/docs/faqs/${target}.md`;
   }
 
   private getFaqUrl(target: string): string {
-    return `${this.getRepositoryUrl()}/blob/faq/${target}.md`;
+    return `${this.getRepositoryUrl()}/blob/docs/faqs/${target}.md`;
   }
 
   public getRepositoryUrl(): string {
