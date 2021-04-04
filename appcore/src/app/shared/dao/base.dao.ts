@@ -44,39 +44,39 @@ export abstract class BaseDao<T> {
     return this.dataStore.getById(this.collectionDef, id);
   }
 
-  public insert(doc: T, persistImmediately: boolean = false): Promise<T> {
+  public insert(doc: T, persistImmediately: boolean): Promise<T> {
     return this.dataStore.insert(this.collectionDef, doc, persistImmediately);
   }
 
-  public insertMany(docs: T[], persistImmediately: boolean = false): Promise<void> {
+  public insertMany(docs: T[], persistImmediately: boolean): Promise<void> {
     return this.dataStore.insertMany(this.collectionDef, docs, persistImmediately);
   }
 
-  public update(doc: T, persistImmediately: boolean = false): Promise<T> {
+  public update(doc: T, persistImmediately: boolean): Promise<T> {
     return this.dataStore.update(this.collectionDef, doc, persistImmediately);
   }
 
-  public updateMany(docs: T[], persistImmediately: boolean = false): Promise<void> {
+  public updateMany(docs: T[], persistImmediately: boolean): Promise<void> {
     return this.dataStore.updateMany(this.collectionDef, docs, persistImmediately);
   }
 
-  public put(doc: T, persistImmediately: boolean = false): Promise<T> {
+  public put(doc: T, persistImmediately: boolean): Promise<T> {
     return this.dataStore.put(this.collectionDef, doc, persistImmediately);
   }
 
-  public remove(doc: T, persistImmediately: boolean = false): Promise<void> {
+  public remove(doc: T, persistImmediately: boolean): Promise<void> {
     return this.dataStore.remove(this.collectionDef, doc, persistImmediately);
   }
 
-  public removeMany(docs: T[], persistImmediately: boolean = false): Promise<void> {
+  public removeMany(docs: T[], persistImmediately: boolean): Promise<void> {
     throw new NotImplementedException("BaseDao::removeMany"); // TODO !!
   }
 
-  public removeById(id: number | string, persistImmediately: boolean = false): Promise<void> {
+  public removeById(id: number | string, persistImmediately: boolean): Promise<void> {
     return this.dataStore.removeById(this.collectionDef, id, persistImmediately);
   }
 
-  public removeByManyIds(ids: (number | string)[], persistImmediately: boolean = false): Promise<void> {
+  public removeByManyIds(ids: (number | string)[], persistImmediately: boolean): Promise<void> {
     return this.dataStore.removeByManyIds(this.collectionDef, ids, persistImmediately);
   }
 
@@ -90,12 +90,12 @@ export abstract class BaseDao<T> {
   /**
    * Clear all data
    */
-  public clear(persistImmediately: boolean = false): Promise<void> {
+  public clear(persistImmediately: boolean): Promise<void> {
     return this.dataStore.clear(this.collectionDef, persistImmediately);
   }
 
-  public saveDataStore(): Promise<void> {
-    return this.dataStore.saveDataStore();
+  public persist(persistImmediately: boolean): Promise<void> {
+    return this.dataStore.persist(persistImmediately);
   }
 
   public chain(): Resultset<T & LokiObj> {

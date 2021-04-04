@@ -89,7 +89,7 @@ export class DesktopActivityService extends ActivityService {
       .then(streams => {
         return this.compute(syncedActivityModel, athleteSnapshot, streams, userSettingsModel).then(
           newSyncedActivityModel => {
-            return this.put(newSyncedActivityModel, persistImmediately);
+            return this.put(newSyncedActivityModel);
           }
         );
       });
@@ -123,7 +123,7 @@ export class DesktopActivityService extends ActivityService {
       }, Promise.resolve())
       .then(() => {
         this.isRecalculating = false;
-        this.activityDao.saveDataStore();
+        this.activityDao.persist(true);
         this.verifyActivitiesWithSettingsLacking();
       })
       .catch(err => {

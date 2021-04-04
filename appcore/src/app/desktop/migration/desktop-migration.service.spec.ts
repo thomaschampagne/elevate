@@ -142,7 +142,7 @@ describe("DesktopMigrationService", () => {
       service.versionsProvider as DesktopVersionsProvider,
       "setExistingVersion"
     ).and.returnValue(Promise.resolve());
-    const saveDataStoreSpy = spyOn(service.dataStore, "saveDataStore").and.returnValue(Promise.resolve());
+    const saveDataStoreSpy = spyOn(service.dataStore, "persist").and.returnValue(Promise.resolve());
 
     // When
     const promise = service.upgrade();
@@ -175,7 +175,7 @@ describe("DesktopMigrationService", () => {
       service.versionsProvider as DesktopVersionsProvider,
       "setExistingVersion"
     ).and.returnValue(Promise.resolve());
-    const saveDataStoreSpy = spyOn(service.dataStore, "saveDataStore").and.returnValue(Promise.resolve());
+    const saveDataStoreSpy = spyOn(service.dataStore, "persist").and.returnValue(Promise.resolve());
 
     // When
     const promise = service.upgrade();

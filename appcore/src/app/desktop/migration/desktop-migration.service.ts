@@ -40,7 +40,7 @@ export class DesktopMigrationService {
           this.logger.info(`Upgrade to ${upgradeData.toVersion} detected.`);
           return this.applyUpgrades(upgradeData.fromVersion, upgradeData.toVersion)
             .then(() => {
-              return this.dataStore.saveDataStore();
+              return this.dataStore.persist(true);
             })
             .then(() => {
               this.logger.info(`Upgrade to ${upgradeData.toVersion} done.`);

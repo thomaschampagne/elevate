@@ -48,13 +48,13 @@ export abstract class SyncService<T> {
   public clearSyncedActivities(): Promise<void> {
     return this.clearSyncTime()
       .then(() => {
-        return this.activityService.clear(true);
+        return this.activityService.clear();
       })
       .then(() => {
-        return this.streamsService.clear(true);
+        return this.streamsService.clear();
       })
       .then(() => {
-        return this.dataStore.saveDataStore();
+        return this.dataStore.persist(true);
       })
       .catch(error => {
         this.logger.error(error);

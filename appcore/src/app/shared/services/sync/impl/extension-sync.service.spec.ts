@@ -625,7 +625,7 @@ describe("ExtensionSyncService", () => {
     const syncDateTimeDaoSpy = spyOn(extensionSyncService.syncDateTimeDao, "clear").and.returnValue(Promise.resolve());
     const activityServiceSpy = spyOn(extensionSyncService.activityService, "clear").and.returnValue(Promise.resolve());
     const streamsServiceSpy = spyOn(extensionSyncService.streamsService, "clear").and.returnValue(Promise.resolve());
-    const saveDataStoreSpy = spyOn(extensionSyncService.dataStore, "saveDataStore").and.returnValue(Promise.resolve());
+    const saveDataStoreSpy = spyOn(extensionSyncService.dataStore, "persist").and.returnValue(Promise.resolve());
 
     // When
     const promise: Promise<void> = extensionSyncService.clearSyncedActivities();

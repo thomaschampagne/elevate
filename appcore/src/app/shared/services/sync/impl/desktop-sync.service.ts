@@ -309,11 +309,11 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         } else {
           currentConnectorSyncDateTime = new ConnectorSyncDateTime(this.currentConnectorType, Date.now());
         }
-        return this.upsertConnectorsSyncDateTimes([currentConnectorSyncDateTime]);
+        return this.connectorSyncDateTimeDao.put(currentConnectorSyncDateTime, false);
       })
       .then(() => {
         // Ensure all activities are well persisted before any reload
-        return this.desktopDataStore.saveDataStore();
+        return this.desktopDataStore.persist(true);
       })
       .then(() => {
         this.logger.debug(completeSyncEvent);
@@ -360,7 +360,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     );
 
     this.activityService
-      .put(activitySyncEvent.activity, true)
+      .put(activitySyncEvent.activity)
       .then((syncedActivityModel: SyncedActivityModel) => {
         this.logger.debug(`Activity "${syncedActivityModel.name}" saved`);
 
@@ -490,30 +490,12 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     return this.connectorSyncDateTimeDao.find(null, { options: { desc: true }, propName: "syncDateTime" });
   }
 
-  public upsertConnectorsSyncDateTimes(
-    connectorSyncDateTimes: ConnectorSyncDateTime[]
-  ): Promise<ConnectorSyncDateTime[]> {
-    if (!_.isArray(connectorSyncDateTimes)) {
-      throw new Error("connectorSyncDateTimes param must be an array");
-    }
-
-    return connectorSyncDateTimes
-      .reduce((previousPromise: Promise<void>, connectorSyncDateTime: ConnectorSyncDateTime) => {
-        return previousPromise.then(() => {
-          return this.connectorSyncDateTimeDao.put(connectorSyncDateTime, true).then(() => Promise.resolve());
-        });
-      }, Promise.resolve())
-      .then(() => {
-        return this.connectorSyncDateTimeDao.find();
-      });
-  }
-
   public updateSyncDateTime(connectorSyncDateTimes: ConnectorSyncDateTime[]): Promise<ConnectorSyncDateTime[]> {
-    throw new ElevateException("Please use upsertSyncDateTimes() method when using DesktopSyncService");
+    throw new ElevateException("Please use upsertConnectorsSyncDateTimes() method when using DesktopSyncService");
   }
 
   public clearSyncTime(): Promise<void> {
-    return this.connectorSyncDateTimeDao.clear(true);
+    return this.connectorSyncDateTimeDao.clear(false);
   }
 
   public ngOnDestroy(): void {

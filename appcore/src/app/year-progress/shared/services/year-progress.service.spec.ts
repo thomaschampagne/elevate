@@ -1397,7 +1397,7 @@ describe("YearProgressService", () => {
       // Then
       promise.then(
         () => {
-          expect(removeByIdDaoSpy).toHaveBeenCalledWith(model.id);
+          expect(removeByIdDaoSpy).toHaveBeenCalledWith(model.id, false);
           done();
         },
         error => {

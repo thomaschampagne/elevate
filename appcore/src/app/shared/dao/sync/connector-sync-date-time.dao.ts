@@ -22,6 +22,6 @@ export class ConnectorSyncDateTimeDao extends BaseDao<ConnectorSyncDateTime> {
   }
 
   public removeByConnectorType(connectorType: ConnectorType) {
-    return this.removeById(connectorType, true);
+    return this.removeById(connectorType, false);
   }
 }

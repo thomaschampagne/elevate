@@ -17,12 +17,15 @@ export abstract class DataStore<T extends {}> {
   protected constructor(@Inject(LoggerService) protected readonly logger: LoggerService) {
     this.initDatabase();
   }
+
   private static readonly DATABASE_NAME = "elevate";
+  private static readonly SAVE_DEBOUNCE_WAIT_MS = 1000;
   private static readonly DEFAULT_LOKI_ID_FIELD = "$loki";
   private static readonly DEFAULT_LOKI_META_FIELD = "meta";
   public db: LokiConstructor;
   public dbEvent$: ReplaySubject<DbEvent>;
   private COLLECTIONS_MAP: Map<string, Collection<T>>;
+  private saveDatabaseDebounce: () => void;
 
   public static isBackupCompatible(dumpVersion): boolean {
     return semver.gte(dumpVersion, this.getMinBackupVersion()) || environment.skipRestoreSyncedBackupCheck;
@@ -48,6 +51,19 @@ export abstract class DataStore<T extends {}> {
     this.dbEvent$ = new ReplaySubject<DbEvent>();
     this.db = new Loki(DataStore.DATABASE_NAME, this.getDbOptions());
     this.COLLECTIONS_MAP = new Map<string, Collection<T>>();
+
+    this.saveDatabaseDebounce = _.debounce(
+      () =>
+        this.db.saveDatabase(err => {
+          if (err) {
+            this.logger.error("Datastore save error: ", err);
+          } else {
+            this.logger.debug("Datastore Saved!");
+          }
+        }),
+      DataStore.SAVE_DEBOUNCE_WAIT_MS,
+      { leading: true }
+    );
   }
 
   public abstract getPersistenceAdapter(): LokiPersistenceAdapter;
@@ -62,6 +78,7 @@ export abstract class DataStore<T extends {}> {
       env: "BROWSER",
       autosave: false,
       autoload: true,
+      throttledSaves: false,
       autoloadCallback: err => this.onAutoLoadDone(err),
       autosaveCallback: () => this.onAutoSaveDone()
     };
@@ -140,11 +157,7 @@ export abstract class DataStore<T extends {}> {
 
     const updatePromise = Promise.resolve(updatedDoc);
 
-    if (!persistImmediately) {
-      return updatePromise;
-    }
-
-    return this.saveDataStore().then(() => {
+    return this.persist(persistImmediately).then(() => {
       return updatePromise;
     });
   }
@@ -152,13 +165,7 @@ export abstract class DataStore<T extends {}> {
   public updateMany(collectionDef: CollectionDef<T>, docs: T[], persistImmediately: boolean): Promise<void> {
     this.resolveCollection(collectionDef).update(docs);
 
-    if (!persistImmediately) {
-      return Promise.resolve();
-    }
-
-    return this.saveDataStore().then(() => {
-      return Promise.resolve();
-    });
+    return this.persist(persistImmediately);
   }
 
   public insert(collectionDef: CollectionDef<T>, doc: T, persistImmediately: boolean): Promise<T> {
@@ -166,11 +173,7 @@ export abstract class DataStore<T extends {}> {
 
     const insertedPromise = Promise.resolve(insertedDoc);
 
-    if (!persistImmediately) {
-      return insertedPromise;
-    }
-
-    return this.saveDataStore().then(() => {
+    return this.persist(persistImmediately).then(() => {
       return insertedPromise;
     });
   }
@@ -178,13 +181,7 @@ export abstract class DataStore<T extends {}> {
   public insertMany(collectionDef: CollectionDef<T>, docs: T[], persistImmediately: boolean): Promise<void> {
     this.resolveCollection(collectionDef).insert(docs);
 
-    if (!persistImmediately) {
-      return Promise.resolve();
-    }
-
-    return this.saveDataStore().then(() => {
-      return Promise.resolve();
-    });
+    return this.persist(persistImmediately);
   }
 
   public put(collectionDef: CollectionDef<T>, doc: T, persistImmediately: boolean): Promise<T> {
@@ -229,13 +226,7 @@ export abstract class DataStore<T extends {}> {
   public remove(collectionDef: CollectionDef<T>, doc: T, persistImmediately: boolean): Promise<void> {
     this.resolveCollection(collectionDef).remove(doc);
 
-    if (!persistImmediately) {
-      return Promise.resolve();
-    }
-
-    return this.saveDataStore().then(() => {
-      return Promise.resolve();
-    });
+    return this.persist(persistImmediately);
   }
 
   public removeById(collectionDef: CollectionDef<T>, id: number | string, persistImmediately: boolean): Promise<void> {
@@ -250,13 +241,7 @@ export abstract class DataStore<T extends {}> {
 
     collection.removeWhere(query);
 
-    if (!persistImmediately) {
-      return Promise.resolve();
-    }
-
-    return this.saveDataStore().then(() => {
-      return Promise.resolve();
-    });
+    return this.persist(persistImmediately);
   }
 
   public removeByManyIds(
@@ -275,13 +260,7 @@ export abstract class DataStore<T extends {}> {
 
     collection.removeWhere(query);
 
-    if (!persistImmediately) {
-      return Promise.resolve();
-    }
-
-    return this.saveDataStore().then(() => {
-      return Promise.resolve();
-    });
+    return this.persist(persistImmediately);
   }
 
   public count(collectionDef: CollectionDef<T>, query?: LokiQuery<T & LokiObj>): Promise<number> {
@@ -291,31 +270,48 @@ export abstract class DataStore<T extends {}> {
 
   public clear(collectionDef: CollectionDef<T>, persistImmediately: boolean): Promise<void> {
     this.resolveCollection(collectionDef).clear();
-    return persistImmediately ? this.saveDataStore() : Promise.resolve();
+    return persistImmediately ? this.persist(persistImmediately) : Promise.resolve();
   }
 
   /**
    * Force persistence of data store
    */
-  public saveDataStore(): Promise<void> {
+  public persist(persistImmediately: boolean): Promise<void> {
     this.logger.debug("Save datastore requested");
 
-    return new Promise<void>((resolve, reject) => {
-      // Force save database to persistence adapter
-      const hasDatabaseChanged = this.db.autosaveDirty();
-
-      if (hasDatabaseChanged) {
+    if (persistImmediately) {
+      return new Promise<void>((resolve, reject) => {
+        // Force save database to persistence adapter
         this.db.saveDatabase(err => {
           if (err) {
+            this.logger.error("Datastore save error: ", err);
             reject(err);
           } else {
-            this.logger.debug("Datastore saved");
+            this.logger.debug("Datastore Saved!");
             resolve();
           }
         });
-      } else {
-        resolve();
-      }
+      });
+    }
+
+    // Debounce safe instead
+    this.saveDatabaseDebounce();
+
+    return Promise.resolve();
+  }
+
+  public saveNow(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      // Force save database to persistence adapter
+      this.db.saveDatabase(err => {
+        if (err) {
+          this.logger.error("Datastore save error: ", err);
+          reject(err);
+        } else {
+          this.logger.debug("Datastore saved");
+          resolve();
+        }
+      });
     });
   }
 

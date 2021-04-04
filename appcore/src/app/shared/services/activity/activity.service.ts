@@ -36,8 +36,8 @@ export abstract class ActivityService {
     return this.activityDao.findSortStartDate(descending);
   }
 
-  public insertMany(syncedActivities: SyncedActivityModel[], persistImmediately: boolean = false): Promise<void> {
-    return this.activityDao.insertMany(syncedActivities, persistImmediately);
+  public insertMany(syncedActivities: SyncedActivityModel[]): Promise<void> {
+    return this.activityDao.insertMany(syncedActivities, false);
   }
 
   public getById(id: number | string): Promise<SyncedActivityModel> {
@@ -45,25 +45,19 @@ export abstract class ActivityService {
   }
 
   public removeById(id: number | string): Promise<void> {
-    return this.activityDao.removeById(id, true);
+    return this.activityDao.removeById(id, false);
   }
 
-  public update(
-    syncedActivityModel: SyncedActivityModel,
-    persistImmediately: boolean = false
-  ): Promise<SyncedActivityModel> {
-    return this.activityDao.update(syncedActivityModel, persistImmediately);
+  public update(syncedActivityModel: SyncedActivityModel): Promise<SyncedActivityModel> {
+    return this.activityDao.update(syncedActivityModel, false);
   }
 
-  public put(
-    syncedActivityModel: SyncedActivityModel,
-    persistImmediately: boolean = false
-  ): Promise<SyncedActivityModel> {
-    return this.activityDao.put(syncedActivityModel, persistImmediately);
+  public put(syncedActivityModel: SyncedActivityModel): Promise<SyncedActivityModel> {
+    return this.activityDao.put(syncedActivityModel, false);
   }
 
-  public clear(persistImmediately: boolean = false): Promise<void> {
-    return this.activityDao.clear(persistImmediately);
+  public clear(): Promise<void> {
+    return this.activityDao.clear(false);
   }
 
   public count(): Promise<number> {
@@ -97,7 +91,7 @@ export abstract class ActivityService {
   }
 
   public removeByManyIds(activitiesToDelete: (string | number)[]): Promise<void> {
-    return this.activityDao.removeByManyIds(activitiesToDelete, true);
+    return this.activityDao.removeByManyIds(activitiesToDelete, false);
   }
 
   /**

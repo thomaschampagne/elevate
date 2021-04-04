@@ -315,7 +315,7 @@ describe("DesktopSyncService", () => {
       // Then
       syncEvent$.subscribe(
         () => {
-          expect(activityServicePutSpy).toHaveBeenCalledWith(activity, true);
+          expect(activityServicePutSpy).toHaveBeenCalledWith(activity);
           expect(streamsServicePutSpy).toHaveBeenCalledWith(expectedDeflatedActivityStreams);
           expect(stopSpy).not.toHaveBeenCalled();
           done();
@@ -352,7 +352,7 @@ describe("DesktopSyncService", () => {
       // Then
       syncEvent$.subscribe(
         (syncEvent: ErrorSyncEvent) => {
-          expect(activityServicePutSpy).toHaveBeenCalledWith(activity, true);
+          expect(activityServicePutSpy).toHaveBeenCalledWith(activity);
           expect(syncEventNextSpy).toHaveBeenCalledTimes(1);
           expect(syncEvent.type).toEqual(expectedErrorSyncEvent.type);
           expect(syncEvent.code).toEqual(expectedErrorSyncEvent.code);
@@ -399,7 +399,7 @@ describe("DesktopSyncService", () => {
       // Then
       syncEvent$.subscribe(
         (syncEvent: ErrorSyncEvent) => {
-          expect(activityServicePutSpy).toHaveBeenCalledWith(activity, true);
+          expect(activityServicePutSpy).toHaveBeenCalledWith(activity);
           expect(syncEventNextSpy).toHaveBeenCalledTimes(1);
           expect(syncEvent.type).toEqual(expectedErrorSyncEvent.type);
           expect(syncEvent.code).toEqual(expectedErrorSyncEvent.code);
@@ -439,8 +439,8 @@ describe("DesktopSyncService", () => {
         desktopSyncService.connectorSyncDateTimeDao,
         "getById"
       ).and.returnValue(Promise.resolve(null));
-      const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(
-        Promise.resolve([connectorSyncDateTime])
+      const upsertSyncDateTimesSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "put").and.returnValue(
+        Promise.resolve(connectorSyncDateTime)
       );
       const isSyncingSpy = spyOn(desktopSyncService.isSyncing$, "next").and.stub();
 
@@ -451,8 +451,7 @@ describe("DesktopSyncService", () => {
       syncEvent$.subscribe(
         () => {
           expect(getConnectorSyncDateTimeByIdSpy).toHaveBeenCalledWith(connectorType);
-          const createdConnectorSyncDateTime: ConnectorSyncDateTime = upsertSyncDateTimesSpy.calls.mostRecent()
-            .args[0][0];
+          const createdConnectorSyncDateTime: ConnectorSyncDateTime = upsertSyncDateTimesSpy.calls.mostRecent().args[0];
           expect(createdConnectorSyncDateTime.connectorType).toEqual(connectorType);
           expect(getSyncStateSpy).toHaveBeenCalledTimes(1);
           expect(isSyncingSpy).toHaveBeenCalledTimes(1);
@@ -478,8 +477,8 @@ describe("DesktopSyncService", () => {
         desktopSyncService.connectorSyncDateTimeDao,
         "getById"
       ).and.returnValue(Promise.resolve(connectorSyncDateTime));
-      const upsertSyncDateTimesSpy = spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(
-        Promise.resolve([connectorSyncDateTime])
+      const upsertSyncDateTimesSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "put").and.returnValue(
+        Promise.resolve(connectorSyncDateTime)
       );
       const isSyncingSpy = spyOn(desktopSyncService.isSyncing$, "next").and.stub();
 
@@ -491,7 +490,7 @@ describe("DesktopSyncService", () => {
         () => {
           expect(connectorSyncDateTime.syncDateTime).toBeGreaterThan(oldDateTime);
           expect(getConnectorSyncDateTimeByIdSpy).toHaveBeenCalledWith(connectorType);
-          expect(upsertSyncDateTimesSpy).toHaveBeenCalledWith([connectorSyncDateTime]);
+          expect(upsertSyncDateTimesSpy).toHaveBeenCalledWith(connectorSyncDateTime, false);
           expect(getSyncStateSpy).toHaveBeenCalledTimes(1);
           expect(isSyncingSpy).toHaveBeenCalledTimes(1);
           done();
@@ -598,7 +597,7 @@ describe("DesktopSyncService", () => {
       // Then
       syncEvent$.subscribe(
         () => {
-          expect(activityServicePutSpy).toHaveBeenCalledWith(activity, true);
+          expect(activityServicePutSpy).toHaveBeenCalledWith(activity);
           expect(syncEventNextSpy).toHaveBeenCalledWith(activitySyncEvent);
           done();
         },
@@ -664,9 +663,7 @@ describe("DesktopSyncService", () => {
       const handleSyncCompleteEventsSpy = spyOn(desktopSyncService, "handleSyncCompleteEvents").and.callThrough();
       spyOn(desktopSyncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
       spyOn(desktopSyncService.connectorSyncDateTimeDao, "getById").and.returnValue(Promise.resolve(null));
-      spyOn(desktopSyncService, "upsertConnectorsSyncDateTimes").and.returnValue(
-        Promise.resolve([connectorSyncDateTime])
-      );
+      spyOn(desktopSyncService.connectorSyncDateTimeDao, "put").and.returnValue(Promise.resolve(connectorSyncDateTime));
       const isSyncingSpy = spyOn(desktopSyncService.isSyncing$, "next");
       const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
 
@@ -1388,54 +1385,6 @@ describe("DesktopSyncService", () => {
           throw new Error("Should not be here!");
         }
       );
-    });
-
-    it("should upsert sync date times of synced connectors", done => {
-      // Given
-      const connectorSyncDateTimesToSave: ConnectorSyncDateTime[] = [
-        new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-        new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
-      ];
-
-      spyOn(desktopSyncService.connectorSyncDateTimeDao, "find").and.returnValue(
-        Promise.resolve(connectorSyncDateTimesToSave)
-      );
-
-      const putSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "put").and.returnValues(
-        Promise.resolve(connectorSyncDateTimesToSave[0]),
-        Promise.resolve(connectorSyncDateTimesToSave[1])
-      );
-
-      // When
-      const promise = desktopSyncService.upsertConnectorsSyncDateTimes(connectorSyncDateTimesToSave);
-
-      // Then
-      promise.then(
-        () => {
-          expect(putSpy).toHaveBeenCalledTimes(2);
-          expect(putSpy).toHaveBeenCalledWith(connectorSyncDateTimesToSave[0], true);
-          expect(putSpy).toHaveBeenCalledWith(connectorSyncDateTimesToSave[1], true);
-          done();
-        },
-        () => {
-          throw new Error("Should not be here!");
-        }
-      );
-    });
-
-    it("should reject upsert if connectors sync date times param is not an array", done => {
-      // Given
-      const expectedErrorMesage = "connectorSyncDateTimes param must be an array";
-      const connectorSyncDateTime = new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111); // No array
-
-      // When
-      const call = () => {
-        desktopSyncService.upsertConnectorsSyncDateTimes(connectorSyncDateTime as any);
-      };
-
-      // Then
-      expect(call).toThrow(new Error(expectedErrorMesage));
-      done();
     });
 
     it("should clear sync date times of synced connectors", done => {

@@ -212,7 +212,7 @@ describe("AthleteService", () => {
           expect(result).toEqual(expectedAthleteModel.datedAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, true);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
 
           done();
         },
@@ -260,7 +260,7 @@ describe("AthleteService", () => {
           expect(result).toEqual(expectedAthleteModel.datedAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, true);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
 
           done();
         },
@@ -309,7 +309,7 @@ describe("AthleteService", () => {
           expect(result).toEqual(expectedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, true);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
 
           done();
         },
@@ -461,7 +461,7 @@ describe("AthleteService", () => {
       promise.then(
         (athleteModel: AthleteModel) => {
           expect(athleteModel).not.toBeNull();
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, true);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
 
           done();
@@ -582,7 +582,7 @@ describe("AthleteService", () => {
           expect(result).toEqual(expectedEditedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, true);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
 
           done();
         },
@@ -657,7 +657,7 @@ describe("AthleteService", () => {
           expect(result).toEqual(expectedEditedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, true);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
 
           done();
         },
@@ -708,7 +708,7 @@ describe("AthleteService", () => {
           expect(result).toEqual(expectedEditedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, true);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
 
           done();
         },
@@ -953,7 +953,7 @@ describe("AthleteService", () => {
           expect(result).not.toBeNull();
           expect(result).toEqual(expectedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, true);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
 
           done();

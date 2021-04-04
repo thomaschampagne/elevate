@@ -489,7 +489,7 @@ export class YearProgressService {
    * Remove preset at index
    */
   public deletePreset(id: string): Promise<void> {
-    return this.yearProgressPresetDao.removeById(id);
+    return this.yearProgressPresetDao.removeById(id, false);
   }
 
   public getTodayMoment(): Moment {

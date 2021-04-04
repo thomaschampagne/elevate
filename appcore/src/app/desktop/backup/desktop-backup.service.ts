@@ -210,7 +210,7 @@ export class DesktopBackupService {
           if (restoredDocs === metadata.totalDocs) {
             // Yes restore is complete: all docs inserted.
             // Save data store and complete :)
-            return this.desktopDataStore.saveDataStore().then(() => {
+            return this.desktopDataStore.persist(true).then(() => {
               restoreProgress$.complete();
               channelSubscription.unsubscribe();
               this.logger.info(`Restored in ${Math.round(Date.now() - restoreStartTime)}ms`);
