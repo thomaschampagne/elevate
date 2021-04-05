@@ -11,7 +11,7 @@ assignees: ''
 
 Before creating any issues, you HAVE TO check if issue already exists:
 
-* Check for answer in Frequently Asked Questions here: https://github.com/thomaschampagne/elevate/tree/faq/
+* Check for answer in Frequently Asked Questions here: https://github.com/thomaschampagne/elevate/tree/docs/faqs/
 * Check for already existing issues matching with yours: https://github.com/thomaschampagne/elevate/issues
 
 Any unsuitable issues will not be handled. Since this project is performed on free time and has hundreds
