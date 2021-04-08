@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="aboutTitle" datatype="html">
+        <source>About</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/about-dialog/about-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="429bbc7c2c43ff56e5219fbd4c7d811163611adb" datatype="html">
+        <source> History size <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{appUsageDetails.megaBytesInUse.toFixed(2)}}"/> MB<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/about-dialog/about-dialog.component.html</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="25edfe570a38428aa4cb6fafb0ede9f0c9e91759" datatype="html">
+        <source> Web extension made with ❤️ by <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://twitter.com/champagnethomas&quot; target=&quot;_blank&quot;&gt;"/>Thomas Champagne<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/about-dialog/about-dialog.component.html</context>
+          <context context-type="linenumber">18,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="b21ab5101e5fd61637d754c1de8cc1c7033a303c" datatype="html">
+        <source> Elevate is an open-source project under <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+      href=&quot;https://github.com/mozilla/foundation.mozilla.org/blob/master/LICENSE&quot;
+      target=&quot;_blank&quot;&gt;"/>Mozilla Public License 2.0<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/about-dialog/about-dialog.component.html</context>
+          <context context-type="linenumber">21,24</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/about-dialog/about-dialog.component.html</context>
+          <context context-type="linenumber">39,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="c5c789fdf63d230c10f44f5f7aeab155042e0f80" datatype="html">
+        <source> This extension is adds some features that riders and runners would like to see in their Strava web. If these features could be added by default in Strava... It could be cool! Consider getting Strava Premium. There are a ton of features that you will love. Remember, this extension has for ambition to enhance the experience of all users (Free and Premium) and tends to keep users loyal in Strava. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/about-dialog/about-dialog.component.html</context>
+          <context context-type="linenumber">26,30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="0ee52525b33c7d005491b5ad51939fd3ac70c11f" datatype="html">
+        <source> Application made with ❤️ by <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://twitter.com/champagnethomas&quot; target=&quot;_blank&quot;&gt;"/>Thomas Champagne<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/about-dialog/about-dialog.component.html</context>
+          <context context-type="linenumber">36,37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="d6831830187b520bf7971f980e2bb4b9f6b549e5" datatype="html">
+        <source>Search settings with keywords...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/global-settings/global-settings.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

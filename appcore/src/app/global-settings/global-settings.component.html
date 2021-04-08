@@ -1,7 +1,7 @@
 <div class="centered-section">
   <div class="search mat-subheading-2" fxLayout="row" fxLayoutAlign="center center">
     <mat-form-field fxFlex="50">
-      <input [(ngModel)]="searchText" matInput placeholder="Search settings with keywords..." type="search">
+      <input [(ngModel)]="searchText" matInput placeholder="Search settings with keywords..." type="search" i18n-placeholder>
       <button (click)="searchText=''" *ngIf="searchText" aria-label="Clear" mat-button mat-icon-button
               matSuffix>
         <mat-icon fontSet="material-icons-outlined">close</mat-icon>

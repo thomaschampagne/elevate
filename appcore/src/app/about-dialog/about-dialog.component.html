@@ -1,4 +1,4 @@
-<div class="mat-h2">About</div>
+<div class="mat-h2" i18n="@@aboutTitle">About</div>
 <mat-dialog-content class="mat-body-1">
   <div *ngIf="installedVersion" class="space-under">
     Version <strong>{{installedVersion}}</strong>&nbsp;/&nbsp;<span
@@ -6,7 +6,7 @@
     *ngIf="buildMetadata">Build {{buildMetadata.date + '.' + buildMetadata.commit.slice(0, 8)}}</span>
   </div>
   <mat-divider></mat-divider>
-  <div *ngIf="appUsageDetails">
+  <div *ngIf="appUsageDetails" i18n>
     History size <strong>{{appUsageDetails.megaBytesInUse.toFixed(2)}} MB</strong>.
   </div>
   <div *ngIf="!appUsageDetails">
@@ -14,15 +14,15 @@
   </div>
   <mat-divider></mat-divider>
   <ng-container *ngIf="(buildTarget === BuildTarget.EXTENSION)">
-    <div class="space-under">
+    <div class="space-under" i18n>
       Web extension made with ❤️ by <a href="https://twitter.com/champagnethomas" target="_blank">Thomas Champagne</a>.
     </div>
-    <div class="space-under">
+    <div class="space-under" i18n>
       Elevate is an open-source project under <a
       href="https://github.com/mozilla/foundation.mozilla.org/blob/master/LICENSE"
       target="_blank">Mozilla Public License 2.0</a>.
     </div>
-    <div class="space-under">
+    <div class="space-under" i18n>
       This extension is adds some features that riders and runners would like to see in their Strava
       web. If these features could be added by default in Strava... It could be cool! Consider getting Strava Premium.
       There are a ton of features that you will love. Remember, this extension has for ambition to enhance the
@@ -32,10 +32,10 @@
   </ng-container>
 
   <ng-container *ngIf="(buildTarget === BuildTarget.DESKTOP)">
-    <div class="space-under">
+    <div class="space-under" i18n>
       Application made with ❤️ by <a href="https://twitter.com/champagnethomas" target="_blank">Thomas Champagne</a>.
     </div>
-    <div class="space-under">
+    <div class="space-under" i18n>
       Elevate is an open-source project under <a
       href="https://github.com/mozilla/foundation.mozilla.org/blob/master/LICENSE"
       target="_blank">Mozilla Public License 2.0</a>.

@@ -7,7 +7,20 @@
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
-      "architect": {
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "fr": {
+            "translation": "src/locale/messages.fr.xlf",
+            "baseHref": "/app/fr/"
+          },
+          "en": {
+            "translation": "src/locale/messages.xlf",
+            "baseHref": "/app/en/"
+          }
+        }
+      },
+        "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
@@ -17,6 +30,7 @@
             "tsConfig": "tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
             "aot": true,
+            "localize": true,
             "assets": [
               "src/assets",
               "src/favicon.ico"
