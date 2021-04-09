@@ -38,6 +38,7 @@ import { ComponentsFactoryService } from "./shared/services/components-factory.s
 import { AppService } from "./shared/services/app-service/app.service";
 import { UPDATE_BAR_COMPONENT, UpdateBarComponent } from "./update-bar/update-bar.component";
 import { UpdateBarDirective } from "./update-bar/update-bar.directive";
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: "app-root",
@@ -100,11 +101,15 @@ export class AppComponent implements OnInit, OnDestroy {
     @Inject(RECALCULATE_ACTIVITIES_BAR_COMPONENT)
     private readonly recalculateActivitiesBarComponentType: Type<RecalculateActivitiesBarComponent>,
     @Inject(SYNC_MENU_COMPONENT) private readonly syncMenuComponentType: Type<SyncMenuComponent>,
-    @Inject(APP_MORE_MENU_COMPONENT) private readonly appMoreMenuComponentType: Type<AppMoreMenuComponent>
+    @Inject(APP_MORE_MENU_COMPONENT) private readonly appMoreMenuComponentType: Type<AppMoreMenuComponent>,
+    translate: TranslateService
   ) {
     this.currentRoute = this.router.url;
     this.showRouteUrl = environment.showRouteUrl;
     this.registerCustomIcons();
+    translate.addLangs(['en', 'fr']);
+    translate.setDefaultLang('en');
+    translate.use('fr');
   }
 
   public static convertRouteToTitle(route: string): string {

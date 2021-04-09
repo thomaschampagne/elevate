@@ -33,10 +33,17 @@ import { ReleaseNoteService } from "../releases-notes/release-note.service";
 import { NewInstalledVersionNoticeDialogComponent } from "./services/versions/new-installed-version-notice-dialog.component";
 import { TargetModule } from "./modules/target/target.module";
 import { ComponentsFactoryService } from "./services/components-factory.service";
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   imports: [CoreModule, BrowserModule, BrowserAnimationsModule, TargetModule],
-  exports: [CoreModule, BrowserModule, BrowserAnimationsModule, TargetModule],
+  exports: [
+    CoreModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    TargetModule,
+    TranslateModule
+  ],
   declarations: [
     // Components
     ActivitiesComponent,

@@ -11,6 +11,9 @@ import { AppLoadComponent } from "./app-load/app-load.component";
 import { TargetBootModule } from "./boot/target-boot.module";
 import { UpdateBarDirective } from "./update-bar/update-bar.directive";
 import { SplashScreenDirective } from "./app-load/splash-screen.directive";
+import {HttpClientModule, HttpClient} from '@angular/common/http';
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 @NgModule({
   declarations: [
@@ -24,8 +27,23 @@ import { SplashScreenDirective } from "./app-load/splash-screen.directive";
     SyncMenuDirective,
     AppMoreMenuDirective
   ],
-  imports: [SharedModule, TargetBootModule],
+  imports: [
+    SharedModule,
+    TargetBootModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+        loader: {
+            provide: TranslateLoader,
+            useFactory: HttpLoaderFactory,
+            deps: [HttpClient]
+        }
+    })
+  ],
   providers: [{ provide: ErrorHandler, useClass: ElevateErrorHandler }],
   bootstrap: [AppLoadComponent]
 })
 export class AppModule {}
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}

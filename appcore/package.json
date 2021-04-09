@@ -42,6 +42,8 @@
     "@asymmetrik/ngx-leaflet": "^8.1.0",
     "@elevate/shared": "file:modules/shared",
     "@iktakahiro/markdown-it-katex": "^4.0.1",
+    "@ngx-translate/core": "^13.0.0",
+    "@ngx-translate/http-loader": "^6.0.0",
     "@sentry/browser": "^6.2.3",
     "angular-plotly.js": "^3.1.0",
     "d3": "^6.6.1",
