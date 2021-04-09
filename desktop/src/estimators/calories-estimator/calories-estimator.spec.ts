@@ -1,66 +1,142 @@
 import { ElevateSport } from "@elevate/shared/enums";
-import { AnalysisDataModel, AthleteSettingsModel, Streams } from "@elevate/shared/models";
+import { AnalysisDataModel, AthleteSettingsModel, Gender, Streams } from "@elevate/shared/models";
 import { ActivityComputer, CaloriesEstimator } from "@elevate/shared/sync";
 
 describe("CaloriesEstimator", () => {
-  it("should calculate calories of cycling activity", done => {
-    // Given
-    const sportType: ElevateSport = ElevateSport.Ride;
-    const movingTime = 3600;
-    const weight = 75;
-    const expectedCalories = 748.1;
+  describe("With HRM", () => {
+    it("should calculate calories of cycling activity performed by a MEN with HRM (1)", done => {
+      // Given
+      const sportType: ElevateSport = ElevateSport.Ride;
+      const movingTime = 3600;
+      const weight = 80;
+      const age = 34;
+      const gender = Gender.MEN;
+      const avgBpm = 150;
+      const expectedCalories = 893.4;
 
-    // When
-    const calories = CaloriesEstimator.calc(sportType, movingTime, weight);
+      // When
+      const calories = CaloriesEstimator.calc(sportType, movingTime, weight, age, gender, avgBpm);
 
-    // Then
-    expect(calories).toEqual(expectedCalories);
-    done();
+      // Then
+      expect(calories).toEqual(expectedCalories);
+      done();
+    });
+
+    it("should calculate calories of cycling activity performed by a MEN with HRM (2)", done => {
+      // Given
+      const sportType: ElevateSport = ElevateSport.Ride;
+      const movingTime = 3600 * 3;
+      const weight = 75;
+      const age = 27;
+      const gender = Gender.MEN;
+      const avgBpm = 178;
+      const expectedCalories = 3336.7;
+
+      // When
+      const calories = CaloriesEstimator.calc(sportType, movingTime, weight, age, gender, avgBpm);
+
+      // Then
+      expect(calories).toEqual(expectedCalories);
+      done();
+    });
+
+    it("should calculate calories of running activity performed by a WOMEN with HRM (1)", done => {
+      // Given
+      const sportType: ElevateSport = ElevateSport.Run;
+      const movingTime = 3600 * 2;
+      const weight = 55;
+      const age = 42;
+      const gender = Gender.WOMEN;
+      const avgBpm = 169;
+      const expectedCalories = 1472.4;
+
+      // When
+      const calories = CaloriesEstimator.calc(sportType, movingTime, weight, age, gender, avgBpm);
+
+      // Then
+      expect(calories).toEqual(expectedCalories);
+      done();
+    });
+
+    it("should calculate calories of running activity performed by a WOMEN with HRM (2)", done => {
+      // Given
+      const sportType: ElevateSport = ElevateSport.Run;
+      const movingTime = 3600;
+      const weight = 49;
+      const age = 31;
+      const gender = Gender.WOMEN;
+      const avgBpm = 90;
+      const expectedCalories = 228.7;
+
+      // When
+      const calories = CaloriesEstimator.calc(sportType, movingTime, weight, age, gender, avgBpm);
+
+      // Then
+      expect(calories).toEqual(expectedCalories);
+      done();
+    });
   });
 
-  it("should calculate calories of running activity", done => {
-    // Given
-    const sportType: ElevateSport = ElevateSport.Run;
-    const movingTime = 3600;
-    const weight = 75;
-    const expectedCalories = 771.8;
+  describe("Without HRM", () => {
+    it("should calculate calories of cycling activity", done => {
+      // Given
+      const sportType: ElevateSport = ElevateSport.Ride;
+      const movingTime = 3600;
+      const weight = 75;
+      const expectedCalories = 748.1;
 
-    // When
-    const calories = CaloriesEstimator.calc(sportType, movingTime, weight);
+      // When
+      const calories = CaloriesEstimator.calc(sportType, movingTime, weight);
 
-    // Then
-    expect(calories).toEqual(expectedCalories);
-    done();
-  });
+      // Then
+      expect(calories).toEqual(expectedCalories);
+      done();
+    });
 
-  it("should not calculate calories if moving time is not a number", done => {
-    // Given
-    const sportType: ElevateSport = ElevateSport.Run;
-    const movingTime = null;
-    const weight = 75;
-    const expectedCalories = null;
+    it("should calculate calories of running activity", done => {
+      // Given
+      const sportType: ElevateSport = ElevateSport.Run;
+      const movingTime = 3600;
+      const weight = 75;
+      const expectedCalories = 771.8;
 
-    // When
-    const calories = CaloriesEstimator.calc(sportType, movingTime, weight);
+      // When
+      const calories = CaloriesEstimator.calc(sportType, movingTime, weight);
 
-    // Then
-    expect(calories).toEqual(expectedCalories);
-    done();
-  });
+      // Then
+      expect(calories).toEqual(expectedCalories);
+      done();
+    });
 
-  it("should not calculate calories if weight is not a number", done => {
-    // Given
-    const sportType: ElevateSport = ElevateSport.Run;
-    const movingTime = 3600;
-    const weight = null;
-    const expectedCalories = null;
+    it("should not calculate calories if moving time is not a number", done => {
+      // Given
+      const sportType: ElevateSport = ElevateSport.Run;
+      const movingTime = null;
+      const weight = 75;
+      const expectedCalories = null;
 
-    // When
-    const calories = CaloriesEstimator.calc(sportType, movingTime, weight);
+      // When
+      const calories = CaloriesEstimator.calc(sportType, movingTime, weight);
 
-    // Then
-    expect(calories).toEqual(expectedCalories);
-    done();
+      // Then
+      expect(calories).toEqual(expectedCalories);
+      done();
+    });
+
+    it("should not calculate calories if weight is not a number", done => {
+      // Given
+      const sportType: ElevateSport = ElevateSport.Run;
+      const movingTime = 3600;
+      const weight = null;
+      const expectedCalories = null;
+
+      // When
+      const calories = CaloriesEstimator.calc(sportType, movingTime, weight);
+
+      // Then
+      expect(calories).toEqual(expectedCalories);
+      done();
+    });
   });
 });
 

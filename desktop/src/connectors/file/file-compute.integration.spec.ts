@@ -53,7 +53,7 @@ describe("Activity compute integration tests through file connector", () => {
     athleteSettingsModel.runningFtp = 275;
     athleteSettingsModel.swimFtp = 31;
 
-    const athleteSnapshotModel: AthleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, athleteSettingsModel);
+    const athleteSnapshotModel: AthleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, 30, athleteSettingsModel);
     const athleteModel = new AthleteModel(Gender.MEN, [new DatedAthleteSettingsModel(null, athleteSettingsModel)]);
 
     fileConnectorConfig = {
@@ -116,8 +116,8 @@ describe("Activity compute integration tests through file connector", () => {
         SpecUtils.assertNearEqual(activity.latLngCenter[1], 5.9212365, 5);
         SpecUtils.assertNearEqualTime(activity.moving_time_raw, "05:24:26");
         SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "06:07:13");
-        SpecUtils.assertNearEqual(activity.extendedStats.calories, 4058);
-        SpecUtils.assertNearEqual(activity.extendedStats.caloriesPerHour, 663);
+        SpecUtils.assertNearEqual(activity.extendedStats.calories, 4599);
+        SpecUtils.assertNearEqual(activity.extendedStats.caloriesPerHour, 751);
 
         // Speed
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.genuineAvgSpeed, 26.3, 1);
@@ -696,7 +696,7 @@ describe("Activity compute integration tests through file connector", () => {
         expect(activity.type).toEqual(ElevateSport.Swim);
         expect(activity.hash).toEqual("6e3bcc8a2fe8da5913de3fe5");
         SpecUtils.assertNearEqual(activity.distance_raw, 2536);
-        SpecUtils.assertNearEqual(activity.extendedStats.calories, 603);
+        SpecUtils.assertNearEqual(activity.extendedStats.calories, 779);
         SpecUtils.assertNearEqualTime(activity.moving_time_raw, "57:28");
         SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "01:14:47");
 

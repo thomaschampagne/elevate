@@ -20,7 +20,7 @@ export class AthleteModel extends AbstractAthleteModel {
     public datedAthleteSettings: DatedAthleteSettingsModel[],
     public firstName: string | null = null,
     public lastName: string | null = null,
-    public birthYear: number | null = null,
+    public birthDate: Date | null = null,
     public practiceLevel: PracticeLevel | null = null,
     public sports: ElevateSport[] = []
   ) {

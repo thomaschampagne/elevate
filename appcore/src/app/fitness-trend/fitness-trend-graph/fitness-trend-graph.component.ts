@@ -97,10 +97,6 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
-  public static getGraphHtmlElement(): HTMLElement {
-    return document.getElementById(FitnessTrendGraphComponent.GRAPH_DOM_ELEMENT_ID);
-  }
-
   public ngOnInit(): void {
     this.PERFORMANCE_MARKER = performance.now();
     this.findGraphHeightFactor();
@@ -235,7 +231,7 @@ export class FitnessTrendGraphComponent implements OnInit, OnChanges, OnDestroy 
 
   public draw(): void {
     _.defer(() => {
-      if (FitnessTrendGraphComponent.getGraphHtmlElement()) {
+      if (this.fitnessTrendGraphElement.nativeElement) {
         MG.data_graphic(this.graphConfig);
         this.logger.debug("Graph update time: " + (performance.now() - this.PERFORMANCE_MARKER).toFixed(0) + " ms.");
       } else {

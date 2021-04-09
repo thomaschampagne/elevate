@@ -345,7 +345,7 @@ describe("ConnectorSyncService", () => {
       const syncedActivityModel = new SyncedActivityModel();
       syncedActivityModel.name = "My activity";
       syncedActivityModel.start_time = new Date().toISOString();
-      const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
+      const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, 30, AthleteSettingsModel.DEFAULT_MODEL);
       const streams = new Streams();
       const analysisDataModel = new AnalysisDataModel();
 
@@ -373,7 +373,7 @@ describe("ConnectorSyncService", () => {
       const syncedActivityModel = new SyncedActivityModel();
       syncedActivityModel.name = "My activity";
       syncedActivityModel.start_time = new Date().toISOString();
-      const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
+      const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, 30, AthleteSettingsModel.DEFAULT_MODEL);
       const streams = null;
       const analysisDataModel = new AnalysisDataModel();
 
@@ -401,7 +401,7 @@ describe("ConnectorSyncService", () => {
       const syncedActivityModel = new SyncedActivityModel();
       syncedActivityModel.name = "My activity";
       syncedActivityModel.start_time = new Date().toISOString();
-      const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
+      const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, 30, AthleteSettingsModel.DEFAULT_MODEL);
       const streams = new Streams();
       const analysisDataModel = new AnalysisDataModel();
       const expectedSyncedActivityModel = _.cloneDeep(syncedActivityModel);

@@ -27,7 +27,8 @@ export class ElevateErrorHandler implements ErrorHandler {
       Sentry.init({
         dsn: ElevateErrorHandler.SENTRY_DATA_SOURCE_NAME,
         release: this.versionsProvider.getPackageVersion(),
-        environment: environment.production ? "production" : "development"
+        environment: environment.production ? "production" : "development",
+        autoSessionTracking: true
       });
     }
   }

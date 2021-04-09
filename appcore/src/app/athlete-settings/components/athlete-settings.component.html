@@ -23,18 +23,13 @@
             </mat-select>
           </mat-form-field>
           <div fxFlex="1"></div>
-          <mat-form-field fxFlex="11">
-            <mat-label>Birth Year</mat-label>
-            <mat-select (selectionChange)="onAthleteChanged()"
-                        [(ngModel)]="athleteModel.birthYear"
-                        placeholder="Birth Year"
-                        aria-label="Birth Year"
-                        name="birthYear"
-                        required>
-              <mat-option *ngFor="let year of generateBirthYears()" [value]="year">
-                {{year}}
-              </mat-option>
-            </mat-select>
+          <mat-form-field fxFlex="9">
+            <mat-label>Birth Date</mat-label>
+            <input matInput name="birthYear" [(ngModel)]="athleteModel.birthDate" (dateChange)="onAthleteChanged()"
+                   [matDatepicker]="picker" [max]="MAX_BIRTHDAY_DATE" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker [startView]="athleteModel.birthDate ? 'month' : 'year'"
+                            [startAt]="athleteModel.birthDate ? athleteModel.birthDate : DEFAULT_BIRTHDAY_START_DATE"></mat-datepicker>
           </mat-form-field>
           <div fxFlex="1"></div>
           <mat-form-field fxFlex="20">

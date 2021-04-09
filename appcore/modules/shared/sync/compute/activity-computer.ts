@@ -656,7 +656,14 @@ export class ActivityComputer {
     }
 
     // Compute calories
-    const calories = CaloriesEstimator.calc(this.activityType, movingTime, this.athleteSnapshot.athleteSettings.weight);
+    const calories = CaloriesEstimator.calc(
+      this.activityType,
+      movingTime,
+      this.athleteSnapshot.athleteSettings.weight,
+      this.athleteSnapshot.age,
+      this.athleteSnapshot.gender,
+      heartRateData ? heartRateData.averageHeartRate : null
+    );
     const caloriesPerHour = calories !== null ? (calories / elapsedTime) * Constant.SEC_HOUR_FACTOR : null;
 
     const analysisResult: AnalysisDataModel = {

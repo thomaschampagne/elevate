@@ -10,6 +10,7 @@ describe("ActivityComputer", () => {
     beforeEach(done => {
       _ATHLETE_MODEL_SNAP_ = new AthleteSnapshotModel(
         Gender.MEN,
+        30,
         new AthleteSettingsModel(
           190,
           60,
@@ -129,6 +130,7 @@ describe("ActivityComputer", () => {
     beforeEach(done => {
       _ATHLETE_MODEL_SNAP_ = new AthleteSnapshotModel(
         Gender.MEN,
+        30,
         new AthleteSettingsModel(
           190,
           60,

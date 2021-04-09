@@ -1465,7 +1465,11 @@ describe("FileConnector", () => {
             accumulatedElevationAscent: defaultElevationGain
           }
         } as AnalysisDataModel;
-        syncedActivityModel.athleteSnapshot = new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL);
+        syncedActivityModel.athleteSnapshot = new AthleteSnapshotModel(
+          Gender.MEN,
+          30,
+          AthleteSettingsModel.DEFAULT_MODEL
+        );
 
         streams = new Streams();
         streams.distance = [startDistance, 10, 100, endDistance];
@@ -1680,7 +1684,7 @@ describe("FileConnector", () => {
         elevation_gain_raw: 780,
         start_timestamp: 11111111111,
         extendedStats: { cadenceData: null, calories: 1456 } as any,
-        athleteSnapshot: new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL),
+        athleteSnapshot: new AthleteSnapshotModel(Gender.MEN, 30, AthleteSettingsModel.DEFAULT_MODEL),
         sourceConnectorType: ConnectorType.FILE,
         latLngCenter: [111, 222]
       };
@@ -1778,7 +1782,7 @@ describe("FileConnector", () => {
         elevation_gain_raw: 780,
         start_timestamp: 11111111111,
         extendedStats: { cadenceData: null, calories: 1456 } as any,
-        athleteSnapshot: new AthleteSnapshotModel(Gender.MEN, AthleteSettingsModel.DEFAULT_MODEL),
+        athleteSnapshot: new AthleteSnapshotModel(Gender.MEN, 30, AthleteSettingsModel.DEFAULT_MODEL),
         sourceConnectorType: ConnectorType.FILE,
         latLngCenter: [111, 222]
       };

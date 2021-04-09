@@ -1,4 +1,5 @@
 export * from "./identifier";
+export * from "./age";
 export * from "./fibonacci";
 export * from "./sleep";
 export * from "./data-smoothing/low-pass-filter";

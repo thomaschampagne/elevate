@@ -48,6 +48,7 @@ describe("FitnessService", () => {
     // Define default athlete model
     _ATHLETE_MODEL_SNAPSHOT_ = new AthleteSnapshotModel(
       Gender.MEN,
+      30,
       new AthleteSettingsModel(
         190,
         60,

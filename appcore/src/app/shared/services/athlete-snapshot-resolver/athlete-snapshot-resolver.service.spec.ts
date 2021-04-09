@@ -117,6 +117,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -149,6 +150,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -181,6 +183,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -213,6 +216,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -240,6 +244,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -272,6 +277,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -302,6 +308,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -336,6 +343,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -358,6 +366,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       AthleteSettingsModel.DEFAULT_MODEL
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -391,6 +400,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -423,6 +433,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -455,6 +466,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -487,6 +499,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -519,6 +532,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -551,6 +565,7 @@ describe("AthleteSnapshotResolverService", () => {
 
     const expectedAthleteSnapshotModel = new AthleteSnapshotModel(
       defaultAthleteModel.gender,
+      null,
       expectedDatedAthleteSettingsModel.toAthleteSettingsModel()
     );
     const clonedDefaultAthleteModel = _.cloneDeep(defaultAthleteModel);

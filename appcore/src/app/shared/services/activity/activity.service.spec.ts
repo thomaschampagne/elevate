@@ -130,6 +130,7 @@ describe("ActivityService", () => {
       // Given
       const athleteSnapshot = new AthleteSnapshotModel(
         Gender.MEN,
+        null,
         new AthleteSettingsModel(
           190,
           60,
@@ -219,6 +220,7 @@ describe("ActivityService", () => {
       // Given
       const athleteSnapshot01 = new AthleteSnapshotModel(
         Gender.MEN,
+        null,
         new AthleteSettingsModel(
           190,
           60,
@@ -316,6 +318,7 @@ describe("ActivityService", () => {
       // Given
       const athleteModel01 = new AthleteSnapshotModel(
         Gender.MEN,
+        null,
         new AthleteSettingsModel(
           190,
           60,
@@ -417,6 +420,7 @@ describe("ActivityService", () => {
       // Given
       const athleteSnapshot = new AthleteSnapshotModel(
         Gender.MEN,
+        null,
         new AthleteSettingsModel(
           190,
           60,

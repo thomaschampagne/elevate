@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Channel, IpcMessage, IpcTunnelService, RuntimeInfo } from "@elevate/shared/electron";
+import { RuntimeInfo } from "@elevate/shared/electron";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
 import { VersionsProvider } from "../../shared/services/versions/versions-provider";
@@ -16,8 +16,9 @@ import { DesktopMigrationService } from "../../desktop/migration/desktop-migrati
 import { DataStore } from "../../shared/data-store/data-store";
 import { FileConnectorInfoService } from "../../shared/services/file-connector-info/file-connector-info.service";
 import { DesktopUnauthorizedMachineIdDialogComponent } from "./desktop-unauthorized-machine-id-dialog/desktop-unauthorized-machine-id-dialog.component";
-import { IPC_TUNNEL_SERVICE } from "../../desktop/ipc/ipc-tunnel-service.token";
 import { DesktopUpdateService } from "../../desktop/app-update/desktop-update.service";
+import { AppService } from "../../shared/services/app-service/app.service";
+import { DesktopAppService } from "../../shared/services/app-service/desktop/desktop-app.service";
 
 @Injectable()
 export class DesktopLoadService extends AppLoadService {
@@ -30,7 +31,7 @@ export class DesktopLoadService extends AppLoadService {
   constructor(
     @Inject(DataStore) protected readonly dataStore: DataStore<object>,
     @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
-    @Inject(IPC_TUNNEL_SERVICE) public readonly ipcTunnelService: IpcTunnelService,
+    @Inject(AppService) public readonly desktopAppService: DesktopAppService,
     @Inject(HttpClient) private readonly httpClient: HttpClient,
     @Inject(StravaConnectorInfoService) private readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(DesktopUpdateService) private readonly desktopUpdateService: DesktopUpdateService,
@@ -55,7 +56,8 @@ export class DesktopLoadService extends AppLoadService {
           return this.desktopUpdateService.handleUpdate();
         })
         .then(() => {
-          return this.getRuntimeInfo()
+          return this.desktopAppService
+            .getRuntimeInfo()
             .then(runtimeInfo => {
               this.runtimeInfo = runtimeInfo;
               return this.desktopBoot(this.runtimeInfo);
@@ -96,10 +98,6 @@ export class DesktopLoadService extends AppLoadService {
           }
         });
     });
-  }
-
-  public getRuntimeInfo(): Promise<RuntimeInfo> {
-    return this.ipcTunnelService.send<void, RuntimeInfo>(new IpcMessage(Channel.runtimeInfo));
   }
 
   public desktopBoot(runtimeInfo: RuntimeInfo, authRetry: boolean = false): Promise<boolean> {

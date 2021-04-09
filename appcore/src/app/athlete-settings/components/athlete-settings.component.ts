@@ -40,9 +40,9 @@ export class AthleteSettingsComponent implements OnInit {
     ElevateSport.Workout
   ];
 
-  private static readonly BIRTH_YEARS_COUNT: number = 120;
-
   public readonly MAX_SPORTS: number = 10;
+  public readonly DEFAULT_BIRTHDAY_START_DATE: Date = new Date(`${new Date().getFullYear() - 30}`); // Minus 30 years
+  public readonly MAX_BIRTHDAY_DATE: Date = new Date();
 
   public readonly GENDERS: GenderModel[] = [
     {
@@ -106,17 +106,6 @@ export class AthleteSettingsComponent implements OnInit {
 
   public startCase(sport: string): string {
     return _.startCase(sport);
-  }
-
-  public getYear(): number {
-    return new Date().getFullYear();
-  }
-
-  public generateBirthYears(): number[] {
-    let count = AthleteSettingsComponent.BIRTH_YEARS_COUNT;
-    const curYear = new Date().getFullYear();
-    count++;
-    return [...Array(count).keys()].map(i => i + (curYear - count)).reverse();
   }
 
   private setupSportsCategories(): void {

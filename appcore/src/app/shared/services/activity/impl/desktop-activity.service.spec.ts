@@ -44,6 +44,7 @@ describe("DesktopActivityService", () => {
       const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
       const athleteSnapshotModel: AthleteSnapshotModel = new AthleteSnapshotModel(
         Gender.MEN,
+        30,
         AthleteSettingsModel.DEFAULT_MODEL
       );
       const streams: Streams = new Streams([0, 1], [0, 1], [0, 1]);
@@ -85,6 +86,7 @@ describe("DesktopActivityService", () => {
       const userSettingsModel: DesktopUserSettingsModel = DesktopUserSettingsModel.DEFAULT_MODEL;
       const athleteSnapshotModel: AthleteSnapshotModel = new AthleteSnapshotModel(
         Gender.MEN,
+        30,
         AthleteSettingsModel.DEFAULT_MODEL
       );
       const streams: Streams = new Streams([0, 1], [0, 1], [0, 1]);
@@ -134,6 +136,7 @@ describe("DesktopActivityService", () => {
 
       const athleteSnapshotModel: AthleteSnapshotModel = new AthleteSnapshotModel(
         Gender.MEN,
+        30,
         AthleteSettingsModel.DEFAULT_MODEL
       );
       const expectedSyncedActivityModel = _.cloneDeep(syncedActivityModel);
@@ -205,6 +208,7 @@ describe("DesktopActivityService", () => {
 
       const athleteSnapshotModel: AthleteSnapshotModel = new AthleteSnapshotModel(
         Gender.MEN,
+        30,
         AthleteSettingsModel.DEFAULT_MODEL
       );
       const expectedSyncedActivityModel = _.cloneDeep(syncedActivityModel);

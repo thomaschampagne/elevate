@@ -123,6 +123,9 @@ export class ActivityViewComponent implements OnInit {
     const athleteSnapshot = activity.athleteSnapshot;
 
     let snapshotFormatted = `Weight ${athleteSnapshot.athleteSettings.weight}kg`;
+    if (this.activity.athleteSnapshot.age) {
+      snapshotFormatted += ` - Age ${this.activity.athleteSnapshot.age}`;
+    }
     snapshotFormatted += ` - MaxHR ${this.activity.athleteSnapshot.athleteSettings.maxHr}bpm`;
     snapshotFormatted += ` - RestHR ${this.activity.athleteSnapshot.athleteSettings.restHr}bpm`;
 

@@ -8,6 +8,8 @@ import { UserSettings } from "@elevate/shared/models";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DesktopMigrationService } from "../../../../desktop/migration/desktop-migration.service";
+import { Channel, IpcMessage, IpcTunnelService, RuntimeInfo } from "@elevate/shared/electron";
+import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 @Injectable()
@@ -17,6 +19,7 @@ export class DesktopAppService extends AppService {
     @Inject(SyncService) public readonly desktopSyncService: DesktopSyncService,
     @Inject(DesktopMigrationService) private readonly desktopMigrationService: DesktopMigrationService,
     @Inject(UserSettingsService) protected readonly userSettingsService: UserSettingsService,
+    @Inject(IPC_TUNNEL_SERVICE) public readonly ipcTunnelService: IpcTunnelService,
     @Inject(MatSnackBar) private readonly snackBar: MatSnackBar
   ) {
     super(activityService, desktopSyncService);
@@ -37,5 +40,9 @@ export class DesktopAppService extends AppService {
         });
       });
     }
+  }
+
+  public getRuntimeInfo(): Promise<RuntimeInfo> {
+    return this.ipcTunnelService.send<void, RuntimeInfo>(new IpcMessage(Channel.runtimeInfo));
   }
 }

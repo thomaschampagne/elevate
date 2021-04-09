@@ -3,13 +3,12 @@ import { Gender } from "./gender.enum";
 import { AthleteSettingsModel } from "./athlete-settings";
 
 export class AthleteSnapshotModel extends AbstractAthleteModel {
-  public gender: Gender;
-  public athleteSettings: AthleteSettingsModel; // Athlete settings used as snap
-
-  constructor(gender: Gender, athleteSettings: AthleteSettingsModel) {
+  constructor(
+    public readonly gender: Gender,
+    public readonly age: number,
+    public readonly athleteSettings: AthleteSettingsModel
+  ) {
     super();
-    this.gender = gender;
-    this.athleteSettings = athleteSettings;
   }
 
   public equals(otherSnapshot: AthleteSnapshotModel): boolean {
@@ -24,6 +23,7 @@ export class AthleteSnapshotModel extends AbstractAthleteModel {
         this.athleteSettings.lthr.running !== otherSnapshot.athleteSettings.lthr.running ||
         this.athleteSettings.weight !== otherSnapshot.athleteSettings.weight ||
         this.athleteSettings.swimFtp !== otherSnapshot.athleteSettings.swimFtp ||
+        this.age !== otherSnapshot.age ||
         this.gender !== otherSnapshot.gender);
     return !isSame;
   }

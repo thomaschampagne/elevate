@@ -1,6 +1,7 @@
 import { AthleteModel, AthleteSettingsModel, AthleteSnapshotModel } from "../models/athlete";
 import { DatedAthleteSettingsModel } from "../models/athlete/athlete-settings";
 import _ from "lodash";
+import { age } from "../tools";
 
 /**
  * Shared by core and app to resolve AthleteModel for a given activity date
@@ -67,9 +68,15 @@ export class AthleteSnapshotResolver {
       datedAthleteSettingsModel = this.resolveDatedAthleteSettingsAtDate(onDateString);
     }
 
+    const athleteAge = this.athleteModel.birthDate ? age(this.athleteModel.birthDate, onDate) : null;
+
     return datedAthleteSettingsModel
-      ? new AthleteSnapshotModel(this.athleteModel.gender, datedAthleteSettingsModel.toAthleteSettingsModel())
-      : new AthleteSnapshotModel(this.athleteModel.gender, AthleteSettingsModel.DEFAULT_MODEL);
+      ? new AthleteSnapshotModel(
+          this.athleteModel.gender,
+          athleteAge,
+          datedAthleteSettingsModel.toAthleteSettingsModel()
+        )
+      : new AthleteSnapshotModel(this.athleteModel.gender, athleteAge, AthleteSettingsModel.DEFAULT_MODEL);
   }
 
   public getCurrent(): AthleteSnapshotModel {
