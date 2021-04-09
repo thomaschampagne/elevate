@@ -1,4 +1,14 @@
-import { Component, Inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  Inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewChild
+} from "@angular/core";
 import { YearProgressStyleModel } from "./models/year-progress-style.model";
 import { ViewableYearProgressDataModel } from "./models/viewable-year-progress-data.model";
 import moment, { Moment } from "moment";
@@ -49,6 +59,9 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
   @Input()
   public yearProgressStyleModel: YearProgressStyleModel;
 
+  @ViewChild("yearProgressGraph", { static: true })
+  public yearProgressGraphElement: ElementRef;
+
   public viewableYearProgressDataModel: ViewableYearProgressDataModel;
   public graphConfig: any;
   public isMomentWatchedToday: boolean;
@@ -63,12 +76,8 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
-  public static getGraphHtmlElement(): HTMLElement {
-    return document.getElementById(YearProgressGraphComponent.GRAPH_DOM_ELEMENT_ID);
-  }
-
-  public static clearSvgGraphContent(): void {
-    const svgElement = YearProgressGraphComponent.getGraphHtmlElement().children[0];
+  public clearSvgGraphContent(): void {
+    const svgElement = this.yearProgressGraphElement.nativeElement.children[0];
     if (svgElement) {
       svgElement.remove();
     }
@@ -102,7 +111,7 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
     // Clear svg content if year selection changed
     if (changes.selectedYears) {
-      YearProgressGraphComponent.clearSvgGraphContent();
+      this.clearSvgGraphContent();
     }
 
     if (changes.isGraphExpanded) {
@@ -213,8 +222,12 @@ export class YearProgressGraphComponent implements OnInit, OnChanges, OnDestroy 
 
   public draw(): void {
     _.defer(() => {
-      if (YearProgressGraphComponent.getGraphHtmlElement()) {
-        MG.data_graphic(this.graphConfig);
+      if (this.yearProgressGraphElement.nativeElement) {
+        try {
+          MG.data_graphic(this.graphConfig);
+        } catch (err) {
+          this.logger.warn(err);
+        }
       } else {
         throw new ElevateException("Year progress graph crashed. You may restart the app.");
       }
