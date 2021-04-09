@@ -1,4 +1,4 @@
-<div class="mat-h2">About</div>
+<div class="mat-h2">{{ 'about.title' | translate }}</div>
 <mat-dialog-content class="mat-body-1">
   <div *ngIf="installedVersion" class="space-under">
     Version <strong>{{installedVersion}}</strong>&nbsp;/&nbsp;<span
@@ -7,7 +7,7 @@
   </div>
   <mat-divider></mat-divider>
   <div *ngIf="appUsageDetails">
-    History size <strong>{{appUsageDetails.megaBytesInUse.toFixed(2)}} MB</strong>.
+    {{ 'about.size' | translate }} <strong>{{appUsageDetails.megaBytesInUse.toFixed(2)}} MB</strong>.
   </div>
   <div *ngIf="!appUsageDetails">
     <strong>Calculating your profile size...</strong>
@@ -15,28 +15,25 @@
   <mat-divider></mat-divider>
   <ng-container *ngIf="(buildTarget === BuildTarget.EXTENSION)">
     <div class="space-under">
-      Web extension made with ❤️ by <a href="https://twitter.com/champagnethomas" target="_blank">Thomas Champagne</a>.
+      {{ 'about.made' | translate }} <a href="https://twitter.com/champagnethomas" target="_blank">Thomas Champagne</a>.
     </div>
     <div class="space-under">
-      Elevate is an open-source project under <a
+      {{ 'about.project' | translate }} <a
       href="https://github.com/mozilla/foundation.mozilla.org/blob/master/LICENSE"
       target="_blank">Mozilla Public License 2.0</a>.
     </div>
     <div class="space-under">
-      This extension is adds some features that riders and runners would like to see in their Strava
-      web. If these features could be added by default in Strava... It could be cool! Consider getting Strava Premium.
-      There are a ton of features that you will love. Remember, this extension has for ambition to enhance the
-      experience of all users (Free and Premium) and tends to keep users loyal in Strava.
+      {{ 'about.text' | translate }}
     </div>
     <mat-divider></mat-divider>
   </ng-container>
 
   <ng-container *ngIf="(buildTarget === BuildTarget.DESKTOP)">
     <div class="space-under">
-      Application made with ❤️ by <a href="https://twitter.com/champagnethomas" target="_blank">Thomas Champagne</a>.
+      {{ 'about.madeApp' | translate }} <a href="https://twitter.com/champagnethomas" target="_blank">Thomas Champagne</a>.
     </div>
     <div class="space-under">
-      Elevate is an open-source project under <a
+      {{ 'about.project' | translate }} <a
       href="https://github.com/mozilla/foundation.mozilla.org/blob/master/LICENSE"
       target="_blank">Mozilla Public License 2.0</a>.
     </div>
