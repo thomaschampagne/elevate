@@ -109,7 +109,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.registerCustomIcons();
     translate.addLangs(['en', 'fr']);
     translate.setDefaultLang('en');
-    translate.use('fr');
+    translate.use('en');
   }
 
   public static convertRouteToTitle(route: string): string {
