@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { ErrorHandler, NgModule } from "@angular/core";
 import { MENU_ITEMS_PROVIDER } from "../shared/services/menu-items/menu-items-provider.interface";
 import { DesktopMenuItemsProvider } from "../shared/services/menu-items/impl/desktop-menu-items-provider.service";
 import { TOP_BAR_COMPONENT } from "../top-bar/top-bar.component";
@@ -23,6 +23,7 @@ import { UPDATE_BAR_COMPONENT } from "../update-bar/update-bar.component";
 import { DesktopUpdateBarComponent } from "../update-bar/desktop-update-bar.component";
 import { DesktopSplashScreenComponent } from "../app-load/desktop/desktop-splash-screen.component";
 import { SPLASH_SCREEN_COMPONENT } from "../app-load/splash-screen.component";
+import { DesktopElevateErrorHandler } from "../errors-handler/desktop-elevate-error-handler";
 
 @NgModule({
   imports: [CoreModule, DesktopRoutingModule],
@@ -39,6 +40,7 @@ import { SPLASH_SCREEN_COMPONENT } from "../app-load/splash-screen.component";
     DesktopUnauthorizedMachineIdDialogComponent
   ],
   providers: [
+    { provide: ErrorHandler, useClass: DesktopElevateErrorHandler },
     { provide: AppLoadService, useClass: DesktopLoadService },
     { provide: AppService, useClass: DesktopAppService },
     { provide: SPLASH_SCREEN_COMPONENT, useValue: DesktopSplashScreenComponent },

@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { ErrorHandler, NgModule } from "@angular/core";
 import { MENU_ITEMS_PROVIDER } from "../shared/services/menu-items/menu-items-provider.interface";
 import { ExtensionMenuItemsProvider } from "../shared/services/menu-items/impl/extension-menu-items-provider.service";
 import { TOP_BAR_COMPONENT } from "../top-bar/top-bar.component";
@@ -22,6 +22,7 @@ import { UPDATE_BAR_COMPONENT } from "../update-bar/update-bar.component";
 import { ExtensionUpdateBarComponent } from "../update-bar/extension-update-bar.component";
 import { ExtensionSplashScreenComponent } from "../app-load/extension/extension-splash-screen.component";
 import { SPLASH_SCREEN_COMPONENT } from "../app-load/splash-screen.component";
+import { ExtensionElevateErrorHandler } from "../errors-handler/extension-elevate-error-handler";
 
 @NgModule({
   imports: [CoreModule, ExtensionRoutingModule],
@@ -37,6 +38,7 @@ import { SPLASH_SCREEN_COMPONENT } from "../app-load/splash-screen.component";
   ],
   providers: [
     ChromiumService,
+    { provide: ErrorHandler, useClass: ExtensionElevateErrorHandler },
     { provide: SPLASH_SCREEN_COMPONENT, useValue: ExtensionSplashScreenComponent },
     { provide: AppLoadService, useClass: ExtensionLoadService },
     { provide: AppService, useClass: ExtensionAppService },

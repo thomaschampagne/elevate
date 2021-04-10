@@ -300,21 +300,6 @@ export abstract class DataStore<T extends {}> {
     return Promise.resolve();
   }
 
-  public saveNow(): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      // Force save database to persistence adapter
-      this.db.saveDatabase(err => {
-        if (err) {
-          this.logger.error("Datastore save error: ", err);
-          reject(err);
-        } else {
-          this.logger.debug("Datastore saved");
-          resolve();
-        }
-      });
-    });
-  }
-
   public reload(options?: Partial<ThrottledSaveDrainOptions>): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.db.loadDatabase(options, (err: any) => {
