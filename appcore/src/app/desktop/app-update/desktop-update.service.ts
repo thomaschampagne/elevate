@@ -17,7 +17,7 @@ import { DesktopOpenResourceResolver } from "../../shared/services/links-opener/
 export class DesktopUpdateService {
   private static readonly CONFIG_ACCEPT_PRE_RELEASES = "config.update.acceptPreReleases";
   private static readonly CONFIG_CHECK_INTERVAL_SEC = "config.update.checkIntervalSec";
-  private static readonly UPDATE_CHECK_INTERVAL_SEC = 60 * 60; // 60 minutes
+  private static readonly UPDATE_CHECK_INTERVAL_SEC = 15 * 60; // 15 minutes
 
   private static readonly WAIT_BEFORE_CLOSING_APP_ON_STATIC_DL = 1500;
 
