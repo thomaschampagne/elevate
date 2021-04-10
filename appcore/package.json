@@ -1,6 +1,6 @@
 {
   "name": "elevate-training",
-  "version": "7.0.0-9.alpha",
+  "version": "7.0.0-10.alpha",
   "license": "MPL-2.0",
   "scripts": {
     "ng": "ng",
