@@ -9,8 +9,8 @@ import semver from "semver/preload";
 import { environment } from "../../../environments/environment";
 
 export enum DbEvent {
-  AUTO_LOADED,
-  AUTO_SAVED
+  LOADED,
+  SAVED
 }
 
 export abstract class DataStore<T extends {}> {
@@ -19,13 +19,11 @@ export abstract class DataStore<T extends {}> {
   }
 
   private static readonly DATABASE_NAME = "elevate";
-  private static readonly SAVE_DEBOUNCE_WAIT_MS = 1000;
   private static readonly DEFAULT_LOKI_ID_FIELD = "$loki";
   private static readonly DEFAULT_LOKI_META_FIELD = "meta";
   public db: LokiConstructor;
   public dbEvent$: ReplaySubject<DbEvent>;
   private COLLECTIONS_MAP: Map<string, Collection<T>>;
-  private saveDatabaseDebounce: () => void;
 
   public static isBackupCompatible(dumpVersion): boolean {
     return semver.gte(dumpVersion, this.getMinBackupVersion()) || environment.skipRestoreSyncedBackupCheck;
@@ -51,19 +49,6 @@ export abstract class DataStore<T extends {}> {
     this.dbEvent$ = new ReplaySubject<DbEvent>();
     this.db = new Loki(DataStore.DATABASE_NAME, this.getDbOptions());
     this.COLLECTIONS_MAP = new Map<string, Collection<T>>();
-
-    this.saveDatabaseDebounce = _.debounce(
-      () =>
-        this.db.saveDatabase(err => {
-          if (err) {
-            this.logger.error("Datastore save error: ", err);
-          } else {
-            this.logger.debug("Datastore Saved!");
-          }
-        }),
-      DataStore.SAVE_DEBOUNCE_WAIT_MS,
-      { leading: true }
-    );
   }
 
   public abstract getPersistenceAdapter(): LokiPersistenceAdapter;
@@ -78,9 +63,8 @@ export abstract class DataStore<T extends {}> {
       env: "BROWSER",
       autosave: false,
       autoload: true,
-      throttledSaves: false,
-      autoloadCallback: err => this.onAutoLoadDone(err),
-      autosaveCallback: () => this.onAutoSaveDone()
+      throttledSaves: true,
+      autoloadCallback: err => this.onAutoLoadDone(err)
     };
   }
 
@@ -277,26 +261,26 @@ export abstract class DataStore<T extends {}> {
    * Force persistence of data store
    */
   public persist(persistImmediately: boolean): Promise<void> {
-    this.logger.debug("Save datastore requested");
-
     if (persistImmediately) {
+      this.logger.debug("Save internal datastore requested");
       return new Promise<void>((resolve, reject) => {
         // Force save database to persistence adapter
-        this.db.saveDatabase(err => {
+        this.db.saveDatabaseInternal(err => {
           if (err) {
-            this.logger.error("Datastore save error: ", err);
+            this.logger.error("Datastore save internal error: ", err);
             reject(err);
           } else {
-            this.logger.debug("Datastore Saved!");
+            this.dbEvent$.next(DbEvent.SAVED);
+            this.logger.debug("Datastore saved internally!");
             resolve();
           }
         });
       });
     }
 
-    // Debounce safe instead
-    this.saveDatabaseDebounce();
-
+    // Save using lokijs throttle mechanism (do not save internally)
+    this.logger.debug("Save datastore requested");
+    this.db.saveDatabase();
     return Promise.resolve();
   }
 
@@ -319,7 +303,7 @@ export abstract class DataStore<T extends {}> {
       this.logger.error(err);
     } else {
       // Broadcast database auto loaded event
-      this.dbEvent$.next(DbEvent.AUTO_LOADED);
+      this.dbEvent$.next(DbEvent.LOADED);
 
       // Allow access to database directly from window for debugging
       (window as any).db = this.db;
@@ -332,11 +316,6 @@ export abstract class DataStore<T extends {}> {
         });
       }
     }
-  }
-
-  protected onAutoSaveDone(): void {
-    this.logger.debug("Database saved automatically");
-    this.dbEvent$.next(DbEvent.AUTO_SAVED);
   }
 
   private extractDefaultFieldId(collection: Collection<T>): keyof T | "$loki" {

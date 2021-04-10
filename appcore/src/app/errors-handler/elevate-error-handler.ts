@@ -4,8 +4,6 @@ import { MatDialog } from "@angular/material/dialog";
 import { VersionsProvider } from "../shared/services/versions/versions-provider";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ElevateException, SyncException, WarningException } from "@elevate/shared/exceptions";
-import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
-import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 
 export abstract class ElevateErrorHandler implements ErrorHandler {
   protected constructor(
@@ -23,6 +21,8 @@ export abstract class ElevateErrorHandler implements ErrorHandler {
   }
 
   abstract onErrorHandled(error: Error);
+
+  abstract displayViewErrorAction(errorMessage: string, error: Error);
 
   public handleError(error: Error): void {
     error = ElevateErrorHandler.provideErrorIfPromiseRejection(error);
@@ -75,20 +75,5 @@ export abstract class ElevateErrorHandler implements ErrorHandler {
         "Unknown error occurred.\n\nCan you screenshot this and report a bug?\n\nThanks!\n\n" + error.stack.toString()
       );
     }
-  }
-
-  private displayViewErrorAction(errorMessage: string, error: Error): void {
-    this.snackBar
-      .open(errorMessage, "View")
-      .onAction()
-      .toPromise()
-      .then(() => {
-        this.dialog.open(GotItDialogComponent, {
-          data: {
-            title: `${errorMessage}.`,
-            content: `<pre class="mat-caption">${error.stack}</pre>`
-          } as GotItDialogDataModel
-        });
-      });
   }
 }

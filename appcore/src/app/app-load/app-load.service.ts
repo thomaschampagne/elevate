@@ -13,10 +13,10 @@ export abstract class AppLoadService {
   public loadApp(): Promise<void> {
     // Listen for every database events from data store
     // Filter all by auto loaded database event
-    // Take 1 AUTO_LOADED event => sufficient to load app
+    // Take 1 LOADED event => sufficient to load app
     this.dataStore.dbEvent$
       .pipe(
-        filter(dbEvent => dbEvent === DbEvent.AUTO_LOADED),
+        filter(dbEvent => dbEvent === DbEvent.LOADED),
         take(1)
       )
       .subscribe(

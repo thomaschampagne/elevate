@@ -9,6 +9,9 @@ import { AthleteService } from "../shared/services/athlete/athlete.service";
 import { DesktopAppService } from "../shared/services/app-service/desktop/desktop-app.service";
 import * as Sentry from "@sentry/browser";
 import { environment } from "../../environments/environment";
+import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
+import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
+import { ElectronService } from "../desktop/electron/electron.service";
 
 @Injectable({
   providedIn: "root"
@@ -23,7 +26,8 @@ export class DesktopElevateErrorHandler extends ElevateErrorHandler {
     @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar,
     @Inject(LoggerService) protected readonly loggerService: LoggerService,
     @Inject(AthleteService) protected readonly athleteService: AthleteService,
-    @Inject(AppService) protected readonly desktopAppService: DesktopAppService
+    @Inject(AppService) protected readonly desktopAppService: DesktopAppService,
+    @Inject(ElectronService) protected readonly electronService: ElectronService
   ) {
     super(versionsProvider, dialog, snackBar, loggerService);
 
@@ -53,5 +57,59 @@ export class DesktopElevateErrorHandler extends ElevateErrorHandler {
 
   public onErrorHandled(error: Error): void {
     Sentry.captureException((error as any).originalError || error);
+  }
+
+  public displayViewErrorAction(errorMessage: string, error: Error): void {
+    this.snackBar
+      .open("An unhandled error occurred", "Help")
+      .onAction()
+      .toPromise()
+      .then(() => {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          data: {
+            title: `Unhandled issue occurred: ${errorMessage}.`,
+            content: `
+                <div>
+                  <strong>Unfortunatly Elevate experienced the below unhandled issue. <span class="warn-color">If error still blocks the application, you might reset the app using below "Reset app" button (your data will be wiped).</span></strong></br>
+                </div>
+                <div>
+                  <pre class="mat-caption">${error.stack}</pre>
+                </div>
+            `,
+            cancelText: "Forget",
+            confirmText: "Reset app",
+            confirmColor: "warn"
+          } as ConfirmDialogDataModel
+        });
+
+        dialogRef
+          .afterClosed()
+          .toPromise()
+          .then((confirm: boolean) => {
+            if (confirm) {
+              this.onFullAppReset();
+            }
+          });
+      });
+  }
+
+  public onFullAppReset(): void {
+    const data: ConfirmDialogDataModel = {
+      title: "Full application reset",
+      content: `This will erase everything to reach a "fresh install" state. Are you sure to perform this action?`,
+      confirmColor: "warn"
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      minWidth: ConfirmDialogComponent.MIN_WIDTH,
+      maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+      data: data
+    });
+
+    dialogRef.afterClosed().subscribe((confirm: boolean) => {
+      if (confirm) {
+        this.electronService.resetApp();
+      }
+    });
   }
 }

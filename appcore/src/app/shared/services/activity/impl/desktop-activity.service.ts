@@ -122,8 +122,8 @@ export class DesktopActivityService extends ActivityService {
       }, Promise.resolve())
       .then(() => {
         this.isRecalculating = false;
-        this.activityDao.persist(true);
         this.verifyActivitiesWithSettingsLacking();
+        return this.activityDao.persist(true);
       })
       .catch(err => {
         return Promise.reject(new ElevateException(err));

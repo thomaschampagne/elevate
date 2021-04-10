@@ -6,11 +6,11 @@
     {{(dialogData.cancelText) ? dialogData.cancelText : "Cancel"}}
   </button>
   <span fxFlex="1"></span>
-  <button *ngIf="dialogData.confirmText !== false" (click)="onConfirm()" color="primary" mat-dialog-close
-          mat-stroked-button [disabled]="dialogData.confirmTimeout > 0 && (this.confirmCountdown$ | async) > 0">
+  <button *ngIf="dialogData.confirmText !== false" (click)="onConfirm()" [color]="dialogData.confirmColor || 'primary'" mat-dialog-close
+          mat-stroked-button [disabled]="dialogData.confirmTimeout > 0 && (confirmCountdown$ | async) > 0">
     {{(dialogData.confirmText) ? dialogData.confirmText : "Confirm"}}
-    <span *ngIf="dialogData.confirmTimeout > 0 && (this.confirmCountdown$ | async) > 0">
-      ({{this.confirmCountdown$ | async | number:'2.0'}})
+    <span *ngIf="dialogData.confirmTimeout > 0 && (confirmCountdown$ | async) > 0">
+      ({{confirmCountdown$ | async | number:'2.0'}})
     </span>
   </button>
 </mat-dialog-actions>

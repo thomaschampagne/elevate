@@ -442,8 +442,11 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
         this.isSyncing$.next(false);
 
-        // Force app reload
-        setTimeout(() => location.reload());
+        // Force database save before reload
+        this.desktopDataStore.persist(true).then(() => {
+          // Force app reload
+          setTimeout(() => location.reload());
+        });
       }
     );
 
