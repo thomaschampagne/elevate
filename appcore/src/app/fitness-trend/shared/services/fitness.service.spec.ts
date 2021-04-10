@@ -21,6 +21,8 @@ import { TargetModule } from "../../../shared/modules/target/desktop-target.modu
 import { TargetBootModule } from "../../../boot/desktop-boot.module";
 import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
 import { IpcRendererTunnelServiceMock } from "../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
+import { ErrorHandler } from "@angular/core";
+import { MockElevateErrorHandler } from "../../../errors-handler/mock-elevate-error-handler";
 
 describe("FitnessService", () => {
   const todayDate = "2015-12-01 12:00";
@@ -41,6 +43,7 @@ describe("FitnessService", () => {
       imports: [CoreModule, SharedModule, TargetBootModule, TargetModule, FitnessTrendModule],
       providers: [
         { provide: DataStore, useClass: TestingDataStore },
+        { provide: ErrorHandler, useClass: MockElevateErrorHandler },
         { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock }
       ]
     });
