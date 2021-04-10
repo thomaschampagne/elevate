@@ -13,12 +13,12 @@ import { ActivitySensorsService } from "../shared/activity-sensors.service";
 })
 export class ActivityViewTimeInZonesComponent implements OnInit {
   private static readonly CHERRY_PICKED_STREAMS_ORDER: (keyof Streams)[] = [
-    "heartrate",
     "watts",
+    "heartrate",
     "velocity_smooth",
     "cadence",
-    "altitude",
-    "grade_smooth"
+    "grade_smooth",
+    "altitude"
   ];
 
   @Input()
