@@ -265,7 +265,7 @@ export abstract class DataStore<T extends {}> {
       this.logger.debug("Save internal datastore requested");
       return new Promise<void>((resolve, reject) => {
         // Force save database to persistence adapter
-        this.db.saveDatabaseInternal(err => {
+        this.db.saveDatabase(err => {
           if (err) {
             this.logger.error("Datastore save internal error: ", err);
             reject(err);

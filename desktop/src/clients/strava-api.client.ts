@@ -175,7 +175,7 @@ export class StravaApiClient {
             return Promise.reject(
               ErrorSyncEvent.UNHANDLED_ERROR_SYNC.create(
                 ConnectorType.STRAVA,
-                `UNHANDLED HTTP GET ERROR on '${url}'. Error: ${JSON.stringify(error)}`
+                `UNHANDLED HTTP GET ERROR on '${url}'. Error code: ${error.statusCode}; Error message: ${error.statusMessage}`
               )
             );
         }

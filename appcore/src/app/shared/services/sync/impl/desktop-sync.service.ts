@@ -103,7 +103,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     } else if (_.isString(error)) {
       return new SyncException(error);
     } else {
-      return new SyncException(JSON.stringify(error));
+      return new SyncException("An unknown sync exception occurred");
     }
   }
 
@@ -338,10 +338,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
           this.isSyncing$.next(false);
         },
         error => {
-          const errorMessage = `Unable to stop sync on connector: ${
-            this.currentConnectorType
-          }. Connector replied with ${JSON.stringify(error)}`;
-          this.logger.error(errorMessage);
+          const errorMessage = `Unable to stop sync on connector: ${this.currentConnectorType}. Error: ${error}`;
+          this.logger.error(errorMessage, error);
           reject(errorMessage);
           this.isSyncing$.next(false);
         }

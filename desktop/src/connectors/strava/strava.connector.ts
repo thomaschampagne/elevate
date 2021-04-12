@@ -183,17 +183,13 @@ export class StravaConnector extends BaseConnector {
                 stravaPageId = stravaPageId + 1;
                 resolve(this.syncPages(syncEvents$, stravaPageId, perPage));
               },
-              error => {
-                reject(error);
-              }
+              error => reject(error)
             );
           } else {
             resolve();
           }
         },
-        error => {
-          reject(error);
-        }
+        error => reject(error)
       );
     });
   }
