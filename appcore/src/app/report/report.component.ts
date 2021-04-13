@@ -9,6 +9,7 @@ import { Observable } from "rxjs";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 import { repository } from "../../../../package.json";
 import { countdown } from "@elevate/shared/tools";
+import { HelpComponent } from "../help/help.component";
 
 @Component({
   selector: "app-report",
@@ -54,6 +55,10 @@ export class ReportComponent implements OnInit {
 
   public onGoToHelp(): void {
     this.router.navigate([`${AppRoutes.help}`]);
+  }
+
+  public onOpenOnlineDoc(): void {
+    this.openResourceResolver.openLink(HelpComponent.ONLINE_DOC_ROOT_PATH);
   }
 
   public onReport(): void {

@@ -11,6 +11,9 @@
         <mat-icon fontSet="material-icons-outlined">close</mat-icon>
       </button>
     </mat-form-field>
+    <button mat-icon-button color="primary" matTooltip="View documentation online" (click)="viewHelpOnline()">
+      <mat-icon fontSet="material-icons-outlined">assistant_photo</mat-icon>
+    </button>
   </div>
 
   <mat-accordion [multi]="true">
@@ -22,14 +25,10 @@
       </mat-expansion-panel-header>
       <p [innerHtml]="faqEntry.answer"></p>
       <div class="view-online">
-        <button mat-stroked-button color="accent" (click)="openResourceResolver.openLink(faqEntry.faqUrl)">
-          View online
+        <button mat-button color="primary" (click)="viewFaqEntryOnline(faqEntry)">
+          <mat-icon fontSet="material-icons-outlined">assistant_photo</mat-icon> View online
         </button>
       </div>
     </mat-expansion-panel>
   </mat-accordion>
-
-  <div class="improve-helper" fxLayout="row" fxLayoutAlign="center center">
-    <a class="mat-caption" href="{{getRepositoryUrl()}}/tree/docs/faqs/" target="_blank">Edit and improve this helper</a>
-  </div>
 </div>

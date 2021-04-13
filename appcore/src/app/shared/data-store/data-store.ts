@@ -262,16 +262,16 @@ export abstract class DataStore<T extends {}> {
    */
   public persist(persistImmediately: boolean): Promise<void> {
     if (persistImmediately) {
-      this.logger.debug("Save internal datastore requested");
+      this.logger.debug("Save immediately requested");
       return new Promise<void>((resolve, reject) => {
         // Force save database to persistence adapter
         this.db.saveDatabase(err => {
           if (err) {
-            this.logger.error("Datastore save internal error: ", err);
+            this.logger.error("Datastore save immediately error: ", err);
             reject(err);
           } else {
             this.dbEvent$.next(DbEvent.SAVED);
-            this.logger.debug("Datastore saved internally!");
+            this.logger.debug("Immediate save done!");
             resolve();
           }
         });
@@ -279,7 +279,7 @@ export abstract class DataStore<T extends {}> {
     }
 
     // Save using lokijs throttle mechanism (do not save internally)
-    this.logger.debug("Save datastore requested");
+    this.logger.debug("Save requested");
     this.db.saveDatabase();
     return Promise.resolve();
   }

@@ -3,7 +3,6 @@ import { HttpClient } from "@angular/common/http";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import MarkDownIt from "markdown-it";
 import { LoggerService } from "../shared/services/logging/logger.service";
-import { repository } from "../../../../package.json";
 import { environment } from "../../environments/environment";
 import { BuildTarget } from "@elevate/shared/enums";
 import _ from "lodash";
@@ -25,9 +24,18 @@ interface FaqEntry {
   styleUrls: ["./help.component.scss"]
 })
 export class HelpComponent implements OnInit {
-  private static readonly MARKDOWN_QUESTION_START_PATTERN = "### ";
+  public static readonly ONLINE_DOC_ROOT_PATH = "https://thomaschampagne.github.io/elevate-docs/";
+  public static readonly RAW_MD_DOC_ROOT_PATH =
+    "https://raw.githubusercontent.com/thomaschampagne/elevate-docs/master/docs/";
+
+  private static readonly MARKDOWN_QUESTION_START_PATTERN = "## ";
   private static readonly MARKDOWN_CARRIAGE_RETURN = "\n";
-  private static readonly FAQS_LIST = ["common", BuildTarget[environment.buildTarget].toLowerCase()];
+  private static readonly TARGET_FAQS = ["common", BuildTarget[environment.buildTarget].toLowerCase()];
+  private static readonly TARGET_RELATIVE_FAQ_DOC_PATH_MAP: Map<string, string> = new Map<string, string>([
+    ["common", "Frequently-Asked-Questions/All-Platforms"],
+    ["desktop", "Frequently-Asked-Questions/Desktop-App"],
+    ["extension", "Frequently-Asked-Questions/Web-Extension"]
+  ]);
 
   public markDownParser: MarkDownIt;
   public isFaqLoaded: boolean = null;
@@ -121,7 +129,7 @@ export class HelpComponent implements OnInit {
 
   private getMarkdownFaqStreams(): Promise<{ faqUrl: string; md: string }[]> {
     const results: { faqUrl: string; md: string }[] = [];
-    return HelpComponent.FAQS_LIST.reduce((previousPromise: Promise<void>, faq: string) => {
+    return HelpComponent.TARGET_FAQS.reduce((previousPromise: Promise<void>, faq: string) => {
       return previousPromise.then(() => {
         const rawFaqUrl = this.getRawFaqMarkdownUrl(faq);
         return this.fetchRemoteMarkdown(rawFaqUrl).then(md => {
@@ -137,15 +145,21 @@ export class HelpComponent implements OnInit {
   }
 
   private getRawFaqMarkdownUrl(target: string): string {
-    const shortRepoName = this.getRepositoryUrl().split("/").slice(3, 5).join("/"); // Find out the short repo name from repo url
-    return `https://raw.githubusercontent.com/${shortRepoName}/docs/faqs/${target}.md`;
+    const faqPath = HelpComponent.TARGET_RELATIVE_FAQ_DOC_PATH_MAP.get(target);
+    return `${HelpComponent.RAW_MD_DOC_ROOT_PATH}${faqPath}.md`;
   }
 
   private getFaqUrl(target: string): string {
-    return `${this.getRepositoryUrl()}/blob/docs/faqs/${target}.md`;
+    const faqPath = HelpComponent.TARGET_RELATIVE_FAQ_DOC_PATH_MAP.get(target);
+    return `${HelpComponent.ONLINE_DOC_ROOT_PATH}${faqPath}`;
   }
 
-  public getRepositoryUrl(): string {
-    return repository.url;
+  public viewHelpOnline(): void {
+    this.openResourceResolver.openLink(HelpComponent.ONLINE_DOC_ROOT_PATH);
+  }
+
+  public viewFaqEntryOnline(faqEntry: FaqEntry): void {
+    const anchorFaqUrl = faqEntry.faqUrl + (faqEntry.anchor ? `#${faqEntry.anchor}` : "");
+    this.openResourceResolver.openLink(anchorFaqUrl);
   }
 }

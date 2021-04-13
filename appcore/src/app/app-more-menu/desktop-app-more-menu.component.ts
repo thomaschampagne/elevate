@@ -27,6 +27,11 @@ import { AppMoreMenuComponent } from "./app-more-menu.component";
         Advanced
       </button>
 
+      <button mat-menu-item (click)="onOnlineDoc()">
+        <mat-icon fontSet="material-icons-outlined">assistant_photo</mat-icon>
+        Online Doc
+      </button>
+
       <button mat-menu-item (click)="onRestartApp()">
         <mat-icon fontSet="material-icons-outlined">replay</mat-icon>
         Restart App
