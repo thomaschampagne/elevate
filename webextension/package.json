@@ -1,6 +1,6 @@
 {
   "name": "elevate-training",
-  "version": "7.0.0-10.alpha",
+  "version": "7.0.0-11.alpha",
   "description": "Chrome Opera extension adding features for Strava website with new performances data and improved ergonomics. Made with AngularJs, UnderscoreJs and Bootstrap",
   "maintainers": [
     {
