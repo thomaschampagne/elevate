@@ -1,3 +1,5 @@
+import { Injector } from "@angular/core";
+
 export abstract class DesktopMigration {
   abstract version: string;
   abstract description: string;
@@ -17,5 +19,5 @@ export abstract class DesktopMigration {
     });
   }
 
-  public abstract upgrade(db: LokiConstructor): Promise<void>;
+  public abstract upgrade(db: LokiConstructor, injector: Injector): Promise<void>;
 }

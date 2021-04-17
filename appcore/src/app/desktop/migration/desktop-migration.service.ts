@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@angular/core";
+import { Inject, Injectable, Injector } from "@angular/core";
 import semver from "semver";
 import { DesktopVersionsProvider } from "../../shared/services/versions/impl/desktop-versions-provider.service";
 import { LoggerService } from "../../shared/services/logging/logger.service";
@@ -15,6 +15,7 @@ import { DesktopActivityService } from "../../shared/services/activity/impl/desk
 @Injectable()
 export class DesktopMigrationService {
   constructor(
+    @Inject(Injector) public readonly injector: Injector,
     @Inject(VersionsProvider) public readonly versionsProvider: DesktopVersionsProvider,
     @Inject(DataStore) public readonly dataStore: DataStore<object>,
     @Inject(ActivityService) public readonly activityService: DesktopActivityService,
@@ -125,7 +126,7 @@ export class DesktopMigrationService {
         return previousMigrationDone.then(() => {
           if (semver.lt(fromVersion, migration.version)) {
             this.logger.info(`Migrating to ${migration.version}: ${migration.description}`);
-            return migration.upgrade(this.db).then(() => {
+            return migration.upgrade(this.db, this.injector).then(() => {
               // Check if migration requires a recalculation
               if (migration.requiresRecalculation) {
                 upgradeRequiresRecalculationByVersion = migration.version;

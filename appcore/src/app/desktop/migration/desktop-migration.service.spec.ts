@@ -11,6 +11,7 @@ import { DesktopVersionsProvider } from "../../shared/services/versions/impl/des
 import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 import { IPC_TUNNEL_SERVICE } from "../ipc/ipc-tunnel-service.token";
 import { IpcRendererTunnelServiceMock } from "../ipc/ipc-renderer-tunnel-service.mock";
+import { Injector } from "@angular/core";
 
 describe("DesktopMigrationService", () => {
   let service: DesktopMigrationService;
@@ -233,7 +234,7 @@ describe("DesktopMigrationService", () => {
 
       public description = "Fake migration to " + this.version;
 
-      public upgrade(db: LokiConstructor): Promise<void> {
+      public upgrade(db: LokiConstructor, injector: Injector): Promise<void> {
         db.getCollection(fakeColName).insert({ name: "John Doe" });
         return Promise.resolve();
       }
@@ -246,7 +247,7 @@ describe("DesktopMigrationService", () => {
 
       public description = "Fake migration to " + this.version;
 
-      public upgrade(db: LokiConstructor): Promise<void> {
+      public upgrade(db: LokiConstructor, injector: Injector): Promise<void> {
         db.getCollection(fakeColName).insert({ name: "Jane Doe" });
         return Promise.resolve();
       }
@@ -296,7 +297,7 @@ describe("DesktopMigrationService", () => {
 
       public description = "Fake migration to " + this.version;
 
-      public upgrade(db: LokiConstructor): Promise<void> {
+      public upgrade(db: LokiConstructor, injector: Injector): Promise<void> {
         return Promise.resolve();
       }
     }
@@ -308,7 +309,7 @@ describe("DesktopMigrationService", () => {
 
       public description = "Fake migration to " + this.version;
 
-      public upgrade(db: LokiConstructor): Promise<void> {
+      public upgrade(db: LokiConstructor, injector: Injector): Promise<void> {
         return Promise.resolve();
       }
     }
