@@ -253,7 +253,7 @@ export abstract class DataStore<T extends {}> {
   }
 
   public clear(collectionDef: CollectionDef<T>, waitSaveDrained: boolean): Promise<void> {
-    this.resolveCollection(collectionDef).findAndRemove();
+    this.resolveCollection(collectionDef).removeDataOnly();
     return this.persist(waitSaveDrained);
   }
 

@@ -184,7 +184,10 @@ export class DesktopBackupService {
 
         // Wipe all collections if not done before restoring anything
         if (!wipedCollections) {
-          this.desktopDataStore.db.collections.forEach(col => col.clear({ removeIndices: true }));
+          this.desktopDataStore.db.collections.forEach(col => {
+            col.findAndRemove();
+            col.clear({ removeIndices: true });
+          });
           wipedCollections = true;
         }
 

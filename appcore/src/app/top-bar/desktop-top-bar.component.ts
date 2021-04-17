@@ -79,6 +79,7 @@ import { DesktopWindowService } from "../shared/services/window/desktop-window.s
         color: black;
         border-radius: 4px;
         padding: 1px 3px;
+        margin-left: 2px;
       }
     `
   ]
