@@ -31,32 +31,36 @@ export class DesktopElevateErrorHandler extends ElevateErrorHandler {
   ) {
     super(versionsProvider, dialog, snackBar, loggerService);
 
-    Sentry.init({
-      dsn: DesktopElevateErrorHandler.SENTRY_DATA_SOURCE_NAME,
-      release: this.versionsProvider.getPackageVersion(),
-      environment: environment.production ? "production" : "development",
-      autoSessionTracking: true
-    });
-
-    Promise.all([this.desktopAppService.getRuntimeInfo(), this.athleteService.fetch()]).then(results => {
-      const [runtimeInfo, athlete] = results;
-
-      Sentry.setContext("athlete", {
-        gender: athlete.gender,
-        firstName: athlete.firstName,
-        lastName: athlete.lastName,
-        practiceLevel: athlete.practiceLevel,
-        machineId: runtimeInfo.athleteMachineId,
-        osUsername: runtimeInfo.osUsername,
-        osHostname: runtimeInfo.osHostname,
-        cpu: runtimeInfo.cpu.name,
-        memory: runtimeInfo.memorySizeGb
+    if (environment.production) {
+      Sentry.init({
+        dsn: DesktopElevateErrorHandler.SENTRY_DATA_SOURCE_NAME,
+        release: this.versionsProvider.getPackageVersion(),
+        environment: "production",
+        autoSessionTracking: true
       });
-    });
+
+      Promise.all([this.desktopAppService.getRuntimeInfo(), this.athleteService.fetch()]).then(results => {
+        const [runtimeInfo, athlete] = results;
+
+        Sentry.setContext("athlete", {
+          gender: athlete.gender,
+          firstName: athlete.firstName,
+          lastName: athlete.lastName,
+          practiceLevel: athlete.practiceLevel,
+          machineId: runtimeInfo.athleteMachineId,
+          osUsername: runtimeInfo.osUsername,
+          osHostname: runtimeInfo.osHostname,
+          cpu: runtimeInfo.cpu.name,
+          memory: runtimeInfo.memorySizeGb
+        });
+      });
+    }
   }
 
   public onErrorHandled(error: Error): void {
-    Sentry.captureException((error as any).originalError || error);
+    if (environment.production) {
+      Sentry.captureException((error as any).originalError || error);
+    }
   }
 
   public displayViewErrorAction(errorMessage: string, error: Error): void {

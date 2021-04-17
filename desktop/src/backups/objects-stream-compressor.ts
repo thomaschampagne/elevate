@@ -6,7 +6,7 @@ import stream from "stream";
 import { Subject } from "rxjs";
 import { inject, singleton } from "tsyringe";
 import { ElevateException } from "@elevate/shared/exceptions";
-import pDefer from "p-defer";
+import pDefer, { DeferredPromise } from "p-defer";
 import { Logger } from "../logger";
 
 @singleton()
@@ -21,7 +21,7 @@ export class ObjectsStreamCompressor {
    */
   private passStream: MiniPass;
 
-  private writeStartedPromise: pDefer.DeferredPromise<string>;
+  private writeStartedPromise: DeferredPromise<string>;
 
   constructor(@inject(Logger) private readonly logger: Logger) {
     this._isDeflating = false;

@@ -481,7 +481,7 @@ export class YearProgressService {
         );
       }
 
-      return this.yearProgressPresetDao.insert(presetModel, true);
+      return this.yearProgressPresetDao.insert(presetModel);
     });
   }
 
@@ -489,7 +489,7 @@ export class YearProgressService {
    * Remove preset at index
    */
   public deletePreset(id: string): Promise<void> {
-    return this.yearProgressPresetDao.removeById(id, false);
+    return this.yearProgressPresetDao.removeById(id);
   }
 
   public getTodayMoment(): Moment {

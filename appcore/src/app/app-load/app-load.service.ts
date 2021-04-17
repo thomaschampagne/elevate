@@ -1,13 +1,13 @@
 import { DataStore, DbEvent } from "../shared/data-store/data-store";
 import { filter, take } from "rxjs/operators";
 import { Inject } from "@angular/core";
-import pDefer from "p-defer";
+import pDefer, { DeferredPromise } from "p-defer";
 
 export abstract class AppLoadService {
-  private dbLoadedPromise: pDefer.DeferredPromise<void>;
+  private dbLoadedPromise: DeferredPromise<void>;
 
   protected constructor(@Inject(DataStore) protected readonly dataStore: DataStore<object>) {
-    this.dbLoadedPromise = pDefer<void>();
+    this.dbLoadedPromise = pDefer();
   }
 
   public loadApp(): Promise<void> {

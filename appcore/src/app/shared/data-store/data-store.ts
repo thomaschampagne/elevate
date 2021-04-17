@@ -136,39 +136,39 @@ export abstract class DataStore<T extends {}> {
     return Promise.resolve(doc);
   }
 
-  public update(collectionDef: CollectionDef<T>, doc: T, persistImmediately: boolean): Promise<T> {
+  public update(collectionDef: CollectionDef<T>, doc: T, waitSaveDrained: boolean): Promise<T> {
     const updatedDoc = this.resolveCollection(collectionDef).update(doc);
 
     const updatePromise = Promise.resolve(updatedDoc);
 
-    return this.persist(persistImmediately).then(() => {
+    return this.persist(waitSaveDrained).then(() => {
       return updatePromise;
     });
   }
 
-  public updateMany(collectionDef: CollectionDef<T>, docs: T[], persistImmediately: boolean): Promise<void> {
+  public updateMany(collectionDef: CollectionDef<T>, docs: T[], waitSaveDrained: boolean): Promise<void> {
     this.resolveCollection(collectionDef).update(docs);
 
-    return this.persist(persistImmediately);
+    return this.persist(waitSaveDrained);
   }
 
-  public insert(collectionDef: CollectionDef<T>, doc: T, persistImmediately: boolean): Promise<T> {
+  public insert(collectionDef: CollectionDef<T>, doc: T, waitSaveDrained: boolean): Promise<T> {
     const insertedDoc = this.resolveCollection(collectionDef).insert(doc);
 
     const insertedPromise = Promise.resolve(insertedDoc);
 
-    return this.persist(persistImmediately).then(() => {
+    return this.persist(waitSaveDrained).then(() => {
       return insertedPromise;
     });
   }
 
-  public insertMany(collectionDef: CollectionDef<T>, docs: T[], persistImmediately: boolean): Promise<void> {
+  public insertMany(collectionDef: CollectionDef<T>, docs: T[], waitSaveDrained: boolean): Promise<void> {
     this.resolveCollection(collectionDef).insert(docs);
 
-    return this.persist(persistImmediately);
+    return this.persist(waitSaveDrained);
   }
 
-  public put(collectionDef: CollectionDef<T>, doc: T, persistImmediately: boolean): Promise<T> {
+  public put(collectionDef: CollectionDef<T>, doc: T, waitSaveDrained: boolean): Promise<T> {
     let putPromise;
 
     const collection = this.resolveCollection(collectionDef);
@@ -185,10 +185,10 @@ export abstract class DataStore<T extends {}> {
 
     if (existingDoc) {
       const updatedDoc = _.assign(existingDoc, doc);
-      putPromise = this.update(collectionDef, updatedDoc, persistImmediately);
+      putPromise = this.update(collectionDef, updatedDoc, waitSaveDrained);
     } else {
       // The doc don't exists. Do a create.
-      putPromise = this.insert(collectionDef, doc, persistImmediately);
+      putPromise = this.insert(collectionDef, doc, waitSaveDrained);
     }
 
     return putPromise;
@@ -207,13 +207,13 @@ export abstract class DataStore<T extends {}> {
     return Promise.resolve(collection.findOne(query) as T);
   }
 
-  public remove(collectionDef: CollectionDef<T>, doc: T, persistImmediately: boolean): Promise<void> {
+  public remove(collectionDef: CollectionDef<T>, doc: T, waitSaveDrained: boolean): Promise<void> {
     this.resolveCollection(collectionDef).remove(doc);
 
-    return this.persist(persistImmediately);
+    return this.persist(waitSaveDrained);
   }
 
-  public removeById(collectionDef: CollectionDef<T>, id: number | string, persistImmediately: boolean): Promise<void> {
+  public removeById(collectionDef: CollectionDef<T>, id: number | string, waitSaveDrained: boolean): Promise<void> {
     const collection = this.resolveCollection(collectionDef);
 
     // Resolve unique field on which we will perform the request
@@ -225,13 +225,13 @@ export abstract class DataStore<T extends {}> {
 
     collection.removeWhere(query);
 
-    return this.persist(persistImmediately);
+    return this.persist(waitSaveDrained);
   }
 
   public removeByManyIds(
     collectionDef: CollectionDef<T>,
     ids: (number | string)[],
-    persistImmediately: boolean
+    waitSaveDrained: boolean
   ): Promise<void> {
     const collection = this.resolveCollection(collectionDef);
 
@@ -244,7 +244,7 @@ export abstract class DataStore<T extends {}> {
 
     collection.removeWhere(query);
 
-    return this.persist(persistImmediately);
+    return this.persist(waitSaveDrained);
   }
 
   public count(collectionDef: CollectionDef<T>, query?: LokiQuery<T & LokiObj>): Promise<number> {
@@ -252,36 +252,36 @@ export abstract class DataStore<T extends {}> {
     return Promise.resolve(count);
   }
 
-  public clear(collectionDef: CollectionDef<T>, persistImmediately: boolean): Promise<void> {
-    this.resolveCollection(collectionDef).clear();
-    return persistImmediately ? this.persist(persistImmediately) : Promise.resolve();
+  public clear(collectionDef: CollectionDef<T>, waitSaveDrained: boolean): Promise<void> {
+    this.resolveCollection(collectionDef).findAndRemove();
+    return this.persist(waitSaveDrained);
   }
 
   /**
    * Force persistence of data store
    */
-  public persist(persistImmediately: boolean): Promise<void> {
-    if (persistImmediately) {
-      this.logger.debug("Save immediately requested");
-      return new Promise<void>((resolve, reject) => {
-        // Force save database to persistence adapter
-        this.db.saveDatabase(err => {
-          if (err) {
-            this.logger.error("Datastore save immediately error: ", err);
-            reject(err);
+  public persist(waitSaveDrained: boolean): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.db.saveDatabase(err => {
+        if (err) {
+          reject(err);
+        } else {
+          if (waitSaveDrained) {
+            this.db.throttledSaveDrain(success => {
+              if (success) {
+                this.logger.debug("Datastore saved after saves drained");
+                resolve();
+              } else {
+                reject("Saves drain failure");
+              }
+            });
           } else {
-            this.dbEvent$.next(DbEvent.SAVED);
-            this.logger.debug("Immediate save done!");
             resolve();
+            this.logger.debug("Datastore saved");
           }
-        });
+        }
       });
-    }
-
-    // Save using lokijs throttle mechanism (do not save internally)
-    this.logger.debug("Save requested");
-    this.db.saveDatabase();
-    return Promise.resolve();
+    });
   }
 
   public reload(options?: Partial<ThrottledSaveDrainOptions>): Promise<void> {

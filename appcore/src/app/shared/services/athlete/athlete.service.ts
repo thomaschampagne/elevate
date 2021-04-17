@@ -79,11 +79,11 @@ export abstract class AthleteService {
   }
 
   public update(athleteModel: AthleteModel): Promise<AthleteModel> {
-    return this.athleteModelDao.update(athleteModel, false);
+    return this.athleteModelDao.update(athleteModel);
   }
 
   public insert(athleteModel: AthleteModel): Promise<AthleteModel> {
-    return this.athleteModelDao.insert(athleteModel, false);
+    return this.athleteModelDao.insert(athleteModel);
   }
 
   /**
@@ -243,6 +243,6 @@ export abstract class AthleteService {
   }
 
   public clear(): Promise<void> {
-    return this.athleteModelDao.clear(false);
+    return this.athleteModelDao.clear();
   }
 }

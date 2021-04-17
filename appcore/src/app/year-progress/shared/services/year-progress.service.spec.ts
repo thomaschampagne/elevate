@@ -1190,7 +1190,7 @@ describe("YearProgressService", () => {
       promise.then(
         () => {
           expect(insertDaoSpy).toHaveBeenCalledTimes(1);
-          expect(insertDaoSpy).toHaveBeenCalledWith(modelToBeAdded, true);
+          expect(insertDaoSpy).toHaveBeenCalledWith(modelToBeAdded);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
           done();
         },
@@ -1397,7 +1397,7 @@ describe("YearProgressService", () => {
       // Then
       promise.then(
         () => {
-          expect(removeByIdDaoSpy).toHaveBeenCalledWith(model.id, false);
+          expect(removeByIdDaoSpy).toHaveBeenCalledWith(model.id);
           done();
         },
         error => {

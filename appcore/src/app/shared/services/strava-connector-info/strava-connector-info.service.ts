@@ -22,7 +22,7 @@ export class StravaConnectorInfoService {
   }
 
   public update(stravaConnectorInfo: StravaConnectorInfo): Promise<StravaConnectorInfo> {
-    return this.stravaConnectorInfoDao.update(stravaConnectorInfo, true);
+    return this.stravaConnectorInfoDao.update(stravaConnectorInfo);
   }
 
   /**

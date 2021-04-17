@@ -39,18 +39,18 @@ export class StreamsService {
   }
 
   public put(streamsModel: DeflatedActivityStreams): Promise<DeflatedActivityStreams> {
-    return this.streamsDao.put(streamsModel, false);
+    return this.streamsDao.put(streamsModel);
   }
 
   public removeById(id: number | string): Promise<void> {
-    return this.streamsDao.removeById(id, false);
+    return this.streamsDao.removeById(id);
   }
 
   public removeByManyIds(activitiesToDelete: (string | number)[]): Promise<void> {
-    return this.streamsDao.removeByManyIds(activitiesToDelete, false);
+    return this.streamsDao.removeByManyIds(activitiesToDelete);
   }
 
   public clear(): Promise<void> {
-    return this.streamsDao.clear(false);
+    return this.streamsDao.clear();
   }
 }

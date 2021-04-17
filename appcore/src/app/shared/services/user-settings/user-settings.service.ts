@@ -26,7 +26,7 @@ export abstract class UserSettingsService {
         userSettings.zones[zoneDefinition.value] = UserZonesModel.serialize(zones);
 
         // Update new user settings
-        return this.userSettingsDao.update(userSettings, true);
+        return this.userSettingsDao.update(userSettings);
       })
       .then(updatedUserSettings => {
         return Promise.resolve(UserZonesModel.deserialize(updatedUserSettings.zones[zoneDefinition.value]));
@@ -38,7 +38,7 @@ export abstract class UserSettingsService {
     return this.fetch()
       .then(userSettings => {
         oldUserZones = userSettings.zones;
-        return this.userSettingsDao.clear(true);
+        return this.userSettingsDao.clear();
       })
       .then(() => {
         const defaultUserSettingsModel = UserSettings.getDefaultsByBuildTarget(environment.buildTarget);
@@ -47,7 +47,7 @@ export abstract class UserSettingsService {
           defaultUserSettingsModel.zones = oldUserZones;
         }
 
-        return this.userSettingsDao.insert(defaultUserSettingsModel, true);
+        return this.userSettingsDao.insert(defaultUserSettingsModel);
       });
   }
 
@@ -62,6 +62,6 @@ export abstract class UserSettingsService {
   }
 
   private updateUserSettings(userSettings: UserSettings.UserSettingsModel): Promise<UserSettingsModel> {
-    return this.userSettingsDao.update(userSettings, true);
+    return this.userSettingsDao.update(userSettings);
   }
 }

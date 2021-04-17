@@ -167,7 +167,7 @@ describe("UserSettingsService", () => {
         expect(result).not.toBeNull();
         expect(result).toEqual(expectedUserSettings);
         expect(insertDaoSpy).toHaveBeenCalledTimes(1);
-        expect(insertDaoSpy).toHaveBeenCalledWith(expectedUserSettings, true);
+        expect(insertDaoSpy).toHaveBeenCalledWith(expectedUserSettings);
 
         done();
       },

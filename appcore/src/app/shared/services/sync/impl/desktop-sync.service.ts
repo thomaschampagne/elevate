@@ -309,7 +309,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         } else {
           currentConnectorSyncDateTime = new ConnectorSyncDateTime(this.currentConnectorType, Date.now());
         }
-        return this.connectorSyncDateTimeDao.put(currentConnectorSyncDateTime, false);
+        return this.connectorSyncDateTimeDao.put(currentConnectorSyncDateTime);
       })
       .then(() => {
         // Ensure all activities are well persisted before any reload
@@ -487,7 +487,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   }
 
   public clearSyncTime(): Promise<void> {
-    return this.connectorSyncDateTimeDao.clear(false);
+    return this.connectorSyncDateTimeDao.clear();
   }
 
   public ngOnDestroy(): void {

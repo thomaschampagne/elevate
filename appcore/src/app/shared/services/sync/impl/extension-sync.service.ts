@@ -222,11 +222,11 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
   }
 
   public updateSyncDateTime(syncDateTime: SyncDateTime): Promise<SyncDateTime> {
-    return this.syncDateTimeDao.put(syncDateTime, true);
+    return this.syncDateTimeDao.put(syncDateTime);
   }
 
   public clearSyncTime(): Promise<void> {
-    return this.syncDateTimeDao.clear(true);
+    return this.syncDateTimeDao.clear();
   }
 
   public redirect(): void {

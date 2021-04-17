@@ -1,6 +1,6 @@
 {
   "name": "elevate",
-  "version": "7.0.0-11.alpha",
+  "version": "7.0.0-12.alpha",
   "description": "Wrap the needed tools required to cook Elevate desktop and web extension",
   "maintainers": [
     {
@@ -57,8 +57,8 @@
   "devDependencies": {
     "cpy-cli": "^3.1.1",
     "del-cli": "^3.0.1",
-    "husky": "^5.2.0",
-    "npm-check-updates": "^11.3.0",
+    "husky": "^6.0.0",
+    "npm-check-updates": "^11.4.1",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
     "run-sequence": "^2.2.1"

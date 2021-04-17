@@ -1,6 +1,5 @@
 import { DataStore } from "../data-store";
-import Loki from "lokijs";
-import LokiIndexedAdapter from "lokijs/src/loki-indexed-adapter";
+import LokiIncrementalIndexedAdapter from "lokijs/src/incremental-indexeddb-adapter";
 import { LoggerService } from "../../services/logging/logger.service";
 import { Inject, Injectable } from "@angular/core";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
@@ -18,8 +17,7 @@ export class DesktopDataStore<T extends {}> extends DataStore<T> {
   }
 
   public getPersistenceAdapter(): LokiPersistenceAdapter {
-    const idbAdapter = new LokiIndexedAdapter();
-    return new Loki.LokiPartitioningAdapter(idbAdapter, { paging: true });
+    return new LokiIncrementalIndexedAdapter();
   }
 
   public getAppUsageDetails(): Promise<AppUsageDetails> {

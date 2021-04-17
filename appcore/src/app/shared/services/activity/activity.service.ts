@@ -43,7 +43,7 @@ export abstract class ActivityService {
   }
 
   public insertMany(syncedActivities: SyncedActivityModel[]): Promise<void> {
-    return this.activityDao.insertMany(syncedActivities, false);
+    return this.activityDao.insertMany(syncedActivities);
   }
 
   public getById(id: number | string): Promise<SyncedActivityModel> {
@@ -51,19 +51,19 @@ export abstract class ActivityService {
   }
 
   public removeById(id: number | string): Promise<void> {
-    return this.activityDao.removeById(id, false);
+    return this.activityDao.removeById(id);
   }
 
   public update(syncedActivityModel: SyncedActivityModel): Promise<SyncedActivityModel> {
-    return this.activityDao.update(syncedActivityModel, false);
+    return this.activityDao.update(syncedActivityModel);
   }
 
   public put(syncedActivityModel: SyncedActivityModel): Promise<SyncedActivityModel> {
-    return this.activityDao.put(syncedActivityModel, false);
+    return this.activityDao.put(syncedActivityModel);
   }
 
   public clear(): Promise<void> {
-    return this.activityDao.clear(false);
+    return this.activityDao.clear();
   }
 
   public count(): Promise<number> {
@@ -97,7 +97,7 @@ export abstract class ActivityService {
   }
 
   public removeByManyIds(activitiesToDelete: (string | number)[]): Promise<void> {
-    return this.activityDao.removeByManyIds(activitiesToDelete, false);
+    return this.activityDao.removeByManyIds(activitiesToDelete);
   }
 
   /**

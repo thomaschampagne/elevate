@@ -103,7 +103,6 @@ describe("AthleteService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -132,7 +131,6 @@ describe("AthleteService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -150,7 +148,6 @@ describe("AthleteService", () => {
         (athleteModel: AthleteModel) => {
           expect(athleteModel).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         },
         error => {
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
@@ -212,14 +209,13 @@ describe("AthleteService", () => {
           expect(result).toEqual(expectedAthleteModel.datedAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 
           done();
         },
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -260,14 +256,13 @@ describe("AthleteService", () => {
           expect(result).toEqual(expectedAthleteModel.datedAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 
           done();
         },
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -309,14 +304,13 @@ describe("AthleteService", () => {
           expect(result).toEqual(expectedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 
           done();
         },
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -461,7 +455,7 @@ describe("AthleteService", () => {
       promise.then(
         (athleteModel: AthleteModel) => {
           expect(athleteModel).not.toBeNull();
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
 
           done();
@@ -469,7 +463,6 @@ describe("AthleteService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -514,7 +507,6 @@ describe("AthleteService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -582,14 +574,13 @@ describe("AthleteService", () => {
           expect(result).toEqual(expectedEditedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 
           done();
         },
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -657,14 +648,13 @@ describe("AthleteService", () => {
           expect(result).toEqual(expectedEditedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 
           done();
         },
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -708,14 +698,13 @@ describe("AthleteService", () => {
           expect(result).toEqual(expectedEditedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
 
           done();
         },
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -832,7 +821,6 @@ describe("AthleteService", () => {
         (result: DatedAthleteSettingsModel[]) => {
           expect(result).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         },
         (error: AppError) => {
           expect(error).not.toBeNull();
@@ -953,7 +941,7 @@ describe("AthleteService", () => {
           expect(result).not.toBeNull();
           expect(result).toEqual(expectedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel, false);
+          expect(updateDaoSpy).toHaveBeenCalledWith(expectedAthleteModel);
           expect(updateDaoSpy).toHaveBeenCalledTimes(1);
 
           done();
@@ -961,7 +949,6 @@ describe("AthleteService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -998,7 +985,6 @@ describe("AthleteService", () => {
         (result: DatedAthleteSettingsModel[]) => {
           expect(result).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         },
         (error: AppError) => {
           expect(error).not.toBeNull();
@@ -1039,7 +1025,6 @@ describe("AthleteService", () => {
         (result: DatedAthleteSettingsModel[]) => {
           expect(result).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         },
         (error: AppError) => {
           expect(error).not.toBeNull();
@@ -1089,7 +1074,6 @@ describe("AthleteService", () => {
         (result: DatedAthleteSettingsModel[]) => {
           expect(result).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         },
         (error: AppError) => {
           expect(error).not.toBeNull();

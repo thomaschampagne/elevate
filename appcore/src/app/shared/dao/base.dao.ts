@@ -44,40 +44,40 @@ export abstract class BaseDao<T> {
     return this.dataStore.getById(this.collectionDef, id);
   }
 
-  public insert(doc: T, persistImmediately: boolean): Promise<T> {
-    return this.dataStore.insert(this.collectionDef, doc, persistImmediately);
+  public insert(doc: T, waitSaveDrained: boolean = false): Promise<T> {
+    return this.dataStore.insert(this.collectionDef, doc, waitSaveDrained);
   }
 
-  public insertMany(docs: T[], persistImmediately: boolean): Promise<void> {
-    return this.dataStore.insertMany(this.collectionDef, docs, persistImmediately);
+  public insertMany(docs: T[], waitSaveDrained: boolean = false): Promise<void> {
+    return this.dataStore.insertMany(this.collectionDef, docs, waitSaveDrained);
   }
 
-  public update(doc: T, persistImmediately: boolean): Promise<T> {
-    return this.dataStore.update(this.collectionDef, doc, persistImmediately);
+  public update(doc: T, waitSaveDrained: boolean = false): Promise<T> {
+    return this.dataStore.update(this.collectionDef, doc, waitSaveDrained);
   }
 
-  public updateMany(docs: T[], persistImmediately: boolean): Promise<void> {
-    return this.dataStore.updateMany(this.collectionDef, docs, persistImmediately);
+  public updateMany(docs: T[], waitSaveDrained: boolean = false): Promise<void> {
+    return this.dataStore.updateMany(this.collectionDef, docs, waitSaveDrained);
   }
 
-  public put(doc: T, persistImmediately: boolean): Promise<T> {
-    return this.dataStore.put(this.collectionDef, doc, persistImmediately);
+  public put(doc: T, waitSaveDrained: boolean = false): Promise<T> {
+    return this.dataStore.put(this.collectionDef, doc, waitSaveDrained);
   }
 
-  public remove(doc: T, persistImmediately: boolean): Promise<void> {
-    return this.dataStore.remove(this.collectionDef, doc, persistImmediately);
+  public remove(doc: T, waitSaveDrained: boolean = false): Promise<void> {
+    return this.dataStore.remove(this.collectionDef, doc, waitSaveDrained);
   }
 
-  public removeMany(docs: T[], persistImmediately: boolean): Promise<void> {
+  public removeMany(docs: T[], waitSaveDrained: boolean = false): Promise<void> {
     throw new NotImplementedException("BaseDao::removeMany"); // TODO !!
   }
 
-  public removeById(id: number | string, persistImmediately: boolean): Promise<void> {
-    return this.dataStore.removeById(this.collectionDef, id, persistImmediately);
+  public removeById(id: number | string, waitSaveDrained: boolean = false): Promise<void> {
+    return this.dataStore.removeById(this.collectionDef, id, waitSaveDrained);
   }
 
-  public removeByManyIds(ids: (number | string)[], persistImmediately: boolean): Promise<void> {
-    return this.dataStore.removeByManyIds(this.collectionDef, ids, persistImmediately);
+  public removeByManyIds(ids: (number | string)[], waitSaveDrained: boolean = false): Promise<void> {
+    return this.dataStore.removeByManyIds(this.collectionDef, ids, waitSaveDrained);
   }
 
   /**
@@ -90,12 +90,12 @@ export abstract class BaseDao<T> {
   /**
    * Clear all data
    */
-  public clear(persistImmediately: boolean): Promise<void> {
-    return this.dataStore.clear(this.collectionDef, persistImmediately);
+  public clear(waitSaveDrained: boolean = false): Promise<void> {
+    return this.dataStore.clear(this.collectionDef, waitSaveDrained);
   }
 
-  public persist(persistImmediately: boolean): Promise<void> {
-    return this.dataStore.persist(persistImmediately);
+  public persist(waitSaveDrained: boolean = false): Promise<void> {
+    return this.dataStore.persist(waitSaveDrained);
   }
 
   public chain(): Resultset<T & LokiObj> {

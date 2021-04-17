@@ -494,7 +494,7 @@ describe("DesktopSyncService", () => {
         () => {
           expect(connectorSyncDateTime.syncDateTime).toBeGreaterThan(oldDateTime);
           expect(getConnectorSyncDateTimeByIdSpy).toHaveBeenCalledWith(connectorType);
-          expect(upsertSyncDateTimesSpy).toHaveBeenCalledWith(connectorSyncDateTime, false);
+          expect(upsertSyncDateTimesSpy).toHaveBeenCalledWith(connectorSyncDateTime);
           expect(getSyncStateSpy).toHaveBeenCalledTimes(1);
           expect(isSyncingSpy).toHaveBeenCalledTimes(1);
           done();
@@ -783,7 +783,7 @@ describe("DesktopSyncService", () => {
     it("should catch SyncException when triggering an unknown type", done => {
       // Given
       const message = {};
-      const expectedMessage = "{}";
+      const expectedMessage = "An unknown sync exception occurred";
 
       // When
       try {

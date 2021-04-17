@@ -3,7 +3,7 @@ import { StaticUpdateNotify, UpdateNotify } from "@elevate/shared/models";
 import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
 import { IPC_TUNNEL_SERVICE } from "../ipc/ipc-tunnel-service.token";
-import pDefer from "p-defer";
+import pDefer, { DeferredPromise } from "p-defer";
 import { WarningException } from "@elevate/shared/exceptions";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { IpcStorageService } from "../ipc/ipc-storage.service";
@@ -23,7 +23,7 @@ export class DesktopUpdateService {
 
   public readonly updateNotify$: Subject<UpdateNotify>;
   public readonly downloadUpdate$: Subject<number>;
-  public updateHandledPromise: pDefer.DeferredPromise<void>;
+  public updateHandledPromise: DeferredPromise<void>;
 
   constructor(
     @Inject(IPC_TUNNEL_SERVICE) public readonly ipcTunnelService: IpcTunnelService,

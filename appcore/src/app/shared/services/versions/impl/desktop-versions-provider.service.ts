@@ -38,7 +38,7 @@ export class DesktopVersionsProvider extends VersionsProvider {
       .findOne()
       .then(properties => {
         properties.existingVersion = version;
-        return this.propertiesDao.update(properties, true);
+        return this.propertiesDao.update(properties);
       })
       .then(() => Promise.resolve());
   }

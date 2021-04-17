@@ -113,7 +113,7 @@ describe("ActivityService", () => {
       // Then
       promise.then(
         () => {
-          expect(removeByManyIdsSpy).toHaveBeenCalledWith(activitiesToDelete, false);
+          expect(removeByManyIdsSpy).toHaveBeenCalledWith(activitiesToDelete);
           done();
         },
         error => {
