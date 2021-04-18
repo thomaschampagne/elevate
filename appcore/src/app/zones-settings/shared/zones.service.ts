@@ -1,17 +1,15 @@
 import { Inject, Injectable } from "@angular/core";
 import _ from "lodash";
-import { Subject, timer } from "rxjs";
+import { Subject } from "rxjs";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
 import { UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";
 import { ZoneChangeOrderModel } from "./zone-change-order.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
-import { debounce } from "rxjs/operators";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Injectable()
 export class ZonesService {
-  private static readonly ZONE_CHANGE_DEBOUNCE_TIME: number = 300;
-
   public currentZones: ZoneModel[];
   /**
    * Subscription mechanism for a {ZoneComponent}.  When a whisper zone change occurs, then all zones receive
@@ -28,15 +26,13 @@ export class ZonesService {
   private readonly MAX_ZONES_COUNT: number = 40;
   private readonly MIN_ZONES_COUNT: number = 3;
 
-  constructor(@Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService) {
+  constructor(
+    @Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar
+  ) {
     this.zoneChangeOrderUpdates = new Subject<ZoneChangeOrderModel>();
     this.zonesUpdates = new Subject<ZoneModel[]>();
     this.stepUpdates = new Subject<number>();
-
-    // Subscribe to zone from & to changes and save debounce them
-    this.zoneChangeOrderUpdates.pipe(debounce(() => timer(ZonesService.ZONE_CHANGE_DEBOUNCE_TIME))).subscribe(() => {
-      this.updateZones();
-    });
   }
 
   public addLastZone(): Promise<string> {
@@ -191,22 +187,14 @@ export class ZonesService {
   }
 
   public updateZones(): Promise<void> {
-    return new Promise((resolve: () => void, reject: (error: string) => void) => {
-      const complianceError = this.isZonesCompliant(this.currentZones);
-
-      if (_.isNull(complianceError)) {
-        this.userSettingsService
-          .updateZones(this.zoneDefinition, this.currentZones)
-          .then(() => {
-            resolve();
-          })
-          .catch(error => {
-            reject(error);
-          });
-      } else {
-        reject(complianceError);
-      }
-    });
+    const complianceError = this.isZonesCompliant(this.currentZones);
+    if (complianceError) {
+      return Promise.reject(complianceError);
+    } else {
+      return this.userSettingsService.updateZones(this.zoneDefinition, this.currentZones).then(() => {
+        return Promise.resolve();
+      });
+    }
   }
 
   public resetZonesToDefault(): Promise<void> {

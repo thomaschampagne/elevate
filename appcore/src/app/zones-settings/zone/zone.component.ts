@@ -53,7 +53,7 @@ export class ZoneComponent implements OnInit, OnDestroy {
   public stepUpdatesSubscription: Subscription;
 
   constructor(
-    @Inject(ZonesService) private readonly zonesService: ZonesService,
+    @Inject(ZonesService) public readonly zonesService: ZonesService,
     @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {}

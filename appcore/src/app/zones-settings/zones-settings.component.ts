@@ -33,7 +33,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
     @Inject(UserSettingsService) public readonly userSettingsService: UserSettingsService,
     @Inject(ActivatedRoute) private readonly route: ActivatedRoute,
     @Inject(Router) private readonly router: Router,
-    @Inject(ZonesService) private readonly zonesService: ZonesService,
+    @Inject(ZonesService) public readonly zonesService: ZonesService,
     @Inject(MatSnackBar) private readonly snackBar: MatSnackBar
   ) {}
 
@@ -89,6 +89,10 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.routeParamsSubscription.unsubscribe();
     this.zonesUpdatesSubscription.unsubscribe();
+
+    if (this.currentZones) {
+      this.zonesService.updateZones();
+    }
   }
 
   private getZoneDefinitionFromZoneValue(zoneValue: ZoneType): ZoneDefinitionModel {

@@ -622,7 +622,6 @@ describe("ZonesService", () => {
     promiseSave.then(
       () => {
         throw new Error("Test should no go there");
-        done();
       },
       error => {
         expect(error).toBe(fakeError);
@@ -647,7 +646,6 @@ describe("ZonesService", () => {
     promiseSave.then(
       () => {
         throw new Error("Test should no go there");
-        done();
       },
       error => {
         expect(error).not.toBeNull();
@@ -717,7 +715,6 @@ describe("ZonesService", () => {
     promiseImport.then(
       () => {
         throw new Error("Test should no go there");
-        done();
       },
       (error: string) => {
         expect(updateZonesSpy).toHaveBeenCalledTimes(0);
@@ -744,7 +741,6 @@ describe("ZonesService", () => {
     promiseImport.then(
       () => {
         throw new Error("Test should no go there");
-        done();
       },
       (error: string) => {
         expect(error).not.toBeNull();
