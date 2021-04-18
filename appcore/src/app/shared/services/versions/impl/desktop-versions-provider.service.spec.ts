@@ -3,7 +3,6 @@ import { CoreModule } from "../../../../core/core.module";
 import { SharedModule } from "../../../shared.module";
 import { DataStore } from "../../../data-store/data-store";
 import { TestingDataStore } from "../../../data-store/testing-datastore.service";
-import { PropertiesModel } from "@elevate/shared/models";
 import { DesktopVersionsProvider } from "./desktop-versions-provider.service";
 import { TargetModule } from "../../../modules/target/desktop-target.module";
 import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
@@ -31,10 +30,7 @@ describe("DesktopVersionsProvider", () => {
   it("should provide the existing version", done => {
     // Given
     const expectedVersion = "5.5.5";
-    const propertiesModel = new PropertiesModel(expectedVersion);
-    const propertyFindOneSpy = spyOn(service.propertiesDao, "findOne").and.returnValue(
-      Promise.resolve(propertiesModel)
-    );
+    const getVersionSpy = spyOn(service.ipcStorageService, "get").and.returnValue(Promise.resolve(expectedVersion));
 
     // When
     const promise = service.getExistingVersion();
@@ -43,7 +39,7 @@ describe("DesktopVersionsProvider", () => {
     promise.then(
       existingVersion => {
         expect(existingVersion).toEqual(expectedVersion);
-        expect(propertyFindOneSpy).toHaveBeenCalledTimes(1);
+        expect(getVersionSpy).toHaveBeenCalledTimes(1);
         done();
       },
       () => {

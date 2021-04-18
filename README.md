@@ -255,18 +255,7 @@ Register your new migration in below file
 ./appcore/src/app/desktop/migration/desktop-registered-migrations.ts
 ```
 
-**Tip:** to emulate a version upgrade, you may downgrade the current version by running below code in developer console:
-
-```javascript
-(version => {
-  const properties = db.getCollection("properties").findOne();
-  properties.existingVersion = version;
-  db.getCollection("properties").update(properties);
-  db.save();
-  console.log(`Fake downgraded to ${version}. Reloading app.`)
-  setTimeout(() => location.reload(), 1000);
-})("YOUR_DOWNGRADE_TARGET_VERSION") // e.g. "7.0.0"
-```
+**Tip:** to emulate a version upgrade, you may downgrade the `version` property inside `ipc.storage.json` file (user app data folder)
 
 ## Sign application
 ### Self-sign with OpenSSL for windows build

@@ -113,6 +113,7 @@ export class DesktopMigrationService {
    */
   public trackPackageVersion(): Promise<void> {
     const packageVersion = this.versionsProvider.getPackageVersion();
+    this.logger.debug(`Tracking package version ${packageVersion}`);
     return this.versionsProvider.setExistingVersion(packageVersion);
   }
 

@@ -1,6 +1,5 @@
 import { Inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { PropertiesDao } from "../../../dao/properties/properties.dao";
 import { ElectronService } from "../../../../desktop/electron/electron.service";
 import { VersionsProvider } from "../versions-provider";
 import { MatDialog } from "@angular/material/dialog";
@@ -8,12 +7,15 @@ import { Platform } from "@elevate/shared/enums";
 import { GhRelease } from "@elevate/shared/models";
 import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
 import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
+import { IpcStorageService } from "../../../../desktop/ipc/ipc-storage.service";
 
 @Injectable()
 export class DesktopVersionsProvider extends VersionsProvider {
+  private static readonly IPC_STORAGE_INSTALLED_VERSION_PATH = "version";
+
   constructor(
     @Inject(HttpClient) public readonly httpClient: HttpClient,
-    @Inject(PropertiesDao) public readonly propertiesDao: PropertiesDao,
+    @Inject(IpcStorageService) public readonly ipcStorageService: IpcStorageService,
     @Inject(IPC_TUNNEL_SERVICE) public readonly ipcTunnelService: IpcTunnelService,
     @Inject(ElectronService) protected readonly electronService: ElectronService,
     @Inject(MatDialog) protected readonly dialog: MatDialog
@@ -28,19 +30,11 @@ export class DesktopVersionsProvider extends VersionsProvider {
   }
 
   public getExistingVersion(): Promise<string> {
-    return this.propertiesDao.findOne().then(properties => {
-      return Promise.resolve(properties.existingVersion);
-    });
+    return this.ipcStorageService.get<string>(DesktopVersionsProvider.IPC_STORAGE_INSTALLED_VERSION_PATH);
   }
 
   public setExistingVersion(version: string): Promise<void> {
-    return this.propertiesDao
-      .findOne()
-      .then(properties => {
-        properties.existingVersion = version;
-        return this.propertiesDao.update(properties);
-      })
-      .then(() => Promise.resolve());
+    return this.ipcStorageService.set<string>(DesktopVersionsProvider.IPC_STORAGE_INSTALLED_VERSION_PATH, version);
   }
 
   public getBuildMetadata(): Promise<{ commit: string; date: string }> {
