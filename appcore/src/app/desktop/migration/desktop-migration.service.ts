@@ -11,12 +11,14 @@ import { DesktopMigration } from "./desktop-migrations.model";
 import { DesktopRegisteredMigrations } from "./desktop-registered-migrations";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
+import { IpcStorageService } from "../ipc/ipc-storage.service";
 
 @Injectable()
 export class DesktopMigrationService {
   constructor(
     @Inject(Injector) public readonly injector: Injector,
     @Inject(VersionsProvider) public readonly versionsProvider: DesktopVersionsProvider,
+    @Inject(IpcStorageService) public readonly ipcStorageService: IpcStorageService,
     @Inject(DataStore) public readonly dataStore: DataStore<object>,
     @Inject(ActivityService) public readonly activityService: DesktopActivityService,
     @Inject(MatDialog) private readonly dialog: MatDialog,
@@ -25,7 +27,7 @@ export class DesktopMigrationService {
     this.db = this.dataStore.db;
   }
 
-  public static readonly RECALCULATE_REQUIRED_LS_KEY: string = "recalculateRequiredByVersion";
+  public static readonly IPC_STORAGE_RECALCULATE_REQUESTED_BY_PATH: string = "recalculateRequestedBy";
   private readonly db: LokiConstructor;
 
   /**
@@ -143,7 +145,7 @@ export class DesktopMigrationService {
         if (upgradeRequiresRecalculationByVersion) {
           return this.activityService.count().then(count => {
             if (count > 0) {
-              this.flagRequiresActivitiesRecalculationByVersion(upgradeRequiresRecalculationByVersion);
+              return this.flagRequiresActivitiesRecalculationByVersion(upgradeRequiresRecalculationByVersion);
             }
             return Promise.resolve();
           });
@@ -156,15 +158,18 @@ export class DesktopMigrationService {
     return DesktopRegisteredMigrations.LIST;
   }
 
-  public recalculateRequiredByVersion(): string {
-    return localStorage.getItem(DesktopMigrationService.RECALCULATE_REQUIRED_LS_KEY);
+  public recalculateRequestedBy(): Promise<string> {
+    return this.ipcStorageService.get<string>(DesktopMigrationService.IPC_STORAGE_RECALCULATE_REQUESTED_BY_PATH);
   }
 
-  public clearRequiredRecalculation(): void {
-    return localStorage.removeItem(DesktopMigrationService.RECALCULATE_REQUIRED_LS_KEY);
+  public clearRequiredRecalculation(): Promise<void> {
+    return this.ipcStorageService.rm<string>(DesktopMigrationService.IPC_STORAGE_RECALCULATE_REQUESTED_BY_PATH);
   }
 
-  public flagRequiresActivitiesRecalculationByVersion(version: string): void {
-    localStorage.setItem(DesktopMigrationService.RECALCULATE_REQUIRED_LS_KEY, version);
+  public flagRequiresActivitiesRecalculationByVersion(version: string): Promise<void> {
+    return this.ipcStorageService.set<string>(
+      DesktopMigrationService.IPC_STORAGE_RECALCULATE_REQUESTED_BY_PATH,
+      version
+    );
   }
 }

@@ -436,14 +436,14 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       () => this.isSyncing$.next(false),
       () => {
         // Clear any recalculation requirements with the new imported backup. Indeed new backup might not require recalculation...
-        this.desktopMigrationService.clearRequiredRecalculation();
+        this.desktopMigrationService.clearRequiredRecalculation().then(() => {
+          this.isSyncing$.next(false);
 
-        this.isSyncing$.next(false);
-
-        // Force database save before reload
-        this.desktopDataStore.persist(true).then(() => {
-          // Force app reload
-          setTimeout(() => location.reload());
+          // Force database save before reload
+          this.desktopDataStore.persist(true).then(() => {
+            // Force app reload at end of every executions
+            setTimeout(() => location.reload());
+          });
         });
       }
     );

@@ -10,6 +10,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { DesktopMigrationService } from "../../../../desktop/migration/desktop-migration.service";
 import { Channel, IpcMessage, IpcTunnelService, RuntimeInfo } from "@elevate/shared/electron";
 import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
+import _ from "lodash";
 import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 
 @Injectable()
@@ -27,19 +28,28 @@ export class DesktopAppService extends AppService {
 
   public init(): void {
     super.init();
+    this.recalculateActivitiesIfRequired();
+  }
 
-    // Trigger recalculation after upgrade/migration
-    const recalculationRequiredByVersion = this.desktopMigrationService.recalculateRequiredByVersion();
-    if (recalculationRequiredByVersion) {
-      // Observe for recalculation done asked by an applied migration
-      this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
-        const snackRef = this.snackBar.open("Last upgrade requires activities recalculation. Let it proceed.", "Ok");
-        this.activityService.recalculateAll(userSettingsModel).then(() => {
-          this.desktopMigrationService.clearRequiredRecalculation();
-          snackRef.dismiss();
-        });
+  private recalculateActivitiesIfRequired(): void {
+    // Trigger recalculation after upgrade/migration once the current call stack has cleared with _.defer
+    _.defer(() => {
+      this.desktopMigrationService.recalculateRequestedBy().then(requestedByVersion => {
+        if (requestedByVersion) {
+          // Observe for recalculation done asked by an applied migration
+          this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
+            const snackRef = this.snackBar.open(
+              "Last upgrade requires activities recalculation. Let it proceed.",
+              "Ok"
+            );
+            this.activityService.recalculateAll(userSettingsModel).then(() => {
+              this.desktopMigrationService.clearRequiredRecalculation();
+              snackRef.dismiss();
+            });
+          });
+        }
       });
-    }
+    });
   }
 
   public getRuntimeInfo(): Promise<RuntimeInfo> {

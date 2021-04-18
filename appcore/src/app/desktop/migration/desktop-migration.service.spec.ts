@@ -322,7 +322,7 @@ describe("DesktopMigrationService", () => {
     spyOn(service, "getDesktopRegisteredMigrations").and.returnValue(DESKTOP_MIGRATIONS);
     spyOn(service.activityService, "count").and.returnValue(Promise.resolve(activitiesCount));
 
-    const localStorageSetSpy = spyOn(localStorage, "setItem").and.stub();
+    const setSpy = spyOn(service.ipcStorageService, "set").and.returnValue(Promise.resolve());
 
     // When
     const promise = service.applyUpgrades(existingVersion, packageVersion);
@@ -330,8 +330,8 @@ describe("DesktopMigrationService", () => {
     // Then
     promise.then(
       () => {
-        expect(localStorageSetSpy).toHaveBeenCalledWith(
-          DesktopMigrationService.RECALCULATE_REQUIRED_LS_KEY,
+        expect(setSpy).toHaveBeenCalledWith(
+          DesktopMigrationService.IPC_STORAGE_RECALCULATE_REQUESTED_BY_PATH,
           fakeMigration01.version
         );
         done();
