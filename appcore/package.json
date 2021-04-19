@@ -53,7 +53,7 @@
     "leaflet": "^1.7.1",
     "leaflet-fullscreen": "github:Leaflet/Leaflet.fullscreen",
     "lodash": "^4.17.21",
-    "lokijs": "^1.5.11",
+    "lokijs": "github:techfort/LokiJS",
     "lz-string": "github:pieroxy/lz-string",
     "markdown-it": "^12.0.6",
     "metrics-graphics": "^2.15.6",
