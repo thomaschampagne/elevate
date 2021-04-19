@@ -57,7 +57,7 @@ export class ZonesService {
       this.currentZones.push(lastZone);
 
       return this.updateZones().then(() => {
-        return Promise.resolve(`Zone <${this.currentZones.length}> has been added.`);
+        return Promise.resolve(`Zone ${this.currentZones.length} has been added.`);
       });
     }
   }
@@ -68,7 +68,7 @@ export class ZonesService {
     } else {
       this.currentZones.pop(); // Delete last zone
       return this.updateZones().then(() => {
-        return Promise.resolve(`Zone <${this.currentZones.length + 1}> has been removed.`);
+        return Promise.resolve(`Zone ${this.currentZones.length + 1} has been removed.`);
       });
     }
   }
