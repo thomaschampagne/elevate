@@ -11,6 +11,14 @@ import { ZonesSettingsComponent } from "../../../zones-settings/zones-settings.c
 
 const routes: Routes = [
   {
+    path: AppRoutes.goals,
+    loadChildren: () => import("../../../desktop/goals/goals.module").then(module => module.GoalsModule)
+  },
+  {
+    path: AppRoutes.dashboard,
+    loadChildren: () => import("../../../desktop/dashboard/dashboard.module").then(module => module.DashboardModule)
+  },
+  {
     path: AppRoutes.activities,
     component: ActivitiesComponent
   },

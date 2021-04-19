@@ -1,4 +1,6 @@
 export class AppRoutes {
+  public static readonly dashboard: string = "dashboard";
+  public static readonly goals: string = "goals";
   public static readonly activities: string = "activities";
   public static readonly activity: string = "activity";
   public static readonly fitnessTrend: string = "fitnessTrend";

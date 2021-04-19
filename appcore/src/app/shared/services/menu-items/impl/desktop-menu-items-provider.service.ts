@@ -6,7 +6,17 @@ import { AppRoutes } from "../../../models/app-routes";
 export class DesktopMenuItemsProvider implements MenuItemsProvider {
   public readonly mainMenuItems: MenuItemModel[] = [
     {
-      icon: "view_list",
+      icon: "space_dashboard",
+      routerLink: AppRoutes.dashboard,
+      routerLinkActive: true
+    },
+    {
+      icon: "emoji_events",
+      routerLink: AppRoutes.goals,
+      routerLinkActive: true
+    },
+    {
+      icon: "summarize",
       routerLink: AppRoutes.activities,
       routerLinkActive: true
     },
