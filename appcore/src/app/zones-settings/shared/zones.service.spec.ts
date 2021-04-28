@@ -69,7 +69,7 @@ describe("ZonesService", () => {
 
       expect(result).not.toBeNull();
 
-      expect(result).toEqual("Zone <" + expectedZoneIdAdded + "> has been added.");
+      expect(result).toEqual("Zone " + expectedZoneIdAdded + " has been added.");
 
       expect(zonesService.currentZones.length).toBe(expectedZonesLength);
       expect(lastAddedZone.from).toBe(95);
@@ -114,7 +114,7 @@ describe("ZonesService", () => {
     // Then
     removeZoneLastPromise.then((result: string) => {
       expect(result).not.toBeNull();
-      expect(result).toEqual("Zone <" + expectedZoneIdRemoved + "> has been removed.");
+      expect(result).toEqual("Zone " + expectedZoneIdRemoved + " has been removed.");
       expect(zonesService.currentZones.length).toBe(expectedZonesLength);
 
       const lastZone = _.last(zonesService.currentZones);

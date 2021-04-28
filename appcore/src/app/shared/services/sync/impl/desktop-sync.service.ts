@@ -51,6 +51,23 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   public syncSubscription: Subscription;
   public currentConnectorType: ConnectorType;
 
+  public CONNECTOR_SYNC_FROM_DATE_TIME_MAP: Map<ConnectorType, () => Promise<number>> = new Map<
+    ConnectorType,
+    () => Promise<number>
+  >([
+    [
+      ConnectorType.STRAVA,
+      () => this.activityService.findMostRecent().then(activity => Promise.resolve(activity.start_timestamp * 1000))
+    ],
+    [
+      ConnectorType.FILE,
+      () =>
+        this.connectorSyncDateTimeDao
+          .findOne({ connectorType: ConnectorType.FILE })
+          .then(connector => Promise.resolve(connector.syncDateTime))
+    ]
+  ]);
+
   constructor(
     @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
     @Inject(DataStore) public readonly desktopDataStore: DesktopDataStore<object>,
@@ -117,7 +134,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     const promisedDataToSync: Promise<any>[] = [
       this.athleteService.fetch(),
       this.userSettingsService.fetch(),
-      fastSync ? this.activityService.findMostRecent() : Promise.resolve(null)
+      fastSync ? this.CONNECTOR_SYNC_FROM_DATE_TIME_MAP.get(this.currentConnectorType)() : Promise.resolve(null)
     ];
 
     if (this.currentConnectorType === ConnectorType.STRAVA) {
@@ -143,11 +160,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       .then(result => {
         const athleteModel: AthleteModel = result[0] as AthleteModel;
         const userSettingsModel: UserSettingsModel = result[1] as UserSettingsModel;
-        const mostRecentActivity: SyncedActivityModel = result[2] as SyncedActivityModel;
+        const connectorSyncFromDateTime: number = result[2] as number;
 
-        // Get timestamp on which we have to sync if an activity exists and fast sync is enabled.
-        // We use the mose recent activity start time for all the connectors
-        const syncFromDateTime = mostRecentActivity && fastSync ? mostRecentActivity.start_timestamp * 1000 : null;
+        // Get timestamp on which we have to sync
+        const syncFromDateTime = connectorSyncFromDateTime && fastSync ? connectorSyncFromDateTime : null;
 
         let startSyncParamPromise: Promise<{
           connectorType: ConnectorType;
