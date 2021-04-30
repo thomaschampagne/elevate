@@ -58,6 +58,7 @@
     "ngx-pipes": "^2.7.6",
     "p-defer": "^3.0.0",
     "plotly.js-basic-dist": "^1.58.5",
+    "pako": "^2.0.3",
     "rxjs": "^6.6.7",
     "semver": "^7.3.5",
     "tslib": "^2.3.1",

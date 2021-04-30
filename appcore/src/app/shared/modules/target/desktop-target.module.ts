@@ -37,6 +37,8 @@ import { DesktopUpdateService } from "../../../desktop/app-update/desktop-update
 import { IpcStorageService } from "../../../desktop/ipc/ipc-storage.service";
 import { WindowService } from "../../services/window/window.service";
 import { DesktopWindowService } from "../../services/window/desktop-window.service";
+import { MachineService } from "../../../desktop/machine/machine.service";
+import { RuntimeInfoService } from "../../../desktop/machine/runtime-info.service";
 
 @NgModule({
   imports: [CoreModule, DesktopRoutingModule, ConnectorsModule],
@@ -58,6 +60,8 @@ import { DesktopWindowService } from "../../services/window/desktop-window.servi
     StravaConnectorInfoDao,
     FileConnectorInfoService,
     DesktopInsightsService,
+    MachineService,
+    RuntimeInfoService,
     { provide: WindowService, useClass: DesktopWindowService },
     { provide: AthleteService, useClass: DesktopAthleteService },
     { provide: UserSettingsService, useClass: DesktopUserSettingsService },

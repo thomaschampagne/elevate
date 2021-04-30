@@ -14,13 +14,7 @@ export abstract class AthleteService {
    * Provides athlete model with dated settings sorted by descending periods
    */
   public fetch(): Promise<AthleteModel> {
-    return this.athleteModelDao.findOne().then((athleteModel: AthleteModel) => {
-      athleteModel.datedAthleteSettings = _.sortBy(athleteModel.datedAthleteSettings, (model: DatedAthleteSettings) => {
-        const sortOnDate: Date = _.isNull(model.since) ? new Date(0) : new Date(model.since);
-        return sortOnDate.getTime() * -1;
-      });
-      return Promise.resolve(athleteModel);
-    });
+    return this.athleteModelDao.findOne();
   }
 
   /**

@@ -1,12 +1,12 @@
 import { inject, singleton } from "tsyringe";
-import netAddr from "public-ip";
-import { HttpCodes } from "typed-rest-client/HttpClient";
-import { GeoIp, RuntimeInfo } from "@elevate/shared/electron";
+import { RuntimeInfo } from "@elevate/shared/electron";
 import os from "os";
 import { machineIdSync } from "node-machine-id";
 import { HttpClient } from "../clients/http.client";
 import { Hash } from "../tools/hash";
 import { Logger } from "../logger";
+import { UserScreen } from "../tools/user-screen";
+import { Arch, Platform } from "@elevate/shared/enums";
 
 @singleton()
 export class RuntimeInfoService {
@@ -17,74 +17,48 @@ export class RuntimeInfoService {
     this._runtimeInfo = null;
   }
 
-  private static readonly GEO_IP_API_TIMEOUT: number = 3000;
   private _runtimeInfo: RuntimeInfo;
-
-  private static getGeoIpApiEndPoint(ip: string): string {
-    return `https://api.db-ip.com/v2/free/${ip}`;
-  }
-
-  public getGeoIp(): Promise<GeoIp> {
-    return netAddr
-      .v4({ timeout: RuntimeInfoService.GEO_IP_API_TIMEOUT })
-      .then(ip => {
-        return this.httpClient.get(RuntimeInfoService.getGeoIpApiEndPoint(ip), {
-          "Content-Type": "application/json"
-        });
-      })
-      .then(response => {
-        return response.message.statusCode === HttpCodes.OK ? response.readBody() : Promise.reject(response.message);
-      })
-      .then(body => {
-        const geoIp = JSON.parse(body) as GeoIp;
-        return Promise.resolve(new GeoIp(geoIp.ipAddress, geoIp.city, geoIp.stateProv, geoIp.countryName));
-      })
-      .catch(err => {
-        return Promise.reject(err);
-      });
-  }
 
   public getInfo(): Promise<RuntimeInfo> {
     if (!this._runtimeInfo) {
       const osPlatform = this.getOsPlatform();
       const osHostname = os.hostname().trim();
       const osUsername = os.userInfo().username.trim();
-      const osMachineId = Hash.asObjectId(machineIdSync());
-      const athleteMachineId = Hash.asObjectId(osMachineId + ":" + osUsername);
       const cpuInfo = os.cpus()[0];
-      const cpuName = { name: cpuInfo ? cpuInfo.model.trim() : "Unknown", threads: os.cpus().length };
+      const cpu = { name: cpuInfo ? cpuInfo.model.trim() : "Unknown", threads: os.cpus().length };
       const memorySize = Math.round(os.totalmem() / 1024 / 1024 / 1024);
+      const { width, height } = UserScreen.computeScreenRes();
+      const screenRes = `${width}x${height}`;
 
-      const runtimeInfo = new RuntimeInfo(
-        osMachineId,
+      // Compute unique user machine key identifier based on hash of: unique machine id,
+      const userMachineKey = `${machineIdSync()}:${JSON.stringify(osPlatform)}:${osHostname}:${osUsername}`;
+      const hashedUserMachineKey = Hash.apply(userMachineKey, Hash.SHA256);
+
+      // Cut unique hashed User Machine Key in 2.
+      // First part become athlete machine key: act as machine password, should not be plain stored or given
+      const midLength = hashedUserMachineKey.length / 2;
+      const athleteMachineKey = hashedUserMachineKey.slice(0, midLength);
+
+      // Second part become athlete machine identifier: act as machine login.
+      const athleteMachineId = Hash.asObjectId(hashedUserMachineKey.slice(midLength));
+
+      this._runtimeInfo = new RuntimeInfo(
+        athleteMachineId,
+        athleteMachineKey,
         osPlatform,
         osHostname,
         osUsername,
-        athleteMachineId,
-        cpuName,
-        memorySize
+        cpu,
+        memorySize,
+        screenRes
       );
 
-      return this.getGeoIp()
-        .then(
-          geoIp => {
-            runtimeInfo.geoIp = geoIp;
-            return Promise.resolve(runtimeInfo);
-          },
-          err => {
-            this.logger.warn(err);
-            return Promise.resolve(runtimeInfo);
-          }
-        )
-        .then(updatedRuntimeInfo => {
-          this._runtimeInfo = updatedRuntimeInfo;
-          return Promise.resolve(this._runtimeInfo);
-        });
+      return Promise.resolve(this._runtimeInfo);
     }
     return Promise.resolve(this._runtimeInfo);
   }
 
-  public getOsPlatform(): { name: string; arch: string } {
-    return { name: os.platform(), arch: os.arch() };
+  public getOsPlatform(): { name: Platform; arch: Arch } {
+    return { name: os.platform() as Platform, arch: os.arch() as Arch };
   }
 }

@@ -26,7 +26,7 @@ export abstract class DataStore<T extends {}> {
   private COLLECTIONS_MAP: Map<string, Collection<T>>;
 
   public static isBackupCompatible(dumpVersion): boolean {
-    return semver.gte(dumpVersion, this.getMinBackupVersion()) || environment.skipRestoreSyncedBackupCheck;
+    return semver.gte(dumpVersion, this.getMinBackupVersion()) || environment.bypassProfileRestoreChecks;
   }
 
   public static getMinBackupVersion(): string {

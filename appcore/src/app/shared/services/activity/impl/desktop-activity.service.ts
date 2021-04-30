@@ -6,6 +6,7 @@ import { LoggerService } from "../../logging/logger.service";
 import { Subject } from "rxjs";
 import { StreamsService } from "../../streams/streams.service";
 import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
+import { DesktopInsightsService } from "../../../../desktop/insights/desktop-insights.service";
 import { Activity } from "@elevate/shared/models/sync/activity.model";
 import { IpcMessage } from "@elevate/shared/electron/ipc-message";
 import { WarningException } from "@elevate/shared/exceptions/warning.exception";
@@ -44,6 +45,7 @@ export class DesktopActivityService extends ActivityService {
     @Inject(ActivityDao) public readonly activityDao: ActivityDao,
     @Inject(AthleteSnapshotResolverService) public readonly athleteSnapshotResolver: AthleteSnapshotResolverService,
     @Inject(StreamsService) public readonly streamsService: StreamsService,
+    @Inject(DesktopInsightsService) private readonly insightsService: DesktopInsightsService,
     @Inject(LoggerService) protected readonly logger: LoggerService
   ) {
     super(activityDao, athleteSnapshotResolver, logger);
@@ -125,6 +127,11 @@ export class DesktopActivityService extends ActivityService {
         this.verifyActivitiesWithSettingsLacking();
         return this.activityDao.persist(true);
       })
+      .then(() => {
+        // Push insight activities and continue without wait for success or error
+        this.find().then(activities => this.insightsService.registerActivities(activities, true));
+        return Promise.resolve();
+      })
       .catch(err => {
         return Promise.reject(new ElevateException(err));
       });
@@ -163,6 +170,11 @@ export class DesktopActivityService extends ActivityService {
       .then(() => {
         this.isRecalculating = false;
         this.verifyActivitiesWithSettingsLacking();
+      })
+      .then(() => {
+        // Push insight activities and continue without wait for success or error
+        this.findByIds(activityIds).then(activities => this.insightsService.registerActivities(activities, false));
+        return Promise.resolve();
       })
       .catch(err => {
         return Promise.reject(new ElevateException(err));

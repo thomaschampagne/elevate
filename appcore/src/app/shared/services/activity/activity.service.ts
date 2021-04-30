@@ -22,7 +22,7 @@ export abstract class ActivityService {
   }
 
   public fetch(): Promise<Activity[]> {
-    return this.activityDao.findSortStartDate(false);
+    return this.activityDao.findSorted(false);
   }
 
   public find(
@@ -33,13 +33,21 @@ export abstract class ActivityService {
   }
 
   public findMostRecent(): Promise<Activity> {
-    return this.findSortStartDate(true).then(activities => {
+    return this.findSorted(true).then(activities => {
       return activities && activities.length ? Promise.resolve(activities[0]) : Promise.resolve(null);
     });
   }
 
-  public findSortStartDate(descending: boolean): Promise<Activity[]> {
-    return this.activityDao.findSortStartDate(descending);
+  public findByIds(ids: (number | string)[]): Promise<SyncedActivityModel[]> {
+    return this.activityDao.find({ id: { $in: ids } });
+  }
+
+  public findSince(dateTime: number): Promise<SyncedActivityModel[]> {
+    return this.activityDao.find({ startTimestamp: { $gt: Math.floor(dateTime / 1000) } }); // Divide by 1000 to match the db
+  }
+
+  public findSorted(descending: boolean = false): Promise<Activity[]> {
+    return this.activityDao.findSorted(descending);
   }
 
   public insertMany(activities: Activity[]): Promise<void> {

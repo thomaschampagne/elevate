@@ -12,7 +12,9 @@ export const environment = {
   logLevel: LoggerService.LEVEL_INFO,
   // Backup version threshold at which a "greater or equal" imported backup version is compatible with current code.
   minBackupVersion: "7.0.0-13.alpha",
-  skipRestoreSyncedBackupCheck: false,
   showDebugRibbon: false,
-  showActivityDebugData: false
+  showActivityDebugData: false,
+  showRouteUrl: false,
+  bypassProfileRestoreChecks: false,
+  backendBaseUrl: "https://elevate.gravelbox.duckdns.org"
 };

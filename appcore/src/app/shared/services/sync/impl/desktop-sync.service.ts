@@ -22,6 +22,7 @@ import { DesktopMigrationService } from "../../../../desktop/migration/desktop-m
 import { ActivityRecalculateNotification, DesktopActivityService } from "../../activity/impl/desktop-activity.service";
 import { IpcSyncMessageSender } from "../../../../desktop/ipc/ipc-sync-messages-sender.service";
 import { DesktopBackupService } from "../../../../desktop/backup/desktop-backup.service";
+import { DesktopInsightsService } from "../../../../desktop/insights/desktop-insights.service";
 import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync/connector-sync-date-time.model";
 import { BackupEvent } from "@elevate/shared/models/backup/backup-event.int";
@@ -47,6 +48,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   public syncEvents$: Subject<SyncEvent>;
   public syncSubscription: Subscription;
   public currentConnectorType: ConnectorType;
+  private previousLastActivityStartTime: number;
 
   public CONNECTOR_SYNC_FROM_DATE_TIME_MAP: Map<ConnectorType, () => Promise<number>> = new Map<
     ConnectorType,
@@ -78,6 +80,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     @Inject(IpcSyncMessageSender) public readonly ipcSyncMessageSender: IpcSyncMessageSender,
     @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(FileConnectorInfoService) public readonly fsConnectorInfoService: FileConnectorInfoService,
+    @Inject(DesktopInsightsService) private readonly insightsService: DesktopInsightsService,
     @Inject(LoggerService) public readonly logger: LoggerService,
     @Inject(ConnectorSyncDateTimeDao) public readonly connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
     @Inject(ElectronService) public readonly electronService: ElectronService,
@@ -94,6 +97,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     );
     this.syncSubscription = null;
     this.currentConnectorType = null;
+    this.previousLastActivityStartTime = null;
     this.syncEvents$ = new Subject<SyncEvent>(); // Starting new sync
     this.stravaConnectorInfoService.listenForCredentialsUpdates(this.syncEvents$);
 
@@ -131,7 +135,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     const promisedDataToSync: Promise<any>[] = [
       this.athleteService.fetch(),
       this.userSettingsService.fetch(),
-      fastSync ? this.CONNECTOR_SYNC_FROM_DATE_TIME_MAP.get(this.currentConnectorType)() : Promise.resolve(null)
+      fastSync ? this.CONNECTOR_SYNC_FROM_DATE_TIME_MAP.get(this.currentConnectorType)() : Promise.resolve(null),
+      this.activityService.findMostRecent()
     ];
 
     if (this.currentConnectorType === ConnectorType.STRAVA) {
@@ -158,6 +163,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         const athleteModel: AthleteModel = result[0] as AthleteModel;
         const userSettings: BaseUserSettings = result[1] as BaseUserSettings;
         const connectorSyncFromDateTime: number = result[2] as number;
+        const mostRecentActivity: SyncedActivityModel = result[3] as SyncedActivityModel;
+
+        // When fast sync keep tracking of the most recent activity before syncing: we need it to get the activity delta added once done.
+        this.previousLastActivityStartTime = mostRecentActivity && fastSync ? mostRecentActivity.start_timestamp : null;
 
         // Get timestamp on which we have to sync
         const syncFromDateTime = connectorSyncFromDateTime && fastSync ? connectorSyncFromDateTime : null;
@@ -171,7 +180,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         }>;
 
         if (this.currentConnectorType === ConnectorType.STRAVA) {
-          const stravaConnectorInfo: StravaConnectorInfo = result[3] as StravaConnectorInfo;
+          const stravaConnectorInfo: StravaConnectorInfo = result[4] as StravaConnectorInfo;
 
           // Create message to start sync on connector!
           startSyncParamPromise = Promise.resolve({
@@ -182,7 +191,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
             syncFromDateTime: syncFromDateTime
           });
         } else if (this.currentConnectorType === ConnectorType.FILE) {
-          const fileConnectorInfo: FileConnectorInfo = result[3] as FileConnectorInfo;
+          const fileConnectorInfo: FileConnectorInfo = result[4] as FileConnectorInfo;
 
           // If source directory is missing or path is invalid then a throw warning
           startSyncParamPromise = this.fsConnectorInfoService
@@ -329,6 +338,16 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         return this.desktopDataStore.persist(true);
       })
       .then(() => {
+        // Push insight activities
+        const findActivities = this.previousLastActivityStartTime
+          ? this.activityService.findSince(this.previousLastActivityStartTime)
+          : this.activityService.find();
+
+        // Push insight activities: replace all on remote if no old activity given
+        findActivities.then(activities =>
+          this.insightsService.registerActivities(activities, !this.previousLastActivityStartTime)
+        );
+
         this.logger.debug(completeSyncEvent);
         this.isSyncing$.next(false);
         syncEvents$.next(completeSyncEvent); // Forward for upward UI use.

@@ -78,8 +78,14 @@ export class ExtensionDataStore<T extends {}> extends DataStore<T> {
       chrome.storage.local.getBytesInUse((bytesInUse: number) => {
         const appUsage = new AppUsage(bytesInUse, chrome.storage.local.QUOTA_BYTES);
         const megaBytesInUse = appUsage.bytesInUse / (1024 * 1024);
+        const megaBytesQuota = appUsage.quotaBytes / (1024 * 1024);
         const percentUsage = (appUsage.bytesInUse / appUsage.quotaBytes) * 100;
-        const appUsageDetails: AppUsageDetails = new AppUsageDetails(appUsage, megaBytesInUse, percentUsage);
+        const appUsageDetails: AppUsageDetails = new AppUsageDetails(
+          appUsage,
+          megaBytesInUse,
+          megaBytesQuota,
+          percentUsage
+        );
         resolve(appUsageDetails);
       });
     });

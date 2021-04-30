@@ -96,9 +96,9 @@ export class UpdateHandler implements IpcListener {
     // On list updates requested
     this.ipcTunnelService.on<Array<[boolean]>, GhRelease[]>(Channel.listUpdates, payload => {
       const [acceptPreReleases] = payload[0];
-      const platform = this.appService.getPlatform();
-      const arch = this.appService.getArch();
-      return this.getReleasesByPlatform(platform, arch, acceptPreReleases);
+      return this.appService.getRuntimeInfo().then(runtimeInfo => {
+        return this.getReleasesByPlatform(runtimeInfo.osPlatform.name, runtimeInfo.osPlatform.arch, acceptPreReleases);
+      });
     });
 
     // On update request
@@ -115,36 +115,38 @@ export class UpdateHandler implements IpcListener {
   }
 
   public updateApp(acceptPreReleases: boolean): Promise<UpdateNotify> {
-    const platform = this.appService.getPlatform();
-    const autoUpdatablePlatform = UpdateHandler.PLATFORM_AUTO_UPDATABLE_MAP.get(platform);
+    return this.appService.getPlatform().then(platform => {
+      const autoUpdatablePlatform = UpdateHandler.PLATFORM_AUTO_UPDATABLE_MAP.get(platform);
 
-    this.logger.info(
-      `Update app requested: platform=${platform}; autoUpdatable=${autoUpdatablePlatform}; acceptPreReleases=${acceptPreReleases}`
-    );
+      this.logger.info(
+        `Update app requested: platform=${platform}; autoUpdatable=${autoUpdatablePlatform}; acceptPreReleases=${acceptPreReleases}`
+      );
 
-    // Update on packaged app only
-    if (this.appService.isPackaged) {
-      // Is auto-updatable platform
-      if (autoUpdatablePlatform) {
-        // configure auto updater if not configured yet
-        if (!this.autoUpdater) {
-          this.configureAutomaticUpdates();
+      // Update on packaged app only
+      if (this.appService.isPackaged) {
+        // Is auto-updatable platform
+        if (autoUpdatablePlatform) {
+          // configure auto updater if not configured yet
+          if (!this.autoUpdater) {
+            this.configureAutomaticUpdates();
+          }
+
+          // Now trigger auto-update checking
+          return this.checkForAutomaticUpdate(
+            true /* Allow quit & install when update is requested */,
+            acceptPreReleases
+          );
+        } else {
+          // Check now manually is auto update not supported
+          return this.appService
+            .getArch()
+            .then(arch => this.manualUpdateCheck(installedVersion, platform, arch, acceptPreReleases));
         }
-
-        // Now trigger auto-update checking
-        return this.checkForAutomaticUpdate(
-          true /* Allow quit & install when update is requested */,
-          acceptPreReleases
-        );
       } else {
-        // Check now manually is auto update not supported
-        const arch = this.appService.getArch();
-        return this.manualUpdateCheck(installedVersion, platform, arch, acceptPreReleases);
+        this.logger.info(`No update: app is not packaged.`);
+        return Promise.resolve(null);
       }
-    } else {
-      this.logger.info(`No update: app is not packaged.`);
-      return Promise.resolve(null);
-    }
+    });
   }
 
   private checkForAutomaticUpdate(autoUpdateQuitInstall: boolean, acceptPreReleases: boolean): Promise<UpdateNotify> {
@@ -173,28 +175,30 @@ export class UpdateHandler implements IpcListener {
   }
 
   public checkForUpdate(acceptPreReleases: boolean): Promise<UpdateNotify> {
-    const platform = this.appService.getPlatform();
-    const autoUpdatablePlatform = UpdateHandler.PLATFORM_AUTO_UPDATABLE_MAP.get(platform);
+    return this.appService.getPlatform().then(platform => {
+      const autoUpdatablePlatform = UpdateHandler.PLATFORM_AUTO_UPDATABLE_MAP.get(platform);
 
-    this.logger.info(
-      `Check for update requested: platform=${platform}; autoUpdatablePlatform=${autoUpdatablePlatform}; acceptPreReleases=${acceptPreReleases}`
-    );
+      this.logger.info(
+        `Check for update requested: platform=${platform}; autoUpdatablePlatform=${autoUpdatablePlatform}; acceptPreReleases=${acceptPreReleases}`
+      );
 
-    if (autoUpdatablePlatform) {
-      if (this.appService.isPackaged) {
-        return this.checkForAutomaticUpdate(
-          false /* Disallow quit & install when update is NOT requested: here simple checkForUpdate */,
-          acceptPreReleases
-        );
+      if (autoUpdatablePlatform) {
+        if (this.appService.isPackaged) {
+          return this.checkForAutomaticUpdate(
+            false /* Disallow quit & install when update is NOT requested: here simple checkForUpdate */,
+            acceptPreReleases
+          );
+        } else {
+          this.logger.debug(`Skip check for update on auto-updatable platform when app is not packaged`);
+          return Promise.resolve(null);
+        }
       } else {
-        this.logger.debug(`Skip check for update on auto-updatable platform when app is not packaged`);
-        return Promise.resolve(null);
+        // Check now manually is auto update not supported
+        return this.appService
+          .getArch()
+          .then(arch => this.manualUpdateCheck(installedVersion, platform, arch, acceptPreReleases));
       }
-    } else {
-      // Check now manually is auto update not supported
-      const arch = this.appService.getArch();
-      return this.manualUpdateCheck(installedVersion, platform, arch, acceptPreReleases);
-    }
+    });
   }
 
   public manualUpdateCheck(

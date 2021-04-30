@@ -24,12 +24,16 @@ export class AppService {
     return path.dirname(app.getAppPath());
   }
 
-  public getArch(): Arch {
-    return this.getRuntimeInfo().osPlatform.arch as Arch;
+  public getArch(): Promise<Arch> {
+    return this.getRuntimeInfo().then(runtimeInfo => {
+      return Promise.resolve(runtimeInfo.osPlatform.arch);
+    });
   }
 
-  public getPlatform(): Platform {
-    return this.getRuntimeInfo().osPlatform.name as Platform;
+  public getPlatform(): Promise<Platform> {
+    return this.getRuntimeInfo().then(runtimeInfo => {
+      return Promise.resolve(runtimeInfo.osPlatform.name);
+    });
   }
 
   public isWindows(): boolean {
@@ -46,7 +50,7 @@ export class AppService {
 
   public printRuntimeInfo(): void {
     this.runtimeInfoService.getInfo().then(runtimeInfo => {
-      const infoStr = `Hostname ${runtimeInfo.osHostname}; Platform ${runtimeInfo.osPlatform.name} ${runtimeInfo.osPlatform.arch}; Cpu ${runtimeInfo.cpu.name}; Memory ${runtimeInfo.memorySizeGb}GB; athleteMachineId ${runtimeInfo.machineId}; Node v${process.versions.node}`;
+      const infoStr = `Hostname ${runtimeInfo.osHostname}; Platform ${runtimeInfo.osPlatform.name} ${runtimeInfo.osPlatform.arch}; Cpu ${runtimeInfo.cpu.name}; Memory ${runtimeInfo.memorySizeGb}GB; athleteMachineId ${runtimeInfo.athleteMachineId}; Node v${process.versions.node}`;
       logger.info(`System details: ${infoStr}`);
     });
   }

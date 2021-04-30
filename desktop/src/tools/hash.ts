@@ -2,6 +2,8 @@ import crypto, { BinaryLike } from "crypto";
 
 export class Hash {
   public static readonly SHA256: string = "sha256";
+  public static readonly SHA256: string = "sha256";
+  public static readonly SHA512: string = "sha512";
 
   public static apply(
     data: BinaryLike,

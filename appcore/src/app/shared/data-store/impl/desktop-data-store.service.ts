@@ -22,10 +22,11 @@ export class DesktopDataStore<T extends {}> extends DataStore<T> {
 
   public getAppUsageDetails(): Promise<AppUsageDetails> {
     return navigator.storage.estimate().then((storageEstimate: StorageEstimate) => {
-      const appUsage = new AppUsage(new Blob([this.db.serialize()]).size, storageEstimate.quota);
+      const appUsage = new AppUsage(storageEstimate.usage, storageEstimate.quota);
       const megaBytesInUse = appUsage.bytesInUse / (1024 * 1024);
+      const megaBytesQuota = appUsage.quotaBytes / (1024 * 1024);
       const percentUsage = (appUsage.bytesInUse / appUsage.quotaBytes) * 100;
-      const appUsageDetails = new AppUsageDetails(appUsage, megaBytesInUse, percentUsage);
+      const appUsageDetails = new AppUsageDetails(appUsage, megaBytesInUse, megaBytesQuota, percentUsage);
       return Promise.resolve(appUsageDetails);
     });
   }

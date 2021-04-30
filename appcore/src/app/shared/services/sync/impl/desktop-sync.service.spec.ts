@@ -134,7 +134,7 @@ describe("DesktopSyncService", () => {
             expect(desktopSyncService.syncSubscription).toBeDefined();
             expect(fetchAthleteModelSpy).toHaveBeenCalledTimes(1);
             expect(fetchUserSettingsSpy).toHaveBeenCalledTimes(1);
-            expect(findMostRecentActivitySpy).toHaveBeenCalledTimes(1);
+            expect(findMostRecentActivitySpy).toHaveBeenCalledTimes(2);
             expect(fetchStravaConnectorInfoSpy).toHaveBeenCalledTimes(1);
             expect(startSyncSpy).toHaveBeenCalledTimes(1);
 
@@ -429,7 +429,7 @@ describe("DesktopSyncService", () => {
       // Given
       const syncEvent$ = new Subject<SyncEvent>();
       const connectorType = ConnectorType.STRAVA;
-      const completeSyncEvent = new CompleteSyncEvent(connectorType);
+      const completeSyncEvent = new CompleteSyncEvent(connectorType, null);
       const connectorSyncDateTime = new ConnectorSyncDateTime(connectorType, Date.now());
       const getSyncStateSpy = spyOn(desktopSyncService, "getSyncState").and.returnValue(
         Promise.resolve(SyncState.NOT_SYNCED)
@@ -467,7 +467,7 @@ describe("DesktopSyncService", () => {
       const syncEvent$ = new Subject<SyncEvent>();
       const oldDateTime = 999;
       const connectorType = ConnectorType.STRAVA;
-      const completeSyncEvent = new CompleteSyncEvent(connectorType);
+      const completeSyncEvent = new CompleteSyncEvent(connectorType, null);
       const connectorSyncDateTime = new ConnectorSyncDateTime(connectorType, oldDateTime);
       const getSyncStateSpy = spyOn(desktopSyncService, "getSyncState").and.returnValue(
         Promise.resolve(SyncState.SYNCED)
@@ -658,7 +658,7 @@ describe("DesktopSyncService", () => {
       const connectorType = ConnectorType.STRAVA;
       desktopSyncService.currentConnectorType = connectorType;
       const connectorSyncDateTime = new ConnectorSyncDateTime(connectorType, Date.now());
-      const completeSyncEvent = new CompleteSyncEvent(desktopSyncService.currentConnectorType);
+      const completeSyncEvent = new CompleteSyncEvent(desktopSyncService.currentConnectorType, null);
       const handleSyncCompleteEventsSpy = spyOn(desktopSyncService, "handleSyncCompleteEvents").and.callThrough();
       spyOn(desktopSyncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));
       spyOn(desktopSyncService.connectorSyncDateTimeDao, "getById").and.returnValue(Promise.resolve(null));

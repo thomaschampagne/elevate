@@ -7,24 +7,18 @@ import { DesktopActivityService } from "../../activity/impl/desktop-activity.ser
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DesktopMigrationService } from "../../../../desktop/migration/desktop-migration.service";
-import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
 import _ from "lodash";
-import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
-import { IpcMessage } from "@elevate/shared/electron/ipc-message";
-import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
-import { Channel } from "@elevate/shared/electron/channels.enum";
 import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 @Injectable()
 export class DesktopAppService extends AppService {
   constructor(
     @Inject(ActivityService) protected readonly activityService: DesktopActivityService,
-    @Inject(SyncService) public readonly desktopSyncService: DesktopSyncService,
-    @Inject(DesktopMigrationService) private readonly desktopMigrationService: DesktopMigrationService,
+    @Inject(SyncService) protected readonly desktopSyncService: DesktopSyncService,
+    @Inject(DesktopMigrationService) protected readonly desktopMigrationService: DesktopMigrationService,
     @Inject(UserSettingsService) protected readonly userSettingsService: UserSettingsService,
-    @Inject(IPC_TUNNEL_SERVICE) public readonly ipcTunnelService: IpcTunnelService,
-    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar
+    @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar
   ) {
     super(activityService, desktopSyncService);
   }
@@ -53,9 +47,5 @@ export class DesktopAppService extends AppService {
         }
       });
     });
-  }
-
-  public getRuntimeInfo(): Promise<RuntimeInfo> {
-    return this.ipcTunnelService.send<void, RuntimeInfo>(new IpcMessage(Channel.runtimeInfo));
   }
 }

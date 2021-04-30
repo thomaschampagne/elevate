@@ -19,7 +19,6 @@ export class AboutDialogComponent implements OnInit {
   public buildTarget: BuildTarget = environment.buildTarget;
   public BuildTarget = BuildTarget;
 
-  public appUsageDetails: AppUsageDetails;
   public installedVersion: string;
   public remoteVersion: string;
   public buildMetadata: { commit: string; date: string };
@@ -32,10 +31,6 @@ export class AboutDialogComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.dataStore.getAppUsageDetails().then((appUsageDetails: AppUsageDetails) => {
-      this.appUsageDetails = appUsageDetails;
-    });
-
     this.installedVersion = this.versionsProvider.getPackageVersion();
 
     this.versionsProvider.getBuildMetadata().then((buildMetadata: { commit: string; date: string }) => {

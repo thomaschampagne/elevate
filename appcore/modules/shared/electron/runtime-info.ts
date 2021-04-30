@@ -1,23 +1,14 @@
-import { GeoIp } from "./geo-ip";
+import { Arch, Platform } from "../enums";
 
 export class RuntimeInfo {
   constructor(
-    public osMachineId: string,
-    public osPlatform: { name: string; arch: string },
-    public osHostname: string,
-    public osUsername: string,
-    public machineId: string,
-    public cpu: { name: string; threads: number },
-    public memorySizeGb: number,
-    public geoIp: GeoIp | null = null
-  ) {
-    this.osMachineId = osMachineId;
-    this.osPlatform = osPlatform;
-    this.osHostname = osHostname;
-    this.osUsername = osUsername;
-    this.machineId = machineId;
-    this.cpu = cpu;
-    this.memorySizeGb = memorySizeGb;
-    this.geoIp = geoIp;
-  }
+    public readonly athleteMachineId: string,
+    public readonly athleteMachineKey: string,
+    public readonly osPlatform: { name: Platform; arch: Arch },
+    public readonly osHostname: string,
+    public readonly osUsername: string,
+    public readonly cpu: { name: string; threads: number },
+    public readonly memorySizeGb: number,
+    public readonly screenRes: string
+  ) {}
 }

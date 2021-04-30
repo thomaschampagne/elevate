@@ -6,13 +6,6 @@
     *ngIf="buildMetadata">Build {{buildMetadata.date + '.' + buildMetadata.commit.slice(0, 8)}}</span>
   </div>
   <mat-divider></mat-divider>
-  <div *ngIf="appUsageDetails">
-    History size <strong>{{appUsageDetails.megaBytesInUse.toFixed(2)}} MB</strong>.
-  </div>
-  <div *ngIf="!appUsageDetails">
-    <strong>Calculating your profile size...</strong>
-  </div>
-  <mat-divider></mat-divider>
   <ng-container *ngIf="(buildTarget === BuildTarget.EXTENSION)">
     <div class="space-under">
       Web extension made with ❤️ by <a href="https://twitter.com/champagnethomas" target="_blank">Thomas Champagne</a>.

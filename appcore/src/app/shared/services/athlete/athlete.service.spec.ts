@@ -64,51 +64,6 @@ describe("AthleteService", () => {
   });
 
   describe("should fetch", () => {
-    it("should fetch and sort descending existing 'dated athlete settings' from athlete model", done => {
-      // Given
-      const expectedAthleteSettingsModel03 = new DatedAthleteSettings(
-        "2018-06-01",
-        new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)
-      );
-      const expectedApsModel02 = new DatedAthleteSettings(
-        "2018-02-15",
-        new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
-      );
-      const expectedApsModel01 = new DatedAthleteSettings(
-        null,
-        new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-      );
-      defaultAthleteModel.datedAthleteSettings = [
-        expectedAthleteSettingsModel03,
-        expectedApsModel01, // Introduce not sorted period between 01/02
-        expectedApsModel02 // Introduce not sorted period between 01/02
-      ];
-
-      const fetchDaoSpy = spyOn(service.athleteModelDao, "findOne").and.returnValue(
-        Promise.resolve(defaultAthleteModel)
-      );
-
-      // When
-      const promise: Promise<AthleteModel> = service.fetch();
-
-      // Then
-      promise.then(
-        (athleteModel: AthleteModel) => {
-          expect(athleteModel).not.toBeNull();
-          expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
-
-          expect(athleteModel.datedAthleteSettings[0]).toEqual(expectedAthleteSettingsModel03);
-          expect(athleteModel.datedAthleteSettings[1]).toEqual(expectedApsModel02);
-          expect(athleteModel.datedAthleteSettings[2]).toEqual(expectedApsModel01);
-
-          done();
-        },
-        error => {
-          expect(error).toBeNull();
-          throw new Error("Whoops! I should not be here!");
-        }
-      );
-    });
 
     it("should fetch empty 'dated athlete settings'", done => {
       // Given

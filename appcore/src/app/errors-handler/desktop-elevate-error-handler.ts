@@ -4,14 +4,13 @@ import { VersionsProvider } from "../shared/services/versions/versions-provider"
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoggerService } from "../shared/services/logging/logger.service";
-import { AppService } from "../shared/services/app-service/app.service";
 import { AthleteService } from "../shared/services/athlete/athlete.service";
-import { DesktopAppService } from "../shared/services/app-service/desktop/desktop-app.service";
 import * as Sentry from "@sentry/browser";
 import { environment } from "../../environments/environment";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ElectronService } from "../desktop/electron/electron.service";
+import { RuntimeInfoService } from "../desktop/machine/runtime-info.service";
 
 @Injectable({
   providedIn: "root"
@@ -26,7 +25,7 @@ export class DesktopElevateErrorHandler extends ElevateErrorHandler {
     @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar,
     @Inject(LoggerService) protected readonly loggerService: LoggerService,
     @Inject(AthleteService) protected readonly athleteService: AthleteService,
-    @Inject(AppService) protected readonly desktopAppService: DesktopAppService,
+    @Inject(RuntimeInfoService) protected readonly runtimeInfoService: RuntimeInfoService,
     @Inject(ElectronService) protected readonly electronService: ElectronService
   ) {
     super(versionsProvider, dialog, snackBar, loggerService);
@@ -39,7 +38,7 @@ export class DesktopElevateErrorHandler extends ElevateErrorHandler {
         autoSessionTracking: false
       });
 
-      Promise.all([this.desktopAppService.getRuntimeInfo(), this.athleteService.fetch()]).then(results => {
+      Promise.all([this.runtimeInfoService.get(), this.athleteService.fetch()]).then(results => {
         const [runtimeInfo, athlete] = results;
 
         Sentry.setContext("athlete", {

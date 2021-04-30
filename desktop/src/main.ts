@@ -34,6 +34,8 @@ import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
 import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
 import { IpcMessage } from "@elevate/shared/electron/ipc-message";
 import { Platform } from "@elevate/shared/enums/platform.enum";
+import { UserScreen } from "./tools/user-screen";
+import { platform } from "os";
 
 const IS_ELECTRON_DEV = !app.isPackaged;
 
@@ -67,15 +69,16 @@ class Main {
   private ipcMain: IpcMain;
   private mainWindow: BrowserWindow;
 
-  private static getWorkingAreaSize(display: Electron.Display): Electron.Size {
-    const screenWidth = display.size.width * display.scaleFactor;
-    const screenHeight = display.size.height * display.scaleFactor;
+  public static computeAppTargetSize(): Electron.Size {
+    const { width, height } = UserScreen.computeScreenRes();
 
-    const windowRatio = screenWidth > 1920 && screenHeight > 1080 ? Main.LARGE_SCREEN_RATIO : Main.DEFAULT_SCREEN_RATIO;
+    const windowRatio = width > 1920 && height > 1080 ? Main.LARGE_SCREEN_RATIO : Main.DEFAULT_SCREEN_RATIO;
+
+    const primaryDisplay = UserScreen.getPrimaryDisplay();
 
     return {
-      width: Math.round(display.workAreaSize.width * windowRatio),
-      height: Math.round(display.workAreaSize.height * windowRatio)
+      width: Math.round(primaryDisplay.workAreaSize.width * windowRatio),
+      height: Math.round(primaryDisplay.workAreaSize.height * windowRatio)
     };
   }
 
@@ -334,6 +337,10 @@ class Main {
   }
 
   private startElevate(): void {
+
+    // Print user runtime info in logs
+    this.appService.printRuntimeInfo();
+
     // Create the browser window.
     this.createMainBrowserWindow();
 
@@ -385,7 +392,7 @@ class Main {
   }
 
   private createMainBrowserWindow(): void {
-    const workAreaSize: Electron.Size = Main.getWorkingAreaSize(Electron.screen.getPrimaryDisplay());
+    const workAreaSize: Electron.Size = Main.computeAppTargetSize();
     const windowOptions: Electron.BrowserWindowConstructorOptions = {
       title: "App",
       width: workAreaSize.width,

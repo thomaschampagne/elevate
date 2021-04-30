@@ -32,7 +32,7 @@ export class ActivityDao extends BaseDao<Activity> {
     });
   }
 
-  public findSortStartDate(descending: boolean): Promise<Activity[]> {
+  public findSorted(descending: boolean): Promise<Activity[]> {
     const sort: { propName: keyof Activity; options: Partial<SimplesortOptions> } = {
       propName: "startTime",
       options: { desc: descending }

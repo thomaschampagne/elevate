@@ -10,8 +10,11 @@ import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/conf
 import { ElectronService } from "../../desktop/electron/electron.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
-import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
-import DesktopUserSettings = UserSettings.DesktopUserSettings;
+import { DataStore } from "../../shared/data-store/data-store";
+import { AppUsageDetails } from "../../shared/models/app-usage-details.model";
+import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
+import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
+import { RuntimeInfoService } from "../../desktop/machine/runtime-info.service";
 
 @Component({
   selector: "app-advanced-menu",
@@ -44,6 +47,18 @@ import DesktopUserSettings = UserSettings.DesktopUserSettings;
             <div>Open user application data folder</div>
             <div>
               <button mat-stroked-button color="primary" (click)="openUserDataFolder()">Open user data folder</button>
+            </div>
+          </div>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Display user machine identifier</div>
+            <div>
+              <button mat-stroked-button color="primary" (click)="onViewMachineId()">View machine Id</button>
+            </div>
+          </div>
+          <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
+            <div>Display history size on disk</div>
+            <div>
+              <button mat-stroked-button color="primary" (click)="onDiskUsage()">View disk usage</button>
             </div>
           </div>
           <div class="entry" fxLayout="row" fxLayoutAlign="space-between center">
@@ -97,6 +112,7 @@ import DesktopUserSettings = UserSettings.DesktopUserSettings;
         padding-top: 5px;
         padding-bottom: 5px;
       }
+
       button {
         width: 175px;
       }
@@ -106,12 +122,14 @@ import DesktopUserSettings = UserSettings.DesktopUserSettings;
 export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
   constructor(
     @Inject(SyncService) protected readonly syncService: SyncService<any>,
+    @Inject(DataStore) private readonly dataStore: DataStore<object>,
     @Inject(MatDialog) protected readonly dialog: MatDialog,
     @Inject(MatSnackBar) protected readonly snackBar: MatSnackBar,
     @Inject(UserSettingsService) protected readonly userSettingsService: UserSettingsService,
     @Inject(ActivityService) protected readonly activityService: DesktopActivityService,
     @Inject(AthleteService) protected readonly athleteService: AthleteService,
-    @Inject(ElectronService) protected readonly electronService: ElectronService
+    @Inject(ElectronService) protected readonly electronService: ElectronService,
+    @Inject(RuntimeInfoService) public readonly runtimeInfoService: RuntimeInfoService
   ) {
     super(syncService, dialog, snackBar);
   }
@@ -230,5 +248,31 @@ export class DesktopAdvancedMenuComponent extends AdvancedMenuComponent {
 
   public onRestart(): void {
     this.electronService.restartApp();
+  }
+
+  public onViewMachineId(): void {
+    this.runtimeInfoService.getMachineCredentials().then(machineCredentials => {
+      this.dialog.open(GotItDialogComponent, {
+        minWidth: GotItDialogComponent.MIN_WIDTH,
+        maxWidth: GotItDialogComponent.MAX_WIDTH,
+        data: {
+          title: "Your user machine identifier",
+          content: `<span class="mat-h3">${machineCredentials.id}</span>`
+        } as GotItDialogDataModel
+      });
+    });
+  }
+
+  public onDiskUsage(): void {
+    this.dataStore.getAppUsageDetails().then((appUsageDetails: AppUsageDetails) => {
+      this.dialog.open(GotItDialogComponent, {
+        minWidth: GotItDialogComponent.MIN_WIDTH,
+        maxWidth: GotItDialogComponent.MAX_WIDTH,
+        data: {
+          title: "Athlete history size on disk",
+          content: `<div class="mat-h3">${Math.round(appUsageDetails.megaBytesInUse)} MB</div>`
+        } as GotItDialogDataModel
+      });
+    });
   }
 }
