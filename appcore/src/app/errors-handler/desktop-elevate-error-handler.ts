@@ -36,7 +36,7 @@ export class DesktopElevateErrorHandler extends ElevateErrorHandler {
         dsn: DesktopElevateErrorHandler.SENTRY_DATA_SOURCE_NAME,
         release: this.versionsProvider.getPackageVersion(),
         environment: "production",
-        autoSessionTracking: true
+        autoSessionTracking: false
       });
 
       Promise.all([this.desktopAppService.getRuntimeInfo(), this.athleteService.fetch()]).then(results => {
