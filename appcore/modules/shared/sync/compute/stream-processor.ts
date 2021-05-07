@@ -59,7 +59,7 @@ export class StreamProcessor {
     // Smooth velocity
     if (streams.velocity_smooth?.length > 0) {
       if (SyncedActivityModel.isPaced(activityParams.type)) {
-        // Remove speed pikes before
+        // Remove speed pikes
         streams.velocity_smooth = medianSelfFilter(
           streams.velocity_smooth,
           StreamProcessor.PACED_MEDIAN_PERCENTAGE_WINDOW
@@ -88,6 +88,12 @@ export class StreamProcessor {
       );
     }
 
+    // Smooth Power
+    if (streams.watts?.length > 0) {
+      // Remove power pikes
+      streams.watts = medianSelfFilter(streams.watts, StreamProcessor.DEFAULT_MEDIAN_PERCENTAGE_WINDOW);
+    }
+
     // Smooth Heart rate
     if (streams.heartrate?.length > 0) {
       // Getting low value percentile to clamp heart rate stream
@@ -100,14 +106,14 @@ export class StreamProcessor {
 
     // Smooth cadence
     if (streams.cadence?.length > 0) {
-      // Remove cadence pikes before
+      // Remove cadence pikes
       streams.cadence = medianSelfFilter(streams.cadence, StreamProcessor.DEFAULT_MEDIAN_PERCENTAGE_WINDOW);
       streams.cadence = meanWindowSmoothing(streams.cadence, StreamProcessor.LOW_MEAN_FILTER_WINDOW);
     }
 
     // Smooth grade
     if (streams.grade_smooth?.length > 0) {
-      // Remove speed pikes before
+      // Remove speed pikes
       streams.grade_smooth = medianFilter(streams.grade_smooth, StreamProcessor.DEFAULT_MEDIAN_PERCENTAGE_WINDOW);
 
       // Clamp
@@ -154,9 +160,7 @@ export class StreamProcessor {
 
     // Smooth power stream on th fly
     if (powerStream && powerStream.length > 0) {
-      // Remove watts pikes before
-      const lowHighPercentiles = this.lowHighPercentiles(powerStream, 1);
-      powerStream = this.clampStream(powerStream, lowHighPercentiles[0], lowHighPercentiles[1]);
+      // Remove watts pikes
       powerStream = medianSelfFilter(powerStream, StreamProcessor.EST_POWER_MEDIAN_PERCENTAGE_WINDOW);
       powerStream = meanWindowSmoothing(powerStream, this.DEFAULT_MEAN_FILTER_WINDOW);
     }

@@ -235,6 +235,9 @@ describe("Activity compute integration tests through file connector", () => {
         SpecUtils.assertNearEqual(activity.extendedStats.cadenceData.upFlatDownCadencePaceData.flat, 79);
         SpecUtils.assertNearEqual(activity.extendedStats.cadenceData.upFlatDownCadencePaceData.down, 89);
 
+        SpecUtils.assertNearEqual(activity.extendedStats.powerData.avgWatts, 186);
+        SpecUtils.assertNearEqual(activity.extendedStats.powerData.maxPower, 411);
+
         SpecUtils.assertNearEqual(activity.extendedStats.gradeData.upFlatDownMoveData.down, 38.9, 1);
         SpecUtils.assertNearEqual(activity.extendedStats.gradeData.upFlatDownMoveData.up, 17.8, 1);
 
@@ -256,6 +259,9 @@ describe("Activity compute integration tests through file connector", () => {
         SpecUtils.assertNearEqual(activity.elevation_gain_raw, 320);
         SpecUtils.assertNearEqualTime(activity.moving_time_raw, "01:24:40");
         SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "03:05:14");
+
+        SpecUtils.assertNearEqual(activity.extendedStats.powerData.avgWatts, 81);
+        SpecUtils.assertNearEqual(activity.extendedStats.powerData.maxPower, 339);
 
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.genuineAvgSpeed, 18, 1);
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.totalAvgSpeed, 9, 1);
@@ -282,6 +288,9 @@ describe("Activity compute integration tests through file connector", () => {
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.genuineAvgSpeed, 25.5, 1);
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.totalAvgSpeed, 20);
 
+        SpecUtils.assertNearEqual(activity.extendedStats.powerData.avgWatts, 180);
+        SpecUtils.assertNearEqual(activity.extendedStats.powerData.maxPower, 382);
+
         SpecUtils.assertNearEqual(activity.extendedStats.cadenceData.averageCadence, 62);
         SpecUtils.assertNearEqual(activity.extendedStats.cadenceData.averageActiveCadence, 77);
         SpecUtils.assertNearEqual(activity.extendedStats.cadenceData.upFlatDownCadencePaceData.up, 73);
@@ -306,6 +315,9 @@ describe("Activity compute integration tests through file connector", () => {
         SpecUtils.assertNearEqual(activity.elevation_gain_raw, 574);
         expect(activity.moving_time_raw).toEqual(activity.extendedStats.movingTime);
         expect(activity.elapsed_time_raw).toEqual(activity.extendedStats.elapsedTime);
+
+        SpecUtils.assertNearEqual(activity.extendedStats.powerData.avgWatts, 149);
+        SpecUtils.assertNearEqual(activity.extendedStats.powerData.maxPower, 456);
 
         SpecUtils.assertNearEqualTime(activity.moving_time_raw, "4:17:34");
         SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "4:56:21");
@@ -374,7 +386,7 @@ describe("Activity compute integration tests through file connector", () => {
         // Heart-rate: No heart-rate data
 
         // Power
-        SpecUtils.assertNearEqual(activity.extendedStats.powerData.maxPower, 465);
+        SpecUtils.assertNearEqual(activity.extendedStats.powerData.maxPower, 453);
         SpecUtils.assertNearEqual(activity.extendedStats.powerData.avgWatts, 202);
         SpecUtils.assertNearEqual(activity.extendedStats.powerData.avgWattsPerKg, 2.69, 2);
         SpecUtils.assertNearEqual(activity.extendedStats.powerData.weightedPower, 230);
@@ -451,6 +463,9 @@ describe("Activity compute integration tests through file connector", () => {
         SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "06:33");
         SpecUtils.assertNearEqualTime(activity.moving_time_raw, "59:45");
         SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "1:07:50");
+
+        SpecUtils.assertNearEqual(activity.extendedStats.powerData.avgWatts, 167);
+
         expect(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace).toBeLessThanOrEqual(
           activity.extendedStats.paceData.avgPace
         );
