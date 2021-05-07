@@ -53,7 +53,7 @@ export class StreamProcessor {
     // Smooth altitude
     if (streams.altitude?.length > 0) {
       streams.altitude = medianSelfFilter(streams.altitude, StreamProcessor.DEFAULT_MEDIAN_PERCENTAGE_WINDOW);
-      streams.altitude = meanWindowSmoothing(streams.altitude, this.ALTITUDE_MEAN_FILTER_WINDOW); // Seems good
+      streams.altitude = meanWindowSmoothing(streams.altitude, StreamProcessor.ALTITUDE_MEAN_FILTER_WINDOW);
     }
 
     // Smooth velocity
@@ -82,7 +82,10 @@ export class StreamProcessor {
       }
 
       // Smoothing
-      streams.velocity_smooth = meanWindowSmoothing(streams.velocity_smooth, this.DEFAULT_MEAN_FILTER_WINDOW);
+      streams.velocity_smooth = meanWindowSmoothing(
+        streams.velocity_smooth,
+        StreamProcessor.DEFAULT_MEAN_FILTER_WINDOW
+      );
     }
 
     // Smooth Heart rate

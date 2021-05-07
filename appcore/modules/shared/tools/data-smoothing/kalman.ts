@@ -15,7 +15,7 @@ export class KalmanFilter {
   private readonly C: number;
   private readonly A: number;
 
-  public static apply(array: number[], kalmanParams: KalmanParams) {
+  public static apply(array: number[], kalmanParams: KalmanParams, u: number = 0) {
     const output = [];
     const kalmanFilter = new KalmanFilter({
       R: kalmanParams.R,
@@ -25,7 +25,7 @@ export class KalmanFilter {
       C: kalmanParams.C
     });
     array.forEach(alt => {
-      output.push(kalmanFilter.filter(alt));
+      output.push(kalmanFilter.filter(alt, u));
     });
     return output;
   }

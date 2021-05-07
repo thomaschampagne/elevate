@@ -128,7 +128,7 @@ describe("Activity compute integration tests through file connector", () => {
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.lowerQuartileSpeed, 13.8, 1);
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.medianSpeed, 26.2, 1);
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.upperQuartileSpeed, 35.6, 1);
-        SpecUtils.assertNearEqual(activity.extendedStats.speedData.standardDeviationSpeed, 12.9, 1);
+        SpecUtils.assertNearEqual(activity.extendedStats.speedData.standardDeviationSpeed, 13.1, 1);
 
         // Heart-rate
         SpecUtils.assertNearEqual(activity.extendedStats.heartRateData.averageHeartRate, 148);
@@ -254,7 +254,7 @@ describe("Activity compute integration tests through file connector", () => {
         const activity = extractResultActivity();
 
         SpecUtils.assertNearEqual(activity.elevation_gain_raw, 320);
-        SpecUtils.assertNearEqualTime(activity.moving_time_raw, "01:25:40");
+        SpecUtils.assertNearEqualTime(activity.moving_time_raw, "01:24:40");
         SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "03:05:14");
 
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.genuineAvgSpeed, 18, 1);
@@ -349,23 +349,23 @@ describe("Activity compute integration tests through file connector", () => {
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.genuineAvgSpeed, 12.21, 2);
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.avgPace, 294);
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.totalAvgSpeed, 12.15, 2);
-        SpecUtils.assertNearEqual(activity.extendedStats.speedData.lowerQuartileSpeed, 10.2, 1);
-        SpecUtils.assertNearEqual(activity.extendedStats.speedData.upperQuartileSpeed, 14.21, 2);
+        SpecUtils.assertNearEqual(activity.extendedStats.speedData.lowerQuartileSpeed, 9.8, 1);
+        SpecUtils.assertNearEqual(activity.extendedStats.speedData.upperQuartileSpeed, 14.4, 2);
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.maxSpeed, 12.24, 2);
         SpecUtils.assertNearEqual(activity.extendedStats.speedData.medianSpeed, 12.3, 2);
-        SpecUtils.assertNearEqual(activity.extendedStats.speedData.standardDeviationSpeed, 3.16, 2);
+        SpecUtils.assertNearEqual(activity.extendedStats.speedData.standardDeviationSpeed, 3.7, 2);
 
         // Pace
         SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.avgPace, "04:54");
         SpecUtils.assertNearEqual(activity.extendedStats.paceData.best20min, 296);
-        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "04:20");
-        SpecUtils.assertNearEqual(activity.extendedStats.paceData.lowerQuartilePace, 354);
+        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "04:15");
+        SpecUtils.assertNearEqual(activity.extendedStats.paceData.lowerQuartilePace, 368);
         SpecUtils.assertNearEqual(activity.extendedStats.paceData.maxPace, 294);
         SpecUtils.assertNearEqual(activity.extendedStats.paceData.medianPace, 293);
-        SpecUtils.assertNearEqual(activity.extendedStats.paceData.runningStressScore, 153);
-        SpecUtils.assertNearEqual(activity.extendedStats.paceData.runningStressScorePerHour, 112);
-        SpecUtils.assertNearEqual(activity.extendedStats.paceData.upperQuartilePace, 254);
-        SpecUtils.assertNearEqual(activity.extendedStats.paceData.standardDeviationPace, 1140);
+        SpecUtils.assertNearEqual(activity.extendedStats.paceData.runningStressScore, 160);
+        SpecUtils.assertNearEqual(activity.extendedStats.paceData.runningStressScorePerHour, 116);
+        SpecUtils.assertNearEqual(activity.extendedStats.paceData.upperQuartilePace, 250);
+        SpecUtils.assertNearEqual(activity.extendedStats.paceData.standardDeviationPace, 974);
 
         expect(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace).toBeLessThanOrEqual(
           activity.extendedStats.paceData.avgPace
@@ -447,9 +447,9 @@ describe("Activity compute integration tests through file connector", () => {
         const activity = extractResultActivity();
 
         SpecUtils.assertNearEqual(activity.elevation_gain_raw, 409);
-        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.avgPace, "09:19");
-        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "06:54");
-        SpecUtils.assertNearEqualTime(activity.moving_time_raw, "57:34");
+        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.avgPace, "09:12");
+        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "06:33");
+        SpecUtils.assertNearEqualTime(activity.moving_time_raw, "59:45");
         SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "1:07:50");
         expect(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace).toBeLessThanOrEqual(
           activity.extendedStats.paceData.avgPace
@@ -470,8 +470,8 @@ describe("Activity compute integration tests through file connector", () => {
         const activity = extractResultActivity();
 
         SpecUtils.assertNearEqual(activity.elevation_gain_raw, 87);
-        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.avgPace, "08:19");
-        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "08:18");
+        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.avgPace, "08:14");
+        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "08:09");
         SpecUtils.assertNearEqualTime(activity.moving_time_raw, "01:14:19");
         SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "01:15:03");
         expect(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace).toBeLessThanOrEqual(
@@ -494,7 +494,7 @@ describe("Activity compute integration tests through file connector", () => {
 
         SpecUtils.assertNearEqual(activity.elevation_gain_raw, 46);
         SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.avgPace, "06:51");
-        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "06:51");
+        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "06:45");
         SpecUtils.assertNearEqualTime(activity.moving_time_raw, "32:25");
         SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "32:38");
         expect(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace).toBeLessThanOrEqual(
@@ -517,8 +517,8 @@ describe("Activity compute integration tests through file connector", () => {
 
         SpecUtils.assertNearEqual(activity.elevation_gain_raw, 76);
         SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.avgPace, "07:00");
-        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "06:55");
-        SpecUtils.assertNearEqualTime(activity.moving_time_raw, "39:00");
+        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "06:49");
+        SpecUtils.assertNearEqualTime(activity.moving_time_raw, "39:41");
         SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "43:06");
         expect(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace).toBeLessThanOrEqual(
           activity.extendedStats.paceData.avgPace
@@ -540,9 +540,9 @@ describe("Activity compute integration tests through file connector", () => {
         const activity = extractResultActivity();
 
         SpecUtils.assertNearEqual(activity.elevation_gain_raw, 525);
-        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.avgPace, "09:26");
-        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "05:58");
-        SpecUtils.assertNearEqualTime(activity.moving_time_raw, "45:24");
+        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.avgPace, "08:02");
+        SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "05:37");
+        SpecUtils.assertNearEqualTime(activity.moving_time_raw, "39:30");
         SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "1:07:19");
         expect(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace).toBeLessThanOrEqual(
           activity.extendedStats.paceData.avgPace
@@ -615,7 +615,6 @@ describe("Activity compute integration tests through file connector", () => {
         SpecUtils.assertNearEqualTime(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace, "06:13");
         SpecUtils.assertNearEqualTime(activity.moving_time_raw, "01:02:36");
         SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "01:02:36");
-        console.log(activity.extendedStats.gradeData.gradeProfile);
         expect(activity.extendedStats.paceData.genuineGradeAdjustedAvgPace).toBeLessThanOrEqual(
           activity.extendedStats.paceData.avgPace
         );
@@ -669,11 +668,13 @@ describe("Activity compute integration tests through file connector", () => {
         expect(activity.hash).toEqual("9592c24f4e49e9cb3faa8590");
         SpecUtils.assertNearEqual(activity.distance_raw, 780);
         SpecUtils.assertNearEqual(activity.extendedStats.calories, 224);
-        SpecUtils.assertNearEqual(activity.extendedStats.caloriesPerHour, 600);
-        SpecUtils.assertNearEqual(activity.extendedStats.swimSwolf, 62);
+        SpecUtils.assertNearEqual(activity.extendedStats.caloriesPerHour, 581);
+        SpecUtils.assertNearEqual(activity.extendedStats.swimSwolf, 59);
         SpecUtils.assertNearEqualTime(activity.moving_time_raw, "21:21");
-        SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "22:26");
+        SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "23:10");
         SpecUtils.assertNearEqualTime(activity.extendedStats.cadenceData.cadenceActiveTime, "21:21");
+
+        expect(activity.moving_time_raw).toBeLessThanOrEqual(activity.elapsed_time_raw);
 
         SpecUtils.endTrackAssertFailed();
 
@@ -696,9 +697,65 @@ describe("Activity compute integration tests through file connector", () => {
         expect(activity.type).toEqual(ElevateSport.Swim);
         expect(activity.hash).toEqual("6e3bcc8a2fe8da5913de3fe5");
         SpecUtils.assertNearEqual(activity.distance_raw, 2536);
-        SpecUtils.assertNearEqual(activity.extendedStats.calories, 779);
-        SpecUtils.assertNearEqualTime(activity.moving_time_raw, "57:28");
+        SpecUtils.assertNearEqualTime(activity.moving_time_raw, "01:10:03");
         SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "01:14:47");
+        SpecUtils.assertNearEqual(activity.extendedStats.calories, 949);
+
+        expect(activity.moving_time_raw).toBeLessThanOrEqual(activity.elapsed_time_raw);
+
+        SpecUtils.endTrackAssertFailed();
+
+        done();
+      });
+    });
+
+    it("should perform sync and calculation on spiros-01 swim (https://www.strava.com/activities/4232464474)", done => {
+      injectActivityForTesting(`${__dirname}/integration-fixtures/swimming/spiros-01.fit`);
+
+      // When
+      const promise = fileConnector.syncFiles(syncEvents$);
+
+      // Then
+      promise.then(() => {
+        const activity = extractResultActivity();
+
+        SpecUtils.startTrackAssertFailed();
+
+        expect(activity.type).toEqual(ElevateSport.Swim);
+        SpecUtils.assertNearEqual(activity.distance_raw, 2300);
+        SpecUtils.assertNearEqualTime(activity.moving_time_raw, "41:18");
+        SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "01:06:22");
+        SpecUtils.assertNearEqual(activity.extendedStats.paceData.swimStressScore, 638);
+        SpecUtils.assertNearEqual(activity.extendedStats.calories, 434);
+
+        expect(activity.moving_time_raw).toBeLessThanOrEqual(activity.elapsed_time_raw);
+
+        SpecUtils.endTrackAssertFailed();
+
+        done();
+      });
+    });
+
+    it("should perform sync and calculation on spiros-02 swim (https://www.strava.com/activities/4126640979)", done => {
+      injectActivityForTesting(`${__dirname}/integration-fixtures/swimming/spiros-02.fit`);
+
+      // When
+      const promise = fileConnector.syncFiles(syncEvents$);
+
+      // Then
+      promise.then(() => {
+        const activity = extractResultActivity();
+
+        SpecUtils.startTrackAssertFailed();
+
+        expect(activity.type).toEqual(ElevateSport.Swim);
+        SpecUtils.assertNearEqual(activity.distance_raw, 2000);
+        SpecUtils.assertNearEqualTime(activity.moving_time_raw, "34:31");
+        SpecUtils.assertNearEqualTime(activity.elapsed_time_raw, "52:32");
+        SpecUtils.assertNearEqual(activity.extendedStats.paceData.swimStressScore, 569);
+        SpecUtils.assertNearEqual(activity.extendedStats.calories, 362);
+
+        expect(activity.moving_time_raw).toBeLessThanOrEqual(activity.elapsed_time_raw);
 
         SpecUtils.endTrackAssertFailed();
 

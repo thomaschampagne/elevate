@@ -89,9 +89,9 @@ export class ActivityComputer {
 
   private static readonly DEFAULT_THRESHOLD_KPH: number = 2; // Kph
   private static readonly CYCLING_THRESHOLD_KPH: number = 4; // Kph
-  private static readonly RUNNING_THRESHOLD_KPH: number = 2.75; // Kph
-  private static readonly SWIMMING_THRESHOLD_KPH: number = 1.75; // Kph
-  private static readonly MOVING_DETECTION_SAMPLES_BUFFER: number = 12;
+  private static readonly RUNNING_THRESHOLD_KPH: number = 2; // Kph
+  private static readonly SWIMMING_THRESHOLD_KPH: number = 1.25; // Kph
+  private static readonly MOVING_DETECTION_SAMPLES_BUFFER: number = 6;
   private static readonly DISTANCE_SAMPLES_BUFFER: number = 5;
 
   private static readonly DEFAULT_CADENCE_THRESHOLD: number = 1;
@@ -473,7 +473,7 @@ export class ActivityComputer {
 
     // Include speed and pace
     if (this.streams && this.streams.time && this.streams.time.length > 0) {
-      elapsedTime = _.last(this.streams.time) - _.first(this.streams.time);
+      elapsedTime = _.last(this.streams.time);
     }
 
     // Grade
