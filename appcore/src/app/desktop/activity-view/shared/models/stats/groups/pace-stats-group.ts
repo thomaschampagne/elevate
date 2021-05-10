@@ -19,7 +19,6 @@ export class RunningPaceStatsGroup extends StatsGroup {
       StatsDef.Pace.Running.q25,
       StatsDef.Pace.Running.q50,
       StatsDef.Pace.Running.q75,
-      StatsDef.Pace.Running.stdDeviation,
       StatsDef.Pace.Running.runningStressScore(activity.start_time),
       StatsDef.Pace.Running.runningStressScorePerHour(activity.start_time)
     ];
@@ -43,7 +42,6 @@ export class SwimmingPaceStatsGroup extends StatsGroup {
       StatsDef.Pace.Swimming.q25,
       StatsDef.Pace.Swimming.q50,
       StatsDef.Pace.Swimming.q75,
-      StatsDef.Pace.Swimming.stdDeviation,
       StatsDef.Pace.Swimming.swimStressScore(activity.start_time),
       StatsDef.Pace.Swimming.swimStressScorePerHour(activity.start_time)
     ];

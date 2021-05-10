@@ -55,7 +55,7 @@
   },
   "engineStrict": true,
   "dependencies": {
-    "@sports-alliance/sports-lib": "^5.4.22",
+    "@sports-alliance/sports-lib": "file:../../sports-lib/",
     "7zip-bin": "^5.1.1",
     "electron-log": "^4.3.4",
     "electron-updater": "^4.3.8",

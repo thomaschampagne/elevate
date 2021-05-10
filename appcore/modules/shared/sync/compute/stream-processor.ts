@@ -1,5 +1,5 @@
 import { AthleteSnapshotModel, Streams, SyncedActivityModel } from "../../models";
-import { meanWindowSmoothing, medianFilter, medianSelfFilter, percentile } from "../../tools";
+import { KalmanFilter, meanWindowSmoothing, medianFilter, medianSelfFilter, percentile } from "../../tools";
 import _ from "lodash";
 import { ElevateSport } from "../../enums";
 import { WarningException } from "../../exceptions";
@@ -58,34 +58,41 @@ export class StreamProcessor {
 
     // Smooth velocity
     if (streams.velocity_smooth?.length > 0) {
-      if (SyncedActivityModel.isPaced(activityParams.type)) {
-        // Remove speed pikes
+      if (SyncedActivityModel.isRun(activityParams.type)) {
+        // Remove unwanted running pace behavior by re-estimate running pace stream.
+        // We use here a reliable process noise (0.01) and measure precision error of 0.5kph (standard deviation)
+        streams.velocity_smooth = KalmanFilter.apply(streams.velocity_smooth, {
+          R: 0.01,
+          Q: 0.5 ** 2 /* provide as variance */
+        });
+
+        // Remove any pace spike
         streams.velocity_smooth = medianSelfFilter(
           streams.velocity_smooth,
           StreamProcessor.PACED_MEDIAN_PERCENTAGE_WINDOW
         );
 
-        // If activity is paced (run, swim, ..) remove unwanted artifacts such as infinite pace when speed if zero
-        // For this we take 1% and 99% percentiles values on which we will clamp the stream
-        const lowHighPercentiles = this.lowHighPercentiles(streams.velocity_smooth, 1);
+        // If activity is remove remove unwanted artifacts such as infinite pace when speed if zero
+        // For this we take 0.2% and 99.8% percentiles values on which we will clamp the stream
+        const lowHighPercentiles = this.lowHighPercentiles(streams.velocity_smooth, 0.2);
         streams.velocity_smooth = this.clampStream(
           streams.velocity_smooth,
           lowHighPercentiles[0],
           lowHighPercentiles[1]
         );
+
+        // Finally smooth pace stream using mean filter
+        streams.velocity_smooth = meanWindowSmoothing(
+          streams.velocity_smooth,
+          StreamProcessor.DEFAULT_MEAN_FILTER_WINDOW
+        );
       } else {
-        // If not paced, also remove speed pikes
+        // Remove any speed spike
         streams.velocity_smooth = medianSelfFilter(
           streams.velocity_smooth,
           StreamProcessor.DEFAULT_MEDIAN_PERCENTAGE_WINDOW
         );
       }
-
-      // Smoothing
-      streams.velocity_smooth = meanWindowSmoothing(
-        streams.velocity_smooth,
-        StreamProcessor.DEFAULT_MEAN_FILTER_WINDOW
-      );
     }
 
     // Smooth Power

@@ -184,13 +184,6 @@ export namespace StatsDef {
         "Equals your avg pace performed on a flat slope"
       );
 
-      export const stdDeviation = Stat.create<PaceDataModel>(
-        PaceSensor.DEFAULT,
-        "Std Deviation σ",
-        ["extendedStats", "paceData", "standardDeviationPace"],
-        "Standard deviation"
-      );
-
       export const q25 = Stat.create<PaceDataModel>(PaceSensor.DEFAULT, "25% Quartile", [
         "extendedStats",
         "paceData",
@@ -254,13 +247,6 @@ export namespace StatsDef {
         ["extendedStats", "paceData", "best20min"],
         "Best pace held during 20 min"
       ).setMissingMessage(emptyThreshold20MinMessage);
-
-      export const stdDeviation = Stat.create<PaceDataModel>(
-        SwimmingPaceSensor.DEFAULT,
-        "Std Deviation σ",
-        ["extendedStats", "paceData", "standardDeviationPace"],
-        "Standard deviation time / hundred meters or yards"
-      );
 
       export const q25 = Stat.create<PaceDataModel>(
         SwimmingPaceSensor.DEFAULT,

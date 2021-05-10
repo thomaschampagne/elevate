@@ -87,11 +87,11 @@ export class ActivityComputer {
     [ElevateSport.Swim, ActivityComputer.isActiveCadenceSwimming]
   ]);
 
+  private static readonly MAX_GRADE: number = 40;
   private static readonly DEFAULT_THRESHOLD_KPH: number = 2; // Kph
   private static readonly CYCLING_THRESHOLD_KPH: number = 4; // Kph
-  private static readonly RUNNING_THRESHOLD_KPH: number = 2; // Kph
-  private static readonly SWIMMING_THRESHOLD_KPH: number = 1.25; // Kph
-  private static readonly MOVING_DETECTION_SAMPLES_BUFFER: number = 6;
+  private static readonly RUNNING_THRESHOLD_KPH: number = 1; // Kph
+  private static readonly SWIMMING_THRESHOLD_KPH: number = 0.5; // Kph
   private static readonly DISTANCE_SAMPLES_BUFFER: number = 5;
 
   private static readonly DEFAULT_CADENCE_THRESHOLD: number = 1;
@@ -153,6 +153,7 @@ export class ActivityComputer {
    * Return grade adjusted speed factor (not pace) for a given grade value
    */
   private static runningGradeAdjustedSpeedFactor(grade: number): number {
+    grade = _.clamp(grade, -ActivityComputer.MAX_GRADE, ActivityComputer.MAX_GRADE);
     const kA = 0.9944001227713231;
     const kB = 0.029290920646623777;
     const kC = 0.0018083953212790634;
@@ -167,6 +168,14 @@ export class ActivityComputer {
       kE * Math.pow(grade, 4) +
       kF * Math.pow(grade, 5)
     );
+  }
+
+  private static runningGradeAdjustedSpeedFactorMinetti(grade: number): number {
+    grade = _.clamp(grade, -ActivityComputer.MAX_GRADE, ActivityComputer.MAX_GRADE);
+    const kA = 0.00108716;
+    const kB = 0.0464835;
+    const kC = 1.0167;
+    return kA * Math.pow(grade, 2) + kB * grade + kC;
   }
 
   public static calculate(
@@ -483,7 +492,12 @@ export class ActivityComputer {
 
     // Prepare move data model along stream or activitySourceData
     let moveDataModel = this.streams
-      ? this.moveData(this.streams.time, this.streams.distance, this.streams.velocity_smooth, this.streams.altitude)
+      ? this.moveData(
+          this.streams.time,
+          this.streams.distance,
+          this.streams.velocity_smooth,
+          this.streams.grade_adjusted_speed
+        )
       : null;
 
     const isMoveDataComputed = !!moveDataModel;
@@ -806,65 +820,46 @@ export class ActivityComputer {
     timeArray: number[],
     distanceArray: number[],
     velocityArray: number[],
-    altitudeArray: number[]
+    gradeAdjustedVelocity: number[]
   ): MoveDataModel {
     if (_.isEmpty(timeArray) || _.isEmpty(distanceArray) || _.isEmpty(velocityArray)) {
       return null;
     }
 
-    if (_.isEmpty(altitudeArray)) {
-      altitudeArray = _.fill(Array(timeArray.length), 0);
-    }
-
     const isRunning = SyncedActivityModel.isRun(this.activityType);
-
-    const movingSpeeds: number[] = [];
-    const movingDurations: number[] = [];
-    const runningGradeAdjSpeed: number[] = [];
-
-    const SAMPLES_TIME_BUFFER = ActivityComputer.MOVING_DETECTION_SAMPLES_BUFFER;
-
-    let index = SAMPLES_TIME_BUFFER;
-    do {
-      const { seconds, speed, grade } = this.getBufferAnalytics(
-        SAMPLES_TIME_BUFFER,
-        index,
-        timeArray,
-        distanceArray,
-        altitudeArray
-      );
-
-      if (this.isMoving(speed)) {
-        movingSpeeds.push(speed);
-        movingDurations.push(seconds);
-
-        if (isRunning) {
-          runningGradeAdjSpeed.push(speed * ActivityComputer.runningGradeAdjustedSpeedFactor(grade));
-        }
-      }
-
-      index = index + SAMPLES_TIME_BUFFER;
-    } while (index <= timeArray.length - 1);
 
     // Distance and Times
     const totalDistance = _.last(distanceArray);
-    const movingTime = _.sum(movingDurations);
     const elapsedTime = _.last(timeArray);
 
     // Calculate speed data
-    const movingAvgSpeed = _.mean(movingSpeeds);
+    const velocityKphArray = velocityArray.map(v => v * Constant.MPS_KPH_FACTOR);
+
+    // Compute moving time
+    const movingTime = _.sum(
+      timeArray.map((time, index) => {
+        const distance = distanceArray[index] - (distanceArray[index - 1] || 0);
+        const seconds = timeArray[index] - (timeArray[index - 1] || 0);
+        const speed = (distance / seconds) * Constant.MPS_KPH_FACTOR;
+        if (this.isMoving(speed)) {
+          return seconds;
+        }
+        return 0;
+      })
+    );
+
+    const avgSpeed = _.mean(velocityKphArray);
+    const avgPace = Movement.speedToPace(avgSpeed);
     const totalAvgSpeed = distanceArray.length > 0 ? (totalDistance / elapsedTime) * Constant.MPS_KPH_FACTOR : null;
-    const varianceSpeed = _.mean(movingSpeeds.map(speed => Math.pow(speed, 2))) - Math.pow(movingAvgSpeed, 2);
+    const varianceSpeed = _.mean(velocityKphArray.map(speed => Math.pow(speed, 2))) - Math.pow(avgSpeed, 2);
     const standardDeviationSpeed = varianceSpeed > 0 ? Math.sqrt(varianceSpeed) : 0;
-    const [q25, q50, q75] = this.quartiles(movingSpeeds);
+    const [q25, q50, q75] = this.quartiles(velocityKphArray);
     const speedPeaks = this.computePeaks(velocityArray, timeArray);
     const best20min = this.computeSplit(velocityArray, timeArray, 60 * 20) * Constant.MPS_KPH_FACTOR || null;
-    const avgPace = Movement.speedToPace(movingAvgSpeed);
-    const velocityKphArray = velocityArray.map(v => v * Constant.MPS_KPH_FACTOR);
 
     // Prepare SpeedDataModel
     const speedData: SpeedDataModel = {
-      genuineAvgSpeed: _.round(movingAvgSpeed, DEFAULT_RND),
+      genuineAvgSpeed: _.round(avgSpeed, DEFAULT_RND),
       totalAvgSpeed: totalAvgSpeed ? _.round(totalAvgSpeed, DEFAULT_RND) : null,
       maxSpeed: _.round(_.max(velocityArray) * Constant.MPS_KPH_FACTOR, DEFAULT_RND),
       best20min: _.round(best20min, DEFAULT_RND),
@@ -885,8 +880,11 @@ export class ActivityComputer {
 
     // Compute running grade adjusted pace
     let runningGradeAdjustedPace = null;
-    if (isRunning) {
-      runningGradeAdjustedPace = _.round(Movement.speedToPace(_.mean(runningGradeAdjSpeed)));
+
+    // Compute running grade adjusted pace
+    if (isRunning && gradeAdjustedVelocity?.length > 0) {
+      const gradeAdjustedSpeed = gradeAdjustedVelocity.map(speed => speed * Constant.MPS_KPH_FACTOR);
+      runningGradeAdjustedPace = _.round(Movement.speedToPace(_.mean(gradeAdjustedSpeed)));
       runningGradeAdjustedPace = runningGradeAdjustedPace > avgPace ? avgPace : runningGradeAdjustedPace;
     }
 
@@ -1367,7 +1365,7 @@ export class ActivityComputer {
     const meters = distanceArray[currentIndex] - distanceArray[currentIndex - buffer];
     const elevation = altitudeArray ? altitudeArray[currentIndex] - altitudeArray[currentIndex - buffer] : null;
     const speed = (meters / seconds) * Constant.MPS_KPH_FACTOR;
-    const grade = Number.isFinite(elevation) ? (elevation / meters) * 100 : null;
+    const grade = Number.isFinite(elevation) && meters > 0 ? (elevation / meters) * 100 : 0;
     return { seconds: seconds, meters: meters, elevation: elevation, speed: speed, grade: grade };
   }
 
