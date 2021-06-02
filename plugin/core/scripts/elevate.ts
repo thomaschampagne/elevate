@@ -120,7 +120,6 @@ export class Elevate {
 			this.handleHideFeed();
 			this.handleOnFlyActivitiesSync();
 			this.handleActivitiesSyncFromOutside();
-			this.handleActivityMachineLearningData();
 
 			// Bike
 			this.handleExtendedActivityData();
@@ -147,6 +146,11 @@ export class Elevate {
 			this.handleAthleteUpdate();
 			this.saveAthleteId();
 			this.handleGoogleMapsComeBackModifier();
+
+			// Machine learning
+			setTimeout(() => {
+				this.handleActivityMachineLearningData();
+			}, 1000);
 		});
 	}
 
@@ -1105,7 +1109,8 @@ export class Elevate {
 
 		const activityML: any = {};
 		activityML.id = activity.get("id") || null;
-		activityML.athleteId = window.pageView.activityAthlete && window.pageView.activityAthlete() && window.pageView.activityAthlete().id || null;
+		activityML.athleteId = window.pageView.activityAthlete && window.pageView.activityAthlete()
+			&& window.pageView.activityAthlete().id || null;
 		activityML.type = activity.get("detailedType") || null;
 		activityML.movingTime = movingTime;
 		activityML.distance = _.round(distance);
@@ -1113,6 +1118,7 @@ export class Elevate {
 		activityML.avgSpeed = avgSpeed;
 		activityML.avgHr = _.round(activity.get("avg_hr")) || null;
 		activityML.avgCad = _.round(activity.get("avg_cadence")) || null;
+		activityML.avgWatts = _.round(activity.get("avgWatts")) || null;
 		activityML.trainer = !!activity.get("trainer");
 
 		if (window.pageView.streamsRequest && window.pageView.streamsRequest.streams && window.pageView.streamsRequest.streams.attributes) {
