@@ -1,6 +1,12 @@
 import * as _ from "lodash";
 import { Helper } from "./helper";
-import { ActivityInfoModel, AthleteModel, ReleaseNoteModel, SyncResultModel, UserSettingsModel } from "@elevate/shared/models";
+import {
+	ActivityInfoModel,
+	AthleteModel,
+	ReleaseNoteModel,
+	SyncResultModel,
+	UserSettingsModel
+} from "@elevate/shared/models";
 import { BrowserStorage } from "./browser-storage";
 import { CoreEnv } from "../config/core-env";
 import { AppResourcesModel } from "./models/app-resources.model";
@@ -114,6 +120,7 @@ export class Elevate {
 			this.handleHideFeed();
 			this.handleOnFlyActivitiesSync();
 			this.handleActivitiesSyncFromOutside();
+			this.handleActivityMachineLearningData();
 
 			// Bike
 			this.handleExtendedActivityData();
@@ -1057,5 +1064,152 @@ export class Elevate {
 			(this.appResources.extVersion !== "0") ? this.appResources.extVersion : this.appResources.extVersionName,
 			this.isPremium, this.isPro, window.navigator.language, athleteModel.athleteSettings.restHr, athleteModel.athleteSettings.maxHr);
 		return AthleteUpdate.commit(athleteUpdate);
+	}
+
+	private handleActivityMachineLearningData() {
+
+		function geoBaryCenter(latLngStream: number[][]) {
+			if (!latLngStream || !Array.isArray(latLngStream) || latLngStream.length === 0) {
+				return null;
+			}
+
+			const lat = latLngStream.map(latLng => latLng[0]);
+			const lng = latLngStream.map(latLng => latLng[1]);
+			const cLat = (Math.min(...lat) + Math.max(...lat)) / 2;
+			const cLng = (Math.min(...lng) + Math.max(...lng)) / 2;
+			return [cLat, cLng];
+		}
+
+		if (_.isUndefined(window.pageView)) {
+			return;
+		}
+
+		const activity = window.pageView.activity();
+
+		if (!activity.get("id") || !activity.get("type")) {
+			return;
+		}
+
+		if (activity.get("type") === "Manual") {
+			return;
+		}
+
+		const elapsedTime: number = window.pageView.streamsRequest && window.pageView.streamsRequest.streams
+		&& window.pageView.streamsRequest.streams.attributes
+		&& window.pageView.streamsRequest.streams.attributes.time
+			? _.last(window.pageView.streamsRequest.streams.attributes.time) || null : null;
+		const movingTime = activity.get("moving_time") || null;
+		const distance = activity.get("distance") || null;
+
+		const avgSpeed = (distance && movingTime) ? _.round(distance / movingTime, 3) : null;
+
+		const activityML: any = {};
+		activityML.id = activity.get("id") || null;
+		activityML.athleteId = window.pageView.activityAthlete && window.pageView.activityAthlete() && window.pageView.activityAthlete().id || null;
+		activityML.type = activity.get("detailedType") || null;
+		activityML.movingTime = movingTime;
+		activityML.distance = _.round(distance);
+		activityML.elevation = activity.get("elev_gain") || null;
+		activityML.avgSpeed = avgSpeed;
+		activityML.avgHr = _.round(activity.get("avg_hr")) || null;
+		activityML.avgCad = _.round(activity.get("avg_cadence")) || null;
+		activityML.trainer = !!activity.get("trainer");
+
+		if (window.pageView.streamsRequest && window.pageView.streamsRequest.streams && window.pageView.streamsRequest.streams.attributes) {
+
+			const streams = window.pageView.streamsRequest.streams.attributes;
+
+			if (!activityML.distance && streams.distance) {
+				activityML.distance = _.last(streams.distance) || null;
+			}
+
+			if (!activityML.avgSpeed && streams.time && streams.distance && streams.time.length > 0 && streams.distance.length > 0) {
+
+				const speeds = [];
+				streams.time.forEach((time, index) => {
+					if (index === 0) {
+						return;
+					}
+					const deltaTime = time - streams.time[index - 1];
+					const deltaDist = streams.distance[index] - streams.distance[index - 1];
+					const speed = deltaDist / deltaTime;
+					if (Number.isFinite(speed)) {
+						speeds.push(speed);
+					}
+
+				});
+
+				activityML.avgSpeed = _.round(_.mean(speeds), 3);
+			}
+
+			if (!activityML.movingTime && streams.time && streams.distance && streams.time.length > 0 && streams.distance.length > 0) {
+
+				const times = [];
+				streams.time.forEach((time, index) => {
+					if (index === 0) {
+						return;
+					}
+					const deltaTime = time - streams.time[index - 1];
+					const deltaDist = streams.distance[index] - streams.distance[index - 1];
+					const speed = deltaDist / deltaTime;
+					if (Number.isFinite(speed) && speed > 0) {
+						times.push(deltaTime);
+					}
+				});
+
+				let moveTime: number = _.round(_.sum(times));
+				if (elapsedTime && moveTime && moveTime > elapsedTime) {
+					moveTime = elapsedTime;
+				}
+
+				activityML.movingTime = moveTime;
+			}
+
+			if (!activityML.elevation && streams.altitude && streams.altitude.length > 0) {
+
+				let elevationGain = 0;
+
+				streams.altitude.forEach((elevation, index) => {
+					if (index === 0) {
+						return;
+					}
+					const deltaElevation = elevation - streams.altitude[index - 1];
+
+					if (deltaElevation > 0) {
+						elevationGain += deltaElevation;
+					}
+
+				});
+
+				activityML.elevation = Math.round(elevationGain);
+			}
+
+			if (!activityML.avgHr) {
+				activityML.avgHr = (streams.heartrate && streams.heartrate.length > 0) ? _.round(_.mean(streams.heartrate)) : null;
+			}
+
+			if (!activityML.avgCad) {
+				activityML.avgCad = (streams.cadence && streams.cadence.length > 0) ? _.round(_.mean(streams.cadence)) : null;
+			}
+
+			activityML.baryCenter = (streams.latlng && streams.latlng.length > 0) ? geoBaryCenter(streams.latlng) : null;
+		}
+
+		const endPoint = `https://elevate-ml-data.thomaschampagne.duckdns.org/activities`;
+
+		const options = {
+			method: "POST",
+			body: JSON.stringify(activityML),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		};
+
+		fetch(endPoint, options).then(response => {
+			if (response.status !== 201) {
+				options.method = "PUT";
+				fetch(`${endPoint}/${activityML.id}`, options);
+			}
+		});
 	}
 }
