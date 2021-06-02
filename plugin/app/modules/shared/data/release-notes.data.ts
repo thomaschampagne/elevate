@@ -2,6 +2,17 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.16.6",
+		date: "2021-06-02",
+		message: "Updating project dependencies with vulnerabilities fixes.",
+		hotFixes: [],
+		features: [],
+		isPatch: true,
+		fixes: [
+			"Updating project dependencies with vulnerabilities fixes."
+		]
+	},
+	{
 		version: "6.16.5",
 		date: "2021-03-10",
 		message: "Fixed broken Elevate running activity stats after recent strava website update.",
