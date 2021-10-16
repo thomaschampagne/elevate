@@ -13,10 +13,10 @@ import _ from "lodash";
 
 @Injectable()
 export class MachineService {
-  private static readonly MACHINE_CHECKIN_ENDPOINT = `${environment.backendBaseUrl}/api/machine/checkIn`;
+  private static readonly MACHINE_CHECKIN_ENDPOINT = `${environment.backendBaseUrl}/machine/checkIn`;
 
-  private static readonly MACHINE_AUTH_ENDPOINT = `${environment.backendBaseUrl}/api/machine/auth`;
-  private static readonly INSIGHT_API_MATCH_REGEX = "/api/insights/.*";
+  private static readonly MACHINE_AUTH_ENDPOINT = `${environment.backendBaseUrl}/machine/auth`;
+  private static readonly INSIGHT_API_MATCH_REGEX = "/insights/.*";
   private static readonly HEADER_TOKEN_NAME = "X-Elevate-Token";
   private static readonly LS_TOKEN_KEY = "machineToken";
 

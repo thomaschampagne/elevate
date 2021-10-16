@@ -16,5 +16,5 @@ export const environment = {
   showActivityDebugData: true,
   showRouteUrl: true,
   bypassProfileRestoreChecks: false,
-  backendBaseUrl: "https://elevate.gravelbox.duckdns.org"
+  backendBaseUrl: "https://peak-dev-elevate.koyeb.app/api"
 };

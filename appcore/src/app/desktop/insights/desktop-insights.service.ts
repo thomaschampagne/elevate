@@ -12,8 +12,8 @@ import { SyncedActivityModel } from "@elevate/shared/models";
 
 @Injectable()
 export class DesktopInsightsService extends MachineAuthenticatedService {
-  private static readonly REPLACE_ALL_ACTIVITIES_ENDPOINT = `${environment.backendBaseUrl}/api/insights/activities/replaceAll`;
-  private static readonly UPSERT_ACTIVITIES_ENDPOINT = `${environment.backendBaseUrl}/api/insights/activities/upsert`;
+  private static readonly REPLACE_ALL_ACTIVITIES_ENDPOINT = `${environment.backendBaseUrl}/insights/activities/replaceAll`;
+  private static readonly UPSERT_ACTIVITIES_ENDPOINT = `${environment.backendBaseUrl}/insights/activities/upsert`;
 
   private static readonly PUSH_ACTIVITIES_ENDPOINT = (machineId: string, replaceAll: boolean) => {
     return replaceAll
