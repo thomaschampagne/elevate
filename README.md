@@ -292,13 +292,13 @@ DNS.2 = your.domain2.com
 * Generate private key and certificate with a `passphrase`
 
 ```bash
-openssl req -x509 -newkey rsa:4096 -sha256 -keyout code_sign.key -out code_sign.crt -days 7300 -config code_sign.cnf
+openssl req -x509 -newkey rsa:4096 -sha256 -keyout code_sign.key -out code_sign.crt -days 1825 -config code_sign.cnf
 ```  
 
 * Create `.pxf` file from the private key and certificate previously generated. `.pxf` file will be used to sign app under windows.
 
 ```bash
-openssl pkcs12 -export -name "elevate" -out code_sign.pfx -inkey code_sign.key -in code_sign.crt
+openssl pkcs12 -export -name "elevate-sports-app" -out code_sign.pfx -inkey code_sign.key -in code_sign.crt
 ```
 
 * Convert `.pxf` file to `base64`

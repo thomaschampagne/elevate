@@ -335,8 +335,8 @@ class Installer {
 
       promise = LegacyBrowserStorage.getInstance()
         .get<DatedAthleteSettings[]>(BrowserStorageType.LOCAL, "datedAthleteSettings")
-        .then((localDatedAthleteSettingss: DatedAthleteSettings[]) => {
-          if (_.isEmpty(localDatedAthleteSettingss)) {
+        .then((localDatedAthleteSettings: DatedAthleteSettings[]) => {
+          if (_.isEmpty(localDatedAthleteSettings)) {
             return LegacyBrowserStorage.getInstance()
               .get(BrowserStorageType.SYNC)
               .then((userSettings: any) => {

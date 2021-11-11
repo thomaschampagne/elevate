@@ -95,7 +95,7 @@ export class AthleteSettingsComponent implements OnInit {
     this.athleteService.update(this.athleteModel).then(() => this.onAthleteSettingsChanged());
   }
 
-  public onDatedAthleteSettingssChanged(): void {
+  public onDatedAthleteSettingsChanged(): void {
     this.onAthleteSettingsChanged();
   }
 
